@@ -1,0 +1,1421 @@
+{
+  "schemaVersion": 1,
+  "datasetId": "global-material-expansion-20260929-v15",
+  "status": "korea-source-reviewed-pp-injection-expansion",
+  "reviewedAt": "2026-09-29",
+  "purpose": "Fifteenth expansion wave deepening South Korean exact-grade coverage with current LOTTE Chemical PP injection-moulding identities while preserving conditioned-property promotion rules.",
+  "summary": {
+    "validatedGrades": 0,
+    "sourceReviewedStagingGrades": 24,
+    "manufacturers": 1,
+    "countryFocus": "South Korea",
+    "stagingFamilies": [
+      "PP"
+    ]
+  },
+  "manufacturers": [
+    {
+      "id": "mfr-lotte-chemical",
+      "name": "LOTTE Chemical",
+      "country": "South Korea",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-pp-j-150",
+          "manufacturer": {
+            "id": "mfr-lotte-chemical",
+            "name": "LOTTE Chemical",
+            "country": "South Korea",
+            "website": "https://www.lottechem.com/"
+          },
+          "brand": "LOTTE PP",
+          "grade": "J-150",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current LOTTE Chemical PP injection-moulding exact grade. Listed features: Heat resistance; surface strength; slipperiness. Listed applications: Household goods; food container; stationery; disposable items."
+          },
+          "properties": [
+            {
+              "id": "obs-lotte-pp-j-150-mi",
+              "property": "Melt Index",
+              "value": 10,
+              "unit": "g/10 min",
+              "testMethod": "ASTM basis shown on LOTTE current datasheet index; exact temperature/load not exposed on reviewed listing",
+              "direction": "not-applicable",
+              "sourceId": "src-lotte-pp-j-150-2026",
+              "sourcePage": "PP injection datasheet index page 1",
+              "comparisonReady": false,
+              "limitations": "LOTTE current exact-grade listing value retained for discovery/context only. Temperature/load are not exposed on the reviewed index, so this observation must not be used for conditioned rheology comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-pp-j-150-2026",
+              "publisher": "LOTTE Chemical",
+              "title": "LOTTE Chemical PP Injection J-150 current datasheet index",
+              "url": "https://product.lottechem.com/en/basic_materials/datasheets.do?cat1Idx=4&cat2Idx=21&page=1",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity, injection category, features, applications and listed MI were reviewed on LOTTE Chemical's current manufacturer-controlled datasheet index. MI remains context-only because full test temperature/load are not exposed on the reviewed listing; promotion requires conditioned exact-grade technical data."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-pp-j-160",
+          "manufacturer": {
+            "id": "mfr-lotte-chemical",
+            "name": "LOTTE Chemical",
+            "country": "South Korea",
+            "website": "https://www.lottechem.com/"
+          },
+          "brand": "LOTTE PP",
+          "grade": "J-160",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current LOTTE Chemical PP injection-moulding exact grade. Listed features: Excellent heat resistance; surface strength; scratch resistance. Listed applications: Household goods; food container; stationery; disposable items."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-pp-j-160-2026",
+              "publisher": "LOTTE Chemical",
+              "title": "LOTTE Chemical PP Injection J-160 current datasheet index",
+              "url": "https://product.lottechem.com/en/basic_materials/datasheets.do?cat1Idx=4&cat2Idx=21&page=1",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity, injection category, features, applications and listed MI were reviewed on LOTTE Chemical's current manufacturer-controlled datasheet index. MI remains context-only because full test temperature/load are not exposed on the reviewed listing; promotion requires conditioned exact-grade technical data."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-pp-sj-150",
+          "manufacturer": {
+            "id": "mfr-lotte-chemical",
+            "name": "LOTTE Chemical",
+            "country": "South Korea",
+            "website": "https://www.lottechem.com/"
+          },
+          "brand": "LOTTE PP",
+          "grade": "SJ-150",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current LOTTE Chemical PP injection-moulding exact grade. Listed features: Heat resistance; surface strength; scratch resistance. Listed applications: Household goods; food container; stationery; disposable items."
+          },
+          "properties": [
+            {
+              "id": "obs-lotte-pp-sj-150-mi",
+              "property": "Melt Index",
+              "value": 10,
+              "unit": "g/10 min",
+              "testMethod": "ASTM basis shown on LOTTE current datasheet index; exact temperature/load not exposed on reviewed listing",
+              "direction": "not-applicable",
+              "sourceId": "src-lotte-pp-sj-150-2026",
+              "sourcePage": "PP injection datasheet index page 1",
+              "comparisonReady": false,
+              "limitations": "LOTTE current exact-grade listing value retained for discovery/context only. Temperature/load are not exposed on the reviewed index, so this observation must not be used for conditioned rheology comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-pp-sj-150-2026",
+              "publisher": "LOTTE Chemical",
+              "title": "LOTTE Chemical PP Injection SJ-150 current datasheet index",
+              "url": "https://product.lottechem.com/en/basic_materials/datasheets.do?cat1Idx=4&cat2Idx=21&page=1",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity, injection category, features, applications and listed MI were reviewed on LOTTE Chemical's current manufacturer-controlled datasheet index. MI remains context-only because full test temperature/load are not exposed on the reviewed listing; promotion requires conditioned exact-grade technical data."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-pp-sj-160",
+          "manufacturer": {
+            "id": "mfr-lotte-chemical",
+            "name": "LOTTE Chemical",
+            "country": "South Korea",
+            "website": "https://www.lottechem.com/"
+          },
+          "brand": "LOTTE PP",
+          "grade": "SJ-160",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current LOTTE Chemical PP injection-moulding exact grade. Listed features: Heat resistance; surface strength; scratch resistance. Listed applications: Household goods; food container; stationery; disposable items."
+          },
+          "properties": [
+            {
+              "id": "obs-lotte-pp-sj-160-mi",
+              "property": "Melt Index",
+              "value": 16,
+              "unit": "g/10 min",
+              "testMethod": "ASTM basis shown on LOTTE current datasheet index; exact temperature/load not exposed on reviewed listing",
+              "direction": "not-applicable",
+              "sourceId": "src-lotte-pp-sj-160-2026",
+              "sourcePage": "PP injection datasheet index page 1",
+              "comparisonReady": false,
+              "limitations": "LOTTE current exact-grade listing value retained for discovery/context only. Temperature/load are not exposed on the reviewed index, so this observation must not be used for conditioned rheology comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-pp-sj-160-2026",
+              "publisher": "LOTTE Chemical",
+              "title": "LOTTE Chemical PP Injection SJ-160 current datasheet index",
+              "url": "https://product.lottechem.com/en/basic_materials/datasheets.do?cat1Idx=4&cat2Idx=21&page=1",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity, injection category, features, applications and listed MI were reviewed on LOTTE Chemical's current manufacturer-controlled datasheet index. MI remains context-only because full test temperature/load are not exposed on the reviewed listing; promotion requires conditioned exact-grade technical data."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-pp-sj-170",
+          "manufacturer": {
+            "id": "mfr-lotte-chemical",
+            "name": "LOTTE Chemical",
+            "country": "South Korea",
+            "website": "https://www.lottechem.com/"
+          },
+          "brand": "LOTTE PP",
+          "grade": "SJ-170",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current LOTTE Chemical PP injection-moulding exact grade. Listed features: High fluidity; heat resistance; surface strength; scratch resistance. Listed applications: Household goods; food container."
+          },
+          "properties": [
+            {
+              "id": "obs-lotte-pp-sj-170-mi",
+              "property": "Melt Index",
+              "value": 25,
+              "unit": "g/10 min",
+              "testMethod": "ASTM basis shown on LOTTE current datasheet index; exact temperature/load not exposed on reviewed listing",
+              "direction": "not-applicable",
+              "sourceId": "src-lotte-pp-sj-170-2026",
+              "sourcePage": "PP injection datasheet index page 1",
+              "comparisonReady": false,
+              "limitations": "LOTTE current exact-grade listing value retained for discovery/context only. Temperature/load are not exposed on the reviewed index, so this observation must not be used for conditioned rheology comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-pp-sj-170-2026",
+              "publisher": "LOTTE Chemical",
+              "title": "LOTTE Chemical PP Injection SJ-170 current datasheet index",
+              "url": "https://product.lottechem.com/en/basic_materials/datasheets.do?cat1Idx=4&cat2Idx=21&page=1",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity, injection category, features, applications and listed MI were reviewed on LOTTE Chemical's current manufacturer-controlled datasheet index. MI remains context-only because full test temperature/load are not exposed on the reviewed listing; promotion requires conditioned exact-grade technical data."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-pp-sj-170m",
+          "manufacturer": {
+            "id": "mfr-lotte-chemical",
+            "name": "LOTTE Chemical",
+            "country": "South Korea",
+            "website": "https://www.lottechem.com/"
+          },
+          "brand": "LOTTE PP",
+          "grade": "SJ-170M",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current LOTTE Chemical PP injection-moulding exact grade. Listed features: Medical application; high transparency; high fluidity; heat resistance. Listed applications: Syringe; household goods; food container."
+          },
+          "properties": [
+            {
+              "id": "obs-lotte-pp-sj-170m-mi",
+              "property": "Melt Index",
+              "value": 26,
+              "unit": "g/10 min",
+              "testMethod": "ASTM basis shown on LOTTE current datasheet index; exact temperature/load not exposed on reviewed listing",
+              "direction": "not-applicable",
+              "sourceId": "src-lotte-pp-sj-170m-2026",
+              "sourcePage": "PP injection datasheet index page 1",
+              "comparisonReady": false,
+              "limitations": "LOTTE current exact-grade listing value retained for discovery/context only. Temperature/load are not exposed on the reviewed index, so this observation must not be used for conditioned rheology comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-pp-sj-170m-2026",
+              "publisher": "LOTTE Chemical",
+              "title": "LOTTE Chemical PP Injection SJ-170M current datasheet index",
+              "url": "https://product.lottechem.com/en/basic_materials/datasheets.do?cat1Idx=4&cat2Idx=21&page=1",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity, injection category, features, applications and listed MI were reviewed on LOTTE Chemical's current manufacturer-controlled datasheet index. MI remains context-only because full test temperature/load are not exposed on the reviewed listing; promotion requires conditioned exact-grade technical data."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-pp-sj-170t",
+          "manufacturer": {
+            "id": "mfr-lotte-chemical",
+            "name": "LOTTE Chemical",
+            "country": "South Korea",
+            "website": "https://www.lottechem.com/"
+          },
+          "brand": "LOTTE PP",
+          "grade": "SJ-170T",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current LOTTE Chemical PP injection-moulding exact grade. Listed features: High transparency; high fluidity; heat resistance. Listed applications: Household goods; food container."
+          },
+          "properties": [
+            {
+              "id": "obs-lotte-pp-sj-170t-mi",
+              "property": "Melt Index",
+              "value": 26,
+              "unit": "g/10 min",
+              "testMethod": "ASTM basis shown on LOTTE current datasheet index; exact temperature/load not exposed on reviewed listing",
+              "direction": "not-applicable",
+              "sourceId": "src-lotte-pp-sj-170t-2026",
+              "sourcePage": "PP injection datasheet index page 1",
+              "comparisonReady": false,
+              "limitations": "LOTTE current exact-grade listing value retained for discovery/context only. Temperature/load are not exposed on the reviewed index, so this observation must not be used for conditioned rheology comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-pp-sj-170t-2026",
+              "publisher": "LOTTE Chemical",
+              "title": "LOTTE Chemical PP Injection SJ-170T current datasheet index",
+              "url": "https://product.lottechem.com/en/basic_materials/datasheets.do?cat1Idx=4&cat2Idx=21&page=1",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity, injection category, features, applications and listed MI were reviewed on LOTTE Chemical's current manufacturer-controlled datasheet index. MI remains context-only because full test temperature/load are not exposed on the reviewed listing; promotion requires conditioned exact-grade technical data."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-pp-j-550n",
+          "manufacturer": {
+            "id": "mfr-lotte-chemical",
+            "name": "LOTTE Chemical",
+            "country": "South Korea",
+            "website": "https://www.lottechem.com/"
+          },
+          "brand": "LOTTE PP",
+          "grade": "J-550N",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current LOTTE Chemical PP injection-moulding exact grade. Listed features: High transparency; high gloss; odorless; hinge characteristics. Listed applications: Cosmetics container; airtight container; transparent case; stationery; water-purifier filter housing."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-pp-j-550n-2026",
+              "publisher": "LOTTE Chemical",
+              "title": "LOTTE Chemical PP Injection J-550N current datasheet index",
+              "url": "https://product.lottechem.com/en/basic_materials/datasheets.do?cat1Idx=4&cat2Idx=21&page=1",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity, injection category, features, applications and listed MI were reviewed on LOTTE Chemical's current manufacturer-controlled datasheet index. MI remains context-only because full test temperature/load are not exposed on the reviewed listing; promotion requires conditioned exact-grade technical data."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-pp-j-550s",
+          "manufacturer": {
+            "id": "mfr-lotte-chemical",
+            "name": "LOTTE Chemical",
+            "country": "South Korea",
+            "website": "https://www.lottechem.com/"
+          },
+          "brand": "LOTTE PP",
+          "grade": "J-550S",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current LOTTE Chemical PP injection-moulding exact grade. Listed features: Ultra-high transparency; high gloss; odorless. Listed applications: Airtight container; luxury household goods; transparent case; stationery; water-purifier tank."
+          },
+          "properties": [
+            {
+              "id": "obs-lotte-pp-j-550s-mi",
+              "property": "Melt Index",
+              "value": 12,
+              "unit": "g/10 min",
+              "testMethod": "ASTM basis shown on LOTTE current datasheet index; exact temperature/load not exposed on reviewed listing",
+              "direction": "not-applicable",
+              "sourceId": "src-lotte-pp-j-550s-2026",
+              "sourcePage": "PP injection datasheet index page 1",
+              "comparisonReady": false,
+              "limitations": "LOTTE current exact-grade listing value retained for discovery/context only. Temperature/load are not exposed on the reviewed index, so this observation must not be used for conditioned rheology comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-pp-j-550s-2026",
+              "publisher": "LOTTE Chemical",
+              "title": "LOTTE Chemical PP Injection J-550S current datasheet index",
+              "url": "https://product.lottechem.com/en/basic_materials/datasheets.do?cat1Idx=4&cat2Idx=21&page=1",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity, injection category, features, applications and listed MI were reviewed on LOTTE Chemical's current manufacturer-controlled datasheet index. MI remains context-only because full test temperature/load are not exposed on the reviewed listing; promotion requires conditioned exact-grade technical data."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-pp-j-560k",
+          "manufacturer": {
+            "id": "mfr-lotte-chemical",
+            "name": "LOTTE Chemical",
+            "country": "South Korea",
+            "website": "https://www.lottechem.com/"
+          },
+          "brand": "LOTTE PP",
+          "grade": "J-560K",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current LOTTE Chemical PP injection-moulding exact grade. Listed features: Ultra-high transparency; high gloss; odorless. Listed applications: Cosmetic container and cap; food container; transparent case; stationery; CD/DVD case."
+          },
+          "properties": [
+            {
+              "id": "obs-lotte-pp-j-560k-mi",
+              "property": "Melt Index",
+              "value": 18,
+              "unit": "g/10 min",
+              "testMethod": "ASTM basis shown on LOTTE current datasheet index; exact temperature/load not exposed on reviewed listing",
+              "direction": "not-applicable",
+              "sourceId": "src-lotte-pp-j-560k-2026",
+              "sourcePage": "PP injection datasheet index page 1",
+              "comparisonReady": false,
+              "limitations": "LOTTE current exact-grade listing value retained for discovery/context only. Temperature/load are not exposed on the reviewed index, so this observation must not be used for conditioned rheology comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-pp-j-560k-2026",
+              "publisher": "LOTTE Chemical",
+              "title": "LOTTE Chemical PP Injection J-560K current datasheet index",
+              "url": "https://product.lottechem.com/en/basic_materials/datasheets.do?cat1Idx=4&cat2Idx=21&page=1",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity, injection category, features, applications and listed MI were reviewed on LOTTE Chemical's current manufacturer-controlled datasheet index. MI remains context-only because full test temperature/load are not exposed on the reviewed listing; promotion requires conditioned exact-grade technical data."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-pp-j-560m",
+          "manufacturer": {
+            "id": "mfr-lotte-chemical",
+            "name": "LOTTE Chemical",
+            "country": "South Korea",
+            "website": "https://www.lottechem.com/"
+          },
+          "brand": "LOTTE PP",
+          "grade": "J-560M",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current LOTTE Chemical PP injection-moulding exact grade. Listed features: Ultra-high transparency; high gloss; odorless. Listed applications: Radiation-sterilization products; airtight container; transparent case; stationery."
+          },
+          "properties": [
+            {
+              "id": "obs-lotte-pp-j-560m-mi",
+              "property": "Melt Index",
+              "value": 18,
+              "unit": "g/10 min",
+              "testMethod": "ASTM basis shown on LOTTE current datasheet index; exact temperature/load not exposed on reviewed listing",
+              "direction": "not-applicable",
+              "sourceId": "src-lotte-pp-j-560m-2026",
+              "sourcePage": "PP injection datasheet index page 2",
+              "comparisonReady": false,
+              "limitations": "LOTTE current exact-grade listing value retained for discovery/context only. Temperature/load are not exposed on the reviewed index, so this observation must not be used for conditioned rheology comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-pp-j-560m-2026",
+              "publisher": "LOTTE Chemical",
+              "title": "LOTTE Chemical PP Injection J-560M current datasheet index",
+              "url": "https://product.lottechem.com/en/basic_materials/datasheets.do?cat1Idx=4&cat2Idx=21&page=2",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity, injection category, features, applications and listed MI were reviewed on LOTTE Chemical's current manufacturer-controlled datasheet index. MI remains context-only because full test temperature/load are not exposed on the reviewed listing; promotion requires conditioned exact-grade technical data."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-pp-j-560s",
+          "manufacturer": {
+            "id": "mfr-lotte-chemical",
+            "name": "LOTTE Chemical",
+            "country": "South Korea",
+            "website": "https://www.lottechem.com/"
+          },
+          "brand": "LOTTE PP",
+          "grade": "J-560S",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current LOTTE Chemical PP injection-moulding exact grade. Listed features: Ultra-high transparency; high gloss; odorless. Listed applications: Cosmetic container and cap; food container; transparent case; stationery; CD/DVD case."
+          },
+          "properties": [
+            {
+              "id": "obs-lotte-pp-j-560s-mi",
+              "property": "Melt Index",
+              "value": 18,
+              "unit": "g/10 min",
+              "testMethod": "ASTM basis shown on LOTTE current datasheet index; exact temperature/load not exposed on reviewed listing",
+              "direction": "not-applicable",
+              "sourceId": "src-lotte-pp-j-560s-2026",
+              "sourcePage": "PP injection datasheet index page 2",
+              "comparisonReady": false,
+              "limitations": "LOTTE current exact-grade listing value retained for discovery/context only. Temperature/load are not exposed on the reviewed index, so this observation must not be used for conditioned rheology comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-pp-j-560s-2026",
+              "publisher": "LOTTE Chemical",
+              "title": "LOTTE Chemical PP Injection J-560S current datasheet index",
+              "url": "https://product.lottechem.com/en/basic_materials/datasheets.do?cat1Idx=4&cat2Idx=21&page=2",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity, injection category, features, applications and listed MI were reviewed on LOTTE Chemical's current manufacturer-controlled datasheet index. MI remains context-only because full test temperature/load are not exposed on the reviewed listing; promotion requires conditioned exact-grade technical data."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-pp-j-570s",
+          "manufacturer": {
+            "id": "mfr-lotte-chemical",
+            "name": "LOTTE Chemical",
+            "country": "South Korea",
+            "website": "https://www.lottechem.com/"
+          },
+          "brand": "LOTTE PP",
+          "grade": "J-570S",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current LOTTE Chemical PP injection-moulding exact grade. Listed features: High transparency; high fluidity; high gloss; odorless. Listed applications: Food container; stationery; CD/DVD case; high-transparency thin-wall injection."
+          },
+          "properties": [
+            {
+              "id": "obs-lotte-pp-j-570s-mi",
+              "property": "Melt Index",
+              "value": 28,
+              "unit": "g/10 min",
+              "testMethod": "ASTM basis shown on LOTTE current datasheet index; exact temperature/load not exposed on reviewed listing",
+              "direction": "not-applicable",
+              "sourceId": "src-lotte-pp-j-570s-2026",
+              "sourcePage": "PP injection datasheet index page 2",
+              "comparisonReady": false,
+              "limitations": "LOTTE current exact-grade listing value retained for discovery/context only. Temperature/load are not exposed on the reviewed index, so this observation must not be used for conditioned rheology comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-pp-j-570s-2026",
+              "publisher": "LOTTE Chemical",
+              "title": "LOTTE Chemical PP Injection J-570S current datasheet index",
+              "url": "https://product.lottechem.com/en/basic_materials/datasheets.do?cat1Idx=4&cat2Idx=21&page=2",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity, injection category, features, applications and listed MI were reviewed on LOTTE Chemical's current manufacturer-controlled datasheet index. MI remains context-only because full test temperature/load are not exposed on the reviewed listing; promotion requires conditioned exact-grade technical data."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-pp-j-580s",
+          "manufacturer": {
+            "id": "mfr-lotte-chemical",
+            "name": "LOTTE Chemical",
+            "country": "South Korea",
+            "website": "https://www.lottechem.com/"
+          },
+          "brand": "LOTTE PP",
+          "grade": "J-580S",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current LOTTE Chemical PP injection-moulding exact grade. Listed features: High transparency; high fluidity; high gloss; odorless. Listed applications: Thin-wall food container; stationery; CD/DVD case; high-transparency thin-wall injection."
+          },
+          "properties": [
+            {
+              "id": "obs-lotte-pp-j-580s-mi",
+              "property": "Melt Index",
+              "value": 36,
+              "unit": "g/10 min",
+              "testMethod": "ASTM basis shown on LOTTE current datasheet index; exact temperature/load not exposed on reviewed listing",
+              "direction": "not-applicable",
+              "sourceId": "src-lotte-pp-j-580s-2026",
+              "sourcePage": "PP injection datasheet index page 2",
+              "comparisonReady": false,
+              "limitations": "LOTTE current exact-grade listing value retained for discovery/context only. Temperature/load are not exposed on the reviewed index, so this observation must not be used for conditioned rheology comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-pp-j-580s-2026",
+              "publisher": "LOTTE Chemical",
+              "title": "LOTTE Chemical PP Injection J-580S current datasheet index",
+              "url": "https://product.lottechem.com/en/basic_materials/datasheets.do?cat1Idx=4&cat2Idx=21&page=2",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity, injection category, features, applications and listed MI were reviewed on LOTTE Chemical's current manufacturer-controlled datasheet index. MI remains context-only because full test temperature/load are not exposed on the reviewed listing; promotion requires conditioned exact-grade technical data."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-pp-j-590k",
+          "manufacturer": {
+            "id": "mfr-lotte-chemical",
+            "name": "LOTTE Chemical",
+            "country": "South Korea",
+            "website": "https://www.lottechem.com/"
+          },
+          "brand": "LOTTE PP",
+          "grade": "J-590K",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current LOTTE Chemical PP injection-moulding exact grade. Listed features: Ultra-high transparency; high fluidity; high gloss; odorless. Listed applications: Thin-wall food container; CD/DVD case."
+          },
+          "properties": [
+            {
+              "id": "obs-lotte-pp-j-590k-mi",
+              "property": "Melt Index",
+              "value": 44,
+              "unit": "g/10 min",
+              "testMethod": "ASTM basis shown on LOTTE current datasheet index; exact temperature/load not exposed on reviewed listing",
+              "direction": "not-applicable",
+              "sourceId": "src-lotte-pp-j-590k-2026",
+              "sourcePage": "PP injection datasheet index page 2",
+              "comparisonReady": false,
+              "limitations": "LOTTE current exact-grade listing value retained for discovery/context only. Temperature/load are not exposed on the reviewed index, so this observation must not be used for conditioned rheology comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-pp-j-590k-2026",
+              "publisher": "LOTTE Chemical",
+              "title": "LOTTE Chemical PP Injection J-590K current datasheet index",
+              "url": "https://product.lottechem.com/en/basic_materials/datasheets.do?cat1Idx=4&cat2Idx=21&page=2",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity, injection category, features, applications and listed MI were reviewed on LOTTE Chemical's current manufacturer-controlled datasheet index. MI remains context-only because full test temperature/load are not exposed on the reviewed listing; promotion requires conditioned exact-grade technical data."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-pp-j-595k",
+          "manufacturer": {
+            "id": "mfr-lotte-chemical",
+            "name": "LOTTE Chemical",
+            "country": "South Korea",
+            "website": "https://www.lottechem.com/"
+          },
+          "brand": "LOTTE PP",
+          "grade": "J-595K",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current LOTTE Chemical PP injection-moulding exact grade. Listed features: Ultra-high transparency; high fluidity; high gloss. Listed applications: Thin-wall food container; high-transparency thin-wall injection."
+          },
+          "properties": [
+            {
+              "id": "obs-lotte-pp-j-595k-mi",
+              "property": "Melt Index",
+              "value": 70,
+              "unit": "g/10 min",
+              "testMethod": "ASTM basis shown on LOTTE current datasheet index; exact temperature/load not exposed on reviewed listing",
+              "direction": "not-applicable",
+              "sourceId": "src-lotte-pp-j-595k-2026",
+              "sourcePage": "PP injection datasheet index page 2",
+              "comparisonReady": false,
+              "limitations": "LOTTE current exact-grade listing value retained for discovery/context only. Temperature/load are not exposed on the reviewed index, so this observation must not be used for conditioned rheology comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-pp-j-595k-2026",
+              "publisher": "LOTTE Chemical",
+              "title": "LOTTE Chemical PP Injection J-595K current datasheet index",
+              "url": "https://product.lottechem.com/en/basic_materials/datasheets.do?cat1Idx=4&cat2Idx=21&page=2",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity, injection category, features, applications and listed MI were reviewed on LOTTE Chemical's current manufacturer-controlled datasheet index. MI remains context-only because full test temperature/load are not exposed on the reviewed listing; promotion requires conditioned exact-grade technical data."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-pp-jss-350n",
+          "manufacturer": {
+            "id": "mfr-lotte-chemical",
+            "name": "LOTTE Chemical",
+            "country": "South Korea",
+            "website": "https://www.lottechem.com/"
+          },
+          "brand": "LOTTE PP",
+          "grade": "JSS-350N",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current LOTTE Chemical PP injection-moulding exact grade. Listed features: High crystallizing; stiffness; high heat resistance. Listed applications: General and industrial injection-moulding product; compound material."
+          },
+          "properties": [
+            {
+              "id": "obs-lotte-pp-jss-350n-mi",
+              "property": "Melt Index",
+              "value": 10,
+              "unit": "g/10 min",
+              "testMethod": "ASTM basis shown on LOTTE current datasheet index; exact temperature/load not exposed on reviewed listing",
+              "direction": "not-applicable",
+              "sourceId": "src-lotte-pp-jss-350n-2026",
+              "sourcePage": "PP injection datasheet index page 2",
+              "comparisonReady": false,
+              "limitations": "LOTTE current exact-grade listing value retained for discovery/context only. Temperature/load are not exposed on the reviewed index, so this observation must not be used for conditioned rheology comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-pp-jss-350n-2026",
+              "publisher": "LOTTE Chemical",
+              "title": "LOTTE Chemical PP Injection JSS-350N current datasheet index",
+              "url": "https://product.lottechem.com/en/basic_materials/datasheets.do?cat1Idx=4&cat2Idx=21&page=2",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity, injection category, features, applications and listed MI were reviewed on LOTTE Chemical's current manufacturer-controlled datasheet index. MI remains context-only because full test temperature/load are not exposed on the reviewed listing; promotion requires conditioned exact-grade technical data."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-pp-jss-380n",
+          "manufacturer": {
+            "id": "mfr-lotte-chemical",
+            "name": "LOTTE Chemical",
+            "country": "South Korea",
+            "website": "https://www.lottechem.com/"
+          },
+          "brand": "LOTTE PP",
+          "grade": "JSS-380N",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current LOTTE Chemical PP injection-moulding exact grade. Listed features: High crystallizing; stiffness; high heat resistance; high fluidity. Listed applications: General and industrial injection-moulding product; compound material."
+          },
+          "properties": [
+            {
+              "id": "obs-lotte-pp-jss-380n-mi",
+              "property": "Melt Index",
+              "value": 60,
+              "unit": "g/10 min",
+              "testMethod": "ASTM basis shown on LOTTE current datasheet index; exact temperature/load not exposed on reviewed listing",
+              "direction": "not-applicable",
+              "sourceId": "src-lotte-pp-jss-380n-2026",
+              "sourcePage": "PP injection datasheet index page 2",
+              "comparisonReady": false,
+              "limitations": "LOTTE current exact-grade listing value retained for discovery/context only. Temperature/load are not exposed on the reviewed index, so this observation must not be used for conditioned rheology comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-pp-jss-380n-2026",
+              "publisher": "LOTTE Chemical",
+              "title": "LOTTE Chemical PP Injection JSS-380N current datasheet index",
+              "url": "https://product.lottechem.com/en/basic_materials/datasheets.do?cat1Idx=4&cat2Idx=21&page=2",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity, injection category, features, applications and listed MI were reviewed on LOTTE Chemical's current manufacturer-controlled datasheet index. MI remains context-only because full test temperature/load are not exposed on the reviewed listing; promotion requires conditioned exact-grade technical data."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-pp-j-320",
+          "manufacturer": {
+            "id": "mfr-lotte-chemical",
+            "name": "LOTTE Chemical",
+            "country": "South Korea",
+            "website": "https://www.lottechem.com/"
+          },
+          "brand": "LOTTE PP",
+          "grade": "J-320",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current LOTTE Chemical PP injection-moulding exact grade. Listed features: Stiffness; impact resistance. Listed applications: Home appliances; automotive parts; industrial goods; compound material."
+          },
+          "properties": [
+            {
+              "id": "obs-lotte-pp-j-320-mi",
+              "property": "Melt Index",
+              "value": 1.8,
+              "unit": "g/10 min",
+              "testMethod": "ASTM basis shown on LOTTE current datasheet index; exact temperature/load not exposed on reviewed listing",
+              "direction": "not-applicable",
+              "sourceId": "src-lotte-pp-j-320-2026",
+              "sourcePage": "PP injection datasheet index page 2",
+              "comparisonReady": false,
+              "limitations": "LOTTE current exact-grade listing value retained for discovery/context only. Temperature/load are not exposed on the reviewed index, so this observation must not be used for conditioned rheology comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-pp-j-320-2026",
+              "publisher": "LOTTE Chemical",
+              "title": "LOTTE Chemical PP Injection J-320 current datasheet index",
+              "url": "https://product.lottechem.com/en/basic_materials/datasheets.do?cat1Idx=4&cat2Idx=21&page=2",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity, injection category, features, applications and listed MI were reviewed on LOTTE Chemical's current manufacturer-controlled datasheet index. MI remains context-only because full test temperature/load are not exposed on the reviewed listing; promotion requires conditioned exact-grade technical data."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-pp-j-330",
+          "manufacturer": {
+            "id": "mfr-lotte-chemical",
+            "name": "LOTTE Chemical",
+            "country": "South Korea",
+            "website": "https://www.lottechem.com/"
+          },
+          "brand": "LOTTE PP",
+          "grade": "J-330",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current LOTTE Chemical PP injection-moulding exact grade. Listed features: Stiffness; impact resistance. Listed applications: Home appliances; automotive parts; industrial goods; compound material."
+          },
+          "properties": [
+            {
+              "id": "obs-lotte-pp-j-330-mi",
+              "property": "Melt Index",
+              "value": 4,
+              "unit": "g/10 min",
+              "testMethod": "ASTM basis shown on LOTTE current datasheet index; exact temperature/load not exposed on reviewed listing",
+              "direction": "not-applicable",
+              "sourceId": "src-lotte-pp-j-330-2026",
+              "sourcePage": "PP injection datasheet index page 2",
+              "comparisonReady": false,
+              "limitations": "LOTTE current exact-grade listing value retained for discovery/context only. Temperature/load are not exposed on the reviewed index, so this observation must not be used for conditioned rheology comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-pp-j-330-2026",
+              "publisher": "LOTTE Chemical",
+              "title": "LOTTE Chemical PP Injection J-330 current datasheet index",
+              "url": "https://product.lottechem.com/en/basic_materials/datasheets.do?cat1Idx=4&cat2Idx=21&page=2",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity, injection category, features, applications and listed MI were reviewed on LOTTE Chemical's current manufacturer-controlled datasheet index. MI remains context-only because full test temperature/load are not exposed on the reviewed listing; promotion requires conditioned exact-grade technical data."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-pp-jm-350",
+          "manufacturer": {
+            "id": "mfr-lotte-chemical",
+            "name": "LOTTE Chemical",
+            "country": "South Korea",
+            "website": "https://www.lottechem.com/"
+          },
+          "brand": "LOTTE PP",
+          "grade": "JM-350",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current LOTTE Chemical PP injection-moulding exact grade. Listed features: Stiffness; impact resistance. Listed applications: Home appliances; automotive parts; industrial goods."
+          },
+          "properties": [
+            {
+              "id": "obs-lotte-pp-jm-350-mi",
+              "property": "Melt Index",
+              "value": 10,
+              "unit": "g/10 min",
+              "testMethod": "ASTM basis shown on LOTTE current datasheet index; exact temperature/load not exposed on reviewed listing",
+              "direction": "not-applicable",
+              "sourceId": "src-lotte-pp-jm-350-2026",
+              "sourcePage": "PP injection datasheet index page 9",
+              "comparisonReady": false,
+              "limitations": "LOTTE current exact-grade listing value retained for discovery/context only. Temperature/load are not exposed on the reviewed index, so this observation must not be used for conditioned rheology comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-pp-jm-350-2026",
+              "publisher": "LOTTE Chemical",
+              "title": "LOTTE Chemical PP Injection JM-350 current datasheet index",
+              "url": "https://product.lottechem.com/en/basic_materials/datasheets.do?cat1Idx=4&cat2Idx=21&page=9",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity, injection category, features, applications and listed MI were reviewed on LOTTE Chemical's current manufacturer-controlled datasheet index. MI remains context-only because full test temperature/load are not exposed on the reviewed listing; promotion requires conditioned exact-grade technical data."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-pp-jm-350un",
+          "manufacturer": {
+            "id": "mfr-lotte-chemical",
+            "name": "LOTTE Chemical",
+            "country": "South Korea",
+            "website": "https://www.lottechem.com/"
+          },
+          "brand": "LOTTE PP",
+          "grade": "JM-350UN",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current LOTTE Chemical PP injection-moulding exact grade. Listed features: Stiffness; impact resistance; weather resistance. Listed applications: Industrial part; battery case."
+          },
+          "properties": [
+            {
+              "id": "obs-lotte-pp-jm-350un-mi",
+              "property": "Melt Index",
+              "value": 10,
+              "unit": "g/10 min",
+              "testMethod": "ASTM basis shown on LOTTE current datasheet index; exact temperature/load not exposed on reviewed listing",
+              "direction": "not-applicable",
+              "sourceId": "src-lotte-pp-jm-350un-2026",
+              "sourcePage": "PP injection datasheet index page 9",
+              "comparisonReady": false,
+              "limitations": "LOTTE current exact-grade listing value retained for discovery/context only. Temperature/load are not exposed on the reviewed index, so this observation must not be used for conditioned rheology comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-pp-jm-350un-2026",
+              "publisher": "LOTTE Chemical",
+              "title": "LOTTE Chemical PP Injection JM-350UN current datasheet index",
+              "url": "https://product.lottechem.com/en/basic_materials/datasheets.do?cat1Idx=4&cat2Idx=21&page=9",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity, injection category, features, applications and listed MI were reviewed on LOTTE Chemical's current manufacturer-controlled datasheet index. MI remains context-only because full test temperature/load are not exposed on the reviewed listing; promotion requires conditioned exact-grade technical data."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-pp-jm-360",
+          "manufacturer": {
+            "id": "mfr-lotte-chemical",
+            "name": "LOTTE Chemical",
+            "country": "South Korea",
+            "website": "https://www.lottechem.com/"
+          },
+          "brand": "LOTTE PP",
+          "grade": "JM-360",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current LOTTE Chemical PP injection-moulding exact grade. Listed features: Stiffness; impact resistance. Listed applications: General and industrial injection-moulding product; compound material."
+          },
+          "properties": [
+            {
+              "id": "obs-lotte-pp-jm-360-mi",
+              "property": "Melt Index",
+              "value": 20,
+              "unit": "g/10 min",
+              "testMethod": "ASTM basis shown on LOTTE current datasheet index; exact temperature/load not exposed on reviewed listing",
+              "direction": "not-applicable",
+              "sourceId": "src-lotte-pp-jm-360-2026",
+              "sourcePage": "PP injection datasheet index page 9",
+              "comparisonReady": false,
+              "limitations": "LOTTE current exact-grade listing value retained for discovery/context only. Temperature/load are not exposed on the reviewed index, so this observation must not be used for conditioned rheology comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-pp-jm-360-2026",
+              "publisher": "LOTTE Chemical",
+              "title": "LOTTE Chemical PP Injection JM-360 current datasheet index",
+              "url": "https://product.lottechem.com/en/basic_materials/datasheets.do?cat1Idx=4&cat2Idx=21&page=9",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity, injection category, features, applications and listed MI were reviewed on LOTTE Chemical's current manufacturer-controlled datasheet index. MI remains context-only because full test temperature/load are not exposed on the reviewed listing; promotion requires conditioned exact-grade technical data."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-pp-jm-370",
+          "manufacturer": {
+            "id": "mfr-lotte-chemical",
+            "name": "LOTTE Chemical",
+            "country": "South Korea",
+            "website": "https://www.lottechem.com/"
+          },
+          "brand": "LOTTE PP",
+          "grade": "JM-370",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current LOTTE Chemical PP injection-moulding exact grade. Listed features: Stiffness; impact resistance. Listed applications: General and industrial injection-moulding product; compound material."
+          },
+          "properties": [
+            {
+              "id": "obs-lotte-pp-jm-370-mi",
+              "property": "Melt Index",
+              "value": 35,
+              "unit": "g/10 min",
+              "testMethod": "ASTM basis shown on LOTTE current datasheet index; exact temperature/load not exposed on reviewed listing",
+              "direction": "not-applicable",
+              "sourceId": "src-lotte-pp-jm-370-2026",
+              "sourcePage": "PP injection datasheet index page 9",
+              "comparisonReady": false,
+              "limitations": "LOTTE current exact-grade listing value retained for discovery/context only. Temperature/load are not exposed on the reviewed index, so this observation must not be used for conditioned rheology comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-pp-jm-370-2026",
+              "publisher": "LOTTE Chemical",
+              "title": "LOTTE Chemical PP Injection JM-370 current datasheet index",
+              "url": "https://product.lottechem.com/en/basic_materials/datasheets.do?cat1Idx=4&cat2Idx=21&page=9",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade identity, injection category, features, applications and listed MI were reviewed on LOTTE Chemical's current manufacturer-controlled datasheet index. MI remains context-only because full test temperature/load are not exposed on the reviewed listing; promotion requires conditioned exact-grade technical data."
+          }
+        }
+      ]
+    }
+  ],
+  "governance": {
+    "runtimePromotionBlocked": true,
+    "reason": "The current manufacturer index exposes exact identities, injection category, applications and MI, but not full MI temperature/load conditions on the reviewed surface.",
+    "comparisonReadyNumericClaims": 0,
+    "productionRecipes": 0
+  }
+}

@@ -1,0 +1,1917 @@
+{
+  "schemaVersion": 1,
+  "datasetId": "global-material-expansion-20260929-v6",
+  "status": "validated-expansion-with-source-reviewed-queue",
+  "reviewedAt": "2026-09-29",
+  "purpose": "Sixth extended wave closing major styrenic family gaps with validated ABS, ASA, SAN, GPPS and HIPS exact-grade data while staging more Supreme and CHIMEI identities.",
+  "summary": {
+    "validatedGrades": 7,
+    "sourceReviewedStagingGrades": 23,
+    "manufacturers": 3,
+    "validatedFamilies": [
+      "ABS",
+      "ASA",
+      "SAN",
+      "GPPS",
+      "HIPS"
+    ],
+    "stagingFamilies": [
+      "ABS",
+      "GPPS",
+      "HIPS"
+    ]
+  },
+  "manufacturers": [
+    {
+      "id": "mfr-ineos-styrolution",
+      "name": "INEOS Styrolution",
+      "country": "Germany",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-ineos-terluran-gp35",
+          "manufacturer": {
+            "id": "mfr-ineos-styrolution",
+            "name": "INEOS Styrolution",
+            "country": "Germany",
+            "website": "https://www.ineos-styrolution.com/"
+          },
+          "brand": "Terluran®",
+          "grade": "GP-35",
+          "aliases": [],
+          "polymer": {
+            "family": "ABS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "High-flow general-purpose injection-moulding ABS exact grade."
+          },
+          "properties": [
+            {
+              "id": "obs-ineos-terluran-gp35-mvr",
+              "property": "Melt Volume-Flow Rate",
+              "value": 11,
+              "unit": "cm³/10 min",
+              "testMethod": "ISO 1133",
+              "temperatureC": 230,
+              "loadKg": 3.8,
+              "direction": "not-applicable",
+              "sourceId": "src-ineos-terluran-gp35-2026",
+              "sourcePage": "current manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "Manufacturer typical exact-grade rheology; compare only at identical method, temperature and load."
+            },
+            {
+              "id": "obs-ineos-terluran-gp35-shrink",
+              "property": "Linear Mold Shrinkage",
+              "value": "0-1.0",
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "unknown",
+              "sourceId": "src-ineos-terluran-gp35-2026",
+              "sourcePage": "current manufacturer exact-grade data",
+              "comparisonReady": false,
+              "limitations": "Manufacturer linear mould-shrinkage range; direction is not resolved on the reviewed surface, so this value is context-only."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-ineos-terluran-gp35-melt",
+              "parameter": "Melt temperature",
+              "min": 218,
+              "max": 260,
+              "value": null,
+              "unit": "°C",
+              "condition": "INEOS indicative exact-grade processing range; may vary with individual processing complexities.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-ineos-terluran-gp35-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-ineos-terluran-gp35-mould",
+              "parameter": "Mould temperature",
+              "min": 29,
+              "max": 60,
+              "value": null,
+              "unit": "°C",
+              "condition": "INEOS indicative exact-grade processing range; validate for actual tool/part/site.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-ineos-terluran-gp35-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-ineos-terluran-gp35-dry-temp",
+              "parameter": "Drying temperature",
+              "min": null,
+              "max": null,
+              "value": 80,
+              "unit": "°C",
+              "condition": "INEOS indicative exact-grade drying guidance; verify actual moisture state and site method.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-ineos-terluran-gp35-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-ineos-terluran-gp35-dry-time",
+              "parameter": "Drying time",
+              "min": 2,
+              "max": 4,
+              "value": null,
+              "unit": "h",
+              "condition": "INEOS indicative exact-grade drying guidance; not a universal recipe.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-ineos-terluran-gp35-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ineos-terluran-gp35-2026",
+              "publisher": "INEOS Styrolution",
+              "title": "Terluran® GP-35 current product and technical data",
+              "url": "https://eshop.ineos-styrolution.com/Product/Terluran_Terluran-GP-35_SKU300600120829.html",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current INEOS Styrolution exact-grade page reviewed. Fully conditioned MVR is comparison-ready; non-directional shrinkage remains context-only; processing values remain indicative supplier guidance."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ineos-luran-s-757g",
+          "manufacturer": {
+            "id": "mfr-ineos-styrolution",
+            "name": "INEOS Styrolution",
+            "country": "Germany",
+            "website": "https://www.ineos-styrolution.com/"
+          },
+          "brand": "Luran® S",
+          "grade": "757G",
+          "aliases": [],
+          "polymer": {
+            "family": "ASA",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current Luran S ASA injection-moulding grade."
+          },
+          "properties": [
+            {
+              "id": "obs-ineos-luran-s-757g-mvr",
+              "property": "Melt Volume-Flow Rate",
+              "value": 25,
+              "unit": "cm³/10 min",
+              "testMethod": "ISO 1133",
+              "temperatureC": 220,
+              "loadKg": 10,
+              "direction": "not-applicable",
+              "sourceId": "src-ineos-luran-s-757g-2026",
+              "sourcePage": "current manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "Manufacturer typical exact-grade rheology; compare only at identical method, temperature and load."
+            },
+            {
+              "id": "obs-ineos-luran-s-757g-shrink",
+              "property": "Linear Mold Shrinkage",
+              "value": "0.4-0.7",
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "unknown",
+              "sourceId": "src-ineos-luran-s-757g-2026",
+              "sourcePage": "current manufacturer exact-grade data",
+              "comparisonReady": false,
+              "limitations": "Manufacturer linear mould-shrinkage range; direction is not resolved on the reviewed surface, so this value is context-only."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-ineos-luran-s-757g-melt",
+              "parameter": "Melt temperature",
+              "min": 240,
+              "max": 280,
+              "value": null,
+              "unit": "°C",
+              "condition": "INEOS indicative exact-grade processing range; may vary with individual processing complexities.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-ineos-luran-s-757g-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-ineos-luran-s-757g-mould",
+              "parameter": "Mould temperature",
+              "min": 40,
+              "max": 80,
+              "value": null,
+              "unit": "°C",
+              "condition": "INEOS indicative exact-grade processing range; validate for actual tool/part/site.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-ineos-luran-s-757g-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-ineos-luran-s-757g-dry-temp",
+              "parameter": "Drying temperature",
+              "min": null,
+              "max": null,
+              "value": 80,
+              "unit": "°C",
+              "condition": "INEOS indicative exact-grade drying guidance; verify actual moisture state and site method.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-ineos-luran-s-757g-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-ineos-luran-s-757g-dry-time",
+              "parameter": "Drying time",
+              "min": 2,
+              "max": 4,
+              "value": null,
+              "unit": "h",
+              "condition": "INEOS indicative exact-grade drying guidance; not a universal recipe.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-ineos-luran-s-757g-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ineos-luran-s-757g-2026",
+              "publisher": "INEOS Styrolution",
+              "title": "Luran® S 757G current product and technical data",
+              "url": "https://eshop.ineos-styrolution.com/Product/Luran-S_LURAN-S-757G_SKU400700190186.html?SKU=400700190186&SelectedRegion=Region_EMEA",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current INEOS Styrolution exact-grade page reviewed. Fully conditioned MVR is comparison-ready; non-directional shrinkage remains context-only; processing values remain indicative supplier guidance."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ineos-luran-s-777k",
+          "manufacturer": {
+            "id": "mfr-ineos-styrolution",
+            "name": "INEOS Styrolution",
+            "country": "Germany",
+            "website": "https://www.ineos-styrolution.com/"
+          },
+          "brand": "Luran® S",
+          "grade": "777K",
+          "aliases": [],
+          "polymer": {
+            "family": "ASA",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current Luran S ASA exact grade."
+          },
+          "properties": [
+            {
+              "id": "obs-ineos-luran-s-777k-mvr",
+              "property": "Melt Volume-Flow Rate",
+              "value": 15,
+              "unit": "cm³/10 min",
+              "testMethod": "ISO 1133",
+              "temperatureC": 220,
+              "loadKg": 10,
+              "direction": "not-applicable",
+              "sourceId": "src-ineos-luran-s-777k-2026",
+              "sourcePage": "current manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "Manufacturer typical exact-grade rheology; compare only at identical method, temperature and load."
+            },
+            {
+              "id": "obs-ineos-luran-s-777k-shrink",
+              "property": "Linear Mold Shrinkage",
+              "value": "0.4-0.7",
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "unknown",
+              "sourceId": "src-ineos-luran-s-777k-2026",
+              "sourcePage": "current manufacturer exact-grade data",
+              "comparisonReady": false,
+              "limitations": "Manufacturer linear mould-shrinkage range; direction is not resolved on the reviewed surface, so this value is context-only."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-ineos-luran-s-777k-melt",
+              "parameter": "Melt temperature",
+              "min": 240,
+              "max": 280,
+              "value": null,
+              "unit": "°C",
+              "condition": "INEOS indicative exact-grade processing range; may vary with individual processing complexities.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-ineos-luran-s-777k-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-ineos-luran-s-777k-mould",
+              "parameter": "Mould temperature",
+              "min": 40,
+              "max": 80,
+              "value": null,
+              "unit": "°C",
+              "condition": "INEOS indicative exact-grade processing range; validate for actual tool/part/site.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-ineos-luran-s-777k-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-ineos-luran-s-777k-dry-temp",
+              "parameter": "Drying temperature",
+              "min": null,
+              "max": null,
+              "value": 80,
+              "unit": "°C",
+              "condition": "INEOS indicative exact-grade drying guidance; verify actual moisture state and site method.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-ineos-luran-s-777k-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-ineos-luran-s-777k-dry-time",
+              "parameter": "Drying time",
+              "min": 2,
+              "max": 4,
+              "value": null,
+              "unit": "h",
+              "condition": "INEOS indicative exact-grade drying guidance; not a universal recipe.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-ineos-luran-s-777k-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ineos-luran-s-777k-2026",
+              "publisher": "INEOS Styrolution",
+              "title": "Luran® S 777K current product and technical data",
+              "url": "https://eshop.ineos-styrolution.com/Product/Luran-S_LURAN-S-777K_SKU400700190193.html?SKU=400700190193&SelectedRegion=Region_Asia",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current INEOS Styrolution exact-grade page reviewed. Fully conditioned MVR is comparison-ready; non-directional shrinkage remains context-only; processing values remain indicative supplier guidance."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ineos-luran-388s",
+          "manufacturer": {
+            "id": "mfr-ineos-styrolution",
+            "name": "INEOS Styrolution",
+            "country": "Germany",
+            "website": "https://www.ineos-styrolution.com/"
+          },
+          "brand": "Luran®",
+          "grade": "388S",
+          "aliases": [],
+          "polymer": {
+            "family": "SAN",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current transparent SAN exact grade."
+          },
+          "properties": [
+            {
+              "id": "obs-ineos-luran-388s-mvr",
+              "property": "Melt Volume-Flow Rate",
+              "value": 7,
+              "unit": "cm³/10 min",
+              "testMethod": "ISO 1133",
+              "temperatureC": 220,
+              "loadKg": 10,
+              "direction": "not-applicable",
+              "sourceId": "src-ineos-luran-388s-2026",
+              "sourcePage": "current manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "Manufacturer typical exact-grade rheology; compare only at identical method, temperature and load."
+            },
+            {
+              "id": "obs-ineos-luran-388s-shrink",
+              "property": "Linear Mold Shrinkage",
+              "value": "0.3-0.7",
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "unknown",
+              "sourceId": "src-ineos-luran-388s-2026",
+              "sourcePage": "current manufacturer exact-grade data",
+              "comparisonReady": false,
+              "limitations": "Manufacturer linear mould-shrinkage range; direction is not resolved on the reviewed surface, so this value is context-only."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-ineos-luran-388s-melt",
+              "parameter": "Melt temperature",
+              "min": 220,
+              "max": 260,
+              "value": null,
+              "unit": "°C",
+              "condition": "INEOS indicative exact-grade processing range; may vary with individual processing complexities.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-ineos-luran-388s-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-ineos-luran-388s-mould",
+              "parameter": "Mould temperature",
+              "min": 40,
+              "max": 80,
+              "value": null,
+              "unit": "°C",
+              "condition": "INEOS indicative exact-grade processing range; validate for actual tool/part/site.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-ineos-luran-388s-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-ineos-luran-388s-dry-temp",
+              "parameter": "Drying temperature",
+              "min": null,
+              "max": null,
+              "value": 80,
+              "unit": "°C",
+              "condition": "INEOS indicative exact-grade drying guidance; verify actual moisture state and site method.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-ineos-luran-388s-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-ineos-luran-388s-dry-time",
+              "parameter": "Drying time",
+              "min": 2,
+              "max": 4,
+              "value": null,
+              "unit": "h",
+              "condition": "INEOS indicative exact-grade drying guidance; not a universal recipe.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-ineos-luran-388s-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ineos-luran-388s-2026",
+              "publisher": "INEOS Styrolution",
+              "title": "Luran® 388S current product and technical data",
+              "url": "https://eshop.ineos-styrolution.com/Product/Luran_Luran-388S_SKU400800210159.html?SKU=400800210159&SelectedRegion=Region_America",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current INEOS Styrolution exact-grade page reviewed. Fully conditioned MVR is comparison-ready; non-directional shrinkage remains context-only; processing values remain indicative supplier guidance."
+          }
+        }
+      ]
+    },
+    {
+      "id": "mfr-supreme-petrochem",
+      "name": "Supreme Petrochem",
+      "country": "India",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-supreme-sc206",
+          "manufacturer": {
+            "id": "mfr-supreme-petrochem",
+            "name": "Supreme Petrochem",
+            "country": "India",
+            "website": "https://supremepetrochem.com/"
+          },
+          "brand": "Supreme",
+          "grade": "SC206",
+          "aliases": [],
+          "polymer": {
+            "family": "GPPS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "General-purpose polystyrene exact grade for injection moulding; current datasheet states commercial active status."
+          },
+          "properties": [
+            {
+              "id": "obs-supreme-sc206-mfi",
+              "property": "Melt Flow Index",
+              "value": 12,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 200,
+              "loadKg": 5,
+              "direction": "not-applicable",
+              "sourceId": "src-supreme-sc206-2026",
+              "sourcePage": "rheological",
+              "comparisonReady": true,
+              "limitations": "Manufacturer nominal/typical guide value; compare only at 200°C/5 kg."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-supreme-sc206-process-temp",
+              "parameter": "Processing temperature",
+              "min": 180,
+              "max": 240,
+              "value": null,
+              "unit": "°C",
+              "condition": "Supreme Petrochem exact-grade catalogue guidance; guide only, not a production recipe.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-supreme-sc206-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-supreme-sc206-predry-temp",
+              "parameter": "Pre-drying temperature",
+              "min": 50,
+              "max": 80,
+              "value": null,
+              "unit": "°C",
+              "condition": "Supreme Petrochem exact-grade guidance; reviewed sheet states 2 h pre-drying duration.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-supreme-sc206-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-supreme-sc206-mould-temp",
+              "parameter": "Mould temperature",
+              "min": 40,
+              "max": 60,
+              "value": null,
+              "unit": "°C",
+              "condition": "Supreme Petrochem exact-grade mould-temperature guidance; guide only.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-supreme-sc206-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-supreme-sc206-2026",
+              "publisher": "Supreme Petrochem",
+              "title": "Supreme SC206 Technical Datasheet",
+              "url": "https://supremepetrochem.com/pdf/SC206.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": "2025-09-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer-hosted technical datasheet reviewed. Fully conditioned MFI is comparison-ready; processing conditions are supplier guide values only."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-supreme-sc206ht",
+          "manufacturer": {
+            "id": "mfr-supreme-petrochem",
+            "name": "Supreme Petrochem",
+            "country": "India",
+            "website": "https://supremepetrochem.com/"
+          },
+          "brand": "Supreme",
+          "grade": "SC206HT",
+          "aliases": [],
+          "polymer": {
+            "family": "GPPS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "General-purpose polystyrene high-blue-tone exact grade; current manufacturer datasheet identifies molding applications."
+          },
+          "properties": [
+            {
+              "id": "obs-supreme-sc206ht-mfi",
+              "property": "Melt Flow Index",
+              "value": 12,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 200,
+              "loadKg": 5,
+              "direction": "not-applicable",
+              "sourceId": "src-supreme-sc206ht-2026",
+              "sourcePage": "rheological",
+              "comparisonReady": true,
+              "limitations": "Manufacturer nominal/typical guide value; compare only at 200°C/5 kg."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-supreme-sc206ht-process-temp",
+              "parameter": "Processing temperature",
+              "min": 180,
+              "max": 240,
+              "value": null,
+              "unit": "°C",
+              "condition": "Supreme Petrochem exact-grade catalogue guidance; guide only, not a production recipe.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-supreme-sc206ht-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-supreme-sc206ht-predry-temp",
+              "parameter": "Pre-drying temperature",
+              "min": 50,
+              "max": 80,
+              "value": null,
+              "unit": "°C",
+              "condition": "Supreme Petrochem exact-grade guidance; reviewed sheet states 2 h pre-drying duration.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-supreme-sc206ht-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-supreme-sc206ht-mould-temp",
+              "parameter": "Mould temperature",
+              "min": 40,
+              "max": 60,
+              "value": null,
+              "unit": "°C",
+              "condition": "Supreme Petrochem exact-grade mould-temperature guidance; guide only.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-supreme-sc206ht-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-supreme-sc206ht-2026",
+              "publisher": "Supreme Petrochem",
+              "title": "Supreme SC206HT Technical Datasheet",
+              "url": "https://www.supremepetrochem.com/pdf/SC206HT.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": "2024-01-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer-hosted technical datasheet reviewed. Fully conditioned MFI is comparison-ready; processing conditions are supplier guide values only."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-supreme-sh400e",
+          "manufacturer": {
+            "id": "mfr-supreme-petrochem",
+            "name": "Supreme Petrochem",
+            "country": "India",
+            "website": "https://supremepetrochem.com/"
+          },
+          "brand": "Supreme",
+          "grade": "SH400E",
+          "aliases": [],
+          "polymer": {
+            "family": "HIPS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "High-impact polystyrene very-high-gloss exact grade; manufacturer datasheet identifies extrusion/cap-layer use."
+          },
+          "properties": [
+            {
+              "id": "obs-supreme-sh400e-mfi",
+              "property": "Melt Flow Index",
+              "value": 4,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 200,
+              "loadKg": 5,
+              "direction": "not-applicable",
+              "sourceId": "src-supreme-sh400e-2026",
+              "sourcePage": "rheological",
+              "comparisonReady": true,
+              "limitations": "Manufacturer nominal/typical guide value; compare only at 200°C/5 kg."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-supreme-sh400e-process-temp",
+              "parameter": "Processing temperature",
+              "min": 180,
+              "max": 240,
+              "value": null,
+              "unit": "°C",
+              "condition": "Supreme Petrochem exact-grade catalogue guidance; guide only, not a production recipe.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-supreme-sh400e-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-supreme-sh400e-predry-temp",
+              "parameter": "Pre-drying temperature",
+              "min": 50,
+              "max": 80,
+              "value": null,
+              "unit": "°C",
+              "condition": "Supreme Petrochem exact-grade guidance; reviewed sheet states 2 h pre-drying duration.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-supreme-sh400e-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-supreme-sh400e-mould-temp",
+              "parameter": "Mould temperature",
+              "min": 50,
+              "max": 60,
+              "value": null,
+              "unit": "°C",
+              "condition": "Supreme Petrochem exact-grade mould-temperature guidance; guide only.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-supreme-sh400e-2026",
+              "sourcePage": "current manufacturer exact-grade processing data",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-supreme-sh400e-2026",
+              "publisher": "Supreme Petrochem",
+              "title": "Supreme SH400E Technical Datasheet",
+              "url": "https://supremepetrochem.com/pdf/SH400E.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": "2025-01-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer-hosted technical datasheet reviewed. Fully conditioned MFI is comparison-ready; processing conditions are supplier guide values only."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-supreme-sh03",
+          "manufacturer": {
+            "id": "mfr-supreme-petrochem",
+            "name": "Supreme Petrochem",
+            "country": "India",
+            "website": "https://supremepetrochem.com/"
+          },
+          "brand": "Supreme",
+          "grade": "SH03",
+          "aliases": [],
+          "polymer": {
+            "family": "HIPS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current Supreme Petrochem HIPS portfolio confirms exact grade SH03; detailed numeric TDS normalization remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-supreme-sh03-identity-2026",
+              "publisher": "Supreme Petrochem",
+              "title": "Supreme SH03 current grade listing",
+              "url": "https://supremepetrochem.com/hips/",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Supreme Petrochem HIPS portfolio confirms exact grade SH03; detailed numeric TDS normalization remains pending."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-supreme-sh300",
+          "manufacturer": {
+            "id": "mfr-supreme-petrochem",
+            "name": "Supreme Petrochem",
+            "country": "India",
+            "website": "https://supremepetrochem.com/"
+          },
+          "brand": "Supreme",
+          "grade": "SH300",
+          "aliases": [],
+          "polymer": {
+            "family": "HIPS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current Supreme Petrochem HIPS portfolio confirms exact grade SH300; detailed numeric TDS normalization remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-supreme-sh300-identity-2026",
+              "publisher": "Supreme Petrochem",
+              "title": "Supreme SH300 current grade listing",
+              "url": "https://supremepetrochem.com/hips/",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Supreme Petrochem HIPS portfolio confirms exact grade SH300; detailed numeric TDS normalization remains pending."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-supreme-sh400hf",
+          "manufacturer": {
+            "id": "mfr-supreme-petrochem",
+            "name": "Supreme Petrochem",
+            "country": "India",
+            "website": "https://supremepetrochem.com/"
+          },
+          "brand": "Supreme",
+          "grade": "SH400HF",
+          "aliases": [],
+          "polymer": {
+            "family": "HIPS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current Supreme Petrochem HIPS portfolio confirms exact grade SH400HF; detailed numeric TDS normalization remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-supreme-sh400hf-identity-2026",
+              "publisher": "Supreme Petrochem",
+              "title": "Supreme SH400HF current grade listing",
+              "url": "https://supremepetrochem.com/hips/",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Supreme Petrochem HIPS portfolio confirms exact grade SH400HF; detailed numeric TDS normalization remains pending."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-supreme-sh400m",
+          "manufacturer": {
+            "id": "mfr-supreme-petrochem",
+            "name": "Supreme Petrochem",
+            "country": "India",
+            "website": "https://supremepetrochem.com/"
+          },
+          "brand": "Supreme",
+          "grade": "SH400M",
+          "aliases": [],
+          "polymer": {
+            "family": "HIPS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current Supreme Petrochem HIPS portfolio confirms exact grade SH400M; detailed numeric TDS normalization remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-supreme-sh400m-identity-2026",
+              "publisher": "Supreme Petrochem",
+              "title": "Supreme SH400M current grade listing",
+              "url": "https://supremepetrochem.com/hips/",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Supreme Petrochem HIPS portfolio confirms exact grade SH400M; detailed numeric TDS normalization remains pending."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-supreme-sh450",
+          "manufacturer": {
+            "id": "mfr-supreme-petrochem",
+            "name": "Supreme Petrochem",
+            "country": "India",
+            "website": "https://supremepetrochem.com/"
+          },
+          "brand": "Supreme",
+          "grade": "SH450",
+          "aliases": [],
+          "polymer": {
+            "family": "HIPS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current Supreme Petrochem HIPS portfolio confirms exact grade SH450; detailed numeric TDS normalization remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-supreme-sh450-identity-2026",
+              "publisher": "Supreme Petrochem",
+              "title": "Supreme SH450 current grade listing",
+              "url": "https://supremepetrochem.com/hips/",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Supreme Petrochem HIPS portfolio confirms exact grade SH450; detailed numeric TDS normalization remains pending."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-supreme-sh731e",
+          "manufacturer": {
+            "id": "mfr-supreme-petrochem",
+            "name": "Supreme Petrochem",
+            "country": "India",
+            "website": "https://supremepetrochem.com/"
+          },
+          "brand": "Supreme",
+          "grade": "SH731E",
+          "aliases": [],
+          "polymer": {
+            "family": "HIPS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current Supreme Petrochem HIPS portfolio confirms exact grade SH731E; detailed numeric TDS normalization remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-supreme-sh731e-identity-2026",
+              "publisher": "Supreme Petrochem",
+              "title": "Supreme SH731E current grade listing",
+              "url": "https://supremepetrochem.com/hips/",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Supreme Petrochem HIPS portfolio confirms exact grade SH731E; detailed numeric TDS normalization remains pending."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-supreme-sh2157",
+          "manufacturer": {
+            "id": "mfr-supreme-petrochem",
+            "name": "Supreme Petrochem",
+            "country": "India",
+            "website": "https://supremepetrochem.com/"
+          },
+          "brand": "Supreme",
+          "grade": "SH2157",
+          "aliases": [],
+          "polymer": {
+            "family": "HIPS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current Supreme Petrochem HIPS portfolio confirms exact grade SH2157; detailed numeric TDS normalization remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-supreme-sh2157-identity-2026",
+              "publisher": "Supreme Petrochem",
+              "title": "Supreme SH2157 current grade listing",
+              "url": "https://supremepetrochem.com/hips/",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Supreme Petrochem HIPS portfolio confirms exact grade SH2157; detailed numeric TDS normalization remains pending."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-supreme-sc201lv",
+          "manufacturer": {
+            "id": "mfr-supreme-petrochem",
+            "name": "Supreme Petrochem",
+            "country": "India",
+            "website": "https://supremepetrochem.com/"
+          },
+          "brand": "Supreme",
+          "grade": "SC201LV",
+          "aliases": [],
+          "polymer": {
+            "family": "GPPS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current Supreme Petrochem GPPS portfolio confirms exact grade SC201LV; detailed numeric TDS normalization remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-supreme-sc201lv-identity-2026",
+              "publisher": "Supreme Petrochem",
+              "title": "Supreme SC201LV current grade listing",
+              "url": "https://supremepetrochem.com/gpps/",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Supreme Petrochem GPPS portfolio confirms exact grade SC201LV; detailed numeric TDS normalization remains pending."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-supreme-sc201lvlt",
+          "manufacturer": {
+            "id": "mfr-supreme-petrochem",
+            "name": "Supreme Petrochem",
+            "country": "India",
+            "website": "https://supremepetrochem.com/"
+          },
+          "brand": "Supreme",
+          "grade": "SC201LVLT",
+          "aliases": [],
+          "polymer": {
+            "family": "GPPS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current Supreme Petrochem GPPS portfolio confirms exact grade SC201LVLT; detailed numeric TDS normalization remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-supreme-sc201lvlt-identity-2026",
+              "publisher": "Supreme Petrochem",
+              "title": "Supreme SC201LVLT current grade listing",
+              "url": "https://supremepetrochem.com/gpps/",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Supreme Petrochem GPPS portfolio confirms exact grade SC201LVLT; detailed numeric TDS normalization remains pending."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-supreme-sc202ec",
+          "manufacturer": {
+            "id": "mfr-supreme-petrochem",
+            "name": "Supreme Petrochem",
+            "country": "India",
+            "website": "https://supremepetrochem.com/"
+          },
+          "brand": "Supreme",
+          "grade": "SC202EC",
+          "aliases": [],
+          "polymer": {
+            "family": "GPPS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current Supreme Petrochem GPPS portfolio confirms exact grade SC202EC; detailed numeric TDS normalization remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-supreme-sc202ec-identity-2026",
+              "publisher": "Supreme Petrochem",
+              "title": "Supreme SC202EC current grade listing",
+              "url": "https://supremepetrochem.com/gpps/",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Supreme Petrochem GPPS portfolio confirms exact grade SC202EC; detailed numeric TDS normalization remains pending."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-supreme-sc202ef",
+          "manufacturer": {
+            "id": "mfr-supreme-petrochem",
+            "name": "Supreme Petrochem",
+            "country": "India",
+            "website": "https://supremepetrochem.com/"
+          },
+          "brand": "Supreme",
+          "grade": "SC202EF",
+          "aliases": [],
+          "polymer": {
+            "family": "GPPS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current Supreme Petrochem GPPS portfolio confirms exact grade SC202EF; detailed numeric TDS normalization remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-supreme-sc202ef-identity-2026",
+              "publisher": "Supreme Petrochem",
+              "title": "Supreme SC202EF current grade listing",
+              "url": "https://supremepetrochem.com/gpps/",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Supreme Petrochem GPPS portfolio confirms exact grade SC202EF; detailed numeric TDS normalization remains pending."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-supreme-sc202lvlt",
+          "manufacturer": {
+            "id": "mfr-supreme-petrochem",
+            "name": "Supreme Petrochem",
+            "country": "India",
+            "website": "https://supremepetrochem.com/"
+          },
+          "brand": "Supreme",
+          "grade": "SC202LVLT",
+          "aliases": [],
+          "polymer": {
+            "family": "GPPS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current Supreme Petrochem GPPS portfolio confirms exact grade SC202LVLT; detailed numeric TDS normalization remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-supreme-sc202lvlt-identity-2026",
+              "publisher": "Supreme Petrochem",
+              "title": "Supreme SC202LVLT current grade listing",
+              "url": "https://supremepetrochem.com/gpps/",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Supreme Petrochem GPPS portfolio confirms exact grade SC202LVLT; detailed numeric TDS normalization remains pending."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-supreme-sc203e",
+          "manufacturer": {
+            "id": "mfr-supreme-petrochem",
+            "name": "Supreme Petrochem",
+            "country": "India",
+            "website": "https://supremepetrochem.com/"
+          },
+          "brand": "Supreme",
+          "grade": "SC203E",
+          "aliases": [],
+          "polymer": {
+            "family": "GPPS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current Supreme Petrochem GPPS portfolio confirms exact grade SC203E; detailed numeric TDS normalization remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-supreme-sc203e-identity-2026",
+              "publisher": "Supreme Petrochem",
+              "title": "Supreme SC203E current grade listing",
+              "url": "https://supremepetrochem.com/gpps/",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Supreme Petrochem GPPS portfolio confirms exact grade SC203E; detailed numeric TDS normalization remains pending."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-supreme-sc203el",
+          "manufacturer": {
+            "id": "mfr-supreme-petrochem",
+            "name": "Supreme Petrochem",
+            "country": "India",
+            "website": "https://supremepetrochem.com/"
+          },
+          "brand": "Supreme",
+          "grade": "SC203EL",
+          "aliases": [],
+          "polymer": {
+            "family": "GPPS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current Supreme Petrochem GPPS portfolio confirms exact grade SC203EL; detailed numeric TDS normalization remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-supreme-sc203el-identity-2026",
+              "publisher": "Supreme Petrochem",
+              "title": "Supreme SC203EL current grade listing",
+              "url": "https://supremepetrochem.com/gpps/",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Supreme Petrochem GPPS portfolio confirms exact grade SC203EL; detailed numeric TDS normalization remains pending."
+          }
+        }
+      ]
+    },
+    {
+      "id": "mfr-chimei",
+      "name": "CHIMEI",
+      "country": "Taiwan",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-chimei-polylac-pa-737",
+          "manufacturer": {
+            "id": "mfr-chimei",
+            "name": "CHIMEI",
+            "country": "Taiwan",
+            "website": "https://www.chimeicorp.com/"
+          },
+          "brand": "POLYLAC®",
+          "grade": "PA-737",
+          "aliases": [],
+          "polymer": {
+            "family": "ABS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current CHIMEI POLYLAC ABS portfolio confirms exact grade PA-737 and offers ISO/ASTM TDS plus process guide; numeric extraction remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-chimei-polylac-pa-737-identity-2026",
+              "publisher": "CHIMEI",
+              "title": "POLYLAC® PA-737 current product listing",
+              "url": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current CHIMEI exact-grade identity confirmed; numeric technical-data promotion waits for exact TDS extraction and revision capture."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-chimei-polylac-pa-757h",
+          "manufacturer": {
+            "id": "mfr-chimei",
+            "name": "CHIMEI",
+            "country": "Taiwan",
+            "website": "https://www.chimeicorp.com/"
+          },
+          "brand": "POLYLAC®",
+          "grade": "PA-757H",
+          "aliases": [],
+          "polymer": {
+            "family": "ABS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current CHIMEI POLYLAC ABS portfolio confirms exact grade PA-757H and offers ISO/ASTM TDS plus process guide; numeric extraction remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-chimei-polylac-pa-757h-identity-2026",
+              "publisher": "CHIMEI",
+              "title": "POLYLAC® PA-757H current product listing",
+              "url": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current CHIMEI exact-grade identity confirmed; numeric technical-data promotion waits for exact TDS extraction and revision capture."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-chimei-polylac-pa-746",
+          "manufacturer": {
+            "id": "mfr-chimei",
+            "name": "CHIMEI",
+            "country": "Taiwan",
+            "website": "https://www.chimeicorp.com/"
+          },
+          "brand": "POLYLAC®",
+          "grade": "PA-746",
+          "aliases": [],
+          "polymer": {
+            "family": "ABS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current CHIMEI POLYLAC ABS portfolio confirms exact grade PA-746 and offers ISO/ASTM TDS plus process guide; numeric extraction remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-chimei-polylac-pa-746-identity-2026",
+              "publisher": "CHIMEI",
+              "title": "POLYLAC® PA-746 current product listing",
+              "url": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current CHIMEI exact-grade identity confirmed; numeric technical-data promotion waits for exact TDS extraction and revision capture."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-chimei-polylac-pa-746h",
+          "manufacturer": {
+            "id": "mfr-chimei",
+            "name": "CHIMEI",
+            "country": "Taiwan",
+            "website": "https://www.chimeicorp.com/"
+          },
+          "brand": "POLYLAC®",
+          "grade": "PA-746H",
+          "aliases": [],
+          "polymer": {
+            "family": "ABS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current CHIMEI POLYLAC ABS portfolio confirms exact grade PA-746H and offers ISO/ASTM TDS plus process guide; numeric extraction remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-chimei-polylac-pa-746h-identity-2026",
+              "publisher": "CHIMEI",
+              "title": "POLYLAC® PA-746H current product listing",
+              "url": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current CHIMEI exact-grade identity confirmed; numeric technical-data promotion waits for exact TDS extraction and revision capture."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-chimei-polylac-pa-737-a03",
+          "manufacturer": {
+            "id": "mfr-chimei",
+            "name": "CHIMEI",
+            "country": "Taiwan",
+            "website": "https://www.chimeicorp.com/"
+          },
+          "brand": "POLYLAC®",
+          "grade": "PA-737 A03",
+          "aliases": [],
+          "polymer": {
+            "family": "ABS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current CHIMEI POLYLAC ABS portfolio confirms exact grade PA-737 A03 and offers ISO/ASTM TDS plus process guide; numeric extraction remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-chimei-polylac-pa-737-a03-identity-2026",
+              "publisher": "CHIMEI",
+              "title": "POLYLAC® PA-737 A03 current product listing",
+              "url": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current CHIMEI exact-grade identity confirmed; numeric technical-data promotion waits for exact TDS extraction and revision capture."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-chimei-polylac-pa-757-j01",
+          "manufacturer": {
+            "id": "mfr-chimei",
+            "name": "CHIMEI",
+            "country": "Taiwan",
+            "website": "https://www.chimeicorp.com/"
+          },
+          "brand": "POLYLAC®",
+          "grade": "PA-757 J01",
+          "aliases": [],
+          "polymer": {
+            "family": "ABS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current CHIMEI POLYLAC ABS portfolio confirms exact grade PA-757 J01 and offers ISO/ASTM TDS plus process guide; numeric extraction remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-chimei-polylac-pa-757-j01-identity-2026",
+              "publisher": "CHIMEI",
+              "title": "POLYLAC® PA-757 J01 current product listing",
+              "url": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current CHIMEI exact-grade identity confirmed; numeric technical-data promotion waits for exact TDS extraction and revision capture."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-chimei-polylac-pa-757g-j08",
+          "manufacturer": {
+            "id": "mfr-chimei",
+            "name": "CHIMEI",
+            "country": "Taiwan",
+            "website": "https://www.chimeicorp.com/"
+          },
+          "brand": "POLYLAC®",
+          "grade": "PA-757G J08",
+          "aliases": [],
+          "polymer": {
+            "family": "ABS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current CHIMEI POLYLAC ABS portfolio confirms exact grade PA-757G J08 and offers ISO/ASTM TDS plus process guide; numeric extraction remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-chimei-polylac-pa-757g-j08-identity-2026",
+              "publisher": "CHIMEI",
+              "title": "POLYLAC® PA-757G J08 current product listing",
+              "url": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current CHIMEI exact-grade identity confirmed; numeric technical-data promotion waits for exact TDS extraction and revision capture."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-chimei-polylac-pa-757-a01",
+          "manufacturer": {
+            "id": "mfr-chimei",
+            "name": "CHIMEI",
+            "country": "Taiwan",
+            "website": "https://www.chimeicorp.com/"
+          },
+          "brand": "POLYLAC®",
+          "grade": "PA-757 A01",
+          "aliases": [],
+          "polymer": {
+            "family": "ABS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current CHIMEI POLYLAC ABS portfolio confirms exact grade PA-757 A01 and offers ISO/ASTM TDS plus process guide; numeric extraction remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-chimei-polylac-pa-757-a01-identity-2026",
+              "publisher": "CHIMEI",
+              "title": "POLYLAC® PA-757 A01 current product listing",
+              "url": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current CHIMEI exact-grade identity confirmed; numeric technical-data promotion waits for exact TDS extraction and revision capture."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-chimei-polylac-pa-747s-a01",
+          "manufacturer": {
+            "id": "mfr-chimei",
+            "name": "CHIMEI",
+            "country": "Taiwan",
+            "website": "https://www.chimeicorp.com/"
+          },
+          "brand": "POLYLAC®",
+          "grade": "PA-747S A01",
+          "aliases": [],
+          "polymer": {
+            "family": "ABS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Current CHIMEI POLYLAC ABS portfolio confirms exact grade PA-747S A01 and offers ISO/ASTM TDS plus process guide; numeric extraction remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-chimei-polylac-pa-747s-a01-identity-2026",
+              "publisher": "CHIMEI",
+              "title": "POLYLAC® PA-747S A01 current product listing",
+              "url": "https://www.chimeicorp.com/en-US/?feature=T10102&material=T10100&page=products&series=T10000",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current CHIMEI exact-grade identity confirmed; numeric technical-data promotion waits for exact TDS extraction and revision capture."
+          }
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "INEOS processing values are retained as indicative supplier guidance and non-directional shrinkage remains context-only.",
+    "Supreme Petrochem MFI values retain ASTM D1238 200°C/5 kg test context.",
+    "CHIMEI identities are staged until exact TDS extraction/revision normalization is complete."
+  ]
+}

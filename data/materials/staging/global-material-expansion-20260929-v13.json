@@ -1,0 +1,385 @@
+{
+  "schemaVersion": 1,
+  "datasetId": "global-material-expansion-20260929-v13",
+  "status": "validated-singapore-high-heat-expansion",
+  "reviewedAt": "2026-09-29",
+  "purpose": "Thirteenth expansion wave adding SABIC high-heat PEI/TPI exact grades with Singapore manufacturing provenance held strictly at family level.",
+  "summary": {
+    "validatedGrades": 5,
+    "sourceReviewedStagingGrades": 0,
+    "manufacturers": 1,
+    "validatedFamilies": [
+      "PEI",
+      "TPI"
+    ],
+    "countryContext": "Singapore high-heat resin manufacturing provenance"
+  },
+  "manufacturers": [
+    {
+      "id": "mfr-sabic",
+      "name": "SABIC",
+      "country": "Saudi Arabia",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-sabic-ultem-2100",
+          "manufacturer": {
+            "id": "mfr-sabic",
+            "name": "SABIC",
+            "country": "Saudi Arabia",
+            "website": "https://www.sabic.com/"
+          },
+          "brand": "ULTEM™",
+          "grade": "2100",
+          "aliases": [],
+          "polymer": {
+            "family": "PEI",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "glassFibrePct": 10,
+            "recycledContentPct": null,
+            "notes": "10% glass-fibre-filled standard-flow PEI exact grade."
+          },
+          "properties": [
+            {
+              "id": "obs-sabic-ultem-2100-tg",
+              "property": "Glass Transition Temperature",
+              "value": 217,
+              "unit": "°C",
+              "testMethod": null,
+              "direction": "not-applicable",
+              "sourceId": "src-sabic-ultem-2100-2026",
+              "sourcePage": "current grade description",
+              "comparisonReady": false,
+              "limitations": "Current SABIC exact-grade description states Tg, but the reviewed surface does not expose the formal test method; use as context only, not as a processing setpoint."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sabic-ultem-2100-2026",
+              "publisher": "SABIC",
+              "title": "ULTEM™ 2100 current exact-grade description",
+              "url": "https://www.sabic.com/en/products/specialties/ultem-resin-family-of-high-heat-solutions/ultem-resin",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-sabic-singapore-high-heat-2026",
+              "publisher": "Singapore Economic Development Board",
+              "title": "Singapore high-heat resin manufacturing provenance",
+              "url": "https://www.edb.gov.sg/en/our-industries/energy-and-chemicals.html",
+              "kind": "government-industry-source",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact-grade identity/composition/Tg come from SABIC's current grade page. Singapore EDB establishes PEI/TPI manufacturing in Singapore at family level only; this record does not claim plant-of-origin for 2100. Current SABIC grade description identifies high-temperature PEI use; no processing setpoints are copied."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sabic-ultem-2210r",
+          "manufacturer": {
+            "id": "mfr-sabic",
+            "name": "SABIC",
+            "country": "Saudi Arabia",
+            "website": "https://www.sabic.com/"
+          },
+          "brand": "ULTEM™",
+          "grade": "2210R",
+          "aliases": [],
+          "polymer": {
+            "family": "PEI",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "glassFibrePct": 20,
+            "recycledContentPct": null,
+            "notes": "20% glass-fibre-filled enhanced-flow PEI with internal mould release."
+          },
+          "properties": [
+            {
+              "id": "obs-sabic-ultem-2210r-tg",
+              "property": "Glass Transition Temperature",
+              "value": 217,
+              "unit": "°C",
+              "testMethod": null,
+              "direction": "not-applicable",
+              "sourceId": "src-sabic-ultem-2210r-2026",
+              "sourcePage": "current grade description",
+              "comparisonReady": false,
+              "limitations": "Current SABIC exact-grade description states Tg, but the reviewed surface does not expose the formal test method; use as context only, not as a processing setpoint."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sabic-ultem-2210r-2026",
+              "publisher": "SABIC",
+              "title": "ULTEM™ 2210R current exact-grade description",
+              "url": "https://www.sabic.com/en/products/specialties/ultem-resin-family-of-high-heat-solutions/ultem-resin",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-sabic-singapore-high-heat-2026",
+              "publisher": "Singapore Economic Development Board",
+              "title": "Singapore high-heat resin manufacturing provenance",
+              "url": "https://www.edb.gov.sg/en/our-industries/energy-and-chemicals.html",
+              "kind": "government-industry-source",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact-grade identity/composition/Tg come from SABIC's current grade page. Singapore EDB establishes PEI/TPI manufacturing in Singapore at family level only; this record does not claim plant-of-origin for 2210R. No exact-grade process settings are inferred from family guides."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sabic-ultem-2210gcr3",
+          "manufacturer": {
+            "id": "mfr-sabic",
+            "name": "SABIC",
+            "country": "Saudi Arabia",
+            "website": "https://www.sabic.com/"
+          },
+          "brand": "ULTEM™",
+          "grade": "2210GCR3",
+          "aliases": [],
+          "polymer": {
+            "family": "PEI",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "glassFibrePct": 20,
+            "recycledContentPct": 30,
+            "notes": "20% glass-fibre-filled enhanced-flow PEI grade with 30% post-consumer recycle content combined with bio-based PEI solutions as described by SABIC."
+          },
+          "properties": [
+            {
+              "id": "obs-sabic-ultem-2210gcr3-tg",
+              "property": "Glass Transition Temperature",
+              "value": 217,
+              "unit": "°C",
+              "testMethod": null,
+              "direction": "not-applicable",
+              "sourceId": "src-sabic-ultem-2210gcr3-2026",
+              "sourcePage": "current grade description",
+              "comparisonReady": false,
+              "limitations": "Current SABIC exact-grade description states Tg, but the reviewed surface does not expose the formal test method; use as context only, not as a processing setpoint."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sabic-ultem-2210gcr3-2026",
+              "publisher": "SABIC",
+              "title": "ULTEM™ 2210GCR3 current exact-grade description",
+              "url": "https://www.sabic.com/en/products/specialties/ultem-resin-family-of-high-heat-solutions/ultem-resin",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-sabic-singapore-high-heat-2026",
+              "publisher": "Singapore Economic Development Board",
+              "title": "Singapore high-heat resin manufacturing provenance",
+              "url": "https://www.edb.gov.sg/en/our-industries/energy-and-chemicals.html",
+              "kind": "government-industry-source",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact-grade identity/composition/Tg come from SABIC's current grade page. Singapore EDB establishes PEI/TPI manufacturing in Singapore at family level only; this record does not claim plant-of-origin for 2210GCR3. Recycled-content statement is recorded only because SABIC states it on the exact grade description."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sabic-extem-rh1017ucl",
+          "manufacturer": {
+            "id": "mfr-sabic",
+            "name": "SABIC",
+            "country": "Saudi Arabia",
+            "website": "https://www.sabic.com/"
+          },
+          "brand": "EXTEM™",
+          "grade": "RH1017UCL",
+          "aliases": [],
+          "polymer": {
+            "family": "TPI",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "glassFibrePct": null,
+            "recycledContentPct": null,
+            "notes": "Transparent amorphous thermoplastic polyimide exact grade; SABIC describes it as injection-mouldable for complex optical lens assemblies."
+          },
+          "properties": [
+            {
+              "id": "obs-sabic-extem-rh1017ucl-tg",
+              "property": "Glass Transition Temperature",
+              "value": 280,
+              "unit": "°C",
+              "testMethod": null,
+              "direction": "not-applicable",
+              "sourceId": "src-sabic-extem-rh1017ucl-2026",
+              "sourcePage": "current grade description",
+              "comparisonReady": false,
+              "limitations": "Current SABIC exact-grade description states Tg, but the reviewed surface does not expose the formal test method; use as context only, not as a processing setpoint."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sabic-extem-rh1017ucl-2026",
+              "publisher": "SABIC",
+              "title": "EXTEM™ RH1017UCL current exact-grade description",
+              "url": "https://www.sabic.com/en/products/specialties/ultem-resin-family-of-high-heat-solutions/extem-resin",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-sabic-singapore-high-heat-2026",
+              "publisher": "Singapore Economic Development Board",
+              "title": "Singapore high-heat resin manufacturing provenance",
+              "url": "https://www.edb.gov.sg/en/our-industries/energy-and-chemicals.html",
+              "kind": "government-industry-source",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact-grade identity/composition/Tg come from SABIC's current grade page. Singapore EDB establishes PEI/TPI manufacturing in Singapore at family level only; this record does not claim plant-of-origin for RH1017UCL. Injection-mouldable use is preserved; no machine recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sabic-extem-xh1015ucl",
+          "manufacturer": {
+            "id": "mfr-sabic",
+            "name": "SABIC",
+            "country": "Saudi Arabia",
+            "website": "https://www.sabic.com/"
+          },
+          "brand": "EXTEM™",
+          "grade": "XH1015UCL",
+          "aliases": [],
+          "polymer": {
+            "family": "TPI",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "glassFibrePct": null,
+            "recycledContentPct": null,
+            "notes": "Unreinforced amorphous thermoplastic polyimide exact grade with near-IR transparency and high refractive index; SABIC describes it for injection-mouldable optical lenses and connectors."
+          },
+          "properties": [
+            {
+              "id": "obs-sabic-extem-xh1015ucl-tg",
+              "property": "Glass Transition Temperature",
+              "value": 267,
+              "unit": "°C",
+              "testMethod": null,
+              "direction": "not-applicable",
+              "sourceId": "src-sabic-extem-xh1015ucl-2026",
+              "sourcePage": "current grade description",
+              "comparisonReady": false,
+              "limitations": "Current SABIC exact-grade description states Tg, but the reviewed surface does not expose the formal test method; use as context only, not as a processing setpoint."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sabic-extem-xh1015ucl-2026",
+              "publisher": "SABIC",
+              "title": "EXTEM™ XH1015UCL current exact-grade description",
+              "url": "https://www.sabic.com/en/products/specialties/ultem-resin-family-of-high-heat-solutions/extem-resin",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-sabic-singapore-high-heat-2026",
+              "publisher": "Singapore Economic Development Board",
+              "title": "Singapore high-heat resin manufacturing provenance",
+              "url": "https://www.edb.gov.sg/en/our-industries/energy-and-chemicals.html",
+              "kind": "government-industry-source",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact-grade identity/composition/Tg come from SABIC's current grade page. Singapore EDB establishes PEI/TPI manufacturing in Singapore at family level only; this record does not claim plant-of-origin for XH1015UCL. Injection-mouldable use is preserved; no machine recipe is inferred."
+          }
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "Singapore EDB states SABIC produces PEI/TPI high-heat resins in Singapore, but exact-grade plant origin is not inferred.",
+    "Tg remains comparison/context-only because formal test methods are not exposed on the reviewed grade-list surface."
+  ]
+}

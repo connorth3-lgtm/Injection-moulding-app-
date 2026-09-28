@@ -1,0 +1,2817 @@
+{
+  "schemaVersion": 1,
+  "datasetId": "global-material-expansion-20260929-v1",
+  "status": "validated-expansion-with-source-reviewed-queue",
+  "reviewedAt": "2026-09-29",
+  "purpose": "Oversized exact-grade acquisition wave across high-value missing polymer families using current manufacturer-controlled primary sources. Validated records publish only observations with sufficient test/source context; thinner ABS identities remain staging.",
+  "summary": {
+    "validatedGrades": 25,
+    "sourceReviewedStagingGrades": 8,
+    "manufacturers": 3,
+    "validatedFamilies": [
+      "PP",
+      "PA6",
+      "PBT",
+      "PEEK"
+    ],
+    "stagingFamilies": [
+      "ABS"
+    ]
+  },
+  "manufacturers": [
+    {
+      "id": "mfr-sabic",
+      "name": "SABIC",
+      "country": "Saudi Arabia",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-sabic-pp-570p",
+          "manufacturer": {
+            "id": "mfr-sabic",
+            "name": "SABIC",
+            "country": "Saudi Arabia",
+            "website": "https://www.sabic.com/"
+          },
+          "brand": "SABIC® PP",
+          "grade": "570P",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "General-purpose injection-moulding homopolymer; brochure notes consistent processability, gloss and dimensional stability."
+          },
+          "properties": [
+            {
+              "id": "obs-sabic-570p-mfr",
+              "property": "Melt Flow Rate",
+              "value": 8,
+              "unit": "g/10min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-sabic-pp-570p-brochure-2026",
+              "sourcePage": "PP homopolymer table",
+              "comparisonReady": true,
+              "limitations": "Typical portfolio value for material comparison; not a production specification or process recipe."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sabic-pp-570p-brochure-2026",
+              "publisher": "SABIC",
+              "title": "Polymers Product Brochure EN 2026",
+              "url": "https://www.sabic.com/en/Images/Polymers-Product-Brochure-2026-Greater-China_tcm1010-49461.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Official SABIC 2026 polymer portfolio identifies this injection-moulding PP grade and its ASTM D1238 MFR at 230°C/2.16 kg; only the fully contextualized MFR is promoted."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sabic-pp-5702p",
+          "manufacturer": {
+            "id": "mfr-sabic",
+            "name": "SABIC",
+            "country": "Saudi Arabia",
+            "website": "https://www.sabic.com/"
+          },
+          "brand": "SABIC® PP",
+          "grade": "5702P",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "General-purpose injection-moulding polypropylene for household articles, closures, containers and toys."
+          },
+          "properties": [
+            {
+              "id": "obs-sabic-5702p-mfr",
+              "property": "Melt Flow Rate",
+              "value": 9,
+              "unit": "g/10min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-sabic-pp-5702p-brochure-2026",
+              "sourcePage": "PP homopolymer table",
+              "comparisonReady": true,
+              "limitations": "Typical portfolio value for material comparison; not a production specification or process recipe."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sabic-pp-5702p-brochure-2026",
+              "publisher": "SABIC",
+              "title": "Polymers Product Brochure EN 2026",
+              "url": "https://www.sabic.com/en/Images/Polymers-Product-Brochure-2026-Greater-China_tcm1010-49461.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Official SABIC 2026 polymer portfolio identifies this injection-moulding PP grade and its ASTM D1238 MFR at 230°C/2.16 kg; only the fully contextualized MFR is promoted."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sabic-pp-5703p",
+          "manufacturer": {
+            "id": "mfr-sabic",
+            "name": "SABIC",
+            "country": "Saudi Arabia",
+            "website": "https://www.sabic.com/"
+          },
+          "brand": "SABIC® PP",
+          "grade": "5703P",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "General-purpose rigid injection-moulding polypropylene."
+          },
+          "properties": [
+            {
+              "id": "obs-sabic-5703p-mfr",
+              "property": "Melt Flow Rate",
+              "value": 12,
+              "unit": "g/10min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-sabic-pp-5703p-brochure-2026",
+              "sourcePage": "PP homopolymer table",
+              "comparisonReady": true,
+              "limitations": "Typical portfolio value for material comparison; not a production specification or process recipe."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sabic-pp-5703p-brochure-2026",
+              "publisher": "SABIC",
+              "title": "Polymers Product Brochure EN 2026",
+              "url": "https://www.sabic.com/en/Images/Polymers-Product-Brochure-2026-Greater-China_tcm1010-49461.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Official SABIC 2026 polymer portfolio identifies this injection-moulding PP grade and its ASTM D1238 MFR at 230°C/2.16 kg; only the fully contextualized MFR is promoted."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sabic-pp-5704pr",
+          "manufacturer": {
+            "id": "mfr-sabic",
+            "name": "SABIC",
+            "country": "Saudi Arabia",
+            "website": "https://www.sabic.com/"
+          },
+          "brand": "SABIC® PP",
+          "grade": "5704PR",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Polypropylene homopolymer for injection moulding and compounding."
+          },
+          "properties": [
+            {
+              "id": "obs-sabic-5704pr-mfr",
+              "property": "Melt Flow Rate",
+              "value": 11,
+              "unit": "g/10min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-sabic-pp-5704pr-brochure-2026",
+              "sourcePage": "PP homopolymer table",
+              "comparisonReady": true,
+              "limitations": "Typical portfolio value for material comparison; not a production specification or process recipe."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sabic-pp-5704pr-brochure-2026",
+              "publisher": "SABIC",
+              "title": "Polymers Product Brochure EN 2026",
+              "url": "https://www.sabic.com/en/Images/Polymers-Product-Brochure-2026-Greater-China_tcm1010-49461.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Official SABIC 2026 polymer portfolio identifies this injection-moulding PP grade and its ASTM D1238 MFR at 230°C/2.16 kg; only the fully contextualized MFR is promoted."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sabic-pp-5705p",
+          "manufacturer": {
+            "id": "mfr-sabic",
+            "name": "SABIC",
+            "country": "Saudi Arabia",
+            "website": "https://www.sabic.com/"
+          },
+          "brand": "SABIC® PP",
+          "grade": "5705P",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Polypropylene homopolymer for injection moulding; source describes high stiffness, heat resistance and flow."
+          },
+          "properties": [
+            {
+              "id": "obs-sabic-5705p-mfr",
+              "property": "Melt Flow Rate",
+              "value": 15,
+              "unit": "g/10min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-sabic-pp-5705p-brochure-2026",
+              "sourcePage": "PP homopolymer table",
+              "comparisonReady": true,
+              "limitations": "Typical portfolio value for material comparison; not a production specification or process recipe."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sabic-pp-5705p-brochure-2026",
+              "publisher": "SABIC",
+              "title": "Polymers Product Brochure EN 2026",
+              "url": "https://www.sabic.com/en/Images/Polymers-Product-Brochure-2026-Greater-China_tcm1010-49461.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Official SABIC 2026 polymer portfolio identifies this injection-moulding PP grade and its ASTM D1238 MFR at 230°C/2.16 kg; only the fully contextualized MFR is promoted."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sabic-pp-5705pr",
+          "manufacturer": {
+            "id": "mfr-sabic",
+            "name": "SABIC",
+            "country": "Saudi Arabia",
+            "website": "https://www.sabic.com/"
+          },
+          "brand": "SABIC® PP",
+          "grade": "5705PR",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Polypropylene homopolymer for injection moulding."
+          },
+          "properties": [
+            {
+              "id": "obs-sabic-5705pr-mfr",
+              "property": "Melt Flow Rate",
+              "value": 15,
+              "unit": "g/10min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-sabic-pp-5705pr-brochure-2026",
+              "sourcePage": "PP homopolymer table",
+              "comparisonReady": true,
+              "limitations": "Typical portfolio value for material comparison; not a production specification or process recipe."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sabic-pp-5705pr-brochure-2026",
+              "publisher": "SABIC",
+              "title": "Polymers Product Brochure EN 2026",
+              "url": "https://www.sabic.com/en/Images/Polymers-Product-Brochure-2026-Greater-China_tcm1010-49461.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Official SABIC 2026 polymer portfolio identifies this injection-moulding PP grade and its ASTM D1238 MFR at 230°C/2.16 kg; only the fully contextualized MFR is promoted."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sabic-pp-5707n",
+          "manufacturer": {
+            "id": "mfr-sabic",
+            "name": "SABIC",
+            "country": "Saudi Arabia",
+            "website": "https://www.sabic.com/"
+          },
+          "brand": "SABIC® PP",
+          "grade": "5707N",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Nucleated/antistatic PP homopolymer for injection-moulded applications; source describes dimensional stability and high stiffness."
+          },
+          "properties": [
+            {
+              "id": "obs-sabic-5707n-mfr",
+              "property": "Melt Flow Rate",
+              "value": 25,
+              "unit": "g/10min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-sabic-pp-5707n-brochure-2026",
+              "sourcePage": "PP homopolymer table",
+              "comparisonReady": true,
+              "limitations": "Typical portfolio value for material comparison; not a production specification or process recipe."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sabic-pp-5707n-brochure-2026",
+              "publisher": "SABIC",
+              "title": "Polymers Product Brochure EN 2026",
+              "url": "https://www.sabic.com/en/Images/Polymers-Product-Brochure-2026-Greater-China_tcm1010-49461.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Official SABIC 2026 polymer portfolio identifies this injection-moulding PP grade and its ASTM D1238 MFR at 230°C/2.16 kg; only the fully contextualized MFR is promoted."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sabic-pp-575p",
+          "manufacturer": {
+            "id": "mfr-sabic",
+            "name": "SABIC",
+            "country": "Saudi Arabia",
+            "website": "https://www.sabic.com/"
+          },
+          "brand": "SABIC® PP",
+          "grade": "575P",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "General-purpose rigid injection-moulding polypropylene."
+          },
+          "properties": [
+            {
+              "id": "obs-sabic-575p-mfr",
+              "property": "Melt Flow Rate",
+              "value": 11,
+              "unit": "g/10min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-sabic-pp-575p-brochure-2026",
+              "sourcePage": "PP homopolymer table",
+              "comparisonReady": true,
+              "limitations": "Typical portfolio value for material comparison; not a production specification or process recipe."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sabic-pp-575p-brochure-2026",
+              "publisher": "SABIC",
+              "title": "Polymers Product Brochure EN 2026",
+              "url": "https://www.sabic.com/en/Images/Polymers-Product-Brochure-2026-Greater-China_tcm1010-49461.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Official SABIC 2026 polymer portfolio identifies this injection-moulding PP grade and its ASTM D1238 MFR at 230°C/2.16 kg; only the fully contextualized MFR is promoted."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sabic-pp-5760nf",
+          "manufacturer": {
+            "id": "mfr-sabic",
+            "name": "SABIC",
+            "country": "Saudi Arabia",
+            "website": "https://www.sabic.com/"
+          },
+          "brand": "SABIC® PP",
+          "grade": "5760NF",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Very-high-flow nucleated polypropylene homopolymer for thin-wall injection moulding."
+          },
+          "properties": [
+            {
+              "id": "obs-sabic-5760nf-mfr",
+              "property": "Melt Flow Rate",
+              "value": 60,
+              "unit": "g/10min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-sabic-pp-5760nf-brochure-2026",
+              "sourcePage": "PP homopolymer table",
+              "comparisonReady": true,
+              "limitations": "Typical portfolio value for material comparison; not a production specification or process recipe."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sabic-pp-5760nf-brochure-2026",
+              "publisher": "SABIC",
+              "title": "Polymers Product Brochure EN 2026",
+              "url": "https://www.sabic.com/en/Images/Polymers-Product-Brochure-2026-Greater-China_tcm1010-49461.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Official SABIC 2026 polymer portfolio identifies this injection-moulding PP grade and its ASTM D1238 MFR at 230°C/2.16 kg; only the fully contextualized MFR is promoted."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sabic-pp-579s",
+          "manufacturer": {
+            "id": "mfr-sabic",
+            "name": "SABIC",
+            "country": "Saudi Arabia",
+            "website": "https://www.sabic.com/"
+          },
+          "brand": "SABIC® PP",
+          "grade": "579S",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "High-flow injection-moulding polypropylene for housewares, thin-wall packaging, appliances and closures."
+          },
+          "properties": [
+            {
+              "id": "obs-sabic-579s-mfr",
+              "property": "Melt Flow Rate",
+              "value": 47,
+              "unit": "g/10min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-sabic-pp-579s-brochure-2026",
+              "sourcePage": "PP homopolymer table",
+              "comparisonReady": true,
+              "limitations": "Typical portfolio value for material comparison; not a production specification or process recipe."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sabic-pp-579s-brochure-2026",
+              "publisher": "SABIC",
+              "title": "Polymers Product Brochure EN 2026",
+              "url": "https://www.sabic.com/en/Images/Polymers-Product-Brochure-2026-Greater-China_tcm1010-49461.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Official SABIC 2026 polymer portfolio identifies this injection-moulding PP grade and its ASTM D1238 MFR at 230°C/2.16 kg; only the fully contextualized MFR is promoted."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sabic-cycolac-mg47",
+          "manufacturer": {
+            "id": "mfr-sabic",
+            "name": "SABIC",
+            "country": "Saudi Arabia",
+            "website": "https://www.sabic.com/"
+          },
+          "brand": "CYCOLAC™",
+          "grade": "MG47",
+          "aliases": [],
+          "polymer": {
+            "family": "ABS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "SABIC exact CYCOLAC ABS grade identity confirmed on the current manufacturer product portfolio; numeric claims withheld pending exact technical-data capture."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sabic-cycolac-family-2026",
+              "publisher": "SABIC",
+              "title": "CYCOLAC™ Resin product portfolio",
+              "url": "https://www.sabic.com/en/products/polymers/acrylonitrile-butadiene-styrene-abs/cycolac-resin",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-sabic-engineering-thermoplastics-brochure-2022",
+              "publisher": "SABIC",
+              "title": "Engineering Thermoplastics Product Brochure 2022",
+              "url": "https://www.sabic.com/en/Images/Engineering%20Thermoplastics%20Product%20Brochure%EF%BC%88EN%29_ROA_2022_tcm1010-44376.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Official SABIC CYCOLAC portfolio confirms this exact grade identity/application description. Kept source-reviewed staging until the exact technical-data document/revision and field-level property conditions are captured."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sabic-cycolac-mg47f",
+          "manufacturer": {
+            "id": "mfr-sabic",
+            "name": "SABIC",
+            "country": "Saudi Arabia",
+            "website": "https://www.sabic.com/"
+          },
+          "brand": "CYCOLAC™",
+          "grade": "MG47F",
+          "aliases": [],
+          "polymer": {
+            "family": "ABS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "SABIC exact CYCOLAC ABS grade identity confirmed on the current manufacturer product portfolio; numeric claims withheld pending exact technical-data capture."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sabic-cycolac-family-2026",
+              "publisher": "SABIC",
+              "title": "CYCOLAC™ Resin product portfolio",
+              "url": "https://www.sabic.com/en/products/polymers/acrylonitrile-butadiene-styrene-abs/cycolac-resin",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-sabic-engineering-thermoplastics-brochure-2022",
+              "publisher": "SABIC",
+              "title": "Engineering Thermoplastics Product Brochure 2022",
+              "url": "https://www.sabic.com/en/Images/Engineering%20Thermoplastics%20Product%20Brochure%EF%BC%88EN%29_ROA_2022_tcm1010-44376.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Official SABIC CYCOLAC portfolio confirms this exact grade identity/application description. Kept source-reviewed staging until the exact technical-data document/revision and field-level property conditions are captured."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sabic-cycolac-mg47n",
+          "manufacturer": {
+            "id": "mfr-sabic",
+            "name": "SABIC",
+            "country": "Saudi Arabia",
+            "website": "https://www.sabic.com/"
+          },
+          "brand": "CYCOLAC™",
+          "grade": "MG47N",
+          "aliases": [],
+          "polymer": {
+            "family": "ABS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "SABIC exact CYCOLAC ABS grade identity confirmed on the current manufacturer product portfolio; numeric claims withheld pending exact technical-data capture."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sabic-cycolac-family-2026",
+              "publisher": "SABIC",
+              "title": "CYCOLAC™ Resin product portfolio",
+              "url": "https://www.sabic.com/en/products/polymers/acrylonitrile-butadiene-styrene-abs/cycolac-resin",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-sabic-engineering-thermoplastics-brochure-2022",
+              "publisher": "SABIC",
+              "title": "Engineering Thermoplastics Product Brochure 2022",
+              "url": "https://www.sabic.com/en/Images/Engineering%20Thermoplastics%20Product%20Brochure%EF%BC%88EN%29_ROA_2022_tcm1010-44376.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Official SABIC CYCOLAC portfolio confirms this exact grade identity/application description. Kept source-reviewed staging until the exact technical-data document/revision and field-level property conditions are captured."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sabic-cycolac-mg47u",
+          "manufacturer": {
+            "id": "mfr-sabic",
+            "name": "SABIC",
+            "country": "Saudi Arabia",
+            "website": "https://www.sabic.com/"
+          },
+          "brand": "CYCOLAC™",
+          "grade": "MG47U",
+          "aliases": [],
+          "polymer": {
+            "family": "ABS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "SABIC exact CYCOLAC ABS grade identity confirmed on the current manufacturer product portfolio; numeric claims withheld pending exact technical-data capture."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sabic-cycolac-family-2026",
+              "publisher": "SABIC",
+              "title": "CYCOLAC™ Resin product portfolio",
+              "url": "https://www.sabic.com/en/products/polymers/acrylonitrile-butadiene-styrene-abs/cycolac-resin",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-sabic-engineering-thermoplastics-brochure-2022",
+              "publisher": "SABIC",
+              "title": "Engineering Thermoplastics Product Brochure 2022",
+              "url": "https://www.sabic.com/en/Images/Engineering%20Thermoplastics%20Product%20Brochure%EF%BC%88EN%29_ROA_2022_tcm1010-44376.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Official SABIC CYCOLAC portfolio confirms this exact grade identity/application description. Kept source-reviewed staging until the exact technical-data document/revision and field-level property conditions are captured."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sabic-cycolac-mg94",
+          "manufacturer": {
+            "id": "mfr-sabic",
+            "name": "SABIC",
+            "country": "Saudi Arabia",
+            "website": "https://www.sabic.com/"
+          },
+          "brand": "CYCOLAC™",
+          "grade": "MG94",
+          "aliases": [],
+          "polymer": {
+            "family": "ABS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "SABIC exact CYCOLAC ABS grade identity confirmed on the current manufacturer product portfolio; numeric claims withheld pending exact technical-data capture."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sabic-cycolac-family-2026",
+              "publisher": "SABIC",
+              "title": "CYCOLAC™ Resin product portfolio",
+              "url": "https://www.sabic.com/en/products/polymers/acrylonitrile-butadiene-styrene-abs/cycolac-resin",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-sabic-engineering-thermoplastics-brochure-2022",
+              "publisher": "SABIC",
+              "title": "Engineering Thermoplastics Product Brochure 2022",
+              "url": "https://www.sabic.com/en/Images/Engineering%20Thermoplastics%20Product%20Brochure%EF%BC%88EN%29_ROA_2022_tcm1010-44376.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Official SABIC CYCOLAC portfolio confirms this exact grade identity/application description. Kept source-reviewed staging until the exact technical-data document/revision and field-level property conditions are captured."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sabic-cycolac-mg94f",
+          "manufacturer": {
+            "id": "mfr-sabic",
+            "name": "SABIC",
+            "country": "Saudi Arabia",
+            "website": "https://www.sabic.com/"
+          },
+          "brand": "CYCOLAC™",
+          "grade": "MG94F",
+          "aliases": [],
+          "polymer": {
+            "family": "ABS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "SABIC exact CYCOLAC ABS grade identity confirmed on the current manufacturer product portfolio; numeric claims withheld pending exact technical-data capture."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sabic-cycolac-family-2026",
+              "publisher": "SABIC",
+              "title": "CYCOLAC™ Resin product portfolio",
+              "url": "https://www.sabic.com/en/products/polymers/acrylonitrile-butadiene-styrene-abs/cycolac-resin",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-sabic-engineering-thermoplastics-brochure-2022",
+              "publisher": "SABIC",
+              "title": "Engineering Thermoplastics Product Brochure 2022",
+              "url": "https://www.sabic.com/en/Images/Engineering%20Thermoplastics%20Product%20Brochure%EF%BC%88EN%29_ROA_2022_tcm1010-44376.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Official SABIC CYCOLAC portfolio confirms this exact grade identity/application description. Kept source-reviewed staging until the exact technical-data document/revision and field-level property conditions are captured."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sabic-cycolac-mg38n",
+          "manufacturer": {
+            "id": "mfr-sabic",
+            "name": "SABIC",
+            "country": "Saudi Arabia",
+            "website": "https://www.sabic.com/"
+          },
+          "brand": "CYCOLAC™",
+          "grade": "MG38N",
+          "aliases": [],
+          "polymer": {
+            "family": "ABS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "SABIC exact CYCOLAC ABS grade identity confirmed on the current manufacturer product portfolio; numeric claims withheld pending exact technical-data capture."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sabic-cycolac-family-2026",
+              "publisher": "SABIC",
+              "title": "CYCOLAC™ Resin product portfolio",
+              "url": "https://www.sabic.com/en/products/polymers/acrylonitrile-butadiene-styrene-abs/cycolac-resin",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-sabic-engineering-thermoplastics-brochure-2022",
+              "publisher": "SABIC",
+              "title": "Engineering Thermoplastics Product Brochure 2022",
+              "url": "https://www.sabic.com/en/Images/Engineering%20Thermoplastics%20Product%20Brochure%EF%BC%88EN%29_ROA_2022_tcm1010-44376.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Official SABIC CYCOLAC portfolio confirms this exact grade identity/application description. Kept source-reviewed staging until the exact technical-data document/revision and field-level property conditions are captured."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-sabic-cycolac-hmg47md",
+          "manufacturer": {
+            "id": "mfr-sabic",
+            "name": "SABIC",
+            "country": "Saudi Arabia",
+            "website": "https://www.sabic.com/"
+          },
+          "brand": "CYCOLAC™",
+          "grade": "HMG47MD",
+          "aliases": [],
+          "polymer": {
+            "family": "ABS",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "SABIC exact CYCOLAC ABS grade identity confirmed on the current manufacturer product portfolio; numeric claims withheld pending exact technical-data capture."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-sabic-cycolac-family-2026",
+              "publisher": "SABIC",
+              "title": "CYCOLAC™ Resin product portfolio",
+              "url": "https://www.sabic.com/en/products/polymers/acrylonitrile-butadiene-styrene-abs/cycolac-resin",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-sabic-engineering-thermoplastics-brochure-2022",
+              "publisher": "SABIC",
+              "title": "Engineering Thermoplastics Product Brochure 2022",
+              "url": "https://www.sabic.com/en/Images/Engineering%20Thermoplastics%20Product%20Brochure%EF%BC%88EN%29_ROA_2022_tcm1010-44376.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Official SABIC CYCOLAC portfolio confirms this exact grade identity/application description. Kept source-reviewed staging until the exact technical-data document/revision and field-level property conditions are captured."
+          }
+        }
+      ]
+    },
+    {
+      "id": "mfr-envalior",
+      "name": "Envalior",
+      "country": "Netherlands",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-envalior-durethan-bkv30h3-0",
+          "manufacturer": {
+            "id": "mfr-envalior",
+            "name": "Envalior",
+            "country": "Netherlands",
+            "website": "https://www.envalior.com/"
+          },
+          "brand": "Durethan",
+          "grade": "BKV30H3.0",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "glassFibrePct": 30,
+            "notes": "30% glass-fibre reinforced injection-moulding grade as identified by the manufacturer."
+          },
+          "properties": [
+            {
+              "id": "obs-envalior-durethan-bkv30h3-0-shrink-flow",
+              "property": "Mould Shrinkage",
+              "value": 0.24,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "flow",
+              "sourceId": "src-envalior-durethan-bkv30h3-0-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Manufacturer molding-shrinkage value; actual part shrinkage depends on geometry, process and orientation."
+            },
+            {
+              "id": "obs-envalior-durethan-bkv30h3-0-shrink-transverse",
+              "property": "Mould Shrinkage",
+              "value": 0.69,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "transverse",
+              "sourceId": "src-envalior-durethan-bkv30h3-0-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Manufacturer molding-shrinkage value; actual part shrinkage depends on geometry, process and orientation."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-envalior-durethan-bkv30h3-0-dry-temp",
+              "parameter": "Drying temperature dry air dryer",
+              "value": 80,
+              "unit": "°C",
+              "condition": "Exact-grade manufacturer material-specific property; verify current grade document and approved site handling.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30h3-0-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30h3-0-dry-time",
+              "parameter": "Drying time dry air dryer",
+              "value": "2-6",
+              "unit": "h",
+              "condition": "Exact-grade manufacturer material-specific property; verify incoming moisture and approved site handling.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30h3-0-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30h3-0-residual-moisture",
+              "parameter": "Residual moisture content",
+              "value": "0.03-0.12",
+              "unit": "%",
+              "condition": "Manufacturer exact-grade residual-moisture guidance; measurement/acceptance method remains site and supplier controlled.",
+              "claimType": "supplier-limit",
+              "sourceId": "src-envalior-durethan-bkv30h3-0-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30h3-0-melt-temp",
+              "parameter": "Melt temperature",
+              "value": "270-290",
+              "unit": "°C",
+              "condition": "Manufacturer exact-grade Tmin-Tmax guidance; not a universal production setpoint.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30h3-0-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30h3-0-mould-temp",
+              "parameter": "Mould temperature",
+              "value": "80-120",
+              "unit": "°C",
+              "condition": "Manufacturer exact-grade guidance; final validated tool/process conditions remain application-specific.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30h3-0-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-envalior-durethan-bkv30h3-0-2026",
+              "publisher": "Envalior",
+              "title": "Durethan BKV30H3.0 exact-grade datasheet",
+              "url": "https://plasticsfinder.envalior.com/en/datasheet/Durethan%C2%AE%20BKV30H3.0/V46XB?b=1",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Envalior Plastics Finder exact-grade page reviewed. Only explicitly published shrinkage/MVR and material-specific processing observations are promoted; values remain supplier guidance, not recipes."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-envalior-durethan-bkv30gh2-0",
+          "manufacturer": {
+            "id": "mfr-envalior",
+            "name": "Envalior",
+            "country": "Netherlands",
+            "website": "https://www.envalior.com/"
+          },
+          "brand": "Durethan",
+          "grade": "BKV30GH2.0",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "glassFibrePct": 30,
+            "notes": "30% glass-fibre reinforced injection-moulding grade as identified by the manufacturer."
+          },
+          "properties": [
+            {
+              "id": "obs-envalior-durethan-bkv30gh2-0-shrink-flow",
+              "property": "Mould Shrinkage",
+              "value": 0.27,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "flow",
+              "sourceId": "src-envalior-durethan-bkv30gh2-0-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Manufacturer molding-shrinkage value; actual part shrinkage depends on geometry, process and orientation."
+            },
+            {
+              "id": "obs-envalior-durethan-bkv30gh2-0-shrink-transverse",
+              "property": "Mould Shrinkage",
+              "value": 0.58,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "transverse",
+              "sourceId": "src-envalior-durethan-bkv30gh2-0-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Manufacturer molding-shrinkage value; actual part shrinkage depends on geometry, process and orientation."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-envalior-durethan-bkv30gh2-0-dry-temp",
+              "parameter": "Drying temperature dry air dryer",
+              "value": 80,
+              "unit": "°C",
+              "condition": "Exact-grade manufacturer material-specific property; verify current grade document and approved site handling.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30gh2-0-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30gh2-0-dry-time",
+              "parameter": "Drying time dry air dryer",
+              "value": "2-6",
+              "unit": "h",
+              "condition": "Exact-grade manufacturer material-specific property; verify incoming moisture and approved site handling.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30gh2-0-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30gh2-0-residual-moisture",
+              "parameter": "Residual moisture content",
+              "value": "0.03-0.12",
+              "unit": "%",
+              "condition": "Manufacturer exact-grade residual-moisture guidance; measurement/acceptance method remains site and supplier controlled.",
+              "claimType": "supplier-limit",
+              "sourceId": "src-envalior-durethan-bkv30gh2-0-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30gh2-0-melt-temp",
+              "parameter": "Melt temperature",
+              "value": "270-290",
+              "unit": "°C",
+              "condition": "Manufacturer exact-grade Tmin-Tmax guidance; not a universal production setpoint.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30gh2-0-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30gh2-0-mould-temp",
+              "parameter": "Mould temperature",
+              "value": "80-120",
+              "unit": "°C",
+              "condition": "Manufacturer exact-grade guidance; final validated tool/process conditions remain application-specific.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30gh2-0-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-envalior-durethan-bkv30gh2-0-2026",
+              "publisher": "Envalior",
+              "title": "Durethan BKV30GH2.0 exact-grade datasheet",
+              "url": "https://plasticsfinder.envalior.com/en/datasheet/Durethan%C2%AE%20BKV30GH2.0/Ol4rW?b=1",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Envalior Plastics Finder exact-grade page reviewed. Only explicitly published shrinkage/MVR and material-specific processing observations are promoted; values remain supplier guidance, not recipes."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-envalior-durethan-bkv30gw1-dus037",
+          "manufacturer": {
+            "id": "mfr-envalior",
+            "name": "Envalior",
+            "country": "Netherlands",
+            "website": "https://www.envalior.com/"
+          },
+          "brand": "Durethan",
+          "grade": "BKV30GW1 DUS037",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "glassFibrePct": 30,
+            "notes": "30% glass-fibre reinforced injection-moulding grade as identified by the manufacturer."
+          },
+          "properties": [
+            {
+              "id": "obs-envalior-durethan-bkv30gw1-dus037-shrink-flow",
+              "property": "Mould Shrinkage",
+              "value": 0.2,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "flow",
+              "sourceId": "src-envalior-durethan-bkv30gw1-dus037-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Manufacturer molding-shrinkage value; actual part shrinkage depends on geometry, process and orientation."
+            },
+            {
+              "id": "obs-envalior-durethan-bkv30gw1-dus037-shrink-transverse",
+              "property": "Mould Shrinkage",
+              "value": 0.6,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "transverse",
+              "sourceId": "src-envalior-durethan-bkv30gw1-dus037-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Manufacturer molding-shrinkage value; actual part shrinkage depends on geometry, process and orientation."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-envalior-durethan-bkv30gw1-dus037-dry-temp",
+              "parameter": "Drying temperature dry air dryer",
+              "value": 80,
+              "unit": "°C",
+              "condition": "Exact-grade manufacturer material-specific property; verify current grade document and approved site handling.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30gw1-dus037-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30gw1-dus037-dry-time",
+              "parameter": "Drying time dry air dryer",
+              "value": "2-6",
+              "unit": "h",
+              "condition": "Exact-grade manufacturer material-specific property; verify incoming moisture and approved site handling.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30gw1-dus037-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30gw1-dus037-residual-moisture",
+              "parameter": "Residual moisture content",
+              "value": "0.03-0.12",
+              "unit": "%",
+              "condition": "Manufacturer exact-grade residual-moisture guidance; measurement/acceptance method remains site and supplier controlled.",
+              "claimType": "supplier-limit",
+              "sourceId": "src-envalior-durethan-bkv30gw1-dus037-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30gw1-dus037-melt-temp",
+              "parameter": "Melt temperature",
+              "value": "270-290",
+              "unit": "°C",
+              "condition": "Manufacturer exact-grade Tmin-Tmax guidance; not a universal production setpoint.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30gw1-dus037-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30gw1-dus037-mould-temp",
+              "parameter": "Mould temperature",
+              "value": "80-120",
+              "unit": "°C",
+              "condition": "Manufacturer exact-grade guidance; final validated tool/process conditions remain application-specific.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30gw1-dus037-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-envalior-durethan-bkv30gw1-dus037-2026",
+              "publisher": "Envalior",
+              "title": "Durethan BKV30GW1 DUS037 exact-grade datasheet",
+              "url": "https://plasticsfinder.envalior.com/en/datasheet/Durethan%C2%AE%20BKV30GW1%20000000%20DUS037/8GnVZ?b=1",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Envalior Plastics Finder exact-grade page reviewed. Only explicitly published shrinkage/MVR and material-specific processing observations are promoted; values remain supplier guidance, not recipes."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-envalior-durethan-bkv30h2-0ef-dus029",
+          "manufacturer": {
+            "id": "mfr-envalior",
+            "name": "Envalior",
+            "country": "Netherlands",
+            "website": "https://www.envalior.com/"
+          },
+          "brand": "Durethan",
+          "grade": "BKV30H2.0EF DUS029",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "glassFibrePct": 30,
+            "notes": "30% glass-fibre reinforced injection-moulding grade as identified by the manufacturer."
+          },
+          "properties": [
+            {
+              "id": "obs-envalior-durethan-bkv30h2-0ef-dus029-shrink-flow",
+              "property": "Mould Shrinkage",
+              "value": 0.23,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "flow",
+              "sourceId": "src-envalior-durethan-bkv30h2-0ef-dus029-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Manufacturer molding-shrinkage value; actual part shrinkage depends on geometry, process and orientation."
+            },
+            {
+              "id": "obs-envalior-durethan-bkv30h2-0ef-dus029-shrink-transverse",
+              "property": "Mould Shrinkage",
+              "value": 0.7,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "transverse",
+              "sourceId": "src-envalior-durethan-bkv30h2-0ef-dus029-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Manufacturer molding-shrinkage value; actual part shrinkage depends on geometry, process and orientation."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-envalior-durethan-bkv30h2-0ef-dus029-dry-temp",
+              "parameter": "Drying temperature dry air dryer",
+              "value": 80,
+              "unit": "°C",
+              "condition": "Exact-grade manufacturer material-specific property; verify current grade document and approved site handling.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30h2-0ef-dus029-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30h2-0ef-dus029-dry-time",
+              "parameter": "Drying time dry air dryer",
+              "value": "2-6",
+              "unit": "h",
+              "condition": "Exact-grade manufacturer material-specific property; verify incoming moisture and approved site handling.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30h2-0ef-dus029-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30h2-0ef-dus029-residual-moisture",
+              "parameter": "Residual moisture content",
+              "value": "0.03-0.12",
+              "unit": "%",
+              "condition": "Manufacturer exact-grade residual-moisture guidance; measurement/acceptance method remains site and supplier controlled.",
+              "claimType": "supplier-limit",
+              "sourceId": "src-envalior-durethan-bkv30h2-0ef-dus029-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30h2-0ef-dus029-melt-temp",
+              "parameter": "Melt temperature",
+              "value": "270-290",
+              "unit": "°C",
+              "condition": "Manufacturer exact-grade Tmin-Tmax guidance; not a universal production setpoint.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30h2-0ef-dus029-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30h2-0ef-dus029-mould-temp",
+              "parameter": "Mould temperature",
+              "value": "80-120",
+              "unit": "°C",
+              "condition": "Manufacturer exact-grade guidance; final validated tool/process conditions remain application-specific.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30h2-0ef-dus029-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-envalior-durethan-bkv30h2-0ef-dus029-2026",
+              "publisher": "Envalior",
+              "title": "Durethan BKV30H2.0EF DUS029 exact-grade datasheet",
+              "url": "https://plasticsfinder.envalior.com/en/datasheet/Durethan%C2%AE%20BKV30H2.0EF%20DUS029/0Pvn6?b=1",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Envalior Plastics Finder exact-grade page reviewed. Only explicitly published shrinkage/MVR and material-specific processing observations are promoted; values remain supplier guidance, not recipes."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-envalior-durethan-bkv30h2-0ef-dus074",
+          "manufacturer": {
+            "id": "mfr-envalior",
+            "name": "Envalior",
+            "country": "Netherlands",
+            "website": "https://www.envalior.com/"
+          },
+          "brand": "Durethan",
+          "grade": "BKV30H2.0EF DUS074",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "glassFibrePct": 30,
+            "notes": "30% glass-fibre reinforced injection-moulding grade as identified by the manufacturer."
+          },
+          "properties": [
+            {
+              "id": "obs-envalior-durethan-bkv30h2-0ef-dus074-shrink-flow",
+              "property": "Mould Shrinkage",
+              "value": 0.25,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "flow",
+              "sourceId": "src-envalior-durethan-bkv30h2-0ef-dus074-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Manufacturer molding-shrinkage value; actual part shrinkage depends on geometry, process and orientation."
+            },
+            {
+              "id": "obs-envalior-durethan-bkv30h2-0ef-dus074-shrink-transverse",
+              "property": "Mould Shrinkage",
+              "value": 0.65,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "transverse",
+              "sourceId": "src-envalior-durethan-bkv30h2-0ef-dus074-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Manufacturer molding-shrinkage value; actual part shrinkage depends on geometry, process and orientation."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-envalior-durethan-bkv30h2-0ef-dus074-dry-temp",
+              "parameter": "Drying temperature dry air dryer",
+              "value": 80,
+              "unit": "°C",
+              "condition": "Exact-grade manufacturer material-specific property; verify current grade document and approved site handling.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30h2-0ef-dus074-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30h2-0ef-dus074-dry-time",
+              "parameter": "Drying time dry air dryer",
+              "value": "2-6",
+              "unit": "h",
+              "condition": "Exact-grade manufacturer material-specific property; verify incoming moisture and approved site handling.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30h2-0ef-dus074-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30h2-0ef-dus074-melt-temp",
+              "parameter": "Melt temperature",
+              "value": "260-280",
+              "unit": "°C",
+              "condition": "Manufacturer exact-grade Tmin-Tmax guidance; not a universal production setpoint.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30h2-0ef-dus074-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30h2-0ef-dus074-mould-temp",
+              "parameter": "Mould temperature",
+              "value": "80-120",
+              "unit": "°C",
+              "condition": "Manufacturer exact-grade guidance; final validated tool/process conditions remain application-specific.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30h2-0ef-dus074-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-envalior-durethan-bkv30h2-0ef-dus074-2026",
+              "publisher": "Envalior",
+              "title": "Durethan BKV30H2.0EF DUS074 exact-grade datasheet",
+              "url": "https://plasticsfinder.envalior.com/en/datasheet/Durethan%C2%AE%20BKV30H2.0EF%20DUS074/Wn4AO?b=1",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Envalior Plastics Finder exact-grade page reviewed. Only explicitly published shrinkage/MVR and material-specific processing observations are promoted; values remain supplier guidance, not recipes."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-envalior-durethan-bkv30xts1",
+          "manufacturer": {
+            "id": "mfr-envalior",
+            "name": "Envalior",
+            "country": "Netherlands",
+            "website": "https://www.envalior.com/"
+          },
+          "brand": "Durethan",
+          "grade": "BKV30XTS1",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "glassFibrePct": 30,
+            "notes": "30% glass-fibre reinforced injection-moulding grade as identified by the manufacturer."
+          },
+          "properties": [
+            {
+              "id": "obs-envalior-durethan-bkv30xts1-shrink-flow",
+              "property": "Mould Shrinkage",
+              "value": 0.25,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "flow",
+              "sourceId": "src-envalior-durethan-bkv30xts1-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Manufacturer molding-shrinkage value; actual part shrinkage depends on geometry, process and orientation."
+            },
+            {
+              "id": "obs-envalior-durethan-bkv30xts1-shrink-transverse",
+              "property": "Mould Shrinkage",
+              "value": 0.63,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "transverse",
+              "sourceId": "src-envalior-durethan-bkv30xts1-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Manufacturer molding-shrinkage value; actual part shrinkage depends on geometry, process and orientation."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-envalior-durethan-bkv30xts1-dry-temp",
+              "parameter": "Drying temperature dry air dryer",
+              "value": 80,
+              "unit": "°C",
+              "condition": "Exact-grade manufacturer material-specific property; verify current grade document and approved site handling.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30xts1-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30xts1-dry-time",
+              "parameter": "Drying time dry air dryer",
+              "value": "2-6",
+              "unit": "h",
+              "condition": "Exact-grade manufacturer material-specific property; verify incoming moisture and approved site handling.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30xts1-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30xts1-residual-moisture",
+              "parameter": "Residual moisture content",
+              "value": "0.03-0.12",
+              "unit": "%",
+              "condition": "Manufacturer exact-grade residual-moisture guidance; measurement/acceptance method remains site and supplier controlled.",
+              "claimType": "supplier-limit",
+              "sourceId": "src-envalior-durethan-bkv30xts1-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30xts1-melt-temp",
+              "parameter": "Melt temperature",
+              "value": "270-290",
+              "unit": "°C",
+              "condition": "Manufacturer exact-grade Tmin-Tmax guidance; not a universal production setpoint.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30xts1-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30xts1-mould-temp",
+              "parameter": "Mould temperature",
+              "value": "80-120",
+              "unit": "°C",
+              "condition": "Manufacturer exact-grade guidance; final validated tool/process conditions remain application-specific.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30xts1-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-envalior-durethan-bkv30xts1-2026",
+              "publisher": "Envalior",
+              "title": "Durethan BKV30XTS1 exact-grade datasheet",
+              "url": "https://plasticsfinder.envalior.com/en/datasheet/Durethan%C2%AE%20BKV30XTS1/4199v?b=1",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Envalior Plastics Finder exact-grade page reviewed. Only explicitly published shrinkage/MVR and material-specific processing observations are promoted; values remain supplier guidance, not recipes."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-envalior-durethan-bkv50h2-0ef-dus001",
+          "manufacturer": {
+            "id": "mfr-envalior",
+            "name": "Envalior",
+            "country": "Netherlands",
+            "website": "https://www.envalior.com/"
+          },
+          "brand": "Durethan",
+          "grade": "BKV50H2.0EF DUS001",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "glassFibrePct": 50,
+            "notes": "50% glass-fibre reinforced injection-moulding grade as identified by the manufacturer."
+          },
+          "properties": [
+            {
+              "id": "obs-envalior-durethan-bkv50h2-0ef-dus001-shrink-flow",
+              "property": "Mould Shrinkage",
+              "value": 0.2,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "flow",
+              "sourceId": "src-envalior-durethan-bkv50h2-0ef-dus001-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Manufacturer molding-shrinkage value; actual part shrinkage depends on geometry, process and orientation."
+            },
+            {
+              "id": "obs-envalior-durethan-bkv50h2-0ef-dus001-shrink-transverse",
+              "property": "Mould Shrinkage",
+              "value": 0.7,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "transverse",
+              "sourceId": "src-envalior-durethan-bkv50h2-0ef-dus001-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Manufacturer molding-shrinkage value; actual part shrinkage depends on geometry, process and orientation."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-envalior-durethan-bkv50h2-0ef-dus001-dry-temp",
+              "parameter": "Drying temperature dry air dryer",
+              "value": 80,
+              "unit": "°C",
+              "condition": "Exact-grade manufacturer material-specific property; verify current grade document and approved site handling.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv50h2-0ef-dus001-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv50h2-0ef-dus001-dry-time",
+              "parameter": "Drying time dry air dryer",
+              "value": "2-6",
+              "unit": "h",
+              "condition": "Exact-grade manufacturer material-specific property; verify incoming moisture and approved site handling.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv50h2-0ef-dus001-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv50h2-0ef-dus001-residual-moisture",
+              "parameter": "Residual moisture content",
+              "value": "0.03-0.12",
+              "unit": "%",
+              "condition": "Manufacturer exact-grade residual-moisture guidance; measurement/acceptance method remains site and supplier controlled.",
+              "claimType": "supplier-limit",
+              "sourceId": "src-envalior-durethan-bkv50h2-0ef-dus001-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv50h2-0ef-dus001-melt-temp",
+              "parameter": "Melt temperature",
+              "value": "270-290",
+              "unit": "°C",
+              "condition": "Manufacturer exact-grade Tmin-Tmax guidance; not a universal production setpoint.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv50h2-0ef-dus001-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv50h2-0ef-dus001-mould-temp",
+              "parameter": "Mould temperature",
+              "value": "80-120",
+              "unit": "°C",
+              "condition": "Manufacturer exact-grade guidance; final validated tool/process conditions remain application-specific.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv50h2-0ef-dus001-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-envalior-durethan-bkv50h2-0ef-dus001-2026",
+              "publisher": "Envalior",
+              "title": "Durethan BKV50H2.0EF DUS001 exact-grade datasheet",
+              "url": "https://plasticsfinder.envalior.com/en/datasheet/Durethan%C2%AE%20BKV50H2.0EF%20DUS001/V464K?b=1",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Envalior Plastics Finder exact-grade page reviewed. Only explicitly published shrinkage/MVR and material-specific processing observations are promoted; values remain supplier guidance, not recipes."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-envalior-durethan-bkv30fn04",
+          "manufacturer": {
+            "id": "mfr-envalior",
+            "name": "Envalior",
+            "country": "Netherlands",
+            "website": "https://www.envalior.com/"
+          },
+          "brand": "Durethan",
+          "grade": "BKV30FN04",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "glassFibrePct": 30,
+            "notes": "30% glass-fibre reinforced, halogen-free flame-retardant, heat-stabilized injection-moulding PA6 grade."
+          },
+          "properties": [
+            {
+              "id": "obs-envalior-durethan-bkv30fn04-mvr",
+              "property": "Melt Volume-Flow Rate",
+              "value": 17,
+              "unit": "cm³/10min",
+              "testMethod": "ISO 1133",
+              "temperatureC": 260,
+              "loadKg": 5,
+              "direction": "not-applicable",
+              "sourceId": "src-envalior-durethan-bkv30fn04-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Manufacturer typical data; preserve exact test temperature/load when comparing grades."
+            },
+            {
+              "id": "obs-envalior-durethan-bkv30fn04-shrink-flow",
+              "property": "Mould Shrinkage",
+              "value": 0.2,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "flow",
+              "sourceId": "src-envalior-durethan-bkv30fn04-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Manufacturer molding-shrinkage value; actual part shrinkage depends on geometry, process and orientation."
+            },
+            {
+              "id": "obs-envalior-durethan-bkv30fn04-shrink-transverse",
+              "property": "Mould Shrinkage",
+              "value": 0.7,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "transverse",
+              "sourceId": "src-envalior-durethan-bkv30fn04-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Manufacturer molding-shrinkage value; actual part shrinkage depends on geometry, process and orientation."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-envalior-durethan-bkv30fn04-dry-temp",
+              "parameter": "Drying temperature dry air dryer",
+              "value": 80,
+              "unit": "°C",
+              "condition": "Exact-grade manufacturer material-specific property; verify current grade document and approved site handling.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30fn04-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30fn04-dry-time",
+              "parameter": "Drying time dry air dryer",
+              "value": "2-6",
+              "unit": "h",
+              "condition": "Exact-grade manufacturer material-specific property; verify incoming moisture and approved site handling.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30fn04-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30fn04-residual-moisture",
+              "parameter": "Residual moisture content",
+              "value": "0.03-0.07",
+              "unit": "%",
+              "condition": "Manufacturer exact-grade residual-moisture guidance; measurement/acceptance method remains site and supplier controlled.",
+              "claimType": "supplier-limit",
+              "sourceId": "src-envalior-durethan-bkv30fn04-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30fn04-melt-temp",
+              "parameter": "Melt temperature",
+              "value": "250-280",
+              "unit": "°C",
+              "condition": "Manufacturer exact-grade Tmin-Tmax guidance; not a universal production setpoint.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30fn04-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30fn04-mould-temp",
+              "parameter": "Mould temperature",
+              "value": "70-90",
+              "unit": "°C",
+              "condition": "Manufacturer exact-grade guidance; final validated tool/process conditions remain application-specific.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30fn04-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-envalior-durethan-bkv30fn04-2026",
+              "publisher": "Envalior",
+              "title": "Durethan BKV30FN04 exact-grade datasheet",
+              "url": "https://plasticsfinder.envalior.com/en/datasheet/Durethan%C2%AE%20BKV30FN04%20000000/y0gMP?b=1",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Envalior Plastics Finder exact-grade page reviewed. Only explicitly published shrinkage/MVR and material-specific processing observations are promoted; values remain supplier guidance, not recipes."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-envalior-durethan-bkv30fn01-dus062",
+          "manufacturer": {
+            "id": "mfr-envalior",
+            "name": "Envalior",
+            "country": "Netherlands",
+            "website": "https://www.envalior.com/"
+          },
+          "brand": "Durethan",
+          "grade": "BKV30FN01 DUS062",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "glassFibrePct": 30,
+            "notes": "30% glass-fibre reinforced flame-retardant PA6 injection-moulding grade."
+          },
+          "properties": [
+            {
+              "id": "obs-envalior-durethan-bkv30fn01-dus062-shrink-flow",
+              "property": "Mould Shrinkage",
+              "value": 0.3,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "flow",
+              "sourceId": "src-envalior-durethan-bkv30fn01-dus062-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Manufacturer molding-shrinkage value; actual part shrinkage depends on geometry, process and orientation."
+            },
+            {
+              "id": "obs-envalior-durethan-bkv30fn01-dus062-shrink-transverse",
+              "property": "Mould Shrinkage",
+              "value": 0.8,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "transverse",
+              "sourceId": "src-envalior-durethan-bkv30fn01-dus062-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Manufacturer molding-shrinkage value; actual part shrinkage depends on geometry, process and orientation."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-envalior-durethan-bkv30fn01-dus062-dry-temp",
+              "parameter": "Drying temperature dry air dryer",
+              "value": 80,
+              "unit": "°C",
+              "condition": "Exact-grade manufacturer material-specific property; verify current grade document and approved site handling.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30fn01-dus062-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30fn01-dus062-dry-time",
+              "parameter": "Drying time dry air dryer",
+              "value": "2-6",
+              "unit": "h",
+              "condition": "Exact-grade manufacturer material-specific property; verify incoming moisture and approved site handling.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30fn01-dus062-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30fn01-dus062-residual-moisture",
+              "parameter": "Residual moisture content",
+              "value": "0.03-0.07",
+              "unit": "%",
+              "condition": "Manufacturer exact-grade residual-moisture guidance; measurement/acceptance method remains site and supplier controlled.",
+              "claimType": "supplier-limit",
+              "sourceId": "src-envalior-durethan-bkv30fn01-dus062-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30fn01-dus062-melt-temp",
+              "parameter": "Melt temperature",
+              "value": "250-270",
+              "unit": "°C",
+              "condition": "Manufacturer exact-grade Tmin-Tmax guidance; not a universal production setpoint.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30fn01-dus062-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv30fn01-dus062-mould-temp",
+              "parameter": "Mould temperature",
+              "value": "80-100",
+              "unit": "°C",
+              "condition": "Manufacturer exact-grade guidance; final validated tool/process conditions remain application-specific.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv30fn01-dus062-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-envalior-durethan-bkv30fn01-dus062-2026",
+              "publisher": "Envalior",
+              "title": "Durethan BKV30FN01 DUS062 exact-grade datasheet",
+              "url": "https://plasticsfinder.envalior.com/en/datasheet/Durethan%C2%AE%20BKV30FN01%20DUS062/DgXO2?b=1",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Envalior Plastics Finder exact-grade page reviewed. Only explicitly published shrinkage/MVR and material-specific processing observations are promoted; values remain supplier guidance, not recipes."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-envalior-durethan-bkv130-dus008",
+          "manufacturer": {
+            "id": "mfr-envalior",
+            "name": "Envalior",
+            "country": "Netherlands",
+            "website": "https://www.envalior.com/"
+          },
+          "brand": "Durethan",
+          "grade": "BKV130 DUS008",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "glassFibrePct": 30,
+            "notes": "30% glass-fibre reinforced impact-modified PA6 injection-moulding grade."
+          },
+          "properties": [
+            {
+              "id": "obs-envalior-durethan-bkv130-dus008-shrink-flow",
+              "property": "Mould Shrinkage",
+              "value": 0.3,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "flow",
+              "sourceId": "src-envalior-durethan-bkv130-dus008-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Manufacturer molding-shrinkage value; actual part shrinkage depends on geometry, process and orientation."
+            },
+            {
+              "id": "obs-envalior-durethan-bkv130-dus008-shrink-transverse",
+              "property": "Mould Shrinkage",
+              "value": 0.7,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "transverse",
+              "sourceId": "src-envalior-durethan-bkv130-dus008-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Manufacturer molding-shrinkage value; actual part shrinkage depends on geometry, process and orientation."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-envalior-durethan-bkv130-dus008-dry-temp",
+              "parameter": "Drying temperature dry air dryer",
+              "value": 80,
+              "unit": "°C",
+              "condition": "Exact-grade manufacturer material-specific property; verify current grade document and approved site handling.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv130-dus008-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-envalior-durethan-bkv130-dus008-dry-time",
+              "parameter": "Drying time dry air dryer",
+              "value": "2-6",
+              "unit": "h",
+              "condition": "Exact-grade manufacturer material-specific property; verify incoming moisture and approved site handling.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-envalior-durethan-bkv130-dus008-2026",
+              "sourcePage": "material specific properties",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-envalior-durethan-bkv130-dus008-2026",
+              "publisher": "Envalior",
+              "title": "Durethan BKV130 DUS008 exact-grade datasheet",
+              "url": "https://plasticsfinder.envalior.com/en/datasheet/Durethan%C2%AE%20BKV130%20DUS008/WnAom?b=1",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Envalior Plastics Finder exact-grade page reviewed. Only explicitly published shrinkage/MVR and material-specific processing observations are promoted; values remain supplier guidance, not recipes."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-envalior-pocan-b3234hr-s2-m30r1",
+          "manufacturer": {
+            "id": "mfr-envalior",
+            "name": "Envalior",
+            "country": "Netherlands",
+            "website": "https://www.envalior.com/"
+          },
+          "brand": "Pocan",
+          "grade": "B3234HR S2 M30R1",
+          "aliases": [],
+          "polymer": {
+            "family": "PBT",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "glassFibrePct": 30,
+            "notes": "30% glass-fibre reinforced, injection-moulding, hydrolysis-stabilized PBT grade with manufacturer-declared recycled content; exact recycled percentage is not inferred."
+          },
+          "properties": [
+            {
+              "id": "obs-envalior-pocan-b3234hr-s2-m30r1-mvr",
+              "property": "Melt Volume-Flow Rate",
+              "value": 20,
+              "unit": "cm³/10min",
+              "testMethod": "ISO 1133",
+              "temperatureC": 260,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-envalior-pocan-b3234hr-s2-m30r1-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Manufacturer typical data; preserve exact test temperature/load when comparing grades."
+            },
+            {
+              "id": "obs-envalior-pocan-b3234hr-s2-m30r1-shrink-flow",
+              "property": "Mould Shrinkage",
+              "value": 0.4,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "flow",
+              "sourceId": "src-envalior-pocan-b3234hr-s2-m30r1-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Manufacturer molding-shrinkage value; actual part shrinkage depends on geometry, process and orientation."
+            },
+            {
+              "id": "obs-envalior-pocan-b3234hr-s2-m30r1-shrink-transverse",
+              "property": "Mould Shrinkage",
+              "value": 1,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "transverse",
+              "sourceId": "src-envalior-pocan-b3234hr-s2-m30r1-2026",
+              "sourcePage": "rheological properties",
+              "comparisonReady": true,
+              "limitations": "Manufacturer molding-shrinkage value; actual part shrinkage depends on geometry, process and orientation."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-envalior-pocan-b3234hr-s2-m30r1-2026",
+              "publisher": "Envalior",
+              "title": "Pocan B3234HR S2 M30R1 exact-grade datasheet",
+              "url": "https://plasticsfinder.envalior.com/en/datasheet/Pocan%C2%AE%20ECOB3234HR%20S2/EZA86?b=1",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Envalior Plastics Finder exact-grade page reviewed. Only explicitly published shrinkage/MVR and material-specific processing observations are promoted; values remain supplier guidance, not recipes."
+          }
+        }
+      ]
+    },
+    {
+      "id": "mfr-victrex",
+      "name": "Victrex",
+      "country": "United Kingdom",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-victrex-peek-450g",
+          "manufacturer": {
+            "id": "mfr-victrex",
+            "name": "Victrex",
+            "country": "United Kingdom",
+            "website": "https://www.victrex.com/"
+          },
+          "brand": "VICTREX™ PEEK",
+          "grade": "450G",
+          "aliases": [],
+          "polymer": {
+            "family": "PEEK",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "glassFibrePct": null,
+            "notes": "Victrex exact PEEK grade; no composition beyond explicit manufacturer description is inferred."
+          },
+          "properties": [
+            {
+              "id": "obs-victrex-peek-450g-mfr",
+              "property": "Melt Flow Rate",
+              "value": 8.5,
+              "unit": "g/10 min",
+              "testMethod": "ISO 1133",
+              "temperatureC": 380,
+              "loadKg": 5,
+              "direction": "not-applicable",
+              "sourceId": "src-victrex-peek-450g-2026",
+              "sourcePage": "grade comparison/product data",
+              "comparisonReady": true,
+              "limitations": "Manufacturer typical material-comparison value; not a process recipe."
+            },
+            {
+              "id": "obs-victrex-peek-450g-shrink-flow",
+              "property": "Mould Shrinkage",
+              "value": 0.9,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "flow",
+              "sourceId": "src-victrex-peek-450g-2026",
+              "sourcePage": "material properties",
+              "comparisonReady": false,
+              "limitations": "Victrex states actual mould shrinkage depends on part geometry, mould configuration and processing conditions; use for material comparison only."
+            },
+            {
+              "id": "obs-victrex-peek-450g-shrink-transverse",
+              "property": "Mould Shrinkage",
+              "value": 1.3,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "transverse",
+              "sourceId": "src-victrex-peek-450g-2026",
+              "sourcePage": "material properties",
+              "comparisonReady": false,
+              "limitations": "Victrex states actual mould shrinkage depends on part geometry, mould configuration and processing conditions; use for material comparison only."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-victrex-peek-450g-dry-temp",
+              "parameter": "Drying temperature",
+              "min": 120,
+              "max": 150,
+              "unit": "°C",
+              "condition": "Victrex typical processing information; 150°C/3 h or 120°C/5 h examples are laboratory guidance, not a universal production recipe.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-victrex-peek-450g-2026",
+              "sourcePage": "typical processing information",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-victrex-peek-450g-dry-time",
+              "parameter": "Drying time",
+              "min": 3,
+              "max": 5,
+              "unit": "hr",
+              "condition": "Victrex typical processing information; verify current grade and site requirements.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-victrex-peek-450g-2026",
+              "sourcePage": "typical processing information",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-victrex-peek-450g-max-moisture",
+              "parameter": "Suggested max moisture",
+              "value": 0.02,
+              "unit": "%",
+              "condition": "Victrex suggested maximum moisture in typical processing information.",
+              "claimType": "supplier-limit",
+              "sourceId": "src-victrex-peek-450g-2026",
+              "sourcePage": "typical processing information",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-victrex-peek-450g-2026",
+              "publisher": "Victrex",
+              "title": "VICTREX PEEK 450G datasheet",
+              "url": "https://www.victrex.com/en/downloads/datasheets/victrex-peek-450g",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": "2024-12-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Victrex exact-grade data reviewed. Shrinkage remains context-only for comparison because part/tool/process dependence is explicitly emphasized; only fully conditioned MFR is comparison-ready."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-victrex-peek-450gl20",
+          "manufacturer": {
+            "id": "mfr-victrex",
+            "name": "Victrex",
+            "country": "United Kingdom",
+            "website": "https://www.victrex.com/"
+          },
+          "brand": "VICTREX™ PEEK",
+          "grade": "450GL20",
+          "aliases": [],
+          "polymer": {
+            "family": "PEEK",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "glassFibrePct": 20,
+            "notes": "20% glass-fibre reinforced PEEK injection-moulding/extrusion grade."
+          },
+          "properties": [
+            {
+              "id": "obs-victrex-peek-450gl20-shrink-flow",
+              "property": "Mould Shrinkage",
+              "value": 0.3,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "flow",
+              "sourceId": "src-victrex-peek-450gl20-2026",
+              "sourcePage": "material properties",
+              "comparisonReady": false,
+              "limitations": "Victrex states actual mould shrinkage depends on part geometry, mould configuration and processing conditions; use for material comparison only."
+            },
+            {
+              "id": "obs-victrex-peek-450gl20-shrink-transverse",
+              "property": "Mould Shrinkage",
+              "value": 0.9,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "transverse",
+              "sourceId": "src-victrex-peek-450gl20-2026",
+              "sourcePage": "material properties",
+              "comparisonReady": false,
+              "limitations": "Victrex states actual mould shrinkage depends on part geometry, mould configuration and processing conditions; use for material comparison only."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-victrex-peek-450gl20-2026",
+              "publisher": "Victrex",
+              "title": "VICTREX PEEK 450GL20 datasheet",
+              "url": "https://www.victrex.com/ja/downloads/datasheets/victrex-peek-450gl20",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": "2026-03-17",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Victrex exact-grade data reviewed. Shrinkage remains context-only for comparison because part/tool/process dependence is explicitly emphasized; only fully conditioned MFR is comparison-ready."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-victrex-peek-450gl30",
+          "manufacturer": {
+            "id": "mfr-victrex",
+            "name": "Victrex",
+            "country": "United Kingdom",
+            "website": "https://www.victrex.com/"
+          },
+          "brand": "VICTREX™ PEEK",
+          "grade": "450GL30",
+          "aliases": [],
+          "polymer": {
+            "family": "PEEK",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "glassFibrePct": 30,
+            "notes": "30% glass-fibre reinforced PEEK injection-moulding/extrusion grade."
+          },
+          "properties": [
+            {
+              "id": "obs-victrex-peek-450gl30-shrink-flow",
+              "property": "Mould Shrinkage",
+              "value": 0.3,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "flow",
+              "sourceId": "src-victrex-peek-450gl30-2026",
+              "sourcePage": "material properties",
+              "comparisonReady": false,
+              "limitations": "Victrex states actual mould shrinkage depends on part geometry, mould configuration and processing conditions; use for material comparison only."
+            },
+            {
+              "id": "obs-victrex-peek-450gl30-shrink-transverse",
+              "property": "Mould Shrinkage",
+              "value": 0.9,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "transverse",
+              "sourceId": "src-victrex-peek-450gl30-2026",
+              "sourcePage": "material properties",
+              "comparisonReady": false,
+              "limitations": "Victrex states actual mould shrinkage depends on part geometry, mould configuration and processing conditions; use for material comparison only."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-victrex-peek-450gl30-dry-temp",
+              "parameter": "Drying temperature",
+              "min": 120,
+              "max": 150,
+              "unit": "°C",
+              "condition": "Victrex typical processing information; 150°C/3 h or 120°C/5 h examples are laboratory guidance, not a universal production recipe.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-victrex-peek-450gl30-2026",
+              "sourcePage": "typical processing information",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-victrex-peek-450gl30-dry-time",
+              "parameter": "Drying time",
+              "min": 3,
+              "max": 5,
+              "unit": "hr",
+              "condition": "Victrex typical processing information; verify current grade and site requirements.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-victrex-peek-450gl30-2026",
+              "sourcePage": "typical processing information",
+              "productionRecipe": false
+            },
+            {
+              "id": "proc-victrex-peek-450gl30-max-moisture",
+              "parameter": "Suggested max moisture",
+              "value": 0.02,
+              "unit": "%",
+              "condition": "Victrex suggested maximum moisture in typical processing information.",
+              "claimType": "supplier-limit",
+              "sourceId": "src-victrex-peek-450gl30-2026",
+              "sourcePage": "typical processing information",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-victrex-peek-450gl30-2026",
+              "publisher": "Victrex",
+              "title": "VICTREX PEEK 450GL30 datasheet",
+              "url": "https://www.victrex.com/en/downloads/datasheets/victrex-peek-450gl30",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": "2026-03-17",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Victrex exact-grade data reviewed. Shrinkage remains context-only for comparison because part/tool/process dependence is explicitly emphasized; only fully conditioned MFR is comparison-ready."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-victrex-peek-450fe20",
+          "manufacturer": {
+            "id": "mfr-victrex",
+            "name": "Victrex",
+            "country": "United Kingdom",
+            "website": "https://www.victrex.com/"
+          },
+          "brand": "VICTREX™ PEEK",
+          "grade": "450FE20",
+          "aliases": [],
+          "polymer": {
+            "family": "PEEK",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "glassFibrePct": null,
+            "notes": "20% PTFE-filled PEEK injection-moulding/extrusion grade for tribological applications."
+          },
+          "properties": [
+            {
+              "id": "obs-victrex-peek-450fe20-shrink-flow",
+              "property": "Mould Shrinkage",
+              "value": 1.2,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "flow",
+              "sourceId": "src-victrex-peek-450fe20-2026",
+              "sourcePage": "material properties",
+              "comparisonReady": false,
+              "limitations": "Victrex states actual mould shrinkage depends on part geometry, mould configuration and processing conditions; use for material comparison only."
+            },
+            {
+              "id": "obs-victrex-peek-450fe20-shrink-transverse",
+              "property": "Mould Shrinkage",
+              "value": 1.7,
+              "unit": "%",
+              "testMethod": "ISO 294-4",
+              "direction": "transverse",
+              "sourceId": "src-victrex-peek-450fe20-2026",
+              "sourcePage": "material properties",
+              "comparisonReady": false,
+              "limitations": "Victrex states actual mould shrinkage depends on part geometry, mould configuration and processing conditions; use for material comparison only."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-victrex-peek-450fe20-2026",
+              "publisher": "Victrex",
+              "title": "VICTREX PEEK 450FE20 datasheet",
+              "url": "https://www.victrex.com/en/downloads/datasheets/victrex-peek-450fe20",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": "2026-03-17",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Victrex exact-grade data reviewed. Shrinkage remains context-only for comparison because part/tool/process dependence is explicitly emphasized; only fully conditioned MFR is comparison-ready."
+          }
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "All validated numeric observations are from manufacturer-controlled sources and retain test conditions where required for comparison readiness.",
+    "Processing values are stored as supplier guidance/limits with productionRecipe=false.",
+    "ABS identities are intentionally not promoted: the current product portfolio confirms grade identity, but numeric property promotion waits for exact technical-data document/revision capture."
+  ]
+}
