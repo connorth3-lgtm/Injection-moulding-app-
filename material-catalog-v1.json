@@ -719,6 +719,976 @@
     },
     {
       "schemaVersion": 1,
+      "id": "mat-covestro-bayblend-fr3000",
+      "manufacturer": {
+        "id": "mfr-covestro",
+        "name": "Covestro",
+        "country": "Germany",
+        "website": "https://www.covestro.com/"
+      },
+      "brand": "Bayblend®",
+      "grade": "FR3000",
+      "aliases": [],
+      "polymer": {
+        "family": "PC/ABS",
+        "blend": "PC+ABS",
+        "morphology": "amorphous"
+      },
+      "composition": {
+        "recycledContentPct": null,
+        "mineralPct": null,
+        "flameRetardant": true,
+        "impactModified": null,
+        "notes": "Covestro exact Bayblend PC+ABS injection-moulding grade; only explicitly published modifiers/recycled content are recorded."
+      },
+      "properties": [
+        {
+          "id": "obs-covestro-bayblend-fr3000-mvr",
+          "property": "Melt Volume-Flow Rate",
+          "value": 24,
+          "unit": "cm³/10 min",
+          "testMethod": "ISO 1133-1",
+          "temperatureC": 240,
+          "loadKg": 5,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-covestro-bayblend-fr3000-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade rheological value; compare only at identical temperature/load."
+        },
+        {
+          "id": "obs-covestro-bayblend-fr3000-shrink-flow",
+          "property": "Mould Shrinkage",
+          "value": "0.50-0.70",
+          "unit": "%",
+          "testMethod": "b. o. ISO 2577",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "150×105×3 mm",
+          "direction": "flow",
+          "sourceId": "src-covestro-bayblend-fr3000-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade molding shrinkage under the stated specimen/process condition; not a part-warpage prediction."
+        },
+        {
+          "id": "obs-covestro-bayblend-fr3000-shrink-transverse",
+          "property": "Mould Shrinkage",
+          "value": "0.50-0.70",
+          "unit": "%",
+          "testMethod": "b. o. ISO 2577",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "150×105×3 mm",
+          "direction": "transverse",
+          "sourceId": "src-covestro-bayblend-fr3000-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade molding shrinkage under the stated specimen/process condition; not a part-warpage prediction."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-covestro-bayblend-fr3000-2026",
+          "publisher": "Covestro",
+          "title": "Bayblend® FR3000 technical properties",
+          "url": "https://solutions.covestro.com/en/products/bayblend/bayblend-fr3000_000000000000795957",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Covestro Solution Center exact-grade page reviewed. Conditioned MVR and directional shrinkage are published; modifiers/recycled content are recorded only where explicitly stated."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-covestro-bayblend-fr3008",
+      "manufacturer": {
+        "id": "mfr-covestro",
+        "name": "Covestro",
+        "country": "Germany",
+        "website": "https://www.covestro.com/"
+      },
+      "brand": "Bayblend®",
+      "grade": "FR3008",
+      "aliases": [],
+      "polymer": {
+        "family": "PC/ABS",
+        "blend": "PC+ABS",
+        "morphology": "amorphous"
+      },
+      "composition": {
+        "recycledContentPct": null,
+        "mineralPct": null,
+        "flameRetardant": true,
+        "impactModified": null,
+        "notes": "Covestro exact Bayblend PC+ABS injection-moulding grade; only explicitly published modifiers/recycled content are recorded."
+      },
+      "properties": [
+        {
+          "id": "obs-covestro-bayblend-fr3008-mvr",
+          "property": "Melt Volume-Flow Rate",
+          "value": 13,
+          "unit": "cm³/10 min",
+          "testMethod": "ISO 1133-1",
+          "temperatureC": 240,
+          "loadKg": 5,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-covestro-bayblend-fr3008-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade rheological value; compare only at identical temperature/load."
+        },
+        {
+          "id": "obs-covestro-bayblend-fr3008-shrink-flow",
+          "property": "Mould Shrinkage",
+          "value": "0.50-0.70",
+          "unit": "%",
+          "testMethod": "b. o. ISO 2577",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "150×105×3 mm; 240°C; mould 80°C",
+          "direction": "flow",
+          "sourceId": "src-covestro-bayblend-fr3008-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade molding shrinkage under the stated specimen/process condition; not a part-warpage prediction."
+        },
+        {
+          "id": "obs-covestro-bayblend-fr3008-shrink-transverse",
+          "property": "Mould Shrinkage",
+          "value": "0.50-0.70",
+          "unit": "%",
+          "testMethod": "b. o. ISO 2577",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "150×105×3 mm; 240°C; mould 80°C",
+          "direction": "transverse",
+          "sourceId": "src-covestro-bayblend-fr3008-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade molding shrinkage under the stated specimen/process condition; not a part-warpage prediction."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-covestro-bayblend-fr3008-2026",
+          "publisher": "Covestro",
+          "title": "Bayblend® FR3008 technical properties",
+          "url": "https://solutions.covestro.com/en/products/bayblend/bayblend-fr3008_000000000000866854",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Covestro Solution Center exact-grade page reviewed. Conditioned MVR and directional shrinkage are published; modifiers/recycled content are recorded only where explicitly stated."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-covestro-bayblend-fr3010-hi",
+      "manufacturer": {
+        "id": "mfr-covestro",
+        "name": "Covestro",
+        "country": "Germany",
+        "website": "https://www.covestro.com/"
+      },
+      "brand": "Bayblend®",
+      "grade": "FR3010 HI",
+      "aliases": [],
+      "polymer": {
+        "family": "PC/ABS",
+        "blend": "PC+ABS",
+        "morphology": "amorphous"
+      },
+      "composition": {
+        "recycledContentPct": null,
+        "mineralPct": null,
+        "flameRetardant": true,
+        "impactModified": true,
+        "notes": "Covestro exact Bayblend PC+ABS injection-moulding grade; only explicitly published modifiers/recycled content are recorded."
+      },
+      "properties": [
+        {
+          "id": "obs-covestro-bayblend-fr3010-hi-mvr",
+          "property": "Melt Volume-Flow Rate",
+          "value": 14,
+          "unit": "cm³/10 min",
+          "testMethod": "ISO 1133-1",
+          "temperatureC": 240,
+          "loadKg": 5,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-covestro-bayblend-fr3010-hi-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade rheological value; compare only at identical temperature/load."
+        },
+        {
+          "id": "obs-covestro-bayblend-fr3010-hi-shrink-flow",
+          "property": "Mould Shrinkage",
+          "value": "0.50-0.70",
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "60×60×2 mm; 500 bar",
+          "direction": "flow",
+          "sourceId": "src-covestro-bayblend-fr3010-hi-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade molding shrinkage under the stated specimen/process condition; not a part-warpage prediction."
+        },
+        {
+          "id": "obs-covestro-bayblend-fr3010-hi-shrink-transverse",
+          "property": "Mould Shrinkage",
+          "value": "0.50-0.70",
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "60×60×2 mm; 500 bar",
+          "direction": "transverse",
+          "sourceId": "src-covestro-bayblend-fr3010-hi-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade molding shrinkage under the stated specimen/process condition; not a part-warpage prediction."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-covestro-bayblend-fr3010-hi-2026",
+          "publisher": "Covestro",
+          "title": "Bayblend® FR3010 HI technical properties",
+          "url": "https://solutions.covestro.com/en/products/bayblend/bayblend-fr3010-hi_000000000086736357",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Covestro Solution Center exact-grade page reviewed. Conditioned MVR and directional shrinkage are published; modifiers/recycled content are recorded only where explicitly stated."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-covestro-bayblend-fr3013",
+      "manufacturer": {
+        "id": "mfr-covestro",
+        "name": "Covestro",
+        "country": "Germany",
+        "website": "https://www.covestro.com/"
+      },
+      "brand": "Bayblend®",
+      "grade": "FR3013",
+      "aliases": [],
+      "polymer": {
+        "family": "PC/ABS",
+        "blend": "PC+ABS",
+        "morphology": "amorphous"
+      },
+      "composition": {
+        "recycledContentPct": null,
+        "mineralPct": null,
+        "flameRetardant": true,
+        "impactModified": true,
+        "notes": "Covestro exact Bayblend PC+ABS injection-moulding grade; only explicitly published modifiers/recycled content are recorded."
+      },
+      "properties": [
+        {
+          "id": "obs-covestro-bayblend-fr3013-mvr",
+          "property": "Melt Volume-Flow Rate",
+          "value": 26,
+          "unit": "cm³/10 min",
+          "testMethod": "ISO 1133-1",
+          "temperatureC": 240,
+          "loadKg": 5,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-covestro-bayblend-fr3013-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade rheological value; compare only at identical temperature/load."
+        },
+        {
+          "id": "obs-covestro-bayblend-fr3013-shrink-flow",
+          "property": "Mould Shrinkage",
+          "value": "0.40-0.60",
+          "unit": "%",
+          "testMethod": "b. o. ISO 2577",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "150×105×3 mm",
+          "direction": "flow",
+          "sourceId": "src-covestro-bayblend-fr3013-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade molding shrinkage under the stated specimen/process condition; not a part-warpage prediction."
+        },
+        {
+          "id": "obs-covestro-bayblend-fr3013-shrink-transverse",
+          "property": "Mould Shrinkage",
+          "value": "0.40-0.60",
+          "unit": "%",
+          "testMethod": "b. o. ISO 2577",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "150×105×3 mm",
+          "direction": "transverse",
+          "sourceId": "src-covestro-bayblend-fr3013-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade molding shrinkage under the stated specimen/process condition; not a part-warpage prediction."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-covestro-bayblend-fr3013-2026",
+          "publisher": "Covestro",
+          "title": "Bayblend® FR3013 technical properties",
+          "url": "https://solutions.covestro.com/en/products/bayblend/bayblend-fr3013_000000000083922427",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Covestro Solution Center exact-grade page reviewed. Conditioned MVR and directional shrinkage are published; modifiers/recycled content are recorded only where explicitly stated."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-covestro-bayblend-fr3020-r35",
+      "manufacturer": {
+        "id": "mfr-covestro",
+        "name": "Covestro",
+        "country": "Germany",
+        "website": "https://www.covestro.com/"
+      },
+      "brand": "Bayblend®",
+      "grade": "FR3020 R35",
+      "aliases": [],
+      "polymer": {
+        "family": "PC/ABS",
+        "blend": "PC+ABS",
+        "morphology": "amorphous"
+      },
+      "composition": {
+        "recycledContentPct": 35,
+        "mineralPct": 5,
+        "flameRetardant": true,
+        "impactModified": null,
+        "notes": "Covestro exact Bayblend PC+ABS injection-moulding grade; only explicitly published modifiers/recycled content are recorded."
+      },
+      "properties": [
+        {
+          "id": "obs-covestro-bayblend-fr3020-r35-mvr",
+          "property": "Melt Volume-Flow Rate",
+          "value": 22,
+          "unit": "cm³/10 min",
+          "testMethod": "ISO 1133-1",
+          "temperatureC": 240,
+          "loadKg": 5,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-covestro-bayblend-fr3020-r35-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade rheological value; compare only at identical temperature/load."
+        },
+        {
+          "id": "obs-covestro-bayblend-fr3020-r35-shrink-flow",
+          "property": "Mould Shrinkage",
+          "value": "0.40-0.60",
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "60×60×2 mm",
+          "direction": "flow",
+          "sourceId": "src-covestro-bayblend-fr3020-r35-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade molding shrinkage under the stated specimen/process condition; not a part-warpage prediction."
+        },
+        {
+          "id": "obs-covestro-bayblend-fr3020-r35-shrink-transverse",
+          "property": "Mould Shrinkage",
+          "value": "0.40-0.60",
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "60×60×2 mm",
+          "direction": "transverse",
+          "sourceId": "src-covestro-bayblend-fr3020-r35-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade molding shrinkage under the stated specimen/process condition; not a part-warpage prediction."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-covestro-bayblend-fr3020-r35-2026",
+          "publisher": "Covestro",
+          "title": "Bayblend® FR3020 R35 technical properties",
+          "url": "https://solutions.covestro.com/en/products/bayblend/bayblend-fr3020-r35_000000000086613859",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Covestro Solution Center exact-grade page reviewed. Conditioned MVR and directional shrinkage are published; modifiers/recycled content are recorded only where explicitly stated."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-covestro-bayblend-fr3040-r35",
+      "manufacturer": {
+        "id": "mfr-covestro",
+        "name": "Covestro",
+        "country": "Germany",
+        "website": "https://www.covestro.com/"
+      },
+      "brand": "Bayblend®",
+      "grade": "FR3040 R35",
+      "aliases": [],
+      "polymer": {
+        "family": "PC/ABS",
+        "blend": "PC+ABS",
+        "morphology": "amorphous"
+      },
+      "composition": {
+        "recycledContentPct": 35,
+        "mineralPct": null,
+        "flameRetardant": true,
+        "impactModified": null,
+        "notes": "Covestro exact Bayblend PC+ABS injection-moulding grade; only explicitly published modifiers/recycled content are recorded."
+      },
+      "properties": [
+        {
+          "id": "obs-covestro-bayblend-fr3040-r35-mvr",
+          "property": "Melt Volume-Flow Rate",
+          "value": 18,
+          "unit": "cm³/10 min",
+          "testMethod": "ISO 1133-1",
+          "temperatureC": 240,
+          "loadKg": 5,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-covestro-bayblend-fr3040-r35-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade rheological value; compare only at identical temperature/load."
+        },
+        {
+          "id": "obs-covestro-bayblend-fr3040-r35-shrink-flow",
+          "property": "Mould Shrinkage",
+          "value": "0.50-0.70",
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "60×60×2 mm",
+          "direction": "flow",
+          "sourceId": "src-covestro-bayblend-fr3040-r35-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade molding shrinkage under the stated specimen/process condition; not a part-warpage prediction."
+        },
+        {
+          "id": "obs-covestro-bayblend-fr3040-r35-shrink-transverse",
+          "property": "Mould Shrinkage",
+          "value": "0.50-0.70",
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "60×60×2 mm",
+          "direction": "transverse",
+          "sourceId": "src-covestro-bayblend-fr3040-r35-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade molding shrinkage under the stated specimen/process condition; not a part-warpage prediction."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-covestro-bayblend-fr3040-r35-2026",
+          "publisher": "Covestro",
+          "title": "Bayblend® FR3040 R35 technical properties",
+          "url": "https://solutions.covestro.com/en/products/bayblend/bayblend-fr3040-r35_000000000086227428",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Covestro Solution Center exact-grade page reviewed. Conditioned MVR and directional shrinkage are published; modifiers/recycled content are recorded only where explicitly stated."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-covestro-bayblend-fr630-gr",
+      "manufacturer": {
+        "id": "mfr-covestro",
+        "name": "Covestro",
+        "country": "Germany",
+        "website": "https://www.covestro.com/"
+      },
+      "brand": "Bayblend®",
+      "grade": "FR630 GR",
+      "aliases": [],
+      "polymer": {
+        "family": "PC/ABS",
+        "blend": "PC+ABS",
+        "morphology": "amorphous"
+      },
+      "composition": {
+        "recycledContentPct": 30,
+        "mineralPct": null,
+        "flameRetardant": true,
+        "impactModified": null,
+        "notes": "Covestro exact Bayblend PC+ABS injection-moulding grade; only explicitly published modifiers/recycled content are recorded."
+      },
+      "properties": [
+        {
+          "id": "obs-covestro-bayblend-fr630-gr-mvr",
+          "property": "Melt Volume-Flow Rate",
+          "value": 20,
+          "unit": "cm³/10 min",
+          "testMethod": "ISO 1133-1",
+          "temperatureC": 240,
+          "loadKg": 5,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-covestro-bayblend-fr630-gr-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade rheological value; compare only at identical temperature/load."
+        },
+        {
+          "id": "obs-covestro-bayblend-fr630-gr-shrink-flow",
+          "property": "Mould Shrinkage",
+          "value": "0.50-0.70",
+          "unit": "%",
+          "testMethod": "b. o. ISO 2577",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "150×105×3 mm; 240°C; mould 80°C",
+          "direction": "flow",
+          "sourceId": "src-covestro-bayblend-fr630-gr-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade molding shrinkage under the stated specimen/process condition; not a part-warpage prediction."
+        },
+        {
+          "id": "obs-covestro-bayblend-fr630-gr-shrink-transverse",
+          "property": "Mould Shrinkage",
+          "value": "0.50-0.70",
+          "unit": "%",
+          "testMethod": "b. o. ISO 2577",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "150×105×3 mm; 240°C; mould 80°C",
+          "direction": "transverse",
+          "sourceId": "src-covestro-bayblend-fr630-gr-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade molding shrinkage under the stated specimen/process condition; not a part-warpage prediction."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-covestro-bayblend-fr630-gr-2026",
+          "publisher": "Covestro",
+          "title": "Bayblend® FR630 GR technical properties",
+          "url": "https://solutions.covestro.com/en/products/bayblend/bayblend-fr630-gr_000000000081538957",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Covestro Solution Center exact-grade page reviewed. Conditioned MVR and directional shrinkage are published; modifiers/recycled content are recorded only where explicitly stated."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-covestro-bayblend-t40-lg",
+      "manufacturer": {
+        "id": "mfr-covestro",
+        "name": "Covestro",
+        "country": "Germany",
+        "website": "https://www.covestro.com/"
+      },
+      "brand": "Bayblend®",
+      "grade": "T40 LG",
+      "aliases": [],
+      "polymer": {
+        "family": "PC/ABS",
+        "blend": "PC+ABS",
+        "morphology": "amorphous"
+      },
+      "composition": {
+        "recycledContentPct": null,
+        "mineralPct": null,
+        "flameRetardant": null,
+        "impactModified": null,
+        "notes": "Covestro exact Bayblend PC+ABS injection-moulding grade; only explicitly published modifiers/recycled content are recorded."
+      },
+      "properties": [
+        {
+          "id": "obs-covestro-bayblend-t40-lg-mvr",
+          "property": "Melt Volume-Flow Rate",
+          "value": 14,
+          "unit": "cm³/10 min",
+          "testMethod": "ISO 1133-1",
+          "temperatureC": 260,
+          "loadKg": 5,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-covestro-bayblend-t40-lg-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade rheological value; compare only at identical temperature/load."
+        },
+        {
+          "id": "obs-covestro-bayblend-t40-lg-shrink-flow",
+          "property": "Mould Shrinkage",
+          "value": "0.50-0.70",
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "60×60×2 mm; 260°C; mould 80°C",
+          "direction": "flow",
+          "sourceId": "src-covestro-bayblend-t40-lg-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade molding shrinkage under the stated specimen/process condition; not a part-warpage prediction."
+        },
+        {
+          "id": "obs-covestro-bayblend-t40-lg-shrink-transverse",
+          "property": "Mould Shrinkage",
+          "value": "0.50-0.70",
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "60×60×2 mm; 260°C; mould 80°C",
+          "direction": "transverse",
+          "sourceId": "src-covestro-bayblend-t40-lg-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade molding shrinkage under the stated specimen/process condition; not a part-warpage prediction."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-covestro-bayblend-t40-lg-2026",
+          "publisher": "Covestro",
+          "title": "Bayblend® T40 LG technical properties",
+          "url": "https://solutions.covestro.com/en/products/bayblend/bayblend-t40-lg_000000000086317524?SelectedCountry=US",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Covestro Solution Center exact-grade page reviewed. Conditioned MVR and directional shrinkage are published; modifiers/recycled content are recorded only where explicitly stated."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-covestro-bayblend-t85-hg",
+      "manufacturer": {
+        "id": "mfr-covestro",
+        "name": "Covestro",
+        "country": "Germany",
+        "website": "https://www.covestro.com/"
+      },
+      "brand": "Bayblend®",
+      "grade": "T85 HG",
+      "aliases": [],
+      "polymer": {
+        "family": "PC/ABS",
+        "blend": "PC+ABS",
+        "morphology": "amorphous"
+      },
+      "composition": {
+        "recycledContentPct": null,
+        "mineralPct": null,
+        "flameRetardant": null,
+        "impactModified": null,
+        "notes": "Covestro exact Bayblend PC+ABS injection-moulding grade; only explicitly published modifiers/recycled content are recorded."
+      },
+      "properties": [
+        {
+          "id": "obs-covestro-bayblend-t85-hg-mvr",
+          "property": "Melt Volume-Flow Rate",
+          "value": 17,
+          "unit": "cm³/10 min",
+          "testMethod": "ISO 1133-1",
+          "temperatureC": 260,
+          "loadKg": 5,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-covestro-bayblend-t85-hg-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade rheological value; compare only at identical temperature/load."
+        },
+        {
+          "id": "obs-covestro-bayblend-t85-hg-shrink-flow",
+          "property": "Mould Shrinkage",
+          "value": "0.55-0.75",
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "60×60×2 mm; 260°C; mould 80°C; 500 bar",
+          "direction": "flow",
+          "sourceId": "src-covestro-bayblend-t85-hg-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade molding shrinkage under the stated specimen/process condition; not a part-warpage prediction."
+        },
+        {
+          "id": "obs-covestro-bayblend-t85-hg-shrink-transverse",
+          "property": "Mould Shrinkage",
+          "value": "0.55-0.75",
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "60×60×2 mm; 260°C; mould 80°C; 500 bar",
+          "direction": "transverse",
+          "sourceId": "src-covestro-bayblend-t85-hg-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade molding shrinkage under the stated specimen/process condition; not a part-warpage prediction."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-covestro-bayblend-t85-hg-2026",
+          "publisher": "Covestro",
+          "title": "Bayblend® T85 HG technical properties",
+          "url": "https://solutions.covestro.com/en/products/bayblend/bayblend-t85-hg_000000000081431000",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Covestro Solution Center exact-grade page reviewed. Conditioned MVR and directional shrinkage are published; modifiers/recycled content are recorded only where explicitly stated."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-covestro-bayblend-t85-xf",
+      "manufacturer": {
+        "id": "mfr-covestro",
+        "name": "Covestro",
+        "country": "Germany",
+        "website": "https://www.covestro.com/"
+      },
+      "brand": "Bayblend®",
+      "grade": "T85 XF",
+      "aliases": [],
+      "polymer": {
+        "family": "PC/ABS",
+        "blend": "PC+ABS",
+        "morphology": "amorphous"
+      },
+      "composition": {
+        "recycledContentPct": null,
+        "mineralPct": null,
+        "flameRetardant": null,
+        "impactModified": null,
+        "notes": "Covestro exact Bayblend PC+ABS injection-moulding grade; only explicitly published modifiers/recycled content are recorded."
+      },
+      "properties": [
+        {
+          "id": "obs-covestro-bayblend-t85-xf-mvr",
+          "property": "Melt Volume-Flow Rate",
+          "value": 19,
+          "unit": "cm³/10 min",
+          "testMethod": "ISO 1133-1",
+          "temperatureC": 260,
+          "loadKg": 5,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-covestro-bayblend-t85-xf-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade rheological value; compare only at identical temperature/load."
+        },
+        {
+          "id": "obs-covestro-bayblend-t85-xf-shrink-flow",
+          "property": "Mould Shrinkage",
+          "value": "0.60-0.75",
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "60×60×2 mm; 260°C; mould 80°C; 500 bar",
+          "direction": "flow",
+          "sourceId": "src-covestro-bayblend-t85-xf-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade molding shrinkage under the stated specimen/process condition; not a part-warpage prediction."
+        },
+        {
+          "id": "obs-covestro-bayblend-t85-xf-shrink-transverse",
+          "property": "Mould Shrinkage",
+          "value": "0.60-0.75",
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": "60×60×2 mm; 260°C; mould 80°C; 500 bar",
+          "direction": "transverse",
+          "sourceId": "src-covestro-bayblend-t85-xf-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Covestro exact-grade molding shrinkage under the stated specimen/process condition; not a part-warpage prediction."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-covestro-bayblend-t85-xf-2026",
+          "publisher": "Covestro",
+          "title": "Bayblend® T85 XF technical properties",
+          "url": "https://solutions.covestro.com/en/products/bayblend/bayblend-t85-xf_000000000000942879",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Covestro Solution Center exact-grade page reviewed. Conditioned MVR and directional shrinkage are published; modifiers/recycled content are recorded only where explicitly stated."
+      }
+    },
+    {
+      "schemaVersion": 1,
       "id": "mat-covestro-makrolon-2405",
       "manufacturer": {
         "id": "mfr-covestro",
@@ -1083,6 +2053,411 @@
         "reviewedAt": "2026-09-29T00:00:00Z",
         "reviewer": "primary-source-web-review",
         "notes": "Current Covestro Solution Center exact-grade page reviewed. Only fully conditioned rheology and ISO 294-4 directional shrinkage observations are promoted."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-envalior-arnite-av2-370-b",
+      "manufacturer": {
+        "id": "mfr-envalior",
+        "name": "Envalior",
+        "country": "Netherlands",
+        "website": "https://www.envalior.com/"
+      },
+      "brand": "Arnite®",
+      "grade": "AV2 370 /B",
+      "aliases": [],
+      "polymer": {
+        "family": "PET",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "glassFibrePct": 35,
+        "notes": "35% glass-fibre reinforced PET injection-moulding grade."
+      },
+      "properties": [
+        {
+          "id": "obs-envalior-arnite-av2-370-b-mvr-1",
+          "property": "Melt Volume-Flow Rate",
+          "value": 40,
+          "unit": "cm³/10min",
+          "testMethod": "ISO 1133",
+          "temperatureC": 290,
+          "loadKg": 10,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-envalior-arnite-av2-370-b-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Envalior exact-grade typical value; preserve test temperature/load when comparing."
+        },
+        {
+          "id": "obs-envalior-arnite-av2-370-b-mvr-2",
+          "property": "Melt Volume-Flow Rate",
+          "value": 22,
+          "unit": "cm³/10min",
+          "testMethod": "ISO 1133",
+          "temperatureC": 270,
+          "loadKg": 10,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-envalior-arnite-av2-370-b-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Envalior exact-grade typical value; preserve test temperature/load when comparing."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-envalior-arnite-av2-370-b-2026",
+          "publisher": "Envalior",
+          "title": "Arnite® AV2 370 /B exact-grade data",
+          "url": "https://plasticsfinder.envalior.com/en/datasheet/Arnite%C2%AE%20AV2%20370%20B/5OX9a?b=1",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Envalior Plastics Finder exact-grade data reviewed. Only fully contextualized MVR and directional shrinkage observations are promoted."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-envalior-arnite-av2-372",
+      "manufacturer": {
+        "id": "mfr-envalior",
+        "name": "Envalior",
+        "country": "Netherlands",
+        "website": "https://www.envalior.com/"
+      },
+      "brand": "Arnite®",
+      "grade": "AV2 372",
+      "aliases": [],
+      "polymer": {
+        "family": "PET",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "glassFibrePct": 35,
+        "notes": "35% glass-fibre reinforced PET injection-moulding grade."
+      },
+      "properties": [
+        {
+          "id": "obs-envalior-arnite-av2-372-shrink-flow",
+          "property": "Mould Shrinkage",
+          "value": 0.25,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "flow",
+          "sourceId": "src-envalior-arnite-av2-372-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Exact-grade directional shrinkage; actual part dimensions remain geometry/process/orientation dependent."
+        },
+        {
+          "id": "obs-envalior-arnite-av2-372-shrink-transverse",
+          "property": "Mould Shrinkage",
+          "value": 0.95,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "transverse",
+          "sourceId": "src-envalior-arnite-av2-372-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Exact-grade directional shrinkage; actual part dimensions remain geometry/process/orientation dependent."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-envalior-arnite-av2-372-2026",
+          "publisher": "Envalior",
+          "title": "Arnite® AV2 372 exact-grade data",
+          "url": "https://plasticsfinder.envalior.com/en/datasheet/Arnite%C2%AE%20AV2%20372/6ZA5j?b=1",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Envalior Plastics Finder exact-grade data reviewed. Only fully contextualized MVR and directional shrinkage observations are promoted."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-envalior-arnite-av2-373-crc",
+      "manufacturer": {
+        "id": "mfr-envalior",
+        "name": "Envalior",
+        "country": "Netherlands",
+        "website": "https://www.envalior.com/"
+      },
+      "brand": "Arnite®",
+      "grade": "AV2 373-CRC",
+      "aliases": [],
+      "polymer": {
+        "family": "PET",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "glassFibrePct": 35,
+        "notes": "35% glass-fibre reinforced PET injection-moulding grade."
+      },
+      "properties": [
+        {
+          "id": "obs-envalior-arnite-av2-373-crc-shrink-flow",
+          "property": "Mould Shrinkage",
+          "value": 0.25,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "flow",
+          "sourceId": "src-envalior-arnite-av2-373-crc-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Exact-grade directional shrinkage; actual part dimensions remain geometry/process/orientation dependent."
+        },
+        {
+          "id": "obs-envalior-arnite-av2-373-crc-shrink-transverse",
+          "property": "Mould Shrinkage",
+          "value": 0.95,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "transverse",
+          "sourceId": "src-envalior-arnite-av2-373-crc-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Exact-grade directional shrinkage; actual part dimensions remain geometry/process/orientation dependent."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-envalior-arnite-av2-373-crc-2026",
+          "publisher": "Envalior",
+          "title": "Arnite® AV2 373-CRC exact-grade data",
+          "url": "https://plasticsfinder.envalior.com/en/datasheet/Arnite%C2%AE%20AV2%20373-CRC/gKanr?b=1",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Envalior Plastics Finder exact-grade data reviewed. Only fully contextualized MVR and directional shrinkage observations are promoted."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-envalior-arnite-av2-390",
+      "manufacturer": {
+        "id": "mfr-envalior",
+        "name": "Envalior",
+        "country": "Netherlands",
+        "website": "https://www.envalior.com/"
+      },
+      "brand": "Arnite®",
+      "grade": "AV2 390",
+      "aliases": [],
+      "polymer": {
+        "family": "PET",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "glassFibrePct": 50,
+        "notes": "50% glass-fibre reinforced PET injection-moulding grade."
+      },
+      "properties": [
+        {
+          "id": "obs-envalior-arnite-av2-390-shrink-flow",
+          "property": "Mould Shrinkage",
+          "value": 0.2,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "flow",
+          "sourceId": "src-envalior-arnite-av2-390-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Exact-grade directional shrinkage; actual part dimensions remain geometry/process/orientation dependent."
+        },
+        {
+          "id": "obs-envalior-arnite-av2-390-shrink-transverse",
+          "property": "Mould Shrinkage",
+          "value": 0.8,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "transverse",
+          "sourceId": "src-envalior-arnite-av2-390-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Exact-grade directional shrinkage; actual part dimensions remain geometry/process/orientation dependent."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-envalior-arnite-av2-390-2026",
+          "publisher": "Envalior",
+          "title": "Arnite® AV2 390 exact-grade data",
+          "url": "https://plasticsfinder.envalior.com/en/datasheet/Arnite%C2%AE%20AV2%20390/x8Ed3?b=1",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Envalior Plastics Finder exact-grade data reviewed. Only fully contextualized MVR and directional shrinkage observations are promoted."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-envalior-arnite-care-a1u",
+      "manufacturer": {
+        "id": "mfr-envalior",
+        "name": "Envalior",
+        "country": "Netherlands",
+        "website": "https://www.envalior.com/"
+      },
+      "brand": "Arnite®",
+      "grade": "Care A1U",
+      "aliases": [],
+      "polymer": {
+        "family": "PET",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "glassFibrePct": null,
+        "notes": "Low-viscosity medical PET injection-moulding/extrusion grade."
+      },
+      "properties": [
+        {
+          "id": "obs-envalior-arnite-care-a1u-mvr-1",
+          "property": "Melt Volume-Flow Rate",
+          "value": 65,
+          "unit": "cm³/10min",
+          "testMethod": "ISO 1133",
+          "temperatureC": 290,
+          "loadKg": 5,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-envalior-arnite-care-a1u-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Envalior exact-grade typical value; preserve test temperature/load when comparing."
+        },
+        {
+          "id": "obs-envalior-arnite-care-a1u-shrink-flow",
+          "property": "Mould Shrinkage",
+          "value": 1.6,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "flow",
+          "sourceId": "src-envalior-arnite-care-a1u-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Exact-grade directional shrinkage; actual part dimensions remain geometry/process/orientation dependent."
+        },
+        {
+          "id": "obs-envalior-arnite-care-a1u-shrink-transverse",
+          "property": "Mould Shrinkage",
+          "value": 1.6,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "transverse",
+          "sourceId": "src-envalior-arnite-care-a1u-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Exact-grade directional shrinkage; actual part dimensions remain geometry/process/orientation dependent."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-envalior-arnite-care-a1u-2026",
+          "publisher": "Envalior",
+          "title": "Arnite® Care A1U exact-grade data",
+          "url": "https://plasticsfinder.envalior.com/api/document/tech/Arnite%C2%AE%20Care%20A1U/MguQumAMz/en",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Envalior Plastics Finder exact-grade data reviewed. Only fully contextualized MVR and directional shrinkage observations are promoted."
       }
     },
     {
@@ -2333,6 +3708,192 @@
         "reviewedAt": "2026-09-29T00:00:00Z",
         "reviewer": "primary-source-web-review",
         "notes": "Current Envalior Plastics Finder exact-grade page reviewed. Only explicitly published shrinkage/MVR and material-specific processing observations are promoted; values remain supplier guidance, not recipes."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-envalior-pocan-b4235",
+      "manufacturer": {
+        "id": "mfr-envalior",
+        "name": "Envalior",
+        "country": "Netherlands",
+        "website": "https://www.envalior.com/"
+      },
+      "brand": "Pocan®",
+      "grade": "B4235",
+      "aliases": [],
+      "polymer": {
+        "family": "PBT",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "glassFibrePct": 30,
+        "notes": "30% glass-fibre reinforced, flame-retardant PBT injection-moulding grade."
+      },
+      "properties": [
+        {
+          "id": "obs-envalior-pocan-b4235-mvr-1",
+          "property": "Melt Volume-Flow Rate",
+          "value": 14,
+          "unit": "cm³/10min",
+          "testMethod": "ISO 1133",
+          "temperatureC": 260,
+          "loadKg": 2.16,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-envalior-pocan-b4235-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Envalior exact-grade typical value; preserve test temperature/load when comparing."
+        },
+        {
+          "id": "obs-envalior-pocan-b4235-shrink-flow",
+          "property": "Mould Shrinkage",
+          "value": 0.4,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "flow",
+          "sourceId": "src-envalior-pocan-b4235-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Exact-grade directional shrinkage; actual part dimensions remain geometry/process/orientation dependent."
+        },
+        {
+          "id": "obs-envalior-pocan-b4235-shrink-transverse",
+          "property": "Mould Shrinkage",
+          "value": 1.1,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "transverse",
+          "sourceId": "src-envalior-pocan-b4235-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Exact-grade directional shrinkage; actual part dimensions remain geometry/process/orientation dependent."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-envalior-pocan-b4235-2026",
+          "publisher": "Envalior",
+          "title": "Pocan® B4235 exact-grade data",
+          "url": "https://plasticsfinder.envalior.com/en/datasheet/Pocan%C2%AE%20B4235/x6802?b=1",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Envalior Plastics Finder exact-grade data reviewed. Only fully contextualized MVR and directional shrinkage observations are promoted."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-envalior-pocan-b4235z",
+      "manufacturer": {
+        "id": "mfr-envalior",
+        "name": "Envalior",
+        "country": "Netherlands",
+        "website": "https://www.envalior.com/"
+      },
+      "brand": "Pocan®",
+      "grade": "B4235Z",
+      "aliases": [],
+      "polymer": {
+        "family": "PBT",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "glassFibrePct": 30,
+        "notes": "30% glass-fibre reinforced, flame-retardant, impact-modified PBT injection-moulding grade."
+      },
+      "properties": [
+        {
+          "id": "obs-envalior-pocan-b4235z-mvr-1",
+          "property": "Melt Volume-Flow Rate",
+          "value": 26,
+          "unit": "cm³/10min",
+          "testMethod": "ISO 1133",
+          "temperatureC": 260,
+          "loadKg": 5,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-envalior-pocan-b4235z-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Envalior exact-grade typical value; preserve test temperature/load when comparing."
+        },
+        {
+          "id": "obs-envalior-pocan-b4235z-shrink-flow",
+          "property": "Mould Shrinkage",
+          "value": 0.3,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "flow",
+          "sourceId": "src-envalior-pocan-b4235z-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Exact-grade directional shrinkage; actual part dimensions remain geometry/process/orientation dependent."
+        },
+        {
+          "id": "obs-envalior-pocan-b4235z-shrink-transverse",
+          "property": "Mould Shrinkage",
+          "value": 0.9,
+          "unit": "%",
+          "testMethod": "ISO 294-4",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "transverse",
+          "sourceId": "src-envalior-pocan-b4235z-2026",
+          "sourcePage": "manufacturer exact-grade technical data",
+          "comparisonReady": true,
+          "limitations": "Exact-grade directional shrinkage; actual part dimensions remain geometry/process/orientation dependent."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-envalior-pocan-b4235z-2026",
+          "publisher": "Envalior",
+          "title": "Pocan® B4235Z exact-grade data",
+          "url": "https://plasticsfinder.envalior.com/en/datasheet/Pocan%C2%AE%20B4235Z/419vP?b=1",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Envalior Plastics Finder exact-grade data reviewed. Only fully contextualized MVR and directional shrinkage observations are promoted."
       }
     },
     {
