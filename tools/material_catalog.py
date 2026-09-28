@@ -156,6 +156,8 @@ def validate_grade(grade: dict[str, Any], context: str = "grade") -> list[str]:
 
 def validate_staging() -> list[str]:
     errors: list[str] = []
+    grade_lineage: dict[str, tuple[str, str, str]] = {}
+    runtime_occurrences: dict[str, int] = {}
     for path in sorted(STAGING.glob("*.json")):
         payload = load_json(path)
         for mi, manufacturer in enumerate(payload.get("manufacturers") or []):
@@ -163,8 +165,85 @@ def validate_staging() -> list[str]:
             need(mid.startswith("mfr-"), f"{path.name}: manufacturer[{mi}] id must start mfr-", errors)
             need(bool(str(manufacturer.get("name", "")).strip()), f"{path.name}: manufacturer[{mi}] name required", errors)
             for gi, grade in enumerate(manufacturer.get("gradeRecords") or []):
-                errors.extend(validate_grade(grade, f"{path.name}:{mid}:grade[{gi}]"))
+                context = f"{path.name}:{mid}:grade[{gi}]"
+                errors.extend(validate_grade(grade, context))
+                gid = clean_text(grade.get("id"))
+                if not gid:
+                    continue
+                lineage = (
+                    clean_text((grade.get("manufacturer") or {}).get("id")),
+                    clean_text(grade.get("brand")),
+                    clean_text(grade.get("grade")),
+                )
+                prior = grade_lineage.get(gid)
+                if prior is None:
+                    grade_lineage[gid] = lineage
+                else:
+                    need(
+                        prior == lineage,
+                        f"{context}: grade id {gid} was reused for a different commercial identity; prior={prior}, current={lineage}",
+                        errors,
+                    )
+                stage = clean_text((grade.get("provenance") or {}).get("stage")) or "staging"
+                if stage in {"validated", "published"}:
+                    runtime_occurrences[gid] = runtime_occurrences.get(gid, 0) + 1
+                    need(
+                        runtime_occurrences[gid] <= 1,
+                        f"{context}: grade id {gid} has more than one validated/published staging occurrence",
+                        errors,
+                    )
     return errors
+
+
+
+def acquisition_status() -> dict[str, Any]:
+    """Summarize the complete staging pipeline without promoting staged-only records."""
+    grade_stages: dict[str, set[str]] = {}
+    manufacturers: set[str] = set()
+    countries: set[str] = set()
+    families: set[str] = set()
+    records = 0
+    for path in sorted(STAGING.glob("*.json")):
+        payload = load_json(path)
+        for manufacturer in payload.get("manufacturers") or []:
+            mid = clean_text(manufacturer.get("id"))
+            if mid:
+                manufacturers.add(mid)
+            country = clean_text(manufacturer.get("country"))
+            if country:
+                countries.add(country)
+            for grade in manufacturer.get("gradeRecords") or []:
+                records += 1
+                gid = clean_text(grade.get("id"))
+                if not gid:
+                    continue
+                stage = clean_text((grade.get("provenance") or {}).get("stage")) or "staging"
+                grade_stages.setdefault(gid, set()).add(stage)
+                family = clean_text((grade.get("polymer") or {}).get("family"))
+                if family:
+                    families.add(family)
+    validated_ids = {
+        gid for gid, stages in grade_stages.items()
+        if stages & {"validated", "published"}
+    }
+    staging_only_ids = {
+        gid for gid, stages in grade_stages.items()
+        if not (stages & {"validated", "published"})
+    }
+    promoted_ids = {
+        gid for gid, stages in grade_stages.items()
+        if "staging" in stages and stages & {"validated", "published"}
+    }
+    return {
+        "stagingRecords": records,
+        "uniqueExactGradeIds": len(grade_stages),
+        "validatedOrPublishedIds": len(validated_ids),
+        "stagingOnlyIds": len(staging_only_ids),
+        "promotionLineageIds": len(promoted_ids),
+        "manufacturersAcrossPipeline": len(manufacturers),
+        "countriesAcrossPipeline": len(countries),
+        "polymerFamiliesAcrossPipeline": len(families),
+    }
 
 
 def compile_catalog(output: Path = CATALOG) -> dict[str, Any]:
@@ -201,14 +280,44 @@ def compile_catalog(output: Path = CATALOG) -> dict[str, Any]:
             if manufacturer_grades:
                 manufacturers[mid] = {"id": mid, "name": manufacturer["name"], "country": manufacturer.get("country")}
 
+    sorted_grades = sorted(
+        grades,
+        key=lambda x: (
+            x["manufacturer"]["name"].lower(),
+            str(x.get("brand") or "").lower(),
+            x["grade"].lower(),
+            str((x.get("identity") or {}).get("variantId") or "").lower(),
+        ),
+    )
+    sorted_manufacturers = sorted(manufacturers.values(), key=lambda x: x["name"].lower())
+    countries = sorted({str(m.get("country") or "").strip() for m in sorted_manufacturers if str(m.get("country") or "").strip()})
+    families = sorted({str((g.get("polymer") or {}).get("family") or "").strip() for g in sorted_grades if str((g.get("polymer") or {}).get("family") or "").strip()})
+    property_observations = [obs for g in sorted_grades for obs in g.get("properties") or []]
+    processing_observations = [obs for g in sorted_grades for obs in g.get("processing") or []]
+    comparison_ready = [obs for obs in property_observations if obs.get("comparisonReady") is True]
+    primary_source_grades = [
+        g for g in sorted_grades
+        if any(str(s.get("kind") or "").startswith("manufacturer-") for s in g.get("sources") or [])
+    ]
+
     catalog = {
         "schemaVersion": 1,
         "catalogVersion": "generated",
         "generated": True,
         "status": "validated",
         "boundary": "Compiled only from staged exact-grade records whose provenance stage is validated/published and which pass semantic QA. Internal staging/schema files are not part of the public runtime artifact. Commercial grade names may legitimately coexist when variant/revision/production identity differs.",
-        "manufacturers": sorted(manufacturers.values(), key=lambda x: x["name"].lower()),
-        "grades": sorted(grades, key=lambda x: (x["manufacturer"]["name"].lower(), str(x.get("brand") or "").lower(), x["grade"].lower(), str((x.get("identity") or {}).get("variantId") or "").lower())),
+        "statistics": {
+            "exactGrades": len(sorted_grades),
+            "manufacturers": len(sorted_manufacturers),
+            "countries": len(countries),
+            "polymerFamilies": len(families),
+            "propertyObservations": len(property_observations),
+            "comparisonReadyObservations": len(comparison_ready),
+            "processingObservations": len(processing_observations),
+            "primarySourceGrades": len(primary_source_grades),
+        },
+        "manufacturers": sorted_manufacturers,
+        "grades": sorted_grades,
     }
     output.write_text(json.dumps(catalog, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return catalog
@@ -216,7 +325,7 @@ def compile_catalog(output: Path = CATALOG) -> dict[str, Any]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Validate/compile MouldMaster exact-grade material staging data")
-    parser.add_argument("command", choices=["validate", "compile"])
+    parser.add_argument("command", choices=["validate", "compile", "status"])
     parser.add_argument("--output", type=Path, default=CATALOG)
     args = parser.parse_args()
 
@@ -225,6 +334,11 @@ def main() -> None:
         if errors:
             raise SystemExit("\n".join(errors))
         print("Material staging semantic QA passed")
+    elif args.command == "status":
+        errors = validate_staging()
+        if errors:
+            raise SystemExit("\n".join(errors))
+        print(json.dumps(acquisition_status(), indent=2, ensure_ascii=False))
     else:
         catalog = compile_catalog(args.output)
         print(f"Compiled {len(catalog['grades'])} validated exact grades from {len(catalog['manufacturers'])} manufacturers")

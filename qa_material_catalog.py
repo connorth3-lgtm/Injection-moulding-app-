@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 import re
 
-from tools.material_catalog import ROOT, CATALOG, STAGING, load_json, validate_staging, validate_grade
+from tools.material_catalog import ROOT, CATALOG, STAGING, load_json, validate_staging, validate_grade, acquisition_status
 
 
 def need(ok, message):
@@ -87,8 +87,24 @@ need("missing-one-side" in registry_runtime and "not-directly-comparable" in reg
 need("Close important evidence gaps" in registry_runtime, "material change assistant must make missing evidence actionable without assuming equivalence")
 need(catalog.get("schemaVersion") == 1, "material catalog schema version drift")
 need(catalog.get("catalogVersion") == "generated", "material catalog must use the compiler-owned generated version marker")
+stats = catalog.get("statistics") or {}
+need(stats.get("exactGrades") == len(catalog.get("grades") or []) == 260, "catalog exact-grade statistics drift")
+need(stats.get("manufacturers") == len(catalog.get("manufacturers") or []) == 28, "catalog manufacturer statistics drift")
+catalog_countries = {m.get("country") for m in catalog.get("manufacturers") or [] if m.get("country")}
+catalog_families = {(g.get("polymer") or {}).get("family") for g in catalog.get("grades") or [] if (g.get("polymer") or {}).get("family")}
+catalog_properties = [obs for g in catalog.get("grades") or [] for obs in g.get("properties") or []]
+catalog_processing = [obs for g in catalog.get("grades") or [] for obs in g.get("processing") or []]
+need(stats.get("countries") == len(catalog_countries) == 13, "catalog country statistics drift")
+need(stats.get("polymerFamilies") == len(catalog_families) == 32, "catalog family statistics drift")
+need(stats.get("propertyObservations") == len(catalog_properties) == 536, "catalog property-observation statistics drift")
+need(stats.get("comparisonReadyObservations") == sum(1 for obs in catalog_properties if obs.get("comparisonReady") is True) == 201, "catalog comparison-ready statistics drift")
+need(stats.get("processingObservations") == len(catalog_processing) == 225, "catalog processing-observation statistics drift")
+need(stats.get("primarySourceGrades") == sum(1 for g in catalog.get("grades") or [] if any(str(s.get("kind") or "").startswith("manufacturer-") for s in g.get("sources") or [])) == 256, "catalog primary-source statistics drift")
 need("variant/revision/production identity differs" in str(catalog.get("boundary") or ""), "material catalog boundary does not describe variant-safe identity")
-need({m.get("id") for m in catalog.get("manufacturers") or []} == {"mfr-kep", "mfr-lg-chem", "mfr-lotte-chemical", "mfr-sabic", "mfr-envalior", "mfr-victrex", "mfr-basf", "mfr-covestro", "mfr-arkema", "mfr-roehm", "mfr-celanese", "mfr-ineos-styrolution", "mfr-supreme-petrochem", "mfr-scgc", "mfr-kuraray", "mfr-ube", "mfr-indianoil", "mfr-petronas-chemicals", "mfr-lotte-titan", "mfr-lyondellbasell", "mfr-momentive", "mfr-mitsui-elastomers-singapore", "mfr-exxonmobil"}, "runtime manufacturer set drift")
+catalog_manufacturer_ids = {m.get("id") for m in catalog.get("manufacturers") or []}
+runtime_manufacturer_ids = {(g.get("manufacturer") or {}).get("id") for g in catalog.get("grades") or []}
+need(catalog_manufacturer_ids == runtime_manufacturer_ids, f"runtime manufacturer index/grade drift: index={sorted(catalog_manufacturer_ids)} grades={sorted(runtime_manufacturer_ids)}")
+need(len(catalog_manufacturer_ids) == 28, "runtime manufacturer count drift")
 need(isinstance(catalog.get("grades"), list), "material catalog grades must be a list")
 for idx, grade in enumerate(catalog["grades"]):
     grade_errors = validate_grade(grade, f"catalog grade[{idx}]")
@@ -109,7 +125,12 @@ for staging_path in sorted(STAGING.glob("*.json")):
                 staged_grade_ids.add(gid)
 runtime_grade_ids = {grade.get("id") for grade in catalog.get("grades") or []}
 need(staged_grade_ids == runtime_grade_ids, f"runtime/staging material drift: staged={sorted(staged_grade_ids)} runtime={sorted(runtime_grade_ids)}")
-need(len(runtime_grade_ids) == 188, "runtime exact-grade count must include the original Korean pilot and validated Korea/global expansion waves through wave22")
+need(len(runtime_grade_ids) == 260, "runtime exact-grade count must include the original Korean pilot, waves through wave22, the 70-grade Vietnam PP / Korea EPS mega wave, and two conditioned Polyplastics POM grades")
+pipeline_status = acquisition_status()
+need(pipeline_status.get("validatedOrPublishedIds") == len(runtime_grade_ids), "acquisition pipeline validated/runtime reconciliation drift")
+need(pipeline_status.get("stagingOnlyIds", 0) >= 370, "mega expansion staged-only acquisition unexpectedly shrank")
+need(pipeline_status.get("uniqueExactGradeIds", 0) >= len(runtime_grade_ids) + 370, "mega expansion unique exact-grade acquisition unexpectedly shrank")
+need(pipeline_status.get("promotionLineageIds", 0) >= 4, "material promotion-lineage accounting unexpectedly disappeared")
 need(kolon_grade_ids.isdisjoint(runtime_grade_ids), "source-reviewed KOLON staging identities must not leak into the validated runtime catalog")
 
 global_wave = load_json(STAGING / "global-material-expansion-20260929-v1.json")
@@ -395,6 +416,90 @@ need(all((g.get("provenance") or {}).get("stage") == "validated" for g in global
 need(all(any(obs.get("property") == "Melt Flow Rate" and obs.get("temperatureC") is not None and obs.get("loadKg") is not None and obs.get("comparisonReady") is True for obs in g.get("properties") or []) for g in global22), "Korea Samyang wave22 conditioned MFR contract drift")
 need(all(obs.get("comparisonReady") is False for g in global22 for obs in g.get("properties") or [] if obs.get("property") == "Mould Shrinkage"), "Korea Samyang wave22 unresolved-direction shrinkage must remain context-only")
 need(all(obs.get("productionRecipe") is False for g in global22 for obs in g.get("processing") or []), "Korea Samyang wave22 supplier guidance became a production recipe")
+
+# Mega wave23: full current Hyosung Vina Vietnam-Plant PP catalogue plus
+# governed SH Energy ANYPOL SE-HF EPS identities. Hyosung melt index remains
+# context-only because the catalogue table omits test temperature/load; EPS is
+# explicitly expandable-bead/steam-moulding material, not conventional injection feedstock.
+global_wave23 = load_json(STAGING / "global-material-mega-expansion-20260929-v23.json")
+need((global_wave23.get("summary") or {}).get("validatedGrades") == 70, "mega wave23 validated-grade count drift")
+need((global_wave23.get("summary") or {}).get("hyosungVinaGrades") == 66, "Hyosung Vina mega-wave grade count drift")
+need((global_wave23.get("summary") or {}).get("shEnergyValidatedGrades") == 4, "SH Energy mega-wave grade count drift")
+global23 = [g for m in global_wave23.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global23) == 70 and all(g.get("id") in runtime_grade_ids for g in global23), "mega wave23 grades are not fully published")
+hyosung_vina = [g for g in global23 if (g.get("manufacturer") or {}).get("id") == "mfr-hyosung-vina"]
+sh_energy = [g for g in global23 if (g.get("manufacturer") or {}).get("id") == "mfr-sh-energy-chemical"]
+need(len(hyosung_vina) == 66, "Hyosung Vina validated exact-grade set drift")
+need(all((g.get("production") or {}).get("country") == "Vietnam" for g in hyosung_vina), "Hyosung Vina country provenance drift")
+need(all((g.get("production") or {}).get("plant") == "Hyosung Vina Chemicals Vietnam Plant" for g in hyosung_vina), "Hyosung Vina catalogue-level plant provenance drift")
+need(all(obs.get("comparisonReady") is False for g in hyosung_vina for obs in g.get("properties") or [] if obs.get("property") == "Melt Index"), "Hyosung Vina under-conditioned melt index became comparison-ready")
+need(all(any(s.get("publisher") == "Hyosung Vina Chemicals" and s.get("kind") == "manufacturer-datasheet" for s in g.get("sources") or []) for g in hyosung_vina), "Hyosung Vina primary catalogue source drift")
+need({g.get("grade") for g in sh_energy} == {"SE-1600HF", "SE-2000HF", "SE-2500HF", "SE-3000HF"}, "SH Energy ANYPOL SE-HF exact-grade set drift")
+need(all((g.get("polymer") or {}).get("family") == "EPS" for g in sh_energy), "SH Energy SE-HF family must remain EPS")
+need(all("not conventional injection" in str((g.get("identity") or {}).get("notes") or "").lower() for g in sh_energy), "SH Energy EPS non-injection boundary missing")
+need(all(not (g.get("processing") or []) for g in sh_energy), "SH Energy EPS processing recipe leaked into runtime")
+need(all(any(s.get("kind") == "regulatory" and "ESR-1095" in str(s.get("title") or "") for s in g.get("sources") or []) for g in sh_energy), "SH Energy ICC-ES source trail drift")
+
+# Mega wave24: large Asahi Kasei exact-identity acquisition remains staging-only.
+global_wave24 = load_json(STAGING / "global-material-mega-expansion-20260929-v24.json")
+need((global_wave24.get("summary") or {}).get("sourceReviewedStagingGrades") == 196, "mega wave24 Asahi Kasei staging count drift")
+need((global_wave24.get("summary") or {}).get("brandCounts") == {"LEONA": 60, "TENAC": 74, "XYRON": 62}, "mega wave24 brand counts drift")
+need((global_wave24.get("governance") or {}).get("runtimePromotionBlocked") is True, "mega wave24 runtime promotion boundary drift")
+global24 = [g for m in global_wave24.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global24) == 196, "mega wave24 exact identity count drift")
+need(all((g.get("provenance") or {}).get("stage") == "staging" for g in global24), "mega wave24 contains non-staging records")
+need(all(g.get("id") not in runtime_grade_ids for g in global24), "mega wave24 staging identity leaked into validated runtime")
+need(all(not (g.get("properties") or []) and not (g.get("processing") or []) for g in global24), "mega wave24 must not invent numeric property/process observations")
+need({(g.get("manufacturer") or {}).get("id") for g in global24} == {"mfr-asahi-kasei"}, "mega wave24 manufacturer drift")
+need({g.get("brand") for g in global24} == {"LEONA", "TENAC", "XYRON"}, "mega wave24 brand set drift")
+need({(g.get("polymer") or {}).get("family") for g in global24} == {"PA", "POM", "mPPE alloy"}, "mega wave24 family staging set drift")
+
+# Mega wave25: Polyplastics current LAPEROS identities remain staging-only while
+# two DURACON POM grades are validated from exact pages with ISO 1133 190C/2.16kg.
+global_wave25 = load_json(STAGING / "global-material-mega-expansion-20260929-v25.json")
+need((global_wave25.get("summary") or {}).get("validatedGrades") == 2, "mega wave25 validated POM count drift")
+need((global_wave25.get("summary") or {}).get("sourceReviewedStagingGrades") == 21, "mega wave25 LAPEROS staging count drift")
+global25 = [g for m in global_wave25.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+global25_validated = [g for g in global25 if (g.get("provenance") or {}).get("stage") in {"validated", "published"}]
+global25_staging = [g for g in global25 if (g.get("provenance") or {}).get("stage") == "staging"]
+need({g.get("grade") for g in global25_validated} == {"M25LV", "GB-25R"}, "mega wave25 DURACON exact-grade set drift")
+need(all(g.get("id") in runtime_grade_ids for g in global25_validated), "mega wave25 validated DURACON grades missing from runtime")
+need(len(global25_staging) == 21 and all(g.get("id") not in runtime_grade_ids for g in global25_staging), "mega wave25 LAPEROS staging leak")
+need(all(not (g.get("properties") or []) and not (g.get("processing") or []) for g in global25_staging), "mega wave25 LAPEROS numeric inference detected")
+need(all(any(obs.get("testMethod") == "ISO 1133" and obs.get("temperatureC") == 190 and obs.get("loadKg") == 2.16 and obs.get("comparisonReady") is True for obs in g.get("properties") or []) for g in global25_validated), "mega wave25 DURACON rheology conditioning drift")
+
+# Mega wave26: Sumitomo Chemical source-reviewed exact identities and explicit
+# composition text remain staging-only until exact numeric observations are normalized.
+global_wave26 = load_json(STAGING / "global-material-mega-expansion-20260929-v26.json")
+need((global_wave26.get("summary") or {}).get("sourceReviewedStagingGrades") == 55, "mega wave26 Sumitomo staging count drift")
+need((global_wave26.get("summary") or {}).get("brandCounts") == {"SUMIKASUPER": 38, "SUMIKAEXCEL": 8, "SUMIPLOY": 9}, "mega wave26 brand counts drift")
+need((global_wave26.get("governance") or {}).get("runtimePromotionBlocked") is True, "mega wave26 runtime promotion boundary drift")
+global26 = [g for m in global_wave26.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global26) == 55, "mega wave26 exact identity count drift")
+need(all((g.get("provenance") or {}).get("stage") == "staging" for g in global26), "mega wave26 contains non-staging record")
+need(all(g.get("id") not in runtime_grade_ids for g in global26), "mega wave26 staging identity leaked into runtime")
+need(all(not (g.get("properties") or []) and not (g.get("processing") or []) for g in global26), "mega wave26 invented numeric property/process observation")
+need({g.get("brand") for g in global26} == {"SUMIKASUPER", "SUMIKAEXCEL", "SUMIPLOY"}, "mega wave26 brand set drift")
+need(all((g.get("manufacturer") or {}).get("id") == "mfr-sumitomo-chemical" for g in global26), "mega wave26 manufacturer drift")
+
+# Scale-quality invariant: the runtime manufacturer index is derived from the
+# actual validated grades rather than a manually frozen vendor whitelist.
+need(len(runtime_manufacturer_ids) == len(catalog.get("manufacturers") or []), "runtime manufacturer index contains duplicate/missing vendors")
+
+# Mega wave27: UBE current injection/tube-coating catalogue expansion remains
+# source-reviewed staging; only explicit manufacturer generic-marking percentages
+# may be retained as composition metadata.
+global_wave27 = load_json(STAGING / "global-material-mega-expansion-20260929-v27.json")
+need((global_wave27.get("summary") or {}).get("sourceReviewedStagingGrades") == 98, "mega wave27 UBE staging count drift")
+need((global_wave27.get("governance") or {}).get("runtimePromotionBlocked") is True, "mega wave27 runtime promotion boundary drift")
+global27 = [g for m in global_wave27.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global27) == 98, "mega wave27 UBE exact identity count drift")
+need(all((g.get("provenance") or {}).get("stage") == "staging" for g in global27), "mega wave27 contains non-staging records")
+need(all(g.get("id") not in runtime_grade_ids for g in global27), "mega wave27 UBE staging identity leaked into runtime")
+need(all(not (g.get("properties") or []) and not (g.get("processing") or []) for g in global27), "mega wave27 invented numeric property/process observations")
+need(all((g.get("manufacturer") or {}).get("id") == "mfr-ube" for g in global27), "mega wave27 manufacturer drift")
+need((global_wave27.get("summary") or {}).get("familyCounts") == {"PA12": 29, "PA6": 40, "PA6+PP": 1, "PA510": 3, "PA56": 14, "PA66+PP": 1, "PA66+PE": 2, "PA66": 5, "PA6/66": 3}, "mega wave27 family-count drift")
+need(all(g.get("grade") not in {"1013B", "1015GC6"} for g in global27), "mega wave27 duplicated already-validated UBE grade")
 
 # Pilot proof: current primary-source LOTTE records remain unchanged while the
 # umbrella manifest records progress without copying exact-grade claims.

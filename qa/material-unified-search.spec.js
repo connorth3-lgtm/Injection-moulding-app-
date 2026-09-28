@@ -154,3 +154,33 @@ test('multidimensional catalogue exposes application process and evidence browse
   await expect(results.locator('[data-mm-material-index-result]')).not.toHaveCount(0);
   await expect(results).toContainText('Primary source');
 });
+
+
+test('mega catalogue keeps Vietnam PP and expandable EPS on distinct governed browse paths',async({page})=>{
+  await openMaterials(page,768);
+  const facets=await page.evaluate(()=>window.MM_MATERIAL_SEARCH.facets());
+  expect(facets.countries).toContain('Vietnam');
+  expect(facets.families).toContain('EPS');
+  expect(facets.processes).toContain('EPS pre-expansion / steam moulding');
+  expect(facets.applications).toContain('Building / construction');
+
+  const vietnam=await page.evaluate(()=>window.MM_MATERIAL_SEARCH.searchAllPage('',{
+    types:['exact-grade'],country:'Vietnam',page:1,pageSize:100
+  }));
+  expect(vietnam.total).toBe(66);
+  expect(vietnam.items.every(item=>item.catalog?.manufacturer==='Hyosung Vina Chemicals Co., Ltd.')).toBeTruthy();
+  expect(vietnam.items.every(item=>item.catalog?.family==='PP')).toBeTruthy();
+
+  const eps=await page.evaluate(()=>window.MM_MATERIAL_SEARCH.searchAllPage('',{
+    types:['exact-grade'],polymerFamily:'EPS',process:'EPS pre-expansion / steam moulding',page:1,pageSize:100
+  }));
+  expect(eps.total).toBe(4);
+  expect(eps.items.every(item=>item.catalog?.manufacturer==='SH Energy & Chemical Co., Ltd.')).toBeTruthy();
+  expect(eps.items.every(item=>item.catalog?.processes.includes('Injection moulding')===false)).toBeTruthy();
+  expect(eps.items.every(item=>item.catalog?.processes.includes('Thin-wall injection')===false)).toBeTruthy();
+
+  const conflictingInjection=await page.evaluate(()=>window.MM_MATERIAL_SEARCH.searchAllPage('',{
+    types:['exact-grade'],polymerFamily:'EPS',process:'Injection moulding',page:1,pageSize:100
+  }));
+  expect(conflictingInjection.total).toBe(0);
+});
