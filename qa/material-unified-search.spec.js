@@ -177,4 +177,10 @@ test('mega catalogue keeps Vietnam PP and expandable EPS on distinct governed br
   expect(eps.total).toBe(4);
   expect(eps.items.every(item=>item.catalog?.manufacturer==='SH Energy & Chemical Co., Ltd.')).toBeTruthy();
   expect(eps.items.every(item=>item.catalog?.processes.includes('Injection moulding')===false)).toBeTruthy();
+  expect(eps.items.every(item=>item.catalog?.processes.includes('Thin-wall injection')===false)).toBeTruthy();
+
+  const conflictingInjection=await page.evaluate(()=>window.MM_MATERIAL_SEARCH.searchAllPage('',{
+    types:['exact-grade'],polymerFamily:'EPS',process:'Injection moulding',page:1,pageSize:100
+  }));
+  expect(conflictingInjection.total).toBe(0);
 });
