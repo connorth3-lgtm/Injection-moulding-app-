@@ -169,7 +169,7 @@ function stabilizeRetiredChrome(){
   }
   document.querySelectorAll('#xpPop,.xp-pop,#profileMini .fun-hud').forEach(el=>el.remove());
 
-  const mobile=!!window.matchMedia?.('(max-width:700px)').matches;
+  const mobile=!!window.matchMedia?.('(max-width:900px)').matches;
   for(const id of ['mm-src-open','mmrd-open']){
     const launcher=document.getElementById(id);if(!launcher)continue;
     if(mobile){
