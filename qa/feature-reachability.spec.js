@@ -52,8 +52,10 @@ for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name
    await openApp(page,viewport.width);
    if(viewport.width<=900){
     await expect(page.locator('#mm-src-open')).toBeHidden();await expect(page.locator('#mmrd-open')).toBeHidden();
+    await mobileMore(page);await expect(page.locator('[data-mm-registry-menu="reference-data"]')).toBeVisible();
    }else{
     await expect(page.locator('#mmrd-open')).toBeVisible();await expect(page.locator('#mm-src-open')).toBeHidden();
+    await expect(page.locator('#mm-src-open')).toHaveAttribute('aria-hidden','true');await expect(page.locator('#mm-src-open')).toHaveAttribute('tabindex','-1');
     const visibleReferenceLaunchers=await page.locator('#mm-src-open:visible,#mmrd-open:visible').count();expect(visibleReferenceLaunchers).toBe(1);
    }
   });
@@ -62,6 +64,7 @@ for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name
    await expect(page.locator('#mm-src-open')).toBeHidden();await expect(page.locator('#mmrd-open')).toBeHidden();
    await page.setViewportSize({width:1024,height:900});
    await expect(page.locator('#mmrd-open')).toBeVisible();await expect(page.locator('#mm-src-open')).toBeHidden();
+   await expect(page.locator('#mm-src-open')).toHaveAttribute('aria-hidden','true');await expect(page.locator('#mm-src-open')).toHaveAttribute('tabindex','-1');
    await page.setViewportSize({width:768,height:900});
    await expect(page.locator('#mm-src-open')).toBeHidden();await expect(page.locator('#mmrd-open')).toBeHidden();
   });

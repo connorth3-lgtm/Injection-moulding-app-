@@ -96,3 +96,29 @@ test('fixed assessment footer does not cover the active question at 200% text sc
   expect(geometry.scrollPaddingBottom).toBeGreaterThanOrEqual(180);
   expect(geometry.paddingBottom).toBeGreaterThanOrEqual(180);
 });
+
+
+test('assessment modal closes on Escape, restores focus and hides non-current controls from navigation',async({page})=>{
+  await page.setViewportSize({width:768,height:900});
+  await page.addInitScript(()=>{
+    const user={id:'escape-focus-qa',name:'Escape Focus QA',role:'learner',completed:[1,2,3,4,5],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:6,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
+    localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:'escape-focus-qa',users:{'escape-focus-qa':user}}));
+  });
+  await page.goto(BASE,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>window.MM_ACCESSIBILITY_HARDENING?.escapeClosesDialog===true&&typeof window.startExam==='function');
+  const trigger=page.locator('.mobile-nav > button').filter({hasText:'Practice'}).first();
+  await trigger.focus();
+  await page.evaluate(()=>startExam('Beginner'));
+  await page.waitForFunction(()=>document.querySelectorAll('#examQuestions .question').length===16&&document.querySelector('#modal:not(.hidden)'));
+  const hiddenState=await page.evaluate(()=>{
+    const cards=[...document.querySelectorAll('#examQuestions .question')];
+    return cards.slice(1).every(card=>{
+      const inputs=[...card.querySelectorAll('input,button,a,[tabindex]')];
+      return card.getAttribute('aria-hidden')==='true'&&getComputedStyle(card).display==='none'&&inputs.every(el=>el.getClientRects().length===0);
+    });
+  });
+  expect(hiddenState).toBeTruthy();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#modal')).toHaveClass(/hidden/);
+  await expect(trigger).toBeFocused();
+});

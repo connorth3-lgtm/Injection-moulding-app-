@@ -48,6 +48,7 @@ lesson_v2 = read("lesson-deep-authoring-v2.js")
 multimodal = read("assessment-multimodal.js")
 a11y = read("accessibility-hardening.js")
 ui_shell = read("ui-shell.css")
+learner_ux = read("learner-ux-repair.js")
 
 shell_release = js_const(index, "SHELL_RELEASE")
 runtime_asset_version = shell_release
@@ -117,6 +118,8 @@ for forbidden in ("retireBrowserOfflineRuntime", ".unregister()", "owned.map(k=>
     require(forbidden not in shell, f"shell hardening: destructive browser/PWA lifecycle marker remains: {forbidden}")
 require("26 August 2026" not in shell, "shell source-review date must derive from validated metadata rather than a hard-coded calendar date")
 require("ensureReferenceDataPage" not in shell and "openReferenceDataPage" not in shell, "legacy in-app Reference Data modal reparenting must be removed")
+require("for(const id of ['mm-src-open','mmrd-open'])" not in learner_ux, "learner UX repair must not reactivate the retired legacy References launcher")
+require("getElementById('mmrd-open')" in learner_ux and "getComputedStyle(launcher)" in learner_ux, "learner UX repair must restore accessibility only for the visible canonical References launcher")
 
 # The explicit repair route is the one place where clearing the current worker/cache is intentional.
 must(repair, ["MouldMaster browser repair", "navigator.serviceWorker.getRegistrations()", "r=>r.unregister()", "k=>k.startsWith('mouldmaster-static-')", "caches.delete(k)", "mmFresh", "location.replace(target.href)"], "repair route")

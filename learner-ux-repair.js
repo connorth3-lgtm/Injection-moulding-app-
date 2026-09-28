@@ -60,13 +60,12 @@ function restoreRedundant(root){
 }
 function repairReferenceLauncherAccessibility(){
   if(window.matchMedia?.('(max-width:900px)').matches)return;
-  for(const id of ['mm-src-open','mmrd-open']){
-    const launcher=document.getElementById(id);if(!launcher)continue;
-    const retiredMobileStylesCleared=launcher.style.getPropertyPriority('display')!=='important'&&!launcher.style.getPropertyValue('visibility')&&!launcher.style.getPropertyValue('pointer-events');
-    if(retiredMobileStylesCleared&&launcher.getAttribute('aria-hidden')==='true'&&launcher.tabIndex===-1){
-      launcher.removeAttribute('aria-hidden');
-      launcher.removeAttribute('tabindex');
-    }
+  const launcher=document.getElementById('mmrd-open');if(!launcher)return;
+  const style=getComputedStyle(launcher);
+  if(style.display==='none'||style.visibility==='hidden')return;
+  if(launcher.getAttribute('aria-hidden')==='true'&&launcher.tabIndex===-1){
+    launcher.removeAttribute('aria-hidden');
+    launcher.removeAttribute('tabindex');
   }
 }
 function syncExamDisclosureGeneration(){
