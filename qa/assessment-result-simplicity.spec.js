@@ -75,3 +75,24 @@ test('assessment question and review remain usable at 200% text scaling with key
   await noOverflow('assessment review');
   await expect(page.locator('#answerReview .answer-row:visible')).toHaveCount(1);
 });
+
+
+test('fixed assessment footer does not cover the active question at 200% text scaling',async({page})=>{
+  await page.setViewportSize({width:412,height:915});
+  await openAssessment(page);
+  await page.evaluate(()=>{document.documentElement.style.fontSize='200%'});
+  const last=page.locator('#examQuestions .question.mm-current-question label').last();
+  await last.scrollIntoViewIfNeeded();
+  const geometry=await page.evaluate(()=>{
+    const option=[...document.querySelectorAll('#examQuestions .question.mm-current-question label')].at(-1);
+    const nav=document.querySelector('.mm-exam-nav');
+    const card=document.querySelector('.modal-card.mm-assessment-modal');
+    if(!option||!nav||!card)return null;
+    const o=option.getBoundingClientRect(),n=nav.getBoundingClientRect(),cs=getComputedStyle(card);
+    return {optionBottom:o.bottom,navTop:n.top,scrollPaddingBottom:parseFloat(cs.scrollPaddingBottom)||0,paddingBottom:parseFloat(cs.paddingBottom)||0};
+  });
+  expect(geometry).not.toBeNull();
+  expect(geometry.optionBottom).toBeLessThanOrEqual(geometry.navTop+1);
+  expect(geometry.scrollPaddingBottom).toBeGreaterThanOrEqual(180);
+  expect(geometry.paddingBottom).toBeGreaterThanOrEqual(180);
+});
