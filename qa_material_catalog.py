@@ -257,6 +257,24 @@ need(all((g.get("manufacturer") or {}).get("country") == "South Korea" for g in 
 need(all(obs.get("comparisonReady") is False for g in global15 for obs in g.get("properties") or []), "Under-conditioned LOTTE PP MI must remain context-only")
 need((global_wave15.get("governance") or {}).get("runtimePromotionBlocked") is True, "Korea LOTTE PP promotion boundary drift")
 
+
+# Korea KOLON continuation: expand current exact-grade POM identities while
+# retaining the original four-grade pilot boundary and blocking numeric
+# promotion until grade-level conditioning is resolved.
+global_wave16 = load_json(STAGING / "global-material-expansion-20260929-v16.json")
+need((global_wave16.get("summary") or {}).get("validatedGrades") == 0, "Korea KOLON wave must remain staging")
+need((global_wave16.get("summary") or {}).get("sourceReviewedStagingGrades") == 16, "Korea KOLON staging count drift")
+need((global_wave16.get("summary") or {}).get("countryFocus") == "South Korea", "Korea KOLON wave country focus drift")
+global16 = [g for m in global_wave16.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global16) == 16, "Korea KOLON exact-grade expansion set drift")
+need(all((g.get("provenance") or {}).get("stage") == "staging" for g in global16), "Korea KOLON expansion must remain staging")
+need(all(g.get("id") not in runtime_grade_ids for g in global16), "Korea KOLON staging identities leaked into runtime")
+need({(g.get("polymer") or {}).get("family") for g in global16} == {"POM"}, "Korea KOLON staging family drift")
+need(all((g.get("manufacturer") or {}).get("country") == "South Korea" for g in global16), "Korea KOLON staging lost country identity")
+need(all(len(g.get("properties") or []) == 0 for g in global16), "Korea KOLON wave must not invent unresolved numeric properties")
+need((global_wave16.get("governance") or {}).get("runtimePromotionBlocked") is True, "Korea KOLON promotion boundary drift")
+need(set((global_wave16.get("governance") or {}).get("duplicatePilotGradesExcluded") or []) == {"K300", "K700", "K100HS", "GF702"}, "Korea KOLON duplicate-pilot exclusion drift")
+
 # Pilot proof: current primary-source LOTTE records remain unchanged while the
 # umbrella manifest records progress without copying exact-grade claims.
 lotte_pilot = load_json(STAGING / "lotte-exact-grade-pilot-v1.json")
