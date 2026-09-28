@@ -275,6 +275,22 @@ need(all(len(g.get("properties") or []) == 0 for g in global16), "Korea KOLON wa
 need((global_wave16.get("governance") or {}).get("runtimePromotionBlocked") is True, "Korea KOLON promotion boundary drift")
 need(set((global_wave16.get("governance") or {}).get("duplicatePilotGradesExcluded") or []) == {"K300", "K700", "K100HS", "GF702"}, "Korea KOLON duplicate-pilot exclusion drift")
 
+
+# Korea SK chemicals continuation: current SKYGREEN injection-grade identities
+# are source-reviewed only until exact-grade numeric TDS conditions are captured.
+global_wave17 = load_json(STAGING / "global-material-expansion-20260929-v17.json")
+need((global_wave17.get("summary") or {}).get("validatedGrades") == 0, "Korea SKYGREEN wave must remain staging")
+need((global_wave17.get("summary") or {}).get("sourceReviewedStagingGrades") == 9, "Korea SKYGREEN staging count drift")
+need((global_wave17.get("summary") or {}).get("countryFocus") == "South Korea", "Korea SKYGREEN country focus drift")
+global17 = [g for m in global_wave17.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global17) == 9, "Korea SKYGREEN exact-grade staging set drift")
+need(all((g.get("provenance") or {}).get("stage") == "staging" for g in global17), "Korea SKYGREEN identities must remain staging")
+need(all(g.get("id") not in runtime_grade_ids for g in global17), "Korea SKYGREEN staging identities leaked into runtime")
+need({(g.get("polymer") or {}).get("family") for g in global17} == {"copolyester"}, "Korea SKYGREEN family drift")
+need(all((g.get("manufacturer") or {}).get("country") == "South Korea" for g in global17), "Korea SKYGREEN staging lost country identity")
+need(all(len(g.get("properties") or []) == 0 and len(g.get("processing") or []) == 0 for g in global17), "Korea SKYGREEN staging must not invent numeric engineering data")
+need((global_wave17.get("governance") or {}).get("runtimePromotionBlocked") is True, "Korea SKYGREEN promotion boundary drift")
+
 # Pilot proof: current primary-source LOTTE records remain unchanged while the
 # umbrella manifest records progress without copying exact-grade claims.
 lotte_pilot = load_json(STAGING / "lotte-exact-grade-pilot-v1.json")
