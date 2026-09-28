@@ -1,0 +1,126 @@
+{
+  "version": "2026-09-28.1",
+  "programme": "Asia-Singapore-Australia-New Zealand material evidence scale programme",
+  "targets": {
+    "propertyCompleteProfiles": {
+      "minimum": 250,
+      "preferred": 500,
+      "stretch": 1000
+    },
+    "traceablePropertyObservations": {
+      "minimum": 10000,
+      "preferred": 25000,
+      "stretch": 50000
+    },
+    "discoveredExactGrades": {
+      "minimum": 1500,
+      "preferred": 3000
+    }
+  },
+  "acceptanceRules": {
+    "primaryManufacturerEvidenceRequired": true,
+    "noUniversalSettings": true,
+    "noInterpolationAcrossGrades": true,
+    "regionalAvailabilityIsNotManufacturingOrigin": true,
+    "typicalValuesAreNotSpecifications": true,
+    "discoveryOnlyDoesNotCountAsComplete": true,
+    "partialDoesNotCountAsComplete": true,
+    "sourceRevisionConflictsMustRemainVisible": true,
+    "processingWindowsRemainGradeAndSourceSpecific": true
+  },
+  "regionalTargets": {
+    "Japan": {
+      "complete": "250-300",
+      "priority": [
+        "Polyplastics",
+        "Toray",
+        "Asahi Kasei",
+        "UBE",
+        "Kuraray",
+        "Teijin",
+        "UNITIKA",
+        "Sumitomo Chemical",
+        "Toyobo"
+      ]
+    },
+    "South Korea": {
+      "complete": "120-180",
+      "priority": [
+        "LOTTE Chemical",
+        "LG Chem"
+      ]
+    },
+    "Taiwan": {
+      "complete": "100-150",
+      "priority": [
+        "CHIMEI",
+        "Formosa Chemicals & Fibre",
+        "LCY"
+      ]
+    },
+    "China": {
+      "complete": "150-250",
+      "priority": [
+        "Kingfa",
+        "Sinopec",
+        "other primary manufacturers"
+      ],
+      "constraint": "do not promote secondary aggregator numeric values"
+    },
+    "India": {
+      "complete": "80-120",
+      "priority": [
+        "IndianOil",
+        "Reliance",
+        "Haldia",
+        "OPaL",
+        "Supreme Petrochem",
+        "Bhansali"
+      ]
+    },
+    "Thailand/Malaysia/Indonesia": {
+      "complete": "100-150",
+      "priority": [
+        "SCGC",
+        "IRPC",
+        "PETRONAS Chemicals",
+        "LOTTE Chemical Titan",
+        "Chandra Asri"
+      ]
+    },
+    "Singapore": {
+      "complete": "40-80",
+      "constraint": "site-to-grade provenance required; regional office is not origin"
+    },
+    "Australia": {
+      "complete": "50-100",
+      "priority": [
+        "Qenos",
+        "Martogg"
+      ],
+      "constraint": "separate local manufacture/compounding from market availability"
+    },
+    "New Zealand": {
+      "complete": "no artificial quota",
+      "constraint": "capture defensible local processing/compounding and link imported grades to overseas manufacturer evidence"
+    }
+  },
+  "currentBaseline": {
+    "waveFile": "data/asian-aus-nz-material-grade-extraction-wave2-v1.json",
+    "governedRecords": 135,
+    "propertyCompleteProfiles": 78,
+    "approxTraceableNumericConditionObservations": 622
+  },
+  "executionOrder": [
+    "Japan property-complete depth",
+    "South Korea exact TDS extraction",
+    "Taiwan exact TDS extraction",
+    "China numeric primary TDS acquisition",
+    "India exact-grade depth",
+    "Thailand/Malaysia/Indonesia depth",
+    "Singapore site-to-grade provenance",
+    "Australia compounds and PE depth",
+    "New Zealand imported-grade provenance"
+  ],
+  "definitionOfDone": "Targets are aspirational until primary evidence is captured. Never manufacture, interpolate or promote values merely to satisfy counts."
+}
