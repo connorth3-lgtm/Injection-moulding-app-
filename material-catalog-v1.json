@@ -71,6 +71,11 @@
       "country": "Netherlands"
     },
     {
+      "id": "mfr-momentive",
+      "name": "Momentive Performance Materials",
+      "country": "United States"
+    },
+    {
       "id": "mfr-petronas-chemicals",
       "name": "PETRONAS Chemicals",
       "country": "Malaysia"
@@ -7558,6 +7563,766 @@
         "reviewedAt": "2026-09-29T00:00:00Z",
         "reviewer": "primary-source-web-review",
         "notes": "Current LyondellBasell exact-grade product page reviewed. Regional availability and fully conditioned MFR temperature/load are preserved."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-momentive-silopren-lsr-2030",
+      "manufacturer": {
+        "id": "mfr-momentive",
+        "name": "Momentive Performance Materials",
+        "country": "United States",
+        "website": "https://www.momentive.com/"
+      },
+      "brand": "Silopren™",
+      "grade": "LSR 2030",
+      "aliases": [],
+      "polymer": {
+        "family": "LSR",
+        "morphology": "thermoset"
+      },
+      "composition": {
+        "notes": "Two-component platinum-cured liquid silicone rubber for injection moulding; A:B mixing ratio 1:1."
+      },
+      "properties": [
+        {
+          "id": "obs-momentive-silopren-lsr-2030-density",
+          "property": "Density",
+          "value": 1.1,
+          "unit": "g/cm³",
+          "testMethod": "DIN 53 479 A",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2030-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2030-hardness",
+          "property": "Shore Hardness",
+          "value": 31,
+          "unit": "Shore A",
+          "testMethod": "DIN 53 505",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2030-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2030-tensile",
+          "property": "Tensile Strength",
+          "value": 8,
+          "unit": "N/mm²",
+          "testMethod": "DIN 53 504 S2",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2030-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2030-elongation",
+          "property": "Elongation at Break",
+          "value": 800,
+          "unit": "%",
+          "testMethod": "DIN 53 504 S2",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2030-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2030-tear",
+          "property": "Tear Strength",
+          "value": 18,
+          "unit": "N/mm",
+          "testMethod": "ASTM D 624 die B",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2030-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2030-compression",
+          "property": "Compression Set",
+          "value": 15,
+          "unit": "%",
+          "testMethod": "ISO 815",
+          "conditioning": "22 h at 175°C; A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2030-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        }
+      ],
+      "processing": [
+        {
+          "id": "proc-momentive-silopren-lsr-2030-mix",
+          "parameter": "Mixing ratio A:B",
+          "min": null,
+          "max": null,
+          "value": "1:1",
+          "unit": "ratio",
+          "condition": "Exact-grade two-component supplier requirement; metering/mixing equipment and actual process validation remain application-specific.",
+          "claimType": "supplier-limit",
+          "sourceId": "src-momentive-silopren-lsr-2030-2026",
+          "sourcePage": "processing recommendations",
+          "productionRecipe": false
+        },
+        {
+          "id": "proc-momentive-silopren-lsr-2030-mould-temp",
+          "parameter": "Heated mould temperature",
+          "min": 170,
+          "max": 230,
+          "value": null,
+          "unit": "°C",
+          "condition": "Momentive processing recommendation for injection moulding/crosslinking; this is a cure environment, not a thermoplastic melt/mould-temperature recipe.",
+          "claimType": "supplier-guidance",
+          "sourceId": "src-momentive-silopren-lsr-2030-2026",
+          "sourcePage": "processing recommendations",
+          "productionRecipe": false
+        }
+      ],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-momentive-silopren-lsr-2030-2026",
+          "publisher": "Momentive Performance Materials",
+          "title": "Silopren™ LSR 2030 Technical Data Sheet",
+          "url": "https://www.momentive.com/content/dam/momentive/en-us/products/tds/silopren/silopren-lsr-2030.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Momentive exact-grade TDS reviewed. Typical vulcanizate values retain post-cure conditioning; injection-moulding recommendations are kept distinct from thermoplastic process settings and productionRecipe=false."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-momentive-silopren-lsr-2040",
+      "manufacturer": {
+        "id": "mfr-momentive",
+        "name": "Momentive Performance Materials",
+        "country": "United States",
+        "website": "https://www.momentive.com/"
+      },
+      "brand": "Silopren™",
+      "grade": "LSR 2040",
+      "aliases": [],
+      "polymer": {
+        "family": "LSR",
+        "morphology": "thermoset"
+      },
+      "composition": {
+        "notes": "Two-component platinum-cured liquid silicone rubber for injection moulding; A:B mixing ratio 1:1."
+      },
+      "properties": [
+        {
+          "id": "obs-momentive-silopren-lsr-2040-density",
+          "property": "Density",
+          "value": 1.12,
+          "unit": "g/cm³",
+          "testMethod": "DIN 53 479 A",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2040-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2040-hardness",
+          "property": "Shore Hardness",
+          "value": 40,
+          "unit": "Shore A",
+          "testMethod": "DIN 53 505",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2040-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2040-tensile",
+          "property": "Tensile Strength",
+          "value": 9,
+          "unit": "N/mm²",
+          "testMethod": "DIN 53 504 S2",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2040-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2040-elongation",
+          "property": "Elongation at Break",
+          "value": 750,
+          "unit": "%",
+          "testMethod": "DIN 53 504 S2",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2040-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2040-tear",
+          "property": "Tear Strength",
+          "value": 25,
+          "unit": "N/mm",
+          "testMethod": "ASTM D 624 die B",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2040-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2040-compression",
+          "property": "Compression Set",
+          "value": 25,
+          "unit": "%",
+          "testMethod": "ISO 815",
+          "conditioning": "22 h at 175°C; A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2040-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        }
+      ],
+      "processing": [
+        {
+          "id": "proc-momentive-silopren-lsr-2040-mix",
+          "parameter": "Mixing ratio A:B",
+          "min": null,
+          "max": null,
+          "value": "1:1",
+          "unit": "ratio",
+          "condition": "Exact-grade two-component supplier requirement; metering/mixing equipment and actual process validation remain application-specific.",
+          "claimType": "supplier-limit",
+          "sourceId": "src-momentive-silopren-lsr-2040-2026",
+          "sourcePage": "processing recommendations",
+          "productionRecipe": false
+        },
+        {
+          "id": "proc-momentive-silopren-lsr-2040-mould-temp",
+          "parameter": "Heated mould temperature",
+          "min": 170,
+          "max": 230,
+          "value": null,
+          "unit": "°C",
+          "condition": "Momentive processing recommendation for injection moulding/crosslinking; this is a cure environment, not a thermoplastic melt/mould-temperature recipe.",
+          "claimType": "supplier-guidance",
+          "sourceId": "src-momentive-silopren-lsr-2040-2026",
+          "sourcePage": "processing recommendations",
+          "productionRecipe": false
+        }
+      ],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-momentive-silopren-lsr-2040-2026",
+          "publisher": "Momentive Performance Materials",
+          "title": "Silopren™ LSR 2040 Technical Data Sheet",
+          "url": "https://www.momentive.com/content/dam/momentive/pt-br/products/tds/silopren-lsr-2040.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Momentive exact-grade TDS reviewed. Typical vulcanizate values retain post-cure conditioning; injection-moulding recommendations are kept distinct from thermoplastic process settings and productionRecipe=false."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-momentive-silopren-lsr-2050",
+      "manufacturer": {
+        "id": "mfr-momentive",
+        "name": "Momentive Performance Materials",
+        "country": "United States",
+        "website": "https://www.momentive.com/"
+      },
+      "brand": "Silopren™",
+      "grade": "LSR 2050",
+      "aliases": [],
+      "polymer": {
+        "family": "LSR",
+        "morphology": "thermoset"
+      },
+      "composition": {
+        "notes": "Two-component platinum-cured liquid silicone rubber for injection moulding; A:B mixing ratio 1:1."
+      },
+      "properties": [
+        {
+          "id": "obs-momentive-silopren-lsr-2050-density",
+          "property": "Density",
+          "value": 1.12,
+          "unit": "g/cm³",
+          "testMethod": "DIN 53 479 A",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2050-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2050-hardness",
+          "property": "Shore Hardness",
+          "value": 51,
+          "unit": "Shore A",
+          "testMethod": "DIN 53 505",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2050-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2050-tensile",
+          "property": "Tensile Strength",
+          "value": 10,
+          "unit": "N/mm²",
+          "testMethod": "DIN 53 504 S2",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2050-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2050-elongation",
+          "property": "Elongation at Break",
+          "value": 600,
+          "unit": "%",
+          "testMethod": "DIN 53 504 S2",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2050-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2050-tear",
+          "property": "Tear Strength",
+          "value": 35,
+          "unit": "N/mm",
+          "testMethod": "ASTM D 624 die B",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2050-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2050-compression",
+          "property": "Compression Set",
+          "value": 25,
+          "unit": "%",
+          "testMethod": "ISO 815",
+          "conditioning": "22 h at 175°C; A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2050-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        }
+      ],
+      "processing": [
+        {
+          "id": "proc-momentive-silopren-lsr-2050-mix",
+          "parameter": "Mixing ratio A:B",
+          "min": null,
+          "max": null,
+          "value": "1:1",
+          "unit": "ratio",
+          "condition": "Exact-grade two-component supplier requirement; metering/mixing equipment and actual process validation remain application-specific.",
+          "claimType": "supplier-limit",
+          "sourceId": "src-momentive-silopren-lsr-2050-2026",
+          "sourcePage": "processing recommendations",
+          "productionRecipe": false
+        },
+        {
+          "id": "proc-momentive-silopren-lsr-2050-mould-temp",
+          "parameter": "Heated mould temperature",
+          "min": 170,
+          "max": 230,
+          "value": null,
+          "unit": "°C",
+          "condition": "Momentive processing recommendation for injection moulding/crosslinking; this is a cure environment, not a thermoplastic melt/mould-temperature recipe.",
+          "claimType": "supplier-guidance",
+          "sourceId": "src-momentive-silopren-lsr-2050-2026",
+          "sourcePage": "processing recommendations",
+          "productionRecipe": false
+        }
+      ],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-momentive-silopren-lsr-2050-2026",
+          "publisher": "Momentive Performance Materials",
+          "title": "Silopren™ LSR 2050 Technical Data Sheet",
+          "url": "https://www.momentive.com/content/dam/momentive/global/product-pages/product-categories/additives/surface-modifiers/softeners/silopren--lsr-2050/tds/Silopren%E2%84%A2%20LSR%202050_TDS_1729605752585.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Momentive exact-grade TDS reviewed. Typical vulcanizate values retain post-cure conditioning; injection-moulding recommendations are kept distinct from thermoplastic process settings and productionRecipe=false."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-momentive-silopren-lsr-2070",
+      "manufacturer": {
+        "id": "mfr-momentive",
+        "name": "Momentive Performance Materials",
+        "country": "United States",
+        "website": "https://www.momentive.com/"
+      },
+      "brand": "Silopren™",
+      "grade": "LSR 2070",
+      "aliases": [],
+      "polymer": {
+        "family": "LSR",
+        "morphology": "thermoset"
+      },
+      "composition": {
+        "notes": "Two-component platinum-cured liquid silicone rubber for injection moulding; A:B mixing ratio 1:1."
+      },
+      "properties": [
+        {
+          "id": "obs-momentive-silopren-lsr-2070-density",
+          "property": "Density",
+          "value": 1.14,
+          "unit": "g/cm³",
+          "testMethod": "DIN 53 479 A",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2070-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2070-hardness",
+          "property": "Shore Hardness",
+          "value": 70,
+          "unit": "Shore A",
+          "testMethod": "DIN 53 505",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2070-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2070-tensile",
+          "property": "Tensile Strength",
+          "value": 9,
+          "unit": "N/mm²",
+          "testMethod": "DIN 53 504 S2",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2070-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2070-elongation",
+          "property": "Elongation at Break",
+          "value": 400,
+          "unit": "%",
+          "testMethod": "DIN 53 504 S2",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2070-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2070-tear",
+          "property": "Tear Strength",
+          "value": 20,
+          "unit": "N/mm",
+          "testMethod": "ASTM D 624 die B",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2070-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2070-compression",
+          "property": "Compression Set",
+          "value": 25,
+          "unit": "%",
+          "testMethod": "ISO 815",
+          "conditioning": "22 h at 175°C; A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2070-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        }
+      ],
+      "processing": [
+        {
+          "id": "proc-momentive-silopren-lsr-2070-mix",
+          "parameter": "Mixing ratio A:B",
+          "min": null,
+          "max": null,
+          "value": "1:1",
+          "unit": "ratio",
+          "condition": "Exact-grade two-component supplier requirement; metering/mixing equipment and actual process validation remain application-specific.",
+          "claimType": "supplier-limit",
+          "sourceId": "src-momentive-silopren-lsr-2070-2026",
+          "sourcePage": "processing recommendations",
+          "productionRecipe": false
+        },
+        {
+          "id": "proc-momentive-silopren-lsr-2070-mould-temp",
+          "parameter": "Heated mould temperature",
+          "min": 170,
+          "max": 230,
+          "value": null,
+          "unit": "°C",
+          "condition": "Momentive processing recommendation for injection moulding/crosslinking; this is a cure environment, not a thermoplastic melt/mould-temperature recipe.",
+          "claimType": "supplier-guidance",
+          "sourceId": "src-momentive-silopren-lsr-2070-2026",
+          "sourcePage": "processing recommendations",
+          "productionRecipe": false
+        }
+      ],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-momentive-silopren-lsr-2070-2026",
+          "publisher": "Momentive Performance Materials",
+          "title": "Silopren™ LSR 2070 Technical Data Sheet",
+          "url": "https://www.momentive.com/content/dam/momentive/es-mx/products/tds/silopren-lsr-2070.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Momentive exact-grade TDS reviewed. Typical vulcanizate values retain post-cure conditioning; injection-moulding recommendations are kept distinct from thermoplastic process settings and productionRecipe=false."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-momentive-silopren-lsr-2670",
+      "manufacturer": {
+        "id": "mfr-momentive",
+        "name": "Momentive Performance Materials",
+        "country": "United States",
+        "website": "https://www.momentive.com/"
+      },
+      "brand": "Silopren™",
+      "grade": "LSR 2670",
+      "aliases": [],
+      "polymer": {
+        "family": "LSR",
+        "morphology": "thermoset"
+      },
+      "composition": {
+        "notes": "Two-component platinum-cured liquid silicone rubber for injection moulding; A:B mixing ratio 1:1."
+      },
+      "properties": [
+        {
+          "id": "obs-momentive-silopren-lsr-2670-density",
+          "property": "Density",
+          "value": 1.13,
+          "unit": "g/cm³",
+          "testMethod": "DIN 53 479 A",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2670-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2670-hardness",
+          "property": "Shore Hardness",
+          "value": 69,
+          "unit": "Shore A",
+          "testMethod": "DIN 53 505",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2670-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2670-tensile",
+          "property": "Tensile Strength",
+          "value": 9.5,
+          "unit": "N/mm²",
+          "testMethod": "DIN 53 504 S2",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2670-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2670-elongation",
+          "property": "Elongation at Break",
+          "value": 350,
+          "unit": "%",
+          "testMethod": "DIN 53 504 S2",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2670-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2670-tear",
+          "property": "Tear Strength",
+          "value": 30,
+          "unit": "N/mm",
+          "testMethod": "ASTM D 624 die B",
+          "conditioning": "A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2670-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        },
+        {
+          "id": "obs-momentive-silopren-lsr-2670-compression",
+          "property": "Compression Set",
+          "value": 20,
+          "unit": "%",
+          "testMethod": "ISO 815",
+          "conditioning": "22 h at 175°C; A:B = 1:1; vulcanization 10 min at 175°C + 4 h at 200°C post-cure",
+          "direction": "not-applicable",
+          "sourceId": "src-momentive-silopren-lsr-2670-2026",
+          "sourcePage": "typical vulcanizate properties",
+          "comparisonReady": false,
+          "limitations": "Momentive typical average data; not a product specification."
+        }
+      ],
+      "processing": [
+        {
+          "id": "proc-momentive-silopren-lsr-2670-mix",
+          "parameter": "Mixing ratio A:B",
+          "min": null,
+          "max": null,
+          "value": "1:1",
+          "unit": "ratio",
+          "condition": "Exact-grade two-component supplier requirement; metering/mixing equipment and actual process validation remain application-specific.",
+          "claimType": "supplier-limit",
+          "sourceId": "src-momentive-silopren-lsr-2670-2026",
+          "sourcePage": "processing recommendations",
+          "productionRecipe": false
+        },
+        {
+          "id": "proc-momentive-silopren-lsr-2670-mould-temp",
+          "parameter": "Heated mould temperature",
+          "min": 140,
+          "max": 200,
+          "value": null,
+          "unit": "°C",
+          "condition": "Momentive processing recommendation for injection moulding/crosslinking; this is a cure environment, not a thermoplastic melt/mould-temperature recipe.",
+          "claimType": "supplier-guidance",
+          "sourceId": "src-momentive-silopren-lsr-2670-2026",
+          "sourcePage": "processing recommendations",
+          "productionRecipe": false
+        }
+      ],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-momentive-silopren-lsr-2670-2026",
+          "publisher": "Momentive Performance Materials",
+          "title": "Silopren™ LSR 2670 Technical Data Sheet",
+          "url": "https://www.momentive.com/content/dam/momentive/en-us/products/tds/silopren/silopren-lsr-2670.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Momentive exact-grade TDS reviewed. Typical vulcanizate values retain post-cure conditioning; injection-moulding recommendations are kept distinct from thermoplastic process settings and productionRecipe=false."
       }
     },
     {
