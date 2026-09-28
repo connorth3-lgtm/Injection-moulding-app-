@@ -102,7 +102,7 @@ for staging_path in sorted(STAGING.glob("*.json")):
                 staged_grade_ids.add(gid)
 runtime_grade_ids = {grade.get("id") for grade in catalog.get("grades") or []}
 need(staged_grade_ids == runtime_grade_ids, f"runtime/staging material drift: staged={sorted(staged_grade_ids)} runtime={sorted(runtime_grade_ids)}")
-need(len(runtime_grade_ids) == 157, "runtime exact-grade count must include the Korean pilot plus thirteen global expansion waves")
+need(len(runtime_grade_ids) == 166, "runtime exact-grade count must include the Korean pilot plus thirteen global expansion waves")
 need(kolon_grade_ids.isdisjoint(runtime_grade_ids), "source-reviewed KOLON staging identities must not leak into the validated runtime catalog")
 
 global_wave = load_json(STAGING / "global-material-expansion-20260929-v1.json")
@@ -205,10 +205,10 @@ need({(g.get("polymer") or {}).get("family") for g in global10_validated} == {"L
 need(all((obs.get("productionRecipe") is False) for g in global10_validated for obs in g.get("processing") or []), "LSR supplier guidance became a production recipe")
 
 global_wave11 = load_json(STAGING / "global-material-expansion-20260929-v11.json")
-need((global_wave11.get("summary") or {}).get("validatedGrades") == 22, "Singapore TAFMER wave validated-grade count drift")
+need((global_wave11.get("summary") or {}).get("validatedGrades") == 31, "Singapore TAFMER wave validated-grade count drift")
 need((global_wave11.get("summary") or {}).get("countryFocus") == "Singapore", "Singapore TAFMER wave country focus drift")
 global11 = [g for m in global_wave11.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
-need(len(global11) == 22 and all(g.get("id") in runtime_grade_ids for g in global11), "Singapore TAFMER grades are not fully published")
+need(len(global11) == 31 and all(g.get("id") in runtime_grade_ids for g in global11), "Singapore TAFMER grades are not fully published")
 need({(g.get("polymer") or {}).get("family") for g in global11} == {"AOC elastomer"}, "Singapore TAFMER family coverage drift")
 need(all(obs.get("comparisonReady") is False for g in global11 for obs in g.get("properties") or [] if obs.get("property") == "Melt Flow Rate"), "Singapore TAFMER MFR must remain context-only while test load is absent")
 
