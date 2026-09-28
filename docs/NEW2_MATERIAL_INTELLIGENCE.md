@@ -1,7 +1,7 @@
 # New2 — Material Intelligence and release validation
 
 Baseline: `main` squash merge `7382aa9b2e5c452bc452946d320289cffd9104e4`  
-Learner-facing web release: `2026.09.29.3`
+Learner-facing web release: `2026.09.29.4`
 
 ## Purpose
 
