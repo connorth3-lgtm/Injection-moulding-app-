@@ -106,7 +106,7 @@ test('assessment modal closes on Escape, restores focus and hides non-current co
   });
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>window.MM_ACCESSIBILITY_HARDENING?.escapeClosesDialog===true&&typeof window.startExam==='function');
-  const trigger=page.locator('#nav button[data-view="scenarios"]').first();
+  const trigger=page.locator('.mobile-nav > button').filter({hasText:'Practice'}).first();
   await trigger.focus();
   await page.evaluate(()=>startExam('Beginner'));
   await page.waitForFunction(()=>document.querySelectorAll('#examQuestions .question').length===16&&document.querySelector('#modal:not(.hidden)'));
