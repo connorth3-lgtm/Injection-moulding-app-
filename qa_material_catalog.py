@@ -102,7 +102,7 @@ for staging_path in sorted(STAGING.glob("*.json")):
                 staged_grade_ids.add(gid)
 runtime_grade_ids = {grade.get("id") for grade in catalog.get("grades") or []}
 need(staged_grade_ids == runtime_grade_ids, f"runtime/staging material drift: staged={sorted(staged_grade_ids)} runtime={sorted(runtime_grade_ids)}")
-need(len(runtime_grade_ids) == 177, "runtime exact-grade count must include the original Korean pilot, validated Samyang Korea pilot, and fourteen global expansion waves")
+need(len(runtime_grade_ids) == 181, "runtime exact-grade count must include the original Korean pilot, validated Samyang Korea pilot, and eighteen global expansion waves")
 need(kolon_grade_ids.isdisjoint(runtime_grade_ids), "source-reviewed KOLON staging identities must not leak into the validated runtime catalog")
 
 global_wave = load_json(STAGING / "global-material-expansion-20260929-v1.json")
@@ -305,6 +305,20 @@ need(all((g.get("manufacturer") or {}).get("country") == "South Korea" for g in 
 need(all(any(obs.get("property") == "Melt Flow Rate" and obs.get("temperatureC") is not None and obs.get("loadKg") is not None and obs.get("comparisonReady") is True for obs in g.get("properties") or []) for g in samyang_grades), "Samyang conditioned MFR contract drift")
 need(all(obs.get("comparisonReady") is False for g in samyang_grades for obs in g.get("properties") or [] if obs.get("property") == "Mould Shrinkage"), "Samyang unresolved-direction shrinkage must remain context-only")
 need(all(obs.get("productionRecipe") is False for g in samyang_grades for obs in g.get("processing") or []), "Samyang supplier guidance became a production recipe")
+
+
+# Korea Samyang wave 18: four further TRIREX PC grades carry explicit
+# ASTM D1238 300C/1.2 kg MFR conditioning and exact-grade processing guidance.
+global_wave18 = load_json(STAGING / "global-material-expansion-20260929-v18.json")
+need((global_wave18.get("summary") or {}).get("validatedGrades") == 4, "Korea Samyang wave18 validated-grade count drift")
+need((global_wave18.get("summary") or {}).get("countryFocus") == "South Korea", "Korea Samyang wave18 country focus drift")
+global18 = [g for m in global_wave18.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need({g.get("grade") for g in global18} == {"FB3025G10", "SO1-3025LD", "HV3022G30", "M3020PN"}, "Korea Samyang wave18 exact-grade set drift")
+need(len(global18) == 4 and all(g.get("id") in runtime_grade_ids for g in global18), "Korea Samyang wave18 grades are not fully published")
+need(all((g.get("provenance") or {}).get("stage") == "validated" for g in global18), "Korea Samyang wave18 contains non-validated grade")
+need(all(any(obs.get("property") == "Melt Flow Rate" and obs.get("temperatureC") == 300 and obs.get("loadKg") == 1.2 and obs.get("comparisonReady") is True for obs in g.get("properties") or []) for g in global18), "Korea Samyang wave18 conditioned MFR contract drift")
+need(all(obs.get("comparisonReady") is False for g in global18 for obs in g.get("properties") or [] if obs.get("property") == "Mould Shrinkage"), "Korea Samyang wave18 unresolved-direction shrinkage must remain context-only")
+need(all(obs.get("productionRecipe") is False for g in global18 for obs in g.get("processing") or []), "Korea Samyang wave18 supplier guidance became a production recipe")
 
 # Pilot proof: current primary-source LOTTE records remain unchanged while the
 # umbrella manifest records progress without copying exact-grade claims.
