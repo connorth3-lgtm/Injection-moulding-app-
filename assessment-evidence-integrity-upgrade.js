@@ -24,12 +24,16 @@ const DIAGNOSTIC_SOURCE_UPGRADES={
  'hot-runner-imbalance':['hotrunner-2024','hotrunner-manifold-2023']
 };
 const OPTIONAL_UPGRADES={
+ 'pbt-hydrolysis':['pbt-celanese'],
  'pet-vs-copolyester':['pet-envalior-arnite'],
+ 'tpu-moisture-reabsorption':['pet-envalior-arnite'],
+ 'pmma-optical-stress':['zhao-2022'],
  'peek-crystallinity-capability':['peek-solvay-ketaspire'],
  'pps-contamination-wear':['pps-solvay-ryton'],
  'lcp-orientation':['lcp-polyplastics-laperos'],
  'pcabs-grade-identity':['pcabs-sabic-cycoloy'],
- 'hdpe-lot-shrink':['hdpe-sabic-injection']
+ 'hdpe-lot-shrink':['hdpe-sabic-injection'],
+ 'tpe-overmould-compatibility':['zhao-2022']
 };
 for(const lab of window.MM_MATERIAL_PRACTICE_EXTENSIONS?.labs||[]){
  const add=OPTIONAL_UPGRADES[lab.id]||[];lab.sourceIds=Array.from(new Set([...(lab.sourceIds||[]),...add]));
