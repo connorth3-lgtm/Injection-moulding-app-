@@ -66,9 +66,9 @@ jobs:
       - name: PRs validate release readiness but never publish
         if: github.event_name == 'pull_request'
         run: echo "PR validation checks production provenance, the physical-device contract and exact build behavior without claiming device evidence, mutating Pages settings or publishing."
-      - name: Confirm protected-main preview publication path
+      - name: Confirm protected-main preview-only publication path
         if: github.event_name == 'push'
-        run: echo "Protected main pushes publish either the authorized production artifact or the release-hold artifact containing the governed /preview/ candidate."
+        run: echo "Protected main pushes always publish the release-hold artifact with the complete governed learner candidate under /preview/. Production-root publication is disabled in this workflow."
 
   build:
     permissions:
@@ -139,7 +139,7 @@ jobs:
             } >> "$GITHUB_STEP_SUMMARY"
           fi
       - name: Stage protected-main physical-device test candidate
-        if: github.event_name != 'pull_request' && steps.physical-readiness.outputs.production_ready != 'true'
+        if: github.event_name != 'pull_request'
         shell: bash
         run: |
           rm -rf physical-pwa-candidate
@@ -149,7 +149,7 @@ jobs:
           staged_fp="$(python3 tools/verify_pwa_physical_evidence.py --artifact physical-pwa-candidate --print-fingerprint)"
           test "$source_fp" = "$staged_fp"
       - name: Retain protected-main physical-device test candidate
-        if: github.event_name != 'pull_request' && steps.physical-readiness.outputs.production_ready != 'true'
+        if: github.event_name != 'pull_request'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: physical-pwa-candidate-${{ github.sha }}
@@ -160,15 +160,15 @@ jobs:
           overwrite: false
           include-hidden-files: false
       - name: Build release-hold Pages artifact
-        if: github.event_name != 'pull_request' && steps.physical-readiness.outputs.production_ready != 'true'
+        if: github.event_name != 'pull_request'
         run: python3 tools/build_pages_hold.py --preview-source .pages-dist
-      - name: Upload production Pages artifact
-        if: github.event_name == 'pull_request' || steps.physical-readiness.outputs.production_ready == 'true'
+      - name: Upload PR validation Pages artifact
+        if: github.event_name == 'pull_request'
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: .pages-dist
-      - name: Upload release-hold Pages artifact
-        if: github.event_name != 'pull_request' && steps.physical-readiness.outputs.production_ready != 'true'
+      - name: Upload preview-only release-hold Pages artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: .pages-hold
@@ -201,36 +201,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Rebuild expected production artifact
-        if: needs.build.outputs.production_ready == 'true'
-        run: python3 tools/build_pages_artifact.py
-      - name: Reconfirm validated physical PWA evidence against rebuilt runtime
-        if: needs.build.outputs.production_ready == 'true'
-        run: python3 tools/verify_pwa_physical_evidence.py --artifact .pages-dist --require-release-authorized
-      - name: Verify exact live production deployment
-        if: needs.build.outputs.production_ready == 'true'
-        run: >-
-          python3 tools/verify_pages_deployment.py
-          --base-url "${{ needs.deploy.outputs.page_url }}"
-          --source-sha "${{ github.sha }}"
-      - name: Verify production deployment remains stable after race window
-        if: needs.build.outputs.production_ready == 'true'
-        run: |
-          sleep 15
-          python3 tools/verify_pages_deployment.py \
-            --base-url "${{ needs.deploy.outputs.page_url }}" \
-            --source-sha "${{ github.sha }}" \
-            --convergence-attempts 6 \
-            --convergence-delay 2
-      - name: Verify release-hold deployment removed legacy publication
-        if: needs.build.outputs.production_ready != 'true'
+      - name: Verify preview-only release-hold deployment
         run: >-
           python3 tools/verify_pages_hold.py
           --base-url "${{ needs.deploy.outputs.page_url }}"
           --convergence-attempts 12
           --convergence-delay 2
-      - name: Verify release-hold remains stable after race window
-        if: needs.build.outputs.production_ready != 'true'
+      - name: Verify preview-only release-hold remains stable after race window
         run: |
           sleep 15
           python3 tools/verify_pages_hold.py \
