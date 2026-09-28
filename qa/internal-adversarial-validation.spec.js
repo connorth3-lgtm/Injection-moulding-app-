@@ -76,10 +76,14 @@ test('interrupted assessment does not resurrect answers after reload or learner 
 test('invalid backup import leaves the learner database byte-for-byte unchanged',async({page})=>{
   await openApp(page);
   const before=await page.evaluate(()=>localStorage.getItem('mouldmasterProDB'));
-  let alertText='';
-  page.once('dialog',async dialog=>{alertText=dialog.message();await dialog.accept()});
+  const dialogs=[];
+  page.on('dialog',async dialog=>{
+    dialogs.push({type:dialog.type(),message:dialog.message()});
+    await dialog.accept();
+  });
   await page.evaluate(()=>window.importData(new File(['{"activeUser":"missing","users":{}}'], 'invalid-backup.json',{type:'application/json'})));
-  await expect.poll(()=>alertText,{timeout:10000}).toMatch(/not a valid MouldMaster backup|could not be stored safely/i);
+  await expect.poll(()=>dialogs.map(x=>x.message).join(' | '),{timeout:10000}).toMatch(/not a valid MouldMaster backup|could not be stored safely/i);
+  expect(dialogs.some(x=>x.type==='confirm'&&/no cryptographic integrity checksum/i.test(x.message))).toBeTruthy();
   const after=await page.evaluate(()=>localStorage.getItem('mouldmasterProDB'));
   expect(after).toBe(before);
 });
