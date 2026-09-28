@@ -110,7 +110,7 @@ Pilot progress as of 2026-09-03:
 - LG Chem has three validated LUPOY exact grades published in `material-catalog-v1.json`: GP1000L, GP1000ML and GP5206F.
 - Korea Polyacetal (KPAC) has four validated KEPITAL exact grades published in `material-catalog-v1.json`: F10-03H, F20-03, F30-03 and FG2025.
 - KOLON ENP has four primary-source-reviewed exact KOCETAL identities in `kolon-enp-exact-grade-pilot-v1`: K300, K700, K100HS and GF702. These remain `source-reviewed-staging`; no KOLON numeric property is validated or published until comparison-critical test context and the stronger source revision/fingerprint identity requirements are satisfied.
-- The runtime catalogue therefore remains at 11 published exact grades across three validated manufacturers. KOLON source review increases acquisition coverage without being counted as validation or publication.
+- The Korean pilot remains 11 published exact grades across its three validated manufacturers. Separately, the 2026-09-29 global expansion adds 25 validated grades from SABIC, Envalior and Victrex across PP, PA6/GF, PBT/GF and PEEK, taking the runtime catalogue to 36 exact grades across six manufacturers. Eight additional SABIC CYCOLAC ABS identities remain source-reviewed staging and are not counted as validated publication.
 - `korea-pilot-v1.json` is an umbrella progress manifest, not a second source of material claims; its `gradeRecords` arrays stay empty and point to separately reviewed/validated datasets.
 
 No glass-fibre percentage, lifecycle state, approval, property condition or processing value is inferred when the primary source does not establish it.
