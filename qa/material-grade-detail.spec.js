@@ -28,7 +28,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
     await openMaterialsFromLearn(page);
     await expect(page.locator('#materials')).toBeVisible();
     await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
-    await expect(page.locator('#mmExactMaterialCatalog')).toHaveAttribute('data-mm-material-total','157');
+    await expect(page.locator('#mmExactMaterialCatalog')).toHaveAttribute('data-mm-material-total','166');
     await expect(page.locator('[data-mm-material-grade]')).toHaveCount(24);
 
     const search=page.locator('[data-mm-exact-query]');
@@ -152,8 +152,8 @@ test('Singapore exact-grade material search exposes Mitsui Elastomers Singapore 
   const root=page.locator('#mmExactMaterialCatalog');
   const search=root.locator('[data-mm-exact-query]');
   await search.fill('Singapore');
-  await expect(root).toHaveAttribute('data-mm-material-total','22');
-  await expect(root.locator('[data-mm-material-grade]')).toHaveCount(22);
+  await expect(root).toHaveAttribute('data-mm-material-total','31');
+  await expect(root.locator('[data-mm-material-grade]')).toHaveCount(31);
   await expect(root).toContainText('TAFMER');
   await expect(root).toContainText('Mitsui Elastomers Singapore');
   await expect(root).toContainText('A-4070S');
