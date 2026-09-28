@@ -91,7 +91,7 @@ must(a11y, ["aria-modal", "focusTrap:true", "focusRestore:true", "forced-colors:
 must(shell, [
     "el.textContent!==value", "syncUpdateCard", "[data-mm-update-card]",
     "data-mm-repair-link", "Repair app files", "./repair.html", "location.reload()", "Desktop package", "hideInternalQaProvenance", "Plugin-assisted QA provenance",
-    "dockReferenceLauncher", "getElementById('mm-src-open')", "document.querySelector('.sidebar-foot')",
+    "dockReferenceLauncher", "getElementById('mm-src-open')", "retired-duplicate-reference-launcher", "document.querySelector('.sidebar-foot')",
     "sourceReviewDisplayDate", "qualitySuite?.sourceFreshnessReviewed", "syncStandardsReviewDate", "window.MM_DATA?.standards", "References reviewed\\s+\\d{1,2}",
     "open.style.position='static'", "open.style.zIndex='auto'", "configureReferenceDrawer",
     "modal.setAttribute('aria-modal','false')",

@@ -59,7 +59,7 @@ function restoreRedundant(root){
   });
 }
 function repairReferenceLauncherAccessibility(){
-  if(window.matchMedia?.('(max-width:700px)').matches)return;
+  if(window.matchMedia?.('(max-width:900px)').matches)return;
   for(const id of ['mm-src-open','mmrd-open']){
     const launcher=document.getElementById(id);if(!launcher)continue;
     const retiredMobileStylesCleared=launcher.style.getPropertyPriority('display')!=='important'&&!launcher.style.getPropertyValue('visibility')&&!launcher.style.getPropertyValue('pointer-events');
