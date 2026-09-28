@@ -29,6 +29,10 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
     await expect(page.locator('#materials')).toBeVisible();
     await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
     await expect(page.locator('#mmExactMaterialCatalog')).toHaveAttribute('data-mm-material-total','260');
+    await expect(page.locator('[data-mm-material-coverage]')).toContainText('28 manufacturers');
+    await expect(page.locator('[data-mm-material-coverage]')).toContainText('13 countries');
+    await expect(page.locator('[data-mm-material-coverage]')).toContainText('32 polymer families');
+    await expect(page.locator('[data-mm-material-coverage]')).toContainText('201 comparison-ready observations');
     await expect(page.locator('[data-mm-material-grade]')).toHaveCount(24);
 
     const search=page.locator('[data-mm-exact-query]');
