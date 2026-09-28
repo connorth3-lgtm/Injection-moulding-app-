@@ -87,6 +87,19 @@ need("missing-one-side" in registry_runtime and "not-directly-comparable" in reg
 need("Close important evidence gaps" in registry_runtime, "material change assistant must make missing evidence actionable without assuming equivalence")
 need(catalog.get("schemaVersion") == 1, "material catalog schema version drift")
 need(catalog.get("catalogVersion") == "generated", "material catalog must use the compiler-owned generated version marker")
+stats = catalog.get("statistics") or {}
+need(stats.get("exactGrades") == len(catalog.get("grades") or []) == 260, "catalog exact-grade statistics drift")
+need(stats.get("manufacturers") == len(catalog.get("manufacturers") or []) == 28, "catalog manufacturer statistics drift")
+catalog_countries = {m.get("country") for m in catalog.get("manufacturers") or [] if m.get("country")}
+catalog_families = {(g.get("polymer") or {}).get("family") for g in catalog.get("grades") or [] if (g.get("polymer") or {}).get("family")}
+catalog_properties = [obs for g in catalog.get("grades") or [] for obs in g.get("properties") or []]
+catalog_processing = [obs for g in catalog.get("grades") or [] for obs in g.get("processing") or []]
+need(stats.get("countries") == len(catalog_countries) == 13, "catalog country statistics drift")
+need(stats.get("polymerFamilies") == len(catalog_families) == 32, "catalog family statistics drift")
+need(stats.get("propertyObservations") == len(catalog_properties) == 536, "catalog property-observation statistics drift")
+need(stats.get("comparisonReadyObservations") == sum(1 for obs in catalog_properties if obs.get("comparisonReady") is True) == 201, "catalog comparison-ready statistics drift")
+need(stats.get("processingObservations") == len(catalog_processing) == 225, "catalog processing-observation statistics drift")
+need(stats.get("primarySourceGrades") == sum(1 for g in catalog.get("grades") or [] if any(str(s.get("kind") or "").startswith("manufacturer-") for s in g.get("sources") or [])) == 256, "catalog primary-source statistics drift")
 need("variant/revision/production identity differs" in str(catalog.get("boundary") or ""), "material catalog boundary does not describe variant-safe identity")
 catalog_manufacturer_ids = {m.get("id") for m in catalog.get("manufacturers") or []}
 runtime_manufacturer_ids = {(g.get("manufacturer") or {}).get("id") for g in catalog.get("grades") or []}
