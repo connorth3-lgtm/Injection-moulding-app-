@@ -128,3 +128,25 @@ test('repeated learner switching keeps Book/activity session dedupe scoped to th
   },{a:A,b:B});
   expect(result).toEqual({a1:1,b1:1,a2:1,aAfterReset:1});
 });
+
+
+test('uniquely owned legacy activity storage migrates to the strong learner token without duplication',async({page})=>{
+  const legacyToken=id=>{let h=2166136261;for(const ch of String(id)){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return(h>>>0).toString(36)};
+  await page.addInitScript(({a,legacy})=>{
+    const user={id:a,name:'Migration QA',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},examPassStatus:{},certificates:[],certificateMeta:{},currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
+    localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:a,users:{[a]:user}}));
+    localStorage.setItem('mm_activity_events_v2::'+legacy,JSON.stringify({schema:2,version:'legacy-fixture',events:[{v:2,t:'2026-09-28T00:00:00.000Z',type:'practice_choice',activityType:'scenario',activityId:'scenario:legacy',itemId:'legacy',correct:true,competencyIds:['legacy-migrated']}]}));
+  },{a:A,legacy:legacyToken(A)});
+  await page.goto(BASE,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>!!window.MM_ACTIVITY_EVENTS_V2&&!!window.MM_LEARNER_SCOPE&&!document.getElementById('mmBootstrap'),{timeout:30000});
+  const result=await page.evaluate(legacy=>{
+    const scope=window.MM_LEARNER_SCOPE,api=window.MM_ACTIVITY_EVENTS_V2;
+    const strong=scope.storageKey('mm_activity_events_v2::',scope.token());
+    const old='mm_activity_events_v2::'+legacy;
+    const events=api.events({includeLegacy:false});
+    return {events:events.map(e=>e.itemId),strong:localStorage.getItem(strong),legacy:localStorage.getItem(old)};
+  },legacyToken(A));
+  expect(result.events).toEqual(['legacy']);
+  expect(result.strong).toBeTruthy();
+  expect(result.legacy).toBeNull();
+});
