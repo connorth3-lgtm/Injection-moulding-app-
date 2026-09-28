@@ -246,6 +246,88 @@ def acquisition_status() -> dict[str, Any]:
     }
 
 
+def promotion_readiness() -> dict[str, Any]:
+    """Report staged-only exact grades that have enough evidence for review without auto-promoting them."""
+    rows: list[dict[str, Any]] = []
+    runtime_ids: set[str] = set()
+    staged: dict[str, dict[str, Any]] = {}
+
+    for path in sorted(STAGING.glob("*.json")):
+        payload = load_json(path)
+        for manufacturer in payload.get("manufacturers") or []:
+            for grade in manufacturer.get("gradeRecords") or []:
+                gid = clean_text(grade.get("id"))
+                if not gid:
+                    continue
+                stage = clean_text((grade.get("provenance") or {}).get("stage")) or "staging"
+                if stage in {"validated", "published"}:
+                    runtime_ids.add(gid)
+                elif gid not in staged:
+                    staged[gid] = {"grade": grade, "dataset": path.name}
+
+    for gid, item in staged.items():
+        if gid in runtime_ids:
+            continue
+        grade = item["grade"]
+        sources = grade.get("sources") or []
+        primary_sources = [
+            source for source in sources
+            if clean_text(source.get("kind")).startswith("manufacturer-")
+            or clean_text(source.get("publisher")) == clean_text((grade.get("manufacturer") or {}).get("name"))
+        ]
+        properties = grade.get("properties") or []
+        processing = grade.get("processing") or []
+        blockers: list[str] = []
+        if not primary_sources:
+            blockers.append("no manufacturer-class primary source")
+        if not properties and not processing:
+            blockers.append("no normalized property or processing observations")
+        for obs in properties:
+            if not clean_text(obs.get("sourceId")):
+                blockers.append("property observation missing sourceId")
+                break
+            if not clean_text(obs.get("unit")):
+                blockers.append("property observation missing unit")
+                break
+            if not clean_text(obs.get("testMethod")):
+                blockers.append("property observation missing test method")
+                break
+        for obs in processing:
+            if not clean_text(obs.get("sourceId")):
+                blockers.append("processing observation missing sourceId")
+                break
+            if not clean_text(obs.get("condition")):
+                blockers.append("processing observation missing applicability condition")
+                break
+        rows.append({
+            "id": gid,
+            "manufacturer": clean_text((grade.get("manufacturer") or {}).get("name")),
+            "brand": clean_text(grade.get("brand")),
+            "grade": clean_text(grade.get("grade")),
+            "family": clean_text((grade.get("polymer") or {}).get("family")),
+            "dataset": item["dataset"],
+            "primarySourceCount": len(primary_sources),
+            "propertyObservations": len(properties),
+            "processingObservations": len(processing),
+            "evidenceReviewCandidate": not blockers,
+            "blockers": blockers,
+        })
+
+    candidates = [row for row in rows if row["evidenceReviewCandidate"]]
+    blocked = [row for row in rows if not row["evidenceReviewCandidate"]]
+    return {
+        "boundary": "This is a review queue, not an automatic publication gate. A candidate still requires semantic review and an explicit provenance-stage change before it can enter runtime.",
+        "stagingOnlyGrades": len(rows),
+        "evidenceReviewCandidates": len(candidates),
+        "blockedGrades": len(blocked),
+        "candidates": sorted(candidates, key=lambda row: (row["manufacturer"], row["brand"], row["grade"])),
+        "blockerCounts": {
+            blocker: sum(blocker in row["blockers"] for row in blocked)
+            for blocker in sorted({b for row in blocked for b in row["blockers"]})
+        },
+    }
+
+
 def compile_catalog(output: Path = CATALOG) -> dict[str, Any]:
     errors = validate_staging()
     if errors:
@@ -325,7 +407,7 @@ def compile_catalog(output: Path = CATALOG) -> dict[str, Any]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Validate/compile MouldMaster exact-grade material staging data")
-    parser.add_argument("command", choices=["validate", "compile", "status"])
+    parser.add_argument("command", choices=["validate", "compile", "status", "promotion-status"])
     parser.add_argument("--output", type=Path, default=CATALOG)
     args = parser.parse_args()
 
@@ -339,6 +421,11 @@ def main() -> None:
         if errors:
             raise SystemExit("\n".join(errors))
         print(json.dumps(acquisition_status(), indent=2, ensure_ascii=False))
+    elif args.command == "promotion-status":
+        errors = validate_staging()
+        if errors:
+            raise SystemExit("\n".join(errors))
+        print(json.dumps(promotion_readiness(), indent=2, ensure_ascii=False))
     else:
         catalog = compile_catalog(args.output)
         print(f"Compiled {len(catalog['grades'])} validated exact grades from {len(catalog['manufacturers'])} manufacturers")
