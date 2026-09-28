@@ -28,8 +28,8 @@ function compactText(value,max=260){const text=clean(value).replace(/\s+/g,' ');
 function resultSummary(doc){
   const p=doc?.payload||{};
   if(doc.type==='exact-grade'){
-    const props=(p.properties||[]).slice(0,3).map(x=>`${clean(x.property)} ${valueText(x)}`).join(' · ');
-    const proc=(p.processing||[]).slice(0,2).map(x=>`${clean(x.parameter)} ${processValue(x)}`).join(' · ');
+    const props=(p.properties||[]).map(x=>`${clean(x.property)} ${valueText(x)}`).join(' · ');
+    const proc=(p.processing||[]).map(x=>`${clean(x.parameter)} ${processValue(x)}`).join(' · ');
     return compactText([props,proc].filter(Boolean).join(' · ')||doc.subtitle);
   }
   if(doc.type==='reference-material')return compactText([...(p.traits||[]),...(p.watch||[]),p.verify].filter(Boolean).join(' · '));
