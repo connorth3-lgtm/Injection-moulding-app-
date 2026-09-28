@@ -239,6 +239,24 @@ need({(g.get("polymer") or {}).get("family") for g in global14} == {"performance
 need(all(any("Singapore" in str(s.get("title", "")) for s in g.get("sources") or []) for g in global14), "Vistamaxx records lost Singapore family-level supply provenance")
 need(all(any(obs.get("property") == "Melt Flow Rate" and obs.get("temperatureC") == 230 and obs.get("loadKg") == 2.16 and obs.get("comparisonReady") is True for obs in g.get("properties") or []) for g in global14), "Vistamaxx conditioned MFR comparison contract drift")
 
+
+# Korea expansion wave: current LOTTE Chemical PP injection identities are
+# source-reviewed staging only. The manufacturer index exposes exact grades,
+# injection category and listed MI, but not the full MI temperature/load
+# conditions needed for comparison-ready promotion.
+global_wave15 = load_json(STAGING / "global-material-expansion-20260929-v15.json")
+need((global_wave15.get("summary") or {}).get("validatedGrades") == 0, "Korea wave must not promote under-conditioned LOTTE PP data")
+need((global_wave15.get("summary") or {}).get("sourceReviewedStagingGrades") == 24, "Korea LOTTE PP staging count drift")
+need((global_wave15.get("summary") or {}).get("countryFocus") == "South Korea", "Korea wave country focus drift")
+global15 = [g for m in global_wave15.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global15) == 24, "Korea LOTTE PP exact-grade staging set drift")
+need(all((g.get("provenance") or {}).get("stage") == "staging" for g in global15), "Korea LOTTE PP identities must remain staging")
+need(all(g.get("id") not in runtime_grade_ids for g in global15), "Korea LOTTE PP staging identities leaked into runtime")
+need({(g.get("polymer") or {}).get("family") for g in global15} == {"PP"}, "Korea LOTTE staging family drift")
+need(all((g.get("manufacturer") or {}).get("country") == "South Korea" for g in global15), "Korea LOTTE staging lost country identity")
+need(all(obs.get("comparisonReady") is False for g in global15 for obs in g.get("properties") or []), "Under-conditioned LOTTE PP MI must remain context-only")
+need((global_wave15.get("governance") or {}).get("runtimePromotionBlocked") is True, "Korea LOTTE PP promotion boundary drift")
+
 # Pilot proof: current primary-source LOTTE records remain unchanged while the
 # umbrella manifest records progress without copying exact-grade claims.
 lotte_pilot = load_json(STAGING / "lotte-exact-grade-pilot-v1.json")
