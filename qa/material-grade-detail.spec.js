@@ -154,7 +154,9 @@ test('Singapore exact-grade material search exposes Mitsui Elastomers Singapore 
   const search=root.locator('[data-mm-exact-query]');
   await search.fill('Singapore');
   await expect(root).toHaveAttribute('data-mm-material-total','31');
-  await expect(root.locator('[data-mm-material-grade]')).toHaveCount(31);
+  await expect(root.locator('[data-mm-material-grade]')).toHaveCount(24);
+  await expect(root.locator('[data-mm-material-status]')).toContainText('31 matching exact grades');
+  await expect(root.locator('[data-mm-material-status]')).toContainText('page 1 of 2');
   await expect(root).toContainText('TAFMER');
   await expect(root).toContainText('Mitsui Elastomers Singapore');
   await expect(root).toContainText('A-4070S');
