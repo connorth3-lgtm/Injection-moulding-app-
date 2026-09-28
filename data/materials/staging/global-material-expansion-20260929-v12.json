@@ -1,0 +1,597 @@
+{
+  "schemaVersion": 1,
+  "datasetId": "global-material-expansion-20260929-v12",
+  "status": "validated-exxonmobil-singapore-linked-pp-expansion",
+  "reviewedAt": "2026-09-29",
+  "purpose": "Twelfth expansion wave adding current ExxonMobil exact PP grades while treating Singapore manufacturing evidence as family-level regional provenance rather than exact-grade origin.",
+  "summary": {
+    "validatedGrades": 8,
+    "sourceReviewedStagingGrades": 0,
+    "manufacturers": 1,
+    "validatedFamilies": [
+      "PP"
+    ],
+    "countryContext": "Singapore family-level manufacturing provenance"
+  },
+  "manufacturers": [
+    {
+      "id": "mfr-exxonmobil",
+      "name": "ExxonMobil",
+      "country": "United States",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-exxonmobil-pp1013h1",
+          "manufacturer": {
+            "id": "mfr-exxonmobil",
+            "name": "ExxonMobil",
+            "country": "United States",
+            "website": "https://www.exxonmobilchemical.com/"
+          },
+          "brand": "ExxonMobil™",
+          "grade": "PP1013H1",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "homopolymer polypropylene exact grade. Current manufacturer page identifies processing method(s): Injection Molding. Features: low extractables, steam sterilizable."
+          },
+          "properties": [
+            {
+              "id": "obs-exxonmobil-pp1013h1-mfr",
+              "property": "Melt Flow Rate",
+              "value": 7.5,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-exxonmobil-pp1013h1-2026",
+              "sourcePage": "current technical data sheet listing",
+              "comparisonReady": true,
+              "limitations": "Current ExxonMobil exact-grade value; compare only at ASTM D1238, 230°C/2.16 kg."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-exxonmobil-pp1013h1-2026",
+              "publisher": "ExxonMobil Product Solutions",
+              "title": "ExxonMobil™ PP1013H1 current polypropylene technical data",
+              "url": "https://www.exxonmobilchemical.com/en/resources/product-data-sheets/polypropylene/homopolymers-resins",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-exxonmobil-singapore-complex-2026",
+              "publisher": "ExxonMobil Singapore",
+              "title": "Singapore Integrated Manufacturing Complex brochure",
+              "url": "https://www.exxonmobil.com.sg/-/media/Singapore/Files/Who-we-are/ExxonMobil-Singapore-Integrated-Manufacturing-Complex-brochure.pdf",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": "2025-10-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact-grade MFR and processing method come from ExxonMobil's current grade table. Singapore provenance is family-level only: ExxonMobil's Singapore complex manufactures polypropylene at scale, but this record does not claim Singapore plant-of-origin for PP1013H1. Uses: Labware; medical packaging; healthcare applications."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-exxonmobil-pp1572",
+          "manufacturer": {
+            "id": "mfr-exxonmobil",
+            "name": "ExxonMobil",
+            "country": "United States",
+            "website": "https://www.exxonmobilchemical.com/"
+          },
+          "brand": "ExxonMobil™",
+          "grade": "PP1572",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "homopolymer polypropylene exact grade. Current manufacturer page identifies processing method(s): Compression Molding; Injection Molding. Features: good mold release, high slip."
+          },
+          "properties": [
+            {
+              "id": "obs-exxonmobil-pp1572-mfr",
+              "property": "Melt Flow Rate",
+              "value": 2.1,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-exxonmobil-pp1572-2026",
+              "sourcePage": "current technical data sheet listing",
+              "comparisonReady": true,
+              "limitations": "Current ExxonMobil exact-grade value; compare only at ASTM D1238, 230°C/2.16 kg."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-exxonmobil-pp1572-2026",
+              "publisher": "ExxonMobil Product Solutions",
+              "title": "ExxonMobil™ PP1572 current polypropylene technical data",
+              "url": "https://www.exxonmobilchemical.com/en/resources/product-data-sheets/polypropylene/homopolymers-resins",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-exxonmobil-singapore-complex-2026",
+              "publisher": "ExxonMobil Singapore",
+              "title": "Singapore Integrated Manufacturing Complex brochure",
+              "url": "https://www.exxonmobil.com.sg/-/media/Singapore/Files/Who-we-are/ExxonMobil-Singapore-Integrated-Manufacturing-Complex-brochure.pdf",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": "2025-10-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact-grade MFR and processing method come from ExxonMobil's current grade table. Singapore provenance is family-level only: ExxonMobil's Singapore complex manufactures polypropylene at scale, but this record does not claim Singapore plant-of-origin for PP1572. Uses: Caps; closures; containers; packaging."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-exxonmobil-pp5262",
+          "manufacturer": {
+            "id": "mfr-exxonmobil",
+            "name": "ExxonMobil",
+            "country": "United States",
+            "website": "https://www.exxonmobilchemical.com/"
+          },
+          "brand": "ExxonMobil™",
+          "grade": "PP5262",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "homopolymer polypropylene exact grade. Current manufacturer page identifies processing method(s): Compounding; Injection Molding. Features: good mold release, high slip."
+          },
+          "properties": [
+            {
+              "id": "obs-exxonmobil-pp5262-mfr",
+              "property": "Melt Flow Rate",
+              "value": 2,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-exxonmobil-pp5262-2026",
+              "sourcePage": "current technical data sheet listing",
+              "comparisonReady": true,
+              "limitations": "Current ExxonMobil exact-grade value; compare only at ASTM D1238, 230°C/2.16 kg."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-exxonmobil-pp5262-2026",
+              "publisher": "ExxonMobil Product Solutions",
+              "title": "ExxonMobil™ PP5262 current polypropylene technical data",
+              "url": "https://www.exxonmobilchemical.com/en/resources/product-data-sheets/polypropylene/homopolymers-resins",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-exxonmobil-singapore-complex-2026",
+              "publisher": "ExxonMobil Singapore",
+              "title": "Singapore Integrated Manufacturing Complex brochure",
+              "url": "https://www.exxonmobil.com.sg/-/media/Singapore/Files/Who-we-are/ExxonMobil-Singapore-Integrated-Manufacturing-Complex-brochure.pdf",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": "2025-10-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact-grade MFR and processing method come from ExxonMobil's current grade table. Singapore provenance is family-level only: ExxonMobil's Singapore complex manufactures polypropylene at scale, but this record does not claim Singapore plant-of-origin for PP5262. Uses: Caps; closures; construction; industrial and rigid packaging."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-exxonmobil-pp9074med",
+          "manufacturer": {
+            "id": "mfr-exxonmobil",
+            "name": "ExxonMobil",
+            "country": "United States",
+            "website": "https://www.exxonmobilchemical.com/"
+          },
+          "brand": "Exceed™",
+          "grade": "PP9074MED",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "random copolymer polypropylene exact grade. Current manufacturer page identifies processing method(s): Injection Molding. Features: controlled rheology, high clarity, radiation sterilizable."
+          },
+          "properties": [
+            {
+              "id": "obs-exxonmobil-pp9074med-mfr",
+              "property": "Melt Flow Rate",
+              "value": 24,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-exxonmobil-pp9074med-2026",
+              "sourcePage": "current technical data sheet listing",
+              "comparisonReady": true,
+              "limitations": "Current ExxonMobil exact-grade value; compare only at ASTM D1238, 230°C/2.16 kg."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-exxonmobil-pp9074med-2026",
+              "publisher": "ExxonMobil Product Solutions",
+              "title": "Exceed™ PP9074MED current polypropylene technical data",
+              "url": "https://www.exxonmobilchemical.com/en/resources/product-data-sheets/polypropylene/random-copolymer-resins",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-exxonmobil-singapore-complex-2026",
+              "publisher": "ExxonMobil Singapore",
+              "title": "Singapore Integrated Manufacturing Complex brochure",
+              "url": "https://www.exxonmobil.com.sg/-/media/Singapore/Files/Who-we-are/ExxonMobil-Singapore-Integrated-Manufacturing-Complex-brochure.pdf",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": "2025-10-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact-grade MFR and processing method come from ExxonMobil's current grade table. Singapore provenance is family-level only: ExxonMobil's Singapore complex manufactures polypropylene at scale, but this record does not claim Singapore plant-of-origin for PP9074MED. Uses: Hypodermic syringe parts; labware; medical packaging."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-exxonmobil-pp9544med",
+          "manufacturer": {
+            "id": "mfr-exxonmobil",
+            "name": "ExxonMobil",
+            "country": "United States",
+            "website": "https://www.exxonmobilchemical.com/"
+          },
+          "brand": "Exceed™",
+          "grade": "PP9544MED",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "random copolymer polypropylene exact grade. Current manufacturer page identifies processing method(s): Injection Molding. Features: controlled rheology, medium clarity, steam sterilizable."
+          },
+          "properties": [
+            {
+              "id": "obs-exxonmobil-pp9544med-mfr",
+              "property": "Melt Flow Rate",
+              "value": 12,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-exxonmobil-pp9544med-2026",
+              "sourcePage": "current technical data sheet listing",
+              "comparisonReady": true,
+              "limitations": "Current ExxonMobil exact-grade value; compare only at ASTM D1238, 230°C/2.16 kg."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-exxonmobil-pp9544med-2026",
+              "publisher": "ExxonMobil Product Solutions",
+              "title": "Exceed™ PP9544MED current polypropylene technical data",
+              "url": "https://www.exxonmobilchemical.com/en/resources/product-data-sheets/polypropylene/random-copolymer-resins",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-exxonmobil-singapore-complex-2026",
+              "publisher": "ExxonMobil Singapore",
+              "title": "Singapore Integrated Manufacturing Complex brochure",
+              "url": "https://www.exxonmobil.com.sg/-/media/Singapore/Files/Who-we-are/ExxonMobil-Singapore-Integrated-Manufacturing-Complex-brochure.pdf",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": "2025-10-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact-grade MFR and processing method come from ExxonMobil's current grade table. Singapore provenance is family-level only: ExxonMobil's Singapore complex manufactures polypropylene at scale, but this record does not claim Singapore plant-of-origin for PP9544MED. Uses: Medical/healthcare applications."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-exxonmobil-pp9574e6",
+          "manufacturer": {
+            "id": "mfr-exxonmobil",
+            "name": "ExxonMobil",
+            "country": "United States",
+            "website": "https://www.exxonmobilchemical.com/"
+          },
+          "brand": "Exceed™",
+          "grade": "PP9574E6",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "random copolymer polypropylene exact grade. Current manufacturer page identifies processing method(s): Injection Molding. Features: antistatic, high clarity."
+          },
+          "properties": [
+            {
+              "id": "obs-exxonmobil-pp9574e6-mfr",
+              "property": "Melt Flow Rate",
+              "value": 12,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-exxonmobil-pp9574e6-2026",
+              "sourcePage": "current technical data sheet listing",
+              "comparisonReady": true,
+              "limitations": "Current ExxonMobil exact-grade value; compare only at ASTM D1238, 230°C/2.16 kg."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-exxonmobil-pp9574e6-2026",
+              "publisher": "ExxonMobil Product Solutions",
+              "title": "Exceed™ PP9574E6 current polypropylene technical data",
+              "url": "https://www.exxonmobilchemical.com/en/resources/product-data-sheets/polypropylene/random-copolymer-resins",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-exxonmobil-singapore-complex-2026",
+              "publisher": "ExxonMobil Singapore",
+              "title": "Singapore Integrated Manufacturing Complex brochure",
+              "url": "https://www.exxonmobil.com.sg/-/media/Singapore/Files/Who-we-are/ExxonMobil-Singapore-Integrated-Manufacturing-Complex-brochure.pdf",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": "2025-10-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact-grade MFR and processing method come from ExxonMobil's current grade table. Singapore provenance is family-level only: ExxonMobil's Singapore complex manufactures polypropylene at scale, but this record does not claim Singapore plant-of-origin for PP9574E6. Uses: Caps; closures; medical/healthcare; rigid packaging."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-exxonmobil-pp7555kne2",
+          "manufacturer": {
+            "id": "mfr-exxonmobil",
+            "name": "ExxonMobil",
+            "country": "United States",
+            "website": "https://www.exxonmobilchemical.com/"
+          },
+          "brand": "ExxonMobil™",
+          "grade": "PP7555KNE2",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "impact copolymer polypropylene exact grade. Current manufacturer page identifies processing method(s): Injection Molding. Features: high flow, high impact resistance, nucleated."
+          },
+          "properties": [
+            {
+              "id": "obs-exxonmobil-pp7555kne2-mfr",
+              "property": "Melt Flow Rate",
+              "value": 50,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-exxonmobil-pp7555kne2-2026",
+              "sourcePage": "current technical data sheet listing",
+              "comparisonReady": true,
+              "limitations": "Current ExxonMobil exact-grade value; compare only at ASTM D1238, 230°C/2.16 kg."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-exxonmobil-pp7555kne2-2026",
+              "publisher": "ExxonMobil Product Solutions",
+              "title": "ExxonMobil™ PP7555KNE2 current polypropylene technical data",
+              "url": "https://www.exxonmobilchemical.com/en/resources/product-data-sheets/polypropylene/impact-copolymer-resins",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-exxonmobil-singapore-complex-2026",
+              "publisher": "ExxonMobil Singapore",
+              "title": "Singapore Integrated Manufacturing Complex brochure",
+              "url": "https://www.exxonmobil.com.sg/-/media/Singapore/Files/Who-we-are/ExxonMobil-Singapore-Integrated-Manufacturing-Complex-brochure.pdf",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": "2025-10-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact-grade MFR and processing method come from ExxonMobil's current grade table. Singapore provenance is family-level only: ExxonMobil's Singapore complex manufactures polypropylene at scale, but this record does not claim Singapore plant-of-origin for PP7555KNE2. Uses: Appliance components; containers; rigid food packaging; toys."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-exxonmobil-pp7654kne2",
+          "manufacturer": {
+            "id": "mfr-exxonmobil",
+            "name": "ExxonMobil",
+            "country": "United States",
+            "website": "https://www.exxonmobilchemical.com/"
+          },
+          "brand": "ExxonMobil™",
+          "grade": "PP7654KNE2",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "impact copolymer polypropylene exact grade. Current manufacturer page identifies processing method(s): Injection Molding. Features: dimensional stability, mold release, thermal stability."
+          },
+          "properties": [
+            {
+              "id": "obs-exxonmobil-pp7654kne2-mfr",
+              "property": "Melt Flow Rate",
+              "value": 17,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-exxonmobil-pp7654kne2-2026",
+              "sourcePage": "current technical data sheet listing",
+              "comparisonReady": true,
+              "limitations": "Current ExxonMobil exact-grade value; compare only at ASTM D1238, 230°C/2.16 kg."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-exxonmobil-pp7654kne2-2026",
+              "publisher": "ExxonMobil Product Solutions",
+              "title": "ExxonMobil™ PP7654KNE2 current polypropylene technical data",
+              "url": "https://www.exxonmobilchemical.com/en/resources/product-data-sheets/polypropylene/impact-copolymer-resins",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            },
+            {
+              "id": "src-exxonmobil-singapore-complex-2026",
+              "publisher": "ExxonMobil Singapore",
+              "title": "Singapore Integrated Manufacturing Complex brochure",
+              "url": "https://www.exxonmobil.com.sg/-/media/Singapore/Files/Who-we-are/ExxonMobil-Singapore-Integrated-Manufacturing-Complex-brochure.pdf",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": "2025-10-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact-grade MFR and processing method come from ExxonMobil's current grade table. Singapore provenance is family-level only: ExxonMobil's Singapore complex manufactures polypropylene at scale, but this record does not claim Singapore plant-of-origin for PP7654KNE2. Uses: Automotive and consumer applications; household goods."
+          }
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "Every MFR observation retains ASTM D1238 230°C/2.16 kg context.",
+    "The Singapore complex brochure establishes polypropylene manufacturing capability at family level only; exact-grade production origin is not inferred."
+  ]
+}
