@@ -1,0 +1,1292 @@
+{
+  "schema": 1,
+  "version": "2026.09.28.1",
+  "policy": "Candidate grade extraction from primary manufacturer sources. Do not count as accepted material profiles until required drying/moisture, degradation/compatibility and processing provenance fields are complete and QA-reviewed. Values remain grade/test-condition specific.",
+  "records": [
+    {
+      "manufacturer": "Kuraray",
+      "country": "Japan",
+      "polymer": "PA9T",
+      "grade": "N1000A",
+      "reinforcement": "0% GF",
+      "properties": {
+        "waterAbsorption_pct_24h": 0.25,
+        "tensile_MPa": 85,
+        "flexural_MPa": 115,
+        "flexuralModulus_GPa": 2.5,
+        "melting_C": 300,
+        "shrinkageFlow_pct": 1.4,
+        "shrinkageTransverse_pct": 1.5
+      },
+      "conditioning": "absolute dry; shrinkage 2 mm",
+      "methods": [
+        "ISO 62",
+        "ISO 527",
+        "ISO 178",
+        "ISO 11357-3",
+        "ISO 294-4"
+      ],
+      "source": "https://genestar.kuraray.com/en/grades/n1000a/",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "country": "Japan",
+      "polymer": "PA9T",
+      "grade": "N1006A",
+      "reinforcement": "0% GF",
+      "properties": {
+        "waterAbsorption_pct_24h": 0.25,
+        "tensile_MPa": 50,
+        "flexural_MPa": 70,
+        "flexuralModulus_GPa": 1.5,
+        "melting_C": 300,
+        "shrinkageFlow_pct": 1.4,
+        "shrinkageTransverse_pct": 1.5
+      },
+      "conditioning": "absolute dry; shrinkage 2 mm",
+      "methods": [
+        "ISO 62",
+        "ISO 527",
+        "ISO 178",
+        "ISO 11357-3",
+        "ISO 294-4"
+      ],
+      "source": "https://genestar.kuraray.com/en/grades/n1006a/",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "country": "Japan",
+      "polymer": "PA9T",
+      "grade": "G1300A",
+      "reinforcement": "30% GF",
+      "properties": {
+        "waterAbsorption_pct_24h": 0.19,
+        "tensile_MPa": 190,
+        "flexural_MPa": 270,
+        "flexuralModulus_GPa": 8.8,
+        "melting_C": 300,
+        "shrinkageFlow_pct": 0.3,
+        "shrinkageTransverse_pct": 0.9
+      },
+      "conditioning": "absolute dry; shrinkage 2 mm",
+      "methods": [
+        "ISO 62",
+        "ISO 527",
+        "ISO 178",
+        "ISO 11357-3",
+        "ISO 294-4"
+      ],
+      "source": "https://genestar.kuraray.com/en/grades/g1300a/",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "country": "Japan",
+      "polymer": "PA9T",
+      "grade": "G1301A",
+      "reinforcement": "30% GF",
+      "properties": {
+        "waterAbsorption_pct_24h": 0.19,
+        "tensile_MPa": 175,
+        "flexural_MPa": 250,
+        "flexuralModulus_GPa": 8.2,
+        "melting_C": 300,
+        "shrinkageFlow_pct": 0.3,
+        "shrinkageTransverse_pct": 0.9
+      },
+      "conditioning": "absolute dry; shrinkage 2 mm",
+      "methods": [
+        "ISO 62",
+        "ISO 527",
+        "ISO 178",
+        "ISO 11357-3",
+        "ISO 294-4"
+      ],
+      "source": "https://genestar.kuraray.com/en/grades/g1301a/",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "country": "Japan",
+      "polymer": "PA9T",
+      "grade": "G1352A",
+      "reinforcement": "35% GF",
+      "properties": {
+        "waterAbsorption_pct_24h": 0.14,
+        "tensile_MPa": 200,
+        "flexural_MPa": 290,
+        "flexuralModulus_GPa": 10.7,
+        "melting_C": 300,
+        "shrinkageFlow_pct": 0.2,
+        "shrinkageTransverse_pct": 0.8
+      },
+      "conditioning": "absolute dry; shrinkage 2 mm",
+      "methods": [
+        "ISO 62",
+        "ISO 527",
+        "ISO 178",
+        "ISO 11357-3",
+        "ISO 294-4"
+      ],
+      "source": "https://genestar.kuraray.com/en/grades/g1352a/",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "country": "Japan",
+      "polymer": "PA9T",
+      "grade": "G1500A",
+      "reinforcement": "50% GF",
+      "properties": {
+        "waterAbsorption_pct_24h": 0.13,
+        "tensile_MPa": 250,
+        "flexural_MPa": 370,
+        "flexuralModulus_GPa": 15.3,
+        "melting_C": 300,
+        "shrinkageFlow_pct": 0.2,
+        "shrinkageTransverse_pct": 0.8
+      },
+      "conditioning": "absolute dry; shrinkage 2 mm",
+      "methods": [
+        "ISO 62",
+        "ISO 527",
+        "ISO 178",
+        "ISO 11357-3",
+        "ISO 294-4"
+      ],
+      "source": "https://genestar.kuraray.com/en/grades/g1500a/",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "UNITIKA",
+      "country": "Japan",
+      "polymer": "PA66",
+      "grade": "E2000",
+      "reinforcement": "none",
+      "properties": {
+        "tensileDry_MPa": 85,
+        "tensileConditioned_MPa": 60,
+        "flexuralDry_MPa": 115,
+        "flexuralConditioned_MPa": 50,
+        "waterAbsorption_pct": 2.3,
+        "shrinkageFlow_pct": 1.8,
+        "shrinkageTransverse_pct": 2,
+        "MVR_cm3_10min": 105
+      },
+      "conditioning": "DAM and 23C/50%RH where stated",
+      "methods": [
+        "ISO 527",
+        "ISO 178",
+        "ISO 62",
+        "ISO 1133"
+      ],
+      "source": "https://www.unitika.co.jp/plastics/e/products/nylon/nylon66/pdf/e2000.pdf",
+      "status": "candidate-complete"
+    },
+    {
+      "manufacturer": "SCGC",
+      "country": "Thailand",
+      "polymer": "PP homopolymer",
+      "grade": "P700J",
+      "reinforcement": "none",
+      "properties": {
+        "MFR_g_10min": 12,
+        "tensileYield_kg_cm2": 320,
+        "flexuralModulus_kg_cm2": 14500,
+        "izod23_J_m": 37
+      },
+      "conditioning": "MFR 230C/2.16kg",
+      "methods": [
+        "ASTM D1238",
+        "ASTM D638",
+        "ASTM D790",
+        "ASTM D256"
+      ],
+      "source": "https://www.scgchemicals.com/en/products-grade/p700j",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "SCGC",
+      "country": "Thailand",
+      "polymer": "PP impact copolymer",
+      "grade": "P840J",
+      "reinforcement": "none",
+      "properties": {
+        "MFR_g_10min": 43,
+        "tensileYield_kg_cm2": 290,
+        "flexuralModulus_kg_cm2": 12500,
+        "izod23_J_m": 70,
+        "izod0_J_m": 39,
+        "izodMinus20_J_m": 30
+      },
+      "conditioning": "MFR 230C/2.16kg",
+      "methods": [
+        "ASTM D1238",
+        "ASTM D638",
+        "ASTM D790",
+        "ASTM D256"
+      ],
+      "source": "https://www.scgchemicals.com/en/products-grade/p840j",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "IndianOil",
+      "country": "India",
+      "polymer": "PP homopolymer",
+      "grade": "1110MAS",
+      "reinforcement": "none",
+      "properties": {
+        "MFI_g_10min": 11,
+        "density_g_cm3": 0.9,
+        "tensileYield_MPa": 42,
+        "flexuralModulus_MPa": 1800,
+        "izod23_J_m": 30,
+        "HDT_C": 120,
+        "Vicat_C": 154
+      },
+      "conditioning": "MFI 230C/2.16kg; typical values; ASTM D4101 molded specimens conditioned ASTM D618",
+      "methods": [
+        "ASTM D1238",
+        "ASTM D1505",
+        "ASTM D638",
+        "ASTM D790",
+        "ASTM D256",
+        "ASTM D648",
+        "ASTM D1525"
+      ],
+      "source": "https://iocl.com/uploads/TDS_23012026.pdf",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "SCGC",
+      "country": "Thailand",
+      "polymer": "PP impact copolymer",
+      "grade": "P740J",
+      "reinforcement": "none",
+      "properties": {
+        "MFR_g_10min": 27,
+        "tensileYield_kg_cm2": 290,
+        "flexuralModulus_kg_cm2": 12500,
+        "izod23_J_m": 78,
+        "izod0_J_m": 49,
+        "izodMinus20_J_m": 39
+      },
+      "conditioning": "MFR 230C/2.16kg",
+      "methods": [
+        "ASTM D1238",
+        "ASTM D638",
+        "ASTM D790",
+        "ASTM D256"
+      ],
+      "source": "https://www.scgchemicals.com/en/products-grade/p740j",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "SCGC",
+      "country": "Thailand",
+      "polymer": "PP impact copolymer",
+      "grade": "P744J",
+      "reinforcement": "none",
+      "properties": {
+        "MFR_g_10min": 30,
+        "tensileYield_MPa": 28,
+        "flexuralModulus_kg_cm2": 14500,
+        "izod23_J_m": 78,
+        "izod0_J_m": 55,
+        "izodMinus20_J_m": 41
+      },
+      "conditioning": "MFR 230C/2.16kg",
+      "methods": [
+        "ASTM D1238",
+        "ASTM D638",
+        "ASTM D790",
+        "ASTM D256"
+      ],
+      "source": "https://www.scgchemicals.com/en/products-grade/p744j",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "SCGC",
+      "country": "Thailand",
+      "polymer": "PP impact copolymer",
+      "grade": "P842J",
+      "reinforcement": "none",
+      "properties": {
+        "MFR_g_10min": 40,
+        "density_g_cm3": 0.91,
+        "melting_C": 163,
+        "HDT_C_at_0_455MPa": 125,
+        "tensileYield_kg_cm2": 295,
+        "flexuralModulus_kg_cm2": 15500,
+        "izod23_J_m": 75,
+        "izod0_J_m": 50
+      },
+      "conditioning": "MFR 230C/2.16kg",
+      "methods": [
+        "ASTM D1238",
+        "ASTM D1505",
+        "ASTM D2117",
+        "ASTM D648",
+        "ASTM D638",
+        "ASTM D790",
+        "ASTM D256"
+      ],
+      "source": "https://www.scgchemicals.com/en/products-grade/p842j",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "SCGC",
+      "country": "Thailand",
+      "polymer": "PP impact copolymer",
+      "grade": "P945J",
+      "reinforcement": "none",
+      "properties": {
+        "MFR_g_10min": 65,
+        "tensileYield_kg_cm2": 270,
+        "flexuralModulus_kg_cm2": 14000,
+        "izod23_J_m": 65
+      },
+      "conditioning": "MFR 230C/2.16kg",
+      "methods": [
+        "ASTM D1238",
+        "ASTM D638",
+        "ASTM D790",
+        "ASTM D256"
+      ],
+      "source": "https://www.scgchemicals.com/en/products-grade/p945j",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Asahi Kasei",
+      "country": "Japan",
+      "polymer": "POM homopolymer",
+      "grade": "TENAC 4010",
+      "reinforcement": "none",
+      "properties": {
+        "meltFlow_g_10min": 10.5,
+        "tensileStrength_MPa": 70,
+        "flexuralModulus_MPa": 2650,
+        "izodNotched_kJ_m2": 6.7,
+        "HDT_C_1_8MPa": 124
+      },
+      "conditioning": "manufacturer typical property table; verify exact method/revision at promotion",
+      "methods": [
+        "ISO 1133",
+        "ISO 527",
+        "ISO 178",
+        "ISO 179",
+        "ISO 75"
+      ],
+      "source": "https://www.asahi-kasei-plastics.com/en/products/tenac/grade/",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Asahi Kasei",
+      "country": "Japan",
+      "polymer": "POM homopolymer",
+      "grade": "TENAC 5010",
+      "reinforcement": "none",
+      "properties": {
+        "meltFlow_g_10min": 18,
+        "tensileStrength_MPa": 69,
+        "flexuralModulus_MPa": 2600
+      },
+      "conditioning": "manufacturer grade table; normal-viscosity homopolymer class",
+      "methods": [
+        "ISO 1133",
+        "ISO 527",
+        "ISO 178"
+      ],
+      "source": "https://www.asahi-kasei-plastics.com/en/products/tenac/grade/",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Asahi Kasei",
+      "country": "Japan",
+      "polymer": "POM copolymer",
+      "grade": "TENAC-C 4520",
+      "reinforcement": "none",
+      "properties": {
+        "meltFlow_g_10min": 9,
+        "tensileStrength_MPa": 61,
+        "flexuralModulus_MPa": 2450
+      },
+      "conditioning": "manufacturer grade table; standard copolymer class",
+      "methods": [
+        "ISO 1133",
+        "ISO 527",
+        "ISO 178"
+      ],
+      "source": "https://www.asahi-kasei-plastics.com/en/products/tenac/grade/",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Asahi Kasei",
+      "country": "Japan",
+      "polymer": "POM copolymer",
+      "grade": "TENAC-C 7520",
+      "reinforcement": "none",
+      "properties": {
+        "meltFlow_g_10min": 30,
+        "tensileStrength_MPa": 60,
+        "flexuralModulus_MPa": 2400
+      },
+      "conditioning": "manufacturer grade table; high-flow copolymer class",
+      "methods": [
+        "ISO 1133",
+        "ISO 527",
+        "ISO 178"
+      ],
+      "source": "https://www.asahi-kasei-plastics.com/en/products/tenac/grade/",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "LG Chem",
+      "country": "South Korea",
+      "polymer": "PA6 compound",
+      "grade": "GP 1100AW",
+      "reinforcement": "unreinforced",
+      "properties": {
+        "specificGravity": 1.13,
+        "moldShrinkage_pct": "1.0-1.4",
+        "tensileStrength_kg_cm2": 810,
+        "flexuralStrength_kg_cm2": 1100,
+        "flexuralModulus_kg_cm2": 27000
+      },
+      "conditioning": "manufacturer engineering-plastics guide; values explicitly described as referential/typical, not guaranteed",
+      "methods": [
+        "ASTM D792",
+        "ASTM D955",
+        "ASTM D638",
+        "ASTM D790"
+      ],
+      "source": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "LG Chem",
+      "country": "South Korea",
+      "polymer": "PA6 compound",
+      "grade": "GP 2300AW",
+      "reinforcement": "GF reinforced",
+      "properties": {
+        "specificGravity": 1.35,
+        "moldShrinkage_pct": "0.4-0.9",
+        "tensileStrength_kg_cm2": 1800,
+        "flexuralStrength_kg_cm2": 2600,
+        "flexuralModulus_kg_cm2": 85000
+      },
+      "conditioning": "manufacturer engineering-plastics guide; general-purpose PA6 GF grade; referential/typical values",
+      "methods": [
+        "ASTM D792",
+        "ASTM D955",
+        "ASTM D638",
+        "ASTM D790"
+      ],
+      "source": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "LG Chem",
+      "country": "South Korea",
+      "polymer": "PA6 compound",
+      "grade": "HM 2604AW",
+      "reinforcement": "GF reinforced",
+      "properties": {
+        "specificGravity": 1.69,
+        "moldShrinkage_pct": "0.2-0.5",
+        "tensileStrength_kg_cm2": 2100,
+        "flexuralStrength_kg_cm2": 3000,
+        "flexuralModulus_kg_cm2": 160000
+      },
+      "conditioning": "manufacturer engineering-plastics guide; high-stiffness PA6 grade; referential/typical values",
+      "methods": [
+        "ASTM D792",
+        "ASTM D955",
+        "ASTM D638",
+        "ASTM D790"
+      ],
+      "source": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Toyobo",
+      "country": "Japan",
+      "polymer": "PA6",
+      "grade": "GLAMIDE T-802",
+      "reinforcement": "representative unfilled family grade",
+      "properties": {
+        "melting_C": 220,
+        "Tg_C": 60,
+        "waterAbsorption24h_pct": 2.3,
+        "density_g_cm3": 1.14
+      },
+      "conditioning": "manufacturer comparative engineering-plastics table",
+      "methods": [],
+      "source": "https://cn.toyobo-global.com/seihin/xj/enpla/glamide/characteristics.html",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Toyobo",
+      "country": "Japan",
+      "polymer": "PA66",
+      "grade": "GLAMIDE T662",
+      "reinforcement": "representative family grade",
+      "properties": {
+        "melting_C": 260,
+        "Tg_C": 60,
+        "waterAbsorption24h_pct": 1.2,
+        "density_g_cm3": 1.14
+      },
+      "conditioning": "manufacturer comparative engineering-plastics table",
+      "methods": [],
+      "source": "https://cn.toyobo-global.com/seihin/xj/enpla/glamide/characteristics.html",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Toyobo",
+      "country": "Japan",
+      "polymer": "high-melting PA6T",
+      "grade": "TY-502NZ",
+      "reinforcement": "representative family grade",
+      "properties": {
+        "melting_C": 295,
+        "Tg_C": 120,
+        "waterAbsorption24h_pct": 0.8,
+        "density_g_cm3": 1.18
+      },
+      "conditioning": "manufacturer comparative engineering-plastics table",
+      "methods": [],
+      "source": "https://cn.toyobo-global.com/seihin/xj/enpla/glamide/characteristics.html",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Polyplastics/Daicel",
+      "country": "Japan",
+      "polymer": "PBT+PET",
+      "grade": "DURANEX 3306",
+      "reinforcement": "GF30%",
+      "properties": {
+        "density_g_cm3": 1.54,
+        "waterAbsorption23C24h_pct": 0.2,
+        "tensile_MPa": 140,
+        "flexural_MPa": 210,
+        "flexuralModulus_MPa": 9100,
+        "charpyNotched23_kJ_m2": 8.1,
+        "HDT_C_1_8MPa": 210,
+        "CLTE_flow_x1e5_perC": 2,
+        "CLTE_transverse_x1e5_perC": 7
+      },
+      "conditioning": "manufacturer grade catalogue; 1 mm water-absorption specimen where stated",
+      "methods": [
+        "ISO 1183",
+        "ISO 62",
+        "ISO 527-1,2",
+        "ISO 178",
+        "ISO 179/1eA",
+        "ISO 75-1,2"
+      ],
+      "source": "https://www.polyplastics.com/Gidb/GradeListSelectGradeAction.do?id=1520",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "country": "Japan",
+      "polymer": "SEPS TPE",
+      "grade": "SEPTON 2002",
+      "reinforcement": "none",
+      "properties": {
+        "styreneContent_wt_pct": 30,
+        "MFR230C_2_16kg_g_10min": 70,
+        "MFR200C_10kg_g_10min": 100,
+        "hardnessShoreA": 80
+      },
+      "conditioning": "manufacturer standard-grade table; TPE base polymer typically used in compounds",
+      "methods": [],
+      "source": "https://www.kuraray.com/global-en/products/thermoplastic-elastomer/",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "country": "Japan",
+      "polymer": "SEPS TPE",
+      "grade": "SEPTON 2063",
+      "reinforcement": "none",
+      "properties": {
+        "styreneContent_wt_pct": 13,
+        "MFR230C_2_16kg_g_10min": 7,
+        "MFR200C_10kg_g_10min": 22,
+        "hardnessShoreA": 36
+      },
+      "conditioning": "manufacturer standard-grade table; TPE base polymer typically used in compounds",
+      "methods": [],
+      "source": "https://www.kuraray.com/global-en/products/thermoplastic-elastomer/",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Kuraray",
+      "country": "Japan",
+      "polymer": "SEEPS TPE",
+      "grade": "SEPTON 4033",
+      "reinforcement": "none",
+      "properties": {
+        "styreneContent_wt_pct": 30,
+        "MFR230C_2_16kg_g_10min": "<0.1",
+        "MFR200C_10kg_g_10min": "<0.1",
+        "hardnessShoreA": 76
+      },
+      "conditioning": "manufacturer standard-grade table; high-molecular-weight TPE base polymer",
+      "methods": [],
+      "source": "https://www.kuraray.com/global-en/products/thermoplastic-elastomer/",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Polyplastics/Daicel",
+      "country": "Japan",
+      "polymer": "LCP",
+      "grade": "LAPEROS A130",
+      "reinforcement": "GF30%",
+      "properties": {
+        "density_g_cm3": 1.61,
+        "waterAbsorption23C24h_pct": 0.02,
+        "tensile_MPa": 210,
+        "flexural_MPa": 270,
+        "flexuralModulus_MPa": 15000,
+        "HDT_C_1_8MPa": 240,
+        "shrinkageFlow_pct_60MPa": 0.01,
+        "shrinkageTransverse_pct_60MPa": 0.45
+      },
+      "conditioning": "shrinkage on 80x80x1 mm specimen at 60 MPa injection pressure",
+      "methods": [
+        "ISO 1183",
+        "ISO 62",
+        "ASTM D638",
+        "ISO 178",
+        "ISO 75-1,2"
+      ],
+      "source": "https://www.polyplastics.com/Gidb/GradeInfoDownloadAction.do?_LOCALE=ENGLISH&fileNo=1&gradeId=2483&langId=1",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Polyplastics/Daicel",
+      "country": "Japan",
+      "polymer": "LCP",
+      "grade": "LAPEROS E473i",
+      "reinforcement": "mineral+GF 30%",
+      "properties": {
+        "density_g_cm3": 1.63,
+        "waterAbsorption23C24h_pct": 0.02,
+        "tensile_MPa": 125,
+        "flexural_MPa": 160,
+        "flexuralModulus_MPa": 11000,
+        "HDT_C_1_8MPa": 250,
+        "shrinkageFlow_pct_60MPa": 0.03,
+        "shrinkageTransverse_pct_60MPa": 0.39
+      },
+      "conditioning": "low-warpage high-flow SMT grade; shrinkage on 80x80x1 mm specimen at 60 MPa injection pressure",
+      "methods": [
+        "ISO 1183",
+        "ISO 62",
+        "ASTM D638",
+        "ISO 178",
+        "ISO 75-1,2"
+      ],
+      "source": "https://www.polyplastics.com/Gidb/GradeInfoDownloadAction.do?_LOCALE=ENGLISH&fileNo=1&gradeId=2547&langId=1",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Polyplastics/Daicel",
+      "country": "Japan",
+      "polymer": "LCP",
+      "grade": "LAPEROS S471",
+      "reinforcement": "mineral+GF 45%",
+      "properties": {
+        "density_g_cm3": 1.77,
+        "waterAbsorption23C24h_pct": 0.01,
+        "tensile_MPa": 130,
+        "flexural_MPa": 180,
+        "flexuralModulus_MPa": 12700,
+        "HDT_C_1_8MPa": 315,
+        "shrinkageFlow_pct_60MPa": 0.1,
+        "shrinkageTransverse_pct_60MPa": 0.33
+      },
+      "conditioning": "high-heat low-warpage grade; shrinkage on 80x80x1 mm specimen at 60 MPa injection pressure",
+      "methods": [
+        "ISO 1183",
+        "ISO 62",
+        "ASTM D638",
+        "ISO 178",
+        "ISO 75-1,2"
+      ],
+      "source": "https://www.polyplastics.com/Gidb/GradeInfoDownloadAction.do?_LOCALE=ENGLISH&fileNo=1&gradeId=2564&langId=1",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "UNITIKA",
+      "country": "Japan",
+      "polymer": "polyarylate",
+      "grade": "U-Polymer L-1003PA",
+      "reinforcement": "compound/sliding grade",
+      "properties": {
+        "tensileYield_MPa": 65,
+        "tensileModulus_MPa": 2100,
+        "flexural_MPa": 88,
+        "flexuralModulus_MPa": 2100,
+        "HDT_C_1_8MPa": 172,
+        "density_g_cm3": 1.23,
+        "waterAbsorption23C24h_pct": 0.26,
+        "shrinkageParallel_pct": "0.6-0.8",
+        "shrinkagePerpendicular_pct": "0.6-0.8"
+      },
+      "conditioning": "manufacturer ISO property table; shrinkage company method 3 mm",
+      "methods": [
+        "ISO 527-1,-2",
+        "ISO 178",
+        "ISO 179-1eA",
+        "ISO 75-1,-2",
+        "ISO 1183",
+        "ISO 62"
+      ],
+      "source": "https://www.unitika.co.jp/plastics/products/par/upolymer/p-series/ps-02.html",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "UNITIKA",
+      "country": "Japan",
+      "polymer": "polyarylate",
+      "grade": "U-Polymer FUN-8520S",
+      "reinforcement": "chemical/impact grade",
+      "properties": {
+        "tensileYield_MPa": 62,
+        "tensileModulus_MPa": 1900,
+        "flexural_MPa": 88,
+        "flexuralModulus_MPa": 1900,
+        "HDT_C_1_8MPa": 123,
+        "density_g_cm3": 1.21,
+        "waterAbsorption23C24h_pct": 0.2,
+        "shrinkageParallel_pct": "0.6-0.8",
+        "shrinkagePerpendicular_pct": "0.6-0.8",
+        "MFR_g_10min": 27
+      },
+      "conditioning": "MFR at 300C/2.16kg; shrinkage company method 3 mm",
+      "methods": [
+        "ISO 527-1,-2",
+        "ISO 178",
+        "ISO 179-1eA",
+        "ISO 75-1,-2",
+        "ISO 1183",
+        "ISO 62",
+        "ISO 1133"
+      ],
+      "source": "https://www.unitika.co.jp/plastics/products/par/upolymer/u-series/us-02.html",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "LOTTE Chemical",
+      "country": "South Korea",
+      "polymer": "PBT",
+      "grade": "GP-5000",
+      "reinforcement": "unfilled",
+      "properties": {
+        "specificGravity": 1.3,
+        "MFI250C_2_16kg_g_10min": 71,
+        "tensileYield_MPa": 55,
+        "tensileModulus_MPa": 2300,
+        "flexural_MPa": 74,
+        "flexuralModulus_MPa": 2100,
+        "izodNotched23_kJ_m2": 4.5,
+        "HDT_C_1_8MPa": 59
+      },
+      "conditioning": "ISO property page; natural or representative color; method conditions retained",
+      "methods": [
+        "ISO 1183",
+        "ISO 1133",
+        "ISO 527",
+        "ISO 178",
+        "ISO 180 1A",
+        "ISO 75-2"
+      ],
+      "source": "https://product.lottechem.com/en/advanced_materials/iso.do?grade=GP-5000",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "LOTTE Chemical",
+      "country": "South Korea",
+      "polymer": "PBT",
+      "grade": "ASF-9860",
+      "reinforcement": "unfilled",
+      "properties": {
+        "specificGravity": 1.31,
+        "waterAbsorption23C_pct": 0.4,
+        "MFI250C_2_16kg_g_10min": 74,
+        "shrinkageMD_pct": "1.5-1.8",
+        "shrinkageTD_pct": "1.7-2.0",
+        "tensileYield_MPa": 58,
+        "tensileModulus_MPa": 2350,
+        "flexural_MPa": 80,
+        "flexuralModulus_MPa": 2320
+      },
+      "conditioning": "automotive high-flow grade; shrinkage ISO 294-4 at 2 mm",
+      "methods": [
+        "ISO 1183",
+        "ISO 62",
+        "ISO 1133",
+        "ISO 294-4",
+        "ISO 527",
+        "ISO 178"
+      ],
+      "source": "https://product.lottechem.com/en/advanced_materials/iso.do?grade=ASF-9860",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "LOTTE Chemical",
+      "country": "South Korea",
+      "polymer": "PBT/GF",
+      "grade": "GP-5400G",
+      "reinforcement": "GF reinforced",
+      "properties": {
+        "specificGravity": 1.61,
+        "MFI250C_2_16kg_g_10min": 10,
+        "tensileYield_MPa": 160,
+        "tensileModulus_MPa": 9000,
+        "flexural_MPa": 220,
+        "flexuralModulus_MPa": 10000,
+        "izodNotched23_kJ_m2": 12
+      },
+      "conditioning": "E&E reinforced grade; ISO property page",
+      "methods": [
+        "ISO 1183",
+        "ISO 1133",
+        "ISO 527",
+        "ISO 178",
+        "ISO 180 1A"
+      ],
+      "source": "https://product.lottechem.com/en/advanced_materials/iso.do?grade=GP-5400G",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "LOTTE Chemical",
+      "country": "South Korea",
+      "polymer": "PC/PBT",
+      "grade": "AE-3063H",
+      "reinforcement": "alloy",
+      "properties": {
+        "specificGravity": 1.2,
+        "MFI250C_5kg_g_10min": 16,
+        "shrinkageMD_pct": "0.55-0.85",
+        "shrinkageTD_pct": "0.55-0.85"
+      },
+      "conditioning": "automotive painting grade; ASTM shrinkage at 3.2 mm",
+      "methods": [
+        "ASTM D792",
+        "ASTM D1238",
+        "ASTM D955",
+        "ASTM D638",
+        "ASTM D790",
+        "ASTM D256"
+      ],
+      "source": "https://product.lottechem.com/en/advanced_materials/astm.do?grade=AE-3063H",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Formosa Chemicals & Fibre",
+      "country": "Taiwan",
+      "polymer": "ABS",
+      "grade": "AF3500",
+      "reinforcement": "none",
+      "properties": {
+        "MFI220C_10kg_g_10min": 47,
+        "MFI200C_5kg_g_10min": 5,
+        "specificGravity": 1.04,
+        "tensileISO_MPa": 38,
+        "flexuralISO_MPa": 50,
+        "flexuralModulusISO_MPa": 1500,
+        "Vicat_C": 92,
+        "HDTannealed_C_1_8MPa": 90,
+        "shrinkage_pct": "0.4-0.7"
+      },
+      "conditioning": "high-flow/high-impact ABS; shrinkage at 3.2 mm; ASTM and ISO property sets published",
+      "methods": [
+        "ASTM D1238",
+        "ASTM D955",
+        "ISO 1133",
+        "ISO 1183",
+        "ISO 527",
+        "ISO 178",
+        "ISO 306",
+        "ISO 75/A",
+        "ISO 2577"
+      ],
+      "source": "https://en.fcfc-plastics.com/af3500.html",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Toray",
+      "country": "Japan",
+      "polymer": "PPS",
+      "grade": "TORELINA A504X90",
+      "reinforcement": "GF40%",
+      "properties": {
+        "density_g_cm3": 1.66,
+        "tensile_MPa": 195,
+        "flexural_MPa": 280,
+        "flexuralModulus_GPa": 14.5,
+        "HDT_C_1_8MPa": 260,
+        "waterAbsorption_pct": 0.02
+      },
+      "conditioning": "manufacturer PPS grade property page; preserve published test conditions at promotion",
+      "methods": [
+        "ISO 1183",
+        "ISO 527",
+        "ISO 178",
+        "ISO 75",
+        "ISO 62"
+      ],
+      "source": "https://www.plastics.toray/products/torelina/",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Toray",
+      "country": "Japan",
+      "polymer": "PBT",
+      "grade": "TORAYCON reinforced family",
+      "reinforcement": "GF/mineral variants",
+      "properties": {},
+      "conditioning": "manufacturer family evidence; grade-specific extraction required before promotion",
+      "methods": [],
+      "source": "https://www.plastics.toray/products/toraycon/",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Toray",
+      "country": "Japan",
+      "polymer": "PA",
+      "grade": "AMILAN engineering nylon family",
+      "reinforcement": "unfilled/GF/mineral/FR variants",
+      "properties": {},
+      "conditioning": "manufacturer family evidence; exact grade/test-conditioned extraction required",
+      "methods": [],
+      "source": "https://www.plastics.toray/products/amilan/",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Teijin",
+      "country": "Japan",
+      "polymer": "PC",
+      "grade": "PANLITE injection family",
+      "reinforcement": "unfilled/reinforced/alloy variants",
+      "properties": {},
+      "conditioning": "manufacturer primary engineering-plastics family; grade-specific property extraction required",
+      "methods": [],
+      "source": "https://www.teijin-resin.com/products/panlite/",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Mitsubishi Engineering-Plastics",
+      "country": "Japan",
+      "polymer": "PC",
+      "grade": "Iupilon/NOVAREX family",
+      "reinforcement": "unfilled/reinforced/alloy variants",
+      "properties": {},
+      "conditioning": "manufacturer primary PC technical library includes properties and fabrication guidance; grade-specific extraction required",
+      "methods": [],
+      "source": "https://www.m-ep.co.jp/en/product/iupi_nova/",
+      "status": "discovery-only"
+    },
+    {
+      "manufacturer": "Polyplastics/Daicel",
+      "country": "Japan",
+      "polymer": "PPS",
+      "grade": "DURAFIDE 1140A66",
+      "reinforcement": "GF40%",
+      "properties": {
+        "density_g_cm3": 1.66,
+        "waterAbsorption23C24h_pct": 0.04,
+        "meltViscosity310C_1000s_Pa_s": 260,
+        "tensile_MPa": 180,
+        "flexural_MPa": 255,
+        "flexuralModulus_MPa": 14500,
+        "charpyNotched23_kJ_m2": 9,
+        "HDT_C_1_8MPa": 265,
+        "CLTE_flow_x1e5_perC": 1,
+        "CLTE_transverse_x1e5_perC": 4
+      },
+      "conditioning": "primary ISO table; typical values, not specification minima",
+      "methods": [
+        "ISO 1183",
+        "ISO 62",
+        "ISO 11443",
+        "ISO 527-1,2",
+        "ISO 178",
+        "ISO 179/1eA",
+        "ISO 75-1,2"
+      ],
+      "source": "https://www.polyplastics.com/Gidb/GradeInfoDownloadAction.do?_LOCALE=ENGLISH&fileNo=1&gradeId=2372&langId=1",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Teijin",
+      "country": "Japan",
+      "polymer": "PC",
+      "grade": "PANLITE SH-1126Z",
+      "reinforcement": "unfilled surface-hardness grade",
+      "properties": {
+        "density_kg_m3": 1170,
+        "waterAbsorption23C24h_pct": 0.1,
+        "tensileYield_MPa": 72,
+        "flexural_MPa": 100,
+        "flexuralModulus_MPa": 2450,
+        "MVR300C_1_2kg_cm3_10min": 26,
+        "HDT_C_1_8MPa": 113,
+        "HDT_C_0_45MPa": 126
+      },
+      "conditioning": "representative measured values, not guaranteed; water immersion 23C/24h",
+      "methods": [
+        "ISO 1183",
+        "ISO 62",
+        "ISO 527-1,2",
+        "ISO 178",
+        "ISO 1133",
+        "ISO 75-1,2"
+      ],
+      "source": "https://www.teijin-resin.com/-/media/pdf/en/products/pc/pc_related_02.pdf",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Teijin",
+      "country": "Japan",
+      "polymer": "PC",
+      "grade": "PANLITE GV-3430R",
+      "reinforcement": "GF30%",
+      "properties": {
+        "flameRating": "UL94 V-0"
+      },
+      "conditioning": "primary grade list confirms injection-molding route and reinforcement; numeric TDS extraction pending",
+      "methods": [
+        "UL94"
+      ],
+      "source": "https://www.teijin-resin.com/-/media/pdf/en/products/pc/pc_related_05.pdf",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Teijin",
+      "country": "Japan",
+      "polymer": "PC",
+      "grade": "PANLITE B-8130R",
+      "reinforcement": "CF30%",
+      "properties": {
+        "flameRating": "UL94 V-2"
+      },
+      "conditioning": "primary grade list confirms injection molding, CF30 and mold-release class; numeric TDS extraction pending",
+      "methods": [
+        "UL94"
+      ],
+      "source": "https://www.teijin-resin.com/-/media/pdf/en/products/pc/pc_related_05.pdf",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Teijin",
+      "country": "Japan",
+      "polymer": "PC/polyester alloy",
+      "grade": "MULTILON AM-9730FZ",
+      "reinforcement": "special fine filament",
+      "properties": {},
+      "conditioning": "primary grade list: high rigidity, appearance and chemical resistance; injection molding; numeric TDS extraction pending",
+      "methods": [],
+      "source": "https://www.teijin-resin.com/-/media/pdf/en/products/pc/pc_related_05.pdf",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "Polyplastics/Daicel",
+      "country": "Japan",
+      "polymer": "POM",
+      "grade": "DURACON M90-44",
+      "reinforcement": "none",
+      "properties": {},
+      "conditioning": "primary technical guide provides shrinkage as a function of 1/2/3 mm thickness under explicit 200C material, 80C mold, 25 mm/s injection speed and defined cavity/gate; preserve the condition matrix, do not collapse to a universal shrinkage value",
+      "methods": [],
+      "source": "https://www.polyplastics.com/Gidb/GradeInfoDownloadAction.do?_LOCALE=ENGLISH&fileNo=1&gradeId=1771&langId=1",
+      "status": "candidate-conditional"
+    },
+    {
+      "manufacturer": "Polyplastics/Daicel",
+      "country": "Japan",
+      "polymer": "POM",
+      "grade": "DURACON M270-44",
+      "reinforcement": "none",
+      "properties": {
+        "dynamicFriction_vsSteel": 0.4,
+        "dynamicFriction_vsM90_44": 0.37,
+        "flameRating": "UL94 HB"
+      },
+      "conditioning": "high-flow fast-cycle grade; flow/shrinkage/process comparisons are fixture and condition dependent; typical values are not specification minima",
+      "methods": [
+        "JIS K7218",
+        "UL94"
+      ],
+      "source": "https://www.polyplastics.com/Gidb/GradeInfoDownloadAction.do?_LOCALE=ENGLISH&fileNo=1&gradeId=1773&langId=1",
+      "status": "candidate-conditional"
+    },
+    {
+      "manufacturer": "LG Chem",
+      "country": "South Korea",
+      "polymer": "PBT compound",
+      "grade": "GP 2306FC",
+      "reinforcement": "reinforced flame-retardant",
+      "properties": {
+        "specificGravity": 1.62,
+        "shrinkage_pct": "0.3-1.0",
+        "tensile_kg_cm2": 1300,
+        "flexural_kg_cm2": 1900,
+        "flexuralModulus_kg_cm2": 85000,
+        "HDT_C_highLoad": 205,
+        "flameRating": "UL94 V-0 at 0.71mm"
+      },
+      "conditioning": "primary engineering-plastics guide; referential typical values only, not guaranteed",
+      "methods": [
+        "ASTM D792",
+        "ASTM D955",
+        "ASTM D638",
+        "ASTM D790",
+        "ASTM D256",
+        "ASTM D648",
+        "UL94"
+      ],
+      "source": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "LG Chem",
+      "country": "South Korea",
+      "polymer": "PBT alloy",
+      "grade": "LW 5300M",
+      "reinforcement": "low-warpage compound",
+      "properties": {
+        "specificGravity": 1.52,
+        "shrinkage_pct": "0.7-0.9",
+        "tensile_kg_cm2": 590,
+        "flexural_kg_cm2": 990,
+        "flexuralModulus_kg_cm2": 54000,
+        "HDT_C_highLoad": 115,
+        "HDT_C_lowLoad": 165
+      },
+      "conditioning": "primary engineering-plastics guide; referential typical values only",
+      "methods": [
+        "ASTM D792",
+        "ASTM D955",
+        "ASTM D638",
+        "ASTM D790",
+        "ASTM D648"
+      ],
+      "source": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "polymer": "PC alloy",
+      "grade": "WONDERLOY PC-345",
+      "reinforcement": "PC alloy",
+      "properties": {
+        "flameRating": "UL94 HB at 1.5mm"
+      },
+      "conditioning": "primary product catalogue identifies high-flow injection grade and provides ISO/ASTM TDS, SDS and process-guide links; numeric TDS extraction pending",
+      "methods": [
+        "UL94"
+      ],
+      "source": "https://www.chimeicorp.com/en-US/?feature=T10701&material=T10700&page=products&series=T10000",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "polymer": "PC alloy",
+      "grade": "WONDERLOY PC-385",
+      "reinforcement": "PC alloy",
+      "properties": {
+        "flameRating": "UL94 HB at 1.5mm"
+      },
+      "conditioning": "primary catalogue: high heat/high impact; TDS/SDS/process guide available; numeric extraction pending",
+      "methods": [
+        "UL94"
+      ],
+      "source": "https://www.chimeicorp.com/en-US/?feature=T10701&material=T10700&page=products&series=T10000",
+      "status": "candidate-partial"
+    },
+    {
+      "manufacturer": "CHIMEI",
+      "country": "Taiwan",
+      "polymer": "PC/ASA alloy",
+      "grade": "WONDERLOY PC-992",
+      "reinforcement": "PC/ASA",
+      "properties": {
+        "flameRating": "UL94 V-0 at 1.5mm"
+      },
+      "conditioning": "weather-resistant high-flow non-brominated/non-chlorinated FR grade; primary catalogue with TDS/SDS/process guide",
+      "methods": [
+        "UL94"
+      ],
+      "source": "https://www.chimeicorp.com/en-US?material=T10700&page=products&series=T10000",
+      "status": "candidate-partial"
+    }
+  ],
+  "discoveryNotes": {
+    "unitikaPA66InjectionGrades": 22,
+    "haldiaPPInjectionGrades": 16,
+    "lottePPInjectionPages": "multiple; grade-level MI/features/applications exposed",
+    "kingfaFamilies": [
+      "PA6",
+      "PA66",
+      "PBT",
+      "POM",
+      "PP-LGF",
+      "PA66-LGF",
+      "PA10T",
+      "PA6T/66",
+      "LCP",
+      "PC/ABS/ASA/AES/PMMA"
+    ],
+    "countingBoundary": "catalogue grade existence is discovery evidence only; it is not a completed profile",
+    "lgChemPA6Guide": "12 named PA6 grades in one primary property table, spanning unreinforced and multiple GF/FR/impact/stiffness variants",
+    "polyplasticsPOM": "DURACON technical library includes grade-specific shrinkage response versus injection pressure, mold temperature and part thickness; preserve as condition-dependent dimensional evidence",
+    "toyobo": "manufacturer comparative PA6/PA66/PA6T data adds moisture-absorption and thermal family context",
+    "polyplasticsPBT": "DURANEX catalogue exposes 99 popular PBT grades; individual pages include ISO methods, water absorption, mechanical/thermal data and flow/transverse CLTE",
+    "kurarayTPE": "SEPTON primary catalogue exposes SEP/SEPS/SEEPS/SEBS grade tables with MFR under explicit load/temperature conditions, styrene content, viscosity and hardness; treat as compound/base-polymer evidence, not interchangeable with finished TPE compound properties",
+    "polyplasticsLCP": "primary grade pages provide extremely low water absorption plus injection-pressure-conditioned flow/transverse shrinkage, useful for anisotropy/precision-molding teaching",
+    "unitikaPolyarylate": "U-Polymer adds amorphous polyarylate grades with ISO methods, water absorption, parallel/perpendicular shrinkage, HDT and chemical/impact/sliding variants",
+    "lotteAdvancedMaterials": "primary catalogue extends beyond row 320 and exposes resin type, feature, ASTM/ISO property links, SDS and processing-guide/certification flags; treat each row as discovery until profile fields pass promotion",
+    "formosaABS": "grade pages expose both ASTM and ISO property sets plus recommended processing-condition documents and SDS, enabling traceable ABS profiles",
+    "toray": "primary Japanese engineering-plastics portfolio adds PPS/PBT/PA families; keep family records discovery-only until exact grade pages and conditions are captured",
+    "teijinMep": "Japanese PC evidence adds PANLITE and Iupilon/NOVAREX technical families; processing guidance must remain supplier/grade bounded",
+    "teijinInjection": "primary Panlite/Multilon grade list explicitly identifies injection molding and reinforcement classes including GF10/20/30, CF10/20/30, PC/polyester alloys, FR, wear, EMI and low-anisotropy grades",
+    "polyplasticsPPS": "DURAFIDE grade pages add rheology at specified shear rate, very low moisture uptake, GF reinforcement, CLTE anisotropy and explicit typical-not-specification boundary",
+    "lgChemPBT": "primary table supplies 10 named reinforced/FR/PBT-alloy grades in one ASTM matrix and explicitly says values are referential, not guaranteed",
+    "chimeiPCAlloy": "Taiwan catalogue exposes grade-level feature, application, ISO+ASTM TDS, SDS, UL and process-guide links; useful for later processing/safety enrichment"
+  },
+  "promotionRules": {
+    "requiredBeforeAccepted": [
+      "grade identity",
+      "polymer family",
+      "reinforcement/filler",
+      "rheology or flow evidence where applicable",
+      "moisture/drying boundary",
+      "thermal behaviour",
+      "shrinkage/dimensional behaviour",
+      "degradation/compatibility caution",
+      "processing provenance",
+      "primary source"
+    ],
+    "noUniversalSettings": true,
+    "noInterpolationAcrossGrades": true
+  },
+  "conditionDependentEvidence": [
+    {
+      "family": "POM",
+      "manufacturer": "Polyplastics/Daicel",
+      "lesson": "Mold shrinkage changes with thickness and processing conditions; M90-44/M270-44 technical guides retain material temperature, mold temperature, injection speed, cavity and gate geometry.",
+      "rule": "Never expose a single family-level shrinkage number when source evidence is conditional."
+    }
+  ]
+}

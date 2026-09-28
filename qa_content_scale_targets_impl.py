@@ -35,7 +35,7 @@ targets = obj.get("targets", {})
 expected = {
     "fully_profiled_measured_datasets": (30, 50),
     "measured_time_series_samples": (1_000_000, 5_000_000),
-    "material_profiles": (250, 300),
+    "material_profiles": (250, 500),
     "defect_mechanisms": (300, 400),
     "sensor_machine_health_concepts": (200, 250),
     "assessment_education_items": (1000, 1500),

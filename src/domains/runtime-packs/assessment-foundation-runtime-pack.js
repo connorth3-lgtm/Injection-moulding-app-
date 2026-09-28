@@ -860,16 +860,11 @@ function rewriteTimingPanel(){
  const rows=slowestExposure();target.innerHTML=`<b>Slowest by question exposure</b><ul>${rows.length?rows.map(x=>`<li>${esc(x.stem)} — ${Math.round(x.avg/1000)}s average</li>`).join(''):'<li>No exposure-based response-time data yet.</li>'}</ul><small class="muted">Timing starts when a question is substantially visible or directly interacted with; hidden-tab time is excluded.</small>`;
 }
 function enhanceRevisionDetails(){
- if(typeof activeExam==='undefined'||!activeExam?.questions)return;
- const rows=[...document.querySelectorAll('#answerReview .answer-row')];
- rows.forEach((row,i)=>{
-  const q=activeExam.questions[i],panel=row.querySelector('.mm-evidence');if(!q||!panel||panel.querySelector('.mm-revision-detail'))return;
-  const id=q.stableId||q.mmId||'',r=revisionFor(id),research=String(q.sourceUrl||'').startsWith('https://doi.org/');
-  panel.insertAdjacentHTML('beforeend',`<div class="mm-revision-detail"><b>Question revision ${r.revision}</b> · ${esc(r.date)}<br>${esc(r.change)}</div>`);
-  const small=panel.querySelector('small');if(small&&research)small.textContent=`Research DOI resolver set reviewed ${SOURCE_REVIEWED}; scheduled DOI recheck by ${SOURCE_REVIEW_BY}. · Question revision ${r.revision}`;
- });
+ // Revision provenance remains available through MM_QUESTION_REVISIONS and QA exports.
+ // Do not duplicate governance metadata inside learner-facing answer remediation.
+ return true;
 }
-function addStyles(){if(document.getElementById('mm-final-assessment-style'))return;const s=document.createElement('style');s.id='mm-final-assessment-style';s.textContent='.mm-revision-detail{margin-top:8px;padding:8px 10px;border-left:3px solid #55d6be;background:#0b192a;border-radius:6px;font-size:11.5px;line-height:1.45}.mm-revision-detail b{color:#72e6cd}';document.head.appendChild(s)}
+function addStyles(){return true}
 
 installAnalyticsExportPatch();addStyles();
 const baseStart=window.startExam;window.startExam=function(){const r=baseStart.apply(this,arguments);setTimeout(initExposureTiming,0);return r};

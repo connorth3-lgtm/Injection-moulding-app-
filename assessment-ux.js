@@ -131,12 +131,11 @@ function decorateExam(){
     const stem=card.querySelector('b');
     if(stem){
       stem.classList.add('mm-question-stem');stem.id=`mm-question-stem-${i}`;stem.tabIndex=-1;card.setAttribute('role','group');card.setAttribute('aria-labelledby',stem.id);
-      const meta=document.createElement('div');meta.className='mm-question-meta';meta.innerHTML=`<span>Question ${i+1}</span><span>${i===cards.length-1?'Final question':'Choose the best answer'}</span>`;stem.insertAdjacentElement('beforebegin',meta);
     }
     optionLabels(card,i);
   });
-  const steps=document.createElement('div');steps.className='mm-exam-steps';steps.setAttribute('aria-label','Assessment question navigation');
-  cards.forEach((_card,i)=>{const b=document.createElement('button');b.type='button';b.className='mm-step';b.dataset.mmQuestion=String(i);b.textContent=String(i+1);b.setAttribute('aria-label',`Go to question ${i+1}`);b.addEventListener('click',()=>showQuestion(i,true));steps.appendChild(b)});
+  const steps=document.createElement('div');steps.className='mm-exam-steps';steps.setAttribute('aria-label','Assessment question navigation');steps.setAttribute('aria-hidden','true');
+  cards.forEach((_card,i)=>{const b=document.createElement('button');b.type='button';b.className='mm-step';b.dataset.mmQuestion=String(i);b.textContent=String(i+1);b.tabIndex=-1;b.setAttribute('aria-label',`Question ${i+1}`);steps.appendChild(b)});
   host.insertAdjacentElement('beforebegin',steps);
   const nav=document.createElement('div');nav.className='mm-exam-nav';nav.innerHTML=`<div class="mm-exam-nav-top"><div><div class="mm-exam-progress" aria-live="polite"></div><div class="mm-exam-answered"></div></div><div class="mm-unanswered-note" aria-live="polite"></div></div><div class="mm-exam-actions"><button type="button" class="secondary mm-exam-prev">Previous</button><button type="button" class="secondary mm-exam-next">Next question</button></div>`;
   host.insertAdjacentElement('afterend',nav);

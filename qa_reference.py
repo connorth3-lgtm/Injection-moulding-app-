@@ -2,6 +2,7 @@ from pathlib import Path
 import json
 import re
 import subprocess
+import tempfile
 
 ROOT = Path(__file__).resolve().parent
 NODE = "node"
@@ -69,6 +70,21 @@ require("http://" not in deep, "deep-dive sources must use HTTPS")
 structured_entries = re.findall(r"\{\s*name\s*:\s*'", reference_data + "\n" + deep)
 require(len(structured_entries) >= 180, "reference database unexpectedly small after deep-dive expansion")
 
+# Cross-file duplicate-content audit: the same normalized title must not silently resolve to
+# different URLs. Same URL/title placements are handled by runtime canonical deduplication.
+def norm_title(v): return re.sub(r'[^a-z0-9]+',' ',v.lower()).strip()
+source_rows=[]
+for name in ["source-library.js","reference-sources.js","reference-deep-dive.js"]:
+    raw=text(name)
+    for title,url in re.findall(r"\['([^']+)'\s*,[^\n]*?'(https://[^']+)'\]",raw): source_rows.append((name,title,url))
+by_title={}
+for name,title,url in source_rows:
+    key=norm_title(title)
+    if not key: continue
+    by_title.setdefault(key,set()).add(url.rstrip('/'))
+conflicting_titles={k:sorted(v) for k,v in by_title.items() if len(v)>1}
+require(not conflicting_titles, f"same reference title resolves to multiple URLs: {conflicting_titles}")
+
 reference_sources = text("reference-sources.js")
 for marker in [
     "Authoritative References",
@@ -92,6 +108,8 @@ require("#examQuestions" not in reference_sources and "activeExam" not in refere
 source_urls = set(re.findall(r"https://[^'\"\s<]+", reference_sources + "\n" + deep))
 require(len(source_urls) >= 55, "authoritative reference library unexpectedly small after deep-dive expansion")
 require("http://" not in reference_sources, "reference browser must use HTTPS source links")
+for marker in ["function canonicalUrl(","globalSeen=new Map()","window.MM_REFERENCE_DUPLICATES","duplicates.push("]:
+    require(marker in reference_sources, f"global reference deduplication control missing: {marker}")
 
 reference_ui = text("reference-browser-ui.js")
 for marker in [
@@ -203,4 +221,17 @@ for js_name in REFERENCE_ASSETS:
     p = subprocess.run([NODE, "--check", str(ROOT / js_name)], capture_output=True, text=True)
     require(p.returncode == 0, f"{js_name}: {p.stderr}")
 
-print(f"MouldMaster reference data, source and mobile browser UI QA passed ({len(structured_entries)} structured entries, {len(source_urls)} source URLs)")
+node_audit = r"""const fs=require('fs'),vm=require('vm');const sandbox={window:{MM_SOURCE_LIBRARY:{}},document:{readyState:'loading',addEventListener(){},body:null,documentElement:{}},URL,MutationObserver:class{observe(){} disconnect(){}}};sandbox.window.window=sandbox.window;vm.createContext(sandbox);vm.runInContext(fs.readFileSync('source-library.js','utf8'),sandbox);vm.runInContext(fs.readFileSync('reference-sources.js','utf8'),sandbox);const rows=Object.values(sandbox.window.MM_REFERENCE_SOURCES||{}).flat(),norm=u=>{const x=new URL(u);x.hash='';x.hostname=x.hostname.toLowerCase();if(x.pathname.length>1)x.pathname=x.pathname.replace(/\/+$/,'');return x.href},urls=rows.map(x=>norm(x[2])),dupes=urls.filter((u,i)=>urls.indexOf(u)!==i);process.stdout.write(JSON.stringify({rows:rows.length,unique:new Set(urls).size,dupes,removed:(sandbox.window.MM_REFERENCE_DUPLICATES||[]).length}))"""
+with tempfile.NamedTemporaryFile("w", suffix=".js", encoding="utf-8", dir=ROOT, delete=False) as audit_file:
+    audit_file.write(node_audit)
+    audit_path = Path(audit_file.name)
+try:
+    p = subprocess.run([NODE, str(audit_path)], cwd=ROOT, capture_output=True, text=True)
+finally:
+    audit_path.unlink(missing_ok=True)
+require(p.returncode == 0, f"reference canonical deduplication runtime audit failed: {p.stderr or p.stdout}")
+runtime = json.loads(p.stdout)
+require(runtime["rows"] == runtime["unique"] and not runtime["dupes"], "reference browser still contains duplicate canonical URLs")
+require(runtime["removed"] >= 0, "reference duplicate reconciliation count must be non-negative")
+
+print(f"MouldMaster reference data, source and mobile browser UI QA passed ({len(structured_entries)} structured entries, {len(source_urls)} source URLs; {runtime['rows']} unique browser references; {runtime['removed']} duplicate placements reconciled)")

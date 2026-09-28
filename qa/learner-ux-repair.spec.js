@@ -28,13 +28,13 @@ async function waitForExamNavigation(page,priorSignature=''){
     const questions=host?[...host.children].filter(el=>el.classList.contains('question')):[];
     const signature=host?.dataset.mmUxExamFormSignature||'';
     const fallback=document.querySelectorAll('[data-mm-exam-question-toggle]').length;
-    const governed=[...document.querySelectorAll('button')].some(button=>(button.getAttribute('aria-label')||button.textContent||'').trim()==='Go to question 6');
+    const governed=document.querySelectorAll('.mm-exam-steps .mm-step').length===16;
     return questions.length===16&&signature&&signature!==prior&&governed&&fallback===0;
   },priorSignature);
   return page.evaluate(()=>({
     signature:document.getElementById('examQuestions')?.dataset.mmUxExamFormSignature||'',
     fallback:document.querySelectorAll('[data-mm-exam-question-toggle]').length,
-    governed:[...document.querySelectorAll('button')].filter(button=>(button.getAttribute('aria-label')||'').startsWith('Go to question ')).length
+    governed:document.querySelectorAll('.mm-exam-steps .mm-step').length
   }));
 }
 async function exerciseCurrentExamNavigation(page,mode){
@@ -42,20 +42,17 @@ async function exerciseCurrentExamNavigation(page,mode){
   expect(mode.governed).toBe(16);
   const questions=page.locator('#examQuestions .question');
   await expect(questions).toHaveCount(16);
-  const q6=page.getByRole('button',{name:'Go to question 6'});
-  await expect(q6).toHaveCount(1);
-  await expect(q6).toBeVisible();
-  await q6.focus();
-  await page.keyboard.press('Enter');
-  await expect(questions.nth(5)).toBeVisible();
+  await expect(page.locator('.mm-exam-steps .mm-step')).toHaveCount(16);
+  await expect(page.locator('.mm-exam-steps')).toHaveAttribute('aria-hidden','true');
+  await expect(page.locator('.mm-exam-steps .mm-step').first()).toHaveAttribute('tabindex','-1');
+  await page.getByRole('button',{name:'Next question'}).click();
+  await expect(questions.nth(1)).toBeVisible();
   await expect(questions.nth(0)).toBeHidden();
-  await expect(questions.nth(5).locator('.mm-question-stem')).toBeFocused();
+  await expect(questions.nth(1).locator('.mm-question-stem')).toBeFocused();
   await page.setViewportSize({width:800,height:600});
-  await expect(q6).toHaveAttribute('aria-current','step');
-  await expect(questions.nth(5)).toBeVisible();
-  await expect(questions.nth(5).locator('.mm-question-stem')).toBeFocused();
+  await expect(questions.nth(1)).toBeVisible();
   await expect(page.locator('[data-mm-exam-question-toggle]')).toHaveCount(0);
-  await expect(page.locator('button[aria-label^="Go to question "]')).toHaveCount(16);
+  await expect(page.locator('.mm-exam-steps .mm-step')).toHaveCount(16);
   await page.setViewportSize({width:412,height:915});
 }
 async function expectQuestionOnlyExam(page){

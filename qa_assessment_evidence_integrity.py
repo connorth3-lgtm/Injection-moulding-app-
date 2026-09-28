@@ -45,20 +45,30 @@ for marker in [
     "records.length===197", "relevanceStatus:relevant.length?'supported':'blocked'",
     "supportLocator", "limitations", "dataEvidence:type", "scope:'optional'",
     "policy:'Every learner-visible keyed decision has an explicit proposition",
-    "context-only", "weakOptional.length===0"
+    "context-only", "weakOptional.length===0", "coverageReconciliation", "legacyFormalApprovalTotal", "optionalPropositionTotal", "Assessment evidence coverage reconciliation failed"
 ]: need(marker in integrity,f'proposition evidence contract missing: {marker}')
 
 allowed=['real-measured','published-experimental','synthetic','supplier','standard/regulatory','engineering-principle']
 for value in allowed: need(repr(value) in integrity or f"'{value}'" in integrity,f'evidence type missing: {value}')
 
 upgrades={
- 'pet-vs-copolyester':'pet-envalior-arnite','peek-crystallinity-capability':'peek-solvay-ketaspire','pps-contamination-wear':'pps-solvay-ryton',
+ 'pbt-hydrolysis':'pbt-celanese','pet-vs-copolyester':'pet-envalior-arnite','tpu-moisture-reabsorption':'pet-envalior-arnite',
+ 'pmma-optical-stress':'zhao-2022','peek-crystallinity-capability':'peek-solvay-ketaspire','pps-contamination-wear':'pps-solvay-ryton',
  'lcp-orientation':'lcp-polyplastics-laperos','pcabs-grade-identity':'pcabs-sabic-cycoloy','hdpe-lot-shrink':'hdpe-sabic-injection',
+ 'tpe-overmould-compatibility':'zhao-2022',
 }
 for lab,source in upgrades.items():
     need(f"'{lab}':['{source}']" in integrity,f'independent source upgrade missing for {lab}: {source}')
     need(f"'{source}'" in integrity,f'new source not registered: {source}')
 need("s?.id==='iso-20430'&&!isSafetyText(searchText)" in integrity,'generic machine-safety source can still count as non-safety material corroboration')
+
+diagnostic_upgrades={
+ 'cavity-short-shot':['autodesk-fill-pack','zhao-2022'],
+ 'hot-runner-imbalance':['hotrunner-2024','hotrunner-manifold-2023'],
+}
+for lab,sources in diagnostic_upgrades.items():
+    for source in sources: need(f"'{source}'" in integrity,f'diagnostic evidence source missing for {lab}: {source}')
+need("DIAGNOSTIC_SOURCE_UPGRADES[lab.id]||null" in integrity,'diagnostic proposition builder must apply explicit lab evidence mappings')
 
 optional=[x for x in items if x.get('kind')=='optional-material-practice']
 need(len(optional)==40,f'optional practice count changed: {len(optional)}/40')
@@ -97,6 +107,7 @@ report={
  'psychometric_inverse_longest_cue_removed':True,
  'source_registration_hard_failures':len(hard),'source_registration_warnings':len(warnings),'independent_material_source_upgrades':upgrades,
  'real_measured_contracts':{'avaps_values':13631488,'openmms_values':298080,'cross_process_lower_values':7426743,'cross_process_upper_values':43814748,'cross_process_combined_values':7426743+43814748,'upper_pressure_values_excluded_pending_unit':21907374,'upper_state_values_excluded_pending_semantics':21907374},
+ 'coverage_reconciliation':{'legacy_formal_approval_total':157,'proposition_formal_total':157,'optional_proposition_total':40,'learner_visible_total':197},
  'status':'passed'
 }
 REPORT.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')

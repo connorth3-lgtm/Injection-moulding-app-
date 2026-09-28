@@ -10,6 +10,10 @@ on:
       - 'sources/**'
       - 'qa_source_freshness.py'
       - 'qa_research_source_freshness.py'
+      - 'source-library.js'
+      - 'reference-sources.js'
+      - 'reference-deep-dive.js'
+      - 'reference-data.js'
       - '.github/workflows/source-freshness.yml'
 
 permissions:

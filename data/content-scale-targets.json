@@ -23,11 +23,17 @@
     },
     "material_profiles": {
       "minimum": 250,
-      "preferred": 300,
+      "preferred": 500,
       "unit": "profiles",
       "acceptance": "A distinct polymer family/grade or explicitly bounded material class with identity, family, reinforcement/filler where relevant, rheology/MFR or equivalent evidence where available, drying/moisture handling, thermal transitions or thermal behaviour, shrinkage/dimensional behaviour, degradation/compatibility cautions, processing-window provenance and source references. Generic placeholders do not count as complete grade profiles.",
       "currentAccepted": 20,
-      "notes": "Twenty explicit base material profiles exist in reference-data.js. Additional mixed reference entries and the 260 generated profile drafts are not automatically counted as complete material profiles."
+      "notes": "Twenty explicit base material profiles exist in reference-data.js. Additional mixed reference entries and the 260 generated profile drafts are not automatically counted as complete material profiles. Extreme Asian primary-source discovery now covers 33 manufacturer source families across eight Asian markets; these remain non-counting until normalized into complete grade profiles.",
+      "asiaPrimarySourceDiscovery": {
+        "sourceFamilies": 33,
+        "regions": 8,
+        "programme": "data/asian-material-evidence-programme-v1.json",
+        "countingStatus": "discovery only; no source family counts as a completed profile until grade-level acceptance fields are extracted and QA-reviewed"
+      }
     },
     "defect_mechanisms": {
       "minimum": 300,
