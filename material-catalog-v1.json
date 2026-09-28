@@ -23926,5 +23926,15 @@
         "notes": "Current Victrex exact-grade data reviewed. Shrinkage remains context-only for comparison because part/tool/process dependence is explicitly emphasized; only fully conditioned MFR is comparison-ready."
       }
     }
-  ]
+  ],
+  "statistics": {
+    "exactGrades": 260,
+    "manufacturers": 28,
+    "countries": 13,
+    "polymerFamilies": 32,
+    "propertyObservations": 536,
+    "comparisonReadyObservations": 201,
+    "processingObservations": 225,
+    "primarySourceGrades": 256
+  }
 }
