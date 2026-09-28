@@ -36,8 +36,9 @@ function resultSummary(doc){
   return compactText([p.summary,...(p.evidence||[]),...(p.related||[])].filter(Boolean).join(' · '));
 }
 function renderAllResult(doc){
-  const sourceCount=(doc.sourceIds||[]).length;
-  return `<article class="mm-material-index-card" data-mm-material-index-result="${esc(doc.id)}" data-mm-material-index-type="${esc(doc.type)}"><div class="mm-material-index-meta"><span class="pill">${esc(materialTypeLabel(doc.type))}</span>${sourceCount?`<span>${sourceCount} evidence source${sourceCount===1?'':'s'}</span>`:''}</div><h4>${esc(doc.title)}</h4>${doc.subtitle?`<p class="mm-material-index-subtitle">${esc(doc.subtitle)}</p>`:''}<p>${esc(resultSummary(doc))}</p>${doc.materialGradeId?`<button type="button" class="secondary" data-mm-index-grade="${esc(doc.materialGradeId)}">Show exact grade</button>`:''}</article>`;
+  const sourceCount=(doc.sourceIds||[]).length,cat=doc.catalog||null;
+  const catalogueMeta=cat?`<p class="mm-material-index-subtitle"><b>${esc(cat.region)}</b> · ${esc(cat.country)} · ${esc(cat.manufacturer)} · ${esc(cat.family)} · ${esc(cat.evidenceStage||'unknown evidence stage')}</p>`:'';
+  return `<article class="mm-material-index-card" data-mm-material-index-result="${esc(doc.id)}" data-mm-material-index-type="${esc(doc.type)}"><div class="mm-material-index-meta"><span class="pill">${esc(materialTypeLabel(doc.type))}</span>${sourceCount?`<span>${sourceCount} evidence source${sourceCount===1?'':'s'}</span>`:''}</div><h4>${esc(doc.title)}</h4>${catalogueMeta}${doc.subtitle?`<p class="mm-material-index-subtitle">${esc(doc.subtitle)}</p>`:''}<p>${esc(resultSummary(doc))}</p>${doc.materialGradeId?`<button type="button" class="secondary" data-mm-index-grade="${esc(doc.materialGradeId)}">Show exact grade</button>`:''}</article>`;
 }
 function installAllIndex(root,index,query){
   if(root.querySelector('[data-mm-all-material-index]'))return;
