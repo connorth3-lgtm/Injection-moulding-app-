@@ -52,13 +52,23 @@ allowed=['real-measured','published-experimental','synthetic','supplier','standa
 for value in allowed: need(repr(value) in integrity or f"'{value}'" in integrity,f'evidence type missing: {value}')
 
 upgrades={
- 'pet-vs-copolyester':'pet-envalior-arnite','peek-crystallinity-capability':'peek-solvay-ketaspire','pps-contamination-wear':'pps-solvay-ryton',
+ 'pbt-hydrolysis':'pbt-celanese','pet-vs-copolyester':'pet-envalior-arnite','tpu-moisture-reabsorption':'pet-envalior-arnite',
+ 'pmma-optical-stress':'zhao-2022','peek-crystallinity-capability':'peek-solvay-ketaspire','pps-contamination-wear':'pps-solvay-ryton',
  'lcp-orientation':'lcp-polyplastics-laperos','pcabs-grade-identity':'pcabs-sabic-cycoloy','hdpe-lot-shrink':'hdpe-sabic-injection',
+ 'tpe-overmould-compatibility':'zhao-2022',
 }
 for lab,source in upgrades.items():
     need(f"'{lab}':['{source}']" in integrity,f'independent source upgrade missing for {lab}: {source}')
     need(f"'{source}'" in integrity,f'new source not registered: {source}')
 need("s?.id==='iso-20430'&&!isSafetyText(searchText)" in integrity,'generic machine-safety source can still count as non-safety material corroboration')
+
+diagnostic_upgrades={
+ 'cavity-short-shot':['autodesk-fill-pack','zhao-2022'],
+ 'hot-runner-imbalance':['hotrunner-2024','hotrunner-manifold-2023'],
+}
+for lab,sources in diagnostic_upgrades.items():
+    for source in sources: need(f"'{source}'" in integrity,f'diagnostic evidence source missing for {lab}: {source}')
+need("DIAGNOSTIC_SOURCE_UPGRADES[lab.id]||null" in integrity,'diagnostic proposition builder must apply explicit lab evidence mappings')
 
 optional=[x for x in items if x.get('kind')=='optional-material-practice']
 need(len(optional)==40,f'optional practice count changed: {len(optional)}/40')

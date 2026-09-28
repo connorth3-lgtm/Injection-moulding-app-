@@ -92,7 +92,7 @@ TAG_RULES = {
 }
 
 
-def request_json(url: str, timeout: int = 45, max_attempts: int = 6) -> dict:
+def request_json(url: str, timeout: int = 30, max_attempts: int = 7) -> dict:
     """Fetch OpenAlex JSON with bounded retry/backoff for transient rate/service errors."""
     retryable_http = {429, 500, 502, 503, 504}
     for attempt in range(max_attempts):
@@ -106,11 +106,11 @@ def request_json(url: str, timeout: int = 45, max_attempts: int = 6) -> dict:
         except urllib.error.HTTPError as exc:
             if exc.code not in retryable_http or attempt + 1 >= max_attempts:
                 raise
-            delay = min(60.0, max(2.0, float(2 ** attempt)))
+            delay = min(90.0, max(5.0, float(5 * (2 ** attempt))))
             retry_after = exc.headers.get("Retry-After") if exc.headers else None
             if retry_after:
                 try:
-                    delay = min(60.0, max(delay, float(retry_after)))
+                    delay = min(90.0, max(delay, float(retry_after)))
                 except ValueError:
                     pass
             time.sleep(delay)
@@ -219,7 +219,7 @@ def main() -> None:
     ap.add_argument("--target", type=int, default=2000, help="Maximum unique candidate records to retain")
     ap.add_argument("--per-query-pages", type=int, default=6, help="Maximum OpenAlex cursor pages per query")
     ap.add_argument("--mailto", default="", help="Optional contact email appended to OpenAlex requests")
-    ap.add_argument("--sleep", type=float, default=0.35)
+    ap.add_argument("--sleep", type=float, default=1.1, help="Delay between successful OpenAlex requests; conservative default avoids shared-runner rate bursts")
     args = ap.parse_args()
 
     records: dict[str, dict] = {}
