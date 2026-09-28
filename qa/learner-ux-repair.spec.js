@@ -115,40 +115,38 @@ test('mobile lesson cleanup is reversible after widening to desktop',async({page
   await page.locator('.mobile-nav > button').filter({hasText:'Learn'}).click();
   await page.getByRole('button',{name:/Continue lesson/i}).first().click();
   await page.waitForFunction(()=>document.querySelectorAll('#lesson [data-mm-ux-hidden-by-repair="1"]').length>0);
-  const mobileState=await page.evaluate(()=>{
-    const launcher=document.getElementById('mm-src-open')||document.getElementById('mmrd-open');
-    return {
-      hiddenByRepair:document.querySelectorAll('#lesson [data-mm-ux-hidden-by-repair="1"]').length,
-      repaired:document.getElementById('lesson')?.classList.contains('mm-learner-ux-repaired')||false,
-      launcherPresent:!!launcher,
-      launcherAria:launcher?.getAttribute('aria-hidden')||null,
-      launcherTabIndex:launcher?.tabIndex??null
-    };
-  });
+  const mobileState=await page.evaluate(()=>({
+    hiddenByRepair:document.querySelectorAll('#lesson [data-mm-ux-hidden-by-repair="1"]').length,
+    repaired:document.getElementById('lesson')?.classList.contains('mm-learner-ux-repaired')||false,
+    canonicalPresent:!!document.getElementById('mmrd-open')
+  }));
   expect(mobileState.hiddenByRepair).toBeGreaterThan(0);
   expect(mobileState.repaired).toBe(true);
-  if(mobileState.launcherPresent){expect(mobileState.launcherAria).toBe('true');expect(mobileState.launcherTabIndex).toBe(-1)}
+  if(mobileState.canonicalPresent){
+    await expect(page.locator('#mmrd-open')).toBeHidden();
+  }
 
   await page.setViewportSize({width:1280,height:900});
   await page.waitForFunction(()=>document.querySelectorAll('#lesson [data-mm-ux-hidden-by-repair="1"]').length===0&&!document.getElementById('lesson')?.classList.contains('mm-learner-ux-repaired'));
-  if(mobileState.launcherPresent)await page.waitForFunction(()=>{
-    const launcher=document.getElementById('mm-src-open')||document.getElementById('mmrd-open');
-    return !!launcher&&launcher.getAttribute('aria-hidden')!=='true'&&launcher.tabIndex!==-1;
+  if(mobileState.canonicalPresent)await page.waitForFunction(()=>{
+    const launcher=document.getElementById('mmrd-open');
+    return !!launcher&&getComputedStyle(launcher).display!=='none'&&launcher.getAttribute('aria-hidden')!=='true'&&launcher.tabIndex!==-1;
   });
-  const desktopState=await page.evaluate(()=>{
-    const launcher=document.getElementById('mm-src-open')||document.getElementById('mmrd-open');
-    return {
-      hiddenByRepair:document.querySelectorAll('#lesson [data-mm-ux-hidden-by-repair="1"]').length,
-      forcedAriaHidden:document.querySelectorAll('#lesson [aria-hidden="true"][data-mm-ux-prev-hidden]').length,
-      repaired:document.getElementById('lesson')?.classList.contains('mm-learner-ux-repaired')||false,
-      launcherAria:launcher?.getAttribute('aria-hidden')||null,
-      launcherTabIndex:launcher?.tabIndex??null
-    };
-  });
+  const desktopState=await page.evaluate(()=>({
+    hiddenByRepair:document.querySelectorAll('#lesson [data-mm-ux-hidden-by-repair="1"]').length,
+    forcedAriaHidden:document.querySelectorAll('#lesson [aria-hidden="true"][data-mm-ux-prev-hidden]').length,
+    repaired:document.getElementById('lesson')?.classList.contains('mm-learner-ux-repaired')||false,
+    canonicalAria:document.getElementById('mmrd-open')?.getAttribute('aria-hidden')||null,
+    canonicalTabIndex:document.getElementById('mmrd-open')?.tabIndex??null,
+    legacyAria:document.getElementById('mm-src-open')?.getAttribute('aria-hidden')||null,
+    legacyTabIndex:document.getElementById('mm-src-open')?.tabIndex??null
+  }));
   expect(desktopState.hiddenByRepair).toBe(0);
   expect(desktopState.forcedAriaHidden).toBe(0);
   expect(desktopState.repaired).toBe(false);
-  if(mobileState.launcherPresent){expect(desktopState.launcherAria).not.toBe('true');expect(desktopState.launcherTabIndex).not.toBe(-1)}
+  if(mobileState.canonicalPresent){expect(desktopState.canonicalAria).not.toBe('true');expect(desktopState.canonicalTabIndex).not.toBe(-1)}
+  expect(desktopState.legacyAria).toBe('true');
+  expect(desktopState.legacyTabIndex).toBe(-1);
 });
 
 test('open mobile modal stays above the fixed primary navigation',async({page})=>{
