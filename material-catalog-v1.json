@@ -17925,6 +17925,451 @@
         "reviewer": "primary-source-web-review",
         "notes": "Current Samyang Advanced Materials exact-grade page reviewed. ASTM D1238 MFR retains explicit 300°C/1.2 kg conditioning; D955 shrinkage direction remains unresolved and context-only; processing guidance remains productionRecipe=false."
       }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-hyosung-pp-hj801rl",
+      "manufacturer": {
+        "id": "mfr-hyosung-chemical",
+        "name": "Hyosung Chemical",
+        "country": "South Korea",
+        "website": "https://www.hyosungchemical.com/"
+      },
+      "brand": "Hyosung Polypropylene",
+      "grade": "HJ801RL",
+      "aliases": [],
+      "polymer": {
+        "family": "PP",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "Current Hyosung exact-grade TDS identifies HJ801RL as homo PP. Applications: small heat-resistant home electronics. Features: long-term thermal resistance; high stiffness; UL 94HB; UL 746B."
+      },
+      "properties": [
+        {
+          "id": "obs-hyosung-hj801rl-mi",
+          "property": "Melt Index",
+          "value": 5,
+          "unit": "g/10min",
+          "testMethod": "ASTM D1238",
+          "temperatureC": 230,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-hj801rl-tds-20260929",
+          "sourcePage": "exact-grade TDS",
+          "comparisonReady": true,
+          "limitations": "Hyosung typical value for reference; not a specification. Compare only at the same ASTM D1238 temperature/load."
+        },
+        {
+          "id": "obs-hyosung-hj801rl-flex",
+          "property": "Flexural Modulus",
+          "value": 23000,
+          "unit": "kg/cm²",
+          "testMethod": "ASTM D790",
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-hj801rl-tds-20260929",
+          "sourcePage": "exact-grade TDS",
+          "comparisonReady": false,
+          "limitations": "Typical manufacturer value; retained as context unless comparison units/method semantics are normalized."
+        },
+        {
+          "id": "obs-hyosung-hj801rl-tensile",
+          "property": "Tensile Strength at Yield",
+          "value": 420,
+          "unit": "kg/cm²",
+          "testMethod": "ASTM D638",
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-hj801rl-tds-20260929",
+          "sourcePage": "exact-grade TDS",
+          "comparisonReady": false,
+          "limitations": "Typical manufacturer value; retained as context."
+        },
+        {
+          "id": "obs-hyosung-hj801rl-izod",
+          "property": "Notched Izod Impact Strength",
+          "value": 3,
+          "unit": "kg-cm/cm",
+          "testMethod": "ASTM D256",
+          "temperatureC": 23,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-hj801rl-tds-20260929",
+          "sourcePage": "exact-grade TDS",
+          "comparisonReady": false,
+          "limitations": "Typical manufacturer value; retained as context."
+        },
+        {
+          "id": "obs-hyosung-hj801rl-density",
+          "property": "Density",
+          "value": 0.9,
+          "unit": "g/cm³",
+          "testMethod": "ASTM D792",
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-hj801rl-tds-20260929",
+          "sourcePage": "exact-grade TDS",
+          "comparisonReady": false,
+          "limitations": "Typical manufacturer value; not a specification."
+        },
+        {
+          "id": "obs-hyosung-hj801rl-hdt",
+          "property": "Heat Deflection Temperature",
+          "value": 140,
+          "unit": "°C",
+          "testMethod": "ASTM D648",
+          "loadMPa": 0.45,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-hj801rl-tds-20260929",
+          "sourcePage": "exact-grade TDS",
+          "comparisonReady": false,
+          "limitations": "Typical manufacturer value; retained as context."
+        },
+        {
+          "id": "obs-hyosung-hj801rl-vicat",
+          "property": "Vicat Softening Temperature",
+          "value": 155,
+          "unit": "°C",
+          "testMethod": "ASTM D1525",
+          "loadN": 10,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-hj801rl-tds-20260929",
+          "sourcePage": "exact-grade TDS",
+          "comparisonReady": false,
+          "limitations": "Typical manufacturer value; retained as context."
+        }
+      ],
+      "processing": [
+        {
+          "id": "proc-hyosung-hj801rl-dry-temp",
+          "parameter": "Drying temperature",
+          "min": 80,
+          "max": 100,
+          "unit": "°C",
+          "condition": "Hyosung exact-grade storage/handling guidance when condensation is visible or expected.",
+          "claimType": "supplier-guidance",
+          "sourceId": "src-hyosung-hj801rl-tds-20260929",
+          "sourcePage": "exact-grade TDS",
+          "productionRecipe": false
+        },
+        {
+          "id": "proc-hyosung-hj801rl-dry-time",
+          "parameter": "Drying time",
+          "min": 2,
+          "max": 4,
+          "unit": "hr",
+          "condition": "Hyosung exact-grade storage/handling guidance; verify actual site/material condition.",
+          "claimType": "supplier-guidance",
+          "sourceId": "src-hyosung-hj801rl-tds-20260929",
+          "sourcePage": "exact-grade TDS",
+          "productionRecipe": false
+        }
+      ],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-hyosung-hj801rl-tds-20260929",
+          "publisher": "Hyosung Chemical",
+          "title": "HJ801RL Technical Data Sheet",
+          "url": "https://www.hyosungchemical.com/upload/board/20240222/91411d4e-47de-4c94-b824-86ac696bfe9e.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Hyosung exact-grade TDS reviewed. ASTM D1238 MI retains explicit 230°C/2.16 kg conditioning and is comparison-ready; other typical properties remain context-only; drying guidance remains productionRecipe=false."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-hyosung-pp-hj801r",
+      "manufacturer": {
+        "id": "mfr-hyosung-chemical",
+        "name": "Hyosung Chemical",
+        "country": "South Korea",
+        "website": "https://www.hyosungchemical.com/"
+      },
+      "brand": "Hyosung Polypropylene",
+      "grade": "HJ801R",
+      "aliases": [],
+      "polymer": {
+        "family": "PP",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "Current Hyosung exact-grade TDS identifies HJ801R as homo PP. Applications: small heat-resistant home electronics. Features: long-term thermal resistance; high stiffness; UL 94HB; UL 746B."
+      },
+      "properties": [
+        {
+          "id": "obs-hyosung-hj801r-mi",
+          "property": "Melt Index",
+          "value": 12,
+          "unit": "g/10min",
+          "testMethod": "ASTM D1238",
+          "temperatureC": 230,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-hj801r-tds-20260929",
+          "sourcePage": "exact-grade TDS",
+          "comparisonReady": true,
+          "limitations": "Hyosung typical value for reference; not a specification. Compare only at the same ASTM D1238 temperature/load."
+        },
+        {
+          "id": "obs-hyosung-hj801r-flex",
+          "property": "Flexural Modulus",
+          "value": 23000,
+          "unit": "kg/cm²",
+          "testMethod": "ASTM D790",
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-hj801r-tds-20260929",
+          "sourcePage": "exact-grade TDS",
+          "comparisonReady": false,
+          "limitations": "Typical manufacturer value; retained as context unless comparison units/method semantics are normalized."
+        },
+        {
+          "id": "obs-hyosung-hj801r-tensile",
+          "property": "Tensile Strength at Yield",
+          "value": 420,
+          "unit": "kg/cm²",
+          "testMethod": "ASTM D638",
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-hj801r-tds-20260929",
+          "sourcePage": "exact-grade TDS",
+          "comparisonReady": false,
+          "limitations": "Typical manufacturer value; retained as context."
+        },
+        {
+          "id": "obs-hyosung-hj801r-izod",
+          "property": "Notched Izod Impact Strength",
+          "value": 3,
+          "unit": "kg-cm/cm",
+          "testMethod": "ASTM D256",
+          "temperatureC": 23,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-hj801r-tds-20260929",
+          "sourcePage": "exact-grade TDS",
+          "comparisonReady": false,
+          "limitations": "Typical manufacturer value; retained as context."
+        },
+        {
+          "id": "obs-hyosung-hj801r-density",
+          "property": "Density",
+          "value": 0.9,
+          "unit": "g/cm³",
+          "testMethod": "ASTM D792",
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-hj801r-tds-20260929",
+          "sourcePage": "exact-grade TDS",
+          "comparisonReady": false,
+          "limitations": "Typical manufacturer value; not a specification."
+        },
+        {
+          "id": "obs-hyosung-hj801r-hdt",
+          "property": "Heat Deflection Temperature",
+          "value": 140,
+          "unit": "°C",
+          "testMethod": "ASTM D648",
+          "loadMPa": 0.45,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-hj801r-tds-20260929",
+          "sourcePage": "exact-grade TDS",
+          "comparisonReady": false,
+          "limitations": "Typical manufacturer value; retained as context."
+        },
+        {
+          "id": "obs-hyosung-hj801r-vicat",
+          "property": "Vicat Softening Temperature",
+          "value": 155,
+          "unit": "°C",
+          "testMethod": "ASTM D1525",
+          "loadN": 10,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-hj801r-tds-20260929",
+          "sourcePage": "exact-grade TDS",
+          "comparisonReady": false,
+          "limitations": "Typical manufacturer value; retained as context."
+        }
+      ],
+      "processing": [
+        {
+          "id": "proc-hyosung-hj801r-dry-temp",
+          "parameter": "Drying temperature",
+          "min": 80,
+          "max": 100,
+          "unit": "°C",
+          "condition": "Hyosung exact-grade storage/handling guidance when condensation is visible or expected.",
+          "claimType": "supplier-guidance",
+          "sourceId": "src-hyosung-hj801r-tds-20260929",
+          "sourcePage": "exact-grade TDS",
+          "productionRecipe": false
+        },
+        {
+          "id": "proc-hyosung-hj801r-dry-time",
+          "parameter": "Drying time",
+          "min": 2,
+          "max": 4,
+          "unit": "hr",
+          "condition": "Hyosung exact-grade storage/handling guidance; verify actual site/material condition.",
+          "claimType": "supplier-guidance",
+          "sourceId": "src-hyosung-hj801r-tds-20260929",
+          "sourcePage": "exact-grade TDS",
+          "productionRecipe": false
+        }
+      ],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-hyosung-hj801r-tds-20260929",
+          "publisher": "Hyosung Chemical",
+          "title": "HJ801R Technical Data Sheet",
+          "url": "https://www.hyosungchemical.com/upload/board/20240222/a680c15b-35ec-452c-981e-662fdbac42fe.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Hyosung exact-grade TDS reviewed. ASTM D1238 MI retains explicit 230°C/2.16 kg conditioning and is comparison-ready; other typical properties remain context-only; drying guidance remains productionRecipe=false."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-hyosung-pp-pb840-ba",
+      "manufacturer": {
+        "id": "mfr-hyosung-chemical",
+        "name": "Hyosung Chemical",
+        "country": "South Korea",
+        "website": "https://www.hyosungchemical.com/"
+      },
+      "brand": "Hyosung Polypropylene",
+      "grade": "PB840-BA",
+      "aliases": [],
+      "polymer": {
+        "family": "PP",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "Current Hyosung exact-grade TDS identifies PB840-BA as PCR impact copolymer PP. Applications: injection molding. Features: 100% PCR polypropylene; good stiffness/impact balance; enhanced sustainability; black."
+      },
+      "properties": [
+        {
+          "id": "obs-hyosung-pb840-ba-mi",
+          "property": "Melt Index",
+          "value": "40±5",
+          "unit": "g/10min",
+          "testMethod": "ASTM D1238",
+          "temperatureC": 230,
+          "loadKg": 2.16,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-pb840-ba-tds-20260929",
+          "sourcePage": "exact-grade TDS",
+          "comparisonReady": true,
+          "limitations": "Hyosung typical value for reference; not a specification. Compare only at the same ASTM D1238 temperature/load."
+        },
+        {
+          "id": "obs-hyosung-pb840-ba-flex",
+          "property": "Flexural Modulus",
+          "value": 11000,
+          "unit": "kg/cm²",
+          "testMethod": "ASTM D790",
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-pb840-ba-tds-20260929",
+          "sourcePage": "exact-grade TDS",
+          "comparisonReady": false,
+          "limitations": "Typical manufacturer value; retained as context unless comparison units/method semantics are normalized."
+        },
+        {
+          "id": "obs-hyosung-pb840-ba-tensile",
+          "property": "Tensile Strength at Yield",
+          "value": 240,
+          "unit": "kg/cm²",
+          "testMethod": "ASTM D638",
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-pb840-ba-tds-20260929",
+          "sourcePage": "exact-grade TDS",
+          "comparisonReady": false,
+          "limitations": "Typical manufacturer value; retained as context."
+        },
+        {
+          "id": "obs-hyosung-pb840-ba-izod",
+          "property": "Notched Izod Impact Strength",
+          "value": 7,
+          "unit": "kg-cm/cm",
+          "testMethod": "ASTM D256",
+          "temperatureC": 23,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-pb840-ba-tds-20260929",
+          "sourcePage": "exact-grade TDS",
+          "comparisonReady": false,
+          "limitations": "Typical manufacturer value; retained as context."
+        }
+      ],
+      "processing": [
+        {
+          "id": "proc-hyosung-pb840-ba-dry-temp",
+          "parameter": "Drying temperature",
+          "min": 80,
+          "max": 100,
+          "unit": "°C",
+          "condition": "Hyosung exact-grade storage/handling guidance when condensation is visible or expected.",
+          "claimType": "supplier-guidance",
+          "sourceId": "src-hyosung-pb840-ba-tds-20260929",
+          "sourcePage": "exact-grade TDS",
+          "productionRecipe": false
+        },
+        {
+          "id": "proc-hyosung-pb840-ba-dry-time",
+          "parameter": "Drying time",
+          "min": 2,
+          "max": 4,
+          "unit": "hr",
+          "condition": "Hyosung exact-grade storage/handling guidance; verify actual site/material condition.",
+          "claimType": "supplier-guidance",
+          "sourceId": "src-hyosung-pb840-ba-tds-20260929",
+          "sourcePage": "exact-grade TDS",
+          "productionRecipe": false
+        }
+      ],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-hyosung-pb840-ba-tds-20260929",
+          "publisher": "Hyosung Chemical",
+          "title": "PB840-BA Technical Data Sheet",
+          "url": "https://www.hyosungchemical.com/upload/board/20250911/411dd6fc-188d-45ac-908b-44793de6e974.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": null,
+          "retrievedAt": "2026-09-29"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-09-29T00:00:00Z",
+        "reviewedAt": "2026-09-29T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Hyosung exact-grade TDS reviewed. ASTM D1238 MI retains explicit 230°C/2.16 kg conditioning and is comparison-ready; other typical properties remain context-only; drying guidance remains productionRecipe=false."
+      }
     }
   ]
 }
