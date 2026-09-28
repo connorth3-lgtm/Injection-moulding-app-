@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 if(window.MM_ACCESSIBILITY_HARDENING)return;
-const VERSION='2026.09.10.1';
+const VERSION='2026.09.29.1';
 let lastFocus=null,activeModal=null;
 const FOCUSABLE='a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
 function visible(el){if(!el||!el.isConnected||el.closest?.('[aria-hidden="true"]'))return false;const s=getComputedStyle(el);return s.display!=='none'&&s.visibility!=='hidden'&&el.getClientRects().length>0}
@@ -15,9 +15,10 @@ function style(){if(document.getElementById('mm-a11y-hardening-style'))return;co
 `;document.head.appendChild(s)}
 function liveRegion(){let r=document.getElementById('mmA11yStatus');if(r)return r;r=document.createElement('div');r.id='mmA11yStatus';r.className='mm-sr-only';r.setAttribute('role','status');r.setAttribute('aria-live','polite');r.setAttribute('aria-atomic','true');document.body.appendChild(r);return r}
 function announce(text){const r=liveRegion();r.textContent='';setTimeout(()=>{r.textContent=String(text||'')},20)}
+function nonBlocking(modal){return !!modal&&(modal.dataset.mmNonBlocking==='1'||modal.getAttribute('aria-modal')==='false')}
 function labelDialog(modal){
   const card=modal.querySelector('.modal-card')||modal.firstElementChild;if(!card)return;
-  modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');
+  modal.setAttribute('role','dialog');modal.setAttribute('aria-modal',nonBlocking(modal)?'false':'true');
   const heading=card.querySelector('h1,h2,h3');
   const labelledBy=clean(modal.getAttribute('aria-labelledby'));
   const labelledTarget=labelledBy?document.getElementById(labelledBy):null;
@@ -72,7 +73,7 @@ function decorateControls(root=document){
   }
 }
 function semanticIssues(root=document){return nodes(root,'[data-mm-a11y-unresolved]').map(el=>({kind:el.dataset.mmA11yUnresolved,tag:String(el.tagName||'').toLowerCase(),id:el.id||null,text:clean(el.textContent).slice(0,80)}))}
-function syncModalState(){const modals=[...document.querySelectorAll('.modal')].filter(visible);if(modals.length)openDialog(modals[modals.length-1]);else if(activeModal)closeDialog(activeModal)}
+function syncModalState(){const modals=[...document.querySelectorAll('.modal')].filter(modal=>visible(modal)&&!nonBlocking(modal));if(modals.length)openDialog(modals[modals.length-1]);else if(activeModal)closeDialog(activeModal)}
 function scan(root=document){style();liveRegion();safeLinks(root);decorateControls(root);for(const modal of nodes(root,'.modal'))labelDialog(modal);syncModalState()}
 document.addEventListener('keydown',trap,true);
 document.addEventListener('click',e=>{const t=e.target.closest?.('button,a,[role="button"]');if(t)lastFocus=t},true);
@@ -87,6 +88,6 @@ const observer=new MutationObserver(mutations=>{
 });
 observer.observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['class','hidden','style','aria-hidden']});
 window.addEventListener('pageshow',()=>scan(document));document.addEventListener('DOMContentLoaded',()=>scan(document),{once:true});
-window.MM_ACCESSIBILITY_HARDENING=Object.freeze({version:VERSION,focusTrap:true,escapeClosesDialog:true,focusRestore:true,hiddenDescendantsExcluded:true,forcedColors:true,moreContrast:true,externalLinkIsolation:true,mutationScope:'changed-subtrees',announce,scan,semanticIssues,unresolvedSemanticCount:()=>semanticIssues(document).length,semanticRepairPolicy:'Runtime may use an explicit title/figcaption or an explicitly decorative image declaration. It does not convert placeholders into labels, invent generic button names, or silently mark unknown images decorative; unresolved source semantics stay visible to QA.',scope:'Runtime accessibility safeguards; formal WCAG conformance still requires manual assistive-technology and browser testing.'});
+window.MM_ACCESSIBILITY_HARDENING=Object.freeze({version:VERSION,focusTrap:true,escapeClosesDialog:true,focusRestore:true,nonBlockingDrawersExcluded:true,hiddenDescendantsExcluded:true,forcedColors:true,moreContrast:true,externalLinkIsolation:true,mutationScope:'changed-subtrees',announce,scan,semanticIssues,unresolvedSemanticCount:()=>semanticIssues(document).length,semanticRepairPolicy:'Runtime may use an explicit title/figcaption or an explicitly decorative image declaration. It does not convert placeholders into labels, invent generic button names, or silently mark unknown images decorative; unresolved source semantics stay visible to QA.',scope:'Runtime accessibility safeguards; formal WCAG conformance still requires manual assistive-technology and browser testing.'});
 scan(document);
 })();
