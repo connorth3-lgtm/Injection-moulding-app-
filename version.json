@@ -16,5 +16,7 @@
   "read_aloud_version": "2026.09.14.2",
   "published": "2026-09-29",
   "repository": "connorth3-lgtm/Injection-moulding-app-",
-  "pages_url": "https://connorth3-lgtm.github.io/Injection-moulding-app-/"
+  "pages_url": "https://connorth3-lgtm.github.io/Injection-moulding-app-/",
+  "published_timezone": "UTC",
+  "published_date_basis": "protected-main publication date; web_release date component is the Pacific/Auckland release-family date"
 }

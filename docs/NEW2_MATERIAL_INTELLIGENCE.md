@@ -66,7 +66,7 @@ A review candidate is **not** automatically promoted. Runtime publication still 
 
 ## Release verification
 
-Post-merge verification for `7382aa9b...` must remain fail-closed. The expected automated evidence includes:
+The baseline SHA above is a historical comparison point only. Post-merge verification must remain fail-closed and must be bound to the exact protected-main commit for the release being evaluated; it must never be inferred from the baseline commit. The expected automated evidence includes:
 
 - Release QA
 - Pages Release Readiness
@@ -110,7 +110,7 @@ New2 is merge-ready when:
 - no manual/external validation item is falsely marked complete by automated evidence.
 ## Protected-check refresh
 
-Final candidate synchronization for the 2026.09.30.3 New2 release; no runtime behavior is changed by this documentation-only commit.
+Release identity is `2026.09.30.3`. Verification evidence is commit-bound: every release decision must use the exact candidate/protected-main SHA and its matching workflow evidence rather than treating the historical New2 baseline as the release candidate.
 
 ## Closed-loop engineering evidence
 
@@ -125,7 +125,7 @@ The linked engineering context now has a dedicated learner-scoped evidence store
 
 Each evidence record has its own stable ID, occurrence and record timestamps, source/reference identifier, type-specific completeness rules, optional material lot/batch, measurement and unit, method/measurement basis, result, acceptance state, acceptance basis where required, notes, revision lineage, and a snapshot of the case's material, machine, mould, product, part and cavity identities.
 
-Evidence remains local to the learner profile unless explicitly exported. Evidence records themselves are append-only: corrections create revisions and withdrawals create retained void audit actions. Deleting the parent case still cascades its owned evidence because the whole case is being intentionally removed. Case export schema 4 includes links, structured evidence, and the evidence audit trail beside the stable engineering context; schema-3 exports remain compatibility imports and retain incomplete-evidence flags where they do not meet the current contract.
+Evidence remains local to the learner profile unless explicitly exported. Evidence records themselves are append-only: corrections create revisions and withdrawals create retained void audit actions. The workspace's legacy delete action is now an archive operation: the parent case is marked `Archived`, its structured evidence and audit history are retained locally, and a `case-archive` audit action is appended. Archived cases are immutable through the normal save path. Full erasure is reserved for explicit app/site-data clearing rather than case removal. Case export schema 4 includes links, structured evidence, and the evidence audit trail beside the stable engineering context; schema-3 exports remain compatibility imports and retain incomplete-evidence flags where they do not meet the current contract.
 
 This closes the software evidence loop from manufacturer evidence → machine/mould actual context → product/part quality evidence while preserving the governance boundary: a recorded result does not by itself prove causation, define a universal process window, authorize a setting change, or replace human/site acceptance.
 
