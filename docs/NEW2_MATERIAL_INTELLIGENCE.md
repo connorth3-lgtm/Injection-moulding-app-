@@ -47,7 +47,7 @@ The workspace exposes this context beside the evidence chain. When an exact cata
 
 Historical case retrieval uses these identities as evidence for relevance. Same exact grade, machine, mould, product and part increase similar-case relevance, while defect/evidence text and locally linked measured datasets remain additional signals. This is retrieval support only; similarity does not prove the same cause or authorize copying a previous process setting.
 
-Case exports include the stable engineering-context IDs so a reviewed/exported evidence record remains traceable to the objects that were actually involved.
+Case exports include the stable engineering-context IDs so a reviewed/exported evidence record remains traceable to the objects that were actually involved. Schema-4 case bundles can be restored as a new learner-owned case after bounded validation; restore never overwrites an existing canonical case.
 
 ## Promotion-readiness queue
 
@@ -123,9 +123,11 @@ The linked engineering context now has a dedicated learner-scoped evidence store
 - material lot / batch evidence;
 - acceptance / release checks.
 
-Each evidence record has its own stable ID, occurrence and record timestamps, optional source/reference identifier, material lot/batch, measurement and unit, result, acceptance state, notes, and a snapshot of the case's material, machine, mould, product, part and cavity identities.
+Each evidence record has its own stable ID, occurrence and record timestamps, source/reference identifier, type-specific completeness rules, optional material lot/batch, measurement and unit, method/measurement basis, result, acceptance state, acceptance basis where required, notes, revision lineage, and a snapshot of the case's material, machine, mould, product, part and cavity identities.
 
-Evidence remains local to the learner profile unless explicitly exported. Deleting a case also removes its owned evidence records. Case export schema 3 includes the complete structured evidence collection beside the stable engineering context.
+Evidence remains local to the learner profile unless explicitly exported. Evidence records themselves are append-only: corrections create revisions and withdrawals create retained void audit actions. Deleting the parent case still cascades its owned evidence because the whole case is being intentionally removed. Case export schema 4 includes links, structured evidence, and the evidence audit trail beside the stable engineering context; schema-3 exports remain compatibility imports and retain incomplete-evidence flags where they do not meet the current contract.
 
 This closes the software evidence loop from manufacturer evidence → machine/mould actual context → product/part quality evidence while preserving the governance boundary: a recorded result does not by itself prove causation, define a universal process window, authorize a setting change, or replace human/site acceptance.
 
+
+New evidence completeness and acceptance metadata remain evidence-management support only. An `accepted` record still does not constitute production authorisation unless the named site authority/process independently makes that decision.
