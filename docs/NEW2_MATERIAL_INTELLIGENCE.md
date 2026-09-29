@@ -1,7 +1,7 @@
 # New2 — Material Intelligence and release validation
 
 Baseline: `main` squash merge `7382aa9b2e5c452bc452946d320289cffd9104e4`  
-Learner-facing web release: `2026.09.29.19`
+Learner-facing web release: `2026.09.29.20`
 
 ## Purpose
 
@@ -110,7 +110,7 @@ New2 is merge-ready when:
 - no manual/external validation item is falsely marked complete by automated evidence.
 ## Protected-check refresh
 
-Final candidate synchronization for the 2026.09.29.19 New2 release; no runtime behavior is changed by this documentation-only commit.
+Final candidate synchronization for the 2026.09.29.20 New2 release; no runtime behavior is changed by this documentation-only commit.
 
 ## Closed-loop engineering evidence
 
