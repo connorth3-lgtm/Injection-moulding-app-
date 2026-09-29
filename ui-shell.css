@@ -413,3 +413,39 @@ body[data-mm-view="lesson"] .topbar{justify-content:flex-end!important}
   #dashboard .mm-home-balance-grid button{transition:none!important}
 }
 
+/* Final product-quality interaction states — 2026.09.29.15 */
+button:disabled,[aria-disabled="true"]{
+  cursor:not-allowed!important;
+  opacity:.48!important;
+  transform:none!important;
+  box-shadow:none!important;
+}
+[data-mm-material-compare-result][aria-busy="true"],
+[data-mm-material-change-result][aria-busy="true"]{
+  min-height:72px;
+  display:grid;
+  place-items:center;
+  color:#9fb2c5;
+  border:1px dashed rgba(129,171,207,.24);
+  border-radius:13px;
+  background:rgba(9,22,35,.5);
+}
+[data-mm-material-compare-result][aria-busy="true"]::before,
+[data-mm-material-change-result][aria-busy="true"]::before{
+  content:"Reviewing published evidence…";
+  font-size:12px;
+  letter-spacing:.01em;
+}
+[data-mm-material-compare-result][aria-busy="true"]>*,
+[data-mm-material-change-result][aria-busy="true"]>*{visibility:hidden}
+[data-mm-product-state="empty"]{max-width:760px}
+.mm-onboarding-product input,.mm-onboarding-product select,.mm-onboarding-product button{min-height:44px}
+.mm-onboarding-product fieldset{min-width:0}
+@media(max-width:700px){
+  .mm-onboarding-product{padding-bottom:4px}
+  .mm-onboarding-product input,.mm-onboarding-product select,.mm-onboarding-product button{min-height:48px}
+}
+@media(prefers-reduced-motion:reduce){
+  [data-mm-material-compare-result],[data-mm-material-change-result]{scroll-behavior:auto!important}
+}
+
