@@ -1,11 +1,11 @@
-/* MouldMaster learner UI polish — 2026.09.29.19
+/* MouldMaster learner UI polish — 2026.09.30.1
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.09.29.20';
+const VERSION='2026.09.30.1';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -26,35 +26,38 @@ function runQuickAction(action){
   switch(action){
     case 'practice': return safe(()=>window.switchView?.('scenarios'));
     case 'book': return safe(()=>window.MMBook?.open?.());
-    case 'materials': return safe(()=>window.switchView?.('materials'));
+    case 'materials': return safe(()=>window.MM_MATERIAL_REGISTRY?.openPage?.({replaceUrl:true})||window.switchView?.('materials'));
     case 'mould-master': return safe(()=>window.MM_MOULD_MASTER_WORKSPACE?.open?.()||window.switchView?.('defects'));
+    case 'process-data': return safe(()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.());
+    case 'learn': return safe(()=>window.switchView?.('path'));
+    case 'recent-case': {
+      const row=window.MM_MOULD_MASTER_WORKSPACE?.cases?.()?.[0];
+      return safe(()=>row?window.MM_MOULD_MASTER_WORKSPACE?.open?.(row.id):window.MM_MOULD_MASTER_WORKSPACE?.open?.());
+    }
   }
+}
+function homeActivity(){
+  const completed=Array.isArray(window.user?.completed)?window.user.completed.length:0;
+  const total=Array.isArray(window.D?.lessons)?window.D.lessons.length:120;
+  const saved=Array.isArray(window.user?.bookmarks)?window.user.bookmarks.length:0;
+  const cases=window.MM_MOULD_MASTER_WORKSPACE?.cases?.()||[];
+  const recent=cases[0]||null;
+  return {completed,total,saved,cases:cases.length,recent}
 }
 function homeBalanceMarkup(){
-  return `<div class="mm-home-balance-copy"><span class="eyebrow">Quick access</span><h2>Your moulding workspace</h2><p>Jump into the task you need without searching through the full tool set.</p></div><div class="mm-home-balance-grid"><button type="button" data-mm-home-action="practice"><span class="mm-home-balance-icon" aria-hidden="true">◎</span><span><b>Practice</b><small>Work one evidence-first shop-floor decision.</small></span></button><button type="button" data-mm-home-action="book"><span class="mm-home-balance-icon mm-book-mark" aria-hidden="true"></span><span><b>Book</b><small>Open the governed injection moulding reference.</small></span></button><button type="button" data-mm-home-action="materials"><span class="mm-home-balance-icon" aria-hidden="true">◇</span><span><b>Materials</b><small>Search exact grades, evidence and material behaviour.</small></span></button><button type="button" data-mm-home-action="mould-master"><span class="mm-home-balance-icon" aria-hidden="true">◆</span><span><b>Mould Master</b><small>Build an evidence-led troubleshooting case.</small></span></button></div>`;
+  const a=homeActivity();
+  const recent=a.recent?\`<button type="button" class="mm-home-recent" data-mm-home-action="recent-case"><span><span class="eyebrow">Recent case</span><b>\${String(a.recent.title||'Untitled troubleshooting case')}</b><small>\${String(a.recent.status||'Investigating')} · continue where you left off</small></span><span aria-hidden="true">→</span></button>\`:'';
+  return \`<div class="mm-home-balance-copy"><div><span class="eyebrow">Workbench</span><h2>What do you need to do?</h2><p>Continue learning, investigate a problem, check a material or work with process evidence.</p></div><div class="mm-home-snapshot" aria-label="Your local activity"><span><b>\${a.completed}/\${a.total}</b><small>lessons</small></span><span><b>\${a.cases}</b><small>cases</small></span><span><b>\${a.saved}</b><small>saved</small></span></div></div><div class="mm-home-balance-grid"><button type="button" data-mm-home-action="mould-master"><span class="mm-home-balance-icon" aria-hidden="true">◆</span><span><b>Troubleshoot</b><small>Open Mould Master and build an evidence-led case.</small></span></button><button type="button" data-mm-home-action="materials"><span class="mm-home-balance-icon" aria-hidden="true">⬡</span><span><b>Materials</b><small>Search exact grades, evidence and comparisons.</small></span></button><button type="button" data-mm-home-action="process-data"><span class="mm-home-balance-icon" aria-hidden="true">⌁</span><span><b>Analyse data</b><small>Read measured process trends and recovery evidence.</small></span></button><button type="button" data-mm-home-action="practice"><span class="mm-home-balance-icon" aria-hidden="true">◎</span><span><b>Practice</b><small>Work one evidence-first shop-floor decision.</small></span></button></div>\${recent}<div class="mm-home-link-row"><button type="button" class="ghost" data-mm-home-action="learn">Browse learning</button><button type="button" class="ghost" data-mm-home-action="book">Open reference book</button></div>\`;
 }
 function syncHomeBalance(){
-  const root=document.getElementById('dashboard');
-  if(!root)return;
+  const root=document.getElementById('dashboard');if(!root)return;
   let panel=root.querySelector('[data-mm-home-balance]');
-  if(!wide()){
-    panel?.remove();
-    return;
-  }
   if(!panel){
-    panel=document.createElement('section');
-    panel.className='card mm-home-balance';
-    panel.dataset.mmHomeBalance=VERSION;
-    panel.setAttribute('aria-label','Quick workspace access');
-    panel.innerHTML=homeBalanceMarkup();
-    panel.addEventListener('click',event=>{
-      const button=event.target?.closest?.('[data-mm-home-action]');
-      if(button)runQuickAction(button.dataset.mmHomeAction);
-    });
+    panel=document.createElement('section');panel.className='card mm-home-balance';panel.dataset.mmHomeBalance=VERSION;
+    panel.setAttribute('aria-label','Moulding workbench');panel.addEventListener('click',event=>{const button=event.target?.closest?.('[data-mm-home-action]');if(button)runQuickAction(button.dataset.mmHomeAction)});
   }
-  const focus=root.querySelector('.mm-today-focus');
-  const focusSlot=focus?.closest?.('.mm-dashboard-slot');
-  const anchor=focusSlot||focus;
+  panel.innerHTML=homeBalanceMarkup();
+  const focus=root.querySelector('.mm-today-focus'),focusSlot=focus?.closest?.('.mm-dashboard-slot'),anchor=focusSlot||focus;
   if(anchor&&panel.previousElementSibling!==anchor)anchor.insertAdjacentElement('afterend',panel);
   else if(!anchor&&!panel.isConnected)root.prepend(panel);
 }
@@ -123,7 +126,7 @@ function syncBookDisclosure(){
   }
 }
 
-const DESKTOP_HIDE_LABELS=/^(Diagnostic labs|Data diagnosis|Material labs|Measured data|Process simulator|Defect finder|Learning insights)$/i;
+const PRIMARY_DESKTOP_VIEWS=new Set(['dashboard','path','materials','scenarios']);
 function hideNavButton(button,hidden){
   if(!button)return;
   if(hidden){
@@ -142,27 +145,25 @@ function hideNavButton(button,hidden){
   }
 }
 function syncDesktopNavigation(){
-  const nav=document.getElementById('nav');
-  if(!nav)return;
+  const nav=document.getElementById('nav');if(!nav)return;
   const isDesktop=desktop();
+  const labels={dashboard:'Home',path:'Learn',materials:'Materials',scenarios:'Practice'};
   [...nav.querySelectorAll(':scope > button')].forEach(button=>{
     if(button.dataset.mmDesktopMoreTools)return;
-    const label=(button.textContent||'').replace(/\s+/g,' ').trim();
-    hideNavButton(button,isDesktop&&DESKTOP_HIDE_LABELS.test(label));
+    const view=button.dataset.view||'';
+    const keep=PRIMARY_DESKTOP_VIEWS.has(view);
+    hideNavButton(button,isDesktop&&!keep);
+    if(keep&&button.querySelector('span'))button.querySelector('span').textContent=labels[view];
   });
+  nav.querySelectorAll(':scope > .nav-group-label,:scope > details.more-nav').forEach(node=>{node.hidden=isDesktop});
   let more=nav.querySelector('[data-mm-desktop-more-tools]');
   if(isDesktop&&!more){
-    more=document.createElement('button');
-    more.type='button';
-    more.dataset.mmDesktopMoreTools='1';
-    more.className='mm-desktop-more-tools';
-    more.innerHTML='<span class="mm-more-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>More tools</span>';
-    more.addEventListener('click',()=>safe(()=>window.openMobileMenu?.()));
-    nav.appendChild(more);
+    more=document.createElement('button');more.type='button';more.dataset.mmDesktopMoreTools='1';more.className='mm-desktop-more-tools';
+    more.innerHTML='<span class="mm-more-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>More</span>';
+    more.addEventListener('click',()=>safe(()=>window.openMobileMenu?.()));nav.appendChild(more);
   }
   if(more)more.hidden=!isDesktop;
 }
-
 function syncFirstRunModal(){
   const root=document.querySelector('.onboarding');
   if(!root||root.dataset.mmProductPolished==='1')return;
