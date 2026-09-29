@@ -107,7 +107,7 @@ curriculum_pack=text('src/domains/runtime-packs/curriculum-workspace-runtime-pac
 need('/* >>> specialist-curriculum.js */' in curriculum_pack,'specialist curriculum missing from curriculum workspace runtime pack')
 need('/* >>> curriculum-integration.js */' in curriculum_pack,'curriculum integration missing from curriculum workspace runtime pack')
 need(idx.index("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'") < idx.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'"),'specialist curriculum pack must load after learning/process diagnostics')
-need(idx.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'") < idx.index("'./app-shell-finalize.js'"),'specialist curriculum pack must load before shell finalization')
+need(idx.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'") < idx.index("'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'"),'specialist curriculum pack must load before shell finalization')
 sw=text('service-worker.js')
 need("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'" in sw,'curriculum workspace runtime pack missing from offline cache')
 
