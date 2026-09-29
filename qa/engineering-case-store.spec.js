@@ -35,7 +35,7 @@ test('Mould Master uses one owner-scoped IndexedDB store with one-time legacy im
   expect(imported).toBeTruthy();
   expect(imported.title).toBe('Legacy imported title');
   expect(imported.legacySource).toBe('mm_mould_master_cases_v1');
-  expect(await page.evaluate(()=>window.MM_MOULD_MASTER_WORKSPACE.canonicalStore)).toBe('indexeddb-v2');
+  expect(await page.evaluate(()=>window.MM_MOULD_MASTER_WORKSPACE.canonicalStore)).toBe('mouldmaster-engineering-v2/db3');
   const migratedLegacyKey=await page.evaluate(()=>window.MM_ENGINEERING_STORE.legacyKey());
   expect(migratedLegacyKey).not.toBe(SEEDED_LEGACY_KEY);
   const legacyRaw=await page.evaluate(key=>localStorage.getItem(key),migratedLegacyKey);
@@ -146,7 +146,9 @@ test('Mould Master uses one owner-scoped IndexedDB store with one-time legacy im
   await evidencePanel.locator('[data-mw-evidence-field="materialLot"]').fill('LOT-NH1033-2409');
   await evidencePanel.locator('[data-mw-evidence-field="measurement"]').fill('42.18');
   await evidencePanel.locator('[data-mw-evidence-field="unit"]').fill('mm');
+  await evidencePanel.locator('[data-mw-evidence-field="methodRef"]').fill('CMM-WI-17 · three repeats');
   await evidencePanel.locator('[data-mw-evidence-field="acceptanceStatus"]').selectOption('accepted');
+  await evidencePanel.locator('[data-mw-evidence-field="acceptanceBasis"]').fill('DRAWING-184-03 REV C · QA disposition QA-8821');
   await evidencePanel.locator('[data-mw-evidence-field="result"]').fill('Dimension verified against the controlled inspection record.');
   await evidencePanel.locator('[data-mw-evidence-field="notes"]').fill('Three repeat measurements retained; method and source reference recorded.');
   await evidencePanel.getByRole('button',{name:'Add evidence record'}).click();
@@ -159,7 +161,11 @@ test('Mould Master uses one owner-scoped IndexedDB store with one-time legacy im
   expect(caseEvidence[0].materialLot).toBe('LOT-NH1033-2409');
   expect(caseEvidence[0].measurement).toBe('42.18');
   expect(caseEvidence[0].unit).toBe('mm');
+  expect(caseEvidence[0].methodRef).toBe('CMM-WI-17 · three repeats');
   expect(caseEvidence[0].acceptanceStatus).toBe('accepted');
+  expect(caseEvidence[0].acceptanceBasis).toContain('DRAWING-184-03');
+  expect(caseEvidence[0].schemaVersion).toBe(2);
+  expect(caseEvidence[0].complete).toBeTruthy();
   expect(caseEvidence[0].context.materialGradeId).toBe('mat-lotte-infino-nh-1033');
   expect(caseEvidence[0].context.machineId).toBe('IMM-07');
   expect(caseEvidence[0].context.mouldId).toBe('MOULD-184');
@@ -167,12 +173,60 @@ test('Mould Master uses one owner-scoped IndexedDB store with one-time legacy im
   expect(caseEvidence[0].context.partId).toBe('PART-184-03');
   const evidenceSummary=await page.evaluate(id=>window.MM_MOULD_MASTER_WORKSPACE.evidenceSummary(id),materialCase);
   expect(evidenceSummary.count).toBe(1);
+  expect(evidenceSummary.activeCount).toBe(1);
+  expect(evidenceSummary.completeCount).toBe(1);
+  expect(evidenceSummary.incompleteCount).toBe(0);
   expect(evidenceSummary.byKind['dimensional-check']).toBe(1);
   expect(evidenceSummary.acceptance.accepted).toBe(1);
   const tokenOther=await page.evaluate(id=>window.MM_LEARNER_SCOPE.tokenFor(id),USER_B);
   expect(await page.evaluate(({id,token})=>window.MM_ENGINEERING_STORE.listCaseEvidence(id,token),{id:materialCase,token:tokenOther})).toEqual([]);
   await expect(evidencePanel).toContainText('Cavity 3 critical dimension');
   await expect(evidencePanel).toContainText('42.18 mm');
+
+  const originalEvidenceId=caseEvidence[0].id;
+  const overwriteError=await page.evaluate(async({caseId,id})=>{
+    try{await window.MM_ENGINEERING_STORE.saveCaseEvidence(caseId,{id,kind:'dimensional-check',title:'overwrite attempt',sourceRef:'bad',measurement:'1',unit:'mm',methodRef:'bad',result:'bad'});return null}catch(error){return String(error.message||error)}
+  },{caseId:materialCase,id:originalEvidenceId});
+  expect(overwriteError).toContain('append-only');
+
+  const revised=await page.evaluate(({id})=>window.MM_ENGINEERING_STORE.reviseCaseEvidence(id,{
+    measurement:'42.19',
+    result:'Repeat inspection after gauge verification.',
+    acceptanceStatus:'accepted',
+    acceptanceBasis:'DRAWING-184-03 REV C · QA disposition QA-8822'
+  }),{id:originalEvidenceId});
+  expect(revised.revisionOf).toBe(originalEvidenceId);
+  expect(revised.measurement).toBe('42.19');
+
+  await page.evaluate(({id})=>window.MM_ENGINEERING_STORE.voidCaseEvidence(id,'Superseded by verified repeat measurement'),{id:originalEvidenceId});
+  const evidenceAfterAudit=await page.evaluate(id=>window.MM_ENGINEERING_STORE.listCaseEvidence(id),materialCase);
+  expect(evidenceAfterAudit).toHaveLength(2);
+  expect(evidenceAfterAudit.find(x=>x.id===originalEvidenceId).voided).toBeTruthy();
+  expect(evidenceAfterAudit.find(x=>x.revisionOf===originalEvidenceId).voided).toBeFalsy();
+  const auditTrail=await page.evaluate(id=>window.MM_ENGINEERING_STORE.evidenceAuditTrail(id),materialCase);
+  expect(auditTrail).toHaveLength(1);
+  expect(auditTrail[0].action).toBe('void');
+  expect(auditTrail[0].reason).toContain('Superseded');
+
+  const restoreResult=await page.evaluate(async id=>{
+    const store=window.MM_ENGINEERING_STORE;
+    const c=await store.getCase(id),evidence=await store.listCaseEvidence(id),evidenceAudit=await store.evidenceAuditTrail(id),links=await store.linksForCase(id);
+    return store.importCaseBundle({schema:4,version:'qa',case:c,evidence,evidenceAudit,links,engineeringContext:window.MM_MOULD_MASTER_WORKSPACE.engineeringContext(id)});
+  },materialCase);
+  expect(restoreResult.caseId).not.toBe(materialCase);
+  expect(restoreResult.evidenceImported).toBe(2);
+  expect(restoreResult.auditImported).toBe(1);
+  expect(restoreResult.destructive).toBeFalsy();
+  const restoredCase=await page.evaluate(id=>window.MM_ENGINEERING_STORE.getCase(id),restoreResult.caseId);
+  expect(restoredCase.materialGradeId).toBe('mat-lotte-infino-nh-1033');
+  expect(restoredCase.machineId).toBe('IMM-07');
+  expect(restoredCase.mouldId).toBe('MOULD-184');
+  expect(restoredCase.productId).toBe('PROD-PUMP-01');
+  expect(restoredCase.partId).toBe('PART-184-03');
+  const restoredEvidence=await page.evaluate(id=>window.MM_ENGINEERING_STORE.listCaseEvidence(id),restoreResult.caseId);
+  expect(restoredEvidence).toHaveLength(2);
+  expect(restoredEvidence.filter(x=>x.voided)).toHaveLength(1);
+  expect(restoredEvidence.find(x=>x.revisionOf)?.measurement).toBe('42.19');
 
   await page.waitForFunction(()=>window.MM_CONNECTED_PROCESS_DATA?.cases?.similarCases);
   const relatedCase=await page.evaluate(()=>window.MM_MOULD_MASTER_WORKSPACE.newCase({
