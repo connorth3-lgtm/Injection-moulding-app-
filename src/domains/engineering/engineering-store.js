@@ -277,6 +277,7 @@ function validateCaseBundle(bundle){
   if(!bundle.case||typeof bundle.case!=='object')throw new Error('Case export is missing its case record');
   if(!Array.isArray(bundle.evidence)||bundle.evidence.length>500)throw new Error('Case export evidence collection is invalid or too large');
   if(bundle.links!=null&&(!Array.isArray(bundle.links)||bundle.links.length>100))throw new Error('Case export link collection is invalid or too large');
+  if(bundle.evidenceAudit!=null&&(!Array.isArray(bundle.evidenceAudit)||bundle.evidenceAudit.length>500))throw new Error('Case export audit collection is invalid or too large');
   const legacy=Number(bundle.schema)===3;
   const evidence=bundle.evidence.map(row=>{
     if(!row||typeof row!=='object'||row.recordType==='audit')throw new Error('Case export contains an invalid evidence record');
@@ -284,12 +285,18 @@ function validateCaseBundle(bundle){
     if(!normalized.complete&&!legacy)throw new Error(`Case export contains incomplete evidence: ${normalized.missingFields.join(', ')}`);
     return normalized
   });
-  return {schema:Number(bundle.schema),legacy,caseRecord:normalizeCase(bundle.case),evidence,links:Array.isArray(bundle.links)?bundle.links:[]}
+  const audit=(Array.isArray(bundle.evidenceAudit)?bundle.evidenceAudit:[]).map(row=>{
+    if(!row||typeof row!=='object'||row.recordType!=='audit'||!['void'].includes(String(row.action||''))||!row.targetEvidenceId)throw new Error('Case export contains an invalid evidence audit record');
+    return {...row}
+  });
+  return {schema:Number(bundle.schema),legacy,caseRecord:normalizeCase(bundle.case),evidence,audit,links:Array.isArray(bundle.links)?bundle.links:[]}
 }
 async function importCaseBundle(bundle,token=learnerToken()){
   const owner=tokenValue(token),validated=validateCaseBundle(bundle),newId=uid('case-import'),importedAt=now();
   const caseRecord=normalizeCase({...validated.caseRecord,id:newId,learnerToken:owner,createdAt:importedAt,updatedAt:importedAt,legacySource:`case-export-v${validated.schema}:${validated.caseRecord.id||'unknown'}`});
-  const evidence=validated.evidence.map(row=>normalizeCaseEvidence({...row,id:uid('evidence'),caseId:newId,learnerToken:owner,recordedAt:row.recordedAt||importedAt,updatedAt:importedAt,importedLegacy:validated.legacy||Boolean(row.importedLegacy)},caseRecord,owner));
+  const idMap=new Map(validated.evidence.map(row=>[String(row.id),uid('evidence')]));
+  const evidence=validated.evidence.map(row=>normalizeCaseEvidence({...row,id:idMap.get(String(row.id)),caseId:newId,learnerToken:owner,recordedAt:row.recordedAt||importedAt,updatedAt:importedAt,revisionOf:row.revisionOf?(idMap.get(String(row.revisionOf))||null):null,importedLegacy:validated.legacy||Boolean(row.importedLegacy)},caseRecord,owner));
+  const audit=validated.audit.map(row=>normalizeEvidenceAudit({...row,id:uid('evidence-audit'),targetEvidenceId:idMap.get(String(row.targetEvidenceId))||''},newId,owner)).filter(row=>row.targetEvidenceId);
   const contextLinks=[
     ['material-grade',caseRecord.materialGradeId,caseRecord.material],['machine',caseRecord.machineId,caseRecord.machine],
     ['mould',caseRecord.mouldId,caseRecord.mould],['product',caseRecord.productId,caseRecord.product],['part',caseRecord.partId,caseRecord.part]
@@ -298,8 +305,9 @@ async function importCaseBundle(bundle,token=learnerToken()){
   tx.objectStore('cases').add(caseRecord);
   for(const link of contextLinks)tx.objectStore('caseLinks').put(link);
   for(const row of evidence)tx.objectStore('caseEvidence').add(row);
+  for(const row of audit)tx.objectStore('caseEvidence').add(row);
   await txDone(tx);db.close();
-  return {caseId:newId,sourceCaseId:String(validated.caseRecord.id||''),schema:validated.schema,evidenceImported:evidence.length,linksImported:contextLinks.length,legacyEvidence:validated.legacy,importedAt,destructive:false}
+  return {caseId:newId,sourceCaseId:String(validated.caseRecord.id||''),schema:validated.schema,evidenceImported:evidence.length,auditImported:audit.length,linksImported:contextLinks.length,legacyEvidence:validated.legacy,importedAt,destructive:false}
 }
 
 function legacyKey(token=learnerToken()){return learnerScope.storageKey(LEGACY_CASE_BASE,tokenValue(token))}
