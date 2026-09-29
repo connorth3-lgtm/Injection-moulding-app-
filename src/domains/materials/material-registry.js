@@ -312,12 +312,12 @@ function materialsStatsMarkup(c){
 }
 function pageIntro(c){
   const el=document.createElement('section');el.id='mmMaterialsPageIntro';el.className='mm-material-page-hero';
-  el.innerHTML=`<div><span class="eyebrow">Materials</span><h2>Material library & engineering evidence</h2><p>Search published exact grades first, inspect the evidence behind each value, compare only condition-matched observations, and connect a grade directly to a Mould Master investigation.</p></div>${materialsStatsMarkup(c)}<nav class="mm-material-page-nav" aria-label="Materials page sections"><button type="button" class="secondary" data-mm-material-jump="catalog">Grade library</button><button type="button" class="secondary" data-mm-material-jump="compare">Compare grades</button><button type="button" class="secondary" data-mm-material-jump="change">Change assistant</button><button type="button" class="ghost" data-mm-material-jump="learning">Material learning</button></nav>`;
+  el.innerHTML=`<div><span class="eyebrow">Materials</span><h2>Material library & engineering evidence</h2><p>Search exact grades, inspect the source evidence, compare matching observations and move a grade into Mould Master when you need to investigate.</p></div>${materialsStatsMarkup(c)}<nav class="mm-material-page-nav" aria-label="Materials page sections"><button type="button" class="secondary" data-mm-material-jump="catalog">Grade library</button><button type="button" class="secondary" data-mm-material-jump="compare">Compare grades</button><button type="button" class="secondary" data-mm-material-jump="change">Change assistant</button><button type="button" class="ghost" data-mm-material-jump="learning">Material learning</button></nav>`;
   return el
 }
 function learningIntro(){
   const el=document.createElement('section');el.id='mmMaterialLearningAnchor';el.className='mm-material-learning-anchor';
-  el.innerHTML='<span class="eyebrow">Learn the mechanisms</span><h3>Material science learning</h3><p>Continue into the Academy material chapters, references and formative learning below. Family-level learning supports understanding; exact-grade supplier evidence remains the source for grade-specific values.</p>';
+  el.innerHTML='<span class="eyebrow">Learn the mechanisms</span><h3>Material science learning</h3><p>Use the learning chapters below for mechanisms and polymer-family behaviour. Exact-grade values stay tied to their published source evidence.</p>';
   return el
 }
 function wirePageNavigation(host){
