@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 if(window.MM_MATERIAL_SEARCH)return;
-const VERSION='2026.09.29.14';
+const VERSION='2026.09.29.15';
 let state=null;
 let readyPromise=null;
 
