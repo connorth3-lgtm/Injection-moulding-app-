@@ -138,6 +138,42 @@ test('Mould Master uses one owner-scoped IndexedDB store with one-time legacy im
   await expect(page.locator('[data-mw-engineering-context]')).toContainText('Pump housing');
   await expect(page.locator('[data-mw-engineering-context]')).toContainText('Exact-grade evidence');
 
+  const evidencePanel=page.locator('[data-mw-case-evidence]');
+  await expect(evidencePanel).toContainText('Closed-loop evidence');
+  await evidencePanel.locator('[data-mw-evidence-field="kind"]').selectOption('dimensional-check');
+  await evidencePanel.locator('[data-mw-evidence-field="title"]').fill('Cavity 3 critical dimension');
+  await evidencePanel.locator('[data-mw-evidence-field="sourceRef"]').fill('QC-REPORT-184-03');
+  await evidencePanel.locator('[data-mw-evidence-field="materialLot"]').fill('LOT-NH1033-2409');
+  await evidencePanel.locator('[data-mw-evidence-field="measurement"]').fill('42.18');
+  await evidencePanel.locator('[data-mw-evidence-field="unit"]').fill('mm');
+  await evidencePanel.locator('[data-mw-evidence-field="acceptanceStatus"]').selectOption('accepted');
+  await evidencePanel.locator('[data-mw-evidence-field="result"]').fill('Dimension verified against the controlled inspection record.');
+  await evidencePanel.locator('[data-mw-evidence-field="notes"]').fill('Three repeat measurements retained; method and source reference recorded.');
+  await evidencePanel.getByRole('button',{name:'Add evidence record'}).click();
+  await page.waitForFunction(id=>window.MM_ENGINEERING_STORE.listCaseEvidence(id).then(items=>items.length===1),materialCase);
+
+  const caseEvidence=await page.evaluate(id=>window.MM_ENGINEERING_STORE.listCaseEvidence(id),materialCase);
+  expect(caseEvidence).toHaveLength(1);
+  expect(caseEvidence[0].kind).toBe('dimensional-check');
+  expect(caseEvidence[0].sourceRef).toBe('QC-REPORT-184-03');
+  expect(caseEvidence[0].materialLot).toBe('LOT-NH1033-2409');
+  expect(caseEvidence[0].measurement).toBe('42.18');
+  expect(caseEvidence[0].unit).toBe('mm');
+  expect(caseEvidence[0].acceptanceStatus).toBe('accepted');
+  expect(caseEvidence[0].context.materialGradeId).toBe('mat-lotte-infino-nh-1033');
+  expect(caseEvidence[0].context.machineId).toBe('IMM-07');
+  expect(caseEvidence[0].context.mouldId).toBe('MOULD-184');
+  expect(caseEvidence[0].context.productId).toBe('PROD-PUMP-01');
+  expect(caseEvidence[0].context.partId).toBe('PART-184-03');
+  const evidenceSummary=await page.evaluate(id=>window.MM_MOULD_MASTER_WORKSPACE.evidenceSummary(id),materialCase);
+  expect(evidenceSummary.count).toBe(1);
+  expect(evidenceSummary.byKind['dimensional-check']).toBe(1);
+  expect(evidenceSummary.acceptance.accepted).toBe(1);
+  const tokenOther=await page.evaluate(id=>window.MM_LEARNER_SCOPE.tokenFor(id),USER_B);
+  expect(await page.evaluate(({id,token})=>window.MM_ENGINEERING_STORE.listCaseEvidence(id,token),{id:materialCase,token:tokenOther})).toEqual([]);
+  await expect(evidencePanel).toContainText('Cavity 3 critical dimension');
+  await expect(evidencePanel).toContainText('42.18 mm');
+
   await page.waitForFunction(()=>window.MM_CONNECTED_PROCESS_DATA?.cases?.similarCases);
   const relatedCase=await page.evaluate(()=>window.MM_MOULD_MASTER_WORKSPACE.newCase({
     title:'Repeat pump housing investigation',
