@@ -301,7 +301,13 @@ function renderLessonCanonical(){
 function switchViewCanonical(id){
   activeCustomId='';const r=captured.switchView.apply(this,arguments);syncActiveState();requestAnimationFrame(syncActiveState);emitView(id);return r
 }
-function openMobileMenuCanonical(){const r=captured.openMobileMenu.apply(this,arguments);populateMobileMore();return r}
+function openMobileMenuCanonical(){
+  const r=captured.openMobileMenu.apply(this,arguments);
+  const modal=document.getElementById('modal'),heading=modal?.querySelector('.modal-card h2');
+  if(heading)heading.textContent='More';
+  const eyebrow=modal?.querySelector('.modal-card .eyebrow');if(eyebrow)eyebrow.textContent='Tools, progress & settings';
+  populateMobileMore();return r
+}
 
 function setCustomActive(id,mobileGroup){activeCustomId=id||'';if(mobileGroup&&navigationItems.has(id))navigationItems.get(id).mobileGroup=mobileGroup;syncActiveState();emitView(id)}
 
