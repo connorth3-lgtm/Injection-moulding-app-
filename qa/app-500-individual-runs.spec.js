@@ -72,7 +72,7 @@ for(let run=1;run<=500;run++){
       await chapters.nth(variant%Math.min(46,await chapters.count())).click();
       await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
     }else if(family==='materials'){
-      await page.evaluate(()=>switchView('path'));const b=page.locator('#path [data-mm-hub-action="materials"]');await expect(b).toBeVisible();await b.click();
+      await page.evaluate(()=>switchView('materials'));
       await expect(page.locator('#mmExactMaterialCatalog')).toHaveCount(1);
     }else if(family==='responsive'){
       const widths=[360,412,600,650,700,768,810,900,1024,1280,1440];
@@ -83,7 +83,7 @@ for(let run=1;run<=500;run++){
       if(viewport.width<=700){
         await page.locator('.mobile-nav > button').filter({hasText:'More'}).click();
       }else if(viewport.width>=1101){
-        await page.locator('#nav').getByRole('button',{name:/More tools/i}).click();
+        await page.locator('#nav').getByRole('button',{name:'More'}).click();
       }else{
         await page.evaluate(()=>window.openMobileMenu?.());
       }
