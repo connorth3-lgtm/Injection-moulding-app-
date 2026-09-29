@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 if(window.MM_MATERIAL_REGISTRY)return;
-const VERSION='2026.09.29.15';
+const VERSION='2026.09.29.16';
 const CATALOG_URL='./material-catalog-v1.json';
 let catalog=null;
 let readyPromise=null;
