@@ -188,4 +188,5 @@ jobs:
         if: github.event_name == 'pull_request'
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          CI_RISK_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: python tools/verify_ci_risk_coverage.py
