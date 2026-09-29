@@ -205,6 +205,13 @@ def verify_runtime_contracts() -> None:
         "conflicts",
         "caseEvidence",
         "saveCaseEvidence",
+        "evidenceCompleteness",
+        "evidenceAuditTrail",
+        "voidCaseEvidence",
+        "reviseCaseEvidence",
+        "validateCaseBundle",
+        "importCaseBundle",
+        "append-only",
         "destructive:false",
         "if(prior?.complete)return {...prior,alreadyComplete:true}",
     ]:
@@ -286,6 +293,7 @@ def run_drill() -> dict:
         "legacyV2CompatibilityExplicitlyUnverified": "pass",
         "engineeringMigration": "pass",
         "engineeringMigrationReplay": "pass",
+        "engineeringEvidenceAppendOnlyRestoreContract": "pass",
         "processDataResetContract": "pass",
         "syntheticOnly": True,
     }
