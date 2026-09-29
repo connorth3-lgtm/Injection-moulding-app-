@@ -83,7 +83,7 @@ for asset in [
     "src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js",
     "src/domains/runtime-packs/curriculum-workspace-runtime-pack.js",
     "src/domains/runtime-packs/process-data-runtime-pack.js",
-    "app-shell-finalize.js",
+    "src/domains/runtime-packs/shell-finalization-runtime-pack.js",
     "learning-analytics.js",
     "runtime-v2.js",
     "accessibility-hardening.js",
@@ -91,7 +91,7 @@ for asset in [
     assert f"'./{asset}'" in index, f"current learner-facing runtime asset not loaded by shell: {asset}"
 assert "['./reading-patch.js','<script" not in index and "['./training-upgrade.js','<script" not in index and "['./training-qa-fix.js','<script" not in index, "learning foundation source scripts must not return as direct bootstrap entries"
 assert index.index("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'") < index.index("'./runtime-v2.js'") < index.index("'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'"), "runtime-v2 assessment ownership load order is wrong"
-assert index.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'") < index.index("'./app-shell-finalize.js'"), "specialist evidence/runtime finalizer load order is wrong"
+assert index.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'"), "specialist evidence/runtime finalizer load order is wrong"
 for retired in ["assessment-100-pass.js","assessment-deep-dive.js","assessment-answer-cue-fix.js","assessment-storage-scope.js","assessment-quality-suite.js","assessment-stable-review-bridge.js","assessment-analytics-ui.js","assessment-final-hardening.js"]:
     assert f"['./{retired}','<script" not in index, f"assessment foundation direct source is still injected: {retired}"
 
@@ -102,7 +102,7 @@ for asset in [
     "mouldmaster-192.png", "mouldmaster-512.png", "version.json", "reading-patch.css",
     "src/domains/runtime-packs/learning-foundation-runtime-pack.js", "src/domains/runtime-packs/assessment-foundation-runtime-pack.js", "source-library.js", "pwa-shell.js", "learning-experience.js",
     "process-data-diagnostics.js", "curriculum-integration.js", "specialist-curriculum.js",
-    "specialist-evidence-gap-extension.js", "mould-master-workspace.js", "app-shell-finalize.js", "learning-analytics.js",
+    "specialist-evidence-gap-extension.js", "mould-master-workspace.js", "src/domains/runtime-packs/shell-finalization-runtime-pack.js", "learning-analytics.js",
     "runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js",
     "learner-ux-repair.css", "premium-ui.css", "premium-dynamic.css", "learner-ux-repair.js"
 ]:
