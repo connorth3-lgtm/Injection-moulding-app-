@@ -32,7 +32,7 @@ const CORE_NAV=[
   {id:'lesson',view:'lesson',mobile:'learn'},
   {id:'defects',view:'defects',mobile:'practice'},
   {id:'simulator',view:'simulator',mobile:'practice'},
-  {id:'materials',view:'materials',mobile:'learn'},
+  {id:'materials',view:'materials',mobile:'materials'},
   {id:'exams',view:'exams',mobile:'more'},
   {id:'certificates',view:'certificates',mobile:'more'},
   {id:'profile',view:'profile',mobile:'more'},
@@ -55,13 +55,25 @@ function syncMobileGeometry(){
   })
 }
 function canonicalMoreButton(button){const handler=button.getAttribute('data-mm-onclick')||button.getAttribute('onclick')||'';return !button.dataset.view&&(handler.includes('openMobileMenu')||/\bMore\b/i.test(button.textContent||''))}
+function ensureMaterialsMobileTab(){
+  const nav=document.querySelector('.mobile-nav');if(!nav)return;
+  let button=nav.querySelector(':scope > button[data-view="materials"]');
+  if(!button){
+    button=document.createElement('button');button.type='button';button.dataset.view='materials';
+    button.innerHTML='⬡<span>Materials</span>';button.setAttribute('aria-label','Materials');
+    button.addEventListener('click',()=>captured.switchView('materials'));
+    const practice=nav.querySelector(':scope > button[data-view="scenarios"]');
+    if(practice)practice.insertAdjacentElement('beforebegin',button);else nav.appendChild(button)
+  }
+}
 function normalizeMobilePrimaryNav(){
   const nav=document.querySelector('.mobile-nav');if(!nav||mobileNavNormalizing)return;
+  ensureMaterialsMobileTab();
   mobileNavNormalizing=true;
   try{
     [...nav.querySelectorAll(':scope > button')].forEach(button=>{
       const view=button.dataset.view||'';
-      const keep=view==='dashboard'||view==='path'||view==='scenarios'||canonicalMoreButton(button);
+      const keep=view==='dashboard'||view==='path'||view==='materials'||view==='scenarios'||canonicalMoreButton(button);
       if(!keep)button.remove()
     });
     if(!mobileNavObserver){
@@ -212,6 +224,7 @@ function syncActiveState(){
     const v=b.dataset.view;let match=false;
     if(group==='home')match=v==='dashboard';
     else if(group==='learn')match=v==='path';
+    else if(group==='materials')match=v==='materials';
     else if(group==='practice')match=v==='scenarios';
     else if(group==='more')match=canonicalMoreButton(b);
     b.classList.toggle('active',match);if(match)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')
