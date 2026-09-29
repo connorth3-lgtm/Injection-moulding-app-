@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.09.29.2",
-  "commit": "de9aaf6edeae3e570bd3125513be57e0cee1e98a",
+  "release": "2026.09.29.18",
+  "commit": "d45151a45bee15b5b86a4bdfb662fb0e0c34b0c8",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -39,5 +39,5 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "2026.09.29.2 is the locked learner UI reference after the material catalogue integration. The prior 2026.09.27.4 comparison remained pixel-identical across phone/tablet and all other desktop learner surfaces; only the release-bound desktop late-Book capture changed. Subsequent candidates remain locked to this immutable reference at maxDiffPixels 12. Physical-device, real-AT and other human/external evidence remain separate historical/freshness gates and are not relabelled by this visual lock."
+  "policy": "2026.09.29.18 is the reviewed learner UI reference for the intentional premium-product redesign: simplified hierarchy, dedicated Materials experience, denser catalogue presentation, quieter secondary utilities, floating mobile navigation and refined first-run/state treatment. The pixel tolerance remains locked at maxDiffPixels 12; this approval updates the reference bytes rather than relaxing drift tolerance. Physical-device, real-AT and other human/external evidence remain separate historical/freshness gates and are not relabelled by this visual lock."
 }
