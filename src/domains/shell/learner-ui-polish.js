@@ -170,7 +170,7 @@ function installFirstRunPolish(){
       <span class="eyebrow">Welcome to MouldMaster</span>
       <h2>Set up your learning path</h2>
       <p class="mm-onboarding-intro">Three quick choices. You can change them later in Profile.</p>
-      <label>Your name<input id="onName" value="${window.esc?.(window.user?.name==="Learner 1"?"":window.user?.name)||""}" placeholder="Your name" autocomplete="name"></label>
+      <label>Your name<input id="onName" value="" placeholder="Your name" autocomplete="name"></label>
       <fieldset class="mm-onboarding-group"><legend>Experience</legend><div class="choice-cards">
         <label class="choice-card"><input type="radio" name="onExp" value="Beginner" checked><b>New</b><small>Start with the fundamentals.</small></label>
         <label class="choice-card"><input type="radio" name="onExp" value="Intermediate"><b>Some experience</b><small>Start around process setup.</small></label>
