@@ -377,7 +377,7 @@ async function installPanel(){
 }
 function registerMaterialsNavigation(){
   const shell=window.MM_APP_SHELL;if(!shell?.navigation?.register||shell.navigation.items?.has?.('materials-page'))return;
-  shell.navigation.register({id:'materials-page',label:'Materials',icon:'⬡',description:'Open the exact-grade material library and engineering evidence.',order:12,desktop:false,mobileMore:true,mobileGroup:'learn',action:()=>openPage({replaceUrl:true})})
+  shell.navigation.register({id:'materials-page',label:'Materials',icon:'⬡',description:'Open the exact-grade material library and engineering evidence.',order:12,desktop:false,mobileMore:false,mobileGroup:'materials',action:()=>openPage({replaceUrl:true})})
 }
 function bindMaterialsLifecycle(){
   const install=()=>installPanel().then(()=>registerMaterialsNavigation()).catch(err=>console.warn('[MouldMaster materials]',err));
