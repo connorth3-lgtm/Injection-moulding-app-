@@ -142,17 +142,18 @@
         "id": "engineering-cases",
         "technology": "IndexedDB",
         "identity": "mouldmaster-engineering-v2",
-        "version": 2,
+        "version": 3,
         "stores": [
           "cases",
           "caseLinks",
+          "caseEvidence",
           "migrations"
         ],
         "source": "src/domains/engineering/engineering-store.js",
         "sourceOfTruth": true,
         "legacySource": "mm_mould_master_cases_v1::<learner-token>",
         "migration": "additive-non-destructive-idempotent",
-        "deletionBoundary": "engineering-evidence"
+        "deletionBoundary": "case-archive-retains-evidence; full erasure only through app/site-data clearing"
       },
       {
         "id": "process-data",
