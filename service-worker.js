@@ -134,6 +134,7 @@ const OPTIONAL=[
   './data/measured-learning/source-readiness-v2.json',
   './reference-data.js',
   './reference-data.html',
+  './materials.html',
   './reference-deep-dive.js',
   './reference-research-extension.js',
   './reference-20x-extension.js',
