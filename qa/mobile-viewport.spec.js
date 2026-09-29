@@ -14,7 +14,7 @@ async function openApp(page){
   await page.waitForFunction(()=>(typeof window.MM_APP_SHELL_FINALIZED==='string'&&window.MM_APP_SHELL_FINALIZED.length>0)&&window.MM_PRIMARY_HUBS);
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
   await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
-  await expect(page.locator('.mobile-nav > button')).toHaveCount(4);
+  await expect(page.locator('.mobile-nav > button')).toHaveCount(5);
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
 async function openPracticeHub(page){
@@ -61,6 +61,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await openApp(page);
       await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
       await expect(page.locator('#dashboard .mm-home-task-hub')).toBeHidden();
+      await expect(page.locator('#dashboard .mm-home-balance')).toBeVisible();
       await expect(page.locator('#continueBtn')).toBeHidden();
       await expect(page.locator('#dashboard .mm-home-core-hero')).toBeHidden();
       await expect(page.locator('#dashboard .mm-home-kpis')).toBeHidden();
@@ -177,7 +178,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
     test('Primary mobile navigation and the reduced More tools are keyboard reachable',async({page})=>{
       await openApp(page);
       const nav=page.locator('.mobile-nav > button');
-      const expected=['Home','Learn','Practice','More'];
+      const expected=['Home','Learn','Materials','Practice','More'];
       await nav.nth(0).focus();
       for(let i=0;i<expected.length;i++){
         const focused=await page.evaluate(()=>document.activeElement?.textContent||'');
@@ -186,10 +187,10 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       }
       await page.keyboard.press('Enter');
       await expect(page.locator('#modal .modal-card')).toBeVisible();
-      await expect(page.locator('[data-mm-registry-menu="mould-master"]')).toHaveCount(0);
-      await expect(page.locator('[data-mm-registry-menu="process-data"]')).toHaveCount(0);
-      await expect(page.locator('[data-mm-registry-menu="diagnostic-labs"]')).toHaveCount(0);
-      await expect(page.locator('[data-mm-registry-menu="material-labs"]')).toHaveCount(0);
+      await expect(page.locator('[data-mm-registry-menu="mould-master"]')).toHaveCount(1);
+      await expect(page.locator('[data-mm-registry-menu="process-data"]')).toHaveCount(1);
+      await expect(page.locator('[data-mm-registry-menu="diagnostic-labs"]')).toHaveCount(1);
+      await expect(page.locator('[data-mm-registry-menu="material-labs"]')).toHaveCount(1);
       await expect(page.locator('[data-mm-registry-menu="book"]')).toHaveCount(1);
       await expect(page.locator('[data-mm-registry-menu="learning-insights"]')).toHaveCount(1);
       await expect(page.locator('[data-mm-registry-menu="repair-app-files"]')).toHaveCount(1);
