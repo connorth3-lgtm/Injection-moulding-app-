@@ -200,9 +200,11 @@ def verify_runtime_contracts() -> None:
 
     for token in [
         "const DB_NAME='mouldmaster-engineering-v2'",
-        "const DB_VERSION=2",
+        "const DB_VERSION=3",
         "preservedExisting",
         "conflicts",
+        "caseEvidence",
+        "saveCaseEvidence",
         "destructive:false",
         "if(prior?.complete)return {...prior,alreadyComplete:true}",
     ]:
