@@ -15,13 +15,13 @@ The 2026-09-03 deep-dive audit converted the freeze from documentation into a mo
 Current ceilings are:
 
 - at most 15 scripts in the ordered `BODY_SCRIPTS` bootstrap list;
-- at most 5 directly injected root-level runtime scripts;
+- at most 4 directly injected root-level runtime scripts;
 - no new root runtime script outside the captured grandfathered set;
 - no new root `*-fix.js`, `*-hardening.js`, `*-finalize.js`, or `*-extension.js` compatibility layer outside the captured grandfathered set;
 - zero active `document.write` bootstrap calls;
 - no `eval()`, `new Function()`, remote runtime script tags, CSP `unsafe-eval`, or external `connect-src` endpoints in the active runtime.
 
-The budget is a ceiling, not a target. These current 15 / 5 / 0 ceilings reflect the 2026-09-18 audit-remediation tranche. Historically, on 2026-09-03 the first deterministic runtime-pack tranche retired 23 direct evidence/process-data bootstrap entries into two ordered generated packs, reducing BODY_SCRIPTS from 60 to 39 and direct root runtime scripts from 59 to 36 without changing source execution order. Removing a root layer, moving capability under `src/domains/`, removing `document.write`, or replacing `unsafe-inline` with a stricter nonce/hash design is always an improvement and remains allowed.
+The budget is a ceiling, not a target. These current 15 / 4 / 0 ceilings reflect the 2026-09-29 audit-hardening tranche. Historically, on 2026-09-03 the first deterministic runtime-pack tranche retired 23 direct evidence/process-data bootstrap entries into two ordered generated packs, reducing BODY_SCRIPTS from 60 to 39 and direct root runtime scripts from 59 to 36 without changing source execution order. Removing a root layer, moving capability under `src/domains/`, removing `document.write`, or replacing `unsafe-inline` with a stricter nonce/hash design is always an improvement and remains allowed.
 
 ## Five user-facing product areas
 
@@ -81,7 +81,7 @@ Mould Master and Process Data may retain free-text material fields for backward 
 
 ## Storage rule
 
-New engineering records use IndexedDB through the v2 engineering store. Legacy Mould Master localStorage records remain readable and can be migrated without deletion. Migration is additive and reversible until a later release explicitly retires the v1 store.
+New engineering records use `mouldmaster-engineering-v2` IndexedDB DB version 3 with `cases`, `caseLinks`, `caseEvidence` and `migrations`; structured evidence uses append-only revision/void history and governed schema-4 export/import. Legacy Mould Master localStorage records remain readable and can be migrated without deletion. Migration is additive and reversible until a later release explicitly retires the v1 store.
 
 ## Ingestion rule
 
@@ -110,7 +110,7 @@ Pilot progress as of 2026-09-03:
 - LG Chem has three validated LUPOY exact grades published in `material-catalog-v1.json`: GP1000L, GP1000ML and GP5206F.
 - Korea Polyacetal (KPAC) has four validated KEPITAL exact grades published in `material-catalog-v1.json`: F10-03H, F20-03, F30-03 and FG2025.
 - KOLON ENP has four primary-source-reviewed exact KOCETAL identities in `kolon-enp-exact-grade-pilot-v1`: K300, K700, K100HS and GF702. These remain `source-reviewed-staging`; no KOLON numeric property is validated or published until comparison-critical test context and the stronger source revision/fingerprint identity requirements are satisfied.
-- The Korean pilot remains 11 published exact grades across its three validated manufacturers. Separately, the 2026-09-29 global expansion adds 25 validated grades from SABIC, Envalior and Victrex across PP, PA6/GF, PBT/GF and PEEK, taking the runtime catalogue to 36 exact grades across six manufacturers. A second 2026-09-29 expansion adds nine validated BASF, Covestro and Arkema grades across PA66/GF, PA11, PC and PBT/GF, taking the runtime catalogue to 45 exact grades across nine manufacturers. A third 2026-09-29 expansion adds 17 validated Covestro and Envalior grades across PC/ABS, PBT and PET, taking the runtime catalogue to 62 exact grades across nine manufacturers and adding PET to validated family coverage. A fourth wave adds validated PMMA, TPU and flexible PPS grades plus a 40-grade Celanese LCP/PPS acquisition queue. A fifth wave adds 19 validated SABIC HDPE injection-moulding grades while keeping their under-conditioned MFR values context-only. A sixth wave closes ABS, ASA, SAN, GPPS and HIPS exact-grade gaps with seven validated INEOS Styrolution/Supreme Petrochem grades and 23 additional staged styrenic identities. A seventh Asia-Pacific wave adds nine validated SCGC, Kuraray, UBE and LOTTE grades, including new PA9T coverage. An eighth wave closes the LCP exact-grade gap with four conservatively validated Celanese Vectra grades whose directional shrinkage stays context-only until specimen/conditioning semantics are fully resolved. The runtime catalogue now contains 173 validated exact grades across 23 manufacturers and 28 exact-grade families/categories. Singapore is a first-class regional evidence target: 31 validated Mitsui Elastomers Singapore TAFMER A/M/DF exact grades are searchable by country/manufacturer; separate Singapore-linked ExxonMobil PP and high-heat PEI/TPI waves are retained; and Arkema Jurong Island PA11 manufacturing is attached as family-level regional provenance without assigning a specific BMNO batch or production line to Singapore.
+- The Korean pilot remains 11 published exact grades across its three validated manufacturers. Separately, the 2026-09-29 global expansion adds 25 validated grades from SABIC, Envalior and Victrex across PP, PA6/GF, PBT/GF and PEEK, taking the runtime catalogue to 36 exact grades across six manufacturers. A second 2026-09-29 expansion adds nine validated BASF, Covestro and Arkema grades across PA66/GF, PA11, PC and PBT/GF, taking the runtime catalogue to 45 exact grades across nine manufacturers. A third 2026-09-29 expansion adds 17 validated Covestro and Envalior grades across PC/ABS, PBT and PET, taking the runtime catalogue to 62 exact grades across nine manufacturers and adding PET to validated family coverage. A fourth wave adds validated PMMA, TPU and flexible PPS grades plus a 40-grade Celanese LCP/PPS acquisition queue. A fifth wave adds 19 validated SABIC HDPE injection-moulding grades while keeping their under-conditioned MFR values context-only. A sixth wave closes ABS, ASA, SAN, GPPS and HIPS exact-grade gaps with seven validated INEOS Styrolution/Supreme Petrochem grades and 23 additional staged styrenic identities. A seventh Asia-Pacific wave adds nine validated SCGC, Kuraray, UBE and LOTTE grades, including new PA9T coverage. An eighth wave closes the LCP exact-grade gap with four conservatively validated Celanese Vectra grades whose directional shrinkage stays context-only until specimen/conditioning semantics are fully resolved. The runtime catalogue now contains 260 validated exact grades across 28 manufacturers, 13 countries and 32 polymer families/categories. Singapore is a first-class regional evidence target: 31 validated Mitsui Elastomers Singapore TAFMER A/M/DF exact grades are searchable by country/manufacturer; separate Singapore-linked ExxonMobil PP and high-heat PEI/TPI waves are retained; and Arkema Jurong Island PA11 manufacturing is attached as family-level regional provenance without assigning a specific BMNO batch or production line to Singapore.
 - `korea-pilot-v1.json` is an umbrella progress manifest, not a second source of material claims; its `gradeRecords` arrays stay empty and point to separately reviewed/validated datasets.
 
 No glass-fibre percentage, lifecycle state, approval, property condition or processing value is inferred when the primary source does not establish it.
@@ -144,3 +144,8 @@ The remaining bootstrap migration is deliberately staged: retire root layers by 
 
 
 Singapore Vistamaxx extension: seven validated ExxonMobil Vistamaxx grades retain exact 230°C/2.16 kg MFR conditions and family-level Singapore primary-supply provenance. The Singapore Elastomers Plant evidence is not treated as proof that a named grade batch originated at that plant.
+
+
+### 2026-09-29 hardening update
+
+The shell finalizer now runs from `src/domains/runtime-packs/shell-finalization-runtime-pack.js`, reducing direct root runtime injection from five to four without changing execution order. The reviewed `app-shell-finalize.js` source remains the deterministic pack input and compatibility source for non-web distribution lanes.
