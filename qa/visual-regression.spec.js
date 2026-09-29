@@ -91,6 +91,9 @@ async function prepareSurface(page,surface){
   }else if(surface==='learn'){
     await page.evaluate(()=>switchView('path'));
     await expect(page.locator('#path .mm-learn-hub')).toBeVisible();
+  }else if(surface==='materials'){
+    await page.evaluate(()=>switchView('materials'));
+    await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
   }else if(surface==='practice'){
     await page.evaluate(()=>switchView('scenarios'));
     await expect(page.locator('#scenarios .mm-practice-hub')).toBeVisible();
