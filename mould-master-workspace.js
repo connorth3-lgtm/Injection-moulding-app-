@@ -210,7 +210,7 @@ function renderCase(c){activeId=c.id;const host=section();c.status=status(c);con
     ${area('After-change / recovery evidence','afterChange',c,'Compare the same signals and part response used in the baseline. Recovery toward baseline strengthens causal confidence.')}
     ${area('Verification & repeatability','verification',c,'Record repeat cycles, independent quality checks, measurement confidence and any maintenance/tooling confirmation.')}
     ${area('Conclusion / standardisation','conclusion',c,'State what was proven, what remains uncertain, and what approved standard/work instruction/change-control action follows.',true)}
-  </div><div class="mw-actions"><button class="primary" type="button" data-mw-save>Save case</button><button class="danger mw-danger" type="button" data-mw-delete>Delete case</button></div></div>
+  </div><div class="mw-actions"><button class="primary" type="button" data-mw-save>Save case</button><button class="danger mw-danger" type="button" data-mw-delete>Archive case</button></div></div>
   <aside class="mw-summary">
     <div class="mw-panel card" data-mw-engineering-context><h3>Engineering context</h3><div class="mw-empty">Loading linked material, machine, mould and product/part context…</div></div>
     <div class="mw-panel card" data-mw-case-evidence><h3>Closed-loop evidence</h3><div class="mw-empty">Loading trial, quality, maintenance, lot and acceptance evidence…</div></div>
@@ -226,7 +226,7 @@ function wire(host,c){
   host.querySelector('[data-mw-save]')?.addEventListener('click',async()=>{try{const saved=await saveCase(collect(c));renderCase(saved);window.toast?.('Mould Master case saved')}catch(err){persistenceError(err)}});
   host.querySelector('[data-mw-new]')?.addEventListener('click',async()=>{try{const n=await saveCase(blank());renderCase(n)}catch(err){persistenceError(err)}});
   host.querySelector('[data-mw-list]')?.addEventListener('click',()=>renderList());
-  host.querySelector('[data-mw-delete]')?.addEventListener('click',async()=>{if(!confirm('Delete this local troubleshooting case?'))return;try{await deleteCase(c.id);renderList()}catch(err){persistenceError(err)}});
+  host.querySelector('[data-mw-delete]')?.addEventListener('click',async()=>{if(!confirm('Archive this local troubleshooting case? Its evidence and audit history will be retained locally and hidden from the normal case list.'))return;try{await deleteCase(c.id);renderList()}catch(err){persistenceError(err)}});
   host.querySelector('[data-mw-export]')?.addEventListener('click',async()=>{try{await exportCase(collect(c))}catch(err){persistenceError(err)}});
   host.querySelectorAll('[data-mw-lesson]').forEach(b=>b.addEventListener('click',()=>{try{user.currentLesson=Number(b.dataset.mwLesson);persist();switchView('lesson')}catch(_){}}));
   host.querySelector('[data-mw-defects]')?.addEventListener('click',()=>switchView('defects'));
