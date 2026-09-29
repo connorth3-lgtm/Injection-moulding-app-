@@ -135,7 +135,7 @@ for marker in ['assessment analytics','scoped to the active learner profile','fi
 need('cleanup cannot be verified' in privacy,'privacy notice must disclose fail-closed reset/import cleanup behavior')
 
 sw=text('service-worker.js')
-for marker in ["'./privacy.html'","'./support.html'","'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'","'./assessment-evidence-sources.js'","'./assessment-evidence-approval.js'","'./curriculum-integration.js'","'./specialist-curriculum.js'","'./specialist-evidence-gap-extension.js'","'./app-shell-registry.js'","'./mould-master-workspace.js'","'./app-shell-finalize.js'"]:
+for marker in ["'./privacy.html'","'./support.html'","'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'","'./assessment-evidence-sources.js'","'./assessment-evidence-approval.js'","'./curriculum-integration.js'","'./specialist-curriculum.js'","'./specialist-evidence-gap-extension.js'","'./app-shell-registry.js'","'./mould-master-workspace.js'","'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'"]:
     need(marker in sw,f'offline compliance/runtime asset missing: {marker}')
 
 for name in ['README.md','ANDROID_INSTALL_README.txt','support.html','UPLOAD_README.txt']:
