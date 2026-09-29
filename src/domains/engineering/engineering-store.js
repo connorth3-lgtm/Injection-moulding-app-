@@ -246,7 +246,7 @@ async function saveCaseEvidence(caseId,input={},token=learnerToken(),{allowLegac
 }
 async function evidenceRows(caseId,owner){return (await getAllByIndex('caseEvidence','caseId',String(caseId))).filter(x=>String(x.learnerToken)===owner)}
 async function listCaseEvidence(caseId,token=learnerToken(),{includeVoided=true}={}){
-  const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)return[];
+  const owner=tokenValue(token),c=await getCase(caseId,owner,{includeArchived:true});if(!c)return[];
   const rows=await evidenceRows(caseId,owner),audits=rows.filter(x=>x.recordType==='audit'),voided=new Map();
   for(const action of audits)if(action.action==='void'&&action.targetEvidenceId)voided.set(String(action.targetEvidenceId),action);
   return rows.filter(x=>x.recordType!=='audit').map(x=>{
