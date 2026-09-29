@@ -164,6 +164,28 @@ function syncDesktopNavigation(){
   }
   if(more)more.hidden=!isDesktop;
 }
+function visibleViewId(){
+  for(const id of ['dashboard','path','materials','lesson','scenarios','simulator','defects','coach','exams','certificates','glossary','profile','standards','visuals','instructor']){
+    const el=document.getElementById(id);if(el&&!el.classList.contains('hidden'))return id
+  }
+  return document.body?.dataset?.mmView||''
+}
+function syncTopbarContext(){
+  const view=visibleViewId(),title=document.getElementById('pageTitle'),subtitle=document.getElementById('pageSubtitle');
+  const search=document.getElementById('searchBtn'),continueBtn=document.getElementById('continueBtn');
+  const primary={
+    dashboard:['Home','Continue learning or jump straight into the moulding task you need.'],
+    path:['Learn','Your current lesson first, with the full pathway and resources behind it.'],
+    materials:['Materials','Exact-grade catalogue, source evidence, comparisons and material learning.'],
+    scenarios:['Practice','Recommended practice first; specialist tools stay one level deeper.']
+  };
+  if(primary[view]){
+    if(title)title.textContent=primary[view][0];
+    if(subtitle)subtitle.textContent=primary[view][1];
+  }
+  if(search)search.hidden=!['dashboard','path'].includes(view);
+  if(continueBtn)continueBtn.hidden=!['dashboard','path'].includes(view);
+}
 function syncFirstRunModal(){
   const root=document.querySelector('.onboarding');
   if(!root||root.dataset.mmProductPolished==='1')return;
@@ -188,6 +210,7 @@ function run(){
   syncHomeBalance();
   syncBookDisclosure();
   syncDesktopNavigation();
+  syncTopbarContext();
   syncReadAloudLabel();
   syncProductStates();
 }
