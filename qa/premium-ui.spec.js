@@ -174,3 +174,45 @@ test('mobile shell uses floating thumb-friendly navigation without overflow',asy
   expect(box?.x||0).toBeGreaterThan(0);
   await assertNoHorizontalOverflow(page,'floating-mobile-nav');
 });
+
+
+test('first-run setup is concise, keyboard reachable and touch sized',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.addInitScript(()=>{
+    const user={id:'first-run-premium',name:'Learner 1',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:false,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
+    localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:user.id,users:{[user.id]:user}}));
+  });
+  await page.goto('/index.html',{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED)&&window.MM_LEARNER_UI_POLISH);
+  await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
+  const modal=page.locator('.mm-onboarding-product');
+  await expect(modal).toBeVisible();
+  await expect(modal).toContainText('Three quick choices');
+  await expect(modal.getByText('Experience',{exact:true})).toBeVisible();
+  await expect(modal.getByText('Typical session',{exact:true})).toBeVisible();
+  const controls=modal.locator('input,select,button');
+  for(let i=0;i<await controls.count();i++){
+    const box=await controls.nth(i).boundingBox();
+    expect(box?.height||0).toBeGreaterThanOrEqual(44);
+  }
+  await modal.locator('#onName').focus();
+  await expect(modal.locator('#onName')).toBeFocused();
+});
+
+test('Materials comparison guides valid choices before running evidence work',async({page})=>{
+  await page.setViewportSize({width:1024,height:900});
+  await openApp(page);
+  await page.evaluate(()=>window.MM_MATERIAL_REGISTRY.openPage({replaceUrl:false}));
+  const a=page.locator('[data-mm-compare-a]'),b=page.locator('[data-mm-compare-b]');
+  const run=page.locator('[data-mm-run-material-compare]');
+  await expect(run).toBeDisabled();
+  const options=await a.locator('option').evaluateAll(nodes=>nodes.map(x=>x.value).filter(Boolean));
+  expect(options.length).toBeGreaterThanOrEqual(2);
+  await a.selectOption(options[0]);
+  await expect(run).toBeDisabled();
+  await b.selectOption(options[1]);
+  await expect(run).toBeEnabled();
+  await run.click();
+  await expect(page.locator('[data-mm-material-compare-result]')).toHaveAttribute('aria-busy','false');
+  await expect(page.locator('[data-mm-material-compare-result] .mm-material-compare-card')).toHaveCount(2);
+});
