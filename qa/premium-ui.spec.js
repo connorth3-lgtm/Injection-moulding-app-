@@ -203,6 +203,7 @@ test('first-run setup is concise, keyboard reachable and touch sized',async({pag
 test('Materials comparison guides valid choices before running evidence work',async({page})=>{
   await page.setViewportSize({width:1024,height:900});
   await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_MATERIAL_REGISTRY?.openPage));
   await page.evaluate(()=>window.MM_MATERIAL_REGISTRY.openPage({replaceUrl:false}));
   const a=page.locator('[data-mm-compare-a]'),b=page.locator('[data-mm-compare-b]');
   const run=page.locator('[data-mm-run-material-compare]');
