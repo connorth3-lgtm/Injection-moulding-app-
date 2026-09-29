@@ -11,7 +11,7 @@ import urllib.parse
 import urllib.request
 
 REPO = os.environ.get("GITHUB_REPOSITORY", "connorth3-lgtm/Injection-moulding-app-")
-SHA = os.environ.get("GITHUB_SHA", "")
+SHA = os.environ.get("CI_RISK_HEAD_SHA", "").strip() or os.environ.get("GITHUB_SHA", "")
 TOKEN = os.environ.get("GITHUB_TOKEN", "")
 BASE_REF = os.environ.get("GITHUB_BASE_REF", "main")
 EVENT = os.environ.get("GITHUB_EVENT_NAME", "")
@@ -91,7 +91,7 @@ def main() -> None:
         print("CI risk-coverage runtime meta-gate: non-PR event; exact-head workflow enforcement skipped.")
         return
     if not SHA or not TOKEN:
-        raise SystemExit("GITHUB_SHA/GITHUB_TOKEN required for CI risk-coverage verification")
+        raise SystemExit("Exact PR head SHA/GITHUB_TOKEN required for CI risk-coverage verification")
     paths = changed_paths()
     expected, classes = expected_for(paths)
     print("Changed paths:", json.dumps(paths))
