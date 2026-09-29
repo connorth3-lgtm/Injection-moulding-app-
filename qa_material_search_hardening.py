@@ -11,7 +11,7 @@ registry='src/domains/materials/material-registry.js'
 module='src/domains/materials/material-search-pagination.js'
 spec='qa/material-search-scale.spec.js'
 unified_spec='qa/material-unified-search.spec.js'
-for p in [registry,module,spec,unified_spec,'src/domains/materials/material-search-index.js','runtime-domain-manifest.json','service-worker.js','playwright.config.cjs','playwright.webkit-full.config.cjs']:
+for p in [registry,module,spec,unified_spec,'materials.html','src/domains/materials/material-search-index.js','runtime-domain-manifest.json','service-worker.js','playwright.config.cjs','playwright.webkit-full.config.cjs']:
     need((ROOT/p).exists(),f'material search hardening asset missing: {p}')
 for p in [registry,module,spec,unified_spec,'src/domains/materials/material-search-index.js']:
     r=subprocess.run(['node','--check',str(ROOT/p)],capture_output=True,text=True)
@@ -21,6 +21,11 @@ for marker in ['MM_MATERIAL_SEARCH_PAGINATION','index.searchPage','index.searchA
     need(marker in code,f'indexed material pagination marker missing: {marker}')
 need('style=' not in code,'material pagination must not emit inline style attributes')
 registry_code=text(registry)
+for marker in ['mmMaterialsPageIntro','Material library & engineering evidence','mmMaterialCompare','mmMaterialChange','mmMaterialLearningAnchor','openPage','view=materials','materials-page']:
+    need(marker in registry_code,f'dedicated Materials page marker missing: {marker}')
+materials_page=text('materials.html')
+need('index.html?view=materials' in materials_page,'dedicated materials entry must resolve to canonical app Materials route')
+need("'./materials.html'" in text('service-worker.js'),'dedicated materials entry must be available offline')
 need(registry_code.count("host=document.getElementById('materials')")>=2,'material registry must re-resolve the live materials host after async catalog load')
 need("style();const c=await load();\n  host=document.getElementById('materials');if(!host||host.querySelector('#mmExactMaterialCatalog'))return false;" in registry_code,'material registry must re-check catalog ownership after async load')
 manifest=json.loads(text('runtime-domain-manifest.json'))['assets']
