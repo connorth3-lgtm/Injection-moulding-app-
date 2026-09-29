@@ -680,7 +680,7 @@ async function saveCase(c){
 async function deleteCase(id){
   await hydrate();const store=await resolveStore();if(!store)throw new Error(storageFailure||'Engineering case store unavailable');
   let owner=store.learnerToken();if(hydratedLearnerToken!==owner){await hydrate({force:true});owner=store.learnerToken()}
-  const removed=await store.deleteCase(id,owner);if(removed)caseCache=all().filter(x=>x.id!==id);if(activeId===id)activeId='';return removed
+  const removed=await store.archiveCase(id,'Archived from Mould Master workspace',owner);if(removed)caseCache=all().filter(x=>x.id!==id);if(activeId===id)activeId='';return removed
 }
 function persistenceError(err){storageFailure=String(err?.message||err);console.warn('[MouldMaster workspace] case persistence failed',err);window.toast?.('Case could not be saved locally')}
 
