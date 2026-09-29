@@ -36,17 +36,19 @@ function runQuickAction(action){
     }
   }
 }
+function homeEscape(value){return String(value??'').replace(/[&<>\"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[ch]))}
 function homeActivity(){
-  const completed=Array.isArray(window.user?.completed)?window.user.completed.length:0;
-  const total=Array.isArray(window.D?.lessons)?window.D.lessons.length:120;
-  const saved=Array.isArray(window.user?.bookmarks)?window.user.bookmarks.length:0;
+  const active=typeof user==='object'&&user?user:null,data=typeof D==='object'&&D?D:null;
+  const completed=Array.isArray(active?.completed)?active.completed.length:0;
+  const total=Array.isArray(data?.lessons)?data.lessons.length:120;
+  const saved=Array.isArray(active?.bookmarks)?active.bookmarks.length:0;
   const cases=window.MM_MOULD_MASTER_WORKSPACE?.cases?.()||[];
   const recent=cases[0]||null;
   return {completed,total,saved,cases:cases.length,recent}
 }
 function homeBalanceMarkup(){
   const a=homeActivity();
-  const recent=a.recent?`<button type="button" class="mm-home-recent" data-mm-home-action="recent-case"><span><span class="eyebrow">Recent case</span><b>${String(a.recent.title||'Untitled troubleshooting case')}</b><small>${String(a.recent.status||'Investigating')} · continue where you left off</small></span><span aria-hidden="true">→</span></button>`:'';
+  const recent=a.recent?`<button type="button" class="mm-home-recent" data-mm-home-action="recent-case"><span><span class="eyebrow">Recent case</span><b>${homeEscape(a.recent.title||'Untitled troubleshooting case')}</b><small>${homeEscape(a.recent.status||'Investigating')} · continue where you left off</small></span><span aria-hidden="true">→</span></button>`:'';
   return `<div class="mm-home-balance-copy"><div><span class="eyebrow">Workbench</span><h2>What do you need to do?</h2><p>Continue learning, investigate a problem, check a material or work with process evidence.</p></div><div class="mm-home-snapshot" aria-label="Your local activity"><span><b>${a.completed}/${a.total}</b><small>lessons</small></span><span><b>${a.cases}</b><small>cases</small></span><span><b>${a.saved}</b><small>saved</small></span></div></div><div class="mm-home-balance-grid"><button type="button" data-mm-home-action="mould-master"><span class="mm-home-balance-icon" aria-hidden="true">◆</span><span><b>Troubleshoot</b><small>Open Mould Master and build an evidence-led case.</small></span></button><button type="button" data-mm-home-action="materials"><span class="mm-home-balance-icon" aria-hidden="true">⬡</span><span><b>Materials</b><small>Search exact grades, evidence and comparisons.</small></span></button><button type="button" data-mm-home-action="process-data"><span class="mm-home-balance-icon" aria-hidden="true">⌁</span><span><b>Analyse data</b><small>Read measured process trends and recovery evidence.</small></span></button><button type="button" data-mm-home-action="practice"><span class="mm-home-balance-icon" aria-hidden="true">◎</span><span><b>Practice</b><small>Work one evidence-first shop-floor decision.</small></span></button></div>${recent}<div class="mm-home-link-row"><button type="button" class="ghost" data-mm-home-action="learn">Browse learning</button><button type="button" class="ghost" data-mm-home-action="book">Open reference book</button></div>`;
 }
 function syncHomeBalance(){
