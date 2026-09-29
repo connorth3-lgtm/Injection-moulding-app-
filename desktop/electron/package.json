@@ -335,6 +335,10 @@
         "to": "mouldmaster/reference-data.html"
       },
       {
+        "from": "../../materials.html",
+        "to": "mouldmaster/materials.html"
+      },
+      {
         "from": "../../reference-deep-dive.js",
         "to": "mouldmaster/reference-deep-dive.js"
       },
