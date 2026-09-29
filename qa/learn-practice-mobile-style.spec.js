@@ -119,7 +119,7 @@ async function expectFullWidthPrimaryAction(page,rootSelector){
 
 async function openMaterials(page){
   await openHub(page,'Learn','#path .mm-learn-hub');
-  await page.locator('#path .mm-hub-tile').filter({hasText:'Material science'}).click();
+  await page.locator('#path .mm-hub-tile').filter({hasText:'Materials'}).click();
   await expect(page.locator('#materials')).toBeVisible();
   await expect(page.locator('#materials .mat-chapter').first()).toBeVisible();
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
