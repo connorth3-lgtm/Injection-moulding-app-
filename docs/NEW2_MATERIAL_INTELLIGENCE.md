@@ -108,3 +108,7 @@ New2 is merge-ready when:
 - existing safety/evidence boundaries remain present;
 - required protected-branch checks are green;
 - no manual/external validation item is falsely marked complete by automated evidence.
+## Protected-check refresh
+
+Final candidate synchronization for the 2026.09.29.4 New2 release; no runtime behavior is changed by this documentation-only commit.
+
