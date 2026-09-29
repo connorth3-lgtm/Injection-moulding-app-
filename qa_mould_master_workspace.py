@@ -42,7 +42,7 @@ for marker in [
     'hydratedLearnerToken',
     'store.learnerToken()',
     'await store.saveCase(c,{token:owner})',
-    'await store.deleteCase(id,owner)',
+    "await store.archiveCase(id,'Archived from Mould Master workspace',owner)",
     'Archive case',
     'evidence and audit history will be retained locally',
     'legacy localStorage is migration input only',
