@@ -19,20 +19,21 @@ async function openApp(page){
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
 
-test('tablet and desktop Home use the available canvas without bloating phone Home',async({page})=>{
+test('Home is a useful workbench across desktop and phone',async({page})=>{
   await page.setViewportSize({width:810,height:1080});
   await openApp(page);
   const balance=page.locator('#dashboard .mm-home-balance');
   await expect(balance).toBeVisible();
-  await expect(balance.locator('[data-mm-home-action]')).toHaveCount(4);
-  await expect(balance.getByRole('button',{name:/Practice/i})).toBeVisible();
-  await expect(balance.getByRole('button',{name:/Book/i})).toBeVisible();
+  await expect(balance.locator('[data-mm-home-action]')).toHaveCount(6);
+  await expect(balance.getByRole('button',{name:/Troubleshoot/i})).toBeVisible();
   await expect(balance.getByRole('button',{name:/Materials/i})).toBeVisible();
-  await expect(balance.getByRole('button',{name:/Mould Master/i})).toBeVisible();
+  await expect(balance.getByRole('button',{name:/Analyse data/i})).toBeVisible();
+  await expect(balance.getByRole('button',{name:/Practice/i})).toBeVisible();
+  await expect(balance.locator('.mm-home-snapshot')).toContainText('3/120');
 
   await page.setViewportSize({width:412,height:915});
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
-  await expect(page.locator('#dashboard .mm-home-balance')).toHaveCount(0);
+  await expect(page.locator('#dashboard .mm-home-balance')).toBeVisible();
   await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
 });
 
@@ -72,21 +73,23 @@ test('desktop navigation stays focused while specialist capabilities remain reac
   await openApp(page);
 
   const nav=page.locator('#nav');
-  await expect(nav.getByRole('button',{name:/Home/i})).toBeVisible();
-  await expect(nav.getByRole('button',{name:/Learn/i})).toBeVisible();
-  await expect(nav.getByRole('button',{name:/Practice/i})).toBeVisible();
-  await expect(nav.getByRole('button',{name:/Book/i})).toBeVisible();
-  await expect(nav.getByRole('button',{name:/More tools/i})).toBeVisible();
+  await expect(nav.getByRole('button',{name:'Home'})).toBeVisible();
+  await expect(nav.getByRole('button',{name:'Learn'})).toBeVisible();
+  await expect(nav.getByRole('button',{name:'Materials'})).toBeVisible();
+  await expect(nav.getByRole('button',{name:'Practice'})).toBeVisible();
+  await expect(nav.getByRole('button',{name:'More'})).toBeVisible();
+  await expect(nav.getByRole('button',{name:/Book/i})).toBeHidden();
   await expect(nav.getByRole('button',{name:/Data diagnosis/i})).toBeHidden();
-  await expect(nav.getByRole('button',{name:/Diagnostic labs/i})).toBeHidden();
-  await expect(nav.getByRole('button',{name:/Material labs/i})).toBeHidden();
+  await expect(nav.getByRole('button',{name:/Mould Master/i})).toBeHidden();
 
   await page.evaluate(()=>switchView('scenarios'));
   await expect(page.locator('#scenarios [data-mm-hub-action="process-data"]')).toBeVisible();
   await expect(page.locator('#scenarios [data-mm-hub-action="troubleshooting"]')).toBeVisible();
 
-  await nav.getByRole('button',{name:/More tools/i}).click();
+  await nav.getByRole('button',{name:'More'}).click();
   await expect(page.locator('#modal .modal-card')).toBeVisible();
+  await expect(page.locator('#modal').getByRole('button',{name:/Mould Master/i})).toBeVisible();
+  await expect(page.locator('#modal').getByRole('button',{name:/Data diagnosis/i})).toBeVisible();
 });
 
 
@@ -107,7 +110,7 @@ test('canonical shell stays stable through intermediate responsive widths',async
     expect(state.view).toBe('dashboard');
     expect(state.navGroup).toBe('home');
     if(width<=700){
-      expect(state.mobileButtons).toHaveLength(4);
+      expect(state.mobileButtons).toHaveLength(5);
       expect(state.current).toBe(1);
     }
   }
@@ -119,7 +122,7 @@ test('canonical navigation registry owns generated control semantics',async({pag
   const generated=page.locator('#nav [data-mm-registry-nav]');
   const count=await generated.count();
   for(let i=0;i<count;i++)expect((await generated.nth(i).getAttribute('aria-label'))||'').not.toBe('');
-  await page.locator('#nav').getByRole('button',{name:/More tools/i}).click();
+  await page.locator('#nav').getByRole('button',{name:'More'}).click();
   const menu=page.locator('#modal [data-mm-registry-menu]');
   const menuCount=await menu.count();
   for(let i=0;i<menuCount;i++){
