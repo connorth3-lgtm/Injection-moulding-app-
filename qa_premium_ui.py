@@ -15,6 +15,7 @@ release=str(version.get('web_release') or '')
 need(re.fullmatch(r'\d{4}\.\d{2}\.\d{2}\.\d+',release) is not None,'premium UI requires a governed web release identity')
 css=text('premium-ui.css')
 dynamic=text('premium-dynamic.css')
+shell=text('ui-shell.css')
 for marker in [
     '--mm-surface-0','--mm-accent','--mm-radius-xl','--mm-shadow-lg',
     '.sidebar{','.hero-main{','.mm-primary-hub','.lesson-body{','.exam-card{',
@@ -23,6 +24,8 @@ for marker in [
     need(marker in css,f'premium UI stylesheet missing governed marker: {marker}')
 need('http://' not in css and 'https://' not in css,'premium UI must remain fully local/offline')
 need('@import' not in css.lower(),'premium UI must not import remote or implicit stylesheets')
+for marker in ['Product design hierarchy cleanup','--mm-product-radius','#dashboard .mm-home-balance{','#materials .mm-exact-results{','.mobile-nav{']:
+    need(marker in shell,f'canonical product-design hierarchy marker missing: {marker}')
 need('http://' not in dynamic and 'https://' not in dynamic,'premium dynamic UI must remain fully local/offline')
 need('@import' not in dynamic.lower(),'premium dynamic UI must not import remote or implicit stylesheets')
 for marker in ['.mm-today-focus','.mm-learning-progress','.mm-next-card','prefers-reduced-motion','forced-colors:active']:
