@@ -1,4 +1,4 @@
-/* MouldMaster premium industrial UI — 2026.09.16.2
+/* MouldMaster premium industrial UI — 2026.09.29.13
    Presentation-only layer. It must not change assessment, safety, evidence or machine-authority semantics. */
 
 :root{
@@ -341,3 +341,167 @@ details>summary{border-radius:10px}
 /* 2026.09.16.2 refinement: consistent local Book/navigation iconography. */
 .mm-book-nav-icon{width:17px;height:14px;display:inline-block;border:1.8px solid currentColor;border-radius:3px;position:relative;box-sizing:border-box}.mm-book-nav-icon::after{content:"";position:absolute;top:1px;bottom:1px;left:50%;border-left:1.5px solid currentColor}.mm-book-hero-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 body.mm-home-visible #continueBtn,body[data-mm-view="path"] #continueBtn{display:none!important}
+
+/* Premium product refinement — 2026.09.29.13 */
+:root{
+  --mm-glass:rgba(10,24,38,.78);
+  --mm-glass-strong:rgba(12,28,44,.92);
+  --mm-highlight:rgba(255,255,255,.045);
+  --mm-divider:rgba(137,180,216,.11);
+  --mm-content-max:1180px;
+}
+body{min-height:100vh}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background:
+    radial-gradient(720px 420px at 82% 4%,rgba(122,181,255,.055),transparent 72%),
+    radial-gradient(620px 380px at 18% 18%,rgba(95,224,198,.04),transparent 75%);
+}
+*{scrollbar-color:#2a435a transparent;scrollbar-width:thin}
+*::-webkit-scrollbar{width:10px;height:10px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{background:#294158;border:2px solid transparent;background-clip:padding-box;border-radius:999px}
+*::-webkit-scrollbar-thumb:hover{background:#38556e;border:2px solid transparent;background-clip:padding-box}
+
+.nav-group-label{
+  margin:18px 10px 7px!important;
+  color:#70869a!important;
+  font-size:9px!important;
+  font-weight:800!important;
+  letter-spacing:.17em!important;
+  text-transform:uppercase!important;
+}
+.sidebar .more-nav{
+  margin-top:8px!important;border-top:1px solid var(--mm-divider)!important;padding-top:8px!important
+}
+.sidebar .more-nav>summary{
+  min-height:42px!important;padding:10px 12px!important;border-radius:11px!important;color:#9fb2c5!important;
+  transition:background .16s var(--mm-ease),color .16s var(--mm-ease)!important
+}
+.sidebar .more-nav>summary:hover{background:rgba(25,46,69,.52)!important;color:#edf7ff!important}
+
+.topbar{
+  position:relative;
+  padding-bottom:15px!important;
+  border-bottom:1px solid var(--mm-divider)!important;
+}
+.topbar::after{
+  content:"";position:absolute;left:0;bottom:-1px;width:78px;height:1px;
+  background:linear-gradient(90deg,var(--mm-accent),transparent)
+}
+.top-actions button{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.main>section:not(.hidden),.main>div:not(.hidden){animation:mmPremiumEnter .24s var(--mm-ease) both}
+@keyframes mmPremiumEnter{from{opacity:.86;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+.card,.lesson-body,.lesson-side,.form-card,.output-panel,.exam-card,.scenario,.chat,.cert,.visual-wrap,.modal-card{
+  position:relative;
+}
+.card::before,.lesson-body::before,.lesson-side::before,.form-card::before,.output-panel::before,.exam-card::before,.scenario::before,.chat::before,.cert::before,.visual-wrap::before{
+  content:"";position:absolute;inset:0 0 auto 0;height:1px;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.055) 30%,rgba(255,255,255,.025) 72%,transparent 100%);
+}
+.card:hover{border-color:rgba(138,184,222,.28)!important}
+
+.mm-dashboard-registry{gap:16px!important}
+.mm-dashboard-slot{min-width:0}
+.mm-today-focus,.mm-home-task-hub,.mm-curriculum-focus,.mm-specialist-strip,.mm-home-utility{
+  border-radius:18px!important;border:1px solid var(--mm-border)!important;
+  background:linear-gradient(180deg,rgba(16,34,53,.94),rgba(10,24,39,.97))!important;
+  box-shadow:var(--mm-shadow-sm),inset 0 1px 0 var(--mm-highlight)!important;
+}
+.mm-home-balance-grid{gap:11px!important}
+.mm-home-balance-grid button,.quick-action{
+  border:1px solid rgba(132,177,214,.18)!important;
+  background:linear-gradient(180deg,rgba(17,37,57,.96),rgba(11,26,42,.98))!important;
+  border-radius:15px!important;
+  box-shadow:0 7px 20px rgba(0,0,0,.12),inset 0 1px 0 var(--mm-highlight)!important;
+  transition:transform .17s var(--mm-ease),border-color .17s var(--mm-ease),background .17s var(--mm-ease),box-shadow .17s var(--mm-ease)!important;
+}
+.mm-home-balance-grid button:hover,.quick-action:hover{
+  transform:translateY(-2px)!important;border-color:rgba(95,224,198,.34)!important;
+  background:linear-gradient(180deg,#17334b,#10283e)!important;
+  box-shadow:0 15px 34px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.05)!important;
+}
+.quick-action .icon,.mm-home-balance-icon{
+  background:linear-gradient(145deg,rgba(95,224,198,.14),rgba(122,181,255,.12))!important;
+  border:1px solid rgba(113,190,194,.18)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04)!important;
+}
+
+.mm-material-page-hero{
+  border-color:rgba(95,224,198,.22)!important;
+  box-shadow:var(--mm-shadow-md),inset 0 1px 0 rgba(255,255,255,.04)!important;
+}
+.mm-material-page-stat{
+  background:linear-gradient(180deg,rgba(13,31,49,.96),rgba(9,22,36,.98))!important;
+  border-color:rgba(126,172,210,.18)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;
+}
+.mm-material-page-stat b{letter-spacing:-.045em!important}
+.mm-exact-materials,.mm-material-all-index,.mm-material-decision,.mm-material-change-assistant{
+  scroll-margin-top:24px;
+}
+.mm-exact-grade,.mm-material-index-card,.mm-material-compare-card,.mm-material-change-report section{
+  box-shadow:0 8px 22px rgba(0,0,0,.12),inset 0 1px 0 rgba(255,255,255,.022)!important;
+  transition:border-color .17s var(--mm-ease),transform .17s var(--mm-ease),box-shadow .17s var(--mm-ease)!important;
+}
+.mm-exact-grade:hover,.mm-material-index-card:hover,.mm-material-compare-card:hover{
+  border-color:rgba(122,181,255,.34)!important;
+  transform:translateY(-1px);
+  box-shadow:0 13px 30px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.03)!important;
+}
+
+.mm-exact-empty,.empty,.empty-state,[data-empty-state]{
+  border:1px dashed rgba(129,171,207,.3)!important;
+  background:linear-gradient(180deg,rgba(12,28,44,.72),rgba(9,21,34,.72))!important;
+  border-radius:14px!important;
+}
+.callout,.legal-note,.mm-exact-caution,.mm-material-no-match{
+  border-radius:12px!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.02)!important;
+}
+
+input,select,textarea{min-height:42px}
+textarea{line-height:1.55!important}
+input::placeholder,textarea::placeholder{color:#6f8498!important;opacity:1}
+select{background-image:none!important}
+label>input,label>select,label>textarea{margin-top:6px!important}
+
+.table-wrap{box-shadow:0 10px 28px rgba(0,0,0,.12),inset 0 1px 0 rgba(255,255,255,.018)!important}
+.table thead th{position:sticky;top:0;z-index:1;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.table tbody tr:nth-child(even){background:rgba(18,39,59,.12)}
+.table tbody tr:hover{background:rgba(45,82,111,.2)!important}
+
+.modal{
+  background:rgba(2,8,14,.82)!important;
+  backdrop-filter:blur(18px) saturate(1.05)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(1.05)!important;
+}
+.modal-card{animation:mmPremiumModal .2s var(--mm-ease) both}
+@keyframes mmPremiumModal{from{opacity:0;transform:translateY(8px) scale(.992)}to{opacity:1;transform:none}}
+.toast{animation:mmPremiumToast .22s var(--mm-ease) both}
+@keyframes mmPremiumToast{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.mobile-nav{
+  border-top:1px solid rgba(143,187,224,.16)!important;
+}
+.mobile-nav button{
+  min-height:48px!important;
+  transition:background .15s var(--mm-ease),color .15s var(--mm-ease),transform .15s var(--mm-ease)!important;
+}
+.mobile-nav button:active{transform:scale(.98)!important}
+
+@media(max-width:700px){
+  .main>section:not(.hidden),.main>div:not(.hidden){animation-duration:.18s}
+  .topbar{padding-bottom:10px!important}
+  .section-head{margin-top:22px!important}
+  .card,.lesson-body,.lesson-side,.form-card,.output-panel,.exam-card,.scenario,.chat,.cert,.visual-wrap{border-radius:16px!important}
+  .mm-home-balance-grid button,.quick-action{border-radius:14px!important}
+  .mm-material-page-stat b{font-size:18px!important}
+  .modal-card{border-radius:18px!important;padding:18px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .main>section:not(.hidden),.main>div:not(.hidden),.modal-card,.toast{animation:none!important}
+  .card,.course-card,.mm-hub-tile,.mm-home-balance-grid button,.quick-action,.mm-exact-grade,.mm-material-index-card,.mm-material-compare-card{transition:none!important}
+}
+
