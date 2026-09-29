@@ -3,9 +3,9 @@
 'use strict';
 if(window.MM_ENGINEERING_STORE)return;
 
-const VERSION='2026.09.04.1';
+const VERSION='2026.09.29.5';
 const DB_NAME='mouldmaster-engineering-v2';
-const DB_VERSION=2;
+const DB_VERSION=3;
 const LEGACY_CASE_BASE='mm_mould_master_cases_v1::';
 const learnerScope=window.MM_LEARNER_SCOPE;
 if(!learnerScope)throw new Error('MM_LEARNER_SCOPE must load before the engineering store');
@@ -39,6 +39,13 @@ function openDb(){
       }else if(tx){
         const s=tx.objectStore('caseLinks');
         if(!s.indexNames.contains('learnerToken'))s.createIndex('learnerToken','learnerToken',{unique:false});
+      }
+      if(!db.objectStoreNames.contains('caseEvidence')){
+        const s=db.createObjectStore('caseEvidence',{keyPath:'id'});
+        s.createIndex('caseId','caseId',{unique:false});
+        s.createIndex('learnerToken','learnerToken',{unique:false});
+        s.createIndex('kind','kind',{unique:false});
+        s.createIndex('occurredAt','occurredAt',{unique:false});
       }
       if(!db.objectStoreNames.contains('migrations'))db.createObjectStore('migrations',{keyPath:'id'});
     };
@@ -101,6 +108,8 @@ async function deleteCase(id,token=learnerToken()){
   const owner=tokenValue(token),record=await getCase(id,owner);if(!record)return false;
   const links=await getAllByIndex('caseLinks','caseId',String(id));
   for(const link of links)if(String(link.learnerToken||owner)===owner)await remove('caseLinks',link.id);
+  const evidence=await getAllByIndex('caseEvidence','caseId',String(id));
+  for(const item of evidence)if(String(item.learnerToken||owner)===owner)await remove('caseEvidence',item.id);
   await remove('cases',String(id));return true
 }
 
@@ -160,6 +169,60 @@ async function linkCaseContext(caseId,context={},token=learnerToken()){
 }
 async function linkCaseDataset(caseId,datasetId,label='',token=learnerToken()){return linkCase(caseId,'process-dataset',datasetId,{label:String(label||'')},token)}
 
+const EVIDENCE_KINDS=Object.freeze(['controlled-trial','dimensional-check','defect-observation','maintenance-event','material-lot','acceptance-check']);
+const ACCEPTANCE_STATES=Object.freeze(['not-assessed','pending','accepted','rejected']);
+function normalizeCaseEvidence(input={},caseRecord={},owner=learnerToken()){
+  const kind=EVIDENCE_KINDS.includes(String(input.kind||''))?String(input.kind):'controlled-trial';
+  const acceptanceStatus=ACCEPTANCE_STATES.includes(String(input.acceptanceStatus||''))?String(input.acceptanceStatus):'not-assessed';
+  return {
+    schemaVersion:1,
+    id:String(input.id||uid('evidence')),
+    caseId:String(input.caseId||caseRecord.id||''),
+    learnerToken:String(owner),
+    kind,
+    occurredAt:String(input.occurredAt||now()),
+    recordedAt:String(input.recordedAt||now()),
+    updatedAt:now(),
+    title:String(input.title||''),
+    sourceRef:String(input.sourceRef||''),
+    materialLot:String(input.materialLot||''),
+    measurement:String(input.measurement||''),
+    unit:String(input.unit||''),
+    result:String(input.result||''),
+    acceptanceStatus,
+    notes:String(input.notes||''),
+    context:{
+      materialGradeId:input.context?.materialGradeId??caseRecord.materialGradeId??null,
+      machineId:input.context?.machineId??caseRecord.machineId??null,
+      mouldId:input.context?.mouldId??caseRecord.mouldId??null,
+      productId:input.context?.productId??caseRecord.productId??null,
+      partId:input.context?.partId??caseRecord.partId??null,
+      cavityId:input.context?.cavityId??caseRecord.cavityId??null
+    },
+    boundary:'Recorded site-local evidence only; does not prove causation, validate a universal process window, or authorize production changes.'
+  };
+}
+async function saveCaseEvidence(caseId,input={},token=learnerToken()){
+  const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)throw new Error(`Unknown engineering case ${caseId}`);
+  const record=normalizeCaseEvidence({...input,caseId},c,owner),prior=await getRaw('caseEvidence',record.id);
+  if(prior&&String(prior.learnerToken)!==owner)throw new Error('Engineering evidence belongs to a different learner profile');
+  record.recordedAt=String(prior?.recordedAt||record.recordedAt);record.updatedAt=now();
+  return put('caseEvidence',record)
+}
+async function listCaseEvidence(caseId,token=learnerToken()){
+  const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)return[];
+  return (await getAllByIndex('caseEvidence','caseId',String(caseId))).filter(x=>String(x.learnerToken)===owner).sort((a,b)=>String(b.occurredAt||b.recordedAt).localeCompare(String(a.occurredAt||a.recordedAt)))
+}
+async function deleteCaseEvidence(id,token=learnerToken()){
+  const owner=tokenValue(token),record=await getRaw('caseEvidence',String(id));if(!record||String(record.learnerToken)!==owner)return false;
+  await remove('caseEvidence',String(id));return true
+}
+async function evidenceSummary(caseId,token=learnerToken()){
+  const items=await listCaseEvidence(caseId,token),byKind={},acceptance={};
+  for(const item of items){byKind[item.kind]=(byKind[item.kind]||0)+1;acceptance[item.acceptanceStatus]=(acceptance[item.acceptanceStatus]||0)+1}
+  return {caseId:String(caseId),count:items.length,byKind,acceptance,latestAt:items[0]?.occurredAt||null,boundary:'Counts describe recorded evidence only; completeness and acceptance still require human/site review.'}
+}
+
 function legacyKey(token=learnerToken()){return learnerScope.storageKey(LEGACY_CASE_BASE,tokenValue(token))}
 function readLegacyCases(token=learnerToken()){try{const raw=JSON.parse(localStorage.getItem(legacyKey(token))||'[]');return Array.isArray(raw)?raw:[]}catch(_){return[]}}
 async function importLegacyCases(cases,token=learnerToken()){
@@ -189,6 +252,6 @@ async function repairLegacyLinkOwnership(token=learnerToken()){
 }
 async function bootstrap(){try{const migration=await migrateLegacyMouldMasterCases();await repairLegacyLinkOwnership();return migration}catch(err){console.warn('[MouldMaster engineering store] legacy migration skipped',err);return null}}
 
-window.MM_ENGINEERING_STORE=Object.freeze({version:VERSION,dbName:DB_NAME,normalizeCase,saveCase,listCases,getCase,deleteCase,linkCase,linksForCase,linkCaseMaterial,linkCaseMachine,linkCaseMould,linkCaseProduct,linkCasePart,linkCaseContext,linkCaseDataset,importLegacyCases,migrateLegacyMouldMasterCases,repairLegacyLinkOwnership,bootstrap,learnerToken,legacyKey});
+window.MM_ENGINEERING_STORE=Object.freeze({version:VERSION,dbName:DB_NAME,normalizeCase,saveCase,listCases,getCase,deleteCase,linkCase,linksForCase,linkCaseMaterial,linkCaseMachine,linkCaseMould,linkCaseProduct,linkCasePart,linkCaseContext,linkCaseDataset,normalizeCaseEvidence,saveCaseEvidence,listCaseEvidence,deleteCaseEvidence,evidenceSummary,evidenceKinds:EVIDENCE_KINDS,acceptanceStates:ACCEPTANCE_STATES,importLegacyCases,migrateLegacyMouldMasterCases,repairLegacyLinkOwnership,bootstrap,learnerToken,legacyKey});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bootstrap,{once:true});else bootstrap();
 })();
