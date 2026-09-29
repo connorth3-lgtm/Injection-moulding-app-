@@ -5,7 +5,7 @@
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.09.17.1';
+const VERSION='2026.09.29.15';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -163,6 +163,34 @@ function syncDesktopNavigation(){
   if(more)more.hidden=!isDesktop;
 }
 
+function installFirstRunPolish(){
+  if(typeof window.showOnboarding!=='function'||window.showOnboarding.__mmProductPolished)return;
+  const polished=function(){
+    window.openModal?.(`<div class="onboarding mm-onboarding-product">
+      <span class="eyebrow">Welcome to MouldMaster</span>
+      <h2>Set up your learning path</h2>
+      <p class="mm-onboarding-intro">Three quick choices. You can change them later in Profile.</p>
+      <label>Your name<input id="onName" value="${window.esc?.(window.user?.name==="Learner 1"?"":window.user?.name)||""}" placeholder="Your name" autocomplete="name"></label>
+      <fieldset class="mm-onboarding-group"><legend>Experience</legend><div class="choice-cards">
+        <label class="choice-card"><input type="radio" name="onExp" value="Beginner" checked><b>New</b><small>Start with the fundamentals.</small></label>
+        <label class="choice-card"><input type="radio" name="onExp" value="Intermediate"><b>Some experience</b><small>Start around process setup.</small></label>
+        <label class="choice-card"><input type="radio" name="onExp" value="Advanced"><b>Experienced</b><small>Start around scientific moulding.</small></label>
+      </div></fieldset>
+      <label class="mm-onboarding-field">Main goal<select id="onGoal">
+        <option>Learn the full process</option><option>Troubleshoot defects better</option><option>Become a process technician</option><option>Become a process engineer</option><option>Improve mould/tooling knowledge</option><option>Prepare for certification</option>
+      </select></label>
+      <fieldset class="mm-onboarding-group"><legend>Typical session</legend><div class="daily-select">
+        <label><input type="radio" name="onMin" value="10">10 min</label><label><input type="radio" name="onMin" value="15" checked>15 min</label><label><input type="radio" name="onMin" value="30">30 min</label>
+      </div></fieldset>
+      <div class="hero-buttons mm-onboarding-actions"><button class="primary" onclick="finishOnboarding()">Start my path →</button><button class="ghost" onclick="skipOnboarding()">Use defaults</button></div>
+    </div>`);
+  };
+  polished.__mmProductPolished=true;window.showOnboarding=polished;
+}
+function syncProductStates(){
+  document.querySelectorAll('.empty-friendly,.mm-exact-empty,.mm-material-no-match').forEach(el=>el.dataset.mmProductState='empty');
+  const failure=document.getElementById('mmStartupFailure');if(failure)failure.dataset.mmProductState='error';
+}
 function syncReadAloudLabel(){
   const host=document.querySelector('.mm-read-aloud details:not([open]) summary');
   if(host&&!host.getAttribute('aria-label'))host.setAttribute('aria-label','Read aloud');
@@ -172,6 +200,7 @@ function run(){
   syncBookDisclosure();
   syncDesktopNavigation();
   syncReadAloudLabel();
+  syncProductStates();
 }
 function schedule(){
   if(queued)return;
@@ -180,6 +209,7 @@ function schedule(){
 }
 function install(){
   ensureStyles();
+  installFirstRunPolish();
   run();
   // Shell render/view lifecycle events cover app-owned mutations. Avoid a whole-body characterData observer,
   // which previously scheduled a full polish pass for every text mutation in the application.
