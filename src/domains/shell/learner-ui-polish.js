@@ -36,7 +36,15 @@ function runQuickAction(action){
     }
   }
 }
-function homeEscape(value){return String(value??'').replace(/[&<>\"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[ch]))}
+function homeEscape(value){
+  return String(value??'').replace(/[&<>"']/g,ch=>{
+    if(ch==='&')return '&amp;';
+    if(ch==='<')return '&lt;';
+    if(ch==='>')return '&gt;';
+    if(ch==='"')return '&quot;';
+    return '&#39;'
+  })
+}
 function homeActivity(){
   const active=typeof user==='object'&&user?user:null,data=typeof D==='object'&&D?D:null;
   const completed=Array.isArray(active?.completed)?active.completed.length:0;
