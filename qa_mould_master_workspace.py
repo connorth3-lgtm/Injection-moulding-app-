@@ -100,7 +100,7 @@ desktop_qa=text('desktop/electron/scripts/qa.cjs')
 need('runtime manifest asset is not integrity-hashed/servable by desktop' in desktop_qa,'desktop QA does not enforce manifest-derived serving coverage')
 
 browser=text('qa/engineering-case-store.spec.js')
-for marker in ['legacy-engineering-case','switchUser','mat-lotte-infino-nh-1033','localStorage.getItem','MM_ENGINEERING_STORE.getCase','materialGradeId','IMM-07','MOULD-184','PROD-PUMP-01','PART-184-03','similarCases','Cavity 3 critical dimension','QC-REPORT-184-03','LOT-NH1033-2409','dimensional-check','MM_ENGINEERING_STORE.listCaseEvidence','Method / measurement basis','Acceptance basis / authority','Void evidence','Import case','importCaseFile']:
+for marker in ['legacy-engineering-case','switchUser','mat-lotte-infino-nh-1033','localStorage.getItem','MM_ENGINEERING_STORE.getCase','materialGradeId','IMM-07','MOULD-184','PROD-PUMP-01','PART-184-03','similarCases','Cavity 3 critical dimension','QC-REPORT-184-03','LOT-NH1033-2409','dimensional-check','MM_ENGINEERING_STORE.listCaseEvidence','Method / measurement basis','Acceptance basis / authority','Revise evidence','Void evidence','Import case','importCaseFile']:
     need(marker in browser,f'canonical engineering browser regression missing marker: {marker}')
 playwright=text('playwright.config.cjs')
 need('engineering-case-store\\.spec\\.js' in playwright,'canonical engineering browser regression missing from Playwright config')
