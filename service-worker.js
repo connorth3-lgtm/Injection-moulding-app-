@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.09.29.12';
+const CACHE_VERSION='2026.09.29.13';
 const CACHE_REVISION='lifecycle-r5-20260924';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
