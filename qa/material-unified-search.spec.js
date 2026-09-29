@@ -10,8 +10,7 @@ async function openMaterials(page,width=412){
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>(typeof window.MM_APP_SHELL_FINALIZED==='string'&&window.MM_MATERIAL_REGISTRY&&window.MM_MATERIAL_SEARCH&&window.MM_MATERIAL_SEARCH_PAGINATION&&window.MM_REFERENCE_DATA&&window.MM_MATERIAL_BEHAVIOUR_LABS));
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
-  await page.locator('.mobile-nav > button').filter({hasText:'Learn'}).click();
-  await page.locator('#path [data-mm-hub-action="materials"]').click();
+  await page.locator('.mobile-nav > button').filter({hasText:'Materials'}).click();
   await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
   await expect(page.locator('[data-mm-all-material-index]')).toBeVisible();
 }

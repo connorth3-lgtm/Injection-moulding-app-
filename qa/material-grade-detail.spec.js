@@ -14,11 +14,7 @@ async function openApp(page){
 }
 
 async function openMaterialsFromLearn(page){
-  await page.locator('.mobile-nav > button').filter({hasText:'Learn'}).click();
-  await expect(page.locator('#path .mm-learn-hub')).toBeVisible();
-  const materials=page.locator('#path [data-mm-hub-action="materials"]');
-  await expect(materials).toBeVisible();
-  await materials.click();
+  await page.locator('.mobile-nav > button').filter({hasText:'Materials'}).click();
 }
 
 for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'small-360x800',width:360,height:800}]){

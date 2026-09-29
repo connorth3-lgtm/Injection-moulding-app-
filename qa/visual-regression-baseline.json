@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.09.29.18",
-  "commit": "d45151a45bee15b5b86a4bdfb662fb0e0c34b0c8",
+  "release": "2026.09.30.3",
+  "commit": "6211863f93b8ba90d327edcd9600f44ddf9f54f9",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -29,6 +29,7 @@
   "surfaces": [
     "home",
     "learn",
+    "materials",
     "practice",
     "lesson",
     "more",
@@ -39,5 +40,5 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "2026.09.29.18 is the reviewed learner UI reference for the intentional premium-product redesign: simplified hierarchy, dedicated Materials experience, denser catalogue presentation, quieter secondary utilities, floating mobile navigation and refined first-run/state treatment. The pixel tolerance remains locked at maxDiffPixels 12; this approval updates the reference bytes rather than relaxing drift tolerance. Physical-device, real-AT and other human/external evidence remain separate historical/freshness gates and are not relabelled by this visual lock."
+  "policy": "2026.09.30.3 is the reviewed learner UI reference for the intentional information-architecture upgrade: Home is a useful workbench, primary navigation is Home / Learn / Materials / Practice / More, Materials is a singular first-class destination, Learn no longer duplicates the catalogue, secondary tools move behind More or task hubs, and top-bar actions are contextual. The pixel tolerance remains locked at maxDiffPixels 12; this approval updates the reference bytes rather than relaxing drift tolerance. Physical-device, real-AT and other human/external evidence remain separate historical/freshness gates and are not relabelled by this visual lock."
 }

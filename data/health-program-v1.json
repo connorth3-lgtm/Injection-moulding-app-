@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "program": "mouldmaster-long-term-health",
-  "currentWebRelease": "2026.09.29.20",
+  "currentWebRelease": "2026.09.30.3",
   "principles": {
     "protectedMainRequired": true,
     "failClosedEngineering": true,

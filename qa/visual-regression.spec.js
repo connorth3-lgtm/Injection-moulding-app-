@@ -91,6 +91,9 @@ async function prepareSurface(page,surface){
   }else if(surface==='learn'){
     await page.evaluate(()=>switchView('path'));
     await expect(page.locator('#path .mm-learn-hub')).toBeVisible();
+  }else if(surface==='materials'){
+    await page.evaluate(()=>switchView('materials'));
+    await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
   }else if(surface==='practice'){
     await page.evaluate(()=>switchView('scenarios'));
     await expect(page.locator('#scenarios .mm-practice-hub')).toBeVisible();
@@ -100,7 +103,7 @@ async function prepareSurface(page,surface){
   }else if(surface==='more'){
     await page.evaluate(()=>openMobileMenu());
     await expect(page.locator('#modal .modal-card')).toBeVisible();
-    await expect(page.getByRole('heading',{name:'Tools & progress'})).toBeVisible();
+    await expect(page.getByRole('heading',{name:'More'})).toBeVisible();
   }else if(surface==='assessment'){
     await page.evaluate(()=>{switchView('exams');startExam('Beginner')});
     await page.waitForFunction(()=>Array.isArray(window.activeExam?.questions)&&window.activeExam.questions.length===16&&document.querySelectorAll('#examQuestions .question').length===16);

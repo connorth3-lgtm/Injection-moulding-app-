@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current learner-facing web release: **`2026.09.29.20`**.
+Current learner-facing web release: **`2026.09.30.3`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 

@@ -18,7 +18,7 @@ async function openHub(page,label,selector){
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
 
-async function expectReadableTiles(page,rootSelector){
+async function expectReadableTiles(page,rootSelector,expectedCount=4){
   const result=await page.evaluate(rootSelector=>{
     const root=document.querySelector(rootSelector);
     const grid=root.querySelector('.mm-hub-grid');
@@ -51,7 +51,7 @@ async function expectReadableTiles(page,rootSelector){
       overlap:boxes.some((a,i)=>boxes.some((b,j)=>j>i&&a.top<b.bottom&&a.bottom>b.top&&a.left<b.right&&a.right>b.left))
     };
   },rootSelector);
-  expect(result.count).toBe(4);
+  expect(result.count).toBe(expectedCount);
   expect(result.columns).toBe(2);
   expect(result.display).toBe('flex');
   expect(result.direction).toBe('column');
@@ -70,7 +70,7 @@ async function expectReadableTiles(page,rootSelector){
   expect(result.overlap).toBe(false);
 }
 
-async function expectNarrowReadableTiles(page,rootSelector){
+async function expectNarrowReadableTiles(page,rootSelector,expectedCount=4){
   const result=await page.evaluate(rootSelector=>{
     const root=document.querySelector(rootSelector);
     const grid=root.querySelector('.mm-hub-grid');
@@ -93,7 +93,7 @@ async function expectNarrowReadableTiles(page,rootSelector){
       overlap:boxes.some((a,i)=>boxes.some((b,j)=>j>i&&a.top<b.bottom&&a.bottom>b.top&&a.left<b.right&&a.right>b.left))
     };
   },rootSelector);
-  expect(result.count).toBe(4);
+  expect(result.count).toBe(expectedCount);
   expect(result.columns).toBe(1);
   expect(result.copies.every(x=>x.display!=='none'&&x.height>0&&x.text.length>12)).toBeTruthy();
   expect(result.minHeights.every(x=>x==='0px')).toBeTruthy();
@@ -118,8 +118,7 @@ async function expectFullWidthPrimaryAction(page,rootSelector){
 }
 
 async function openMaterials(page){
-  await openHub(page,'Learn','#path .mm-learn-hub');
-  await page.locator('#path .mm-hub-tile').filter({hasText:'Materials'}).click();
+  await page.locator('.mobile-nav > button').filter({hasText:'Materials'}).click();
   await expect(page.locator('#materials')).toBeVisible();
   await expect(page.locator('#materials .mat-chapter').first()).toBeVisible();
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
@@ -161,7 +160,7 @@ test.use({viewport:{width:412,height:915}});
 test('Learn hub keeps compact left-aligned mobile cards under strict CSP',async({page})=>{
   await openApp(page);
   await openHub(page,'Learn','#path .mm-learn-hub');
-  await expectReadableTiles(page,'#path .mm-learn-hub');
+  await expectReadableTiles(page,'#path .mm-learn-hub',3);
   await expectFullWidthPrimaryAction(page,'#path .mm-learn-hub');
   await page.screenshot({path:'qa-artifacts/mobile-learn-hub-412x915.png',fullPage:true});
 });
@@ -187,7 +186,7 @@ test.describe('360px narrow-phone hubs',()=>{
   test('Learn and Practice use content-driven one-column cards instead of empty title slabs',async({page})=>{
     await openApp(page);
     await openHub(page,'Learn','#path .mm-learn-hub');
-    await expectNarrowReadableTiles(page,'#path .mm-learn-hub');
+    await expectNarrowReadableTiles(page,'#path .mm-learn-hub',3);
 
     await openHub(page,'Practice','#scenarios .mm-practice-hub');
     await expectNarrowReadableTiles(page,'#scenarios .mm-practice-hub');
@@ -196,7 +195,7 @@ test.describe('360px narrow-phone hubs',()=>{
 
   test('primary tab navigation settles at the top instead of preserving a clipped hub position',async({page})=>{
     await openApp(page);
-    await openHub(page,'Learn','#path .mm-learn-hub');
+    await openHub(page,'Materials','#materials');
     await page.evaluate(()=>window.scrollTo(0,document.scrollingElement?.scrollHeight||document.body.scrollHeight));
     await expect.poll(()=>page.evaluate(()=>window.scrollY||document.scrollingElement?.scrollTop||0)).toBeGreaterThan(20);
     await openHub(page,'Practice','#scenarios .mm-practice-hub');

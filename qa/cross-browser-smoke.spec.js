@@ -23,11 +23,7 @@ async function openMaterials(page){
   if(await desktopMaterials.isVisible()){
     await desktopMaterials.click();
   }else{
-    const learn=page.locator('.mobile-nav > button').filter({hasText:'Learn'});
-    await expect(learn).toBeVisible();
-    await learn.click();
-    await expect(page.locator('#path .mm-learn-hub')).toBeVisible();
-    const materials=page.locator('#path [data-mm-hub-action="materials"]');
+    const materials=page.locator('.mobile-nav > button').filter({hasText:'Materials'});
     await expect(materials).toBeVisible();
     await materials.click();
   }

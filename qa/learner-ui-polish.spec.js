@@ -19,20 +19,21 @@ async function openApp(page){
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
 
-test('tablet and desktop Home use the available canvas without bloating phone Home',async({page})=>{
+test('Home is a useful workbench across desktop and phone',async({page})=>{
   await page.setViewportSize({width:810,height:1080});
   await openApp(page);
   const balance=page.locator('#dashboard .mm-home-balance');
   await expect(balance).toBeVisible();
-  await expect(balance.locator('[data-mm-home-action]')).toHaveCount(4);
-  await expect(balance.getByRole('button',{name:/Practice/i})).toBeVisible();
-  await expect(balance.getByRole('button',{name:/Book/i})).toBeVisible();
+  await expect(balance.locator('[data-mm-home-action]')).toHaveCount(6);
+  await expect(balance.getByRole('button',{name:/Troubleshoot/i})).toBeVisible();
   await expect(balance.getByRole('button',{name:/Materials/i})).toBeVisible();
-  await expect(balance.getByRole('button',{name:/Mould Master/i})).toBeVisible();
+  await expect(balance.getByRole('button',{name:/Analyse data/i})).toBeVisible();
+  await expect(balance.getByRole('button',{name:/Practice/i})).toBeVisible();
+  await expect(balance.locator('.mm-home-snapshot')).toContainText('3/120');
 
   await page.setViewportSize({width:412,height:915});
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
-  await expect(page.locator('#dashboard .mm-home-balance')).toHaveCount(0);
+  await expect(page.locator('#dashboard .mm-home-balance')).toBeVisible();
   await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
 });
 
@@ -72,21 +73,23 @@ test('desktop navigation stays focused while specialist capabilities remain reac
   await openApp(page);
 
   const nav=page.locator('#nav');
-  await expect(nav.getByRole('button',{name:/Home/i})).toBeVisible();
-  await expect(nav.getByRole('button',{name:/Learn/i})).toBeVisible();
-  await expect(nav.getByRole('button',{name:/Practice/i})).toBeVisible();
-  await expect(nav.getByRole('button',{name:/Book/i})).toBeVisible();
-  await expect(nav.getByRole('button',{name:/More tools/i})).toBeVisible();
+  await expect(nav.getByRole('button',{name:'Home'})).toBeVisible();
+  await expect(nav.getByRole('button',{name:'Learn'})).toBeVisible();
+  await expect(nav.getByRole('button',{name:'Materials'})).toBeVisible();
+  await expect(nav.getByRole('button',{name:'Practice'})).toBeVisible();
+  await expect(nav.getByRole('button',{name:'More'})).toBeVisible();
+  await expect(nav.getByRole('button',{name:/Book/i})).toBeHidden();
   await expect(nav.getByRole('button',{name:/Data diagnosis/i})).toBeHidden();
-  await expect(nav.getByRole('button',{name:/Diagnostic labs/i})).toBeHidden();
-  await expect(nav.getByRole('button',{name:/Material labs/i})).toBeHidden();
+  await expect(nav.getByRole('button',{name:/Mould Master/i})).toBeHidden();
 
   await page.evaluate(()=>switchView('scenarios'));
   await expect(page.locator('#scenarios [data-mm-hub-action="process-data"]')).toBeVisible();
   await expect(page.locator('#scenarios [data-mm-hub-action="troubleshooting"]')).toBeVisible();
 
-  await nav.getByRole('button',{name:/More tools/i}).click();
+  await nav.getByRole('button',{name:'More'}).click();
   await expect(page.locator('#modal .modal-card')).toBeVisible();
+  await expect(page.locator('#modal').getByRole('button',{name:/Mould Master/i})).toBeVisible();
+  await expect(page.locator('#modal').getByRole('button',{name:/Data diagnosis/i})).toBeVisible();
 });
 
 
@@ -107,7 +110,7 @@ test('canonical shell stays stable through intermediate responsive widths',async
     expect(state.view).toBe('dashboard');
     expect(state.navGroup).toBe('home');
     if(width<=700){
-      expect(state.mobileButtons).toHaveLength(4);
+      expect(state.mobileButtons).toHaveLength(5);
       expect(state.current).toBe(1);
     }
   }
@@ -119,11 +122,101 @@ test('canonical navigation registry owns generated control semantics',async({pag
   const generated=page.locator('#nav [data-mm-registry-nav]');
   const count=await generated.count();
   for(let i=0;i<count;i++)expect((await generated.nth(i).getAttribute('aria-label'))||'').not.toBe('');
-  await page.locator('#nav').getByRole('button',{name:/More tools/i}).click();
+  await page.locator('#nav').getByRole('button',{name:'More'}).click();
   const menu=page.locator('#modal [data-mm-registry-menu]');
   const menuCount=await menu.count();
   for(let i=0;i<menuCount;i++){
     expect((await menu.nth(i).getAttribute('aria-label'))||'').not.toBe('');
     await expect(menu.nth(i).locator('.icon')).toHaveAttribute('aria-hidden','true');
   }
+});
+
+
+test('primary IA keeps Materials singular and every major destination reachable',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await openApp(page);
+  const nav=page.locator('#nav');
+  const visibleLabels=await nav.locator(':scope > button').evaluateAll(nodes=>nodes.filter(n=>getComputedStyle(n).display!=='none'&&!n.hidden).map(n=>(n.textContent||'').replace(/\s+/g,' ').trim()));
+  expect(visibleLabels).toEqual(['⌂ Home','▦ Learn','⬡ Materials','⚠ Practice','More']);
+
+  await nav.getByRole('button',{name:'Home'}).click();
+  await expect(page.locator('#dashboard')).toBeVisible();
+  await expect(page.locator('#dashboard .mm-home-balance')).toBeVisible();
+  await expect(page.locator('#pageTitle')).toHaveText('Home');
+
+  await nav.getByRole('button',{name:'Learn'}).click();
+  await expect(page.locator('#path .mm-learn-hub')).toBeVisible();
+  await expect(page.locator('#path [data-mm-hub-action="materials"]')).toHaveCount(0);
+  await expect(page.locator('#pageTitle')).toHaveText('Learn');
+
+  await nav.getByRole('button',{name:'Materials'}).click();
+  await expect(page.locator('#materials')).toBeVisible();
+  await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
+  await expect(page.locator('#pageTitle')).toHaveText('Materials');
+  await expect(page.locator('#searchBtn')).toBeHidden();
+  await expect(page.locator('#continueBtn')).toBeHidden();
+
+  await nav.getByRole('button',{name:'Practice'}).click();
+  await expect(page.locator('#scenarios .mm-practice-hub')).toBeVisible();
+  await expect(page.locator('#pageTitle')).toHaveText('Practice');
+  await expect(page.locator('#searchBtn')).toBeHidden();
+  await expect(page.locator('#continueBtn')).toBeHidden();
+
+  await nav.getByRole('button',{name:'More'}).click();
+  await expect(page.locator('#modal .modal-card')).toBeVisible();
+  await expect(page.locator('#modal .modal-card h2')).toHaveText('More');
+  await expect(page.locator('#modal .quick-action').filter({hasText:/^Materials$/i})).toHaveCount(0);
+  for(const label of ['Process simulator','Defect finder','Troubleshooting coach','Knowledge checks','Standards & safety','Profile & data','Mould Master','Data diagnosis']){
+    await expect(page.locator('#modal').getByRole('button',{name:new RegExp(label,'i')})).toBeVisible();
+  }
+
+  const desktopOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(desktopOverflow).toBeLessThanOrEqual(1);
+
+  await page.keyboard.press('Escape');
+  await page.setViewportSize({width:390,height:844});
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  const mobile=page.locator('.mobile-nav');
+  await expect(mobile.locator(':scope > button')).toHaveCount(5);
+  await expect(mobile.getByRole('button',{name:'Materials'})).toBeVisible();
+  await mobile.getByRole('button',{name:'Materials'}).click();
+  await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
+  const mobileOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(mobileOverflow).toBeLessThanOrEqual(1);
+});
+
+
+test('all major app surfaces remain reachable without shell clutter',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await openApp(page);
+  const core=[
+    ['simulator','#simulator'],['defects','#defects'],['coach','#coach'],['exams','#exams'],
+    ['certificates','#certificates'],['glossary','#glossary'],['profile','#profile'],
+    ['standards','#standards'],['visuals','#visuals']
+  ];
+  for(const [view,selector] of core){
+    await page.evaluate(view=>window.switchView(view),view);
+    await expect(page.locator(selector)).toBeVisible();
+    await expect(page.locator('#searchBtn')).toBeHidden();
+    await expect(page.locator('#continueBtn')).toBeHidden();
+    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+    expect(overflow,view+' horizontal overflow').toBeLessThanOrEqual(1);
+  }
+
+  await page.waitForFunction(()=>Boolean(window.MM_MOULD_MASTER_WORKSPACE?.open));
+  await page.evaluate(()=>window.MM_MOULD_MASTER_WORKSPACE.open());
+  await expect(page.locator('#mmMouldMasterWorkspace')).toBeVisible();
+  await expect(page.locator('#searchBtn')).toBeHidden();
+  await expect(page.locator('#continueBtn')).toBeHidden();
+
+  await page.waitForFunction(()=>Boolean(window.MM_PROCESS_DATA_DIAGNOSTICS?.open));
+  await page.evaluate(()=>window.MM_PROCESS_DATA_DIAGNOSTICS.open());
+  await expect(page.locator('#processDataLabs')).toBeVisible();
+
+  await page.waitForFunction(()=>Boolean(window.MM_MATERIAL_REGISTRY?.openPage));
+  await page.evaluate(()=>window.MM_MATERIAL_REGISTRY.openPage({replaceUrl:false}));
+  await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
+
+  const finalOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(finalOverflow).toBeLessThanOrEqual(1);
 });
