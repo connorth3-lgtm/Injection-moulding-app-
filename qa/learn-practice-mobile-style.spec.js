@@ -195,7 +195,7 @@ test.describe('360px narrow-phone hubs',()=>{
 
   test('primary tab navigation settles at the top instead of preserving a clipped hub position',async({page})=>{
     await openApp(page);
-    await openHub(page,'Learn','#path .mm-learn-hub');
+    await openHub(page,'Materials','#materials');
     await page.evaluate(()=>window.scrollTo(0,document.scrollingElement?.scrollHeight||document.body.scrollHeight));
     await expect.poll(()=>page.evaluate(()=>window.scrollY||document.scrollingElement?.scrollTop||0)).toBeGreaterThan(20);
     await openHub(page,'Practice','#scenarios .mm-practice-hub');
