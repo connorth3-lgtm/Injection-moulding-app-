@@ -60,7 +60,9 @@ def main() -> None:
 
     stores = {row["id"]: row for row in data.get("persistence", {}).get("stores", [])}
     require(stores["learner-core"]["identity"] == "mouldmasterProDB", "learner source-of-truth key mismatch")
-    require(stores["engineering-cases"]["identity"] == "mouldmaster-engineering-v2" and stores["engineering-cases"]["version"] == 2, "engineering DB inventory mismatch")
+    require(stores["engineering-cases"]["identity"] == "mouldmaster-engineering-v2" and stores["engineering-cases"]["version"] == 3, "engineering DB inventory mismatch")
+    require(stores["engineering-cases"].get("stores") == ["cases", "caseLinks", "caseEvidence", "migrations"], "engineering DB store inventory mismatch")
+    require("archive" in stores["engineering-cases"].get("deletionBoundary", ""), "engineering case deletion boundary must retain audit history")
     require(stores["process-data"]["identity"] == "mouldmaster-process-data-v1" and stores["process-data"]["version"] == 1, "process-data DB inventory mismatch")
     require(stores["production-health"]["retentionMaxEvents"] == 120, "diagnostic retention inventory mismatch")
     backup = data["persistence"]["learnerBackupContract"]
