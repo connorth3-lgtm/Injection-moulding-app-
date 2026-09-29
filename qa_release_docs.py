@@ -52,11 +52,11 @@ need(str(pkg.get('build',{}).get('buildNumber'))==release_parts[3],'desktop buil
 need(pkg.get('build',{}).get('buildVersion')=='.'.join(release_parts),'desktop buildVersion must match desktop_release')
 
 # Electron 44 is an explicit supported-platform decision, not just a package bump.
-need(pkg.get('devDependencies',{}).get('electron')=='44.4.3','desktop runtime must remain pinned to reviewed Electron 44.4.3')
-need(lock.get('packages',{}).get('',{}).get('devDependencies',{}).get('electron')=='44.4.3','desktop lock must resolve reviewed Electron 44.4.3')
+need(pkg.get('devDependencies',{}).get('electron')=='44.4.5','desktop runtime must remain pinned to reviewed Electron 44.4.5')
+need(lock.get('packages',{}).get('',{}).get('devDependencies',{}).get('electron')=='44.4.5','desktop lock must resolve reviewed Electron 44.4.5')
 electron_support=text('desktop/electron/ELECTRON_44_SUPPORT.md')
 for marker in [
- 'Electron `44.4.3`',
+ 'Electron `44.4.5`',
  'Windows 10/11, 64-bit only',
  'GitHub portable/NSIS validation lane is x64',
  'Microsoft Store MSIX lane packages x64 and arm64',
@@ -67,12 +67,12 @@ for marker in [
  'setLoginItemSettings',
  'ANGLE is statically linked',
  'https://www.electronjs.org/blog/electron-44-0',
- 'https://releases.electronjs.org/release/v44.4.3',
+ 'https://releases.electronjs.org/release/v44.4.5',
 ]:
     need(marker in electron_support,f'Electron 44 support policy missing marker: {marker}')
 
 desktop_readme=text('desktop/electron/README.md')
-for marker in ['Electron 44.4.3','Windows 10/11 64-bit','ELECTRON_44_SUPPORT.md','127.0.0.1:43139']:
+for marker in ['Electron 44.4.5','Windows 10/11 64-bit','ELECTRON_44_SUPPORT.md','127.0.0.1:43139']:
     need(marker in desktop_readme,f'desktop README Electron 44/stable-origin marker missing: {marker}')
 
 # The manual retirement guide is release evidence too. Keep its human test target
