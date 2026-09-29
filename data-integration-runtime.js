@@ -318,11 +318,27 @@ async function linkCase(caseId,link){
   await put('caseLinks',next);return next;
 }
 async function caseLink(caseId){return get('caseLinks',caseId)}
-function caseTokens(c){return new Set(String([c?.defect,c?.material,c?.machine,c?.mould,c?.title,c?.evidence,c?.hypothesis].filter(Boolean).join(' ')).toLowerCase().replace(/[^a-z0-9]+/g,' ').split(/\s+/).filter(x=>x.length>2))}
+function caseTokens(c){return new Set(String([c?.defect,c?.material,c?.materialGradeId,c?.machine,c?.machineId,c?.mould,c?.mouldId,c?.product,c?.productId,c?.part,c?.partId,c?.title,c?.evidence,c?.hypothesis].filter(Boolean).join(' ')).toLowerCase().replace(/[^a-z0-9]+/g,' ').split(/\s+/).filter(x=>x.length>2))}
+function sameIdentity(a,b,key){return Boolean(a?.[key]&&b?.[key]&&String(a[key])===String(b[key]))}
 async function similarCases(caseId){
   const api=window.MM_MOULD_MASTER_WORKSPACE,current=api?.getCase?.(caseId);if(!current)return[];
   const all=api.cases?.()||[],ct=caseTokens(current),cl=await caseLink(caseId),out=[];
-  for(const c of all){if(c.id===caseId)continue;const t=caseTokens(c);let score=0;for(const x of ct)if(t.has(x))score++;const l=await caseLink(c.id);if(cl?.datasetId&&l?.datasetId===cl.datasetId)score+=4;if(cl?.machine&&l?.machine===cl.machine)score+=2;if(cl?.mould&&l?.mould===cl.mould)score+=3;if(cl?.materialGrade&&l?.materialGrade===cl.materialGrade)score+=2;if(score>0)out.push({caseId:c.id,title:c.title||c.defect||'Untitled case',score,link:l||null})}
+  for(const c of all){
+    if(c.id===caseId)continue;
+    const t=caseTokens(c);let score=0;
+    for(const x of ct)if(t.has(x))score++;
+    if(sameIdentity(current,c,'materialGradeId'))score+=4;
+    if(sameIdentity(current,c,'machineId'))score+=4;
+    if(sameIdentity(current,c,'mouldId'))score+=5;
+    if(sameIdentity(current,c,'productId'))score+=3;
+    if(sameIdentity(current,c,'partId'))score+=5;
+    const l=await caseLink(c.id);
+    if(cl?.datasetId&&l?.datasetId===cl.datasetId)score+=4;
+    if(cl?.machine&&l?.machine===cl.machine)score+=2;
+    if(cl?.mould&&l?.mould===cl.mould)score+=3;
+    if(cl?.materialGrade&&l?.materialGrade===cl.materialGrade)score+=2;
+    if(score>0)out.push({caseId:c.id,title:c.title||c.defect||'Untitled case',score,link:l||null,context:{materialGradeId:c.materialGradeId||null,machineId:c.machineId||null,mouldId:c.mouldId||null,productId:c.productId||null,partId:c.partId||null}})
+  }
   return out.sort((a,b)=>b.score-a.score).slice(0,6);
 }
 

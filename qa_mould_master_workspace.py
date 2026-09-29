@@ -44,7 +44,12 @@ for marker in [
     'await store.saveCase(c,{token:owner})',
     'await store.deleteCase(id,owner)',
     'legacy localStorage is migration input only',
-    'Export case'
+    'Export case',
+    'Engineering context',
+    'productId',
+    'partId',
+    'linkCaseContext',
+    'engineeringContext:id=>'
 ]: need(marker in js,f'Mould Master workspace marker missing: {marker}')
 
 for forbidden in [
@@ -57,7 +62,7 @@ for forbidden in [
 ]: need(forbidden not in js,f'Mould Master workspace contains forbidden second-store/mutation/transport/control path: {forbidden}')
 
 engineering=text('src/domains/engineering/engineering-store.js')
-for marker in ['importLegacyCases','if(prior?.complete)return','preservedExisting','destructive:false','Engineering case belongs to a different learner profile']:
+for marker in ['importLegacyCases','if(prior?.complete)return','preservedExisting','destructive:false','Engineering case belongs to a different learner profile','linkCaseMachine','linkCaseMould','linkCaseProduct','linkCasePart','linkCaseContext','productId','partId']:
     need(marker in engineering,f'engineering canonical-store migration/ownership marker missing: {marker}')
 need('syncLegacySnapshot' not in engineering,'engineering store must not maintain live localStorage snapshot parity')
 need(not (ROOT/'src/domains/engineering/store-bridge.js').exists(),'retired engineering store bridge must not remain in the repository')
@@ -89,7 +94,7 @@ desktop_qa=text('desktop/electron/scripts/qa.cjs')
 need('runtime manifest asset is not integrity-hashed/servable by desktop' in desktop_qa,'desktop QA does not enforce manifest-derived serving coverage')
 
 browser=text('qa/engineering-case-store.spec.js')
-for marker in ['legacy-engineering-case','switchUser','mat-lotte-infino-nh-1033','localStorage.getItem','MM_ENGINEERING_STORE.getCase','materialGradeId']:
+for marker in ['legacy-engineering-case','switchUser','mat-lotte-infino-nh-1033','localStorage.getItem','MM_ENGINEERING_STORE.getCase','materialGradeId','IMM-07','MOULD-184','PROD-PUMP-01','PART-184-03','similarCases']:
     need(marker in browser,f'canonical engineering browser regression missing marker: {marker}')
 playwright=text('playwright.config.cjs')
 need('engineering-case-store\\.spec\\.js' in playwright,'canonical engineering browser regression missing from Playwright config')

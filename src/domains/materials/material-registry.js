@@ -180,6 +180,44 @@ function missingEvidence(snapshot){
   if(!snapshot.thermal.length)missing.push('thermal processing guidance');
   return missing;
 }
+function evidenceCoverage(snapshot){
+  const categories=[
+    ['Drying / moisture',snapshot.drying.length],
+    ['Shrinkage',snapshot.shrinkage.length],
+    ['Flow / rheology proxy',snapshot.flow.length],
+    ['Thermal guidance',snapshot.thermal.length],
+    ['Primary source trail',snapshot.sourceCount]
+  ];
+  return {
+    categories:categories.map(([label,count])=>({label,count,published:count>0})),
+    publishedCategories:categories.filter(([,count])=>count>0).length,
+    totalCategories:categories.length
+  };
+}
+function changeFlags(report){
+  const flags=[];
+  const changed=rows=>rows.some(r=>r.status==='changed');
+  const incompatible=rows=>rows.some(r=>r.status==='not-directly-comparable');
+  const gap=rows=>rows.some(r=>r.status==='missing-one-side');
+  if(report.identity.some(r=>r.label==='Polymer family'&&r.status==='changed'))flags.push('Polymer family changes between the two exact grades.');
+  if(report.identity.some(r=>r.label==='Morphology'&&r.status==='changed'))flags.push('Published morphology changes between the two exact grades.');
+  if(report.identity.some(r=>r.label==='Composition'&&r.status==='changed'))flags.push('Published composition description changes between the two exact grades.');
+  if(changed(report.drying)||gap(report.drying))flags.push('Drying / moisture evidence requires re-verification.');
+  if(changed(report.shrinkage)||gap(report.shrinkage)||incompatible(report.shrinkage))flags.push('Dimensional evidence changes or is incomplete.');
+  if(changed(report.flow)||gap(report.flow)||incompatible(report.flow))flags.push('Flow evidence changes, is incomplete, or is not directly comparable.');
+  if(changed(report.thermal)||gap(report.thermal))flags.push('Thermal processing guidance requires re-verification.');
+  if(report.missingBefore.length||report.missingAfter.length)flags.push('Core evidence gaps remain in at least one exact-grade record.');
+  return [...new Set(flags)];
+}
+function validationGates(report){
+  return [
+    {id:'identity',label:'Identity and source control',open:report.identity.some(r=>r.status==='changed'),evidence:'Confirm exact commercial grade, supplier document revision/region, lot identity and approved site specification.'},
+    {id:'handling',label:'Material handling evidence',open:report.drying.some(r=>r.status!=='unchanged')||report.missingAfter.includes('drying / moisture'),evidence:'Resolve drying, moisture and post-dryer handling evidence for the proposed exact grade.'},
+    {id:'machine-tool',label:'Machine / mould compatibility',open:report.thermal.some(r=>r.status!=='unchanged')||report.flow.some(r=>r.status!=='unchanged'),evidence:'Verify current supplier/site boundaries against the actual machine, hot runner, mould and measured filling response.'},
+    {id:'dimension',label:'Dimensional verification',open:report.shrinkage.some(r=>r.status!=='unchanged')||report.identity.some(r=>['Morphology','Composition'].includes(r.label)&&r.status==='changed'),evidence:'Verify dimensions/warpage with the real part, orientation, packing, cooling, conditioning and measurement timing.'},
+    {id:'controlled-trial',label:'Controlled trial and acceptance evidence',open:true,evidence:'Record approved trial actuals, cavity/part identity, mass/dimensions, defects and acceptance results before an approved process is updated.'}
+  ];
+}
 function verificationActions(report){
   const actions=[
     'Confirm the exact new commercial grade, supplier document revision/region, lot identity and approved site material specification before changing the process.',
@@ -209,6 +247,9 @@ async function materialChangeReport(beforeId,afterId){
     sources:{before:(before.sources||[]).map(s=>({id:s.id,title:clean(s.title),publisher:clean(s.publisher),documentDate:clean(s.documentDate),retrievedAt:clean(s.retrievedAt),url:safeUrl(s.url)})),after:(after.sources||[]).map(s=>({id:s.id,title:clean(s.title),publisher:clean(s.publisher),documentDate:clean(s.documentDate),retrievedAt:clean(s.retrievedAt),url:safeUrl(s.url)}))},
     boundary:'This report identifies governed evidence differences and verification needs. It does not rank materials and does not prescribe purge/changeover settings, authorize production changes, or prove that a changed value will cause a specific part response.'
   };
+  report.coverage={before:evidenceCoverage(beforeSnapshot),after:evidenceCoverage(afterSnapshot)};
+  report.flags=changeFlags(report);
+  report.validationGates=validationGates(report);
   report.actions=verificationActions(report);
   return report;
 }
@@ -223,7 +264,10 @@ function renderSourceColumn(title,grade,sources){
 function renderMaterialChangeReport(report){
   if(!report.ready)return `<p class="mm-exact-empty">${esc(report.boundary)}</p>`;
   const gaps=(label,items)=>items.length?`<li><b>${esc(label)}:</b> ${esc(items.join(', '))}</li>`:`<li><b>${esc(label)}:</b> no missing core evidence categories detected.</li>`;
-  return `<div class="mm-material-change-report"><div class="mm-material-change-hero"><span class="eyebrow">Material change delta</span><h3>${esc(report.before.name)} → ${esc(report.after.name)}</h3><p>Review what the published evidence says changed, what stayed the same, what cannot be compared directly, and what is missing.</p></div><section><h4>Identity and composition</h4>${renderDeltaRows(report.identity)}</section><section><h4>Drying / moisture</h4>${renderDeltaRows(report.drying)}</section><section><h4>Rheology / melt-flow evidence</h4>${renderDeltaRows(report.flow)}</section><section><h4>Shrinkage evidence</h4>${renderDeltaRows(report.shrinkage)}</section><section><h4>Thermal guidance</h4>${renderDeltaRows(report.thermal)}</section><section class="mm-material-change-gaps"><h4>Published evidence gaps</h4><ul>${gaps('Old grade',report.missingBefore)}${gaps('New grade',report.missingAfter)}</ul></section><section><h4>Verification actions before an approved process change</h4><ol class="mm-material-change-actions">${report.actions.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></section><section><h4>Primary-source trail</h4><div class="mm-material-change-source-grid">${renderSourceColumn('Old grade',report.before,report.sources.before)}${renderSourceColumn('New grade',report.after,report.sources.after)}</div></section><p class="mm-exact-boundary">${esc(report.boundary)}</p></div>`;
+  const coverageCard=(label,coverage)=>`<div class="mm-material-coverage-card"><b>${esc(label)}</b><span>${coverage.publishedCategories}/${coverage.totalCategories} evidence categories published</span><ul>${coverage.categories.map(x=>`<li data-mm-evidence-published="${x.published?'true':'false'}">${esc(x.label)}: ${x.published?esc(String(x.count)):'not published'}</li>`).join('')}</ul></div>`;
+  const flags=report.flags.length?`<ul class="mm-material-change-flags">${report.flags.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'<p>No additional structured change flags were generated from the published evidence.</p>';
+  const gates=`<ol class="mm-material-validation-gates">${report.validationGates.map(g=>`<li data-mm-gate-open="${g.open?'true':'false'}"><b>${esc(g.label)}</b><span>${g.open?'Needs verification':'No published change detected in this gate'}</span><small>${esc(g.evidence)}</small></li>`).join('')}</ol>`;
+  return `<div class="mm-material-change-report"><div class="mm-material-change-hero"><span class="eyebrow">Material change delta</span><h3>${esc(report.before.name)} → ${esc(report.after.name)}</h3><p>Review what the published evidence says changed, what stayed the same, what cannot be compared directly, and what is missing.</p></div><section><h4>Evidence coverage</h4><div class="mm-material-coverage-grid">${coverageCard('Old grade',report.coverage.before)}${coverageCard('New grade',report.coverage.after)}</div></section><section><h4>Unresolved change flags</h4>${flags}</section><section><h4>Identity and composition</h4>${renderDeltaRows(report.identity)}</section><section><h4>Drying / moisture</h4>${renderDeltaRows(report.drying)}</section><section><h4>Rheology / melt-flow evidence</h4>${renderDeltaRows(report.flow)}</section><section><h4>Shrinkage evidence</h4>${renderDeltaRows(report.shrinkage)}</section><section><h4>Thermal guidance</h4>${renderDeltaRows(report.thermal)}</section><section class="mm-material-change-gaps"><h4>Published evidence gaps</h4><ul>${gaps('Old grade',report.missingBefore)}${gaps('New grade',report.missingAfter)}</ul></section><section><h4>Verification gates before site approval</h4>${gates}</section><section><h4>Verification actions before an approved process change</h4><ol class="mm-material-change-actions">${report.actions.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></section><section><h4>Primary-source trail</h4><div class="mm-material-change-source-grid">${renderSourceColumn('Old grade',report.before,report.sources.before)}${renderSourceColumn('New grade',report.after,report.sources.after)}</div></section><p class="mm-exact-boundary">${esc(report.boundary)}</p></div>`;
 }
 
 function evidenceList(title,rows,empty){

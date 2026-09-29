@@ -18,7 +18,7 @@ async function resolveStore(){
 }
 function uid(){try{return crypto.randomUUID()}catch(_){return 'case-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8)}}
 function now(){return new Date().toISOString()}
-function blank(){return{id:uid(),createdAt:now(),updatedAt:now(),title:'',defectId:null,defect:'',materialGradeId:null,material:'',machineId:null,machine:'',mouldId:null,mould:'',cavityId:null,onset:'Unknown / not yet defined',location:'',baseline:'',evidence:'',hypothesis:'',controlledTest:'',testResult:'',afterChange:'',verification:'',conclusion:'',status:'Investigating'}}
+function blank(){return{id:uid(),createdAt:now(),updatedAt:now(),title:'',defectId:null,defect:'',materialGradeId:null,material:'',machineId:null,machine:'',mouldId:null,mould:'',productId:null,product:'',partId:null,part:'',cavityId:null,onset:'Unknown / not yet defined',location:'',baseline:'',evidence:'',hypothesis:'',controlledTest:'',testResult:'',afterChange:'',verification:'',conclusion:'',status:'Investigating'}}
 function all(){return caseCache.slice().sort((a,b)=>String(b.updatedAt||'').localeCompare(String(a.updatedAt||'')))}
 function get(id){return all().find(x=>x.id===id)||null}
 function replaceCache(cases){caseCache=(Array.isArray(cases)?cases:[]).slice(0,MAX_CASES).map(x=>({...x}));return all()}
@@ -40,7 +40,9 @@ async function saveCase(c){
   await hydrate();const store=await resolveStore();if(!store)throw new Error(storageFailure||'Engineering case store unavailable');
   let owner=store.learnerToken();if(hydratedLearnerToken!==owner){await hydrate({force:true});owner=store.learnerToken()}
   c.status=status(c);c.updatedAt=now();
-  const saved=await store.saveCase(c,{token:owner}),cases=all().filter(x=>x.id!==saved.id);caseCache=[{...saved},...cases].slice(0,MAX_CASES);return saved
+  const saved=await store.saveCase(c,{token:owner});
+  await store.linkCaseContext?.(saved.id,saved,owner);
+  const cases=all().filter(x=>x.id!==saved.id);caseCache=[{...saved},...cases].slice(0,MAX_CASES);return saved
 }
 async function deleteCase(id){
   await hydrate();const store=await resolveStore();if(!store)throw new Error(storageFailure||'Engineering case store unavailable');
@@ -101,6 +103,24 @@ function relatedHtml(c){
   const mat=ms.length?ms.map(x=>`<button class="ghost" type="button" data-mw-material="${esc(x.id)}">Material lab · ${esc(x.title)}</button>`).join(''):'';
   return `<div class="mw-related"><h3>Learning & evidence links</h3>${lessonButtons}${spec}${data}${mat}<button class="ghost" type="button" data-mw-defects>Open Defect Finder</button><button class="ghost" type="button" data-mw-diagnostic>Open Diagnostic Labs</button><button class="ghost" type="button" data-mw-data-home>Open Data Diagnosis</button><p class="mw-help">Use these links to learn the mechanism or test your reasoning. Case notes remain your own local evidence record.</p></div>`
 }
+async function hydrateEngineeringContext(host,c){
+  const panel=host.querySelector('[data-mw-engineering-context]');if(!panel)return;
+  const rows=[
+    ['Material',c.material||'Not identified',c.materialGradeId||''],
+    ['Machine',c.machine||'Not identified',c.machineId||''],
+    ['Mould',c.mould||'Not identified',c.mouldId||''],
+    ['Product / assembly',c.product||'Not identified',c.productId||''],
+    ['Part / component',c.part||'Not identified',c.partId||'']
+  ];
+  let materialEvidence='';
+  if(c.materialGradeId&&window.MM_MATERIAL_REGISTRY?.get){
+    try{
+      const grade=await window.MM_MATERIAL_REGISTRY.get(c.materialGradeId);
+      if(grade)materialEvidence=`<div class="mw-kpi"><span>Exact-grade evidence</span><b>${esc((grade.properties||[]).length+' properties · '+(grade.processing||[]).length+' processing observations · '+(grade.sources||[]).length+' primary/source records')}</b></div>`;
+    }catch(_){}
+  }
+  panel.innerHTML=`<h3>Engineering context</h3>${rows.map(([label,name,id])=>`<div class="mw-kpi"><span>${esc(label)}</span><b>${esc(name)}</b>${id?`<div class="mw-help">ID: ${esc(id)}</div>`:''}</div>`).join('')}${materialEvidence}<p class="mw-help">These identities keep material evidence, machine/cell history, mould/tool history and product/part quality evidence attached to the same troubleshooting case.</p>`;
+}
 function casesHtml(active){const cs=all();if(!cs.length)return '<div class="mw-empty">No saved cases yet.</div>';return `<div class="mw-cases">${cs.slice(0,12).map(c=>`<div class="mw-case"><div><b>${esc(c.title||c.defect||'Untitled case')}</b><small>${esc(status(c))} · ${new Date(c.updatedAt).toLocaleDateString()}</small></div><button class="ghost" type="button" data-mw-open="${esc(c.id)}">${c.id===active?'Open':'View'}</button></div>`).join('')}</div>`}
 
 function renderCase(c){activeId=c.id;const host=section();c.status=status(c);const pct=completeness(c);host.innerHTML=`
@@ -111,8 +131,15 @@ function renderCase(c){activeId=c.id;const host=section();c.status=status(c);con
     ${textField('Case title','title',c,false,'Use a short identifier such as “Cavity 3 flash after insert change”.')}
     <label>Defect / symptom<select data-mw-field="defect">${defectOptions(c)}</select><div class="mw-help">Select the closest visible symptom; the mechanism still has to be proven.</div></label>
     ${textField('Material / grade','material',c,false,'Record the exact grade and lot when known.')}
+    ${textField('Exact material grade ID','materialGradeId',c,false,'Use the catalogue grade ID when this case is tied to a published exact grade.')}
     ${textField('Machine / cell','machine',c,false,'Record the actual machine/cell, not only a recipe name.')}
+    ${textField('Machine / cell ID','machineId',c,false,'Use a stable plant identifier such as IMM-07 or CELL-2.')}
     ${textField('Mould / tool / cavity','mould',c,false,'Include cavity, gate, insert or local area where relevant.')}
+    ${textField('Mould / tool ID','mouldId',c,false,'Use a stable mould/tool identifier so cases can be grouped over time.')}
+    ${textField('Product / assembly','product',c,false,'Record the customer/product or assembly this part belongs to.')}
+    ${textField('Product / assembly ID','productId',c,false,'Use the controlled product/assembly identifier when known.')}
+    ${textField('Part / component','part',c,false,'Record the moulded component or part name.')}
+    ${textField('Part / component ID','partId',c,false,'Use the drawing, SKU or internal part identifier when known.')}
     <label>When did it start?<select data-mw-field="onset">${onsetOptions(c)}</select><div class="mw-help">Timing around a change event is often strong localisation evidence.</div></label>
     ${textField('Where / how often','location',c,true,'e.g. cavity-specific, one side of part, every cycle, intermittent, after warm-up.')}
     ${area('Known-good baseline','baseline',c,'Record the last verified-good condition: actuals, material state, tool/cooling condition and part response as applicable.')}
@@ -125,11 +152,12 @@ function renderCase(c){activeId=c.id;const host=section();c.status=status(c);con
     ${area('Conclusion / standardisation','conclusion',c,'State what was proven, what remains uncertain, and what approved standard/work instruction/change-control action follows.',true)}
   </div><div class="mw-actions"><button class="primary" type="button" data-mw-save>Save case</button><button class="danger mw-danger" type="button" data-mw-delete>Delete case</button></div></div>
   <aside class="mw-summary">
+    <div class="mw-panel card" data-mw-engineering-context><h3>Engineering context</h3><div class="mw-empty">Loading linked material, machine, mould and product/part context…</div></div>
     <div class="mw-panel card"><h3>Case status</h3><div class="mw-kpi"><span>Evidence chain</span><b>${esc(c.status)}</b></div><div class="mw-kpi"><span>Record completeness</span><b>${pct}%</b><div class="mw-progress"><i style="width:${pct}%"></i></div></div><div class="mw-kpi"><span>Decision rule</span><b>${c.verification.trim()?'Verification recorded':'Do not standardise yet'}</b></div></div>
     <div class="mw-panel card"><h3>Defect evidence board</h3>${evidenceBoard(c)}</div>
     <div class="mw-panel card">${relatedHtml(c)}</div>
   </aside>
-</div>`;wire(host,c)}
+</div>`;wire(host,c);hydrateEngineeringContext(host,c)}
 
 function collect(c){document.querySelectorAll('#mmMouldMasterWorkspace [data-mw-field]').forEach(el=>{c[el.dataset.mwField]=el.value});c.status=status(c);return c}
 function wire(host,c){
@@ -159,13 +187,13 @@ function wire(host,c){
   host.querySelectorAll('[data-mw-material]').forEach(b=>b.addEventListener('click',()=>{window.MM_MATERIAL_BEHAVIOUR_LABS?.open?.();setTimeout(()=>document.querySelector(`[data-ml-start="${CSS.escape(b.dataset.mwMaterial)}"]`)?.click(),0)}));
   host.querySelector('[data-mw-field="defect"]')?.addEventListener('change',async()=>{try{const saved=await saveCase(collect(c));renderCase(saved)}catch(err){persistenceError(err)}})
 }
-function exportCase(c){const payload={schema:1,version:VERSION,exportedAt:now(),trainingBoundary:'Evidence record only; not a universal production recipe or machine authorisation.',case:c};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`mouldmaster-case-${String(c.title||c.id).replace(/[^a-z0-9]+/gi,'-').toLowerCase().slice(0,48)}.json`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)}
+function exportCase(c){const payload={schema:2,version:VERSION,engineeringContext:{materialGradeId:c.materialGradeId||null,machineId:c.machineId||null,mouldId:c.mouldId||null,productId:c.productId||null,partId:c.partId||null},exportedAt:now(),trainingBoundary:'Evidence record only; not a universal production recipe or machine authorisation.',case:c};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`mouldmaster-case-${String(c.title||c.id).replace(/[^a-z0-9]+/gi,'-').toLowerCase().slice(0,48)}.json`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)}
 function renderList(){activeId='';const host=section();host.innerHTML=`<div class="mw-hero card"><div class="eyebrow">Mould Master</div><h2>Troubleshooting casebook</h2><p>Keep diagnosis tied to the evidence chain rather than a sequence of unrecorded machine adjustments.</p><div class="mw-boundary"><b>Local-only record:</b> cases stay in this browser/desktop profile unless you explicitly export a case JSON file. No case data is uploaded by this module.</div></div><div class="mw-toolbar"><div><h2 style="margin:0">Saved cases</h2><p class="muted" style="margin:4px 0 0">${all().length} local case${all().length===1?'':'s'}</p></div><button class="primary" type="button" data-mw-new>New case</button></div><div class="mw-panel card">${casesHtml('')}</div>`;host.querySelector('[data-mw-new]')?.addEventListener('click',async()=>{try{const c=await saveCase(blank());renderCase(c)}catch(err){persistenceError(err)}});host.querySelectorAll('[data-mw-open]').forEach(b=>b.addEventListener('click',()=>{const c=get(b.dataset.mwOpen);if(c)renderCase(c)}))}
 async function open(id){style();await hydrate();const host=section();hideViews();host.classList.remove('hidden');header();mark();const c=id&&get(id)||get(activeId);if(c)renderCase(c);else renderList();window.scrollTo?.({top:0,behavior:'smooth'})}
 async function newCase(seed={}){await hydrate();const c=await saveCase({...blank(),...seed,id:uid(),createdAt:now(),updatedAt:now()});await open(c.id);return c.id}
 
 style();section();
 window.mmOpenMouldMaster=()=>open();
-window.MM_MOULD_MASTER_WORKSPACE={version:VERSION,canonicalStore:'indexeddb-v2',hydrate,open,newCase,cases:()=>all().map(x=>({...x})),getCase:id=>{const c=get(id);return c?{...c}:null},learnerToken:()=>hydratedLearnerToken,storageError:()=>storageFailure,scope:'Learner-scoped local IndexedDB evidence casebook; legacy localStorage is migration input only; no network upload, universal production setpoints, assessment mutation or machine authorisation.'};
+window.MM_MOULD_MASTER_WORKSPACE={version:VERSION,canonicalStore:'indexeddb-v2',hydrate,open,newCase,cases:()=>all().map(x=>({...x})),getCase:id=>{const c=get(id);return c?{...c}:null},engineeringContext:id=>{const c=get(id);return c?{materialGradeId:c.materialGradeId||null,material:c.material||'',machineId:c.machineId||null,machine:c.machine||'',mouldId:c.mouldId||null,mould:c.mould||'',productId:c.productId||null,product:c.product||'',partId:c.partId||null,part:c.part||''}:null},learnerToken:()=>hydratedLearnerToken,storageError:()=>storageFailure,scope:'Learner-scoped local IndexedDB evidence casebook; legacy localStorage is migration input only; no network upload, universal production setpoints, assessment mutation or machine authorisation.'};
 window.addEventListener('mm:domains-ready',()=>hydrate({force:true}),{once:true});
 })();

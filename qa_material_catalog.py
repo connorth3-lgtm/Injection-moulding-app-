@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 import re
 
-from tools.material_catalog import ROOT, CATALOG, STAGING, load_json, validate_staging, validate_grade, acquisition_status
+from tools.material_catalog import ROOT, CATALOG, STAGING, load_json, validate_staging, validate_grade, acquisition_status, promotion_readiness
 
 
 def need(ok, message):
@@ -74,12 +74,18 @@ need(progress.get("publishedExactGrades") == 11, "Korean pilot published exact-g
 errors = validate_staging()
 need(not errors, "material staging semantic QA failed:\n" + "\n".join(errors))
 
+promotion = promotion_readiness()
+need(promotion.get("stagingOnlyGrades", 0) > 0, "promotion readiness must report the staged-only queue")
+need(promotion.get("stagingOnlyGrades") == promotion.get("evidenceReviewCandidates", 0) + promotion.get("blockedGrades", 0), "promotion readiness queue counts do not reconcile")
+need("not an automatic publication gate" in promotion.get("boundary", ""), "promotion readiness must preserve explicit human/semantic review boundary")
+need(all(row.get("evidenceReviewCandidate") is True and not row.get("blockers") for row in promotion.get("candidates") or []), "promotion candidates must be blocker-free review candidates")
+
 # Runtime catalog is a generated/validated public snapshot at repository root;
 # source schemas and staging remain under data/ and outside the Pages allowlist.
 need(CATALOG == ROOT / "material-catalog-v1.json", "runtime catalog must remain outside private data/ staging tree")
 catalog = load_json(CATALOG)
 registry_runtime = (ROOT / "src/domains/materials/material-registry.js").read_text(encoding="utf-8")
-for marker in ("decisionComparison", "matchedComparisonRows", "materialChangeReport", "evidenceDelta", "verificationActions", "data-mm-run-material-compare", "data-mm-run-material-change", "Material Change Assistant", "Material-change evidence checklist", "not a material ranking or production recipe", "does not prescribe purge/changeover settings", "Do not copy a drying recipe from another grade"):
+for marker in ("decisionComparison", "matchedComparisonRows", "materialChangeReport", "evidenceDelta", "verificationActions", "evidenceCoverage", "changeFlags", "validationGates", "data-mm-run-material-compare", "data-mm-run-material-change", "Material Change Assistant", "Material-change evidence checklist", "not a material ranking or production recipe", "does not prescribe purge/changeover settings", "Do not copy a drying recipe from another grade"):
     need(marker in registry_runtime, f"material decision-support marker missing: {marker}")
 need("comparableSignature(ob)!==sig" in registry_runtime, "material decision support must fail closed when test-condition signatures differ")
 need("coupon shrinkage and morphology as evidence inputs, not a part-warpage prediction" in registry_runtime, "material warpage reasoning boundary missing")
