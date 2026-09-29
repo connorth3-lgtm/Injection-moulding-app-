@@ -131,7 +131,7 @@ const EVIDENCE_KIND_LABELS={
 };
 function evidenceKindOptions(selected='controlled-trial'){return Object.entries(EVIDENCE_KIND_LABELS).map(([value,label])=>`<option value="${esc(value)}" ${value===selected?'selected':''}>${esc(label)}</option>`).join('')}
 function evidenceAcceptanceOptions(selected='not-assessed'){return [['not-assessed','Not assessed'],['pending','Pending'],['accepted','Accepted'],['rejected','Rejected']].map(([value,label])=>`<option value="${value}" ${value===selected?'selected':''}>${label}</option>`).join('')}
-function evidenceItemHtml(item){return `<div class="mw-evidence-row"><b>${esc(EVIDENCE_KIND_LABELS[item.kind]||item.kind)} · ${esc(item.title||'Untitled evidence')}</b><br><span class="mw-help">${esc(item.occurredAt||'')} · ${esc(item.acceptanceStatus||'not-assessed')}${item.sourceRef?` · source ${esc(item.sourceRef)}`:''} · ${item.complete?'complete':'incomplete'}${item.voided?' · VOID':''}</span>${item.materialLot?`<div><b>Lot / batch:</b> ${esc(item.materialLot)}</div>`:''}${item.measurement?`<div><b>Measurement:</b> ${esc(item.measurement)} ${esc(item.unit||'')}</div>`:''}${item.methodRef?`<div><b>Method / basis:</b> ${esc(item.methodRef)}</div>`:''}${item.acceptanceBasis?`<div><b>Acceptance basis:</b> ${esc(item.acceptanceBasis)}</div>`:''}${item.result?`<div><b>Result:</b> ${esc(item.result)}</div>`:''}${item.revisionOf?`<div><b>Revision of:</b> ${esc(item.revisionOf)}</div>`:''}${item.voided?`<div><b>Void reason:</b> ${esc(item.voidReason||'Not recorded')}</div>`:''}${!item.complete?`<div class="mw-help">Missing required evidence: ${esc((item.missingFields||[]).join(', '))}</div>`:''}${item.notes?`<div><b>Notes:</b> ${esc(item.notes)}</div>`:''}${item.voided?'':`<button class="ghost" type="button" data-mw-evidence-void="${esc(item.id)}">Void evidence</button>`}</div>`}
+function evidenceItemHtml(item){return `<div class="mw-evidence-row"><b>${esc(EVIDENCE_KIND_LABELS[item.kind]||item.kind)} · ${esc(item.title||'Untitled evidence')}</b><br><span class="mw-help">${esc(item.occurredAt||'')} · ${esc(item.acceptanceStatus||'not-assessed')}${item.sourceRef?` · source ${esc(item.sourceRef)}`:''} · ${item.complete?'complete':'incomplete'}${item.voided?' · VOID':''}</span>${item.materialLot?`<div><b>Lot / batch:</b> ${esc(item.materialLot)}</div>`:''}${item.measurement?`<div><b>Measurement:</b> ${esc(item.measurement)} ${esc(item.unit||'')}</div>`:''}${item.methodRef?`<div><b>Method / basis:</b> ${esc(item.methodRef)}</div>`:''}${item.acceptanceBasis?`<div><b>Acceptance basis:</b> ${esc(item.acceptanceBasis)}</div>`:''}${item.result?`<div><b>Result:</b> ${esc(item.result)}</div>`:''}${item.revisionOf?`<div><b>Revision of:</b> ${esc(item.revisionOf)}</div>`:''}${item.voided?`<div><b>Void reason:</b> ${esc(item.voidReason||'Not recorded')}</div>`:''}${!item.complete?`<div class="mw-help">Missing required evidence: ${esc((item.missingFields||[]).join(', '))}</div>`:''}${item.notes?`<div><b>Notes:</b> ${esc(item.notes)}</div>`:''}${item.voided?'':`<button class="ghost" type="button" data-mw-evidence-revise="${esc(item.id)}">Revise evidence</button><button class="ghost" type="button" data-mw-evidence-void="${esc(item.id)}">Void evidence</button>`}</div>`}
 async function hydrateCaseEvidence(host,c){
   const panel=host.querySelector('[data-mw-case-evidence]');if(!panel)return;
   const store=await resolveStore();if(!store?.listCaseEvidence){panel.innerHTML='<h3>Closed-loop evidence</h3><div class="mw-empty">Structured evidence store unavailable.</div>';return}
@@ -158,10 +158,23 @@ async function hydrateCaseEvidence(host,c){
     try{
       const input={};panel.querySelectorAll('[data-mw-evidence-field]').forEach(el=>input[el.dataset.mwEvidenceField]=el.value);
       if(input.occurredAt)input.occurredAt=new Date(input.occurredAt).toISOString();
-      await store.saveCaseEvidence(c.id,input,store.learnerToken());
-      await hydrateCaseEvidence(host,c);window.toast?.('Evidence record saved');
+      const revisionOf=panel.dataset.mwRevisionOf||'';
+      if(revisionOf)await store.reviseCaseEvidence(revisionOf,input,store.learnerToken());
+      else await store.saveCaseEvidence(c.id,input,store.learnerToken());
+      await hydrateCaseEvidence(host,c);window.toast?.(revisionOf?'Evidence revision saved; original retained':'Evidence record saved');
     }catch(err){persistenceError(err)}
   });
+  panel.querySelectorAll('[data-mw-evidence-revise]').forEach(btn=>btn.addEventListener('click',()=>{
+    const item=items.find(x=>x.id===btn.dataset.mwEvidenceRevise);if(!item)return;
+    panel.dataset.mwRevisionOf=item.id;
+    for(const field of panel.querySelectorAll('[data-mw-evidence-field]')){
+      let value=item[field.dataset.mwEvidenceField]??'';
+      if(field.dataset.mwEvidenceField==='occurredAt'&&value)value=String(value).slice(0,16);
+      field.value=String(value);
+    }
+    const add=panel.querySelector('[data-mw-evidence-add]');if(add)add.textContent='Save evidence revision';
+    panel.querySelector('[data-mw-evidence-field="title"]')?.focus();
+  }));
   panel.querySelectorAll('[data-mw-evidence-void]').forEach(btn=>btn.addEventListener('click',async()=>{
     const reason=prompt('Why is this evidence being voided? The original record will be retained in the audit trail.','');
     if(!String(reason||'').trim())return;
