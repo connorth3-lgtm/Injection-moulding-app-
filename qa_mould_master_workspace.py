@@ -43,6 +43,8 @@ for marker in [
     'store.learnerToken()',
     'await store.saveCase(c,{token:owner})',
     'await store.deleteCase(id,owner)',
+    'Archive case',
+    'evidence and audit history will be retained locally',
     'legacy localStorage is migration input only',
     'Export case',
     'Engineering context',
@@ -74,7 +76,7 @@ for forbidden in [
 ]: need(forbidden not in js,f'Mould Master workspace contains forbidden second-store/mutation/transport/control path: {forbidden}')
 
 engineering=text('src/domains/engineering/engineering-store.js')
-for marker in ['importLegacyCases','if(prior?.complete)return','preservedExisting','destructive:false','Engineering case belongs to a different learner profile','linkCaseMachine','linkCaseMould','linkCaseProduct','linkCasePart','linkCaseContext','productId','partId','caseEvidence','normalizeCaseEvidence','saveCaseEvidence','listCaseEvidence','voidCaseEvidence','reviseCaseEvidence','evidenceAuditTrail','evidenceSummary','validateCaseBundle','importCaseBundle','evidenceCompleteness','methodRef','acceptanceBasis','materialLot','acceptanceStatus']:
+for marker in ['importLegacyCases','if(prior?.complete)return','preservedExisting','destructive:false','Engineering case belongs to a different learner profile','linkCaseMachine','linkCaseMould','linkCaseProduct','linkCasePart','linkCaseContext','productId','partId','caseEvidence','archiveCase','archivedAt','case-archive','normalizeCaseEvidence','saveCaseEvidence','listCaseEvidence','voidCaseEvidence','reviseCaseEvidence','evidenceAuditTrail','evidenceSummary','validateCaseBundle','importCaseBundle','evidenceCompleteness','methodRef','acceptanceBasis','materialLot','acceptanceStatus']:
     need(marker in engineering,f'engineering canonical-store migration/ownership marker missing: {marker}')
 need('syncLegacySnapshot' not in engineering,'engineering store must not maintain live localStorage snapshot parity')
 need(not (ROOT/'src/domains/engineering/store-bridge.js').exists(),'retired engineering store bridge must not remain in the repository')
