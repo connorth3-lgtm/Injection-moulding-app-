@@ -53,7 +53,7 @@ for(let run=1;run<=500;run++){
     expect(state.navGroup).toBe('home');
     expect(state.unresolved,'unresolved accessibility semantics: '+JSON.stringify(state.semanticIssues)).toBe(0);
     expect(state.horizontalOverflow).toBeLessThanOrEqual(1);
-    if(viewport.width<=700){expect(state.mobileVisible).toBe(4);expect(state.mobileCurrent).toBe(1)}
+    if(viewport.width<=700){expect(state.mobileVisible).toBe(5);expect(state.mobileCurrent).toBe(1)}
     if(family==='home'){
       await expect(page.locator('#dashboard')).toBeVisible();
       await expect(page.locator('#dashboard')).not.toContainText(/workshop rank|learning streak/i);
