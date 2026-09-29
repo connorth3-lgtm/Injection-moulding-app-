@@ -11,7 +11,7 @@ V=json.loads(text('version.json'))
 expected={
  'web_release':'2026.09.29.6',
  'android_release':'2026.08.26.2',
- 'desktop_release':'2026.08.26.9',
+ 'desktop_release':'2026.09.29.1',
  'content_version':'2026.08.26.1',
  'question_bank_version':'2026.08.30.1',
  'assessment_quality_version':'2026.08.24.3',
