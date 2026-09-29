@@ -30,7 +30,7 @@ const BASE_FILES=[
   'src/domains/domain-bootstrap.js',RUNTIME_MANIFEST,'src/domains/runtime-packs/learning-foundation-runtime-pack.js','src/domains/runtime-packs/assessment-foundation-runtime-pack.js','src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js','src/domains/runtime-packs/evidence-runtime-pack.js','src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js','src/domains/runtime-packs/assessment-multimodal-runtime-pack.js','src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js','src/domains/runtime-packs/process-data-runtime-pack.js','src/domains/runtime-packs/curriculum-workspace-runtime-pack.js','src/domains/runtime-packs/shell-finalization-runtime-pack.js','app-shell-finalize.js','production-health.js','data-integration-runtime.js',
   'process-data-intelligence-ui.js','process-data-semantic-registry.json','current-data-manifest.json','learning-analytics.js','accessibility-hardening.js',
   'source-library.js','measured-evidence-integration.js','measured-evidence-decision.js','measured-learning-library.js','measured-learning-library.css',
-  'reference-data.js','reference-data.html','reference-deep-dive.js','reference-research-extension.js','reference-20x-extension.js',
+  'reference-data.js','reference-data.html','materials.html','reference-deep-dive.js','reference-research-extension.js','reference-20x-extension.js',
   'reference-2026-expansion.js','reference-sources.js','reference-browser-ui.js','diagnostic-learning-labs.js','material-behaviour-labs.js',
   'src/domains/shell/learner-ui-polish.css','service-worker.js','repair.html','privacy.html','support.html'
 ];
