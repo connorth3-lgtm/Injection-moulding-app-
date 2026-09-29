@@ -61,7 +61,7 @@ function ensureMaterialsMobileTab(){
   if(!button){
     button=document.createElement('button');button.type='button';button.dataset.view='materials';
     button.innerHTML='⬡<span>Materials</span>';button.setAttribute('aria-label','Materials');
-    button.addEventListener('click',()=>captured.switchView('materials'));
+    button.addEventListener('click',()=>window.switchView?.('materials'));
     const practice=nav.querySelector(':scope > button[data-view="scenarios"]');
     if(practice)practice.insertAdjacentElement('beforebegin',button);else nav.appendChild(button)
   }
