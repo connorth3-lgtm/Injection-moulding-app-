@@ -90,3 +90,26 @@
   .mm-home-balance-grid button,.mm-book-governance,.mm-book-assurance-details{border:1px solid ButtonText}
   .mm-home-balance-icon{border:1px solid ButtonText}
 }
+
+/* Product-quality first-run and state treatment */
+.mm-onboarding-product{max-width:620px}
+.mm-onboarding-product h2{margin:5px 0 7px;font-size:clamp(26px,4vw,34px);letter-spacing:-.035em}
+.mm-onboarding-intro{margin:0 0 16px;color:var(--mm-text-muted,var(--muted));line-height:1.5}
+.mm-onboarding-group{border:0;padding:0;margin:16px 0}
+.mm-onboarding-group legend,.mm-onboarding-field{display:block;margin-bottom:8px;color:#dce8f4;font-size:13px;font-weight:760}
+.mm-onboarding-product .choice-cards{gap:8px}
+.mm-onboarding-product .choice-card{min-height:86px;padding:12px;border-radius:13px}
+.mm-onboarding-product .choice-card b{display:block;margin-bottom:3px}
+.mm-onboarding-product .choice-card small{display:block;line-height:1.35}
+.mm-onboarding-product .daily-select{gap:7px}
+.mm-onboarding-product .daily-select label{min-height:44px;display:flex;align-items:center;justify-content:center;gap:7px;border-radius:12px}
+.mm-onboarding-actions{margin-top:17px}
+[data-mm-product-state="empty"]{position:relative;padding:14px 15px!important;border-style:dashed!important;color:#9eb1c4!important}
+[data-mm-product-state="error"]{border-color:#7a4050!important;background:#2b1720!important}
+@media(max-width:700px){
+  .mm-onboarding-product .choice-cards{grid-template-columns:1fr!important}
+  .mm-onboarding-product .choice-card{min-height:0}
+  .mm-onboarding-actions{display:grid!important;grid-template-columns:1fr!important}
+  .mm-onboarding-actions button{width:100%!important}
+}
+
