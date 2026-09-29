@@ -10,3 +10,17 @@ Release lanes are intentionally independent. Equality of version numbers is not 
 | Windows recovery | 2026.08.21.1 | frozen recovery lane, not the current learner runtime | legacy/recovery semantics only | frozen bytes; never modify to reduce current architecture debt |
 
 Machine-readable release identities remain authoritative in `version.json`. This matrix documents compatibility boundaries and must not be used to promote an external HOLD to PASS.
+
+
+## New2 feature availability
+
+| Capability | Web/PWA 2026.09.29.6 | Open desktop 2026.09.29.1 candidate | Android 2026.08.26.2 |
+| --- | --- | --- | --- |
+| 260 exact-grade material catalogue | Included | Included in candidate build | Do not assume parity |
+| Material → Machine → Mould → Product → Part links | Included | Included in candidate build | Do not assume parity |
+| Structured closed-loop evidence | Included | Included in candidate build | Do not assume parity |
+| Schema-4 engineering case export/import | Included | Included in candidate build | Do not assume parity |
+| Append-only evidence revisions / void audit | Included | Included in candidate build | Do not assume parity |
+| Exact-head CI risk coverage meta-gate | Release governance | Release governance | Not an Android runtime capability |
+
+The desktop entry above describes repository-built candidate contents, not signed-package or Microsoft Store acceptance. Android parity requires a separately versioned Android release plus genuine device validation; the existing Android release must not be relabelled as containing New2.
