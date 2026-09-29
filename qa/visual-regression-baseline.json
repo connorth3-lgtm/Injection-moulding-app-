@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.09.30.2",
-  "commit": "2e38faac46468fbd06d9a180f781dfb90286d0ee",
+  "release": "2026.09.30.3",
+  "commit": "6211863f93b8ba90d327edcd9600f44ddf9f54f9",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -40,5 +40,5 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "2026.09.30.2 is the reviewed learner UI reference for the intentional information-architecture upgrade: Home is a useful workbench, primary navigation is Home / Learn / Materials / Practice / More, Materials is a singular first-class destination, Learn no longer duplicates the catalogue, secondary tools move behind More or task hubs, and top-bar actions are contextual. The pixel tolerance remains locked at maxDiffPixels 12; this approval updates the reference bytes rather than relaxing drift tolerance. Physical-device, real-AT and other human/external evidence remain separate historical/freshness gates and are not relabelled by this visual lock."
+  "policy": "2026.09.30.3 is the reviewed learner UI reference for the intentional information-architecture upgrade: Home is a useful workbench, primary navigation is Home / Learn / Materials / Practice / More, Materials is a singular first-class destination, Learn no longer duplicates the catalogue, secondary tools move behind More or task hubs, and top-bar actions are contextual. The pixel tolerance remains locked at maxDiffPixels 12; this approval updates the reference bytes rather than relaxing drift tolerance. Physical-device, real-AT and other human/external evidence remain separate historical/freshness gates and are not relabelled by this visual lock."
 }
