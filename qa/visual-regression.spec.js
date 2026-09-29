@@ -100,7 +100,7 @@ async function prepareSurface(page,surface){
   }else if(surface==='more'){
     await page.evaluate(()=>openMobileMenu());
     await expect(page.locator('#modal .modal-card')).toBeVisible();
-    await expect(page.getByRole('heading',{name:'Tools & progress'})).toBeVisible();
+    await expect(page.getByRole('heading',{name:'More'})).toBeVisible();
   }else if(surface==='assessment'){
     await page.evaluate(()=>{switchView('exams');startExam('Beginner')});
     await page.waitForFunction(()=>Array.isArray(window.activeExam?.questions)&&window.activeExam.questions.length===16&&document.querySelectorAll('#examQuestions .question').length===16);
