@@ -81,8 +81,9 @@ for forbidden in ['correctIndex=', 'question_bank_version=', 'MM_DATA.exams=', '
     need(forbidden not in shell,f'app shell contains forbidden assessment/network mutation: {forbidden}')
 
 idx=text('index.html')
-for asset in ['app-shell-registry.js','app-shell-finalize.js']:
-    need(f"['./{asset}','<script src=\"./{asset}\">']" in idx,f'index missing {asset}')
+need("['./app-shell-registry.js','<script src=\"./app-shell-registry.js\">']" in idx,'index missing app-shell-registry.js')
+need("['./src/domains/runtime-packs/shell-finalization-runtime-pack.js','<script src=\"./src/domains/runtime-packs/shell-finalization-runtime-pack.js\">']" in idx,'index missing packed shell finalizer')
+need("['./app-shell-finalize.js','<script" not in idx,'direct root shell finalizer must remain retired from browser bootstrap')
 need("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'" in idx,'index missing packed mould-master workspace runtime')
 need(idx.index("'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'") < idx.index("'./app-shell-registry.js'"),'registry must capture the mature pre-shell core after packed assessment evidence patches')
 need(idx.index("'./app-shell-registry.js'") < idx.index("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'"),'registry must capture core before packed learner wrapper modules')
