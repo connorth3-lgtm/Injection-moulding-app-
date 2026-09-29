@@ -20,7 +20,7 @@ Learner-scoped feature keys are registered through `MM_LEARNER_SCOPE`. New learn
 
 ### Engineering cases
 
-`mouldmaster-engineering-v2` is IndexedDB version 2 with `cases`, `caseLinks` and `migrations`. The legacy `mm_mould_master_cases_v1::<learner-token>` path is migrated additively. Replay must be idempotent, newer canonical data must win, cross-learner ID conflicts must fail closed, and the legacy source is not destroyed during migration proof.
+`mouldmaster-engineering-v2` is IndexedDB version 3 with `cases`, `caseLinks`, `caseEvidence` and `migrations`. Structured evidence is append-only: corrections create revisions and withdrawals create retained void audit records rather than silently deleting the original observation. The legacy `mm_mould_master_cases_v1::<learner-token>` path is migrated additively. Replay must be idempotent, newer canonical data must win, cross-learner ID conflicts must fail closed, and the legacy source is not destroyed during migration proof.
 
 ### Process evidence
 
@@ -34,7 +34,7 @@ Learner-scoped feature keys are registered through `MM_LEARNER_SCOPE`. New learn
 
 Every migration follows: **validate source → stage/normalise → write transactionally where available → verify result → only then declare success**. A failure before verified commit preserves the last-known-good representation. Repeated migration must be idempotent where replay is possible. Derived caches may be rebuilt; source-of-truth learner or process evidence must never be silently regenerated from guesses.
 
-A learner backup does not implicitly include engineering cases or site-local process evidence. Those have separate scope and must be explicitly exported/handled when supported. This prevents a learner-profile restore from silently overwriting workplace evidence.
+A learner backup does not implicitly include engineering cases or site-local process evidence. Those have separate scope. Engineering cases use a bounded schema-4 JSON export/import path that validates the case, links, evidence and audit trail before a single IndexedDB transaction; restore always creates a new learner-owned case rather than overwriting an existing case. Schema-3 case exports remain compatibility inputs and retain incomplete-evidence flags where they do not satisfy the current evidence contract. This prevents a learner-profile restore from silently overwriting workplace evidence.
 
 Current exports use `mouldmaster-backup-v3`. The envelope contains the existing strictly validated `mouldmaster-backup-v2` payload plus integrity metadata: `SHA-256`, canonicalization `json-stable-v1`, and scope `backupFormat+payload`. The runtime computes the digest over canonical envelope input. The payload is verified **before** handing an isolated payload Blob to the existing bounded/transactional importer. Digest mismatch, unsupported integrity metadata, malformed envelope, invalid learner identity or oversize input fails closed before restore and preserves last-known-good learner data.
 

@@ -9,6 +9,19 @@ async function seedLearner(page){
   });
 }
 
+async function waitForDomToSettle(page){
+  let prior=-1;
+  let stableSamples=0;
+  for(let attempt=0;attempt<12;attempt++){
+    await page.waitForTimeout(50);
+    const nodes=await page.evaluate(()=>document.getElementsByTagName('*').length);
+    if(nodes===prior)stableSamples+=1;
+    else stableSamples=0;
+    if(stableSamples>=2)return;
+    prior=nodes;
+  }
+}
+
 test('startup and browser resource growth stay inside regression ceilings',async({page,browserName})=>{
   await seedLearner(page);
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
@@ -57,11 +70,11 @@ test('repeated navigation does not accumulate unbounded DOM or resource entries'
   await page.waitForFunction(()=>(typeof window.MM_APP_SHELL_FINALIZED==='string'&&window.MM_APP_SHELL_FINALIZED.length>0)&&window.MM_PRIMARY_HUBS,{timeout:budget.startupReadyMsMax});
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'),{timeout:budget.startupReadyMsMax});
 
-  // Warm every view once so lazy first-render construction is not mislabeled as a leak.
-  await page.evaluate(()=>{
-    for(const view of ['dashboard','path','scenarios','materials','dashboard'])window.switchView(view);
-  });
-  await page.waitForTimeout(100);
+  // Warm and settle every view individually so deferred first-render construction is not mislabeled as a leak.
+  for(const view of ['dashboard','path','scenarios','materials','dashboard']){
+    await page.evaluate(nextView=>window.switchView(nextView),view);
+    await waitForDomToSettle(page);
+  }
   const before=await page.evaluate(()=>document.getElementsByTagName('*').length);
   const half=Math.max(1,Math.floor(budget.longSessionCycles/2));
 

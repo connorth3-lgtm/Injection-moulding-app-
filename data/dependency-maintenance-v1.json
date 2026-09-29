@@ -25,7 +25,7 @@
     },
     {
       "id": "electron-desktop",
-      "declared": "44.4.3",
+      "declared": "44.4.5",
       "statusAtReview": "supported-stable",
       "eol": "2027-03-02",
       "owner": "repository-maintainer",

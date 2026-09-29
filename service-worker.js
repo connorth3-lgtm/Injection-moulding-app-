@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.09.29.5';
+const CACHE_VERSION='2026.09.29.9';
 const CACHE_REVISION='lifecycle-r5-20260924';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
@@ -101,7 +101,7 @@ const CORE=[
   './material-catalog-v1.json',
   './learning-analytics.js',
   './accessibility-hardening.js',
-  './app-shell-finalize.js',
+  './src/domains/runtime-packs/shell-finalization-runtime-pack.js',
   './production-health.js',
   './data-integration-runtime.js',
   './process-data-intelligence-ui.js',

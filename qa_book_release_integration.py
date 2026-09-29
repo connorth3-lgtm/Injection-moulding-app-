@@ -78,7 +78,7 @@ need("script.src='./src/domains/learning/book-runtime.js'" in compat_loader, 'ro
 for forbidden in ("const AUTH_PATH='./data/", 'function showChapter(', 'function verifiedChapterHtml('):
     need(forbidden not in compat_loader, f'root Book path still contains a second implementation: {forbidden}')
 need("script.src='./book-runtime.js'" in learning_pack, 'learning foundation must still reach the compatibility loader')
-need(index.index('learning-foundation-runtime-pack.js') < index.index('app-shell-finalize.js'), 'release script versioner must install before app-shell dynamic loaders execute')
+need(index.index('learning-foundation-runtime-pack.js') < index.index('shell-finalization-runtime-pack.js'), 'release script versioner must install before packed app-shell dynamic loaders execute')
 
 # Every dynamically created same-origin script after the compatibility loader gets the current shell release query.
 for marker in ('__MM_RELEASE_SCRIPT_VERSIONER__', 'HTMLScriptElement', 'versionScriptUrl', "url.searchParams.set('v',release)"):

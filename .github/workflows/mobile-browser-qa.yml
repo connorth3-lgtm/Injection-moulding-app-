@@ -63,6 +63,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   mobile-browser:
@@ -70,6 +71,8 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v7
         with:
           python-version: '3.13'
@@ -182,3 +185,10 @@ jobs:
             exit 1
           fi
           echo "All browser and visual approval gates passed."
+
+      - name: Exact-head CI risk coverage meta-gate
+        if: github.event_name == 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          CI_RISK_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: python tools/verify_ci_risk_coverage.py

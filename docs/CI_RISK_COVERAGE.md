@@ -1,6 +1,6 @@
 # CI risk coverage contract
 
-This file defines the minimum workflow coverage expected for pull requests to `main`. It is intentionally declarative: repository rules remain the authority for required checks, while this contract prevents high-risk paths from silently losing the workflows that exercise them.
+This file defines the minimum workflow coverage expected for pull requests to `main`. The contract is enforced at runtime by `tools/verify_ci_risk_coverage.py` inside the natively required `mobile-browser` protected context. The verifier classifies the exact PR diff, queries GitHub Actions for the exact head SHA, and fails if an applicable workflow is missing, remains unresolved beyond the bounded polling window, or completes non-successfully.
 
 schema: 1
 
@@ -37,3 +37,8 @@ Required coverage: Question Quality 50-Pass, Premium UI QA, MouldMaster Release 
 ## Evidence boundary
 
 A passing repository workflow is not physical-device, assistive-technology, SME, learner-outcome, signing, Store, production-site, or accreditation evidence. External HOLD states remain controlled by their evidence contracts.
+
+
+## Runtime enforcement
+
+`MouldMaster Domain Foundation QA` runs on every pull request to `main`. At the end of the required Mobile Browser QA job, the exact-head meta-gate verifies the applicable workflows above using the pull-request head SHA. This closes the gap where a workflow trigger/event failure could otherwise look like a green subset of checks. The meta-gate does not treat its own `mobile-browser` run as external evidence; native branch protection still requires that job independently.

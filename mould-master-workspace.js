@@ -1,7 +1,7 @@
-/* MouldMaster evidence-led troubleshooting workspace — 2026.09.29.5 */
+/* MouldMaster evidence-led troubleshooting workspace — 2026.09.29.6 */
 (function(){
 'use strict';
-const VERSION='2026.09.29.5';
+const VERSION='2026.09.29.6';
 const MAX_CASES=80;
 let activeId='';
 let caseCache=[];
@@ -131,12 +131,12 @@ const EVIDENCE_KIND_LABELS={
 };
 function evidenceKindOptions(selected='controlled-trial'){return Object.entries(EVIDENCE_KIND_LABELS).map(([value,label])=>`<option value="${esc(value)}" ${value===selected?'selected':''}>${esc(label)}</option>`).join('')}
 function evidenceAcceptanceOptions(selected='not-assessed'){return [['not-assessed','Not assessed'],['pending','Pending'],['accepted','Accepted'],['rejected','Rejected']].map(([value,label])=>`<option value="${value}" ${value===selected?'selected':''}>${label}</option>`).join('')}
-function evidenceItemHtml(item){return `<div class="mw-evidence-row"><b>${esc(EVIDENCE_KIND_LABELS[item.kind]||item.kind)} · ${esc(item.title||'Untitled evidence')}</b><br><span class="mw-help">${esc(item.occurredAt||'')} · ${esc(item.acceptanceStatus||'not-assessed')}${item.sourceRef?` · source ${esc(item.sourceRef)}`:''}</span>${item.materialLot?`<div><b>Lot / batch:</b> ${esc(item.materialLot)}</div>`:''}${item.measurement?`<div><b>Measurement:</b> ${esc(item.measurement)} ${esc(item.unit||'')}</div>`:''}${item.result?`<div><b>Result:</b> ${esc(item.result)}</div>`:''}${item.notes?`<div><b>Notes:</b> ${esc(item.notes)}</div>`:''}<button class="ghost" type="button" data-mw-evidence-delete="${esc(item.id)}">Delete evidence</button></div>`}
+function evidenceItemHtml(item){return `<div class="mw-evidence-row"><b>${esc(EVIDENCE_KIND_LABELS[item.kind]||item.kind)} · ${esc(item.title||'Untitled evidence')}</b><br><span class="mw-help">${esc(item.occurredAt||'')} · ${esc(item.acceptanceStatus||'not-assessed')}${item.sourceRef?` · source ${esc(item.sourceRef)}`:''} · ${item.complete?'complete':'incomplete'}${item.voided?' · VOID':''}</span>${item.materialLot?`<div><b>Lot / batch:</b> ${esc(item.materialLot)}</div>`:''}${item.measurement?`<div><b>Measurement:</b> ${esc(item.measurement)} ${esc(item.unit||'')}</div>`:''}${item.methodRef?`<div><b>Method / basis:</b> ${esc(item.methodRef)}</div>`:''}${item.acceptanceBasis?`<div><b>Acceptance basis:</b> ${esc(item.acceptanceBasis)}</div>`:''}${item.result?`<div><b>Result:</b> ${esc(item.result)}</div>`:''}${item.revisionOf?`<div><b>Revision of:</b> ${esc(item.revisionOf)}</div>`:''}${item.voided?`<div><b>Void reason:</b> ${esc(item.voidReason||'Not recorded')}</div>`:''}${!item.complete?`<div class="mw-help">Missing required evidence: ${esc((item.missingFields||[]).join(', '))}</div>`:''}${item.notes?`<div><b>Notes:</b> ${esc(item.notes)}</div>`:''}${item.voided?'':`<button class="ghost" type="button" data-mw-evidence-revise="${esc(item.id)}">Revise evidence</button><button class="ghost" type="button" data-mw-evidence-void="${esc(item.id)}">Void evidence</button>`}</div>`}
 async function hydrateCaseEvidence(host,c){
   const panel=host.querySelector('[data-mw-case-evidence]');if(!panel)return;
   const store=await resolveStore();if(!store?.listCaseEvidence){panel.innerHTML='<h3>Closed-loop evidence</h3><div class="mw-empty">Structured evidence store unavailable.</div>';return}
   const items=await store.listCaseEvidence(c.id,store.learnerToken()),summary=await store.evidenceSummary(c.id,store.learnerToken());
-  panel.innerHTML=`<h3>Closed-loop evidence</h3><div class="mw-kpi"><span>Recorded evidence</span><b>${summary.count}</b><div class="mw-help">Site-local records tied to this case and its stable engineering identities.</div></div>
+  panel.innerHTML=`<h3>Closed-loop evidence</h3><div class="mw-kpi"><span>Active evidence</span><b>${summary.activeCount} / ${summary.count}</b><div class="mw-help">${summary.completeCount} complete · ${summary.incompleteCount} incomplete · ${summary.voidedCount} voided. Site-local records tied to stable engineering identities.</div></div>
   <div class="mw-form">
     <label>Evidence type<select data-mw-evidence-field="kind">${evidenceKindOptions()}</select></label>
     <label>Evidence title<input data-mw-evidence-field="title" placeholder="e.g. Cavity 3 dimension after controlled trial"></label>
@@ -145,7 +145,9 @@ async function hydrateCaseEvidence(host,c){
     <label>Material lot / batch<input data-mw-evidence-field="materialLot" placeholder="supplier / lot / batch identifier"></label>
     <label>Measurement<input data-mw-evidence-field="measurement" placeholder="numeric value or controlled observation"></label>
     <label>Unit<input data-mw-evidence-field="unit" placeholder="mm, g, %, cycles…"></label>
+    <label>Method / measurement basis<input data-mw-evidence-field="methodRef" placeholder="gauge, test method, sample plan, work instruction…"></label>
     <label>Acceptance<select data-mw-evidence-field="acceptanceStatus">${evidenceAcceptanceOptions()}</select></label>
+    <label class="wide">Acceptance basis / authority<input data-mw-evidence-field="acceptanceBasis" placeholder="approved drawing/spec, QA disposition, authorised release reference…"></label>
     <label class="wide">Result<textarea data-mw-evidence-field="result" placeholder="What was actually observed?"></textarea></label>
     <label class="wide">Notes<textarea data-mw-evidence-field="notes" placeholder="Method, sample size, measurement confidence, maintenance finding, limitations…"></textarea></label>
   </div>
@@ -156,13 +158,27 @@ async function hydrateCaseEvidence(host,c){
     try{
       const input={};panel.querySelectorAll('[data-mw-evidence-field]').forEach(el=>input[el.dataset.mwEvidenceField]=el.value);
       if(input.occurredAt)input.occurredAt=new Date(input.occurredAt).toISOString();
-      await store.saveCaseEvidence(c.id,input,store.learnerToken());
-      await hydrateCaseEvidence(host,c);window.toast?.('Evidence record saved');
+      const revisionOf=panel.dataset.mwRevisionOf||'';
+      if(revisionOf)await store.reviseCaseEvidence(revisionOf,input,store.learnerToken());
+      else await store.saveCaseEvidence(c.id,input,store.learnerToken());
+      await hydrateCaseEvidence(host,c);window.toast?.(revisionOf?'Evidence revision saved; original retained':'Evidence record saved');
     }catch(err){persistenceError(err)}
   });
-  panel.querySelectorAll('[data-mw-evidence-delete]').forEach(btn=>btn.addEventListener('click',async()=>{
-    if(!confirm('Delete this local evidence record?'))return;
-    try{await store.deleteCaseEvidence(btn.dataset.mwEvidenceDelete,store.learnerToken());await hydrateCaseEvidence(host,c)}catch(err){persistenceError(err)}
+  panel.querySelectorAll('[data-mw-evidence-revise]').forEach(btn=>btn.addEventListener('click',()=>{
+    const item=items.find(x=>x.id===btn.dataset.mwEvidenceRevise);if(!item)return;
+    panel.dataset.mwRevisionOf=item.id;
+    for(const field of panel.querySelectorAll('[data-mw-evidence-field]')){
+      let value=item[field.dataset.mwEvidenceField]??'';
+      if(field.dataset.mwEvidenceField==='occurredAt'&&value)value=String(value).slice(0,16);
+      field.value=String(value);
+    }
+    const add=panel.querySelector('[data-mw-evidence-add]');if(add)add.textContent='Save evidence revision';
+    panel.querySelector('[data-mw-evidence-field="title"]')?.focus();
+  }));
+  panel.querySelectorAll('[data-mw-evidence-void]').forEach(btn=>btn.addEventListener('click',async()=>{
+    const reason=prompt('Why is this evidence being voided? The original record will be retained in the audit trail.','');
+    if(!String(reason||'').trim())return;
+    try{await store.voidCaseEvidence(btn.dataset.mwEvidenceVoid,reason,store.learnerToken());await hydrateCaseEvidence(host,c);window.toast?.('Evidence void recorded; original retained')}catch(err){persistenceError(err)}
   }))
 }
 function casesHtml(active){const cs=all();if(!cs.length)return '<div class="mw-empty">No saved cases yet.</div>';return `<div class="mw-cases">${cs.slice(0,12).map(c=>`<div class="mw-case"><div><b>${esc(c.title||c.defect||'Untitled case')}</b><small>${esc(status(c))} · ${new Date(c.updatedAt).toLocaleDateString()}</small></div><button class="ghost" type="button" data-mw-open="${esc(c.id)}">${c.id===active?'Open':'View'}</button></div>`).join('')}</div>`}
@@ -232,13 +248,20 @@ function wire(host,c){
   host.querySelectorAll('[data-mw-material]').forEach(b=>b.addEventListener('click',()=>{window.MM_MATERIAL_BEHAVIOUR_LABS?.open?.();setTimeout(()=>document.querySelector(`[data-ml-start="${CSS.escape(b.dataset.mwMaterial)}"]`)?.click(),0)}));
   host.querySelector('[data-mw-field="defect"]')?.addEventListener('change',async()=>{try{const saved=await saveCase(collect(c));renderCase(saved)}catch(err){persistenceError(err)}})
 }
-async function exportCase(c){const store=await resolveStore(),evidence=store?.listCaseEvidence?await store.listCaseEvidence(c.id,store.learnerToken()):[];const payload={schema:3,version:VERSION,engineeringContext:{materialGradeId:c.materialGradeId||null,machineId:c.machineId||null,mouldId:c.mouldId||null,productId:c.productId||null,partId:c.partId||null},evidence,exportedAt:now(),trainingBoundary:'Evidence record only; not a universal production recipe or machine authorisation.',case:c};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`mouldmaster-case-${String(c.title||c.id).replace(/[^a-z0-9]+/gi,'-').toLowerCase().slice(0,48)}.json`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)}
-function renderList(){activeId='';const host=section();host.innerHTML=`<div class="mw-hero card"><div class="eyebrow">Mould Master</div><h2>Troubleshooting casebook</h2><p>Keep diagnosis tied to the evidence chain rather than a sequence of unrecorded machine adjustments.</p><div class="mw-boundary"><b>Local-only record:</b> cases stay in this browser/desktop profile unless you explicitly export a case JSON file. No case data is uploaded by this module.</div></div><div class="mw-toolbar"><div><h2 style="margin:0">Saved cases</h2><p class="muted" style="margin:4px 0 0">${all().length} local case${all().length===1?'':'s'}</p></div><button class="primary" type="button" data-mw-new>New case</button></div><div class="mw-panel card">${casesHtml('')}</div>`;host.querySelector('[data-mw-new]')?.addEventListener('click',async()=>{try{const c=await saveCase(blank());renderCase(c)}catch(err){persistenceError(err)}});host.querySelectorAll('[data-mw-open]').forEach(b=>b.addEventListener('click',()=>{const c=get(b.dataset.mwOpen);if(c)renderCase(c)}))}
+async function exportCase(c){const store=await resolveStore(),owner=store?.learnerToken?.(),evidence=store?.listCaseEvidence?await store.listCaseEvidence(c.id,owner):[],evidenceAudit=store?.evidenceAuditTrail?await store.evidenceAuditTrail(c.id,owner):[],links=store?.linksForCase?await store.linksForCase(c.id,owner):[];const payload={schema:4,version:VERSION,engineeringContext:{materialGradeId:c.materialGradeId||null,machineId:c.machineId||null,mouldId:c.mouldId||null,productId:c.productId||null,partId:c.partId||null},links,evidence,evidenceAudit,exportedAt:now(),trainingBoundary:'Evidence record only; not a universal production recipe or machine authorisation.',case:c};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`mouldmaster-case-${String(c.title||c.id).replace(/[^a-z0-9]+/gi,'-').toLowerCase().slice(0,48)}.json`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)}
+async function importCaseFile(file){
+  if(!file)throw new Error('Choose a MouldMaster case JSON file');
+  if(file.size>5*1024*1024)throw new Error('Case import is limited to 5 MiB');
+  const parsed=JSON.parse(await file.text()),store=await resolveStore();if(!store?.importCaseBundle)throw new Error('Engineering case restore is unavailable');
+  const result=await store.importCaseBundle(parsed,store.learnerToken());
+  await hydrate({force:true});await open(result.caseId);return result
+}
+function renderList(){activeId='';const host=section();host.innerHTML=`<div class="mw-hero card"><div class="eyebrow">Mould Master</div><h2>Troubleshooting casebook</h2><p>Keep diagnosis tied to the evidence chain rather than a sequence of unrecorded machine adjustments.</p><div class="mw-boundary"><b>Local-only record:</b> cases stay in this browser/desktop profile unless you explicitly export a case JSON file. Restores create a new learner-owned case rather than overwriting an existing case. No case data is uploaded by this module.</div></div><div class="mw-toolbar"><div><h2 style="margin:0">Saved cases</h2><p class="muted" style="margin:4px 0 0">${all().length} local case${all().length===1?'':'s'}</p></div><div class="mw-actions"><button class="primary" type="button" data-mw-new>New case</button><button class="ghost" type="button" data-mw-import>Import case</button></div></div><div class="mw-panel card">${casesHtml('')}</div>`;host.querySelector('[data-mw-new]')?.addEventListener('click',async()=>{try{const c=await saveCase(blank());renderCase(c)}catch(err){persistenceError(err)}});host.querySelector('[data-mw-import]')?.addEventListener('click',()=>{const input=document.createElement('input');input.type='file';input.accept='.json,application/json';input.addEventListener('change',async()=>{try{const result=await importCaseFile(input.files?.[0]);window.toast?.(`Imported case with ${result.evidenceImported} evidence record${result.evidenceImported===1?'':'s'}`)}catch(err){persistenceError(err)}});input.click()});host.querySelectorAll('[data-mw-open]').forEach(b=>b.addEventListener('click',()=>{const c=get(b.dataset.mwOpen);if(c)renderCase(c)}))}
 async function open(id){style();await hydrate();const host=section();hideViews();host.classList.remove('hidden');header();mark();const c=id&&get(id)||get(activeId);if(c)renderCase(c);else renderList();window.scrollTo?.({top:0,behavior:'smooth'})}
 async function newCase(seed={}){await hydrate();const c=await saveCase({...blank(),...seed,id:uid(),createdAt:now(),updatedAt:now()});await open(c.id);return c.id}
 
 style();section();
 window.mmOpenMouldMaster=()=>open();
-window.MM_MOULD_MASTER_WORKSPACE={version:VERSION,canonicalStore:'indexeddb-v2',hydrate,open,newCase,cases:()=>all().map(x=>({...x})),getCase:id=>{const c=get(id);return c?{...c}:null},evidence:async id=>{const store=await resolveStore();return store?.listCaseEvidence?store.listCaseEvidence(id,store.learnerToken()):[]},evidenceSummary:async id=>{const store=await resolveStore();return store?.evidenceSummary?store.evidenceSummary(id,store.learnerToken()):null},engineeringContext:id=>{const c=get(id);return c?{materialGradeId:c.materialGradeId||null,material:c.material||'',machineId:c.machineId||null,machine:c.machine||'',mouldId:c.mouldId||null,mould:c.mould||'',productId:c.productId||null,product:c.product||'',partId:c.partId||null,part:c.part||''}:null},learnerToken:()=>hydratedLearnerToken,storageError:()=>storageFailure,scope:'Learner-scoped local IndexedDB evidence casebook; legacy localStorage is migration input only; no network upload, universal production setpoints, assessment mutation or machine authorisation.'};
+window.MM_MOULD_MASTER_WORKSPACE={version:VERSION,canonicalStore:'mouldmaster-engineering-v2/db3',hydrate,open,newCase,importCaseFile,cases:()=>all().map(x=>({...x})),getCase:id=>{const c=get(id);return c?{...c}:null},evidence:async id=>{const store=await resolveStore();return store?.listCaseEvidence?store.listCaseEvidence(id,store.learnerToken()):[]},evidenceSummary:async id=>{const store=await resolveStore();return store?.evidenceSummary?store.evidenceSummary(id,store.learnerToken()):null},engineeringContext:id=>{const c=get(id);return c?{materialGradeId:c.materialGradeId||null,material:c.material||'',machineId:c.machineId||null,machine:c.machine||'',mouldId:c.mouldId||null,mould:c.mould||'',productId:c.productId||null,product:c.product||'',partId:c.partId||null,part:c.part||''}:null},learnerToken:()=>hydratedLearnerToken,storageError:()=>storageFailure,scope:'Learner-scoped local IndexedDB evidence casebook; legacy localStorage is migration input only; no network upload, universal production setpoints, assessment mutation or machine authorisation.'};
 window.addEventListener('mm:domains-ready',()=>hydrate({force:true}),{once:true});
 })();
