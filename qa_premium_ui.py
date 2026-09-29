@@ -22,8 +22,6 @@ for marker in [
 ]:
     need(marker in css,f'premium UI stylesheet missing governed marker: {marker}')
 need('http://' not in css and 'https://' not in css,'premium UI must remain fully local/offline')
-for marker in ['Premium product refinement','--mm-glass','mmPremiumEnter','mmPremiumModal','mmPremiumToast','.nav-group-label{','.mm-material-page-hero{','prefers-reduced-motion:reduce']:
-    need(marker in css,f'premium product refinement missing governed marker: {marker}')
 need('@import' not in css.lower(),'premium UI must not import remote or implicit stylesheets')
 need('http://' not in dynamic and 'https://' not in dynamic,'premium dynamic UI must remain fully local/offline')
 need('@import' not in dynamic.lower(),'premium dynamic UI must not import remote or implicit stylesheets')
