@@ -5,7 +5,7 @@
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.09.29.19';
+const VERSION='2026.09.29.20';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -199,12 +199,13 @@ function install(){
   ensureStyles();
   run();
   syncFirstRunModal();
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{syncFirstRunModal();syncProductStates()}));
   // Shell render/view lifecycle events cover app-owned mutations. Avoid a whole-body characterData observer,
   // which previously scheduled a full polish pass for every text mutation in the application.
   window.addEventListener('resize',schedule,{passive:true});
   window.addEventListener?.('mm:domains-ready',schedule);
   window.MM_APP_SHELL?.events?.onRender?.('dashboard',schedule);
-  window.MM_APP_SHELL?.events?.onViewChange?.(()=>{schedule();requestAnimationFrame(()=>{syncFirstRunModal();syncProductStates()})});
+  window.MM_APP_SHELL?.events?.onViewChange?.(schedule);
   document.addEventListener('click',event=>{
     if(event.target?.closest?.('[data-mm-onclick*="showOnboarding"],[onclick*="showOnboarding"]'))requestAnimationFrame(()=>{syncFirstRunModal();syncProductStates()})
   },true);
