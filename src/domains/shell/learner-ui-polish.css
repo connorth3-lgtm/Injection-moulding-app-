@@ -76,6 +76,15 @@
 }
 
 @media(max-width:700px){
+  #dashboard .mm-home-balance,
+  #dashboard .mm-home-balance *,
+  #dashboard .mm-home-balance-grid,
+  #dashboard .mm-home-link-row,
+  #dashboard .mm-home-snapshot{min-width:0!important;max-width:100%}
+  #dashboard .mm-home-balance button,
+  #dashboard .mm-home-balance b,
+  #dashboard .mm-home-balance small,
+  #dashboard .mm-home-balance p{overflow-wrap:anywhere;word-break:normal}
   .mm-home-balance{display:none!important}
   #mmBookView [data-mm-book-hero]{padding:16px!important}
   #mmBookView [data-mm-book-hero]>h2{font-size:24px!important;margin-top:5px!important}
