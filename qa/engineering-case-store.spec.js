@@ -49,6 +49,11 @@ test('Mould Master uses one owner-scoped IndexedDB store with one-time legacy im
   await page.getByRole('button',{name:'Save case'}).click();
   await page.waitForFunction(id=>window.MM_ENGINEERING_STORE.getCase(id).then(c=>c?.title==='Canonical IndexedDB edit'),LEGACY_CASE_ID);
   expect(await page.evaluate(key=>localStorage.getItem(key),migratedLegacyKey)).toBe(legacyRaw);
+  const archivedLegacy=await page.evaluate(id=>window.MM_ENGINEERING_STORE.getCase(id,window.MM_ENGINEERING_STORE.learnerToken(),{includeArchived:true}),LEGACY_CASE_ID);
+  expect(archivedLegacy.archivedAt).toBeTruthy();
+  expect(archivedLegacy.status).toBe('Archived');
+  const archivedAudit=await page.evaluate(id=>window.MM_ENGINEERING_STORE.evidenceAuditTrail(id),LEGACY_CASE_ID);
+  expect(archivedAudit.some(x=>x.action==='case-archive')).toBeTruthy();
 
   await page.reload({waitUntil:'domcontentloaded'});
   await waitForApp(page);
@@ -57,7 +62,7 @@ test('Mould Master uses one owner-scoped IndexedDB store with one-time legacy im
 
   await page.evaluate(id=>window.MM_MOULD_MASTER_WORKSPACE.open(id),LEGACY_CASE_ID);
   page.once('dialog',dialog=>dialog.accept());
-  await page.getByRole('button',{name:'Delete case'}).click();
+  await page.getByRole('button',{name:'Archive case'}).click();
   await page.waitForFunction(id=>window.MM_ENGINEERING_STORE.getCase(id).then(c=>c===null),LEGACY_CASE_ID);
   expect(await page.evaluate(key=>localStorage.getItem(key),migratedLegacyKey)).toBe(legacyRaw);
 
