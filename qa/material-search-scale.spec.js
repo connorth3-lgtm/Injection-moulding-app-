@@ -32,11 +32,7 @@ async function openMaterials(page){
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>(typeof window.MM_APP_SHELL_FINALIZED==='string'&&window.MM_APP_SHELL_FINALIZED.length>0)&&window.MM_MATERIAL_REGISTRY&&window.MM_MATERIAL_SEARCH&&window.MM_MATERIAL_SEARCH_PAGINATION&&window.MM_PRIMARY_HUBS);
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
-  await page.locator('.mobile-nav > button').filter({hasText:'Learn'}).click();
-  await expect(page.locator('#path .mm-learn-hub')).toBeVisible();
-  const materials=page.locator('#path [data-mm-hub-action="materials"]');
-  await expect(materials).toBeVisible();
-  await materials.click();
+  await page.locator('.mobile-nav > button').filter({hasText:'Materials'}).click();
   await expect(page.locator('#mmExactMaterialCatalog')).toHaveCount(1);
   await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
   await expect(page.locator('#mmExactMaterialCatalog')).toHaveAttribute('data-mm-material-search-mode','indexed');
