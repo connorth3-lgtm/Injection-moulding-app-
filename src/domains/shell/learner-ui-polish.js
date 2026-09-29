@@ -163,29 +163,17 @@ function syncDesktopNavigation(){
   if(more)more.hidden=!isDesktop;
 }
 
-function installFirstRunPolish(){
-  if(typeof window.showOnboarding!=='function'||window.showOnboarding.__mmProductPolished)return;
-  const polished=function(){
-    window.openModal?.(`<div class="onboarding mm-onboarding-product">
-      <span class="eyebrow">Welcome to MouldMaster</span>
-      <h2>Set up your learning path</h2>
-      <p class="mm-onboarding-intro">Three quick choices. You can change them later in Profile.</p>
-      <label>Your name<input id="onName" value="" placeholder="Your name" autocomplete="name"></label>
-      <fieldset class="mm-onboarding-group"><legend>Experience</legend><div class="choice-cards">
-        <label class="choice-card"><input type="radio" name="onExp" value="Beginner" checked><b>New</b><small>Start with the fundamentals.</small></label>
-        <label class="choice-card"><input type="radio" name="onExp" value="Intermediate"><b>Some experience</b><small>Start around process setup.</small></label>
-        <label class="choice-card"><input type="radio" name="onExp" value="Advanced"><b>Experienced</b><small>Start around scientific moulding.</small></label>
-      </div></fieldset>
-      <label class="mm-onboarding-field">Main goal<select id="onGoal">
-        <option>Learn the full process</option><option>Troubleshoot defects better</option><option>Become a process technician</option><option>Become a process engineer</option><option>Improve mould/tooling knowledge</option><option>Prepare for certification</option>
-      </select></label>
-      <fieldset class="mm-onboarding-group"><legend>Typical session</legend><div class="daily-select">
-        <label><input type="radio" name="onMin" value="10">10 min</label><label><input type="radio" name="onMin" value="15" checked>15 min</label><label><input type="radio" name="onMin" value="30">30 min</label>
-      </div></fieldset>
-      <div class="hero-buttons mm-onboarding-actions"><button class="primary" onclick="finishOnboarding()">Start my path →</button><button class="ghost" onclick="skipOnboarding()">Use defaults</button></div>
-    </div>`);
-  };
-  polished.__mmProductPolished=true;window.showOnboarding=polished;
+function syncFirstRunModal(){
+  const root=document.querySelector('.onboarding');
+  if(!root||root.dataset.mmProductPolished==='1')return;
+  root.dataset.mmProductPolished='1';root.classList.add('mm-onboarding-product');
+  const h2=root.querySelector('h2');if(h2)h2.textContent='Set up your learning path';
+  const intro=root.querySelector(':scope > p');if(intro){intro.textContent='Three quick choices. You can change them later in Profile.';intro.classList.add('mm-onboarding-intro')}
+  const headings=[...root.querySelectorAll('h3')];
+  if(headings[0])headings[0].textContent='Experience';
+  if(headings[1])headings[1].textContent='Main goal';
+  if(headings[2])headings[2].textContent='Typical session';
+  const primary=root.querySelector('.hero-buttons .primary');if(primary)primary.textContent='Start my path →';
 }
 function syncProductStates(){
   document.querySelectorAll('.empty-friendly,.mm-exact-empty,.mm-material-no-match').forEach(el=>el.dataset.mmProductState='empty');
@@ -209,14 +197,16 @@ function schedule(){
 }
 function install(){
   ensureStyles();
-  installFirstRunPolish();
   run();
+  syncFirstRunModal();
   // Shell render/view lifecycle events cover app-owned mutations. Avoid a whole-body characterData observer,
   // which previously scheduled a full polish pass for every text mutation in the application.
   window.addEventListener('resize',schedule,{passive:true});
   window.addEventListener?.('mm:domains-ready',schedule);
   window.MM_APP_SHELL?.events?.onRender?.('dashboard',schedule);
   window.MM_APP_SHELL?.events?.onViewChange?.(schedule);
+  const modal=document.getElementById('modal');
+  if(modal)new MutationObserver(()=>{syncFirstRunModal();syncProductStates()}).observe(modal,{childList:true,subtree:true});
   window.MM_LEARNER_UI_POLISH=Object.freeze({version:VERSION,refresh:schedule});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
