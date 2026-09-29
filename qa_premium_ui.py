@@ -24,7 +24,7 @@ for marker in [
     need(marker in css,f'premium UI stylesheet missing governed marker: {marker}')
 need('http://' not in css and 'https://' not in css,'premium UI must remain fully local/offline')
 need('@import' not in css.lower(),'premium UI must not import remote or implicit stylesheets')
-for marker in ['Product design hierarchy cleanup','--mm-product-radius','#dashboard .mm-home-balance{','#materials .mm-exact-results{','.mobile-nav{']:
+for marker in ['Product design hierarchy cleanup','--mm-product-radius','#dashboard .mm-home-balance{','#materials .mm-exact-results{','.mobile-nav{','Final product-quality interaction states','Startup and degraded states must feel like the same product']:
     need(marker in shell,f'canonical product-design hierarchy marker missing: {marker}')
 need('http://' not in dynamic and 'https://' not in dynamic,'premium dynamic UI must remain fully local/offline')
 need('@import' not in dynamic.lower(),'premium dynamic UI must not import remote or implicit stylesheets')
@@ -83,7 +83,7 @@ need("testMatch:/premium-ui\\.spec\\.js/" in config,'premium Playwright config m
 need("baseURL:'http://127.0.0.1:4173'" in config,'premium Playwright config must bind the local review server')
 
 spec=text('qa/premium-ui.spec.js')
-for marker in ['premium UI stylesheet is active','no horizontal overflow','reduced motion','forced-colour-safe']:
+for marker in ['premium UI stylesheet is active','no horizontal overflow','reduced motion','forced-colour-safe','first-run setup is concise','Materials comparison guides valid choices']:
     need(marker in spec,f'premium browser contract missing: {marker}')
 
 print(f'PASS: premium industrial UI is first-paint, offline, desktop-integrity, accessibility and cross-browser-regression governed for {release}; legacy !important debt={important_count}.')
