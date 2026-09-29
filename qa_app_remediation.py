@@ -75,7 +75,7 @@ need(not (ROOT / "src/domains/engineering/store-bridge.js").exists(), "retired e
 for marker in (
     "MM_ENGINEERING_STORE",
     "await store.saveCase(c,{token:owner})",
-    "await store.deleteCase(id,owner)",
+    "await store.archiveCase(id,'Archived from Mould Master workspace',owner)",
     "canonicalStore:'mouldmaster-engineering-v2/db3'",
     "legacy localStorage is migration input only",
     "hydratedLearnerToken",

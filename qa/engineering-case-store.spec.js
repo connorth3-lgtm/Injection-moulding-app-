@@ -55,11 +55,20 @@ test('Mould Master uses one owner-scoped IndexedDB store with one-time legacy im
   expect((await page.evaluate(id=>window.MM_ENGINEERING_STORE.getCase(id),LEGACY_CASE_ID)).title).toBe('Canonical IndexedDB edit');
   expect(await page.evaluate(key=>localStorage.getItem(key),migratedLegacyKey)).toBe(legacyRaw);
 
+  await page.evaluate(id=>window.MM_ENGINEERING_STORE.saveCaseEvidence(id,{kind:'controlled-trial',title:'Legacy archive retention proof',sourceRef:'QA-LEGACY-ARCHIVE',result:'Evidence must survive case archive'}),LEGACY_CASE_ID);
   await page.evaluate(id=>window.MM_MOULD_MASTER_WORKSPACE.open(id),LEGACY_CASE_ID);
   page.once('dialog',dialog=>dialog.accept());
-  await page.getByRole('button',{name:'Delete case'}).click();
+  await page.getByRole('button',{name:'Archive case'}).click();
   await page.waitForFunction(id=>window.MM_ENGINEERING_STORE.getCase(id).then(c=>c===null),LEGACY_CASE_ID);
   expect(await page.evaluate(key=>localStorage.getItem(key),migratedLegacyKey)).toBe(legacyRaw);
+  const archivedLegacy=await page.evaluate(id=>window.MM_ENGINEERING_STORE.getCase(id,window.MM_ENGINEERING_STORE.learnerToken(),{includeArchived:true}),LEGACY_CASE_ID);
+  expect(archivedLegacy.archivedAt).toBeTruthy();
+  expect(archivedLegacy.status).toBe('Archived');
+  const archivedEvidence=await page.evaluate(id=>window.MM_ENGINEERING_STORE.listCaseEvidence(id),LEGACY_CASE_ID);
+  expect(archivedEvidence).toHaveLength(1);
+  expect(archivedEvidence[0].title).toBe('Legacy archive retention proof');
+  const archivedAudit=await page.evaluate(id=>window.MM_ENGINEERING_STORE.evidenceAuditTrail(id),LEGACY_CASE_ID);
+  expect(archivedAudit.some(x=>x.action==='case-archive')).toBeTruthy();
 
   await page.reload({waitUntil:'domcontentloaded'});
   await waitForApp(page);

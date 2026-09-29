@@ -91,27 +91,32 @@ function normalizeCase(input={}){
     verification:String(input.verification||''),
     conclusion:String(input.conclusion||''),
     status:String(input.status||'Investigating'),
+    archivedAt:input.archivedAt?String(input.archivedAt):null,
+    archiveReason:String(input.archiveReason||''),
     legacySource:input.legacySource||null
   };
 }
 
-async function saveCase(input,{token=null,allowForeignId=false}={}){
+async function saveCase(input,{token=null,allowForeignId=false,allowArchivedRestore=false}={}){
   const owner=tokenValue(token||input?.learnerToken),record=normalizeCase({...input,learnerToken:owner});
   const prior=await getRaw('cases',record.id);
   if(prior&&String(prior.learnerToken)!==owner&&!allowForeignId)throw new Error('Engineering case belongs to a different learner profile');
+  if(prior?.archivedAt&&!allowArchivedRestore)throw new Error('Archived engineering cases are immutable; restore by importing a new case bundle');
   record.createdAt=String(prior?.createdAt||record.createdAt||now());record.updatedAt=now();
   return put('cases',record)
 }
-async function listCases(token=learnerToken()){return (await getAllByIndex('cases','learnerToken',tokenValue(token))).sort((a,b)=>String(b.updatedAt).localeCompare(String(a.updatedAt)))}
-async function getCase(id,token=learnerToken()){const record=await getRaw('cases',String(id));return record&&String(record.learnerToken)===tokenValue(token)?record:null}
-async function deleteCase(id,token=learnerToken()){
+async function listCases(token=learnerToken()){return (await getAllByIndex('cases','learnerToken',tokenValue(token))).filter(x=>!x.archivedAt).sort((a,b)=>String(b.updatedAt).localeCompare(String(a.updatedAt)))}
+async function getCase(id,token=learnerToken(),{includeArchived=false}={}){const record=await getRaw('cases',String(id));return record&&String(record.learnerToken)===tokenValue(token)&&(includeArchived||!record.archivedAt)?record:null}
+async function archiveCase(id,reason='Archived from Mould Master workspace',token=learnerToken()){
   const owner=tokenValue(token),record=await getCase(id,owner);if(!record)return false;
-  const links=await getAllByIndex('caseLinks','caseId',String(id));
-  for(const link of links)if(String(link.learnerToken||owner)===owner)await remove('caseLinks',link.id);
-  const evidence=await getAllByIndex('caseEvidence','caseId',String(id));
-  for(const item of evidence)if(String(item.learnerToken||owner)===owner)await remove('caseEvidence',item.id);
-  await remove('cases',String(id));return true
+  const archivedAt=now(),archived=normalizeCase({...record,status:'Archived',archivedAt,archiveReason:String(reason||'Archived from Mould Master workspace'),updatedAt:archivedAt,learnerToken:owner});
+  const audit=normalizeEvidenceAudit({action:'case-archive',reason:archived.archiveReason,recordedAt:archivedAt},String(id),owner);
+  const db=await openDb(),tx=db.transaction(['cases','caseEvidence'],'readwrite');
+  tx.objectStore('cases').put(archived);
+  tx.objectStore('caseEvidence').add(audit);
+  await txDone(tx);db.close();return true
 }
+async function deleteCase(id,token=learnerToken()){return archiveCase(id,'Archived through legacy delete API',token)}
 
 async function linkCase(caseId,kind,targetId,meta={},token=learnerToken()){
   if(!caseId||!kind||!targetId)throw new Error('caseId, kind and targetId are required');
@@ -121,7 +126,7 @@ async function linkCase(caseId,kind,targetId,meta={},token=learnerToken()){
   await put('caseLinks',record);return record
 }
 async function linksForCase(caseId,token=learnerToken()){
-  const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)return[];
+  const owner=tokenValue(token),c=await getCase(caseId,owner,{includeArchived:true});if(!c)return[];
   return (await getAllByIndex('caseLinks','caseId',String(caseId))).filter(x=>String(x.learnerToken||owner)===owner)
 }
 async function linkCaseMaterial(caseId,materialGradeId,displayName='',token=learnerToken()){
@@ -241,7 +246,7 @@ async function saveCaseEvidence(caseId,input={},token=learnerToken(),{allowLegac
 }
 async function evidenceRows(caseId,owner){return (await getAllByIndex('caseEvidence','caseId',String(caseId))).filter(x=>String(x.learnerToken)===owner)}
 async function listCaseEvidence(caseId,token=learnerToken(),{includeVoided=true}={}){
-  const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)return[];
+  const owner=tokenValue(token),c=await getCase(caseId,owner,{includeArchived:true});if(!c)return[];
   const rows=await evidenceRows(caseId,owner),audits=rows.filter(x=>x.recordType==='audit'),voided=new Map();
   for(const action of audits)if(action.action==='void'&&action.targetEvidenceId)voided.set(String(action.targetEvidenceId),action);
   return rows.filter(x=>x.recordType!=='audit').map(x=>{
@@ -250,7 +255,7 @@ async function listCaseEvidence(caseId,token=learnerToken(),{includeVoided=true}
   }).filter(x=>includeVoided||!x.voided).sort((a,b)=>String(b.occurredAt||b.recordedAt).localeCompare(String(a.occurredAt||a.recordedAt)))
 }
 async function evidenceAuditTrail(caseId,token=learnerToken()){
-  const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)return[];
+  const owner=tokenValue(token),c=await getCase(caseId,owner,{includeArchived:true});if(!c)return[];
   return (await evidenceRows(caseId,owner)).filter(x=>x.recordType==='audit').sort((a,b)=>String(a.recordedAt).localeCompare(String(b.recordedAt)))
 }
 async function voidCaseEvidence(id,reason='',token=learnerToken()){
@@ -340,6 +345,6 @@ async function repairLegacyLinkOwnership(token=learnerToken()){
 }
 async function bootstrap(){try{const migration=await migrateLegacyMouldMasterCases();await repairLegacyLinkOwnership();return migration}catch(err){console.warn('[MouldMaster engineering store] legacy migration skipped',err);return null}}
 
-window.MM_ENGINEERING_STORE=Object.freeze({version:VERSION,dbName:DB_NAME,dbVersion:DB_VERSION,normalizeCase,saveCase,listCases,getCase,deleteCase,linkCase,linksForCase,linkCaseMaterial,linkCaseMachine,linkCaseMould,linkCaseProduct,linkCasePart,linkCaseContext,linkCaseDataset,normalizeCaseEvidence,evidenceCompleteness,saveCaseEvidence,listCaseEvidence,evidenceAuditTrail,voidCaseEvidence,reviseCaseEvidence,deleteCaseEvidence,evidenceSummary,validateCaseBundle,importCaseBundle,evidenceKinds:EVIDENCE_KINDS,acceptanceStates:ACCEPTANCE_STATES,importLegacyCases,migrateLegacyMouldMasterCases,repairLegacyLinkOwnership,bootstrap,learnerToken,legacyKey});
+window.MM_ENGINEERING_STORE=Object.freeze({version:VERSION,dbName:DB_NAME,dbVersion:DB_VERSION,normalizeCase,saveCase,listCases,getCase,archiveCase,deleteCase,linkCase,linksForCase,linkCaseMaterial,linkCaseMachine,linkCaseMould,linkCaseProduct,linkCasePart,linkCaseContext,linkCaseDataset,normalizeCaseEvidence,evidenceCompleteness,saveCaseEvidence,listCaseEvidence,evidenceAuditTrail,voidCaseEvidence,reviseCaseEvidence,deleteCaseEvidence,evidenceSummary,validateCaseBundle,importCaseBundle,evidenceKinds:EVIDENCE_KINDS,acceptanceStates:ACCEPTANCE_STATES,importLegacyCases,migrateLegacyMouldMasterCases,repairLegacyLinkOwnership,bootstrap,learnerToken,legacyKey});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bootstrap,{once:true});else bootstrap();
 })();
