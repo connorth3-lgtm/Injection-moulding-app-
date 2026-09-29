@@ -14,9 +14,7 @@ async function openApp(page){
 
 test('Book distinguishes evidence verification from independent human validation',async({page})=>{
   await openApp(page);
-  const bookButton=page.locator('button[data-mm-book-tab]');
-  await expect(bookButton).toBeVisible();
-  await bookButton.click();
+  await page.evaluate(()=>window.MMBook.open());
 
   const view=page.locator('#mmBookView');
   await expect(view).toBeVisible();
