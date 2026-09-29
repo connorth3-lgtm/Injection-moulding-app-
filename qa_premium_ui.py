@@ -16,6 +16,7 @@ need(re.fullmatch(r'\d{4}\.\d{2}\.\d{2}\.\d+',release) is not None,'premium UI r
 css=text('premium-ui.css')
 dynamic=text('premium-dynamic.css')
 shell=text('ui-shell.css')
+learner_polish=text('src/domains/shell/learner-ui-polish.js')
 for marker in [
     '--mm-surface-0','--mm-accent','--mm-radius-xl','--mm-shadow-lg',
     '.sidebar{','.hero-main{','.mm-primary-hub','.lesson-body{','.exam-card{',
@@ -24,6 +25,7 @@ for marker in [
     need(marker in css,f'premium UI stylesheet missing governed marker: {marker}')
 need('http://' not in css and 'https://' not in css,'premium UI must remain fully local/offline')
 need('@import' not in css.lower(),'premium UI must not import remote or implicit stylesheets')
+need(f"const VERSION='{release}';" in learner_polish,'learner UI polish version must match the governed web release')
 for marker in ['Product design hierarchy cleanup','--mm-product-radius','#dashboard .mm-home-balance{','#materials .mm-exact-results{','.mobile-nav{','Final product-quality interaction states','Startup and degraded states must feel like the same product']:
     need(marker in shell,f'canonical product-design hierarchy marker missing: {marker}')
 need('http://' not in dynamic and 'https://' not in dynamic,'premium dynamic UI must remain fully local/offline')
