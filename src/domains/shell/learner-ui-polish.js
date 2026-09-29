@@ -1,11 +1,11 @@
-/* MouldMaster learner UI polish — 2026.09.17.1
+/* MouldMaster learner UI polish — 2026.09.29.17
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.09.29.16';
+const VERSION='2026.09.29.17';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
