@@ -3,7 +3,7 @@
 'use strict';
 if(window.MM_ENGINEERING_STORE)return;
 
-const VERSION='2026.09.29.5';
+const VERSION='2026.09.29.6';
 const DB_NAME='mouldmaster-engineering-v2';
 const DB_VERSION=3;
 const LEGACY_CASE_BASE='mm_mould_master_cases_v1::';
@@ -171,26 +171,46 @@ async function linkCaseDataset(caseId,datasetId,label='',token=learnerToken()){r
 
 const EVIDENCE_KINDS=Object.freeze(['controlled-trial','dimensional-check','defect-observation','maintenance-event','material-lot','acceptance-check']);
 const ACCEPTANCE_STATES=Object.freeze(['not-assessed','pending','accepted','rejected']);
+const EVIDENCE_REQUIRED=Object.freeze({
+  'controlled-trial':['title','sourceRef','result'],
+  'dimensional-check':['title','sourceRef','measurement','unit','methodRef','result'],
+  'defect-observation':['title','sourceRef','result'],
+  'maintenance-event':['title','sourceRef','result'],
+  'material-lot':['title','sourceRef','materialLot'],
+  'acceptance-check':['title','sourceRef','result','acceptanceBasis']
+});
+function evidenceCompleteness(input={}){
+  const kind=EVIDENCE_KINDS.includes(String(input.kind||''))?String(input.kind):'controlled-trial';
+  const required=[...(EVIDENCE_REQUIRED[kind]||[])];
+  if(['accepted','rejected'].includes(String(input.acceptanceStatus||''))&&!required.includes('acceptanceBasis'))required.push('acceptanceBasis');
+  const missing=required.filter(key=>!String(input[key]??'').trim());
+  return {kind,required,missing,complete:missing.length===0}
+}
 function normalizeCaseEvidence(input={},caseRecord={},owner=learnerToken()){
   const kind=EVIDENCE_KINDS.includes(String(input.kind||''))?String(input.kind):'controlled-trial';
   const acceptanceStatus=ACCEPTANCE_STATES.includes(String(input.acceptanceStatus||''))?String(input.acceptanceStatus):'not-assessed';
-  return {
-    schemaVersion:1,
+  const record={
+    schemaVersion:2,
+    recordType:'evidence',
     id:String(input.id||uid('evidence')),
     caseId:String(input.caseId||caseRecord.id||''),
     learnerToken:String(owner),
     kind,
     occurredAt:String(input.occurredAt||now()),
     recordedAt:String(input.recordedAt||now()),
-    updatedAt:now(),
+    updatedAt:String(input.updatedAt||now()),
     title:String(input.title||''),
     sourceRef:String(input.sourceRef||''),
     materialLot:String(input.materialLot||''),
     measurement:String(input.measurement||''),
     unit:String(input.unit||''),
+    methodRef:String(input.methodRef||''),
     result:String(input.result||''),
     acceptanceStatus,
+    acceptanceBasis:String(input.acceptanceBasis||''),
     notes:String(input.notes||''),
+    revisionOf:input.revisionOf?String(input.revisionOf):null,
+    importedLegacy:Boolean(input.importedLegacy),
     context:{
       materialGradeId:input.context?.materialGradeId??caseRecord.materialGradeId??null,
       machineId:input.context?.machineId??caseRecord.machineId??null,
@@ -201,26 +221,85 @@ function normalizeCaseEvidence(input={},caseRecord={},owner=learnerToken()){
     },
     boundary:'Recorded site-local evidence only; does not prove causation, validate a universal process window, or authorize production changes.'
   };
+  const completeness=evidenceCompleteness(record);
+  record.complete=completeness.complete;record.missingFields=completeness.missing;
+  return record
 }
-async function saveCaseEvidence(caseId,input={},token=learnerToken()){
+function normalizeEvidenceAudit(input={},caseId='',owner=learnerToken()){
+  return {
+    schemaVersion:2,recordType:'audit',id:String(input.id||uid('evidence-audit')),caseId:String(caseId),
+    learnerToken:String(owner),action:String(input.action||''),targetEvidenceId:String(input.targetEvidenceId||''),
+    reason:String(input.reason||''),recordedAt:String(input.recordedAt||now()),updatedAt:String(input.recordedAt||now())
+  }
+}
+async function saveCaseEvidence(caseId,input={},token=learnerToken(),{allowLegacyIncomplete=false}={}){
   const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)throw new Error(`Unknown engineering case ${caseId}`);
   const record=normalizeCaseEvidence({...input,caseId},c,owner),prior=await getRaw('caseEvidence',record.id);
-  if(prior&&String(prior.learnerToken)!==owner)throw new Error('Engineering evidence belongs to a different learner profile');
-  record.recordedAt=String(prior?.recordedAt||record.recordedAt);record.updatedAt=now();
+  if(prior)throw new Error('Engineering evidence is append-only; create a revision instead of overwriting an existing record');
+  if(!record.complete&&!allowLegacyIncomplete)throw new Error(`Evidence record is incomplete: ${record.missingFields.join(', ')}`);
   return put('caseEvidence',record)
 }
-async function listCaseEvidence(caseId,token=learnerToken()){
+async function evidenceRows(caseId,owner){return (await getAllByIndex('caseEvidence','caseId',String(caseId))).filter(x=>String(x.learnerToken)===owner)}
+async function listCaseEvidence(caseId,token=learnerToken(),{includeVoided=true}={}){
   const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)return[];
-  return (await getAllByIndex('caseEvidence','caseId',String(caseId))).filter(x=>String(x.learnerToken)===owner).sort((a,b)=>String(b.occurredAt||b.recordedAt).localeCompare(String(a.occurredAt||a.recordedAt)))
+  const rows=await evidenceRows(caseId,owner),audits=rows.filter(x=>x.recordType==='audit'),voided=new Map();
+  for(const action of audits)if(action.action==='void'&&action.targetEvidenceId)voided.set(String(action.targetEvidenceId),action);
+  return rows.filter(x=>x.recordType!=='audit').map(x=>{
+    const completeness=evidenceCompleteness(x),voidAction=voided.get(String(x.id));
+    return {...x,complete:completeness.complete,missingFields:completeness.missing,voided:Boolean(voidAction),voidReason:voidAction?.reason||'',voidedAt:voidAction?.recordedAt||null}
+  }).filter(x=>includeVoided||!x.voided).sort((a,b)=>String(b.occurredAt||b.recordedAt).localeCompare(String(a.occurredAt||a.recordedAt)))
 }
-async function deleteCaseEvidence(id,token=learnerToken()){
-  const owner=tokenValue(token),record=await getRaw('caseEvidence',String(id));if(!record||String(record.learnerToken)!==owner)return false;
-  await remove('caseEvidence',String(id));return true
+async function evidenceAuditTrail(caseId,token=learnerToken()){
+  const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)return[];
+  return (await evidenceRows(caseId,owner)).filter(x=>x.recordType==='audit').sort((a,b)=>String(a.recordedAt).localeCompare(String(b.recordedAt)))
 }
+async function voidCaseEvidence(id,reason='',token=learnerToken()){
+  const owner=tokenValue(token),record=await getRaw('caseEvidence',String(id));
+  if(!record||record.recordType==='audit'||String(record.learnerToken)!==owner)return false;
+  if(!String(reason||'').trim())throw new Error('A reason is required to void an evidence record');
+  const existing=(await evidenceAuditTrail(record.caseId,owner)).find(x=>x.action==='void'&&x.targetEvidenceId===String(id));
+  if(existing)return existing;
+  return put('caseEvidence',normalizeEvidenceAudit({action:'void',targetEvidenceId:String(id),reason:String(reason).trim()},record.caseId,owner))
+}
+async function reviseCaseEvidence(id,changes={},token=learnerToken()){
+  const owner=tokenValue(token),prior=await getRaw('caseEvidence',String(id));
+  if(!prior||prior.recordType==='audit'||String(prior.learnerToken)!==owner)throw new Error('Evidence record unavailable for revision');
+  return saveCaseEvidence(prior.caseId,{...prior,...changes,id:uid('evidence'),recordedAt:now(),updatedAt:now(),revisionOf:prior.id},owner)
+}
+async function deleteCaseEvidence(id,token=learnerToken()){return voidCaseEvidence(id,'Voided through legacy delete API',token)}
 async function evidenceSummary(caseId,token=learnerToken()){
-  const items=await listCaseEvidence(caseId,token),byKind={},acceptance={};
-  for(const item of items){byKind[item.kind]=(byKind[item.kind]||0)+1;acceptance[item.acceptanceStatus]=(acceptance[item.acceptanceStatus]||0)+1}
-  return {caseId:String(caseId),count:items.length,byKind,acceptance,latestAt:items[0]?.occurredAt||null,boundary:'Counts describe recorded evidence only; completeness and acceptance still require human/site review.'}
+  const items=await listCaseEvidence(caseId,token),active=items.filter(x=>!x.voided),byKind={},acceptance={};
+  for(const item of active){byKind[item.kind]=(byKind[item.kind]||0)+1;acceptance[item.acceptanceStatus]=(acceptance[item.acceptanceStatus]||0)+1}
+  return {caseId:String(caseId),count:items.length,activeCount:active.length,voidedCount:items.length-active.length,completeCount:active.filter(x=>x.complete).length,incompleteCount:active.filter(x=>!x.complete).length,byKind,acceptance,latestAt:active[0]?.occurredAt||null,boundary:'Counts describe recorded evidence only; completeness and acceptance still require human/site review.'}
+}
+function validateCaseBundle(bundle){
+  if(!bundle||typeof bundle!=='object'||![3,4].includes(Number(bundle.schema)))throw new Error('Unsupported MouldMaster case export schema');
+  if(!bundle.case||typeof bundle.case!=='object')throw new Error('Case export is missing its case record');
+  if(!Array.isArray(bundle.evidence)||bundle.evidence.length>500)throw new Error('Case export evidence collection is invalid or too large');
+  if(bundle.links!=null&&(!Array.isArray(bundle.links)||bundle.links.length>100))throw new Error('Case export link collection is invalid or too large');
+  const legacy=Number(bundle.schema)===3;
+  const evidence=bundle.evidence.map(row=>{
+    if(!row||typeof row!=='object'||row.recordType==='audit')throw new Error('Case export contains an invalid evidence record');
+    const normalized=normalizeCaseEvidence({...row,importedLegacy:legacy||Boolean(row.importedLegacy)},bundle.case,'IMPORT-PREFLIGHT');
+    if(!normalized.complete&&!legacy)throw new Error(`Case export contains incomplete evidence: ${normalized.missingFields.join(', ')}`);
+    return normalized
+  });
+  return {schema:Number(bundle.schema),legacy,caseRecord:normalizeCase(bundle.case),evidence,links:Array.isArray(bundle.links)?bundle.links:[]}
+}
+async function importCaseBundle(bundle,token=learnerToken()){
+  const owner=tokenValue(token),validated=validateCaseBundle(bundle),newId=uid('case-import'),importedAt=now();
+  const caseRecord=normalizeCase({...validated.caseRecord,id:newId,learnerToken:owner,createdAt:importedAt,updatedAt:importedAt,legacySource:`case-export-v${validated.schema}:${validated.caseRecord.id||'unknown'}`});
+  const evidence=validated.evidence.map(row=>normalizeCaseEvidence({...row,id:uid('evidence'),caseId:newId,learnerToken:owner,recordedAt:row.recordedAt||importedAt,updatedAt:importedAt,importedLegacy:validated.legacy||Boolean(row.importedLegacy)},caseRecord,owner));
+  const contextLinks=[
+    ['material-grade',caseRecord.materialGradeId,caseRecord.material],['machine',caseRecord.machineId,caseRecord.machine],
+    ['mould',caseRecord.mouldId,caseRecord.mould],['product',caseRecord.productId,caseRecord.product],['part',caseRecord.partId,caseRecord.part]
+  ].filter(([,id])=>id).map(([kind,targetId,displayName])=>({id:`${newId}::${kind}::${targetId}`,caseId:newId,learnerToken:owner,kind,targetId:String(targetId),meta:{displayName:String(displayName||'')},updatedAt:importedAt}));
+  const db=await openDb(),tx=db.transaction(['cases','caseLinks','caseEvidence'],'readwrite');
+  tx.objectStore('cases').add(caseRecord);
+  for(const link of contextLinks)tx.objectStore('caseLinks').put(link);
+  for(const row of evidence)tx.objectStore('caseEvidence').add(row);
+  await txDone(tx);db.close();
+  return {caseId:newId,sourceCaseId:String(validated.caseRecord.id||''),schema:validated.schema,evidenceImported:evidence.length,linksImported:contextLinks.length,legacyEvidence:validated.legacy,importedAt,destructive:false}
 }
 
 function legacyKey(token=learnerToken()){return learnerScope.storageKey(LEGACY_CASE_BASE,tokenValue(token))}
@@ -252,6 +331,6 @@ async function repairLegacyLinkOwnership(token=learnerToken()){
 }
 async function bootstrap(){try{const migration=await migrateLegacyMouldMasterCases();await repairLegacyLinkOwnership();return migration}catch(err){console.warn('[MouldMaster engineering store] legacy migration skipped',err);return null}}
 
-window.MM_ENGINEERING_STORE=Object.freeze({version:VERSION,dbName:DB_NAME,normalizeCase,saveCase,listCases,getCase,deleteCase,linkCase,linksForCase,linkCaseMaterial,linkCaseMachine,linkCaseMould,linkCaseProduct,linkCasePart,linkCaseContext,linkCaseDataset,normalizeCaseEvidence,saveCaseEvidence,listCaseEvidence,deleteCaseEvidence,evidenceSummary,evidenceKinds:EVIDENCE_KINDS,acceptanceStates:ACCEPTANCE_STATES,importLegacyCases,migrateLegacyMouldMasterCases,repairLegacyLinkOwnership,bootstrap,learnerToken,legacyKey});
+window.MM_ENGINEERING_STORE=Object.freeze({version:VERSION,dbName:DB_NAME,dbVersion:DB_VERSION,normalizeCase,saveCase,listCases,getCase,deleteCase,linkCase,linksForCase,linkCaseMaterial,linkCaseMachine,linkCaseMould,linkCaseProduct,linkCasePart,linkCaseContext,linkCaseDataset,normalizeCaseEvidence,evidenceCompleteness,saveCaseEvidence,listCaseEvidence,evidenceAuditTrail,voidCaseEvidence,reviseCaseEvidence,deleteCaseEvidence,evidenceSummary,validateCaseBundle,importCaseBundle,evidenceKinds:EVIDENCE_KINDS,acceptanceStates:ACCEPTANCE_STATES,importLegacyCases,migrateLegacyMouldMasterCases,repairLegacyLinkOwnership,bootstrap,learnerToken,legacyKey});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bootstrap,{once:true});else bootstrap();
 })();
