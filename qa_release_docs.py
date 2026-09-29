@@ -20,7 +20,7 @@ expected={
  'windows_recovery_release':'2026.08.21.1',
 }
 for k,v in expected.items(): need(V.get(k)==v,f'version.json {k} drift: {V.get(k)!r} != {v!r}')
-need(re.fullmatch(r'\\d{4}-\\d{2}-\\d{2}',str(V.get('published',''))) is not None,'version.json published must remain an ISO UTC calendar date')
+need(V.get('published')=='2026-09-29','version.json published UTC date drift')
 need(V.get('published_timezone')=='UTC','version.json must explicitly define the published date timezone')
 need(V.get('published_date_basis')=='protected-main publication date; web_release date component is the Pacific/Auckland release-family date','version.json publication/release-family date semantics are ambiguous')
 
