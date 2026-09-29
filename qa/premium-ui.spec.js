@@ -159,6 +159,7 @@ test('product hierarchy keeps Home focused and Materials catalogue dense',async(
   expect(hierarchy.focusShadow).not.toBe('none');
   expect(hierarchy.utilityShadow).toBe('none');
 
+  await page.waitForFunction(()=>Boolean(window.MM_MATERIAL_REGISTRY?.openPage));
   await page.evaluate(()=>window.MM_MATERIAL_REGISTRY.openPage({replaceUrl:false}));
   await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
   const columns=await page.locator('#mmExactMaterialCatalog [data-mm-exact-results]').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length);
