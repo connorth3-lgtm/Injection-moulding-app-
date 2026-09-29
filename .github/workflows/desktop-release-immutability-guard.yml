@@ -75,18 +75,26 @@ jobs:
 
           target="$(python3 -c 'import json,sys; print(json.load(sys.stdin).get("target_commitish") or "")' <<<"$release_json")"
           created_at="$(python3 -c 'import json,sys; print(json.load(sys.stdin).get("created_at") or "")' <<<"$release_json")"
+          published_at="$(python3 -c 'import json,sys; print(json.load(sys.stdin).get("published_at") or "")' <<<"$release_json")"
 
           created_by_this_run="false"
           if [[ "$EVENT_NAME" == "workflow_run" && -n "$TRIGGER_STARTED_AT" && -n "$TRIGGER_UPDATED_AT" && "$target" == "$TRIGGER_SHA" ]]; then
-            if python3 - "$created_at" "$TRIGGER_STARTED_AT" "$TRIGGER_UPDATED_AT" <<'PY'
-          from datetime import datetime
+            # GitHub may stamp release created_at from the target commit rather than
+            # the actual publication transaction. published_at is the authoritative
+            # signal for a release produced by this publisher run; created_at remains
+            # a fallback for older API behavior.
+            if python3 - "$published_at" "$created_at" "$TRIGGER_STARTED_AT" "$TRIGGER_UPDATED_AT" <<'PY'
+          from datetime import datetime, timedelta
           import sys
 
           def parse(value):
-              return datetime.fromisoformat(value.replace('Z', '+00:00'))
+              return datetime.fromisoformat(value.replace('Z', '+00:00')) if value else None
 
-          created, started, updated = map(parse, sys.argv[1:4])
-          raise SystemExit(0 if started <= created <= updated else 1)
+          published, created, started, updated = map(parse, sys.argv[1:5])
+          lower = started - timedelta(seconds=5)
+          upper = updated + timedelta(seconds=30)
+          stamp = published or created
+          raise SystemExit(0 if stamp and lower <= stamp <= upper else 1)
           PY
             then
               created_by_this_run="true"
