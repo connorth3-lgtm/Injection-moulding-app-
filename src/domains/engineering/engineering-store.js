@@ -281,6 +281,7 @@ function validateCaseBundle(bundle){
   const legacy=Number(bundle.schema)===3;
   const evidence=bundle.evidence.map(row=>{
     if(!row||typeof row!=='object'||row.recordType==='audit')throw new Error('Case export contains an invalid evidence record');
+    if(!EVIDENCE_KINDS.includes(String(row.kind||'')))throw new Error(`Case export contains unknown evidence kind: ${String(row.kind||'')}`);
     const normalized=normalizeCaseEvidence({...row,importedLegacy:legacy||Boolean(row.importedLegacy)},bundle.case,'IMPORT-PREFLIGHT');
     if(!normalized.complete&&!legacy)throw new Error(`Case export contains incomplete evidence: ${normalized.missingFields.join(', ')}`);
     return normalized
