@@ -112,3 +112,20 @@ New2 is merge-ready when:
 
 Final candidate synchronization for the 2026.09.29.5 New2 release; no runtime behavior is changed by this documentation-only commit.
 
+## Closed-loop engineering evidence
+
+The linked engineering context now has a dedicated learner-scoped evidence store. Each troubleshooting case can retain structured records for:
+
+- controlled trials;
+- dimensional / quality checks;
+- defect observations;
+- maintenance events;
+- material lot / batch evidence;
+- acceptance / release checks.
+
+Each evidence record has its own stable ID, occurrence and record timestamps, optional source/reference identifier, material lot/batch, measurement and unit, result, acceptance state, notes, and a snapshot of the case's material, machine, mould, product, part and cavity identities.
+
+Evidence remains local to the learner profile unless explicitly exported. Deleting a case also removes its owned evidence records. Case export schema 3 includes the complete structured evidence collection beside the stable engineering context.
+
+This closes the software evidence loop from manufacturer evidence → machine/mould actual context → product/part quality evidence while preserving the governance boundary: a recorded result does not by itself prove causation, define a universal process window, authorize a setting change, or replace human/site acceptance.
+
