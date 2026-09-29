@@ -74,7 +74,7 @@ test('Mould Master case changes reach the canonical engineering store without a 
     const record=await store.getCase(caseId);
     return {persisted:!!record,title:record?.title||'',material:record?.material||'',canonicalStore:workspace.canonicalStore||'',bridgePresent:!!window.MM_CASE_STORE_BRIDGE};
   },id);
-  expect(result).toEqual({persisted:true,title:'Cross-browser parity test',material:'PC/ABS',canonicalStore:'indexeddb-v2',bridgePresent:false});
+  expect(result).toEqual({persisted:true,title:'Cross-browser parity test',material:'PC/ABS',canonicalStore:'mouldmaster-engineering-v2/db3',bridgePresent:false});
 });
 
 test('visible learner shell has basic semantic accessibility integrity',async({page,browserName})=>{
