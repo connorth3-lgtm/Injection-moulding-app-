@@ -324,9 +324,13 @@ function wirePageNavigation(host){
   const targets={catalog:'mmExactMaterialCatalog',compare:'mmMaterialCompare',change:'mmMaterialChange',learning:'mmMaterialLearningAnchor'};
   host.querySelectorAll('[data-mm-material-jump]').forEach(button=>button.addEventListener('click',()=>document.getElementById(targets[button.dataset.mmMaterialJump])?.scrollIntoView({behavior:'smooth',block:'start'})))
 }
+function syncMaterialsUrl(){
+  if(location.protocol==='file:')return;
+  const u=new URL(location.href);u.pathname=u.pathname.replace(/\/materials\.html$/,'/index.html');u.searchParams.set('view','materials');history.replaceState(null,'',u)
+}
 function openPage({focus='catalog',replaceUrl=true}={}){
   if(typeof window.switchView==='function')window.switchView('materials');
-  if(replaceUrl&&location.protocol!=='file:'){const u=new URL(location.href);u.pathname=u.pathname.replace(/\/materials\.html$/,'/index.html');u.searchParams.set('view','materials');history.replaceState(null,'',u)}
+  if(replaceUrl)syncMaterialsUrl();
   return installPanel().then(()=>{const target={catalog:'mmExactMaterialCatalog',compare:'mmMaterialCompare',change:'mmMaterialChange',learning:'mmMaterialLearningAnchor'}[focus]||'mmMaterialsPageIntro';requestAnimationFrame(()=>document.getElementById(target)?.scrollIntoView({block:'start'}));return true})
 }
 async function installPanel(){
@@ -366,7 +370,7 @@ function bindMaterialsLifecycle(){
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
   const shell=window.MM_APP_SHELL;
   shell?.events?.onRender?.('materials',install);
-  shell?.events?.onViewChange?.(view=>{if(view==='materials')install()});
+  shell?.events?.onViewChange?.(view=>{if(view==='materials'){syncMaterialsUrl();install()}});
   window.addEventListener('mm:domains-ready',install,{once:true});
   if(new URLSearchParams(location.search).get('view')==='materials')requestAnimationFrame(()=>openPage({replaceUrl:false}));
 }
