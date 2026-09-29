@@ -184,3 +184,39 @@ test('primary IA keeps Materials singular and every major destination reachable'
   const mobileOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
   expect(mobileOverflow).toBeLessThanOrEqual(1);
 });
+
+
+test('all major app surfaces remain reachable without shell clutter',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await openApp(page);
+  const core=[
+    ['simulator','#simulator'],['defects','#defects'],['coach','#coach'],['exams','#exams'],
+    ['certificates','#certificates'],['glossary','#glossary'],['profile','#profile'],
+    ['standards','#standards'],['visuals','#visuals']
+  ];
+  for(const [view,selector] of core){
+    await page.evaluate(view=>window.switchView(view),view);
+    await expect(page.locator(selector)).toBeVisible();
+    await expect(page.locator('#searchBtn')).toBeHidden();
+    await expect(page.locator('#continueBtn')).toBeHidden();
+    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+    expect(overflow,view+' horizontal overflow').toBeLessThanOrEqual(1);
+  }
+
+  await page.waitForFunction(()=>Boolean(window.MM_MOULD_MASTER_WORKSPACE?.open));
+  await page.evaluate(()=>window.MM_MOULD_MASTER_WORKSPACE.open());
+  await expect(page.locator('#mmMouldMasterWorkspace')).toBeVisible();
+  await expect(page.locator('#searchBtn')).toBeHidden();
+  await expect(page.locator('#continueBtn')).toBeHidden();
+
+  await page.waitForFunction(()=>Boolean(window.MM_PROCESS_DATA_DIAGNOSTICS?.open));
+  await page.evaluate(()=>window.MM_PROCESS_DATA_DIAGNOSTICS.open());
+  await expect(page.locator('#processDataLabs')).toBeVisible();
+
+  await page.waitForFunction(()=>Boolean(window.MM_MATERIAL_REGISTRY?.openPage));
+  await page.evaluate(()=>window.MM_MATERIAL_REGISTRY.openPage({replaceUrl:false}));
+  await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
+
+  const finalOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(finalOverflow).toBeLessThanOrEqual(1);
+});
