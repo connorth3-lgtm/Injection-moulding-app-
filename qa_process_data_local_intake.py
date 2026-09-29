@@ -165,7 +165,7 @@ need(f"'./{MODULE}'" in sw,'offline cache missing local intake module')
 froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
 need('../../'+MODULE in froms,'desktop package missing local intake module')
 need("'"+MODULE+"'" in integrity,'desktop integrity manifest missing local intake module')
-need(process_pack.index("/* >>> process-data-20-pass-atlas.js */") < process_pack.index('/* >>> '+MODULE+' */'),'local intake must load after the process-data atlas inside its runtime pack'); need(idx.index("'./src/domains/runtime-packs/process-data-runtime-pack.js'") < idx.index("'./app-shell-finalize.js'"),'process-data runtime pack must load before shell finalization')
+need(process_pack.index("/* >>> process-data-20-pass-atlas.js */") < process_pack.index('/* >>> '+MODULE+' */'),'local intake must load after the process-data atlas inside its runtime pack'); need(idx.index("'./src/domains/runtime-packs/process-data-runtime-pack.js'") < idx.index("'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'"),'process-data runtime pack must load before shell finalization')
 
 for wf in ['.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml','.github/workflows/publish-open-desktop.yml','.github/workflows/microsoft-store-msix.yml']:
     need('python qa_process_data_local_intake.py' in text(wf),f'{wf} must gate local process-data intake')
