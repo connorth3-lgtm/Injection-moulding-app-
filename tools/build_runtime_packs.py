@@ -25,6 +25,7 @@ PACKS: dict[str, tuple[str, ...]] = {
     "learning-process-diagnostics-runtime-pack.js": ("learning-experience.js","process-data-diagnostics.js","real-measured-data-assessment.js"),
     "process-data-runtime-pack.js": ("process-data-deep-dive-machine.js","process-data-deep-dive-tooling.js","process-data-deep-dive-material.js","process-data-deep-dive-scientific.js","process-data-deep-dive-quality.js","process-data-deep-dive-50.js","process-data-20-pass-01-05.js","process-data-20-pass-06-10.js","process-data-20-pass-11-15.js","process-data-20-pass-16-20.js","process-data-20-pass-atlas.js","process-data-local-intake.js"),
     "curriculum-workspace-runtime-pack.js": ("curriculum-integration.js","specialist-curriculum.js","specialist-evidence-gap-extension.js","mould-master-workspace.js"),
+    "shell-finalization-runtime-pack.js": ("app-shell-finalize.js",),
 }
 
 
