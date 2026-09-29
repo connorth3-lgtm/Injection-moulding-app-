@@ -21,7 +21,7 @@ for marker in ['MM_MATERIAL_SEARCH_PAGINATION','index.searchPage','index.searchA
     need(marker in code,f'indexed material pagination marker missing: {marker}')
 need('style=' not in code,'material pagination must not emit inline style attributes')
 registry_code=text(registry)
-for marker in ['mmMaterialsPageIntro','Material library & engineering evidence','mmMaterialCompare','mmMaterialChange','mmMaterialLearningAnchor','openPage','view=materials','materials-page']:
+for marker in ['mmMaterialsPageIntro','Material library & engineering evidence','mmMaterialCompare','mmMaterialChange','mmMaterialLearningAnchor','openPage',"searchParams.set('view','materials')",'materials-page']:
     need(marker in registry_code,f'dedicated Materials page marker missing: {marker}')
 materials_page=text('materials.html')
 need('index.html?view=materials' in materials_page,'dedicated materials entry must resolve to canonical app Materials route')
