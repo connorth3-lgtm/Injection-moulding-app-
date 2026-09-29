@@ -130,3 +130,57 @@ test('canonical navigation registry owns generated control semantics',async({pag
     await expect(menu.nth(i).locator('.icon')).toHaveAttribute('aria-hidden','true');
   }
 });
+
+
+test('primary IA keeps Materials singular and every major destination reachable',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await openApp(page);
+  const nav=page.locator('#nav');
+  const visibleLabels=await nav.locator(':scope > button').evaluateAll(nodes=>nodes.filter(n=>getComputedStyle(n).display!=='none'&&!n.hidden).map(n=>(n.textContent||'').replace(/\s+/g,' ').trim()));
+  expect(visibleLabels).toEqual(['⌂ Home','▦ Learn','⬡ Materials','⚠ Practice','More']);
+
+  await nav.getByRole('button',{name:'Home'}).click();
+  await expect(page.locator('#dashboard')).toBeVisible();
+  await expect(page.locator('#dashboard .mm-home-balance')).toBeVisible();
+  await expect(page.locator('#pageTitle')).toHaveText('Home');
+
+  await nav.getByRole('button',{name:'Learn'}).click();
+  await expect(page.locator('#path .mm-learn-hub')).toBeVisible();
+  await expect(page.locator('#path [data-mm-hub-action="materials"]')).toHaveCount(0);
+  await expect(page.locator('#pageTitle')).toHaveText('Learn');
+
+  await nav.getByRole('button',{name:'Materials'}).click();
+  await expect(page.locator('#materials')).toBeVisible();
+  await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
+  await expect(page.locator('#pageTitle')).toHaveText('Materials');
+  await expect(page.locator('#searchBtn')).toBeHidden();
+  await expect(page.locator('#continueBtn')).toBeHidden();
+
+  await nav.getByRole('button',{name:'Practice'}).click();
+  await expect(page.locator('#scenarios .mm-practice-hub')).toBeVisible();
+  await expect(page.locator('#pageTitle')).toHaveText('Practice');
+  await expect(page.locator('#searchBtn')).toBeHidden();
+  await expect(page.locator('#continueBtn')).toBeHidden();
+
+  await nav.getByRole('button',{name:'More'}).click();
+  await expect(page.locator('#modal .modal-card')).toBeVisible();
+  await expect(page.locator('#modal .modal-card h2')).toHaveText('More');
+  await expect(page.locator('#modal .quick-action').filter({hasText:/^Materials$/i})).toHaveCount(0);
+  for(const label of ['Process simulator','Defect finder','Troubleshooting coach','Knowledge checks','Standards & safety','Profile & data','Mould Master','Data diagnosis']){
+    await expect(page.locator('#modal').getByRole('button',{name:new RegExp(label,'i')})).toBeVisible();
+  }
+
+  const desktopOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(desktopOverflow).toBeLessThanOrEqual(1);
+
+  await page.keyboard.press('Escape');
+  await page.setViewportSize({width:390,height:844});
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  const mobile=page.locator('.mobile-nav');
+  await expect(mobile.locator(':scope > button')).toHaveCount(5);
+  await expect(mobile.getByRole('button',{name:'Materials'})).toBeVisible();
+  await mobile.getByRole('button',{name:'Materials'}).click();
+  await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
+  const mobileOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(mobileOverflow).toBeLessThanOrEqual(1);
+});
