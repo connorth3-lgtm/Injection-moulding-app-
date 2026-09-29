@@ -22,14 +22,14 @@ for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name
   test('Book is discoverable and opens through visible UI',async({page})=>{
    await openApp(page,viewport.width);
    if(viewport.width<=900){await mobileMore(page);const book=page.locator('[data-mm-registry-menu="book"]');await expect(book).toBeVisible();await book.click()}
-   else {const book=page.locator('#nav [data-mm-book-tab],#nav [data-mm-book-tab="1"],#nav button').filter({hasText:/^\s*Book\s*$/}).first();await expect(book).toBeVisible();await book.click()}
+   else {const more=page.locator('#nav [data-mm-desktop-more-tools]');await expect(more).toBeVisible();await more.click();const book=page.locator('[data-mm-registry-menu="book"]');await expect(book).toBeVisible();await book.click()}
    await expectVisible(page,'#mmBookView');
   });
   test('core learning and practice destinations are reachable by clicks',async({page})=>{
    await openApp(page,viewport.width);
    if(viewport.width<=900){
     await mobileHub(page,'Learn');await expectVisible(page,'#path .mm-learn-hub');
-    await page.locator('#path [data-mm-hub-action="materials"]').click();await expectVisible(page,'#materials');
+    await mobileHub(page,'Materials');await expectVisible(page,'#materials');
     await mobileHub(page,'Practice');await expectVisible(page,'#scenarios .mm-practice-hub');
     await page.locator('#scenarios [data-mm-hub-action="assessments"]').click();await expectVisible(page,'#exams');
     await mobileHub(page,'Practice');await page.locator('#scenarios [data-mm-hub-action="labs"]').click();await page.locator('#modal [data-mm-hub-action="simulator"]').click();await expectVisible(page,'#simulator');
