@@ -143,3 +143,34 @@ test('assessment keyboard navigation moves focus only into the active question',
   expect(active.hidden).toBe(true);
   expect(active.hiddenChecked).toBe(false);
 });
+
+
+test('product hierarchy keeps Home focused and Materials catalogue dense',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await openApp(page);
+  const focus=page.locator('#dashboard .mm-today-focus');
+  const utilities=page.locator('#dashboard .mm-home-balance');
+  await expect(focus).toBeVisible();
+  await expect(utilities).toBeVisible();
+  const hierarchy=await page.evaluate(()=>({
+    focusShadow:getComputedStyle(document.querySelector('#dashboard .mm-today-focus')).boxShadow,
+    utilityShadow:getComputedStyle(document.querySelector('#dashboard .mm-home-balance')).boxShadow
+  }));
+  expect(hierarchy.focusShadow).not.toBe('none');
+  expect(hierarchy.utilityShadow).toBe('none');
+
+  await page.evaluate(()=>window.MM_MATERIAL_REGISTRY.openPage({replaceUrl:false}));
+  await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
+  const columns=await page.locator('#mmExactMaterialCatalog [data-mm-exact-results]').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length);
+  expect(columns).toBeGreaterThanOrEqual(3);
+});
+
+test('mobile shell uses floating thumb-friendly navigation without overflow',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  const nav=page.locator('.mobile-nav');
+  const box=await nav.boundingBox();
+  expect(box?.width||0).toBeLessThan(390);
+  expect(box?.x||0).toBeGreaterThan(0);
+  await assertNoHorizontalOverflow(page,'floating-mobile-nav');
+});
