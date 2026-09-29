@@ -214,7 +214,7 @@ function learnHubMarkup(){
     <section class="mm-hub-continue mm-primary-hub-card" aria-label="Continue learning"><div class="mm-hub-continue-copy"><span class="eyebrow">Continue</span><h2>${esc(lesson?.title||'Your next lesson')}</h2><p>${lessonLine}</p><div class="mm-hub-progress"><div class="mini-bar" aria-hidden="true"><span style="width:${c?.overall||0}%"></span></div><strong>${c?.overall||0}% complete</strong></div></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="lesson">Continue lesson →</button></section>
     <section class="mm-hub-section"><div class="mm-hub-section-head"><h2>Choose a learning area</h2><p>Open only what you need.</p></div><div class="mm-hub-grid">
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="path-detail"><span class="eyebrow">Core learning</span><b>Learning path</b><small>All ${totalTracks} tracks and lessons.</small><span class="mm-hub-tile-action">Browse learning path →</span></button>
-      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="materials"><span class="eyebrow">Materials</span><b>Material science</b><small>Polymers, material families and behaviour.</small><span class="mm-hub-tile-action">Open material learning →</span></button>
+      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="materials"><span class="eyebrow">Materials</span><b>Materials</b><small>Exact-grade library, evidence, comparisons and material science learning.</small><span class="mm-hub-tile-action">Open Materials →</span></button>
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="specialist"><span class="eyebrow">Advanced</span><b>Specialist learning</b><small>${specialistCount?`${specialistCount} optional advanced lessons.`:'Optional advanced lessons.'}</small><span class="mm-hub-tile-action">Open specialist learning →</span></button>
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="learn-resources"><span class="eyebrow">Resources</span><b>Visuals, glossary & saved</b><small>Diagrams, terms and ${saved} saved lesson${saved===1?'':'s'}.</small><span class="mm-hub-tile-action">Open learning resources →</span></button>
     </div></section>
@@ -350,7 +350,7 @@ function configureMore(){
 }
 function pruneMore(){
   const modal=document.getElementById('modal');if(!modal)return;
-  const moved=/^(Material science|Process simulator|Defect finder|Troubleshooting coach|Knowledge checks|Mould Master|Diagnostic labs|Data diagnosis|Material labs)$/i;
+  const moved=/^(Materials|Material science|Process simulator|Defect finder|Troubleshooting coach|Knowledge checks|Mould Master|Diagnostic labs|Data diagnosis|Material labs)$/i;
   modal.querySelectorAll('.quick-action').forEach(button=>{const label=(button.querySelector('b')?.textContent||'').trim();if(moved.test(label))button.remove()});
 }
 configureMore();

@@ -27,7 +27,7 @@ test('tablet and desktop Home use the available canvas without bloating phone Ho
   await expect(balance.locator('[data-mm-home-action]')).toHaveCount(4);
   await expect(balance.getByRole('button',{name:/Practice/i})).toBeVisible();
   await expect(balance.getByRole('button',{name:/Book/i})).toBeVisible();
-  await expect(balance.getByRole('button',{name:/Material science/i})).toBeVisible();
+  await expect(balance.getByRole('button',{name:/Materials/i})).toBeVisible();
   await expect(balance.getByRole('button',{name:/Mould Master/i})).toBeVisible();
 
   await page.setViewportSize({width:412,height:915});

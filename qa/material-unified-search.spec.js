@@ -16,6 +16,30 @@ async function openMaterials(page,width=412){
   await expect(page.locator('[data-mm-all-material-index]')).toBeVisible();
 }
 
+test('Materials has a dedicated entry page and first-class library layout',async({page})=>{
+  await page.setViewportSize({width:412,height:915});
+  await page.addInitScript(()=>{
+    const id='material-page-qa',user={id,name:'Material Page QA',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
+    localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:id,users:{[id]:user}}));
+  });
+  await page.goto('http://127.0.0.1:4173/materials.html',{waitUntil:'domcontentloaded'});
+  await page.waitForURL(/index\.html\?view=materials/);
+  await page.waitForFunction(()=>(typeof window.MM_APP_SHELL_FINALIZED==='string'&&window.MM_MATERIAL_REGISTRY));
+  await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
+  await expect(page.locator('#materials')).toBeVisible();
+  await expect(page.locator('#mmMaterialsPageIntro')).toBeVisible();
+  await expect(page.locator('#mmMaterialsPageIntro')).toContainText('Material library & engineering evidence');
+  await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
+  await expect(page.locator('#mmMaterialCompare')).toBeVisible();
+  await expect(page.locator('#mmMaterialChange')).toBeVisible();
+  await expect(page.locator('#mmMaterialLearningAnchor')).toBeVisible();
+  await expect(page.locator('#nav button[data-view="materials"] span')).toHaveText('Materials');
+  await page.getByRole('button',{name:'Compare grades'}).click();
+  await expect(page.locator('#mmMaterialCompare')).toBeInViewport();
+  const geometry=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,page:document.documentElement.scrollWidth}));
+  expect(geometry.page).toBeLessThanOrEqual(geometry.viewport+1);
+});
+
 test('unified material index searches exact-grade processing evidence, family reference data and material labs',async({page})=>{
   await openMaterials(page);
   const root=page.locator('#mmExactMaterialCatalog');

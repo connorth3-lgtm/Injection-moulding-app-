@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 if(window.MM_MATERIAL_REGISTRY)return;
-const VERSION='2026.09.29.2';
+const VERSION='2026.09.29.16';
 const CATALOG_URL='./material-catalog-v1.json';
 let catalog=null;
 let readyPromise=null;
@@ -301,39 +301,94 @@ async function renderResults(root){
   host.innerHTML=rows.map(renderGrade).join('');
   host.querySelectorAll('[data-mm-exact-case]').forEach(b=>b.addEventListener('click',async()=>{b.disabled=true;try{await startMouldMasterCase(b.dataset.mmExactCase)}catch(err){console.error('[MouldMaster materials]',err);b.disabled=false}}));
 }
+function materialsStatsMarkup(c){
+  const s=c?.statistics||{};
+  return `<div class="mm-material-page-stats" aria-label="Material library coverage">
+    <div class="mm-material-page-stat"><b>${s.exactGrades??(c?.grades||[]).length}</b><span>Published exact grades</span></div>
+    <div class="mm-material-page-stat"><b>${s.manufacturers??(c?.manufacturers||[]).length}</b><span>Manufacturers</span></div>
+    <div class="mm-material-page-stat"><b>${s.polymerFamilies??0}</b><span>Polymer families</span></div>
+    <div class="mm-material-page-stat"><b>${s.comparisonReadyObservations??0}</b><span>Comparison-ready observations</span></div>
+  </div>`
+}
+function pageIntro(c){
+  const el=document.createElement('section');el.id='mmMaterialsPageIntro';el.className='mm-material-page-hero';
+  el.innerHTML=`<div><span class="eyebrow">Materials</span><h2>Material library & engineering evidence</h2><p>Search exact grades, inspect the source evidence, compare matching observations and move a grade into Mould Master when you need to investigate.</p></div>${materialsStatsMarkup(c)}<nav class="mm-material-page-nav" aria-label="Materials page sections"><button type="button" class="secondary" data-mm-material-jump="catalog">Grade library</button><button type="button" class="secondary" data-mm-material-jump="compare">Compare grades</button><button type="button" class="secondary" data-mm-material-jump="change">Change assistant</button><button type="button" class="ghost" data-mm-material-jump="learning">Material learning</button></nav>`;
+  return el
+}
+function learningIntro(){
+  const el=document.createElement('section');el.id='mmMaterialLearningAnchor';el.className='mm-material-learning-anchor';
+  el.innerHTML='<span class="eyebrow">Learn the mechanisms</span><h3>Material science learning</h3><p>Use the learning chapters below for mechanisms and polymer-family behaviour. Exact-grade values stay tied to their published source evidence.</p>';
+  return el
+}
+function wirePageNavigation(host){
+  const targets={catalog:'mmExactMaterialCatalog',compare:'mmMaterialCompare',change:'mmMaterialChange',learning:'mmMaterialLearningAnchor'};
+  host.querySelectorAll('[data-mm-material-jump]').forEach(button=>button.addEventListener('click',()=>document.getElementById(targets[button.dataset.mmMaterialJump])?.scrollIntoView({behavior:'smooth',block:'start'})))
+}
+function syncMaterialsUrl(){
+  if(location.protocol==='file:')return;
+  const u=new URL(location.href);u.pathname=u.pathname.replace(/\/materials\.html$/,'/index.html');u.searchParams.set('view','materials');history.replaceState(null,'',u)
+}
+function openPage({focus='catalog',replaceUrl=true}={}){
+  if(typeof window.switchView==='function')window.switchView('materials');
+  if(replaceUrl)syncMaterialsUrl();
+  return installPanel().then(()=>{const target={catalog:'mmExactMaterialCatalog',compare:'mmMaterialCompare',change:'mmMaterialChange',learning:'mmMaterialLearningAnchor'}[focus]||'mmMaterialsPageIntro';requestAnimationFrame(()=>document.getElementById(target)?.scrollIntoView({block:'start'}));return true})
+}
 async function installPanel(){
   let host=document.getElementById('materials');if(!host||host.querySelector('#mmExactMaterialCatalog'))return false;
   style();const c=await load();
   host=document.getElementById('materials');if(!host||host.querySelector('#mmExactMaterialCatalog'))return false;
   const section=document.createElement('section');section.id='mmExactMaterialCatalog';section.className='card mm-exact-materials';
   const gradeOptions=(c.grades||[]).map(g=>`<option value="${esc(g.id)}">${esc(displayName(g))}</option>`).join('');
-  section.innerHTML=`<div class="mm-exact-head"><div><span class="eyebrow">Canonical material domain</span><h2>Exact commercial grades</h2><p>Search source-backed exact grades separately from generic resin-family learning.</p><p class="mm-material-coverage" data-mm-material-coverage>${c.statistics?`${c.statistics.manufacturers} manufacturers · ${c.statistics.countries} countries · ${c.statistics.polymerFamilies} polymer families · ${c.statistics.comparisonReadyObservations} comparison-ready observations`:''}</p></div><span class="pill">${(c.statistics?.exactGrades??(c.grades||[]).length)} published</span></div><div class="mm-exact-search"><label>Search manufacturer, brand or grade<input data-mm-exact-query placeholder="e.g. manufacturer, PC/ABS, grade"></label><label>Manufacturer<select data-mm-exact-manufacturer><option value="">All manufacturers</option>${(c.manufacturers||[]).map(m=>`<option value="${esc(m.id)}">${esc(m.name)}</option>`).join('')}</select></label></div><div class="mm-exact-results" data-mm-exact-results></div><div class="mm-material-decision" data-mm-material-decision><div class="mm-material-decision-head"><span class="eyebrow">Decision support</span><h3>Compare exact-grade evidence</h3><p>Compare what the governed records actually say about drying, moisture, shrinkage, flow and thermal guidance. This does not rank materials or generate production settings.</p></div><div class="mm-material-compare-controls"><label>Grade A<select data-mm-compare-a><option value="">Select exact grade</option>${gradeOptions}</select></label><label>Grade B<select data-mm-compare-b><option value="">Select exact grade</option>${gradeOptions}</select></label><button type="button" class="secondary" data-mm-run-material-compare>Compare evidence</button></div><div data-mm-material-compare-result aria-live="polite"><p class="mm-exact-empty">Select two exact grades to review their evidence side by side.</p></div><div class="mm-material-change-assistant" data-mm-material-change-assistant><span class="eyebrow">Material Change Assistant</span><h3>Plan an evidence-led grade change</h3><p>Choose the current and proposed exact grades. The report highlights governed differences, evidence gaps and verification actions without generating production settings.</p><div class="mm-material-compare-controls"><label>Current grade<select data-mm-change-before><option value="">Select current exact grade</option>${gradeOptions}</select></label><label>Proposed grade<select data-mm-change-after><option value="">Select proposed exact grade</option>${gradeOptions}</select></label><button type="button" class="secondary" data-mm-run-material-change>Build delta report</button></div><div data-mm-material-change-result aria-live="polite"><p class="mm-exact-empty">Select two exact grades to build a sourced change report.</p></div></div>${renderMaterialChangeChecklist()}</div><div class="mm-exact-boundary">Only validated exact-grade records are shown here. Property values retain their test context; processing observations retain their primary source and are not universal production recipes.</div>`;
-  host.appendChild(section);
+  section.innerHTML=`<div class="mm-exact-head"><div><span class="eyebrow">Grade library</span><h2>Exact commercial grades</h2><p>Search source-backed grades and inspect the evidence behind each value.</p><p class="mm-material-coverage" data-mm-material-coverage>${c.statistics?`${c.statistics.manufacturers} manufacturers · ${c.statistics.countries} countries · ${c.statistics.polymerFamilies} polymer families · ${c.statistics.comparisonReadyObservations} comparison-ready observations`:''}</p></div><span class="pill">${(c.statistics?.exactGrades??(c.grades||[]).length)} published</span></div><div class="mm-exact-search"><label>Search manufacturer, brand or grade<input data-mm-exact-query placeholder="e.g. manufacturer, PC/ABS, grade"></label><label>Manufacturer<select data-mm-exact-manufacturer><option value="">All manufacturers</option>${(c.manufacturers||[]).map(m=>`<option value="${esc(m.id)}">${esc(m.name)}</option>`).join('')}</select></label></div><div class="mm-exact-results" data-mm-exact-results></div><div class="mm-material-decision" id="mmMaterialCompare" data-mm-material-decision><div class="mm-material-decision-head"><span class="eyebrow">Compare</span><h3>Compare exact-grade evidence</h3><p>See only condition-matched evidence side by side. No ranking or production settings.</p></div><div class="mm-material-compare-controls"><label>Grade A<select data-mm-compare-a><option value="">Select exact grade</option>${gradeOptions}</select></label><label>Grade B<select data-mm-compare-b><option value="">Select exact grade</option>${gradeOptions}</select></label><button type="button" class="secondary" data-mm-run-material-compare disabled aria-disabled="true">Compare evidence</button></div><div data-mm-material-compare-result aria-live="polite"><p class="mm-exact-empty">Select two exact grades to review their evidence side by side.</p></div><div class="mm-material-change-assistant" id="mmMaterialChange" data-mm-material-change-assistant><span class="eyebrow">Grade change</span><h3>Plan an evidence-led material change</h3><p>See published differences, evidence gaps and the checks still needed before approval.</p><div class="mm-material-compare-controls"><label>Current grade<select data-mm-change-before><option value="">Select current exact grade</option>${gradeOptions}</select></label><label>Proposed grade<select data-mm-change-after><option value="">Select proposed exact grade</option>${gradeOptions}</select></label><button type="button" class="secondary" data-mm-run-material-change disabled aria-disabled="true">Build delta report</button></div><div data-mm-material-change-result aria-live="polite"><p class="mm-exact-empty">Select two exact grades to build a sourced change report.</p></div></div>${renderMaterialChangeChecklist()}</div><div class="mm-exact-boundary">Only validated exact-grade records are shown here. Property values retain their test context; processing observations retain their primary source and are not universal production recipes.</div>`;
+  const intro=pageIntro(c),learning=learningIntro();
+  host.prepend(section);host.prepend(intro);section.insertAdjacentElement('afterend',learning);
+  host.dataset.mmMaterialsPage='dedicated';
+  const navLabel=document.querySelector('#nav button[data-view="materials"] span');if(navLabel)navLabel.textContent='Materials';
+  wirePageNavigation(host);
   const rerender=()=>renderResults(section).catch(err=>console.warn('[MouldMaster materials]',err));
   section.querySelector('[data-mm-exact-query]')?.addEventListener('input',rerender);
   section.querySelector('[data-mm-exact-manufacturer]')?.addEventListener('change',rerender);
+  const syncMaterialActions=()=>{
+    const a=section.querySelector('[data-mm-compare-a]')?.value||'',b=section.querySelector('[data-mm-compare-b]')?.value||'';
+    const before=section.querySelector('[data-mm-change-before]')?.value||'',after=section.querySelector('[data-mm-change-after]')?.value||'';
+    const compare=section.querySelector('[data-mm-run-material-compare]'),change=section.querySelector('[data-mm-run-material-change]');
+    const compareReady=!!a&&!!b&&a!==b,changeReady=!!before&&!!after&&before!==after;
+    if(compare){compare.disabled=!compareReady;compare.setAttribute('aria-disabled',String(!compareReady))}
+    if(change){change.disabled=!changeReady;change.setAttribute('aria-disabled',String(!changeReady))}
+  };
+  ['[data-mm-compare-a]','[data-mm-compare-b]','[data-mm-change-before]','[data-mm-change-after]'].forEach(selector=>section.querySelector(selector)?.addEventListener('change',syncMaterialActions));
+  syncMaterialActions();
   section.querySelector('[data-mm-run-material-compare]')?.addEventListener('click',async()=>{
     const resultHost=section.querySelector('[data-mm-material-compare-result]');
     const a=section.querySelector('[data-mm-compare-a]')?.value||'',b=section.querySelector('[data-mm-compare-b]')?.value||'';
     if(a&&a===b){resultHost.innerHTML='<p class="mm-exact-empty">Choose two different exact grades.</p>';return}
-    const result=await decisionComparison([a,b]);resultHost.innerHTML=renderDecisionResult(result);
+    resultHost.setAttribute('aria-busy','true');
+    try{const result=await decisionComparison([a,b]);resultHost.innerHTML=renderDecisionResult(result);resultHost.scrollIntoView({behavior:'smooth',block:'nearest'})}
+    finally{resultHost.setAttribute('aria-busy','false')}
   });
   section.querySelector('[data-mm-run-material-change]')?.addEventListener('click',async()=>{
     const resultHost=section.querySelector('[data-mm-material-change-result]');
     const before=section.querySelector('[data-mm-change-before]')?.value||'',after=section.querySelector('[data-mm-change-after]')?.value||'';
-    const report=await materialChangeReport(before,after);resultHost.innerHTML=renderMaterialChangeReport(report);
+    resultHost.setAttribute('aria-busy','true');
+    try{const report=await materialChangeReport(before,after);resultHost.innerHTML=renderMaterialChangeReport(report);resultHost.scrollIntoView({behavior:'smooth',block:'nearest'})}
+    finally{resultHost.setAttribute('aria-busy','false')}
   });
   await renderResults(section);return true;
 }
+function registerMaterialsNavigation(){
+  const shell=window.MM_APP_SHELL;if(!shell?.navigation?.register||shell.navigation.items?.has?.('materials-page'))return;
+  shell.navigation.register({id:'materials-page',label:'Materials',icon:'⬡',description:'Open the exact-grade material library and engineering evidence.',order:12,desktop:false,mobileMore:true,mobileGroup:'learn',action:()=>openPage({replaceUrl:true})})
+}
 function bindMaterialsLifecycle(){
-  const install=()=>installPanel().catch(err=>console.warn('[MouldMaster materials]',err));
+  const install=()=>installPanel().then(()=>registerMaterialsNavigation()).catch(err=>console.warn('[MouldMaster materials]',err));
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
   const shell=window.MM_APP_SHELL;
   shell?.events?.onRender?.('materials',install);
-  shell?.events?.onViewChange?.(view=>{if(view==='materials')install()});
+  shell?.events?.onViewChange?.(view=>{if(view==='materials'){syncMaterialsUrl();install()}});
   window.addEventListener('mm:domains-ready',install,{once:true});
+  if(new URLSearchParams(location.search).get('view')==='materials')requestAnimationFrame(()=>openPage({replaceUrl:false}));
 }
 
-window.MM_MATERIAL_REGISTRY=Object.freeze({version:VERSION,catalogUrl:CATALOG_URL,load,all,get,search,displayName,manufacturers,propertyObservations,compareProperty,decisionComparison,materialChangeReport,stats,startMouldMasterCase,installPanel});
+window.MM_MATERIAL_REGISTRY=Object.freeze({version:VERSION,catalogUrl:CATALOG_URL,load,all,get,search,displayName,manufacturers,propertyObservations,compareProperty,decisionComparison,materialChangeReport,stats,startMouldMasterCase,installPanel,openPage});
 load().then(bindMaterialsLifecycle).catch(err=>console.warn('[MouldMaster materials] exact-grade catalog unavailable',err));
 })();

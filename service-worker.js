@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.09.29.10';
+const CACHE_VERSION='2026.09.29.20';
 const CACHE_REVISION='lifecycle-r5-20260924';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
@@ -134,6 +134,7 @@ const OPTIONAL=[
   './data/measured-learning/source-readiness-v2.json',
   './reference-data.js',
   './reference-data.html',
+  './materials.html',
   './reference-deep-dive.js',
   './reference-research-extension.js',
   './reference-20x-extension.js',

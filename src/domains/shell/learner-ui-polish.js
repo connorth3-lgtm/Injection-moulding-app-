@@ -1,11 +1,11 @@
-/* MouldMaster learner UI polish — 2026.09.17.1
+/* MouldMaster learner UI polish — 2026.09.29.19
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.09.17.1';
+const VERSION='2026.09.29.20';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -31,7 +31,7 @@ function runQuickAction(action){
   }
 }
 function homeBalanceMarkup(){
-  return `<div class="mm-home-balance-copy"><span class="eyebrow">Quick access</span><h2>Your moulding workspace</h2><p>Jump into the task you need without searching through the full tool set.</p></div><div class="mm-home-balance-grid"><button type="button" data-mm-home-action="practice"><span class="mm-home-balance-icon" aria-hidden="true">◎</span><span><b>Practice</b><small>Work one evidence-first shop-floor decision.</small></span></button><button type="button" data-mm-home-action="book"><span class="mm-home-balance-icon mm-book-mark" aria-hidden="true"></span><span><b>Book</b><small>Open the governed injection moulding reference.</small></span></button><button type="button" data-mm-home-action="materials"><span class="mm-home-balance-icon" aria-hidden="true">◇</span><span><b>Material science</b><small>Review polymer families and behaviour.</small></span></button><button type="button" data-mm-home-action="mould-master"><span class="mm-home-balance-icon" aria-hidden="true">◆</span><span><b>Mould Master</b><small>Build an evidence-led troubleshooting case.</small></span></button></div>`;
+  return `<div class="mm-home-balance-copy"><span class="eyebrow">Quick access</span><h2>Your moulding workspace</h2><p>Jump into the task you need without searching through the full tool set.</p></div><div class="mm-home-balance-grid"><button type="button" data-mm-home-action="practice"><span class="mm-home-balance-icon" aria-hidden="true">◎</span><span><b>Practice</b><small>Work one evidence-first shop-floor decision.</small></span></button><button type="button" data-mm-home-action="book"><span class="mm-home-balance-icon mm-book-mark" aria-hidden="true"></span><span><b>Book</b><small>Open the governed injection moulding reference.</small></span></button><button type="button" data-mm-home-action="materials"><span class="mm-home-balance-icon" aria-hidden="true">◇</span><span><b>Materials</b><small>Search exact grades, evidence and material behaviour.</small></span></button><button type="button" data-mm-home-action="mould-master"><span class="mm-home-balance-icon" aria-hidden="true">◆</span><span><b>Mould Master</b><small>Build an evidence-led troubleshooting case.</small></span></button></div>`;
 }
 function syncHomeBalance(){
   const root=document.getElementById('dashboard');
@@ -163,6 +163,22 @@ function syncDesktopNavigation(){
   if(more)more.hidden=!isDesktop;
 }
 
+function syncFirstRunModal(){
+  const root=document.querySelector('.onboarding');
+  if(!root||root.dataset.mmProductPolished==='1')return;
+  root.dataset.mmProductPolished='1';root.classList.add('mm-onboarding-product');
+  const h2=root.querySelector('h2');if(h2)h2.textContent='Set up your learning path';
+  const intro=root.querySelector(':scope > p');if(intro){intro.textContent='Three quick choices. You can change them later in Profile.';intro.classList.add('mm-onboarding-intro')}
+  const headings=[...root.querySelectorAll('h3')];
+  if(headings[0])headings[0].textContent='Experience';
+  if(headings[1])headings[1].textContent='Main goal';
+  if(headings[2])headings[2].textContent='Typical session';
+  const primary=root.querySelector('.hero-buttons .primary');if(primary)primary.textContent='Start my path →';
+}
+function syncProductStates(){
+  document.querySelectorAll('.empty-friendly,.mm-exact-empty,.mm-material-no-match').forEach(el=>el.dataset.mmProductState='empty');
+  const failure=document.getElementById('mmStartupFailure');if(failure)failure.dataset.mmProductState='error';
+}
 function syncReadAloudLabel(){
   const host=document.querySelector('.mm-read-aloud details:not([open]) summary');
   if(host&&!host.getAttribute('aria-label'))host.setAttribute('aria-label','Read aloud');
@@ -172,6 +188,7 @@ function run(){
   syncBookDisclosure();
   syncDesktopNavigation();
   syncReadAloudLabel();
+  syncProductStates();
 }
 function schedule(){
   if(queued)return;
@@ -181,12 +198,17 @@ function schedule(){
 function install(){
   ensureStyles();
   run();
+  syncFirstRunModal();
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{syncFirstRunModal();syncProductStates()}));
   // Shell render/view lifecycle events cover app-owned mutations. Avoid a whole-body characterData observer,
   // which previously scheduled a full polish pass for every text mutation in the application.
   window.addEventListener('resize',schedule,{passive:true});
   window.addEventListener?.('mm:domains-ready',schedule);
   window.MM_APP_SHELL?.events?.onRender?.('dashboard',schedule);
   window.MM_APP_SHELL?.events?.onViewChange?.(schedule);
+  document.addEventListener('click',event=>{
+    if(event.target?.closest?.('[data-mm-onclick*="showOnboarding"],[onclick*="showOnboarding"]'))requestAnimationFrame(()=>{syncFirstRunModal();syncProductStates()})
+  },true);
   window.MM_LEARNER_UI_POLISH=Object.freeze({version:VERSION,refresh:schedule});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();

@@ -85,7 +85,7 @@ need(all(row.get("evidenceReviewCandidate") is True and not row.get("blockers") 
 need(CATALOG == ROOT / "material-catalog-v1.json", "runtime catalog must remain outside private data/ staging tree")
 catalog = load_json(CATALOG)
 registry_runtime = (ROOT / "src/domains/materials/material-registry.js").read_text(encoding="utf-8")
-for marker in ("decisionComparison", "matchedComparisonRows", "materialChangeReport", "evidenceDelta", "verificationActions", "evidenceCoverage", "changeFlags", "validationGates", "data-mm-run-material-compare", "data-mm-run-material-change", "Material Change Assistant", "Material-change evidence checklist", "not a material ranking or production recipe", "does not prescribe purge/changeover settings", "Do not copy a drying recipe from another grade"):
+for marker in ("decisionComparison", "matchedComparisonRows", "materialChangeReport", "evidenceDelta", "verificationActions", "evidenceCoverage", "changeFlags", "validationGates", "data-mm-run-material-compare", "data-mm-run-material-change", "Plan an evidence-led material change", "Material-change evidence checklist", "not a material ranking or production recipe", "does not prescribe purge/changeover settings", "Do not copy a drying recipe from another grade"):
     need(marker in registry_runtime, f"material decision-support marker missing: {marker}")
 need("comparableSignature(ob)!==sig" in registry_runtime, "material decision support must fail closed when test-condition signatures differ")
 need("coupon shrinkage and morphology as evidence inputs, not a part-warpage prediction" in registry_runtime, "material warpage reasoning boundary missing")
