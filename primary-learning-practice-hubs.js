@@ -344,7 +344,7 @@ window.MM_APP_SHELL?.events?.onRender?.('dashboard',()=>requestAnimationFrame(si
 
 function configureMore(){
   const items=window.MM_APP_SHELL?.navigation?.items;
-  if(items?.forEach)items.forEach(item=>{item.mobileMore=true});
+  if(items?.forEach)items.forEach((item,id)=>{item.mobileMore=id!=='materials-page'});
 }
 function pruneMore(){
   const modal=document.getElementById('modal');if(!modal)return;
