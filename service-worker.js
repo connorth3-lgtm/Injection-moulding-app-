@@ -101,7 +101,7 @@ const CORE=[
   './material-catalog-v1.json',
   './learning-analytics.js',
   './accessibility-hardening.js',
-  './app-shell-finalize.js',
+  './src/domains/runtime-packs/shell-finalization-runtime-pack.js',
   './production-health.js',
   './data-integration-runtime.js',
   './process-data-intelligence-ui.js',
