@@ -63,6 +63,13 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await expect(page.locator('#dashboard .mm-home-task-hub')).toHaveCount(0);
       await expect(page.locator('#dashboard .mm-home-utility')).toHaveCount(0);
       await expect(page.locator('#dashboard .mm-home-balance')).toBeVisible();
+      await expect(page.locator('#dashboard .mm-home-balance [data-mm-home-action]')).toHaveCount(2);
+      await expect(page.locator('#dashboard .mm-home-balance')).not.toContainText(/Materials|Practice|Saved lessons|Browse learning|Reference book/i);
+      const firstViewport=await page.evaluate(()=>({
+        toolsBottom:document.querySelector('#dashboard .mm-home-balance').getBoundingClientRect().bottom,
+        navTop:document.querySelector('.mobile-nav').getBoundingClientRect().top
+      }));
+      expect(firstViewport.toolsBottom).toBeLessThanOrEqual(firstViewport.navTop+1);
       await expect(page.locator('#continueBtn')).toBeHidden();
       await expect(page.locator('#dashboard .mm-home-core-hero')).toBeHidden();
       await expect(page.locator('#dashboard .mm-home-kpis')).toBeHidden();
