@@ -24,6 +24,11 @@
       "state the chapter's applicability boundary before acting",
       "distinguish a plausible mechanism from a guaranteed cause",
       "identify when machine/material/mould/site documentation overrides generic guidance"
+    ],
+    "guidanceProgression": [
+      "novice: worked support with explicit evidence-chain prompts",
+      "developing: partial guidance; learner commits to mechanism and test before explanation",
+      "advanced: evidence-only challenge before guidance is revealed"
     ]
   },
   "metrics": [
@@ -53,5 +58,44 @@
     "publicRepositoryEvidence": "Aggregate counts, non-identifying analysis references and release-bound conclusions only."
   },
   "evidence": null,
-  "promotionRule": "data/release-external-validation-v1.json learnerOutcomes must remain hold until a separately reviewed real-learner longitudinal evidence object satisfies tools/verify_release_external_validation.py."
+  "promotionRule": "data/release-external-validation-v1.json learnerOutcomes must remain hold until a separately reviewed real-learner longitudinal evidence object satisfies tools/verify_release_external_validation.py.",
+  "primaryEndpoints": {
+    "immediateLearningGain": "Paired change from baseline to immediate matched concept/diagnostic performance.",
+    "delayedTransferRetention": "Performance on novel matched transfer tasks after the governed delay window, analysed separately from immediate gain.",
+    "diagnosticReasoning": "Rubric score for baseline/evidence/mechanism/test/verification reasoning rather than answer accuracy alone.",
+    "boundaryRecognition": "Ability to identify when generic Book guidance must yield to machine/material/mould/site documentation and when evidence is insufficient."
+  },
+  "secondaryEndpoints": {
+    "evidenceNavigation": "Time to locate relevant evidence without coaching.",
+    "abandonment": "Task abandonment and navigation friction.",
+    "calibration": "Confidence versus correctness; confidence is not treated as competence.",
+    "usabilityThemes": "Non-identifying confusion and workflow themes."
+  },
+  "analysisRules": [
+    "Keep baseline, immediate and delayed outcomes distinct; do not collapse them into one headline score.",
+    "Report paired change and uncertainty intervals where the data support them; do not use a p-value alone as an efficacy claim.",
+    "Report attrition and missing delayed reviews explicitly rather than analysing completers as if they represented the full cohort.",
+    "Stratify descriptively by prior experience when cell sizes permit; do not infer population differences from tiny subgroups.",
+    "Novel transfer tasks must not simply repeat the original answer wording.",
+    "A learner-outcomes PASS requires separately reviewed real-participant evidence; synthetic, automated, proxy or developer-run results never satisfy it."
+  ],
+  "psychometricPlan": {
+    "status": "descriptive-until-real-cohort",
+    "measures": [
+      "item difficulty by stable question ID and revision",
+      "item discrimination against an independently defined total/criterion score where sample size and design justify it",
+      "distractor selection frequencies",
+      "omission rate",
+      "response-time distribution",
+      "repeat-attempt exposure effects",
+      "safety-critical error patterns"
+    ],
+    "prohibitions": [
+      "No psychometric validity claim from synthetic traffic, automated browsers or developer test accounts.",
+      "No fixed competence cut-score validation from the current exploratory pilot.",
+      "No item-level discrimination estimate is reported as stable without a pre-specified adequate real-response sample and independent review."
+    ],
+    "nextGate": "Pre-register the psychometric analysis and sample-adequacy rules before using cohort data to justify item retirement, cut-score claims or credential validity."
+  },
+  "evidenceBasis": "sources/LEARNING_AND_ENGINEERING_REVIEW_BASIS.md"
 }
