@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.09.30.8",
-  "commit": "6a7714474a2c2aec0de0180ac9bfa7c8f997a497",
+  "release": "2026.09.30.9",
+  "commit": "f5a20222ef41ab7251ee67ce070c9422083259a4",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -40,6 +40,6 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "2026.09.30.8 is the reviewed learner UI reference for the deep Home ownership cleanup: Today's focus remains the primary next step; the Workbench is the sole secondary Home launcher, uses a single-column outer layout at every viewport, preserves focused controls across responsive refreshes, and no retired task-hub or Home utility row is generated. The pixel tolerance remains locked at maxDiffPixels 12; this approval advances the reference bytes rather than relaxing drift tolerance. Physical-device, real-AT and other human/external evidence remain separate HOLD/freshness gates and are not relabelled by this visual lock.",
-  "ref": "visual-baseline/2026.09.30.8"
+  "policy": "2026.09.30.9 is the reviewed learner UI reference only after semantic Home checks pass: Today's focus is the single dominant action, Home duplicates none of Learn/Materials/Practice/Saved/Book navigation, only Troubleshoot and Analyse data remain as specialist shortcuts, the Home content width is constrained on large screens, and the primary lesson plus both specialist tools fit above the fixed navigation at governed phone widths. Pixel tolerance remains locked at maxDiffPixels 12 and supplements—rather than substitutes for—those structural and geometry assertions. Physical-device, real-AT and other human/external evidence remain separate HOLD/freshness gates.",
+  "ref": "visual-baseline/2026.09.30.9"
 }

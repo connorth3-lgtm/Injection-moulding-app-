@@ -19,65 +19,52 @@ async function openApp(page){
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
 
-test('Home has one stable responsive Workbench owner across desktop, tablet and phone',async({page})=>{
+test('Home is one primary lesson decision plus two non-duplicate specialist tools',async({page})=>{
   await page.setViewportSize({width:810,height:1080});
   await openApp(page);
-  const balance=page.locator('#dashboard .mm-home-balance');
-  await expect(balance).toBeVisible();
-  await expect(page.locator('#dashboard .mm-home-task-hub')).toHaveCount(0);
-  await expect(page.locator('#dashboard .mm-home-utility')).toHaveCount(0);
-  await expect(balance.locator('[data-mm-home-action]')).toHaveCount(7);
-  await expect(balance.getByRole('button',{name:/Troubleshoot/i})).toBeVisible();
-  await expect(balance.getByRole('button',{name:/Materials/i})).toBeVisible();
-  await expect(balance.getByRole('button',{name:/Analyse data/i})).toBeVisible();
-  await expect(balance.getByRole('button',{name:/Practice/i})).toBeVisible();
-  await expect(balance.getByRole('button',{name:/Saved lessons/i})).toBeVisible();
-  await expect(balance.locator('.mm-home-snapshot')).toContainText('3/120');
+  const focus=page.locator('#dashboard .mm-today-focus');
+  const tools=page.locator('#dashboard .mm-home-balance');
+  await expect(focus).toBeVisible();
+  await expect(tools).toBeVisible();
+  await expect(page.locator('#dashboard .mm-home-task-hub,#dashboard .mm-home-utility')).toHaveCount(0);
+  await expect(tools.locator('[data-mm-home-action]')).toHaveCount(2);
+  await expect(tools.getByRole('button',{name:/Troubleshoot/i})).toBeVisible();
+  await expect(tools.getByRole('button',{name:/Analyse data/i})).toBeVisible();
+  await expect(tools.getByRole('button',{name:/Materials|Practice|Saved lessons|Browse learning|Reference book/i})).toHaveCount(0);
+  await expect(focus.getByRole('button',{name:/Continue lesson/i})).toBeVisible();
 
-  const initial=await page.evaluate(()=>({
+  const tablet=await page.evaluate(()=>({
+    dashboardWidth:document.getElementById('dashboard').getBoundingClientRect().width,
     outer:getComputedStyle(document.querySelector('#dashboard .mm-home-balance')).gridTemplateColumns.split(/\s+/).filter(Boolean).length,
     actions:getComputedStyle(document.querySelector('#dashboard .mm-home-balance-grid')).gridTemplateColumns.split(/\s+/).filter(Boolean).length,
     order:Boolean(document.querySelector('#dashboard .mm-today-focus')?.compareDocumentPosition(document.querySelector('#dashboard .mm-home-balance'))&Node.DOCUMENT_POSITION_FOLLOWING)
   }));
-  expect(initial.outer).toBe(1);
-  expect(initial.actions).toBe(2);
-  expect(initial.order).toBeTruthy();
+  expect(tablet.dashboardWidth).toBeLessThanOrEqual(960.5);
+  expect(tablet.outer).toBe(1);
+  expect(tablet.actions).toBe(2);
+  expect(tablet.order).toBeTruthy();
 
-  const materials=balance.getByRole('button',{name:/Materials/i});
-  await materials.evaluate(el=>el.dataset.mmQaStableNode='1');
-  await materials.focus();
+  const troubleshoot=tools.getByRole('button',{name:/Troubleshoot/i});
+  await troubleshoot.evaluate(el=>el.dataset.mmQaStableNode='1');
+  await troubleshoot.focus();
   await page.setViewportSize({width:412,height:915});
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
-  await expect(page.locator('#dashboard .mm-home-balance')).toBeVisible();
   const phone=await page.evaluate(()=>({
-    outer:getComputedStyle(document.querySelector('#dashboard .mm-home-balance')).gridTemplateColumns.split(/\s+/).filter(Boolean).length,
     actions:getComputedStyle(document.querySelector('#dashboard .mm-home-balance-grid')).gridTemplateColumns.split(/\s+/).filter(Boolean).length,
     focused:document.activeElement?.dataset?.mmHomeAction||'',
-    stable:document.querySelector('[data-mm-home-action="materials"]')?.dataset?.mmQaStableNode||''
+    stable:document.querySelector('[data-mm-home-action="mould-master"]')?.dataset?.mmQaStableNode||'',
+    toolsBottom:document.querySelector('#dashboard .mm-home-balance').getBoundingClientRect().bottom,
+    navTop:document.querySelector('.mobile-nav').getBoundingClientRect().top
   }));
-  expect(phone.outer).toBe(1);
   expect(phone.actions).toBe(2);
-  expect(phone.focused).toBe('materials');
+  expect(phone.focused).toBe('mould-master');
   expect(phone.stable).toBe('1');
-
-  await page.evaluate(()=>{
-    user.bookmarks=[2,3];
-    window.MM_LEARNER_UI_POLISH.refresh();
-  });
-  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
-  await expect(balance.locator('[data-mm-home-stat="saved"]')).toHaveText('2');
-  await expect(balance.getByRole('button',{name:/Materials/i})).toHaveAttribute('data-mm-qa-stable-node','1');
+  expect(phone.toolsBottom).toBeLessThanOrEqual(phone.navTop+1);
 
   await page.setViewportSize({width:1440,height:900});
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
-  const desktop=await page.evaluate(()=>({
-    outer:getComputedStyle(document.querySelector('#dashboard .mm-home-balance')).gridTemplateColumns.split(/\s+/).filter(Boolean).length,
-    actions:getComputedStyle(document.querySelector('#dashboard .mm-home-balance-grid')).gridTemplateColumns.split(/\s+/).filter(Boolean).length
-  }));
-  expect(desktop.outer).toBe(1);
-  expect(desktop.actions).toBe(4);
+  expect(await page.locator('#dashboard .mm-home-balance-grid').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(/\s+/).filter(Boolean).length)).toBe(2);
 });
-
 test('Book keeps governed status intact but progressively discloses assurance detail without a mutation loop',async({page})=>{
   await page.setViewportSize({width:412,height:915});
   await openApp(page);

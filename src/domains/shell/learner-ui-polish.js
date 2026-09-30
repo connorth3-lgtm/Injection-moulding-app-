@@ -1,11 +1,11 @@
-/* MouldMaster learner UI polish — 2026.09.30.8
+/* MouldMaster learner UI polish — 2026.09.30.9
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.09.30.8';
+const VERSION='2026.09.30.9';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -24,13 +24,8 @@ function safe(fn){try{return typeof fn==='function'?fn():undefined}catch(error){
 
 function runQuickAction(action){
   switch(action){
-    case 'practice': return safe(()=>window.switchView?.('scenarios'));
-    case 'book': return safe(()=>window.MMBook?.open?.());
-    case 'materials': return safe(()=>window.MM_MATERIAL_REGISTRY?.openPage?.({replaceUrl:true})||window.switchView?.('materials'));
     case 'mould-master': return safe(()=>window.MM_MOULD_MASTER_WORKSPACE?.open?.()||window.switchView?.('defects'));
     case 'process-data': return safe(()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.());
-    case 'learn': return safe(()=>window.switchView?.('path'));
-    case 'saved': return safe(()=>window.switchView?.('profile'));
     case 'recent-case': {
       const row=window.MM_MOULD_MASTER_WORKSPACE?.cases?.()?.[0];
       return safe(()=>row?window.MM_MOULD_MASTER_WORKSPACE?.open?.(row.id):window.MM_MOULD_MASTER_WORKSPACE?.open?.());
@@ -38,28 +33,14 @@ function runQuickAction(action){
   }
 }
 function homeActivity(){
-  const active=typeof user==='object'&&user?user:null,data=typeof D==='object'&&D?D:null;
-  const completed=Array.isArray(active?.completed)?active.completed.length:0;
-  const total=Array.isArray(data?.lessons)?data.lessons.length:120;
-  const saved=Array.isArray(active?.bookmarks)?active.bookmarks.length:0;
   const cases=window.MM_MOULD_MASTER_WORKSPACE?.cases?.()||[];
-  const recent=cases[0]||null;
-  return {completed,total,saved,cases:cases.length,recent}
+  return {recent:cases[0]||null}
 }
 function homeBalanceMarkup(){
-  return `<div class="mm-home-balance-copy"><div><span class="eyebrow">Workbench</span><h2>Tools & shortcuts</h2><p>Jump to troubleshooting, materials or process evidence without losing your place in learning.</p></div><div class="mm-home-snapshot" aria-label="Your local activity"><span><b data-mm-home-stat="lessons">0/120</b><small>lessons</small></span><span><b data-mm-home-stat="cases">0</b><small>cases</small></span><span><b data-mm-home-stat="saved">0</b><small>saved</small></span></div></div><div class="mm-home-balance-grid"><button type="button" data-mm-home-action="mould-master"><span class="mm-home-balance-icon" aria-hidden="true">◆</span><span><b>Troubleshoot</b><small>Open Mould Master and build an evidence-led case.</small></span></button><button type="button" data-mm-home-action="materials"><span class="mm-home-balance-icon" aria-hidden="true">⬡</span><span><b>Materials</b><small>Search exact grades, evidence and comparisons.</small></span></button><button type="button" data-mm-home-action="process-data"><span class="mm-home-balance-icon" aria-hidden="true">⌁</span><span><b>Analyse data</b><small>Read measured process trends and recovery evidence.</small></span></button><button type="button" data-mm-home-action="practice"><span class="mm-home-balance-icon" aria-hidden="true">◎</span><span><b>Practice</b><small>Work one evidence-first shop-floor decision.</small></span></button></div><div data-mm-home-recent-slot hidden></div><div class="mm-home-link-row"><button type="button" class="ghost" data-mm-home-action="learn">Browse learning</button><button type="button" class="ghost" data-mm-home-action="saved">Saved lessons</button><button type="button" class="ghost" data-mm-home-action="book">Reference book</button></div>`;
+  return `<div class="mm-home-balance-copy"><span class="eyebrow">Moulding tools</span><h2>Diagnose or analyse</h2><p>Use specialist tools when the next step is evidence, not another lesson.</p></div><div class="mm-home-balance-grid"><button type="button" data-mm-home-action="mould-master"><span class="mm-home-balance-icon" aria-hidden="true">◆</span><span><b>Troubleshoot</b><small>Build an evidence-led Mould Master case.</small></span><span class="mm-home-action-arrow" aria-hidden="true">→</span></button><button type="button" data-mm-home-action="process-data"><span class="mm-home-balance-icon" aria-hidden="true">⌁</span><span><b>Analyse data</b><small>Read measured trends and recovery evidence.</small></span><span class="mm-home-action-arrow" aria-hidden="true">→</span></button></div><div data-mm-home-recent-slot hidden></div>`;
 }
 function syncHomeBalanceContent(panel){
   const a=homeActivity();
-  const setStat=(name,value)=>{
-    const el=panel.querySelector(`[data-mm-home-stat="${name}"]`);
-    const next=String(value);
-    if(el&&el.textContent!==next)el.textContent=next;
-  };
-  setStat('lessons',`${a.completed}/${a.total}`);
-  setStat('cases',a.cases);
-  setStat('saved',a.saved);
-
   const slot=panel.querySelector('[data-mm-home-recent-slot]');
   if(!slot)return;
   let button=slot.querySelector('[data-mm-home-action="recent-case"]');
@@ -91,7 +72,7 @@ function syncHomeBalance(){
     panel=document.createElement('section');
     panel.className='card mm-home-balance';
     panel.dataset.mmHomeBalance=VERSION;
-    panel.setAttribute('aria-label','Moulding workbench');
+    panel.setAttribute('aria-label','Specialist moulding tools');
     panel.innerHTML=homeBalanceMarkup();
     panel.addEventListener('click',event=>{const button=event.target?.closest?.('[data-mm-home-action]');if(button)runQuickAction(button.dataset.mmHomeAction)});
   }
