@@ -108,13 +108,13 @@ function removeHomeJobRouter(root){
     return (text.includes('one platform')&&text.includes('five jobs'))||text.includes('what do you need to do');
   };
 
-  for(const block of Array.from(root.querySelectorAll('.mm-dashboard-slot,section,.card,.mm-home-task-hub,[class*="router"],[class*="job"]'))){
+  for(const block of Array.from(root.querySelectorAll('.mm-dashboard-slot,section,.card,[class*="router"],[class*="job"]'))){
     if(isLegacyRouterText(block.textContent))block.remove();
   }
 
   for(const node of Array.from(root.querySelectorAll('h1,h2,h3,.eyebrow,[class*="eyebrow"],[class*="kicker"]'))){
     if(!isLegacyRouterText(node.textContent))continue;
-    const block=node.closest('.mm-dashboard-slot,section,.card,.mm-home-task-hub,[class*="router"],[class*="job"]')||node.parentElement;
+    const block=node.closest('.mm-dashboard-slot,section,.card,[class*="router"],[class*="job"]')||node.parentElement;
     if(block&&block!==root)block.remove();
   }
 }
@@ -153,15 +153,6 @@ function simplifyHomeScreen(){
   if(oldQuickGrid)oldQuickGrid.remove();
   root.querySelectorAll('.how-grid,.achievement-grid').forEach(el=>el.remove());
 
-  const actions=Array.from(root.querySelectorAll('.mm-home-action'));
-  const learningShortcut=root.querySelector('[data-mm-role="explore-learning"]');
-  if(learningShortcut){
-    let done=false;
-    try{done=typeof window.dailyDone==='function'&&window.dailyDone()}catch(_){}
-    learningShortcut.removeAttribute('data-mm-onclick');
-    learningShortcut.dataset.mmPracticeAction=done?'scenarios':'daily';
-    learningShortcut.innerHTML=`<span class="mm-home-action-icon">✓</span><span><strong>${done?'Daily practice complete':'Daily practice'}</strong><small>${done?'Keep practising with another evidence-first scenario.':'Take one short evidence-first moulding decision for today.'}</small></span>`;
-  }
 }
 function stabilizeRetiredChrome(){
   const root=document.getElementById('dashboard');

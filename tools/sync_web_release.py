@@ -173,7 +173,7 @@ def desired_files() -> dict[Path, str]:
     )
     polish_css = replace_once(
         polish_css,
-        r"^(\/\* Home usefulness \+ primary-navigation declutter — )\d{4}\.\d{2}\.\d{2}\.\d+( \*\/)$",
+        r"^(\/\* Canonical Home hierarchy — )\d{4}\.\d{2}\.\d{2}\.\d+( \*\/)$",
         rf"\g<1>{web_release}\g<2>",
         "learner UI Home polish release marker",
     )

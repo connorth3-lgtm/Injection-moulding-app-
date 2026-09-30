@@ -17,6 +17,8 @@ css=text('premium-ui.css')
 dynamic=text('premium-dynamic.css')
 shell=text('ui-shell.css')
 learner_polish=text('src/domains/shell/learner-ui-polish.js')
+learner_polish_css=text('src/domains/shell/learner-ui-polish.css')
+learning_experience=text('learning-experience.js')
 for marker in [
     '--mm-surface-0','--mm-accent','--mm-radius-xl','--mm-shadow-lg',
     '.sidebar{','.hero-main{','.mm-primary-hub','.lesson-body{','.exam-card{',
@@ -26,8 +28,15 @@ for marker in [
 need('http://' not in css and 'https://' not in css,'premium UI must remain fully local/offline')
 need('@import' not in css.lower(),'premium UI must not import remote or implicit stylesheets')
 need(f"const VERSION='{release}';" in learner_polish,'learner UI polish version must match the governed web release')
-for marker in ['Product design hierarchy cleanup','--mm-product-radius','#dashboard .mm-home-balance{','#materials .mm-exact-results{','.mobile-nav{','Final product-quality interaction states','Startup and degraded states must feel like the same product']:
+for marker in ['Product design hierarchy cleanup','--mm-product-radius','#materials .mm-exact-results{','.mobile-nav{','Final product-quality interaction states','Startup and degraded states must feel like the same product']:
     need(marker in shell,f'canonical product-design hierarchy marker missing: {marker}')
+need('Canonical Home hierarchy' in learner_polish_css,'learner UI polish must own the canonical Home hierarchy')
+need('#dashboard .mm-home-balance{' in learner_polish_css,'canonical Home Workbench layout owner is missing')
+need('#dashboard .mm-home-balance{' not in learner_polish_css.split('/* Canonical Home hierarchy',1)[0],'legacy Home Workbench layout rules remain before the canonical owner')
+need('grid-template-columns:1fr!important' in learner_polish_css,'canonical Home Workbench outer grid must remain one column')
+for retired_source in (css,dynamic,shell,learning_experience):
+    need('.mm-home-utility' not in retired_source,'retired Home utility styling/source returned')
+need('#dashboard .mm-home-balance{' not in shell,'ui-shell must not compete with learner-ui-polish for Workbench layout')
 need('http://' not in dynamic and 'https://' not in dynamic,'premium dynamic UI must remain fully local/offline')
 need('@import' not in dynamic.lower(),'premium dynamic UI must not import remote or implicit stylesheets')
 for marker in ['.mm-today-focus','.mm-learning-progress','.mm-next-card','prefers-reduced-motion','forced-colors:active']:

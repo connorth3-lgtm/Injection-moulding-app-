@@ -273,7 +273,6 @@ function specialistDashboardHtml(){
 
 function installDefaultDashboardSections(){
   registerDashboard({id:'today-focus',zone:'before',order:10,adopt:'.mm-today-focus'});
-  registerDashboard({id:'task-hub',zone:'before',order:20,adopt:'.mm-home-task-hub'});
   registerDashboard({id:'curriculum-focus',zone:'before',order:30,render:slot=>{slot.innerHTML=curriculumDashboardHtml();slot.querySelector('[data-mm-curriculum-dashboard-open]')?.addEventListener('click',()=>{const lesson=currentLesson(),rec=window.MM_CURRICULUM_INTEGRATION?.recommendations?.(lesson.id)?.[0];if(rec)window.MM_CURRICULUM_INTEGRATION.open?.(rec.type,rec.id,lesson.id)})}});
   registerDashboard({id:'specialist',zone:'after',order:90,render:slot=>{slot.innerHTML=specialistDashboardHtml();slot.querySelector('[data-mm-specialist-open]')?.addEventListener('click',()=>window.MM_SPECIALIST_CURRICULUM?.open?.())}})
 }

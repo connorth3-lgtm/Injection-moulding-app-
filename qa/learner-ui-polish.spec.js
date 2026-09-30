@@ -19,11 +19,13 @@ async function openApp(page){
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
 
-test('Home is a useful workbench across desktop and phone',async({page})=>{
+test('Home has one stable responsive Workbench owner across desktop, tablet and phone',async({page})=>{
   await page.setViewportSize({width:810,height:1080});
   await openApp(page);
   const balance=page.locator('#dashboard .mm-home-balance');
   await expect(balance).toBeVisible();
+  await expect(page.locator('#dashboard .mm-home-task-hub')).toHaveCount(0);
+  await expect(page.locator('#dashboard .mm-home-utility')).toHaveCount(0);
   await expect(balance.locator('[data-mm-home-action]')).toHaveCount(7);
   await expect(balance.getByRole('button',{name:/Troubleshoot/i})).toBeVisible();
   await expect(balance.getByRole('button',{name:/Materials/i})).toBeVisible();
@@ -31,22 +33,49 @@ test('Home is a useful workbench across desktop and phone',async({page})=>{
   await expect(balance.getByRole('button',{name:/Practice/i})).toBeVisible();
   await expect(balance.getByRole('button',{name:/Saved lessons/i})).toBeVisible();
   await expect(balance.locator('.mm-home-snapshot')).toContainText('3/120');
-  await expect(page.locator('#dashboard .mm-today-focus .mm-home-utility')).toHaveCount(0);
-  expect(await page.evaluate(()=>{
-    const focus=document.querySelector('#dashboard .mm-today-focus');
-    const workbench=document.querySelector('#dashboard .mm-home-balance');
-    return Boolean(focus&&workbench&&(focus.compareDocumentPosition(workbench)&Node.DOCUMENT_POSITION_FOLLOWING));
-  })).toBeTruthy();
 
+  const initial=await page.evaluate(()=>({
+    outer:getComputedStyle(document.querySelector('#dashboard .mm-home-balance')).gridTemplateColumns.split(/\s+/).filter(Boolean).length,
+    actions:getComputedStyle(document.querySelector('#dashboard .mm-home-balance-grid')).gridTemplateColumns.split(/\s+/).filter(Boolean).length,
+    order:Boolean(document.querySelector('#dashboard .mm-today-focus')?.compareDocumentPosition(document.querySelector('#dashboard .mm-home-balance'))&Node.DOCUMENT_POSITION_FOLLOWING)
+  }));
+  expect(initial.outer).toBe(1);
+  expect(initial.actions).toBe(2);
+  expect(initial.order).toBeTruthy();
+
+  const materials=balance.getByRole('button',{name:/Materials/i});
+  await materials.evaluate(el=>el.dataset.mmQaStableNode='1');
+  await materials.focus();
   await page.setViewportSize({width:412,height:915});
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
   await expect(page.locator('#dashboard .mm-home-balance')).toBeVisible();
-  await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
-  expect(await page.evaluate(()=>{
-    const focus=document.querySelector('#dashboard .mm-today-focus');
-    const workbench=document.querySelector('#dashboard .mm-home-balance');
-    return Boolean(focus&&workbench&&(focus.compareDocumentPosition(workbench)&Node.DOCUMENT_POSITION_FOLLOWING));
-  })).toBeTruthy();
+  const phone=await page.evaluate(()=>({
+    outer:getComputedStyle(document.querySelector('#dashboard .mm-home-balance')).gridTemplateColumns.split(/\s+/).filter(Boolean).length,
+    actions:getComputedStyle(document.querySelector('#dashboard .mm-home-balance-grid')).gridTemplateColumns.split(/\s+/).filter(Boolean).length,
+    focused:document.activeElement?.dataset?.mmHomeAction||'',
+    stable:document.querySelector('[data-mm-home-action="materials"]')?.dataset?.mmQaStableNode||''
+  }));
+  expect(phone.outer).toBe(1);
+  expect(phone.actions).toBe(2);
+  expect(phone.focused).toBe('materials');
+  expect(phone.stable).toBe('1');
+
+  await page.evaluate(()=>{
+    user.bookmarks=[2,3];
+    window.MM_LEARNER_UI_POLISH.refresh();
+  });
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  await expect(balance.locator('[data-mm-home-stat="saved"]')).toHaveText('2');
+  await expect(balance.getByRole('button',{name:/Materials/i})).toHaveAttribute('data-mm-qa-stable-node','1');
+
+  await page.setViewportSize({width:1440,height:900});
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  const desktop=await page.evaluate(()=>({
+    outer:getComputedStyle(document.querySelector('#dashboard .mm-home-balance')).gridTemplateColumns.split(/\s+/).filter(Boolean).length,
+    actions:getComputedStyle(document.querySelector('#dashboard .mm-home-balance-grid')).gridTemplateColumns.split(/\s+/).filter(Boolean).length
+  }));
+  expect(desktop.outer).toBe(1);
+  expect(desktop.actions).toBe(4);
 });
 
 test('Book keeps governed status intact but progressively discloses assurance detail without a mutation loop',async({page})=>{
