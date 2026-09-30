@@ -1,0 +1,5025 @@
+{
+  "schemaVersion": 1,
+  "bookId": "mouldmaster-book",
+  "release": "2026.10.01.1",
+  "status": "technical-review-material-atlas",
+  "title": "Material Grade Atlas — Asia, Australia and New Zealand evidence wave",
+  "sourceIndex": {
+    "path": "data/material-unique-profile-index-v1.json",
+    "version": "2026-09-28.10",
+    "uniqueExactCompleteProfiles": 89,
+    "countingRule": "one manufacturer + exact grade identity equals one unique complete profile; multiple evidence rows enrich but do not increase profile count"
+  },
+  "sourceExtraction": {
+    "path": "data/asian-aus-nz-material-grade-extraction-wave2-v1.json",
+    "version": "2026-09-28.40",
+    "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
+    "policy": {
+      "noUniversalSettings": true,
+      "noInterpolationAcrossGrades": true,
+      "regionalAvailabilityIsNotManufacturingOrigin": true,
+      "typicalValuesAreNotSpecifications": true
+    }
+  },
+  "boundary": "Exact-grade evidence appendix for learning and comparison. Values retain the source test condition, grade identity and source/value-status context. Typical or manufacturer-measured values are not universal specifications or production setpoints. Current supplier TDS/SDS/processing guidance, machine/mould limits and site controls remain authoritative.",
+  "profileCount": 89,
+  "profiles": [
+    {
+      "id": "material-atlas-001",
+      "manufacturer": "Qenos",
+      "grade": "Alkatuff LL820",
+      "polymer": "LLDPE",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        1,
+        133
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Qenos",
+          "manufacturerCountry": "Australia",
+          "region": "Australia",
+          "polymer": "LLDPE",
+          "grade": "Alkatuff LL820",
+          "process": "injection moulding/compounding",
+          "meltIndex": {
+            "test": "ASTM D1238",
+            "condition": "190 C / 2.16 kg",
+            "value_g_10min": 20
+          },
+          "density_g_cm3": 0.9251,
+          "status": "candidate-complete",
+          "source": "Qenos Polyethylene at a Glance"
+        },
+        {
+          "manufacturer": "Qenos",
+          "manufacturerCountry": "Australia",
+          "region": "Australia",
+          "polymer": "LLDPE",
+          "grade": "Alkatuff LL820",
+          "process": [
+            "injection moulding",
+            "compounding"
+          ],
+          "MI": {
+            "test": "ASTM D1238",
+            "condition": "190 C / 2.16 kg",
+            "value_g_10min": 20
+          },
+          "density_g_cm3": 0.9251,
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-002",
+      "manufacturer": "SCGC",
+      "grade": "P700J",
+      "polymer": "PP homopolymer",
+      "evidenceRowCount": 3,
+      "supportingRecordIndexes": [
+        2,
+        97,
+        194
+      ],
+      "evidence": [
+        {
+          "manufacturer": "SCGC",
+          "manufacturerCountry": "Thailand",
+          "region": "Asia",
+          "polymer": "PP homopolymer",
+          "grade": "P700J",
+          "process": "injection moulding",
+          "mfr": {
+            "test": "ASTM D1238",
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 12
+          },
+          "tensileYield_kg_cm2": 320,
+          "flexuralModulus_kg_cm2": 14500,
+          "izod_J_m": {
+            "at23C": 37,
+            "at0C": 20
+          },
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "SCGC",
+          "manufacturerCountry": "Thailand",
+          "region": "Asia",
+          "polymer": "PP homopolymer",
+          "grade": "P700J",
+          "process": "injection moulding",
+          "MFR": {
+            "test": "ASTM D1238",
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 12
+          },
+          "density_g_cm3": 0.91,
+          "tensileYield_kg_cm2": 320,
+          "flexuralModulus_kg_cm2": 14500,
+          "notchedIzod_J_m": {
+            "at23C": 37,
+            "at0C": 20
+          },
+          "HDT_C": 120,
+          "shrinkage2mm_percent": {
+            "MD": 1.25,
+            "TD": 1.35
+          },
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "SCGC",
+          "manufacturerCountry": "Thailand",
+          "region": "Asia",
+          "polymer": "PP homopolymer",
+          "grade": "P700J",
+          "process": "injection moulding",
+          "MFR": {
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 12
+          },
+          "density_g_cm3": 0.91,
+          "tensileYield_kg_cm2": 320,
+          "flexuralModulus_kg_cm2": 14500,
+          "notchedIzod_J_m": {
+            "at23C": 37,
+            "at0C": 20
+          },
+          "HDT_C": 120,
+          "shrinkage2mm_percent": {
+            "MD": 1.25,
+            "TD": 1.35
+          },
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-003",
+      "manufacturer": "SCGC",
+      "grade": "P840J",
+      "polymer": "PP impact copolymer",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        3
+      ],
+      "evidence": [
+        {
+          "manufacturer": "SCGC",
+          "manufacturerCountry": "Thailand",
+          "region": "Asia",
+          "polymer": "PP impact copolymer",
+          "grade": "P840J",
+          "process": "injection moulding",
+          "mfr": {
+            "test": "ASTM D1238",
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 43
+          },
+          "tensileYield_kg_cm2": 290,
+          "flexuralModulus_kg_cm2": 12500,
+          "izod_J_m": {
+            "at23C": 70,
+            "at0C": 39,
+            "atMinus20C": 30
+          },
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-004",
+      "manufacturer": "SCGC",
+      "grade": "P901J",
+      "polymer": "PP homopolymer",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        4
+      ],
+      "evidence": [
+        {
+          "manufacturer": "SCGC",
+          "manufacturerCountry": "Thailand",
+          "region": "Asia",
+          "polymer": "PP homopolymer",
+          "grade": "P901J",
+          "process": "thin-wall injection moulding",
+          "mfr": {
+            "test": "ASTM D1238",
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 70
+          },
+          "shrinkage_2mm_percent": {
+            "MD": 1,
+            "TD": 1.25
+          },
+          "density_g_cm3": 0.91,
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-005",
+      "manufacturer": "Kuraray",
+      "grade": "N1000A",
+      "polymer": "PA9T",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        5,
+        153
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Kuraray",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PA9T",
+          "grade": "N1000A",
+          "reinforcement": "unreinforced",
+          "condition": "absolutely dry",
+          "waterAbsorption_23C_24h_percent": 0.25,
+          "tensile_MPa": 85,
+          "flexuralModulus_GPa": 2.5,
+          "melting_C": 300,
+          "shrinkage_2mm_percent": {
+            "flow": 1.4,
+            "transverse": 1.5
+          },
+          "valueStatus": "manufacturer measured, not guaranteed",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Kuraray",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PA9T",
+          "grade": "N1000A",
+          "reinforcement": "unreinforced",
+          "condition": "absolutely dry",
+          "specificGravity": 1.14,
+          "waterAbsorption23C24h_percent": 0.25,
+          "tensile_MPa": 85,
+          "flexuralModulus_GPa": 2.5,
+          "melting_C": 300,
+          "shrinkage2mm_percent": {
+            "test": "ISO 294-4",
+            "flow": 1.4,
+            "transverse": 1.5
+          },
+          "valueStatus": "manufacturer measured; not guaranteed",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-006",
+      "manufacturer": "Kuraray",
+      "grade": "G1300A",
+      "polymer": "PA9T",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        6,
+        154
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Kuraray",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PA9T",
+          "grade": "G1300A",
+          "reinforcement": "GF30",
+          "condition": "absolutely dry",
+          "waterAbsorption_23C_24h_percent": 0.19,
+          "tensile_MPa": 190,
+          "flexuralModulus_GPa": 8.8,
+          "melting_C": 300,
+          "shrinkage_2mm_percent": {
+            "flow": 0.3,
+            "transverse": 0.9
+          },
+          "valueStatus": "manufacturer measured, not guaranteed",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Kuraray",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PA9T",
+          "grade": "G1300A",
+          "reinforcement": "GF30",
+          "condition": "absolutely dry",
+          "specificGravity": 1.42,
+          "waterAbsorption23C24h_percent": 0.19,
+          "tensile_MPa": 190,
+          "flexuralModulus_GPa": 8.8,
+          "melting_C": 300,
+          "shrinkage2mm_percent": {
+            "test": "ISO 294-4",
+            "flow": 0.3,
+            "transverse": 0.9
+          },
+          "valueStatus": "manufacturer measured; not guaranteed",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-007",
+      "manufacturer": "UNITIKA",
+      "grade": "E2000",
+      "polymer": "PA66",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        7,
+        150
+      ],
+      "evidence": [
+        {
+          "manufacturer": "UNITIKA",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PA66",
+          "grade": "E2000",
+          "process": "general injection moulding",
+          "conditionStates": {
+            "DAM": {
+              "tensileYield_MPa": 85,
+              "tensileModulus_MPa": 3000,
+              "flexural_MPa": 115,
+              "flexuralModulus_MPa": 3000
+            },
+            "conditioned50RH": {
+              "tensileYield_MPa": 60,
+              "tensileModulus_MPa": 1000,
+              "flexural_MPa": 50,
+              "flexuralModulus_MPa": 1100
+            }
+          },
+          "mvr": {
+            "test": "ISO 1133",
+            "condition": "275 C / 5 kg",
+            "value_cm3_10min": 105
+          },
+          "moulding": {
+            "cylinder_C": "270-290",
+            "mould_C": "60-110"
+          },
+          "valueStatus": "typical average lots, not guaranteed",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "UNITIKA",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PA66",
+          "grade": "E2000",
+          "process": "injection moulding",
+          "conditionedProperties": {
+            "DAM": {
+              "tensileYield_MPa": 85,
+              "tensileModulus_MPa": 3000,
+              "flexural_MPa": 115,
+              "flexuralModulus_MPa": 3000
+            },
+            "RH50": {
+              "tensileYield_MPa": 60,
+              "tensileModulus_MPa": 1000,
+              "flexural_MPa": 50,
+              "flexuralModulus_MPa": 1100
+            }
+          },
+          "MVR": {
+            "test": "ISO 1133",
+            "condition": "275 C / 5 kg",
+            "value_cm3_10min": 105
+          },
+          "processingBoundary": {
+            "cylinder_C": "270-290",
+            "mould_C": "60-110"
+          },
+          "valueStatus": "typical average lots; not guaranteed",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-008",
+      "manufacturer": "LyondellBasell Australia",
+      "grade": "Moplen HP400L / PLASVE HP400L",
+      "polymer": "PP homopolymer",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        9
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LyondellBasell Australia",
+          "manufacturerCountry": "Australia",
+          "region": "Australia/New Zealand availability",
+          "polymer": "PP homopolymer",
+          "grade": "Moplen HP400L / PLASVE HP400L",
+          "process": "injection moulding",
+          "mfr": {
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 6
+          },
+          "density_g_cm3": 0.9,
+          "flexuralModulus_MPa": 1500,
+          "tensileYield_MPa": 32,
+          "vicat_C": 154,
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-009",
+      "manufacturer": "IndianOil",
+      "grade": "P1110MAS",
+      "polymer": "PP homopolymer",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        13,
+        184
+      ],
+      "evidence": [
+        {
+          "manufacturer": "IndianOil",
+          "manufacturerCountry": "India",
+          "region": "Asia",
+          "polymer": "PP homopolymer",
+          "grade": "P1110MAS",
+          "process": "injection moulding",
+          "features": [
+            "high flow",
+            "high stiffness",
+            "gloss",
+            "antistatic"
+          ],
+          "applicationBoundary": [
+            "furniture",
+            "house articles",
+            "automotive components requiring stiffness",
+            "low-warpage products"
+          ],
+          "qualification": "manufacturer states cycle-time reduction up to 18% depends on product and equipment; not a universal cycle-time claim",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "IndianOil",
+          "manufacturerCountry": "India",
+          "region": "Asia",
+          "polymer": "PP homopolymer",
+          "grade": "P1110MAS",
+          "process": "injection moulding",
+          "features": [
+            "high flow",
+            "high stiffness",
+            "gloss",
+            "antistatic"
+          ],
+          "applications": [
+            "furniture",
+            "household articles",
+            "automotive stiffness applications",
+            "low-warpage products"
+          ],
+          "cycleTimeClaim": "manufacturer states up to 18% depending on product and equipment",
+          "boundary": "cycle-time claim is conditional and not universal",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-010",
+      "manufacturer": "LOTTE Chemical",
+      "grade": "ASF-9860",
+      "polymer": "PBT",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        14,
+        151
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LOTTE Chemical",
+          "manufacturerCountry": "South Korea",
+          "region": "Asia",
+          "polymer": "PBT",
+          "grade": "ASF-9860",
+          "mfi": {
+            "test": "ISO 1133",
+            "condition": "250 C / 2.16 kg",
+            "value_g_10min": 74
+          },
+          "specificGravity": {
+            "test": "ISO 1183",
+            "value": 1.31
+          },
+          "waterAbsorption_percent": {
+            "test": "ISO 62",
+            "condition": "23 C",
+            "value": 0.4
+          },
+          "mouldShrinkage_percent": {
+            "test": "ISO 294-4",
+            "thickness_mm": 2,
+            "MD": "1.5-1.8",
+            "TD": "1.7-2.0"
+          },
+          "tensileYield_MPa": 58,
+          "tensileModulus_MPa": 2350,
+          "flexural_MPa": 80,
+          "flexuralModulus_MPa": 2320,
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "LOTTE Chemical",
+          "manufacturerCountry": "South Korea",
+          "region": "Asia",
+          "polymer": "PBT",
+          "grade": "ASF-9860",
+          "MFI": {
+            "test": "ISO 1133",
+            "condition": "250 C / 2.16 kg",
+            "value_g_10min": 74
+          },
+          "specificGravity": 1.31,
+          "waterAbsorption_percent": {
+            "test": "ISO 62",
+            "condition": "23 C",
+            "value": 0.4
+          },
+          "mouldShrinkage_percent": {
+            "test": "ISO 294-4",
+            "thickness_mm": 2,
+            "MD": "1.5-1.8",
+            "TD": "1.7-2.0"
+          },
+          "tensileYield_MPa": 58,
+          "tensileModulus_MPa": 2350,
+          "flexural_MPa": 80,
+          "flexuralModulus_MPa": 2320,
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-011",
+      "manufacturer": "LOTTE Chemical",
+      "grade": "GP-5000",
+      "polymer": "PBT",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        15,
+        152
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LOTTE Chemical",
+          "manufacturerCountry": "South Korea",
+          "region": "Asia",
+          "polymer": "PBT",
+          "grade": "GP-5000",
+          "mfi": {
+            "test": "ISO 1133",
+            "condition": "250 C / 2.16 kg",
+            "value_g_10min": 71
+          },
+          "specificGravity": 1.3,
+          "tensileYield_MPa": 55,
+          "tensileModulus_MPa": 2300,
+          "flexural_MPa": 74,
+          "flexuralModulus_MPa": 2100,
+          "notchedIzod_kJ_m2": 4.5,
+          "HDT_C": {
+            "test": "ISO 75-2",
+            "condition": "1.8 MPa / 4 mm unannealed",
+            "value": 59
+          },
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "LOTTE Chemical",
+          "manufacturerCountry": "South Korea",
+          "region": "Asia",
+          "polymer": "PBT",
+          "grade": "GP-5000",
+          "MFI": {
+            "test": "ISO 1133",
+            "condition": "250 C / 2.16 kg",
+            "value_g_10min": 71
+          },
+          "specificGravity": 1.3,
+          "tensileYield_MPa": 55,
+          "tensileModulus_MPa": 2300,
+          "flexural_MPa": 74,
+          "flexuralModulus_MPa": 2100,
+          "notchedIzod23C_kJ_m2": 4.5,
+          "HDT_C": {
+            "condition": "1.8 MPa / 4 mm unannealed",
+            "value": 59
+          },
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-012",
+      "manufacturer": "Polyplastics",
+      "grade": "DURANEX 3306",
+      "polymer": "PBT+PET",
+      "evidenceRowCount": 3,
+      "supportingRecordIndexes": [
+        17,
+        148,
+        210
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PBT+PET",
+          "grade": "DURANEX 3306",
+          "reinforcement": "GF30",
+          "density_g_cm3": 1.54,
+          "waterAbsorption_percent": {
+            "test": "ISO 62",
+            "condition": "23 C / 24 h / 1 mm",
+            "value": 0.2
+          },
+          "tensile_MPa": 140,
+          "flexural_MPa": 210,
+          "flexuralModulus_MPa": 9100,
+          "notchedCharpy_kJ_m2": 8.1,
+          "HDT_C": {
+            "condition": "1.8 MPa",
+            "value": 210
+          },
+          "clte_1e5_per_C": {
+            "flow": 2,
+            "transverse": 7
+          },
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PBT+PET",
+          "grade": "DURANEX 3306",
+          "reinforcement": "GF30",
+          "density_g_cm3": 1.54,
+          "waterAbsorption_percent": {
+            "test": "ISO 62",
+            "condition": "23 C / 24 h / 1 mm",
+            "value": 0.2
+          },
+          "tensile_MPa": 140,
+          "flexural_MPa": 210,
+          "flexuralModulus_MPa": 9100,
+          "notchedCharpy23C_kJ_m2": 8.1,
+          "HDT1_8MPa_C": 210,
+          "CLTE_1e5_per_C": {
+            "flow": 2,
+            "transverse": 7
+          },
+          "valueStatus": "typical manufacturer values",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PBT+PET-GF30",
+          "grade": "DURANEX 3306",
+          "reinforcement": "GF30",
+          "density_g_cm3": 1.54,
+          "waterAbsorption_percent": 0.2,
+          "tensile_MPa": 140,
+          "flexural_MPa": 210,
+          "flexuralModulus_MPa": 9100,
+          "notchedCharpy_kJ_m2": 8.1,
+          "HDT1_8MPa_C": 210,
+          "CLTE_1e5_K": {
+            "flow": 2,
+            "transverse": 7
+          },
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-013",
+      "manufacturer": "Teijin",
+      "grade": "PANLITE SH-1126Z",
+      "polymer": "PC",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        18,
+        149
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Teijin",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PC",
+          "grade": "PANLITE SH-1126Z",
+          "density_kg_m3": 1170,
+          "waterAbsorption_percent": {
+            "test": "ISO 62",
+            "condition": "23 C / 24 h immersion",
+            "value": 0.1
+          },
+          "tensileYield_MPa": 72,
+          "flexural_MPa": 100,
+          "flexuralModulus_MPa": 2450,
+          "mvr": {
+            "test": "ISO 1133",
+            "condition": "300 C / 1.2 kgf",
+            "value_cm3_10min": 26
+          },
+          "HDT_C": {
+            "at1_8MPa": 113,
+            "at0_45MPa": 126
+          },
+          "valueStatus": "representative, not guaranteed",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Teijin",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PC",
+          "grade": "PANLITE SH-1126Z",
+          "density_kg_m3": 1170,
+          "waterAbsorption_percent": {
+            "test": "ISO 62",
+            "condition": "23 C / 24 h immersion",
+            "value": 0.1
+          },
+          "tensileYield_MPa": 72,
+          "flexural_MPa": 100,
+          "flexuralModulus_MPa": 2450,
+          "MVR": {
+            "test": "ISO 1133",
+            "condition": "300 C / 1.2 kgf",
+            "value_cm3_10min": 26
+          },
+          "HDT_C": {
+            "at1_8MPa": 113,
+            "at0_45MPa": 126
+          },
+          "valueStatus": "representative values; not guaranteed",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-014",
+      "manufacturer": "Formosa Chemicals & Fibre",
+      "grade": "TAIRILAC AG15A1-H",
+      "polymer": "ABS",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        19
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Formosa Chemicals & Fibre",
+          "manufacturerCountry": "Taiwan",
+          "region": "Asia",
+          "polymer": "ABS",
+          "grade": "TAIRILAC AG15A1-H",
+          "tensile_MPa": {
+            "test": "ASTM D-638",
+            "condition": "23 C",
+            "value": 45
+          },
+          "flexural_MPa": {
+            "test": "ASTM D-790",
+            "condition": "23 C",
+            "value": 80
+          },
+          "flexuralModulus_MPa": 2548,
+          "notchedIzod_J_m": {
+            "test": "ASTM D-256",
+            "condition": "23 C / 1/4 inch",
+            "value": 246
+          },
+          "vicat_C": {
+            "test": "ASTM D-1525",
+            "condition": "1 kg",
+            "value": 100
+          },
+          "mfi_g_10min": {
+            "test": "ASTM D-1238",
+            "conditions": [
+              {
+                "condition": "200 C / 5 kg",
+                "value": 2.2
+              },
+              {
+                "condition": "220 C / 10 kg",
+                "value": 24
+              }
+            ]
+          },
+          "mouldShrinkage_percent": {
+            "test": "ASTM D-955",
+            "condition": "3.2 mm",
+            "value": "0.4-0.7"
+          },
+          "valueStatus": "general guide; laboratory data, not guaranteed",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-015",
+      "manufacturer": "LOTTE Chemical Titan",
+      "grade": "SH611",
+      "polymer": "PP impact copolymer",
+      "evidenceRowCount": 3,
+      "supportingRecordIndexes": [
+        23,
+        115,
+        200
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LOTTE Chemical Titan",
+          "manufacturerCountry": "Malaysia",
+          "region": "Asia",
+          "polymer": "PP impact copolymer",
+          "grade": "SH611",
+          "process": "injection moulding",
+          "MFR": {
+            "test": "ASTM D1238",
+            "condition": "230 C",
+            "value_g_10min": 18
+          },
+          "density_g_cm3": 0.9,
+          "tensileYield_kg_cm2": 190,
+          "flexuralModulus_kg_cm2": 9000,
+          "applicationBoundary": [
+            "industrial pails",
+            "pallets",
+            "household electric appliances"
+          ],
+          "restriction": "not designed/intended for food, personal care, medical or pharmaceutical applications per manufacturer sheet",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "LOTTE Chemical Titan",
+          "manufacturerCountry": "Malaysia",
+          "region": "Asia",
+          "polymer": "PP impact copolymer",
+          "grade": "SH611",
+          "process": "injection moulding",
+          "MFR": {
+            "test": "ASTM D1238",
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 18
+          },
+          "density_g_cm3": 0.9,
+          "tensileYield_kg_cm2": 190,
+          "flexuralModulus_kg_cm2": 9000,
+          "applicationBoundary": [
+            "industrial pails",
+            "pallets",
+            "household electrical appliances"
+          ],
+          "restriction": "manufacturer sheet excludes food, personal-care, medical and pharmaceutical applications",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "LOTTE Chemical Titan",
+          "manufacturerCountry": "Malaysia",
+          "region": "Asia",
+          "polymer": "PP impact copolymer",
+          "grade": "SH611",
+          "process": "injection moulding",
+          "MFR": {
+            "test": "ASTM D1238",
+            "condition": "230 C",
+            "value_g_10min": 18
+          },
+          "density_g_cm3": 0.9,
+          "tensileYield_kg_cm2": 190,
+          "flexuralModulus_kg_cm2": 9000,
+          "applications": [
+            "industrial pails",
+            "pallets",
+            "household electrical appliances"
+          ],
+          "restriction": "not designed/intended for food, personal care, medical or pharmaceutical uses",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-016",
+      "manufacturer": "LyondellBasell Australia",
+      "grade": "PLASVE/Moplen HP400L",
+      "polymer": "PP homopolymer",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        26
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LyondellBasell Australia",
+          "manufacturerCountry": "Australia",
+          "region": "Australia/New Zealand availability",
+          "polymer": "PP homopolymer",
+          "grade": "PLASVE/Moplen HP400L",
+          "MFR": {
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 6
+          },
+          "density_g_cm3": 0.9,
+          "flexuralModulus_MPa": 1500,
+          "tensileYield_MPa": 32,
+          "notchedIzod23C_kJ_m2": 3.5,
+          "vicat_C": 154,
+          "HDT0_45MPa_C": 82,
+          "availability": [
+            "Australia",
+            "New Zealand",
+            "Asia-Pacific"
+          ],
+          "valueStatus": "typical properties",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-017",
+      "manufacturer": "Kuraray",
+      "grade": "G1500A",
+      "polymer": "PA9T",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        27,
+        155
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Kuraray",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PA9T",
+          "grade": "G1500A",
+          "reinforcement": "GF50",
+          "process": "injection moulding",
+          "condition": "absolutely dry",
+          "specificGravity": 1.58,
+          "waterAbsorption_percent": {
+            "test": "ISO 62",
+            "condition": "23 C water immersion 24 h",
+            "value": 0.13
+          },
+          "tensile_MPa": 250,
+          "flexural_MPa": 370,
+          "flexuralModulus_GPa": 15.3,
+          "notchedCharpy_kJ_m2": 17,
+          "melting_C": 300,
+          "shrinkage2mm_percent": {
+            "test": "ISO 294-4",
+            "flow": 0.2,
+            "transverse": 0.8
+          },
+          "valueStatus": "manufacturer actual measured values; not guaranteed",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Kuraray",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PA9T",
+          "grade": "G1500A",
+          "reinforcement": "GF50",
+          "condition": "absolutely dry",
+          "specificGravity": 1.58,
+          "waterAbsorption23C24h_percent": 0.13,
+          "tensile_MPa": 250,
+          "flexural_MPa": 370,
+          "flexuralModulus_GPa": 15.3,
+          "notchedCharpy_kJ_m2": 17,
+          "melting_C": 300,
+          "shrinkage2mm_percent": {
+            "test": "ISO 294-4",
+            "flow": 0.2,
+            "transverse": 0.8
+          },
+          "valueStatus": "manufacturer measured; not guaranteed",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-018",
+      "manufacturer": "UBE",
+      "grade": "1015GC6",
+      "polymer": "PA6",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        28,
+        188
+      ],
+      "evidence": [
+        {
+          "manufacturer": "UBE",
+          "manufacturerCountry": "Japan",
+          "productionArea": "Thailand",
+          "region": "Asia",
+          "polymer": "PA6",
+          "grade": "1015GC6",
+          "reinforcement": "GF30",
+          "process": "injection moulding",
+          "condition": "dry as molded",
+          "tensile_MPa": 185,
+          "tensileModulus_MPa": 9300,
+          "flexural_MPa": 280,
+          "flexuralModulus_MPa": 8500,
+          "notchedCharpy_kJ_m2": 15,
+          "melting_C": "215-225",
+          "HDT_C": {
+            "at0_45MPa": 220,
+            "at1_8MPa": 205
+          },
+          "CLTE_1e5_K": 2.5,
+          "density_g_cm3": 1.36,
+          "equilibriumWaterAbsorption_percent": 1.8,
+          "valueStatus": "typical values",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "UBE",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PA6-GF30",
+          "grade": "1015GC6",
+          "condition": "dry as moulded",
+          "reinforcement": "GF30",
+          "tensile_MPa": 190,
+          "tensileModulus_MPa": 9500,
+          "flexural_MPa": 280,
+          "flexuralModulus_MPa": 8500,
+          "notchedCharpy_kJ_m2": 12,
+          "melting_C": 220,
+          "HDT_C": {
+            "at1_8MPa": 200,
+            "at0_45MPa": 215
+          },
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-019",
+      "manufacturer": "UBE",
+      "grade": "1013B",
+      "polymer": "PA6",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        29,
+        189
+      ],
+      "evidence": [
+        {
+          "manufacturer": "UBE",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PA6",
+          "grade": "1013B",
+          "reinforcement": "unreinforced",
+          "process": "injection moulding",
+          "condition": "dry as molded",
+          "tensile_MPa": 80,
+          "tensileModulus_MPa": 2900,
+          "flexural_MPa": 110,
+          "flexuralModulus_MPa": 2700,
+          "notchedCharpy_kJ_m2": 6,
+          "melting_C": "215-225",
+          "HDT_C": {
+            "at0_45MPa": 155,
+            "at1_8MPa": 60
+          },
+          "CLTE_1e5_K": 8,
+          "density_g_cm3": 1.14,
+          "equilibriumWaterAbsorption_percent": 3,
+          "moistureEffect": {
+            "rockwellR": {
+              "dry": 120,
+              "afterAbsorption": 85
+            },
+            "volumeResistivity_ohm_cm": {
+              "dry": "1e15",
+              "afterAbsorption": "1e12"
+            }
+          },
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "UBE",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PA6",
+          "grade": "1013B",
+          "condition": "dry as moulded",
+          "reinforcement": "unreinforced",
+          "tensile_MPa": 80,
+          "tensileModulus_MPa": 2800,
+          "flexural_MPa": 110,
+          "flexuralModulus_MPa": 2500,
+          "notchedCharpy_kJ_m2": 6,
+          "melting_C": 220,
+          "HDT_C": {
+            "at1_8MPa": 60,
+            "at0_45MPa": 160
+          },
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-020",
+      "manufacturer": "Supreme Petrochem",
+      "grade": "SH400HV",
+      "polymer": "HIPS",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        30,
+        234
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Supreme Petrochem",
+          "manufacturerCountry": "India",
+          "region": "Asia",
+          "polymer": "HIPS",
+          "grade": "SH400HV",
+          "tensile_kgf_cm2": 355,
+          "elongation_percent": 35,
+          "flexural_kgf_cm2": 595,
+          "flexuralModulus_kgf_cm2": 22350,
+          "notchedIzod_J_m": 95,
+          "specificGravity": 1.03,
+          "gloss60deg_percent": ">80",
+          "processingBoundary": {
+            "processingTemperature_C": "180-240",
+            "predrying": {
+              "temperature_C": "50-80",
+              "time_h": 2
+            },
+            "mouldTemperature_C": "40-60",
+            "note": "manufacturer recommends injection speed/high melt and mould temperature for improved gloss; retain as grade/process guidance only"
+          },
+          "valueStatus": "typical guide only; manufacturer may revise",
+          "sourceRevision": "09/2025",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Supreme Petrochem",
+          "manufacturerCountry": "India",
+          "region": "Asia",
+          "polymer": "HIPS",
+          "grade": "SH400HV",
+          "process": "injection moulding",
+          "specificGravity": 1.03,
+          "tensile_kgf_cm2": 355,
+          "elongation_percent": 35,
+          "flexural_kgf_cm2": 595,
+          "flexuralModulus_kgf_cm2": 22350,
+          "notchedIzod_J_m": 95,
+          "gloss_percent": ">80",
+          "processingBoundary": {
+            "melt_C": "180-240",
+            "predry_C": "50-80",
+            "predry_h": 2,
+            "mould_C": "40-60"
+          },
+          "sourceRevision": "09/2025",
+          "valueStatus": "manufacturer guide typical values",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-021",
+      "manufacturer": "Formosa Chemicals & Fibre",
+      "grade": "AF3500",
+      "polymer": "ABS",
+      "evidenceRowCount": 3,
+      "supportingRecordIndexes": [
+        31,
+        124,
+        171
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Formosa Chemicals & Fibre",
+          "manufacturerCountry": "Taiwan",
+          "region": "Asia",
+          "polymer": "ABS",
+          "grade": "AF3500",
+          "feature": "high flow/high impact",
+          "mfi": {
+            "ASTM_D1238": [
+              {
+                "condition": "220 C / 10 kg",
+                "value_g_10min": 47
+              },
+              {
+                "condition": "200 C / 5 kg",
+                "value_g_10min": 5
+              }
+            ],
+            "ISO1133": [
+              {
+                "condition": "200 C / 5 kg",
+                "value_g_10min": 5
+              },
+              {
+                "condition": "220 C / 10 kg",
+                "value_g_10min": 47
+              }
+            ]
+          },
+          "specificGravity": 1.04,
+          "tensile": {
+            "ASTM_D638_kg_cm2": 390,
+            "ISO527_MPa": 38
+          },
+          "flexural": {
+            "ASTM_D790_kg_cm2": 670,
+            "ISO178_MPa": 50
+          },
+          "flexuralModulus": {
+            "ASTM_D790_kg_cm2": 20000,
+            "ISO178_MPa": 1500
+          },
+          "HDT_C": {
+            "ASTM_D648_annealed_1_8MPa": 94,
+            "ASTM_D648_unannealed_1_8MPa": 83,
+            "ISO75A_annealed_1_8MPa": 90
+          },
+          "shrinkage_percent": {
+            "ASTM_D955_3_2mm": "0.4-0.7",
+            "ISO2577_3_2mm": "0.4-0.7"
+          },
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Formosa Chemicals & Fibre",
+          "manufacturerCountry": "Taiwan",
+          "region": "Asia",
+          "polymer": "ABS",
+          "grade": "AF3500",
+          "process": "injection moulding",
+          "feature": "high flow/high impact",
+          "MFI": [
+            {
+              "test": "ASTM D1238",
+              "condition": "200 C / 5 kg",
+              "value_g_10min": 5
+            },
+            {
+              "test": "ASTM D1238",
+              "condition": "220 C / 10 kg",
+              "value_g_10min": 47
+            }
+          ],
+          "specificGravity": 1.04,
+          "tensile_MPa": {
+            "ISO527": 38
+          },
+          "flexural_MPa": {
+            "ISO178": 50
+          },
+          "flexuralModulus_MPa": {
+            "ISO178": 1500
+          },
+          "HDT_C": {
+            "annealed_1_8MPa": 90
+          },
+          "shrinkage_percent": {
+            "thickness_mm": 3.2,
+            "value": "0.4-0.7"
+          },
+          "valueStatus": "manufacturer laboratory/general guide, not guaranteed",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Formosa Chemicals & Fibre",
+          "manufacturerCountry": "Taiwan",
+          "region": "Asia",
+          "polymer": "ABS",
+          "grade": "AF3500",
+          "process": "injection moulding",
+          "feature": "high flow/high impact",
+          "specificGravity": 1.04,
+          "MFI": [
+            {
+              "test": "ASTM D1238",
+              "condition": "200 C / 5 kg",
+              "value_g_10min": 5
+            },
+            {
+              "test": "ASTM D1238",
+              "condition": "220 C / 10 kg",
+              "value_g_10min": 47
+            }
+          ],
+          "tensile_MPa": {
+            "ISO527": 38
+          },
+          "flexural_MPa": {
+            "ISO178": 50
+          },
+          "flexuralModulus_MPa": {
+            "ISO178": 1500
+          },
+          "HDT_C": {
+            "ISO75A_annealed_1_8MPa": 90
+          },
+          "shrinkage_percent": {
+            "thickness_mm": 3.2,
+            "value": "0.4-0.7"
+          },
+          "valueStatus": "manufacturer laboratory/general guide; not guaranteed",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-022",
+      "manufacturer": "Sumitomo Chemical",
+      "grade": "SUMIKAEXCEL 3600G",
+      "polymer": "PESU",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        32,
+        157
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Sumitomo Chemical",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PESU",
+          "grade": "SUMIKAEXCEL 3600G",
+          "reinforcement": "unreinforced",
+          "process": "injection moulding",
+          "specificGravity": 1.37,
+          "waterAbsorption_percent": {
+            "test": "ISO 62",
+            "condition": "23 C / 24 h water",
+            "value": 1
+          },
+          "shrinkage_percent": {
+            "method": "Sumitomo Chemical",
+            "MD": 0.6,
+            "TD": 0.6
+          },
+          "tensile_MPa": {
+            "ISO527": 85,
+            "ASTM_D638": 84
+          },
+          "tensileModulus_MPa": 2700,
+          "flexural_MPa": {
+            "ISO178": 130,
+            "ASTM_D790": 129
+          },
+          "flexuralModulus_MPa": 2600,
+          "HDT_C": {
+            "ISO75_1_8MPa": 205,
+            "ISO75_0_45MPa": 214,
+            "ASTM_D648_1_82MPa": 203,
+            "ASTM_D648_0_45MPa": 210
+          },
+          "MFR": {
+            "test": "ISO 1133-1",
+            "condition": "360 C / 2.16 kg",
+            "value_g_10min": 55
+          },
+          "CLTE_1e5_K": {
+            "MD": 5.5,
+            "TD": 5.5
+          },
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Sumitomo Chemical",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PESU",
+          "grade": "SUMIKAEXCEL 3600G",
+          "process": "injection moulding",
+          "specificGravity": 1.37,
+          "waterAbsorption23C24h_percent": 1,
+          "shrinkage_percent": {
+            "MD": 0.6,
+            "TD": 0.6
+          },
+          "tensile_MPa": {
+            "ISO527": 85,
+            "ASTM_D638": 84
+          },
+          "tensileModulus_MPa": 2700,
+          "flexural_MPa": {
+            "ISO178": 130,
+            "ASTM_D790": 129
+          },
+          "flexuralModulus_MPa": 2600,
+          "HDT_C": {
+            "ISO75_1_8MPa": 205,
+            "ISO75_0_45MPa": 214,
+            "ASTM_D648_1_82MPa": 203,
+            "ASTM_D648_0_45MPa": 210
+          },
+          "MFR": {
+            "test": "ISO 1133-1",
+            "condition": "360 C / 2.16 kg",
+            "value_g_10min": 55
+          },
+          "CLTE_1e5_K": {
+            "MD": 5.5,
+            "TD": 5.5
+          },
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-023",
+      "manufacturer": "LyondellBasell",
+      "grade": "PLASVE HP741T",
+      "polymer": "PP homopolymer",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        36,
+        160
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LyondellBasell",
+          "regionalEntity": "LyondellBasell Australia",
+          "region": "Australia/New Zealand availability",
+          "polymer": "PP homopolymer",
+          "grade": "PLASVE HP741T",
+          "process": "thin-wall injection moulding",
+          "MFR": {
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 60
+          },
+          "density_g_cm3": 0.9,
+          "flexuralModulus_MPa": 1750,
+          "tensileYield_MPa": 36,
+          "notchedIzod23C_kJ_m2": 2.4,
+          "vicat_C": 150,
+          "HDT0_45MPa_C": 100,
+          "valueStatus": "typical",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "LyondellBasell",
+          "region": "Australia/New Zealand availability",
+          "polymer": "PP homopolymer",
+          "grade": "PLASVE HP741T",
+          "process": "thin-wall injection moulding",
+          "MFR": {
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 60
+          },
+          "density_g_cm3": 0.9,
+          "flexuralModulus_MPa": 1750,
+          "tensileYield_MPa": 36,
+          "notchedIzod23C_kJ_m2": 2.4,
+          "vicat_C": 150,
+          "HDT0_45MPa_C": 100,
+          "valueStatus": "typical",
+          "originBoundary": "regional availability is not manufacturing origin",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-024",
+      "manufacturer": "LyondellBasell",
+      "grade": "PLASVE HP548S",
+      "polymer": "PP homopolymer",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        37,
+        181
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LyondellBasell",
+          "region": "Australia/New Zealand availability",
+          "polymer": "PP homopolymer",
+          "grade": "PLASVE HP548S",
+          "process": "thin-wall injection moulding",
+          "MFR": {
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 35
+          },
+          "density_g_cm3": 0.9,
+          "flexuralModulus_MPa": 1450,
+          "tensileYield_MPa": 33,
+          "notchedIzod23C_kJ_m2": 2.3,
+          "vicat_C": 150,
+          "HDT0_45MPa_C": 80,
+          "valueStatus": "typical",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "LyondellBasell",
+          "region": "Australia/New Zealand availability",
+          "polymer": "PP homopolymer",
+          "grade": "PLASVE HP548S",
+          "process": "thin-wall injection moulding",
+          "MFR": {
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 35
+          },
+          "density_g_cm3": 0.9,
+          "flexuralModulus_MPa": 1450,
+          "tensileYield_MPa": 33,
+          "notchedIzod23C_kJ_m2": 2.3,
+          "vicat_C": 150,
+          "HDT0_45MPa_C": 80,
+          "originBoundary": "regional availability is not manufacturing origin",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-025",
+      "manufacturer": "LyondellBasell",
+      "grade": "Moplen EP332K",
+      "polymer": "PP impact copolymer",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        38,
+        161
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LyondellBasell",
+          "region": "Australia/New Zealand availability",
+          "polymer": "PP impact copolymer",
+          "grade": "Moplen EP332K",
+          "process": "injection moulding",
+          "MFR": {
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 5
+          },
+          "density_g_cm3": 0.9,
+          "flexuralModulus_MPa": 1150,
+          "tensileModulus_MPa": 1100,
+          "tensileYield_MPa": 25,
+          "notchedCharpy_kJ_m2": {
+            "at23C": 13,
+            "at0C": 6.4,
+            "atMinus20C": 4.7
+          },
+          "HDT0_46MPa_C": 88,
+          "features": [
+            "low warpage",
+            "low-temperature impact",
+            "thermal ageing stability"
+          ],
+          "valueStatus": "typical",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "LyondellBasell",
+          "region": "Australia/New Zealand availability",
+          "polymer": "PP impact copolymer",
+          "grade": "Moplen EP332K",
+          "process": "injection moulding",
+          "MFR": {
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 5
+          },
+          "density_g_cm3": 0.9,
+          "flexuralModulus_MPa": 1150,
+          "tensileModulus_MPa": 1100,
+          "tensileYield_MPa": 25,
+          "notchedCharpy_kJ_m2": {
+            "at23C": 13,
+            "at0C": 6.4,
+            "atMinus20C": 4.7
+          },
+          "HDT0_46MPa_C": 88,
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-026",
+      "manufacturer": "LyondellBasell",
+      "grade": "Moplen EP336J",
+      "polymer": "PP impact copolymer",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        39,
+        179
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LyondellBasell",
+          "region": "Australia/New Zealand availability",
+          "polymer": "PP impact copolymer",
+          "grade": "Moplen EP336J",
+          "process": "injection moulding",
+          "MFR": {
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 3
+          },
+          "density_g_cm3": 0.9,
+          "flexuralModulus_MPa": 1200,
+          "tensileYield_MPa": 25,
+          "notchedIzod_J_m": {
+            "at23C": 450,
+            "atMinus20C": 60
+          },
+          "vicat_C": 147,
+          "HDT0_46MPa_C": 96,
+          "valueStatus": "typical",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "LyondellBasell",
+          "region": "Australia/New Zealand availability",
+          "polymer": "PP impact copolymer",
+          "grade": "Moplen EP336J",
+          "process": "injection moulding",
+          "MFR": {
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 3
+          },
+          "density_g_cm3": 0.9,
+          "flexuralModulus_MPa": 1200,
+          "tensileYield_MPa": 25,
+          "notchedIzod_J_m": {
+            "at23C": 450,
+            "atMinus20C": 60
+          },
+          "vicat_C": 147,
+          "HDT0_46MPa_C": 96,
+          "originBoundary": "regional availability is not manufacturing origin",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-027",
+      "manufacturer": "LyondellBasell",
+      "grade": "Moplen RP348NK",
+      "polymer": "PP random copolymer",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        40,
+        162
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LyondellBasell",
+          "region": "Australia/New Zealand availability",
+          "polymer": "PP random copolymer",
+          "grade": "Moplen RP348NK",
+          "process": "injection moulding",
+          "MFR": {
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 11
+          },
+          "density_g_cm3": 0.9,
+          "flexuralModulus_MPa": 1070,
+          "tensileYield_MPa": 29,
+          "notchedIzod23C_J_m": 70,
+          "HDT_C": 86,
+          "features": [
+            "nucleated",
+            "clarity",
+            "low processing temperature"
+          ],
+          "valueStatus": "typical",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "LyondellBasell",
+          "region": "Australia/New Zealand availability",
+          "polymer": "PP random copolymer",
+          "grade": "Moplen RP348NK",
+          "process": "injection moulding",
+          "MFR": {
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 11
+          },
+          "density_g_cm3": 0.9,
+          "flexuralModulus_MPa": 1070,
+          "tensileYield_MPa": 29,
+          "notchedIzod23C_J_m": 70,
+          "HDT_C": 86,
+          "features": [
+            "nucleated",
+            "clarity",
+            "low processing temperature"
+          ],
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-028",
+      "manufacturer": "LyondellBasell",
+      "grade": "Moplen EP641P",
+      "polymer": "PP impact copolymer",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        41,
+        180
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LyondellBasell",
+          "region": "Australia/New Zealand availability",
+          "polymer": "PP impact copolymer",
+          "grade": "Moplen EP641P",
+          "process": "injection moulding",
+          "MFR": {
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 20
+          },
+          "density_g_cm3": 0.9,
+          "features": [
+            "stiffness/toughness balance"
+          ],
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "LyondellBasell",
+          "region": "Australia/New Zealand availability",
+          "polymer": "PP impact copolymer",
+          "grade": "Moplen EP641P",
+          "process": "injection moulding",
+          "MFR": {
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 20
+          },
+          "density_g_cm3": 0.9,
+          "feature": "stiffness/toughness balance",
+          "originBoundary": "regional availability is not manufacturing origin",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-029",
+      "manufacturer": "LyondellBasell Australia",
+      "grade": "Moplen HE649T",
+      "polymer": "PP homopolymer",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        42,
+        163
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LyondellBasell Australia",
+          "manufacturerCountry": "Australia",
+          "region": "Australia/New Zealand availability",
+          "polymer": "PP homopolymer",
+          "grade": "Moplen HE649T",
+          "productionSite": "Geelong, Australia",
+          "process": "thin-wall injection moulding",
+          "MFR": {
+            "test": "ISO 1133",
+            "value_g_10min": 50
+          },
+          "flexuralModulus_MPa": 1700,
+          "HDT0_45MPa_C": 90,
+          "tensileYield_MPa": 35,
+          "notchedIzod23C_kJ_m2": 2.4,
+          "valueStatus": "typical, not specification",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "LyondellBasell Australia",
+          "manufacturerCountry": "Australia",
+          "region": "Australia/New Zealand availability",
+          "polymer": "PP homopolymer",
+          "grade": "Moplen HE649T",
+          "productionSite": "Geelong, Australia",
+          "process": "thin-wall injection moulding",
+          "MFR": {
+            "test": "ISO 1133",
+            "value_g_10min": 50
+          },
+          "flexuralModulus_MPa": 1700,
+          "HDT0_45MPa_C": 90,
+          "tensileYield_MPa": 35,
+          "notchedIzod23C_kJ_m2": 2.4,
+          "valueStatus": "typical; not specification",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-030",
+      "manufacturer": "LOTTE Chemical",
+      "grade": "GP-5400G",
+      "polymer": "PBT/GF",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        46,
+        167
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LOTTE Chemical",
+          "manufacturerCountry": "South Korea",
+          "region": "Asia",
+          "polymer": "PBT/GF",
+          "grade": "GP-5400G",
+          "process": "injection moulding",
+          "specificGravity": 1.61,
+          "MFI": {
+            "test": "ISO 1133",
+            "condition": "250 C / 2.16 kg",
+            "value_g_10min": 10
+          },
+          "tensileYield_MPa": 160,
+          "tensileModulus_MPa": 9000,
+          "flexural_MPa": 220,
+          "flexuralModulus_MPa": 10000,
+          "notchedIzod23C_kJ_m2": 12,
+          "notchedCharpy23C_kJ_m2": 11,
+          "processingBoundary": {
+            "mould_C": "80-120",
+            "hotRunner_C": 250,
+            "nozzle_C": 250,
+            "barrel_C": {
+              "front": "240-250",
+              "mid": "225-230"
+            },
+            "injectionPressure_kgf_cm2": 900,
+            "drying": {
+              "dehumidifier": {
+                "temperature_C": 100,
+                "time_h": "2-4"
+              },
+              "normalHopper": {
+                "temperature_C": 100,
+                "time_h": "4-6"
+              },
+              "targetMoistureAfterDrying_percent": 0.1
+            },
+            "screw_rpm": "40-80",
+            "backPressure_kgf_cm2": "10-30"
+          },
+          "boundary": "representative manufacturer processing guide for this grade; not universal PBT settings",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "LOTTE Chemical",
+          "manufacturerCountry": "South Korea",
+          "region": "Asia",
+          "polymer": "PBT/GF",
+          "grade": "GP-5400G",
+          "process": "injection moulding",
+          "specificGravity": 1.61,
+          "MFI": {
+            "test": "ISO 1133",
+            "condition": "250 C / 2.16 kg",
+            "value_g_10min": 10
+          },
+          "tensileYield_MPa": 160,
+          "tensileModulus_MPa": 9000,
+          "flexural_MPa": 220,
+          "flexuralModulus_MPa": 10000,
+          "notchedIzod23C_kJ_m2": 12,
+          "notchedCharpy23C_kJ_m2": 11,
+          "processingBoundary": {
+            "mould_C": "80-120",
+            "hotRunner_C": 250,
+            "nozzle_C": 250,
+            "barrelFront_C": "240-250",
+            "barrelMid_C": "225-230",
+            "injectionPressure_kgf_cm2": 900,
+            "drying": {
+              "dehumidifier_C": 100,
+              "dehumidifier_h": "2-4",
+              "normalHopper_C": 100,
+              "normalHopper_h": "4-6",
+              "targetMoisture_percent": 0.1
+            },
+            "screw_rpm": "40-80",
+            "backPressure_kgf_cm2": "10-30"
+          },
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-031",
+      "manufacturer": "Polyplastics",
+      "grade": "DURAFIDE 1140A66",
+      "polymer": "PPS",
+      "evidenceRowCount": 3,
+      "supportingRecordIndexes": [
+        51,
+        156,
+        211
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PPS",
+          "grade": "DURAFIDE 1140A66",
+          "reinforcement": "GF40",
+          "feature": "low chlorine",
+          "density_g_cm3": 1.66,
+          "waterAbsorption_percent": {
+            "test": "ISO 62",
+            "condition": "23 C / 24 h / 1 mm",
+            "value": 0.04
+          },
+          "meltViscosity_Pa_s": {
+            "test": "ISO 11443",
+            "condition": "310 C / 1000 s^-1",
+            "value": 260
+          },
+          "tensile_MPa": 180,
+          "flexural_MPa": 255,
+          "flexuralModulus_MPa": 14500,
+          "notchedCharpy23C_kJ_m2": 9,
+          "HDT1_8MPa_C": 265,
+          "CLTE_1e5_per_C": {
+            "flow": 1,
+            "transverse": 4
+          },
+          "valueStatus": "typical, not material specification minimum",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PPS",
+          "grade": "DURAFIDE 1140A66",
+          "reinforcement": "GF40",
+          "feature": "low chlorine",
+          "density_g_cm3": 1.66,
+          "waterAbsorption23C24h1mm_percent": 0.04,
+          "meltViscosity_Pa_s": {
+            "test": "ISO 11443",
+            "condition": "310 C / 1000 s^-1",
+            "value": 260
+          },
+          "tensile_MPa": 180,
+          "flexural_MPa": 255,
+          "flexuralModulus_MPa": 14500,
+          "notchedCharpy23C_kJ_m2": 9,
+          "HDT1_8MPa_C": 265,
+          "CLTE_1e5_per_C": {
+            "flow": 1,
+            "transverse": 4
+          },
+          "valueStatus": "typical; not specification minimum",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PPS-GF40",
+          "grade": "DURAFIDE 1140A66",
+          "reinforcement": "GF40",
+          "density_g_cm3": 1.66,
+          "waterAbsorption_percent": 0.04,
+          "meltViscosity": {
+            "test": "ISO 11443",
+            "condition": "310 C / 1000 s^-1",
+            "value_Pa_s": 260
+          },
+          "tensile_MPa": 180,
+          "flexural_MPa": 255,
+          "flexuralModulus_MPa": 14500,
+          "notchedCharpy_kJ_m2": 9,
+          "HDT1_8MPa_C": 265,
+          "CLTE_1e5_K": {
+            "flow": 1,
+            "transverse": 4
+          },
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-032",
+      "manufacturer": "Asahi Kasei",
+      "grade": "TENAC-C 4520",
+      "polymer": "POM copolymer",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        52,
+        187
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Asahi Kasei",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "POM copolymer",
+          "grade": "TENAC-C 4520",
+          "density_g_cm3": 1.41,
+          "tensileStress_MPa": 63,
+          "strainAtBreak_percent": 35,
+          "tensileModulus_MPa": 2700,
+          "viscosityClass": "medium",
+          "CAEAvailability": "Autodesk Moldflow grade listed",
+          "boundary": "CAE availability is evidence capability, not a processing recipe",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Asahi Kasei",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "POM copolymer",
+          "grade": "TENAC-C 4520",
+          "density_g_cm3": 1.41,
+          "tensileStress_MPa": 63,
+          "tensileModulus_MPa": 2700,
+          "strainAtBreak_percent": 35,
+          "viscosityClass": "medium",
+          "CAEAvailability": "Autodesk Moldflow listed",
+          "boundary": "CAE listing is capability evidence, not processing settings",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-033",
+      "manufacturer": "UNITIKA",
+      "grade": "FUN-8520S",
+      "polymer": "polyarylate alloy",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        53,
+        158
+      ],
+      "evidence": [
+        {
+          "manufacturer": "UNITIKA",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "polyarylate alloy",
+          "grade": "FUN-8520S",
+          "tensileYield_MPa": 62,
+          "tensileModulus_MPa": 1900,
+          "flexural_MPa": 88,
+          "flexuralModulus_MPa": 1900,
+          "notchedCharpy_kJ_m2": 25,
+          "HDT1_8MPa_C": 123,
+          "density_g_cm3": 1.21,
+          "waterAbsorption_percent": {
+            "test": "ISO 62",
+            "condition": "23 C water 24 h",
+            "value": 0.2
+          },
+          "shrinkage3mm_percent": {
+            "flow": "0.6-0.8",
+            "transverse": "0.6-0.8"
+          },
+          "lightTransmittance3mm_percent": 87,
+          "MFR": {
+            "test": "ISO 1133",
+            "condition": "300 C / 2.16 kg",
+            "value_g_10min": 27
+          },
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "UNITIKA",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "polyarylate alloy",
+          "grade": "FUN-8520S",
+          "density_g_cm3": 1.21,
+          "waterAbsorption23C24h_percent": 0.2,
+          "tensileYield_MPa": 62,
+          "tensileModulus_MPa": 1900,
+          "flexural_MPa": 88,
+          "flexuralModulus_MPa": 1900,
+          "notchedCharpy_kJ_m2": 25,
+          "HDT1_8MPa_C": 123,
+          "shrinkage3mm_percent": {
+            "flow": "0.6-0.8",
+            "transverse": "0.6-0.8"
+          },
+          "MFR": {
+            "test": "ISO 1133",
+            "condition": "300 C / 2.16 kg",
+            "value_g_10min": 27
+          },
+          "lightTransmittance3mm_percent": 87,
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-034",
+      "manufacturer": "UNITIKA",
+      "grade": "UG-100-20",
+      "polymer": "polyarylate composite",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        54,
+        185
+      ],
+      "evidence": [
+        {
+          "manufacturer": "UNITIKA",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "polyarylate composite",
+          "grade": "UG-100-20",
+          "density_g_cm3": 1.36,
+          "waterAbsorption24h_percent": 0.24,
+          "tensile_MPa": 99,
+          "flexural_MPa": 157,
+          "flexuralModulus_GPa": 5.2,
+          "notchedIzod_J_m": 49,
+          "HDT1_8MPa_C": 180,
+          "CLTE_1e5_K": 2.1,
+          "shrinkage3mm_percent": {
+            "flow": 0.2,
+            "orthogonal": 0.55
+          },
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "UNITIKA",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "polyarylate composite",
+          "grade": "UG-100-20",
+          "density_g_cm3": 1.36,
+          "waterAbsorption24h_percent": 0.24,
+          "tensile_MPa": 99,
+          "flexural_MPa": 157,
+          "flexuralModulus_GPa": 5.2,
+          "notchedIzod_J_m": 49,
+          "HDT1_8MPa_C": 180,
+          "CLTE_1e5_K": 2.1,
+          "shrinkage3mm_percent": {
+            "flow": 0.2,
+            "transverse": 0.55
+          },
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-035",
+      "manufacturer": "UNITIKA",
+      "grade": "UG-100-30",
+      "polymer": "polyarylate composite",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        55,
+        186
+      ],
+      "evidence": [
+        {
+          "manufacturer": "UNITIKA",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "polyarylate composite",
+          "grade": "UG-100-30",
+          "density_g_cm3": 1.44,
+          "waterAbsorption24h_percent": 0.24,
+          "tensile_MPa": 132,
+          "flexural_MPa": 133,
+          "flexuralModulus_GPa": 5.7,
+          "notchedIzod_J_m": 100,
+          "HDT1_8MPa_C": 180,
+          "CLTE_1e5_K": 3.5,
+          "shrinkage3mm_percent": {
+            "flow": "0.1-0.2",
+            "orthogonal": "0.3-0.5"
+          },
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "UNITIKA",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "polyarylate composite",
+          "grade": "UG-100-30",
+          "density_g_cm3": 1.44,
+          "waterAbsorption24h_percent": 0.24,
+          "tensile_MPa": 132,
+          "flexural_MPa": 133,
+          "flexuralModulus_GPa": 5.7,
+          "notchedIzod_J_m": 100,
+          "HDT1_8MPa_C": 180,
+          "CLTE_1e5_K": 3.5,
+          "shrinkage3mm_percent": {
+            "flow": "0.1-0.2",
+            "transverse": "0.3-0.5"
+          },
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-036",
+      "manufacturer": "ExxonMobil Chemical",
+      "grade": "Achieve Advanced PP7123KNE1",
+      "polymer": "PP",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        67
+      ],
+      "evidence": [
+        {
+          "manufacturer": "ExxonMobil Chemical",
+          "region": "Asia/Singapore supply and manufacturing context",
+          "polymer": "PP",
+          "grade": "Achieve Advanced PP7123KNE1",
+          "process": "injection moulding",
+          "processingBoundary": {
+            "drying": "not required",
+            "melt_C": "200-240",
+            "barrelRear_C": "200-230",
+            "barrelMiddle_C": "200-230",
+            "barrelFront_C": "205-240",
+            "nozzle_C": "205-240",
+            "mould_C": "20-60",
+            "screwSpeed_rpm": "40-100",
+            "cushion_mm": "5-10",
+            "fillTime_s": "1-10",
+            "fillTarget": "95-98% full if conditions allow"
+          },
+          "valueStatus": "typical/reference processing values only; manufacturer says not definite specifications",
+          "boundary": "grade-specific guide; machine/part dependent values must not be universalised",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-037",
+      "manufacturer": "Polyplastics",
+      "grade": "DURACON CP15X",
+      "polymer": "POM",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        69,
+        201
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "POM",
+          "grade": "DURACON CP15X",
+          "feature": "creep resistant",
+          "density_g_cm3": 1.41,
+          "waterAbsorption23C24h1mm_percent": 0.7,
+          "MFR": {
+            "test": "ISO 1133",
+            "condition": "190 C / 2.16 kg",
+            "value_g_10min": 1.7
+          },
+          "MVR": {
+            "test": "ISO 1133",
+            "condition": "190 C / 2.16 kg",
+            "value_cm3_10min": 1.4
+          },
+          "tensile_MPa": 66,
+          "tensileModulus_MPa": 2700,
+          "flexural_MPa": 87,
+          "flexuralModulus_MPa": 2450,
+          "notchedCharpy23C_kJ_m2": 12,
+          "HDT1_8MPa_C": 92,
+          "CLTEflow_1e5_C": 12,
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "POM",
+          "grade": "DURACON CP15X",
+          "MFR": {
+            "condition": "190 C / 2.16 kg",
+            "value_g_10min": 1.7
+          },
+          "MVR": {
+            "condition": "190 C / 2.16 kg",
+            "value_cm3_10min": 1.4
+          },
+          "tensile_MPa": 66,
+          "tensileModulus_MPa": 2700,
+          "flexural_MPa": 87,
+          "flexuralModulus_MPa": 2450,
+          "notchedCharpy_kJ_m2": 12,
+          "HDT_C": 92,
+          "waterAbsorption_percent": 0.7,
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-038",
+      "manufacturer": "Polyplastics",
+      "grade": "DURACON M25LV",
+      "polymer": "POM",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        70,
+        202
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "POM",
+          "grade": "DURACON M25LV",
+          "feature": "low VOC/high viscosity",
+          "density_g_cm3": 1.41,
+          "waterAbsorption23C24h1mm_percent": 0.6,
+          "MFR": {
+            "test": "ISO 1133",
+            "condition": "190 C / 2.16 kg",
+            "value_g_10min": 2.5
+          },
+          "MVR": {
+            "test": "ISO 1133",
+            "condition": "190 C / 2.16 kg",
+            "value_cm3_10min": 2.2
+          },
+          "tensile_MPa": 59,
+          "tensileModulus_MPa": 2400,
+          "flexural_MPa": 79,
+          "flexuralModulus_MPa": 2200,
+          "notchedCharpy23C_kJ_m2": 8.5,
+          "HDT1_8MPa_C": 87,
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "POM",
+          "grade": "DURACON M25LV",
+          "MFR": {
+            "condition": "190 C / 2.16 kg",
+            "value_g_10min": 2.5
+          },
+          "MVR": {
+            "condition": "190 C / 2.16 kg",
+            "value_cm3_10min": 2.2
+          },
+          "tensile_MPa": 59,
+          "tensileModulus_MPa": 2400,
+          "flexural_MPa": 79,
+          "flexuralModulus_MPa": 2200,
+          "notchedCharpy_kJ_m2": 8.5,
+          "HDT_C": 87,
+          "waterAbsorption_percent": 0.6,
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-039",
+      "manufacturer": "Polyplastics",
+      "grade": "DURACON TF-30",
+      "polymer": "POM",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        71,
+        203
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "POM",
+          "grade": "DURACON TF-30",
+          "feature": "high impact/flexible",
+          "density_g_cm3": 1.35,
+          "waterAbsorption23C24h1mm_percent": 0.8,
+          "MFR": {
+            "test": "ISO 1133",
+            "condition": "190 C / 2.16 kg",
+            "value_g_10min": 8
+          },
+          "MVR": {
+            "test": "ISO 1133",
+            "condition": "190 C / 2.16 kg",
+            "value_cm3_10min": 7
+          },
+          "tensile_MPa": 37,
+          "tensileModulus_MPa": 1300,
+          "flexural_MPa": 43,
+          "flexuralModulus_MPa": 1200,
+          "notchedCharpy23C_kJ_m2": 20,
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "POM",
+          "grade": "DURACON TF-30",
+          "MFR": {
+            "condition": "190 C / 2.16 kg",
+            "value_g_10min": 8
+          },
+          "MVR": {
+            "condition": "190 C / 2.16 kg",
+            "value_cm3_10min": 7
+          },
+          "tensile_MPa": 37,
+          "tensileModulus_MPa": 1300,
+          "flexural_MPa": 43,
+          "flexuralModulus_MPa": 1200,
+          "notchedCharpy_kJ_m2": 20,
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-040",
+      "manufacturer": "Polyplastics",
+      "grade": "DURACON AW-01",
+      "polymer": "POM+PE",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        72,
+        204
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "POM+PE",
+          "grade": "DURACON AW-01",
+          "feature": "high sliding",
+          "density_g_cm3": 1.37,
+          "waterAbsorption23C24h1mm_percent": 0.7,
+          "MFR": {
+            "test": "ISO 1133",
+            "condition": "190 C / 2.16 kg",
+            "value_g_10min": 9
+          },
+          "MVR": {
+            "test": "ISO 1133",
+            "condition": "190 C / 2.16 kg",
+            "value_cm3_10min": 8
+          },
+          "tensile_MPa": 54,
+          "tensileModulus_MPa": 2350,
+          "flexural_MPa": 75,
+          "flexuralModulus_MPa": 2200,
+          "notchedCharpy23C_kJ_m2": 5.7,
+          "HDT1_8MPa_C": 80,
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "POM+PE",
+          "grade": "DURACON AW-01",
+          "MFR": {
+            "condition": "190 C / 2.16 kg",
+            "value_g_10min": 9
+          },
+          "MVR": {
+            "condition": "190 C / 2.16 kg",
+            "value_cm3_10min": 8
+          },
+          "tensile_MPa": 54,
+          "tensileModulus_MPa": 2350,
+          "flexural_MPa": 75,
+          "flexuralModulus_MPa": 2200,
+          "notchedCharpy_kJ_m2": 5.7,
+          "HDT_C": 80,
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-041",
+      "manufacturer": "Polyplastics",
+      "grade": "DURACON WR-01",
+      "polymer": "POM",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        73,
+        205
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "POM",
+          "grade": "DURACON WR-01",
+          "feature": "chlorinated-water resistant",
+          "density_g_cm3": 1.41,
+          "waterAbsorption23C24h1mm_percent": 1.2,
+          "MFR": {
+            "test": "ISO 1133",
+            "condition": "190 C / 2.16 kg",
+            "value_g_10min": 10
+          },
+          "MVR": {
+            "test": "ISO 1133",
+            "condition": "190 C / 2.16 kg",
+            "value_cm3_10min": 8
+          },
+          "tensile_MPa": 58,
+          "tensileModulus_MPa": 2400,
+          "flexural_MPa": 76,
+          "flexuralModulus_MPa": 2200,
+          "notchedCharpy23C_kJ_m2": 5.6,
+          "HDT1_8MPa_C": 78,
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "POM",
+          "grade": "DURACON WR-01",
+          "MFR": {
+            "condition": "190 C / 2.16 kg",
+            "value_g_10min": 10
+          },
+          "MVR": {
+            "condition": "190 C / 2.16 kg",
+            "value_cm3_10min": 8
+          },
+          "tensile_MPa": 58,
+          "tensileModulus_MPa": 2400,
+          "flexural_MPa": 76,
+          "flexuralModulus_MPa": 2200,
+          "notchedCharpy_kJ_m2": 5.6,
+          "HDT_C": 78,
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-042",
+      "manufacturer": "Polyplastics",
+      "grade": "DURACON M140-44",
+      "polymer": "POM",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        74,
+        206
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "POM",
+          "grade": "DURACON M140-44",
+          "feature": "high flow/fast moulding cycle",
+          "density_g_cm3": 1.41,
+          "waterAbsorption23C24h1mm_percent": 0.5,
+          "MFR": {
+            "test": "ISO 1133",
+            "condition": "190 C / 2.16 kg",
+            "value_g_10min": 14
+          },
+          "MVR": {
+            "test": "ISO 1133",
+            "condition": "190 C / 2.16 kg",
+            "value_cm3_10min": 12
+          },
+          "tensile_MPa": 62,
+          "tensileModulus_MPa": 2700,
+          "flexural_MPa": 87,
+          "flexuralModulus_MPa": 2500,
+          "notchedCharpy23C_kJ_m2": 5.5,
+          "HDT1_8MPa_C": 100,
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "POM",
+          "grade": "DURACON M140-44",
+          "MFR": {
+            "condition": "190 C / 2.16 kg",
+            "value_g_10min": 14
+          },
+          "MVR": {
+            "condition": "190 C / 2.16 kg",
+            "value_cm3_10min": 12
+          },
+          "tensile_MPa": 62,
+          "tensileModulus_MPa": 2700,
+          "flexural_MPa": 87,
+          "flexuralModulus_MPa": 2500,
+          "notchedCharpy_kJ_m2": 5.5,
+          "HDT_C": 100,
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-043",
+      "manufacturer": "Polyplastics",
+      "grade": "DURACON M450-44",
+      "polymer": "POM",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        75,
+        207
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "POM",
+          "grade": "DURACON M450-44",
+          "feature": "super high flow/fast moulding cycle",
+          "density_g_cm3": 1.41,
+          "waterAbsorption23C24h1mm_percent": 0.5,
+          "MFR": {
+            "test": "ISO 1133",
+            "condition": "190 C / 2.16 kg",
+            "value_g_10min": 45
+          },
+          "MVR": {
+            "test": "ISO 1133",
+            "condition": "190 C / 2.16 kg",
+            "value_cm3_10min": 38
+          },
+          "tensile_MPa": 63,
+          "tensileModulus_MPa": 2800,
+          "flexural_MPa": 89,
+          "flexuralModulus_MPa": 2550,
+          "notchedCharpy23C_kJ_m2": 5,
+          "HDT1_8MPa_C": 100,
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "POM",
+          "grade": "DURACON M450-44",
+          "MFR": {
+            "condition": "190 C / 2.16 kg",
+            "value_g_10min": 45
+          },
+          "MVR": {
+            "condition": "190 C / 2.16 kg",
+            "value_cm3_10min": 38
+          },
+          "tensile_MPa": 63,
+          "tensileModulus_MPa": 2800,
+          "flexural_MPa": 89,
+          "flexuralModulus_MPa": 2550,
+          "notchedCharpy_kJ_m2": 5,
+          "HDT_C": 100,
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-044",
+      "manufacturer": "Polyplastics",
+      "grade": "DURACON GM-20",
+      "polymer": "POM-GF20",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        76,
+        208
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "POM-GF20",
+          "grade": "DURACON GM-20",
+          "feature": "mineral/GF reinforced low warpage",
+          "density_g_cm3": 1.54,
+          "waterAbsorption23C24h1mm_percent": 0.7,
+          "MFR": {
+            "test": "ISO 1133",
+            "condition": "190 C / 2.16 kg",
+            "value_g_10min": 21
+          },
+          "MVR": {
+            "test": "ISO 1133",
+            "condition": "190 C / 2.16 kg",
+            "value_cm3_10min": 16
+          },
+          "tensile_MPa": 55,
+          "tensileModulus_MPa": 3800,
+          "flexural_MPa": 94,
+          "flexuralModulus_MPa": 3500,
+          "notchedCharpy23C_kJ_m2": 3.6,
+          "HDT1_8MPa_C": 112,
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "POM-GF20",
+          "grade": "DURACON GM-20",
+          "reinforcement": "GF20",
+          "MFR": {
+            "condition": "190 C / 2.16 kg",
+            "value_g_10min": 21
+          },
+          "MVR": {
+            "condition": "190 C / 2.16 kg",
+            "value_cm3_10min": 16
+          },
+          "tensile_MPa": 55,
+          "tensileModulus_MPa": 3800,
+          "flexural_MPa": 94,
+          "flexuralModulus_MPa": 3500,
+          "notchedCharpy_kJ_m2": 3.6,
+          "HDT_C": 112,
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-045",
+      "manufacturer": "Polyplastics",
+      "grade": "DURACON LU-02",
+      "polymer": "POM",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        77,
+        209
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "POM",
+          "grade": "DURACON LU-02",
+          "feature": "low gloss/weather resistant",
+          "density_g_cm3": 1.39,
+          "waterAbsorption23C24h1mm_percent": 0.5,
+          "MFR": {
+            "test": "ISO 1133",
+            "condition": "190 C / 2.16 kg",
+            "value_g_10min": 22
+          },
+          "MVR": {
+            "test": "ISO 1133",
+            "condition": "190 C / 2.16 kg",
+            "value_cm3_10min": 19
+          },
+          "tensile_MPa": 57,
+          "tensileModulus_MPa": 2450,
+          "flexural_MPa": 75,
+          "flexuralModulus_MPa": 2250,
+          "notchedCharpy23C_kJ_m2": 6.8,
+          "HDT1_8MPa_C": 82,
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "POM",
+          "grade": "DURACON LU-02",
+          "MFR": {
+            "condition": "190 C / 2.16 kg",
+            "value_g_10min": 22
+          },
+          "MVR": {
+            "condition": "190 C / 2.16 kg",
+            "value_cm3_10min": 19
+          },
+          "tensile_MPa": 57,
+          "tensileModulus_MPa": 2450,
+          "flexural_MPa": 75,
+          "flexuralModulus_MPa": 2250,
+          "notchedCharpy_kJ_m2": 6.8,
+          "HDT_C": 82,
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-046",
+      "manufacturer": "Kuraray",
+      "grade": "G1352A",
+      "polymer": "PA9T",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        78,
+        190
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Kuraray",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PA9T",
+          "grade": "G1352A",
+          "reinforcement": "GF35",
+          "feature": "high sliding",
+          "process": "injection moulding",
+          "condition": "absolutely dry",
+          "specificGravity": 1.5,
+          "waterAbsorption23C24h_percent": 0.14,
+          "tensile_MPa": 200,
+          "flexural_MPa": 290,
+          "flexuralModulus_GPa": 10.7,
+          "notchedCharpy_kJ_m2": 13,
+          "melting_C": 300,
+          "shrinkage2mm_percent": {
+            "test": "ISO 294-4",
+            "flow": 0.2,
+            "transverse": 0.8
+          },
+          "valueStatus": "manufacturer measured; not guaranteed",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Kuraray",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PA9T",
+          "grade": "G1352A",
+          "reinforcement": "GF35",
+          "feature": "high sliding",
+          "condition": "absolutely dry",
+          "specificGravity": 1.5,
+          "waterAbsorption23C24h_percent": 0.14,
+          "tensile_MPa": 200,
+          "flexural_MPa": 290,
+          "flexuralModulus_GPa": 10.7,
+          "notchedCharpy_kJ_m2": 13,
+          "melting_C": 300,
+          "shrinkage2mm_percent": {
+            "test": "ISO 294-4",
+            "flow": 0.2,
+            "transverse": 0.8
+          },
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-047",
+      "manufacturer": "Kuraray",
+      "grade": "GL1350A",
+      "polymer": "PA9T",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        79,
+        191
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Kuraray",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PA9T",
+          "grade": "GL1350A",
+          "reinforcement": "GF35",
+          "feature": "hydrolysis resistant/laser absorbing",
+          "process": "injection moulding",
+          "condition": "absolutely dry",
+          "specificGravity": 1.4,
+          "waterAbsorption23C24h_percent": 0.19,
+          "tensile_MPa": 200,
+          "flexural_MPa": 290,
+          "flexuralModulus_GPa": 10,
+          "notchedCharpy_kJ_m2": 12,
+          "melting_C": 300,
+          "shrinkage2mm_percent": {
+            "test": "ISO 294-4",
+            "flow": 0.3,
+            "transverse": 0.9
+          },
+          "valueStatus": "manufacturer measured; not guaranteed",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Kuraray",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PA9T",
+          "grade": "GL1350A",
+          "reinforcement": "GF35",
+          "feature": "hydrolysis resistant/laser absorbing",
+          "condition": "absolutely dry",
+          "specificGravity": 1.4,
+          "waterAbsorption23C24h_percent": 0.19,
+          "tensile_MPa": 200,
+          "flexural_MPa": 290,
+          "flexuralModulus_GPa": 10,
+          "notchedCharpy_kJ_m2": 12,
+          "melting_C": 300,
+          "shrinkage2mm_percent": {
+            "test": "ISO 294-4",
+            "flow": 0.3,
+            "transverse": 0.9
+          },
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-048",
+      "manufacturer": "Kuraray",
+      "grade": "G1350A-M47WF",
+      "polymer": "PA9T",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        80,
+        192
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Kuraray",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PA9T",
+          "grade": "G1350A-M47WF",
+          "reinforcement": "GF35",
+          "feature": "faucet/food-contact certified; hot-water resistant",
+          "process": "injection moulding",
+          "condition": "absolutely dry",
+          "specificGravity": 1.4,
+          "waterAbsorption23C24h_percent": 0.19,
+          "tensile_MPa": 200,
+          "flexural_MPa": 285,
+          "flexuralModulus_GPa": 9.5,
+          "notchedCharpy_kJ_m2": 11.5,
+          "melting_C": 300,
+          "shrinkage2mm_percent": {
+            "test": "ISO 294-4",
+            "flow": 0.3,
+            "transverse": 0.9
+          },
+          "valueStatus": "manufacturer measured; not guaranteed",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Kuraray",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PA9T",
+          "grade": "G1350A-M47WF",
+          "reinforcement": "GF35",
+          "feature": "hot-water/food-contact",
+          "condition": "absolutely dry",
+          "specificGravity": 1.4,
+          "waterAbsorption23C24h_percent": 0.19,
+          "tensile_MPa": 200,
+          "flexural_MPa": 285,
+          "flexuralModulus_GPa": 9.5,
+          "notchedCharpy_kJ_m2": 11.5,
+          "melting_C": 300,
+          "shrinkage2mm_percent": {
+            "test": "ISO 294-4",
+            "flow": 0.3,
+            "transverse": 0.9
+          },
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-049",
+      "manufacturer": "UBE",
+      "grade": "3030B",
+      "polymer": "PA12",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        81
+      ],
+      "evidence": [
+        {
+          "manufacturer": "UBE",
+          "manufacturerCountry": "Japan",
+          "productionArea": "Japan",
+          "region": "Asia",
+          "polymer": "PA12",
+          "grade": "3030B",
+          "process": [
+            "injection moulding",
+            "tube moulding"
+          ],
+          "reinforcement": "neat resin",
+          "tensile_MPa": 46,
+          "tensileStrainBreak_percent": ">150",
+          "tensileModulus_MPa": 1500,
+          "flexural_MPa": 59,
+          "flexuralModulus_MPa": 1500,
+          "notchedCharpy_kJ_m2": 17,
+          "rockwellR": 105,
+          "melting_C": "175-181",
+          "HDT_C": {
+            "at0_45MPa": 90,
+            "at1_8MPa": 48
+          },
+          "valueStatus": "typical",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-050",
+      "manufacturer": "ExxonMobil Chemical",
+      "grade": "Exceed PP7123KNE1",
+      "polymer": "PP impact copolymer",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        88
+      ],
+      "evidence": [
+        {
+          "manufacturer": "ExxonMobil Chemical",
+          "region": "Asia Pacific/Singapore context",
+          "polymer": "PP impact copolymer",
+          "grade": "Exceed PP7123KNE1",
+          "process": "injection moulding",
+          "MFR": {
+            "test": "ASTM D1238",
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 11
+          },
+          "density_g_cm3": 0.9,
+          "flexuralModulus_MPa": 1680,
+          "tensileYield_MPa": {
+            "ASTM_D638": 32.7,
+            "ISO527": 30.8
+          },
+          "notchedIzod23C_J_m": 70,
+          "HDT0_45MPa_C": 100,
+          "valueStatus": "typical manufacturer data",
+          "originBoundary": "Asia-Pacific availability; do not assign Singapore grade origin solely from regional manufacturing capability",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-051",
+      "manufacturer": "LOTTE Chemical",
+      "grade": "LW-5300M",
+      "polymer": "PBT",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        90,
+        168
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LOTTE Chemical",
+          "manufacturerCountry": "South Korea",
+          "region": "Asia",
+          "polymer": "PBT",
+          "grade": "LW-5300M",
+          "feature": "low warpage",
+          "specificGravity": 1.52,
+          "mouldShrinkage_percent": "0.7-0.9",
+          "tensile_kg_cm2": 590,
+          "flexural_kg_cm2": 990,
+          "flexuralModulus_kg_cm2": 54000,
+          "HDT_C": {
+            "lowLoad": 165,
+            "highLoad": 115
+          },
+          "boundary": "retain original manufacturer units and load condition; do not compare HDT without load/method normalization",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "LOTTE Chemical",
+          "manufacturerCountry": "South Korea",
+          "region": "Asia",
+          "polymer": "PBT",
+          "grade": "LW-5300M",
+          "feature": "low warpage",
+          "specificGravity": 1.52,
+          "mouldShrinkage_percent": "0.7-0.9",
+          "tensile_kg_cm2": 590,
+          "flexural_kg_cm2": 990,
+          "flexuralModulus_kg_cm2": 54000,
+          "HDT_C": {
+            "lowLoad": 165,
+            "highLoad": 115
+          },
+          "valueStatus": "manufacturer typical data",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-052",
+      "manufacturer": "LOTTE Chemical",
+      "grade": "GP-2306FC",
+      "polymer": "PBT",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        91,
+        169
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LOTTE Chemical",
+          "manufacturerCountry": "South Korea",
+          "region": "Asia",
+          "polymer": "PBT",
+          "grade": "GP-2306FC",
+          "reinforcement": "reinforced/flame retardant",
+          "specificGravity": 1.62,
+          "mouldShrinkage_percent": "0.3-1.0",
+          "tensile_kg_cm2": 1300,
+          "flexural_kg_cm2": 1900,
+          "flexuralModulus_kg_cm2": 85000,
+          "HDT_C": {
+            "highLoad": 205
+          },
+          "flammability": "UL94 V-0 at 0.71 mm",
+          "boundary": "ASTM/typical manufacturer data; preserve test basis",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "LOTTE Chemical",
+          "manufacturerCountry": "South Korea",
+          "region": "Asia",
+          "polymer": "PBT",
+          "grade": "GP-2306FC",
+          "feature": "reinforced flame-retardant",
+          "specificGravity": 1.62,
+          "mouldShrinkage_percent": "0.3-1.0",
+          "tensile_kg_cm2": 1300,
+          "flexural_kg_cm2": 1900,
+          "flexuralModulus_kg_cm2": 85000,
+          "HDT_C": {
+            "highLoad": 205
+          },
+          "flammability": "UL94 V-0 at 0.71 mm",
+          "valueStatus": "manufacturer typical data",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-053",
+      "manufacturer": "SCGC",
+      "grade": "P740J",
+      "polymer": "PP impact copolymer",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        98,
+        195
+      ],
+      "evidence": [
+        {
+          "manufacturer": "SCGC",
+          "manufacturerCountry": "Thailand",
+          "region": "Asia",
+          "polymer": "PP impact copolymer",
+          "grade": "P740J",
+          "process": "injection moulding",
+          "MFR": {
+            "test": "ASTM D1238",
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 27
+          },
+          "density_g_cm3": 0.91,
+          "tensileYield_kg_cm2": 290,
+          "flexuralModulus_kg_cm2": 12500,
+          "notchedIzod23C_J_m": 78,
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "SCGC",
+          "manufacturerCountry": "Thailand",
+          "region": "Asia",
+          "polymer": "PP impact copolymer",
+          "grade": "P740J",
+          "process": "injection moulding",
+          "MFR": {
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 27
+          },
+          "density_g_cm3": 0.91,
+          "tensileYield_kg_cm2": 290,
+          "flexuralModulus_kg_cm2": 12500,
+          "notchedIzod23C_J_m": 78,
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-054",
+      "manufacturer": "SCGC",
+      "grade": "P744J",
+      "polymer": "PP impact copolymer",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        99,
+        196
+      ],
+      "evidence": [
+        {
+          "manufacturer": "SCGC",
+          "manufacturerCountry": "Thailand",
+          "region": "Asia",
+          "polymer": "PP impact copolymer",
+          "grade": "P744J",
+          "process": "injection moulding",
+          "MFR": {
+            "test": "ASTM D1238",
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 30
+          },
+          "density_g_cm3": 0.91,
+          "tensileYield_kg_cm2": 290,
+          "flexuralModulus_kg_cm2": 14500,
+          "notchedIzod23C_J_m": 78,
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "SCGC",
+          "manufacturerCountry": "Thailand",
+          "region": "Asia",
+          "polymer": "PP impact copolymer",
+          "grade": "P744J",
+          "process": "injection moulding",
+          "MFR": {
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 30
+          },
+          "density_g_cm3": 0.91,
+          "tensileYield_kg_cm2": 290,
+          "flexuralModulus_kg_cm2": 14500,
+          "notchedIzod23C_J_m": 78,
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-055",
+      "manufacturer": "SCGC",
+      "grade": "P842J",
+      "polymer": "PP impact copolymer",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        100,
+        197
+      ],
+      "evidence": [
+        {
+          "manufacturer": "SCGC",
+          "manufacturerCountry": "Thailand",
+          "region": "Asia",
+          "polymer": "PP impact copolymer",
+          "grade": "P842J",
+          "process": "injection moulding",
+          "MFR": {
+            "test": "ASTM D1238",
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 40
+          },
+          "density_g_cm3": 0.91,
+          "tensileYield_kg_cm2": 295,
+          "flexuralModulus_kg_cm2": 14500,
+          "notchedIzod23C_J_m": 74,
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "SCGC",
+          "manufacturerCountry": "Thailand",
+          "region": "Asia",
+          "polymer": "PP impact copolymer",
+          "grade": "P842J",
+          "process": "injection moulding",
+          "MFR": {
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 40
+          },
+          "density_g_cm3": 0.91,
+          "tensileYield_kg_cm2": 295,
+          "flexuralModulus_kg_cm2": 14500,
+          "notchedIzod23C_J_m": 74,
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-056",
+      "manufacturer": "IndianOil",
+      "grade": "180M50",
+      "polymer": "HDPE",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        101,
+        233
+      ],
+      "evidence": [
+        {
+          "manufacturer": "IndianOil",
+          "manufacturerCountry": "India",
+          "region": "Asia",
+          "polymer": "HDPE",
+          "grade": "180M50",
+          "process": "thin-wall injection moulding",
+          "meltIndex_g_10min": 20,
+          "density_g_cm3": 0.95,
+          "feature": "high flow",
+          "boundary": "grade-specific manufacturer classification; MI test condition must remain attached when sourced from full TDS",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "IndianOil",
+          "manufacturerCountry": "India",
+          "region": "Asia",
+          "polymer": "HDPE",
+          "grade": "180M50",
+          "process": "high-flow injection moulding",
+          "meltIndex_g_10min": 20,
+          "density_g_cm3": 0.95,
+          "application": "thin-wall injection mouldings",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-057",
+      "manufacturer": "IndianOil",
+      "grade": "080M60U",
+      "polymer": "HDPE",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        102,
+        232
+      ],
+      "evidence": [
+        {
+          "manufacturer": "IndianOil",
+          "manufacturerCountry": "India",
+          "region": "Asia",
+          "polymer": "HDPE",
+          "grade": "080M60U",
+          "process": "injection moulding",
+          "meltIndex_g_10min": 8,
+          "density_g_cm3": 0.96,
+          "feature": "UV stabilised",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "IndianOil",
+          "manufacturerCountry": "India",
+          "region": "Asia",
+          "polymer": "HDPE",
+          "grade": "080M60U",
+          "process": "injection moulding",
+          "meltIndex_g_10min": 8,
+          "density_g_cm3": 0.96,
+          "feature": "UV stabilised",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-058",
+      "manufacturer": "PETRONAS Chemicals",
+      "grade": "H500NG",
+      "polymer": "PP homopolymer",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        119
+      ],
+      "evidence": [
+        {
+          "manufacturer": "PETRONAS Chemicals",
+          "manufacturerCountry": "Malaysia",
+          "region": "Asia",
+          "polymer": "PP homopolymer",
+          "grade": "H500NG",
+          "process": "injection moulding",
+          "MFR_g_10min": 12,
+          "applications": [
+            "furniture",
+            "housewares",
+            "containers",
+            "toys"
+          ],
+          "evidenceClass": "manufacturer product brochure",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-059",
+      "manufacturer": "PETRONAS Chemicals",
+      "grade": "H648TT",
+      "polymer": "PP homopolymer",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        120
+      ],
+      "evidence": [
+        {
+          "manufacturer": "PETRONAS Chemicals",
+          "manufacturerCountry": "Malaysia",
+          "region": "Asia",
+          "polymer": "PP homopolymer",
+          "grade": "H648TT",
+          "process": "transparent thin-wall injection moulding",
+          "MFR_g_10min": 53,
+          "evidenceClass": "manufacturer product brochure",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-060",
+      "manufacturer": "Formosa Chemicals & Fibre",
+      "grade": "AG15A1-H",
+      "polymer": "ABS",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        123,
+        170
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Formosa Chemicals & Fibre",
+          "manufacturerCountry": "Taiwan",
+          "region": "Asia",
+          "polymer": "ABS",
+          "grade": "AG15A1-H",
+          "process": "injection moulding",
+          "tensile_MPa": {
+            "test": "ASTM D638",
+            "condition": "23 C",
+            "value": 45
+          },
+          "flexural_MPa": {
+            "test": "ASTM D790",
+            "condition": "23 C",
+            "value": 80
+          },
+          "flexuralModulus_MPa": 2548,
+          "notchedIzod_J_m": {
+            "test": "ASTM D256",
+            "condition": "23 C / 1/4 inch",
+            "value": 246
+          },
+          "vicat_C": {
+            "test": "ASTM D1525",
+            "condition": "1 kg",
+            "value": 100
+          },
+          "MFI": [
+            {
+              "test": "ASTM D1238",
+              "condition": "200 C / 5 kg",
+              "value_g_10min": 2.2
+            },
+            {
+              "test": "ASTM D1238",
+              "condition": "220 C / 10 kg",
+              "value_g_10min": 24
+            }
+          ],
+          "shrinkage_percent": {
+            "test": "ASTM D955",
+            "thickness_mm": 3.2,
+            "value": "0.4-0.7"
+          },
+          "valueStatus": "general guide/laboratory data, not guaranteed",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Formosa Chemicals & Fibre",
+          "manufacturerCountry": "Taiwan",
+          "region": "Asia",
+          "polymer": "ABS",
+          "grade": "AG15A1-H",
+          "process": "injection moulding",
+          "tensile_MPa": {
+            "test": "ASTM D638",
+            "condition": "23 C",
+            "value": 45
+          },
+          "flexural_MPa": {
+            "test": "ASTM D790",
+            "value": 80
+          },
+          "flexuralModulus_MPa": 2548,
+          "notchedIzod_J_m": {
+            "test": "ASTM D256",
+            "condition": "23 C / 1/4 inch",
+            "value": 246
+          },
+          "vicat_C": {
+            "test": "ASTM D1525",
+            "condition": "1 kg",
+            "value": 100
+          },
+          "MFI": [
+            {
+              "test": "ASTM D1238",
+              "condition": "200 C / 5 kg",
+              "value_g_10min": 2.2
+            },
+            {
+              "test": "ASTM D1238",
+              "condition": "220 C / 10 kg",
+              "value_g_10min": 24
+            }
+          ],
+          "shrinkage_percent": {
+            "test": "ASTM D955",
+            "thickness_mm": 3.2,
+            "value": "0.4-0.7"
+          },
+          "valueStatus": "manufacturer general guide/laboratory data; not guaranteed",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-061",
+      "manufacturer": "Polyplastics",
+      "grade": "DURACON M90-44",
+      "polymer": "POM",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        147
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Polyplastics",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "POM",
+          "grade": "DURACON M90-44",
+          "process": "injection moulding",
+          "density_g_cm3": 1.41,
+          "waterAbsorption_percent": {
+            "test": "ISO 62",
+            "condition": "23 C / 24 h / 1 mm",
+            "value": 0.5
+          },
+          "MFR": {
+            "test": "ISO 1133",
+            "condition": "190 C / 2.16 kg",
+            "value_g_10min": 9
+          },
+          "tensile_MPa": 63,
+          "tensileModulus_MPa": 2700,
+          "flexural_MPa": 88,
+          "flexuralModulus_MPa": 2500,
+          "notchedCharpy23C_kJ_m2": 6,
+          "HDT1_8MPa_C": 100,
+          "shrinkage_percent": {
+            "test": "ISO 294-4",
+            "specimen": "60x60x2 mm",
+            "cavityPressure_MPa": 60,
+            "flow": 2.3,
+            "transverse": 2.1
+          },
+          "processingContext": {
+            "material_C": 200,
+            "mould_C": 80,
+            "injectionSpeed_mm_s": 25
+          },
+          "valueStatus": "typical; not specification minimum",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-062",
+      "manufacturer": "LyondellBasell",
+      "grade": "PLASVE HP400L",
+      "polymer": "PP homopolymer",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        159
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LyondellBasell",
+          "region": "Australia/New Zealand availability",
+          "polymer": "PP homopolymer",
+          "grade": "PLASVE HP400L",
+          "process": "injection moulding",
+          "MFR": {
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 6
+          },
+          "density_g_cm3": 0.9,
+          "flexuralModulus_MPa": 1500,
+          "tensileYield_MPa": 32,
+          "notchedIzod23C_kJ_m2": 3.5,
+          "vicat_C": 154,
+          "HDT0_45MPa_C": 82,
+          "valueStatus": "typical",
+          "originBoundary": "regional availability is not manufacturing origin",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-063",
+      "manufacturer": "Qenos",
+      "grade": "LDN248",
+      "polymer": "LDPE",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        164
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Qenos",
+          "manufacturerCountry": "Australia",
+          "region": "Australia",
+          "polymer": "LDPE",
+          "grade": "LDN248",
+          "process": "injection moulding",
+          "MI": {
+            "test": "ASTM D1238",
+            "condition": "190 C / 2.16 kg",
+            "value_g_10min": 8.5
+          },
+          "density_g_cm3": 0.922,
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-064",
+      "manufacturer": "Qenos",
+      "grade": "WRM124",
+      "polymer": "LDPE",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        165
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Qenos",
+          "manufacturerCountry": "Australia",
+          "region": "Australia",
+          "polymer": "LDPE",
+          "grade": "WRM124",
+          "process": "injection moulding",
+          "MI": {
+            "test": "ASTM D1238",
+            "condition": "190 C / 2.16 kg",
+            "value_g_10min": 22
+          },
+          "density_g_cm3": 0.92,
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-065",
+      "manufacturer": "Qenos",
+      "grade": "WSM168",
+      "polymer": "LDPE",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        166
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Qenos",
+          "manufacturerCountry": "Australia",
+          "region": "Australia",
+          "polymer": "LDPE",
+          "grade": "WSM168",
+          "process": "injection moulding",
+          "MI": {
+            "test": "ASTM D1238",
+            "condition": "190 C / 2.16 kg",
+            "value_g_10min": 63
+          },
+          "density_g_cm3": 0.919,
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-066",
+      "manufacturer": "SCGC",
+      "grade": "P722JO",
+      "polymer": "PP impact copolymer",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        177
+      ],
+      "evidence": [
+        {
+          "manufacturer": "SCGC",
+          "manufacturerCountry": "Thailand",
+          "region": "Asia",
+          "polymer": "PP impact copolymer",
+          "grade": "P722JO",
+          "process": "injection moulding",
+          "MFR": {
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 10
+          },
+          "tensileYield_kg_cm2": 300,
+          "flexuralModulus_kg_cm2": 13000,
+          "notchedIzod23C_J_m": 98,
+          "features": [
+            "UV resistance",
+            "battery case/automotive"
+          ],
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-067",
+      "manufacturer": "SCGC",
+      "grade": "P841J",
+      "polymer": "PP impact copolymer",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        178
+      ],
+      "evidence": [
+        {
+          "manufacturer": "SCGC",
+          "manufacturerCountry": "Thailand",
+          "region": "Asia",
+          "polymer": "PP impact copolymer",
+          "grade": "P841J",
+          "process": "injection moulding",
+          "MFR": {
+            "condition": "230 C / 2.16 kg",
+            "value_g_10min": 40
+          },
+          "tensileYield_kg_cm2": 260,
+          "flexuralModulus_kg_cm2": 12000,
+          "notchedIzod23C_J_m": 70,
+          "feature": "UV resistance",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-068",
+      "manufacturer": "IndianOil",
+      "grade": "080M60",
+      "polymer": "HDPE",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        182
+      ],
+      "evidence": [
+        {
+          "manufacturer": "IndianOil",
+          "manufacturerCountry": "India",
+          "region": "Asia",
+          "polymer": "HDPE",
+          "grade": "080M60",
+          "process": "injection moulding",
+          "meltIndex_g_10min": 8,
+          "density_g_cm3": 0.96,
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-069",
+      "manufacturer": "IndianOil",
+      "grade": "080M55",
+      "polymer": "HDPE",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        183
+      ],
+      "evidence": [
+        {
+          "manufacturer": "IndianOil",
+          "manufacturerCountry": "India",
+          "region": "Asia",
+          "polymer": "HDPE",
+          "grade": "080M55",
+          "process": "injection moulding",
+          "meltIndex_g_10min": 8,
+          "density_g_cm3": 0.955,
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-070",
+      "manufacturer": "PETRONAS Chemicals",
+      "grade": "PROPELINAS H500NG",
+      "polymer": "PP homopolymer",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        198
+      ],
+      "evidence": [
+        {
+          "manufacturer": "PETRONAS Chemicals",
+          "manufacturerCountry": "Malaysia",
+          "region": "Asia",
+          "polymer": "PP homopolymer",
+          "grade": "PROPELINAS H500NG",
+          "process": "injection moulding",
+          "MFR_g_10min": 12,
+          "applications": [
+            "furniture",
+            "housewares",
+            "containers",
+            "toys"
+          ],
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-071",
+      "manufacturer": "PETRONAS Chemicals",
+      "grade": "PROPELINAS H648TT",
+      "polymer": "PP homopolymer",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        199
+      ],
+      "evidence": [
+        {
+          "manufacturer": "PETRONAS Chemicals",
+          "manufacturerCountry": "Malaysia",
+          "region": "Asia",
+          "polymer": "PP homopolymer",
+          "grade": "PROPELINAS H648TT",
+          "process": "transparent thin-wall injection moulding",
+          "MFR_g_10min": 53,
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-072",
+      "manufacturer": "Sumitomo Chemical",
+      "grade": "SUMIKAEXCEL 4100G",
+      "polymer": "PESU",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        243
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Sumitomo Chemical",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PESU",
+          "grade": "SUMIKAEXCEL 4100G",
+          "process": "injection moulding",
+          "reinforcement": "unreinforced",
+          "density_g_cm3": 1.37,
+          "waterAbsorption_percent": {
+            "condition": "23 C / 24 h water",
+            "value": 1
+          },
+          "shrinkage_percent": {
+            "MD": 0.6,
+            "TD": 0.6
+          },
+          "tensile_MPa": {
+            "ISO527": 85,
+            "ASTM_D638": 84
+          },
+          "tensileModulus_MPa": 2700,
+          "flexural_MPa": {
+            "ISO178": 130,
+            "ASTM_D790": 129
+          },
+          "flexuralModulus_MPa": 2600,
+          "HDT_C": {
+            "ISO_1_8MPa": 205,
+            "ISO_0_45MPa": 214,
+            "ASTM_1_82MPa": 203,
+            "ASTM_0_45MPa": 210
+          },
+          "CLTE_1e5_K": {
+            "MD": 5.5,
+            "TD": 5.5
+          },
+          "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_ippan.html",
+          "valueStatus": "manufacturer typical values",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-073",
+      "manufacturer": "Sumitomo Chemical",
+      "grade": "SUMIKAEXCEL 4800G",
+      "polymer": "PESU",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        244
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Sumitomo Chemical",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PESU",
+          "grade": "SUMIKAEXCEL 4800G",
+          "process": "injection moulding",
+          "reinforcement": "unreinforced",
+          "density_g_cm3": 1.37,
+          "waterAbsorption_percent": {
+            "condition": "23 C / 24 h water",
+            "value": 1
+          },
+          "shrinkage_percent": {
+            "MD": 0.6,
+            "TD": 0.6
+          },
+          "tensile_MPa": {
+            "ISO527": 85,
+            "ASTM_D638": 84
+          },
+          "flexural_MPa": {
+            "ISO178": 130,
+            "ASTM_D790": 129
+          },
+          "flexuralModulus_MPa": 2600,
+          "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_ippan.html",
+          "valueStatus": "manufacturer typical values",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-074",
+      "manufacturer": "Sumitomo Chemical",
+      "grade": "SUMIKAEXCEL 3601GL20",
+      "polymer": "PESU-GF20",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        245
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Sumitomo Chemical",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PESU-GF20",
+          "grade": "SUMIKAEXCEL 3601GL20",
+          "process": "injection moulding",
+          "reinforcement": "GF20",
+          "density_g_cm3": 1.51,
+          "waterAbsorption_percent": {
+            "condition": "23 C / 24 h water",
+            "value": 0.8
+          },
+          "shrinkage_percent": {
+            "MD": 0.3,
+            "TD": 0.4
+          },
+          "tensile_MPa": {
+            "ISO527": 135,
+            "ASTM_D638": 124
+          },
+          "CAE": {
+            "specificHeat_J_kgK": 847,
+            "thermalConductivity_W_mK": 0.28,
+            "youngsModulus_MPa": {
+              "MD": 6600,
+              "TD": 4300
+            },
+            "CLTE_1e5_K": {
+              "MD": 2.4,
+              "TD": 4.7
+            }
+          },
+          "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_ippan.html",
+          "caeSourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_bs_other.html",
+          "valueStatus": "manufacturer typical/CAE measured values",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-075",
+      "manufacturer": "Sumitomo Chemical",
+      "grade": "SUMIKAEXCEL 4101GL20",
+      "polymer": "PESU-GF20",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        246,
+        250
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Sumitomo Chemical",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PESU-GF20",
+          "grade": "SUMIKAEXCEL 4101GL20",
+          "process": "injection moulding",
+          "reinforcement": "GF20",
+          "CAE": {
+            "specificHeat_J_kgK": 847,
+            "thermalConductivity_W_mK": 0.28,
+            "youngsModulus_MPa": {
+              "MD": 6600,
+              "TD": 4300
+            },
+            "CLTE_1e5_K": {
+              "MD": 2.4,
+              "TD": 4.7
+            }
+          },
+          "weldEvidence": {
+            "flexuralStrength_MPa": {
+              "nonWeld": 190,
+              "weld": 110
+            },
+            "notchedIzod_J_m": {
+              "nonWeld": 68,
+              "weld": 29
+            }
+          },
+          "caeSourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_bs_other.html",
+          "valueStatus": "manufacturer measured CAE/weld data; not universal processing recipe",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Sumitomo Chemical",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PESU-GF20",
+          "grade": "SUMIKAEXCEL 4101GL20",
+          "process": "injection moulding",
+          "reinforcement": "GF20",
+          "density_g_cm3": 1.51,
+          "waterAbsorption_percent": {
+            "condition": "23 C / 24 h water",
+            "value": 0.8
+          },
+          "shrinkage_percent": {
+            "MD": 0.3,
+            "TD": 0.4
+          },
+          "tensile_MPa": {
+            "ISO527": 135,
+            "ASTM_D638": 124
+          },
+          "tensileModulus_MPa": 6500,
+          "flexural_MPa": {
+            "ISO178": 190,
+            "ASTM_D790": 184
+          },
+          "flexuralModulus_MPa": 6200,
+          "HDT_C": {
+            "ISO_1_8MPa": 215,
+            "ISO_0_45MPa": 220,
+            "ASTM_1_82MPa": 211,
+            "ASTM_0_45MPa": 216
+          },
+          "CLTE_1e5_K": {
+            "MD": 2.4,
+            "TD": 4.7
+          },
+          "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_ippan.html",
+          "valueStatus": "manufacturer typical values",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-076",
+      "manufacturer": "Sumitomo Chemical",
+      "grade": "SUMIKAEXCEL 4101GL30",
+      "polymer": "PESU-GF30",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        247,
+        251
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Sumitomo Chemical",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PESU-GF30",
+          "grade": "SUMIKAEXCEL 4101GL30",
+          "process": "injection moulding",
+          "reinforcement": "GF30",
+          "CAE": {
+            "specificHeat_J_kgK": 788,
+            "thermalConductivity_W_mK": 0.24,
+            "youngsModulus_MPa": {
+              "MD": 8900,
+              "TD": 5000
+            },
+            "CLTE_1e5_K": {
+              "MD": 2.1,
+              "TD": 4.5
+            }
+          },
+          "weldEvidence": {
+            "flexuralStrength_MPa": {
+              "nonWeld": 180,
+              "weld": 110
+            },
+            "notchedIzod_J_m": {
+              "nonWeld": 68,
+              "weld": 29
+            }
+          },
+          "caeSourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_bs_other.html",
+          "valueStatus": "manufacturer measured CAE/weld data; do not interpolate from GF20",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Sumitomo Chemical",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PESU-GF30",
+          "grade": "SUMIKAEXCEL 4101GL30",
+          "process": "injection moulding",
+          "reinforcement": "GF30",
+          "density_g_cm3": 1.58,
+          "waterAbsorption_percent": {
+            "condition": "23 C / 24 h water",
+            "value": 0.7
+          },
+          "shrinkage_percent": {
+            "MD": 0.2,
+            "TD": 0.4
+          },
+          "tensile_MPa": {
+            "ISO527": 155,
+            "ASTM_D638": 146
+          },
+          "tensileModulus_MPa": 9000,
+          "flexural_MPa": {
+            "ISO178": 220,
+            "ASTM_D790": 216
+          },
+          "flexuralModulus_MPa": 8500,
+          "HDT_C": {
+            "ISO_1_8MPa": 220,
+            "ISO_0_45MPa": 225,
+            "ASTM_1_82MPa": 216,
+            "ASTM_0_45MPa": 221
+          },
+          "CLTE_1e5_K": {
+            "MD": 2.1,
+            "TD": 4.5
+          },
+          "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_ippan.html",
+          "valueStatus": "manufacturer typical values; GF30 values remain distinct from GF20",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-077",
+      "manufacturer": "Sumitomo Chemical",
+      "grade": "SUMIKAEXCEL 3601GL30",
+      "polymer": "PESU-GF30",
+      "evidenceRowCount": 2,
+      "supportingRecordIndexes": [
+        248,
+        252
+      ],
+      "evidence": [
+        {
+          "manufacturer": "Sumitomo Chemical",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PESU-GF30",
+          "grade": "SUMIKAEXCEL 3601GL30",
+          "process": "injection moulding",
+          "reinforcement": "GF30",
+          "familyEvidence": "manufacturer lineup identifies GF30 high-flow injection grade",
+          "CAE": {
+            "specificHeat_J_kgK": 788,
+            "thermalConductivity_W_mK": 0.24,
+            "youngsModulus_MPa": {
+              "MD": 8900,
+              "TD": 5000
+            },
+            "CLTE_1e5_K": {
+              "MD": 2.1,
+              "TD": 4.5
+            }
+          },
+          "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_grade.html",
+          "caeSourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_bs_other.html",
+          "valueStatus": "manufacturer CAE measured values; property-family grouping explicitly includes 3601GL30/4101GL30",
+          "status": "candidate-complete"
+        },
+        {
+          "manufacturer": "Sumitomo Chemical",
+          "manufacturerCountry": "Japan",
+          "region": "Asia",
+          "polymer": "PESU-GF30",
+          "grade": "SUMIKAEXCEL 3601GL30",
+          "process": "injection moulding",
+          "reinforcement": "GF30",
+          "density_g_cm3": 1.58,
+          "waterAbsorption_percent": {
+            "condition": "23 C / 24 h water",
+            "value": 0.7
+          },
+          "shrinkage_percent": {
+            "MD": 0.2,
+            "TD": 0.4
+          },
+          "tensile_MPa": {
+            "ISO527": 155,
+            "ASTM_D638": 146
+          },
+          "tensileModulus_MPa": 9000,
+          "flexural_MPa": {
+            "ISO178": 220,
+            "ASTM_D790": 216
+          },
+          "flexuralModulus_MPa": 8500,
+          "HDT_C": {
+            "ISO_1_8MPa": 220,
+            "ISO_0_45MPa": 225
+          },
+          "CLTE_1e5_K": {
+            "MD": 2.1,
+            "TD": 4.5
+          },
+          "sourceUrl": "https://www.sumitomo-chem.co.jp/sep/english/products/pes/pes_fg_ippan.html",
+          "valueStatus": "manufacturer family property table/CAE grouping; retain grade-specific identity",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-078",
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP1100AW",
+      "polymer": "PA6",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        266
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LG Chem",
+          "manufacturerCountry": "South Korea",
+          "region": "Asia",
+          "polymer": "PA6",
+          "grade": "LUMID GP1100AW",
+          "reinforcement": "unreinforced",
+          "specificGravity": {
+            "test": "ASTM D792",
+            "value": 1.13
+          },
+          "mouldShrinkage_percent": {
+            "test": "ASTM D955",
+            "value": "1.0-1.4"
+          },
+          "tensileStrength_kg_cm2": {
+            "test": "ASTM D638",
+            "value": 810
+          },
+          "tensileElongation_percent": {
+            "test": "ASTM D638",
+            "value": 100
+          },
+          "flexuralStrength_kg_cm2": {
+            "test": "ASTM D790",
+            "value": 1100
+          },
+          "flexuralModulus_kg_cm2": {
+            "test": "ASTM D790",
+            "value": 27000
+          },
+          "rockwellHardness_R": {
+            "test": "ASTM D785",
+            "value": 120
+          },
+          "HDT_C": {
+            "test": "ASTM D648",
+            "at18_6kg_cm2": 60,
+            "at4_6kg_cm2": 170
+          },
+          "flammability": "UL94 V-2 at 1.5 mm",
+          "dielectricStrength_kV_mm": {
+            "test": "ASTM D149",
+            "value": 19
+          },
+          "volumeResistivity_ohm_cm": {
+            "test": "ASTM D257",
+            "value": "1.00E+15"
+          },
+          "characteristic": "low viscosity",
+          "sourceUrl": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
+          "valueStatus": "LG Chem typical/reference values; no warranty or guarantee",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-079",
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP2300AW",
+      "polymer": "PA6-GF",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        267
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LG Chem",
+          "manufacturerCountry": "South Korea",
+          "region": "Asia",
+          "polymer": "PA6-GF",
+          "grade": "LUMID GP2300AW",
+          "reinforcement": "GF reinforced",
+          "specificGravity": {
+            "test": "ASTM D792",
+            "value": 1.35
+          },
+          "mouldShrinkage_percent": {
+            "test": "ASTM D955",
+            "value": "0.4-0.9"
+          },
+          "tensileStrength_kg_cm2": {
+            "test": "ASTM D638",
+            "value": 1800
+          },
+          "tensileElongation_percent": {
+            "test": "ASTM D638",
+            "value": 3
+          },
+          "flexuralStrength_kg_cm2": {
+            "test": "ASTM D790",
+            "value": 2600
+          },
+          "flexuralModulus_kg_cm2": {
+            "test": "ASTM D790",
+            "value": 85000
+          },
+          "notchedIzod_kg_cm_cm": {
+            "test": "ASTM D256",
+            "condition": "23 C / 3.2 mm",
+            "value": 12
+          },
+          "rockwellHardness_R": {
+            "test": "ASTM D785",
+            "value": 121
+          },
+          "HDT_C": {
+            "test": "ASTM D648",
+            "at18_6kg_cm2": 210
+          },
+          "flammability": "UL94 HB at 0.75 mm",
+          "dielectricStrength_kV_mm": {
+            "test": "ASTM D149",
+            "value": 20
+          },
+          "volumeResistivity_ohm_cm": {
+            "test": "ASTM D257",
+            "value": "1.00E+14"
+          },
+          "characteristic": "general purpose",
+          "sourceUrl": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
+          "valueStatus": "LG Chem typical/reference values; no warranty or guarantee",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-080",
+      "manufacturer": "LG Chem",
+      "grade": "LUMID HM2604AW",
+      "polymer": "PA6-GF",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        268
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LG Chem",
+          "manufacturerCountry": "South Korea",
+          "region": "Asia",
+          "polymer": "PA6-GF",
+          "grade": "LUMID HM2604AW",
+          "reinforcement": "GF reinforced",
+          "specificGravity": {
+            "test": "ASTM D792",
+            "value": 1.69
+          },
+          "mouldShrinkage_percent": {
+            "test": "ASTM D955",
+            "value": "0.2-0.5"
+          },
+          "tensileStrength_kg_cm2": {
+            "test": "ASTM D638",
+            "value": 2100
+          },
+          "tensileElongation_percent": {
+            "test": "ASTM D638",
+            "value": 2
+          },
+          "flexuralStrength_kg_cm2": {
+            "test": "ASTM D790",
+            "value": 3000
+          },
+          "flexuralModulus_kg_cm2": {
+            "test": "ASTM D790",
+            "value": 160000
+          },
+          "notchedIzod_kg_cm_cm": {
+            "test": "ASTM D256",
+            "condition": "23 C / 3.2 mm",
+            "value": 16
+          },
+          "rockwellHardness_R": {
+            "test": "ASTM D785",
+            "value": 130
+          },
+          "HDT_C": {
+            "test": "ASTM D648",
+            "at18_6kg_cm2": 205
+          },
+          "dielectricStrength_kV_mm": {
+            "test": "ASTM D149",
+            "value": 21
+          },
+          "volumeResistivity_ohm_cm": {
+            "test": "ASTM D257",
+            "value": "1.00E+15"
+          },
+          "characteristic": "high stiffness",
+          "sourceUrl": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
+          "valueStatus": "LG Chem typical/reference values; no warranty or guarantee",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-081",
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP2100AW",
+      "polymer": "PA6-GF",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        275
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LG Chem",
+          "manufacturerCountry": "South Korea",
+          "region": "Asia",
+          "polymer": "PA6-GF",
+          "grade": "LUMID GP2100AW",
+          "reinforcement": "GF reinforced",
+          "recordType": "primary-numeric-conversion",
+          "specificGravity": {
+            "test": "ASTM D792",
+            "value": 1.22
+          },
+          "mouldShrinkage_percent": {
+            "test": "ASTM D955",
+            "value": "0.6-1.1"
+          },
+          "tensileStrength_kg_cm2": {
+            "test": "ASTM D638",
+            "value": 1250
+          },
+          "tensileElongation_percent": {
+            "test": "ASTM D638",
+            "value": 4
+          },
+          "flexuralStrength_kg_cm2": {
+            "test": "ASTM D790",
+            "value": 1900
+          },
+          "flexuralModulus_kg_cm2": {
+            "test": "ASTM D790",
+            "value": 52000
+          },
+          "notchedIzod_kg_cm_cm": {
+            "test": "ASTM D256",
+            "condition": "23 C / 3.2 mm",
+            "value": 9
+          },
+          "HDT_C": {
+            "test": "ASTM D648",
+            "at18_6kg_cm2": 195
+          },
+          "sourceUrl": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
+          "valueStatus": "LG Chem typical/reference values; no warranty or guarantee",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-082",
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP2200AW",
+      "polymer": "PA6-GF",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        276
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LG Chem",
+          "manufacturerCountry": "South Korea",
+          "region": "Asia",
+          "polymer": "PA6-GF",
+          "grade": "LUMID GP2200AW",
+          "reinforcement": "GF reinforced",
+          "recordType": "primary-numeric-conversion",
+          "specificGravity": {
+            "test": "ASTM D792",
+            "value": 1.28
+          },
+          "mouldShrinkage_percent": {
+            "test": "ASTM D955",
+            "value": "0.5-1.0"
+          },
+          "tensileStrength_kg_cm2": {
+            "test": "ASTM D638",
+            "value": 1500
+          },
+          "tensileElongation_percent": {
+            "test": "ASTM D638",
+            "value": 3
+          },
+          "flexuralStrength_kg_cm2": {
+            "test": "ASTM D790",
+            "value": 2200
+          },
+          "flexuralModulus_kg_cm2": {
+            "test": "ASTM D790",
+            "value": 68000
+          },
+          "notchedIzod_kg_cm_cm": {
+            "test": "ASTM D256",
+            "condition": "23 C / 3.2 mm",
+            "value": 10
+          },
+          "HDT_C": {
+            "test": "ASTM D648",
+            "at18_6kg_cm2": 205
+          },
+          "sourceUrl": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
+          "valueStatus": "LG Chem typical/reference values; no warranty or guarantee",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-083",
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP2400AW",
+      "polymer": "PA6-GF",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        277
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LG Chem",
+          "manufacturerCountry": "South Korea",
+          "region": "Asia",
+          "polymer": "PA6-GF",
+          "grade": "LUMID GP2400AW",
+          "reinforcement": "GF reinforced",
+          "recordType": "primary-numeric-conversion",
+          "specificGravity": {
+            "test": "ASTM D792",
+            "value": 1.46
+          },
+          "mouldShrinkage_percent": {
+            "test": "ASTM D955",
+            "value": "0.3-0.7"
+          },
+          "tensileStrength_kg_cm2": {
+            "test": "ASTM D638",
+            "value": 1950
+          },
+          "tensileElongation_percent": {
+            "test": "ASTM D638",
+            "value": 3
+          },
+          "flexuralStrength_kg_cm2": {
+            "test": "ASTM D790",
+            "value": 2800
+          },
+          "flexuralModulus_kg_cm2": {
+            "test": "ASTM D790",
+            "value": 105000
+          },
+          "notchedIzod_kg_cm_cm": {
+            "test": "ASTM D256",
+            "condition": "23 C / 3.2 mm",
+            "value": 13
+          },
+          "HDT_C": {
+            "test": "ASTM D648",
+            "at18_6kg_cm2": 210
+          },
+          "sourceUrl": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
+          "valueStatus": "LG Chem typical/reference values; no warranty or guarantee",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-084",
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP2500AW",
+      "polymer": "PA6-GF",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        278
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LG Chem",
+          "manufacturerCountry": "South Korea",
+          "region": "Asia",
+          "polymer": "PA6-GF",
+          "grade": "LUMID GP2500AW",
+          "reinforcement": "GF reinforced",
+          "recordType": "primary-numeric-conversion",
+          "specificGravity": {
+            "test": "ASTM D792",
+            "value": 1.57
+          },
+          "mouldShrinkage_percent": {
+            "test": "ASTM D955",
+            "value": "0.2-0.6"
+          },
+          "tensileStrength_kg_cm2": {
+            "test": "ASTM D638",
+            "value": 2050
+          },
+          "tensileElongation_percent": {
+            "test": "ASTM D638",
+            "value": 2
+          },
+          "flexuralStrength_kg_cm2": {
+            "test": "ASTM D790",
+            "value": 2900
+          },
+          "flexuralModulus_kg_cm2": {
+            "test": "ASTM D790",
+            "value": 130000
+          },
+          "notchedIzod_kg_cm_cm": {
+            "test": "ASTM D256",
+            "condition": "23 C / 3.2 mm",
+            "value": 14
+          },
+          "HDT_C": {
+            "test": "ASTM D648",
+            "at18_6kg_cm2": 210
+          },
+          "sourceUrl": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
+          "valueStatus": "LG Chem typical/reference values; no warranty or guarantee",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-085",
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP3100AW",
+      "polymer": "PA6-GF",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        279
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LG Chem",
+          "manufacturerCountry": "South Korea",
+          "region": "Asia",
+          "polymer": "PA6-GF",
+          "grade": "LUMID GP3100AW",
+          "process": "injection moulding",
+          "recordType": "primary-numeric-conversion",
+          "specificGravity": {
+            "test": "ASTM D792",
+            "value": 1.22
+          },
+          "mouldShrinkage_percent": {
+            "test": "ASTM D955",
+            "value": "0.6-1.1"
+          },
+          "tensileStrength_kg_cm2": {
+            "test": "ASTM D638",
+            "value": 1300
+          },
+          "tensileElongation_percent": {
+            "test": "ASTM D638",
+            "value": 4
+          },
+          "flexuralStrength_kg_cm2": {
+            "test": "ASTM D790",
+            "value": 1900
+          },
+          "flexuralModulus_kg_cm2": {
+            "test": "ASTM D790",
+            "value": 52000
+          },
+          "notchedIzod_kg_cm_cm": {
+            "test": "ASTM D256",
+            "condition": "23 C / 3.2 mm",
+            "value": 9
+          },
+          "HDT_C": {
+            "test": "ASTM D648",
+            "at18_6kg_cm2": 195
+          },
+          "characteristic": "heat stabilised GF PA6",
+          "sourceUrl": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
+          "valueStatus": "LG Chem typical/reference values; no warranty or guarantee",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-086",
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP3200AW",
+      "polymer": "PA6-GF",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        280
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LG Chem",
+          "manufacturerCountry": "South Korea",
+          "region": "Asia",
+          "polymer": "PA6-GF",
+          "grade": "LUMID GP3200AW",
+          "process": "injection moulding",
+          "recordType": "primary-numeric-conversion",
+          "specificGravity": {
+            "test": "ASTM D792",
+            "value": 1.28
+          },
+          "mouldShrinkage_percent": {
+            "test": "ASTM D955",
+            "value": "0.5-1.0"
+          },
+          "tensileStrength_kg_cm2": {
+            "test": "ASTM D638",
+            "value": 1550
+          },
+          "tensileElongation_percent": {
+            "test": "ASTM D638",
+            "value": 3
+          },
+          "flexuralStrength_kg_cm2": {
+            "test": "ASTM D790",
+            "value": 2250
+          },
+          "flexuralModulus_kg_cm2": {
+            "test": "ASTM D790",
+            "value": 68000
+          },
+          "notchedIzod_kg_cm_cm": {
+            "test": "ASTM D256",
+            "condition": "23 C / 3.2 mm",
+            "value": 10
+          },
+          "HDT_C": {
+            "test": "ASTM D648",
+            "at18_6kg_cm2": 205
+          },
+          "characteristic": "heat stabilised GF PA6",
+          "sourceUrl": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
+          "valueStatus": "LG Chem typical/reference values; no warranty or guarantee",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-087",
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP3300AW",
+      "polymer": "PA6-GF",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        281
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LG Chem",
+          "manufacturerCountry": "South Korea",
+          "region": "Asia",
+          "polymer": "PA6-GF",
+          "grade": "LUMID GP3300AW",
+          "process": "injection moulding",
+          "recordType": "primary-numeric-conversion",
+          "specificGravity": {
+            "test": "ASTM D792",
+            "value": 1.35
+          },
+          "mouldShrinkage_percent": {
+            "test": "ASTM D955",
+            "value": "0.4-0.9"
+          },
+          "tensileStrength_kg_cm2": {
+            "test": "ASTM D638",
+            "value": 1850
+          },
+          "tensileElongation_percent": {
+            "test": "ASTM D638",
+            "value": 3
+          },
+          "flexuralStrength_kg_cm2": {
+            "test": "ASTM D790",
+            "value": 2650
+          },
+          "flexuralModulus_kg_cm2": {
+            "test": "ASTM D790",
+            "value": 85000
+          },
+          "notchedIzod_kg_cm_cm": {
+            "test": "ASTM D256",
+            "condition": "23 C / 3.2 mm",
+            "value": 12
+          },
+          "HDT_C": {
+            "test": "ASTM D648",
+            "at18_6kg_cm2": 210
+          },
+          "characteristic": "heat stabilised GF PA6",
+          "sourceUrl": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
+          "valueStatus": "LG Chem typical/reference values; no warranty or guarantee",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-088",
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP3400AW",
+      "polymer": "PA6-GF",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        282
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LG Chem",
+          "manufacturerCountry": "South Korea",
+          "region": "Asia",
+          "polymer": "PA6-GF",
+          "grade": "LUMID GP3400AW",
+          "process": "injection moulding",
+          "recordType": "primary-numeric-conversion",
+          "specificGravity": {
+            "test": "ASTM D792",
+            "value": 1.46
+          },
+          "mouldShrinkage_percent": {
+            "test": "ASTM D955",
+            "value": "0.3-0.7"
+          },
+          "tensileStrength_kg_cm2": {
+            "test": "ASTM D638",
+            "value": 2000
+          },
+          "tensileElongation_percent": {
+            "test": "ASTM D638",
+            "value": 3
+          },
+          "flexuralStrength_kg_cm2": {
+            "test": "ASTM D790",
+            "value": 2850
+          },
+          "flexuralModulus_kg_cm2": {
+            "test": "ASTM D790",
+            "value": 105000
+          },
+          "notchedIzod_kg_cm_cm": {
+            "test": "ASTM D256",
+            "condition": "23 C / 3.2 mm",
+            "value": 13
+          },
+          "HDT_C": {
+            "test": "ASTM D648",
+            "at18_6kg_cm2": 210
+          },
+          "characteristic": "heat stabilised GF PA6",
+          "sourceUrl": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
+          "valueStatus": "LG Chem typical/reference values; no warranty or guarantee",
+          "status": "candidate-complete"
+        }
+      ]
+    },
+    {
+      "id": "material-atlas-089",
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP3500AW",
+      "polymer": "PA6-GF",
+      "evidenceRowCount": 1,
+      "supportingRecordIndexes": [
+        283
+      ],
+      "evidence": [
+        {
+          "manufacturer": "LG Chem",
+          "manufacturerCountry": "South Korea",
+          "region": "Asia",
+          "polymer": "PA6-GF",
+          "grade": "LUMID GP3500AW",
+          "process": "injection moulding",
+          "recordType": "primary-numeric-conversion",
+          "specificGravity": {
+            "test": "ASTM D792",
+            "value": 1.57
+          },
+          "mouldShrinkage_percent": {
+            "test": "ASTM D955",
+            "value": "0.2-0.6"
+          },
+          "tensileStrength_kg_cm2": {
+            "test": "ASTM D638",
+            "value": 2100
+          },
+          "tensileElongation_percent": {
+            "test": "ASTM D638",
+            "value": 2
+          },
+          "flexuralStrength_kg_cm2": {
+            "test": "ASTM D790",
+            "value": 3000
+          },
+          "flexuralModulus_kg_cm2": {
+            "test": "ASTM D790",
+            "value": 130000
+          },
+          "notchedIzod_kg_cm_cm": {
+            "test": "ASTM D256",
+            "condition": "23 C / 3.2 mm",
+            "value": 14
+          },
+          "HDT_C": {
+            "test": "ASTM D648",
+            "at18_6kg_cm2": 210
+          },
+          "characteristic": "heat stabilised GF PA6",
+          "sourceUrl": "https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf",
+          "valueStatus": "LG Chem typical/reference values; no warranty or guarantee",
+          "status": "candidate-complete"
+        }
+      ]
+    }
+  ]
+}
