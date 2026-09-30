@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.09.30.9",
-  "commit": "f5a20222ef41ab7251ee67ce070c9422083259a4",
+  "release": "2026.10.01.2",
+  "commit": "PENDING_REVIEWED_CONTENT_HEAD",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -37,9 +37,10 @@
     "listen-expanded",
     "listening",
     "book-contents",
+    "book-materials",
     "book-late",
     "book-trace"
   ],
-  "policy": "2026.09.30.9 is the reviewed learner UI reference only after semantic Home checks pass: Today's focus is the single dominant action, Home duplicates none of Learn/Materials/Practice/Saved/Book navigation, only Troubleshoot and Analyse data remain as specialist shortcuts, the Home content width is constrained on large screens, and the primary lesson plus both specialist tools fit above the fixed navigation at governed phone widths. Pixel tolerance remains locked at maxDiffPixels 12 and supplements—rather than substitutes for—those structural and geometry assertions. Physical-device, real-AT and other human/external evidence remain separate HOLD/freshness gates.",
-  "ref": "visual-baseline/2026.09.30.9"
+  "policy": "2026.10.01.2 is the reviewed learner UI reference only after semantic Home and Book-material checks pass: Today's focus remains the single dominant Home action; Home duplicates none of Learn/Materials/Practice/Saved/Book navigation; Troubleshoot and Analyse data remain the two specialist shortcuts; a real recent troubleshooting case stays clear of fixed phone navigation; the Book Materials chapter exposes all 260 canonical exact grades plus all 284 governed Asia/Australia/New Zealand evidence rows; the 89-profile index is reconciliation-only; and the technical-review material appendix is excluded from evidence-verified listen-all. Pixel tolerance remains locked at maxDiffPixels 12 and supplements—rather than substitutes for—those structural, coverage and geometry assertions. Physical-device, real-AT and other human/external evidence remain separate HOLD/freshness gates.",
+  "ref": "visual-baseline/2026.10.01.2"
 }
