@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.09.30.3",
-  "commit": "6211863f93b8ba90d327edcd9600f44ddf9f54f9",
+  "release": "2026.09.30.5",
+  "commit": "56fb3b123d6d5026d71b77945cc2a8f4f9edda92",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -40,5 +40,5 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "2026.09.30.3 is the reviewed learner UI reference for the intentional information-architecture upgrade: Home is a useful workbench, primary navigation is Home / Learn / Materials / Practice / More, Materials is a singular first-class destination, Learn no longer duplicates the catalogue, secondary tools move behind More or task hubs, and top-bar actions are contextual. The pixel tolerance remains locked at maxDiffPixels 12; this approval updates the reference bytes rather than relaxing drift tolerance. Physical-device, real-AT and other human/external evidence remain separate historical/freshness gates and are not relabelled by this visual lock."
+  "policy": "2026.09.30.5 is the reviewed learner UI reference for the focused mobile/product polish: the Home workbench is prioritised on phones, Materials filters are thumb-friendly and WebKit-safe, long engineering/evidence metadata wraps on narrow screens, and More is reduced to secondary/reference/progress utilities while Practice owns troubleshooting, process-data and lab/simulator entry points. The pixel tolerance remains locked at maxDiffPixels 12; this approval updates the reference bytes rather than relaxing drift tolerance. Physical-device, real-AT and other human/external evidence remain separate historical/freshness gates and are not relabelled by this visual lock."
 }
