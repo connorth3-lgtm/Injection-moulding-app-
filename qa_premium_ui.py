@@ -31,7 +31,8 @@ need(f"const VERSION='{release}';" in learner_polish,'learner UI polish version 
 for marker in ['Product design hierarchy cleanup','--mm-product-radius','#materials .mm-exact-results{','.mobile-nav{','Final product-quality interaction states','Startup and degraded states must feel like the same product']:
     need(marker in shell,f'canonical product-design hierarchy marker missing: {marker}')
 need('Canonical Home hierarchy' in learner_polish_css,'learner UI polish must own the canonical Home hierarchy')
-need(learner_polish_css.count('#dashboard .mm-home-balance{')==1,'canonical Home Workbench must have one outer-layout owner')
+need('#dashboard .mm-home-balance{' in learner_polish_css,'canonical Home Workbench layout owner is missing')
+need('#dashboard .mm-home-balance{' not in learner_polish_css.split('/* Canonical Home hierarchy',1)[0],'legacy Home Workbench layout rules remain before the canonical owner')
 need('grid-template-columns:1fr!important' in learner_polish_css,'canonical Home Workbench outer grid must remain one column')
 for retired_source in (css,dynamic,shell,learning_experience):
     need('.mm-home-utility' not in retired_source,'retired Home utility styling/source returned')
