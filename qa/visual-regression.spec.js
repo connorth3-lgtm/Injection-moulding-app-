@@ -112,6 +112,16 @@ async function prepareSurface(page,surface){
     await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
     await page.evaluate(()=>window.MMBook.open());
     await expect(page.locator('[data-mm-book-chapter]')).toHaveCount(46);
+  }else if(surface==='book-materials'){
+    await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
+    await page.evaluate(()=>window.MMBook.open());
+    await page.locator('[data-mm-book-chapter="material-families"]').click();
+    await expect(page.locator('[data-mm-book-material-atlas]')).toBeVisible();
+    const canonical=page.locator('[data-mm-book-canonical-catalog]');
+    await canonical.locator('summary').click();
+    const first=canonical.locator('[data-mm-book-catalog-grade]').first();
+    await first.locator('summary').click();
+    await expect(first).toBeVisible();
   }else if(surface==='book-late'){
     await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
     await page.evaluate(()=>window.MMBook.open());
