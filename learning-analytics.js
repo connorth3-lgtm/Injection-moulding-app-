@@ -1,8 +1,8 @@
-/* MouldMaster privacy-preserving learning analytics — 2026.09.10.1 */
+/* MouldMaster privacy-preserving learning analytics — retention-aware 2026.10.01.2 */
 (function(){
 'use strict';
 
-const VERSION='2026.09.10.2';
+const VERSION='2026.10.01.2';
 const STORAGE_PREFIX='mm_learning_analytics_v1::';
 const MAX_EVENTS=1500;
 const IDLE_MS=5*60*1000;
@@ -66,6 +66,14 @@ function currentRole(){try{return String(typeof user!=='undefined'&&user?.role||
 function isInstructor(){return currentRole()==='instructor'}
 function requireInstructor(action='Cross-profile analytics export'){if(!isInstructor())throw new Error(`${action} requires instructor role`)}
 function currentCompletedLessons(){try{return Array.isArray(user?.completed)?user.completed.length:0}catch(_){return 0}}
+function delayedTransferSummary(){
+  try{
+    const projected=window.MM_DELAYED_TRANSFER_REVIEWS?.project?.();
+    const items=Array.isArray(projected?.items)?projected.items:[],completed=items.filter(x=>x.status==='completed'&&Number.isFinite(Number(x.score)));
+    const avg=completed.length?completed.reduce((sum,x)=>sum+Number(x.score),0)/completed.length:null;
+    return {available:!!projected,total:Number(projected?.summary?.total)||0,due:(Number(projected?.summary?.due)||0)+(Number(projected?.summary?.overdue)||0),completed:Number(projected?.summary?.completed)||0,averageScore:avg};
+  }catch(_){return {available:false,total:0,due:0,completed:0,averageScore:null}}
+}
 
 function aggregate(events){
   const e=Array.isArray(events)?events:[];
@@ -225,7 +233,7 @@ function recentHtml(events){
   return `<div class="la-list">${rows.map(x=>{let label=x.type==='lesson_complete'?`Lesson ${esc(x.id)} completed`:x.type==='practice_complete'?`${x.module==='diagnostic'?'Diagnostic':'Process-data'} case ${esc(x.id)} · ${Math.round(Number(x.score)||0)}%`:`Missed ${esc(stepLabel(`${x.module}:${x.step}`))}`;return `<div class="la-row"><span>${label}</span><small>${new Date(x.t).toLocaleDateString()}</small></div>`}).join('')}</div>`
 }
 function learnerPanel(events){
-  const a=aggregate(events),difficult=a.difficult.length?a.difficult.map(([k,n])=>`<div class="la-row"><span>${esc(stepLabel(k))}</span><strong>${n} miss${n===1?'':'es'}</strong></div>`).join(''):'<div class="la-empty">No repeated trouble spots recorded yet.</div>';
+  const a=aggregate(events),retention=delayedTransferSummary(),difficult=a.difficult.length?a.difficult.map(([k,n])=>`<div class="la-row"><span>${esc(stepLabel(k))}</span><strong>${n} miss${n===1?'':'es'}</strong></div>`).join(''):'<div class="la-empty">No repeated trouble spots recorded yet.</div>';
   return `
     <div class="la-kpis">
       <div class="la-kpi card"><span>Current lesson progress</span><strong>${currentCompletedLessons()}/120</strong></div>
@@ -236,8 +244,9 @@ function learnerPanel(events){
     <div class="la-grid">
       <div class="la-panel card"><h3>Where practice is hardest</h3><div class="la-list">${difficult}</div><p class="la-note">Miss counts show which reasoning stage caused difficulty, not the answer text a learner selected.</p></div>
       <div class="la-panel card"><h3>Retry improvement</h3><div class="la-list"><div class="la-row"><span>Cases attempted more than once</span><strong>${a.repeatedCases}</strong></div><div class="la-row"><span>Cases with a higher latest score</span><strong>${a.improvedCases}</strong></div><div class="la-row"><span>Completed practice cases</span><strong>${a.practiceCompleted}</strong></div><div class="la-row"><span>Average completed-case score</span><strong>${a.practiceCompleted?a.avgScore.toFixed(1)+'%':'—'}</strong></div></div></div>
+      <div class="la-panel card"><h3>Delayed transfer / retention</h3>${retention.available?`<div class="la-list"><div class="la-row"><span>7-day / 30-day reviews due</span><strong>${retention.due}</strong></div><div class="la-row"><span>Completed delayed reviews</span><strong>${retention.completed}</strong></div><div class="la-row"><span>Average completed review score</span><strong>${retention.averageScore==null?'—':retention.averageScore.toFixed(1)+'%'}</strong></div></div><p class="la-note">Delayed reviews test retrieval after time has passed. They are learning evidence only—not competence certification or production authority.</p>`:'<div class="la-empty">Delayed-transfer evidence is not available yet for this profile.</div>'}</div>
       <div class="la-panel card"><h3>Recent tracked activity</h3>${recentHtml(events)}</div>
-      <div class="la-panel card"><h3>What this measures</h3><p class="la-note">Time-on-task counts visible, active lesson time and completed guided-practice time. A five-minute idle limit prevents a forgotten open lesson from inflating the total. Retry gain compares each repeated case's latest completed attempt with its first tracked completed attempt.</p><p class="la-note">Analytics starts with this release. Existing lesson completion totals remain visible, but historical timing and retry events are not reconstructed.</p></div>
+      <div class="la-panel card"><h3>What this measures</h3><p class="la-note">Time-on-task counts visible, active lesson time and completed guided-practice time. A five-minute idle limit prevents a forgotten open lesson from inflating the total. Retry gain compares each repeated case's latest completed attempt with its first tracked completed attempt.</p><p class="la-note">Delayed-transfer scores come from the separate governed 7-day/30-day review layer. Existing historical timing and retry events are not reconstructed.</p></div>
     </div>`
 }
 function instructorPanel(){
@@ -273,5 +282,5 @@ let queued=false;function schedule(){if(queued)return;queued=true;(window.reques
 install();window.addEventListener('load',schedule);window.addEventListener?.('mm:domains-ready',schedule);window.MM_APP_SHELL?.events?.onRender?.('profile',schedule);window.MM_APP_SHELL?.events?.onViewChange?.(schedule);
 try{if(typeof currentView!=='undefined'&&currentView==='lesson')startLessonSession()}catch(_){}
 
-window.MM_LEARNING_ANALYTICS={version:VERSION,record,summary:()=>aggregate(eventsFor()),open:openInsights,canExportCrossProfile:isInstructor,minimumAggregateProfiles:MIN_EXPORT_PROFILES,storageHealth:()=>({...storageHealth}),scope:'Learner-scoped local analytics only; instructor export is cohort-level aggregate only with a minimum profile threshold; no per-profile rows, names, hashed learner tokens, notes, free text, assessment answers or network upload. Core render/view lifecycle integration uses Runtime V2 hooks rather than global wrapper replacement.'};
+window.MM_LEARNING_ANALYTICS={version:VERSION,record,summary:()=>aggregate(eventsFor()),delayedTransferSummary,open:openInsights,canExportCrossProfile:isInstructor,minimumAggregateProfiles:MIN_EXPORT_PROFILES,storageHealth:()=>({...storageHealth}),scope:'Learner-scoped local analytics only; instructor export is cohort-level aggregate only with a minimum profile threshold; no per-profile rows, names, hashed learner tokens, notes, free text, assessment answers or network upload. Core render/view lifecycle integration uses Runtime V2 hooks rather than global wrapper replacement.'};
 })();
