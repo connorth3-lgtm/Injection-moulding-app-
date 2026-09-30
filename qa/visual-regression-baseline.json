@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.09.30.5",
-  "commit": "56fb3b123d6d5026d71b77945cc2a8f4f9edda92",
+  "release": "2026.09.30.7",
+  "commit": "2dac28d0a9cb5f475279709d063be979da0f9763",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -40,6 +40,6 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "2026.09.30.5 is the reviewed learner UI reference for the focused mobile/product polish: the Home workbench is prioritised on phones, Materials filters are thumb-friendly and WebKit-safe, long engineering/evidence metadata wraps on narrow screens, and More is reduced to secondary/reference/progress utilities while Practice owns troubleshooting, process-data and lab/simulator entry points. The pixel tolerance remains locked at maxDiffPixels 12; this approval updates the reference bytes rather than relaxing drift tolerance. Physical-device, real-AT and other human/external evidence remain separate historical/freshness gates and are not relabelled by this visual lock.",
-  "ref": "visual-baseline/2026.09.30.5"
+  "policy": "2026.09.30.7 is the reviewed learner UI reference for the Home hierarchy repair: Today's focus and Continue lesson remain the primary Home action at phone, tablet and desktop widths; the Workbench is a quieter secondary launcher; duplicate Practice/Saved shortcuts are removed from Today's focus; compact task access remains available without changing learner content or engineering authority. The pixel tolerance remains locked at maxDiffPixels 12; this approval advances the reference bytes rather than relaxing drift tolerance. Physical-device, real-AT and other human/external evidence remain separate HOLD/freshness gates and are not relabelled by this visual lock.",
+  "ref": "visual-baseline/2026.09.30.7"
 }
