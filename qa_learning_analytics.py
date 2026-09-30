@@ -22,7 +22,7 @@ p=subprocess.run(['node','--check',str(ROOT/'process-data-diagnostics.js')],capt
 need(p.returncode==0,'process-data-diagnostics.js syntax error: '+(p.stderr or p.stdout))
 
 for marker in [
-    "const VERSION='2026.09.10.2'",
+    "const VERSION='2026.10.01.2'",
     "const STORAGE_PREFIX='mm_learning_analytics_v1::'",
     'const MAX_EVENTS=1500',
     'const IDLE_MS=5*60*1000',
@@ -47,7 +47,12 @@ for marker in [
     'diagnosticChoiceCorrect',
     'processChoiceCorrect',
     'MM_PROCESS_DATA_DIAGNOSTICS?.evaluateChoice?.',
-    'MM_LEARNING_ANALYTICS'
+    'MM_LEARNING_ANALYTICS',
+    'MM_DELAYED_TRANSFER_REVIEWS?.project?.',
+    'Delayed transfer / retention',
+    '7-day / 30-day reviews due',
+    'learning evidence only',
+    'delayedTransferSummary'
 ]:
     need(marker in js,f'learning analytics marker missing: {marker}')
 
