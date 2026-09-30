@@ -31,8 +31,8 @@ p=subprocess.run(['node','--check',str(ROOT/'curriculum-integration.js')],captur
 need(p.returncode==0,'curriculum-integration.js syntax error: '+(p.stderr or p.stdout))
 
 for marker in [
-    "const VERSION='2026.08.26.1'",
-    'Theory → practice → evidence',
+    "const VERSION='2026.10.01.2'",
+    'Mechanism → measurement → discrimination → verification',
     'Apply this lesson',
     '2 linked activities',
     'mmCurriculumOpen',
@@ -42,10 +42,19 @@ for marker in [
     "D.lessons.length!==120",
     'Lesson ${lesson.id} does not have two valid curriculum practice connections',
     'curriculum_practice_open',
-    'Learning boundary:',
-    'optional formative learning',
+    'Known-good baseline',
+    'Current measured evidence',
+    'Rank competing mechanisms',
+    'Smallest discriminating test',
+    'Verify recovery',
+    'GUIDANCE_LEVELS',
+    'Worked support',
+    'Partial guidance',
+    'Evidence-only challenge',
+    'guidance:()=>({...guidanceFor()})',
+    'Measurement-first boundary:',
     'does not change formal assessment answers',
-    'no formal assessment mutation and no production recipe'
+    'no formal assessment mutation, competence claim or production recipe'
 ]:
     need(marker in js,f'curriculum integration marker missing: {marker}')
 
