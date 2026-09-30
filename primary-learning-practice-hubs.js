@@ -333,7 +333,6 @@ window.mmHubOpenScenarios=openScenarioDetail;
 
 function simplifyHome(){
   const root=document.getElementById('dashboard');if(!root)return;
-  root.querySelectorAll('.mm-home-task-hub').forEach(el=>el.remove());
   root.querySelectorAll('#mmDashboardRegistryBefore .mm-dashboard-slot:not([data-mm-dashboard-section="today-focus"]),#mmDashboardRegistryAfter .mm-dashboard-slot').forEach(el=>el.remove());
   root.querySelectorAll('button[data-mm-onclick]').forEach(button=>{
     const action=button.getAttribute('data-mm-onclick')||'';
