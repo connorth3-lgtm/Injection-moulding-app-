@@ -24,17 +24,29 @@ test('Home is a useful workbench across desktop and phone',async({page})=>{
   await openApp(page);
   const balance=page.locator('#dashboard .mm-home-balance');
   await expect(balance).toBeVisible();
-  await expect(balance.locator('[data-mm-home-action]')).toHaveCount(6);
+  await expect(balance.locator('[data-mm-home-action]')).toHaveCount(7);
   await expect(balance.getByRole('button',{name:/Troubleshoot/i})).toBeVisible();
   await expect(balance.getByRole('button',{name:/Materials/i})).toBeVisible();
   await expect(balance.getByRole('button',{name:/Analyse data/i})).toBeVisible();
   await expect(balance.getByRole('button',{name:/Practice/i})).toBeVisible();
+  await expect(balance.getByRole('button',{name:/Saved lessons/i})).toBeVisible();
   await expect(balance.locator('.mm-home-snapshot')).toContainText('3/120');
+  await expect(page.locator('#dashboard .mm-today-focus .mm-home-utility')).toHaveCount(0);
+  expect(await page.evaluate(()=>{
+    const focus=document.querySelector('#dashboard .mm-today-focus');
+    const workbench=document.querySelector('#dashboard .mm-home-balance');
+    return Boolean(focus&&workbench&&(focus.compareDocumentPosition(workbench)&Node.DOCUMENT_POSITION_FOLLOWING));
+  })).toBeTruthy();
 
   await page.setViewportSize({width:412,height:915});
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
   await expect(page.locator('#dashboard .mm-home-balance')).toBeVisible();
   await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
+  expect(await page.evaluate(()=>{
+    const focus=document.querySelector('#dashboard .mm-today-focus');
+    const workbench=document.querySelector('#dashboard .mm-home-balance');
+    return Boolean(focus&&workbench&&(focus.compareDocumentPosition(workbench)&Node.DOCUMENT_POSITION_FOLLOWING));
+  })).toBeTruthy();
 });
 
 test('Book keeps governed status intact but progressively discloses assurance detail without a mutation loop',async({page})=>{
