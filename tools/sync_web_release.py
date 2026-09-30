@@ -106,6 +106,78 @@ def desired_files() -> dict[Path, str]:
         "support PWA release fallback",
     )
 
+    health_contract_path = ROOT / "data" / "health-program-v1.json"
+    health_contract = replace_once(
+        health_contract_path.read_text(encoding="utf-8"),
+        r'("currentWebRelease"\s*:\s*")[^"]+(")',
+        rf"\g<1>{web_release}\g<2>",
+        "health program currentWebRelease",
+    )
+
+    health_status_path = ROOT / "HEALTH_STATUS.md"
+    health_status = replace_once(
+        health_status_path.read_text(encoding="utf-8"),
+        r"^(Current learner-facing web release: \*\*)[^*]+(\*\*)$",
+        rf"\g<1>{web_release}\g<2>",
+        "health status current release",
+    )
+    health_status = replace_once(
+        health_status,
+        r"^(- Current learner-facing web release: \*\*)[^*]+(\*\*\.)$",
+        rf"\g<1>{web_release}\g<2>",
+        "health status current release contract",
+    )
+
+    governance_status_path = ROOT / "GOVERNANCE_STATUS.md"
+    governance_status = replace_once(
+        governance_status_path.read_text(encoding="utf-8"),
+        r"^(Current learner-facing web release: \*\*`)[^`]+(`\*\*\.)$",
+        rf"\g<1>{web_release}\g<2>",
+        "governance status current release",
+    )
+
+    compatibility_path = ROOT / "docs" / "CLIENT_COMPATIBILITY_MATRIX.md"
+    compatibility = replace_once(
+        compatibility_path.read_text(encoding="utf-8"),
+        r"^(\| Web/PWA \| )\d{4}\.\d{2}\.\d{2}\.\d+( \|)",
+        rf"\g<1>{web_release}\g<2>",
+        "client compatibility Web/PWA release row",
+    )
+    compatibility = replace_once(
+        compatibility,
+        r"^(\| Capability \| Web/PWA )\d{4}\.\d{2}\.\d{2}\.\d+( \|)",
+        rf"\g<1>{web_release}\g<2>",
+        "client compatibility capability header",
+    )
+
+    polish_js_path = ROOT / "src" / "domains" / "shell" / "learner-ui-polish.js"
+    polish_js = replace_once(
+        polish_js_path.read_text(encoding="utf-8"),
+        r"^(\/\* MouldMaster learner UI polish — )\d{4}\.\d{2}\.\d{2}\.\d+",
+        rf"\g<1>{web_release}",
+        "learner UI polish header",
+    )
+    polish_js = replace_once(
+        polish_js,
+        r"^const VERSION='[^']+';$",
+        f"const VERSION='{web_release}';",
+        "learner UI polish VERSION",
+    )
+
+    polish_css_path = ROOT / "src" / "domains" / "shell" / "learner-ui-polish.css"
+    polish_css = replace_once(
+        polish_css_path.read_text(encoding="utf-8"),
+        r"^(\/\* MouldMaster learner UI polish — )\d{4}\.\d{2}\.\d{2}\.\d+( \*\/)$",
+        rf"\g<1>{web_release}\g<2>",
+        "learner UI polish CSS header",
+    )
+    polish_css = replace_once(
+        polish_css,
+        r"^(\/\* Home usefulness \+ primary-navigation declutter — )\d{4}\.\d{2}\.\d{2}\.\d+( \*\/)$",
+        rf"\g<1>{web_release}\g<2>",
+        "learner UI Home polish release marker",
+    )
+
     return {
         worker_path: worker,
         index_path: index,
@@ -114,6 +186,12 @@ def desired_files() -> dict[Path, str]:
         release_docs_qa_path: release_docs_qa,
         readme_path: readme,
         support_path: support,
+        health_contract_path: health_contract,
+        health_status_path: health_status,
+        governance_status_path: governance_status,
+        compatibility_path: compatibility,
+        polish_js_path: polish_js,
+        polish_css_path: polish_css,
     }
 
 

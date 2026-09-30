@@ -33,6 +33,13 @@ jobs:
 
           while IFS=$'\t' read -r branch sha; do
             [[ -z "$branch" || "$branch" == "main" ]] && continue
+            case "$branch" in
+              visual-baseline/*)
+                echo "Keeping retained visual baseline ref: $branch ($sha)"
+                kept=$((kept+1))
+                continue
+                ;;
+            esac
 
             ahead=$(gh api "repos/$GH_REPO/compare/main...$sha" --jq '.ahead_by')
             reason=""

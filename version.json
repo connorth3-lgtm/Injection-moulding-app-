@@ -1,5 +1,5 @@
 {
-  "web_release": "2026.09.30.5",
+  "web_release": "2026.09.30.6",
   "android_release": "2026.08.26.2",
   "desktop_release": "2026.09.29.1",
   "desktop_release_tag": "desktop-v2026.09.29.1",
@@ -14,9 +14,9 @@
   "assessment_evidence_version": "2026.08.25.2",
   "production_observability_version": "2026.09.01.1",
   "read_aloud_version": "2026.09.14.2",
-  "published": "2026-09-29",
+  "published": "2026-09-30",
   "repository": "connorth3-lgtm/Injection-moulding-app-",
   "pages_url": "https://connorth3-lgtm.github.io/Injection-moulding-app-/",
   "published_timezone": "UTC",
-  "published_date_basis": "protected-main publication date; web_release date component is the Pacific/Auckland release-family date"
+  "published_date_basis": "governed web-release publication date in UTC; web_release date component is the Pacific/Auckland release-family date"
 }

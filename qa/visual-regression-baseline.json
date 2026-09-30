@@ -40,5 +40,6 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "2026.09.30.5 is the reviewed learner UI reference for the focused mobile/product polish: the Home workbench is prioritised on phones, Materials filters are thumb-friendly and WebKit-safe, long engineering/evidence metadata wraps on narrow screens, and More is reduced to secondary/reference/progress utilities while Practice owns troubleshooting, process-data and lab/simulator entry points. The pixel tolerance remains locked at maxDiffPixels 12; this approval updates the reference bytes rather than relaxing drift tolerance. Physical-device, real-AT and other human/external evidence remain separate historical/freshness gates and are not relabelled by this visual lock."
+  "policy": "2026.09.30.5 is the reviewed learner UI reference for the focused mobile/product polish: the Home workbench is prioritised on phones, Materials filters are thumb-friendly and WebKit-safe, long engineering/evidence metadata wraps on narrow screens, and More is reduced to secondary/reference/progress utilities while Practice owns troubleshooting, process-data and lab/simulator entry points. The pixel tolerance remains locked at maxDiffPixels 12; this approval updates the reference bytes rather than relaxing drift tolerance. Physical-device, real-AT and other human/external evidence remain separate historical/freshness gates and are not relabelled by this visual lock.",
+  "ref": "visual-baseline/2026.09.30.5"
 }

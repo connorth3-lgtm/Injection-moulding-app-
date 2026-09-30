@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import date
 import json, re
 
 ROOT=Path(__file__).resolve().parent
@@ -9,7 +10,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
- 'web_release':'2026.09.30.5',
+ 'web_release':'2026.09.30.6',
  'android_release':'2026.08.26.2',
  'desktop_release':'2026.09.29.1',
  'content_version':'2026.08.26.1',
@@ -20,9 +21,13 @@ expected={
  'windows_recovery_release':'2026.08.21.1',
 }
 for k,v in expected.items(): need(V.get(k)==v,f'version.json {k} drift: {V.get(k)!r} != {v!r}')
-need(V.get('published')=='2026-09-29','version.json published UTC date drift')
+published=str(V.get('published') or '')
+need(re.fullmatch(r'\d{4}-\d{2}-\d{2}',published) is not None,'version.json published must use YYYY-MM-DD')
+published_date=date.fromisoformat(published)
+release_family_date=date.fromisoformat('.'.join(V['web_release'].split('.')[:3]).replace('.','-'))
+need((release_family_date-published_date).days in (0,1),'version.json published UTC date must match the Auckland release-family date or the immediately preceding UTC date')
 need(V.get('published_timezone')=='UTC','version.json must explicitly define the published date timezone')
-need(V.get('published_date_basis')=='protected-main publication date; web_release date component is the Pacific/Auckland release-family date','version.json publication/release-family date semantics are ambiguous')
+need(V.get('published_date_basis')=='governed web-release publication date in UTC; web_release date component is the Pacific/Auckland release-family date','version.json publication/release-family date semantics are ambiguous')
 
 new2=text('docs/NEW2_MATERIAL_INTELLIGENCE.md')
 for marker in [
@@ -157,5 +162,19 @@ for marker in ["'./privacy.html'","'./support.html'","'./src/domains/runtime-pac
 
 for name in ['README.md','ANDROID_INSTALL_README.txt','support.html','UPLOAD_README.txt']:
     t=text(name);need('2026.08.23.10' not in t and '2026.08.23.5' not in t,f'stale August 23 release identifier remains in {name}')
+
+
+pwa_shell=text('pwa-shell.js')
+need('Android release ${RELEASE}' not in pwa_shell,'PWA shell must not relabel the independent Android lane with the web release')
+need('data-mm-android-pwa' not in pwa_shell,'retired Android/web label coupling must not return')
+
+visual=json.loads(text('qa/visual-regression-baseline.json'))
+need(re.fullmatch(r'[0-9a-f]{40}',str(visual.get('commit') or '')) is not None,'visual baseline commit must be an exact SHA')
+need(visual.get('ref')==f"visual-baseline/{visual.get('release')}",'visual baseline must use the release-named retained ref')
+mobile_workflow=text('.github/workflows/mobile-browser-qa.yml')
+for marker in ['BASELINE_REF','refs/heads/$BASELINE_REF','FETCHED_BASELINE_SHA','Visual baseline ref drifted']:
+    need(marker in mobile_workflow,f'mobile visual baseline retention guard missing: {marker}')
+prune_workflow=text('.github/workflows/prune-merged-branches.yml')
+need('visual-baseline/*' in prune_workflow,'merged-branch pruning must explicitly preserve visual baseline refs')
 
 print('MouldMaster release/documentation coherence QA passed')
