@@ -96,14 +96,24 @@ jobs:
           npx playwright install --with-deps chromium firefox webkit
       - name: Prepare approved visual baseline
         run: |
-          BASELINE_SHA="$(python - <<'PY'
+          readarray -t BASELINE_META < <(python - <<'PY'
           import json
-          print(json.load(open('qa/visual-regression-baseline.json', encoding='utf-8'))['commit'])
+          data=json.load(open('qa/visual-regression-baseline.json', encoding='utf-8'))
+          print(data['commit'])
+          print(data['ref'])
           PY
-          )"
+          )
+          BASELINE_SHA="${BASELINE_META[0]}"
+          BASELINE_REF="${BASELINE_META[1]}"
           test -n "$BASELINE_SHA"
+          test -n "$BASELINE_REF"
           test "$BASELINE_SHA" != "${{ github.sha }}"
-          git fetch --no-tags --depth=1 origin "$BASELINE_SHA"
+          git fetch --no-tags --depth=1 origin "refs/heads/$BASELINE_REF"
+          FETCHED_BASELINE_SHA="$(git rev-parse FETCH_HEAD)"
+          if [ "$FETCHED_BASELINE_SHA" != "$BASELINE_SHA" ]; then
+            echo "::error::Visual baseline ref drifted: $BASELINE_REF expected $BASELINE_SHA but resolved $FETCHED_BASELINE_SHA"
+            exit 1
+          fi
           rm -rf /tmp/mm-visual-baseline
           git worktree add --detach /tmp/mm-visual-baseline "$BASELINE_SHA"
       - name: Start candidate and baseline MouldMaster servers

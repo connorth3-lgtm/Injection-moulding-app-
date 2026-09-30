@@ -176,6 +176,10 @@ def main() -> None:
     require(STATUS.read_text(encoding="utf-8") == rendered, "HEALTH_STATUS.md is stale")
     for state in ["**OK**", "**DEGRADED**", "**BLOCKED / HOLD**", "**FAILED / STUCK**"]:
         require(state in rendered, f"generated health surface is missing state {state}")
+    require("## Historical control baseline" in rendered, "health status must label retained PR #373 evidence as historical")
+    require("Historical protected PR evidence" in rendered, "health status historical PR evidence label missing")
+    require("## Current release contract" in rendered, "health status current-release contract section missing")
+    require("## Current baseline" not in rendered, "health status must not present historical PR evidence as the current baseline")
 
     governance_qa = (ROOT / "qa_governance_orphan_detection.py").read_text(encoding="utf-8")
     require("orphan" in governance_qa.lower() and "hold" in governance_qa.lower(), "canonical stuck/orphan HOLD distinction missing")

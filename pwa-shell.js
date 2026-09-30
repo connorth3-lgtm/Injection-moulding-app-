@@ -1,7 +1,7 @@
 /* MouldMaster PWA shell controller — 2026.09.06 */
 (function(){
 'use strict';
-const RELEASE='2026.09.30.5';
+const RELEASE='2026.09.30.6';
 const CONTENT='2026.08.26.1';
 const REFERENCE_DATA_URL='./reference-data.html';
 function setText(el,value){if(el&&el.textContent!==value)el.textContent=value}
@@ -18,8 +18,6 @@ function displayContext(){
     :{version:RELEASE,mode:standalone?'Installed PWA':'Browser',title:standalone?'Installed app updates':'Browser app updates',detail:standalone?'The installed PWA refreshes app files when online and keeps a verified offline copy.':'Browser mode uses the same verified same-origin service worker/cache as an installed PWA, so opening a normal tab never removes the installed offline copy.'};
 }
 function syncLabels(){
-  const copy=`Android release ${RELEASE}. Training content ${CONTENT}. Learner progress, notes, scores and certificates remain in this browser profile during app updates.`;
-  document.querySelectorAll('[data-mm-android-pwa] .tiny.muted').forEach(p=>{if(/Android release/i.test(p.textContent||''))setText(p,copy)});
   const meta=document.querySelector('meta[name="mm-shell-release"]');if(meta)setAttr(meta,'content',RELEASE);
 }
 function sourceReviewDisplayDate(){

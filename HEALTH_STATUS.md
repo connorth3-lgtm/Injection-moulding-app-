@@ -1,8 +1,8 @@
 # MouldMaster health status
 
-Baseline review: **2026-09-18**  
-Source commit: `3e020626205ebdb3c62a155105b6bfb91b8e70df`  
-Current learner-facing web release: **2026.09.30.5**
+Historical health-control review: **2026-09-18**  
+Historical source commit: `3e020626205ebdb3c62a155105b6bfb91b8e70df`  
+Current learner-facing web release: **2026.09.30.6**
 
 This file is generated from `data/health-program-v1.json`. It reports engineering/operations health separately from deliberate external-validation HOLDs.
 
@@ -17,13 +17,18 @@ This file is generated from `data/health-program-v1.json`. It reports engineerin
 
 Current repository engineering baseline: **OK**. Current external-validation boundary: **BLOCKED / HOLD**.
 
-## Current baseline
+## Historical control baseline
 
-- Protected PR evidence: PR #373 — 16 PR-triggered workflows — **SUCCESS**.
-- External validation: **HOLD**. This is a governed evidence boundary, not a software defect.
+- Historical protected PR evidence: PR #373 — 16 PR-triggered workflows — **SUCCESS**.
+- External validation at that review: **HOLD**. This remains a governed evidence boundary, not a software defect.
 - Platform-admin immutable-release work: issue **#278** remains external to repository source changes.
-- Canonical governance orphan/stuck detection: required by protected health/deep-audit QA.
-- Backup/restore drill: deterministic synthetic drill required by protected health QA.
+- Canonical governance orphan/stuck detection and backup/restore drills remain required controls inherited from this baseline.
+
+## Current release contract
+
+- Current learner-facing web release: **2026.09.30.6**.
+- Current release promotion is governed by the declared fast/deep CI tiers and exact-head protected workflows; the historical PR count above is not presented as current-release evidence.
+- Current external-validation boundary: **HOLD** until genuine release-bound human/device/platform evidence satisfies the governed exit conditions.
 
 ## Indicators
 
