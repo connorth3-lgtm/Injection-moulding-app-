@@ -72,6 +72,7 @@ def main() -> int:
             "qa_book_manifest.py",
             "qa_book_authored.py",
             "qa_book_materials_machine.py",
+            "qa_book_material_grade_atlas.py",
             "qa_book_complete_draft.py",
             "qa_book_claim_coverage.py",
             "qa_book_derived_governance.py",
