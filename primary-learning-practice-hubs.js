@@ -344,7 +344,8 @@ window.MM_APP_SHELL?.events?.onRender?.('dashboard',()=>requestAnimationFrame(si
 
 function configureMore(){
   const items=window.MM_APP_SHELL?.navigation?.items;
-  if(items?.forEach)items.forEach((item,id)=>{item.mobileMore=id!=='materials-page'});
+  const practiceOwned=new Set(['mould-master','diagnostic-labs','process-data','material-labs']);
+  if(items?.forEach)items.forEach((item,id)=>{item.mobileMore=id!=='materials-page'&&!practiceOwned.has(id)});
 }
 function pruneMore(){
   const modal=document.getElementById('modal');if(!modal)return;
