@@ -174,8 +174,8 @@
   }
 }
 
-/* Canonical Home hierarchy — 2026.09.30.8
-   This is the sole owner of Workbench presentation. Today's focus stays first;
+/* Canonical Home hierarchy — 2026.09.30.8 */
+/* Sole Workbench presentation owner. Today's focus stays first;
    the Workbench remains a secondary, single-column outer surface at every width. */
 #dashboard .mm-today-focus{margin-bottom:12px!important}
 #dashboard .mm-home-balance{
