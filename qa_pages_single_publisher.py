@@ -167,7 +167,9 @@ with tempfile.TemporaryDirectory() as tmp:
     index = (target / "index.html").read_text(encoding="utf-8")
     worker = (target / "service-worker.js").read_text(encoding="utf-8")
     need('data-mm-release-hold-migration="true"' in index, "release-hold root must register the migration worker")
-    need(index.count("<script") == 1 and "<script src=" not in index.lower(), "release-hold root may contain only one inline migration registration")
+    need('data-mm-preview-autoforward="true"' in index, "release-hold root must auto-forward normal browser visits to /preview/")
+    need("location.replace(preview.href)" in index, "release-hold root preview forwarding must use location.replace")
+    need(index.count("<script") == 1 and "<script src=" not in index.lower(), "release-hold root may contain only one inline migration/preview-forward bootstrap")
     for marker in (
         "MouldMaster release-hold migration worker",
         "./preview/",
@@ -184,6 +186,7 @@ for marker in (
     'ALLOWED_FILES = {"index.html", "404.html", "device-validation.html"}',
     'MIGRATION_FILE = "service-worker.js"',
     'MIGRATION_REGISTER_MARKER = \'data-mm-release-hold-migration="true"\'',
+    'PREVIEW_FORWARD_MARKER = \'data-mm-preview-autoforward="true"\'',
     'MIGRATION_WORKER_MARKER = "MouldMaster release-hold migration worker"',
     "validate_migration_worker(worker_payload)",
     'HELPER_MARKER = \'data-mm-device-metadata-helper="true"\'',
@@ -215,5 +218,5 @@ for marker in ("--convergence-attempts", "--convergence-delay", "FORBIDDEN_PROBE
 print(
     "MouldMaster Pages single-publisher QA passed (workflow-only source, successful legacy-deploy detection, "
     "earliest-start guard, preview-only main publication, minimal base hold plus stale-root-PWA migration with /preview/ staged, "
-    "local-only metadata helper, and live 404 verification)"
+    "root-to-preview Home forwarding, local-only metadata helper, and live 404 verification)"
 )
