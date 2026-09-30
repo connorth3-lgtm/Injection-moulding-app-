@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "release": "2026.09.30.8",
-  "commit": "adf7b89b392531255961beab5e372d6f1b5429b4",
+  "commit": "6a7714474a2c2aec0de0180ac9bfa7c8f997a497",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
