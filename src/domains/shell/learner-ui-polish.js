@@ -37,15 +37,6 @@ function runQuickAction(action){
     }
   }
 }
-function homeEscape(value){
-  return String(value??'').replace(/[&<>"']/g,ch=>{
-    if(ch==='&')return '&amp;';
-    if(ch==='<')return '&lt;';
-    if(ch==='>')return '&gt;';
-    if(ch==='"')return '&quot;';
-    return '&#39;'
-  })
-}
 function homeActivity(){
   const active=typeof user==='object'&&user?user:null,data=typeof D==='object'&&D?D:null;
   const completed=Array.isArray(active?.completed)?active.completed.length:0;
@@ -56,21 +47,57 @@ function homeActivity(){
   return {completed,total,saved,cases:cases.length,recent}
 }
 function homeBalanceMarkup(){
+  return `<div class="mm-home-balance-copy"><div><span class="eyebrow">Workbench</span><h2>Tools & shortcuts</h2><p>Jump to troubleshooting, materials or process evidence without losing your place in learning.</p></div><div class="mm-home-snapshot" aria-label="Your local activity"><span><b data-mm-home-stat="lessons">0/120</b><small>lessons</small></span><span><b data-mm-home-stat="cases">0</b><small>cases</small></span><span><b data-mm-home-stat="saved">0</b><small>saved</small></span></div></div><div class="mm-home-balance-grid"><button type="button" data-mm-home-action="mould-master"><span class="mm-home-balance-icon" aria-hidden="true">◆</span><span><b>Troubleshoot</b><small>Open Mould Master and build an evidence-led case.</small></span></button><button type="button" data-mm-home-action="materials"><span class="mm-home-balance-icon" aria-hidden="true">⬡</span><span><b>Materials</b><small>Search exact grades, evidence and comparisons.</small></span></button><button type="button" data-mm-home-action="process-data"><span class="mm-home-balance-icon" aria-hidden="true">⌁</span><span><b>Analyse data</b><small>Read measured process trends and recovery evidence.</small></span></button><button type="button" data-mm-home-action="practice"><span class="mm-home-balance-icon" aria-hidden="true">◎</span><span><b>Practice</b><small>Work one evidence-first shop-floor decision.</small></span></button></div><div data-mm-home-recent-slot hidden></div><div class="mm-home-link-row"><button type="button" class="ghost" data-mm-home-action="learn">Browse learning</button><button type="button" class="ghost" data-mm-home-action="saved">Saved lessons</button><button type="button" class="ghost" data-mm-home-action="book">Reference book</button></div>`;
+}
+function syncHomeBalanceContent(panel){
   const a=homeActivity();
-  const recent=a.recent?`<button type="button" class="mm-home-recent" data-mm-home-action="recent-case"><span><span class="eyebrow">Recent case</span><b>${homeEscape(a.recent.title||'Untitled troubleshooting case')}</b><small>${homeEscape(a.recent.status||'Investigating')} · continue where you left off</small></span><span aria-hidden="true">→</span></button>`:'';
-  return `<div class="mm-home-balance-copy"><div><span class="eyebrow">Workbench</span><h2>Tools & shortcuts</h2><p>Jump to troubleshooting, materials or process evidence without losing your place in learning.</p></div><div class="mm-home-snapshot" aria-label="Your local activity"><span><b>${a.completed}/${a.total}</b><small>lessons</small></span><span><b>${a.cases}</b><small>cases</small></span><span><b>${a.saved}</b><small>saved</small></span></div></div><div class="mm-home-balance-grid"><button type="button" data-mm-home-action="mould-master"><span class="mm-home-balance-icon" aria-hidden="true">◆</span><span><b>Troubleshoot</b><small>Open Mould Master and build an evidence-led case.</small></span></button><button type="button" data-mm-home-action="materials"><span class="mm-home-balance-icon" aria-hidden="true">⬡</span><span><b>Materials</b><small>Search exact grades, evidence and comparisons.</small></span></button><button type="button" data-mm-home-action="process-data"><span class="mm-home-balance-icon" aria-hidden="true">⌁</span><span><b>Analyse data</b><small>Read measured process trends and recovery evidence.</small></span></button><button type="button" data-mm-home-action="practice"><span class="mm-home-balance-icon" aria-hidden="true">◎</span><span><b>Practice</b><small>Work one evidence-first shop-floor decision.</small></span></button></div>${recent}<div class="mm-home-link-row"><button type="button" class="ghost" data-mm-home-action="learn">Browse learning</button><button type="button" class="ghost" data-mm-home-action="saved">Saved lessons</button><button type="button" class="ghost" data-mm-home-action="book">Reference book</button></div>`;
+  const setStat=(name,value)=>{
+    const el=panel.querySelector(`[data-mm-home-stat="${name}"]`);
+    const next=String(value);
+    if(el&&el.textContent!==next)el.textContent=next;
+  };
+  setStat('lessons',`${a.completed}/${a.total}`);
+  setStat('cases',a.cases);
+  setStat('saved',a.saved);
+
+  const slot=panel.querySelector('[data-mm-home-recent-slot]');
+  if(!slot)return;
+  let button=slot.querySelector('[data-mm-home-action="recent-case"]');
+  if(!a.recent){
+    button?.remove();
+    slot.hidden=true;
+    return;
+  }
+  if(!button){
+    button=document.createElement('button');
+    button.type='button';
+    button.className='mm-home-recent';
+    button.dataset.mmHomeAction='recent-case';
+    button.innerHTML='<span><span class="eyebrow">Recent case</span><b data-mm-home-recent-title></b><small data-mm-home-recent-status></small></span><span aria-hidden="true">→</span>';
+    slot.appendChild(button);
+  }
+  const title=button.querySelector('[data-mm-home-recent-title]');
+  const status=button.querySelector('[data-mm-home-recent-status]');
+  const nextTitle=String(a.recent.title||'Untitled troubleshooting case');
+  const nextStatus=`${String(a.recent.status||'Investigating')} · continue where you left off`;
+  if(title&&title.textContent!==nextTitle)title.textContent=nextTitle;
+  if(status&&status.textContent!==nextStatus)status.textContent=nextStatus;
+  slot.hidden=false;
 }
 function syncHomeBalance(){
   const root=document.getElementById('dashboard');if(!root)return;
   let panel=root.querySelector('[data-mm-home-balance]');
   if(!panel){
-    panel=document.createElement('section');panel.className='card mm-home-balance';panel.dataset.mmHomeBalance=VERSION;
-    panel.setAttribute('aria-label','Moulding workbench');panel.addEventListener('click',event=>{const button=event.target?.closest?.('[data-mm-home-action]');if(button)runQuickAction(button.dataset.mmHomeAction)});
+    panel=document.createElement('section');
+    panel.className='card mm-home-balance';
+    panel.dataset.mmHomeBalance=VERSION;
+    panel.setAttribute('aria-label','Moulding workbench');
+    panel.innerHTML=homeBalanceMarkup();
+    panel.addEventListener('click',event=>{const button=event.target?.closest?.('[data-mm-home-action]');if(button)runQuickAction(button.dataset.mmHomeAction)});
   }
   panel.dataset.mmHomeBalance=VERSION;
-  panel.innerHTML=homeBalanceMarkup();
+  syncHomeBalanceContent(panel);
   const focus=root.querySelector('.mm-today-focus');
-  focus?.querySelector('.mm-home-utility')?.remove();
   const focusSlot=focus?.closest?.('.mm-dashboard-slot'),anchor=focusSlot||focus;
   if(anchor&&panel.previousElementSibling!==anchor)anchor.insertAdjacentElement('afterend',panel);
   else if(!anchor&&!panel.isConnected)root.prepend(panel);
