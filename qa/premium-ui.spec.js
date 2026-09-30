@@ -218,3 +218,74 @@ test('Materials comparison guides valid choices before running evidence work',as
   await expect(page.locator('[data-mm-material-compare-result]')).toHaveAttribute('aria-busy','false');
   await expect(page.locator('[data-mm-material-compare-result] .mm-material-compare-card')).toHaveCount(2);
 });
+
+
+test('390px Home keeps the four primary workbench actions above the fold',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  const actions=page.locator('#dashboard .mm-home-balance-grid button');
+  await expect(actions).toHaveCount(4);
+  const boxes=[];
+  for(let i=0;i<4;i++)boxes.push(await actions.nth(i).boundingBox());
+  expect(Math.max(...boxes.map(x=>(x?.y||0)+(x?.height||0)))).toBeLessThan(700);
+  await expect(page.locator('#dashboard .mm-home-snapshot')).toBeHidden();
+  await assertNoHorizontalOverflow(page,'home-390-primary-actions');
+});
+
+test('mobile Materials keeps search controls sticky and touch sized',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_MATERIAL_REGISTRY?.openPage));
+  await page.evaluate(()=>window.MM_MATERIAL_REGISTRY.openPage({replaceUrl:false}));
+  const filters=page.locator('#mmExactMaterialCatalog .mm-exact-search');
+  await expect(filters).toBeVisible();
+  const style=await filters.evaluate(el=>({position:getComputedStyle(el).position,top:getComputedStyle(el).top}));
+  expect(style.position).toBe('sticky');
+  expect(parseFloat(style.top)).toBeGreaterThanOrEqual(0);
+  for(const control of ['[data-mm-exact-query]','[data-mm-exact-manufacturer]']){
+    const box=await page.locator(control).boundingBox();
+    expect(box?.height||0).toBeGreaterThanOrEqual(44);
+  }
+  await page.locator('[data-mm-exact-results]').evaluate(el=>el.scrollIntoView({block:'end'}));
+  await expect(filters).toBeVisible();
+  await assertNoHorizontalOverflow(page,'materials-sticky-filters');
+});
+
+test('mobile evidence cards wrap long engineering metadata without horizontal overflow',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_ENGINEERING_STORE&&window.MM_MOULD_MASTER_WORKSPACE));
+  await page.evaluate(async()=>{
+    const store=window.MM_ENGINEERING_STORE;
+    const token=store.learnerToken();
+    const c=await store.saveCase({
+      id:'qa-mobile-evidence-density',
+      title:'Long evidence wrapping case',
+      material:'PA66 GF30 very long commercial material identity for mobile wrapping',
+      machine:'IMM-07',
+      mould:'MOULD-184',
+      evidence:'Measured evidence',
+      controlledTest:'Controlled test',
+      verification:'Verified',
+      conclusion:'Conclusion'
+    },{token});
+    await store.saveCaseEvidence(c.id,{
+      kind:'dimensional-check',
+      title:'Cavity 3 critical dimension after controlled verification with long descriptive metadata',
+      occurredAt:new Date().toISOString(),
+      sourceRef:'QC-REPORT-184-03-LONG-REFERENCE',
+      measurement:'25.004',
+      unit:'mm',
+      methodRef:'CMM measurement plan with long controlled inspection method reference',
+      acceptanceStatus:'accepted',
+      acceptanceBasis:'Approved drawing and QA disposition reference with long descriptive authority',
+      result:'Dimension remained within the approved tolerance across the verification sample.'
+    },token);
+    await window.MM_MOULD_MASTER_WORKSPACE.open(c.id);
+  });
+  const row=page.locator('#mmMouldMasterWorkspace .mw-evidence-row').first();
+  await expect(row).toBeVisible();
+  await assertNoHorizontalOverflow(page,'mould-master-evidence-390');
+  const title=await row.locator(':scope > b').first().evaluate(el=>getComputedStyle(el).overflowWrap);
+  expect(['anywhere','break-word']).toContain(title);
+});

@@ -1,11 +1,11 @@
-/* MouldMaster learner UI polish — 2026.09.30.4
+/* MouldMaster learner UI polish — 2026.09.30.5
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.09.30.4';
+const VERSION='2026.09.30.5';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -68,7 +68,9 @@ function syncHomeBalance(){
   }
   panel.innerHTML=homeBalanceMarkup();
   const focus=root.querySelector('.mm-today-focus'),focusSlot=focus?.closest?.('.mm-dashboard-slot'),anchor=focusSlot||focus;
-  if(anchor&&panel.previousElementSibling!==anchor)anchor.insertAdjacentElement('afterend',panel);
+  if(anchor&&!wide()){
+    if(panel.nextElementSibling!==anchor)anchor.insertAdjacentElement('beforebegin',panel)
+  }else if(anchor&&panel.previousElementSibling!==anchor)anchor.insertAdjacentElement('afterend',panel);
   else if(!anchor&&!panel.isConnected)root.prepend(panel);
 }
 

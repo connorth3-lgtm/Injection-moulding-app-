@@ -187,10 +187,13 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       }
       await page.keyboard.press('Enter');
       await expect(page.locator('#modal .modal-card')).toBeVisible();
-      await expect(page.locator('[data-mm-registry-menu="mould-master"]')).toHaveCount(1);
-      await expect(page.locator('[data-mm-registry-menu="process-data"]')).toHaveCount(1);
-      await expect(page.locator('[data-mm-registry-menu="diagnostic-labs"]')).toHaveCount(1);
-      await expect(page.locator('[data-mm-registry-menu="material-labs"]')).toHaveCount(1);
+      await expect(page.locator('[data-mm-registry-menu="mould-master"]')).toHaveCount(0);
+      await expect(page.locator('[data-mm-registry-menu="process-data"]')).toHaveCount(0);
+      await expect(page.locator('[data-mm-registry-menu="diagnostic-labs"]')).toHaveCount(0);
+      await expect(page.locator('[data-mm-registry-menu="material-labs"]')).toHaveCount(0);
+      await expect(page.locator('#modal .quick-action').filter({hasText:'Process simulator'})).toHaveCount(0);
+      await expect(page.locator('#modal .quick-action').filter({hasText:'Defect finder'})).toHaveCount(0);
+      await expect(page.locator('#modal .quick-action').filter({hasText:'Troubleshooting coach'})).toHaveCount(0);
       await expect(page.locator('[data-mm-registry-menu="book"]')).toHaveCount(1);
       await expect(page.locator('[data-mm-registry-menu="learning-insights"]')).toHaveCount(1);
       await expect(page.locator('[data-mm-registry-menu="repair-app-files"]')).toHaveCount(1);

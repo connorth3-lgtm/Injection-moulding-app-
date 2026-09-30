@@ -279,10 +279,10 @@ function installDefaultDashboardSections(){
 }
 function installDefaultNavigation(){
   registerNavigation({id:'book',label:'Book',icon:'▣',description:'Open the governed injection moulding reference.',order:5,group:'progress',desktop:false,mobileGroup:'more',action:()=>window.MMBook?.open?.()});
-  registerNavigation({id:'mould-master',label:'Mould Master',icon:'◆',description:'Build an evidence-led troubleshooting case.',order:10,group:'practice',legacyDataset:'mmMouldMaster',mobileGroup:'practice',action:()=>window.MM_MOULD_MASTER_WORKSPACE?.open?.()});
-  registerNavigation({id:'diagnostic-labs',label:'Diagnostic labs',icon:'⌁',description:'Practise evidence-first troubleshooting.',order:20,group:'practice',legacyDataset:'mmDiagnosticLabs',mobileGroup:'practice',action:()=>window.MM_DIAGNOSTIC_LABS?.open?.()});
-  registerNavigation({id:'process-data',label:'Data diagnosis',icon:'⌁',description:'Read process trends and choose the next evidence check.',order:30,group:'practice',legacyDataset:'mmProcessData',mobileGroup:'practice',action:()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.()});
-  registerNavigation({id:'material-labs',label:'Material labs',icon:'◈',description:'Compare resin-specific behaviour and evidence.',order:40,group:'practice',legacyDataset:'mmMaterialLabs',mobileGroup:'practice',action:()=>window.MM_MATERIAL_BEHAVIOUR_LABS?.open?.()});
+  registerNavigation({id:'mould-master',mobileMore:false,label:'Mould Master',icon:'◆',description:'Build an evidence-led troubleshooting case.',order:10,group:'practice',legacyDataset:'mmMouldMaster',mobileGroup:'practice',action:()=>window.MM_MOULD_MASTER_WORKSPACE?.open?.()});
+  registerNavigation({id:'diagnostic-labs',mobileMore:false,label:'Diagnostic labs',icon:'⌁',description:'Practise evidence-first troubleshooting.',order:20,group:'practice',legacyDataset:'mmDiagnosticLabs',mobileGroup:'practice',action:()=>window.MM_DIAGNOSTIC_LABS?.open?.()});
+  registerNavigation({id:'process-data',mobileMore:false,label:'Data diagnosis',icon:'⌁',description:'Read process trends and choose the next evidence check.',order:30,group:'practice',legacyDataset:'mmProcessData',mobileGroup:'practice',action:()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.()});
+  registerNavigation({id:'material-labs',mobileMore:false,label:'Material labs',icon:'◈',description:'Compare resin-specific behaviour and evidence.',order:40,group:'practice',legacyDataset:'mmMaterialLabs',mobileGroup:'practice',action:()=>window.MM_MATERIAL_BEHAVIOUR_LABS?.open?.()});
   registerNavigation({id:'reference-data',label:'Reference data',icon:'▤',description:'Materials, defects, signals and troubleshooting data.',order:50,group:'progress',desktop:false,mobileGroup:'more',action:()=>location.assign('./reference-data.html')});
   registerNavigation({id:'learning-insights',label:'Learning insights',icon:'◫',description:'See local learning progress and retry trends.',order:60,group:'progress',legacyDataset:'mmLearningInsights',mobileGroup:'more',action:()=>window.MM_LEARNING_ANALYTICS?.open?.()});
   registerNavigation({id:'repair-app-files',label:'Repair app files',icon:'↻',description:'Refresh installed files without deleting learner progress.',order:70,group:'progress',desktop:false,mobileGroup:'more',action:()=>location.hostname==='127.0.0.1'&&/\bElectron\//.test(navigator.userAgent||'')?location.reload():location.assign('./repair.html')})
@@ -303,9 +303,17 @@ function switchViewCanonical(id){
 }
 function openMobileMenuCanonical(){
   const r=captured.openMobileMenu.apply(this,arguments);
-  const modal=document.getElementById('modal'),heading=modal?.querySelector('.modal-card h2');
+  const modal=document.getElementById('modal'),card=modal?.querySelector('.modal-card'),heading=card?.querySelector('h2');
   if(heading)heading.textContent='More';
-  const eyebrow=modal?.querySelector('.modal-card .eyebrow');if(eyebrow)eyebrow.textContent='Tools, progress & settings';
+  const eyebrow=card?.querySelector('.eyebrow');if(eyebrow)eyebrow.textContent='Progress, reference & settings';
+  const grid=card?.querySelector('.grid2');
+  if(grid){
+    [...grid.querySelectorAll(':scope > .quick-action')].forEach(button=>{
+      const handler=button.getAttribute('data-mm-onclick')||button.getAttribute('onclick')||'';
+      if(/switchView\('(simulator|defects|coach)'\)/.test(handler))button.remove()
+    });
+    grid.dataset.mmMoreReduced='1'
+  }
   populateMobileMore();return r
 }
 
