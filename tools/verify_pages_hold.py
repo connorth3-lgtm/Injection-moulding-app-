@@ -2,7 +2,7 @@
 """Verify the live GitHub Pages release-hold boundary.
 
 The root publication remains a production release hold. Verification proves that the
-hold marker is live, the privacy-safe on-device metadata helper is available, the
+hold marker is live, normal browser visits are auto-forwarded to the governed /preview/ learner UI, the privacy-safe on-device metadata helper is available, the
 separate non-production /preview/ learner runtime is internally version-consistent,
 stale installed MouldMaster root-entry PWAs are migrated to that preview without
 capturing helper/unrelated pages, and non-public repository paths remain inaccessible.
@@ -22,6 +22,7 @@ MARKER = 'data-mm-release-hold="true"'
 HELPER_MARKER = 'data-mm-device-metadata-helper="true"'
 PREVIEW_MARKER = 'content="non-production-preview"'
 MIGRATION_REGISTER_MARKER = 'data-mm-release-hold-migration="true"'
+PREVIEW_FORWARD_MARKER = 'data-mm-preview-autoforward="true"'
 MIGRATION_WORKER_MARKER = "MouldMaster release-hold migration worker"
 FORBIDDEN_PATHS = (
     "MouldMasterAcademy.exe",
@@ -62,6 +63,8 @@ def verify_once(base_url: str) -> None:
         raise AssertionError("release-hold root does not expose the non-production preview")
     if MIGRATION_REGISTER_MARKER not in text:
         raise AssertionError("release-hold root does not register the stale-PWA migration worker")
+    if PREVIEW_FORWARD_MARKER not in text or "location.replace(preview.href)" not in text:
+        raise AssertionError("release-hold root does not automatically forward browser visits to the governed preview")
 
     worker_status, worker_body = fetch(urljoin(root, "service-worker.js"))
     worker_text = worker_body.decode("utf-8", errors="replace")
@@ -183,7 +186,7 @@ def main() -> None:
         try:
             verify_once(args.base_url)
             print(
-                "Pages release-hold verification passed: production root remains held, migration is scoped to "
+                "Pages release-hold verification passed: production root remains held while normal root visits auto-forward to /preview/, migration is scoped to "
                 "approved MouldMaster entry paths, the preview release fingerprint is internally consistent, "
                 "the validated preview cache is immutable at runtime, the persistent preview warning is present, "
                 "the local-only device helper is live, and legacy/non-public probes return 404."

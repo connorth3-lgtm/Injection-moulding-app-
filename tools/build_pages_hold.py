@@ -3,8 +3,11 @@
 
 The root publication remains a release hold while production PWA evidence is pending.
 Optionally, the already-built public learner artifact may be copied under /preview/ as
-a clearly separated non-production preview. This does not change production readiness,
-the governed physical-device contract, or the production verifier.
+a clearly separated non-production preview. When that preview exists, the hold-root
+bootstrap immediately forwards normal browser visits into /preview/ after registering
+the migration worker, so the public Home entry does not strand users on the hold page.
+This does not change production readiness, the governed physical-device contract, or
+the production verifier.
 
 When a preview is staged, the hold root also publishes a tiny migration-only service
 worker. Its sole job is to replace an older installed root PWA worker and move stale
@@ -30,17 +33,30 @@ MARKER = 'data-mm-release-hold="true"'
 HELPER_MARKER = 'data-mm-device-metadata-helper="true"'
 PREVIEW_MARKER = 'content="non-production-preview"'
 MIGRATION_REGISTER_MARKER = 'data-mm-release-hold-migration="true"'
+PREVIEW_FORWARD_MARKER = 'data-mm-preview-autoforward="true"'
 MIGRATION_WORKER_MARKER = "MouldMaster release-hold migration worker"
 PREVIEW_REQUIRED = {"index.html", "manifest.webmanifest", "service-worker.js", "version.json"}
 
 
 def migration_registration() -> str:
-    return f"""<script {MIGRATION_REGISTER_MARKER}>
+    return f"""<script {MIGRATION_REGISTER_MARKER} {PREVIEW_FORWARD_MARKER}>
 (function(){{
-  if(!('serviceWorker' in navigator))return;
+  const preview=new URL('./preview/',location.href);
+  let moved=false;
+  function openPreview(){{
+    if(moved)return;
+    moved=true;
+    location.replace(preview.href);
+  }}
+  const fallback=setTimeout(openPreview,1200);
+  if(!('serviceWorker' in navigator)){{
+    clearTimeout(fallback);
+    openPreview();
+    return;
+  }}
   navigator.serviceWorker.register('./service-worker.js',{{scope:'./'}})
     .then(function(reg){{return reg.update();}})
-    .catch(function(){{}});
+    .then(function(){{clearTimeout(fallback);openPreview();}},function(){{clearTimeout(fallback);openPreview();}});
 }})();
 </script>"""
 
@@ -110,7 +126,7 @@ def document(*, not_found: bool = False, preview_available: bool = False) -> str
     migration = migration_registration() if (preview_available and not not_found) else ""
     boundary = (
         "No learner application runtime is served from this root release-hold page. "
-        "The separate /preview/ path is non-production and does not satisfy or bypass the production validation gate."
+        "Browser visits are forwarded to the separate /preview/ path, which remains non-production and does not satisfy or bypass the production validation gate."
         if preview_available and not not_found
         else "No learner application runtime, assessment content, repository tooling or legacy distribution files are served from this Pages publication."
     )
@@ -236,8 +252,8 @@ def build(target: Path, preview_source: Path | None = None) -> set[str]:
             raise SystemExit("release-hold 404 document must remain script-free")
         if name == "index.html":
             if preview_available:
-                if payload.count("<script") != 1 or MIGRATION_REGISTER_MARKER not in payload or "<script src=" in lowered:
-                    raise SystemExit("release-hold root may contain only the inline stale-PWA migration registration")
+                if payload.count("<script") != 1 or MIGRATION_REGISTER_MARKER not in payload or PREVIEW_FORWARD_MARKER not in payload or "<script src=" in lowered:
+                    raise SystemExit("release-hold root may contain only the inline stale-PWA migration/preview-forward bootstrap")
                 if "mouldmaster_core_app" in lowered or "manifest.webmanifest" in lowered:
                     raise SystemExit("release-hold root must not load learner runtime assets")
             elif "<script" in lowered:
