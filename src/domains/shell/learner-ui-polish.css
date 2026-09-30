@@ -174,99 +174,227 @@
   }
 }
 
-/* Canonical Home hierarchy — 2026.09.30.8 */
-/* Sole Workbench presentation owner. Today's focus stays first;
-   the Workbench remains a secondary, single-column outer surface at every width. */
-#dashboard .mm-today-focus{margin-bottom:12px!important}
+/* Canonical Home hierarchy — 2026.09.30.9 */
+/* Home has one job: resume learning. Specialist tools remain available without
+   duplicating Learn, Materials, Practice, Saved lessons or Book navigation. */
+#dashboard{
+  width:min(100%,960px)!important;
+  margin-inline:auto!important;
+}
+#dashboard .mm-today-focus{
+  margin:0 0 18px!important;
+  padding:24px 26px!important;
+  gap:24px!important;
+  border:1px solid rgba(95,224,198,.24)!important;
+  border-radius:22px!important;
+  background:linear-gradient(145deg,rgba(17,48,62,.98),rgba(13,32,48,.98))!important;
+  box-shadow:0 14px 36px rgba(0,0,0,.16)!important;
+}
+#dashboard .mm-today-focus .eyebrow{color:#8fe8d6!important}
+#dashboard .mm-today-focus h2{
+  margin:5px 0 7px!important;
+  font-size:clamp(27px,3.3vw,36px)!important;
+  line-height:1.08!important;
+  letter-spacing:-.035em!important;
+}
+#dashboard .mm-today-focus p{
+  max-width:680px!important;
+  margin:0!important;
+  color:#b8cadb!important;
+  font-size:14px!important;
+  line-height:1.52!important;
+}
+#dashboard .mm-today-meta{margin-top:13px!important;gap:7px!important}
+#dashboard .mm-today-meta .pill{
+  min-height:28px!important;
+  padding:5px 9px!important;
+  border-color:rgba(142,184,216,.18)!important;
+  background:rgba(6,18,30,.32)!important;
+  font-size:11px!important;
+}
+#dashboard .mm-today-focus>button{
+  min-width:190px!important;
+  min-height:50px!important;
+  align-self:center!important;
+  border-radius:13px!important;
+  font-size:14px!important;
+  font-weight:850!important;
+}
+
 #dashboard .mm-home-balance{
   display:grid!important;
   grid-template-columns:1fr!important;
-  gap:11px!important;
-  align-items:stretch!important;
+  gap:10px!important;
   min-width:0!important;
   max-width:100%!important;
-  margin:0 0 16px!important;
-  padding:14px!important;
-  border:1px solid rgba(126,169,204,.14)!important;
-  border-radius:18px!important;
-  background:rgba(8,20,33,.58)!important;
+  margin:0!important;
+  padding:0 2px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
   box-shadow:none!important;
 }
-#dashboard .mm-home-balance *,
-#dashboard .mm-home-balance-grid,
-#dashboard .mm-home-link-row,
-#dashboard .mm-home-snapshot{min-width:0!important;max-width:100%}
-#dashboard .mm-home-balance button,
-#dashboard .mm-home-balance b,
-#dashboard .mm-home-balance small,
-#dashboard .mm-home-balance p{overflow-wrap:anywhere;word-break:normal}
 #dashboard .mm-home-balance-copy{
+  display:grid!important;
+  grid-template-columns:auto 1fr!important;
+  align-items:baseline!important;
+  column-gap:10px!important;
+  row-gap:2px!important;
+  padding:0 2px!important;
+}
+#dashboard .mm-home-balance-copy .eyebrow{
+  grid-column:1/-1!important;
+  color:#7f95aa!important;
+  font-size:9px!important;
+}
+#dashboard .mm-home-balance-copy h2{
+  margin:0!important;
+  font-size:16px!important;
+  line-height:1.25!important;
+  letter-spacing:-.01em!important;
+}
+#dashboard .mm-home-balance-copy p{
+  margin:0!important;
+  color:#7f95aa!important;
+  font-size:11px!important;
+  line-height:1.4!important;
+}
+#dashboard .mm-home-balance-grid{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:9px!important;
+}
+#dashboard .mm-home-balance-grid button{
+  min-width:0!important;
+  min-height:72px!important;
+  padding:11px 12px!important;
+  border:1px solid rgba(126,169,204,.14)!important;
+  border-radius:14px!important;
+  background:rgba(12,27,43,.68)!important;
+  color:#eef6ff!important;
+  display:grid!important;
+  grid-template-columns:auto minmax(0,1fr) auto!important;
+  align-items:center!important;
+  gap:10px!important;
+  text-align:left!important;
+  box-shadow:none!important;
+}
+#dashboard .mm-home-balance-grid button:hover,
+#dashboard .mm-home-balance-grid button:focus-visible{
+  border-color:rgba(95,224,198,.34)!important;
+  background:rgba(17,38,57,.92)!important;
+  transform:none!important;
+}
+#dashboard .mm-home-balance-icon{
+  display:grid!important;
+  place-items:center!important;
+  width:34px!important;
+  height:34px!important;
+  border-radius:10px!important;
+  background:#173149!important;
+  color:#9fd7ff!important;
+  font-size:17px!important;
+  font-weight:900!important;
+}
+#dashboard .mm-home-balance-grid b{
+  display:block!important;
+  font-size:14px!important;
+  line-height:1.25!important;
+}
+#dashboard .mm-home-balance-grid small{
+  display:block!important;
+  margin-top:3px!important;
+  color:#93a8bb!important;
+  font-size:11px!important;
+  line-height:1.35!important;
+}
+#dashboard .mm-home-action-arrow{
+  color:#8fe8d6!important;
+  font-size:16px!important;
+}
+#dashboard .mm-home-recent{
+  width:100%!important;
+  min-height:50px!important;
+  padding:9px 11px!important;
+  border:1px solid rgba(126,169,204,.13)!important;
+  border-radius:12px!important;
+  background:rgba(9,22,36,.58)!important;
+  color:#eaf4ff!important;
   display:flex!important;
   align-items:center!important;
   justify-content:space-between!important;
-  gap:16px!important;
-  padding:0!important;
-}
-#dashboard .mm-home-balance-copy>div:first-child{min-width:0}
-#dashboard .mm-home-balance-copy h2{font-size:18px!important;margin:2px 0 3px!important;letter-spacing:-.025em}
-#dashboard .mm-home-balance-copy p{max-width:720px!important;margin:0!important;color:#8fa4b8!important;font-size:12px!important;line-height:1.42!important}
-#dashboard .mm-home-snapshot{display:flex;gap:7px;flex:0 0 auto}
-#dashboard .mm-home-snapshot>span{min-width:64px;padding:8px 9px;border:1px solid rgba(127,169,204,.16);border-radius:11px;background:rgba(8,20,33,.5);text-align:center}
-#dashboard .mm-home-snapshot b{display:block;font-size:15px;letter-spacing:-.02em}
-#dashboard .mm-home-snapshot small{display:block;margin-top:2px;color:#8297aa;font-size:9px;text-transform:uppercase;letter-spacing:.08em}
-#dashboard .mm-home-balance-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important}
-#dashboard .mm-home-balance-grid button{
-  min-height:76px!important;
-  padding:11px!important;
-  border:1px solid rgba(126,169,204,.14)!important;
-  border-radius:12px!important;
-  background:rgba(14,31,48,.72)!important;
-  color:var(--mm-text-strong,#eef6ff)!important;
-  box-shadow:none!important;
-  display:grid!important;
-  grid-template-columns:auto 1fr!important;
-  align-items:center!important;
-  column-gap:10px!important;
+  gap:12px!important;
   text-align:left!important;
 }
-#dashboard .mm-home-balance-grid button:first-child{border-color:rgba(95,224,198,.30)!important;background:linear-gradient(180deg,rgba(18,52,59,.88),rgba(12,32,40,.92))!important}
-#dashboard .mm-home-balance-grid button:hover,
-#dashboard .mm-home-balance-grid button:focus-visible{background:rgba(20,43,64,.92)!important;border-color:rgba(95,224,198,.30)!important;transform:none!important}
-#dashboard .mm-home-balance-grid .mm-home-balance-icon{grid-row:1/span 2;display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:#183149;color:#9fd7ff;font-size:17px;font-weight:900}
-#dashboard .mm-home-balance-grid b{display:block;font-size:13px!important;line-height:1.25}
-#dashboard .mm-home-balance-grid small{display:block;margin-top:2px!important;color:var(--mm-text-muted,#9fb2c6);font-size:10px!important;line-height:1.4}
-#dashboard .mm-home-recent{width:100%;min-height:58px;padding:10px 12px;border:1px solid rgba(126,169,204,.15);border-radius:12px;background:rgba(11,27,43,.6);color:#eaf4ff;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left}
 #dashboard .mm-home-recent b,
-#dashboard .mm-home-recent small{display:block}
-#dashboard .mm-home-recent b{margin:2px 0 3px;font-size:13px}
-#dashboard .mm-home-recent small{color:#91a6ba;font-size:10px}
-#dashboard .mm-home-link-row{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-start!important}
-#dashboard .mm-home-link-row button{min-width:0!important;min-height:38px!important;padding:7px 10px!important;font-size:11px!important}
+#dashboard .mm-home-recent small{display:block!important}
+#dashboard .mm-home-recent b{margin:2px 0 2px!important;font-size:13px!important}
+#dashboard .mm-home-recent small{color:#91a6ba!important;font-size:11px!important}
 
-@media(max-width:900px){
-  #dashboard .mm-home-balance-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-  #dashboard .mm-home-balance-grid button{min-height:72px!important}
-}
 @media(max-width:700px){
-  #dashboard .mm-today-focus{padding:16px!important;margin-bottom:10px!important}
-  #dashboard .mm-today-focus h2{font-size:22px!important}
-  #dashboard .mm-home-balance{padding:10px!important;gap:8px!important;margin-bottom:10px!important}
-  #dashboard .mm-home-balance-copy{display:grid!important;align-items:start!important;gap:5px!important}
+  #dashboard{width:100%!important}
+  #dashboard .mm-today-focus{
+    padding:18px!important;
+    gap:14px!important;
+    margin-bottom:15px!important;
+    border-radius:18px!important;
+    box-shadow:none!important;
+  }
+  #dashboard .mm-today-focus h2{font-size:25px!important}
+  #dashboard .mm-today-focus p{font-size:13px!important;line-height:1.45!important}
+  #dashboard .mm-today-meta{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:5px!important;
+  }
+  #dashboard .mm-today-meta .pill{
+    min-width:0!important;
+    padding:5px 4px!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+    text-align:center!important;
+    font-size:10px!important;
+  }
+  #dashboard .mm-today-focus>button{
+    width:100%!important;
+    min-width:0!important;
+    min-height:48px!important;
+  }
+  #dashboard .mm-home-balance{gap:8px!important}
+  #dashboard .mm-home-balance-copy{
+    grid-template-columns:1fr!important;
+    gap:1px!important;
+    padding:0 2px!important;
+  }
   #dashboard .mm-home-balance-copy .eyebrow,
-  #dashboard .mm-home-balance-copy p,
-  #dashboard .mm-home-snapshot{display:none!important}
-  #dashboard .mm-home-balance-copy h2{margin:0!important;font-size:15px!important;line-height:1.2!important}
-  #dashboard .mm-home-balance-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important}
-  #dashboard .mm-home-balance-grid button{min-height:58px!important;padding:7px 8px!important;column-gap:8px!important}
-  #dashboard .mm-home-balance-grid button small{display:none!important}
-  #dashboard .mm-home-balance-grid .mm-home-balance-icon{width:26px;height:26px;font-size:14px}
-  #dashboard .mm-home-balance-grid b{font-size:11px!important}
-  #dashboard .mm-home-recent{min-height:48px!important;padding:8px 9px!important}
-  #dashboard .mm-home-recent small{display:none!important}
-  #dashboard .mm-home-link-row{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
-  #dashboard .mm-home-link-row button{min-height:34px!important;padding:5px 6px!important;font-size:9px!important}
+  #dashboard .mm-home-balance-copy p{display:none!important}
+  #dashboard .mm-home-balance-copy h2{font-size:14px!important}
+  #dashboard .mm-home-balance-grid{gap:7px!important}
+  #dashboard .mm-home-balance-grid button{
+    min-height:58px!important;
+    padding:8px 9px!important;
+    grid-template-columns:auto minmax(0,1fr)!important;
+    gap:8px!important;
+  }
+  #dashboard .mm-home-balance-icon{
+    width:28px!important;
+    height:28px!important;
+    font-size:14px!important;
+  }
+  #dashboard .mm-home-balance-grid b{font-size:12px!important}
+  #dashboard .mm-home-balance-grid small,
+  #dashboard .mm-home-action-arrow{display:none!important}
+  #dashboard .mm-home-recent{min-height:46px!important}
+}
+@media(max-width:360px){
+  #dashboard .mm-today-focus{padding:16px!important}
+  #dashboard .mm-today-focus h2{font-size:23px!important}
+  #dashboard .mm-today-meta .pill:nth-child(2){display:none!important}
+  #dashboard .mm-today-meta{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 }
 @media(forced-colors:active){
+  #dashboard .mm-today-focus,
   #dashboard .mm-home-balance-grid button,
   #dashboard .mm-home-balance-icon{border:1px solid ButtonText!important;background:Canvas!important;color:CanvasText!important}
 }
