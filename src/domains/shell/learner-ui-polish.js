@@ -30,6 +30,7 @@ function runQuickAction(action){
     case 'mould-master': return safe(()=>window.MM_MOULD_MASTER_WORKSPACE?.open?.()||window.switchView?.('defects'));
     case 'process-data': return safe(()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.());
     case 'learn': return safe(()=>window.switchView?.('path'));
+    case 'saved': return safe(()=>window.switchView?.('profile'));
     case 'recent-case': {
       const row=window.MM_MOULD_MASTER_WORKSPACE?.cases?.()?.[0];
       return safe(()=>row?window.MM_MOULD_MASTER_WORKSPACE?.open?.(row.id):window.MM_MOULD_MASTER_WORKSPACE?.open?.());
@@ -57,7 +58,7 @@ function homeActivity(){
 function homeBalanceMarkup(){
   const a=homeActivity();
   const recent=a.recent?`<button type="button" class="mm-home-recent" data-mm-home-action="recent-case"><span><span class="eyebrow">Recent case</span><b>${homeEscape(a.recent.title||'Untitled troubleshooting case')}</b><small>${homeEscape(a.recent.status||'Investigating')} · continue where you left off</small></span><span aria-hidden="true">→</span></button>`:'';
-  return `<div class="mm-home-balance-copy"><div><span class="eyebrow">Workbench</span><h2>What do you need to do?</h2><p>Continue learning, investigate a problem, check a material or work with process evidence.</p></div><div class="mm-home-snapshot" aria-label="Your local activity"><span><b>${a.completed}/${a.total}</b><small>lessons</small></span><span><b>${a.cases}</b><small>cases</small></span><span><b>${a.saved}</b><small>saved</small></span></div></div><div class="mm-home-balance-grid"><button type="button" data-mm-home-action="mould-master"><span class="mm-home-balance-icon" aria-hidden="true">◆</span><span><b>Troubleshoot</b><small>Open Mould Master and build an evidence-led case.</small></span></button><button type="button" data-mm-home-action="materials"><span class="mm-home-balance-icon" aria-hidden="true">⬡</span><span><b>Materials</b><small>Search exact grades, evidence and comparisons.</small></span></button><button type="button" data-mm-home-action="process-data"><span class="mm-home-balance-icon" aria-hidden="true">⌁</span><span><b>Analyse data</b><small>Read measured process trends and recovery evidence.</small></span></button><button type="button" data-mm-home-action="practice"><span class="mm-home-balance-icon" aria-hidden="true">◎</span><span><b>Practice</b><small>Work one evidence-first shop-floor decision.</small></span></button></div>${recent}<div class="mm-home-link-row"><button type="button" class="ghost" data-mm-home-action="learn">Browse learning</button><button type="button" class="ghost" data-mm-home-action="book">Open reference book</button></div>`;
+  return `<div class="mm-home-balance-copy"><div><span class="eyebrow">Workbench</span><h2>Tools & shortcuts</h2><p>Jump to troubleshooting, materials or process evidence without losing your place in learning.</p></div><div class="mm-home-snapshot" aria-label="Your local activity"><span><b>${a.completed}/${a.total}</b><small>lessons</small></span><span><b>${a.cases}</b><small>cases</small></span><span><b>${a.saved}</b><small>saved</small></span></div></div><div class="mm-home-balance-grid"><button type="button" data-mm-home-action="mould-master"><span class="mm-home-balance-icon" aria-hidden="true">◆</span><span><b>Troubleshoot</b><small>Open Mould Master and build an evidence-led case.</small></span></button><button type="button" data-mm-home-action="materials"><span class="mm-home-balance-icon" aria-hidden="true">⬡</span><span><b>Materials</b><small>Search exact grades, evidence and comparisons.</small></span></button><button type="button" data-mm-home-action="process-data"><span class="mm-home-balance-icon" aria-hidden="true">⌁</span><span><b>Analyse data</b><small>Read measured process trends and recovery evidence.</small></span></button><button type="button" data-mm-home-action="practice"><span class="mm-home-balance-icon" aria-hidden="true">◎</span><span><b>Practice</b><small>Work one evidence-first shop-floor decision.</small></span></button></div>${recent}<div class="mm-home-link-row"><button type="button" class="ghost" data-mm-home-action="learn">Browse learning</button><button type="button" class="ghost" data-mm-home-action="saved">Saved lessons</button><button type="button" class="ghost" data-mm-home-action="book">Reference book</button></div>`;
 }
 function syncHomeBalance(){
   const root=document.getElementById('dashboard');if(!root)return;
@@ -66,11 +67,12 @@ function syncHomeBalance(){
     panel=document.createElement('section');panel.className='card mm-home-balance';panel.dataset.mmHomeBalance=VERSION;
     panel.setAttribute('aria-label','Moulding workbench');panel.addEventListener('click',event=>{const button=event.target?.closest?.('[data-mm-home-action]');if(button)runQuickAction(button.dataset.mmHomeAction)});
   }
+  panel.dataset.mmHomeBalance=VERSION;
   panel.innerHTML=homeBalanceMarkup();
-  const focus=root.querySelector('.mm-today-focus'),focusSlot=focus?.closest?.('.mm-dashboard-slot'),anchor=focusSlot||focus;
-  if(anchor&&!wide()){
-    if(panel.nextElementSibling!==anchor)anchor.insertAdjacentElement('beforebegin',panel)
-  }else if(anchor&&panel.previousElementSibling!==anchor)anchor.insertAdjacentElement('afterend',panel);
+  const focus=root.querySelector('.mm-today-focus');
+  focus?.querySelector('.mm-home-utility')?.remove();
+  const focusSlot=focus?.closest?.('.mm-dashboard-slot'),anchor=focusSlot||focus;
+  if(anchor&&panel.previousElementSibling!==anchor)anchor.insertAdjacentElement('afterend',panel);
   else if(!anchor&&!panel.isConnected)root.prepend(panel);
 }
 
