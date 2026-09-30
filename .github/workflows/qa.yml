@@ -58,6 +58,7 @@ jobs:
           python qa_book_manifest.py
           python qa_book_authored.py
           python qa_book_materials_machine.py
+          python qa_book_material_grade_atlas.py
           python qa_book_complete_draft.py
           python qa_book_claim_coverage.py
           python qa_book_derived_governance.py
