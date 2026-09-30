@@ -6,6 +6,8 @@ async function seed(page){
     const user={id:'material-scale-qa',name:'Material Scale QA',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
     localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:'material-scale-qa',users:{'material-scale-qa':user}}));
   });
+}
+async function installScaleCatalog(page){
   await page.route('**/material-catalog-v1.json',async route=>{
     const response=await route.fetch();
     const original=await response.json();
@@ -29,9 +31,11 @@ async function seed(page){
 
 async function openMaterials(page){
   await seed(page);
+  await installScaleCatalog(page);
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>(typeof window.MM_APP_SHELL_FINALIZED==='string'&&window.MM_APP_SHELL_FINALIZED.length>0)&&window.MM_MATERIAL_REGISTRY&&window.MM_MATERIAL_SEARCH&&window.MM_MATERIAL_SEARCH_PAGINATION&&window.MM_PRIMARY_HUBS);
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
+  await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
   await page.locator('.mobile-nav > button').filter({hasText:'Materials'}).click();
   await expect(page.locator('#mmExactMaterialCatalog')).toHaveCount(1);
   await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
