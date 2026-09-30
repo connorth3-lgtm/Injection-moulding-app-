@@ -37,5 +37,6 @@ The remediation specifically checks for coverage of mould/feed-system/cooling/ej
 
 - Published Book claims still follow the governed source hierarchy and exact-byte authorization.
 - A learning-science citation justifies an instructional design choice; it does not validate MouldMaster learner outcomes.
+- Synthetic, automated or developer-generated activity may test software behavior, but it does not count as learner-outcome, psychometric-validity or competence evidence.
 - Real learner effectiveness, psychometric validity, independent Book SME approval and practical competence remain external evidence gates.
 - No study-specific injection-moulding values are converted into universal production settings.
