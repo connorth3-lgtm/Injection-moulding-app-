@@ -30,22 +30,9 @@ markers=[
     "const VERSION='2026.09.10.3'",
     'Complete & continue',
     'Today’s focus',
-    'What do you need help with?',
-    'Diagnose a moulding problem',
-    'Analyse process data',
-    'Practice a scenario',
-    'Explore your learning',
-    'Mould Master · start from the defect',
-    'mm-home-task-hub',
     'data-mm-role="today-focus"',
-    'data-mm-role="task-hub"',
-    'data-mm-role="diagnose-defect"',
-    'data-mm-role="process-data"',
-    'data-mm-role="practice-scenario"',
-    'data-mm-role="explore-learning"',
+    'data-mm-role="continue-lesson"',
     'mm-home-core-hero',
-    'mmOpenMouldMaster',
-    'mmOpenDataDiagnosis',
     'Notes autosave on this device.',
     'mm-mobile-actions',
     'aria-current',
@@ -60,17 +47,29 @@ markers=[
 for marker in markers:
     need(marker in js,f'learning experience marker missing: {marker}')
 
-# Home is task-first on small screens: the catalogue-heavy core dashboard is suppressed while
-# direct diagnosis, process-data, practice and learning actions remain visible.
+# Home source owns only the primary next-lesson surface. Workbench shortcuts are
+# owned by learner-ui-polish; retired task/utility blocks must not be generated and
+# cleaned up later by downstream shell layers.
+for retired in [
+    'mm-home-task-hub',
+    'mm-home-utility',
+    'mm-home-actions',
+    'mm-home-action',
+    'data-mm-role="task-hub"',
+    'data-mm-role="diagnose-defect"',
+    'data-mm-role="process-data"',
+    'data-mm-role="practice-scenario"',
+    'data-mm-role="explore-learning"',
+]:
+    need(retired not in js,f'retired Home source returned: {retired}')
+
+# Small-screen Home still suppresses catalogue-heavy legacy dashboard surfaces;
+# the canonical Workbench is supplied later by learner-ui-polish.
 for marker in [
     '#dashboard .mm-home-core-hero,#dashboard .mm-home-kpis,#dashboard .mm-home-course-head,#dashboard .mm-home-course-grid{display:none!important}',
     '#dashboard .mm-specialist-strip>p{display:none!important}',
-    '.mm-home-actions{grid-template-columns:1fr 1fr',
-    '@media(max-width:430px){.mm-home-actions{grid-template-columns:1fr}'
 ]:
     need(marker in js,f'mobile Home hierarchy marker missing: {marker}')
-need("switchView('defects')" in js,'Mould Master Home action must open the evidence-first defect diagnosis view')
-need('window.MM_PROCESS_DATA_DIAGNOSTICS?.open' in js,'Home process-data action must use the guided data-diagnosis module')
 
 # Mobile Home keeps a compact non-sticky topbar and enough fixed-nav/safe-area clearance
 # without the previous oversized dead space. Touch targets stay at least 44px.
@@ -164,4 +163,4 @@ need(re.search(r"const next=D\.lessons\[index\+1\]\|\|null",js) is not None,'com
 need("user.currentLesson=next.id" in js,'complete-and-continue must advance currentLesson')
 need("toast('Learning path complete ✓')" in js,'final lesson must terminate the learning path rather than wrap')
 
-print(f'MouldMaster learning experience QA passed (task-first Home, gamification retired, compact event-driven mobile hierarchy, complete-and-continue, autosave notes, fixed-nav clearance, coherent runtime={runtime_asset}, offline/desktop packaging)')
+print(f'MouldMaster learning experience QA passed (single-source Home focus, gamification retired, compact event-driven mobile hierarchy, complete-and-continue, autosave notes, fixed-nav clearance, coherent runtime={runtime_asset}, offline/desktop packaging)')
