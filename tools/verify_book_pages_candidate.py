@@ -24,6 +24,7 @@ AUTH = BOOK_ROOT + "book-publication-authorization-v1.json"
 SME = BOOK_ROOT + "book-sme-review-v1.json"
 WORKED = BOOK_ROOT + "book-worked-engineering-cases-v1.json"
 ENRICHMENT = BOOK_ROOT + "book-evidence-enrichment-v2.json"
+MATERIAL_ATLAS = BOOK_ROOT + "book-material-grade-atlas-v1.json"
 RUNTIME = "src/domains/learning/book-runtime.js"
 BATCHES = (
     BOOK_ROOT + "book-authored-foundations-v1.json",
@@ -58,6 +59,10 @@ RUNTIME_MARKERS = (
     "ENRICHMENT_PATH",
     "validateEvidenceEnrichment",
     "getEvidenceEnrichment",
+    "MATERIAL_ATLAS_PATH",
+    "validateMaterialAtlas",
+    "materialAtlasHtml",
+    "getMaterialAtlas",
 )
 
 
@@ -154,7 +159,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     cache_match = re.search(r"CACHE_VERSION\s*=\s*['\"]([^'\"]+)['\"]", worker)
     if not cache_match or cache_match.group(1) != web_release:
         raise AssertionError("candidate service-worker release does not match version.json")
-    for path in (RUNTIME, MANIFEST, AUTH, SME, WORKED, ENRICHMENT, *BATCHES):
+    for path in (RUNTIME, MANIFEST, AUTH, SME, WORKED, ENRICHMENT, MATERIAL_ATLAS, *BATCHES):
         marker = f"'./{path}'"
         if marker not in worker and f'"./{path}"' not in worker:
             raise AssertionError(f"candidate service worker does not govern Book asset: {path}")
@@ -190,7 +195,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     hashes = integrity.get("gitBlobSha1ByFile") if isinstance(integrity, dict) else None
     if not isinstance(hashes, dict) or integrity.get("algorithm") != "git-blob-sha1":
         raise AssertionError("live Book exact-byte authorization contract is missing")
-    integrity_paths = (MANIFEST, SME, WORKED, ENRICHMENT, *BATCHES)
+    integrity_paths = (MANIFEST, SME, WORKED, ENRICHMENT, MATERIAL_ATLAS, *BATCHES)
     for path in integrity_paths:
         name = path.rsplit("/", 1)[-1]
         expected = hashes.get(name)
@@ -215,6 +220,20 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
         raise AssertionError("live Book evidence-enrichment authorization counts drifted")
     if enrichment_auth.get("independentSmeStatus") != "hold":
         raise AssertionError("live Book evidence-enrichment authorization must preserve independent SME HOLD")
+
+    atlas = fetch_json(candidate, MATERIAL_ATLAS)
+    if atlas.get("schemaVersion") != 1 or atlas.get("bookId") != "mouldmaster-book" or atlas.get("status") != "technical-review-material-atlas":
+        raise AssertionError("live Book material atlas identity mismatch")
+    if atlas.get("profileCount") != 89 or len(atlas.get("profiles") or []) != 89:
+        raise AssertionError("live Book material atlas must contain exactly 89 profiles")
+    evidence_rows = sum(len(row.get("evidence") or []) for row in atlas["profiles"] if isinstance(row, dict))
+    if evidence_rows != 147:
+        raise AssertionError(f"live Book material atlas evidence-row mismatch: {evidence_rows}")
+    atlas_auth = auth.get("materialAtlasAuthorization")
+    if not isinstance(atlas_auth, dict) or atlas_auth.get("status") != "authorized-technical-review-appendix":
+        raise AssertionError("live Book material atlas authorization is missing")
+    if atlas_auth.get("profileCount") != 89 or atlas_auth.get("evidenceRowCount") != 147 or atlas_auth.get("independentSmeStatus") != "hold":
+        raise AssertionError("live Book material atlas authorization counts/boundary drifted")
 
     sme = fetch_json(candidate, SME)
     sme_status, sme_approved, sme_total = sme_summary(sme, ids)
