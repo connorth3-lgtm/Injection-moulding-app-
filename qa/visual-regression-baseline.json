@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.09.30.7",
-  "commit": "2dac28d0a9cb5f475279709d063be979da0f9763",
+  "release": "2026.09.30.8",
+  "commit": "adf7b89b392531255961beab5e372d6f1b5429b4",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -40,6 +40,6 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "2026.09.30.7 is the reviewed learner UI reference for the Home hierarchy repair: Today's focus and Continue lesson remain the primary Home action at phone, tablet and desktop widths; the Workbench is a quieter secondary launcher; duplicate Practice/Saved shortcuts are removed from Today's focus; compact task access remains available without changing learner content or engineering authority. The pixel tolerance remains locked at maxDiffPixels 12; this approval advances the reference bytes rather than relaxing drift tolerance. Physical-device, real-AT and other human/external evidence remain separate HOLD/freshness gates and are not relabelled by this visual lock.",
-  "ref": "visual-baseline/2026.09.30.7"
+  "policy": "2026.09.30.8 is the reviewed learner UI reference for the deep Home ownership cleanup: Today's focus remains the primary next step; the Workbench is the sole secondary Home launcher, uses a single-column outer layout at every viewport, preserves focused controls across responsive refreshes, and no retired task-hub or Home utility row is generated. The pixel tolerance remains locked at maxDiffPixels 12; this approval advances the reference bytes rather than relaxing drift tolerance. Physical-device, real-AT and other human/external evidence remain separate HOLD/freshness gates and are not relabelled by this visual lock.",
+  "ref": "visual-baseline/2026.09.30.8"
 }
