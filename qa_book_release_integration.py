@@ -64,6 +64,7 @@ book_data = [
     'book-authored-remaining-v1.json',
     'book-worked-engineering-cases-v1.json',
     'book-evidence-enrichment-v2.json',
+    'book-material-grade-atlas-v1.json',
 ]
 for name in book_data:
     packaged = f'./src/domains/learning/book-data/{name}'
@@ -109,14 +110,14 @@ required_integrity = {
     'book-manifest-v1.json', 'book-sme-review-v1.json', 'book-qualification-resolution-all-v1.json',
     'book-claim-resolution-high-risk-v1.json', 'book-authored-foundations-v1.json',
     'book-evidence-registry-v1.json', 'book-chapters-materials-machine-v1.json', 'book-authored-remaining-v1.json',
-    'book-worked-engineering-cases-v1.json', 'book-evidence-enrichment-v2.json',
+    'book-worked-engineering-cases-v1.json', 'book-evidence-enrichment-v2.json', 'book-material-grade-atlas-v1.json',
 }
 need(required_integrity <= set(sha_by_file), f'Book byte-integrity coverage incomplete: {sorted(required_integrity - set(sha_by_file))}')
 for name in required_integrity:
     need(sha_by_file[name] == git_blob_sha(PACKAGED_ROOT / name), f'Book byte-integrity Git object mismatch: {name}')
 auth_blob = git_blob_sha(PACKAGED_ROOT / 'book-publication-authorization-v1.json')
 need(f"const AUTH_GIT_BLOB_SHA1='{auth_blob}'" in book_runtime, 'canonical runtime is not pinned to exact authorization bytes')
-for marker in ('gitBlobSha1', 'verifiedJson', 'validateIntegrityAuthorization', 'Book byte-integrity mismatch', 'WORKED_CASES_PATH', 'validateWorkedCases', 'workedCaseHtml', 'getWorkedCases', 'ENRICHMENT_PATH', 'validateEvidenceEnrichment', 'getEvidenceEnrichment'):
+for marker in ('gitBlobSha1', 'verifiedJson', 'validateIntegrityAuthorization', 'Book byte-integrity mismatch', 'WORKED_CASES_PATH', 'validateWorkedCases', 'workedCaseHtml', 'getWorkedCases', 'ENRICHMENT_PATH', 'validateEvidenceEnrichment', 'getEvidenceEnrichment', 'MATERIAL_ATLAS_PATH', 'validateMaterialAtlas', 'materialAtlasHtml', 'getMaterialAtlas'):
     need(marker in book_runtime, f'Book runtime exact-byte safeguard missing: {marker}')
 need("auth?.authorizationBasis?.sourceRevision!=='7ef28bd8b02994223e320fda64e99808357d3219'" in book_runtime, 'runtime no longer enforces reviewed source revision')
 
