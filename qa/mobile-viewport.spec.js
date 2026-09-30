@@ -244,8 +244,13 @@ test('capture Android-like Home regression artifact after bootstrap is gone and 
 test('UI audit contract: one page title, compact header actions, useful Home, dense hubs, and unobstructed lesson content',async({page})=>{
   await page.setViewportSize({width:412,height:915});
   await openApp(page);
-  await expect(page.locator('#dashboard .mm-home-utility')).toBeVisible();
-  await expect(page.locator('#dashboard .mm-home-utility button')).toHaveCount(2);
+  await expect(page.locator('#dashboard .mm-home-utility')).toHaveCount(0);
+  await expect(page.locator('#dashboard .mm-home-balance')).toBeVisible();
+  expect(await page.evaluate(()=>{
+    const focus=document.querySelector('#dashboard .mm-today-focus');
+    const workbench=document.querySelector('#dashboard .mm-home-balance');
+    return Boolean(focus&&workbench&&(focus.compareDocumentPosition(workbench)&Node.DOCUMENT_POSITION_FOLLOWING));
+  })).toBeTruthy();
   const searchBox=await page.locator('#searchBtn').boundingBox();
   expect(searchBox.width).toBeLessThanOrEqual(48);
   expect(searchBox.height).toBeGreaterThanOrEqual(44);
