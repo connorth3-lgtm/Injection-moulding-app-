@@ -18,7 +18,7 @@ version=json.loads(VERSION.read_text(encoding='utf-8'))
 release=version.get('web_release')
 need(data.get('schemaVersion')==1,'real AT contract schema drifted')
 evidence_release=data.get('release')
-need(isinstance(evidence_release,str) and evidence_release and evidence_release<=release,'real AT evidence release must be present and cannot target a future web release')
+need(evidence_release==release,'real AT validation contract must be rebound to the current web release')
 packet=data.get('packet')
 need(packet==f'qa/ACCESSIBILITY_REAL_AT_{evidence_release}.md','real AT evidence packet must remain bound to its recorded release')
 need((ROOT/packet).is_file(),'real AT release packet is missing')
@@ -47,6 +47,4 @@ for key in ('uiNavigation','bookLongForm','assessmentQuestionsAndFeedback','keyb
 tasks='\n'.join(data.get('requiredTasks') or [])
 for marker in ('Book chapter','long-stem assessment','focus returns','200% text zoom'):
     need(marker in tasks,f'real AT task matrix missing UI/Book/assessment coverage: {marker}')
-if evidence_release!=release:
-    need(data.get('status')!='validated','stale real AT evidence must not validate the current web release')
 print(f'MouldMaster real assistive-technology contract QA passed for evidence release {evidence_release}; current web release {release} remains fail-closed until matching human evidence exists')

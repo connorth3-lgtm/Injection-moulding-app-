@@ -34,12 +34,7 @@ need(isinstance(release, str) and release, "version.json web_release is missing"
 ledger = load("data/release-external-validation-v1.json")
 evidence_release = ledger.get("release")
 need(isinstance(evidence_release, str) and evidence_release, "external-validation ledger release is missing")
-need(evidence_release <= release, "external-validation ledger cannot target a future release")
-stale = evidence_release != release
-if stale:
-    for section_name in ("accessibility", "pwaPhysicalDevices", "windowsDistribution", "bookSme", "curriculumSme", "learnerOutcomes", "nzqaProvider"):
-        need((ledger.get(section_name) or {}).get("status") == "hold", f"stale external evidence must remain HOLD for {section_name}")
-    need(not any(bool(value) for value in (ledger.get("claims") or {}).values()), "stale external evidence cannot support current-release claims")
+need(evidence_release == release, "external-validation ledger must be rebound to the current web release")
 
 index_rel = ledger.get("validationIndex")
 need(index_rel == f"qa/EXTERNAL_VALIDATION_{evidence_release}.md", "release validation index path is stale")
@@ -102,23 +97,22 @@ need(isinstance(candidate_run_id, int) and candidate_run_id > 0, "physical PWA c
 need(isinstance(candidate.get("artifactId"), int) and candidate["artifactId"] > 0, "physical PWA artifact id is invalid")
 need(bool(candidate.get("artifactExpiresAt")), "physical PWA artifact expiry is missing")
 
-# External evidence is immutable provenance for its recorded release. If the learner-facing
-# release has advanced, the old fingerprint must remain historical and all external lanes HOLD.
-# Exact current-runtime fingerprint equality is only meaningful while validating the same release.
-if not stale:
-    try:
-        subprocess.run([sys.executable, "tools/build_pages_artifact.py"], cwd=ROOT, check=True)
-        sys.path.insert(0, str(ROOT / "tools"))
-        from verify_pwa_physical_evidence import runtime_fingerprint  # type: ignore
+# The release boundary must always bind to the exact current learner runtime, even
+# when every external workstream remains HOLD. Historical evidence records may stay
+# historical, but current release packets/candidates cannot silently lag behind.
+try:
+    subprocess.run([sys.executable, "tools/build_pages_artifact.py"], cwd=ROOT, check=True)
+    sys.path.insert(0, str(ROOT / "tools"))
+    from verify_pwa_physical_evidence import runtime_fingerprint  # type: ignore
 
-        actual_fp = runtime_fingerprint(PAGES)
-        need(actual_fp == candidate.get("runtimeFingerprint"), "physical PWA packet fingerprint is stale")
-        need(actual_fp == access.get("runtimeFingerprint"), "real-AT packet fingerprint is stale")
-        need(actual_fp == nzqa_candidate.get("runtimeFingerprint"), "NZQA external-validation packet fingerprint is stale")
-        need(source_sha == nzqa_candidate.get("sourceSha"), "NZQA external-validation candidate source SHA drifted from the retained public candidate")
-    finally:
-        if PAGES.exists():
-            shutil.rmtree(PAGES)
+    actual_fp = runtime_fingerprint(PAGES)
+    need(actual_fp == candidate.get("runtimeFingerprint"), "physical PWA packet fingerprint is stale")
+    need(actual_fp == access.get("runtimeFingerprint"), "real-AT packet fingerprint is stale")
+    need(actual_fp == nzqa_candidate.get("runtimeFingerprint"), "NZQA external-validation packet fingerprint is stale")
+    need(source_sha == nzqa_candidate.get("sourceSha"), "NZQA external-validation candidate source SHA drifted from the retained public candidate")
+finally:
+    if PAGES.exists():
+        shutil.rmtree(PAGES)
 
 for name in ("accessibility", "pwaPhysicalDevices", "windowsDistribution", "bookSme", "curriculumSme", "learnerOutcomes", "nzqaProvider"):
     need((ledger.get(name) or {}).get("status") == "hold", f"{name} must remain HOLD until genuine external evidence exists")

@@ -104,12 +104,7 @@ def main() -> None:
     for label, evidence_release in evidence_releases.items():
         assert isinstance(evidence_release, str) and evidence_release, f"{label} contract must identify the exact release its evidence belongs to"
         assert evidence_release <= current_release, f"{label} contract cannot target a future learner release"
-    if external.get("release") != current_release:
-        for key in ("bookSme", "curriculumSme", "pwaPhysicalDevices", "accessibility", "learnerOutcomes", "nzqaProvider"):
-            assert external[key]["status"] == "hold", f"stale external evidence must fail closed for {key}"
-        assert external["windowsDistribution"]["status"] == "hold", "stale external evidence must fail closed for Windows distribution"
-        claims = external.get("claims", {})
-        assert not any(bool(v) for v in claims.values()), "stale external evidence cannot support current-release validation claims"
+    assert external.get("release") == current_release, "external-validation boundary must be rebound to the current learner release"
 
     state_allowed(model, "technicalAutomation", external["technicalAutomation"]["status"])
     state_allowed(model, "publicationAuthorization", book_auth["status"])
