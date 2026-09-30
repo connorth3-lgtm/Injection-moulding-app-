@@ -20,7 +20,7 @@
       "typicalValuesAreNotSpecifications": true
     }
   },
-  "boundary": "Exact-grade evidence appendix for learning and comparison. Values retain the source test condition, grade identity and source/value-status context. Typical or manufacturer-measured values are not universal specifications or production setpoints. Current supplier TDS/SDS/processing guidance, machine/mould limits and site controls remain authoritative.",
+  "boundary": "Exact-grade evidence appendix for learning and comparison. Values retain the source test condition, grade identity and source/value-status context. Typical or manufacturer-measured values are not guaranteed specifications, universal settings or production setpoints. Current supplier TDS/SDS/processing guidance, machine/mould limits and site controls remain authoritative.",
   "profileCount": 89,
   "profiles": [
     {
