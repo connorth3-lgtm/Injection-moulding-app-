@@ -40,7 +40,7 @@ for atlas_profile,index_profile in zip(profiles,INDEX.get('profiles') or []):
 
 need(evidence_rows==147,'Book material atlas must preserve all 147 linked evidence rows')
 boundary=ATLAS.get('boundary','').lower()
-for marker in ('not universal','not guaranteed','current supplier'):
+for marker in ('not guaranteed specifications','universal settings','current supplier'):
     need(marker in boundary,f'Book material atlas boundary missing: {marker}')
 
 print('PASS: Book material grade atlas preserves all 89 exact profiles and all 147 linked evidence rows from the current Asia/Australia/NZ material dataset.')
