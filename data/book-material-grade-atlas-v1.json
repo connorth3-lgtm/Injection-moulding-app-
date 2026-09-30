@@ -1,7 +1,6 @@
 {
   "schemaVersion": 1,
   "bookId": "mouldmaster-book",
-  "release": "2026.10.01.1",
   "status": "technical-review-material-atlas",
   "title": "Material Grade Atlas — Asia, Australia and New Zealand evidence wave",
   "sourceIndex": {
@@ -5021,5 +5020,7 @@
         }
       ]
     }
-  ]
+  ],
+  "atlasVersion": "2026.10.01.1",
+  "bookRuntimeCompatibility": "2026.09.24.14"
 }
