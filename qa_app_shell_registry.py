@@ -33,7 +33,6 @@ for marker in [
     'syncDesktopNavigation',
     'populateMobileMore',
     "id:'today-focus'",
-    "id:'task-hub'",
     "id:'curriculum-focus'",
     "id:'specialist'",
     "id:'mould-master'",
@@ -106,8 +105,9 @@ for dep in ['MM_APP_SHELL','MM_LEARNING_EXPERIENCE','MM_CURRICULUM_INTEGRATION',
     need(dep in finalizer,f'finalizer dependency guard missing: {dep}')
 need('MM_APP_SHELL.finalize()' in finalizer,'finalizer does not activate canonical shell')
 need('window.MM_APP_SHELL_FINALIZED=VERSION' in finalizer,'finalizer marker must derive from the finalizer version')
-need("root.querySelector('[data-mm-role=\"explore-learning\"]')" in finalizer,'Home simplification must target the semantic learning role')
-need('actions.find(button=>/Explore your learning/i.test' not in finalizer,'Home behavior must not depend on learner-visible learning-copy text')
+need("id:'task-hub'" not in shell,'retired Home task-hub must not be registered by the canonical shell')
+need('.mm-home-task-hub' not in finalizer,'shell finalizer must not retain retired Home task-hub cleanup coupling')
+need('data-mm-role="explore-learning"' not in finalizer,'shell finalizer must not rewrite retired Home task actions')
 need('new MutationObserver' not in finalizer,'finalizer reintroduced redundant document/view MutationObserver ownership')
 
 # Browser readiness must depend on shell-finalized state, never a release/version literal.
