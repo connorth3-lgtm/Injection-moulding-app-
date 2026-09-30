@@ -60,7 +60,8 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
     test('Home is lean, XP-free, clear of duplicate reference launchers, and Practice owns troubleshooting',async({page})=>{
       await openApp(page);
       await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
-      await expect(page.locator('#dashboard .mm-home-task-hub')).toBeHidden();
+      await expect(page.locator('#dashboard .mm-home-task-hub')).toHaveCount(0);
+      await expect(page.locator('#dashboard .mm-home-utility')).toHaveCount(0);
       await expect(page.locator('#dashboard .mm-home-balance')).toBeVisible();
       await expect(page.locator('#continueBtn')).toBeHidden();
       await expect(page.locator('#dashboard .mm-home-core-hero')).toBeHidden();
