@@ -5,11 +5,11 @@
  */
 
 /* >>> curriculum-integration.js */
-/* MouldMaster curriculum integration — theory → practice → evidence — 2026.08.26.1 */
+/* MouldMaster curriculum integration — evidence loop + adaptive guidance — 2026.10.01.2 */
 (function(){
 'use strict';
 
-const VERSION='2026.08.26.1';
+const VERSION='2026.10.01.2';
 const RETURN_KEY='mm_curriculum_return_v1';
 
 if(typeof renderLesson!=='function'||typeof renderDashboard!=='function'||typeof currentLesson!=='function'||typeof D==='undefined'){
@@ -73,6 +73,19 @@ const TYPE_META=Object.freeze({
   data:{label:'Data diagnosis',detail:'Read baseline → fault → recovery evidence from a 72-cycle synthetic dataset.',selector:'data-pd-start'},
   material:{label:'Material lab',detail:'Apply grade-aware material evidence and safe handling logic.',selector:'data-ml-start'}
 });
+
+const GUIDANCE_LEVELS=Object.freeze({
+  worked:Object.freeze({id:'worked',label:'Worked support',instruction:'Use the prompts and explanations. Name the known-good baseline and the evidence that changes your first hypothesis.'}),
+  partial:Object.freeze({id:'partial',label:'Partial guidance',instruction:'Commit to a ranked mechanism and the smallest discriminating test before opening the explanation.'}),
+  independent:Object.freeze({id:'independent',label:'Evidence-only challenge',instruction:'Treat the activity as a fresh case: establish the baseline, rank competing mechanisms, choose one discriminating test, then verify recovery before reading guidance.'})
+});
+function guidanceFor(){
+  let experience='';try{experience=String(user?.experience||'').trim().toLowerCase()}catch(_){}
+  let completed=0;try{completed=Array.isArray(user?.completed)?user.completed.length:0}catch(_){}
+  if(/advanced|process engineer|engineer|expert/.test(experience)||completed>=80)return GUIDANCE_LEVELS.independent;
+  if(/setter|technician|intermediate/.test(experience)||completed>=30)return GUIDANCE_LEVELS.partial;
+  return GUIDANCE_LEVELS.worked;
+}
 
 function esc(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
 function key(route){return `${route.type}:${route.id}`}
@@ -210,7 +223,7 @@ style.textContent=`
 .mm-curriculum-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}.mm-curriculum-head h3{margin:5px 0 6px}.mm-curriculum-head p{margin:0;color:#bdd0e2;line-height:1.5;max-width:760px}
 .mm-curriculum-loop{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}.mm-curriculum-loop span{font-size:10px;padding:5px 8px;border:1px solid #3a5877;border-radius:999px;background:#102137;color:#c6d8ea}.mm-curriculum-loop b{color:var(--accent)}
 .mm-curriculum-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}.mm-curriculum-card{padding:14px;border:1px solid #34516e;border-radius:12px;background:#0d1d31}.mm-curriculum-card h4{margin:6px 0 7px;font-size:16px}.mm-curriculum-card p{margin:0;color:#b9cade;font-size:12px;line-height:1.5}.mm-curriculum-card .mm-next-actions{margin-top:11px}
-.mm-curriculum-type{font-size:10px;text-transform:uppercase;letter-spacing:.11em;color:var(--accent);font-weight:800}.mm-curriculum-boundary{margin-top:12px;font-size:11px;color:#9fb4ca;line-height:1.5}.mm-curriculum-boundary b{color:#d8e5f1}
+.mm-curriculum-type{font-size:10px;text-transform:uppercase;letter-spacing:.11em;color:var(--accent);font-weight:800}.mm-curriculum-guidance{margin-top:12px;padding:11px 12px;border:1px solid #3b5f78;border-radius:10px;background:#10263b;color:#c9daea;font-size:12px;line-height:1.5}.mm-curriculum-guidance b{color:#edf7ff}.mm-curriculum-boundary{margin-top:12px;font-size:11px;color:#9fb4ca;line-height:1.5}.mm-curriculum-boundary b{color:#d8e5f1}
 .mm-curriculum-focus{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:-3px 0 14px;padding:13px 15px;border:1px solid #304d6b;border-radius:13px;background:#0e1e31}.mm-curriculum-focus p{margin:3px 0 0;color:#aebfd1;font-size:12px;line-height:1.4}.mm-curriculum-focus b{display:block}
 .mm-curriculum-return{position:fixed;right:18px;bottom:18px;z-index:24;box-shadow:0 10px 30px rgba(0,0,0,.35)}
 @media(max-width:760px){.mm-curriculum-grid{grid-template-columns:1fr}.mm-curriculum-focus{align-items:stretch;flex-direction:column}.mm-curriculum-focus button{width:100%}.mm-curriculum-return{right:12px;bottom:78px;max-width:calc(100vw - 24px)}}
@@ -218,18 +231,18 @@ style.textContent=`
 document.head.appendChild(style);
 
 function cardHtml(rec,index,lessonId){
-  const meta=TYPE_META[rec.type];
+  const meta=TYPE_META[rec.type],guidance=guidanceFor();
   const title=rec.item.title||rec.id;
   const detail=index===0?'Best fit for this lesson':'Evidence extension';
-  return `<article class="mm-curriculum-card"><span class="mm-curriculum-type">${esc(meta.label)} · ${detail}</span><h4>${esc(title)}</h4><p>${esc(rec.why||meta.detail)}</p><div class="mm-next-actions"><button class="secondary" type="button" data-mm-onclick="mmCurriculumOpen('${esc(rec.type)}','${esc(rec.id)}',${Number(lessonId)})">Open linked practice →</button></div></article>`;
+  return `<article class="mm-curriculum-card"><span class="mm-curriculum-type">${esc(meta.label)} · ${detail}</span><h4>${esc(title)}</h4><p>${esc(rec.why||meta.detail)}</p><p class="mm-curriculum-guidance"><b>${esc(guidance.label)}:</b> ${esc(guidance.instruction)}</p><div class="mm-next-actions"><button class="secondary" type="button" data-mm-onclick="mmCurriculumOpen('${esc(rec.type)}','${esc(rec.id)}',${Number(lessonId)})">Open linked practice →</button></div></article>`;
 }
 function decorateLesson(){
   const root=document.getElementById('lesson');
   const lesson=currentLesson();
   const notes=root?.querySelector('#mmNotes')||[...(root?.querySelectorAll('.lesson-body h3')||[])].find(h=>h.textContent.trim()==='Your lesson notes');
   if(!root||!notes||root.querySelector('#mmCurriculumPractice'))return;
-  const recs=recommendationsFor(lesson);
-  notes.insertAdjacentHTML('beforebegin',`<section class="mm-curriculum-section" id="mmCurriculumPractice" aria-label="Linked curriculum practice"><div class="mm-curriculum-head"><div><span class="eyebrow">Theory → practice → evidence</span><h3>Apply this lesson</h3><p>Use the concept you just studied in two guided activities. The first is the closest fit; the second strengthens the evidence habit from another angle.</p></div><span class="pill">2 linked activities</span></div><div class="mm-curriculum-loop"><span><b>1</b> Learn the mechanism</span><span><b>2</b> Make a diagnosis</span><span><b>3</b> Read the evidence</span><span><b>4</b> Return and explain</span></div><div class="mm-curriculum-grid">${recs.map((rec,index)=>cardHtml(rec,index,lesson.id)).join('')}</div><div class="mm-curriculum-boundary"><b>Learning boundary:</b> linked practice is optional formative learning. It does not change formal assessment answers, certificate rules or production setpoints.</div></section>`);
+  const recs=recommendationsFor(lesson),guidance=guidanceFor();
+  notes.insertAdjacentHTML('beforebegin',`<section class="mm-curriculum-section" id="mmCurriculumPractice" aria-label="Linked curriculum practice"><div class="mm-curriculum-head"><div><span class="eyebrow">Mechanism → measurement → discrimination → verification</span><h3>Apply this lesson</h3><p>Use the concept in two activities, but do not jump straight to a setting change. Work from a known-good baseline through current evidence, competing mechanisms, the smallest controlled discriminating test, and recovery verification.</p></div><span class="pill">2 linked activities</span></div><div class="mm-curriculum-loop"><span><b>1</b> Known-good baseline</span><span><b>2</b> Current measured evidence</span><span><b>3</b> Rank competing mechanisms</span><span><b>4</b> Smallest discriminating test</span><span><b>5</b> Verify recovery</span></div><div class="mm-curriculum-guidance"><b>${esc(guidance.label)}:</b> ${esc(guidance.instruction)} Guidance is deliberately reduced as prior experience/completion increases; it never changes the engineering answer key.</div><div class="mm-curriculum-grid">${recs.map((rec,index)=>cardHtml(rec,index,lesson.id)).join('')}</div><div class="mm-curriculum-boundary"><b>Measurement-first boundary:</b> a symptom or screen setpoint is not a root cause. Linked practice is formative learning and does not change formal assessment answers, certificate rules, machine limits or production setpoints.</div></section>`);
   const jumps=root.querySelector('.mm-learning-jumps');
   if(jumps&&!jumps.querySelector('[data-mm-curriculum-jump]'))jumps.insertAdjacentHTML('beforeend','<button type="button" data-mm-curriculum-jump data-mm-onclick="mmLearningJump(\'mmCurriculumPractice\')">Linked practice</button>');
   const origin=getReturn();
@@ -256,10 +269,11 @@ ensureReturnButton();
 window.MM_CURRICULUM_INTEGRATION={
   version:VERSION,
   recommendations:lessonId=>{const lesson=D.lessons.find(l=>l.id===Number(lessonId));return lesson?recommendationsFor(lesson).map(r=>({type:r.type,id:r.id,title:r.item.title||r.id,why:r.why})):[]},
+  guidance:()=>({...guidanceFor()}),
   open:openPractice,
   returnToLesson,
   coverage:{lessons:D.lessons.length,courses:D.courses.length,linksPerLesson:2},
-  scope:'Formative curriculum links from lessons to existing diagnostic, material and synthetic-data practice; no formal assessment mutation and no production recipe.'
+  scope:'Formative curriculum links use a measurement-first engineering loop and fade guidance with experience/completion; no formal assessment mutation, competence claim or production recipe.'
 };
 
 if(typeof currentView==='string'){
