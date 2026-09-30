@@ -131,7 +131,12 @@ test('Mould Master uses one owner-scoped IndexedDB store with one-time legacy im
   expect(materialRecord.schemaVersion).toBe(4);
 
   await page.waitForFunction(id=>window.MM_ENGINEERING_STORE.linksForCase(id).then(rows=>
-    ['machine','mould','product','part'].every(kind=>rows.some(x=>x.kind===kind))
+    [
+      ['machine','IMM-07'],
+      ['mould','MOULD-184'],
+      ['product','PROD-PUMP-01'],
+      ['part','PART-184-03']
+    ].every(([kind,targetId])=>rows.some(x=>x.kind===kind&&x.targetId===targetId))
   ),materialCase);
   links=await page.evaluate(id=>window.MM_ENGINEERING_STORE.linksForCase(id),materialCase);
   expect(links.some(x=>x.kind==='machine'&&x.targetId==='IMM-07')).toBeTruthy();

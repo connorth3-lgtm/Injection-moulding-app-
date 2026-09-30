@@ -1,0 +1,482 @@
+{
+  "schema_version": 1,
+  "last_updated": "2026-09-30",
+  "title": "Injection Moulding Machine Library",
+  "scope": "Manufacturer, model, controller, manual, service-document and verified-specification registry for injection moulding machines.",
+  "verification_levels": {
+    "verified": "Exact model or exact document identity verified from a primary or directly matching source.",
+    "strong_match": "Strong family/controller match, but exact hardware revision is not independently confirmed.",
+    "reference_only": "Useful adjacent documentation; not safe to treat as the exact machine manual.",
+    "lead": "Research lead awaiting verification.",
+    "missing": "Document known or strongly expected to exist but not yet located."
+  },
+  "manufacturers": [
+    {
+      "id": "hwamda",
+      "name": "Ningbo Hwamda Machinery Manufacturing Co., Ltd.",
+      "aliases": [
+        "Hwamda",
+        "Hwanda",
+        "HMD"
+      ],
+      "models": [
+        {
+          "id": "hwamda-hmd400m6",
+          "model": "HMD400M6",
+          "series": "M6",
+          "research_status": "active",
+          "generation_note": "Original M6 generation. Do not substitute HMD400M6-S servo documentation unless the machine is independently identified as -S.",
+          "manufacture_year": {
+            "value": null,
+            "status": "unknown",
+            "evidence_note": "The exact machine year is unknown. The exact HMD400M6 model is documented in historical market records by 2008; a 2007-era Hwamda supplier listing also identifies the model."
+          },
+          "controller": {
+            "family": "Techmation M8M/M10M-style HMI",
+            "confidence": "strong_match",
+            "host_controller": "unknown",
+            "host_note": "AK668 documentation exists for M8M/M10M, but the photographed front panel alone does not prove AK668 is fitted."
+          },
+          "common_verified_specs": {
+            "clamping_force_kn": 4000,
+            "opening_stroke_mm": 660,
+            "platen_mm": "1050 x 1050",
+            "tie_bar_spacing_mm": "730 x 710",
+            "max_daylight_mm": 1390,
+            "mould_thickness_mm": "250-730",
+            "ejector_stroke_mm": 185,
+            "ejector_force_kn": 111,
+            "hydraulic_system_pressure_mpa": 17.5,
+            "pump_motor_kw": 37,
+            "heating_capacity_kw": 23.2,
+            "oil_tank_l": 950,
+            "machine_dimensions_m": "7.6 x 1.75 x 2.41",
+            "machine_weight_kg": 17000
+          },
+          "published_injection_variant": {
+            "status": "verified_source_variant",
+            "screw_diameter_mm": [
+              70,
+              80,
+              90
+            ],
+            "shot_volume_cm3": [
+              1385,
+              1809,
+              2289
+            ],
+            "ps_shot_weight_g": [
+              1300,
+              1700,
+              2150
+            ],
+            "injection_pressure_mpa": [
+              206,
+              158,
+              125
+            ],
+            "screw_ld": [
+              "24:1",
+              "21:1",
+              "19:1"
+            ],
+            "screw_stroke_mm": 360,
+            "screw_speed_rpm": "0-135",
+            "source_id": "hmd-m6-tech-pack"
+          },
+          "manuals": [
+            {
+              "id": "hmd-m6-tech-pack",
+              "title": "HMD M6 Series Technical Data Pack",
+              "type": "technical_data",
+              "status": "verified",
+              "exact_model": true,
+              "coverage": [
+                "machine specifications",
+                "machine dimensions",
+                "platen dimensions"
+              ],
+              "url": "https://kiaunoriumedis.lt/wp-content/uploads/2022/02/injection_machine.pdf",
+              "notes": "18-page family technical-data pack. HMD400M6 data is on the HMD400M6 section; this is not the full operation/service manual."
+            },
+            {
+              "id": "techmation-m8m-m10m",
+              "title": "Techmation M8M / M10M HMI Controller & Software Manual",
+              "type": "controller_operator",
+              "status": "strong_match",
+              "exact_model": false,
+              "coverage": [
+                "operator interface",
+                "mould movement",
+                "injection/hold",
+                "charge",
+                "ejector",
+                "cores",
+                "temperature",
+                "alarms",
+                "diagnostics",
+                "I/O functions"
+              ],
+              "url": "https://hitechinterplas.com/assets/default/file/download/1458918147M8M%20M10M%20manual_E_010305%20%2800000002%29.pdf",
+              "notes": "Direct 80-page Techmation M8M/M10M Standard HMI Controller & Software Manual. The photographed panel strongly matches this HMI family. The manual itself says machine safety, general operation and maintenance require the machine manufacturer's manual; exact controller host/revision remains unconfirmed."
+            },
+            {
+              "id": "techmation-ak668-m8m-m10m",
+              "title": "AK668 / M8M / M10M HMI Controller & Software Manual",
+              "type": "controller_service_reference",
+              "status": "reference_only",
+              "exact_model": false,
+              "coverage": [
+                "machine set",
+                "version identification",
+                "system settings",
+                "DA outputs",
+                "maintenance-oriented controller functions"
+              ],
+              "url": "https://www.scribd.com/document/765088086/AK668-05-1",
+              "notes": "Do not promote this to exact-controller status until AK668 hardware is independently confirmed."
+            },
+            {
+              "id": "techmation-tech2-install",
+              "title": "Techmation TECH2 Series Installation Manual",
+              "type": "controller_installation",
+              "status": "reference_only",
+              "exact_model": false,
+              "coverage": [
+                "power supply",
+                "temperature control",
+                "M10M panel",
+                "valve outputs",
+                "relay outputs",
+                "motor circuits"
+              ],
+              "url": "https://hitechinterplas.com/assets/default/file/download/1400493678TECH2%20Series%20Installation%20Manual_Eng_-Q8V8M10M.pdf",
+              "notes": "Useful generic Techmation hardware reference. Not the HMD400M6 OEM electrical drawing."
+            }
+          ],
+          "wanted_documents": [
+            {
+              "title": "Hwamda HMD400M6 / M6 operation and maintenance manual",
+              "status": "missing"
+            },
+            {
+              "title": "HMD400M6 machine-specific electrical schematic",
+              "status": "missing"
+            },
+            {
+              "title": "HMD400M6 hydraulic schematic",
+              "status": "missing"
+            },
+            {
+              "title": "Hwamda OEM Techmation I/O assignment",
+              "status": "missing"
+            },
+            {
+              "title": "HMD400M6 lubrication diagram",
+              "status": "missing"
+            },
+            {
+              "title": "HMD400M6 parts book",
+              "status": "missing"
+            }
+          ],
+          "sources": [
+            {
+              "id": "hmd-m6-tech-pack",
+              "title": "HMD M6 technical-data PDF",
+              "publisher": "archived distributor-hosted document",
+              "url": "https://kiaunoriumedis.lt/wp-content/uploads/2022/02/injection_machine.pdf",
+              "supports": [
+                "exact HMD400M6 specifications",
+                "dimensions",
+                "M6 family model data"
+              ],
+              "checked": "2026-09-30"
+            },
+            {
+              "id": "made-in-china-hmd400m6",
+              "title": "Plastic Injection Moulding Machines (HMD400M6)",
+              "publisher": "Made-in-China / Ningbo Beilun Hwamda Machinery",
+              "url": "https://www.made-in-china.com/showroom/hwamda/product-detailToSxbczVbnWj/China-Plastic-Injection-Moulding-Machines-HMD400M6-.html",
+              "supports": [
+                "exact model identity",
+                "manufacturer identity",
+                "historical M3/M6 product family"
+              ],
+              "checked": "2026-09-30"
+            },
+            {
+              "id": "plastemart-2008-auction",
+              "title": "2008 plastic manufacturing equipment auction listing",
+              "publisher": "Plastemart",
+              "url": "https://www.plastemart.com/featured-products/online-auction-of-plastic-manufacturing-equipment-injection-moulders-blow-moulders-extrusion-moul/673",
+              "supports": [
+                "HMD400M6 documented in field use by 2008"
+              ],
+              "checked": "2026-09-30"
+            },
+            {
+              "id": "hwamda-official",
+              "title": "Ningbo Hwamda official website",
+              "publisher": "Hwamda",
+              "url": "https://www.hwamda.com/en/",
+              "supports": [
+                "manufacturer continuity and identity"
+              ],
+              "checked": "2026-09-30"
+            },
+            {
+              "id": "techmation-tech2",
+              "title": "TECH2 Series Installation Manual",
+              "publisher": "Techmation Co., Ltd.",
+              "url": "https://hitechinterplas.com/assets/default/file/download/1400493678TECH2%20Series%20Installation%20Manual_Eng_-Q8V8M10M.pdf",
+              "supports": [
+                "M10M-compatible Techmation installation architecture"
+              ],
+              "checked": "2026-09-30"
+            }
+          ],
+          "research_log": [
+            {
+              "date": "2026-09-30",
+              "summary": "Fresh multi-language search repeated across exact-model, service manual, electrical schematic, hydraulic schematic, Chinese manual/drawing terms, manual repositories, GitHub code search and historical product listings. No authenticated full HMD400M6 OEM service/drawing pack was located."
+            },
+            {
+              "date": "2026-09-30",
+              "summary": "Verified a direct 80-page M8M/M10M Standard HMI Controller & Software Manual PDF. It covers operations, panel keys/screens, I/O diagnostics/reassignment, machine diagnostics, machine-set data, DA adjustment and alarms, while explicitly requiring the machine manufacturer's manual for machine safety/general operation/maintenance. Exact HMD400M6 OEM service/drawing pack still not found."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "arburg",
+      "name": "ARBURG GmbH + Co KG",
+      "aliases": [
+        "ARBURG"
+      ],
+      "catalog_status": "manufacturer_sources_indexed",
+      "official_sources": [
+        {
+          "title": "ARBURG Technical Data",
+          "type": "official_technical_data",
+          "status": "verified",
+          "url": "https://www.arburg.com/en/technical-data/",
+          "notes": "Official performance data and mould-installation dimensions for current ARBURG products."
+        },
+        {
+          "title": "ARBURG Technical Service",
+          "type": "official_service",
+          "status": "verified",
+          "url": "https://www.arburg.com/en/contact/technical-service/",
+          "notes": "Official technical-service route; machine number is used for machine-specific support."
+        }
+      ],
+      "models": []
+    },
+    {
+      "id": "engel",
+      "name": "ENGEL AUSTRIA GmbH",
+      "aliases": [
+        "ENGEL"
+      ],
+      "catalog_status": "manufacturer_sources_indexed",
+      "official_sources": [
+        {
+          "title": "ENGEL e-connect customer portal",
+          "type": "official_document_portal",
+          "status": "verified",
+          "url": "https://www.engelglobal.com/us/digital-solutions/e-connect-portal",
+          "notes": "Official portal states machine technical data, maintenance history and manuals are available in the machine park."
+        }
+      ],
+      "models": []
+    },
+    {
+      "id": "sumitomo-shi-demag",
+      "name": "Sumitomo (SHI) Demag Plastics Machinery GmbH",
+      "aliases": [
+        "Sumitomo Demag",
+        "SHI Demag"
+      ],
+      "catalog_status": "manufacturer_sources_indexed",
+      "official_sources": [
+        {
+          "title": "myConnect / myDocumentation",
+          "type": "official_document_portal",
+          "status": "verified",
+          "url": "https://www.sumitomo-shi-demag.eu/products/myconnect",
+          "notes": "Official myDocumentation service provides current digital documents and is presented as available across machine series."
+        }
+      ],
+      "models": []
+    },
+    {
+      "id": "fanuc",
+      "name": "FANUC",
+      "aliases": [
+        "FANUC ROBOSHOT",
+        "ROBOSHOT"
+      ],
+      "catalog_status": "manufacturer_sources_indexed",
+      "official_sources": [
+        {
+          "title": "FANUC ROBOSHOT product and document pages",
+          "type": "official_technical_data",
+          "status": "verified",
+          "url": "https://www.fanuc.eu/eu-en/product/roboshot/fanuc-roboshot-a-s50ib",
+          "notes": "Official ROBOSHOT model pages expose technical specifications and downloadable product documents."
+        }
+      ],
+      "models": []
+    },
+    {
+      "id": "haitian",
+      "name": "Haitian International Holdings Limited",
+      "aliases": [
+        "Haitian",
+        "Zhafir"
+      ],
+      "catalog_status": "manufacturer_sources_indexed",
+      "official_sources": [
+        {
+          "title": "Haitian product overview",
+          "type": "official_technical_data",
+          "status": "verified",
+          "url": "https://eu.haitianinter.com/products/",
+          "notes": "Official current product-family overview for Haitian and Zhafir injection moulding machines."
+        },
+        {
+          "title": "Haitian global service",
+          "type": "official_service",
+          "status": "verified",
+          "url": "https://vt.haitianinter.com/service/",
+          "notes": "Official service network covering spare parts, technicians, troubleshooting and training."
+        }
+      ],
+      "models": []
+    },
+    {
+      "id": "kraussmaffei",
+      "name": "KraussMaffei Technologies GmbH",
+      "aliases": [
+        "KraussMaffei",
+        "Krauss Maffei"
+      ],
+      "catalog_status": "manufacturer_sources_indexed",
+      "official_sources": [
+        {
+          "title": "KraussMaffei injection-moulding service",
+          "type": "official_service",
+          "status": "verified",
+          "url": "https://www.kraussmaffei.com/en/service/sales-service",
+          "notes": "Official service area for injection moulding machinery."
+        },
+        {
+          "title": "KraussMaffei pioneersClub document access",
+          "type": "official_document_portal",
+          "status": "verified",
+          "url": "https://events.kraussmaffei.com/en/K-2025",
+          "notes": "Official page states pioneersClub provides access to machines and relevant documents, plus service and spare-parts functions."
+        }
+      ],
+      "models": []
+    },
+    {
+      "id": "shibaura-machine",
+      "name": "Shibaura Machine",
+      "aliases": [
+        "Toshiba Machine",
+        "Shibaura"
+      ],
+      "catalog_status": "manufacturer_sources_indexed",
+      "official_sources": [
+        {
+          "title": "Shibaura injection moulding machines",
+          "type": "official_technical_data",
+          "status": "verified",
+          "url": "https://shibaura-machine.com/injection-molding-machines/",
+          "notes": "Official current machine and controller information."
+        },
+        {
+          "title": "V70 on-board PDF machine manual",
+          "type": "official_manual_access_note",
+          "status": "verified",
+          "url": "https://shibaura-machine.com/articles/im-2020-8-26-user-friendly-v70-controller-features-on-board-pdf-machine-manual/",
+          "notes": "Official Shibaura article confirms V70-equipped machines include a searchable on-board PDF machine manual."
+        }
+      ],
+      "models": []
+    },
+    {
+      "id": "milacron",
+      "name": "Milacron",
+      "aliases": [
+        "Cincinnati Milacron"
+      ],
+      "catalog_status": "manufacturer_sources_indexed",
+      "official_sources": [
+        {
+          "title": "Milacron Parts & Service",
+          "type": "official_service",
+          "status": "verified",
+          "url": "https://www.milacron.com/parts-service/",
+          "notes": "Official lifecycle support for injection moulding and extrusion machines, including service, parts, training and rebuilds."
+        },
+        {
+          "title": "Milacron Service Hub",
+          "type": "official_document_portal",
+          "status": "verified",
+          "url": "https://store.milacron.com/store",
+          "notes": "Official service hub exposes registered-machine and document functions."
+        }
+      ],
+      "models": []
+    },
+    {
+      "id": "nissei",
+      "name": "NISSEI PLASTIC INDUSTRIAL CO., LTD.",
+      "aliases": [
+        "NISSEI"
+      ],
+      "catalog_status": "manufacturer_sources_indexed",
+      "official_sources": [
+        {
+          "title": "NISSEI Product Information",
+          "type": "official_technical_data",
+          "status": "verified",
+          "url": "https://www.nisseiplastic.com/en/products/",
+          "notes": "Official current horizontal, vertical and special injection moulding machine line-up with model specifications."
+        },
+        {
+          "title": "NISSEI Technical Service",
+          "type": "official_service",
+          "status": "verified",
+          "url": "https://www.nisseiplastic.com/en/news/corporate/2816.php",
+          "notes": "Official NISSEI page identifies its Technical Service Department for inspection, maintenance and repair of injection moulding machines."
+        }
+      ],
+      "models": []
+    },
+    {
+      "id": "jsw",
+      "name": "The Japan Steel Works, Ltd.",
+      "aliases": [
+        "JSW",
+        "Japan Steel Works"
+      ],
+      "catalog_status": "manufacturer_sources_indexed",
+      "official_sources": [
+        {
+          "title": "JSW Injection Moulding Machine Products",
+          "type": "official_technical_data",
+          "status": "verified",
+          "url": "https://www.jsw.co.jp/en/product/business/molding_machine/mm_0400/",
+          "notes": "Official JSW machine page provides clamping range, technology information and product-catalog download access."
+        }
+      ],
+      "models": []
+    }
+  ],
+  "coverage_note": "The registry is designed for all injection moulding machine manufacturers and models. Manufacturer-level official sources are indexed before exact-model records are promoted."
+}
