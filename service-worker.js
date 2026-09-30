@@ -83,6 +83,7 @@ const CORE=[
   './src/domains/learning/book-data/book-authored-remaining-v1.json',
   './src/domains/learning/book-data/book-worked-engineering-cases-v1.json',
   './src/domains/learning/book-data/book-evidence-enrichment-v2.json',
+  './src/domains/learning/book-data/book-material-grade-atlas-v1.json',
   './src/domains/learning/book-data/nzqa-education-readiness-v1.json',
   './src/domains/learning/book-data/nzqa-provider-evidence-templates-v1.json',
   './src/domains/quality/data/quality-management-iso9001-v1.json',
