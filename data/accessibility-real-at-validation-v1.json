@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.09.30.6",
-  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.09.30.6.md",
-  "sourceSha": "5e5f8a8814f68c771632dc480f31e775c900f74b",
-  "runtimeFingerprint": "sha256:89830ff04fb3b1b09563a1732acc9dd3353c6bb1bcd5e7219fbf2d9f7dd60a58",
+  "release": "2026.09.30.7",
+  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.09.30.7.md",
+  "sourceSha": "359730b042302a4a8c338b1f62f65b39ea1f0027",
+  "runtimeFingerprint": "sha256:e50a7685f649322ec518385f8f9d774dbb7b4c13f083f9a3c08403904dfa24a5",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.09.30.6 is bound to the exact protected-main candidate 5e5f8a8814f68c771632dc480f31e775c900f74b; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.09.30.7 is bound to exact pre-merge learner-runtime candidate 359730b042302a4a8c338b1f62f65b39ea1f0027; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
