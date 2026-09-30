@@ -65,6 +65,7 @@ book_data = [
     'book-worked-engineering-cases-v1.json',
     'book-evidence-enrichment-v2.json',
     'book-material-grade-atlas-v1.json',
+    'book-material-regional-evidence-v1.json',
 ]
 for name in book_data:
     packaged = f'./src/domains/learning/book-data/{name}'
@@ -73,6 +74,8 @@ for name in book_data:
     target = PACKAGED_ROOT / name
     if source.exists():
         need(source.read_bytes() == target.read_bytes(), f'packaged Book data drifted from governed source: {name}')
+
+need((ROOT / 'data/asian-aus-nz-material-grade-extraction-wave2-v1.json').read_bytes() == (PACKAGED_ROOT / 'book-material-regional-evidence-v1.json').read_bytes(), 'packaged regional Book material evidence drifted from governed source wave')
 
 # One canonical Book implementation: the legacy root path is now only a stable compatibility loader.
 need("script.src='./src/domains/learning/book-runtime.js'" in compat_loader, 'root Book compatibility loader must delegate to canonical packaged runtime')
@@ -111,13 +114,15 @@ required_integrity = {
     'book-claim-resolution-high-risk-v1.json', 'book-authored-foundations-v1.json',
     'book-evidence-registry-v1.json', 'book-chapters-materials-machine-v1.json', 'book-authored-remaining-v1.json',
     'book-worked-engineering-cases-v1.json', 'book-evidence-enrichment-v2.json', 'book-material-grade-atlas-v1.json',
+    'book-material-regional-evidence-v1.json', 'material-catalog-v1.json',
 }
 need(required_integrity <= set(sha_by_file), f'Book byte-integrity coverage incomplete: {sorted(required_integrity - set(sha_by_file))}')
 for name in required_integrity:
-    need(sha_by_file[name] == git_blob_sha(PACKAGED_ROOT / name), f'Book byte-integrity Git object mismatch: {name}')
+    path = ROOT / name if name == 'material-catalog-v1.json' else PACKAGED_ROOT / name
+    need(sha_by_file[name] == git_blob_sha(path), f'Book byte-integrity Git object mismatch: {name}')
 auth_blob = git_blob_sha(PACKAGED_ROOT / 'book-publication-authorization-v1.json')
 need(f"const AUTH_GIT_BLOB_SHA1='{auth_blob}'" in book_runtime, 'canonical runtime is not pinned to exact authorization bytes')
-for marker in ('gitBlobSha1', 'verifiedJson', 'validateIntegrityAuthorization', 'Book byte-integrity mismatch', 'WORKED_CASES_PATH', 'validateWorkedCases', 'workedCaseHtml', 'getWorkedCases', 'ENRICHMENT_PATH', 'validateEvidenceEnrichment', 'getEvidenceEnrichment', 'MATERIAL_ATLAS_PATH', 'validateMaterialAtlas', 'materialAtlasHtml', 'getMaterialAtlas'):
+for marker in ('gitBlobSha1', 'verifiedJson', 'validateIntegrityAuthorization', 'Book byte-integrity mismatch', 'WORKED_CASES_PATH', 'validateWorkedCases', 'workedCaseHtml', 'getWorkedCases', 'ENRICHMENT_PATH', 'validateEvidenceEnrichment', 'getEvidenceEnrichment', 'MATERIAL_ATLAS_PATH', 'MATERIAL_REGIONAL_PATH', 'MATERIAL_CATALOG_PATH', 'validateMaterialAtlas', 'validateMaterialCatalog', 'validateMaterialRegionalEvidence', 'materialAtlasHtml', 'getMaterialAtlas', 'getMaterialCatalog', 'getMaterialRegionalEvidence'):
     need(marker in book_runtime, f'Book runtime exact-byte safeguard missing: {marker}')
 need("auth?.authorizationBasis?.sourceRevision!=='7ef28bd8b02994223e320fda64e99808357d3219'" in book_runtime, 'runtime no longer enforces reviewed source revision')
 
@@ -141,9 +146,9 @@ need(authorization['authorizationBasis']['sourceRevision'] == '7ef28bd8b02994223
 # Book is now part of the primary search surface and read/listen still render one governed chapter representation.
 for marker in ('function searchBook(', 'function appendBookSearchResults(', 'function installBookSearch(', 'function openChapter('):
     need(marker in book_runtime, f'Book search integration missing: {marker}')
-need('function verifiedChapterHtml(chapter)' in book_runtime, 'verified chapter renderer missing')
+need('function verifiedChapterHtml(chapter,options={})' in book_runtime, 'verified chapter renderer missing')
 need("if(chapter.state==='verified')ui.reader.innerHTML=`${back}${verifiedChapterHtml(chapter)}`" in book_runtime, 'Book read surface no longer uses governed verified renderer')
-need("verified.map(verifiedChapterHtml).join('')" in book_runtime, 'Book listen surface no longer uses governed verified renderer')
+need("verified.map(chapter=>verifiedChapterHtml(chapter,{includeTechnicalMaterial:false})).join('')" in book_runtime, 'Book listen surface must exclude technical-review material appendix')
 need("ui.listen.addEventListener('click',startVerifiedListening)" in book_runtime, 'Book listening control is not bound')
 need('style=' not in book_runtime, 'Book runtime reintroduced inline style attributes')
 
