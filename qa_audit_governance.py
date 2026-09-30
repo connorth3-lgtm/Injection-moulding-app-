@@ -118,6 +118,7 @@ for marker in (
     'ALLOWED_FILES = {"index.html", "404.html", "device-validation.html"}',
     'HELPER_MARKER = \'data-mm-device-metadata-helper="true"\'',
     'PREVIEW_MARKER = \'content="non-production-preview"\'',
+    'PREVIEW_FORWARD_MARKER = \'data-mm-preview-autoforward="true"\'',
     'PREVIEW_REQUIRED = {"index.html", "manifest.webmanifest", "service-worker.js", "version.json"}',
     'stage_preview(preview_source, target / "preview")',
     "validate_helper(helper_payload)",
@@ -134,6 +135,7 @@ for marker in (
     'PREVIEW_MARKER = \'content="non-production-preview"\'',
     'fetch(urljoin(root, "device-validation.html"))',
     'fetch(urljoin(root, "preview/"))',
+    '"location.replace(preview.href)"',
     "non-production preview runtime asset unavailable",
     "device metadata helper violates local-only boundary",
 ):
@@ -184,6 +186,6 @@ need(self_test.returncode == 0, f"ruleset verifier self-test failed: {self_test.
 
 print(
     "Audit governance QA passed: assessment-evidence workflows retain full Git history, least-privilege Pages permissions, "
-    "physical-test runtime fingerprint reporting, preview-only protected-main publication with a separated non-production learner runtime "
+    "physical-test runtime fingerprint reporting, preview-only protected-main publication with root-to-preview Home forwarding and a separated non-production learner runtime "
     "and local-only device metadata helper, live branch-prune SHA recheck and fail-closed ruleset bypass verification are enforced."
 )
