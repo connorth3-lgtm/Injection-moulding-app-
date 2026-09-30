@@ -220,15 +220,18 @@ test('Materials comparison guides valid choices before running evidence work',as
 });
 
 
-test('390px Home keeps the four primary workbench actions above the fold',async({page})=>{
+test('390px Home keeps the primary lesson and two specialist tools above the nav',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   const actions=page.locator('#dashboard .mm-home-balance-grid button');
-  await expect(actions).toHaveCount(4);
-  const boxes=[];
-  for(let i=0;i<4;i++)boxes.push(await actions.nth(i).boundingBox());
-  expect(Math.max(...boxes.map(x=>(x?.y||0)+(x?.height||0)))).toBeLessThan(700);
-  await expect(page.locator('#dashboard .mm-home-snapshot')).toBeHidden();
+  await expect(actions).toHaveCount(2);
+  await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
+  const geometry=await page.evaluate(()=>({
+    toolsBottom:document.querySelector('#dashboard .mm-home-balance').getBoundingClientRect().bottom,
+    navTop:document.querySelector('.mobile-nav').getBoundingClientRect().top
+  }));
+  expect(geometry.toolsBottom).toBeLessThanOrEqual(geometry.navTop+1);
+  await expect(page.locator('#dashboard .mm-home-balance')).not.toContainText(/Materials|Practice|Saved lessons|Reference book/i);
   await assertNoHorizontalOverflow(page,'home-390-primary-actions');
 });
 
