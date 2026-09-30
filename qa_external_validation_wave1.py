@@ -92,7 +92,8 @@ require(old_fingerprint != candidate.get("runtimeFingerprint"), "historical Wave
 
 manifest_ids = [ch["id"] for part in manifest["parts"] for ch in part["chapters"]]
 require(len(manifest_ids) == 46 and len(set(manifest_ids)) == 46, "Book manifest must contain 46 unique chapter ids")
-require(book_sme.get("release") == external_release, "Book SME contract must remain bound to the external-evidence release")
+book_sme_release = str(book_sme.get("release") or "")
+require(bool(book_sme_release) and book_sme_release <= external_release, "Book SME contract cannot target a future external-evidence release")
 require(book_sme.get("manifestVersion") == manifest.get("version"), "Book SME manifest version mismatch")
 require(set(book_sme.get("chapterIds") or []) == set(manifest_ids), "Book SME contract must cover exactly all 46 manifest chapters")
 require(set(auth.get("authorizedChapterIds") or []) == set(manifest_ids), "Book publication authorization must cover the same 46 chapters")
@@ -101,6 +102,7 @@ require(len(required_dimensions) == 6, "Book SME contract must define six review
 reviews = book_sme.get("reviews")
 require(isinstance(reviews, list), "Book SME reviews must be a list")
 if book_sme.get("status") == "validated":
+    require(book_sme_release == external_release, "Validated Book SME evidence must be bound to the current external-evidence release")
     require(len(reviews) == 46, "Validated Book SME evidence requires 46 review records")
     by_id = {row.get("chapterId"): row for row in reviews if isinstance(row, dict)}
     require(set(by_id) == set(manifest_ids), "Validated Book SME reviews must exactly cover all chapters")

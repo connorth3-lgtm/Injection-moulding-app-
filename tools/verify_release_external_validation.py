@@ -99,6 +99,12 @@ def require_current_release(evidence: dict, expected_release: str, label: str) -
         fail(f"{label} evidence/contract must be bound to release {expected_release}")
 
 
+def require_not_future_release(evidence: dict, expected_release: str, label: str) -> None:
+    release = require_nonempty(evidence.get("release"), f"{label} release is missing")
+    if release > expected_release:
+        fail(f"{label} cannot target future release {release}")
+
+
 def validate_accessibility(section: dict, expected_release: str) -> None:
     packet = require_release_packet(
         section.get("reviewPacket"),
@@ -180,7 +186,7 @@ def validate_book_sme(section: dict, expected_release: str) -> None:
         "Book SME",
     )
     evidence = load_json(ROOT / section["evidenceContract"])
-    require_current_release(evidence, expected_release, "Book SME")
+    require_not_future_release(evidence, expected_release, "Book SME")
     chapter_ids = evidence.get("chapterIds")
     reviews = evidence.get("reviews")
     required_dimensions = set(evidence.get("requiredDimensions") or [])
@@ -192,6 +198,7 @@ def validate_book_sme(section: dict, expected_release: str) -> None:
         if evidence.get("status") == "validated":
             fail("Book SME is marked hold although its evidence contract says validated; reconcile explicitly")
         return
+    require_current_release(evidence, expected_release, "Book SME")
     if evidence.get("status") != "validated":
         fail("Book SME cannot be validated until the human-review contract status is validated")
     if len(required_dimensions) != 6:
@@ -303,8 +310,11 @@ def validate_nzqa(section: dict, expected_release: str) -> None:
     templates_path = require_repo_file(contract.get("providerTemplatesContract"), "NZQA provider evidence-template contract is missing")
     readiness = load_json(ROOT / readiness_path)
     templates = load_json(ROOT / templates_path)
-    if readiness.get("id") != "mouldmaster-nzqa-education-readiness" or readiness.get("releaseTarget") != expected_release:
-        fail("NZQA readiness contract identity/release target is stale")
+    if readiness.get("id") != "mouldmaster-nzqa-education-readiness":
+        fail("NZQA readiness contract identity is invalid")
+    readiness_release = require_nonempty(readiness.get("releaseTarget"), "NZQA readiness releaseTarget is missing")
+    if readiness_release > expected_release:
+        fail(f"NZQA readiness contract cannot target future release {readiness_release}")
     if templates.get("id") != "mouldmaster-nzqa-provider-evidence-templates":
         fail("NZQA provider evidence-template contract identity is invalid")
     candidate = contract.get("candidate")
@@ -335,6 +345,8 @@ def validate_nzqa(section: dict, expected_release: str) -> None:
 
     if contract.get("status") != "validated":
         fail("NZQA provider validation cannot be promoted until its external contract is validated")
+    if readiness_release != expected_release:
+        fail("validated NZQA/provider status requires the readiness contract to be rebound to the current release")
     evidence = contract.get("evidence")
     if not isinstance(evidence, dict):
         fail("validated NZQA provider status requires a release-bound evidence object")
@@ -351,9 +363,8 @@ def main() -> None:
     if data.get("schemaVersion") != 1:
         fail("schemaVersion must be 1")
     contract_release = require_nonempty(data.get("release"), "external-validation contract release is missing")
-    if contract_release > expected_release:
-        fail(f"external-validation contract cannot target future release {contract_release}")
-    stale = contract_release != expected_release
+    if contract_release != expected_release:
+        fail(f"external-validation contract must be rebound to current release {expected_release}; got {contract_release}")
     require_release_packet(
         data.get("validationIndex"),
         contract_release,
@@ -393,10 +404,6 @@ def main() -> None:
         if policy.get(key) is not True:
             fail(f"governance.requiredPolicy.{key} must be true")
 
-    if stale:
-        for name in ("accessibility", "pwaPhysicalDevices", "windowsDistribution", "bookSme", "curriculumSme", "learnerOutcomes", "nzqaProvider"):
-            if data[name]["status"] != "hold":
-                fail(f"stale external-validation contract must remain HOLD for {name}")
     validate_accessibility(data["accessibility"], contract_release)
     validate_pwa(data["pwaPhysicalDevices"], contract_release)
     validate_windows(data["windowsDistribution"], contract_release)
