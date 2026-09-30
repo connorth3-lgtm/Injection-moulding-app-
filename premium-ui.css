@@ -277,7 +277,7 @@ input:focus,select:focus,textarea:focus{border-color:#61d9c3!important;box-shado
 .search-item{padding:12px!important;border-radius:11px!important;background:#0e2135!important;border-color:rgba(126,170,205,.2)!important}
 
 /* Read-aloud / listening and utility surfaces */
-.mm-read-aloud,.mm-listening-shell,.mm-today-focus,.mm-specialist-strip,.mm-home-utility{
+.mm-read-aloud,.mm-listening-shell,.mm-today-focus,.mm-specialist-strip{
   --mm-local-border:rgba(126,170,205,.18);
 }
 details>summary{border-radius:10px}
