@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "bookId": "mouldmaster-book",
-  "version": "2026.09.24.14",
+  "version": "2026.10.01.1",
   "status": "authorized",
   "authorizationType": "governed-book-publication",
   "authorizedAt": "2026-09-14",
@@ -30,7 +30,8 @@
       "book-chapters-materials-machine-v1.json": "db728583dd832c1998c8b2ac32ce97b281929047",
       "book-authored-remaining-v1.json": "ee0788e10630aaf6d0d8c64e2d69e40c14968f1f",
       "book-worked-engineering-cases-v1.json": "a17b39d366fe7751e2f833d34f7560bbd9f70fd0",
-      "book-evidence-enrichment-v2.json": "6b1c89025947fe72665f2a2b8cd2b389e6d298b0"
+      "book-evidence-enrichment-v2.json": "6b1c89025947fe72665f2a2b8cd2b389e6d298b0",
+      "book-material-grade-atlas-v1.json": "b5ef8dffc4022479695b31eac1b610b08e2e00e8"
     }
   },
   "canonicalAcademicEvidenceUrls": {
@@ -111,6 +112,7 @@
     "Peer-reviewed learner-facing links use canonical DOI/publisher records where available; discovery indexes are not treated as the controlling citation target.",
     "Worked engineering examples are synthetic teaching data with explicit assumptions and evidence anchors; they are not measured production evidence, universal settings, independent SME approval or machine-control authority.",
     "Evidence-enrichment sections are exact-byte authorized generic teaching content recovered from the previously validated editorial stack; source-specific values retain source context, synthetic examples remain labelled, and independent human SME review remains a separate HOLD.",
+    "The Material Grade Atlas is an exact-byte authorized technical-review appendix. Its 89 exact-grade profiles and linked evidence rows retain manufacturer, grade, test-condition, regional and value-status context; they are not independently SME-approved, universal settings, guaranteed specifications or production recipes.",
     "Any later hold, conflicting evidence, stale controlling source, read/listen divergence, byte-integrity mismatch or claim-ledger regression must fail closed and block/revoke publication in release QA."
   ],
   "revocationRules": {
@@ -122,7 +124,8 @@
     "runtimeByteIntegrityMismatch": "fail-closed-runtime",
     "authorizationChapterOutsideManifest": "fail-closed-runtime",
     "workedCaseLedgerOrEvidenceMismatch": "fail-closed-runtime",
-    "evidenceEnrichmentLedgerOrEvidenceMismatch": "fail-closed-runtime"
+    "evidenceEnrichmentLedgerOrEvidenceMismatch": "fail-closed-runtime",
+    "materialAtlasLedgerOrEvidenceMismatch": "fail-closed-runtime"
   },
   "workedCasesAuthorization": {
     "status": "authorized",
@@ -157,5 +160,21 @@
     "independentSmeStatus": "hold",
     "independentSmeContract": "data/book-sme-review-v1.json",
     "authorityBoundary": "advisory-only; no universal setpoints, validated recipe authority or automatic machine control"
+  },
+  "materialAtlasAuthorization": {
+    "status": "authorized-technical-review-appendix",
+    "authorizedAt": "2026-10-01",
+    "atlasVersion": "2026.10.01.1",
+    "ledger": "data/book-material-grade-atlas-v1.json",
+    "sourceIndex": "data/material-unique-profile-index-v1.json",
+    "sourceIndexVersion": "2026-09-28.10",
+    "sourceExtraction": "data/asian-aus-nz-material-grade-extraction-wave2-v1.json",
+    "sourceExtractionVersion": "2026-09-28.40",
+    "profileCount": 89,
+    "evidenceRowCount": 147,
+    "scope": "Exact manufacturer + grade material evidence for Book learning/search, preserving original test conditions, source/value-status qualifiers and regional context.",
+    "independentSmeStatus": "hold",
+    "independentSmeContract": "data/book-sme-review-v1.json",
+    "authorityBoundary": "technical-review appendix only; no universal setpoints, guaranteed specifications, validated production recipe or automatic machine-control authority"
   }
 }
