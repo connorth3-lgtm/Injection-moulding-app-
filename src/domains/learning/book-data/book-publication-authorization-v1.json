@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "bookId": "mouldmaster-book",
-  "version": "2026.10.01.1",
+  "version": "2026.10.01.2",
   "status": "authorized",
   "authorizationType": "governed-book-publication",
   "authorizedAt": "2026-09-14",
@@ -31,7 +31,9 @@
       "book-authored-remaining-v1.json": "ee0788e10630aaf6d0d8c64e2d69e40c14968f1f",
       "book-worked-engineering-cases-v1.json": "a17b39d366fe7751e2f833d34f7560bbd9f70fd0",
       "book-evidence-enrichment-v2.json": "6b1c89025947fe72665f2a2b8cd2b389e6d298b0",
-      "book-material-grade-atlas-v1.json": "bca76fb45a97d7b5559877e4f8478b6a18b8349c"
+      "book-material-grade-atlas-v1.json": "cacdbc176a4007ed876838a364a0fc841ed504ff",
+      "book-material-regional-evidence-v1.json": "4a42fa97f737b13271518d63672d3c4a01421e14",
+      "material-catalog-v1.json": "88ac789aef21314cf2fbef194937ea3dca180471"
     }
   },
   "canonicalAcademicEvidenceUrls": {
@@ -112,7 +114,7 @@
     "Peer-reviewed learner-facing links use canonical DOI/publisher records where available; discovery indexes are not treated as the controlling citation target.",
     "Worked engineering examples are synthetic teaching data with explicit assumptions and evidence anchors; they are not measured production evidence, universal settings, independent SME approval or machine-control authority.",
     "Evidence-enrichment sections are exact-byte authorized generic teaching content recovered from the previously validated editorial stack; source-specific values retain source context, synthetic examples remain labelled, and independent human SME review remains a separate HOLD.",
-    "The Material Grade Atlas is an exact-byte authorized technical-review appendix. Its 89 exact-grade profiles and linked evidence rows retain manufacturer, grade, test-condition, regional and value-status context; they are not independently SME-approved, universal settings, guaranteed specifications or production recipes.",
+    "The Material Data Atlas is an exact-byte authorized technical-review appendix. It consumes all 260 validated canonical exact-grade records plus every one of the 284 governed Asia/Australia/New Zealand evidence rows; the 89-profile regional index is reconciliation-only. Catalogue and regional values retain manufacturer, grade, source, test-condition, lifecycle, process and value-status context; they are not independently SME-approved, universal settings, guaranteed specifications or production recipes. The technical-review appendix is excluded from the evidence-verified listen-all path.",
     "Any later hold, conflicting evidence, stale controlling source, read/listen divergence, byte-integrity mismatch or claim-ledger regression must fail closed and block/revoke publication in release QA."
   ],
   "revocationRules": {
@@ -164,17 +166,26 @@
   "materialAtlasAuthorization": {
     "status": "authorized-technical-review-appendix",
     "authorizedAt": "2026-10-01",
-    "atlasVersion": "2026.10.01.1",
+    "atlasVersion": "2026.10.01.2",
     "ledger": "data/book-material-grade-atlas-v1.json",
-    "sourceIndex": "data/material-unique-profile-index-v1.json",
-    "sourceIndexVersion": "2026-09-28.10",
-    "sourceExtraction": "data/asian-aus-nz-material-grade-extraction-wave2-v1.json",
-    "sourceExtractionVersion": "2026-09-28.40",
-    "profileCount": 89,
-    "evidenceRowCount": 147,
-    "scope": "Exact manufacturer + grade material evidence for Book learning/search, preserving original test conditions, source/value-status qualifiers and regional context.",
+    "canonicalCatalog": "material-catalog-v1.json",
+    "canonicalCatalogStatus": "validated",
+    "canonicalGradeCount": 260,
+    "regionalEvidence": "data/asian-aus-nz-material-grade-extraction-wave2-v1.json",
+    "packagedRegionalEvidence": "src/domains/learning/book-data/book-material-regional-evidence-v1.json",
+    "regionalEvidenceVersion": "2026-09-28.40",
+    "regionalEvidenceRowCount": 284,
+    "regionalStatusCounts": {
+      "candidate-complete": 161,
+      "candidate-partial": 7,
+      "conditional": 4,
+      "discovery-only": 112
+    },
+    "regionalProfileIndex": "data/material-unique-profile-index-v1.json",
+    "regionalProfileCount": 89,
+    "scope": "Complete Book material reference coverage: all validated canonical public exact-grade records plus every governed Asia/Australia/New Zealand source-wave row, preserving source status and boundaries.",
     "independentSmeStatus": "hold",
     "independentSmeContract": "data/book-sme-review-v1.json",
-    "authorityBoundary": "technical-review appendix only; no universal setpoints, guaranteed specifications, validated production recipe or automatic machine-control authority"
+    "authorityBoundary": "technical-review appendix only; excluded from evidence-verified listen-all; no universal setpoints, guaranteed specifications, validated production recipe or automatic machine-control authority"
   }
 }
