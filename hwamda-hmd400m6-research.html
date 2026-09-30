@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hwamda HMD400M6 Manual Research</title>
+<style>
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;max-width:980px;margin:40px auto;padding:0 20px;line-height:1.55;color:#1d2433}
+h1,h2,h3{line-height:1.2}.tag{display:inline-block;padding:4px 9px;border:1px solid #c8ced8;border-radius:999px;margin:2px 4px 2px 0;font-size:.9rem}
+.ok{background:#eef9f1}.warn{background:#fff8e8}.missing{background:#fff0f0}
+table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #d8dde6;padding:8px;vertical-align:top;text-align:left}
+a{color:#1458c0}.small{color:#667085;font-size:.92rem}
+</style>
+</head>
+<body>
+<h1>Hwamda HMD400M6 Manual Research</h1>
+<p><span class="tag ok">Exact model identified</span><span class="tag ok">Techmation HMI family matched</span><span class="tag missing">Full OEM service manual still missing</span></p>
+<p class="small">Research ledger for the original Hwamda HMD400M6 M6-series injection moulding machine. Last updated 2026-09-30.</p>
+
+<h2>Current identification</h2>
+<table>
+<tr><th>Item</th><th>Status</th></tr>
+<tr><td>Machine</td><td>Hwamda HMD400M6</td></tr>
+<tr><td>Clamp force</td><td>4000 kN</td></tr>
+<tr><td>Tie bars</td><td>730 × 710 mm</td></tr>
+<tr><td>Platen</td><td>1050 × 1050 mm</td></tr>
+<tr><td>Opening stroke</td><td>660 mm</td></tr>
+<tr><td>Mould thickness</td><td>250–730 mm</td></tr>
+<tr><td>Max daylight</td><td>1390 mm</td></tr>
+<tr><td>Controller panel</td><td>Strong visual match to Techmation M8M/M10M-family HMI</td></tr>
+<tr><td>Exact controller host</td><td>Not yet confirmed</td></tr>
+<tr><td>Build year</td><td>Unknown; exact model documented by 2008</td></tr>
+</table>
+
+<h2>Verified / useful documents</h2>
+<ol>
+<li><strong>HMD400M6 technical and dimensional pack</strong> — <a href="https://kiaunoriumedis.lt/wp-content/uploads/2022/02/injection_machine.pdf">direct PDF</a>. Exact-model technical data, not a full service manual.</li>
+<li><strong>Techmation M8M/M10M HMI Controller & Software Manual</strong> — <a href="https://www.scribd.com/document/741534048/M8M-M10M-manual">indexed copy</a>. Best operator-interface family match so far.</li>
+<li><strong>AK668 / M8M / M10M controller manual candidate</strong> — <a href="https://www.scribd.com/document/765088086/AK668-05-1">indexed copy</a>. Useful service reference; AK668 is not yet proven on this machine.</li>
+<li><strong>Techmation TECH2 installation manual</strong> — <a href="https://www.hitechinterplas.com/assets/default/file/download/1400493678TECH2%20Series%20Installation%20Manual_Eng_-Q8V8M10M.pdf">direct PDF</a>. Generic controller hardware architecture, not Hwamda-specific wiring.</li>
+</ol>
+
+<h2>Official download-center audit</h2>
+<ul>
+<li><strong>Hwamda public downloads:</strong> <a href="https://www.hwamdamachinery.com/download.asp">current download page</a> exposes an M8-SII CE certificate, but no public HMD400M6/M6 service manual was found.</li>
+<li><strong>Techmation official manual center:</strong> <a href="https://en.techmation.com.cn/download-manual/">manual downloads</a>, <a href="https://en.techmation.com.cn/download-manual-controlhost/">control-host manuals</a>, and <a href="https://en.techmation.com.cn/download-manual-HMI/">HMI manuals</a> currently list newer systems; legacy AK668/M8M/M10M material is not currently listed.</li>
+<li><strong>GitHub archive search:</strong> exact-model and unique-fingerprint searches did not locate an authentic HMD400M6 OEM service manual or schematic set.</li>
+</ul>
+<p class="small">These are negative public-search results, not proof that Hwamda or Techmation lack internal legacy documents.</p>
+
+<h2>Surviving M6 paperwork lead</h2>
+<p>A preventive-maintenance record for a surviving <strong>HMD128M6</strong> at SEFA Servicios in Peru explicitly says <strong>“CATALOGO: SI”</strong>. A separate machinery inventory identifies the same model as plant asset PR-IP-01. This is independent evidence that M6-series paperwork survived with field machines.</p>
+<ul>
+<li><a href="https://es.scribd.com/document/682200508/PLAN-DE-MANTENIMIENTO-SABADO">SEFA maintenance record</a></li>
+<li><a href="https://es.scribd.com/document/719488163/INVENTARIO-DE-MAQUINAS">SEFA machinery inventory</a></li>
+</ul>
+<p class="small">This does not prove the catalogue is the HMD400M6 service manual, but it makes surviving-owner archives a high-priority route.</p>
+
+<h2>New M6-series lead: Techmation A63 / “SA63”</h2>
+<p>A secondary HMD128M6 M6-series configuration table states <strong>“Taiwan Techmation SA63 Computer Control”</strong> and, importantly, lists an <strong>Operating Manual</strong> among the machine attachments.</p>
+<p><a href="https://www.cnc-machiningparts.com/quality-5114277-fork-spoon-knife-plastic-cup-making-machine-with-mold-open-close-speed">M6-series configuration-table source</a></p>
+<p>This is same-series secondary evidence, not proof that this particular HMD400M6 uses A63/SA63. Techmation A63 is independently documented as a real injection-moulding controller family, so A63/SA63 is now a priority host-controller lead alongside M8M/M10M and AK668.</p>
+<ul>
+<li><a href="https://www.buenmachine.com/?currency=USD">A63 / MMIS7M7 product references</a></li>
+<li><a href="https://www.qy6.com.cn/qyml/aboutchenrofang.html">Older Chinese repair listing naming 弘讯电脑A63</a></li>
+<li><a href="https://www.machineto.com/techmation-controller-for-injection-molding-machine-10335026">Techmation controller listing including A63/A62/AK668/C6000</a></li>
+</ul>
+
+<h2>Missing target documents</h2>
+<ol>
+<li>Hwamda HMD400M6 / M6 operation and maintenance manual</li>
+<li>HMD400M6 hydraulic schematic</li>
+<li>HMD400M6 electrical schematic</li>
+<li>Hwamda OEM Techmation I/O allocation table</li>
+<li>M6 lubrication diagram</li>
+<li>HMD400M6 parts book / mechanical service drawings</li>
+<li>Exact controller hardware manual for the fitted board</li>
+</ol>
+
+<h2>Important audit notes</h2>
+<ul>
+<li>Do not treat HMD400M6-S servo documentation as interchangeable with the original HMD400M6.</li>
+<li>Do not promote AK668, TECH2 or PXA255-Q7 references to exact-machine status without direct evidence.</li>
+<li>Two published HMD400M6 injection-unit data sets conflict. Keep both until the exact injection-unit revision is confirmed.</li>
+</ul>
+
+<h2>Historical / supporting sources</h2>
+<ul>
+<li><a href="https://www.made-in-china.com/showroom/hwamda/product-detailToSxbczVbnWj/China-Plastic-Injection-Moulding-Machines-HMD400M6-.html">Historical exact-model HMD400M6 listing</a></li>
+<li><a href="https://louiske.en.ec21.com/Injection_Molding_Machine_HMD268M6--3054618_3028091.html">Historical M6 series architecture example (Yuken + Techmation)</a></li>
+<li><a href="https://www.plastemart.com/featured-products/online-auction-of-plastic-manufacturing-equipment-injection-moulders-blow-moulders-extrusion-moul/673">2008 HMD400M6 field-use evidence</a></li>
+<li><a href="https://www.110.com/fagui/law_389187.html">2011 HMD400M6-S servo-labelled derivative evidence</a></li>
+<li><a href="https://hwamdaglobal.com/en/solutions/global-service-and-spare-parts/">Current Hwamda service / parts support</a></li>
+<li><a href="https://en.techmation.com.cn/service/">Current Techmation service</a></li>
+</ul>
+
+<h2>Search state</h2>
+<p>The exact full HMD400M6 factory service pack remains the target. Current public searches repeatedly resolve to the exact technical-data pack, controller-family material, historical sales listings, or later M6-S documentation—not the original Hwamda electrical/hydraulic/service drawings.</p>
+
+<p class="small">Detailed audit and update log: <a href="research/hwamda-hmd400m6/">research/hwamda-hmd400m6/README.md</a></p>
+</body>
+</html>
