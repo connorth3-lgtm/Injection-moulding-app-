@@ -1,4 +1,4 @@
-/* MouldMaster learner UI polish — 2026.09.30.6 */
+/* MouldMaster learner UI polish — 2026.09.30.7 */
 
 /* Home: keep the mobile landing page lean, but use the available tablet/desktop
    canvas for a small task-oriented workspace instead of a large empty field. */
@@ -122,7 +122,7 @@
   .mm-onboarding-actions button{width:100%!important}
 }
 
-/* Home usefulness + primary-navigation declutter — 2026.09.30.6 */
+/* Home usefulness + primary-navigation declutter — 2026.09.30.7 */
 .mm-home-balance{
   grid-template-columns:1fr!important;
   gap:13px!important;
@@ -323,7 +323,7 @@
 }
 
 
-/* Home hierarchy repair — 2026.09.30.6
+/* Home hierarchy repair — 2026.09.30.7
    Keep the learner's next lesson first. The workbench is a quieter secondary
    launcher, with no duplicate Practice/Saved controls inside Today's focus. */
 #dashboard .mm-today-focus{margin-bottom:12px!important}
