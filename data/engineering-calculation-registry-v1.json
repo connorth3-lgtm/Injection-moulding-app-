@@ -63,8 +63,8 @@
       ],
       "scope": "Arithmetic separating-force screen; not automatically a required machine clamp setting.",
       "evidenceAnchors": [
-        "10.1016/J.CIRPJ.2017.03.001",
-        "10.1016/J.PRECISIONENG.2017.11.007"
+        "RAO-2017-TIEBAR-LOAD",
+        "HUANG-2018-CLAMP-SEPARATION"
       ],
       "uncertaintyBoundary": "Does not resolve spatial pressure gradients, mould/platen deflection, tie-bar imbalance or dynamic effects."
     },
@@ -83,8 +83,8 @@
       ],
       "scope": "Uncertainty-aware screening range using an explicitly supplied pressure range.",
       "evidenceAnchors": [
-        "10.1016/J.CIRPJ.2017.03.001",
-        "10.1016/J.PRECISIONENG.2017.11.007"
+        "RAO-2017-TIEBAR-LOAD",
+        "HUANG-2018-CLAMP-SEPARATION"
       ],
       "uncertaintyBoundary": "No safety factor or machine rating is invented."
     },
@@ -141,8 +141,8 @@
       ],
       "scope": "Capacity comparison only after the applicable engineering clamp requirement and exact-machine usable capacity are independently established.",
       "evidenceAnchors": [
-        "10.1016/J.CIRPJ.2017.03.001",
-        "10.1016/J.PRECISIONENG.2017.11.007"
+        "RAO-2017-TIEBAR-LOAD",
+        "HUANG-2018-CLAMP-SEPARATION"
       ],
       "uncertaintyBoundary": "Does not determine a machine clamp setpoint, preferred utilisation margin or mould/platen load distribution. Force units require canonical case (N, kN, MN), so mN cannot be silently read as MN."
     },
@@ -568,7 +568,7 @@
       ],
       "scope": "First-order relative comparison only under comparable thermal boundary/ejection conditions.",
       "evidenceAnchors": [
-        "AUTODESK-COOLING",
+        "PIGNON-2018-COOLING-ANALYTICAL",
         "KUO-2022-COOLING-WARPAGE"
       ],
       "uncertaintyBoundary": "Not an absolute cooling predictor; crystallisation, thermal contact resistance, local geometry, circuit resistance and transient mould state can invalidate the scaling."
@@ -643,5 +643,82 @@
       "uncertaintyBoundary": "A mass plateau is evidence consistent with diminishing additional transfer, not universal proof of an exact physical gate-freeze instant."
     }
   ],
-  "unitPolicy": "Engineering input units preserve SI prefix case. Canonical pressure/force case is mandatory and ambiguous uppercase/lowercase prefix substitutions are rejected; examples include mPa != MPa, mN != MN, Mg != mg, Mm != mm and ML != mL."
+  "unitPolicy": "Engineering input units preserve SI prefix case. Canonical pressure/force case is mandatory and ambiguous uppercase/lowercase prefix substitutions are rejected; examples include mPa != MPa, mN != MN, Mg != mg, Mm != mm and ML != mL.",
+  "evidenceResolution": {
+    "rule": "Every evidenceAnchors ID must resolve either from an existing governed repository evidence ledger or from engineeringEvidenceSupplements below. Raw DOI strings are not valid anchor IDs.",
+    "governedJsonSources": [
+      {
+        "path": "data/book-manifest-v1.json",
+        "collection": "sourceSeeds"
+      },
+      {
+        "path": "data/book-authored-foundations-v1.json",
+        "collection": "sourceSeeds"
+      },
+      {
+        "path": "data/book-evidence-registry-v1.json",
+        "collection": "sourceSeeds"
+      },
+      {
+        "path": "data/book-chapters-materials-machine-v1.json",
+        "collection": "sourceSeeds"
+      },
+      {
+        "path": "data/book-authored-remaining-v1.json",
+        "collection": "sourceSeeds"
+      },
+      {
+        "path": "data/book-claim-review-engineering-advanced-v1.json",
+        "collection": "sourceSeeds"
+      },
+      {
+        "path": "data/book-qualification-resolution-all-v1.json",
+        "collection": "newEvidence"
+      },
+      {
+        "path": "data/book-claim-resolution-all-v1.json",
+        "collection": "newEvidence"
+      },
+      {
+        "path": "sources/SOURCE_FRESHNESS.json",
+        "collection": "sources"
+      }
+    ],
+    "canonicalAcademicUrlSource": {
+      "path": "data/book-publication-authorization-v1.json",
+      "collection": "canonicalAcademicEvidenceUrls"
+    }
+  },
+  "engineeringEvidenceSupplements": [
+    {
+      "id": "RAO-2017-TIEBAR-LOAD",
+      "type": "peer-reviewed-journal",
+      "issuer": "CIRP Journal of Manufacturing Science and Technology",
+      "title": "Study on the clamping force measurement and partial load regulation technology of injection molding machine",
+      "url": "https://doi.org/10.1016/j.cirpj.2017.03.001",
+      "checked": "2026-10-02",
+      "currentState": "peer-reviewed-doi-verified",
+      "scope": "Tie-bar strain/load distribution and partial-load behaviour in injection moulding machines. Used to support clamp/tie-bar load context; not a universal clamp setpoint or direct cavity-pressure-to-clamp prescription."
+    },
+    {
+      "id": "HUANG-2018-CLAMP-SEPARATION",
+      "type": "peer-reviewed-journal",
+      "issuer": "Precision Engineering",
+      "title": "Influence of clamping force on tie-bar elongation, mold separation, and part dimensions in injection molding",
+      "url": "https://doi.org/10.1016/j.precisioneng.2017.11.007",
+      "checked": "2026-10-02",
+      "currentState": "peer-reviewed-doi-verified",
+      "scope": "Experimental relation among clamping force, tie-bar elongation, mould separation and part dimensions. Used for clamp/mould-separation evidence, not a universal optimum clamp force."
+    },
+    {
+      "id": "PIGNON-2018-COOLING-ANALYTICAL",
+      "type": "peer-reviewed-journal",
+      "issuer": "International Journal of Heat and Mass Transfer",
+      "title": "Improvement of heat transfer analytical models for thermoplastic injection molding and comparison with experiments",
+      "url": "https://doi.org/10.1016/j.ijheatmasstransfer.2017.09.078",
+      "checked": "2026-10-02",
+      "currentState": "peer-reviewed-doi-verified",
+      "scope": "Validated analytical cooling/solidification modelling for amorphous and semi-crystalline thermoplastics, including thermal-contact-resistance limitations. Supports first-order thermal screening, not universal absolute cooling time."
+    }
+  ]
 }
