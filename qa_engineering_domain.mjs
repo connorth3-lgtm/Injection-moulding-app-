@@ -216,9 +216,9 @@ const flowCapacity = volumetricFlowCapacityAssessment({
 });
 assert.equal(flowCapacity.ok, true);
 assert.equal(flowCapacity.value.requiredCm3S, 200);
-assert.equal(flowCapacity.value.availableCm3S, 250);
+assert.ok(Math.abs(flowCapacity.value.availableCm3S - 250) < 1e-12);
 assert.equal(flowCapacity.value.utilisationPct, 80);
-assert.equal(flowCapacity.value.capacityMarginCm3S, 50);
+assert.ok(Math.abs(flowCapacity.value.capacityMarginCm3S - 50) < 1e-12);
 
 const plasticisingCapacity = plasticisingThroughputAssessment({
   requiredMassRate: { value: 18, unit: 'kg/h' },
