@@ -169,6 +169,11 @@ assert.equal(
   'unsupported-pressure-unit',
   'mPa must never be silently interpreted as MPa',
 );
+assert.equal(
+  pressureValue({ pressure: { value: 55, unit: 'mpa' }, kind: 'cavity' }).reason,
+  'unsupported-pressure-unit',
+  'lowercase mpa is ambiguous and must not be normalised to MPa',
+);
 
 
 const measuredDrop = measuredPressureDifference({
@@ -281,6 +286,14 @@ assert.equal(
   }).reason,
   'unsupported-available-clamp-force-unit',
   'mN must never be silently interpreted as MN',
+);
+assert.equal(
+  clampCapacityAssessment({
+    requiredClampForce: { value: 900, unit: 'kn' },
+    availableClampForce: { value: 1200, unit: 'kN' },
+  }).reason,
+  'unsupported-required-clamp-force-unit',
+  'force units must use canonical SI prefix case',
 );
 
 const pressureCapacity = specificPlasticPressureCapacityAssessment({
