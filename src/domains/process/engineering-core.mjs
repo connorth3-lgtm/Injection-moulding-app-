@@ -375,7 +375,22 @@ export function clampSeparatingForceRange({ projectedArea, lowerRepresentativePr
   );
 }
 
-export function shotCapacityAssessment({ requiredShotMass, usableMachineShotMass, capacityBasisVerified = false, provenance = null } = {}) {
+export function shotCapacityAssessment({
+  requiredShotMass,
+  usableMachineShotMass,
+  capacityBasisVerified = false,
+  capacityBasisRef,
+  machineConfigurationId,
+  injectionUnitConfigurationId,
+  provenance = null,
+} = {}) {
+  const machineId = explicitIdentity(machineConfigurationId, 'machine-configuration-id');
+  if (!machineId.ok) return machineId;
+  const injectionId = explicitIdentity(injectionUnitConfigurationId, 'injection-unit-configuration-id');
+  if (!injectionId.ok) return injectionId;
+  const basisRef = String(capacityBasisRef || '').trim();
+  if (!basisRef) return unsupported('capacity-basis-reference-required', { field: 'capacityBasisRef' });
+
   const required = convertPositive(requiredShotMass, MASS_TO_G, 'required-shot-mass');
   if (!required.ok) return required;
   const usable = convertPositive(usableMachineShotMass, MASS_TO_G, 'usable-machine-shot-mass');
@@ -389,6 +404,9 @@ export function shotCapacityAssessment({ requiredShotMass, usableMachineShotMass
   const utilisationPct = 100 * required.value.si / usable.value.si;
   return supported(
     {
+      machineConfigurationId: machineId.value.id,
+      injectionUnitConfigurationId: injectionId.value.id,
+      capacityBasisRef: basisRef,
       requiredShotG: required.value.si,
       usableMachineShotG: usable.value.si,
       utilisationPct,
@@ -399,7 +417,7 @@ export function shotCapacityAssessment({ requiredShotMass, usableMachineShotMass
       equationId: ENGINEERING_EQUATION_IDS.shotCapacityAssessment,
       units: Object.freeze({ mass: 'g', utilisation: '%' }),
       assumptions: Object.freeze([
-        'Required and usable machine shot masses are on a verified comparable material/equivalent basis.',
+        'Required and usable machine shot masses are on a verified comparable material/equivalent basis tied to the stated machine and injection-unit configuration.',
         'No universal preferred barrel-utilisation percentage is inferred by this function.',
         'Machine suitability also depends on pressure, flow, plasticising, residence, mould fit and other machine/tool requirements.',
       ]),
@@ -408,7 +426,6 @@ export function shotCapacityAssessment({ requiredShotMass, usableMachineShotMass
     },
   );
 }
-
 
 function capacityComparison(requiredBase, availableBase) {
   const utilisationPct = 100 * requiredBase / availableBase;
@@ -419,7 +436,17 @@ function capacityComparison(requiredBase, availableBase) {
   };
 }
 
-export function clampCapacityAssessment({ requiredClampForce, availableClampForce, provenance = null } = {}) {
+export function clampCapacityAssessment({
+  requiredClampForce,
+  availableClampForce,
+  machineConfigurationId,
+  capacityBasisRef,
+  provenance = null,
+} = {}) {
+  const machineId = explicitIdentity(machineConfigurationId, 'machine-configuration-id');
+  if (!machineId.ok) return machineId;
+  const basisRef = String(capacityBasisRef || '').trim();
+  if (!basisRef) return unsupported('capacity-basis-reference-required', { field: 'capacityBasisRef' });
   const required = convertPositiveBase(requiredClampForce, FORCE_TO_N, 'required-clamp-force', 'N');
   if (!required.ok) return required;
   const available = convertPositiveBase(availableClampForce, FORCE_TO_N, 'available-clamp-force', 'N');
@@ -427,6 +454,8 @@ export function clampCapacityAssessment({ requiredClampForce, availableClampForc
   const comparison = capacityComparison(required.value.base, available.value.base);
   return supported(
     {
+      machineConfigurationId: machineId.value.id,
+      capacityBasisRef: basisRef,
       requiredKilonewtons: required.value.base / 1000,
       availableKilonewtons: available.value.base / 1000,
       utilisationPct: comparison.utilisationPct,
@@ -438,7 +467,7 @@ export function clampCapacityAssessment({ requiredClampForce, availableClampForc
       units: Object.freeze({ force: 'kN', utilisation: '%' }),
       assumptions: Object.freeze([
         'The required force supplied to this function is already the applicable engineering clamp requirement for the stated case.',
-        'The available force is the verified usable clamp capacity of the exact machine/configuration.',
+        'The available force and capacity basis are verified for the exact stated machine configuration.',
         'This function compares capacity only; it does not determine an appropriate operating clamp setpoint or invent a preferred utilisation margin.',
       ]),
       provenance,
@@ -447,7 +476,20 @@ export function clampCapacityAssessment({ requiredClampForce, availableClampForc
   );
 }
 
-export function specificPlasticPressureCapacityAssessment({ requiredPressure, availableMachinePressure, provenance = null } = {}) {
+export function specificPlasticPressureCapacityAssessment({
+  requiredPressure,
+  availableMachinePressure,
+  machineConfigurationId,
+  injectionUnitConfigurationId,
+  capacityBasisRef,
+  provenance = null,
+} = {}) {
+  const machineId = explicitIdentity(machineConfigurationId, 'machine-configuration-id');
+  if (!machineId.ok) return machineId;
+  const injectionId = explicitIdentity(injectionUnitConfigurationId, 'injection-unit-configuration-id');
+  if (!injectionId.ok) return injectionId;
+  const basisRef = String(capacityBasisRef || '').trim();
+  if (!basisRef) return unsupported('capacity-basis-reference-required', { field: 'capacityBasisRef' });
   const required = pressureValue({ pressure: requiredPressure, kind: 'specific-plastic', provenance });
   if (!required.ok) return required;
   const available = pressureValue({ pressure: availableMachinePressure, kind: 'specific-plastic', provenance });
@@ -455,6 +497,9 @@ export function specificPlasticPressureCapacityAssessment({ requiredPressure, av
   const comparison = capacityComparison(required.value.pascals, available.value.pascals);
   return supported(
     {
+      machineConfigurationId: machineId.value.id,
+      injectionUnitConfigurationId: injectionId.value.id,
+      capacityBasisRef: basisRef,
       requiredMegapascals: required.value.megapascals,
       availableMegapascals: available.value.megapascals,
       utilisationPct: comparison.utilisationPct,
@@ -465,7 +510,7 @@ export function specificPlasticPressureCapacityAssessment({ requiredPressure, av
       equationId: ENGINEERING_EQUATION_IDS.specificPlasticPressureCapacityAssessment,
       units: Object.freeze({ pressure: 'MPa', utilisation: '%' }),
       assumptions: Object.freeze([
-        'Both values are verified on the same specific-plastic/injection-pressure basis; hydraulic pressure must not be substituted without a verified machine conversion basis.',
+        'Both values are verified on the same specific-plastic/injection-pressure basis for the exact stated machine and injection-unit configuration; hydraulic pressure must not be substituted without a verified machine conversion basis.',
         'The required pressure is established independently from appropriate process/mould evidence; this function does not predict cavity or flow-path pressure demand.',
         'No preferred pressure-utilisation percentage is inferred.',
       ]),
@@ -475,7 +520,20 @@ export function specificPlasticPressureCapacityAssessment({ requiredPressure, av
   );
 }
 
-export function volumetricFlowCapacityAssessment({ requiredFlow, availableMachineFlow, provenance = null } = {}) {
+export function volumetricFlowCapacityAssessment({
+  requiredFlow,
+  availableMachineFlow,
+  machineConfigurationId,
+  injectionUnitConfigurationId,
+  capacityBasisRef,
+  provenance = null,
+} = {}) {
+  const machineId = explicitIdentity(machineConfigurationId, 'machine-configuration-id');
+  if (!machineId.ok) return machineId;
+  const injectionId = explicitIdentity(injectionUnitConfigurationId, 'injection-unit-configuration-id');
+  if (!injectionId.ok) return injectionId;
+  const basisRef = String(capacityBasisRef || '').trim();
+  if (!basisRef) return unsupported('capacity-basis-reference-required', { field: 'capacityBasisRef' });
   const required = convertPositiveBase(requiredFlow, VOLUME_RATE_TO_CM3_S, 'required-volumetric-flow', 'cm3/s');
   if (!required.ok) return required;
   const available = convertPositiveBase(availableMachineFlow, VOLUME_RATE_TO_CM3_S, 'available-machine-flow', 'cm3/s');
@@ -483,6 +541,9 @@ export function volumetricFlowCapacityAssessment({ requiredFlow, availableMachin
   const comparison = capacityComparison(required.value.base, available.value.base);
   return supported(
     {
+      machineConfigurationId: machineId.value.id,
+      injectionUnitConfigurationId: injectionId.value.id,
+      capacityBasisRef: basisRef,
       requiredCm3S: required.value.base,
       availableCm3S: available.value.base,
       utilisationPct: comparison.utilisationPct,
@@ -493,7 +554,7 @@ export function volumetricFlowCapacityAssessment({ requiredFlow, availableMachin
       equationId: ENGINEERING_EQUATION_IDS.volumetricFlowCapacityAssessment,
       units: Object.freeze({ flow: 'cm³/s', utilisation: '%' }),
       assumptions: Object.freeze([
-        'Required and available flow values use a verified comparable volumetric basis.',
+        'Required and available flow values use a verified comparable volumetric basis for the exact stated machine and injection-unit configuration.',
         'This is a machine-capacity comparison, not a melt-front velocity, gate shear-rate or cavity-fill prediction.',
         'No preferred flow-utilisation percentage is inferred.',
       ]),
@@ -503,7 +564,23 @@ export function volumetricFlowCapacityAssessment({ requiredFlow, availableMachin
   );
 }
 
-export function plasticisingThroughputAssessment({ requiredMassRate, availablePlasticisingRate, provenance = null } = {}) {
+export function plasticisingThroughputAssessment({
+  requiredMassRate,
+  availablePlasticisingRate,
+  machineConfigurationId,
+  injectionUnitConfigurationId,
+  materialGradeId,
+  capacityBasisRef,
+  provenance = null,
+} = {}) {
+  const machineId = explicitIdentity(machineConfigurationId, 'machine-configuration-id');
+  if (!machineId.ok) return machineId;
+  const injectionId = explicitIdentity(injectionUnitConfigurationId, 'injection-unit-configuration-id');
+  if (!injectionId.ok) return injectionId;
+  const gradeId = explicitIdentity(materialGradeId, 'material-grade-id');
+  if (!gradeId.ok) return gradeId;
+  const basisRef = String(capacityBasisRef || '').trim();
+  if (!basisRef) return unsupported('capacity-basis-reference-required', { field: 'capacityBasisRef' });
   const required = convertPositiveBase(requiredMassRate, MASS_RATE_TO_G_S, 'required-mass-rate', 'g/s');
   if (!required.ok) return required;
   const available = convertPositiveBase(availablePlasticisingRate, MASS_RATE_TO_G_S, 'available-plasticising-rate', 'g/s');
@@ -511,6 +588,10 @@ export function plasticisingThroughputAssessment({ requiredMassRate, availablePl
   const comparison = capacityComparison(required.value.base, available.value.base);
   return supported(
     {
+      machineConfigurationId: machineId.value.id,
+      injectionUnitConfigurationId: injectionId.value.id,
+      materialGradeId: gradeId.value.id,
+      capacityBasisRef: basisRef,
       requiredGS: required.value.base,
       availableGS: available.value.base,
       utilisationPct: comparison.utilisationPct,
@@ -521,7 +602,7 @@ export function plasticisingThroughputAssessment({ requiredMassRate, availablePl
       equationId: ENGINEERING_EQUATION_IDS.plasticisingThroughputAssessment,
       units: Object.freeze({ massRate: 'g/s', utilisation: '%' }),
       assumptions: Object.freeze([
-        'Required and available plasticising rates are verified as comparable for the actual material, screw/configuration and stated conditions.',
+        'Required and available plasticising rates are verified as comparable for the exact material grade, machine and injection-unit configuration stated.',
         'Nominal catalogue plasticising rate is not assumed to equal usable grade-specific recovery capability unless that basis is verified.',
         'No preferred throughput-utilisation percentage is inferred.',
       ]),
@@ -771,25 +852,38 @@ export function ejectorStrokeFit({
   );
 }
 
-function assessmentState(assessment) {
+function assessmentState(assessment, expectedIdentity = {}) {
   if (!assessment || typeof assessment !== 'object') return { state: 'UNKNOWN', reason: 'missing-assessment' };
   if (assessment.ok === false) return { state: 'UNKNOWN', reason: assessment.reason || 'unsupported-assessment' };
-  const explicit = String(assessment?.value?.state || assessment?.state || '').toUpperCase();
+
+  const value = assessment?.value && typeof assessment.value === 'object' ? assessment.value : assessment;
+  const identityChecks = [
+    ['machineConfigurationId', 'machine-configuration-mismatch'],
+    ['injectionUnitConfigurationId', 'injection-unit-configuration-mismatch'],
+    ['mouldConfigurationId', 'mould-configuration-mismatch'],
+  ];
+  for (const [field, reason] of identityChecks) {
+    const actual = String(value?.[field] || '').trim();
+    const expected = String(expectedIdentity?.[field] || '').trim();
+    if (actual && expected && actual !== expected) return { state: 'UNKNOWN', reason };
+  }
+
+  const explicit = String(value?.state || assessment?.state || '').toUpperCase();
   if (explicit === 'MARGINAL') {
-    const marginalBasisRef = String(assessment?.marginalBasisRef || '').trim();
+    const marginalBasisRef = String(assessment?.marginalBasisRef || value?.marginalBasisRef || '').trim();
     return marginalBasisRef
       ? { state: 'MARGINAL', reason: null }
       : { state: 'UNKNOWN', reason: 'marginal-basis-required' };
   }
   if (['PASS', 'FAIL', 'UNKNOWN'].includes(explicit)) return { state: explicit, reason: null };
-  if (typeof assessment?.value?.exceedsAvailableCapacity === 'boolean') {
-    return { state: assessment.value.exceedsAvailableCapacity ? 'FAIL' : 'PASS', reason: null };
+  if (typeof value?.exceedsAvailableCapacity === 'boolean') {
+    return { state: value.exceedsAvailableCapacity ? 'FAIL' : 'PASS', reason: null };
   }
-  if (typeof assessment?.value?.exceedsUsableCapacity === 'boolean') {
-    return { state: assessment.value.exceedsUsableCapacity ? 'FAIL' : 'PASS', reason: null };
+  if (typeof value?.exceedsUsableCapacity === 'boolean') {
+    return { state: value.exceedsUsableCapacity ? 'FAIL' : 'PASS', reason: null };
   }
-  if (typeof assessment?.value?.fits === 'boolean') {
-    return { state: assessment.value.fits ? 'PASS' : 'FAIL', reason: null };
+  if (typeof value?.fits === 'boolean') {
+    return { state: value.fits ? 'PASS' : 'FAIL', reason: null };
   }
   return { state: 'UNKNOWN', reason: 'assessment-state-unresolved' };
 }
@@ -817,8 +911,13 @@ export function machineSuitabilitySummary({
   const axisIds = [...new Set(requiredAxisIds.map(value => String(value || '').trim()).filter(Boolean))];
   if (axisIds.length < 1) return unsupported('required-axis-list-required', { field: 'requiredAxisIds' });
   const source = assessments && typeof assessments === 'object' ? assessments : {};
+  const expectedIdentity = Object.freeze({
+    machineConfigurationId: machineId.value.id,
+    injectionUnitConfigurationId: injectionId.value.id,
+    mouldConfigurationId: mouldId.value.id,
+  });
   const axes = axisIds.map(id => {
-    const resolved = assessmentState(source[id]);
+    const resolved = assessmentState(source[id], expectedIdentity);
     return Object.freeze({ id, state: resolved.state, reason: resolved.reason });
   });
   const states = axes.map(axis => axis.state);
@@ -843,7 +942,7 @@ export function machineSuitabilitySummary({
     {
       equationId: ENGINEERING_EQUATION_IDS.machineSuitabilitySummary,
       assumptions: Object.freeze([
-        'The summary covers only the explicitly declared required axes and exact machine/injection-unit/mould identities supplied to this function.',
+        'The summary covers only the explicitly declared required axes and exact machine/injection-unit/mould identities supplied to this function; any identity carried by an assessment must match the summary identity or that axis becomes UNKNOWN.',
         'FAIL dominates the summary. If no axis fails, any unresolved required axis forces UNKNOWN; MARGINAL is preserved only when an upstream assessment explicitly supplies that state together with a non-empty marginalBasisRef.',
         'PASS means every declared required axis passed its stated comparison. It is not a universal declaration that the machine/mould combination is safe, validated, installable or production-ready.',
         'Safety, guarding, utilities, platen/loading limits, nozzle/location compatibility, controls, ancillary equipment, local procedures and OEM requirements remain separate unless explicitly represented by required axes.',
