@@ -35,6 +35,15 @@ A pure domain module may return data, reasons, assumptions, units, provenance an
 2. **Shot/cavity mass accounting** — cavity count × part mass + optional runner mass, without claiming machine shot-capacity suitability.
 3. **Process-channel semantic readiness** — role, meaning, unit/dynamic-unit and sampling-basis blockers, kept equivalent to the current `.16.2` browser implementation during migration.
 4. **Exact-grade processing boundary** — grade-specific process settings require an exact grade and a current controlling supplier document; the pure domain does not invent generic production setpoints.
+5. **Pressure unit + semantic typing** — converts units while requiring a declared pressure location/type; it never turns hydraulic pressure into plastic/nozzle/cavity pressure by implication.
+6. **Clamp-force uncertainty range** — applies projected area to an explicitly supplied representative cavity-pressure range without inventing a machine clamp setting or safety factor.
+7. **Verified-basis shot-capacity screening** — computes utilisation only when the machine capacity and required shot are explicitly verified as comparable on the same material/equivalent basis; no universal preferred utilisation band is supplied.
+8. **Measured fill-stage rates** — pure volume/time, mass/time and ram-travel/time arithmetic with an explicit boundary that ram speed is not melt-front velocity and does not imply shear rate or viscosity.
+9. **Average residence screening** — inventory/throughput and shot/cycle forms return average residence estimates only; they explicitly do not claim a residence-time distribution or grade-specific degradation limit.
+10. **Relative thermal/cooling scaling** — thickness-squared/diffusivity scaling is available only as a first-order relative comparison under comparable thermal boundaries, never as a universal absolute cooling-time prediction.
+11. **Gate-seal plateau analysis** — repeated part-mass observations can be tested against a user-supplied decision tolerance; the result is evidence consistent with a plateau for that exact study, not proof of a universal or exact gate-freeze instant.
+
+The machine-readable contract for these calculations is `data/engineering-calculation-registry-v1.json`. Every implemented calculation has a stable ID, input/output scope, evidence anchors and an uncertainty/authority boundary. `qa_engineering_domain.mjs` requires exact registry/domain coverage so new engineering arithmetic cannot silently appear without a governed calculation record.
 
 `process-statistics.mjs` separately owns the descriptive evidence calculations already extracted by the audit, including reference-spread normalization, group separation and energy-per-good-part with explicit unsupported-state reasons.
 
@@ -57,7 +66,7 @@ The learner-facing `.16.2` browser runtime is intentionally not broadly rewritte
 
 ## Inventory for further extraction
 
-The audit identified additional candidate rules that should move behind the same boundary when they next change: material/drying applicability, usable shot-capacity checks, cycle-time components, cooling/thermal estimates, energy and quality/drift calculations, process-limit/readiness rules, and any repeated clamp/pressure/mass logic found in learner UI or evidence workflows. Each extraction must preserve units, assumptions, provenance and unsupported-state reasons.
+The audit still identifies additional candidate rules that should move behind the same boundary when they next change: material/drying applicability, full machine-suitability checks (pressure/flow/plasticising/mould fit), cycle-time component accounting, absolute cooling/solidification models that have sufficiently scoped material/thermal evidence, runner/gate geometric screening, energy and quality/drift calculations, process-limit/readiness rules, and the remaining duplicate clamp/pressure/fill-rate logic in learner UI. The legacy simulator's fixed weighted defect signals also remain a training model only and must not be promoted into probability, causal or production-setting authority. Each extraction must preserve units, assumptions, provenance, uncertainty and unsupported-state reasons.
 
 ## Safety and authority boundary
 
