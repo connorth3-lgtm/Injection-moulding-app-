@@ -264,6 +264,27 @@
       "uncertaintyBoundary": "Not an absolute cooling predictor; crystallisation, thermal contact resistance, local geometry, circuit resistance and transient mould state can invalidate the scaling."
     },
     {
+      "id": "EQ-SHR-001",
+      "name": "Source-bound linear shrinkage compensation range",
+      "formula": "D_mould = D_target / (1 - S), where S = (D_mould - D_part) / D_mould",
+      "inputs": [
+        "target part dimension",
+        "lower/upper source-backed linear shrinkage",
+        "provenance"
+      ],
+      "outputs": [
+        "starting mould-dimension range",
+        "compensation range"
+      ],
+      "scope": "Arithmetic starting compensation using an explicit mould-referenced linear-shrinkage definition and a source-backed range.",
+      "evidenceAnchors": [
+        "ASTM-D955-21",
+        "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW",
+        "ISO-20457-2026"
+      ],
+      "uncertaintyBoundary": "Not a released tool dimension and does not supply a generic polymer shrinkage constant; anisotropy, fibre orientation, pressure/thermal history, geometry, conditioning and tolerances remain outside this arithmetic."
+    },
+    {
       "id": "PROC-GATE-001",
       "name": "Repeatability-aware gate-seal plateau assessment",
       "formula": "Compare adjacent repeated part-mass means against a user-supplied decision tolerance across at least three hold-time levels.",
