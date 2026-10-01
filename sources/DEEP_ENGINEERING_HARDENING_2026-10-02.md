@@ -38,6 +38,10 @@ This pass reviewed the current MouldMaster engineering/runtime architecture and 
 
 All new functions return structured unsupported states rather than silently inventing missing engineering meaning.
 
+### SPC/capability hardening
+
+`src/domains/process/process-statistics.mjs` now has fail-closed capability arithmetic. It refuses to produce an index unless process stability, measurement-system adequacy, sampling adequacy, distribution/model adequacy and specification authority are all explicitly confirmed. A within-subgroup spread basis produces Cp/Cpk/Cpu/Cpl; an overall/long-term spread basis produces Pp/Ppk/Ppu/Ppl, preventing silent estimator relabelling. The function does not grade results against a generic 1.33/1.67-style threshold.
+
 ### Stable calculation registry
 
 `data/engineering-calculation-registry-v1.json` is now the machine-readable calculation contract. Each calculation records:
