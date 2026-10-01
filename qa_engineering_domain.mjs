@@ -6,6 +6,10 @@ import {
   aggregateShotMass,
   pressureValue,
   shotCapacityAssessment,
+  clampCapacityAssessment,
+  specificPlasticPressureCapacityAssessment,
+  volumetricFlowCapacityAssessment,
+  plasticisingThroughputAssessment,
   fillStageRates,
   averageResidenceTimeEstimate,
   averageResidenceTimeFromShotCycle,
@@ -183,6 +187,48 @@ assert.equal(shotCapacity.value.utilisationPct, 55);
 assert.equal(shotCapacity.value.capacityMarginG, 45);
 assert.equal(shotCapacity.value.exceedsUsableCapacity, false);
 assert.match(shotCapacity.assumptions.join(' '), /No universal preferred barrel-utilisation percentage/i);
+
+
+const clampCapacity = clampCapacityAssessment({
+  requiredClampForce: { value: 900, unit: 'kN' },
+  availableClampForce: { value: 1.2, unit: 'MN' },
+});
+assert.equal(clampCapacity.ok, true);
+assert.equal(clampCapacity.value.utilisationPct, 75);
+assert.equal(clampCapacity.value.capacityMarginKilonewtons, 300);
+assert.equal(clampCapacity.value.exceedsAvailableCapacity, false);
+assert.match(clampCapacity.assumptions.join(' '), /does not determine an appropriate operating clamp setpoint/i);
+
+const pressureCapacity = specificPlasticPressureCapacityAssessment({
+  requiredPressure: { value: 120, unit: 'MPa' },
+  availableMachinePressure: { value: 1500, unit: 'bar' },
+});
+assert.equal(pressureCapacity.ok, true);
+assert.equal(pressureCapacity.value.requiredMegapascals, 120);
+assert.equal(pressureCapacity.value.availableMegapascals, 150);
+assert.equal(pressureCapacity.value.utilisationPct, 80);
+assert.equal(pressureCapacity.value.capacityMarginMegapascals, 30);
+assert.match(pressureCapacity.assumptions.join(' '), /hydraulic pressure must not be substituted/i);
+
+const flowCapacity = volumetricFlowCapacityAssessment({
+  requiredFlow: { value: 200, unit: 'cm³/s' },
+  availableMachineFlow: { value: 15, unit: 'L/min' },
+});
+assert.equal(flowCapacity.ok, true);
+assert.equal(flowCapacity.value.requiredCm3S, 200);
+assert.equal(flowCapacity.value.availableCm3S, 250);
+assert.equal(flowCapacity.value.utilisationPct, 80);
+assert.equal(flowCapacity.value.capacityMarginCm3S, 50);
+
+const plasticisingCapacity = plasticisingThroughputAssessment({
+  requiredMassRate: { value: 18, unit: 'kg/h' },
+  availablePlasticisingRate: { value: 30, unit: 'kg/h' },
+});
+assert.equal(plasticisingCapacity.ok, true);
+assert.equal(plasticisingCapacity.value.requiredGS, 5);
+assert.ok(Math.abs(plasticisingCapacity.value.availableGS - (30 * 1000 / 3600)) < 1e-12);
+assert.equal(plasticisingCapacity.value.utilisationPct, 60);
+assert.match(plasticisingCapacity.assumptions.join(' '), /Nominal catalogue plasticising rate is not assumed/i);
 
 const rates = fillStageRates({
   fillTime: { value: 2, unit: 's' },
