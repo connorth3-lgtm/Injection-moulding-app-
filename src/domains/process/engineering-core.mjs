@@ -23,6 +23,7 @@ const MASS_RATE_TO_G_S = Object.freeze({
   'kg/h': 1000 / 3600,
 });
 const DIFFUSIVITY_TO_MM2_S = Object.freeze({ 'mm2/s': 1, 'cm2/s': 100, 'm2/s': 1e6 });
+const SHRINKAGE_TO_FRACTION = Object.freeze({ '%': 0.01, percent: 0.01, fraction: 1 });
 const PRESSURE_KINDS = Object.freeze([
   'hydraulic',
   'specific-plastic',
@@ -46,6 +47,7 @@ export const ENGINEERING_EQUATION_IDS = Object.freeze({
   averageResidenceTime: 'EQ-RES-001',
   averageResidenceFromShotCycle: 'EQ-RES-002',
   relativeCoolingTimeScale: 'EQ-THERM-001',
+  linearShrinkageCompensationRange: 'EQ-SHR-001',
   gateSealPlateau: 'PROC-GATE-001',
 });
 
@@ -538,6 +540,73 @@ export function relativeCoolingTimeScale({
       ]),
       provenance,
       authority: 'relative-thermal-screen-only',
+    },
+  );
+}
+
+
+function convertShrinkageFraction(quantity, field) {
+  if (!quantity || typeof quantity !== 'object') return unsupported(`missing-${field}`, { field });
+  const raw = Number(quantity.value);
+  if (!Number.isFinite(raw) || raw < 0) return unsupported(`invalid-${field}-value`, { field });
+  const unit = cleanUnit(quantity.unit);
+  const factor = SHRINKAGE_TO_FRACTION[unit];
+  if (!factor) return unsupported(`unsupported-${field}-unit`, { field, unit: String(quantity.unit ?? '') });
+  const fraction = raw * factor;
+  if (fraction >= 1) return unsupported(`invalid-${field}-fraction`, { field, fraction });
+  return supported({ fraction, inputValue: raw, inputUnit: unit });
+}
+
+export function linearShrinkageCompensationRange({
+  targetPartDimension,
+  lowerShrinkage,
+  upperShrinkage,
+  definition = 'mould-referenced-linear',
+  provenance = null,
+} = {}) {
+  if (definition !== 'mould-referenced-linear') {
+    return unsupported('unsupported-shrinkage-definition', {
+      field: 'definition',
+      allowed: 'mould-referenced-linear',
+    });
+  }
+  if (!String(provenance || '').trim()) {
+    return unsupported('shrinkage-range-provenance-required', { field: 'provenance' });
+  }
+  const target = convertPositiveBase(targetPartDimension, LENGTH_TO_MM, 'target-part-dimension', 'mm');
+  if (!target.ok) return target;
+  const low = convertShrinkageFraction(lowerShrinkage, 'lower-shrinkage');
+  if (!low.ok) return low;
+  const high = convertShrinkageFraction(upperShrinkage, 'upper-shrinkage');
+  if (!high.ok) return high;
+  if (low.value.fraction > high.value.fraction) {
+    return unsupported('shrinkage-range-reversed', { field: 'shrinkage-range' });
+  }
+
+  const lowerMouldMm = target.value.base / (1 - low.value.fraction);
+  const upperMouldMm = target.value.base / (1 - high.value.fraction);
+  return supported(
+    {
+      targetPartDimensionMm: target.value.base,
+      lowerShrinkageFraction: low.value.fraction,
+      upperShrinkageFraction: high.value.fraction,
+      lowerStartingMouldDimensionMm: lowerMouldMm,
+      upperStartingMouldDimensionMm: upperMouldMm,
+      lowerCompensationMm: lowerMouldMm - target.value.base,
+      upperCompensationMm: upperMouldMm - target.value.base,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.linearShrinkageCompensationRange,
+      definition,
+      units: Object.freeze({ dimension: 'mm', shrinkage: 'fraction' }),
+      assumptions: Object.freeze([
+        'Shrinkage is explicitly defined here as (mould dimension - conditioned part dimension) / mould dimension for a stated linear direction.',
+        'The entered shrinkage range is source-backed and applicable to the stated material/test/process context; the function does not supply a generic polymer shrinkage constant.',
+        'The output is a starting arithmetic compensation range, not a released tool dimension. Flow/transverse anisotropy, fibre orientation, pressure history, crystallisation, geometry, local cooling, conditioning and product tolerances can shift the realised production dimension.',
+        'Final mould compensation requires the applicable drawing/tolerance framework and validated material/mould/process evidence.',
+      ]),
+      provenance: String(provenance).trim(),
+      authority: 'starting-compensation-range-only',
     },
   );
 }
