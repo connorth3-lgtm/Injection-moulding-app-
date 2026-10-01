@@ -782,6 +782,8 @@ const calculationRegistry = JSON.parse(
   fs.readFileSync(new URL('./data/engineering-calculation-registry-v1.json', import.meta.url), 'utf8'),
 );
 assert.equal(calculationRegistry.status, 'advisory-only');
+assert.match(calculationRegistry.unitPolicy, /mPa != MPa/);
+assert.match(calculationRegistry.unitPolicy, /Mg != mg/);
 const registeredIds = new Set(calculationRegistry.entries.map(entry => entry.id));
 for (const equationId of Object.values(ENGINEERING_EQUATION_IDS)) {
   assert.ok(registeredIds.has(equationId), `engineering calculation registry is missing ${equationId}`);
