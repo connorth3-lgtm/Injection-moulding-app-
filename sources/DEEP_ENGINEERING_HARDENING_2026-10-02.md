@@ -31,11 +31,12 @@ This pass reviewed the current MouldMaster engineering/runtime architecture and 
 9. average residence screening derived from shot mass and cycle time;
 10. relative cooling-time diffusion scaling with explicit non-absolute-model boundaries;
 11. source-bound linear shrinkage compensation-range arithmetic that refuses unsourced generic shrinkage inputs and explicitly stops short of a released tool dimension;
-12. exact-identity mould-height, opening-stroke, maximum-daylight, tie-bar-clearance and ejector-stroke fit screens;
-13. a declared-axis machine-suitability composer that preserves PASS / MARGINAL / FAIL / UNKNOWN without inventing a marginal threshold and requires `marginalBasisRef` for any MARGINAL assessment and forces UNKNOWN when a required axis is unresolved;
-14. hydraulic-diameter, uniform-channel-volume and circular-channel apparent wall-shear-rate screens with explicit non-Newtonian/pressure-loss boundaries;
-15. fail-closed pressure-loss modelling readiness that rejects MFR/MFI as a substitute for an explicit rheology model and blocks hydraulic/command pressure types;
-16. repeatability-aware gate-seal plateau analysis using a user-supplied decision tolerance.
+12. exact-grade, sample-specific moisture acceptance against a supplier-controlled limit with explicit measurement uncertainty and PASS / FAIL / INDETERMINATE states, without generating drying setpoints;
+13. exact-identity mould-height, opening-stroke, maximum-daylight, tie-bar-clearance and ejector-stroke fit screens;
+14. a declared-axis machine-suitability composer that preserves PASS / MARGINAL / FAIL / UNKNOWN without inventing a marginal threshold and requires `marginalBasisRef` for any MARGINAL assessment and forces UNKNOWN when a required axis is unresolved;
+15. hydraulic-diameter, uniform-channel-volume and circular-channel apparent wall-shear-rate screens with explicit non-Newtonian/pressure-loss boundaries;
+16. fail-closed pressure-loss modelling readiness that rejects MFR/MFI as a substitute for an explicit rheology model and blocks hydraulic/command pressure types;
+17. repeatability-aware gate-seal plateau analysis using a user-supplied decision tolerance.
 
 All new functions return structured unsupported states rather than silently inventing missing engineering meaning. The unit boundary also preserves SI prefix case across pressure, force, mass, length, area, volume, rates and diffusivity so ambiguous prefix changes are rejected rather than normalised.
 
@@ -76,6 +77,10 @@ Required direction:
 ### P1 — migrate duplicate UI arithmetic to the pure domain
 
 `src/domains/engineering/engineer-simulator-ui.js` still contains duplicate clamp and fill-rate arithmetic. Future runtime work should consume the canonical engineering-domain implementation through a governed browser adapter/module path so the app has one source of truth.
+
+### P1 — material-condition acceptance
+
+The pure domain now supports an uncertainty-aware exact-grade moisture comparison. The measurement method, sample identity and controlling supplier requirement are mandatory. A measurement whose uncertainty interval overlaps the limit is reported as INDETERMINATE instead of being rounded into a pass/fail. The function intentionally does not prescribe dryer temperature, time, dew point or airflow.
 
 ### P1 — process transfer arithmetic
 
