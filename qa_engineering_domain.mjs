@@ -218,7 +218,7 @@ const flowCapacity = volumetricFlowCapacityAssessment({
 assert.equal(flowCapacity.ok, true);
 assert.equal(flowCapacity.value.requiredCm3S, 200);
 assert.ok(Math.abs(flowCapacity.value.availableCm3S - 250) < 1e-12);
-assert.equal(flowCapacity.value.utilisationPct, 80);
+assert.ok(Math.abs(flowCapacity.value.utilisationPct - 80) < 1e-12);
 assert.ok(Math.abs(flowCapacity.value.capacityMarginCm3S - 50) < 1e-12);
 
 const plasticisingCapacity = plasticisingThroughputAssessment({
@@ -228,7 +228,7 @@ const plasticisingCapacity = plasticisingThroughputAssessment({
 assert.equal(plasticisingCapacity.ok, true);
 assert.equal(plasticisingCapacity.value.requiredGS, 5);
 assert.ok(Math.abs(plasticisingCapacity.value.availableGS - (30 * 1000 / 3600)) < 1e-12);
-assert.equal(plasticisingCapacity.value.utilisationPct, 60);
+assert.ok(Math.abs(plasticisingCapacity.value.utilisationPct - 60) < 1e-12);
 assert.match(plasticisingCapacity.assumptions.join(' '), /Nominal catalogue plasticising rate is not assumed/i);
 
 const rates = fillStageRates({
