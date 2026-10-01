@@ -184,9 +184,13 @@ export function capabilityIndices({
   spreadEstimatorRef,
   measurementUnit,
   processStable = false,
+  processStabilityBasisRef,
   measurementSystemAdequate = false,
+  measurementSystemBasisRef,
   samplingAdequacyConfirmed = false,
+  samplingAdequacyBasisRef,
   distributionModelAdequate = false,
+  distributionModelBasisRef,
   specificationBasisRef,
 } = {}) {
   const meanValueNumber = finiteNumber(meanValue);
@@ -196,6 +200,10 @@ export function capabilityIndices({
   const basis = String(spreadBasis || '').trim().toLowerCase();
   const estimatorRef = String(spreadEstimatorRef || '').trim();
   const unit = String(measurementUnit || '').trim();
+  const stabilityRef = String(processStabilityBasisRef || '').trim();
+  const measurementRef = String(measurementSystemBasisRef || '').trim();
+  const samplingRef = String(samplingAdequacyBasisRef || '').trim();
+  const distributionRef = String(distributionModelBasisRef || '').trim();
   const specRef = String(specificationBasisRef || '').trim();
 
   if (meanValueNumber === null) return Object.freeze({ indices: null, reason: 'invalid-mean' });
@@ -208,9 +216,13 @@ export function capabilityIndices({
 
   const blockers = [];
   if (processStable !== true) blockers.push('process-stability');
+  else if (!stabilityRef) blockers.push('process-stability-basis');
   if (measurementSystemAdequate !== true) blockers.push('measurement-system');
+  else if (!measurementRef) blockers.push('measurement-system-basis');
   if (samplingAdequacyConfirmed !== true) blockers.push('sampling-adequacy');
+  else if (!samplingRef) blockers.push('sampling-adequacy-basis');
   if (distributionModelAdequate !== true) blockers.push('distribution-model');
+  else if (!distributionRef) blockers.push('distribution-model-basis');
   if (!estimatorRef) blockers.push('spread-estimator');
   if (!unit) blockers.push('measurement-unit');
   if (!specRef) blockers.push('specification-basis');
@@ -248,11 +260,15 @@ export function capabilityIndices({
       upperSpecLimit: usl,
       measurementUnit: unit,
       spreadEstimatorRef: estimatorRef,
+      processStabilityBasisRef: stabilityRef,
+      measurementSystemBasisRef: measurementRef,
+      samplingAdequacyBasisRef: samplingRef,
+      distributionModelBasisRef: distributionRef,
       specificationBasisRef: specRef,
     }),
     assumptions: Object.freeze([
       'The supplied spread is an appropriate standard-deviation estimate for the declared spread basis, carries an explicit estimator reference and common measurement unit, and is not silently substituted between within-subgroup and overall/long-term variation.',
-      'Process stability, measurement-system adequacy, sampling adequacy, distribution/model adequacy and specification authority are caller-confirmed prerequisites, not inferred from the arithmetic.',
+      'Process stability, measurement-system adequacy, sampling adequacy, distribution/model adequacy and specification authority are caller-confirmed prerequisites with explicit basis references, not inferred from the arithmetic.',
       'The calculation does not grade capability against a universal acceptance threshold; product/customer/site requirements control any acceptance criterion.',
       'These indices describe spread and centring relative to specification under the stated assumptions and do not establish process causation or production authorization.',
     ]),
