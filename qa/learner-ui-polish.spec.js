@@ -261,7 +261,7 @@ test('Book Materials chapter exposes the complete governed material datasets wit
   await expect(atlas).toContainText('Complete Material Data Atlas');
   await expect(atlas).toContainText('260 canonical exact grades');
   await expect(atlas).toContainText('all 284 Asia/Australia/New Zealand evidence rows');
-  await expect(atlas).toContainText('excluded from evidence-verified listen-all');
+  await expect(atlas).toContainText('excluded from source-reviewed listen-all');
 
   expect(await page.evaluate(()=>window.MMBook.getMaterialCatalog().grades.length)).toBe(260);
   expect(await page.evaluate(()=>window.MMBook.getMaterialRegionalEvidence().records.length)).toBe(284);
@@ -273,6 +273,9 @@ test('Book Materials chapter exposes the complete governed material datasets wit
   const firstGrade=canonical.locator('[data-mm-book-catalog-grade]').first();
   await firstGrade.locator('summary').click();
   await expect(firstGrade).toContainText(/Canonical exact-grade record/i);
+  await expect(firstGrade).toContainText(/evidence:/i);
+  await expect(firstGrade).toContainText(/commercial\/source currentness:/i);
+  await expect(firstGrade).toContainText(/Evidence integrity and product\/source currentness are separate statuses/i);
   await expect(firstGrade.locator('pre')).toHaveCount(0);
 
   const regional=atlas.locator('[data-mm-book-regional-evidence]');
