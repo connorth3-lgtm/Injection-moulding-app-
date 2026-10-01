@@ -114,17 +114,23 @@
       "inputs": [
         "required shot mass",
         "usable machine shot mass",
-        "verified comparable capacity basis"
+        "verified comparable capacity basis flag",
+        "capacity basis reference",
+        "exact machine configuration ID",
+        "exact injection-unit configuration ID"
       ],
       "outputs": [
+        "machine/injection-unit identity",
+        "capacity basis reference",
         "utilisation %",
-        "capacity margin g"
+        "capacity margin g",
+        "capacity exceedance flag"
       ],
-      "scope": "Capacity screen only after mass-basis equivalence is explicitly verified.",
+      "scope": "Capacity screen only after mass-basis equivalence is explicitly verified and tied to an exact machine/injection-unit configuration plus a traceable capacity basis reference.",
       "evidenceAnchors": [
         "ARBURG-PLASTICISING-SERVICE"
       ],
-      "uncertaintyBoundary": "No universal preferred barrel-utilisation percentage is supplied."
+      "uncertaintyBoundary": "No universal preferred barrel-utilisation percentage is supplied; anonymous or unreferenced machine capacity is rejected."
     },
     {
       "id": "EQ-CAP-001",
@@ -132,19 +138,23 @@
       "formula": "utilisation[%] = 100 × F_required / F_available",
       "inputs": [
         "required clamp force",
-        "verified available clamp force"
+        "verified available clamp force",
+        "exact machine configuration ID",
+        "capacity basis reference"
       ],
       "outputs": [
+        "machine identity",
+        "capacity basis reference",
         "utilisation %",
         "force capacity margin",
         "capacity exceedance flag"
       ],
-      "scope": "Capacity comparison only after the applicable engineering clamp requirement and exact-machine usable capacity are independently established.",
+      "scope": "Capacity comparison only after the applicable engineering clamp requirement and exact-machine usable capacity are independently established and referenced.",
       "evidenceAnchors": [
         "RAO-2017-TIEBAR-LOAD",
         "HUANG-2018-CLAMP-SEPARATION"
       ],
-      "uncertaintyBoundary": "Does not determine a machine clamp setpoint, preferred utilisation margin or mould/platen load distribution. Force units require canonical case (N, kN, MN), so mN cannot be silently read as MN."
+      "uncertaintyBoundary": "Does not determine a machine clamp setpoint, preferred utilisation margin or mould/platen load distribution. Force units require canonical case (N, kN, MN), so mN cannot be silently read as MN; anonymous machine capacity is rejected."
     },
     {
       "id": "EQ-CAP-002",
@@ -152,18 +162,23 @@
       "formula": "utilisation[%] = 100 × P_required_specific-plastic / P_available_specific-plastic",
       "inputs": [
         "required specific-plastic pressure",
-        "verified available machine specific-plastic pressure"
+        "verified available machine specific-plastic pressure",
+        "exact machine configuration ID",
+        "exact injection-unit configuration ID",
+        "capacity basis reference"
       ],
       "outputs": [
+        "machine/injection-unit identity",
+        "capacity basis reference",
         "utilisation %",
         "pressure capacity margin",
         "capacity exceedance flag"
       ],
-      "scope": "Like-for-like plastic-side injection-pressure capacity screen.",
+      "scope": "Like-for-like plastic-side injection-pressure capacity screen tied to one exact machine/injection-unit configuration and a traceable capacity basis.",
       "evidenceAnchors": [
         "PARIZS-2023-IN-MOLD-SENSORS"
       ],
-      "uncertaintyBoundary": "Hydraulic pressure cannot be substituted without a verified machine conversion basis; cavity pressure demand is not predicted."
+      "uncertaintyBoundary": "Hydraulic pressure cannot be substituted without a verified machine conversion basis; cavity pressure demand is not predicted; anonymous machine/injection-unit capacity is rejected."
     },
     {
       "id": "EQ-CAP-003",
@@ -171,18 +186,23 @@
       "formula": "utilisation[%] = 100 × Q_required / Q_available",
       "inputs": [
         "required volumetric flow",
-        "verified available machine volumetric flow"
+        "verified available machine volumetric flow",
+        "exact machine configuration ID",
+        "exact injection-unit configuration ID",
+        "capacity basis reference"
       ],
       "outputs": [
+        "machine/injection-unit identity",
+        "capacity basis reference",
         "utilisation %",
         "flow capacity margin",
         "capacity exceedance flag"
       ],
-      "scope": "Like-for-like volumetric injection-capacity screen.",
+      "scope": "Like-for-like volumetric injection-capacity screen tied to one exact machine/injection-unit configuration and a traceable capacity basis.",
       "evidenceAnchors": [
         "ISO-294-1-2017"
       ],
-      "uncertaintyBoundary": "Does not infer melt-front velocity, gate shear rate, pressure loss or a preferred utilisation percentage."
+      "uncertaintyBoundary": "Does not infer melt-front velocity, gate shear rate, pressure loss or a preferred utilisation percentage; anonymous machine/injection-unit flow capacity is rejected."
     },
     {
       "id": "EQ-CAP-004",
@@ -190,19 +210,25 @@
       "formula": "utilisation[%] = 100 × m_dot_required / m_dot_available",
       "inputs": [
         "required mass throughput",
-        "verified available plasticising rate"
+        "verified available plasticising rate",
+        "exact machine configuration ID",
+        "exact injection-unit configuration ID",
+        "exact material grade ID",
+        "capacity basis reference"
       ],
       "outputs": [
+        "machine/injection-unit/material identity",
+        "capacity basis reference",
         "utilisation %",
         "throughput capacity margin",
         "capacity exceedance flag"
       ],
-      "scope": "Grade/configuration-aware plasticising/recovery capacity screen.",
+      "scope": "Grade/configuration-aware plasticising/recovery capacity screen tied to an exact machine, injection unit, material grade and traceable capacity basis.",
       "evidenceAnchors": [
         "ARBURG-PLASTICISING-SERVICE",
         "BASF-ULTRAMID-PROCESSING"
       ],
-      "uncertaintyBoundary": "Nominal catalogue plasticising output is not assumed to equal usable grade-specific recovery capability without a verified comparable basis."
+      "uncertaintyBoundary": "Nominal catalogue plasticising output is not assumed to equal usable grade-specific recovery capability without a verified comparable basis; anonymous machine/grade capacity is rejected."
     },
     {
       "id": "EQ-FIT-001",
@@ -317,20 +343,20 @@
         "exact injection-unit configuration ID",
         "exact mould configuration ID",
         "explicit required-axis list",
-        "axis assessments",
+        "identity-carrying axis assessments",
         "marginalBasisRef on any MARGINAL assessment",
         "declared basis"
       ],
       "outputs": [
-        "per-axis state",
+        "per-axis state and identity-mismatch reason",
         "coverage completeness",
         "summary state"
       ],
-      "scope": "Composition of explicitly declared machine/mould suitability axes without inventing missing engineering meaning.",
+      "scope": "Composition of explicitly declared machine/mould suitability axes while enforcing any machine, injection-unit or mould identity carried by the axis assessment.",
       "evidenceAnchors": [
         "ISO-20430-2020"
       ],
-      "uncertaintyBoundary": "PASS applies only to the declared axes and is not a universal declaration of safety, installability, validation or production readiness; unresolved required axes force UNKNOWN unless a known FAIL already dominates. A bare MARGINAL state without marginalBasisRef is treated as UNKNOWN."
+      "uncertaintyBoundary": "PASS applies only to the declared axes and is not a universal declaration of safety, installability, validation or production readiness. Any assessment identity mismatch becomes UNKNOWN; unresolved required axes force UNKNOWN unless a known FAIL already dominates. A bare MARGINAL state without marginalBasisRef is treated as UNKNOWN."
     },
     {
       "id": "EQ-FLOWPATH-001",
