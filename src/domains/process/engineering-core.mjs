@@ -1545,6 +1545,11 @@ export function linearShrinkageCompensationRange({
   targetPartDimension,
   lowerShrinkage,
   upperShrinkage,
+  materialGradeId,
+  shrinkageDirection,
+  directionBasisRef,
+  shrinkageBasisRef,
+  conditioningBasisRef,
   definition = 'mould-referenced-linear',
   provenance = null,
 } = {}) {
@@ -1554,9 +1559,17 @@ export function linearShrinkageCompensationRange({
       allowed: 'mould-referenced-linear',
     });
   }
-  if (!String(provenance || '').trim()) {
-    return unsupported('shrinkage-range-provenance-required', { field: 'provenance' });
-  }
+  const gradeId = explicitIdentity(materialGradeId, 'material-grade-id');
+  if (!gradeId.ok) return gradeId;
+  const direction = String(shrinkageDirection || '').trim();
+  if (!direction) return unsupported('shrinkage-direction-required', { field: 'shrinkageDirection' });
+  const directionRef = String(directionBasisRef || '').trim();
+  if (!directionRef) return unsupported('direction-basis-reference-required', { field: 'directionBasisRef' });
+  const shrinkageRef = String(shrinkageBasisRef || '').trim();
+  if (!shrinkageRef) return unsupported('shrinkage-basis-reference-required', { field: 'shrinkageBasisRef' });
+  const conditioningRef = String(conditioningBasisRef || '').trim();
+  if (!conditioningRef) return unsupported('conditioning-basis-reference-required', { field: 'conditioningBasisRef' });
+
   const target = convertPositiveBase(targetPartDimension, LENGTH_TO_MM, 'target-part-dimension', 'mm');
   if (!target.ok) return target;
   const low = convertShrinkageFraction(lowerShrinkage, 'lower-shrinkage');
@@ -1571,6 +1584,11 @@ export function linearShrinkageCompensationRange({
   const upperMouldMm = target.value.base / (1 - high.value.fraction);
   return supported(
     {
+      materialGradeId: gradeId.value.id,
+      shrinkageDirection: direction,
+      directionBasisRef: directionRef,
+      shrinkageBasisRef: shrinkageRef,
+      conditioningBasisRef: conditioningRef,
       targetPartDimensionMm: target.value.base,
       lowerShrinkageFraction: low.value.fraction,
       upperShrinkageFraction: high.value.fraction,
@@ -1584,17 +1602,17 @@ export function linearShrinkageCompensationRange({
       definition,
       units: Object.freeze({ dimension: 'mm', shrinkage: 'fraction' }),
       assumptions: Object.freeze([
-        'Shrinkage is explicitly defined here as (mould dimension - conditioned part dimension) / mould dimension for a stated linear direction.',
-        'The entered shrinkage range is source-backed and applicable to the stated material/test/process context; the function does not supply a generic polymer shrinkage constant.',
-        'The output is a starting arithmetic compensation range, not a released tool dimension. Flow/transverse anisotropy, fibre orientation, pressure history, crystallisation, geometry, local cooling, conditioning and product tolerances can shift the realised production dimension.',
+        'Shrinkage is explicitly defined here as (mould dimension - conditioned part dimension) / mould dimension for the stated linear direction.',
+        'The entered shrinkage range is source-backed for the exact material grade, stated direction and conditioning/dimensional basis; the function does not supply a generic polymer shrinkage constant.',
+        'Flow/transverse or other directional shrinkage values are not treated as interchangeable. The direction basis is retained explicitly with the result.',
+        'The output is a starting arithmetic compensation range, not a released tool dimension. Fibre orientation, pressure history, crystallisation, geometry, local cooling, mould restraint and product tolerances can shift the realised production dimension.',
         'Final mould compensation requires the applicable drawing/tolerance framework and validated material/mould/process evidence.',
       ]),
-      provenance: String(provenance).trim(),
+      provenance,
       authority: 'starting-compensation-range-only',
     },
   );
 }
-
 
 function convertMoistureMassFraction(quantity, field, { allowZero = true } = {}) {
   if (!quantity || typeof quantity !== 'object') return unsupported(`missing-${field}`, { field });
