@@ -24,7 +24,7 @@
       "evidenceAnchors": [
         "PARIZS-2023-IN-MOLD-SENSORS"
       ],
-      "uncertaintyBoundary": "No location-to-location or hydraulic-to-plastic conversion is inferred."
+      "uncertaintyBoundary": "No location-to-location or hydraulic-to-plastic conversion is inferred. SI prefix case is preserved for pressure so mPa is not accepted as MPa."
     },
     {
       "id": "EQ-PRESS-002",
@@ -144,7 +144,7 @@
         "10.1016/J.CIRPJ.2017.03.001",
         "10.1016/J.PRECISIONENG.2017.11.007"
       ],
-      "uncertaintyBoundary": "Does not determine a machine clamp setpoint, preferred utilisation margin or mould/platen load distribution."
+      "uncertaintyBoundary": "Does not determine a machine clamp setpoint, preferred utilisation margin or mould/platen load distribution. Force prefixes preserve case so mN is not accepted as MN."
     },
     {
       "id": "EQ-CAP-002",
@@ -318,6 +318,7 @@
         "exact mould configuration ID",
         "explicit required-axis list",
         "axis assessments",
+        "marginalBasisRef on any MARGINAL assessment",
         "declared basis"
       ],
       "outputs": [
@@ -329,7 +330,7 @@
       "evidenceAnchors": [
         "ISO-20430-2020"
       ],
-      "uncertaintyBoundary": "PASS applies only to the declared axes and is not a universal declaration of safety, installability, validation or production readiness; unresolved required axes force UNKNOWN unless a known FAIL already dominates."
+      "uncertaintyBoundary": "PASS applies only to the declared axes and is not a universal declaration of safety, installability, validation or production readiness; unresolved required axes force UNKNOWN unless a known FAIL already dominates. A bare MARGINAL state without marginalBasisRef is treated as UNKNOWN."
     },
     {
       "id": "EQ-FLOWPATH-001",
@@ -388,14 +389,14 @@
     {
       "id": "PROC-FLOWPATH-001",
       "name": "Pressure-loss modelling readiness",
-      "formula": "Readiness gate over exact material, rheology, thermal state, geometry, flow and pressure-location semantics",
+      "formula": "Readiness gate over exact material, rheology, thermal state, geometry, flow, plastic-side measured pressure kinds and physical location semantics",
       "inputs": [
         "exact material grade",
         "rheology model reference",
         "thermal-state reference",
         "flow-path geometry reference",
         "volumetric flow",
-        "upstream/downstream pressure kinds",
+        "upstream/downstream plastic-side measured pressure kinds",
         "distinct upstream/downstream location IDs"
       ],
       "outputs": [
@@ -408,7 +409,7 @@
         "AUTODESK-RUNNER-LAYOUT",
         "ISO-294-1-2017"
       ],
-      "uncertaintyBoundary": "Readiness is not model validation; MFR/MFI alone is not accepted as complete injection-moulding rheology, pressure locations must be explicit, and no pressure loss is calculated."
+      "uncertaintyBoundary": "Readiness is not model validation; MFR/MFI alone is not accepted as complete injection-moulding rheology, hydraulic/command pressure types are excluded, physical pressure locations must be explicit, and no pressure loss is calculated."
     },
     {
       "id": "EQ-FLOW-001",
