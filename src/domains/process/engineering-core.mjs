@@ -35,6 +35,7 @@ const PRESSURE_KINDS = Object.freeze([
 
 export const ENGINEERING_EQUATION_IDS = Object.freeze({
   pressureConversion: 'EQ-PRESS-001',
+  measuredPressureDifference: 'EQ-PRESS-002',
   clampSeparatingForce: 'EQ-CF-001',
   clampSeparatingForceRange: 'EQ-CF-002',
   aggregateShotMass: 'EQ-SHOT-001',
@@ -218,6 +219,70 @@ export function pressureValue({ pressure, kind, provenance = null } = {}) {
         'Hydraulic, specific-plastic, nozzle, runner, cavity and pack-command pressures remain semantically distinct.',
       ]),
       authority: 'unit-conversion-only',
+    },
+  );
+}
+
+
+export function measuredPressureDifference({
+  upstreamPressure,
+  downstreamPressure,
+  upstreamKind,
+  downstreamKind,
+  upstreamLocationId,
+  downstreamLocationId,
+  measurementBasisRef,
+  provenance = null,
+} = {}) {
+  const allowedMeasuredKinds = ['specific-plastic', 'nozzle', 'runner', 'cavity'];
+  const upstream = pressureValue({ pressure: upstreamPressure, kind: upstreamKind, provenance });
+  if (!upstream.ok) return upstream;
+  const downstream = pressureValue({ pressure: downstreamPressure, kind: downstreamKind, provenance });
+  if (!downstream.ok) return downstream;
+  if (!allowedMeasuredKinds.includes(upstream.pressureKind)) {
+    return unsupported('unsupported-upstream-measured-pressure-kind', {
+      field: 'upstreamKind',
+      allowedKinds: allowedMeasuredKinds,
+    });
+  }
+  if (!allowedMeasuredKinds.includes(downstream.pressureKind)) {
+    return unsupported('unsupported-downstream-measured-pressure-kind', {
+      field: 'downstreamKind',
+      allowedKinds: allowedMeasuredKinds,
+    });
+  }
+  const upstreamLocation = String(upstreamLocationId || '').trim();
+  const downstreamLocation = String(downstreamLocationId || '').trim();
+  const basis = String(measurementBasisRef || '').trim();
+  if (!upstreamLocation) return unsupported('upstream-location-required', { field: 'upstreamLocationId' });
+  if (!downstreamLocation) return unsupported('downstream-location-required', { field: 'downstreamLocationId' });
+  if (upstreamLocation === downstreamLocation) return unsupported('distinct-pressure-locations-required', { field: 'upstreamLocationId|downstreamLocationId' });
+  if (!basis) return unsupported('measurement-basis-required', { field: 'measurementBasisRef' });
+
+  const differencePa = upstream.value.pascals - downstream.value.pascals;
+  return supported(
+    {
+      upstreamMegapascals: upstream.value.megapascals,
+      downstreamMegapascals: downstream.value.megapascals,
+      pressureDifferenceMegapascals: differencePa / 1e6,
+      upstreamKind: upstream.pressureKind,
+      downstreamKind: downstream.pressureKind,
+      upstreamLocationId: upstreamLocation,
+      downstreamLocationId: downstreamLocation,
+      measurementBasisRef: basis,
+      upstreamNotLowerThanDownstream: differencePa >= 0,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.measuredPressureDifference,
+      units: Object.freeze({ pressure: 'MPa' }),
+      assumptions: Object.freeze([
+        'Both pressures are actual plastic-side pressure measurements or verified plastic-side actuals associated with the same explicitly referenced comparison basis.',
+        'Hydraulic pressure and pressure commands are excluded because subtracting them directly from nozzle/runner/cavity pressure would not represent a like-for-like measured flow-path pressure difference.',
+        'The arithmetic difference is a measured signal comparison only. It is not automatically a pressure-loss coefficient, viscosity estimate, restriction diagnosis or causal attribution.',
+        'A negative difference is retained and flagged rather than silently corrected; investigate synchronization, calibration, location definitions and process dynamics before interpreting it.',
+      ]),
+      provenance,
+      authority: 'measured-pressure-difference-only',
     },
   );
 }
