@@ -4,6 +4,13 @@
 const AREA_TO_M2 = Object.freeze({ m2: 1, cm2: 1e-4, mm2: 1e-6 });
 const PRESSURE_TO_PA = Object.freeze({ pa: 1, kpa: 1e3, mpa: 1e6, bar: 1e5 });
 const MASS_TO_G = Object.freeze({ g: 1, kg: 1000, mg: 0.001 });
+const FORCE_TO_N = Object.freeze({ n: 1, kn: 1000, mn: 1e6 });
+const VOLUME_RATE_TO_CM3_S = Object.freeze({
+  'cm3/s': 1,
+  'ml/s': 1,
+  'cm3/min': 1 / 60,
+  'l/min': 1000 / 60,
+});
 const VOLUME_TO_CM3 = Object.freeze({ cm3: 1, ml: 1, l: 1000, m3: 1e6, mm3: 0.001 });
 const LENGTH_TO_MM = Object.freeze({ mm: 1, cm: 10, m: 1000 });
 const TIME_TO_S = Object.freeze({ s: 1, sec: 1, min: 60, h: 3600 });
@@ -31,6 +38,10 @@ export const ENGINEERING_EQUATION_IDS = Object.freeze({
   clampSeparatingForceRange: 'EQ-CF-002',
   aggregateShotMass: 'EQ-SHOT-001',
   shotCapacityAssessment: 'EQ-SHOT-002',
+  clampCapacityAssessment: 'EQ-CAP-001',
+  specificPlasticPressureCapacityAssessment: 'EQ-CAP-002',
+  volumetricFlowCapacityAssessment: 'EQ-CAP-003',
+  plasticisingThroughputAssessment: 'EQ-CAP-004',
   fillStageRates: 'EQ-FLOW-001',
   averageResidenceTime: 'EQ-RES-001',
   averageResidenceFromShotCycle: 'EQ-RES-002',
@@ -259,6 +270,128 @@ export function shotCapacityAssessment({ requiredShotMass, usableMachineShotMass
         'Required and usable machine shot masses are on a verified comparable material/equivalent basis.',
         'No universal preferred barrel-utilisation percentage is inferred by this function.',
         'Machine suitability also depends on pressure, flow, plasticising, residence, mould fit and other machine/tool requirements.',
+      ]),
+      provenance,
+      authority: 'capacity-screen-only',
+    },
+  );
+}
+
+
+function capacityComparison(requiredBase, availableBase) {
+  const utilisationPct = 100 * requiredBase / availableBase;
+  return {
+    utilisationPct,
+    capacityMargin: availableBase - requiredBase,
+    exceedsAvailableCapacity: requiredBase > availableBase,
+  };
+}
+
+export function clampCapacityAssessment({ requiredClampForce, availableClampForce, provenance = null } = {}) {
+  const required = convertPositiveBase(requiredClampForce, FORCE_TO_N, 'required-clamp-force', 'N');
+  if (!required.ok) return required;
+  const available = convertPositiveBase(availableClampForce, FORCE_TO_N, 'available-clamp-force', 'N');
+  if (!available.ok) return available;
+  const comparison = capacityComparison(required.value.base, available.value.base);
+  return supported(
+    {
+      requiredKilonewtons: required.value.base / 1000,
+      availableKilonewtons: available.value.base / 1000,
+      utilisationPct: comparison.utilisationPct,
+      capacityMarginKilonewtons: comparison.capacityMargin / 1000,
+      exceedsAvailableCapacity: comparison.exceedsAvailableCapacity,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.clampCapacityAssessment,
+      units: Object.freeze({ force: 'kN', utilisation: '%' }),
+      assumptions: Object.freeze([
+        'The required force supplied to this function is already the applicable engineering clamp requirement for the stated case.',
+        'The available force is the verified usable clamp capacity of the exact machine/configuration.',
+        'This function compares capacity only; it does not determine an appropriate operating clamp setpoint or invent a preferred utilisation margin.',
+      ]),
+      provenance,
+      authority: 'capacity-screen-only',
+    },
+  );
+}
+
+export function specificPlasticPressureCapacityAssessment({ requiredPressure, availableMachinePressure, provenance = null } = {}) {
+  const required = pressureValue({ pressure: requiredPressure, kind: 'specific-plastic', provenance });
+  if (!required.ok) return required;
+  const available = pressureValue({ pressure: availableMachinePressure, kind: 'specific-plastic', provenance });
+  if (!available.ok) return available;
+  const comparison = capacityComparison(required.value.pascals, available.value.pascals);
+  return supported(
+    {
+      requiredMegapascals: required.value.megapascals,
+      availableMegapascals: available.value.megapascals,
+      utilisationPct: comparison.utilisationPct,
+      capacityMarginMegapascals: comparison.capacityMargin / 1e6,
+      exceedsAvailableCapacity: comparison.exceedsAvailableCapacity,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.specificPlasticPressureCapacityAssessment,
+      units: Object.freeze({ pressure: 'MPa', utilisation: '%' }),
+      assumptions: Object.freeze([
+        'Both values are verified on the same specific-plastic/injection-pressure basis; hydraulic pressure must not be substituted without a verified machine conversion basis.',
+        'The required pressure is established independently from appropriate process/mould evidence; this function does not predict cavity or flow-path pressure demand.',
+        'No preferred pressure-utilisation percentage is inferred.',
+      ]),
+      provenance,
+      authority: 'capacity-screen-only',
+    },
+  );
+}
+
+export function volumetricFlowCapacityAssessment({ requiredFlow, availableMachineFlow, provenance = null } = {}) {
+  const required = convertPositiveBase(requiredFlow, VOLUME_RATE_TO_CM3_S, 'required-volumetric-flow', 'cm3/s');
+  if (!required.ok) return required;
+  const available = convertPositiveBase(availableMachineFlow, VOLUME_RATE_TO_CM3_S, 'available-machine-flow', 'cm3/s');
+  if (!available.ok) return available;
+  const comparison = capacityComparison(required.value.base, available.value.base);
+  return supported(
+    {
+      requiredCm3S: required.value.base,
+      availableCm3S: available.value.base,
+      utilisationPct: comparison.utilisationPct,
+      capacityMarginCm3S: comparison.capacityMargin,
+      exceedsAvailableCapacity: comparison.exceedsAvailableCapacity,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.volumetricFlowCapacityAssessment,
+      units: Object.freeze({ flow: 'cm³/s', utilisation: '%' }),
+      assumptions: Object.freeze([
+        'Required and available flow values use a verified comparable volumetric basis.',
+        'This is a machine-capacity comparison, not a melt-front velocity, gate shear-rate or cavity-fill prediction.',
+        'No preferred flow-utilisation percentage is inferred.',
+      ]),
+      provenance,
+      authority: 'capacity-screen-only',
+    },
+  );
+}
+
+export function plasticisingThroughputAssessment({ requiredMassRate, availablePlasticisingRate, provenance = null } = {}) {
+  const required = convertPositiveBase(requiredMassRate, MASS_RATE_TO_G_S, 'required-mass-rate', 'g/s');
+  if (!required.ok) return required;
+  const available = convertPositiveBase(availablePlasticisingRate, MASS_RATE_TO_G_S, 'available-plasticising-rate', 'g/s');
+  if (!available.ok) return available;
+  const comparison = capacityComparison(required.value.base, available.value.base);
+  return supported(
+    {
+      requiredGS: required.value.base,
+      availableGS: available.value.base,
+      utilisationPct: comparison.utilisationPct,
+      capacityMarginGS: comparison.capacityMargin,
+      exceedsAvailableCapacity: comparison.exceedsAvailableCapacity,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.plasticisingThroughputAssessment,
+      units: Object.freeze({ massRate: 'g/s', utilisation: '%' }),
+      assumptions: Object.freeze([
+        'Required and available plasticising rates are verified as comparable for the actual material, screw/configuration and stated conditions.',
+        'Nominal catalogue plasticising rate is not assumed to equal usable grade-specific recovery capability unless that basis is verified.',
+        'No preferred throughput-utilisation percentage is inferred.',
       ]),
       provenance,
       authority: 'capacity-screen-only',
