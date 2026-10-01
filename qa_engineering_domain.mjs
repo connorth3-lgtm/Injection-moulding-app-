@@ -1162,6 +1162,7 @@ assert.equal(
     mouldSurfaceTemperature: { value: 60, unit: '°C' },
     ejectionTemperature: { value: 90, unit: '°C' },
     materialMorphology: 'amorphous',
+    ejectionCriterionType: 'centerline-temperature',
     ejectionCriterionRef: 'validated-part-ejection-study/rev-2',
     mouldSurfaceTemperatureBasisRef: 'instrumented-mould/trial-18',
   }).reason,
