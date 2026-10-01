@@ -22,6 +22,10 @@ import {
   circularChannelApparentWallShearRate,
   pressureLossModelReadiness,
   fillStageRates,
+  screwSweptVolume,
+  volumetricFlowFromScrewMotion,
+  screwSpeedForVolumetricFlow,
+  volumetricTransferBetweenScrews,
   averageResidenceTimeEstimate,
   averageResidenceTimeFromShotCycle,
   relativeCoolingTimeScale,
@@ -646,6 +650,68 @@ assert.equal(
   }).reason,
   'unsupported-fill-volume-unit',
   'ML must never be silently interpreted as mL',
+);
+
+
+const swept = screwSweptVolume({
+  screwDiameter: { value: 40, unit: 'mm' },
+  screwStroke: { value: 100, unit: 'mm' },
+  injectionUnitConfigurationId: 'IMM-A/IU-40',
+  provenance: 'synthetic-machine-geometry',
+});
+assert.equal(swept.ok, true);
+assert.ok(Math.abs(swept.value.sweptVolumeCm3 - (Math.PI * 40 ** 2 / 4 * 100 / 1000)) < 1e-12);
+assert.equal(swept.equationId, 'EQ-MTRANS-001');
+assert.match(swept.assumptions.join(' '), /not automatically delivered melt volume/i);
+assert.equal(
+  screwSweptVolume({
+    screwDiameter: { value: 40, unit: 'mm' },
+    screwStroke: { value: 100, unit: 'mm' },
+  }).reason,
+  'missing-injection-unit-configuration-id',
+);
+
+const screwFlow = volumetricFlowFromScrewMotion({
+  screwDiameter: { value: 40, unit: 'mm' },
+  screwLinearSpeed: { value: 80, unit: 'mm/s' },
+  injectionUnitConfigurationId: 'IMM-A/IU-40',
+});
+assert.equal(screwFlow.ok, true);
+assert.ok(Math.abs(screwFlow.value.geometricVolumetricFlowCm3S - (Math.PI * 40 ** 2 / 4 * 80 / 1000)) < 1e-12);
+assert.match(screwFlow.assumptions.join(' '), /not proven cavity volumetric flow/i);
+
+const requiredSpeed = screwSpeedForVolumetricFlow({
+  screwDiameter: { value: 50, unit: 'mm' },
+  targetVolumetricFlow: { value: screwFlow.value.geometricVolumetricFlowCm3S, unit: 'cm3/s' },
+  injectionUnitConfigurationId: 'IMM-B/IU-50',
+});
+assert.equal(requiredSpeed.ok, true);
+assert.ok(Math.abs(requiredSpeed.value.requiredScrewLinearSpeedMmS - (80 * 40 ** 2 / 50 ** 2)) < 1e-12);
+assert.match(requiredSpeed.assumptions.join(' '), /not a released machine velocity setpoint/i);
+
+const transferred = volumetricTransferBetweenScrews({
+  sourceScrewDiameter: { value: 40, unit: 'mm' },
+  sourceScrewLinearSpeed: { value: 80, unit: 'mm/s' },
+  sourceInjectionUnitConfigurationId: 'IMM-A/IU-40',
+  targetScrewDiameter: { value: 50, unit: 'mm' },
+  targetInjectionUnitConfigurationId: 'IMM-B/IU-50',
+  provenance: 'controlled-transfer-fixture',
+});
+assert.equal(transferred.ok, true);
+assert.ok(Math.abs(transferred.value.targetGeometricScrewLinearSpeedMmS - 51.2) < 1e-12);
+assert.ok(Math.abs(transferred.value.speedRatioTargetToSource - 0.64) < 1e-12);
+assert.equal(transferred.equationId, 'EQ-MTRANS-004');
+assert.match(transferred.assumptions.join(' '), /preserves only the same geometric screw-displacement volumetric rate/i);
+assert.match(transferred.assumptions.join(' '), /does not prove equivalent cavity fill/i);
+
+assert.equal(
+  volumetricFlowFromScrewMotion({
+    screwDiameter: { value: 40, unit: 'mm' },
+    screwLinearSpeed: { value: 8, unit: 'Mm/s' },
+    injectionUnitConfigurationId: 'IMM-A/IU-40',
+  }).reason,
+  'unsupported-screw-linear-speed-unit',
+  'Mm/s must never be silently interpreted as mm/s',
 );
 
 const residence = averageResidenceTimeEstimate({
