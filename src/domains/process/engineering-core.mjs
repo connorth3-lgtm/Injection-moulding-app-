@@ -862,10 +862,19 @@ function assessmentState(assessment, expectedIdentity = {}) {
     ['injectionUnitConfigurationId', 'injection-unit-configuration-mismatch'],
     ['mouldConfigurationId', 'mould-configuration-mismatch'],
   ];
+  let carriedIdentityCount = 0;
   for (const [field, reason] of identityChecks) {
     const actual = String(value?.[field] || '').trim();
     const expected = String(expectedIdentity?.[field] || '').trim();
+    if (actual) carriedIdentityCount += 1;
     if (actual && expected && actual !== expected) return { state: 'UNKNOWN', reason };
+  }
+
+  if (carriedIdentityCount === 0) {
+    const contextIndependent = assessment?.contextIndependent === true || value?.contextIndependent === true;
+    const contextBasisRef = String(assessment?.contextBasisRef || value?.contextBasisRef || '').trim();
+    if (!contextIndependent) return { state: 'UNKNOWN', reason: 'assessment-identity-unbound' };
+    if (!contextBasisRef) return { state: 'UNKNOWN', reason: 'context-basis-required' };
   }
 
   const explicit = String(value?.state || assessment?.state || '').toUpperCase();
@@ -942,7 +951,7 @@ export function machineSuitabilitySummary({
     {
       equationId: ENGINEERING_EQUATION_IDS.machineSuitabilitySummary,
       assumptions: Object.freeze([
-        'The summary covers only the explicitly declared required axes and exact machine/injection-unit/mould identities supplied to this function; any identity carried by an assessment must match the summary identity or that axis becomes UNKNOWN.',
+        'The summary covers only the explicitly declared required axes and exact machine/injection-unit/mould identities supplied to this function; any identity carried by an assessment must match the summary identity or that axis becomes UNKNOWN. An assessment carrying no hardware identity must explicitly declare contextIndependent=true with a non-empty contextBasisRef or it is UNKNOWN.',
         'FAIL dominates the summary. If no axis fails, any unresolved required axis forces UNKNOWN; MARGINAL is preserved only when an upstream assessment explicitly supplies that state together with a non-empty marginalBasisRef.',
         'PASS means every declared required axis passed its stated comparison. It is not a universal declaration that the machine/mould combination is safe, validated, installable or production-ready.',
         'Safety, guarding, utilities, platen/loading limits, nozzle/location compatibility, controls, ancillary equipment, local procedures and OEM requirements remain separate unless explicitly represented by required axes.',
