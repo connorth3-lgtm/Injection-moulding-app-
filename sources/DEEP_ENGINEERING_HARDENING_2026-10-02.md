@@ -29,7 +29,9 @@ This pass reviewed the current MouldMaster engineering/runtime architecture and 
 7. average residence screening derived from shot mass and cycle time;
 8. relative cooling-time diffusion scaling with explicit non-absolute-model boundaries;
 9. source-bound linear shrinkage compensation-range arithmetic that refuses unsourced generic shrinkage inputs and explicitly stops short of a released tool dimension;
-10. repeatability-aware gate-seal plateau analysis using a user-supplied decision tolerance.
+10. exact-identity mould-height, opening-stroke, maximum-daylight, tie-bar-clearance and ejector-stroke fit screens;
+11. a declared-axis machine-suitability composer that preserves PASS / MARGINAL / FAIL / UNKNOWN without inventing a marginal threshold and forces UNKNOWN when a required axis is unresolved;
+12. repeatability-aware gate-seal plateau analysis using a user-supplied decision tolerance.
 
 All new functions return structured unsupported states rather than silently inventing missing engineering meaning.
 
@@ -69,7 +71,7 @@ Required direction:
 
 ### P1 — machine suitability
 
-Separate pure capacity screens now exist for clamp force, verified shot mass, specific-plastic pressure, volumetric injection flow and plasticising throughput. The remaining gap is a fail-closed **machine-suitability composition layer** that combines those screens with residence/thermal history and physical mould-fit checks (mould height, daylight, tie-bar clearance, opening stroke and ejector stroke). No overall PASS should be produced when a required axis is unknown; the final output should preserve per-axis PASS / MARGINAL / FAIL / UNKNOWN rather than hiding an incomplete machine match behind one green result.
+Separate pure capacity screens now exist for clamp force, verified shot mass, specific-plastic pressure, volumetric injection flow and plasticising throughput. Exact-identity geometric screens now cover mould height, daylight, tie-bar clearance, opening stroke and ejector stroke, and the composition layer now preserves per-axis PASS / MARGINAL / FAIL / UNKNOWN while forcing UNKNOWN for unresolved required axes unless a known FAIL already dominates. Remaining machine-suitability work is to add evidence-scoped residence/thermal-history decisions plus nozzle/location, platen/load, utility and ancillary-equipment axes; no universal machine-ready PASS is authorised.
 
 ### P1 — thermal model depth
 
