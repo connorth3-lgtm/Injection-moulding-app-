@@ -31,7 +31,7 @@ This pass reviewed the current MouldMaster engineering/runtime architecture and 
 9. average residence screening derived from shot mass and cycle time;
 10. relative cooling-time diffusion scaling with explicit non-absolute-model boundaries;
 11. an evidence-gated absolute 1-D amorphous plane-wall cooling estimate that requires thermal-property/ejection/mould-surface provenance and rejects semi-crystalline material into a phase-change-model hold;
-12. source-bound linear shrinkage compensation-range arithmetic that refuses unsourced generic shrinkage inputs and explicitly stops short of a released tool dimension;
+12. grade- and direction-bound linear shrinkage compensation arithmetic that requires exact material grade, directional basis, source-backed shrinkage range and conditioning/dimensional basis, refuses generic or silently interchanged directional shrinkage values, and explicitly stops short of a released tool dimension;
 13. exact-grade, sample-specific moisture acceptance against a supplier-controlled limit with explicit measurement uncertainty and PASS / FAIL / INDETERMINATE states, without generating drying setpoints;
 14. exact-identity mould-height, opening-stroke, maximum-daylight, tie-bar-clearance and ejector-stroke fit screens;
 15. a declared-axis machine-suitability composer that preserves PASS / MARGINAL / FAIL / UNKNOWN, rejects cross-machine/cross-injection-unit/cross-mould identities as UNKNOWN, rejects identity-free custom axes unless they explicitly declare `contextIndependent` plus `contextBasisRef`, does not invent a marginal threshold, and requires `marginalBasisRef` for any MARGINAL assessment;
