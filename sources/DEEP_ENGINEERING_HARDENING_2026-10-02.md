@@ -45,6 +45,10 @@ All new functions return structured unsupported states rather than silently inve
 
 `process-statistics.mjs` now preserves cavity identity and reports per-cavity summary statistics plus the range of cavity means. It requires explicit measurement unit, sampling basis **and sampling-basis reference**, measurement-system adequacy **and measurement-system basis reference**, plus minimum repeated support per cavity. Bare adequacy flags are insufficient. The output is descriptive only: no generic balance percentage or tooling/process diagnosis is generated.
 
+### Energy-intensity statistics hardening
+
+`energyPerGoodPart` now requires unique cycle identity, a per-cycle sampling-basis reference, energy-measurement basis reference and quality-disposition basis reference. Negative energy is rejected; missing/duplicate/misaligned cycles fail closed. Energy consumed by rejected cycles remains in the numerator while only good parts contribute to the denominator, preserving the intended energy-per-good-part accounting.
+
 ### SPC/capability hardening
 
 `src/domains/process/process-statistics.mjs` now has fail-closed capability arithmetic. It refuses to produce an index unless process stability, measurement-system adequacy, sampling adequacy and distribution/model adequacy are explicitly confirmed with a non-empty evidence-basis reference for each prerequisite; a common measurement unit, explicit spread-estimator reference and specification-authority reference are also required. Bare `true` flags are insufficient. A within-subgroup spread basis produces Cp/Cpk/Cpu/Cpl; an overall/long-term spread basis produces Pp/Ppk/Ppu/Ppl, preventing silent estimator relabelling. The function does not grade results against a generic 1.33/1.67-style threshold.
