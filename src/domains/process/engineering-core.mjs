@@ -4,9 +4,42 @@
 const AREA_TO_M2 = Object.freeze({ m2: 1, cm2: 1e-4, mm2: 1e-6 });
 const PRESSURE_TO_PA = Object.freeze({ pa: 1, kpa: 1e3, mpa: 1e6, bar: 1e5 });
 const MASS_TO_G = Object.freeze({ g: 1, kg: 1000, mg: 0.001 });
+const VOLUME_TO_CM3 = Object.freeze({ cm3: 1, ml: 1, l: 1000, m3: 1e6, mm3: 0.001 });
+const LENGTH_TO_MM = Object.freeze({ mm: 1, cm: 10, m: 1000 });
+const TIME_TO_S = Object.freeze({ s: 1, sec: 1, min: 60, h: 3600 });
+const MASS_RATE_TO_G_S = Object.freeze({
+  'g/s': 1,
+  'kg/s': 1000,
+  'g/min': 1 / 60,
+  'kg/min': 1000 / 60,
+  'g/h': 1 / 3600,
+  'kg/h': 1000 / 3600,
+});
+const DIFFUSIVITY_TO_MM2_S = Object.freeze({ 'mm2/s': 1, 'cm2/s': 100, 'm2/s': 1e6 });
+const PRESSURE_KINDS = Object.freeze([
+  'hydraulic',
+  'specific-plastic',
+  'nozzle',
+  'runner',
+  'cavity',
+  'pack-command',
+]);
+
+export const ENGINEERING_EQUATION_IDS = Object.freeze({
+  pressureConversion: 'EQ-PRESS-001',
+  clampSeparatingForce: 'EQ-CF-001',
+  clampSeparatingForceRange: 'EQ-CF-002',
+  aggregateShotMass: 'EQ-SHOT-001',
+  shotCapacityAssessment: 'EQ-SHOT-002',
+  fillStageRates: 'EQ-FLOW-001',
+  averageResidenceTime: 'EQ-RES-001',
+  averageResidenceFromShotCycle: 'EQ-RES-002',
+  relativeCoolingTimeScale: 'EQ-THERM-001',
+  gateSealPlateau: 'PROC-GATE-001',
+});
 
 function cleanUnit(unit) {
-  return String(unit ?? '').trim().toLowerCase().replace('²', '2');
+  return String(unit ?? '').trim().toLowerCase().replaceAll('²', '2').replaceAll('³', '3').replace(/\s+/g, '');
 }
 
 function finitePositive(value) {
@@ -41,6 +74,7 @@ export function clampSeparatingForce({ projectedArea, representativePressure, pr
   return supported(
     { newtons, kilonewtons: newtons / 1000 },
     {
+      equationId: ENGINEERING_EQUATION_IDS.clampSeparatingForce,
       units: Object.freeze({ force: 'kN', areaSI: 'm²', pressureSI: 'Pa' }),
       assumptions: Object.freeze([
         'The supplied projected area represents the area relevant to the stated engineering estimate.',
@@ -73,6 +107,7 @@ export function aggregateShotMass({ cavityCount, partMass, runnerMass = { value:
   return supported(
     { partContributionG: partsG, runnerContributionG: runnerG, totalG, totalKg: totalG / 1000 },
     {
+      equationId: ENGINEERING_EQUATION_IDS.aggregateShotMass,
       units: Object.freeze({ mass: 'g' }),
       assumptions: Object.freeze([
         'Every counted cavity is assumed to produce one part of the supplied part mass for this arithmetic estimate.',
@@ -113,6 +148,359 @@ export function gradeSpecificProcessingBoundary({ exactGrade, currentSupplierDoc
       assumptions: Object.freeze(['Processing settings and limits are grade-specific unless an authoritative source explicitly establishes otherwise.']),
       provenance: String(currentSupplierDocument).trim(),
       authority: 'source-first-boundary-only',
+    },
+  );
+}
+
+
+function convertPositiveBase(quantity, table, field, baseUnit) {
+  if (!quantity || typeof quantity !== 'object') return unsupported(`missing-${field}`, { field });
+  const value = finitePositive(quantity.value);
+  if (value === null) return unsupported(`invalid-${field}-value`, { field });
+  const unit = cleanUnit(quantity.unit);
+  const factor = table[unit];
+  if (!factor) return unsupported(`unsupported-${field}-unit`, { field, unit: String(quantity.unit ?? '') });
+  return supported({ base: value * factor, baseUnit, inputValue: value, inputUnit: unit });
+}
+
+function optionalPositiveBase(quantity, table, field, baseUnit) {
+  if (quantity == null) return supported({ base: null, baseUnit, inputValue: null, inputUnit: null });
+  return convertPositiveBase(quantity, table, field, baseUnit);
+}
+
+export function pressureValue({ pressure, kind, provenance = null } = {}) {
+  const converted = convertPositive(pressure, PRESSURE_TO_PA, 'pressure');
+  if (!converted.ok) return converted;
+  const pressureKind = String(kind || '').trim().toLowerCase().replaceAll('_', '-');
+  if (!PRESSURE_KINDS.includes(pressureKind)) {
+    return unsupported('pressure-kind-required', {
+      field: 'kind',
+      allowedKinds: PRESSURE_KINDS,
+    });
+  }
+  const pascals = converted.value.si;
+  return supported(
+    {
+      pascals,
+      kilopascals: pascals / 1e3,
+      megapascals: pascals / 1e6,
+      bar: pascals / 1e5,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.pressureConversion,
+      pressureKind,
+      provenance,
+      assumptions: Object.freeze([
+        'This function converts units only. It does not convert one pressure location or machine pressure type into another.',
+        'Hydraulic, specific-plastic, nozzle, runner, cavity and pack-command pressures remain semantically distinct.',
+      ]),
+      authority: 'unit-conversion-only',
+    },
+  );
+}
+
+export function clampSeparatingForceRange({ projectedArea, lowerRepresentativePressure, upperRepresentativePressure, provenance = null } = {}) {
+  const area = convertPositive(projectedArea, AREA_TO_M2, 'projected-area');
+  if (!area.ok) return area;
+  const low = convertPositive(lowerRepresentativePressure, PRESSURE_TO_PA, 'lower-representative-pressure');
+  if (!low.ok) return low;
+  const high = convertPositive(upperRepresentativePressure, PRESSURE_TO_PA, 'upper-representative-pressure');
+  if (!high.ok) return high;
+  if (low.value.si > high.value.si) {
+    return unsupported('pressure-range-reversed', { field: 'representative-pressure-range' });
+  }
+  const lowerNewtons = area.value.si * low.value.si;
+  const upperNewtons = area.value.si * high.value.si;
+  return supported(
+    {
+      lowerNewtons,
+      upperNewtons,
+      lowerKilonewtons: lowerNewtons / 1000,
+      upperKilonewtons: upperNewtons / 1000,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.clampSeparatingForceRange,
+      units: Object.freeze({ force: 'kN', areaSI: 'm²', pressureSI: 'Pa' }),
+      assumptions: Object.freeze([
+        'The pressure range is supplied explicitly and represents an engineering range for pressure acting over the stated projected area.',
+        'The result is a separating-force range, not a prescribed machine clamp setting or safety factor.',
+        'Spatial pressure gradients, mould/platen deflection, tie-bar load distribution and dynamic effects are not resolved by this screening calculation.',
+      ]),
+      provenance,
+      authority: 'engineering-range-estimate-only',
+    },
+  );
+}
+
+export function shotCapacityAssessment({ requiredShotMass, usableMachineShotMass, capacityBasisVerified = false, provenance = null } = {}) {
+  const required = convertPositive(requiredShotMass, MASS_TO_G, 'required-shot-mass');
+  if (!required.ok) return required;
+  const usable = convertPositive(usableMachineShotMass, MASS_TO_G, 'usable-machine-shot-mass');
+  if (!usable.ok) return usable;
+  if (capacityBasisVerified !== true) {
+    return unsupported('capacity-basis-unverified', {
+      field: 'capacityBasisVerified',
+      detail: 'Mass-based machine shot capacity must be verified as applicable to the actual material/equivalent basis before comparison.',
+    });
+  }
+  const utilisationPct = 100 * required.value.si / usable.value.si;
+  return supported(
+    {
+      requiredShotG: required.value.si,
+      usableMachineShotG: usable.value.si,
+      utilisationPct,
+      capacityMarginG: usable.value.si - required.value.si,
+      exceedsUsableCapacity: required.value.si > usable.value.si,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.shotCapacityAssessment,
+      units: Object.freeze({ mass: 'g', utilisation: '%' }),
+      assumptions: Object.freeze([
+        'Required and usable machine shot masses are on a verified comparable material/equivalent basis.',
+        'No universal preferred barrel-utilisation percentage is inferred by this function.',
+        'Machine suitability also depends on pressure, flow, plasticising, residence, mould fit and other machine/tool requirements.',
+      ]),
+      provenance,
+      authority: 'capacity-screen-only',
+    },
+  );
+}
+
+export function fillStageRates({ fillTime, fillVolume = null, fillMass = null, injectionStroke = null, provenance = null } = {}) {
+  const time = convertPositiveBase(fillTime, TIME_TO_S, 'fill-time', 's');
+  if (!time.ok) return time;
+  const volume = optionalPositiveBase(fillVolume, VOLUME_TO_CM3, 'fill-volume', 'cm3');
+  if (!volume.ok) return volume;
+  const mass = optionalPositiveBase(fillMass, MASS_TO_G, 'fill-mass', 'g');
+  if (!mass.ok) return mass;
+  const stroke = optionalPositiveBase(injectionStroke, LENGTH_TO_MM, 'injection-stroke', 'mm');
+  if (!stroke.ok) return stroke;
+  if (volume.value.base === null && mass.value.base === null && stroke.value.base === null) {
+    return unsupported('fill-rate-numerator-required', { field: 'fillVolume|fillMass|injectionStroke' });
+  }
+  const seconds = time.value.base;
+  return supported(
+    {
+      fillTimeS: seconds,
+      volumetricFlowCm3S: volume.value.base === null ? null : volume.value.base / seconds,
+      massFlowGS: mass.value.base === null ? null : mass.value.base / seconds,
+      averageScrewRamSpeedMmS: stroke.value.base === null ? null : stroke.value.base / seconds,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.fillStageRates,
+      units: Object.freeze({ time: 's', volumetricFlow: 'cm³/s', massFlow: 'g/s', screwRamSpeed: 'mm/s' }),
+      assumptions: Object.freeze([
+        'Each numerator covers the same fill-stage interval as the supplied fill time.',
+        'Average screw/ram forward speed is not melt-front velocity.',
+        'No shear rate, apparent viscosity or pressure loss is inferred without flow-path geometry and appropriate rheology.',
+      ]),
+      provenance,
+      authority: 'measured-rate-arithmetic-only',
+    },
+  );
+}
+
+export function averageResidenceTimeEstimate({ meltInventoryMass, massThroughputRate, provenance = null } = {}) {
+  const inventory = convertPositiveBase(meltInventoryMass, MASS_TO_G, 'melt-inventory-mass', 'g');
+  if (!inventory.ok) return inventory;
+  const throughput = convertPositiveBase(massThroughputRate, MASS_RATE_TO_G_S, 'mass-throughput-rate', 'g/s');
+  if (!throughput.ok) return throughput;
+  const seconds = inventory.value.base / throughput.value.base;
+  return supported(
+    { seconds, minutes: seconds / 60, hours: seconds / 3600, throughputGS: throughput.value.base },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.averageResidenceTime,
+      units: Object.freeze({ time: 's', throughput: 'g/s' }),
+      assumptions: Object.freeze([
+        'This is a steady-throughput average inventory/throughput estimate, not a residence-time distribution.',
+        'Stagnant regions, screw-channel distribution, hot-runner inventory, interruptions, purging and material recirculation are not represented unless included in the supplied inventory/throughput basis.',
+        'Material degradation limits remain grade- and condition-specific and require current supplier evidence.',
+      ]),
+      provenance,
+      authority: 'average-residence-estimate-only',
+    },
+  );
+}
+
+export function averageResidenceTimeFromShotCycle({ meltInventoryMass, shotMass, cycleTime, provenance = null } = {}) {
+  const shot = convertPositiveBase(shotMass, MASS_TO_G, 'shot-mass', 'g');
+  if (!shot.ok) return shot;
+  const cycle = convertPositiveBase(cycleTime, TIME_TO_S, 'cycle-time', 's');
+  if (!cycle.ok) return cycle;
+  const throughputGS = shot.value.base / cycle.value.base;
+  const result = averageResidenceTimeEstimate({
+    meltInventoryMass,
+    massThroughputRate: { value: throughputGS, unit: 'g/s' },
+    provenance,
+  });
+  if (!result.ok) return result;
+  return supported(
+    {
+      ...result.value,
+      shotMassG: shot.value.base,
+      cycleTimeS: cycle.value.base,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.averageResidenceFromShotCycle,
+      units: result.units,
+      assumptions: Object.freeze([
+        ...result.assumptions,
+        'The derived throughput assumes the stated shot mass leaves the plasticising system once per stated cycle; purge, reject and interruption flows are excluded unless represented separately.',
+      ]),
+      provenance,
+      authority: 'average-residence-estimate-only',
+    },
+  );
+}
+
+export function relativeCoolingTimeScale({
+  referenceCoolingTime,
+  referenceThickness,
+  targetThickness,
+  referenceThermalDiffusivity = null,
+  targetThermalDiffusivity = null,
+  provenance = null,
+} = {}) {
+  const time = convertPositiveBase(referenceCoolingTime, TIME_TO_S, 'reference-cooling-time', 's');
+  if (!time.ok) return time;
+  const refThickness = convertPositiveBase(referenceThickness, LENGTH_TO_MM, 'reference-thickness', 'mm');
+  if (!refThickness.ok) return refThickness;
+  const targetThicknessValue = convertPositiveBase(targetThickness, LENGTH_TO_MM, 'target-thickness', 'mm');
+  if (!targetThicknessValue.ok) return targetThicknessValue;
+
+  let diffusivityRatio = 1;
+  let referenceAlpha = null;
+  let targetAlpha = null;
+  if (referenceThermalDiffusivity != null || targetThermalDiffusivity != null) {
+    if (referenceThermalDiffusivity == null || targetThermalDiffusivity == null) {
+      return unsupported('both-diffusivities-required', { field: 'referenceThermalDiffusivity|targetThermalDiffusivity' });
+    }
+    const refAlpha = convertPositiveBase(referenceThermalDiffusivity, DIFFUSIVITY_TO_MM2_S, 'reference-thermal-diffusivity', 'mm2/s');
+    if (!refAlpha.ok) return refAlpha;
+    const targetAlphaResult = convertPositiveBase(targetThermalDiffusivity, DIFFUSIVITY_TO_MM2_S, 'target-thermal-diffusivity', 'mm2/s');
+    if (!targetAlphaResult.ok) return targetAlphaResult;
+    referenceAlpha = refAlpha.value.base;
+    targetAlpha = targetAlphaResult.value.base;
+    diffusivityRatio = referenceAlpha / targetAlpha;
+  }
+
+  const thicknessRatio = targetThicknessValue.value.base / refThickness.value.base;
+  const scalingFactor = thicknessRatio ** 2 * diffusivityRatio;
+  return supported(
+    {
+      referenceCoolingTimeS: time.value.base,
+      estimatedTargetCoolingTimeS: time.value.base * scalingFactor,
+      scalingFactor,
+      thicknessRatio,
+      referenceThermalDiffusivityMm2S: referenceAlpha,
+      targetThermalDiffusivityMm2S: targetAlpha,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.relativeCoolingTimeScale,
+      units: Object.freeze({ time: 's', thickness: 'mm', thermalDiffusivity: 'mm²/s' }),
+      assumptions: Object.freeze([
+        'This is a first-order diffusion scaling comparison, not an absolute cooling-time prediction.',
+        'The reference and target are assumed to have comparable thermal boundary conditions, ejection criterion and one-dimensional characteristic thickness behaviour.',
+        'Crystallisation/latent heat, thermal contact resistance, local geometry, coolant circuit resistance, mould material and transient cycle-to-cycle thermal state can invalidate simple thickness-squared scaling.',
+      ]),
+      provenance,
+      authority: 'relative-thermal-screen-only',
+    },
+  );
+}
+
+function sampleMean(values) {
+  return values.reduce((sum, value) => sum + value, 0) / values.length;
+}
+
+function sampleStandardDeviation(values, mean = sampleMean(values)) {
+  if (values.length < 2) return null;
+  const variance = values.reduce((sum, value) => sum + (value - mean) ** 2, 0) / (values.length - 1);
+  return Math.sqrt(variance);
+}
+
+export function gateSealPlateauAssessment({ points, plateauToleranceMass, provenance = null } = {}) {
+  if (!Array.isArray(points) || points.length < 3) {
+    return unsupported('at-least-three-hold-time-points-required', { field: 'points' });
+  }
+  const tolerance = convertPositiveBase(plateauToleranceMass, MASS_TO_G, 'plateau-tolerance-mass', 'g');
+  if (!tolerance.ok) return tolerance;
+
+  const rows = [];
+  for (let index = 0; index < points.length; index += 1) {
+    const point = points[index] || {};
+    const hold = convertPositiveBase(point.holdTime, TIME_TO_S, `points[${index}].hold-time`, 's');
+    if (!hold.ok) return hold;
+    if (!Array.isArray(point.partMasses) || point.partMasses.length < 2) {
+      return unsupported('insufficient-replicates', { field: `points[${index}].partMasses`, minimum: 2 });
+    }
+    const masses = [];
+    for (let massIndex = 0; massIndex < point.partMasses.length; massIndex += 1) {
+      const converted = convertPositiveBase(point.partMasses[massIndex], MASS_TO_G, `points[${index}].partMasses[${massIndex}]`, 'g');
+      if (!converted.ok) return converted;
+      masses.push(converted.value.base);
+    }
+    const meanG = sampleMean(masses);
+    rows.push({
+      holdTimeS: hold.value.base,
+      replicateCount: masses.length,
+      meanMassG: meanG,
+      sampleStandardDeviationG: sampleStandardDeviation(masses, meanG),
+      minimumMassG: Math.min(...masses),
+      maximumMassG: Math.max(...masses),
+    });
+  }
+
+  rows.sort((a, b) => a.holdTimeS - b.holdTimeS);
+  for (let index = 1; index < rows.length; index += 1) {
+    if (Math.abs(rows[index].holdTimeS - rows[index - 1].holdTimeS) < 1e-12) {
+      return unsupported('duplicate-hold-time', { field: 'points', holdTimeS: rows[index].holdTimeS });
+    }
+  }
+
+  const adjacentMeanChangesG = rows.slice(1).map((row, index) => ({
+    fromHoldTimeS: rows[index].holdTimeS,
+    toHoldTimeS: row.holdTimeS,
+    changeG: row.meanMassG - rows[index].meanMassG,
+    absoluteChangeG: Math.abs(row.meanMassG - rows[index].meanMassG),
+  }));
+
+  let candidateIndex = null;
+  for (let index = 0; index <= rows.length - 3; index += 1) {
+    const remainingChanges = adjacentMeanChangesG.slice(index);
+    if (remainingChanges.length >= 2 && remainingChanges.every(change => change.absoluteChangeG <= tolerance.value.base)) {
+      candidateIndex = index;
+      break;
+    }
+  }
+
+  const plateau = candidateIndex === null
+    ? null
+    : {
+        earliestConsistentHoldTimeS: rows[candidateIndex].holdTimeS,
+        consecutivePointCount: rows.length - candidateIndex,
+        maximumAdjacentMeanChangeG: Math.max(...adjacentMeanChangesG.slice(candidateIndex).map(change => change.absoluteChangeG)),
+      };
+
+  return supported(
+    {
+      conclusion: plateau ? 'plateau-consistent-with-entered-tolerance' : 'no-plateau-within-entered-range',
+      plateauToleranceG: tolerance.value.base,
+      plateau,
+      points: rows,
+      adjacentMeanChangesG,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.gateSealPlateau,
+      units: Object.freeze({ time: 's', mass: 'g' }),
+      assumptions: Object.freeze([
+        'The tolerance is supplied by the user from an appropriate measurement/process decision basis; the function does not invent a universal plateau threshold.',
+        'At least two repeated mass observations are required at every hold time and at least three hold-time levels are required.',
+        'A mass plateau is evidence consistent with diminishing additional material transfer for this material, gate, mould and thermal state; it is not universal proof of an exact physical gate-freeze instant.',
+        'Relevant dimensional, cavity-pressure or quality evidence may still be needed before declaring additional hold time ineffective.',
+      ]),
+      provenance,
+      authority: 'controlled-study-analysis-only',
     },
   );
 }
