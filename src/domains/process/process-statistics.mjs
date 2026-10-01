@@ -284,25 +284,80 @@ export function capabilityIndices({
   });
 }
 
-export function energyPerGoodPart(rows, { energyKey, qualityKey, unit, samplingBasis }) {
+export function energyPerGoodPart(rows, {
+  energyKey,
+  qualityKey,
+  cycleIdKey,
+  unit,
+  samplingBasis,
+  samplingBasisRef,
+  energyMeasurementBasisRef,
+  qualityDispositionBasisRef,
+} = {}) {
+  const energyField = String(energyKey || '').trim();
+  const qualityField = String(qualityKey || '').trim();
+  const cycleField = String(cycleIdKey || '').trim();
+  const samplingRef = String(samplingBasisRef || '').trim();
+  const energyRef = String(energyMeasurementBasisRef || '').trim();
+  const qualityRef = String(qualityDispositionBasisRef || '').trim();
+
+  if (!energyField) return Object.freeze({ valueKwh: null, reason: 'energy-key-required' });
+  if (!qualityField) return Object.freeze({ valueKwh: null, reason: 'quality-key-required' });
+  if (!cycleField) return Object.freeze({ valueKwh: null, reason: 'cycle-id-key-required' });
   if (samplingBasis !== 'per-cycle') return Object.freeze({ valueKwh: null, reason: 'energy-not-confirmed-per-cycle' });
-  const factor = ({ kwh: 1, wh: 1 / 1000, j: 1 / 3.6e6, kj: 1 / 3600, mj: 1 / 3.6 })[String(unit || '').toLowerCase()];
+  if (!samplingRef) return Object.freeze({ valueKwh: null, reason: 'sampling-basis-reference-required' });
+  if (!energyRef) return Object.freeze({ valueKwh: null, reason: 'energy-measurement-basis-required' });
+  if (!qualityRef) return Object.freeze({ valueKwh: null, reason: 'quality-disposition-basis-required' });
+
+  const normalizedUnit = String(unit || '').toLowerCase();
+  const factor = ({ kwh: 1, wh: 1 / 1000, j: 1 / 3.6e6, kj: 1 / 3600, mj: 1 / 3.6 })[normalizedUnit];
   if (!factor) return Object.freeze({ valueKwh: null, reason: 'unsupported-energy-unit' });
   if (!Array.isArray(rows) || !rows.length) return Object.freeze({ valueKwh: null, reason: 'no-rows' });
 
   let total = 0;
   let good = 0;
-  for (const row of rows) {
-    const energy = finiteNumber(row?.[energyKey]);
-    const quality = row?.[qualityKey];
+  const seenCycleIds = new Set();
+  for (let index = 0; index < rows.length; index += 1) {
+    const row = rows[index] || {};
+    const cycleId = String(row?.[cycleField] ?? '').trim();
+    if (!cycleId) return Object.freeze({ valueKwh: null, reason: 'cycle-id-required', rowIndex: index });
+    if (seenCycleIds.has(cycleId)) {
+      return Object.freeze({ valueKwh: null, reason: 'duplicate-cycle-id', cycleId });
+    }
+    seenCycleIds.add(cycleId);
+
+    const energy = finiteNumber(row?.[energyField]);
+    const quality = row?.[qualityField];
     if (energy === null || (quality !== 0 && quality !== 1)) {
-      return Object.freeze({ valueKwh: null, reason: 'incomplete-aligned-coverage' });
+      return Object.freeze({ valueKwh: null, reason: 'incomplete-aligned-coverage', cycleId });
+    }
+    if (energy < 0) {
+      return Object.freeze({ valueKwh: null, reason: 'negative-energy-value', cycleId });
     }
     total += energy * factor;
     if (quality === 1) good += 1;
   }
   if (!good) return Object.freeze({ valueKwh: null, reason: 'no-good-parts' });
-  return Object.freeze({ valueKwh: total / good, reason: null, totalKwh: total, goodParts: good, rows: rows.length });
+  return Object.freeze({
+    valueKwh: total / good,
+    reason: null,
+    totalKwh: total,
+    goodParts: good,
+    rows: rows.length,
+    cycleCount: seenCycleIds.size,
+    samplingBasis: 'per-cycle',
+    samplingBasisRef: samplingRef,
+    energyMeasurementBasisRef: energyRef,
+    qualityDispositionBasisRef: qualityRef,
+    assumptions: Object.freeze([
+      'Every included row represents one uniquely identified cycle with aligned energy and quality disposition.',
+      'The energy channel is confirmed as per-cycle on the stated measurement basis and converted to kWh using only the declared unit.',
+      'All cycle energy, including energy consumed by rejected parts, remains in the numerator while only good parts contribute to the denominator.',
+      'The quality-disposition basis defines the entered 0/1 labels; the function does not infer product acceptance or root cause.',
+      'The result is descriptive energy intensity for the supplied aligned cycle set, not a universal efficiency target or causal proof.',
+    ]),
+    authority: 'aligned-energy-intensity-only',
+  });
 }
 
 export const PROCESS_STATISTICS_BOUNDARY = Object.freeze({
