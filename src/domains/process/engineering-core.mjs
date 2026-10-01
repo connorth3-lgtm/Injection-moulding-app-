@@ -1726,7 +1726,37 @@ function sampleStandardDeviation(values, mean = sampleMean(values)) {
   return Math.sqrt(variance);
 }
 
-export function gateSealPlateauAssessment({ points, plateauToleranceMass, provenance = null } = {}) {
+export function gateSealPlateauAssessment({
+  points,
+  plateauToleranceMass,
+  materialGradeId,
+  mouldConfigurationId,
+  gateId,
+  massMeasurementScopeId,
+  thermalStateRef,
+  measurementSystemBasisRef,
+  studyBasisRef,
+  plateauToleranceBasisRef,
+  provenance = null,
+} = {}) {
+  const gradeId = explicitIdentity(materialGradeId, 'material-grade-id');
+  if (!gradeId.ok) return gradeId;
+  const mouldId = explicitIdentity(mouldConfigurationId, 'mould-configuration-id');
+  if (!mouldId.ok) return mouldId;
+  const gateIdentity = explicitIdentity(gateId, 'gate-id');
+  if (!gateIdentity.ok) return gateIdentity;
+  const massScope = explicitIdentity(massMeasurementScopeId, 'mass-measurement-scope-id');
+  if (!massScope.ok) return massScope;
+
+  const thermalRef = String(thermalStateRef || '').trim();
+  if (!thermalRef) return unsupported('thermal-state-reference-required', { field: 'thermalStateRef' });
+  const measurementRef = String(measurementSystemBasisRef || '').trim();
+  if (!measurementRef) return unsupported('measurement-system-basis-required', { field: 'measurementSystemBasisRef' });
+  const studyRef = String(studyBasisRef || '').trim();
+  if (!studyRef) return unsupported('study-basis-reference-required', { field: 'studyBasisRef' });
+  const toleranceRef = String(plateauToleranceBasisRef || '').trim();
+  if (!toleranceRef) return unsupported('plateau-tolerance-basis-required', { field: 'plateauToleranceBasisRef' });
+
   if (!Array.isArray(points) || points.length < 3) {
     return unsupported('at-least-three-hold-time-points-required', { field: 'points' });
   }
@@ -1734,6 +1764,7 @@ export function gateSealPlateauAssessment({ points, plateauToleranceMass, proven
   if (!tolerance.ok) return tolerance;
 
   const rows = [];
+  const seenReplicateIds = new Set();
   for (let index = 0; index < points.length; index += 1) {
     const point = points[index] || {};
     const hold = convertPositiveBase(point.holdTime, TIME_TO_S, `points[${index}].hold-time`, 's');
@@ -1741,8 +1772,28 @@ export function gateSealPlateauAssessment({ points, plateauToleranceMass, proven
     if (!Array.isArray(point.partMasses) || point.partMasses.length < 2) {
       return unsupported('insufficient-replicates', { field: `points[${index}].partMasses`, minimum: 2 });
     }
+    if (!Array.isArray(point.replicateIds) || point.replicateIds.length !== point.partMasses.length) {
+      return unsupported('replicate-id-alignment-required', {
+        field: `points[${index}].replicateIds`,
+        expectedCount: point.partMasses.length,
+      });
+    }
+
     const masses = [];
+    const replicateIds = [];
     for (let massIndex = 0; massIndex < point.partMasses.length; massIndex += 1) {
+      const replicateId = String(point.replicateIds[massIndex] || '').trim();
+      if (!replicateId) {
+        return unsupported('replicate-id-required', {
+          field: `points[${index}].replicateIds[${massIndex}]`,
+        });
+      }
+      if (seenReplicateIds.has(replicateId)) {
+        return unsupported('duplicate-replicate-id', { replicateId });
+      }
+      seenReplicateIds.add(replicateId);
+      replicateIds.push(replicateId);
+
       const converted = convertPositiveBase(point.partMasses[massIndex], MASS_TO_G, `points[${index}].partMasses[${massIndex}]`, 'g');
       if (!converted.ok) return converted;
       masses.push(converted.value.base);
@@ -1750,6 +1801,7 @@ export function gateSealPlateauAssessment({ points, plateauToleranceMass, proven
     const meanG = sampleMean(masses);
     rows.push({
       holdTimeS: hold.value.base,
+      replicateIds: Object.freeze(replicateIds),
       replicateCount: masses.length,
       meanMassG: meanG,
       sampleStandardDeviationG: sampleStandardDeviation(masses, meanG),
@@ -1791,6 +1843,14 @@ export function gateSealPlateauAssessment({ points, plateauToleranceMass, proven
 
   return supported(
     {
+      materialGradeId: gradeId.value.id,
+      mouldConfigurationId: mouldId.value.id,
+      gateId: gateIdentity.value.id,
+      massMeasurementScopeId: massScope.value.id,
+      thermalStateRef: thermalRef,
+      measurementSystemBasisRef: measurementRef,
+      studyBasisRef: studyRef,
+      plateauToleranceBasisRef: toleranceRef,
       conclusion: plateau ? 'plateau-consistent-with-entered-tolerance' : 'no-plateau-within-entered-range',
       plateauToleranceG: tolerance.value.base,
       plateau,
@@ -1801,9 +1861,9 @@ export function gateSealPlateauAssessment({ points, plateauToleranceMass, proven
       equationId: ENGINEERING_EQUATION_IDS.gateSealPlateau,
       units: Object.freeze({ time: 's', mass: 'g' }),
       assumptions: Object.freeze([
-        'The tolerance is supplied by the user from an appropriate measurement/process decision basis; the function does not invent a universal plateau threshold.',
-        'At least two repeated mass observations are required at every hold time and at least three hold-time levels are required.',
-        'A mass plateau is evidence consistent with diminishing additional material transfer for this material, gate, mould and thermal state; it is not universal proof of an exact physical gate-freeze instant.',
+        'The tolerance is supplied from the stated decision basis for the exact measurement system/study context; the function does not invent a universal plateau threshold.',
+        'Every replicate mass is tied to a unique sample/cycle identifier, with at least two repeated observations at every hold time and at least three hold-time levels.',
+        'A mass plateau is evidence consistent with diminishing additional material transfer for the exact stated material grade, mould, gate, mass-measurement scope and thermal state; it is not universal proof of an exact physical gate-freeze instant.',
         'Relevant dimensional, cavity-pressure or quality evidence may still be needed before declaring additional hold time ineffective.',
       ]),
       provenance,
