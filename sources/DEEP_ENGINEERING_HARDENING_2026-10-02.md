@@ -28,7 +28,8 @@ This pass reviewed the current MouldMaster engineering/runtime architecture and 
 6. average residence-time screening from inventory/throughput;
 7. average residence screening derived from shot mass and cycle time;
 8. relative cooling-time diffusion scaling with explicit non-absolute-model boundaries;
-9. repeatability-aware gate-seal plateau analysis using a user-supplied decision tolerance.
+9. source-bound linear shrinkage compensation-range arithmetic that refuses unsourced generic shrinkage inputs and explicitly stops short of a released tool dimension;
+10. repeatability-aware gate-seal plateau analysis using a user-supplied decision tolerance.
 
 All new functions return structured unsupported states rather than silently inventing missing engineering meaning.
 
