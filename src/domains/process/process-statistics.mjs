@@ -93,6 +93,8 @@ export function capabilityIndices({
   lowerSpecLimit,
   upperSpecLimit,
   spreadBasis,
+  spreadEstimatorRef,
+  measurementUnit,
   processStable = false,
   measurementSystemAdequate = false,
   samplingAdequacyConfirmed = false,
@@ -104,6 +106,8 @@ export function capabilityIndices({
   const lsl = finiteNumber(lowerSpecLimit);
   const usl = finiteNumber(upperSpecLimit);
   const basis = String(spreadBasis || '').trim().toLowerCase();
+  const estimatorRef = String(spreadEstimatorRef || '').trim();
+  const unit = String(measurementUnit || '').trim();
   const specRef = String(specificationBasisRef || '').trim();
 
   if (meanValueNumber === null) return Object.freeze({ indices: null, reason: 'invalid-mean' });
@@ -119,6 +123,8 @@ export function capabilityIndices({
   if (measurementSystemAdequate !== true) blockers.push('measurement-system');
   if (samplingAdequacyConfirmed !== true) blockers.push('sampling-adequacy');
   if (distributionModelAdequate !== true) blockers.push('distribution-model');
+  if (!estimatorRef) blockers.push('spread-estimator');
+  if (!unit) blockers.push('measurement-unit');
   if (!specRef) blockers.push('specification-basis');
   if (blockers.length) {
     return Object.freeze({
@@ -152,10 +158,12 @@ export function capabilityIndices({
       spread,
       lowerSpecLimit: lsl,
       upperSpecLimit: usl,
+      measurementUnit: unit,
+      spreadEstimatorRef: estimatorRef,
       specificationBasisRef: specRef,
     }),
     assumptions: Object.freeze([
-      'The supplied spread is an appropriate standard-deviation estimate for the declared spread basis and is not silently substituted between within-subgroup and overall/long-term variation.',
+      'The supplied spread is an appropriate standard-deviation estimate for the declared spread basis, carries an explicit estimator reference and common measurement unit, and is not silently substituted between within-subgroup and overall/long-term variation.',
       'Process stability, measurement-system adequacy, sampling adequacy, distribution/model adequacy and specification authority are caller-confirmed prerequisites, not inferred from the arithmetic.',
       'The calculation does not grade capability against a universal acceptance threshold; product/customer/site requirements control any acceptance criterion.',
       'These indices describe spread and centring relative to specification under the stated assumptions and do not establish process causation or production authorization.',
