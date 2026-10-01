@@ -784,6 +784,7 @@ const amorphousCooling = amorphousSlabCoolingTimeEstimate({
   mouldSurfaceTemperature: { value: 60, unit: '°C' },
   ejectionTemperature: { value: 90, unit: '°C' },
   materialMorphology: 'amorphous',
+  ejectionCriterionType: 'centerline-temperature',
   thermalDiffusivityRef: 'grade-property-dataset/rev-4',
   ejectionCriterionRef: 'validated-part-ejection-study/rev-2',
   mouldSurfaceTemperatureBasisRef: 'instrumented-mould/trial-18',
@@ -805,6 +806,7 @@ assert.equal(
     mouldSurfaceTemperature: { value: 60, unit: '°C' },
     ejectionTemperature: { value: 90, unit: '°C' },
     materialMorphology: 'semi-crystalline',
+    ejectionCriterionType: 'centerline-temperature',
     thermalDiffusivityRef: 'grade-property-dataset/rev-4',
     ejectionCriterionRef: 'validated-part-ejection-study/rev-2',
     mouldSurfaceTemperatureBasisRef: 'instrumented-mould/trial-18',
@@ -820,6 +822,7 @@ assert.equal(
     mouldSurfaceTemperature: { value: 100, unit: '°C' },
     ejectionTemperature: { value: 90, unit: '°C' },
     materialMorphology: 'amorphous',
+    ejectionCriterionType: 'centerline-temperature',
     thermalDiffusivityRef: 'grade-property-dataset/rev-4',
     ejectionCriterionRef: 'validated-part-ejection-study/rev-2',
     mouldSurfaceTemperatureBasisRef: 'instrumented-mould/trial-18',
@@ -839,6 +842,22 @@ assert.equal(
     mouldSurfaceTemperatureBasisRef: 'instrumented-mould/trial-18',
   }).reason,
   'thermal-diffusivity-reference-required',
+);
+
+assert.equal(
+  amorphousSlabCoolingTimeEstimate({
+    partThickness: { value: 3, unit: 'mm' },
+    thermalDiffusivity: { value: 0.1, unit: 'mm2/s' },
+    meltTemperature: { value: 230, unit: '°C' },
+    mouldSurfaceTemperature: { value: 60, unit: '°C' },
+    ejectionTemperature: { value: 90, unit: '°C' },
+    materialMorphology: 'amorphous',
+    ejectionCriterionType: 'mean-temperature',
+    thermalDiffusivityRef: 'grade-property-dataset/rev-4',
+    ejectionCriterionRef: 'mean-temperature-study/rev-1',
+    mouldSurfaceTemperatureBasisRef: 'instrumented-mould/trial-18',
+  }).reason,
+  'centerline-ejection-criterion-required',
 );
 
 assert.equal(
