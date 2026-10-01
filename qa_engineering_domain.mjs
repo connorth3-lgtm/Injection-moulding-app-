@@ -605,7 +605,13 @@ const marginalSummary = machineSuitabilitySummary({
   requiredAxisIds: ['mould-height', 'site-specific-axis'],
   assessments: {
     'mould-height': heightFit,
-    'site-specific-axis': { ok: true, value: { state: 'MARGINAL' }, marginalBasisRef: 'approved-site-machine-fit-rule-rev-3' },
+    'site-specific-axis': {
+      ok: true,
+      value: { state: 'MARGINAL' },
+      contextIndependent: true,
+      contextBasisRef: 'approved-site-context-rule-rev-3',
+      marginalBasisRef: 'approved-site-machine-fit-rule-rev-3',
+    },
   },
 });
 assert.equal(marginalSummary.value.summaryState, 'MARGINAL');
@@ -619,7 +625,12 @@ const marginalWithoutBasis = machineSuitabilitySummary({
   requiredAxisIds: ['mould-height', 'site-specific-axis'],
   assessments: {
     'mould-height': heightFit,
-    'site-specific-axis': { ok: true, value: { state: 'MARGINAL' } },
+    'site-specific-axis': {
+      ok: true,
+      value: { state: 'MARGINAL' },
+      contextIndependent: true,
+      contextBasisRef: 'approved-site-context-rule-rev-3',
+    },
   },
 });
 assert.equal(marginalWithoutBasis.value.summaryState, 'UNKNOWN');
@@ -627,6 +638,51 @@ assert.equal(
   marginalWithoutBasis.value.axes.find(axis => axis.id === 'site-specific-axis').reason,
   'marginal-basis-required',
 );
+
+const unboundCustomAxis = machineSuitabilitySummary({
+  machineConfigurationId: commonFitIds.machineConfigurationId,
+  injectionUnitConfigurationId: machineCapacityIds.injectionUnitConfigurationId,
+  mouldConfigurationId: commonFitIds.mouldConfigurationId,
+  basis: 'custom-axis-identity-fixture',
+  requiredAxisIds: ['custom-axis'],
+  assessments: {
+    'custom-axis': { ok: true, value: { state: 'PASS' } },
+  },
+});
+assert.equal(unboundCustomAxis.value.summaryState, 'UNKNOWN');
+assert.equal(unboundCustomAxis.value.axes[0].reason, 'assessment-identity-unbound');
+
+const missingContextBasis = machineSuitabilitySummary({
+  machineConfigurationId: commonFitIds.machineConfigurationId,
+  injectionUnitConfigurationId: machineCapacityIds.injectionUnitConfigurationId,
+  mouldConfigurationId: commonFitIds.mouldConfigurationId,
+  basis: 'custom-axis-context-fixture',
+  requiredAxisIds: ['custom-axis'],
+  assessments: {
+    'custom-axis': { ok: true, value: { state: 'PASS' }, contextIndependent: true },
+  },
+});
+assert.equal(missingContextBasis.value.summaryState, 'UNKNOWN');
+assert.equal(missingContextBasis.value.axes[0].reason, 'context-basis-required');
+
+const contextIndependentPass = machineSuitabilitySummary({
+  machineConfigurationId: commonFitIds.machineConfigurationId,
+  injectionUnitConfigurationId: machineCapacityIds.injectionUnitConfigurationId,
+  mouldConfigurationId: commonFitIds.mouldConfigurationId,
+  basis: 'custom-axis-context-fixture',
+  requiredAxisIds: ['custom-axis'],
+  assessments: {
+    'custom-axis': {
+      ok: true,
+      value: { state: 'PASS' },
+      contextIndependent: true,
+      contextBasisRef: 'approved-context-independent-rule-rev-A',
+    },
+  },
+});
+assert.equal(contextIndependentPass.value.summaryState, 'PASS');
+assert.equal(contextIndependentPass.value.coverageComplete, true);
+
 
 
 const hydraulic = hydraulicDiameter({
