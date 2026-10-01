@@ -26,15 +26,16 @@ This pass reviewed the current MouldMaster engineering/runtime architecture and 
 4. shot-capacity utilisation only after comparable capacity basis is explicitly verified;
 5. separate clamp-force, specific-plastic-pressure, volumetric-flow and plasticising-throughput capacity comparisons, each requiring a verified like-for-like basis;
 6. fill-stage volume/mass/ram-rate arithmetic;
-7. average residence-time screening from inventory/throughput;
-8. average residence screening derived from shot mass and cycle time;
-9. relative cooling-time diffusion scaling with explicit non-absolute-model boundaries;
-10. source-bound linear shrinkage compensation-range arithmetic that refuses unsourced generic shrinkage inputs and explicitly stops short of a released tool dimension;
-11. exact-identity mould-height, opening-stroke, maximum-daylight, tie-bar-clearance and ejector-stroke fit screens;
-12. a declared-axis machine-suitability composer that preserves PASS / MARGINAL / FAIL / UNKNOWN without inventing a marginal threshold and requires `marginalBasisRef` for any MARGINAL assessment and forces UNKNOWN when a required axis is unresolved;
-13. hydraulic-diameter, uniform-channel-volume and circular-channel apparent wall-shear-rate screens with explicit non-Newtonian/pressure-loss boundaries;
-14. fail-closed pressure-loss modelling readiness that rejects MFR/MFI as a substitute for an explicit rheology model and blocks hydraulic/command pressure types;
-15. repeatability-aware gate-seal plateau analysis using a user-supplied decision tolerance.
+7. screw swept-volume and volumetric-rate machine-transfer geometry tied to exact injection-unit identities, including inverse target screw-speed translation without claiming a released setpoint;
+8. average residence-time screening from inventory/throughput;
+9. average residence screening derived from shot mass and cycle time;
+10. relative cooling-time diffusion scaling with explicit non-absolute-model boundaries;
+11. source-bound linear shrinkage compensation-range arithmetic that refuses unsourced generic shrinkage inputs and explicitly stops short of a released tool dimension;
+12. exact-identity mould-height, opening-stroke, maximum-daylight, tie-bar-clearance and ejector-stroke fit screens;
+13. a declared-axis machine-suitability composer that preserves PASS / MARGINAL / FAIL / UNKNOWN without inventing a marginal threshold and requires `marginalBasisRef` for any MARGINAL assessment and forces UNKNOWN when a required axis is unresolved;
+14. hydraulic-diameter, uniform-channel-volume and circular-channel apparent wall-shear-rate screens with explicit non-Newtonian/pressure-loss boundaries;
+15. fail-closed pressure-loss modelling readiness that rejects MFR/MFI as a substitute for an explicit rheology model and blocks hydraulic/command pressure types;
+16. repeatability-aware gate-seal plateau analysis using a user-supplied decision tolerance.
 
 All new functions return structured unsupported states rather than silently inventing missing engineering meaning. The unit boundary also preserves SI prefix case across pressure, force, mass, length, area, volume, rates and diffusivity so ambiguous prefix changes are rejected rather than normalised.
 
@@ -75,6 +76,10 @@ Required direction:
 ### P1 — migrate duplicate UI arithmetic to the pure domain
 
 `src/domains/engineering/engineer-simulator-ui.js` still contains duplicate clamp and fill-rate arithmetic. Future runtime work should consume the canonical engineering-domain implementation through a governed browser adapter/module path so the app has one source of truth.
+
+### P1 — process transfer arithmetic
+
+The pure domain now converts actual screw motion and screw diameter into geometric barrel-displacement volumetric rate and can translate that rate to a different screw diameter. This is deliberately narrower than a full process-transfer recipe: target machine acceleration, pressure capability, melt preparation, check-ring behaviour, trace shape and product validation still have to be demonstrated. Hydraulic-to-plastic pressure conversion has **not** been added because that requires exact machine-specific intensification documentation rather than a generic ratio.
 
 ### P1 — machine suitability
 
