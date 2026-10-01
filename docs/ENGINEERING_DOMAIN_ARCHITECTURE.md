@@ -52,7 +52,7 @@ A pure domain module may return data, reasons, assumptions, units, provenance an
 
 The machine-readable contract for these calculations is `data/engineering-calculation-registry-v1.json`. Every implemented calculation has a stable ID, input/output scope, evidence anchors and an uncertainty/authority boundary. `qa_engineering_domain.mjs` requires exact registry/domain coverage so new engineering arithmetic cannot silently appear without a governed calculation record.
 
-`process-statistics.mjs` separately owns the descriptive evidence calculations already extracted by the audit, including reference-spread normalization, group separation and energy-per-good-part with explicit unsupported-state reasons.
+`process-statistics.mjs` separately owns the descriptive/statistical evidence calculations already extracted by the audit, including reference-spread normalization, group separation, energy-per-good-part and fail-closed capability arithmetic. Cp/Cpk are emitted only from an explicitly confirmed within-subgroup spread basis; overall/long-term spread is labelled Pp/Ppk instead. Stability, measurement-system adequacy, sampling adequacy, distribution/model adequacy and a specification authority reference are mandatory prerequisites, and the function never invents a universal acceptance threshold.
 
 ## Inputs, outputs and fail-closed behaviour
 
