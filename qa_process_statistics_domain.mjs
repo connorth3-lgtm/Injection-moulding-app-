@@ -240,28 +240,67 @@ assert.equal(capabilityIndices({
   measurementUnit: 'mm',
 }).reason, 'spread-basis-required');
 
+const energyEvidence = {
+  energyKey: 'energy',
+  qualityKey: 'quality',
+  cycleIdKey: 'cycleId',
+  unit: 'kWh',
+  samplingBasis: 'per-cycle',
+  samplingBasisRef: 'cycle-alignment-schema-rev-A',
+  energyMeasurementBasisRef: 'machine-energy-meter-calibration-rev-A',
+  qualityDispositionBasisRef: 'approved-quality-disposition-rule-rev-A',
+};
+
 const incompleteEnergy = energyPerGoodPart([
-  { energy: 0.5, quality: 1 },
-  { energy: '', quality: 1 },
-], { energyKey: 'energy', qualityKey: 'quality', unit: 'kWh', samplingBasis: 'per-cycle' });
+  { cycleId: 'C001', energy: 0.5, quality: 1 },
+  { cycleId: 'C002', energy: '', quality: 1 },
+], energyEvidence);
 assert.equal(incompleteEnergy.valueKwh, null);
 assert.equal(incompleteEnergy.reason, 'incomplete-aligned-coverage');
+assert.equal(incompleteEnergy.cycleId, 'C002');
 
 const wrongSampling = energyPerGoodPart([
-  { energy: 0.5, quality: 1 },
-], { energyKey: 'energy', qualityKey: 'quality', unit: 'kWh', samplingBasis: 'trace-sample' });
+  { cycleId: 'C001', energy: 0.5, quality: 1 },
+], { ...energyEvidence, samplingBasis: 'trace-sample' });
 assert.equal(wrongSampling.valueKwh, null);
 assert.equal(wrongSampling.reason, 'energy-not-confirmed-per-cycle');
 
+assert.equal(energyPerGoodPart([
+  { cycleId: 'C001', energy: 0.5, quality: 1 },
+], { ...energyEvidence, samplingBasisRef: '' }).reason, 'sampling-basis-reference-required');
+
+assert.equal(energyPerGoodPart([
+  { cycleId: 'C001', energy: 0.5, quality: 1 },
+], { ...energyEvidence, energyMeasurementBasisRef: '' }).reason, 'energy-measurement-basis-required');
+
+assert.equal(energyPerGoodPart([
+  { cycleId: 'C001', energy: 0.5, quality: 1 },
+], { ...energyEvidence, qualityDispositionBasisRef: '' }).reason, 'quality-disposition-basis-required');
+
+assert.equal(energyPerGoodPart([
+  { cycleId: 'C001', energy: 0.5, quality: 1 },
+  { cycleId: 'C001', energy: 0.6, quality: 1 },
+], energyEvidence).reason, 'duplicate-cycle-id');
+
+assert.equal(energyPerGoodPart([
+  { cycleId: 'C001', energy: -0.1, quality: 1 },
+], energyEvidence).reason, 'negative-energy-value');
+
 const validEnergy = energyPerGoodPart([
-  { energy: 500, quality: 1 },
-  { energy: 500, quality: 0 },
-  { energy: 500, quality: 1 },
-], { energyKey: 'energy', qualityKey: 'quality', unit: 'Wh', samplingBasis: 'per-cycle' });
+  { cycleId: 'C001', energy: 500, quality: 1 },
+  { cycleId: 'C002', energy: 500, quality: 0 },
+  { cycleId: 'C003', energy: 500, quality: 1 },
+], { ...energyEvidence, unit: 'Wh' });
 assert.equal(validEnergy.reason, null);
 assert.equal(validEnergy.totalKwh, 1.5);
 assert.equal(validEnergy.goodParts, 2);
+assert.equal(validEnergy.cycleCount, 3);
 assert.equal(validEnergy.valueKwh, 0.75);
+assert.equal(validEnergy.samplingBasisRef, 'cycle-alignment-schema-rev-A');
+assert.equal(validEnergy.energyMeasurementBasisRef, 'machine-energy-meter-calibration-rev-A');
+assert.equal(validEnergy.qualityDispositionBasisRef, 'approved-quality-disposition-rule-rev-A');
+assert.match(validEnergy.assumptions.join(' '), /rejected parts.*numerator/i);
+
 
 assert.equal(PROCESS_STATISTICS_BOUNDARY.machineControl, 'none');
 assert.equal(PROCESS_STATISTICS_BOUNDARY.productionAuthority, 'none');
