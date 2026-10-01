@@ -95,7 +95,8 @@
       "No fixed competence cut-score validation from the current exploratory pilot.",
       "No item-level discrimination estimate is reported as stable without a pre-specified adequate real-response sample and independent review."
     ],
-    "nextGate": "Pre-register the psychometric analysis and sample-adequacy rules before using cohort data to justify item retirement, cut-score claims or credential validity."
+    "nextGate": "Collect an adequately sized real-response calibration cohort under data/psychometric-validation-plan-v1.json before using item statistics, cut scores or credential claims operationally.",
+    "preRegisteredPlan": "data/psychometric-validation-plan-v1.json"
   },
   "evidenceBasis": "sources/LEARNING_AND_ENGINEERING_REVIEW_BASIS.md"
 }
