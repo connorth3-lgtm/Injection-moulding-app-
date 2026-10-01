@@ -87,6 +87,94 @@ export function symmetricGroupSeparation(leftValues, rightValues, minimumPerGrou
 }
 
 
+
+export function cavitySpecificSummary({
+  cavities,
+  measurementUnit,
+  samplingBasis,
+  measurementSystemAdequate = false,
+  minimumPerCavity = 3,
+} = {}) {
+  const unit = String(measurementUnit || '').trim();
+  const basis = String(samplingBasis || '').trim();
+  if (!unit) return Object.freeze({ result: null, reason: 'measurement-unit-required' });
+  if (!basis) return Object.freeze({ result: null, reason: 'sampling-basis-required' });
+  if (measurementSystemAdequate !== true) {
+    return Object.freeze({ result: null, reason: 'measurement-system-not-confirmed' });
+  }
+  if (!Number.isInteger(minimumPerCavity) || minimumPerCavity < 2) {
+    return Object.freeze({ result: null, reason: 'invalid-minimum-per-cavity' });
+  }
+  if (!Array.isArray(cavities) || cavities.length < 2) {
+    return Object.freeze({ result: null, reason: 'at-least-two-cavities-required' });
+  }
+
+  const seen = new Set();
+  const summaries = [];
+  for (let index = 0; index < cavities.length; index += 1) {
+    const row = cavities[index] || {};
+    const cavityId = String(row.cavityId || '').trim();
+    if (!cavityId) return Object.freeze({ result: null, reason: 'cavity-id-required', cavityIndex: index });
+    if (seen.has(cavityId)) return Object.freeze({ result: null, reason: 'duplicate-cavity-id', cavityId });
+    seen.add(cavityId);
+    if (!Array.isArray(row.values)) {
+      return Object.freeze({ result: null, reason: 'cavity-values-required', cavityId });
+    }
+    const values = row.values.map(finiteNumber).filter(value => value !== null);
+    if (values.length !== row.values.length) {
+      return Object.freeze({ result: null, reason: 'non-finite-cavity-value', cavityId });
+    }
+    if (values.length < minimumPerCavity) {
+      return Object.freeze({
+        result: null,
+        reason: 'insufficient-cavity-support',
+        cavityId,
+        n: values.length,
+        minimumPerCavity,
+      });
+    }
+    summaries.push(Object.freeze({ cavityId, ...numericSummary(values) }));
+  }
+
+  const cavityMeans = summaries.map(summary => summary.mean);
+  const meanOfCavityMeans = mean(cavityMeans);
+  let minimum = summaries[0];
+  let maximum = summaries[0];
+  for (const summary of summaries.slice(1)) {
+    if (summary.mean < minimum.mean) minimum = summary;
+    if (summary.mean > maximum.mean) maximum = summary;
+  }
+  const rangeOfCavityMeans = maximum.mean - minimum.mean;
+  const relativeRangePct = Math.abs(meanOfCavityMeans) > Number.EPSILON
+    ? 100 * rangeOfCavityMeans / Math.abs(meanOfCavityMeans)
+    : null;
+
+  return Object.freeze({
+    result: Object.freeze({
+      cavityCount: summaries.length,
+      measurementUnit: unit,
+      samplingBasis: basis,
+      minimumPerCavity,
+      cavities: Object.freeze(summaries),
+      meanOfCavityMeans,
+      minimumMeanCavityId: minimum.cavityId,
+      minimumCavityMean: minimum.mean,
+      maximumMeanCavityId: maximum.cavityId,
+      maximumCavityMean: maximum.mean,
+      rangeOfCavityMeans,
+      relativeRangePct,
+    }),
+    reason: null,
+    assumptions: Object.freeze([
+      'Cavity identity is preserved; values are not pooled before each cavity is summarised.',
+      'The result is descriptive evidence of between-cavity response, not a universal balance acceptance decision.',
+      'A relative range is reported only when the mean of cavity means is meaningfully non-zero; no generic tolerance is applied.',
+      'Sampling basis and measurement-system adequacy are caller-confirmed; the function does not infer cycle alignment, rational subgrouping, causation or tooling root cause.',
+    ]),
+    authority: 'cavity-specific-descriptive-statistics-only',
+  });
+}
+
 export function capabilityIndices({
   meanValue,
   spreadValue,
