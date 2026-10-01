@@ -1313,21 +1313,45 @@ export function fillStageRates({ fillTime, fillVolume = null, fillMass = null, i
   );
 }
 
-export function averageResidenceTimeEstimate({ meltInventoryMass, massThroughputRate, provenance = null } = {}) {
+export function averageResidenceTimeEstimate({
+  meltInventoryMass,
+  massThroughputRate,
+  injectionUnitConfigurationId,
+  meltInventoryBasisRef,
+  throughputBasisRef,
+  provenance = null,
+} = {}) {
+  const injectionId = explicitIdentity(injectionUnitConfigurationId, 'injection-unit-configuration-id');
+  if (!injectionId.ok) return injectionId;
+  const inventoryRef = String(meltInventoryBasisRef || '').trim();
+  if (!inventoryRef) return unsupported('melt-inventory-basis-reference-required', { field: 'meltInventoryBasisRef' });
+  const throughputRef = String(throughputBasisRef || '').trim();
+  if (!throughputRef) return unsupported('throughput-basis-reference-required', { field: 'throughputBasisRef' });
+
   const inventory = convertPositiveBase(meltInventoryMass, MASS_TO_G, 'melt-inventory-mass', 'g');
   if (!inventory.ok) return inventory;
   const throughput = convertPositiveBase(massThroughputRate, MASS_RATE_TO_G_S, 'mass-throughput-rate', 'g/s');
   if (!throughput.ok) return throughput;
   const seconds = inventory.value.base / throughput.value.base;
+
   return supported(
-    { seconds, minutes: seconds / 60, hours: seconds / 3600, throughputGS: throughput.value.base },
+    {
+      injectionUnitConfigurationId: injectionId.value.id,
+      meltInventoryBasisRef: inventoryRef,
+      throughputBasisRef: throughputRef,
+      meltInventoryG: inventory.value.base,
+      throughputGS: throughput.value.base,
+      seconds,
+      minutes: seconds / 60,
+      hours: seconds / 3600,
+    },
     {
       equationId: ENGINEERING_EQUATION_IDS.averageResidenceTime,
-      units: Object.freeze({ time: 's', throughput: 'g/s' }),
+      units: Object.freeze({ mass: 'g', time: 's', throughput: 'g/s' }),
       assumptions: Object.freeze([
-        'This is a steady-throughput average inventory/throughput estimate, not a residence-time distribution.',
-        'Stagnant regions, screw-channel distribution, hot-runner inventory, interruptions, purging and material recirculation are not represented unless included in the supplied inventory/throughput basis.',
-        'Material degradation limits remain grade- and condition-specific and require current supplier evidence.',
+        'This is a steady-throughput average inventory/throughput estimate tied to the exact stated injection-unit configuration and explicit inventory/throughput basis references.',
+        'It is not a residence-time distribution. Stagnant regions, screw-channel distribution, hot-runner inventory, interruptions, purging and material recirculation are not represented unless included in the referenced inventory/throughput basis.',
+        'The result does not establish a safe material residence limit or degradation verdict. Material limits remain exact-grade, melt-temperature and supplier-evidence dependent.',
       ]),
       provenance,
       authority: 'average-residence-estimate-only',
@@ -1335,30 +1359,57 @@ export function averageResidenceTimeEstimate({ meltInventoryMass, massThroughput
   );
 }
 
-export function averageResidenceTimeFromShotCycle({ meltInventoryMass, shotMass, cycleTime, provenance = null } = {}) {
+export function averageResidenceTimeFromShotCycle({
+  meltInventoryMass,
+  shotMass,
+  cycleTime,
+  injectionUnitConfigurationId,
+  meltInventoryBasisRef,
+  shotMassBasisRef,
+  cycleTimeBasisRef,
+  provenance = null,
+} = {}) {
+  const injectionId = explicitIdentity(injectionUnitConfigurationId, 'injection-unit-configuration-id');
+  if (!injectionId.ok) return injectionId;
+  const inventoryRef = String(meltInventoryBasisRef || '').trim();
+  if (!inventoryRef) return unsupported('melt-inventory-basis-reference-required', { field: 'meltInventoryBasisRef' });
+  const shotRef = String(shotMassBasisRef || '').trim();
+  if (!shotRef) return unsupported('shot-mass-basis-reference-required', { field: 'shotMassBasisRef' });
+  const cycleRef = String(cycleTimeBasisRef || '').trim();
+  if (!cycleRef) return unsupported('cycle-time-basis-reference-required', { field: 'cycleTimeBasisRef' });
+
+  const inventory = convertPositiveBase(meltInventoryMass, MASS_TO_G, 'melt-inventory-mass', 'g');
+  if (!inventory.ok) return inventory;
   const shot = convertPositiveBase(shotMass, MASS_TO_G, 'shot-mass', 'g');
   if (!shot.ok) return shot;
   const cycle = convertPositiveBase(cycleTime, TIME_TO_S, 'cycle-time', 's');
   if (!cycle.ok) return cycle;
+
   const throughputGS = shot.value.base / cycle.value.base;
-  const result = averageResidenceTimeEstimate({
-    meltInventoryMass,
-    massThroughputRate: { value: throughputGS, unit: 'g/s' },
-    provenance,
-  });
-  if (!result.ok) return result;
+  const seconds = inventory.value.base / throughputGS;
+
   return supported(
     {
-      ...result.value,
+      injectionUnitConfigurationId: injectionId.value.id,
+      meltInventoryBasisRef: inventoryRef,
+      shotMassBasisRef: shotRef,
+      cycleTimeBasisRef: cycleRef,
+      meltInventoryG: inventory.value.base,
       shotMassG: shot.value.base,
       cycleTimeS: cycle.value.base,
+      derivedThroughputGS: throughputGS,
+      seconds,
+      minutes: seconds / 60,
+      hours: seconds / 3600,
     },
     {
       equationId: ENGINEERING_EQUATION_IDS.averageResidenceFromShotCycle,
-      units: result.units,
+      units: Object.freeze({ mass: 'g', time: 's', throughput: 'g/s' }),
       assumptions: Object.freeze([
-        ...result.assumptions,
-        'The derived throughput assumes the stated shot mass leaves the plasticising system once per stated cycle; purge, reject and interruption flows are excluded unless represented separately.',
+        'The average is derived from referenced melt inventory, shot mass and cycle time for the exact stated injection-unit configuration.',
+        'The derived throughput assumes the referenced shot mass leaves the plasticising system once per referenced cycle; purge, reject, interruption and recirculation flows are excluded unless represented in the basis.',
+        'This remains an average inventory/throughput estimate, not a residence-time distribution or exact oldest-material age.',
+        'The result does not establish a safe material residence limit or degradation verdict; exact-grade supplier limits and actual thermal history remain controlling.',
       ]),
       provenance,
       authority: 'average-residence-estimate-only',
