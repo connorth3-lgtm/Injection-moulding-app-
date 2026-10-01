@@ -47,7 +47,7 @@ All new functions return structured unsupported states rather than silently inve
 
 ### SPC/capability hardening
 
-`src/domains/process/process-statistics.mjs` now has fail-closed capability arithmetic. It refuses to produce an index unless process stability, measurement-system adequacy, sampling adequacy, distribution/model adequacy, a common measurement unit, an explicit spread-estimator reference and specification authority are all explicitly confirmed. A within-subgroup spread basis produces Cp/Cpk/Cpu/Cpl; an overall/long-term spread basis produces Pp/Ppk/Ppu/Ppl, preventing silent estimator relabelling. The function does not grade results against a generic 1.33/1.67-style threshold.
+`src/domains/process/process-statistics.mjs` now has fail-closed capability arithmetic. It refuses to produce an index unless process stability, measurement-system adequacy, sampling adequacy and distribution/model adequacy are explicitly confirmed with a non-empty evidence-basis reference for each prerequisite; a common measurement unit, explicit spread-estimator reference and specification-authority reference are also required. Bare `true` flags are insufficient. A within-subgroup spread basis produces Cp/Cpk/Cpu/Cpl; an overall/long-term spread basis produces Pp/Ppk/Ppu/Ppl, preventing silent estimator relabelling. The function does not grade results against a generic 1.33/1.67-style threshold.
 
 ### Stable calculation registry
 
