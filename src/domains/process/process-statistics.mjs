@@ -92,16 +92,22 @@ export function cavitySpecificSummary({
   cavities,
   measurementUnit,
   samplingBasis,
+  samplingBasisRef,
   measurementSystemAdequate = false,
+  measurementSystemBasisRef,
   minimumPerCavity = 3,
 } = {}) {
   const unit = String(measurementUnit || '').trim();
   const basis = String(samplingBasis || '').trim();
+  const basisRef = String(samplingBasisRef || '').trim();
+  const measurementRef = String(measurementSystemBasisRef || '').trim();
   if (!unit) return Object.freeze({ result: null, reason: 'measurement-unit-required' });
   if (!basis) return Object.freeze({ result: null, reason: 'sampling-basis-required' });
+  if (!basisRef) return Object.freeze({ result: null, reason: 'sampling-basis-reference-required' });
   if (measurementSystemAdequate !== true) {
     return Object.freeze({ result: null, reason: 'measurement-system-not-confirmed' });
   }
+  if (!measurementRef) return Object.freeze({ result: null, reason: 'measurement-system-basis-required' });
   if (!Number.isInteger(minimumPerCavity) || minimumPerCavity < 2) {
     return Object.freeze({ result: null, reason: 'invalid-minimum-per-cavity' });
   }
@@ -154,6 +160,8 @@ export function cavitySpecificSummary({
       cavityCount: summaries.length,
       measurementUnit: unit,
       samplingBasis: basis,
+      samplingBasisRef: basisRef,
+      measurementSystemBasisRef: measurementRef,
       minimumPerCavity,
       cavities: Object.freeze(summaries),
       meanOfCavityMeans,
@@ -169,7 +177,7 @@ export function cavitySpecificSummary({
       'Cavity identity is preserved; values are not pooled before each cavity is summarised.',
       'The result is descriptive evidence of between-cavity response, not a universal balance acceptance decision.',
       'A relative range is reported only when the mean of cavity means is meaningfully non-zero; no generic tolerance is applied.',
-      'Sampling basis and measurement-system adequacy are caller-confirmed; the function does not infer cycle alignment, rational subgrouping, causation or tooling root cause.',
+      'Sampling basis and measurement-system adequacy are caller-confirmed with explicit evidence references; the function does not infer cycle alignment, rational subgrouping, causation or tooling root cause.',
     ]),
     authority: 'cavity-specific-descriptive-statistics-only',
   });
