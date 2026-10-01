@@ -5,6 +5,7 @@ import {
   referenceScale,
   normalizedReferenceShift,
   symmetricGroupSeparation,
+  capabilityIndices,
   energyPerGoodPart,
   PROCESS_STATISTICS_BOUNDARY,
 } from './src/domains/process/process-statistics.mjs';
@@ -48,6 +49,74 @@ assert.equal(zeroSpreadGroups.reason, 'zero-group-spread');
 const separation = symmetricGroupSeparation([1, 2, 3], [2, 3, 4]);
 assert.ok(Number.isFinite(separation.score));
 assert.equal(separation.metric, 'symmetric-unweighted-rms-group-spread-separation');
+
+
+const blockedCapability = capabilityIndices({
+  meanValue: 10.08,
+  spreadValue: 0.04,
+  lowerSpecLimit: 9.8,
+  upperSpecLimit: 10.2,
+  spreadBasis: 'within-subgroup',
+});
+assert.equal(blockedCapability.indices, null);
+assert.equal(blockedCapability.reason, 'capability-prerequisites-unmet');
+for (const blocker of ['process-stability', 'measurement-system', 'sampling-adequacy', 'distribution-model', 'specification-basis']) {
+  assert.ok(blockedCapability.blockers.includes(blocker), `missing capability blocker ${blocker}`);
+}
+
+const cpCpk = capabilityIndices({
+  meanValue: 10.08,
+  spreadValue: 0.04,
+  lowerSpecLimit: 9.8,
+  upperSpecLimit: 10.2,
+  spreadBasis: 'within-subgroup',
+  processStable: true,
+  measurementSystemAdequate: true,
+  samplingAdequacyConfirmed: true,
+  distributionModelAdequate: true,
+  specificationBasisRef: 'synthetic-drawing-rev-A',
+});
+assert.equal(cpCpk.reason, null);
+assert.ok(Math.abs(cpCpk.indices.Cp - (0.4 / 0.24)) < 1e-12);
+assert.ok(Math.abs(cpCpk.indices.Cpk - 1) < 1e-12);
+assert.ok(Math.abs(cpCpk.indices.Cpu - 1) < 1e-12);
+assert.ok(Math.abs(cpCpk.indices.Cpl - (0.28 / 0.12)) < 1e-12);
+assert.equal(cpCpk.family.potential, 'Cp');
+assert.match(cpCpk.assumptions.join(' '), /does not grade capability against a universal acceptance threshold/i);
+
+const ppPpk = capabilityIndices({
+  meanValue: 10.08,
+  spreadValue: 0.05,
+  lowerSpecLimit: 9.8,
+  upperSpecLimit: 10.2,
+  spreadBasis: 'overall-long-term',
+  processStable: true,
+  measurementSystemAdequate: true,
+  samplingAdequacyConfirmed: true,
+  distributionModelAdequate: true,
+  specificationBasisRef: 'synthetic-drawing-rev-A',
+});
+assert.equal(ppPpk.reason, null);
+assert.ok('Pp' in ppPpk.indices);
+assert.ok('Ppk' in ppPpk.indices);
+assert.ok(!('Cp' in ppPpk.indices));
+assert.equal(ppPpk.family.centeringAdjusted, 'Ppk');
+
+assert.equal(capabilityIndices({
+  meanValue: 10,
+  spreadValue: 0.04,
+  lowerSpecLimit: 10.2,
+  upperSpecLimit: 9.8,
+  spreadBasis: 'within-subgroup',
+}).reason, 'invalid-specification-order');
+
+assert.equal(capabilityIndices({
+  meanValue: 10,
+  spreadValue: 0.04,
+  lowerSpecLimit: 9.8,
+  upperSpecLimit: 10.2,
+  spreadBasis: 'unlabelled-sd',
+}).reason, 'spread-basis-required');
 
 const incompleteEnergy = energyPerGoodPart([
   { energy: 0.5, quality: 1 },
