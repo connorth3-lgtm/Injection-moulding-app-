@@ -10,7 +10,7 @@ Every number below is **SYNTHETIC TEACHING DATA** unless explicitly stated other
 
 Convert area: `120 cm² = 0.012 m²`.
 
-Estimate separating force:
+General mould-opening load is the pressure distribution integrated over projected area, `F = ∫A p(x,y) dA`. For this arithmetic-only example the representative pressure is assumed uniform, so the integral reduces to:
 
 `F = P × A = 55,000,000 Pa × 0.012 m² = 660,000 N = 660 kN`.
 
@@ -29,27 +29,27 @@ Estimate separating force:
 | + gate / early cavity | 58 MPa |
 | Full intended fill path | 72 MPa |
 
-Apparent incremental pressure demands are `18`, `16`, `24`, and `14 MPa` across the staged additions.
+The nozzle-only reading is the `18 MPa` baseline. The additional rises after that baseline are `+16`, `+24`, and `+14 MPa`; the largest added demand is therefore `+24 MPa` when the gate/early-cavity portion is introduced.
 
-**Interpretation.** The largest observed increment in this synthetic sequence is associated with adding the gate/early-cavity portion. That is evidence for where to investigate; it is not proof that the gate is defective. The displayed pressure remains an upstream machine signal and must not be relabelled as cavity pressure.
+**Interpretation.** The baseline is not a differential increment. The largest additional rise in this synthetic sequence is associated with adding the gate/early-cavity portion. That is evidence for where to investigate; it is not proof that the gate is defective. The displayed pressure remains an upstream machine signal and must not be relabelled as cavity pressure.
 
 **Evidence anchors:** ISO 294-1; Autodesk fill/pack documentation; cavity-pressure sensing literature already in the MouldMaster evidence register.
 
 ## 3. Gate-seal study: find a response plateau, not a universal hold time
 
-**SYNTHETIC TEACHING DATA**, all other selected conditions held constant:
+**SYNTHETIC TEACHING DATA**, five repeated shots represented at each hold duration with all other selected conditions held constant:
 
-| Hold duration | Mean part mass |
-| --- | ---: |
-| 2 s | 18.42 g |
-| 4 s | 18.70 g |
-| 6 s | 18.82 g |
-| 8 s | 18.83 g |
-| 10 s | 18.83 g |
+| Hold duration | Mean part mass (n=5) | Sample SD |
+| --- | ---: | ---: |
+| 2 s | 18.42 g | 0.02 g |
+| 4 s | 18.70 g | 0.02 g |
+| 6 s | 18.82 g | 0.01 g |
+| 8 s | 18.83 g | 0.01 g |
+| 10 s | 18.83 g | 0.01 g |
 
-The change from `6 → 8 s` is `0.01 g`; `8 → 10 s` is `0.00 g` at the shown resolution.
+The change from `6 → 8 s` is `0.01 g`; `8 → 10 s` is `0.00 g` at the shown resolution. The `0.01 g` change is the same order as the shown `0.01 g` sample SD, so it should not be treated as decisive without the actual balance resolution/uncertainty and repeated-shot evidence.
 
-**Interpretation.** The synthetic mass response is approaching a plateau around the 6–8 s region. A real study would repeat observations, consider measurement resolution and critical dimensions/quality, and bind the result to that material, gate, mould and thermal state. It does not establish a generic hold time.
+**Interpretation.** The synthetic response is consistent with a plateau in roughly the 6–10 s region, not with a universally exact freeze time. A real study retains the individual observations, confirms measurement adequacy and checks relevant dimensional/quality characteristics. It does not establish a generic hold time.
 
 **Evidence anchors:** ASTM D955; ISO 294-1; Jansen, Pantani & Titomanlio gate-freeze evidence.
 
@@ -77,9 +77,9 @@ The equal peak does not make the traces equivalent. Trace B contains `33.3%` gre
 | Low | High | 0.29 mm |
 | High | High | 0.30 mm |
 
-At low mould temperature, moving fill speed low → high changes warpage by `-0.11 mm`. At high mould temperature, the same speed change is `+0.01 mm`.
+At low mould temperature, moving fill speed low → high changes warpage by `-0.11 mm`. At high mould temperature, the same speed change is `+0.01 mm`. The difference of those simple effects is `+0.12 mm`, which demonstrates an interaction pattern in the four synthetic cell means.
 
-**Interpretation.** The effect of speed depends on temperature; a one-factor-at-a-time conclusion such as “higher speed reduces warpage” would be misleading. Replication, randomisation/blocking, residual checks and confirmation runs are still required before a real process conclusion.
+**Interpretation.** The effect of speed depends on temperature; a one-factor-at-a-time conclusion such as “higher speed reduces warpage” would be misleading. Because this teaching table has no experimental-error estimate, it does not establish statistical significance. Replication where an error estimate is required, randomisation/blocking, residual checks and confirmation runs are still required before a real process conclusion.
 
 **Evidence anchors:** NIST/SEMATECH experimental-design guidance; ISO 20457 dimensional influences.
 
@@ -102,7 +102,7 @@ A pooled average near `12.02 g` could look ordinary while cavities 2 and 4 carry
 
 ## 7. Capability example: good spread does not compensate for poor centring
 
-**SYNTHETIC TEACHING DATA:** specification `10.00 ± 0.20 mm`, therefore `LSL = 9.80 mm`, `USL = 10.20 mm`; stable-process teaching estimate `mean = 10.08 mm`, `s = 0.04 mm`.
+**SYNTHETIC TEACHING DATA:** specification `10.00 ± 0.20 mm`, therefore `LSL = 9.80 mm`, `USL = 10.20 mm`; stable-process teaching estimate `mean = 10.08 mm`, `s = 0.04 mm`. The example explicitly treats `s` as the spread estimate used in the displayed `Cp/Cpk` arithmetic; a real report must state how that spread was estimated and must not silently mix within-subgroup and overall/long-term variation.
 
 `Cp = (USL - LSL) / (6s) = 0.40 / 0.24 = 1.67`.
 
@@ -135,7 +135,7 @@ A simple sensible-heat estimate is:
 
 `Q = m × cp × ΔT = 0.080 × 1,800 × 180 = 25,920 J ≈ 25.9 kJ per shot`.
 
-**Interpretation.** This is a simplified heat quantity, not a cooling-time formula. It omits crystallisation/latent effects where relevant, mould/insert heat capacity, shear heating, heat lost outside the mould, spatial temperature gradients and heat-transfer coefficients. Real cooling design requires geometry/material/tool-specific analysis and measurement.
+**Interpretation.** This is a simplified heat quantity, not a cooling-time formula. It omits crystallisation/latent or broader enthalpy effects where relevant, temperature dependence of specific heat, mould/insert heat capacity, shear heating, heat lost outside the mould, spatial temperature gradients and heat-transfer coefficients. Real cooling design requires geometry/material/tool-specific analysis and measurement.
 
 **Evidence anchors:** ISO 294-1; ASTM D955; mould-cooling technical references.
 
