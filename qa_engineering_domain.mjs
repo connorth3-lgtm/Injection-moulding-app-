@@ -268,7 +268,7 @@ assert.equal(
 
 const machineCapacityIds = {
   machineConfigurationId: 'IMM-07/config-A',
-  injectionUnitConfigurationId: machineCapacityIds.injectionUnitConfigurationId,
+  injectionUnitConfigurationId: 'IU-07/55mm-screw',
 };
 
 assert.equal(
