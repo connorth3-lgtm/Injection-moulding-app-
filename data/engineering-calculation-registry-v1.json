@@ -343,20 +343,21 @@
         "exact injection-unit configuration ID",
         "exact mould configuration ID",
         "explicit required-axis list",
-        "identity-carrying axis assessments",
+        "identity-carrying axis assessments or explicitly context-independent assessments",
+        "contextBasisRef for any context-independent assessment",
         "marginalBasisRef on any MARGINAL assessment",
         "declared basis"
       ],
       "outputs": [
-        "per-axis state and identity-mismatch reason",
+        "per-axis state and mismatch/unbound reason",
         "coverage completeness",
         "summary state"
       ],
-      "scope": "Composition of explicitly declared machine/mould suitability axes while enforcing any machine, injection-unit or mould identity carried by the axis assessment.",
+      "scope": "Composition of explicitly declared machine/mould suitability axes while enforcing carried machine/injection-unit/mould identity and requiring an explicit referenced basis for any identity-free context-independent axis.",
       "evidenceAnchors": [
         "ISO-20430-2020"
       ],
-      "uncertaintyBoundary": "PASS applies only to the declared axes and is not a universal declaration of safety, installability, validation or production readiness. Any assessment identity mismatch becomes UNKNOWN; unresolved required axes force UNKNOWN unless a known FAIL already dominates. A bare MARGINAL state without marginalBasisRef is treated as UNKNOWN."
+      "uncertaintyBoundary": "PASS applies only to the declared axes and is not a universal declaration of safety, installability, validation or production readiness. Identity mismatch, unbound identity-free axes, missing context basis, or other unresolved required axes become UNKNOWN unless a known FAIL already dominates. A bare MARGINAL state without marginalBasisRef is treated as UNKNOWN."
     },
     {
       "id": "EQ-FLOWPATH-001",
