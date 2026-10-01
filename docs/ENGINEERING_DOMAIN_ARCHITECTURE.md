@@ -56,7 +56,7 @@ The machine-readable contract for these calculations is `data/engineering-calcul
 
 ## Inputs, outputs and fail-closed behaviour
 
-Pure functions accept plain JavaScript values/objects only. Engineering quantities must carry explicit units at the boundary. Where the input is absent, non-finite, unsupported, ambiguous or lacks required provenance, the function returns `ok: false` with a stable reason instead of guessing.
+Pure functions accept plain JavaScript values/objects only. Engineering quantities must carry explicit units at the boundary. SI prefix case is preserved across the engineering unit boundary; ambiguous substitutions such as `mPa`/`MPa`, `mN`/`MN`, `Mg`/`mg`, `Mm`/`mm` and `ML`/`mL` are rejected rather than guessed. Where the input is absent, non-finite, unsupported, ambiguous or lacks required provenance, the function returns `ok: false` with a stable reason instead of guessing.
 
 Successful engineering results carry the relevant units plus assumptions/provenance and an authority label. The authority labels are deliberately narrow: arithmetic estimates, mass accounting, semantic readiness and source-first guidance. None grant validated recipe authority or machine-control authority.
 
