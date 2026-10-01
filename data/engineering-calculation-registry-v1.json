@@ -583,6 +583,7 @@
         "melt temperature",
         "mould surface temperature",
         "ejection temperature",
+        "explicit centerline-temperature ejection criterion type",
         "amorphous morphology",
         "thermal-diffusivity reference",
         "ejection-criterion reference",
@@ -593,12 +594,12 @@
         "logarithm argument",
         "retained thermal basis"
       ],
-      "scope": "First-term one-dimensional plane-wall/centerline screening estimate for explicitly amorphous thermoplastics only.",
+      "scope": "First-term one-dimensional plane-wall/centerline screening estimate for explicitly amorphous thermoplastics only, using an explicitly centerline-temperature ejection criterion.",
       "evidenceAnchors": [
         "PIGNON-2018-COOLING-ANALYTICAL",
         "TORRES-ALBA-2020-CONFORMAL-COOLING"
       ],
-      "uncertaintyBoundary": "Semi-crystalline material is rejected; crystallisation/latent heat, thermal contact resistance, local geometry, nonuniform thermal history, cooling-circuit resistance, mould transient state and post-ejection reheating are not resolved. Output is not a guaranteed cycle-time setting."
+      "uncertaintyBoundary": "Semi-crystalline material and non-centerline ejection criteria are rejected; crystallisation/latent heat, thermal contact resistance, local geometry, nonuniform thermal history, cooling-circuit resistance, mould transient state and post-ejection reheating are not resolved. Output is not a guaranteed cycle-time setting."
     },
     {
       "id": "EQ-SHR-001",
