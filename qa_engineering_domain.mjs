@@ -942,13 +942,73 @@ assert.equal(
 
 
 
+const amorphousCoolingContext = {
+  materialGradeId: 'ABS-grade-X',
+  materialMorphology: 'amorphous',
+  materialMorphologyRef: 'supplier-grade-morphology/rev-A',
+  thermalModelBasisRef: 'PIGNON-2018-COOLING-ANALYTICAL',
+};
+
+assert.equal(
+  amorphousSlabCoolingTimeEstimate({
+    partThickness: { value: 3, unit: 'mm' },
+    thermalDiffusivity: { value: 0.1, unit: 'mm2/s' },
+    meltTemperature: { value: 230, unit: '°C' },
+    mouldSurfaceTemperature: { value: 60, unit: '°C' },
+    ejectionTemperature: { value: 90, unit: '°C' },
+    materialMorphology: 'amorphous',
+    ejectionCriterionType: 'centerline-temperature',
+    thermalDiffusivityRef: 'grade-property-dataset/rev-4',
+    ejectionCriterionRef: 'validated-part-ejection-study/rev-2',
+    mouldSurfaceTemperatureBasisRef: 'instrumented-mould/trial-18',
+    thermalModelBasisRef: 'PIGNON-2018-COOLING-ANALYTICAL',
+  }).reason,
+  'missing-material-grade-id',
+);
+
+assert.equal(
+  amorphousSlabCoolingTimeEstimate({
+    materialGradeId: 'ABS-grade-X',
+    partThickness: { value: 3, unit: 'mm' },
+    thermalDiffusivity: { value: 0.1, unit: 'mm2/s' },
+    meltTemperature: { value: 230, unit: '°C' },
+    mouldSurfaceTemperature: { value: 60, unit: '°C' },
+    ejectionTemperature: { value: 90, unit: '°C' },
+    materialMorphology: 'amorphous',
+    ejectionCriterionType: 'centerline-temperature',
+    thermalDiffusivityRef: 'grade-property-dataset/rev-4',
+    ejectionCriterionRef: 'validated-part-ejection-study/rev-2',
+    mouldSurfaceTemperatureBasisRef: 'instrumented-mould/trial-18',
+    thermalModelBasisRef: 'PIGNON-2018-COOLING-ANALYTICAL',
+  }).reason,
+  'material-morphology-reference-required',
+);
+
+assert.equal(
+  amorphousSlabCoolingTimeEstimate({
+    materialGradeId: 'ABS-grade-X',
+    materialMorphology: 'amorphous',
+    materialMorphologyRef: 'supplier-grade-morphology/rev-A',
+    partThickness: { value: 3, unit: 'mm' },
+    thermalDiffusivity: { value: 0.1, unit: 'mm2/s' },
+    meltTemperature: { value: 230, unit: '°C' },
+    mouldSurfaceTemperature: { value: 60, unit: '°C' },
+    ejectionTemperature: { value: 90, unit: '°C' },
+    ejectionCriterionType: 'centerline-temperature',
+    thermalDiffusivityRef: 'grade-property-dataset/rev-4',
+    ejectionCriterionRef: 'validated-part-ejection-study/rev-2',
+    mouldSurfaceTemperatureBasisRef: 'instrumented-mould/trial-18',
+  }).reason,
+  'thermal-model-basis-reference-required',
+);
+
 const amorphousCooling = amorphousSlabCoolingTimeEstimate({
+  ...amorphousCoolingContext,
   partThickness: { value: 3, unit: 'mm' },
   thermalDiffusivity: { value: 0.1, unit: 'mm2/s' },
   meltTemperature: { value: 230, unit: '°C' },
   mouldSurfaceTemperature: { value: 60, unit: '°C' },
   ejectionTemperature: { value: 90, unit: '°C' },
-  materialMorphology: 'amorphous',
   ejectionCriterionType: 'centerline-temperature',
   thermalDiffusivityRef: 'grade-property-dataset/rev-4',
   ejectionCriterionRef: 'validated-part-ejection-study/rev-2',
@@ -959,12 +1019,16 @@ assert.equal(amorphousCooling.ok, true);
 assert.ok(Math.abs(amorphousCooling.value.coolingTimeS - 18.020468757556586) < 1e-12);
 assert.equal(amorphousCooling.equationId, 'EQ-THERM-002');
 assert.equal(amorphousCooling.value.materialMorphology, 'amorphous');
+assert.equal(amorphousCooling.value.materialGradeId, 'ABS-grade-X');
+assert.equal(amorphousCooling.value.materialMorphologyRef, 'supplier-grade-morphology/rev-A');
+assert.equal(amorphousCooling.value.thermalModelBasisRef, 'PIGNON-2018-COOLING-ANALYTICAL');
 assert.equal(amorphousCooling.value.temperatureCriterion, 'centerline-first-term-plane-wall');
 assert.match(amorphousCooling.assumptions.join(' '), /semi-crystalline solidification\/crystallisation requires a phase-change treatment/i);
 assert.match(amorphousCooling.assumptions.join(' '), /not a guaranteed cycle-time setting/i);
 
 assert.equal(
   amorphousSlabCoolingTimeEstimate({
+    ...amorphousCoolingContext,
     partThickness: { value: 3, unit: 'mm' },
     thermalDiffusivity: { value: 0.1, unit: 'mm2/s' },
     meltTemperature: { value: 230, unit: '°C' },
@@ -981,6 +1045,7 @@ assert.equal(
 
 assert.equal(
   amorphousSlabCoolingTimeEstimate({
+    ...amorphousCoolingContext,
     partThickness: { value: 3, unit: 'mm' },
     thermalDiffusivity: { value: 0.1, unit: 'mm2/s' },
     meltTemperature: { value: 230, unit: '°C' },
@@ -997,6 +1062,7 @@ assert.equal(
 
 assert.equal(
   amorphousSlabCoolingTimeEstimate({
+    ...amorphousCoolingContext,
     partThickness: { value: 3, unit: 'mm' },
     thermalDiffusivity: { value: 0.1, unit: 'mm2/s' },
     meltTemperature: { value: 230, unit: '°C' },
@@ -1011,6 +1077,7 @@ assert.equal(
 
 assert.equal(
   amorphousSlabCoolingTimeEstimate({
+    ...amorphousCoolingContext,
     partThickness: { value: 3, unit: 'mm' },
     thermalDiffusivity: { value: 0.1, unit: 'mm2/s' },
     meltTemperature: { value: 230, unit: '°C' },
