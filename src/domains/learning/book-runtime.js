@@ -14,7 +14,7 @@
   const MATERIAL_REGIONAL_PATH=`${BOOK_DATA}book-material-regional-evidence-v1.json`;
   const MATERIAL_CATALOG_PATH='./material-catalog-v1.json';
   const BATCH_PATHS=[`${BOOK_DATA}book-authored-foundations-v1.json`,`${BOOK_DATA}book-evidence-registry-v1.json`,`${BOOK_DATA}book-chapters-materials-machine-v1.json`,`${BOOK_DATA}book-authored-remaining-v1.json`];
-  const AUTH_GIT_BLOB_SHA1='7c8bf4fbea92799f5cc43d4cf66ee6263f02e7c7';
+  const AUTH_GIT_BLOB_SHA1='00ee699d39fa580f3aad6de335b4e6ef99fcb724';
   const REQUIRED_INTEGRITY_FILES=['book-manifest-v1.json','book-sme-review-v1.json','book-qualification-resolution-all-v1.json','book-claim-resolution-high-risk-v1.json','book-authored-foundations-v1.json','book-evidence-registry-v1.json','book-chapters-materials-machine-v1.json','book-authored-remaining-v1.json','book-worked-engineering-cases-v1.json','book-evidence-enrichment-v2.json','book-material-grade-atlas-v1.json','book-material-regional-evidence-v1.json','material-catalog-v1.json'];
   const CANONICAL_SOURCE_URLS=Object.freeze({
     'OUBELLAOUCH-2024-FIBRE-ORIENTATION':'https://doi.org/10.1007/s00170-024-12990-5',
@@ -49,7 +49,7 @@
     integrityMap=Object.freeze({...cfg.gitBlobSha1ByFile});
   }
   function applyPublicationAuthorization(data,declared,auth){
-    if(auth?.schema!==1||auth?.bookId!==data.bookId)throw new Error('Book publication authorization identity check failed');if(auth.status!=='authorized')return;
+    if(auth?.schema!==1||auth?.bookId!==data.bookId)throw new Error('Book publication authorization identity check failed');if(auth.status!=='authorized')return;if(auth.learnerFacingPublicationLabel!=='Source evidence reviewed')throw new Error('Book learner-facing assurance terminology mismatch');
     if(auth?.authorizationBasis?.sourceRevision!=='7ef28bd8b02994223e320fda64e99808357d3219')throw new Error('Book publication authorization source revision mismatch');
     if(auth?.governanceSnapshot?.manifestVersion!==data.version)throw new Error('Book publication authorization manifest version mismatch');const snapshot=auth.governanceSnapshot||{};
     if(snapshot.chapters!==46||snapshot.claims!==137||snapshot.supported!==116||snapshot.qualified!==21||snapshot.hold!==0||snapshot.conflicting!==0||snapshot.scopeQualifiedClaimsBlockingPublication!==0)throw new Error('Book publication authorization governance snapshot mismatch');
