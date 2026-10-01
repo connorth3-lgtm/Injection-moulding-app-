@@ -14,6 +14,7 @@ import {
   averageResidenceTimeEstimate,
   averageResidenceTimeFromShotCycle,
   relativeCoolingTimeScale,
+  linearShrinkageCompensationRange,
   gateSealPlateauAssessment,
   channelSemanticReadiness,
   gradeSpecificProcessingBoundary,
@@ -288,6 +289,37 @@ assert.equal(
     referenceThermalDiffusivity: { value: 0.1, unit: 'mm2/s' },
   }).reason,
   'both-diffusivities-required',
+);
+
+
+assert.equal(
+  linearShrinkageCompensationRange({
+    targetPartDimension: { value: 100, unit: 'mm' },
+    lowerShrinkage: { value: 1, unit: '%' },
+    upperShrinkage: { value: 2, unit: '%' },
+  }).reason,
+  'shrinkage-range-provenance-required',
+);
+const shrinkageRange = linearShrinkageCompensationRange({
+  targetPartDimension: { value: 100, unit: 'mm' },
+  lowerShrinkage: { value: 1, unit: '%' },
+  upperShrinkage: { value: 2, unit: '%' },
+  provenance: 'supplier-grade-sheet-rev-A',
+});
+assert.equal(shrinkageRange.ok, true);
+assert.ok(Math.abs(shrinkageRange.value.lowerStartingMouldDimensionMm - (100 / 0.99)) < 1e-12);
+assert.ok(Math.abs(shrinkageRange.value.upperStartingMouldDimensionMm - (100 / 0.98)) < 1e-12);
+assert.equal(shrinkageRange.equationId, 'EQ-SHR-001');
+assert.match(shrinkageRange.assumptions.join(' '), /does not supply a generic polymer shrinkage constant/i);
+assert.match(shrinkageRange.assumptions.join(' '), /not a released tool dimension/i);
+assert.equal(
+  linearShrinkageCompensationRange({
+    targetPartDimension: { value: 100, unit: 'mm' },
+    lowerShrinkage: { value: 2, unit: '%' },
+    upperShrinkage: { value: 1, unit: '%' },
+    provenance: 'test',
+  }).reason,
+  'shrinkage-range-reversed',
 );
 
 const gateStudy = gateSealPlateauAssessment({
