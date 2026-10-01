@@ -5,6 +5,7 @@ import {
   clampSeparatingForceRange,
   aggregateShotMass,
   pressureValue,
+  measuredPressureDifference,
   shotCapacityAssessment,
   clampCapacityAssessment,
   specificPlasticPressureCapacityAssessment,
@@ -162,6 +163,63 @@ assert.equal(cavityPressure.pressureKind, 'cavity');
 assert.equal(cavityPressure.equationId, 'EQ-PRESS-001');
 assert.match(cavityPressure.assumptions.join(' '), /does not convert one pressure location/i);
 assert.equal(pressureValue({ pressure: { value: 55, unit: 'MPa' } }).reason, 'pressure-kind-required');
+
+
+const measuredDrop = measuredPressureDifference({
+  upstreamPressure: { value: 95, unit: 'MPa' },
+  downstreamPressure: { value: 62, unit: 'MPa' },
+  upstreamKind: 'nozzle',
+  downstreamKind: 'cavity',
+  upstreamLocationId: 'nozzle-transducer-A',
+  downstreamLocationId: 'cavity-3-sensor',
+  measurementBasisRef: 'cycle-142-fill-end-synchronised',
+  provenance: 'controlled-pressure-loss-study',
+});
+assert.equal(measuredDrop.ok, true);
+assert.equal(measuredDrop.value.pressureDifferenceMegapascals, 33);
+assert.equal(measuredDrop.value.upstreamNotLowerThanDownstream, true);
+assert.equal(measuredDrop.equationId, 'EQ-PRESS-002');
+assert.match(measuredDrop.assumptions.join(' '), /not automatically a pressure-loss coefficient/i);
+
+assert.equal(
+  measuredPressureDifference({
+    upstreamPressure: { value: 120, unit: 'bar' },
+    downstreamPressure: { value: 8, unit: 'MPa' },
+    upstreamKind: 'hydraulic',
+    downstreamKind: 'cavity',
+    upstreamLocationId: 'hydraulic-line',
+    downstreamLocationId: 'cavity',
+    measurementBasisRef: 'same-cycle',
+  }).reason,
+  'unsupported-upstream-measured-pressure-kind',
+);
+
+const negativeMeasuredDrop = measuredPressureDifference({
+  upstreamPressure: { value: 50, unit: 'MPa' },
+  downstreamPressure: { value: 52, unit: 'MPa' },
+  upstreamKind: 'runner',
+  downstreamKind: 'cavity',
+  upstreamLocationId: 'runner-A',
+  downstreamLocationId: 'cavity-A',
+  measurementBasisRef: 'trace-sample-55',
+});
+assert.equal(negativeMeasuredDrop.ok, true);
+assert.equal(negativeMeasuredDrop.value.pressureDifferenceMegapascals, -2);
+assert.equal(negativeMeasuredDrop.value.upstreamNotLowerThanDownstream, false);
+assert.match(negativeMeasuredDrop.assumptions.join(' '), /retained and flagged rather than silently corrected/i);
+
+assert.equal(
+  measuredPressureDifference({
+    upstreamPressure: { value: 50, unit: 'MPa' },
+    downstreamPressure: { value: 45, unit: 'MPa' },
+    upstreamKind: 'runner',
+    downstreamKind: 'runner',
+    upstreamLocationId: 'runner-A',
+    downstreamLocationId: 'runner-A',
+    measurementBasisRef: 'trace-sample-1',
+  }).reason,
+  'distinct-pressure-locations-required',
+);
 
 const clampRange = clampSeparatingForceRange({
   projectedArea: { value: 100, unit: 'cm²' },
