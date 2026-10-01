@@ -21,19 +21,20 @@ This pass reviewed the current MouldMaster engineering/runtime architecture and 
 `src/domains/process/engineering-core.mjs` now owns additional browser-independent, unit-aware primitives:
 
 1. pressure unit conversion with mandatory pressure-type semantics;
-2. clamp separating-force range from an explicitly supplied pressure range;
-3. shot-capacity utilisation only after comparable capacity basis is explicitly verified;
-4. separate clamp-force, specific-plastic-pressure, volumetric-flow and plasticising-throughput capacity comparisons, each requiring a verified like-for-like basis;
-5. fill-stage volume/mass/ram-rate arithmetic;
-6. average residence-time screening from inventory/throughput;
-7. average residence screening derived from shot mass and cycle time;
-8. relative cooling-time diffusion scaling with explicit non-absolute-model boundaries;
-9. source-bound linear shrinkage compensation-range arithmetic that refuses unsourced generic shrinkage inputs and explicitly stops short of a released tool dimension;
-10. exact-identity mould-height, opening-stroke, maximum-daylight, tie-bar-clearance and ejector-stroke fit screens;
-11. a declared-axis machine-suitability composer that preserves PASS / MARGINAL / FAIL / UNKNOWN without inventing a marginal threshold and forces UNKNOWN when a required axis is unresolved;
-12. hydraulic-diameter, uniform-channel-volume and circular-channel apparent wall-shear-rate screens with explicit non-Newtonian/pressure-loss boundaries;
-13. fail-closed pressure-loss modelling readiness that rejects MFR/MFI as a substitute for an explicit rheology model;
-14. repeatability-aware gate-seal plateau analysis using a user-supplied decision tolerance.
+2. location-explicit measured plastic-side pressure differences that exclude hydraulic/command pressure and preserve negative differences for investigation;
+3. clamp separating-force range from an explicitly supplied pressure range;
+4. shot-capacity utilisation only after comparable capacity basis is explicitly verified;
+5. separate clamp-force, specific-plastic-pressure, volumetric-flow and plasticising-throughput capacity comparisons, each requiring a verified like-for-like basis;
+6. fill-stage volume/mass/ram-rate arithmetic;
+7. average residence-time screening from inventory/throughput;
+8. average residence screening derived from shot mass and cycle time;
+9. relative cooling-time diffusion scaling with explicit non-absolute-model boundaries;
+10. source-bound linear shrinkage compensation-range arithmetic that refuses unsourced generic shrinkage inputs and explicitly stops short of a released tool dimension;
+11. exact-identity mould-height, opening-stroke, maximum-daylight, tie-bar-clearance and ejector-stroke fit screens;
+12. a declared-axis machine-suitability composer that preserves PASS / MARGINAL / FAIL / UNKNOWN without inventing a marginal threshold and forces UNKNOWN when a required axis is unresolved;
+13. hydraulic-diameter, uniform-channel-volume and circular-channel apparent wall-shear-rate screens with explicit non-Newtonian/pressure-loss boundaries;
+14. fail-closed pressure-loss modelling readiness that rejects MFR/MFI as a substitute for an explicit rheology model;
+15. repeatability-aware gate-seal plateau analysis using a user-supplied decision tolerance.
 
 All new functions return structured unsupported states rather than silently inventing missing engineering meaning.
 
