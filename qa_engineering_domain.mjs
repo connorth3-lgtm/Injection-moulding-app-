@@ -932,7 +932,75 @@ for (const entry of calculationRegistry.entries) {
   assert.ok(entry.scope, `engineering calculation ${entry.id} is missing scope`);
   assert.ok(entry.uncertaintyBoundary, `engineering calculation ${entry.id} is missing uncertainty boundary`);
   assert.ok(Array.isArray(entry.evidenceAnchors) && entry.evidenceAnchors.length > 0, `engineering calculation ${entry.id} is missing evidence anchors`);
+  for (const anchor of entry.evidenceAnchors) {
+    assert.ok(!/^10\\.\\d{4,9}\\//i.test(anchor), `engineering calculation ${entry.id} uses a raw DOI as an evidence ID: ${anchor}`);
+  }
 }
+
+assert.ok(calculationRegistry.evidenceResolution, 'engineering calculation registry is missing evidence-resolution contract');
+assert.ok(Array.isArray(calculationRegistry.evidenceResolution.governedJsonSources), 'governed evidence source list is missing');
+assert.ok(Array.isArray(calculationRegistry.engineeringEvidenceSupplements), 'engineering evidence supplements must be an array');
+
+const resolvedEngineeringEvidence = new Map();
+for (const sourceSpec of calculationRegistry.evidenceResolution.governedJsonSources) {
+  const sourceDoc = JSON.parse(
+    fs.readFileSync(new URL(`./${sourceSpec.path}`, import.meta.url), 'utf8'),
+  );
+  const records = sourceDoc?.[sourceSpec.collection];
+  assert.ok(Array.isArray(records), `engineering evidence collection ${sourceSpec.collection} missing from ${sourceSpec.path}`);
+  for (const record of records) {
+    if (!record?.id) continue;
+    const existing = resolvedEngineeringEvidence.get(record.id);
+    if (existing) {
+      assert.equal(
+        existing.url,
+        record.url,
+        `governed evidence ID ${record.id} resolves to conflicting URLs in ${existing.__sourcePath} and ${sourceSpec.path}`,
+      );
+      continue;
+    }
+    resolvedEngineeringEvidence.set(record.id, { ...record, __sourcePath: sourceSpec.path });
+  }
+}
+
+for (const record of calculationRegistry.engineeringEvidenceSupplements) {
+  assert.ok(record?.id, 'engineering evidence supplement is missing id');
+  assert.ok(!resolvedEngineeringEvidence.has(record.id), `engineering evidence supplement duplicates governed source ID ${record.id}`);
+  assert.match(String(record.type || ''), /peer-reviewed/i, `engineering evidence supplement ${record.id} must be peer-reviewed`);
+  assert.match(String(record.url || ''), /^https:\/\/doi\.org\//i, `engineering evidence supplement ${record.id} must use a canonical DOI URL`);
+  assert.match(String(record.checked || ''), /^20\d\d-\d\d-\d\d$/, `engineering evidence supplement ${record.id} must carry a checked date`);
+  assert.ok(String(record.scope || '').trim(), `engineering evidence supplement ${record.id} is missing scope`);
+  resolvedEngineeringEvidence.set(record.id, { ...record, __sourcePath: 'engineering-calculation-registry-v1.json#engineeringEvidenceSupplements' });
+}
+
+const canonicalSourceSpec = calculationRegistry.evidenceResolution.canonicalAcademicUrlSource;
+assert.ok(canonicalSourceSpec?.path && canonicalSourceSpec?.collection, 'canonical academic URL source contract is incomplete');
+const canonicalSourceDoc = JSON.parse(
+  fs.readFileSync(new URL(`./${canonicalSourceSpec.path}`, import.meta.url), 'utf8'),
+);
+const canonicalAcademicUrls = canonicalSourceDoc?.[canonicalSourceSpec.collection] || {};
+assert.equal(typeof canonicalAcademicUrls, 'object');
+
+for (const [id, canonicalUrl] of Object.entries(canonicalAcademicUrls)) {
+  const record = resolvedEngineeringEvidence.get(id);
+  if (record) resolvedEngineeringEvidence.set(id, { ...record, url: canonicalUrl, canonicalUrlApplied: true });
+}
+
+const unresolvedEvidence = [];
+for (const entry of calculationRegistry.entries) {
+  for (const anchor of entry.evidenceAnchors) {
+    const record = resolvedEngineeringEvidence.get(anchor);
+    if (!record) {
+      unresolvedEvidence.push({ calculationId: entry.id, anchor });
+      continue;
+    }
+    assert.ok(String(record.title || record.name || '').trim(), `engineering evidence ${anchor} is missing title/name`);
+    assert.match(String(record.url || ''), /^https:\/\//, `engineering evidence ${anchor} does not resolve to an HTTPS URL`);
+  }
+}
+assert.deepEqual(unresolvedEvidence, [], `engineering calculation evidence contains unresolved anchors: ${JSON.stringify(unresolvedEvidence)}`);
+
+assert.match(calculationRegistry.evidenceResolution.rule, /Every evidenceAnchors ID must resolve/i);
 assert.match(calculationRegistry.authorityBoundary, /No calculation.*production recipe.*machine-control/i);
 
 assert.deepEqual(ENGINEERING_DOMAIN_BOUNDARY.dependenciesAllowed, ['plain JavaScript data']);
