@@ -283,6 +283,23 @@ assert.equal(
   'insufficient-replicates',
 );
 
+
+const calculationRegistry = JSON.parse(
+  fs.readFileSync(new URL('./data/engineering-calculation-registry-v1.json', import.meta.url), 'utf8'),
+);
+assert.equal(calculationRegistry.status, 'advisory-only');
+const registeredIds = new Set(calculationRegistry.entries.map(entry => entry.id));
+for (const equationId of Object.values(ENGINEERING_EQUATION_IDS)) {
+  assert.ok(registeredIds.has(equationId), `engineering calculation registry is missing ${equationId}`);
+}
+assert.equal(registeredIds.size, Object.values(ENGINEERING_EQUATION_IDS).length);
+for (const entry of calculationRegistry.entries) {
+  assert.ok(entry.scope, `engineering calculation ${entry.id} is missing scope`);
+  assert.ok(entry.uncertaintyBoundary, `engineering calculation ${entry.id} is missing uncertainty boundary`);
+  assert.ok(Array.isArray(entry.evidenceAnchors) && entry.evidenceAnchors.length > 0, `engineering calculation ${entry.id} is missing evidence anchors`);
+}
+assert.match(calculationRegistry.authorityBoundary, /No calculation.*production recipe.*machine-control/i);
+
 assert.deepEqual(ENGINEERING_DOMAIN_BOUNDARY.dependenciesAllowed, ['plain JavaScript data']);
 assert.ok(ENGINEERING_DOMAIN_BOUNDARY.dependenciesForbidden.includes('DOM'));
 assert.ok(ENGINEERING_DOMAIN_BOUNDARY.dependenciesForbidden.includes('IndexedDB'));
