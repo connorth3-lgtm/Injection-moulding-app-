@@ -69,11 +69,12 @@
         "force: N → kN"
       ],
       "calculationSteps": [
+        "The general mould-opening load is pressure integrated over projected area, F = ∫A p(x,y) dA. This synthetic example assumes one uniform representative pressure, so the arithmetic reduces to F = P × A.",
         "120 cm² = 0.012 m²",
         "55 MPa = 55,000,000 Pa",
         "F = P × A = 55,000,000 × 0.012 = 660,000 N = 660 kN"
       ],
-      "interpretation": "660 kN is the arithmetic result of the stated assumptions. It is not automatically the required machine clamp rating.",
+      "interpretation": "660 kN is the arithmetic result of the stated uniform representative-pressure assumption. It is an opening-load estimate, not automatically the required machine clamp rating and not a licence to substitute peak machine injection pressure for a cavity-pressure distribution.",
       "boundaries": [
         "Real decisions require actual projected area, pressure distribution, cavity/feed-system contribution, mould support/stiffness, machine/mould limits and the site's engineering margin policy.",
         "No automatic machine-control or production recipe authority is created."
@@ -127,10 +128,13 @@
         ]
       },
       "calculationSteps": [
-        "Apparent increments across the staged additions are 18 MPa, 16 MPa, 24 MPa and 14 MPa.",
-        "The largest synthetic increment occurs when the gate/early-cavity portion is added."
+        "Nozzle-only baseline displayed upstream pressure = 18 MPa.",
+        "Additional rise when sprue/runner is added = 34 − 18 = +16 MPa.",
+        "Additional rise when gate/early cavity is added = 58 − 34 = +24 MPa.",
+        "Additional rise to the full intended fill path = 72 − 58 = +14 MPa.",
+        "The largest additional synthetic rise is therefore +24 MPa at the gate/early-cavity addition."
       ],
-      "interpretation": "The sequence identifies where pressure demand appears to increase and therefore where to investigate. It does not prove that the gate is defective, and the displayed upstream signal must not be relabelled as cavity pressure.",
+      "interpretation": "The sequence identifies where additional upstream pressure demand appears to increase and therefore where to investigate. The 18 MPa nozzle-only value is a baseline, not a differential increment. The sequence does not prove that the gate is defective, and the displayed upstream signal must not be relabelled as cavity pressure.",
       "boundaries": [
         "The comparison requires controlled comparable states and valid machine/sensor semantics.",
         "A staged pressure signal is diagnostic evidence, not causal proof."
@@ -158,43 +162,51 @@
       "chapterId": "gate-seal",
       "title": "Gate-seal study: find a response plateau, not a universal hold time",
       "synthetic": true,
-      "setup": "All selected conditions are held constant while hold duration changes and mean part mass is observed.",
+      "setup": "At each hold duration, five synthetic repeated shots are represented while all selected conditions are held constant. Mean part mass and sample spread are shown to demonstrate that a plateau must be judged against repeatability and measurement resolution rather than from one part.",
       "table": {
         "columns": [
           "Hold duration",
-          "Mean part mass"
+          "Mean part mass (n=5)",
+          "Sample SD"
         ],
         "rows": [
           [
             "2 s",
-            "18.42 g"
+            "18.42 g",
+            "0.02 g"
           ],
           [
             "4 s",
-            "18.70 g"
+            "18.70 g",
+            "0.02 g"
           ],
           [
             "6 s",
-            "18.82 g"
+            "18.82 g",
+            "0.01 g"
           ],
           [
             "8 s",
-            "18.83 g"
+            "18.83 g",
+            "0.01 g"
           ],
           [
             "10 s",
-            "18.83 g"
+            "18.83 g",
+            "0.01 g"
           ]
         ]
       },
       "calculationSteps": [
-        "6 → 8 s change = +0.01 g",
-        "8 → 10 s change = +0.00 g at the shown resolution"
+        "6 → 8 s mean change = +0.01 g.",
+        "8 → 10 s mean change = +0.00 g at the shown resolution.",
+        "The +0.01 g change is the same order as the shown 0.01 g sample SD, so the mean difference must not be treated as decisive without the actual measurement resolution/uncertainty and repeated-shot evidence."
       ],
-      "interpretation": "The synthetic mass response approaches a plateau around the 6–8 s region. A real study needs repeated observations, measurement-resolution awareness and critical quality checks.",
+      "interpretation": "The synthetic response is consistent with a plateau in roughly the 6–10 s region, not with a universally exact gate-freeze time. A real study should retain individual repeated observations, verify balance resolution/measurement adequacy, and confirm relevant dimensional or quality characteristics before declaring additional hold time ineffective.",
       "boundaries": [
         "The result is specific to material, gate, mould and thermal state.",
-        "The example does not establish a generic hold time."
+        "The example does not establish a generic hold time.",
+        "A mean-mass plateau is evidence only; repeatability, measurement resolution/uncertainty and relevant quality characteristics must support the interpretation."
       ],
       "sourceIds": [
         "ASTM-D955-21",
@@ -299,13 +311,15 @@
         ]
       },
       "calculationSteps": [
-        "At low mould temperature: high − low fill speed = 0.31 − 0.42 = -0.11 mm",
-        "At high mould temperature: high − low fill speed = 0.30 − 0.29 = +0.01 mm"
+        "At low mould temperature: high − low fill speed = 0.31 − 0.42 = -0.11 mm.",
+        "At high mould temperature: high − low fill speed = 0.30 − 0.29 = +0.01 mm.",
+        "Difference of those simple effects = +0.01 − (-0.11) = +0.12 mm, demonstrating an interaction pattern in the four synthetic cell means."
       ],
-      "interpretation": "The fill-speed effect changes with mould-temperature level, so a one-factor statement such as 'higher speed reduces warpage' would be misleading.",
+      "interpretation": "The fill-speed effect changes with mould-temperature level, so a one-factor statement such as 'higher speed reduces warpage' would be misleading. Because this simple teaching table has one synthetic mean per combination and no experimental-error estimate, it demonstrates the logic of interaction but does not establish statistical significance.",
       "boundaries": [
-        "Real conclusions require an appropriate design, replication/randomisation or blocking where needed, residual checks and confirmation runs.",
-        "Factor ranges must remain within safe and qualified limits."
+        "A real DOE requires a design appropriate to the decision, including replication where an error estimate is needed, randomisation and/or blocking where applicable, model/residual checks and confirmation runs.",
+        "Factor ranges must remain within safe and qualified limits.",
+        "Do not use an interaction pattern from unreplicated teaching means as a production conclusion or significance claim."
       ],
       "sourceIds": [
         "NIST-SEMATECH-DOE",
@@ -390,7 +404,7 @@
       "chapterId": "capability",
       "title": "Capability example: good spread does not compensate for poor centring",
       "synthetic": true,
-      "setup": "Synthetic specification is 10.00 ± 0.20 mm, giving LSL 9.80 mm and USL 10.20 mm. Teaching estimates use mean 10.08 mm and s = 0.04 mm.",
+      "setup": "Synthetic specification is 10.00 ± 0.20 mm, giving LSL 9.80 mm and USL 10.20 mm. Teaching estimates use mean 10.08 mm and s = 0.04 mm; for this example, s is explicitly treated as the spread estimate used in the displayed Cp/Cpk arithmetic.",
       "calculationSteps": [
         "Cp = (USL - LSL) / (6s) = 0.40 / 0.24 = 1.67",
         "Cpk = min((10.20 - 10.08)/(3×0.04), (10.08 - 9.80)/(3×0.04))",
@@ -399,6 +413,7 @@
       "interpretation": "The synthetic spread is narrower than the tolerance width, but off-centre location lowers Cpk relative to Cp.",
       "boundaries": [
         "Capability arithmetic is not trustworthy merely because it can be calculated; process stability, sampling, distribution assumptions where applicable and measurement-system adequacy must be established.",
+        "The method must state how the spread estimate was obtained (for example, within-subgroup versus overall/long-term variation) and must not silently mix different variation estimators under the same interpretation.",
         "No customer/site acceptance threshold is inferred."
       ],
       "sourceIds": [
@@ -460,7 +475,7 @@
       ],
       "interpretation": "This is a simplified sensible-heat quantity, not a cooling-time formula.",
       "boundaries": [
-        "The estimate omits crystallisation/latent effects where relevant, mould/insert heat capacity, shear heating, losses outside the mould, spatial gradients and heat-transfer coefficients.",
+        "The estimate omits crystallisation/latent or broader enthalpy effects where relevant, temperature dependence of specific heat, mould/insert heat capacity, shear heating, losses outside the mould, spatial gradients and heat-transfer coefficients.",
         "Real cooling design requires geometry-, material- and tool-specific analysis and measurement."
       ],
       "sourceIds": [
