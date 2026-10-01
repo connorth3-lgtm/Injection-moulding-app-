@@ -43,7 +43,7 @@ All new functions return structured unsupported states rather than silently inve
 
 ### Multi-cavity statistics hardening
 
-`process-statistics.mjs` now preserves cavity identity and reports per-cavity summary statistics plus the range of cavity means. It requires explicit measurement unit, sampling basis, measurement-system adequacy and minimum repeated support per cavity. The output is descriptive only: no generic balance percentage or tooling/process diagnosis is generated.
+`process-statistics.mjs` now preserves cavity identity and reports per-cavity summary statistics plus the range of cavity means. It requires explicit measurement unit, sampling basis **and sampling-basis reference**, measurement-system adequacy **and measurement-system basis reference**, plus minimum repeated support per cavity. Bare adequacy flags are insufficient. The output is descriptive only: no generic balance percentage or tooling/process diagnosis is generated.
 
 ### SPC/capability hardening
 
