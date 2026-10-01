@@ -12,7 +12,7 @@ async function openApp(page){
   await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
 }
 
-test('Book distinguishes evidence verification from independent human validation',async({page})=>{
+test('Book distinguishes source evidence review from independent human validation',async({page})=>{
   await openApp(page);
   await page.evaluate(()=>window.MMBook.open());
 
@@ -32,12 +32,14 @@ test('Book distinguishes evidence verification from independent human validation
 
   const chapterButtons=view.locator('.mm-book-chapter-button');
   await expect(chapterButtons).toHaveCount(46);
-  await expect(chapterButtons.first()).toContainText('Evidence verified');
-  await expect(view).not.toContainText(/\bVerified\b(?!\s+means)/);
+  await expect(chapterButtons.first()).toContainText('Source evidence reviewed');
+  await expect(view).not.toContainText(/\bEvidence verified\b/i);
 
   const boundary=view.locator('[data-mm-book-accuracy]');
-  await expect(boundary).toContainText('Evidence verified');
+  await expect(boundary).toContainText('Source evidence reviewed');
   await expect(boundary).toContainText('does not imply independent human SME approval');
   await expect(boundary).toContainText('physical-device validation');
   await expect(boundary).toContainText('learner-outcome validation');
+  await expect(boundary).toContainText('accreditation');
+  await expect(boundary).toContainText('production validation');
 });
