@@ -16,6 +16,10 @@ import {
   tieBarClearanceFit,
   ejectorStrokeFit,
   machineSuitabilitySummary,
+  hydraulicDiameter,
+  uniformChannelVolume,
+  circularChannelApparentWallShearRate,
+  pressureLossModelReadiness,
   fillStageRates,
   averageResidenceTimeEstimate,
   averageResidenceTimeFromShotCycle,
@@ -377,6 +381,69 @@ const marginalSummary = machineSuitabilitySummary({
 });
 assert.equal(marginalSummary.value.summaryState, 'MARGINAL');
 assert.match(marginalSummary.assumptions.join(' '), /only when an upstream assessment explicitly supplies that state/i);
+
+
+const hydraulic = hydraulicDiameter({
+  crossSectionArea: { value: 20, unit: 'mm²' },
+  wettedPerimeter: { value: 18, unit: 'mm' },
+  provenance: 'synthetic-channel-geometry',
+});
+assert.equal(hydraulic.ok, true);
+assert.ok(Math.abs(hydraulic.value.hydraulicDiameterMm - (80 / 18)) < 1e-12);
+assert.match(hydraulic.assumptions.join(' '), /does not by itself establish pressure loss/i);
+
+const channelVolume = uniformChannelVolume({
+  crossSectionArea: { value: 20, unit: 'mm²' },
+  channelLength: { value: 100, unit: 'mm' },
+});
+assert.equal(channelVolume.ok, true);
+assert.ok(Math.abs(channelVolume.value.volumeCm3 - 2) < 1e-12);
+assert.match(channelVolume.assumptions.join(' '), /geometric volume only/i);
+
+const circularShear = circularChannelApparentWallShearRate({
+  volumetricFlow: { value: 10, unit: 'cm³/s' },
+  diameter: { value: 10, unit: 'mm' },
+});
+assert.equal(circularShear.ok, true);
+assert.ok(Math.abs(circularShear.value.apparentWallShearRatePerS - (320 / Math.PI)) < 1e-12);
+assert.match(circularShear.assumptions.join(' '), /does not apply a Rabinowitsch correction/i);
+assert.match(circularShear.assumptions.join(' '), /does not calculate viscosity/i);
+
+const pressureLossReady = pressureLossModelReadiness({
+  materialGradeId: 'PA66-GF30-grade-X',
+  rheologyModelRef: 'supplier/CAE-cross-wlf-rev-2',
+  thermalStateRef: 'measured-melt-state/trial-14',
+  flowPathGeometryRef: 'mould-142-flowpath-rev-C',
+  volumetricFlow: { value: 55, unit: 'cm³/s' },
+  upstreamPressureKind: 'nozzle',
+  downstreamPressureKind: 'cavity',
+  provenance: 'controlled-trial-14',
+});
+assert.equal(pressureLossReady.ok, true);
+assert.equal(pressureLossReady.value.ready, true);
+assert.deepEqual(pressureLossReady.value.blockers, []);
+assert.match(pressureLossReady.assumptions.join(' '), /MFR\/MFI alone is not accepted/i);
+
+const pressureLossBlocked = pressureLossModelReadiness({
+  volumetricFlow: { value: 55, unit: 'cm³/s' },
+  upstreamPressureKind: 'cavity',
+  downstreamPressureKind: 'cavity',
+});
+assert.equal(pressureLossBlocked.ok, true);
+assert.equal(pressureLossBlocked.value.ready, false);
+for (const blocker of ['material-grade', 'rheology-model', 'thermal-state', 'flow-path-geometry', 'distinct-pressure-locations']) {
+  assert.ok(pressureLossBlocked.value.blockers.includes(blocker), `pressure-loss readiness missing blocker ${blocker}`);
+}
+const pressureLossNoFlow = pressureLossModelReadiness({
+  materialGradeId: 'grade',
+  rheologyModelRef: 'rheo',
+  thermalStateRef: 'thermal',
+  flowPathGeometryRef: 'geometry',
+  volumetricFlow: { value: 0, unit: 'cm3/s' },
+  upstreamPressureKind: 'nozzle',
+  downstreamPressureKind: 'cavity',
+});
+assert.ok(pressureLossNoFlow.value.blockers.includes('volumetric-flow'));
 
 const rates = fillStageRates({
   fillTime: { value: 2, unit: 's' },
