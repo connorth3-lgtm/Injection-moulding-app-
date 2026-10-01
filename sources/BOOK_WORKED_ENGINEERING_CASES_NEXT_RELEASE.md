@@ -1,6 +1,6 @@
 # MouldMaster Book — governed worked engineering cases
 
-**Status:** integrated into governed `2026.09.24.14` learner runtime as exact-byte-authorized synthetic teaching content. The cases remain **not independently SME-approved**; independent human Book SME validation is still a separate HOLD.
+**Status:** integrated into governed `2026.10.01.3` learner runtime as exact-byte-authorized synthetic teaching content. The cases remain **not independently SME-approved**; independent human Book SME validation is still a separate HOLD.
 
 Every number below is **SYNTHETIC TEACHING DATA** unless explicitly stated otherwise. The cases teach calculation and evidence structure, not universal production settings. Each case is mapped into `data/book-worked-engineering-cases-v1.json` with a unique case-level claim ID, evidence source IDs, assumptions/boundaries, runtime byte-integrity authorization, and explicit inclusion in the independent Book SME review scope.
 
@@ -153,10 +153,12 @@ A simple sensible-heat estimate is:
 
 ---
 
+## 11–18. Expanded quantitative and diagnostic cases
+
+Release `2026.10.01.3` adds eight further governed synthetic cases: V/P transfer comparison, feed-system branch balance, venting diagnosis with controlled recovery, ejection-load trend interpretation, valve-gate timing evidence, progressive fill study, shot-utilisation arithmetic and process-window robustness. Each case is encoded in the governed JSON ledger with its complete table/calculation, evidence anchors and non-universal boundaries; this document does not duplicate those full records.
+
 ## Integration record for issue #368
 
-The ten cases are integrated into release `2026.09.18.3` through the governed worked-case ledger and the canonical Book renderer. The authoritative `data/` ledger and generated runtime mirror must remain byte-identical; publication authorization pins the exact served worked-case and SME-scope bytes; executable QA recomputes the numeric examples; and all ten case IDs are inside the current human SME review contract.
+All eighteen cases are integrated into release `2026.10.01.3` through the governed worked-case ledger and canonical Book renderer. The authoritative `data/` ledger and runtime mirror remain byte-identical; publication authorization pins the exact served worked-case and SME-scope bytes; executable QA recomputes the numeric examples; and all eighteen case IDs are inside the current human SME review contract.
 
-This integration does **not** complete independent human SME validation. The Book SME workstream remains HOLD until genuine human review is recorded. Release-specific physical-device, real assistive-technology, curriculum-SME and learner-outcome evidence also remain separate HOLDs. No `.16.2`, `.18.1` or `.18.2` external evidence may be relabelled for the changed `.18.3` bytes.
-
-**Historical retained `.18.2` candidate — not evidence for `.18.3`:** source `f0bbf8410d3736da955fb0256e0c7dc1288d0712`, runtime fingerprint `sha256:dd89c6283eaae5c72abc08b22390610ab4e8326b1a5255ad97890df2fff04752`, candidate run `35288487442`, artifact `10524804805`. Later governance/QA-only commits must remain public-byte-equivalent under the exact release packet verifier.
+This integration does **not** complete independent human SME validation. The Book SME workstream remains HOLD until genuine human review is recorded. Release-specific physical-device, real assistive-technology, curriculum-SME and learner-outcome evidence remain separate HOLDs. The eight governed engineering diagrams added in the same release are also inside the independent Book-SME scope and do not count as human approval.
