@@ -820,16 +820,6 @@ assert.equal(
 );
 
 
-const swept = screwSweptVolume({
-  screwDiameter: { value: 40, unit: 'mm' },
-  screwStroke: { value: 100, unit: 'mm' },
-  injectionUnitConfigurationId: 'IMM-A/IU-40',
-  provenance: 'synthetic-machine-geometry',
-});
-assert.equal(swept.ok, true);
-assert.ok(Math.abs(swept.value.sweptVolumeCm3 - (Math.PI * 40 ** 2 / 4 * 100 / 1000)) < 1e-12);
-assert.equal(swept.equationId, 'EQ-MTRANS-001');
-assert.match(swept.assumptions.join(' '), /not automatically delivered melt volume/i);
 assert.equal(
   screwSweptVolume({
     screwDiameter: { value: 40, unit: 'mm' },
@@ -838,21 +828,69 @@ assert.equal(
   'missing-injection-unit-configuration-id',
 );
 
+assert.equal(
+  screwSweptVolume({
+    screwDiameter: { value: 40, unit: 'mm' },
+    screwStroke: { value: 100, unit: 'mm' },
+    injectionUnitConfigurationId: 'IMM-A/IU-40',
+  }).reason,
+  'screw-geometry-basis-reference-required',
+);
+
+const swept = screwSweptVolume({
+  screwDiameter: { value: 40, unit: 'mm' },
+  screwStroke: { value: 100, unit: 'mm' },
+  injectionUnitConfigurationId: 'IMM-A/IU-40',
+  screwGeometryBasisRef: 'oem-screw-geometry/IU-40-rev-A',
+  provenance: 'synthetic-machine-geometry',
+});
+assert.equal(swept.ok, true);
+assert.equal(swept.value.screwGeometryBasisRef, 'oem-screw-geometry/IU-40-rev-A');
+assert.ok(Math.abs(swept.value.sweptVolumeCm3 - (Math.PI * 40 ** 2 / 4 * 100 / 1000)) < 1e-12);
+assert.equal(swept.equationId, 'EQ-MTRANS-001');
+assert.match(swept.assumptions.join(' '), /not automatically delivered melt volume/i);
+
+assert.equal(
+  volumetricFlowFromScrewMotion({
+    screwDiameter: { value: 40, unit: 'mm' },
+    screwLinearSpeed: { value: 80, unit: 'mm/s' },
+    injectionUnitConfigurationId: 'IMM-A/IU-40',
+    screwGeometryBasisRef: 'oem-screw-geometry/IU-40-rev-A',
+  }).reason,
+  'screw-motion-basis-reference-required',
+);
+
 const screwFlow = volumetricFlowFromScrewMotion({
   screwDiameter: { value: 40, unit: 'mm' },
   screwLinearSpeed: { value: 80, unit: 'mm/s' },
   injectionUnitConfigurationId: 'IMM-A/IU-40',
+  screwGeometryBasisRef: 'oem-screw-geometry/IU-40-rev-A',
+  screwMotionBasisRef: 'actual-screw-trace/source-cycle-142',
 });
 assert.equal(screwFlow.ok, true);
+assert.equal(screwFlow.value.screwMotionBasisRef, 'actual-screw-trace/source-cycle-142');
 assert.ok(Math.abs(screwFlow.value.geometricVolumetricFlowCm3S - (Math.PI * 40 ** 2 / 4 * 80 / 1000)) < 1e-12);
 assert.match(screwFlow.assumptions.join(' '), /not proven cavity volumetric flow/i);
+
+assert.equal(
+  screwSpeedForVolumetricFlow({
+    screwDiameter: { value: 50, unit: 'mm' },
+    targetVolumetricFlow: { value: screwFlow.value.geometricVolumetricFlowCm3S, unit: 'cm3/s' },
+    injectionUnitConfigurationId: 'IMM-B/IU-50',
+    screwGeometryBasisRef: 'oem-screw-geometry/IU-50-rev-B',
+  }).reason,
+  'target-volumetric-flow-basis-reference-required',
+);
 
 const requiredSpeed = screwSpeedForVolumetricFlow({
   screwDiameter: { value: 50, unit: 'mm' },
   targetVolumetricFlow: { value: screwFlow.value.geometricVolumetricFlowCm3S, unit: 'cm3/s' },
   injectionUnitConfigurationId: 'IMM-B/IU-50',
+  screwGeometryBasisRef: 'oem-screw-geometry/IU-50-rev-B',
+  targetVolumetricFlowBasisRef: 'controlled-transfer-study/rev-C',
 });
 assert.equal(requiredSpeed.ok, true);
+assert.equal(requiredSpeed.value.targetVolumetricFlowBasisRef, 'controlled-transfer-study/rev-C');
 assert.ok(Math.abs(requiredSpeed.value.requiredScrewLinearSpeedMmS - (80 * 40 ** 2 / 50 ** 2)) < 1e-12);
 assert.match(requiredSpeed.assumptions.join(' '), /not a released machine velocity setpoint/i);
 
@@ -860,11 +898,19 @@ const transferred = volumetricTransferBetweenScrews({
   sourceScrewDiameter: { value: 40, unit: 'mm' },
   sourceScrewLinearSpeed: { value: 80, unit: 'mm/s' },
   sourceInjectionUnitConfigurationId: 'IMM-A/IU-40',
+  sourceScrewGeometryBasisRef: 'oem-screw-geometry/IU-40-rev-A',
+  sourceScrewMotionBasisRef: 'actual-screw-trace/source-cycle-142',
   targetScrewDiameter: { value: 50, unit: 'mm' },
   targetInjectionUnitConfigurationId: 'IMM-B/IU-50',
+  targetScrewGeometryBasisRef: 'oem-screw-geometry/IU-50-rev-B',
+  transferStudyBasisRef: 'controlled-transfer-study/rev-C',
   provenance: 'controlled-transfer-fixture',
 });
 assert.equal(transferred.ok, true);
+assert.equal(transferred.value.sourceScrewGeometryBasisRef, 'oem-screw-geometry/IU-40-rev-A');
+assert.equal(transferred.value.sourceScrewMotionBasisRef, 'actual-screw-trace/source-cycle-142');
+assert.equal(transferred.value.targetScrewGeometryBasisRef, 'oem-screw-geometry/IU-50-rev-B');
+assert.equal(transferred.value.transferStudyBasisRef, 'controlled-transfer-study/rev-C');
 assert.ok(Math.abs(transferred.value.targetGeometricScrewLinearSpeedMmS - 51.2) < 1e-12);
 assert.ok(Math.abs(transferred.value.speedRatioTargetToSource - 0.64) < 1e-12);
 assert.equal(transferred.equationId, 'EQ-MTRANS-004');
@@ -876,6 +922,8 @@ assert.equal(
     screwDiameter: { value: 40, unit: 'mm' },
     screwLinearSpeed: { value: 8, unit: 'Mm/s' },
     injectionUnitConfigurationId: 'IMM-A/IU-40',
+    screwGeometryBasisRef: 'oem-screw-geometry/IU-40-rev-A',
+    screwMotionBasisRef: 'actual-screw-trace/source-cycle-142',
   }).reason,
   'unsupported-screw-linear-speed-unit',
   'Mm/s must never be silently interpreted as mm/s',
