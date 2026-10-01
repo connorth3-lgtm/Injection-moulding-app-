@@ -20,7 +20,7 @@ This pass reviewed the current MouldMaster engineering/runtime architecture and 
 
 `src/domains/process/engineering-core.mjs` now owns additional browser-independent, unit-aware primitives:
 
-1. pressure unit conversion with mandatory pressure-type semantics;
+1. pressure unit conversion with mandatory pressure-type semantics and case-safe SI prefixes so `mPa` cannot be treated as `MPa`;
 2. location-explicit measured plastic-side pressure differences that exclude hydraulic/command pressure and preserve negative differences for investigation;
 3. clamp separating-force range from an explicitly supplied pressure range;
 4. shot-capacity utilisation only after comparable capacity basis is explicitly verified;
@@ -31,9 +31,9 @@ This pass reviewed the current MouldMaster engineering/runtime architecture and 
 9. relative cooling-time diffusion scaling with explicit non-absolute-model boundaries;
 10. source-bound linear shrinkage compensation-range arithmetic that refuses unsourced generic shrinkage inputs and explicitly stops short of a released tool dimension;
 11. exact-identity mould-height, opening-stroke, maximum-daylight, tie-bar-clearance and ejector-stroke fit screens;
-12. a declared-axis machine-suitability composer that preserves PASS / MARGINAL / FAIL / UNKNOWN without inventing a marginal threshold and forces UNKNOWN when a required axis is unresolved;
+12. a declared-axis machine-suitability composer that preserves PASS / MARGINAL / FAIL / UNKNOWN without inventing a marginal threshold and requires `marginalBasisRef` for any MARGINAL assessment and forces UNKNOWN when a required axis is unresolved;
 13. hydraulic-diameter, uniform-channel-volume and circular-channel apparent wall-shear-rate screens with explicit non-Newtonian/pressure-loss boundaries;
-14. fail-closed pressure-loss modelling readiness that rejects MFR/MFI as a substitute for an explicit rheology model;
+14. fail-closed pressure-loss modelling readiness that rejects MFR/MFI as a substitute for an explicit rheology model and blocks hydraulic/command pressure types;
 15. repeatability-aware gate-seal plateau analysis using a user-supplied decision tolerance.
 
 All new functions return structured unsupported states rather than silently inventing missing engineering meaning.
