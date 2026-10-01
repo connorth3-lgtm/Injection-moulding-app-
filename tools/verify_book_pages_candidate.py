@@ -25,6 +25,8 @@ SME = BOOK_ROOT + "book-sme-review-v1.json"
 WORKED = BOOK_ROOT + "book-worked-engineering-cases-v1.json"
 ENRICHMENT = BOOK_ROOT + "book-evidence-enrichment-v2.json"
 MATERIAL_ATLAS = BOOK_ROOT + "book-material-grade-atlas-v1.json"
+MATERIAL_REGIONAL = BOOK_ROOT + "book-material-regional-evidence-v1.json"
+MATERIAL_CATALOG = "material-catalog-v1.json"
 RUNTIME = "src/domains/learning/book-runtime.js"
 BATCHES = (
     BOOK_ROOT + "book-authored-foundations-v1.json",
@@ -63,6 +65,13 @@ RUNTIME_MARKERS = (
     "validateMaterialAtlas",
     "materialAtlasHtml",
     "getMaterialAtlas",
+    "MATERIAL_REGIONAL_PATH",
+    "MATERIAL_CATALOG_PATH",
+    "validateMaterialCatalog",
+    "validateMaterialRegionalEvidence",
+    "getMaterialCatalog",
+    "getMaterialRegionalEvidence",
+    "includeTechnicalMaterial:false",
 )
 
 
@@ -159,7 +168,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     cache_match = re.search(r"CACHE_VERSION\s*=\s*['\"]([^'\"]+)['\"]", worker)
     if not cache_match or cache_match.group(1) != web_release:
         raise AssertionError("candidate service-worker release does not match version.json")
-    for path in (RUNTIME, MANIFEST, AUTH, SME, WORKED, ENRICHMENT, MATERIAL_ATLAS, *BATCHES):
+    for path in (RUNTIME, MANIFEST, AUTH, SME, WORKED, ENRICHMENT, MATERIAL_ATLAS, MATERIAL_REGIONAL, MATERIAL_CATALOG, *BATCHES):
         marker = f"'./{path}'"
         if marker not in worker and f'"./{path}"' not in worker:
             raise AssertionError(f"candidate service worker does not govern Book asset: {path}")
@@ -195,7 +204,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     hashes = integrity.get("gitBlobSha1ByFile") if isinstance(integrity, dict) else None
     if not isinstance(hashes, dict) or integrity.get("algorithm") != "git-blob-sha1":
         raise AssertionError("live Book exact-byte authorization contract is missing")
-    integrity_paths = (MANIFEST, SME, WORKED, ENRICHMENT, MATERIAL_ATLAS, *BATCHES)
+    integrity_paths = (MANIFEST, SME, WORKED, ENRICHMENT, MATERIAL_ATLAS, MATERIAL_REGIONAL, MATERIAL_CATALOG, *BATCHES)
     for path in integrity_paths:
         name = path.rsplit("/", 1)[-1]
         expected = hashes.get(name)
@@ -222,17 +231,32 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
         raise AssertionError("live Book evidence-enrichment authorization must preserve independent SME HOLD")
 
     atlas = fetch_json(candidate, MATERIAL_ATLAS)
-    if atlas.get("schemaVersion") != 1 or atlas.get("bookId") != "mouldmaster-book" or atlas.get("status") != "technical-review-material-atlas":
+    if atlas.get("schemaVersion") != 2 or atlas.get("bookId") != "mouldmaster-book" or atlas.get("status") != "technical-review-material-atlas":
         raise AssertionError("live Book material atlas identity mismatch")
-    if atlas.get("profileCount") != 89 or len(atlas.get("profiles") or []) != 89:
-        raise AssertionError("live Book material atlas must contain exactly 89 profiles")
-    evidence_rows = sum(len(row.get("evidence") or []) for row in atlas["profiles"] if isinstance(row, dict))
-    if evidence_rows != 147:
-        raise AssertionError(f"live Book material atlas evidence-row mismatch: {evidence_rows}")
+    if (atlas.get("canonicalCatalog") or {}).get("gradeCount") != 260:
+        raise AssertionError("live Book material atlas must declare all 260 canonical grades")
+    if (atlas.get("regionalEvidence") or {}).get("recordCount") != 284:
+        raise AssertionError("live Book material atlas must declare all 284 regional evidence rows")
+    catalog = fetch_json(candidate, MATERIAL_CATALOG)
+    grades = catalog.get("grades")
+    if catalog.get("status") != "validated" or not isinstance(grades, list) or len(grades) != 260:
+        raise AssertionError("live canonical material catalogue coverage mismatch")
+    regional = fetch_json(candidate, MATERIAL_REGIONAL)
+    rows = regional.get("records")
+    if regional.get("version") != "2026-09-28.40" or not isinstance(rows, list) or len(rows) != 284:
+        raise AssertionError("live regional material evidence coverage mismatch")
+    status_counts = {}
+    for row in rows:
+        if not isinstance(row, dict):
+            raise AssertionError("live regional material evidence contains a non-object row")
+        key = row.get("status")
+        status_counts[key] = status_counts.get(key, 0) + 1
+    if status_counts != {"candidate-complete":161,"conditional":4,"discovery-only":112,"candidate-partial":7}:
+        raise AssertionError(f"live regional material evidence status counts drifted: {status_counts}")
     atlas_auth = auth.get("materialAtlasAuthorization")
     if not isinstance(atlas_auth, dict) or atlas_auth.get("status") != "authorized-technical-review-appendix":
         raise AssertionError("live Book material atlas authorization is missing")
-    if atlas_auth.get("profileCount") != 89 or atlas_auth.get("evidenceRowCount") != 147 or atlas_auth.get("independentSmeStatus") != "hold":
+    if atlas_auth.get("canonicalGradeCount") != 260 or atlas_auth.get("regionalEvidenceRowCount") != 284 or atlas_auth.get("independentSmeStatus") != "hold":
         raise AssertionError("live Book material atlas authorization counts/boundary drifted")
 
     sme = fetch_json(candidate, SME)
@@ -300,8 +324,9 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
         f"Live MouldMaster Book candidate verified at {candidate}: release {web_release}; "
         "8 parts / 46 chapters; authorization 116 supported / 21 scoped-qualified / 0 hold / 0 conflict; "
         f"Book content release {worked_release}; independent SME contract status={sme_status!r}, approved={sme_approved}/{sme_total}; "
-        "10 byte-authorized worked cases and 13 enrichment sections are covered by the SME HOLD; authored drafts remain non-self-promoting; "
-        "Read/Listen shared-runtime markers are present."
+        "10 byte-authorized worked cases and 13 enrichment sections are covered by the SME HOLD; "
+        "the technical-review material reference exposes 260 canonical grades plus all 284 regional evidence rows and is excluded from listen-all; "
+        "authored drafts remain non-self-promoting; Read/Listen shared-runtime markers are present."
     )
 
 

@@ -319,6 +319,6 @@ test('assessment focus mode uses the external stylesheet and never injects a run
   expect(state.injected).toBe(false);
   expect(state.current).not.toBe('');
   expect(state.focused).toBe(false);
-  await page.locator('.mm-exam-next').click();
+  await page.getByRole('button',{name:'Next question'}).click();
   await expect(page.locator('#examQuestions .mm-current-question .mm-question-stem')).toBeFocused();
 });

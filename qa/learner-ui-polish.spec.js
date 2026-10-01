@@ -248,3 +248,70 @@ test('all major app surfaces remain reachable without shell clutter',async({page
   const finalOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
   expect(finalOverflow).toBeLessThanOrEqual(1);
 });
+
+
+test('Book Materials chapter exposes the complete governed material datasets with structured technical-review rendering',async({page})=>{
+  await page.setViewportSize({width:810,height:1080});
+  await openApp(page);
+  await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
+  await page.evaluate(()=>window.MMBook.open());
+  await page.locator('[data-mm-book-chapter="material-families"]').click();
+  const atlas=page.locator('[data-mm-book-material-atlas]');
+  await expect(atlas).toBeVisible();
+  await expect(atlas).toContainText('Complete Material Data Atlas');
+  await expect(atlas).toContainText('260 canonical exact grades');
+  await expect(atlas).toContainText('all 284 Asia/Australia/New Zealand evidence rows');
+  await expect(atlas).toContainText('excluded from evidence-verified listen-all');
+
+  expect(await page.evaluate(()=>window.MMBook.getMaterialCatalog().grades.length)).toBe(260);
+  expect(await page.evaluate(()=>window.MMBook.getMaterialRegionalEvidence().records.length)).toBe(284);
+  expect(await page.evaluate(()=>window.MMBook.getMaterialAtlas().regionalProfileIndex.profileCount)).toBe(89);
+
+  const canonical=atlas.locator('[data-mm-book-canonical-catalog]');
+  await canonical.locator('summary').click();
+  await expect(canonical.locator('[data-mm-book-catalog-grade]')).toHaveCount(260);
+  const firstGrade=canonical.locator('[data-mm-book-catalog-grade]').first();
+  await firstGrade.locator('summary').click();
+  await expect(firstGrade).toContainText(/Canonical exact-grade record/i);
+  await expect(firstGrade.locator('pre')).toHaveCount(0);
+
+  const regional=atlas.locator('[data-mm-book-regional-evidence]');
+  await regional.locator('summary').click();
+  await expect(regional.locator('[data-mm-book-regional-row]')).toHaveCount(284);
+  const firstRegional=regional.locator('[data-mm-book-regional-row]').first();
+  await firstRegional.locator('summary').click();
+  await expect(firstRegional).toContainText(/Regional evidence row 1/i);
+  await expect(firstRegional.locator('pre')).toHaveCount(0);
+
+  const search=await page.evaluate(()=>window.MMBook.search('BMNO').map(x=>x.id));
+  expect(search).toContain('material-families');
+});
+
+test('Home with a real recent troubleshooting case remains clear of the fixed nav at 360px',async({page})=>{
+  await page.setViewportSize({width:360,height:800});
+  await openApp(page);
+  await page.waitForFunction(()=>window.MM_MOULD_MASTER_WORKSPACE?.newCase&&window.MM_MOULD_MASTER_WORKSPACE?.cases);
+  await page.evaluate(async()=>{
+    await window.MM_MOULD_MASTER_WORKSPACE.newCase({
+      title:'Recent troubleshooting case with a deliberately long moulding title',
+      defect:'Short shot',
+      status:'Investigating'
+    });
+    window.MM_LEARNER_UI_POLISH.refresh();
+  });
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  const recent=page.locator('#dashboard [data-mm-home-action="recent-case"]');
+  await expect(recent).toBeVisible();
+  await expect(page.locator('#dashboard .mm-home-balance-grid [data-mm-home-action]')).toHaveCount(2);
+  const geometry=await page.evaluate(()=>({
+    focusBottom:document.querySelector('#dashboard .mm-today-focus').getBoundingClientRect().bottom,
+    toolsBottom:document.querySelector('#dashboard .mm-home-balance-grid').getBoundingClientRect().bottom,
+    recentBottom:document.querySelector('#dashboard [data-mm-home-action="recent-case"]').getBoundingClientRect().bottom,
+    navTop:document.querySelector('.mobile-nav').getBoundingClientRect().top,
+    overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth
+  }));
+  expect(geometry.focusBottom).toBeLessThan(geometry.navTop);
+  expect(geometry.toolsBottom).toBeLessThan(geometry.navTop);
+  expect(geometry.recentBottom).toBeLessThanOrEqual(geometry.navTop+1);
+  expect(geometry.overflow).toBeLessThanOrEqual(1);
+});
