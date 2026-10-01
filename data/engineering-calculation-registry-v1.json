@@ -24,7 +24,7 @@
       "evidenceAnchors": [
         "PARIZS-2023-IN-MOLD-SENSORS"
       ],
-      "uncertaintyBoundary": "No location-to-location or hydraulic-to-plastic conversion is inferred. SI prefix case is preserved for pressure so mPa is not accepted as MPa."
+      "uncertaintyBoundary": "No location-to-location or hydraulic-to-plastic conversion is inferred. Pressure units require canonical case (Pa, kPa, MPa, bar), so mPa or lowercase mpa cannot be silently read as MPa."
     },
     {
       "id": "EQ-PRESS-002",
@@ -144,7 +144,7 @@
         "10.1016/J.CIRPJ.2017.03.001",
         "10.1016/J.PRECISIONENG.2017.11.007"
       ],
-      "uncertaintyBoundary": "Does not determine a machine clamp setpoint, preferred utilisation margin or mould/platen load distribution. Force prefixes preserve case so mN is not accepted as MN."
+      "uncertaintyBoundary": "Does not determine a machine clamp setpoint, preferred utilisation margin or mould/platen load distribution. Force units require canonical case (N, kN, MN), so mN cannot be silently read as MN."
     },
     {
       "id": "EQ-CAP-002",
