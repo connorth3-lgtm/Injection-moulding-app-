@@ -5,6 +5,7 @@ import {
   referenceScale,
   normalizedReferenceShift,
   symmetricGroupSeparation,
+  cavitySpecificSummary,
   capabilityIndices,
   energyPerGoodPart,
   PROCESS_STATISTICS_BOUNDARY,
@@ -50,6 +51,58 @@ const separation = symmetricGroupSeparation([1, 2, 3], [2, 3, 4]);
 assert.ok(Number.isFinite(separation.score));
 assert.equal(separation.metric, 'symmetric-unweighted-rms-group-spread-separation');
 
+
+
+const cavitySummary = cavitySpecificSummary({
+  measurementUnit: 'g',
+  samplingBasis: 'same-stabilised-run/cavity-labelled-parts',
+  measurementSystemAdequate: true,
+  minimumPerCavity: 3,
+  cavities: [
+    { cavityId: 'C1', values: [10.00, 10.02, 9.98] },
+    { cavityId: 'C2', values: [10.10, 10.12, 10.08] },
+    { cavityId: 'C3', values: [9.95, 9.96, 9.94] },
+  ],
+});
+assert.equal(cavitySummary.reason, null);
+assert.equal(cavitySummary.result.cavityCount, 3);
+assert.equal(cavitySummary.result.minimumMeanCavityId, 'C3');
+assert.equal(cavitySummary.result.maximumMeanCavityId, 'C2');
+assert.ok(Math.abs(cavitySummary.result.rangeOfCavityMeans - 0.15) < 1e-12);
+assert.ok(Number.isFinite(cavitySummary.result.relativeRangePct));
+assert.match(cavitySummary.assumptions.join(' '), /not a universal balance acceptance decision/i);
+assert.match(cavitySummary.assumptions.join(' '), /Cavity identity is preserved/i);
+
+assert.equal(cavitySpecificSummary({
+  measurementUnit: 'g',
+  samplingBasis: 'same-run',
+  measurementSystemAdequate: false,
+  cavities: [
+    { cavityId: 'C1', values: [10, 10, 10] },
+    { cavityId: 'C2', values: [10, 10, 10] },
+  ],
+}).reason, 'measurement-system-not-confirmed');
+
+assert.equal(cavitySpecificSummary({
+  measurementUnit: 'g',
+  samplingBasis: 'same-run',
+  measurementSystemAdequate: true,
+  cavities: [
+    { cavityId: 'C1', values: [10, 10, 10] },
+    { cavityId: 'C1', values: [10, 10, 10] },
+  ],
+}).reason, 'duplicate-cavity-id');
+
+assert.equal(cavitySpecificSummary({
+  measurementUnit: 'g',
+  samplingBasis: 'same-run',
+  measurementSystemAdequate: true,
+  minimumPerCavity: 3,
+  cavities: [
+    { cavityId: 'C1', values: [10, 10] },
+    { cavityId: 'C2', values: [10, 10, 10] },
+  ],
+}).reason, 'insufficient-cavity-support');
 
 const blockedCapability = capabilityIndices({
   meanValue: 10.08,
