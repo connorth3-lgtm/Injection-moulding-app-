@@ -182,6 +182,139 @@
       "uncertaintyBoundary": "Nominal catalogue plasticising output is not assumed to equal usable grade-specific recovery capability without a verified comparable basis."
     },
     {
+      "id": "EQ-FIT-001",
+      "name": "Mould-height range fit",
+      "formula": "min_machine_mould_height <= mould_height <= max_machine_mould_height",
+      "inputs": [
+        "mould height",
+        "machine minimum mould height",
+        "machine maximum mould height",
+        "exact machine configuration ID",
+        "exact mould configuration ID"
+      ],
+      "outputs": [
+        "fit state",
+        "lower/upper geometric margins"
+      ],
+      "scope": "Exact-identity geometric fit screen for mould height.",
+      "evidenceAnchors": [
+        "ISO-20430-2020",
+        "OEM-MACHINE-DOCUMENTATION"
+      ],
+      "uncertaintyBoundary": "Does not prove installation, platen/load, tie-bar, ejector, nozzle, daylight or safety compatibility."
+    },
+    {
+      "id": "EQ-FIT-002",
+      "name": "Opening-stroke fit",
+      "formula": "required_opening_stroke <= available_opening_stroke",
+      "inputs": [
+        "required opening stroke",
+        "available machine opening stroke",
+        "exact machine configuration ID",
+        "exact mould configuration ID"
+      ],
+      "outputs": [
+        "fit state",
+        "stroke margin"
+      ],
+      "scope": "Exact-identity opening-stroke capacity screen.",
+      "evidenceAnchors": [
+        "ISO-20430-2020",
+        "OEM-MACHINE-DOCUMENTATION"
+      ],
+      "uncertaintyBoundary": "Required removal/action stroke must be established independently; no ejection, daylight or safety compatibility is inferred."
+    },
+    {
+      "id": "EQ-FIT-003",
+      "name": "Maximum-daylight fit",
+      "formula": "mould_closed_height + required_open_gap <= available_maximum_daylight",
+      "inputs": [
+        "mould closed height",
+        "required open gap",
+        "available maximum daylight",
+        "exact machine configuration ID",
+        "exact mould configuration ID"
+      ],
+      "outputs": [
+        "required maximum platen separation",
+        "fit state",
+        "daylight margin"
+      ],
+      "scope": "Exact-identity geometric daylight screen on one explicitly common datum/definition basis.",
+      "evidenceAnchors": [
+        "ISO-20430-2020",
+        "OEM-MACHINE-DOCUMENTATION"
+      ],
+      "uncertaintyBoundary": "Does not substitute for opening-stroke, ejector, tie-bar or safety checks."
+    },
+    {
+      "id": "EQ-FIT-004",
+      "name": "Tie-bar clear-opening fit",
+      "formula": "oriented_mould_width <= horizontal_clearance AND oriented_mould_height <= vertical_clearance",
+      "inputs": [
+        "oriented mould width",
+        "oriented mould height",
+        "horizontal tie-bar clearance",
+        "vertical tie-bar clearance",
+        "exact identities"
+      ],
+      "outputs": [
+        "axis fit states",
+        "axis margins",
+        "combined fit state"
+      ],
+      "scope": "Orientation-explicit tie-bar clear-opening geometric screen.",
+      "evidenceAnchors": [
+        "ISO-20430-2020",
+        "OEM-MACHINE-DOCUMENTATION"
+      ],
+      "uncertaintyBoundary": "No automatic mould rotation; hoses, manifolds, protrusions, handling path and ancillary hardware are excluded unless included in the entered envelope."
+    },
+    {
+      "id": "EQ-FIT-005",
+      "name": "Ejector-stroke fit",
+      "formula": "required_ejector_stroke <= available_ejector_stroke",
+      "inputs": [
+        "required ejector stroke",
+        "available ejector stroke",
+        "exact identities"
+      ],
+      "outputs": [
+        "fit state",
+        "stroke margin"
+      ],
+      "scope": "Exact-identity ejector-stroke screen.",
+      "evidenceAnchors": [
+        "ISO-20430-2020",
+        "OEM-MACHINE-DOCUMENTATION"
+      ],
+      "uncertaintyBoundary": "Does not prove ejector force, pattern, coupling, timing or interference compatibility."
+    },
+    {
+      "id": "EQ-FIT-006",
+      "name": "Declared-axis machine suitability composition",
+      "formula": "FAIL dominates; otherwise UNKNOWN dominates; otherwise MARGINAL dominates; PASS only when every declared required axis passes",
+      "inputs": [
+        "exact machine configuration ID",
+        "exact injection-unit configuration ID",
+        "exact mould configuration ID",
+        "explicit required-axis list",
+        "axis assessments",
+        "declared basis"
+      ],
+      "outputs": [
+        "per-axis state",
+        "coverage completeness",
+        "summary state"
+      ],
+      "scope": "Composition of explicitly declared machine/mould suitability axes without inventing missing engineering meaning.",
+      "evidenceAnchors": [
+        "ISO-20430-2020",
+        "OEM-MACHINE-DOCUMENTATION"
+      ],
+      "uncertaintyBoundary": "PASS applies only to the declared axes and is not a universal declaration of safety, installability, validation or production readiness; unresolved required axes force UNKNOWN unless a known FAIL already dominates."
+    },
+    {
       "id": "EQ-FLOW-001",
       "name": "Fill-stage measured rate arithmetic",
       "formula": "Q = V/t; m_dot = m/t; v_ram = stroke/t",
