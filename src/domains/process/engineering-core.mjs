@@ -32,6 +32,12 @@ const PRESSURE_KINDS = Object.freeze([
   'cavity',
   'pack-command',
 ]);
+const PLASTIC_SIDE_MEASURED_PRESSURE_KINDS = Object.freeze([
+  'specific-plastic',
+  'nozzle',
+  'runner',
+  'cavity',
+]);
 
 export const ENGINEERING_EQUATION_IDS = Object.freeze({
   pressureConversion: 'EQ-PRESS-001',
@@ -79,14 +85,33 @@ function supported(value, metadata = {}) {
   return Object.freeze({ ok: true, value: Object.freeze(value), ...metadata });
 }
 
+function caseSensitiveEngineeringFactor(table, rawUnit) {
+  const raw = String(rawUnit ?? '').trim().replaceAll('²', '2').replaceAll('³', '3').replace(/\s+/g, '');
+  if (table === PRESSURE_TO_PA) {
+    if (raw === 'Pa' || raw === 'pa') return { factor: 1, unit: 'Pa' };
+    if (raw === 'kPa' || raw === 'kpa' || raw === 'KPA') return { factor: 1e3, unit: 'kPa' };
+    if (raw === 'MPa' || raw === 'mpa' || raw === 'MPA') return { factor: 1e6, unit: 'MPa' };
+    if (raw === 'bar' || raw === 'BAR') return { factor: 1e5, unit: 'bar' };
+    return null;
+  }
+  if (table === FORCE_TO_N) {
+    if (raw === 'N' || raw === 'n') return { factor: 1, unit: 'N' };
+    if (raw === 'kN' || raw === 'kn' || raw === 'KN') return { factor: 1e3, unit: 'kN' };
+    if (raw === 'MN') return { factor: 1e6, unit: 'MN' };
+    return null;
+  }
+  const unit = cleanUnit(raw);
+  const factor = table[unit];
+  return factor ? { factor, unit } : null;
+}
+
 function convertPositive(quantity, table, field) {
   if (!quantity || typeof quantity !== 'object') return unsupported(`missing-${field}`, { field });
   const value = finitePositive(quantity.value);
   if (value === null) return unsupported(`invalid-${field}-value`, { field });
-  const unit = cleanUnit(quantity.unit);
-  const factor = table[unit];
-  if (!factor) return unsupported(`unsupported-${field}-unit`, { field, unit: String(quantity.unit ?? '') });
-  return supported({ si: value * factor, inputValue: value, inputUnit: unit });
+  const resolved = caseSensitiveEngineeringFactor(table, quantity.unit);
+  if (!resolved) return unsupported(`unsupported-${field}-unit`, { field, unit: String(quantity.unit ?? '') });
+  return supported({ si: value * resolved.factor, inputValue: value, inputUnit: resolved.unit });
 }
 
 export function clampSeparatingForce({ projectedArea, representativePressure, provenance = null } = {}) {
@@ -181,10 +206,9 @@ function convertPositiveBase(quantity, table, field, baseUnit) {
   if (!quantity || typeof quantity !== 'object') return unsupported(`missing-${field}`, { field });
   const value = finitePositive(quantity.value);
   if (value === null) return unsupported(`invalid-${field}-value`, { field });
-  const unit = cleanUnit(quantity.unit);
-  const factor = table[unit];
-  if (!factor) return unsupported(`unsupported-${field}-unit`, { field, unit: String(quantity.unit ?? '') });
-  return supported({ base: value * factor, baseUnit, inputValue: value, inputUnit: unit });
+  const resolved = caseSensitiveEngineeringFactor(table, quantity.unit);
+  if (!resolved) return unsupported(`unsupported-${field}-unit`, { field, unit: String(quantity.unit ?? '') });
+  return supported({ base: value * resolved.factor, baseUnit, inputValue: value, inputUnit: resolved.unit });
 }
 
 function optionalPositiveBase(quantity, table, field, baseUnit) {
@@ -234,7 +258,7 @@ export function measuredPressureDifference({
   measurementBasisRef,
   provenance = null,
 } = {}) {
-  const allowedMeasuredKinds = ['specific-plastic', 'nozzle', 'runner', 'cavity'];
+  const allowedMeasuredKinds = PLASTIC_SIDE_MEASURED_PRESSURE_KINDS;
   const upstream = pressureValue({ pressure: upstreamPressure, kind: upstreamKind, provenance });
   if (!upstream.ok) return upstream;
   const downstream = pressureValue({ pressure: downstreamPressure, kind: downstreamKind, provenance });
@@ -720,7 +744,13 @@ function assessmentState(assessment) {
   if (!assessment || typeof assessment !== 'object') return { state: 'UNKNOWN', reason: 'missing-assessment' };
   if (assessment.ok === false) return { state: 'UNKNOWN', reason: assessment.reason || 'unsupported-assessment' };
   const explicit = String(assessment?.value?.state || assessment?.state || '').toUpperCase();
-  if (['PASS', 'MARGINAL', 'FAIL', 'UNKNOWN'].includes(explicit)) return { state: explicit, reason: null };
+  if (explicit === 'MARGINAL') {
+    const marginalBasisRef = String(assessment?.marginalBasisRef || '').trim();
+    return marginalBasisRef
+      ? { state: 'MARGINAL', reason: null }
+      : { state: 'UNKNOWN', reason: 'marginal-basis-required' };
+  }
+  if (['PASS', 'FAIL', 'UNKNOWN'].includes(explicit)) return { state: explicit, reason: null };
   if (typeof assessment?.value?.exceedsAvailableCapacity === 'boolean') {
     return { state: assessment.value.exceedsAvailableCapacity ? 'FAIL' : 'PASS', reason: null };
   }
@@ -783,7 +813,7 @@ export function machineSuitabilitySummary({
       equationId: ENGINEERING_EQUATION_IDS.machineSuitabilitySummary,
       assumptions: Object.freeze([
         'The summary covers only the explicitly declared required axes and exact machine/injection-unit/mould identities supplied to this function.',
-        'FAIL dominates the summary. If no axis fails, any unresolved required axis forces UNKNOWN; MARGINAL is preserved only when an upstream assessment explicitly supplies that state from an authorised basis.',
+        'FAIL dominates the summary. If no axis fails, any unresolved required axis forces UNKNOWN; MARGINAL is preserved only when an upstream assessment explicitly supplies that state together with a non-empty marginalBasisRef.',
         'PASS means every declared required axis passed its stated comparison. It is not a universal declaration that the machine/mould combination is safe, validated, installable or production-ready.',
         'Safety, guarding, utilities, platen/loading limits, nozzle/location compatibility, controls, ancillary equipment, local procedures and OEM requirements remain separate unless explicitly represented by required axes.',
       ]),
@@ -913,8 +943,8 @@ export function pressureLossModelReadiness({
 
   const upstream = String(upstreamPressureKind || '').trim().toLowerCase().replaceAll('_', '-');
   const downstream = String(downstreamPressureKind || '').trim().toLowerCase().replaceAll('_', '-');
-  if (!PRESSURE_KINDS.includes(upstream)) blockers.push('upstream-pressure-kind');
-  if (!PRESSURE_KINDS.includes(downstream)) blockers.push('downstream-pressure-kind');
+  if (!PLASTIC_SIDE_MEASURED_PRESSURE_KINDS.includes(upstream)) blockers.push('upstream-pressure-kind');
+  if (!PLASTIC_SIDE_MEASURED_PRESSURE_KINDS.includes(downstream)) blockers.push('downstream-pressure-kind');
 
   const upstreamLocation = String(upstreamLocationId || '').trim();
   const downstreamLocation = String(downstreamLocationId || '').trim();
@@ -934,8 +964,8 @@ export function pressureLossModelReadiness({
       thermalStateRef: thermal || null,
       flowPathGeometryRef: geometry || null,
       volumetricFlowCm3S: flow.ok ? flow.value.base : null,
-      upstreamPressureKind: PRESSURE_KINDS.includes(upstream) ? upstream : null,
-      downstreamPressureKind: PRESSURE_KINDS.includes(downstream) ? downstream : null,
+      upstreamPressureKind: PLASTIC_SIDE_MEASURED_PRESSURE_KINDS.includes(upstream) ? upstream : null,
+      downstreamPressureKind: PLASTIC_SIDE_MEASURED_PRESSURE_KINDS.includes(downstream) ? downstream : null,
       upstreamLocationId: upstreamLocation || null,
       downstreamLocationId: downstreamLocation || null,
     }),
