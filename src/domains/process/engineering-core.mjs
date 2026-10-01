@@ -1453,13 +1453,23 @@ export function amorphousSlabCoolingTimeEstimate({
   meltTemperature,
   mouldSurfaceTemperature,
   ejectionTemperature,
+  materialGradeId,
   materialMorphology,
+  materialMorphologyRef,
   ejectionCriterionType,
   thermalDiffusivityRef,
   ejectionCriterionRef,
   mouldSurfaceTemperatureBasisRef,
+  thermalModelBasisRef,
   provenance = null,
 } = {}) {
+  const gradeId = explicitIdentity(materialGradeId, 'material-grade-id');
+  if (!gradeId.ok) return gradeId;
+  const morphologyRef = String(materialMorphologyRef || '').trim();
+  if (!morphologyRef) return unsupported('material-morphology-reference-required', { field: 'materialMorphologyRef' });
+  const modelRef = String(thermalModelBasisRef || '').trim();
+  if (!modelRef) return unsupported('thermal-model-basis-reference-required', { field: 'thermalModelBasisRef' });
+
   const morphology = String(materialMorphology || '').trim().toLowerCase();
   if (morphology !== 'amorphous') {
     return unsupported(
@@ -1511,6 +1521,9 @@ export function amorphousSlabCoolingTimeEstimate({
 
   return supported(
     {
+      materialGradeId: gradeId.value.id,
+      materialMorphologyRef: morphologyRef,
+      thermalModelBasisRef: modelRef,
       coolingTimeS,
       partThicknessMm: thickness.value.base,
       thermalDiffusivityMm2S: alpha.value.base,
@@ -1530,10 +1543,10 @@ export function amorphousSlabCoolingTimeEstimate({
       units: Object.freeze({ time: 's', thickness: 'mm', thermalDiffusivity: 'mm²/s', temperature: '°C' }),
       assumptions: Object.freeze([
         'This is the first-term one-dimensional plane-wall/centerline conduction estimate t = s²/(π²α) ln[(4/π)(Tm-Tw)/(Te-Tw)] using the full stated wall thickness and an explicitly centerline-temperature ejection criterion.',
-        'The polymer is explicitly amorphous for this model; semi-crystalline solidification/crystallisation requires a phase-change treatment and is rejected by this function.',
-        'Thermophysical properties and mould-surface boundary conditions are treated as constant/uniform first-order approximations over the calculation.',
+        'The exact material grade and its amorphous morphology classification are explicitly retained with a traceable morphology reference; semi-crystalline solidification/crystallisation requires a phase-change treatment and is rejected by this function.',
+        'The analytical model basis is explicitly referenced. Thermophysical properties and mould-surface boundary conditions are treated as constant/uniform first-order approximations over the calculation.',
         'Thermal contact resistance, local ribs/bosses/corners, nonuniform filling temperature, cooling-channel resistance, mould transient state and post-ejection reheating are not resolved.',
-        'The output is an analytical screening estimate tied to the stated thermal-diffusivity, ejection-criterion and mould-surface-temperature references, not a guaranteed cycle-time setting.',
+        'The output is an analytical screening estimate tied to the stated exact material grade, morphology, thermal-model, thermal-diffusivity, ejection-criterion and mould-surface-temperature references, not a guaranteed cycle-time setting.',
       ]),
       provenance,
       authority: 'amorphous-1d-cooling-screen-only',
