@@ -26,6 +26,14 @@ EXPECTED = {
     "worked-conditioning-v1": "dimensional-stability",
     "worked-heat-load-v1": "cooling",
     "worked-diagnostic-short-shot-v1": "diagnostic-method",
+    "worked-vp-transfer-v1": "vp-transfer",
+    "worked-feed-balance-v1": "feed-system",
+    "worked-vent-diagnosis-v1": "venting",
+    "worked-ejection-trend-v1": "ejection-draft",
+    "worked-hot-runner-timing-v1": "hot-runners",
+    "worked-fill-study-v1": "fill-study",
+    "worked-shot-utilisation-v1": "shot-utilisation",
+    "worked-process-window-v1": "process-window",
 }
 
 
@@ -53,12 +61,12 @@ def main() -> None:
     current_release = version.get("web_release")
     content_release = ledger.get("release")
     need(isinstance(current_release, str) and current_release, "current learner web release is missing")
-    need(content_release == "2026.09.24.14", "worked-case governed content provenance release mismatch")
+    need(content_release == "2026.10.01.3", "worked-case governed content provenance release mismatch")
     need(content_release <= current_release, "worked-case content cannot target a future learner release")
     need(LEDGER.read_bytes() == RUNTIME_LEDGER.read_bytes(), "authoritative/runtime worked-case ledgers differ")
 
     cases = ledger.get("cases") or []
-    need(len(cases) == 10, f"expected ten governed worked cases, found {len(cases)}")
+    need(len(cases) == 18, f"expected eighteen governed worked cases, found {len(cases)}")
     by_id = {item.get("id"): item for item in cases}
     need(set(by_id) == set(EXPECTED), "worked-case identity set drifted")
     need(len(by_id) == len(cases), "duplicate worked-case IDs")
@@ -89,14 +97,14 @@ def main() -> None:
         need(authority.get(key) is False, f"worked-case authority unexpectedly enabled: {key}")
 
     expected_ids = list(EXPECTED)
-    need(sme.get("release") == "2026.09.24.14", "Book SME contract was not advanced with the worked cases")
+    need(sme.get("release") == "2026.10.01.3", "Book SME contract was not advanced with the worked cases")
     need(sme.get("status") == "hold" and sme.get("reviews") == [], "worked-case integration must not manufacture human SME approval")
     need(sme.get("workedCaseIds") == expected_ids, "Book SME contract does not enumerate all worked-case IDs")
 
     worked_auth = auth.get("workedCasesAuthorization") or {}
     need(worked_auth.get("status") == "authorized", "worked-case publication authorization missing")
-    need(worked_auth.get("release") == "2026.09.24.14", "worked-case authorization release mismatch")
-    need(worked_auth.get("caseCount") == 10 and worked_auth.get("claimCount") == 10, "worked-case authorization counts drifted")
+    need(worked_auth.get("release") == "2026.10.01.3", "worked-case authorization release mismatch")
+    need(worked_auth.get("caseCount") == 18 and worked_auth.get("claimCount") == 18, "worked-case authorization counts drifted")
     need(worked_auth.get("independentSmeStatus") == "hold", "worked-case authorization falsely promotes SME status")
     hashes = (auth.get("runtimeIntegrity") or {}).get("gitBlobSha1ByFile") or {}
     need(hashes.get(LEDGER.name) == git_blob_sha(RUNTIME_LEDGER), "worked-case ledger is not exact-byte authorized")
