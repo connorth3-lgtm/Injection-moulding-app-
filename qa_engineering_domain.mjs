@@ -29,6 +29,7 @@ import {
   averageResidenceTimeEstimate,
   averageResidenceTimeFromShotCycle,
   relativeCoolingTimeScale,
+  amorphousSlabCoolingTimeEstimate,
   linearShrinkageCompensationRange,
   materialMoistureAcceptance,
   gateSealPlateauAssessment,
@@ -774,6 +775,71 @@ assert.equal(
   'Mm2/s must never be silently interpreted as mm2/s',
 );
 
+
+
+const amorphousCooling = amorphousSlabCoolingTimeEstimate({
+  partThickness: { value: 3, unit: 'mm' },
+  thermalDiffusivity: { value: 0.1, unit: 'mm2/s' },
+  meltTemperature: { value: 230, unit: '°C' },
+  mouldSurfaceTemperature: { value: 60, unit: '°C' },
+  ejectionTemperature: { value: 90, unit: '°C' },
+  materialMorphology: 'amorphous',
+  thermalDiffusivityRef: 'grade-property-dataset/rev-4',
+  ejectionCriterionRef: 'validated-part-ejection-study/rev-2',
+  mouldSurfaceTemperatureBasisRef: 'instrumented-mould/trial-18',
+  provenance: 'thermal-screen-fixture',
+});
+assert.equal(amorphousCooling.ok, true);
+assert.ok(Math.abs(amorphousCooling.value.coolingTimeS - 18.020468757556586) < 1e-12);
+assert.equal(amorphousCooling.equationId, 'EQ-THERM-002');
+assert.equal(amorphousCooling.value.materialMorphology, 'amorphous');
+assert.equal(amorphousCooling.value.temperatureCriterion, 'centerline-first-term-plane-wall');
+assert.match(amorphousCooling.assumptions.join(' '), /semi-crystalline solidification\/crystallisation requires a phase-change treatment/i);
+assert.match(amorphousCooling.assumptions.join(' '), /not a guaranteed cycle-time setting/i);
+
+assert.equal(
+  amorphousSlabCoolingTimeEstimate({
+    partThickness: { value: 3, unit: 'mm' },
+    thermalDiffusivity: { value: 0.1, unit: 'mm2/s' },
+    meltTemperature: { value: 230, unit: '°C' },
+    mouldSurfaceTemperature: { value: 60, unit: '°C' },
+    ejectionTemperature: { value: 90, unit: '°C' },
+    materialMorphology: 'semi-crystalline',
+    thermalDiffusivityRef: 'grade-property-dataset/rev-4',
+    ejectionCriterionRef: 'validated-part-ejection-study/rev-2',
+    mouldSurfaceTemperatureBasisRef: 'instrumented-mould/trial-18',
+  }).reason,
+  'semi-crystalline-requires-phase-change-model',
+);
+
+assert.equal(
+  amorphousSlabCoolingTimeEstimate({
+    partThickness: { value: 3, unit: 'mm' },
+    thermalDiffusivity: { value: 0.1, unit: 'mm2/s' },
+    meltTemperature: { value: 230, unit: '°C' },
+    mouldSurfaceTemperature: { value: 100, unit: '°C' },
+    ejectionTemperature: { value: 90, unit: '°C' },
+    materialMorphology: 'amorphous',
+    thermalDiffusivityRef: 'grade-property-dataset/rev-4',
+    ejectionCriterionRef: 'validated-part-ejection-study/rev-2',
+    mouldSurfaceTemperatureBasisRef: 'instrumented-mould/trial-18',
+  }).reason,
+  'invalid-thermal-temperature-order',
+);
+
+assert.equal(
+  amorphousSlabCoolingTimeEstimate({
+    partThickness: { value: 3, unit: 'mm' },
+    thermalDiffusivity: { value: 0.1, unit: 'mm2/s' },
+    meltTemperature: { value: 230, unit: '°C' },
+    mouldSurfaceTemperature: { value: 60, unit: '°C' },
+    ejectionTemperature: { value: 90, unit: '°C' },
+    materialMorphology: 'amorphous',
+    ejectionCriterionRef: 'validated-part-ejection-study/rev-2',
+    mouldSurfaceTemperatureBasisRef: 'instrumented-mould/trial-18',
+  }).reason,
+  'thermal-diffusivity-reference-required',
+);
 
 assert.equal(
   linearShrinkageCompensationRange({
