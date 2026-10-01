@@ -1025,32 +1025,78 @@ assert.equal(
   'centerline-ejection-criterion-required',
 );
 
+const shrinkageContext = {
+  materialGradeId: 'PA66-GF30-grade-X',
+  shrinkageDirection: 'flow-direction',
+  directionBasisRef: 'mould-flow-axis/drawing-rev-C',
+  shrinkageBasisRef: 'supplier-grade-shrinkage-data/rev-A',
+  conditioningBasisRef: 'dimensional-conditioning-protocol/rev-B',
+};
+
 assert.equal(
   linearShrinkageCompensationRange({
     targetPartDimension: { value: 100, unit: 'mm' },
     lowerShrinkage: { value: 1, unit: '%' },
     upperShrinkage: { value: 2, unit: '%' },
   }).reason,
-  'shrinkage-range-provenance-required',
+  'missing-material-grade-id',
 );
+assert.equal(
+  linearShrinkageCompensationRange({
+    ...shrinkageContext,
+    shrinkageDirection: '',
+    targetPartDimension: { value: 100, unit: 'mm' },
+    lowerShrinkage: { value: 1, unit: '%' },
+    upperShrinkage: { value: 2, unit: '%' },
+  }).reason,
+  'shrinkage-direction-required',
+);
+assert.equal(
+  linearShrinkageCompensationRange({
+    ...shrinkageContext,
+    shrinkageBasisRef: '',
+    targetPartDimension: { value: 100, unit: 'mm' },
+    lowerShrinkage: { value: 1, unit: '%' },
+    upperShrinkage: { value: 2, unit: '%' },
+  }).reason,
+  'shrinkage-basis-reference-required',
+);
+assert.equal(
+  linearShrinkageCompensationRange({
+    ...shrinkageContext,
+    conditioningBasisRef: '',
+    targetPartDimension: { value: 100, unit: 'mm' },
+    lowerShrinkage: { value: 1, unit: '%' },
+    upperShrinkage: { value: 2, unit: '%' },
+  }).reason,
+  'conditioning-basis-reference-required',
+);
+
 const shrinkageRange = linearShrinkageCompensationRange({
+  ...shrinkageContext,
   targetPartDimension: { value: 100, unit: 'mm' },
   lowerShrinkage: { value: 1, unit: '%' },
   upperShrinkage: { value: 2, unit: '%' },
   provenance: 'supplier-grade-sheet-rev-A',
 });
 assert.equal(shrinkageRange.ok, true);
+assert.equal(shrinkageRange.value.materialGradeId, 'PA66-GF30-grade-X');
+assert.equal(shrinkageRange.value.shrinkageDirection, 'flow-direction');
+assert.equal(shrinkageRange.value.directionBasisRef, 'mould-flow-axis/drawing-rev-C');
+assert.equal(shrinkageRange.value.shrinkageBasisRef, 'supplier-grade-shrinkage-data/rev-A');
+assert.equal(shrinkageRange.value.conditioningBasisRef, 'dimensional-conditioning-protocol/rev-B');
 assert.ok(Math.abs(shrinkageRange.value.lowerStartingMouldDimensionMm - (100 / 0.99)) < 1e-12);
 assert.ok(Math.abs(shrinkageRange.value.upperStartingMouldDimensionMm - (100 / 0.98)) < 1e-12);
 assert.equal(shrinkageRange.equationId, 'EQ-SHR-001');
 assert.match(shrinkageRange.assumptions.join(' '), /does not supply a generic polymer shrinkage constant/i);
+assert.match(shrinkageRange.assumptions.join(' '), /not treated as interchangeable/i);
 assert.match(shrinkageRange.assumptions.join(' '), /not a released tool dimension/i);
 assert.equal(
   linearShrinkageCompensationRange({
+    ...shrinkageContext,
     targetPartDimension: { value: 100, unit: 'mm' },
     lowerShrinkage: { value: 2, unit: '%' },
     upperShrinkage: { value: 1, unit: '%' },
-    provenance: 'test',
   }).reason,
   'shrinkage-range-reversed',
 );
