@@ -137,7 +137,7 @@ def main() -> None:
     for pattern in unsafe_patterns:
         need(not re.search(pattern, lower), f"unsafe worked-case claim detected: {pattern}")
 
-    print("MouldMaster governed worked-case integration QA passed: 10 learner-facing synthetic cases, 10 case claims, exact-byte authorization, explicit SME HOLD and no production-control authority.")
+    print("MouldMaster governed worked-case integration QA passed: 18 learner-facing synthetic cases, 18 case claims, exact-byte authorization, explicit SME HOLD and no production-control authority.")
 
 
 if __name__ == "__main__":
