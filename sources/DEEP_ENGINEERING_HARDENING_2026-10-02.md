@@ -97,7 +97,7 @@ Separate pure capacity screens now exist for clamp force, verified shot mass, sp
 
 ### P1 — thermal model depth
 
-The pure domain now includes both a relative diffusion scaling screen and a narrowly scoped **amorphous 1-D analytical cooling estimate**. The absolute estimate requires source-backed thermal diffusivity, an explicit ejection criterion and mould-surface-temperature basis, and it rejects semi-crystalline materials. Remaining thermal work is a validated semi-crystalline/phase-change treatment plus deeper boundary modelling that explicitly handles:
+The pure domain now includes both a relative diffusion scaling screen and a narrowly scoped **amorphous 1-D analytical cooling estimate**. The absolute estimate requires source-backed thermal diffusivity, an explicitly centerline-temperature ejection criterion and mould-surface-temperature basis, and it rejects semi-crystalline materials. Remaining thermal work is a validated semi-crystalline/phase-change treatment plus deeper boundary modelling that explicitly handles:
 
 - amorphous vs semi-crystalline applicability;
 - melt/mould/ejection temperature criterion;
