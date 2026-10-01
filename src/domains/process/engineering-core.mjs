@@ -43,6 +43,12 @@ export const ENGINEERING_EQUATION_IDS = Object.freeze({
   specificPlasticPressureCapacityAssessment: 'EQ-CAP-002',
   volumetricFlowCapacityAssessment: 'EQ-CAP-003',
   plasticisingThroughputAssessment: 'EQ-CAP-004',
+  mouldHeightFit: 'EQ-FIT-001',
+  openingStrokeFit: 'EQ-FIT-002',
+  daylightFit: 'EQ-FIT-003',
+  tieBarClearanceFit: 'EQ-FIT-004',
+  ejectorStrokeFit: 'EQ-FIT-005',
+  machineSuitabilitySummary: 'EQ-FIT-006',
   fillStageRates: 'EQ-FLOW-001',
   averageResidenceTime: 'EQ-RES-001',
   averageResidenceFromShotCycle: 'EQ-RES-002',
@@ -397,6 +403,323 @@ export function plasticisingThroughputAssessment({ requiredMassRate, availablePl
       ]),
       provenance,
       authority: 'capacity-screen-only',
+    },
+  );
+}
+
+
+function explicitIdentity(value, field) {
+  const clean = String(value || '').trim();
+  return clean ? supported({ id: clean }) : unsupported(`missing-${field}`, { field });
+}
+
+function lengthCapacityComparison(requiredQuantity, availableQuantity, requiredField, availableField) {
+  const required = convertPositiveBase(requiredQuantity, LENGTH_TO_MM, requiredField, 'mm');
+  if (!required.ok) return required;
+  const available = convertPositiveBase(availableQuantity, LENGTH_TO_MM, availableField, 'mm');
+  if (!available.ok) return available;
+  return supported({
+    requiredMm: required.value.base,
+    availableMm: available.value.base,
+    marginMm: available.value.base - required.value.base,
+    fits: required.value.base <= available.value.base,
+    state: required.value.base <= available.value.base ? 'PASS' : 'FAIL',
+  });
+}
+
+export function mouldHeightFit({
+  mouldHeight,
+  machineMinMouldHeight,
+  machineMaxMouldHeight,
+  machineConfigurationId,
+  mouldConfigurationId,
+  provenance = null,
+} = {}) {
+  const machineId = explicitIdentity(machineConfigurationId, 'machine-configuration-id');
+  if (!machineId.ok) return machineId;
+  const mouldId = explicitIdentity(mouldConfigurationId, 'mould-configuration-id');
+  if (!mouldId.ok) return mouldId;
+  const mould = convertPositiveBase(mouldHeight, LENGTH_TO_MM, 'mould-height', 'mm');
+  if (!mould.ok) return mould;
+  const minimum = convertPositiveBase(machineMinMouldHeight, LENGTH_TO_MM, 'machine-min-mould-height', 'mm');
+  if (!minimum.ok) return minimum;
+  const maximum = convertPositiveBase(machineMaxMouldHeight, LENGTH_TO_MM, 'machine-max-mould-height', 'mm');
+  if (!maximum.ok) return maximum;
+  if (minimum.value.base > maximum.value.base) {
+    return unsupported('machine-mould-height-range-reversed', { field: 'machine-mould-height-range' });
+  }
+  const fits = mould.value.base >= minimum.value.base && mould.value.base <= maximum.value.base;
+  return supported(
+    {
+      machineConfigurationId: machineId.value.id,
+      mouldConfigurationId: mouldId.value.id,
+      mouldHeightMm: mould.value.base,
+      machineMinMouldHeightMm: minimum.value.base,
+      machineMaxMouldHeightMm: maximum.value.base,
+      marginAboveMinimumMm: mould.value.base - minimum.value.base,
+      marginBelowMaximumMm: maximum.value.base - mould.value.base,
+      fits,
+      state: fits ? 'PASS' : 'FAIL',
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.mouldHeightFit,
+      units: Object.freeze({ length: 'mm' }),
+      assumptions: Object.freeze([
+        'Machine minimum and maximum mould-height values are verified for the exact machine/configuration and use the same physical definition as the mould-height measurement.',
+        'A geometric PASS means only that the stated mould height falls inside the stated machine range; it does not authorize installation or prove platen, tie-bar, ejector, nozzle, daylight or load compatibility.',
+      ]),
+      provenance,
+      authority: 'geometric-fit-screen-only',
+    },
+  );
+}
+
+export function openingStrokeFit({
+  requiredOpeningStroke,
+  availableOpeningStroke,
+  machineConfigurationId,
+  mouldConfigurationId,
+  provenance = null,
+} = {}) {
+  const machineId = explicitIdentity(machineConfigurationId, 'machine-configuration-id');
+  if (!machineId.ok) return machineId;
+  const mouldId = explicitIdentity(mouldConfigurationId, 'mould-configuration-id');
+  if (!mouldId.ok) return mouldId;
+  const comparison = lengthCapacityComparison(requiredOpeningStroke, availableOpeningStroke, 'required-opening-stroke', 'available-opening-stroke');
+  if (!comparison.ok) return comparison;
+  return supported(
+    {
+      machineConfigurationId: machineId.value.id,
+      mouldConfigurationId: mouldId.value.id,
+      requiredOpeningStrokeMm: comparison.value.requiredMm,
+      availableOpeningStrokeMm: comparison.value.availableMm,
+      marginMm: comparison.value.marginMm,
+      fits: comparison.value.fits,
+      state: comparison.value.state,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.openingStrokeFit,
+      units: Object.freeze({ length: 'mm' }),
+      assumptions: Object.freeze([
+        'Required opening stroke is established from the actual part/runner removal and mould action requirement, not inferred by this function.',
+        'Available opening stroke is verified for the exact machine/configuration and the same stroke definition.',
+        'PASS means only that the stated required stroke does not exceed the stated available stroke.',
+      ]),
+      provenance,
+      authority: 'geometric-fit-screen-only',
+    },
+  );
+}
+
+export function daylightFit({
+  mouldClosedHeight,
+  requiredOpenGap,
+  availableMaximumDaylight,
+  machineConfigurationId,
+  mouldConfigurationId,
+  provenance = null,
+} = {}) {
+  const machineId = explicitIdentity(machineConfigurationId, 'machine-configuration-id');
+  if (!machineId.ok) return machineId;
+  const mouldId = explicitIdentity(mouldConfigurationId, 'mould-configuration-id');
+  if (!mouldId.ok) return mouldId;
+  const closed = convertPositiveBase(mouldClosedHeight, LENGTH_TO_MM, 'mould-closed-height', 'mm');
+  if (!closed.ok) return closed;
+  const gap = convertPositiveBase(requiredOpenGap, LENGTH_TO_MM, 'required-open-gap', 'mm');
+  if (!gap.ok) return gap;
+  const daylight = convertPositiveBase(availableMaximumDaylight, LENGTH_TO_MM, 'available-maximum-daylight', 'mm');
+  if (!daylight.ok) return daylight;
+  const requiredSeparationMm = closed.value.base + gap.value.base;
+  const fits = requiredSeparationMm <= daylight.value.base;
+  return supported(
+    {
+      machineConfigurationId: machineId.value.id,
+      mouldConfigurationId: mouldId.value.id,
+      mouldClosedHeightMm: closed.value.base,
+      requiredOpenGapMm: gap.value.base,
+      requiredMaximumPlatenSeparationMm: requiredSeparationMm,
+      availableMaximumDaylightMm: daylight.value.base,
+      marginMm: daylight.value.base - requiredSeparationMm,
+      fits,
+      state: fits ? 'PASS' : 'FAIL',
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.daylightFit,
+      units: Object.freeze({ length: 'mm' }),
+      assumptions: Object.freeze([
+        'Available maximum daylight and required maximum platen separation use the same machine/OEM definition and datum basis.',
+        'Required open gap is independently established from actual ejection/removal/mould-action needs.',
+        'PASS does not by itself prove opening-stroke, tie-bar, ejector or safety compatibility.',
+      ]),
+      provenance,
+      authority: 'geometric-fit-screen-only',
+    },
+  );
+}
+
+export function tieBarClearanceFit({
+  orientedMouldWidth,
+  orientedMouldHeight,
+  horizontalTieBarClearance,
+  verticalTieBarClearance,
+  machineConfigurationId,
+  mouldConfigurationId,
+  provenance = null,
+} = {}) {
+  const machineId = explicitIdentity(machineConfigurationId, 'machine-configuration-id');
+  if (!machineId.ok) return machineId;
+  const mouldId = explicitIdentity(mouldConfigurationId, 'mould-configuration-id');
+  if (!mouldId.ok) return mouldId;
+  const width = convertPositiveBase(orientedMouldWidth, LENGTH_TO_MM, 'oriented-mould-width', 'mm');
+  if (!width.ok) return width;
+  const height = convertPositiveBase(orientedMouldHeight, LENGTH_TO_MM, 'oriented-mould-height', 'mm');
+  if (!height.ok) return height;
+  const horizontal = convertPositiveBase(horizontalTieBarClearance, LENGTH_TO_MM, 'horizontal-tie-bar-clearance', 'mm');
+  if (!horizontal.ok) return horizontal;
+  const vertical = convertPositiveBase(verticalTieBarClearance, LENGTH_TO_MM, 'vertical-tie-bar-clearance', 'mm');
+  if (!vertical.ok) return vertical;
+  const horizontalFits = width.value.base <= horizontal.value.base;
+  const verticalFits = height.value.base <= vertical.value.base;
+  const fits = horizontalFits && verticalFits;
+  return supported(
+    {
+      machineConfigurationId: machineId.value.id,
+      mouldConfigurationId: mouldId.value.id,
+      orientedMouldWidthMm: width.value.base,
+      orientedMouldHeightMm: height.value.base,
+      horizontalTieBarClearanceMm: horizontal.value.base,
+      verticalTieBarClearanceMm: vertical.value.base,
+      horizontalMarginMm: horizontal.value.base - width.value.base,
+      verticalMarginMm: vertical.value.base - height.value.base,
+      horizontalFits,
+      verticalFits,
+      fits,
+      state: fits ? 'PASS' : 'FAIL',
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.tieBarClearanceFit,
+      units: Object.freeze({ length: 'mm' }),
+      assumptions: Object.freeze([
+        'Mould width and height are supplied in the actual intended machine orientation; this function does not silently rotate the mould to obtain a pass.',
+        'Tie-bar clearances are verified for the exact machine/configuration and are measured on the same usable-clearance basis as the mould dimensions.',
+        'PASS does not account for hoses, manifolds, protrusions, handling path, platen hardware, locating ring, nozzle access or ancillary equipment unless those are already included in the entered envelope.',
+      ]),
+      provenance,
+      authority: 'geometric-fit-screen-only',
+    },
+  );
+}
+
+export function ejectorStrokeFit({
+  requiredEjectorStroke,
+  availableEjectorStroke,
+  machineConfigurationId,
+  mouldConfigurationId,
+  provenance = null,
+} = {}) {
+  const machineId = explicitIdentity(machineConfigurationId, 'machine-configuration-id');
+  if (!machineId.ok) return machineId;
+  const mouldId = explicitIdentity(mouldConfigurationId, 'mould-configuration-id');
+  if (!mouldId.ok) return mouldId;
+  const comparison = lengthCapacityComparison(requiredEjectorStroke, availableEjectorStroke, 'required-ejector-stroke', 'available-ejector-stroke');
+  if (!comparison.ok) return comparison;
+  return supported(
+    {
+      machineConfigurationId: machineId.value.id,
+      mouldConfigurationId: mouldId.value.id,
+      requiredEjectorStrokeMm: comparison.value.requiredMm,
+      availableEjectorStrokeMm: comparison.value.availableMm,
+      marginMm: comparison.value.marginMm,
+      fits: comparison.value.fits,
+      state: comparison.value.state,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.ejectorStrokeFit,
+      units: Object.freeze({ length: 'mm' }),
+      assumptions: Object.freeze([
+        'Required ejector stroke is established from the actual mould/ejection design and is not inferred by this function.',
+        'Available ejector stroke is verified for the exact machine/configuration and compatible ejector arrangement.',
+        'PASS does not prove ejector force, pattern, coupling, timing or interference compatibility.',
+      ]),
+      provenance,
+      authority: 'geometric-fit-screen-only',
+    },
+  );
+}
+
+function assessmentState(assessment) {
+  if (!assessment || typeof assessment !== 'object') return { state: 'UNKNOWN', reason: 'missing-assessment' };
+  if (assessment.ok === false) return { state: 'UNKNOWN', reason: assessment.reason || 'unsupported-assessment' };
+  const explicit = String(assessment?.value?.state || assessment?.state || '').toUpperCase();
+  if (['PASS', 'MARGINAL', 'FAIL', 'UNKNOWN'].includes(explicit)) return { state: explicit, reason: null };
+  if (typeof assessment?.value?.exceedsAvailableCapacity === 'boolean') {
+    return { state: assessment.value.exceedsAvailableCapacity ? 'FAIL' : 'PASS', reason: null };
+  }
+  if (typeof assessment?.value?.exceedsUsableCapacity === 'boolean') {
+    return { state: assessment.value.exceedsUsableCapacity ? 'FAIL' : 'PASS', reason: null };
+  }
+  if (typeof assessment?.value?.fits === 'boolean') {
+    return { state: assessment.value.fits ? 'PASS' : 'FAIL', reason: null };
+  }
+  return { state: 'UNKNOWN', reason: 'assessment-state-unresolved' };
+}
+
+export function machineSuitabilitySummary({
+  machineConfigurationId,
+  injectionUnitConfigurationId,
+  mouldConfigurationId,
+  requiredAxisIds,
+  assessments,
+  basis,
+  provenance = null,
+} = {}) {
+  const machineId = explicitIdentity(machineConfigurationId, 'machine-configuration-id');
+  if (!machineId.ok) return machineId;
+  const injectionId = explicitIdentity(injectionUnitConfigurationId, 'injection-unit-configuration-id');
+  if (!injectionId.ok) return injectionId;
+  const mouldId = explicitIdentity(mouldConfigurationId, 'mould-configuration-id');
+  if (!mouldId.ok) return mouldId;
+  const cleanBasis = String(basis || '').trim();
+  if (!cleanBasis) return unsupported('suitability-basis-required', { field: 'basis' });
+  if (!Array.isArray(requiredAxisIds) || requiredAxisIds.length < 1) {
+    return unsupported('required-axis-list-required', { field: 'requiredAxisIds' });
+  }
+  const axisIds = [...new Set(requiredAxisIds.map(value => String(value || '').trim()).filter(Boolean))];
+  if (axisIds.length < 1) return unsupported('required-axis-list-required', { field: 'requiredAxisIds' });
+  const source = assessments && typeof assessments === 'object' ? assessments : {};
+  const axes = axisIds.map(id => {
+    const resolved = assessmentState(source[id]);
+    return Object.freeze({ id, state: resolved.state, reason: resolved.reason });
+  });
+  const states = axes.map(axis => axis.state);
+  const summaryState = states.includes('FAIL')
+    ? 'FAIL'
+    : states.includes('UNKNOWN')
+      ? 'UNKNOWN'
+      : states.includes('MARGINAL')
+        ? 'MARGINAL'
+        : 'PASS';
+  return supported(
+    {
+      machineConfigurationId: machineId.value.id,
+      injectionUnitConfigurationId: injectionId.value.id,
+      mouldConfigurationId: mouldId.value.id,
+      basis: cleanBasis,
+      requiredAxisIds: Object.freeze(axisIds),
+      axes: Object.freeze(axes),
+      coverageComplete: !states.includes('UNKNOWN'),
+      summaryState,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.machineSuitabilitySummary,
+      assumptions: Object.freeze([
+        'The summary covers only the explicitly declared required axes and exact machine/injection-unit/mould identities supplied to this function.',
+        'FAIL dominates the summary. If no axis fails, any unresolved required axis forces UNKNOWN; MARGINAL is preserved only when an upstream assessment explicitly supplies that state from an authorised basis.',
+        'PASS means every declared required axis passed its stated comparison. It is not a universal declaration that the machine/mould combination is safe, validated, installable or production-ready.',
+        'Safety, guarding, utilities, platen/loading limits, nozzle/location compatibility, controls, ancillary equipment, local procedures and OEM requirements remain separate unless explicitly represented by required axes.',
+      ]),
+      provenance,
+      authority: 'declared-axis-composition-only',
     },
   );
 }
