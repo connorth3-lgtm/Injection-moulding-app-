@@ -20,7 +20,7 @@ This pass reviewed the current MouldMaster engineering/runtime architecture and 
 
 `src/domains/process/engineering-core.mjs` now owns additional browser-independent, unit-aware primitives:
 
-1. pressure unit conversion with mandatory pressure-type semantics and case-safe SI prefixes so `mPa` cannot be treated as `MPa`;
+1. pressure unit conversion with mandatory pressure-type semantics and canonical pressure-unit case (`Pa`, `kPa`, `MPa`, `bar`) so `mPa`/`mpa` cannot be treated as `MPa`;
 2. location-explicit measured plastic-side pressure differences that exclude hydraulic/command pressure and preserve negative differences for investigation;
 3. clamp separating-force range from an explicitly supplied pressure range;
 4. shot-capacity utilisation only after comparable capacity basis is explicitly verified;
