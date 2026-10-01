@@ -186,7 +186,7 @@
     "scope": "Complete Book material reference coverage: all validated canonical public exact-grade records plus every governed Asia/Australia/New Zealand source-wave row, preserving source status and boundaries.",
     "independentSmeStatus": "hold",
     "independentSmeContract": "data/book-sme-review-v1.json",
-    "authorityBoundary": "technical-review appendix only; excluded from evidence-verified listen-all; no universal setpoints, guaranteed specifications, validated production recipe or automatic machine-control authority"
+    "authorityBoundary": "technical-review appendix only; excluded from source-reviewed listen-all; no universal setpoints, guaranteed specifications, validated production recipe or automatic machine-control authority"
   },
   "learnerFacingPublicationLabel": "Source evidence reviewed",
   "learnerFacingPublicationMeaning": "The governed chapter wording has passed MouldMaster claim/source and publication controls. This label is not independent human SME approval, accreditation, production validation or machine-control authority."
