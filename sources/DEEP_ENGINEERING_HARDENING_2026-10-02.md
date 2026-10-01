@@ -45,9 +45,9 @@ All new functions return structured unsupported states rather than silently inve
 
 `qa_engineering_domain.mjs` requires one-to-one registry coverage for every exported engineering calculation ID.
 
-### Canonical academic links
+### Canonical academic-link governance
 
-Governed Book claim-review evidence now points directly to canonical DOI records for the Párizs 2023 in-mould sensor paper, Oubellaouch 2024 fibre-orientation paper, Zhao 2022 warpage/shrinkage review and Li 2024 weld-line review instead of intermediary discovery-index URLs.
+The Book publication-authorization record already carries canonical DOI mappings for high-value peer-reviewed sources, including Párizs 2023, Oubellaouch 2024, Zhao 2022 and Li 2024. Some learner-runtime claim-review payloads still contain intermediary discovery URLs. This engineering-only pass deliberately leaves those governed runtime bytes unchanged so it does not invalidate the current web-release fingerprint. Any future URL normalization should be performed as an explicit governed learner-runtime release with the required web-release/cache/fingerprint update.
 
 ## Highest remaining internal engineering debt
 
