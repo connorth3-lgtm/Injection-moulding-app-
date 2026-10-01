@@ -88,15 +88,15 @@ function supported(value, metadata = {}) {
 function caseSensitiveEngineeringFactor(table, rawUnit) {
   const raw = String(rawUnit ?? '').trim().replaceAll('²', '2').replaceAll('³', '3').replace(/\s+/g, '');
   if (table === PRESSURE_TO_PA) {
-    if (raw === 'Pa' || raw === 'pa') return { factor: 1, unit: 'Pa' };
-    if (raw === 'kPa' || raw === 'kpa' || raw === 'KPA') return { factor: 1e3, unit: 'kPa' };
-    if (raw === 'MPa' || raw === 'mpa' || raw === 'MPA') return { factor: 1e6, unit: 'MPa' };
-    if (raw === 'bar' || raw === 'BAR') return { factor: 1e5, unit: 'bar' };
+    if (raw === 'Pa') return { factor: 1, unit: 'Pa' };
+    if (raw === 'kPa') return { factor: 1e3, unit: 'kPa' };
+    if (raw === 'MPa') return { factor: 1e6, unit: 'MPa' };
+    if (raw === 'bar') return { factor: 1e5, unit: 'bar' };
     return null;
   }
   if (table === FORCE_TO_N) {
-    if (raw === 'N' || raw === 'n') return { factor: 1, unit: 'N' };
-    if (raw === 'kN' || raw === 'kn' || raw === 'KN') return { factor: 1e3, unit: 'kN' };
+    if (raw === 'N') return { factor: 1, unit: 'N' };
+    if (raw === 'kN') return { factor: 1e3, unit: 'kN' };
     if (raw === 'MN') return { factor: 1e6, unit: 'MN' };
     return null;
   }
