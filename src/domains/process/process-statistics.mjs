@@ -86,6 +86,84 @@ export function symmetricGroupSeparation(leftValues, rightValues, minimumPerGrou
   });
 }
 
+
+export function capabilityIndices({
+  meanValue,
+  spreadValue,
+  lowerSpecLimit,
+  upperSpecLimit,
+  spreadBasis,
+  processStable = false,
+  measurementSystemAdequate = false,
+  samplingAdequacyConfirmed = false,
+  distributionModelAdequate = false,
+  specificationBasisRef,
+} = {}) {
+  const meanValueNumber = finiteNumber(meanValue);
+  const spread = finiteNumber(spreadValue);
+  const lsl = finiteNumber(lowerSpecLimit);
+  const usl = finiteNumber(upperSpecLimit);
+  const basis = String(spreadBasis || '').trim().toLowerCase();
+  const specRef = String(specificationBasisRef || '').trim();
+
+  if (meanValueNumber === null) return Object.freeze({ indices: null, reason: 'invalid-mean' });
+  if (!(spread > 0)) return Object.freeze({ indices: null, reason: 'invalid-spread' });
+  if (lsl === null || usl === null) return Object.freeze({ indices: null, reason: 'two-sided-specification-required' });
+  if (!(lsl < usl)) return Object.freeze({ indices: null, reason: 'invalid-specification-order' });
+  if (!['within-subgroup', 'overall-long-term'].includes(basis)) {
+    return Object.freeze({ indices: null, reason: 'spread-basis-required', allowed: Object.freeze(['within-subgroup', 'overall-long-term']) });
+  }
+
+  const blockers = [];
+  if (processStable !== true) blockers.push('process-stability');
+  if (measurementSystemAdequate !== true) blockers.push('measurement-system');
+  if (samplingAdequacyConfirmed !== true) blockers.push('sampling-adequacy');
+  if (distributionModelAdequate !== true) blockers.push('distribution-model');
+  if (!specRef) blockers.push('specification-basis');
+  if (blockers.length) {
+    return Object.freeze({
+      indices: null,
+      reason: 'capability-prerequisites-unmet',
+      blockers: Object.freeze(blockers),
+      spreadBasis: basis,
+    });
+  }
+
+  const potential = (usl - lsl) / (6 * spread);
+  const upper = (usl - meanValueNumber) / (3 * spread);
+  const lower = (meanValueNumber - lsl) / (3 * spread);
+  const centeringAdjusted = Math.min(upper, lower);
+  const family = basis === 'within-subgroup'
+    ? Object.freeze({ potential: 'Cp', centeringAdjusted: 'Cpk', upper: 'Cpu', lower: 'Cpl' })
+    : Object.freeze({ potential: 'Pp', centeringAdjusted: 'Ppk', upper: 'Ppu', lower: 'Ppl' });
+
+  return Object.freeze({
+    indices: Object.freeze({
+      [family.potential]: potential,
+      [family.centeringAdjusted]: centeringAdjusted,
+      [family.upper]: upper,
+      [family.lower]: lower,
+    }),
+    reason: null,
+    spreadBasis: basis,
+    family,
+    inputs: Object.freeze({
+      mean: meanValueNumber,
+      spread,
+      lowerSpecLimit: lsl,
+      upperSpecLimit: usl,
+      specificationBasisRef: specRef,
+    }),
+    assumptions: Object.freeze([
+      'The supplied spread is an appropriate standard-deviation estimate for the declared spread basis and is not silently substituted between within-subgroup and overall/long-term variation.',
+      'Process stability, measurement-system adequacy, sampling adequacy, distribution/model adequacy and specification authority are caller-confirmed prerequisites, not inferred from the arithmetic.',
+      'The calculation does not grade capability against a universal acceptance threshold; product/customer/site requirements control any acceptance criterion.',
+      'These indices describe spread and centring relative to specification under the stated assumptions and do not establish process causation or production authorization.',
+    ]),
+    authority: 'capability-arithmetic-only',
+  });
+}
+
 export function energyPerGoodPart(rows, { energyKey, qualityKey, unit, samplingBasis }) {
   if (samplingBasis !== 'per-cycle') return Object.freeze({ valueKwh: null, reason: 'energy-not-confirmed-per-cycle' });
   const factor = ({ kwh: 1, wh: 1 / 1000, j: 1 / 3.6e6, kj: 1 / 3600, mj: 1 / 3.6 })[String(unit || '').toLowerCase()];
