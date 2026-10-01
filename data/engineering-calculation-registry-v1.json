@@ -309,6 +309,84 @@
       "uncertaintyBoundary": "PASS applies only to the declared axes and is not a universal declaration of safety, installability, validation or production readiness; unresolved required axes force UNKNOWN unless a known FAIL already dominates."
     },
     {
+      "id": "EQ-FLOWPATH-001",
+      "name": "Hydraulic diameter from area and wetted perimeter",
+      "formula": "D_h = 4A/P",
+      "inputs": [
+        "cross-section area",
+        "wetted perimeter"
+      ],
+      "outputs": [
+        "hydraulic diameter"
+      ],
+      "scope": "Geometric characteristic for a fully wetted internal passage.",
+      "evidenceAnchors": [
+        "ISO-12165-2019",
+        "AUTODESK-RUNNER-LAYOUT"
+      ],
+      "uncertaintyBoundary": "Does not by itself establish pressure loss, viscosity, shear stress or a recommended runner/gate size."
+    },
+    {
+      "id": "EQ-FLOWPATH-002",
+      "name": "Uniform channel geometric volume",
+      "formula": "V = A × L",
+      "inputs": [
+        "uniform cross-section area",
+        "channel length"
+      ],
+      "outputs": [
+        "channel volume"
+      ],
+      "scope": "Geometric volume accounting for one uniform flow-path segment.",
+      "evidenceAnchors": [
+        "ISO-12165-2019",
+        "AUTODESK-RUNNER-LAYOUT"
+      ],
+      "uncertaintyBoundary": "Does not include junctions/transitions unless separately represented and does not model compressibility, packing or thermal expansion."
+    },
+    {
+      "id": "EQ-FLOWPATH-003",
+      "name": "Circular-channel apparent wall shear rate",
+      "formula": "gamma_dot_app = 32Q/(pi D^3)",
+      "inputs": [
+        "volumetric flow through exact circular passage",
+        "circular passage diameter"
+      ],
+      "outputs": [
+        "apparent wall shear rate"
+      ],
+      "scope": "Nominal geometric kinematic screen for a fully filled circular passage.",
+      "evidenceAnchors": [
+        "AUTODESK-GATE-DESIGN",
+        "AUTODESK-RUNNER-LAYOUT"
+      ],
+      "uncertaintyBoundary": "No Rabinowitsch correction; does not calculate viscosity, shear stress, heating, pressure loss or a safe material/gate shear-rate limit."
+    },
+    {
+      "id": "PROC-FLOWPATH-001",
+      "name": "Pressure-loss modelling readiness",
+      "formula": "Readiness gate over exact material, rheology, thermal state, geometry, flow and pressure-location semantics",
+      "inputs": [
+        "exact material grade",
+        "rheology model reference",
+        "thermal-state reference",
+        "flow-path geometry reference",
+        "volumetric flow",
+        "upstream/downstream pressure kinds"
+      ],
+      "outputs": [
+        "ready flag",
+        "blocking semantics"
+      ],
+      "scope": "Fail-closed semantic gate before any quantitative feed-system pressure-loss model is attempted.",
+      "evidenceAnchors": [
+        "AUTODESK-JUNCTURE-LOSS",
+        "AUTODESK-RUNNER-LAYOUT",
+        "ISO-294-1-2017"
+      ],
+      "uncertaintyBoundary": "Readiness is not model validation; MFR/MFI alone is not accepted as complete injection-moulding rheology and no pressure loss is calculated."
+    },
+    {
       "id": "EQ-FLOW-001",
       "name": "Fill-stage measured rate arithmetic",
       "formula": "Q = V/t; m_dot = m/t; v_ram = stroke/t",
