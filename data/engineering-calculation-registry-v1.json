@@ -445,18 +445,21 @@
       "inputs": [
         "screw diameter",
         "screw stroke",
-        "exact injection-unit configuration ID"
+        "exact injection-unit configuration ID",
+        "screw-geometry basis reference"
       ],
       "outputs": [
+        "injection-unit identity",
+        "geometry basis reference",
         "screw cross-sectional area",
         "geometric swept volume"
       ],
-      "scope": "Exact injection-unit geometry screen for barrel displacement volume.",
+      "scope": "Geometric swept barrel volume for one exact injection-unit configuration tied to referenced screw geometry.",
       "evidenceAnchors": [
         "RJG-MIV-CONSORTIUM-WHITE-PAPER",
         "ARBURG-PLASTICISING-SERVICE"
       ],
-      "uncertaintyBoundary": "Swept barrel volume is not automatically delivered melt volume; check-ring backflow, compression, leakage, decompression and machine signal semantics remain outside the geometry."
+      "uncertaintyBoundary": "Not delivered melt volume; non-return-valve backflow, compression, leakage, decompression and machine-specific signal definitions remain outside the geometry."
     },
     {
       "id": "EQ-MTRANS-002",
@@ -464,37 +467,45 @@
       "formula": "Q = (pi D^2 / 4) × v",
       "inputs": [
         "screw diameter",
-        "actual screw linear speed",
-        "exact injection-unit configuration ID"
+        "actual forward screw linear speed",
+        "exact injection-unit configuration ID",
+        "screw-geometry basis reference",
+        "screw-motion basis reference"
       ],
       "outputs": [
-        "geometric volumetric flow"
+        "injection-unit identity",
+        "geometry/motion basis references",
+        "geometric volumetric displacement rate"
       ],
-      "scope": "Machine-transfer geometry based on actual screw motion rather than copied velocity screen values.",
+      "scope": "Geometric barrel displacement rate from referenced actual screw motion and exact screw geometry.",
       "evidenceAnchors": [
         "RJG-MIV-CONSORTIUM-WHITE-PAPER",
         "ISO-294-1-2017"
       ],
-      "uncertaintyBoundary": "Displaced barrel volume rate is not proven cavity flow; check-ring behaviour, compressibility, leakage, machine signal scaling, acceleration and pressure limitation remain outside the arithmetic."
+      "uncertaintyBoundary": "Not proven cavity flow; controller command alone is insufficient, and check-ring/compressibility/leakage/decompression/signal-scaling effects remain outside the calculation."
     },
     {
       "id": "EQ-MTRANS-003",
       "name": "Required screw speed for target geometric volumetric rate",
       "formula": "v = Q / (pi D^2 / 4)",
       "inputs": [
-        "target geometric volumetric flow",
-        "target screw diameter",
-        "exact target injection-unit configuration ID"
+        "screw diameter",
+        "target volumetric flow",
+        "exact injection-unit configuration ID",
+        "screw-geometry basis reference",
+        "target-flow basis reference"
       ],
       "outputs": [
+        "injection-unit identity",
+        "geometry/flow basis references",
         "required geometric screw linear speed"
       ],
-      "scope": "Inverse machine-transfer geometry for matching a target barrel-displacement volumetric rate.",
+      "scope": "Inverse geometric displacement calculation for a referenced target volumetric rate and exact target injection-unit geometry.",
       "evidenceAnchors": [
         "RJG-MIV-CONSORTIUM-WHITE-PAPER",
         "ISO-294-1-2017"
       ],
-      "uncertaintyBoundary": "The result is not a released machine setpoint and does not prove the target machine can meet acceleration, pressure or melt-condition requirements."
+      "uncertaintyBoundary": "Not a released machine setpoint; target-machine flow, acceleration and pressure capability must be validated separately."
     },
     {
       "id": "EQ-MTRANS-004",
@@ -504,19 +515,25 @@
         "source screw diameter",
         "source actual screw speed",
         "source injection-unit ID",
+        "source screw-geometry basis reference",
+        "source motion basis reference",
         "target screw diameter",
-        "target injection-unit ID"
+        "target injection-unit ID",
+        "target screw-geometry basis reference",
+        "transfer-study basis reference"
       ],
       "outputs": [
-        "source geometric volumetric rate",
+        "source/target injection-unit identities",
+        "geometry/motion/transfer references",
+        "preserved geometric volumetric rate",
         "target geometric screw speed",
         "speed ratio"
       ],
-      "scope": "Cross-machine geometric transfer preserving screw-displacement volumetric rate only.",
+      "scope": "Reference-bound geometric volumetric-rate transfer between two explicitly identified injection units.",
       "evidenceAnchors": [
         "RJG-MIV-CONSORTIUM-WHITE-PAPER"
       ],
-      "uncertaintyBoundary": "Does not establish equivalent cavity fill, melt-front velocity, shear history, pressure demand, acceleration response, melt condition or part quality; validation on the target machine remains required."
+      "uncertaintyBoundary": "Preserves only geometric screw-displacement rate. It does not prove equivalent cavity fill, melt-front velocity, shear history, pressure demand, acceleration response, check-ring behaviour, melt condition or part quality."
     },
     {
       "id": "EQ-FLOW-001",
