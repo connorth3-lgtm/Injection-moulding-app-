@@ -41,6 +41,10 @@ This pass reviewed the current MouldMaster engineering/runtime architecture and 
 
 All new functions return structured unsupported states rather than silently inventing missing engineering meaning. The unit boundary also preserves SI prefix case across pressure, force, mass, length, area, volume, rates and diffusivity so ambiguous prefix changes are rejected rather than normalised.
 
+### Multi-cavity statistics hardening
+
+`process-statistics.mjs` now preserves cavity identity and reports per-cavity summary statistics plus the range of cavity means. It requires explicit measurement unit, sampling basis, measurement-system adequacy and minimum repeated support per cavity. The output is descriptive only: no generic balance percentage or tooling/process diagnosis is generated.
+
 ### SPC/capability hardening
 
 `src/domains/process/process-statistics.mjs` now has fail-closed capability arithmetic. It refuses to produce an index unless process stability, measurement-system adequacy, sampling adequacy, distribution/model adequacy, a common measurement unit, an explicit spread-estimator reference and specification authority are all explicitly confirmed. A within-subgroup spread basis produces Cp/Cpk/Cpu/Cpl; an overall/long-term spread basis produces Pp/Ppk/Ppu/Ppl, preventing silent estimator relabelling. The function does not grade results against a generic 1.33/1.67-style threshold.
@@ -110,7 +114,7 @@ The pure domain now includes hydraulic diameter, uniform channel volume, circula
 - add non-circular gate/channel shear models only where aspect-ratio/formula applicability is explicit;
 - add material-density mass accounting only with temperature/state provenance rather than a generic resin constant;
 - add quantitative pressure-loss models only with validated rheology, thermal state and geometry;
-- add cavity/branch balance evidence while preserving cavity identity;
+- connect cavity-specific descriptive statistics to branch/pressure evidence while preserving cycle and cavity identity;
 - connect these calculations to the existing gate-seal study and controlled pressure-loss workflow.
 
 ### P1 — measurement uncertainty
