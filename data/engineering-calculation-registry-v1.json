@@ -595,8 +595,8 @@
       ],
       "scope": "First-term one-dimensional plane-wall/centerline screening estimate for explicitly amorphous thermoplastics only.",
       "evidenceAnchors": [
-        "10.1016/j.ijheatmasstransfer.2017.09.078",
-        "10.3390/polym12010154"
+        "PIGNON-2018-COOLING-ANALYTICAL",
+        "TORRES-ALBA-2020-CONFORMAL-COOLING"
       ],
       "uncertaintyBoundary": "Semi-crystalline material is rejected; crystallisation/latent heat, thermal contact resistance, local geometry, nonuniform thermal history, cooling-circuit resistance, mould transient state and post-ejection reheating are not resolved. Output is not a guaranteed cycle-time setting."
     },
@@ -742,6 +742,16 @@
       "checked": "2026-10-02",
       "currentState": "peer-reviewed-doi-verified",
       "scope": "Validated analytical cooling/solidification modelling for amorphous and semi-crystalline thermoplastics, including thermal-contact-resistance limitations. Supports first-order thermal screening, not universal absolute cooling time."
+    },
+    {
+      "id": "TORRES-ALBA-2020-CONFORMAL-COOLING",
+      "type": "peer-reviewed-journal",
+      "issuer": "Polymers",
+      "title": "A New Conformal Cooling Design Procedure for Injection Molding Based on Temperature Clusters and Multidimensional Discrete Models",
+      "url": "https://doi.org/10.3390/polym12010154",
+      "checked": "2026-10-02",
+      "currentState": "peer-reviewed-doi-verified",
+      "scope": "Peer-reviewed conformal-cooling study using temperature fields, geometry and cooling-design constraints. Used as corroborating cooling-system evidence; not a universal absolute cooling-time or channel-layout rule."
     }
   ]
 }
