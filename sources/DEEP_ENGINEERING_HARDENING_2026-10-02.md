@@ -31,7 +31,9 @@ This pass reviewed the current MouldMaster engineering/runtime architecture and 
 9. source-bound linear shrinkage compensation-range arithmetic that refuses unsourced generic shrinkage inputs and explicitly stops short of a released tool dimension;
 10. exact-identity mould-height, opening-stroke, maximum-daylight, tie-bar-clearance and ejector-stroke fit screens;
 11. a declared-axis machine-suitability composer that preserves PASS / MARGINAL / FAIL / UNKNOWN without inventing a marginal threshold and forces UNKNOWN when a required axis is unresolved;
-12. repeatability-aware gate-seal plateau analysis using a user-supplied decision tolerance.
+12. hydraulic-diameter, uniform-channel-volume and circular-channel apparent wall-shear-rate screens with explicit non-Newtonian/pressure-loss boundaries;
+13. fail-closed pressure-loss modelling readiness that rejects MFR/MFI as a substitute for an explicit rheology model;
+14. repeatability-aware gate-seal plateau analysis using a user-supplied decision tolerance.
 
 All new functions return structured unsupported states rather than silently inventing missing engineering meaning.
 
@@ -87,14 +89,13 @@ The current added thermal function is deliberately only a **relative diffusion s
 
 ### P1 — runner/gate engineering
 
-Add geometry-scoped screens only where formula and material/rheology assumptions are explicit:
+The pure domain now includes hydraulic diameter, uniform channel volume, circular-channel apparent wall shear rate and a pressure-loss readiness gate. The remaining work is deliberately narrower:
 
-- hydraulic diameter;
-- volume/mass accounting;
-- apparent geometric shear-rate screens;
-- pressure-loss readiness (not pressure-loss prediction without rheology);
-- balance/cavity identity;
-- gate-seal study linkage.
+- add non-circular gate/channel shear models only where aspect-ratio/formula applicability is explicit;
+- add material-density mass accounting only with temperature/state provenance rather than a generic resin constant;
+- add quantitative pressure-loss models only with validated rheology, thermal state and geometry;
+- add cavity/branch balance evidence while preserving cavity identity;
+- connect these calculations to the existing gate-seal study and controlled pressure-loss workflow.
 
 ### P1 — measurement uncertainty
 
