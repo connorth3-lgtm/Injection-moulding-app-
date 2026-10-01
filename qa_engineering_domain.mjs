@@ -881,23 +881,68 @@ assert.equal(
   'Mm/s must never be silently interpreted as mm/s',
 );
 
+assert.equal(
+  averageResidenceTimeEstimate({
+    meltInventoryMass: { value: 500, unit: 'g' },
+    massThroughputRate: { value: 1, unit: 'kg/h' },
+  }).reason,
+  'missing-injection-unit-configuration-id',
+);
+
+const residenceContext = {
+  injectionUnitConfigurationId: 'IMM-A/IU-40',
+  meltInventoryBasisRef: 'injection-unit-melt-inventory-study/rev-A',
+};
+
+assert.equal(
+  averageResidenceTimeEstimate({
+    ...residenceContext,
+    meltInventoryMass: { value: 500, unit: 'g' },
+    massThroughputRate: { value: 1, unit: 'kg/h' },
+  }).reason,
+  'throughput-basis-reference-required',
+);
+
 const residence = averageResidenceTimeEstimate({
+  ...residenceContext,
+  throughputBasisRef: 'production-throughput-history/rev-B',
   meltInventoryMass: { value: 500, unit: 'g' },
   massThroughputRate: { value: 1, unit: 'kg/h' },
 });
 assert.equal(residence.ok, true);
+assert.equal(residence.value.injectionUnitConfigurationId, 'IMM-A/IU-40');
+assert.equal(residence.value.meltInventoryBasisRef, 'injection-unit-melt-inventory-study/rev-A');
+assert.equal(residence.value.throughputBasisRef, 'production-throughput-history/rev-B');
 assert.ok(Math.abs(residence.value.minutes - 30) < 1e-12);
 assert.match(residence.assumptions.join(' '), /not a residence-time distribution/i);
+assert.match(residence.assumptions.join(' '), /does not establish a safe material residence limit/i);
+
+assert.equal(
+  averageResidenceTimeFromShotCycle({
+    ...residenceContext,
+    meltInventoryMass: { value: 500, unit: 'g' },
+    shotMass: { value: 25, unit: 'g' },
+    cycleTime: { value: 20, unit: 's' },
+    cycleTimeBasisRef: 'cycle-trace/rev-C',
+  }).reason,
+  'shot-mass-basis-reference-required',
+);
 
 const residenceFromShot = averageResidenceTimeFromShotCycle({
+  ...residenceContext,
+  shotMassBasisRef: 'shot-mass-study/rev-C',
+  cycleTimeBasisRef: 'cycle-trace/rev-C',
   meltInventoryMass: { value: 500, unit: 'g' },
   shotMass: { value: 25, unit: 'g' },
   cycleTime: { value: 20, unit: 's' },
 });
 assert.equal(residenceFromShot.ok, true);
+assert.equal(residenceFromShot.value.injectionUnitConfigurationId, 'IMM-A/IU-40');
 assert.equal(residenceFromShot.value.seconds, 400);
 assert.equal(residenceFromShot.value.shotMassG, 25);
+assert.equal(residenceFromShot.value.derivedThroughputGS, 1.25);
 assert.equal(residenceFromShot.equationId, 'EQ-RES-002');
+assert.match(residenceFromShot.assumptions.join(' '), /not a residence-time distribution/i);
 
 const coolingScale = relativeCoolingTimeScale({
   referenceCoolingTime: { value: 15, unit: 's' },
