@@ -60,7 +60,7 @@ const blockedCapability = capabilityIndices({
 });
 assert.equal(blockedCapability.indices, null);
 assert.equal(blockedCapability.reason, 'capability-prerequisites-unmet');
-for (const blocker of ['process-stability', 'measurement-system', 'sampling-adequacy', 'distribution-model', 'specification-basis']) {
+for (const blocker of ['process-stability', 'measurement-system', 'sampling-adequacy', 'distribution-model', 'spread-estimator', 'measurement-unit', 'specification-basis']) {
   assert.ok(blockedCapability.blockers.includes(blocker), `missing capability blocker ${blocker}`);
 }
 
@@ -70,6 +70,8 @@ const cpCpk = capabilityIndices({
   lowerSpecLimit: 9.8,
   upperSpecLimit: 10.2,
   spreadBasis: 'within-subgroup',
+  spreadEstimatorRef: 'pooled-within-subgroup-sigma-fixture',
+  measurementUnit: 'mm',
   processStable: true,
   measurementSystemAdequate: true,
   samplingAdequacyConfirmed: true,
@@ -90,6 +92,8 @@ const ppPpk = capabilityIndices({
   lowerSpecLimit: 9.8,
   upperSpecLimit: 10.2,
   spreadBasis: 'overall-long-term',
+  spreadEstimatorRef: 'overall-sample-sd-fixture',
+  measurementUnit: 'mm',
   processStable: true,
   measurementSystemAdequate: true,
   samplingAdequacyConfirmed: true,
@@ -116,6 +120,8 @@ assert.equal(capabilityIndices({
   lowerSpecLimit: 9.8,
   upperSpecLimit: 10.2,
   spreadBasis: 'unlabelled-sd',
+  spreadEstimatorRef: 'some-estimator',
+  measurementUnit: 'mm',
 }).reason, 'spread-basis-required');
 
 const incompleteEnergy = energyPerGoodPart([
