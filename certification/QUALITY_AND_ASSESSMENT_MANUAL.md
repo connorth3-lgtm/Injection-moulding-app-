@@ -19,7 +19,9 @@ Current audited question-bank version: `2026.08.30.1`.
 Knowledge assessment rules:
 - UK/US/NZ mode: 10 questions (7 technical + 3 regional safety questions).
 - Compare All: 16 questions (7 technical + all 9 regional safety questions).
-- Pass requirement: at least 80% overall **and zero incorrect safety-critical regional questions**.
+- These are governed formative/learning-completion assessments. Seven sampled technical items cannot by themselves establish broad injection-moulding competence.
+- Pass requirement for the current learning-completion certificate: at least 80% overall **and zero incorrect safety-critical regional questions**.
+- The 80% threshold is a programme policy threshold, not an empirically validated professional competence cut-score.
 - Correct answers are never changed by confidence scoring, spaced repetition, XP or practical sign-off.
 
 ## 4. Learning outcomes framework
@@ -44,7 +46,7 @@ Each level should evidence progression across these domains:
 - justify a robust process window and confirmation strategy
 
 ## 5. Assessment design rules
-Every summative question should:
+For the current formative/learning-completion bank, and for any future summative bank, every keyed question should:
 - have one defensible best answer
 - avoid answer-length and absolute-language cues
 - avoid unsafe distractors that appear as recommended actions
@@ -87,8 +89,10 @@ Online knowledge completion does not by itself demonstrate workplace competence.
 
 Practical records must never imply legal authorisation to operate equipment unless the employer's own authorisation process separately grants it.
 
-## 9. Identity and assessment integrity — accreditation target
-For externally recognised credentials, implement:
+## 9. Identity, validity and assessment integrity — accreditation target
+Before any externally recognised or competence-bearing credential, implement a separate summative validation programme. The current short sampled assessment and 80% rule are insufficient by themselves. The programme must establish a blueprint with adequate item sampling per claimed domain, real-response item statistics, reliability/precision appropriate to the decision, defensible standard-setting/cut-score evidence, fairness review, external moderation and practical/workplace evidence where competence is claimed.
+
+For externally recognised credentials, also implement:
 - verified learner identity
 - controlled enrolment record
 - attempt timestamps and assessment version
@@ -138,7 +142,7 @@ Assessment-key changes trigger a new question-bank version.
 
 ## 13. Continuous improvement
 Collect and review:
-- item difficulty and discrimination where sample size allows
+- item difficulty and discrimination only from adequately sized real-response samples, with revision/version identity retained
 - common wrong-answer patterns
 - completion/dropout points
 - learner confidence vs correctness

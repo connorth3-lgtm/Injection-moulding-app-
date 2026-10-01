@@ -17,8 +17,9 @@ The project maintainers do not intend to seek patent protection over implementat
 
 ## Current release lanes
 
-- PWA / browser shell: `2026.10.01.2`
+- PWA / browser shell: `2026.10.02.1`
 - Open Windows desktop: `2026.09.29.1`
+- Android lane: `2026.08.26.2`
 - Training content: `2026.08.26.1`
 - Audited assessment bank: `2026.08.30.1`
 - Assessment quality / analytics hardening: `2026.08.24.3`
@@ -27,6 +28,8 @@ The project maintainers do not intend to seek patent protection over implementat
 - Frozen legacy Windows recovery lane: `2026.08.21.1`
 
 `version.json` is the machine-readable release record and is the source of truth for release identifiers.
+
+Release lanes are not assumed to be feature-parity by date alone. In particular, the older Android lane must not be described as containing newer web/PWA or desktop features unless that exact Android release is rebuilt, tested and governed for them.
 
 ## Run the PWA
 
@@ -38,11 +41,11 @@ The PWA uses an installable web manifest and a service worker for offline suppor
 
 ## Assessment system
 
-The current assessment stack contains 30 technical exam items, 27 UK/US/NZ regional safety/compliance items and 40 scenario drills. Regional safety items remain mandatory and safety-critical. A certificate requires at least 80% overall and zero wrong safety-critical regional items.
+The current assessment stack contains 30 technical exam items, 27 UK/US/NZ regional safety/compliance items and 40 scenario drills. A normal regional learning check samples 7 technical items plus 3 regional safety/compliance items; it is a formative/learning-completion assessment, not a validated professional-competence examination. Regional safety items remain mandatory and safety-critical. The current learning-completion certificate policy requires at least 80% overall and zero wrong safety-critical regional items. The 80% threshold is a governed programme rule, not yet an empirically validated competence cut-score.
 
 All 30 technical exam items now use evidence-based reasoning rather than pure definition recall: learners interpret linked observations, select diagnostic decisions, choose discriminating tests, evaluate verification/recovery evidence and recognise when signal semantics or other evidence are insufficient for a defensible conclusion. Regional legal/safety answer keys remain jurisdiction-specific and unchanged by this question-bank release.
 
-Assessment quality controls include stable question IDs, a competency-balanced exam blueprint, difficulty calibration, duplicate/answer-cue QA, per-question evidence/revision information and device-local analytics. Analytics are scoped to the active learner profile. Question-performance analytics and response-timing analytics are not uploaded by MouldMaster; they can be reset locally and are deliberately excluded from progress backups.
+Assessment quality controls include stable question IDs, a competency-balanced formative blueprint, difficulty labels, duplicate/answer-cue QA, per-question evidence/revision information and device-local analytics. A future high-stakes or externally recognised summative assessment requires a separate adequately sampled blueprint, real-response psychometric analysis, cut-score justification, independent moderation and practical/workplace evidence where competence is claimed. Analytics are scoped to the active learner profile. Question-performance analytics and response-timing analytics are not uploaded by MouldMaster; they can be reset locally and are deliberately excluded from progress backups.
 
 All 157 keyed learner questions across exams, scenarios, Diagnostic Learning Labs and Material Behaviour Labs are covered by the evidence-approval gate in this feature revision. Unmatched technical topics fail closed rather than inheriting a generic source; mapped evidence must support the actual mechanism or method being assessed. The 24 Material Behaviour Lab decisions use explicit source IDs and question/choice fingerprints rather than generic topic fallback.
 

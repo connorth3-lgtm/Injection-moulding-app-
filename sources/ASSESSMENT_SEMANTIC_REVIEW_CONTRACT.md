@@ -34,3 +34,9 @@ A deterministic pass does not constitute semantic approval. A complete semantic 
 Where a keyed proposition is taught in the governed Book, the reviewer must confirm that the assessment does not contradict, overstate or silently generalise the Book's current authorized wording. Where the Book deliberately leaves a mechanism qualified or context-dependent, the assessment must preserve that uncertainty rather than force an unjustified universal answer.
 
 Human semantic review, independent Book SME review and real assistive-technology validation are separate evidence classes. Automation and AI-assisted review may identify defects and enforce coverage, but must not create, infer or self-attest those human approvals.
+
+## Assessment-authority boundary
+
+The current 7-technical-item regional exam sample is a formative/learning-completion check. Semantic approval of individual items does not convert that sample into a validated professional-competence examination, and the current 80% threshold is not treated as an empirically established competence cut-score.
+
+Any future high-stakes or externally recognised summative assessment must use a separately governed blueprint with adequate item sampling across every claimed domain, real-learner response data, item and test-level psychometric analysis appropriate to the decision, defensible standard setting, independent moderation, fairness/accessibility review and practical/workplace evidence where competence is claimed. Safety mastery must not rely on a trivially small random sample merely because the zero-wrong rule is retained.

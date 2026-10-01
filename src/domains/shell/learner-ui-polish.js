@@ -1,11 +1,11 @@
-/* MouldMaster learner UI polish — 2026.10.01.2
+/* MouldMaster learner UI polish — 2026.10.02.1
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.10.01.2';
+const VERSION='2026.10.02.1';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -134,7 +134,7 @@ function syncBookDisclosure(){
     const details=document.createElement('details');
     details.className='mm-book-assurance-details';
     const summary=document.createElement('summary');
-    summary.innerHTML='<b>Accuracy & assurance boundary</b><span>What “evidence verified” does and does not mean</span>';
+    summary.innerHTML='<b>Accuracy & assurance boundary</b><span>What “source evidence reviewed” does and does not mean</span>';
     const body=document.createElement('div');
     body.className='mm-book-assurance-body';
     while(accuracy.firstChild)body.appendChild(accuracy.firstChild);

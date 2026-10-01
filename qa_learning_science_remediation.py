@@ -10,6 +10,7 @@ def need(ok,msg):
 curr=text('curriculum-integration.js')
 analytics=text('learning-analytics.js')
 pilot=json.loads(text('data/learner-pilot-v1.json'))
+psychometric=json.loads(text('data/psychometric-validation-plan-v1.json'))
 basis=text('sources/LEARNING_AND_ENGINEERING_REVIEW_BASIS.md')
 external=json.loads(text('data/release-external-validation-v1.json'))
 
@@ -39,6 +40,14 @@ need(pilot.get('evidence') is None,'learner pilot must not invent evidence')
 for key in ['primaryEndpoints','secondaryEndpoints','analysisRules','psychometricPlan']:
     need(pilot.get(key),f'learner pilot validation contract missing: {key}')
 need(pilot['psychometricPlan'].get('status')=='descriptive-until-real-cohort','psychometric plan must remain descriptive before real cohort')
+need(pilot['psychometricPlan'].get('preRegisteredPlan')=='data/psychometric-validation-plan-v1.json','learner pilot must bind to preregistered psychometric plan')
+need(psychometric.get('status')=='preregistered-no-real-response-evidence','psychometric gate must not imply real validation evidence')
+need(psychometric.get('evidence') is None,'psychometric gate must not manufacture real-response evidence')
+need(psychometric.get('currentAuthority',{}).get('professionalCompetenceAuthority') is False,'current assessment must not claim professional competence authority')
+need(psychometric.get('currentAuthority',{}).get('cutScoreValidity')=='not-established','current 80% policy must not be relabelled as validated cut score')
+need(psychometric.get('itemAnalysisGate',{}).get('planningFloorIndependentResponsesPerItem')>=100,'item calibration planning floor weakened')
+need(psychometric.get('testLevelGate',{}).get('planningFloorCompleteFirstAttemptForms')>=200,'test-level calibration planning floor weakened')
+need(psychometric.get('externalReview',{}).get('status')=='hold' and psychometric.get('externalReview',{}).get('automationMayNotApprove') is True,'psychometric independent-review HOLD weakened')
 joined=json.dumps(pilot)
 for marker in ['attrition','distractor selection frequencies','safety-critical error patterns','synthetic traffic','cut-score']:
     need(marker in joined,f'learner validation boundary missing: {marker}')
@@ -58,4 +67,4 @@ learner=(external.get('learnerOutcomes') or {})
 need(learner.get('status')=='hold','learner outcomes must remain HOLD until real externally reviewed evidence exists')
 need('synthetic' in text('sources/LEARNING_AND_ENGINEERING_REVIEW_BASIS.md').lower(),'basis must preserve synthetic-evidence boundary')
 
-print('MouldMaster learning-science remediation QA passed (adaptive guidance, retention visibility, pre-specified learner/psychometric gates, external outcome HOLD preserved)')
+print('MouldMaster learning-science remediation QA passed (adaptive guidance, retention visibility, preregistered psychometric/sample-adequacy gates and external outcome HOLD preserved)')
