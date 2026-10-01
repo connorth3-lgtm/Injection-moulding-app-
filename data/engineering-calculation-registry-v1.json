@@ -605,28 +605,30 @@
       "name": "Amorphous 1-D plane-wall centerline cooling estimate",
       "formula": "t = s^2/(pi^2 alpha) × ln[(4/pi) × (T_melt - T_mould)/(T_eject - T_mould)]",
       "inputs": [
-        "full wall thickness",
-        "source-backed thermal diffusivity",
+        "part thickness",
+        "thermal diffusivity",
         "melt temperature",
-        "mould surface temperature",
-        "ejection temperature",
-        "explicit centerline-temperature ejection criterion type",
-        "amorphous morphology",
+        "mould-surface temperature",
+        "centerline ejection temperature",
+        "exact material grade ID",
+        "amorphous morphology declaration",
+        "material morphology reference",
+        "thermal-model basis reference",
         "thermal-diffusivity reference",
         "ejection-criterion reference",
         "mould-surface-temperature basis reference"
       ],
       "outputs": [
-        "analytical cooling-time estimate",
-        "logarithm argument",
-        "retained thermal basis"
+        "exact material grade and morphology/model references",
+        "analytical cooling-time screen",
+        "temperature/logarithm diagnostic terms"
       ],
-      "scope": "First-term one-dimensional plane-wall/centerline screening estimate for explicitly amorphous thermoplastics only, using an explicitly centerline-temperature ejection criterion.",
+      "scope": "First-term one-dimensional plane-wall centerline cooling screen for an exact material grade explicitly documented as amorphous and tied to referenced morphology, thermal-model, diffusivity, ejection-criterion and mould-surface-temperature evidence.",
       "evidenceAnchors": [
         "PIGNON-2018-COOLING-ANALYTICAL",
         "TORRES-ALBA-2020-CONFORMAL-COOLING"
       ],
-      "uncertaintyBoundary": "Semi-crystalline material and non-centerline ejection criteria are rejected; crystallisation/latent heat, thermal contact resistance, local geometry, nonuniform thermal history, cooling-circuit resistance, mould transient state and post-ejection reheating are not resolved. Output is not a guaranteed cycle-time setting."
+      "uncertaintyBoundary": "Not valid for semi-crystalline phase-change behaviour and not a guaranteed cycle time. Constant-property/uniform-boundary assumptions exclude contact resistance, local geometry, nonuniform fill temperature, cooling-channel resistance, mould transient state and post-ejection reheating."
     },
     {
       "id": "EQ-SHR-001",
