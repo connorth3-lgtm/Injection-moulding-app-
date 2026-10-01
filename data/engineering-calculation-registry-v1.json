@@ -687,10 +687,6 @@
         "collection": "sourceSeeds"
       },
       {
-        "path": "data/book-chapters-materials-machine-v1.json",
-        "collection": "sourceSeeds"
-      },
-      {
         "path": "data/book-authored-remaining-v1.json",
         "collection": "sourceSeeds"
       },
