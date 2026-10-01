@@ -42,7 +42,8 @@ A pure domain module may return data, reasons, assumptions, units, provenance an
 9. **Measured fill-stage rates** — pure volume/time, mass/time and ram-travel/time arithmetic with an explicit boundary that ram speed is not melt-front velocity and does not imply shear rate or viscosity.
 10. **Average residence screening** — inventory/throughput and shot/cycle forms return average residence estimates only; they explicitly do not claim a residence-time distribution or grade-specific degradation limit.
 11. **Relative thermal/cooling scaling** — thickness-squared/diffusivity scaling is available only as a first-order relative comparison under comparable thermal boundaries, never as a universal absolute cooling-time prediction.
-12. **Gate-seal plateau analysis** — repeated part-mass observations can be tested against a user-supplied decision tolerance; the result is evidence consistent with a plateau for that exact study, not proof of a universal or exact gate-freeze instant.
+12. **Source-bound shrinkage compensation range** — converts an explicitly sourced linear shrinkage range into a starting mould-dimension range using a declared mould-referenced shrinkage definition; it does not provide generic polymer shrinkage values or released tool dimensions.
+13. **Gate-seal plateau analysis** — repeated part-mass observations can be tested against a user-supplied decision tolerance; the result is evidence consistent with a plateau for that exact study, not proof of a universal or exact gate-freeze instant.
 
 The machine-readable contract for these calculations is `data/engineering-calculation-registry-v1.json`. Every implemented calculation has a stable ID, input/output scope, evidence anchors and an uncertainty/authority boundary. `qa_engineering_domain.mjs` requires exact registry/domain coverage so new engineering arithmetic cannot silently appear without a governed calculation record.
 
