@@ -30,13 +30,14 @@ This pass reviewed the current MouldMaster engineering/runtime architecture and 
 8. average residence-time screening from inventory/throughput;
 9. average residence screening derived from shot mass and cycle time;
 10. relative cooling-time diffusion scaling with explicit non-absolute-model boundaries;
-11. source-bound linear shrinkage compensation-range arithmetic that refuses unsourced generic shrinkage inputs and explicitly stops short of a released tool dimension;
-12. exact-grade, sample-specific moisture acceptance against a supplier-controlled limit with explicit measurement uncertainty and PASS / FAIL / INDETERMINATE states, without generating drying setpoints;
-13. exact-identity mould-height, opening-stroke, maximum-daylight, tie-bar-clearance and ejector-stroke fit screens;
-14. a declared-axis machine-suitability composer that preserves PASS / MARGINAL / FAIL / UNKNOWN without inventing a marginal threshold and requires `marginalBasisRef` for any MARGINAL assessment and forces UNKNOWN when a required axis is unresolved;
-15. hydraulic-diameter, uniform-channel-volume and circular-channel apparent wall-shear-rate screens with explicit non-Newtonian/pressure-loss boundaries;
-16. fail-closed pressure-loss modelling readiness that rejects MFR/MFI as a substitute for an explicit rheology model and blocks hydraulic/command pressure types;
-17. repeatability-aware gate-seal plateau analysis using a user-supplied decision tolerance.
+11. an evidence-gated absolute 1-D amorphous plane-wall cooling estimate that requires thermal-property/ejection/mould-surface provenance and rejects semi-crystalline material into a phase-change-model hold;
+12. source-bound linear shrinkage compensation-range arithmetic that refuses unsourced generic shrinkage inputs and explicitly stops short of a released tool dimension;
+13. exact-grade, sample-specific moisture acceptance against a supplier-controlled limit with explicit measurement uncertainty and PASS / FAIL / INDETERMINATE states, without generating drying setpoints;
+14. exact-identity mould-height, opening-stroke, maximum-daylight, tie-bar-clearance and ejector-stroke fit screens;
+15. a declared-axis machine-suitability composer that preserves PASS / MARGINAL / FAIL / UNKNOWN without inventing a marginal threshold and requires `marginalBasisRef` for any MARGINAL assessment and forces UNKNOWN when a required axis is unresolved;
+16. hydraulic-diameter, uniform-channel-volume and circular-channel apparent wall-shear-rate screens with explicit non-Newtonian/pressure-loss boundaries;
+17. fail-closed pressure-loss modelling readiness that rejects MFR/MFI as a substitute for an explicit rheology model and blocks hydraulic/command pressure types;
+18. repeatability-aware gate-seal plateau analysis using a user-supplied decision tolerance.
 
 All new functions return structured unsupported states rather than silently inventing missing engineering meaning. The unit boundary also preserves SI prefix case across pressure, force, mass, length, area, volume, rates and diffusivity so ambiguous prefix changes are rejected rather than normalised.
 
@@ -92,7 +93,7 @@ Separate pure capacity screens now exist for clamp force, verified shot mass, sp
 
 ### P1 — thermal model depth
 
-The current added thermal function is deliberately only a **relative diffusion scaling screen**. An absolute cooling/solidification calculation should only be added after the implementation explicitly handles:
+The pure domain now includes both a relative diffusion scaling screen and a narrowly scoped **amorphous 1-D analytical cooling estimate**. The absolute estimate requires source-backed thermal diffusivity, an explicit ejection criterion and mould-surface-temperature basis, and it rejects semi-crystalline materials. Remaining thermal work is a validated semi-crystalline/phase-change treatment plus deeper boundary modelling that explicitly handles:
 
 - amorphous vs semi-crystalline applicability;
 - melt/mould/ejection temperature criterion;
