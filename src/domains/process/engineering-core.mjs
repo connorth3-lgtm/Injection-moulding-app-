@@ -1128,10 +1128,13 @@ export function screwSweptVolume({
   screwDiameter,
   screwStroke,
   injectionUnitConfigurationId,
+  screwGeometryBasisRef,
   provenance = null,
 } = {}) {
   const unitId = explicitIdentity(injectionUnitConfigurationId, 'injection-unit-configuration-id');
   if (!unitId.ok) return unitId;
+  const geometryRef = String(screwGeometryBasisRef || '').trim();
+  if (!geometryRef) return unsupported('screw-geometry-basis-reference-required', { field: 'screwGeometryBasisRef' });
   const diameter = convertPositiveBase(screwDiameter, LENGTH_TO_MM, 'screw-diameter', 'mm');
   if (!diameter.ok) return diameter;
   const stroke = convertPositiveBase(screwStroke, LENGTH_TO_MM, 'screw-stroke', 'mm');
@@ -1141,6 +1144,7 @@ export function screwSweptVolume({
   return supported(
     {
       injectionUnitConfigurationId: unitId.value.id,
+      screwGeometryBasisRef: geometryRef,
       screwDiameterMm: diameter.value.base,
       screwStrokeMm: stroke.value.base,
       screwCrossSectionAreaMm2: areaMm2,
@@ -1151,7 +1155,7 @@ export function screwSweptVolume({
       units: Object.freeze({ diameter: 'mm', stroke: 'mm', area: 'mm²', volume: 'cm³' }),
       assumptions: Object.freeze([
         'The calculation is geometric swept barrel volume: πD²/4 × stroke.',
-        'The entered diameter is the effective screw/barrel displacement diameter for the exact injection-unit configuration.',
+        'The entered diameter and stroke are tied to the explicit screw-geometry basis reference for the exact injection-unit configuration.',
         'Swept volume is not automatically delivered melt volume because non-return-valve backflow, compression, leakage, decompression and machine-specific signal definitions can change delivered material.',
       ]),
       provenance,
@@ -1164,10 +1168,16 @@ export function volumetricFlowFromScrewMotion({
   screwDiameter,
   screwLinearSpeed,
   injectionUnitConfigurationId,
+  screwGeometryBasisRef,
+  screwMotionBasisRef,
   provenance = null,
 } = {}) {
   const unitId = explicitIdentity(injectionUnitConfigurationId, 'injection-unit-configuration-id');
   if (!unitId.ok) return unitId;
+  const geometryRef = String(screwGeometryBasisRef || '').trim();
+  if (!geometryRef) return unsupported('screw-geometry-basis-reference-required', { field: 'screwGeometryBasisRef' });
+  const motionRef = String(screwMotionBasisRef || '').trim();
+  if (!motionRef) return unsupported('screw-motion-basis-reference-required', { field: 'screwMotionBasisRef' });
   const diameter = convertPositiveBase(screwDiameter, LENGTH_TO_MM, 'screw-diameter', 'mm');
   if (!diameter.ok) return diameter;
   const speed = convertPositiveBase(screwLinearSpeed, LINEAR_SPEED_TO_MM_S, 'screw-linear-speed', 'mm/s');
@@ -1177,6 +1187,8 @@ export function volumetricFlowFromScrewMotion({
   return supported(
     {
       injectionUnitConfigurationId: unitId.value.id,
+      screwGeometryBasisRef: geometryRef,
+      screwMotionBasisRef: motionRef,
       screwDiameterMm: diameter.value.base,
       screwLinearSpeedMmS: speed.value.base,
       screwCrossSectionAreaMm2: areaMm2,
@@ -1187,7 +1199,7 @@ export function volumetricFlowFromScrewMotion({
       units: Object.freeze({ diameter: 'mm', speed: 'mm/s', flow: 'cm³/s' }),
       assumptions: Object.freeze([
         'The geometric rate is calculated from screw cross-sectional area × actual forward screw speed.',
-        'Actual screw motion is required; a controller command is not automatically equivalent to actual motion.',
+        'Actual screw motion is required and retained with an explicit motion-basis reference; a controller command is not automatically equivalent to actual motion.',
         'This is displaced barrel volume, not proven cavity volumetric flow. Check-ring behaviour, compressibility, leakage, decompression and machine-specific signal scaling remain outside the geometry.',
       ]),
       provenance,
@@ -1200,10 +1212,16 @@ export function screwSpeedForVolumetricFlow({
   screwDiameter,
   targetVolumetricFlow,
   injectionUnitConfigurationId,
+  screwGeometryBasisRef,
+  targetVolumetricFlowBasisRef,
   provenance = null,
 } = {}) {
   const unitId = explicitIdentity(injectionUnitConfigurationId, 'injection-unit-configuration-id');
   if (!unitId.ok) return unitId;
+  const geometryRef = String(screwGeometryBasisRef || '').trim();
+  if (!geometryRef) return unsupported('screw-geometry-basis-reference-required', { field: 'screwGeometryBasisRef' });
+  const flowRef = String(targetVolumetricFlowBasisRef || '').trim();
+  if (!flowRef) return unsupported('target-volumetric-flow-basis-reference-required', { field: 'targetVolumetricFlowBasisRef' });
   const diameter = convertPositiveBase(screwDiameter, LENGTH_TO_MM, 'screw-diameter', 'mm');
   if (!diameter.ok) return diameter;
   const flow = convertPositiveBase(targetVolumetricFlow, VOLUME_RATE_TO_CM3_S, 'target-volumetric-flow', 'cm3/s');
@@ -1213,6 +1231,8 @@ export function screwSpeedForVolumetricFlow({
   return supported(
     {
       injectionUnitConfigurationId: unitId.value.id,
+      screwGeometryBasisRef: geometryRef,
+      targetVolumetricFlowBasisRef: flowRef,
       screwDiameterMm: diameter.value.base,
       targetVolumetricFlowCm3S: flow.value.base,
       screwCrossSectionAreaMm2: areaMm2,
@@ -1223,7 +1243,7 @@ export function screwSpeedForVolumetricFlow({
       units: Object.freeze({ diameter: 'mm', flow: 'cm³/s', speed: 'mm/s' }),
       assumptions: Object.freeze([
         'The function inverts geometric screw displacement Q = πD²v/4.',
-        'The result is a geometric target for screw motion, not a released machine velocity setpoint.',
+        'The result is a geometric target for screw motion tied to the explicit target-flow and screw-geometry basis references, not a released machine velocity setpoint.',
         'The target machine must separately be shown capable of the required volumetric rate, acceleration and pressure without becoming pressure-limited.',
       ]),
       provenance,
@@ -1236,14 +1256,20 @@ export function volumetricTransferBetweenScrews({
   sourceScrewDiameter,
   sourceScrewLinearSpeed,
   sourceInjectionUnitConfigurationId,
+  sourceScrewGeometryBasisRef,
+  sourceScrewMotionBasisRef,
   targetScrewDiameter,
   targetInjectionUnitConfigurationId,
+  targetScrewGeometryBasisRef,
+  transferStudyBasisRef,
   provenance = null,
 } = {}) {
   const source = volumetricFlowFromScrewMotion({
     screwDiameter: sourceScrewDiameter,
     screwLinearSpeed: sourceScrewLinearSpeed,
     injectionUnitConfigurationId: sourceInjectionUnitConfigurationId,
+    screwGeometryBasisRef: sourceScrewGeometryBasisRef,
+    screwMotionBasisRef: sourceScrewMotionBasisRef,
     provenance,
   });
   if (!source.ok) return source;
@@ -1251,13 +1277,19 @@ export function volumetricTransferBetweenScrews({
     screwDiameter: targetScrewDiameter,
     targetVolumetricFlow: { value: source.value.geometricVolumetricFlowCm3S, unit: 'cm3/s' },
     injectionUnitConfigurationId: targetInjectionUnitConfigurationId,
+    screwGeometryBasisRef: targetScrewGeometryBasisRef,
+    targetVolumetricFlowBasisRef: transferStudyBasisRef,
     provenance,
   });
   if (!target.ok) return target;
   return supported(
     {
       sourceInjectionUnitConfigurationId: source.value.injectionUnitConfigurationId,
+      sourceScrewGeometryBasisRef: source.value.screwGeometryBasisRef,
+      sourceScrewMotionBasisRef: source.value.screwMotionBasisRef,
       targetInjectionUnitConfigurationId: target.value.injectionUnitConfigurationId,
+      targetScrewGeometryBasisRef: target.value.screwGeometryBasisRef,
+      transferStudyBasisRef: target.value.targetVolumetricFlowBasisRef,
       sourceScrewDiameterMm: source.value.screwDiameterMm,
       sourceScrewLinearSpeedMmS: source.value.screwLinearSpeedMmS,
       geometricVolumetricFlowCm3S: source.value.geometricVolumetricFlowCm3S,
@@ -1269,7 +1301,7 @@ export function volumetricTransferBetweenScrews({
       equationId: ENGINEERING_EQUATION_IDS.volumetricTransferBetweenScrews,
       units: Object.freeze({ diameter: 'mm', speed: 'mm/s', flow: 'cm³/s' }),
       assumptions: Object.freeze([
-        'This preserves only the same geometric screw-displacement volumetric rate between two explicitly identified injection-unit configurations.',
+        'This preserves only the same geometric screw-displacement volumetric rate between two explicitly identified injection-unit configurations using referenced source motion, source/target screw geometry and transfer-study basis.',
         'It does not prove equivalent cavity fill, melt-front velocity, shear history, pressure demand, acceleration response, check-ring behaviour, melt condition or part quality.',
         'A transferred process still requires machine capability checks, actual trace comparison and product/process validation rather than copied screen numbers alone.',
       ]),
