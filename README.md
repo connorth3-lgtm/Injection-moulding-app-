@@ -17,7 +17,7 @@ The project maintainers do not intend to seek patent protection over implementat
 
 ## Current release lanes
 
-- PWA / browser shell: `2026.10.01.2`
+- PWA / browser shell: `2026.10.01.3`
 - Open Windows desktop: `2026.09.29.1`
 - Training content: `2026.08.26.1`
 - Audited assessment bank: `2026.08.30.1`
@@ -63,6 +63,8 @@ A separate **50-pass real measured-evidence deep dive** is defined in `data/meas
 The controlled move toward real de-identified evidence is defined in `sources/REAL_PROCESS_DATA_PILOT_PROTOCOL.md` and `data/real-process-data-pilot-template.csv`. Pilot data should preserve shot/cavity identity within the prepared file, actual process signals, material/thermal state, quality outcomes and intervention timing while excluding customer/person identifiers and avoiding public upload of raw production data. Public measured-data benchmark work remains separate from an authorised site pilot: source files must be fingerprinted and profiled before any claim that MouldMaster has validated a relationship against real rows.
 
 ## Guided curriculum and specialist extensions
+
+The current Book release also includes **18 governed synthetic worked engineering cases** and **8 exact-hash instructional engineering diagrams**. The diagrams are mechanism explanations rather than scale drawings, CFD/FEA outputs, mould designs or safety instructions, and both cases and diagrams remain inside the independent human Book-SME HOLD.
 
 The canonical completion pathway remains **120 core lessons**. `curriculum-integration.js` links every core lesson to two valid formative activities drawn from the existing diagnostic, material-behaviour and process-data practice layers, with a return-to-lesson flow so learners move from theory → practice → evidence → explanation.
 
