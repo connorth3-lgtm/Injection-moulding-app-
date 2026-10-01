@@ -56,7 +56,9 @@ assert.equal(separation.metric, 'symmetric-unweighted-rms-group-spread-separatio
 const cavitySummary = cavitySpecificSummary({
   measurementUnit: 'g',
   samplingBasis: 'same-stabilised-run/cavity-labelled-parts',
+  samplingBasisRef: 'cavity-labelled-sampling-plan-rev-A',
   measurementSystemAdequate: true,
+  measurementSystemBasisRef: 'part-mass-msa-rev-A',
   minimumPerCavity: 3,
   cavities: [
     { cavityId: 'C1', values: [10.00, 10.02, 9.98] },
@@ -66,6 +68,8 @@ const cavitySummary = cavitySpecificSummary({
 });
 assert.equal(cavitySummary.reason, null);
 assert.equal(cavitySummary.result.cavityCount, 3);
+assert.equal(cavitySummary.result.samplingBasisRef, 'cavity-labelled-sampling-plan-rev-A');
+assert.equal(cavitySummary.result.measurementSystemBasisRef, 'part-mass-msa-rev-A');
 assert.equal(cavitySummary.result.minimumMeanCavityId, 'C3');
 assert.equal(cavitySummary.result.maximumMeanCavityId, 'C2');
 assert.ok(Math.abs(cavitySummary.result.rangeOfCavityMeans - 0.15) < 1e-12);
@@ -76,6 +80,7 @@ assert.match(cavitySummary.assumptions.join(' '), /Cavity identity is preserved/
 assert.equal(cavitySpecificSummary({
   measurementUnit: 'g',
   samplingBasis: 'same-run',
+  samplingBasisRef: 'sampling-plan-A',
   measurementSystemAdequate: false,
   cavities: [
     { cavityId: 'C1', values: [10, 10, 10] },
@@ -87,6 +92,30 @@ assert.equal(cavitySpecificSummary({
   measurementUnit: 'g',
   samplingBasis: 'same-run',
   measurementSystemAdequate: true,
+  measurementSystemBasisRef: 'msa-A',
+  cavities: [
+    { cavityId: 'C1', values: [10, 10, 10] },
+    { cavityId: 'C2', values: [10, 10, 10] },
+  ],
+}).reason, 'sampling-basis-reference-required');
+
+assert.equal(cavitySpecificSummary({
+  measurementUnit: 'g',
+  samplingBasis: 'same-run',
+  samplingBasisRef: 'sampling-plan-A',
+  measurementSystemAdequate: true,
+  cavities: [
+    { cavityId: 'C1', values: [10, 10, 10] },
+    { cavityId: 'C2', values: [10, 10, 10] },
+  ],
+}).reason, 'measurement-system-basis-required');
+
+assert.equal(cavitySpecificSummary({
+  measurementUnit: 'g',
+  samplingBasis: 'same-run',
+  samplingBasisRef: 'sampling-plan-A',
+  measurementSystemAdequate: true,
+  measurementSystemBasisRef: 'msa-A',
   cavities: [
     { cavityId: 'C1', values: [10, 10, 10] },
     { cavityId: 'C1', values: [10, 10, 10] },
@@ -96,7 +125,9 @@ assert.equal(cavitySpecificSummary({
 assert.equal(cavitySpecificSummary({
   measurementUnit: 'g',
   samplingBasis: 'same-run',
+  samplingBasisRef: 'sampling-plan-A',
   measurementSystemAdequate: true,
+  measurementSystemBasisRef: 'msa-A',
   minimumPerCavity: 3,
   cavities: [
     { cavityId: 'C1', values: [10, 10] },
