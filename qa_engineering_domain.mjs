@@ -1334,45 +1334,140 @@ assert.equal(
   'moisture units must use the governed canonical spelling rather than guessed case',
 );
 
+const gateStudyContext = {
+  materialGradeId: 'PA66-GF30-grade-X',
+  mouldConfigurationId: 'MOULD-142/rev-C',
+  gateId: 'gate-A',
+  massMeasurementScopeId: 'single-part-after-standard-conditioning',
+  thermalStateRef: 'validated-mould-thermal-state/trial-18',
+  measurementSystemBasisRef: 'balance-msa/rev-B',
+  studyBasisRef: 'gate-seal-study/protocol-rev-C',
+  plateauToleranceBasisRef: 'mass-repeatability-decision-rule/rev-A',
+};
+
+assert.equal(
+  gateSealPlateauAssessment({
+    plateauToleranceMass: { value: 0.03, unit: 'g' },
+    points: [],
+  }).reason,
+  'missing-material-grade-id',
+);
+
 const gateStudy = gateSealPlateauAssessment({
+  ...gateStudyContext,
   plateauToleranceMass: { value: 0.03, unit: 'g' },
   points: [
-    { holdTime: { value: 2, unit: 's' }, partMasses: [{ value: 40.00, unit: 'g' }, { value: 40.02, unit: 'g' }] },
-    { holdTime: { value: 4, unit: 's' }, partMasses: [{ value: 40.50, unit: 'g' }, { value: 40.52, unit: 'g' }] },
-    { holdTime: { value: 6, unit: 's' }, partMasses: [{ value: 40.70, unit: 'g' }, { value: 40.72, unit: 'g' }] },
-    { holdTime: { value: 8, unit: 's' }, partMasses: [{ value: 40.71, unit: 'g' }, { value: 40.72, unit: 'g' }] },
-    { holdTime: { value: 10, unit: 's' }, partMasses: [{ value: 40.72, unit: 'g' }, { value: 40.71, unit: 'g' }] },
+    {
+      holdTime: { value: 2, unit: 's' },
+      partMasses: [{ value: 40.00, unit: 'g' }, { value: 40.02, unit: 'g' }],
+      replicateIds: ['h2-r1', 'h2-r2'],
+    },
+    {
+      holdTime: { value: 4, unit: 's' },
+      partMasses: [{ value: 40.50, unit: 'g' }, { value: 40.52, unit: 'g' }],
+      replicateIds: ['h4-r1', 'h4-r2'],
+    },
+    {
+      holdTime: { value: 6, unit: 's' },
+      partMasses: [{ value: 40.70, unit: 'g' }, { value: 40.72, unit: 'g' }],
+      replicateIds: ['h6-r1', 'h6-r2'],
+    },
+    {
+      holdTime: { value: 8, unit: 's' },
+      partMasses: [{ value: 40.71, unit: 'g' }, { value: 40.72, unit: 'g' }],
+      replicateIds: ['h8-r1', 'h8-r2'],
+    },
+    {
+      holdTime: { value: 10, unit: 's' },
+      partMasses: [{ value: 40.72, unit: 'g' }, { value: 40.71, unit: 'g' }],
+      replicateIds: ['h10-r1', 'h10-r2'],
+    },
   ],
 });
 assert.equal(gateStudy.ok, true);
+assert.equal(gateStudy.value.materialGradeId, 'PA66-GF30-grade-X');
+assert.equal(gateStudy.value.mouldConfigurationId, 'MOULD-142/rev-C');
+assert.equal(gateStudy.value.gateId, 'gate-A');
+assert.equal(gateStudy.value.massMeasurementScopeId, 'single-part-after-standard-conditioning');
 assert.equal(gateStudy.value.conclusion, 'plateau-consistent-with-entered-tolerance');
 assert.equal(gateStudy.value.plateau.earliestConsistentHoldTimeS, 6);
 assert.equal(gateStudy.value.plateau.consecutivePointCount, 3);
 assert.match(gateStudy.assumptions.join(' '), /not universal proof of an exact physical gate-freeze instant/i);
 
 const noGatePlateau = gateSealPlateauAssessment({
+  ...gateStudyContext,
+  studyBasisRef: 'gate-seal-study/no-plateau-fixture',
   plateauToleranceMass: { value: 0.001, unit: 'g' },
   points: [
-    { holdTime: { value: 2, unit: 's' }, partMasses: [{ value: 40.00, unit: 'g' }, { value: 40.01, unit: 'g' }] },
-    { holdTime: { value: 4, unit: 's' }, partMasses: [{ value: 40.20, unit: 'g' }, { value: 40.21, unit: 'g' }] },
-    { holdTime: { value: 6, unit: 's' }, partMasses: [{ value: 40.30, unit: 'g' }, { value: 40.31, unit: 'g' }] },
+    {
+      holdTime: { value: 2, unit: 's' },
+      partMasses: [{ value: 40.00, unit: 'g' }, { value: 40.01, unit: 'g' }],
+      replicateIds: ['np-h2-r1', 'np-h2-r2'],
+    },
+    {
+      holdTime: { value: 4, unit: 's' },
+      partMasses: [{ value: 40.20, unit: 'g' }, { value: 40.21, unit: 'g' }],
+      replicateIds: ['np-h4-r1', 'np-h4-r2'],
+    },
+    {
+      holdTime: { value: 6, unit: 's' },
+      partMasses: [{ value: 40.30, unit: 'g' }, { value: 40.31, unit: 'g' }],
+      replicateIds: ['np-h6-r1', 'np-h6-r2'],
+    },
   ],
 });
 assert.equal(noGatePlateau.ok, true);
 assert.equal(noGatePlateau.value.conclusion, 'no-plateau-within-entered-range');
 assert.equal(noGatePlateau.value.plateau, null);
+
 assert.equal(
   gateSealPlateauAssessment({
+    ...gateStudyContext,
     plateauToleranceMass: { value: 0.02, unit: 'g' },
     points: [
-      { holdTime: { value: 2, unit: 's' }, partMasses: [{ value: 40, unit: 'g' }] },
-      { holdTime: { value: 4, unit: 's' }, partMasses: [{ value: 40.2, unit: 'g' }, { value: 40.21, unit: 'g' }] },
-      { holdTime: { value: 6, unit: 's' }, partMasses: [{ value: 40.3, unit: 'g' }, { value: 40.31, unit: 'g' }] },
+      {
+        holdTime: { value: 2, unit: 's' },
+        partMasses: [{ value: 40, unit: 'g' }],
+        replicateIds: ['short-h2-r1'],
+      },
+      {
+        holdTime: { value: 4, unit: 's' },
+        partMasses: [{ value: 40.2, unit: 'g' }, { value: 40.21, unit: 'g' }],
+        replicateIds: ['short-h4-r1', 'short-h4-r2'],
+      },
+      {
+        holdTime: { value: 6, unit: 's' },
+        partMasses: [{ value: 40.3, unit: 'g' }, { value: 40.31, unit: 'g' }],
+        replicateIds: ['short-h6-r1', 'short-h6-r2'],
+      },
     ],
   }).reason,
   'insufficient-replicates',
 );
 
+assert.equal(
+  gateSealPlateauAssessment({
+    ...gateStudyContext,
+    plateauToleranceMass: { value: 0.02, unit: 'g' },
+    points: [
+      {
+        holdTime: { value: 2, unit: 's' },
+        partMasses: [{ value: 40.0, unit: 'g' }, { value: 40.01, unit: 'g' }],
+      },
+      {
+        holdTime: { value: 4, unit: 's' },
+        partMasses: [{ value: 40.2, unit: 'g' }, { value: 40.21, unit: 'g' }],
+        replicateIds: ['align-h4-r1', 'align-h4-r2'],
+      },
+      {
+        holdTime: { value: 6, unit: 's' },
+        partMasses: [{ value: 40.3, unit: 'g' }, { value: 40.31, unit: 'g' }],
+        replicateIds: ['align-h6-r1', 'align-h6-r2'],
+      },
+    ],
+  }).reason,
+  'replicate-id-alignment-required',
+);
 
 const calculationRegistry = JSON.parse(
   fs.readFileSync(new URL('./data/engineering-calculation-registry-v1.json', import.meta.url), 'utf8'),
