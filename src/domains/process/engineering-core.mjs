@@ -799,7 +799,7 @@ export function circularChannelApparentWallShearRate({
   const d = convertPositiveBase(diameter, LENGTH_TO_MM, 'diameter', 'mm');
   if (!d.ok) return d;
   const flowMm3S = flow.value.base * 1000;
-  const apparentShearRatePerS = 32 * flowMm3S / (Math.PI * d.value.base ** 3);
+  const apparentWallShearRatePerS = 32 * flowMm3S / (Math.PI * d.value.base ** 3);
   return supported(
     {
       apparentWallShearRatePerS,
