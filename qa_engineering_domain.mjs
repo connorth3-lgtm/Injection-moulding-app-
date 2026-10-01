@@ -164,6 +164,12 @@ assert.equal(cavityPressure.equationId, 'EQ-PRESS-001');
 assert.match(cavityPressure.assumptions.join(' '), /does not convert one pressure location/i);
 assert.equal(pressureValue({ pressure: { value: 55, unit: 'MPa' } }).reason, 'pressure-kind-required');
 
+assert.equal(
+  pressureValue({ pressure: { value: 55, unit: 'mPa' }, kind: 'cavity' }).reason,
+  'unsupported-pressure-unit',
+  'mPa must never be silently interpreted as MPa',
+);
+
 
 const measuredDrop = measuredPressureDifference({
   upstreamPressure: { value: 95, unit: 'MPa' },
@@ -267,6 +273,15 @@ assert.equal(clampCapacity.value.utilisationPct, 75);
 assert.equal(clampCapacity.value.capacityMarginKilonewtons, 300);
 assert.equal(clampCapacity.value.exceedsAvailableCapacity, false);
 assert.match(clampCapacity.assumptions.join(' '), /does not determine an appropriate operating clamp setpoint/i);
+
+assert.equal(
+  clampCapacityAssessment({
+    requiredClampForce: { value: 900, unit: 'kN' },
+    availableClampForce: { value: 1200000, unit: 'mN' },
+  }).reason,
+  'unsupported-available-clamp-force-unit',
+  'mN must never be silently interpreted as MN',
+);
 
 const pressureCapacity = specificPlasticPressureCapacityAssessment({
   requiredPressure: { value: 120, unit: 'MPa' },
@@ -434,11 +449,28 @@ const marginalSummary = machineSuitabilitySummary({
   requiredAxisIds: ['mould-height', 'site-specific-axis'],
   assessments: {
     'mould-height': heightFit,
-    'site-specific-axis': { ok: true, value: { state: 'MARGINAL' } },
+    'site-specific-axis': { ok: true, value: { state: 'MARGINAL' }, marginalBasisRef: 'approved-site-machine-fit-rule-rev-3' },
   },
 });
 assert.equal(marginalSummary.value.summaryState, 'MARGINAL');
-assert.match(marginalSummary.assumptions.join(' '), /only when an upstream assessment explicitly supplies that state/i);
+assert.match(marginalSummary.assumptions.join(' '), /non-empty marginalBasisRef/i);
+
+const marginalWithoutBasis = machineSuitabilitySummary({
+  machineConfigurationId: commonFitIds.machineConfigurationId,
+  injectionUnitConfigurationId: 'IU-07/55mm-screw',
+  mouldConfigurationId: commonFitIds.mouldConfigurationId,
+  basis: 'synthetic declared-axis fixture',
+  requiredAxisIds: ['mould-height', 'site-specific-axis'],
+  assessments: {
+    'mould-height': heightFit,
+    'site-specific-axis': { ok: true, value: { state: 'MARGINAL' } },
+  },
+});
+assert.equal(marginalWithoutBasis.value.summaryState, 'UNKNOWN');
+assert.equal(
+  marginalWithoutBasis.value.axes.find(axis => axis.id === 'site-specific-axis').reason,
+  'marginal-basis-required',
+);
 
 
 const hydraulic = hydraulicDiameter({
@@ -518,6 +550,32 @@ const pressureLossNoFlow = pressureLossModelReadiness({
   downstreamLocationId: 'cavity-A',
 });
 assert.ok(pressureLossNoFlow.value.blockers.includes('volumetric-flow'));
+
+const pressureLossHydraulicBlocked = pressureLossModelReadiness({
+  materialGradeId: 'grade',
+  rheologyModelRef: 'rheo',
+  thermalStateRef: 'thermal',
+  flowPathGeometryRef: 'geometry',
+  volumetricFlow: { value: 55, unit: 'cm3/s' },
+  upstreamPressureKind: 'hydraulic',
+  downstreamPressureKind: 'cavity',
+  upstreamLocationId: 'hydraulic-line-A',
+  downstreamLocationId: 'cavity-A',
+});
+assert.ok(pressureLossHydraulicBlocked.value.blockers.includes('upstream-pressure-kind'));
+
+const pressureLossCommandBlocked = pressureLossModelReadiness({
+  materialGradeId: 'grade',
+  rheologyModelRef: 'rheo',
+  thermalStateRef: 'thermal',
+  flowPathGeometryRef: 'geometry',
+  volumetricFlow: { value: 55, unit: 'cm3/s' },
+  upstreamPressureKind: 'nozzle',
+  downstreamPressureKind: 'pack-command',
+  upstreamLocationId: 'nozzle-A',
+  downstreamLocationId: 'pack-command',
+});
+assert.ok(pressureLossCommandBlocked.value.blockers.includes('downstream-pressure-kind'));
 
 const rates = fillStageRates({
   fillTime: { value: 2, unit: 's' },
