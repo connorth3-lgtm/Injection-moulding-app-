@@ -198,8 +198,7 @@
       ],
       "scope": "Exact-identity geometric fit screen for mould height.",
       "evidenceAnchors": [
-        "ISO-20430-2020",
-        "OEM-MACHINE-DOCUMENTATION"
+        "ISO-20430-2020"
       ],
       "uncertaintyBoundary": "Does not prove installation, platen/load, tie-bar, ejector, nozzle, daylight or safety compatibility."
     },
@@ -219,8 +218,7 @@
       ],
       "scope": "Exact-identity opening-stroke capacity screen.",
       "evidenceAnchors": [
-        "ISO-20430-2020",
-        "OEM-MACHINE-DOCUMENTATION"
+        "ISO-20430-2020"
       ],
       "uncertaintyBoundary": "Required removal/action stroke must be established independently; no ejection, daylight or safety compatibility is inferred."
     },
@@ -242,8 +240,7 @@
       ],
       "scope": "Exact-identity geometric daylight screen on one explicitly common datum/definition basis.",
       "evidenceAnchors": [
-        "ISO-20430-2020",
-        "OEM-MACHINE-DOCUMENTATION"
+        "ISO-20430-2020"
       ],
       "uncertaintyBoundary": "Does not substitute for opening-stroke, ejector, tie-bar or safety checks."
     },
@@ -265,8 +262,7 @@
       ],
       "scope": "Orientation-explicit tie-bar clear-opening geometric screen.",
       "evidenceAnchors": [
-        "ISO-20430-2020",
-        "OEM-MACHINE-DOCUMENTATION"
+        "ISO-20430-2020"
       ],
       "uncertaintyBoundary": "No automatic mould rotation; hoses, manifolds, protrusions, handling path and ancillary hardware are excluded unless included in the entered envelope."
     },
@@ -285,8 +281,7 @@
       ],
       "scope": "Exact-identity ejector-stroke screen.",
       "evidenceAnchors": [
-        "ISO-20430-2020",
-        "OEM-MACHINE-DOCUMENTATION"
+        "ISO-20430-2020"
       ],
       "uncertaintyBoundary": "Does not prove ejector force, pattern, coupling, timing or interference compatibility."
     },
@@ -309,8 +304,7 @@
       ],
       "scope": "Composition of explicitly declared machine/mould suitability axes without inventing missing engineering meaning.",
       "evidenceAnchors": [
-        "ISO-20430-2020",
-        "OEM-MACHINE-DOCUMENTATION"
+        "ISO-20430-2020"
       ],
       "uncertaintyBoundary": "PASS applies only to the declared axes and is not a universal declaration of safety, installability, validation or production readiness; unresolved required axes force UNKNOWN unless a known FAIL already dominates."
     },
