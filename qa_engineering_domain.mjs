@@ -266,19 +266,47 @@ assert.equal(
   'Mm2 must never be silently interpreted as mm2',
 );
 
+const machineCapacityIds = {
+  machineConfigurationId: 'IMM-07/config-A',
+  injectionUnitConfigurationId: machineCapacityIds.injectionUnitConfigurationId,
+};
+
 assert.equal(
   shotCapacityAssessment({
     requiredShotMass: { value: 55, unit: 'g' },
     usableMachineShotMass: { value: 100, unit: 'g' },
   }).reason,
+  'missing-machine-configuration-id',
+);
+assert.equal(
+  shotCapacityAssessment({
+    ...machineCapacityIds,
+    requiredShotMass: { value: 55, unit: 'g' },
+    usableMachineShotMass: { value: 100, unit: 'g' },
+    capacityBasisRef: 'oem-shot-capacity-basis-rev-A',
+  }).reason,
   'capacity-basis-unverified',
 );
+assert.equal(
+  shotCapacityAssessment({
+    ...machineCapacityIds,
+    requiredShotMass: { value: 55, unit: 'g' },
+    usableMachineShotMass: { value: 100, unit: 'g' },
+    capacityBasisVerified: true,
+  }).reason,
+  'capacity-basis-reference-required',
+);
 const shotCapacity = shotCapacityAssessment({
+  ...machineCapacityIds,
   requiredShotMass: { value: 55, unit: 'g' },
   usableMachineShotMass: { value: 0.1, unit: 'kg' },
   capacityBasisVerified: true,
+  capacityBasisRef: 'oem-shot-capacity-basis-rev-A',
 });
 assert.equal(shotCapacity.ok, true);
+assert.equal(shotCapacity.value.machineConfigurationId, machineCapacityIds.machineConfigurationId);
+assert.equal(shotCapacity.value.injectionUnitConfigurationId, machineCapacityIds.injectionUnitConfigurationId);
+assert.equal(shotCapacity.value.capacityBasisRef, 'oem-shot-capacity-basis-rev-A');
 assert.equal(shotCapacity.value.utilisationPct, 55);
 assert.equal(shotCapacity.value.capacityMarginG, 45);
 assert.equal(shotCapacity.value.exceedsUsableCapacity, false);
@@ -302,12 +330,15 @@ assert.equal(
   'runner mass must preserve SI prefix case',
 );
 
-
 const clampCapacity = clampCapacityAssessment({
+  machineConfigurationId: machineCapacityIds.machineConfigurationId,
+  capacityBasisRef: 'oem-clamp-capacity-rev-A',
   requiredClampForce: { value: 900, unit: 'kN' },
   availableClampForce: { value: 1.2, unit: 'MN' },
 });
 assert.equal(clampCapacity.ok, true);
+assert.equal(clampCapacity.value.machineConfigurationId, machineCapacityIds.machineConfigurationId);
+assert.equal(clampCapacity.value.capacityBasisRef, 'oem-clamp-capacity-rev-A');
 assert.equal(clampCapacity.value.utilisationPct, 75);
 assert.equal(clampCapacity.value.capacityMarginKilonewtons, 300);
 assert.equal(clampCapacity.value.exceedsAvailableCapacity, false);
@@ -315,6 +346,8 @@ assert.match(clampCapacity.assumptions.join(' '), /does not determine an appropr
 
 assert.equal(
   clampCapacityAssessment({
+    machineConfigurationId: machineCapacityIds.machineConfigurationId,
+    capacityBasisRef: 'oem-clamp-capacity-rev-A',
     requiredClampForce: { value: 900, unit: 'kN' },
     availableClampForce: { value: 1200000, unit: 'mN' },
   }).reason,
@@ -323,6 +356,8 @@ assert.equal(
 );
 assert.equal(
   clampCapacityAssessment({
+    machineConfigurationId: machineCapacityIds.machineConfigurationId,
+    capacityBasisRef: 'oem-clamp-capacity-rev-A',
     requiredClampForce: { value: 900, unit: 'kn' },
     availableClampForce: { value: 1200, unit: 'kN' },
   }).reason,
@@ -331,10 +366,14 @@ assert.equal(
 );
 
 const pressureCapacity = specificPlasticPressureCapacityAssessment({
+  ...machineCapacityIds,
+  capacityBasisRef: 'oem-specific-plastic-pressure-rev-A',
   requiredPressure: { value: 120, unit: 'MPa' },
   availableMachinePressure: { value: 1500, unit: 'bar' },
 });
 assert.equal(pressureCapacity.ok, true);
+assert.equal(pressureCapacity.value.machineConfigurationId, machineCapacityIds.machineConfigurationId);
+assert.equal(pressureCapacity.value.injectionUnitConfigurationId, machineCapacityIds.injectionUnitConfigurationId);
 assert.equal(pressureCapacity.value.requiredMegapascals, 120);
 assert.equal(pressureCapacity.value.availableMegapascals, 150);
 assert.equal(pressureCapacity.value.utilisationPct, 80);
@@ -342,20 +381,30 @@ assert.equal(pressureCapacity.value.capacityMarginMegapascals, 30);
 assert.match(pressureCapacity.assumptions.join(' '), /hydraulic pressure must not be substituted/i);
 
 const flowCapacity = volumetricFlowCapacityAssessment({
+  ...machineCapacityIds,
+  capacityBasisRef: 'oem-volumetric-flow-capacity-rev-A',
   requiredFlow: { value: 200, unit: 'cm³/s' },
   availableMachineFlow: { value: 15, unit: 'L/min' },
 });
 assert.equal(flowCapacity.ok, true);
+assert.equal(flowCapacity.value.machineConfigurationId, machineCapacityIds.machineConfigurationId);
+assert.equal(flowCapacity.value.injectionUnitConfigurationId, machineCapacityIds.injectionUnitConfigurationId);
 assert.equal(flowCapacity.value.requiredCm3S, 200);
 assert.ok(Math.abs(flowCapacity.value.availableCm3S - 250) < 1e-12);
 assert.ok(Math.abs(flowCapacity.value.utilisationPct - 80) < 1e-12);
 assert.ok(Math.abs(flowCapacity.value.capacityMarginCm3S - 50) < 1e-12);
 
 const plasticisingCapacity = plasticisingThroughputAssessment({
+  ...machineCapacityIds,
+  materialGradeId: 'PA66-GF30-grade-X',
+  capacityBasisRef: 'oem-grade-specific-plasticising-trial-rev-A',
   requiredMassRate: { value: 18, unit: 'kg/h' },
   availablePlasticisingRate: { value: 30, unit: 'kg/h' },
 });
 assert.equal(plasticisingCapacity.ok, true);
+assert.equal(plasticisingCapacity.value.machineConfigurationId, machineCapacityIds.machineConfigurationId);
+assert.equal(plasticisingCapacity.value.injectionUnitConfigurationId, machineCapacityIds.injectionUnitConfigurationId);
+assert.equal(plasticisingCapacity.value.materialGradeId, 'PA66-GF30-grade-X');
 assert.equal(plasticisingCapacity.value.requiredGS, 5);
 assert.ok(Math.abs(plasticisingCapacity.value.availableGS - (30 * 1000 / 3600)) < 1e-12);
 assert.ok(Math.abs(plasticisingCapacity.value.utilisationPct - 60) < 1e-12);
@@ -442,7 +491,7 @@ assert.equal(
 
 const suitabilityUnknown = machineSuitabilitySummary({
   machineConfigurationId: commonFitIds.machineConfigurationId,
-  injectionUnitConfigurationId: 'IU-07/55mm-screw',
+  injectionUnitConfigurationId: machineCapacityIds.injectionUnitConfigurationId,
   mouldConfigurationId: commonFitIds.mouldConfigurationId,
   basis: 'synthetic complete-machine-screen fixture',
   requiredAxisIds: ['mould-height', 'opening-stroke', 'daylight', 'tie-bars', 'ejector', 'shot'],
@@ -461,7 +510,7 @@ assert.equal(suitabilityUnknown.value.coverageComplete, false);
 
 const suitabilityPass = machineSuitabilitySummary({
   machineConfigurationId: commonFitIds.machineConfigurationId,
-  injectionUnitConfigurationId: 'IU-07/55mm-screw',
+  injectionUnitConfigurationId: machineCapacityIds.injectionUnitConfigurationId,
   mouldConfigurationId: commonFitIds.mouldConfigurationId,
   basis: 'synthetic declared-axis fixture',
   requiredAxisIds: ['mould-height', 'opening-stroke', 'ejector', 'shot'],
@@ -477,9 +526,69 @@ assert.equal(suitabilityPass.value.summaryState, 'PASS');
 assert.equal(suitabilityPass.value.coverageComplete, true);
 assert.match(suitabilityPass.assumptions.join(' '), /not a universal declaration/i);
 
+const wrongMachineShot = shotCapacityAssessment({
+  machineConfigurationId: 'IMM-99/config-Z',
+  injectionUnitConfigurationId: machineCapacityIds.injectionUnitConfigurationId,
+  requiredShotMass: { value: 55, unit: 'g' },
+  usableMachineShotMass: { value: 100, unit: 'g' },
+  capacityBasisVerified: true,
+  capacityBasisRef: 'oem-shot-capacity-other-machine',
+});
+assert.equal(wrongMachineShot.ok, true);
+const crossMachineSummary = machineSuitabilitySummary({
+  machineConfigurationId: commonFitIds.machineConfigurationId,
+  injectionUnitConfigurationId: machineCapacityIds.injectionUnitConfigurationId,
+  mouldConfigurationId: commonFitIds.mouldConfigurationId,
+  basis: 'identity-mismatch-fixture',
+  requiredAxisIds: ['shot'],
+  assessments: { shot: wrongMachineShot },
+});
+assert.equal(crossMachineSummary.value.summaryState, 'UNKNOWN');
+assert.equal(crossMachineSummary.value.axes[0].reason, 'machine-configuration-mismatch');
+
+const wrongInjectionShot = shotCapacityAssessment({
+  machineConfigurationId: commonFitIds.machineConfigurationId,
+  injectionUnitConfigurationId: 'IU-07/40mm-screw',
+  requiredShotMass: { value: 55, unit: 'g' },
+  usableMachineShotMass: { value: 100, unit: 'g' },
+  capacityBasisVerified: true,
+  capacityBasisRef: 'oem-shot-capacity-other-injection-unit',
+});
+assert.equal(wrongInjectionShot.ok, true);
+const crossInjectionSummary = machineSuitabilitySummary({
+  machineConfigurationId: commonFitIds.machineConfigurationId,
+  injectionUnitConfigurationId: machineCapacityIds.injectionUnitConfigurationId,
+  mouldConfigurationId: commonFitIds.mouldConfigurationId,
+  basis: 'identity-mismatch-fixture',
+  requiredAxisIds: ['shot'],
+  assessments: { shot: wrongInjectionShot },
+});
+assert.equal(crossInjectionSummary.value.summaryState, 'UNKNOWN');
+assert.equal(crossInjectionSummary.value.axes[0].reason, 'injection-unit-configuration-mismatch');
+
+const wrongMouldHeight = mouldHeightFit({
+  machineConfigurationId: commonFitIds.machineConfigurationId,
+  mouldConfigurationId: 'MOULD-999/rev-A',
+  mouldHeight: { value: 420, unit: 'mm' },
+  machineMinMouldHeight: { value: 300, unit: 'mm' },
+  machineMaxMouldHeight: { value: 550, unit: 'mm' },
+});
+assert.equal(wrongMouldHeight.ok, true);
+const crossMouldSummary = machineSuitabilitySummary({
+  machineConfigurationId: commonFitIds.machineConfigurationId,
+  injectionUnitConfigurationId: machineCapacityIds.injectionUnitConfigurationId,
+  mouldConfigurationId: commonFitIds.mouldConfigurationId,
+  basis: 'identity-mismatch-fixture',
+  requiredAxisIds: ['mould-height'],
+  assessments: { 'mould-height': wrongMouldHeight },
+});
+assert.equal(crossMouldSummary.value.summaryState, 'UNKNOWN');
+assert.equal(crossMouldSummary.value.axes[0].reason, 'mould-configuration-mismatch');
+
+
 const suitabilityOnlyUnknown = machineSuitabilitySummary({
   machineConfigurationId: commonFitIds.machineConfigurationId,
-  injectionUnitConfigurationId: 'IU-07/55mm-screw',
+  injectionUnitConfigurationId: machineCapacityIds.injectionUnitConfigurationId,
   mouldConfigurationId: commonFitIds.mouldConfigurationId,
   basis: 'synthetic declared-axis fixture',
   requiredAxisIds: ['mould-height', 'unknown-axis'],
@@ -490,7 +599,7 @@ assert.equal(suitabilityOnlyUnknown.value.coverageComplete, false);
 
 const marginalSummary = machineSuitabilitySummary({
   machineConfigurationId: commonFitIds.machineConfigurationId,
-  injectionUnitConfigurationId: 'IU-07/55mm-screw',
+  injectionUnitConfigurationId: machineCapacityIds.injectionUnitConfigurationId,
   mouldConfigurationId: commonFitIds.mouldConfigurationId,
   basis: 'authorised site threshold fixture',
   requiredAxisIds: ['mould-height', 'site-specific-axis'],
@@ -504,7 +613,7 @@ assert.match(marginalSummary.assumptions.join(' '), /non-empty marginalBasisRef/
 
 const marginalWithoutBasis = machineSuitabilitySummary({
   machineConfigurationId: commonFitIds.machineConfigurationId,
-  injectionUnitConfigurationId: 'IU-07/55mm-screw',
+  injectionUnitConfigurationId: machineCapacityIds.injectionUnitConfigurationId,
   mouldConfigurationId: commonFitIds.mouldConfigurationId,
   basis: 'synthetic declared-axis fixture',
   requiredAxisIds: ['mould-height', 'site-specific-axis'],
