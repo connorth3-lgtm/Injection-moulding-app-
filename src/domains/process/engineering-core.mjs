@@ -87,19 +87,38 @@ function supported(value, metadata = {}) {
 
 function caseSensitiveEngineeringFactor(table, rawUnit) {
   const raw = String(rawUnit ?? '').trim().replaceAll('²', '2').replaceAll('³', '3').replace(/\s+/g, '');
-  if (table === PRESSURE_TO_PA) {
-    if (raw === 'Pa') return { factor: 1, unit: 'Pa' };
-    if (raw === 'kPa') return { factor: 1e3, unit: 'kPa' };
-    if (raw === 'MPa') return { factor: 1e6, unit: 'MPa' };
-    if (raw === 'bar') return { factor: 1e5, unit: 'bar' };
-    return null;
+  const exact = (map) => Object.prototype.hasOwnProperty.call(map, raw)
+    ? { factor: map[raw], unit: raw }
+    : null;
+
+  if (table === PRESSURE_TO_PA) return exact({ Pa: 1, kPa: 1e3, MPa: 1e6, bar: 1e5 });
+  if (table === FORCE_TO_N) return exact({ N: 1, kN: 1e3, MN: 1e6 });
+  if (table === AREA_TO_M2) return exact({ m2: 1, cm2: 1e-4, mm2: 1e-6 });
+  if (table === MASS_TO_G) return exact({ g: 1, kg: 1000, mg: 0.001 });
+  if (table === VOLUME_TO_CM3) {
+    const resolved = exact({ cm3: 1, mL: 1, ml: 1, L: 1000, l: 1000, m3: 1e6, mm3: 0.001 });
+    if (!resolved) return null;
+    const canonical = ({ ml: 'mL', l: 'L' })[resolved.unit] || resolved.unit;
+    return { factor: resolved.factor, unit: canonical };
   }
-  if (table === FORCE_TO_N) {
-    if (raw === 'N') return { factor: 1, unit: 'N' };
-    if (raw === 'kN') return { factor: 1e3, unit: 'kN' };
-    if (raw === 'MN') return { factor: 1e6, unit: 'MN' };
-    return null;
+  if (table === LENGTH_TO_MM) return exact({ mm: 1, cm: 10, m: 1000 });
+  if (table === TIME_TO_S) return exact({ s: 1, sec: 1, min: 60, h: 3600 });
+  if (table === MASS_RATE_TO_G_S) return exact({
+    'g/s': 1,
+    'kg/s': 1000,
+    'g/min': 1 / 60,
+    'kg/min': 1000 / 60,
+    'g/h': 1 / 3600,
+    'kg/h': 1000 / 3600,
+  });
+  if (table === DIFFUSIVITY_TO_MM2_S) return exact({ 'mm2/s': 1, 'cm2/s': 100, 'm2/s': 1e6 });
+  if (table === VOLUME_RATE_TO_CM3_S) {
+    const resolved = exact({ 'cm3/s': 1, 'mL/s': 1, 'ml/s': 1, 'cm3/min': 1 / 60, 'L/min': 1000 / 60, 'l/min': 1000 / 60 });
+    if (!resolved) return null;
+    const canonical = ({ 'ml/s': 'mL/s', 'l/min': 'L/min' })[resolved.unit] || resolved.unit;
+    return { factor: resolved.factor, unit: canonical };
   }
+
   const unit = cleanUnit(raw);
   const factor = table[unit];
   return factor ? { factor, unit } : null;
@@ -145,10 +164,9 @@ export function aggregateShotMass({ cavityCount, partMass, runnerMass = { value:
   if (runnerMass != null) {
     const raw = Number(runnerMass?.value);
     if (!Number.isFinite(raw) || raw < 0) return unsupported('invalid-runner-mass-value', { field: 'runner-mass' });
-    const unit = cleanUnit(runnerMass?.unit);
-    const factor = MASS_TO_G[unit];
-    if (!factor) return unsupported('unsupported-runner-mass-unit', { field: 'runner-mass', unit: String(runnerMass?.unit ?? '') });
-    runnerG = raw * factor;
+    const resolved = caseSensitiveEngineeringFactor(MASS_TO_G, runnerMass?.unit);
+    if (!resolved) return unsupported('unsupported-runner-mass-unit', { field: 'runner-mass', unit: String(runnerMass?.unit ?? '') });
+    runnerG = raw * resolved.factor;
   }
 
   const partsG = cavityCount * part.value.si;
