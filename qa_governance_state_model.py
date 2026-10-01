@@ -93,6 +93,10 @@ def main() -> None:
     nzqa_external = load("data/nzqa-external-validation-v1.json")
 
     validate_model_shape(model)
+    labels = model.get("userFacingLabels") or {}
+    evidence_labels = labels.get("evidenceMaturity") or {}
+    assert evidence_labels.get("verified") == "Source evidence reviewed", "internal verified state must not be displayed as independent verification"
+    assert book_auth.get("learnerFacingPublicationLabel") == evidence_labels.get("verified"), "Book authorization/runtime terminology drifted from canonical governance labels"
 
     current_release = version.get("web_release")
     evidence_releases = {
