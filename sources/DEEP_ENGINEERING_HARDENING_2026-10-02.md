@@ -61,7 +61,7 @@ All new functions return structured unsupported states rather than silently inve
 - uncertainty boundary;
 - advisory authority boundary.
 
-`qa_engineering_domain.mjs` requires one-to-one registry coverage for every exported engineering calculation ID.
+`qa_engineering_domain.mjs` requires one-to-one registry coverage for every exported engineering calculation ID. It now also resolves every `evidenceAnchors` ID across the repository's governed Book/source ledgers plus a minimal peer-reviewed supplement list, applies the Book's canonical academic DOI overrides where available, rejects raw DOI strings as pseudo-IDs, and fails on orphaned evidence or conflicting source URLs. The local supplements are limited to peer-reviewed papers verified on 2026-10-02 for clamp/tie-bar behaviour and analytical/conformal cooling.
 
 ### Canonical academic-link governance
 
