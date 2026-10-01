@@ -535,5 +535,6 @@
       ],
       "uncertaintyBoundary": "A mass plateau is evidence consistent with diminishing additional transfer, not universal proof of an exact physical gate-freeze instant."
     }
-  ]
+  ],
+  "unitPolicy": "Engineering input units preserve SI prefix case. Canonical pressure/force case is mandatory and ambiguous uppercase/lowercase prefix substitutions are rejected; examples include mPa != MPa, mN != MN, Mg != mg, Mm != mm and ML != mL."
 }
