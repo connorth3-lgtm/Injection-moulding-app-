@@ -1346,6 +1346,7 @@ export function amorphousSlabCoolingTimeEstimate({
   mouldSurfaceTemperature,
   ejectionTemperature,
   materialMorphology,
+  ejectionCriterionType,
   thermalDiffusivityRef,
   ejectionCriterionRef,
   mouldSurfaceTemperatureBasisRef,
@@ -1359,6 +1360,13 @@ export function amorphousSlabCoolingTimeEstimate({
         : 'amorphous-morphology-required',
       { field: 'materialMorphology', received: materialMorphology ?? null },
     );
+  }
+  const criterionType = String(ejectionCriterionType || '').trim();
+  if (criterionType !== 'centerline-temperature') {
+    return unsupported('centerline-ejection-criterion-required', {
+      field: 'ejectionCriterionType',
+      allowed: 'centerline-temperature',
+    });
   }
   const alphaRef = String(thermalDiffusivityRef || '').trim();
   if (!alphaRef) return unsupported('thermal-diffusivity-reference-required', { field: 'thermalDiffusivityRef' });
@@ -1404,6 +1412,7 @@ export function amorphousSlabCoolingTimeEstimate({
       logarithmArgument,
       materialMorphology: 'amorphous',
       temperatureCriterion: 'centerline-first-term-plane-wall',
+      ejectionCriterionType: criterionType,
       thermalDiffusivityRef: alphaRef,
       ejectionCriterionRef: ejectRef,
       mouldSurfaceTemperatureBasisRef: mouldRef,
@@ -1412,7 +1421,7 @@ export function amorphousSlabCoolingTimeEstimate({
       equationId: ENGINEERING_EQUATION_IDS.amorphousSlabCoolingTimeEstimate,
       units: Object.freeze({ time: 's', thickness: 'mm', thermalDiffusivity: 'mm²/s', temperature: '°C' }),
       assumptions: Object.freeze([
-        'This is the first-term one-dimensional plane-wall/centerline conduction estimate t = s²/(π²α) ln[(4/π)(Tm-Tw)/(Te-Tw)] using the full stated wall thickness.',
+        'This is the first-term one-dimensional plane-wall/centerline conduction estimate t = s²/(π²α) ln[(4/π)(Tm-Tw)/(Te-Tw)] using the full stated wall thickness and an explicitly centerline-temperature ejection criterion.',
         'The polymer is explicitly amorphous for this model; semi-crystalline solidification/crystallisation requires a phase-change treatment and is rejected by this function.',
         'Thermophysical properties and mould-surface boundary conditions are treated as constant/uniform first-order approximations over the calculation.',
         'Thermal contact resistance, local ribs/bosses/corners, nonuniform filling temperature, cooling-channel resistance, mould transient state and post-ejection reheating are not resolved.',
