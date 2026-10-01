@@ -27,6 +27,29 @@
       "uncertaintyBoundary": "No location-to-location or hydraulic-to-plastic conversion is inferred."
     },
     {
+      "id": "EQ-PRESS-002",
+      "name": "Location-explicit measured plastic-side pressure difference",
+      "formula": "DeltaP = P_upstream - P_downstream",
+      "inputs": [
+        "upstream pressure",
+        "downstream pressure",
+        "plastic-side pressure kinds",
+        "distinct location IDs",
+        "synchronised measurement basis"
+      ],
+      "outputs": [
+        "pressure difference",
+        "direction-consistency flag"
+      ],
+      "scope": "Arithmetic comparison of like-for-like actual plastic-side pressure signals tied to explicit locations and one comparison basis.",
+      "evidenceAnchors": [
+        "PARIZS-2023-IN-MOLD-SENSORS",
+        "AUTODESK-JUNCTURE-LOSS",
+        "RJG-DECOUPLED-WORKSHOP"
+      ],
+      "uncertaintyBoundary": "Hydraulic and command pressures are excluded; the difference is not automatically a pressure-loss coefficient, viscosity estimate, restriction diagnosis or causal attribution."
+    },
+    {
       "id": "EQ-CF-001",
       "name": "Clamp separating-force screening estimate",
       "formula": "F = A_projected × P_representative",
