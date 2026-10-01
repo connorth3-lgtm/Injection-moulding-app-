@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "bookId": "mouldmaster-book",
-  "release": "2026.09.24.14",
+  "release": "2026.10.01.3",
   "status": "authorized-synthetic-teaching",
   "policy": "Worked engineering cases are synthetic teaching examples. They are source-governed and internally publication-authorized, but they are not independent human SME approval, measured production evidence, universal process recipes, validated production limits or machine-control authority.",
   "sourceSeeds": [
@@ -517,12 +517,430 @@
           ]
         }
       ]
+    },
+    {
+      "id": "worked-vp-transfer-v1",
+      "chapterId": "vp-transfer",
+      "title": "V/P transfer comparison: separate timing from pressure outcome",
+      "synthetic": true,
+      "setup": "Three synthetic runs use the same material, tool and nominal fill profile while transfer position is shifted. The values teach comparison logic only.",
+      "table": {
+        "columns": [
+          "Run",
+          "Transfer position",
+          "End-of-fill cavity pressure",
+          "Peak cavity pressure"
+        ],
+        "rows": [
+          [
+            "A",
+            "18 mm",
+            "48 MPa",
+            "70 MPa"
+          ],
+          [
+            "B",
+            "15 mm",
+            "55 MPa",
+            "74 MPa"
+          ],
+          [
+            "C",
+            "12 mm",
+            "61 MPa",
+            "76 MPa"
+          ]
+        ]
+      },
+      "calculationSteps": [
+        "A→B end-of-fill cavity-pressure change = +7 MPa.",
+        "B→C end-of-fill cavity-pressure change = +6 MPa.",
+        "The pressure response changes progressively across the synthetic transfer shift, but the table alone does not identify the best transfer point."
+      ],
+      "interpretation": "Transfer timing changes the handover between velocity-controlled filling and pressure-controlled packing. Judge the transition with fill progression, actual machine response, cavity pressure and part-quality evidence rather than a position number alone.",
+      "boundaries": [
+        "The positions and pressures are synthetic and are not machine settings.",
+        "A safe process window, machine response semantics, mould filling pattern and quality criteria remain controlling."
+      ],
+      "sourceIds": [
+        "ISO-294-1-2017",
+        "BIELENBERG-2025-SWITCHOVER-REVIEW"
+      ],
+      "claims": [
+        {
+          "id": "worked-vp-transfer-v1-claim-1",
+          "statement": "Velocity-to-pressure transfer should be interpreted as a process transition using actual filling/pressure/quality evidence rather than a universal position value.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "ISO-294-1-2017",
+            "BIELENBERG-2025-SWITCHOVER-REVIEW"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-feed-balance-v1",
+      "chapterId": "feed-system",
+      "title": "Feed-system balance: compare branches before blaming the cavity",
+      "synthetic": true,
+      "setup": "A two-branch synthetic runner study records comparable upstream-to-cavity pressure demand and mean part mass for each branch.",
+      "table": {
+        "columns": [
+          "Branch",
+          "Relative pressure demand",
+          "Mean part mass"
+        ],
+        "rows": [
+          [
+            "A",
+            "22 MPa",
+            "14.02 g"
+          ],
+          [
+            "B",
+            "31 MPa",
+            "13.78 g"
+          ]
+        ]
+      },
+      "calculationSteps": [
+        "Pressure-demand difference B − A = 9 MPa.",
+        "Mean-mass difference A − B = 0.24 g."
+      ],
+      "interpretation": "The branch with higher synthetic pressure demand also produces lower mass, which is evidence to inspect runner/gate geometry, thermal state and cavity-specific restrictions. It is not proof of a single geometric cause.",
+      "boundaries": [
+        "Keep material, fill-rate and thermal state comparable before interpreting branch differences.",
+        "Runner or gate modification requires authorised tooling engineering; the arithmetic is diagnostic, not a sizing prescription."
+      ],
+      "sourceIds": [
+        "ISO-294-1-2017",
+        "AUTODESK-RUNNER-LAYOUT",
+        "AUTODESK-JUNCTURE-LOSS"
+      ],
+      "claims": [
+        {
+          "id": "worked-feed-balance-v1-claim-1",
+          "statement": "Controlled branch-by-branch pressure and quality comparisons can expose feed-system imbalance without assuming a specific restriction is causal.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "ISO-294-1-2017",
+            "AUTODESK-RUNNER-LAYOUT",
+            "AUTODESK-JUNCTURE-LOSS"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-vent-diagnosis-v1",
+      "chapterId": "venting",
+      "title": "Venting diagnosis: defect location plus controlled recovery",
+      "synthetic": true,
+      "setup": "A synthetic end-of-fill burn appears on one cavity while global machine actuals remain stable. An authorised inspection finds visible vent contamination.",
+      "table": {
+        "columns": [
+          "State",
+          "Burns in 10 shots",
+          "Global shot mass"
+        ],
+        "rows": [
+          [
+            "Before authorised cleaning",
+            "8",
+            "stable"
+          ],
+          [
+            "After cleaning and controlled restart",
+            "1",
+            "stable"
+          ]
+        ]
+      },
+      "calculationSteps": [
+        "Observed burn count changes from 8/10 to 1/10 shots after the controlled intervention.",
+        "Global shot-mass stability is retained as evidence against a large global-delivery change."
+      ],
+      "interpretation": "The repeatable local pattern, inspection evidence and post-cleaning recovery strengthen a vent-restriction hypothesis, but thermal degradation and other mechanisms still require exclusion where evidence points that way.",
+      "boundaries": [
+        "Never alter vents, guarding or mould steel without tooling authority and machine/site safety controls.",
+        "One recovery sequence is useful evidence; repeated production-relevant confirmation is required before promoting a causal conclusion."
+      ],
+      "sourceIds": [
+        "ISO-294-1-2017",
+        "BASF-INJECTION-TROUBLESHOOTER"
+      ],
+      "claims": [
+        {
+          "id": "worked-vent-diagnosis-v1-claim-1",
+          "statement": "Local defect location, authorised vent inspection and repeatable controlled recovery can strengthen a vent-restriction diagnosis without turning the symptom into automatic causal proof.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "ISO-294-1-2017",
+            "BASF-INJECTION-TROUBLESHOOTER"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-ejection-trend-v1",
+      "chapterId": "ejection-draft",
+      "title": "Ejection trend: rising force is an investigation trigger",
+      "synthetic": true,
+      "setup": "A synthetic production sequence shows increasing normalised ejector-current peak while part geometry and commanded ejection motion are unchanged.",
+      "table": {
+        "columns": [
+          "Checkpoint",
+          "Normalised ejector-current peak",
+          "Visible part damage"
+        ],
+        "rows": [
+          [
+            "Baseline",
+            "40%",
+            "none"
+          ],
+          [
+            "Later",
+            "58%",
+            "light scuff"
+          ],
+          [
+            "Latest",
+            "74%",
+            "repeatable scuff"
+          ]
+        ]
+      },
+      "calculationSteps": [
+        "Latest − baseline current-peak change = +34 percentage points.",
+        "The mechanical/electrical trend and surface evidence move together in the synthetic sequence."
+      ],
+      "interpretation": "The trend justifies checking cooling state, draft/release condition, contamination, surface damage, alignment and ejector mechanism condition. It does not prove inadequate draft.",
+      "boundaries": [
+        "Current/force semantics are machine specific and require the manufacturer documentation.",
+        "Tool access, lubrication, polishing or mechanical adjustment requires authorised maintenance/tooling procedures."
+      ],
+      "sourceIds": [
+        "ISO-12165-2019",
+        "ISO-20457-2026"
+      ],
+      "claims": [
+        {
+          "id": "worked-ejection-trend-v1-claim-1",
+          "statement": "A repeatable rise in ejection load combined with part-surface evidence is a diagnostic trigger, not standalone proof of a particular mould-design fault.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "ISO-12165-2019",
+            "ISO-20457-2026"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-hot-runner-timing-v1",
+      "chapterId": "hot-runners",
+      "title": "Valve-gate timing: preserve cavity-specific actual evidence",
+      "synthetic": true,
+      "setup": "A synthetic two-cavity valve-gate sequence compares commanded opening offset with cavity-pressure rise and part mass.",
+      "table": {
+        "columns": [
+          "Cavity",
+          "Valve opening offset",
+          "Pressure-rise onset",
+          "Mean mass"
+        ],
+        "rows": [
+          [
+            "1",
+            "0 ms",
+            "reference",
+            "18.04 g"
+          ],
+          [
+            "2",
+            "+80 ms",
+            "+75 ms",
+            "17.82 g"
+          ]
+        ]
+      },
+      "calculationSteps": [
+        "Mean-mass difference = 18.04 − 17.82 = 0.22 g.",
+        "The synthetic pressure-rise delay approximately follows the commanded opening offset, but actuator actuals are not supplied."
+      ],
+      "interpretation": "Command, actual valve motion, local pressure response and cavity quality should be aligned before concluding that timing caused an imbalance.",
+      "boundaries": [
+        "Displayed zone temperature or valve command does not prove nozzle-tip melt state or actual pin motion.",
+        "Hot-runner servicing and timing limits remain controller/tool-manufacturer specific."
+      ],
+      "sourceIds": [
+        "ISO-294-1-2017",
+        "PARIZS-2023-IN-MOLD-SENSORS-WORKED"
+      ],
+      "claims": [
+        {
+          "id": "worked-hot-runner-timing-v1-claim-1",
+          "statement": "Valve-gate diagnosis should align command/actual timing with cavity-specific pressure and quality evidence instead of relying on command values alone.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "ISO-294-1-2017",
+            "PARIZS-2023-IN-MOLD-SENSORS-WORKED"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-fill-study-v1",
+      "chapterId": "fill-study",
+      "title": "Fill study: preserve progression, not just the final short shot",
+      "synthetic": true,
+      "setup": "A synthetic fill study records filled mass fraction at controlled progressive shot volumes with packing influence intentionally excluded from the teaching comparison.",
+      "table": {
+        "columns": [
+          "Step",
+          "Filled mass fraction",
+          "Observed front"
+        ],
+        "rows": [
+          [
+            "1",
+            "28%",
+            "near gate"
+          ],
+          [
+            "2",
+            "51%",
+            "mid cavity"
+          ],
+          [
+            "3",
+            "76%",
+            "approaching far feature"
+          ],
+          [
+            "4",
+            "95%",
+            "last region remains unfilled"
+          ]
+        ]
+      },
+      "calculationSteps": [
+        "Progression increments are +23, +25 and +19 percentage points.",
+        "The smaller final increment is an observation to investigate, not proof of freeze-off or vent restriction."
+      ],
+      "interpretation": "A controlled fill progression helps localise where resistance or imbalance develops and gives context for weld lines, air traps and orientation. The final pattern must be interpreted with thermal, pressure and geometry evidence.",
+      "boundaries": [
+        "The study is synthetic; actual fill-study procedures must stay within safe machine/mould/material limits.",
+        "Do not disable safety systems or use unapproved machine states to create a short shot."
+      ],
+      "sourceIds": [
+        "ISO-294-1-2017",
+        "BASF-INJECTION-TROUBLESHOOTER"
+      ],
+      "claims": [
+        {
+          "id": "worked-fill-study-v1-claim-1",
+          "statement": "Controlled progressive filling can reveal flow-front development and localise diagnostic questions, but a short-shot pattern alone does not prove a mechanism.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "ISO-294-1-2017",
+            "BASF-INJECTION-TROUBLESHOOTER"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-shot-utilisation-v1",
+      "chapterId": "shot-utilisation",
+      "title": "Shot utilisation: arithmetic is not a machine-limit decision",
+      "synthetic": true,
+      "setup": "A synthetic machine has a stated maximum shot mass of 300 g for the reference condition and a moulded shot mass of 180 g including the runner.",
+      "calculationSteps": [
+        "Simple reference utilisation = 180 / 300 × 100 = 60%.",
+        "The 60% result is only a ratio of the two stated masses."
+      ],
+      "interpretation": "Shot-utilisation arithmetic can flag whether a process deserves review, but real usable shot capacity depends on material density, plasticising performance, residence history, screw geometry, machine documentation and the actual process.",
+      "boundaries": [
+        "Do not convert this example into a universal preferred utilisation percentage.",
+        "Use the actual machine manufacturer specification and material/mould/process evidence for capacity and residence decisions."
+      ],
+      "sourceIds": [
+        "ISO-294-1-2017"
+      ],
+      "claims": [
+        {
+          "id": "worked-shot-utilisation-v1-claim-1",
+          "statement": "A simple shot-mass ratio can be calculated when its basis is explicit, but it is not by itself a safe machine-capacity or residence-time criterion.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "ISO-294-1-2017"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-process-window-v1",
+      "chapterId": "process-window",
+      "title": "Process window: seek a robust region, not a single magic point",
+      "synthetic": true,
+      "setup": "A synthetic 3×3 study classifies acceptable appearance/dimension response across fill-rate and mould-temperature levels. Values are coded Low, Mid and High rather than production settings.",
+      "table": {
+        "columns": [
+          "Fill rate \\ Mould temp",
+          "Low",
+          "Mid",
+          "High"
+        ],
+        "rows": [
+          [
+            "Low",
+            "short",
+            "acceptable",
+            "acceptable"
+          ],
+          [
+            "Mid",
+            "short",
+            "acceptable",
+            "flash"
+          ],
+          [
+            "High",
+            "burn",
+            "acceptable",
+            "flash"
+          ]
+        ]
+      },
+      "calculationSteps": [
+        "The centre column is acceptable at all three synthetic fill-rate levels.",
+        "No single corner condition is robust across the synthetic matrix."
+      ],
+      "interpretation": "A process-window study looks for regions where requirements remain satisfied despite realistic variation. Confirmation requires quantitative quality criteria, stability, measurement adequacy and appropriate experimental design.",
+      "boundaries": [
+        "Categorical labels are synthetic and do not define acceptable production limits.",
+        "Factor ranges must be safe, qualified and consistent with machine, mould and material documentation."
+      ],
+      "sourceIds": [
+        "ISO-294-1-2017",
+        "NIST-SEMATECH-DOE"
+      ],
+      "claims": [
+        {
+          "id": "worked-process-window-v1-claim-1",
+          "statement": "Process-window development should seek a confirmed robust region across relevant factors rather than infer universal optimum settings from one condition.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "ISO-294-1-2017",
+            "NIST-SEMATECH-DOE"
+          ]
+        }
+      ]
     }
   ],
   "humanReviewScope": {
     "status": "hold",
     "contract": "data/book-sme-review-v1.json",
-    "required": "All ten worked cases are attached to chapters already inside the 46-chapter independent human SME scope; the case IDs are also enumerated explicitly in that contract for the new release."
+    "required": "All eighteen worked cases are attached to chapters inside the 46-chapter independent human SME scope; each case requires arithmetic/reasoning, assumptions, evidence fit, synthetic-data labelling and non-universal-boundary review."
   },
   "authorityBoundary": {
     "productionUse": "advisory-only",

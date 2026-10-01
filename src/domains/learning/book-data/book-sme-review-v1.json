@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "bookId": "mouldmaster-book",
-  "release": "2026.09.24.14",
+  "release": "2026.10.01.3",
   "manifestVersion": "2026.09.14.1",
   "status": "hold",
   "policy": "Human SME review is independent external evidence. Automated QA may verify coverage, fingerprints/identity and review-record shape, but must never create or infer an SME approval.",
@@ -88,7 +88,15 @@
     "worked-capability-v1",
     "worked-conditioning-v1",
     "worked-heat-load-v1",
-    "worked-diagnostic-short-shot-v1"
+    "worked-diagnostic-short-shot-v1",
+    "worked-vp-transfer-v1",
+    "worked-feed-balance-v1",
+    "worked-vent-diagnosis-v1",
+    "worked-ejection-trend-v1",
+    "worked-hot-runner-timing-v1",
+    "worked-fill-study-v1",
+    "worked-shot-utilisation-v1",
+    "worked-process-window-v1"
   ],
   "workedCaseReviewRule": "Each workedCaseId must be reviewed inside its owning chapter across the same six requiredDimensions. A chapter approval for this release must include the worked case where present; automation must not create or infer that approval.",
   "enrichmentChapterIds": [
@@ -103,5 +111,16 @@
     "process-monitoring",
     "multi-cavity"
   ],
-  "enrichmentReviewRule": "Each enrichmentChapterId must be reviewed with all published evidence-enrichment sections in that chapter. Automation may verify scope and identity but must not create or infer human SME approval."
+  "enrichmentReviewRule": "Each enrichmentChapterId must be reviewed with all published evidence-enrichment sections in that chapter. Automation may verify scope and identity but must not create or infer human SME approval.",
+  "diagramIds": [
+    "diagram-vp-transfer-v1",
+    "diagram-cavity-pressure-cycle-v1",
+    "diagram-feed-system-v1",
+    "diagram-cooling-balance-v1",
+    "diagram-fountain-flow-v1",
+    "diagram-gate-seal-v1",
+    "diagram-multicavity-balance-v1",
+    "diagram-ejection-draft-v1"
+  ],
+  "diagramReviewRequirement": "Review all governed instructional diagrams for mechanism accuracy, labels, accessibility text, scale/non-scale boundary and consistency with chapter evidence. Diagrams do not count as independently SME-approved until the chapter review is approved."
 }

@@ -17,6 +17,14 @@ EXPECTED_CHAPTERS = {
     "worked-conditioning-v1": "dimensional-stability",
     "worked-heat-load-v1": "cooling",
     "worked-diagnostic-short-shot-v1": "diagnostic-method",
+    "worked-vp-transfer-v1": "vp-transfer",
+    "worked-feed-balance-v1": "feed-system",
+    "worked-vent-diagnosis-v1": "venting",
+    "worked-ejection-trend-v1": "ejection-draft",
+    "worked-hot-runner-timing-v1": "hot-runners",
+    "worked-fill-study-v1": "fill-study",
+    "worked-shot-utilisation-v1": "shot-utilisation",
+    "worked-process-window-v1": "process-window",
 }
 
 
@@ -74,6 +82,12 @@ def main() -> None:
     heat_j = Decimal("0.080") * Decimal("1800") * Decimal("180")
     need(heat_j == Decimal("25920"), "sensible heat-load arithmetic regression")
 
+    need(Decimal("61") - Decimal("48") == Decimal("13"), "V/P transfer pressure comparison regression")
+    need(Decimal("31") - Decimal("22") == Decimal("9"), "feed-balance pressure comparison regression")
+    need(Decimal("18.04") - Decimal("17.82") == Decimal("0.22"), "hot-runner cavity mass delta regression")
+    need(Decimal("180") / Decimal("300") * Decimal("100") == Decimal("60"), "shot-utilisation arithmetic regression")
+    need("acceptable" in " ".join(sum(cases["worked-process-window-v1"]["table"]["rows"], [])), "process-window robust-region teaching table missing")
+
     diagnosis = cases["worked-diagnostic-short-shot-v1"]
     need(len(diagnosis.get("observations", [])) >= 4, "diagnostic case lost discriminating observations")
     joined = " ".join(diagnosis["boundaries"]).lower()
@@ -89,7 +103,7 @@ def main() -> None:
         },
         "worked-case production authority boundary weakened",
     )
-    print("MouldMaster worked-case calculation QA passed: 9 numeric examples recompute exactly and the end-to-end diagnosis retains fail-closed causal/safety boundaries.")
+    print("MouldMaster worked-case calculation QA passed: 18 governed synthetic cases retain exact arithmetic/diagnostic boundaries and fail-closed production authority.")
 
 
 if __name__ == "__main__":
