@@ -116,7 +116,7 @@ def main() -> None:
     need("worked_release > web_release" in live_verifier and 'worked_auth.get("release") != worked_release' in live_verifier, "live Book verifier must bind worked-case authorization to governed content release, not every shell release")
     need("enrichment_release > web_release" in live_verifier and 'enrichment_auth.get("release") != enrichment_release' in live_verifier, "live Book verifier must bind enrichment authorization to governed content release, not every shell release")
 
-    need("integrated into governed" in lower and "2026.09.24.14" in lower and "learner runtime" in lower, "source pack integration status is stale")
+    need("integrated into governed" in lower and "2026.10.01.3" in lower and "learner runtime" in lower, "source pack integration status is stale")
     headings = re.findall(r"^## (\d+)\. ", text, flags=re.M)
     need(headings == [str(i) for i in range(1, 11)], f"expected ten ordered source cases, found {headings}")
     need(text.count("SYNTHETIC") >= 10, "worked values must remain visibly synthetic")
