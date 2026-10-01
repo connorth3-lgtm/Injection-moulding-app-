@@ -36,7 +36,7 @@ This pass reviewed the current MouldMaster engineering/runtime architecture and 
 14. fail-closed pressure-loss modelling readiness that rejects MFR/MFI as a substitute for an explicit rheology model and blocks hydraulic/command pressure types;
 15. repeatability-aware gate-seal plateau analysis using a user-supplied decision tolerance.
 
-All new functions return structured unsupported states rather than silently inventing missing engineering meaning.
+All new functions return structured unsupported states rather than silently inventing missing engineering meaning. The unit boundary also preserves SI prefix case across pressure, force, mass, length, area, volume, rates and diffusivity so ambiguous prefix changes are rejected rather than normalised.
 
 ### SPC/capability hardening
 
