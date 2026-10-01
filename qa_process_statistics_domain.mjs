@@ -117,7 +117,7 @@ for (const blocker of ['process-stability', 'measurement-system', 'sampling-adeq
   assert.ok(blockedCapability.blockers.includes(blocker), `missing capability blocker ${blocker}`);
 }
 
-const cpCpk = capabilityIndices({
+const bareTrueCapability = capabilityIndices({
   meanValue: 10.08,
   spreadValue: 0.04,
   lowerSpecLimit: 9.8,
@@ -131,12 +131,40 @@ const cpCpk = capabilityIndices({
   distributionModelAdequate: true,
   specificationBasisRef: 'synthetic-drawing-rev-A',
 });
+assert.equal(bareTrueCapability.indices, null);
+assert.equal(bareTrueCapability.reason, 'capability-prerequisites-unmet');
+for (const blocker of ['process-stability-basis', 'measurement-system-basis', 'sampling-adequacy-basis', 'distribution-model-basis']) {
+  assert.ok(bareTrueCapability.blockers.includes(blocker), `bare true capability flag missing evidence-basis blocker ${blocker}`);
+}
+
+const cpCpk = capabilityIndices({
+  meanValue: 10.08,
+  spreadValue: 0.04,
+  lowerSpecLimit: 9.8,
+  upperSpecLimit: 10.2,
+  spreadBasis: 'within-subgroup',
+  spreadEstimatorRef: 'pooled-within-subgroup-sigma-fixture',
+  measurementUnit: 'mm',
+  processStable: true,
+  processStabilityBasisRef: 'control-chart-stability-study-rev-A',
+  measurementSystemAdequate: true,
+  measurementSystemBasisRef: 'msa-study-rev-A',
+  samplingAdequacyConfirmed: true,
+  samplingAdequacyBasisRef: 'sampling-plan-rev-A',
+  distributionModelAdequate: true,
+  distributionModelBasisRef: 'distribution-check-rev-A',
+  specificationBasisRef: 'synthetic-drawing-rev-A',
+});
 assert.equal(cpCpk.reason, null);
 assert.ok(Math.abs(cpCpk.indices.Cp - (0.4 / 0.24)) < 1e-12);
 assert.ok(Math.abs(cpCpk.indices.Cpk - 1) < 1e-12);
 assert.ok(Math.abs(cpCpk.indices.Cpu - 1) < 1e-12);
 assert.ok(Math.abs(cpCpk.indices.Cpl - (0.28 / 0.12)) < 1e-12);
 assert.equal(cpCpk.family.potential, 'Cp');
+assert.equal(cpCpk.inputs.processStabilityBasisRef, 'control-chart-stability-study-rev-A');
+assert.equal(cpCpk.inputs.measurementSystemBasisRef, 'msa-study-rev-A');
+assert.equal(cpCpk.inputs.samplingAdequacyBasisRef, 'sampling-plan-rev-A');
+assert.equal(cpCpk.inputs.distributionModelBasisRef, 'distribution-check-rev-A');
 assert.match(cpCpk.assumptions.join(' '), /does not grade capability against a universal acceptance threshold/i);
 
 const ppPpk = capabilityIndices({
@@ -148,9 +176,13 @@ const ppPpk = capabilityIndices({
   spreadEstimatorRef: 'overall-sample-sd-fixture',
   measurementUnit: 'mm',
   processStable: true,
+  processStabilityBasisRef: 'control-chart-stability-study-rev-A',
   measurementSystemAdequate: true,
+  measurementSystemBasisRef: 'msa-study-rev-A',
   samplingAdequacyConfirmed: true,
+  samplingAdequacyBasisRef: 'sampling-plan-rev-A',
   distributionModelAdequate: true,
+  distributionModelBasisRef: 'distribution-check-rev-A',
   specificationBasisRef: 'synthetic-drawing-rev-A',
 });
 assert.equal(ppPpk.reason, null);
