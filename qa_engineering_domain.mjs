@@ -10,6 +10,12 @@ import {
   specificPlasticPressureCapacityAssessment,
   volumetricFlowCapacityAssessment,
   plasticisingThroughputAssessment,
+  mouldHeightFit,
+  openingStrokeFit,
+  daylightFit,
+  tieBarClearanceFit,
+  ejectorStrokeFit,
+  machineSuitabilitySummary,
   fillStageRates,
   averageResidenceTimeEstimate,
   averageResidenceTimeFromShotCycle,
@@ -230,6 +236,147 @@ assert.equal(plasticisingCapacity.value.requiredGS, 5);
 assert.ok(Math.abs(plasticisingCapacity.value.availableGS - (30 * 1000 / 3600)) < 1e-12);
 assert.ok(Math.abs(plasticisingCapacity.value.utilisationPct - 60) < 1e-12);
 assert.match(plasticisingCapacity.assumptions.join(' '), /Nominal catalogue plasticising rate is not assumed/i);
+
+
+const commonFitIds = {
+  machineConfigurationId: 'IMM-07/config-A',
+  mouldConfigurationId: 'MOULD-142/rev-C',
+};
+
+const heightFit = mouldHeightFit({
+  ...commonFitIds,
+  mouldHeight: { value: 420, unit: 'mm' },
+  machineMinMouldHeight: { value: 300, unit: 'mm' },
+  machineMaxMouldHeight: { value: 550, unit: 'mm' },
+  provenance: 'oem-machine-data + approved-tool-drawing',
+});
+assert.equal(heightFit.ok, true);
+assert.equal(heightFit.value.state, 'PASS');
+assert.equal(heightFit.value.marginAboveMinimumMm, 120);
+assert.equal(heightFit.value.marginBelowMaximumMm, 130);
+assert.match(heightFit.assumptions.join(' '), /does not authorize installation/i);
+assert.equal(
+  mouldHeightFit({
+    ...commonFitIds,
+    mouldHeight: { value: 420, unit: 'mm' },
+    machineMinMouldHeight: { value: 600, unit: 'mm' },
+    machineMaxMouldHeight: { value: 500, unit: 'mm' },
+  }).reason,
+  'machine-mould-height-range-reversed',
+);
+
+const openingFit = openingStrokeFit({
+  ...commonFitIds,
+  requiredOpeningStroke: { value: 450, unit: 'mm' },
+  availableOpeningStroke: { value: 500, unit: 'mm' },
+});
+assert.equal(openingFit.ok, true);
+assert.equal(openingFit.value.state, 'PASS');
+assert.equal(openingFit.value.marginMm, 50);
+
+const daylight = daylightFit({
+  ...commonFitIds,
+  mouldClosedHeight: { value: 420, unit: 'mm' },
+  requiredOpenGap: { value: 480, unit: 'mm' },
+  availableMaximumDaylight: { value: 850, unit: 'mm' },
+});
+assert.equal(daylight.ok, true);
+assert.equal(daylight.value.requiredMaximumPlatenSeparationMm, 900);
+assert.equal(daylight.value.state, 'FAIL');
+assert.equal(daylight.value.marginMm, -50);
+
+const tieBars = tieBarClearanceFit({
+  ...commonFitIds,
+  orientedMouldWidth: { value: 620, unit: 'mm' },
+  orientedMouldHeight: { value: 580, unit: 'mm' },
+  horizontalTieBarClearance: { value: 650, unit: 'mm' },
+  verticalTieBarClearance: { value: 570, unit: 'mm' },
+});
+assert.equal(tieBars.ok, true);
+assert.equal(tieBars.value.horizontalFits, true);
+assert.equal(tieBars.value.verticalFits, false);
+assert.equal(tieBars.value.state, 'FAIL');
+assert.match(tieBars.assumptions.join(' '), /does not silently rotate the mould/i);
+
+const ejector = ejectorStrokeFit({
+  ...commonFitIds,
+  requiredEjectorStroke: { value: 90, unit: 'mm' },
+  availableEjectorStroke: { value: 120, unit: 'mm' },
+});
+assert.equal(ejector.ok, true);
+assert.equal(ejector.value.state, 'PASS');
+assert.equal(ejector.value.marginMm, 30);
+
+assert.equal(
+  openingStrokeFit({
+    requiredOpeningStroke: { value: 450, unit: 'mm' },
+    availableOpeningStroke: { value: 500, unit: 'mm' },
+    mouldConfigurationId: commonFitIds.mouldConfigurationId,
+  }).reason,
+  'missing-machine-configuration-id',
+);
+
+const suitabilityUnknown = machineSuitabilitySummary({
+  machineConfigurationId: commonFitIds.machineConfigurationId,
+  injectionUnitConfigurationId: 'IU-07/55mm-screw',
+  mouldConfigurationId: commonFitIds.mouldConfigurationId,
+  basis: 'synthetic complete-machine-screen fixture',
+  requiredAxisIds: ['mould-height', 'opening-stroke', 'daylight', 'tie-bars', 'ejector', 'shot'],
+  assessments: {
+    'mould-height': heightFit,
+    'opening-stroke': openingFit,
+    daylight,
+    'tie-bars': null,
+    ejector,
+    shot: shotCapacity,
+  },
+});
+assert.equal(suitabilityUnknown.ok, true);
+assert.equal(suitabilityUnknown.value.summaryState, 'FAIL', 'a known failure must dominate unknown axes');
+assert.equal(suitabilityUnknown.value.coverageComplete, false);
+
+const suitabilityPass = machineSuitabilitySummary({
+  machineConfigurationId: commonFitIds.machineConfigurationId,
+  injectionUnitConfigurationId: 'IU-07/55mm-screw',
+  mouldConfigurationId: commonFitIds.mouldConfigurationId,
+  basis: 'synthetic declared-axis fixture',
+  requiredAxisIds: ['mould-height', 'opening-stroke', 'ejector', 'shot'],
+  assessments: {
+    'mould-height': heightFit,
+    'opening-stroke': openingFit,
+    ejector,
+    shot: shotCapacity,
+  },
+});
+assert.equal(suitabilityPass.ok, true);
+assert.equal(suitabilityPass.value.summaryState, 'PASS');
+assert.equal(suitabilityPass.value.coverageComplete, true);
+assert.match(suitabilityPass.assumptions.join(' '), /not a universal declaration/i);
+
+const suitabilityOnlyUnknown = machineSuitabilitySummary({
+  machineConfigurationId: commonFitIds.machineConfigurationId,
+  injectionUnitConfigurationId: 'IU-07/55mm-screw',
+  mouldConfigurationId: commonFitIds.mouldConfigurationId,
+  basis: 'synthetic declared-axis fixture',
+  requiredAxisIds: ['mould-height', 'unknown-axis'],
+  assessments: { 'mould-height': heightFit },
+});
+assert.equal(suitabilityOnlyUnknown.value.summaryState, 'UNKNOWN');
+assert.equal(suitabilityOnlyUnknown.value.coverageComplete, false);
+
+const marginalSummary = machineSuitabilitySummary({
+  machineConfigurationId: commonFitIds.machineConfigurationId,
+  injectionUnitConfigurationId: 'IU-07/55mm-screw',
+  mouldConfigurationId: commonFitIds.mouldConfigurationId,
+  basis: 'authorised site threshold fixture',
+  requiredAxisIds: ['mould-height', 'site-specific-axis'],
+  assessments: {
+    'mould-height': heightFit,
+    'site-specific-axis': { ok: true, value: { state: 'MARGINAL' } },
+  },
+});
+assert.equal(marginalSummary.value.summaryState, 'MARGINAL');
+assert.match(marginalSummary.assumptions.join(' '), /only when an upstream assessment explicitly supplies that state/i);
 
 const rates = fillStageRates({
   fillTime: { value: 2, unit: 's' },
