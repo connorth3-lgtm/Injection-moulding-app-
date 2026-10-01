@@ -8,11 +8,10 @@ async function seed(page){
   });
 }
 async function installScaleCatalog(page){
-  await page.route('**/material-catalog-v1.json',async route=>{
-    const response=await route.fetch();
-    const original=await response.json();
+  await page.evaluate(async()=>{
+    const original=await window.MM_MATERIAL_REGISTRY.all();
     const byManufacturer=[];
-    for(const grade of original.grades||[]){if(!byManufacturer.some(x=>x.manufacturer?.id===grade.manufacturer?.id))byManufacturer.push(grade)}
+    for(const grade of original||[]){if(!byManufacturer.some(x=>x.manufacturer?.id===grade.manufacturer?.id))byManufacturer.push(grade)}
     const templates=byManufacturer.slice(0,3);
     if(templates.length<2)throw new Error('scale fixture needs at least two source manufacturers');
     const synthetic=Array.from({length:72},(_,i)=>{
@@ -22,20 +21,20 @@ async function installScaleCatalog(page){
       src.brand='ScaleLab';
       src.grade=`SCALE-${n}`;
       src.aliases=[...(src.aliases||[]),'scale fixture'];
-      src.provenance={...(src.provenance||{}),notes:'Synthetic browser-scale fixture derived from a validated record; never production material evidence.'};
+      src.provenance={...(src.provenance||{}),notes:'Synthetic browser-scale fixture derived from an already-authorized runtime record; never production material evidence.'};
       return src;
     });
-    await route.fulfill({response,json:{...original,catalogVersion:'qa-scale-72',grades:synthetic}});
+    window.MM_MATERIAL_SEARCH._buildForTest(synthetic);
   });
 }
 
 async function openMaterials(page){
   await seed(page);
-  await installScaleCatalog(page);
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>(typeof window.MM_APP_SHELL_FINALIZED==='string'&&window.MM_APP_SHELL_FINALIZED.length>0)&&window.MM_MATERIAL_REGISTRY&&window.MM_MATERIAL_SEARCH&&window.MM_MATERIAL_SEARCH_PAGINATION&&window.MM_PRIMARY_HUBS);
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
   await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
+  await installScaleCatalog(page);
   await page.locator('.mobile-nav > button').filter({hasText:'Materials'}).click();
   await expect(page.locator('#mmExactMaterialCatalog')).toHaveCount(1);
   await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
