@@ -475,6 +475,8 @@ const pressureLossReady = pressureLossModelReadiness({
   volumetricFlow: { value: 55, unit: 'cm³/s' },
   upstreamPressureKind: 'nozzle',
   downstreamPressureKind: 'cavity',
+  upstreamLocationId: 'nozzle-transducer-A',
+  downstreamLocationId: 'cavity-3-sensor',
   provenance: 'controlled-trial-14',
 });
 assert.equal(pressureLossReady.ok, true);
@@ -484,14 +486,26 @@ assert.match(pressureLossReady.assumptions.join(' '), /MFR\/MFI alone is not acc
 
 const pressureLossBlocked = pressureLossModelReadiness({
   volumetricFlow: { value: 55, unit: 'cm³/s' },
-  upstreamPressureKind: 'cavity',
-  downstreamPressureKind: 'cavity',
+  upstreamPressureKind: 'runner',
+  downstreamPressureKind: 'runner',
 });
 assert.equal(pressureLossBlocked.ok, true);
 assert.equal(pressureLossBlocked.value.ready, false);
-for (const blocker of ['material-grade', 'rheology-model', 'thermal-state', 'flow-path-geometry', 'distinct-pressure-locations']) {
+for (const blocker of ['material-grade', 'rheology-model', 'thermal-state', 'flow-path-geometry', 'upstream-pressure-location', 'downstream-pressure-location']) {
   assert.ok(pressureLossBlocked.value.blockers.includes(blocker), `pressure-loss readiness missing blocker ${blocker}`);
 }
+const sameLocationPressureLoss = pressureLossModelReadiness({
+  materialGradeId: 'grade',
+  rheologyModelRef: 'rheo',
+  thermalStateRef: 'thermal',
+  flowPathGeometryRef: 'geometry',
+  volumetricFlow: { value: 55, unit: 'cm3/s' },
+  upstreamPressureKind: 'runner',
+  downstreamPressureKind: 'runner',
+  upstreamLocationId: 'runner-sensor-1',
+  downstreamLocationId: 'runner-sensor-1',
+});
+assert.ok(sameLocationPressureLoss.value.blockers.includes('distinct-pressure-locations'));
 const pressureLossNoFlow = pressureLossModelReadiness({
   materialGradeId: 'grade',
   rheologyModelRef: 'rheo',
@@ -500,6 +514,8 @@ const pressureLossNoFlow = pressureLossModelReadiness({
   volumetricFlow: { value: 0, unit: 'cm3/s' },
   upstreamPressureKind: 'nozzle',
   downstreamPressureKind: 'cavity',
+  upstreamLocationId: 'nozzle-A',
+  downstreamLocationId: 'cavity-A',
 });
 assert.ok(pressureLossNoFlow.value.blockers.includes('volumetric-flow'));
 
