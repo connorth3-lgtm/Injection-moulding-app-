@@ -29,6 +29,7 @@ const MASS_RATE_TO_G_S = Object.freeze({
 });
 const DIFFUSIVITY_TO_MM2_S = Object.freeze({ 'mm2/s': 1, 'cm2/s': 100, 'm2/s': 1e6 });
 const SHRINKAGE_TO_FRACTION = Object.freeze({ '%': 0.01, percent: 0.01, fraction: 1 });
+const MOISTURE_TO_FRACTION = Object.freeze({ '%': 0.01, ppm: 1e-6, fraction: 1 });
 const PRESSURE_KINDS = Object.freeze([
   'hydraulic',
   'specific-plastic',
@@ -74,6 +75,7 @@ export const ENGINEERING_EQUATION_IDS = Object.freeze({
   averageResidenceFromShotCycle: 'EQ-RES-002',
   relativeCoolingTimeScale: 'EQ-THERM-001',
   linearShrinkageCompensationRange: 'EQ-SHR-001',
+  materialMoistureAcceptance: 'EQ-MAT-001',
   gateSealPlateau: 'PROC-GATE-001',
 });
 
@@ -1374,6 +1376,109 @@ export function linearShrinkageCompensationRange({
       ]),
       provenance: String(provenance).trim(),
       authority: 'starting-compensation-range-only',
+    },
+  );
+}
+
+
+function convertMoistureMassFraction(quantity, field, { allowZero = true } = {}) {
+  if (!quantity || typeof quantity !== 'object') return unsupported(`missing-${field}`, { field });
+  const raw = Number(quantity.value);
+  if (!Number.isFinite(raw) || raw < 0 || (!allowZero && raw === 0)) {
+    return unsupported(`invalid-${field}-value`, { field });
+  }
+  const unit = String(quantity.unit || '').trim();
+  const factor = MOISTURE_TO_FRACTION[unit];
+  if (!factor) return unsupported(`unsupported-${field}-unit`, { field, unit });
+  const fraction = raw * factor;
+  if (!(fraction >= 0 && fraction < 1)) {
+    return unsupported(`invalid-${field}-fraction`, { field, fraction });
+  }
+  return supported({ fraction, inputValue: raw, inputUnit: unit });
+}
+
+export function materialMoistureAcceptance({
+  materialGradeId,
+  sampleId,
+  measuredMoisture,
+  maximumAllowedMoisture,
+  measurementUncertainty,
+  moistureBasis = 'mass-fraction',
+  measurementMethodRef,
+  supplierRequirementRef,
+  provenance = null,
+} = {}) {
+  const gradeId = explicitIdentity(materialGradeId, 'material-grade-id');
+  if (!gradeId.ok) return gradeId;
+  const sample = explicitIdentity(sampleId, 'sample-id');
+  if (!sample.ok) return sample;
+  if (String(moistureBasis || '').trim() !== 'mass-fraction') {
+    return unsupported('unsupported-moisture-basis', {
+      field: 'moistureBasis',
+      allowed: 'mass-fraction',
+    });
+  }
+  const methodRef = String(measurementMethodRef || '').trim();
+  if (!methodRef) return unsupported('measurement-method-required', { field: 'measurementMethodRef' });
+  const requirementRef = String(supplierRequirementRef || '').trim();
+  if (!requirementRef) return unsupported('supplier-requirement-required', { field: 'supplierRequirementRef' });
+
+  const measured = convertMoistureMassFraction(measuredMoisture, 'measured-moisture');
+  if (!measured.ok) return measured;
+  const maximum = convertMoistureMassFraction(maximumAllowedMoisture, 'maximum-allowed-moisture');
+  if (!maximum.ok) return maximum;
+  const uncertainty = convertMoistureMassFraction(measurementUncertainty, 'measurement-uncertainty');
+  if (!uncertainty.ok) return uncertainty;
+
+  const lowerFraction = Math.max(0, measured.value.fraction - uncertainty.value.fraction);
+  const upperFraction = measured.value.fraction + uncertainty.value.fraction;
+  if (upperFraction >= 1) {
+    return unsupported('measurement-uncertainty-range-invalid', {
+      field: 'measurementUncertainty',
+      upperFraction,
+    });
+  }
+
+  const state = upperFraction <= maximum.value.fraction
+    ? 'PASS'
+    : lowerFraction > maximum.value.fraction
+      ? 'FAIL'
+      : 'INDETERMINATE';
+
+  return supported(
+    {
+      materialGradeId: gradeId.value.id,
+      sampleId: sample.value.id,
+      state,
+      moistureBasis: 'mass-fraction',
+      measuredFraction: measured.value.fraction,
+      measuredPercent: measured.value.fraction * 100,
+      measuredPpm: measured.value.fraction * 1e6,
+      uncertaintyFraction: uncertainty.value.fraction,
+      uncertaintyPercent: uncertainty.value.fraction * 100,
+      uncertaintyPpm: uncertainty.value.fraction * 1e6,
+      lowerMeasurementBoundFraction: lowerFraction,
+      upperMeasurementBoundFraction: upperFraction,
+      maximumAllowedFraction: maximum.value.fraction,
+      maximumAllowedPercent: maximum.value.fraction * 100,
+      maximumAllowedPpm: maximum.value.fraction * 1e6,
+      nominalMarginToLimitFraction: maximum.value.fraction - measured.value.fraction,
+      conservativeMarginToLimitFraction: maximum.value.fraction - upperFraction,
+      measurementMethodRef: methodRef,
+      supplierRequirementRef: requirementRef,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.materialMoistureAcceptance,
+      units: Object.freeze({ moisture: 'mass fraction / % / ppm' }),
+      assumptions: Object.freeze([
+        'The supplier limit applies to the exact material grade, material condition and moisture definition represented by the entered requirement reference.',
+        'The measured value and stated uncertainty come from the identified measurement method and sample, on the same mass-fraction basis as the supplier limit.',
+        'PASS is returned only when the upper measurement bound is at or below the entered supplier limit; FAIL only when the lower bound is above it; overlap returns INDETERMINATE.',
+        'This function does not prescribe dryer temperature, drying time, dew point, airflow or residence. Those values remain grade-, dryer- and supplier-specific.',
+        'A moisture result alone does not prove or disprove the root cause of splay, hydrolysis, molecular-weight loss or another defect.',
+      ]),
+      provenance,
+      authority: 'grade-specific-moisture-comparison-only',
     },
   );
 }
