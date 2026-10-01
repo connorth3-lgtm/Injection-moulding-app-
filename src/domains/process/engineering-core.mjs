@@ -894,6 +894,8 @@ export function pressureLossModelReadiness({
   volumetricFlow,
   upstreamPressureKind,
   downstreamPressureKind,
+  upstreamLocationId,
+  downstreamLocationId,
   provenance = null,
 } = {}) {
   const blockers = [];
@@ -913,7 +915,12 @@ export function pressureLossModelReadiness({
   const downstream = String(downstreamPressureKind || '').trim().toLowerCase().replaceAll('_', '-');
   if (!PRESSURE_KINDS.includes(upstream)) blockers.push('upstream-pressure-kind');
   if (!PRESSURE_KINDS.includes(downstream)) blockers.push('downstream-pressure-kind');
-  if (PRESSURE_KINDS.includes(upstream) && PRESSURE_KINDS.includes(downstream) && upstream === downstream) {
+
+  const upstreamLocation = String(upstreamLocationId || '').trim();
+  const downstreamLocation = String(downstreamLocationId || '').trim();
+  if (!upstreamLocation) blockers.push('upstream-pressure-location');
+  if (!downstreamLocation) blockers.push('downstream-pressure-location');
+  if (upstreamLocation && downstreamLocation && upstreamLocation === downstreamLocation) {
     blockers.push('distinct-pressure-locations');
   }
 
@@ -929,12 +936,14 @@ export function pressureLossModelReadiness({
       volumetricFlowCm3S: flow.ok ? flow.value.base : null,
       upstreamPressureKind: PRESSURE_KINDS.includes(upstream) ? upstream : null,
       downstreamPressureKind: PRESSURE_KINDS.includes(downstream) ? downstream : null,
+      upstreamLocationId: upstreamLocation || null,
+      downstreamLocationId: downstreamLocation || null,
     }),
     equationId: ENGINEERING_EQUATION_IDS.pressureLossModelReadiness,
     assumptions: Object.freeze([
       'Readiness means the minimum modelling semantics are present; it does not mean the rheology model, geometry discretisation or boundary conditions are valid.',
       'MFR/MFI alone is not accepted as a complete injection-moulding rheology model.',
-      'Pressure loss is not calculated unless geometry, flow, thermal state, material rheology and pressure-location semantics are all explicit.',
+      'Pressure loss is not calculated unless geometry, flow, thermal state, material rheology and explicit upstream/downstream pressure locations are all defined.',
     ]),
     provenance,
     authority: 'pressure-loss-readiness-only',
