@@ -2,9 +2,18 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {
   clampSeparatingForce,
+  clampSeparatingForceRange,
   aggregateShotMass,
+  pressureValue,
+  shotCapacityAssessment,
+  fillStageRates,
+  averageResidenceTimeEstimate,
+  averageResidenceTimeFromShotCycle,
+  relativeCoolingTimeScale,
+  gateSealPlateauAssessment,
   channelSemanticReadiness,
   gradeSpecificProcessingBoundary,
+  ENGINEERING_EQUATION_IDS,
   ENGINEERING_DOMAIN_BOUNDARY,
 } from './src/domains/process/engineering-core.mjs';
 
@@ -120,6 +129,159 @@ assert.equal(gradeBoundary.authority, 'source-first-boundary-only');
 assert.equal(gradeSpecificProcessingBoundary({ currentSupplierDocument: 'doc', requestedSetting: 'drying' }).reason, 'exact-grade-required');
 assert.equal(gradeSpecificProcessingBoundary({ exactGrade: 'grade', requestedSetting: 'drying' }).reason, 'current-grade-document-required');
 assert.equal(gradeSpecificProcessingBoundary({ exactGrade: 'grade', currentSupplierDocument: 'doc' }).reason, 'requested-setting-required');
+
+
+
+assert.equal(ENGINEERING_EQUATION_IDS.clampSeparatingForce, 'EQ-CF-001');
+assert.equal(ENGINEERING_EQUATION_IDS.gateSealPlateau, 'PROC-GATE-001');
+
+const cavityPressure = pressureValue({
+  pressure: { value: 55, unit: 'MPa' },
+  kind: 'cavity',
+  provenance: 'semantic-pressure-fixture',
+});
+assert.equal(cavityPressure.ok, true);
+assert.equal(cavityPressure.value.megapascals, 55);
+assert.equal(cavityPressure.value.bar, 550);
+assert.equal(cavityPressure.pressureKind, 'cavity');
+assert.equal(cavityPressure.equationId, 'EQ-PRESS-001');
+assert.match(cavityPressure.assumptions.join(' '), /does not convert one pressure location/i);
+assert.equal(pressureValue({ pressure: { value: 55, unit: 'MPa' } }).reason, 'pressure-kind-required');
+
+const clampRange = clampSeparatingForceRange({
+  projectedArea: { value: 100, unit: 'cm²' },
+  lowerRepresentativePressure: { value: 40, unit: 'MPa' },
+  upperRepresentativePressure: { value: 60, unit: 'MPa' },
+});
+assert.equal(clampRange.ok, true);
+assert.equal(clampRange.value.lowerKilonewtons, 400);
+assert.equal(clampRange.value.upperKilonewtons, 600);
+assert.equal(clampRange.equationId, 'EQ-CF-002');
+assert.equal(
+  clampSeparatingForceRange({
+    projectedArea: { value: 100, unit: 'cm2' },
+    lowerRepresentativePressure: { value: 70, unit: 'MPa' },
+    upperRepresentativePressure: { value: 60, unit: 'MPa' },
+  }).reason,
+  'pressure-range-reversed',
+);
+
+assert.equal(
+  shotCapacityAssessment({
+    requiredShotMass: { value: 55, unit: 'g' },
+    usableMachineShotMass: { value: 100, unit: 'g' },
+  }).reason,
+  'capacity-basis-unverified',
+);
+const shotCapacity = shotCapacityAssessment({
+  requiredShotMass: { value: 55, unit: 'g' },
+  usableMachineShotMass: { value: 0.1, unit: 'kg' },
+  capacityBasisVerified: true,
+});
+assert.equal(shotCapacity.ok, true);
+assert.equal(shotCapacity.value.utilisationPct, 55);
+assert.equal(shotCapacity.value.capacityMarginG, 45);
+assert.equal(shotCapacity.value.exceedsUsableCapacity, false);
+assert.match(shotCapacity.assumptions.join(' '), /No universal preferred barrel-utilisation percentage/i);
+
+const rates = fillStageRates({
+  fillTime: { value: 2, unit: 's' },
+  fillVolume: { value: 40, unit: 'cm³' },
+  fillMass: { value: 30, unit: 'g' },
+  injectionStroke: { value: 5, unit: 'cm' },
+});
+assert.equal(rates.ok, true);
+assert.equal(rates.value.volumetricFlowCm3S, 20);
+assert.equal(rates.value.massFlowGS, 15);
+assert.equal(rates.value.averageScrewRamSpeedMmS, 25);
+assert.equal(rates.equationId, 'EQ-FLOW-001');
+assert.equal(fillStageRates({ fillTime: { value: 2, unit: 's' } }).reason, 'fill-rate-numerator-required');
+
+const residence = averageResidenceTimeEstimate({
+  meltInventoryMass: { value: 500, unit: 'g' },
+  massThroughputRate: { value: 1, unit: 'kg/h' },
+});
+assert.equal(residence.ok, true);
+assert.ok(Math.abs(residence.value.minutes - 30) < 1e-12);
+assert.match(residence.assumptions.join(' '), /not a residence-time distribution/i);
+
+const residenceFromShot = averageResidenceTimeFromShotCycle({
+  meltInventoryMass: { value: 500, unit: 'g' },
+  shotMass: { value: 25, unit: 'g' },
+  cycleTime: { value: 20, unit: 's' },
+});
+assert.equal(residenceFromShot.ok, true);
+assert.equal(residenceFromShot.value.seconds, 400);
+assert.equal(residenceFromShot.value.shotMassG, 25);
+assert.equal(residenceFromShot.equationId, 'EQ-RES-002');
+
+const coolingScale = relativeCoolingTimeScale({
+  referenceCoolingTime: { value: 15, unit: 's' },
+  referenceThickness: { value: 2, unit: 'mm' },
+  targetThickness: { value: 3, unit: 'mm' },
+});
+assert.equal(coolingScale.ok, true);
+assert.equal(coolingScale.value.scalingFactor, 2.25);
+assert.equal(coolingScale.value.estimatedTargetCoolingTimeS, 33.75);
+assert.match(coolingScale.assumptions.join(' '), /not an absolute cooling-time prediction/i);
+
+const coolingWithDiffusivity = relativeCoolingTimeScale({
+  referenceCoolingTime: { value: 15, unit: 's' },
+  referenceThickness: { value: 2, unit: 'mm' },
+  targetThickness: { value: 3, unit: 'mm' },
+  referenceThermalDiffusivity: { value: 0.1, unit: 'mm²/s' },
+  targetThermalDiffusivity: { value: 0.08, unit: 'mm2/s' },
+});
+assert.equal(coolingWithDiffusivity.ok, true);
+assert.ok(Math.abs(coolingWithDiffusivity.value.estimatedTargetCoolingTimeS - 42.1875) < 1e-12);
+assert.equal(
+  relativeCoolingTimeScale({
+    referenceCoolingTime: { value: 15, unit: 's' },
+    referenceThickness: { value: 2, unit: 'mm' },
+    targetThickness: { value: 3, unit: 'mm' },
+    referenceThermalDiffusivity: { value: 0.1, unit: 'mm2/s' },
+  }).reason,
+  'both-diffusivities-required',
+);
+
+const gateStudy = gateSealPlateauAssessment({
+  plateauToleranceMass: { value: 0.03, unit: 'g' },
+  points: [
+    { holdTime: { value: 2, unit: 's' }, partMasses: [{ value: 40.00, unit: 'g' }, { value: 40.02, unit: 'g' }] },
+    { holdTime: { value: 4, unit: 's' }, partMasses: [{ value: 40.50, unit: 'g' }, { value: 40.52, unit: 'g' }] },
+    { holdTime: { value: 6, unit: 's' }, partMasses: [{ value: 40.70, unit: 'g' }, { value: 40.72, unit: 'g' }] },
+    { holdTime: { value: 8, unit: 's' }, partMasses: [{ value: 40.71, unit: 'g' }, { value: 40.72, unit: 'g' }] },
+    { holdTime: { value: 10, unit: 's' }, partMasses: [{ value: 40.72, unit: 'g' }, { value: 40.71, unit: 'g' }] },
+  ],
+});
+assert.equal(gateStudy.ok, true);
+assert.equal(gateStudy.value.conclusion, 'plateau-consistent-with-entered-tolerance');
+assert.equal(gateStudy.value.plateau.earliestConsistentHoldTimeS, 6);
+assert.equal(gateStudy.value.plateau.consecutivePointCount, 3);
+assert.match(gateStudy.assumptions.join(' '), /not universal proof of an exact physical gate-freeze instant/i);
+
+const noGatePlateau = gateSealPlateauAssessment({
+  plateauToleranceMass: { value: 0.001, unit: 'g' },
+  points: [
+    { holdTime: { value: 2, unit: 's' }, partMasses: [{ value: 40.00, unit: 'g' }, { value: 40.01, unit: 'g' }] },
+    { holdTime: { value: 4, unit: 's' }, partMasses: [{ value: 40.20, unit: 'g' }, { value: 40.21, unit: 'g' }] },
+    { holdTime: { value: 6, unit: 's' }, partMasses: [{ value: 40.30, unit: 'g' }, { value: 40.31, unit: 'g' }] },
+  ],
+});
+assert.equal(noGatePlateau.ok, true);
+assert.equal(noGatePlateau.value.conclusion, 'no-plateau-within-entered-range');
+assert.equal(noGatePlateau.value.plateau, null);
+assert.equal(
+  gateSealPlateauAssessment({
+    plateauToleranceMass: { value: 0.02, unit: 'g' },
+    points: [
+      { holdTime: { value: 2, unit: 's' }, partMasses: [{ value: 40, unit: 'g' }] },
+      { holdTime: { value: 4, unit: 's' }, partMasses: [{ value: 40.2, unit: 'g' }, { value: 40.21, unit: 'g' }] },
+      { holdTime: { value: 6, unit: 's' }, partMasses: [{ value: 40.3, unit: 'g' }, { value: 40.31, unit: 'g' }] },
+    ],
+  }).reason,
+  'insufficient-replicates',
+);
 
 assert.deepEqual(ENGINEERING_DOMAIN_BOUNDARY.dependenciesAllowed, ['plain JavaScript data']);
 assert.ok(ENGINEERING_DOMAIN_BOUNDARY.dependenciesForbidden.includes('DOM'));
