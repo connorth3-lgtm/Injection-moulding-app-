@@ -49,6 +49,10 @@ export const ENGINEERING_EQUATION_IDS = Object.freeze({
   tieBarClearanceFit: 'EQ-FIT-004',
   ejectorStrokeFit: 'EQ-FIT-005',
   machineSuitabilitySummary: 'EQ-FIT-006',
+  hydraulicDiameter: 'EQ-FLOWPATH-001',
+  uniformChannelVolume: 'EQ-FLOWPATH-002',
+  circularChannelApparentWallShearRate: 'EQ-FLOWPATH-003',
+  pressureLossModelReadiness: 'PROC-FLOWPATH-001',
   fillStageRates: 'EQ-FLOW-001',
   averageResidenceTime: 'EQ-RES-001',
   averageResidenceFromShotCycle: 'EQ-RES-002',
@@ -722,6 +726,154 @@ export function machineSuitabilitySummary({
       authority: 'declared-axis-composition-only',
     },
   );
+}
+
+
+export function hydraulicDiameter({
+  crossSectionArea,
+  wettedPerimeter,
+  provenance = null,
+} = {}) {
+  const area = convertPositive(crossSectionArea, AREA_TO_M2, 'cross-section-area');
+  if (!area.ok) return area;
+  const perimeter = convertPositiveBase(wettedPerimeter, LENGTH_TO_MM, 'wetted-perimeter', 'mm');
+  if (!perimeter.ok) return perimeter;
+  const perimeterM = perimeter.value.base / 1000;
+  const hydraulicDiameterM = 4 * area.value.si / perimeterM;
+  return supported(
+    {
+      hydraulicDiameterMm: hydraulicDiameterM * 1000,
+      crossSectionAreaM2: area.value.si,
+      wettedPerimeterMm: perimeter.value.base,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.hydraulicDiameter,
+      units: Object.freeze({ hydraulicDiameter: 'mm', area: 'm²', perimeter: 'mm' }),
+      assumptions: Object.freeze([
+        'Hydraulic diameter is defined here as 4A/P for a fully wetted internal flow passage.',
+        'Cross-sectional area and wetted perimeter must describe the same local passage section.',
+        'Hydraulic diameter is a geometric characteristic only; it does not by itself establish pressure loss, shear stress, viscosity or a recommended runner/gate size.',
+      ]),
+      provenance,
+      authority: 'flow-path-geometry-only',
+    },
+  );
+}
+
+export function uniformChannelVolume({
+  crossSectionArea,
+  channelLength,
+  provenance = null,
+} = {}) {
+  const area = convertPositive(crossSectionArea, AREA_TO_M2, 'cross-section-area');
+  if (!area.ok) return area;
+  const length = convertPositiveBase(channelLength, LENGTH_TO_MM, 'channel-length', 'mm');
+  if (!length.ok) return length;
+  const volumeCm3 = area.value.si * (length.value.base / 1000) * 1e6;
+  return supported(
+    {
+      volumeCm3,
+      crossSectionAreaM2: area.value.si,
+      channelLengthMm: length.value.base,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.uniformChannelVolume,
+      units: Object.freeze({ volume: 'cm³', area: 'm²', length: 'mm' }),
+      assumptions: Object.freeze([
+        'The supplied cross-section is uniform over the supplied channel length.',
+        'The result is geometric volume only; packing/compressibility, hot-runner thermal expansion, junction volumes and local transitions are excluded unless separately represented.',
+      ]),
+      provenance,
+      authority: 'flow-path-geometry-only',
+    },
+  );
+}
+
+export function circularChannelApparentWallShearRate({
+  volumetricFlow,
+  diameter,
+  provenance = null,
+} = {}) {
+  const flow = convertPositiveBase(volumetricFlow, VOLUME_RATE_TO_CM3_S, 'volumetric-flow', 'cm3/s');
+  if (!flow.ok) return flow;
+  const d = convertPositiveBase(diameter, LENGTH_TO_MM, 'diameter', 'mm');
+  if (!d.ok) return d;
+  const flowMm3S = flow.value.base * 1000;
+  const apparentShearRatePerS = 32 * flowMm3S / (Math.PI * d.value.base ** 3);
+  return supported(
+    {
+      apparentWallShearRatePerS,
+      volumetricFlowCm3S: flow.value.base,
+      diameterMm: d.value.base,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.circularChannelApparentWallShearRate,
+      units: Object.freeze({ shearRate: '1/s', flow: 'cm³/s', diameter: 'mm' }),
+      assumptions: Object.freeze([
+        'This is the nominal/apparent wall shear-rate expression 32Q/(πD³) for a fully filled circular channel.',
+        'It is a geometric kinematic screen and does not apply a Rabinowitsch correction for non-Newtonian polymer behaviour.',
+        'It does not calculate viscosity, shear stress, shear heating, pressure loss or a safe/recommended gate or runner shear-rate limit.',
+        'Flow must be the volumetric flow through this exact circular passage rather than a machine command or unrelated upstream total when branches divide flow.',
+      ]),
+      provenance,
+      authority: 'apparent-geometric-rate-only',
+    },
+  );
+}
+
+export function pressureLossModelReadiness({
+  materialGradeId,
+  rheologyModelRef,
+  thermalStateRef,
+  flowPathGeometryRef,
+  volumetricFlow,
+  upstreamPressureKind,
+  downstreamPressureKind,
+  provenance = null,
+} = {}) {
+  const blockers = [];
+  const grade = String(materialGradeId || '').trim();
+  const rheology = String(rheologyModelRef || '').trim();
+  const thermal = String(thermalStateRef || '').trim();
+  const geometry = String(flowPathGeometryRef || '').trim();
+  if (!grade) blockers.push('material-grade');
+  if (!rheology) blockers.push('rheology-model');
+  if (!thermal) blockers.push('thermal-state');
+  if (!geometry) blockers.push('flow-path-geometry');
+
+  const flow = convertPositiveBase(volumetricFlow, VOLUME_RATE_TO_CM3_S, 'volumetric-flow', 'cm3/s');
+  if (!flow.ok) blockers.push('volumetric-flow');
+
+  const upstream = String(upstreamPressureKind || '').trim().toLowerCase().replaceAll('_', '-');
+  const downstream = String(downstreamPressureKind || '').trim().toLowerCase().replaceAll('_', '-');
+  if (!PRESSURE_KINDS.includes(upstream)) blockers.push('upstream-pressure-kind');
+  if (!PRESSURE_KINDS.includes(downstream)) blockers.push('downstream-pressure-kind');
+  if (PRESSURE_KINDS.includes(upstream) && PRESSURE_KINDS.includes(downstream) && upstream === downstream) {
+    blockers.push('distinct-pressure-locations');
+  }
+
+  return Object.freeze({
+    ok: true,
+    value: Object.freeze({
+      ready: blockers.length === 0,
+      blockers: Object.freeze([...new Set(blockers)]),
+      materialGradeId: grade || null,
+      rheologyModelRef: rheology || null,
+      thermalStateRef: thermal || null,
+      flowPathGeometryRef: geometry || null,
+      volumetricFlowCm3S: flow.ok ? flow.value.base : null,
+      upstreamPressureKind: PRESSURE_KINDS.includes(upstream) ? upstream : null,
+      downstreamPressureKind: PRESSURE_KINDS.includes(downstream) ? downstream : null,
+    }),
+    equationId: ENGINEERING_EQUATION_IDS.pressureLossModelReadiness,
+    assumptions: Object.freeze([
+      'Readiness means the minimum modelling semantics are present; it does not mean the rheology model, geometry discretisation or boundary conditions are valid.',
+      'MFR/MFI alone is not accepted as a complete injection-moulding rheology model.',
+      'Pressure loss is not calculated unless geometry, flow, thermal state, material rheology and pressure-location semantics are all explicit.',
+    ]),
+    provenance,
+    authority: 'pressure-loss-readiness-only',
+  });
 }
 
 export function fillStageRates({ fillTime, fillVolume = null, fillMass = null, injectionStroke = null, provenance = null } = {}) {
