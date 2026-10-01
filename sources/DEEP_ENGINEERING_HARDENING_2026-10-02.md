@@ -34,7 +34,7 @@ This pass reviewed the current MouldMaster engineering/runtime architecture and 
 12. source-bound linear shrinkage compensation-range arithmetic that refuses unsourced generic shrinkage inputs and explicitly stops short of a released tool dimension;
 13. exact-grade, sample-specific moisture acceptance against a supplier-controlled limit with explicit measurement uncertainty and PASS / FAIL / INDETERMINATE states, without generating drying setpoints;
 14. exact-identity mould-height, opening-stroke, maximum-daylight, tie-bar-clearance and ejector-stroke fit screens;
-15. a declared-axis machine-suitability composer that preserves PASS / MARGINAL / FAIL / UNKNOWN, rejects cross-machine/cross-injection-unit/cross-mould assessment identities as UNKNOWN, does not invent a marginal threshold, and requires `marginalBasisRef` for any MARGINAL assessment;
+15. a declared-axis machine-suitability composer that preserves PASS / MARGINAL / FAIL / UNKNOWN, rejects cross-machine/cross-injection-unit/cross-mould identities as UNKNOWN, rejects identity-free custom axes unless they explicitly declare `contextIndependent` plus `contextBasisRef`, does not invent a marginal threshold, and requires `marginalBasisRef` for any MARGINAL assessment;
 16. hydraulic-diameter, uniform-channel-volume and circular-channel apparent wall-shear-rate screens with explicit non-Newtonian/pressure-loss boundaries;
 17. fail-closed pressure-loss modelling readiness that rejects MFR/MFI as a substitute for an explicit rheology model and blocks hydraulic/command pressure types;
 18. repeatability-aware gate-seal plateau analysis using a user-supplied decision tolerance.
