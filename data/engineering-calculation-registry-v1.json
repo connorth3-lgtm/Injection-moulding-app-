@@ -595,6 +595,33 @@
       "uncertaintyBoundary": "Not a released tool dimension and does not supply a generic polymer shrinkage constant; anisotropy, fibre orientation, pressure/thermal history, geometry, conditioning and tolerances remain outside this arithmetic."
     },
     {
+      "id": "EQ-MAT-001",
+      "name": "Uncertainty-aware exact-grade moisture acceptance",
+      "formula": "Compare [measured moisture - uncertainty, measured moisture + uncertainty] with a supplier-controlled maximum moisture limit on the same mass-fraction basis",
+      "inputs": [
+        "exact material grade ID",
+        "sample ID",
+        "measured moisture",
+        "measurement uncertainty",
+        "supplier maximum moisture",
+        "measurement method reference",
+        "supplier requirement reference",
+        "mass-fraction basis"
+      ],
+      "outputs": [
+        "PASS / FAIL / INDETERMINATE",
+        "measurement bounds",
+        "nominal and conservative margin to limit"
+      ],
+      "scope": "Grade- and sample-specific moisture comparison only; supports source-first material control without generating a drying recipe.",
+      "evidenceAnchors": [
+        "iso-15512-2019",
+        "BASF-ULTRAMID-PROCESSING",
+        "BASF-ULTRASON-INJECTION"
+      ],
+      "uncertaintyBoundary": "PASS requires the upper measurement bound to be at/below the supplied grade limit; FAIL requires the lower bound to exceed it; overlap is INDETERMINATE. No dryer temperature, time, dew point, airflow or defect root cause is inferred."
+    },
+    {
       "id": "PROC-GATE-001",
       "name": "Repeatability-aware gate-seal plateau assessment",
       "formula": "Compare adjacent repeated part-mass means against a user-supplied decision tolerance across at least three hold-time levels.",
