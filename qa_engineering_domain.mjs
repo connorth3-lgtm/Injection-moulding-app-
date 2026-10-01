@@ -30,6 +30,7 @@ import {
   averageResidenceTimeFromShotCycle,
   relativeCoolingTimeScale,
   linearShrinkageCompensationRange,
+  materialMoistureAcceptance,
   gateSealPlateauAssessment,
   channelSemanticReadiness,
   gradeSpecificProcessingBoundary,
@@ -802,6 +803,78 @@ assert.equal(
     provenance: 'test',
   }).reason,
   'shrinkage-range-reversed',
+);
+
+
+const moisturePass = materialMoistureAcceptance({
+  materialGradeId: 'PA66-GF30-grade-X',
+  sampleId: 'lot-24/sample-3',
+  measuredMoisture: { value: 850, unit: 'ppm' },
+  maximumAllowedMoisture: { value: 0.10, unit: '%' },
+  measurementUncertainty: { value: 50, unit: 'ppm' },
+  moistureBasis: 'mass-fraction',
+  measurementMethodRef: 'ISO-15512-lab-method/run-24',
+  supplierRequirementRef: 'supplier-grade-guide/rev-7/moisture-limit',
+  provenance: 'incoming-material-lab',
+});
+assert.equal(moisturePass.ok, true);
+assert.equal(moisturePass.value.state, 'PASS');
+assert.ok(Math.abs(moisturePass.value.upperMeasurementBoundFraction - 0.0009) < 1e-12);
+assert.ok(Math.abs(moisturePass.value.maximumAllowedFraction - 0.001) < 1e-12);
+assert.equal(moisturePass.equationId, 'EQ-MAT-001');
+assert.match(moisturePass.assumptions.join(' '), /does not prescribe dryer temperature/i);
+
+const moistureFail = materialMoistureAcceptance({
+  materialGradeId: 'PA66-GF30-grade-X',
+  sampleId: 'lot-24/sample-4',
+  measuredMoisture: { value: 1250, unit: 'ppm' },
+  maximumAllowedMoisture: { value: 1000, unit: 'ppm' },
+  measurementUncertainty: { value: 100, unit: 'ppm' },
+  measurementMethodRef: 'ISO-15512-lab-method/run-25',
+  supplierRequirementRef: 'supplier-grade-guide/rev-7/moisture-limit',
+});
+assert.equal(moistureFail.ok, true);
+assert.equal(moistureFail.value.state, 'FAIL');
+assert.ok(moistureFail.value.lowerMeasurementBoundFraction > moistureFail.value.maximumAllowedFraction);
+
+const moistureIndeterminate = materialMoistureAcceptance({
+  materialGradeId: 'PA66-GF30-grade-X',
+  sampleId: 'lot-24/sample-5',
+  measuredMoisture: { value: 950, unit: 'ppm' },
+  maximumAllowedMoisture: { value: 1000, unit: 'ppm' },
+  measurementUncertainty: { value: 100, unit: 'ppm' },
+  measurementMethodRef: 'ISO-15512-lab-method/run-26',
+  supplierRequirementRef: 'supplier-grade-guide/rev-7/moisture-limit',
+});
+assert.equal(moistureIndeterminate.ok, true);
+assert.equal(moistureIndeterminate.value.state, 'INDETERMINATE');
+assert.ok(moistureIndeterminate.value.lowerMeasurementBoundFraction < moistureIndeterminate.value.maximumAllowedFraction);
+assert.ok(moistureIndeterminate.value.upperMeasurementBoundFraction > moistureIndeterminate.value.maximumAllowedFraction);
+
+assert.equal(
+  materialMoistureAcceptance({
+    materialGradeId: 'PA66-GF30-grade-X',
+    sampleId: 'lot-24/sample-6',
+    measuredMoisture: { value: 900, unit: 'ppm' },
+    maximumAllowedMoisture: { value: 1000, unit: 'ppm' },
+    measurementUncertainty: { value: 50, unit: 'ppm' },
+    measurementMethodRef: 'ISO-15512-lab-method/run-27',
+  }).reason,
+  'supplier-requirement-required',
+);
+
+assert.equal(
+  materialMoistureAcceptance({
+    materialGradeId: 'PA66-GF30-grade-X',
+    sampleId: 'lot-24/sample-7',
+    measuredMoisture: { value: 900, unit: 'PPM' },
+    maximumAllowedMoisture: { value: 1000, unit: 'ppm' },
+    measurementUncertainty: { value: 50, unit: 'ppm' },
+    measurementMethodRef: 'ISO-15512-lab-method/run-28',
+    supplierRequirementRef: 'supplier-grade-guide/rev-7/moisture-limit',
+  }).reason,
+  'unsupported-measured-moisture-unit',
+  'moisture units must use the governed canonical spelling rather than guessed case',
 );
 
 const gateStudy = gateSealPlateauAssessment({
