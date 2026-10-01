@@ -26,7 +26,7 @@ The score is the absolute difference between group means divided by that spread.
 
 ## Energy per good part
 
-Energy-per-good-part is calculated only when the energy channel is explicitly confirmed as `per-cycle`, the unit is a supported energy unit, every included cycle has both finite energy and a resolved quality label, and at least one good part exists. Missing or misaligned coverage makes the ratio unscored rather than silently biasing the numerator or denominator.
+Energy-per-good-part is calculated only when every included row has a unique cycle identity, the energy channel is explicitly confirmed as `per-cycle`, and the sampling basis, energy-measurement basis and quality-disposition basis each carry a non-empty reference. The unit must be supported, every included cycle must have finite non-negative energy plus a resolved 0/1 quality label, and at least one good part must exist. Energy consumed by rejected cycles remains in the numerator while only good parts contribute to the denominator. Missing, duplicate, negative-energy or misaligned coverage makes the ratio unscored rather than silently biasing the result.
 
 ## Boundaries
 
