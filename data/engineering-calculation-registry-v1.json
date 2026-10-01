@@ -395,7 +395,8 @@
         "thermal-state reference",
         "flow-path geometry reference",
         "volumetric flow",
-        "upstream/downstream pressure kinds"
+        "upstream/downstream pressure kinds",
+        "distinct upstream/downstream location IDs"
       ],
       "outputs": [
         "ready flag",
@@ -407,7 +408,7 @@
         "AUTODESK-RUNNER-LAYOUT",
         "ISO-294-1-2017"
       ],
-      "uncertaintyBoundary": "Readiness is not model validation; MFR/MFI alone is not accepted as complete injection-moulding rheology and no pressure loss is calculated."
+      "uncertaintyBoundary": "Readiness is not model validation; MFR/MFI alone is not accepted as complete injection-moulding rheology, pressure locations must be explicit, and no pressure loss is calculated."
     },
     {
       "id": "EQ-FLOW-001",
