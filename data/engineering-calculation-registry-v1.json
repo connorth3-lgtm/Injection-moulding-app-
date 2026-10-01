@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "registryId": "mouldmaster-engineering-calculations-v1",
+  "status": "advisory-only",
+  "authorityBoundary": "No calculation in this registry grants production recipe, safety, machine-control or universal setpoint authority.",
+  "implementation": "src/domains/process/engineering-core.mjs",
+  "entries": [
+    {
+      "id": "EQ-PRESS-001",
+      "name": "Pressure unit conversion with semantic pressure type",
+      "formula": "P_out = P_in × unit conversion factor",
+      "inputs": ["pressure value", "pressure unit", "pressure kind"],
+      "outputs": ["Pa", "kPa", "MPa", "bar"],
+      "scope": "Unit conversion only. Hydraulic, specific-plastic, nozzle, runner, cavity and pack-command pressures remain distinct.",
+      "evidenceAnchors": ["PARIZS-2023-IN-MOLD-SENSORS"],
+      "uncertaintyBoundary": "No location-to-location or hydraulic-to-plastic conversion is inferred."
+    },
+    {
+      "id": "EQ-CF-001",
+      "name": "Clamp separating-force screening estimate",
+      "formula": "F = A_projected × P_representative",
+      "inputs": ["projected area", "explicit representative pressure"],
+      "outputs": ["N", "kN"],
+      "scope": "Arithmetic separating-force screen; not automatically a required machine clamp setting.",
+      "evidenceAnchors": ["10.1016/J.CIRPJ.2017.03.001", "10.1016/J.PRECISIONENG.2017.11.007"],
+      "uncertaintyBoundary": "Does not resolve spatial pressure gradients, mould/platen deflection, tie-bar imbalance or dynamic effects."
+    },
+    {
+      "id": "EQ-CF-002",
+      "name": "Clamp separating-force range",
+      "formula": "F_low/high = A_projected × P_low/high",
+      "inputs": ["projected area", "lower representative pressure", "upper representative pressure"],
+      "outputs": ["lower/upper N", "lower/upper kN"],
+      "scope": "Uncertainty-aware screening range using an explicitly supplied pressure range.",
+      "evidenceAnchors": ["10.1016/J.CIRPJ.2017.03.001", "10.1016/J.PRECISIONENG.2017.11.007"],
+      "uncertaintyBoundary": "No safety factor or machine rating is invented."
+    },
+    {
+      "id": "EQ-SHOT-001",
+      "name": "Aggregate shot mass",
+      "formula": "m_shot = cavity_count × m_part + m_runner",
+      "inputs": ["cavity count", "part mass", "optional runner mass"],
+      "outputs": ["g", "kg"],
+      "scope": "Mass accounting only.",
+      "evidenceAnchors": ["ISO-294-1-2017"],
+      "uncertaintyBoundary": "Does not establish usable machine shot capacity."
+    },
+    {
+      "id": "EQ-SHOT-002",
+      "name": "Verified-basis shot-capacity utilisation",
+      "formula": "utilisation[%] = 100 × m_required / m_usable",
+      "inputs": ["required shot mass", "usable machine shot mass", "verified comparable capacity basis"],
+      "outputs": ["utilisation %", "capacity margin g"],
+      "scope": "Capacity screen only after mass-basis equivalence is explicitly verified.",
+      "evidenceAnchors": ["ARBURG-PLASTICISING-SERVICE"],
+      "uncertaintyBoundary": "No universal preferred barrel-utilisation percentage is supplied."
+    },
+    {
+      "id": "EQ-FLOW-001",
+      "name": "Fill-stage measured rate arithmetic",
+      "formula": "Q = V/t; m_dot = m/t; v_ram = stroke/t",
+      "inputs": ["fill time", "optional fill volume", "optional fill mass", "optional injection stroke"],
+      "outputs": ["cm3/s", "g/s", "mm/s"],
+      "scope": "Direct rate arithmetic over one explicitly matched fill interval.",
+      "evidenceAnchors": ["ISO-294-1-2017"],
+      "uncertaintyBoundary": "Screw/ram speed is not melt-front velocity; no shear rate, viscosity or pressure loss is inferred."
+    },
+    {
+      "id": "EQ-RES-001",
+      "name": "Average residence-time estimate",
+      "formula": "t_avg = melt_inventory / mass_throughput_rate",
+      "inputs": ["melt inventory mass", "mass throughput rate"],
+      "outputs": ["s", "min", "h"],
+      "scope": "Steady-throughput average inventory/throughput estimate.",
+      "evidenceAnchors": ["ARBURG-PLASTICISING-SERVICE", "BASF-ULTRAMID-PROCESSING"],
+      "uncertaintyBoundary": "Not a residence-time distribution and does not represent stagnant/dead regions unless included in the supplied basis."
+    },
+    {
+      "id": "EQ-RES-002",
+      "name": "Average residence time from shot/cycle throughput",
+      "formula": "throughput = m_shot/t_cycle; t_avg = melt_inventory/throughput",
+      "inputs": ["melt inventory mass", "shot mass", "cycle time"],
+      "outputs": ["s", "min", "h"],
+      "scope": "Screening estimate for steady repeated cycling.",
+      "evidenceAnchors": ["ARBURG-PLASTICISING-SERVICE", "BASF-ULTRAMID-PROCESSING"],
+      "uncertaintyBoundary": "Purging, rejects, interruptions, hot-runner residence and recirculation are excluded unless separately represented."
+    },
+    {
+      "id": "EQ-THERM-001",
+      "name": "Relative cooling-time diffusion scaling",
+      "formula": "t_target/t_ref = (s_target/s_ref)^2 × (alpha_ref/alpha_target)",
+      "inputs": ["reference cooling time", "reference/target characteristic thickness", "optional reference/target thermal diffusivity"],
+      "outputs": ["scaling factor", "estimated target cooling time"],
+      "scope": "First-order relative comparison only under comparable thermal boundary/ejection conditions.",
+      "evidenceAnchors": ["AUTODESK-COOLING", "KUO-2022-COOLING-WARPAGE"],
+      "uncertaintyBoundary": "Not an absolute cooling predictor; crystallisation, thermal contact resistance, local geometry, circuit resistance and transient mould state can invalidate the scaling."
+    },
+    {
+      "id": "PROC-GATE-001",
+      "name": "Repeatability-aware gate-seal plateau assessment",
+      "formula": "Compare adjacent repeated part-mass means against a user-supplied decision tolerance across at least three hold-time levels.",
+      "inputs": ["hold-time levels", "at least two part-mass replicates per level", "user-supplied plateau tolerance"],
+      "outputs": ["plateau-consistent/no-plateau conclusion", "earliest consistent hold-time level", "repeatability statistics"],
+      "scope": "Controlled-study analysis for one material/gate/mould/thermal state.",
+      "evidenceAnchors": ["PARIZS-2023-IN-MOLD-SENSORS", "RJG-GATE-SEAL-STUDY"],
+      "uncertaintyBoundary": "A mass plateau is evidence consistent with diminishing additional transfer, not universal proof of an exact physical gate-freeze instant."
+    }
+  ]
+}
