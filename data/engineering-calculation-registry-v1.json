@@ -574,6 +574,33 @@
       "uncertaintyBoundary": "Not an absolute cooling predictor; crystallisation, thermal contact resistance, local geometry, circuit resistance and transient mould state can invalidate the scaling."
     },
     {
+      "id": "EQ-THERM-002",
+      "name": "Amorphous 1-D plane-wall centerline cooling estimate",
+      "formula": "t = s^2/(pi^2 alpha) × ln[(4/pi) × (T_melt - T_mould)/(T_eject - T_mould)]",
+      "inputs": [
+        "full wall thickness",
+        "source-backed thermal diffusivity",
+        "melt temperature",
+        "mould surface temperature",
+        "ejection temperature",
+        "amorphous morphology",
+        "thermal-diffusivity reference",
+        "ejection-criterion reference",
+        "mould-surface-temperature basis reference"
+      ],
+      "outputs": [
+        "analytical cooling-time estimate",
+        "logarithm argument",
+        "retained thermal basis"
+      ],
+      "scope": "First-term one-dimensional plane-wall/centerline screening estimate for explicitly amorphous thermoplastics only.",
+      "evidenceAnchors": [
+        "10.1016/j.ijheatmasstransfer.2017.09.078",
+        "10.3390/polym12010154"
+      ],
+      "uncertaintyBoundary": "Semi-crystalline material is rejected; crystallisation/latent heat, thermal contact resistance, local geometry, nonuniform thermal history, cooling-circuit resistance, mould transient state and post-ejection reheating are not resolved. Output is not a guaranteed cycle-time setting."
+    },
+    {
       "id": "EQ-SHR-001",
       "name": "Source-bound linear shrinkage compensation range",
       "formula": "D_mould = D_target / (1 - S), where S = (D_mould - D_part) / D_mould",
