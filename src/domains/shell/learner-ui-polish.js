@@ -134,7 +134,7 @@ function syncBookDisclosure(){
     const details=document.createElement('details');
     details.className='mm-book-assurance-details';
     const summary=document.createElement('summary');
-    summary.innerHTML='<b>Accuracy & assurance boundary</b><span>What “evidence verified” does and does not mean</span>';
+    summary.innerHTML='<b>Accuracy & assurance boundary</b><span>What “source evidence reviewed” does and does not mean</span>';
     const body=document.createElement('div');
     body.className='mm-book-assurance-body';
     while(accuracy.firstChild)body.appendChild(accuracy.firstChild);
