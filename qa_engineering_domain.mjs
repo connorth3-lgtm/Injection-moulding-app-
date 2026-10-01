@@ -251,6 +251,16 @@ assert.equal(
 );
 
 assert.equal(
+  clampSeparatingForceRange({
+    projectedArea: { value: 1, unit: 'Mm2' },
+    lowerRepresentativePressure: { value: 40, unit: 'MPa' },
+    upperRepresentativePressure: { value: 60, unit: 'MPa' },
+  }).reason,
+  'unsupported-projected-area-unit',
+  'Mm2 must never be silently interpreted as mm2',
+);
+
+assert.equal(
   shotCapacityAssessment({
     requiredShotMass: { value: 55, unit: 'g' },
     usableMachineShotMass: { value: 100, unit: 'g' },
@@ -267,6 +277,24 @@ assert.equal(shotCapacity.value.utilisationPct, 55);
 assert.equal(shotCapacity.value.capacityMarginG, 45);
 assert.equal(shotCapacity.value.exceedsUsableCapacity, false);
 assert.match(shotCapacity.assumptions.join(' '), /No universal preferred barrel-utilisation percentage/i);
+
+assert.equal(
+  aggregateShotMass({
+    cavityCount: 1,
+    partMass: { value: 1, unit: 'Mg' },
+  }).reason,
+  'unsupported-part-mass-unit',
+  'Mg must never be silently interpreted as mg',
+);
+assert.equal(
+  aggregateShotMass({
+    cavityCount: 1,
+    partMass: { value: 10, unit: 'g' },
+    runnerMass: { value: 1, unit: 'Mg' },
+  }).reason,
+  'unsupported-runner-mass-unit',
+  'runner mass must preserve SI prefix case',
+);
 
 
 const clampCapacity = clampCapacityAssessment({
@@ -603,6 +631,23 @@ assert.equal(rates.value.averageScrewRamSpeedMmS, 25);
 assert.equal(rates.equationId, 'EQ-FLOW-001');
 assert.equal(fillStageRates({ fillTime: { value: 2, unit: 's' } }).reason, 'fill-rate-numerator-required');
 
+assert.equal(
+  fillStageRates({
+    fillTime: { value: 2, unit: 's' },
+    injectionStroke: { value: 1, unit: 'Mm' },
+  }).reason,
+  'unsupported-injection-stroke-unit',
+  'Mm must never be silently interpreted as mm',
+);
+assert.equal(
+  fillStageRates({
+    fillTime: { value: 2, unit: 's' },
+    fillVolume: { value: 1, unit: 'ML' },
+  }).reason,
+  'unsupported-fill-volume-unit',
+  'ML must never be silently interpreted as mL',
+);
+
 const residence = averageResidenceTimeEstimate({
   meltInventoryMass: { value: 500, unit: 'g' },
   massThroughputRate: { value: 1, unit: 'kg/h' },
@@ -648,6 +693,18 @@ assert.equal(
     referenceThermalDiffusivity: { value: 0.1, unit: 'mm2/s' },
   }).reason,
   'both-diffusivities-required',
+);
+
+assert.equal(
+  relativeCoolingTimeScale({
+    referenceCoolingTime: { value: 15, unit: 's' },
+    referenceThickness: { value: 2, unit: 'mm' },
+    targetThickness: { value: 3, unit: 'mm' },
+    referenceThermalDiffusivity: { value: 0.1, unit: 'Mm2/s' },
+    targetThermalDiffusivity: { value: 0.08, unit: 'mm2/s' },
+  }).reason,
+  'unsupported-reference-thermal-diffusivity-unit',
+  'Mm2/s must never be silently interpreted as mm2/s',
 );
 
 
