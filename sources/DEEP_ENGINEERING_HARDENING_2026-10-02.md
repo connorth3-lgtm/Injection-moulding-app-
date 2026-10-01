@@ -23,11 +23,12 @@ This pass reviewed the current MouldMaster engineering/runtime architecture and 
 1. pressure unit conversion with mandatory pressure-type semantics;
 2. clamp separating-force range from an explicitly supplied pressure range;
 3. shot-capacity utilisation only after comparable capacity basis is explicitly verified;
-4. fill-stage volume/mass/ram-rate arithmetic;
-5. average residence-time screening from inventory/throughput;
-6. average residence screening derived from shot mass and cycle time;
-7. relative cooling-time diffusion scaling with explicit non-absolute-model boundaries;
-8. repeatability-aware gate-seal plateau analysis using a user-supplied decision tolerance.
+4. separate clamp-force, specific-plastic-pressure, volumetric-flow and plasticising-throughput capacity comparisons, each requiring a verified like-for-like basis;
+5. fill-stage volume/mass/ram-rate arithmetic;
+6. average residence-time screening from inventory/throughput;
+7. average residence screening derived from shot mass and cycle time;
+8. relative cooling-time diffusion scaling with explicit non-absolute-model boundaries;
+9. repeatability-aware gate-seal plateau analysis using a user-supplied decision tolerance.
 
 All new functions return structured unsupported states rather than silently inventing missing engineering meaning.
 
@@ -67,17 +68,7 @@ Required direction:
 
 ### P1 — machine suitability
 
-The pure domain still needs a fail-closed machine-suitability composition layer for:
-
-- clamp capacity;
-- verified shot capacity;
-- available plastic pressure;
-- volumetric flow/injection-rate capability;
-- plasticising/recovery capability;
-- residence/thermal history;
-- mould height/daylight/tie-bar/opening/ejector fit.
-
-No overall PASS should be produced when one of the required semantics is unknown; the output should show per-axis PASS / MARGINAL / FAIL / UNKNOWN.
+Separate pure capacity screens now exist for clamp force, verified shot mass, specific-plastic pressure, volumetric injection flow and plasticising throughput. The remaining gap is a fail-closed **machine-suitability composition layer** that combines those screens with residence/thermal history and physical mould-fit checks (mould height, daylight, tie-bar clearance, opening stroke and ejector stroke). No overall PASS should be produced when a required axis is unknown; the final output should preserve per-axis PASS / MARGINAL / FAIL / UNKNOWN rather than hiding an incomplete machine match behind one green result.
 
 ### P1 — thermal model depth
 
