@@ -545,19 +545,23 @@
       "formula": "t_avg = melt_inventory / mass_throughput_rate",
       "inputs": [
         "melt inventory mass",
-        "mass throughput rate"
+        "mass throughput rate",
+        "exact injection-unit configuration ID",
+        "melt-inventory basis reference",
+        "throughput basis reference"
       ],
       "outputs": [
-        "s",
-        "min",
-        "h"
+        "injection-unit identity",
+        "inventory/throughput basis references",
+        "average residence time",
+        "normalized throughput"
       ],
-      "scope": "Steady-throughput average inventory/throughput estimate.",
+      "scope": "Steady-throughput average inventory/throughput estimate tied to one exact injection-unit configuration and explicit inventory/throughput evidence.",
       "evidenceAnchors": [
         "ARBURG-PLASTICISING-SERVICE",
         "BASF-ULTRAMID-PROCESSING"
       ],
-      "uncertaintyBoundary": "Not a residence-time distribution and does not represent stagnant/dead regions unless included in the supplied basis."
+      "uncertaintyBoundary": "Not a residence-time distribution, exact oldest-material age, or grade-specific safe-residence verdict. Stagnant regions, hot-runner inventory, interruptions, purging and recirculation remain outside the estimate unless included in the referenced basis."
     },
     {
       "id": "EQ-RES-002",
@@ -566,19 +570,24 @@
       "inputs": [
         "melt inventory mass",
         "shot mass",
-        "cycle time"
+        "cycle time",
+        "exact injection-unit configuration ID",
+        "melt-inventory basis reference",
+        "shot-mass basis reference",
+        "cycle-time basis reference"
       ],
       "outputs": [
-        "s",
-        "min",
-        "h"
+        "injection-unit identity",
+        "basis references",
+        "derived throughput",
+        "average residence time"
       ],
-      "scope": "Screening estimate for steady repeated cycling.",
+      "scope": "Average inventory/throughput estimate derived from referenced shot mass and cycle time for one exact injection-unit configuration.",
       "evidenceAnchors": [
         "ARBURG-PLASTICISING-SERVICE",
         "BASF-ULTRAMID-PROCESSING"
       ],
-      "uncertaintyBoundary": "Purging, rejects, interruptions, hot-runner residence and recirculation are excluded unless separately represented."
+      "uncertaintyBoundary": "Assumes one referenced shot leaves per referenced cycle. Purge/reject/interruption/recirculation flow is excluded unless represented; result is not a residence-time distribution or grade-specific safe-residence verdict."
     },
     {
       "id": "EQ-THERM-001",
