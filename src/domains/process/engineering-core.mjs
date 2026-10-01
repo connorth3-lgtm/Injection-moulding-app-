@@ -74,6 +74,7 @@ export const ENGINEERING_EQUATION_IDS = Object.freeze({
   averageResidenceTime: 'EQ-RES-001',
   averageResidenceFromShotCycle: 'EQ-RES-002',
   relativeCoolingTimeScale: 'EQ-THERM-001',
+  amorphousSlabCoolingTimeEstimate: 'EQ-THERM-002',
   linearShrinkageCompensationRange: 'EQ-SHR-001',
   materialMoistureAcceptance: 'EQ-MAT-001',
   gateSealPlateau: 'PROC-GATE-001',
@@ -1324,6 +1325,103 @@ function convertShrinkageFraction(quantity, field) {
   const fraction = raw * factor;
   if (fraction >= 1) return unsupported(`invalid-${field}-fraction`, { field, fraction });
   return supported({ fraction, inputValue: raw, inputUnit: unit });
+}
+
+
+function finiteTemperatureC(quantity, field) {
+  if (!quantity || typeof quantity !== 'object') return unsupported(`missing-${field}`, { field });
+  const value = Number(quantity.value);
+  if (!Number.isFinite(value)) return unsupported(`invalid-${field}-value`, { field });
+  const unit = String(quantity.unit || '').trim();
+  if (unit !== '°C' && unit !== 'C') {
+    return unsupported(`unsupported-${field}-unit`, { field, unit });
+  }
+  return supported({ celsius: value, inputUnit: unit });
+}
+
+export function amorphousSlabCoolingTimeEstimate({
+  partThickness,
+  thermalDiffusivity,
+  meltTemperature,
+  mouldSurfaceTemperature,
+  ejectionTemperature,
+  materialMorphology,
+  thermalDiffusivityRef,
+  ejectionCriterionRef,
+  mouldSurfaceTemperatureBasisRef,
+  provenance = null,
+} = {}) {
+  const morphology = String(materialMorphology || '').trim().toLowerCase();
+  if (morphology !== 'amorphous') {
+    return unsupported(
+      morphology === 'semi-crystalline'
+        ? 'semi-crystalline-requires-phase-change-model'
+        : 'amorphous-morphology-required',
+      { field: 'materialMorphology', received: materialMorphology ?? null },
+    );
+  }
+  const alphaRef = String(thermalDiffusivityRef || '').trim();
+  if (!alphaRef) return unsupported('thermal-diffusivity-reference-required', { field: 'thermalDiffusivityRef' });
+  const ejectRef = String(ejectionCriterionRef || '').trim();
+  if (!ejectRef) return unsupported('ejection-criterion-reference-required', { field: 'ejectionCriterionRef' });
+  const mouldRef = String(mouldSurfaceTemperatureBasisRef || '').trim();
+  if (!mouldRef) return unsupported('mould-surface-temperature-basis-required', { field: 'mouldSurfaceTemperatureBasisRef' });
+
+  const thickness = convertPositiveBase(partThickness, LENGTH_TO_MM, 'part-thickness', 'mm');
+  if (!thickness.ok) return thickness;
+  const alpha = convertPositiveBase(thermalDiffusivity, DIFFUSIVITY_TO_MM2_S, 'thermal-diffusivity', 'mm2/s');
+  if (!alpha.ok) return alpha;
+  const melt = finiteTemperatureC(meltTemperature, 'melt-temperature');
+  if (!melt.ok) return melt;
+  const mould = finiteTemperatureC(mouldSurfaceTemperature, 'mould-surface-temperature');
+  if (!mould.ok) return mould;
+  const eject = finiteTemperatureC(ejectionTemperature, 'ejection-temperature');
+  if (!eject.ok) return eject;
+
+  if (!(melt.value.celsius > eject.value.celsius && eject.value.celsius > mould.value.celsius)) {
+    return unsupported('invalid-thermal-temperature-order', {
+      requiredOrder: 'meltTemperature > ejectionTemperature > mouldSurfaceTemperature',
+    });
+  }
+
+  const logarithmArgument = (4 / Math.PI)
+    * ((melt.value.celsius - mould.value.celsius) / (eject.value.celsius - mould.value.celsius));
+  if (!(logarithmArgument > 1)) {
+    return unsupported('invalid-cooling-logarithm-argument', { logarithmArgument });
+  }
+
+  const coolingTimeS = (thickness.value.base ** 2 / (Math.PI ** 2 * alpha.value.base))
+    * Math.log(logarithmArgument);
+
+  return supported(
+    {
+      coolingTimeS,
+      partThicknessMm: thickness.value.base,
+      thermalDiffusivityMm2S: alpha.value.base,
+      meltTemperatureC: melt.value.celsius,
+      mouldSurfaceTemperatureC: mould.value.celsius,
+      ejectionTemperatureC: eject.value.celsius,
+      logarithmArgument,
+      materialMorphology: 'amorphous',
+      temperatureCriterion: 'centerline-first-term-plane-wall',
+      thermalDiffusivityRef: alphaRef,
+      ejectionCriterionRef: ejectRef,
+      mouldSurfaceTemperatureBasisRef: mouldRef,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.amorphousSlabCoolingTimeEstimate,
+      units: Object.freeze({ time: 's', thickness: 'mm', thermalDiffusivity: 'mm²/s', temperature: '°C' }),
+      assumptions: Object.freeze([
+        'This is the first-term one-dimensional plane-wall/centerline conduction estimate t = s²/(π²α) ln[(4/π)(Tm-Tw)/(Te-Tw)] using the full stated wall thickness.',
+        'The polymer is explicitly amorphous for this model; semi-crystalline solidification/crystallisation requires a phase-change treatment and is rejected by this function.',
+        'Thermophysical properties and mould-surface boundary conditions are treated as constant/uniform first-order approximations over the calculation.',
+        'Thermal contact resistance, local ribs/bosses/corners, nonuniform filling temperature, cooling-channel resistance, mould transient state and post-ejection reheating are not resolved.',
+        'The output is an analytical screening estimate tied to the stated thermal-diffusivity, ejection-criterion and mould-surface-temperature references, not a guaranteed cycle-time setting.',
+      ]),
+      provenance,
+      authority: 'amorphous-1d-cooling-screen-only',
+    },
+  );
 }
 
 export function linearShrinkageCompensationRange({
