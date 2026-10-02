@@ -82,7 +82,7 @@ learning_pack = text("src/domains/runtime-packs/learning-foundation-runtime-pack
 pack_builder = text("tools/build_runtime_packs.py")
 positions = []
 for source in learning_sources:
-    marker = f"/* >>> {source} */"
+    marker = f"/* >>> {Path(source).name} */"
     need(marker in learning_pack, f"learning foundation runtime pack missing source marker: {source}")
     positions.append(learning_pack.index(marker))
 
@@ -103,7 +103,7 @@ assessment_sources = (
 assessment_pack = text("src/domains/runtime-packs/assessment-foundation-runtime-pack.js")
 assessment_positions = []
 for source in assessment_sources:
-    marker = f"/* >>> {source} */"
+    marker = f"/* >>> {Path(source).name} */"
     need(marker in assessment_pack, f"assessment foundation runtime pack missing source marker: {source}")
     assessment_positions.append(assessment_pack.index(marker))
 
