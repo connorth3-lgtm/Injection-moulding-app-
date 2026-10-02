@@ -194,7 +194,7 @@ def main() -> int:
     if browser_contract_changed and (ROOT / "qa_webkit_regression.py").exists():
         commands.append([sys.executable, "qa_webkit_regression.py"])
 
-    if any(p.startswith("src/domains/") or p in {"runtime-v2.js", "runtime-domain-manifest.json"} for p in files):
+    if any(p.startswith("src/domains/") or p in {"src/domains/shared/runtime-v2.js", "runtime-domain-manifest.json"} for p in files):
         if (ROOT / "qa_audit_consolidation.py").exists():
             commands.append([sys.executable, "qa_audit_consolidation.py"])
 

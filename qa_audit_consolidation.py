@@ -11,7 +11,7 @@ def must(src, needles, label):
 def must_not(src, needles, label):
     for needle in needles: need(needle not in src, f'{label}: forbidden legacy marker remains: {needle}')
 
-runtime=text('runtime-v2.js')
+runtime=text('src/domains/shared/runtime-v2.js')
 assessment_ux=text('assessment-ux.js')
 analytics=text('learning-analytics.js')
 evidence_approval=text('assessment-evidence-approval.js')
