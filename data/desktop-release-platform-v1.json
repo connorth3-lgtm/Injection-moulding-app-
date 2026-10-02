@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "release": "2026.09.29.1",
+  "tag": "desktop-v2026.09.29.1",
+  "status": "hold",
+  "githubImmutable": false,
+  "observedAt": "2026-10-02",
+  "evidence": "GitHub Releases API reports immutable=false for the current desktop release.",
+  "issue": "#278",
+  "exitCondition": "Enable repository-level immutable releases, then publish a new governed desktop release version whose GitHub release reports immutable=true. Existing mutable releases are never retroactively relabelled as immutable.",
+  "boundary": "Asset SHA-256 digests and one-shot publisher controls improve provenance but do not substitute for platform-enforced release immutability."
+}
