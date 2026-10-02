@@ -1,8 +1,8 @@
-/* MouldMaster engineer-friendly simulator UI — 2026.10.02.2 */
+/* MouldMaster engineer-friendly simulator UI — 2026.10.03.1 */
 (function(){
 'use strict';
 if(window.MM_ENGINEER_SIMULATOR_UI)return;
-const VERSION='2026.10.02.2';
+const VERSION='2026.10.03.1';
 const baseRender=window.renderSimulator;
 const baseUpdate=window.updateSimulator;
 if(typeof baseRender!=='function'||typeof baseUpdate!=='function'){
