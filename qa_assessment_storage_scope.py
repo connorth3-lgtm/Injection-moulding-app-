@@ -30,7 +30,7 @@ for marker in [
 for forbidden in ['Storage.prototype', "Object.defineProperty(P,'getItem'", "Object.defineProperty(P,'setItem'", "Object.defineProperty(P,'removeItem'"]:
     need(forbidden not in js,f'native Storage interception must be retired: {forbidden}')
 
-for path in [scope,ROOT/'assessment-quality-suite.js',ROOT/'assessment-final-hardening.js']:
+for path in [scope,ROOT/'assessment-quality-suite.js',ROOT/'src/domains/assessment/assessment-final-hardening.js']:
     p=subprocess.run(['node','--check',str(path)],capture_output=True,text=True)
     need(p.returncode==0,f'{path.name} syntax error: {p.stderr}')
 
@@ -98,7 +98,7 @@ quality=text('assessment-quality-suite.js')
 for marker in ['const ASSESSMENT_STORAGE=window.MM_ASSESSMENT_STORAGE_SCOPE;', 'ASSESSMENT_STORAGE.read(ANALYTICS_KEY', 'ASSESSMENT_STORAGE.write(ANALYTICS_KEY', 'ASSESSMENT_STORAGE.removeItem(ANALYTICS_KEY)']:
     need(marker in quality,f'assessment analytics explicit storage marker missing: {marker}')
 need('localStorage.removeItem(ANALYTICS_KEY)' not in quality,'assessment analytics reset still bypasses learner-scoped storage')
-final=text('assessment-final-hardening.js')
+final=text('src/domains/assessment/assessment-final-hardening.js')
 for marker in ['const S=window.MM_ASSESSMENT_STORAGE_SCOPE;', 'S.read(k,d)', 'S.write(k,v)', 'S.removeItem(TIMING_KEY)']:
     need(marker in final,f'assessment timing explicit storage marker missing: {marker}')
 
@@ -116,7 +116,7 @@ for marker in ["function assessmentStore(){return window.MM_ASSESSMENT_STORAGE_S
 for forbidden in ["localStorage.getItem(ASSESSMENT_HISTORY_KEY)", "localStorage.setItem(ASSESSMENT_HISTORY_KEY", "localStorage.getItem(ASSESSMENT_RESULT_META_KEY)", "localStorage.setItem(ASSESSMENT_RESULT_META_KEY"]:
     need(forbidden not in ux,f'learner UX assessment persistence bypasses scoped storage: {forbidden}')
 
-bridge=text('training-qa-fix.js')
+bridge=text('src/domains/learning/training-qa-fix.js')
 for marker in ['clearAssessmentAnalyticsStores','clearLearningAnalyticsStores','clearAllAnalyticsStores','clearTrainingExtrasStores','cancelActiveExam','mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1','mm-assessment-question-history-v4','mm-assessment-result-meta-v1','mm_learning_analytics_v1::','ANALYTICS_CLEANUP_CODE','remaining key(s):','restoreSnapshot(before)','clearAllAnalyticsStores();clearTrainingExtrasStores()','const proposedReset=JSON.parse(JSON.stringify(defaultDB))']:
     need(marker in bridge,f'training reset/import verified analytics cleanup missing: {marker}')
 

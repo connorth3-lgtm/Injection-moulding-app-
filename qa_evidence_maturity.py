@@ -11,10 +11,10 @@ def need(ok,msg):
 def text(name): return (ROOT/name).read_text(encoding='utf-8')
 
 required=[
- 'MouldMaster_Core_App.html','training-upgrade.js','assessment-deep-dive.js','assessment-answer-cue-fix.js',
+ 'MouldMaster_Core_App.html','training-upgrade.js','assessment-deep-dive.js','src/domains/assessment/assessment-answer-cue-fix.js',
  'assessment-storage-scope.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','diagnostic-learning-labs.js','material-behaviour-labs.js','assessment-evidence-sources.js',
- 'assessment-evidence-approval.js','source-library.js','reference-data.js','reference-deep-dive.js','reference-research-extension.js',
- 'reference-20x-extension.js','reference-2026-expansion.js','evidence-maturity-deep-dive.js','evidence-maturity-formal-bridge.js','lesson-evidence-depth.js'
+ 'assessment-evidence-approval.js','source-library.js','reference-data.js','reference-deep-dive.js','src/domains/research/reference-research-extension.js',
+ 'src/domains/research/reference-20x-extension.js','reference-2026-expansion.js','evidence-maturity-deep-dive.js','evidence-maturity-formal-bridge.js','lesson-evidence-depth.js'
 ]
 for name in required: need((ROOT/name).exists(),f'missing evidence-maturity dependency: {name}')
 
@@ -40,11 +40,11 @@ const sandbox={window:{MM_DATA:D,requestAnimationFrame:fn=>fn(),addEventListener
 sandbox.window.window=sandbox.window;sandbox.window.document=document;sandbox.window.localStorage=localStorage;sandbox.window.MutationObserver=MutationObserver;sandbox.window.URL=URLObj;sandbox.window.setTimeout=sandbox.setTimeout;
 vm.createContext(sandbox);
 vm.runInContext(fs.readFileSync('source-library.js','utf8'),sandbox,{filename:'source-library.js'});
-for(const file of ['reference-data.js','reference-deep-dive.js','reference-research-extension.js','reference-20x-extension.js','reference-2026-expansion.js']){
+for(const file of ['reference-data.js','reference-deep-dive.js','src/domains/research/reference-research-extension.js','src/domains/research/reference-20x-extension.js','reference-2026-expansion.js']){
  vm.runInContext(fs.readFileSync(file,'utf8'),sandbox,{filename:file});
 }
 document.readyState='complete';
-for(const file of ['diagnostic-learning-labs.js','material-behaviour-labs.js','assessment-deep-dive.js','assessment-answer-cue-fix.js','assessment-storage-scope.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-evidence-sources.js','evidence-maturity-deep-dive.js','evidence-maturity-formal-bridge.js','lesson-evidence-depth.js','assessment-evidence-approval.js']){
+for(const file of ['diagnostic-learning-labs.js','material-behaviour-labs.js','assessment-deep-dive.js','src/domains/assessment/assessment-answer-cue-fix.js','assessment-storage-scope.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-evidence-sources.js','evidence-maturity-deep-dive.js','evidence-maturity-formal-bridge.js','lesson-evidence-depth.js','assessment-evidence-approval.js']){
  vm.runInContext(fs.readFileSync(file,'utf8'),sandbox,{filename:file});
 }
 const A=sandbox.window.MM_EVIDENCE_APPROVAL;
