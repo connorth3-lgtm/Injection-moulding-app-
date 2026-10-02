@@ -75,7 +75,7 @@ for forbidden in [
 need('"$conclusion" != "success"' in guard, "required PR workflows must still fail audit when completed unsuccessfully")
 need("for attempt in {1..60}" in guard, "read-only workflow audit must tolerate long-running required checks")
 
-# Effective ruleset verification must enforce the explicit solo-maintainer
+# Effective ruleset verification must enforce the explicit independent-review
 # review settings as well as the five governed automated contexts and existing
 # server-side protections.
 for marker in [
