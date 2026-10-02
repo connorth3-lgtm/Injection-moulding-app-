@@ -36,7 +36,8 @@
         "Production Observability QA",
         "MouldMaster Physical PWA Contract QA",
         "Question Quality 50-Pass",
-        "Read Aloud QA"
+        "Read Aloud QA",
+        "Exact-head CI Risk Coverage"
       ]
     },
     "criticalPaths": [
