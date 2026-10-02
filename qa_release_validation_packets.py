@@ -57,6 +57,10 @@ for section_name, (key, expected) in packet_expectations.items():
     need((ROOT / expected).is_file(), f"{section_name} packet is missing: {expected}")
     need(expected in index_text, f"release validation index does not reference {expected}")
 
+book_packet = ROOT / packet_expectations["bookSme"][1]
+book_packet_text = book_packet.read_text(encoding="utf-8")
+need("\\n" not in book_packet_text, "Book SME packet contains escaped newline text instead of real Markdown paragraphs")
+
 access = load("data/accessibility-real-at-validation-v1.json")
 access_section = ledger["accessibility"]
 access_candidate = access_section.get("candidate") or {}
