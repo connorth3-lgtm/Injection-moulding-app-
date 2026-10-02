@@ -137,10 +137,20 @@ def main() -> int:
 
     engineer_simulator_changed = bool(files & {
         "src/domains/engineering/engineer-simulator-ui.js",
+        "src/domains/process/engineering-core.mjs",
+        "src/domains/process/engineering-core-browser.js",
+        "tools/generate_engineering_browser_adapter.py",
+        "tools/generate_runtime_manifest.py",
+        "runtime-domain-manifest.json",
         "qa_engineer_simulator_units.cjs",
     })
-    if engineer_simulator_changed and (ROOT / "qa_engineer_simulator_units.cjs").exists():
-        commands.append(["node", "qa_engineer_simulator_units.cjs"])
+    if engineer_simulator_changed:
+        if (ROOT / "tools/generate_engineering_browser_adapter.py").exists():
+            commands.append([sys.executable, "tools/generate_engineering_browser_adapter.py", "--check"])
+        if (ROOT / "tools/generate_runtime_manifest.py").exists():
+            commands.append([sys.executable, "tools/generate_runtime_manifest.py", "--check"])
+        if (ROOT / "qa_engineer_simulator_units.cjs").exists():
+            commands.append(["node", "qa_engineer_simulator_units.cjs"])
 
     simulator_accessibility_changed = bool(files & {
         "src/core-runtime/core-inline-007.js",
