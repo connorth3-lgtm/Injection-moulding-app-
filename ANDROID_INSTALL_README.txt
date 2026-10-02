@@ -37,7 +37,7 @@ PWA / OFFLINE APPLICATION FILES
   reference-browser-ui.js
   diagnostic-learning-labs.js
   material-behaviour-labs.js
-  app-shell-registry.js
+  src/domains/shell/app-shell-registry.js
   process-data-diagnostics.js
   learning-experience.js
   curriculum-integration.js

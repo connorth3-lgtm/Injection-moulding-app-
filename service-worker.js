@@ -34,7 +34,7 @@ const CORE=[
   './read-aloud.js',
   './src/domains/shared/runtime-v2.js',
   './assessment-runtime-v2.js',
-  './app-shell-registry.js',
+  './src/domains/shell/app-shell-registry.js',
   './pwa-shell.js',
   './learning-experience.js',
   './lesson-simple-experience.js',

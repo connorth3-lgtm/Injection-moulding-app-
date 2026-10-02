@@ -142,7 +142,7 @@ need(foundation_pack.index('assessment-storage-scope.js')<foundation_pack.index(
 evidence_pack=text('src/domains/runtime-packs/evidence-runtime-pack.js'); depth_pack=text('src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js')
 need(evidence_pack.index('assessment-evidence-sources.js')<evidence_pack.index('evidence-maturity-deep-dive.js')<evidence_pack.index('evidence-maturity-formal-bridge.js'),'formal evidence modules must run after base sources')
 need('assessment-evidence-approval.js' in depth_pack,'assessment evidence approval must remain in the post-evidence depth pack')
-need(idx.index('evidence-runtime-pack.js')<idx.index('app-shell-registry.js'),'packed evidence maturity runtime must load before shell registry')
+need(idx.index('evidence-runtime-pack.js')<idx.index('src/domains/shell/app-shell-registry.js'),'packed evidence maturity runtime must load before shell registry')
 
 report={
  'schema':1,'version':'2026.08.26.4','formal_questions':157,'formal_min_urls':2,'formal_min_authorities':2,
