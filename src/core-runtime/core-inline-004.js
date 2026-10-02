@@ -297,7 +297,7 @@ function renderSimulator(){
  <div class="grid2">
  <div class="card form-card">
   <span class="eyebrow">Educational process model</span><h2>Machine & process inputs</h2>
-  <p class="muted">Move the controls to explore a synthetic sensitivity exercise. Fixed teaching weights are not probabilities, physical defect predictors, material or machine limits, process windows, or production settings.</p>
+  <p class="muted">Move the controls to explore a synthetic baseline-direction exercise. The mechanism prompts are qualitative teaching cues, not probabilities, physical defect predictors, material or machine limits, process windows, or production settings.</p>
   <div class="form-grid">
    ${slider("Injection speed","speed",20,100,simulatorState.speed,"%")}
    ${slider("Transfer fill","transfer",85,100,simulatorState.transfer,"%")}
