@@ -2,10 +2,9 @@
   "schemaVersion": 1,
   "capturedAt": "2026-09-17",
   "runtimeBodyScriptCeiling": 15,
-  "rootRuntimeScriptCeiling": 3,
+  "rootRuntimeScriptCeiling": 2,
   "documentWriteCeiling": 0,
   "grandfatheredRootRuntimeScripts": [
-    "./runtime-v2.js",
     "./app-shell-registry.js",
     "./pwa-shell.js"
   ],
@@ -36,7 +35,8 @@
     "2026-09-18 audit-remediation tranche reduces directly injected root runtime scripts to 5 while using contiguous generated packs that preserve the exact historical global bootstrap execution order; BODY_SCRIPTS ceiling is 15.",
     "2026-09-29 audit hardening packs app-shell-finalize.js into a deterministic domain runtime pack, reducing directly injected root runtime scripts from 5 to 4 without changing execution order.",
     "2026-10-02 deep-fix adds a merge-base ratchet: numeric ceilings and grandfathered root/compatibility sets may only stay flat or decrease on pull requests; increasing architecture debt requires redesign rather than baseline expansion.",
-    "2026-10-03 domain-ownership tranche moves production-health.js unchanged into src/domains/governance/, reducing directly injected root runtime scripts from 4 to 3."
+    "2026-10-03 domain-ownership tranche moves production-health.js unchanged into src/domains/governance/, reducing directly injected root runtime scripts from 4 to 3.",
+    "2026-10-03 domain-ownership tranche moves runtime-v2.js unchanged into src/domains/shared/, reducing directly injected root runtime scripts from 3 to 2."
   ],
   "compatibilityLayerCeiling": 9,
   "targetRootRuntimeScripts": 0,

@@ -21,7 +21,7 @@ on:
       - 'assessment-psychometric-approval.js'
       - 'assessment-evidence-integrity-upgrade.js'
       - 'real-measured-data-assessment.js'
-      - 'runtime-v2.js'
+      - 'src/domains/shared/runtime-v2.js'
       - 'app-shell-finalize.js'
       - 'learning-analytics.js'
       - 'assessment-evidence-approval.js'

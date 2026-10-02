@@ -24,7 +24,7 @@ jobs:
           python-version: '3.12'
       - name: New runtime JavaScript syntax
         run: |
-          node --check runtime-v2.js
+          node --check src/domains/shared/runtime-v2.js
           node --check assessment-runtime-v2.js
           node --check lesson-deep-authoring-v2.js
           node --check assessment-multimodal.js

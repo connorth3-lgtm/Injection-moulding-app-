@@ -139,8 +139,8 @@
         "to": "mouldmaster/assessment-final-hardening.js"
       },
       {
-        "from": "../../runtime-v2.js",
-        "to": "mouldmaster/runtime-v2.js"
+        "from": "../../src/domains/shared/runtime-v2.js",
+        "to": "mouldmaster/src/domains/shared/runtime-v2.js"
       },
       {
         "from": "../../assessment-runtime-v2.js",

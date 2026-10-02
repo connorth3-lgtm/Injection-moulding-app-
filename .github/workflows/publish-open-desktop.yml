@@ -102,7 +102,7 @@ jobs:
           node --check assessment-stable-review-bridge.js
           node --check assessment-analytics-ui.js
           node --check assessment-final-hardening.js
-          node --check runtime-v2.js
+          node --check src/domains/shared/runtime-v2.js
           node --check assessment-runtime-v2.js
           node --check assessment-ux.js
           node --check assessment-evidence-sources.js

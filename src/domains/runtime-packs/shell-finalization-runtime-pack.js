@@ -14,7 +14,7 @@ if(!window.MM_CURRICULUM_INTEGRATION)throw new Error('app-shell-finalize.js requ
 if(!window.MM_SPECIALIST_CURRICULUM)throw new Error('app-shell-finalize.js requires specialist-curriculum.js');
 if(!window.MM_SPECIALIST_EVIDENCE_GAPS)throw new Error('app-shell-finalize.js requires specialist-evidence-gap-extension.js');
 if(!window.MM_MOULD_MASTER_WORKSPACE)throw new Error('app-shell-finalize.js requires mould-master-workspace.js');
-if(!window.MM_RUNTIME_V2)throw new Error('app-shell-finalize.js requires runtime-v2.js');
+if(!window.MM_RUNTIME_V2)throw new Error('app-shell-finalize.js requires src/domains/shared/runtime-v2.js');
 
 const VERSION='2026.09.10.3';
 const R=window.MM_RUNTIME_V2;
