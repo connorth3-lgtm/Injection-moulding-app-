@@ -8,17 +8,12 @@
     "claim": "Strongly automated and technically governed; no external-validation claim is implied."
   },
   "governance": {
-    "status": "enforced",
-    "requiredPolicy": {
-      "minimumApprovals": 0,
-      "reviewThreadResolution": true,
-      "dismissStaleReviews": true,
-      "lastPushApproval": false
-    },
+    "status": "pending-native-ruleset-apply",
+    "policyFile": "data/main-governance-policy-v1.json",
     "repositoryPolicy": ".github/MAIN_PROTECTION.md",
     "verifier": "tools/verify_main_ruleset.py",
-    "maintainerMode": "solo",
-    "soloMaintainerBoundary": "Independent approval and latest-push approval are disabled only while this repository has one write-capable maintainer; all PR, thread-resolution, status, security and no-bypass controls remain mandatory."
+    "liveRulesetIssue": "#43",
+    "required": "Add or confirm an independent trusted reviewer, apply the canonical main governance policy to GitHub's live main ruleset, verify the exact live ruleset, then change this status to enforced."
   },
   "accessibility": {
     "status": "hold",
