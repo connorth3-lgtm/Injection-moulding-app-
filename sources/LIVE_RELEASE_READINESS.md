@@ -1,54 +1,66 @@
 # MouldMaster live-release readiness boundary
 
-Reviewed: 2026-08-31  
+Reviewed: 2026-10-02  
 Machine-readable policy: `data/live-release-readiness.json`
 
 ## Decision
 
-MouldMaster's **public learner release is not blocked by completion of the first authorised real-site pilot**.
+MouldMaster separates **learner preview availability**, **production-root PWA publication**, **real-site evidence validation**, and **production-control authority**.
 
-The hosted PWA and open Windows learner build are eligible for live release when the normal release, browser, desktop, assessment, evidence, provenance and safety QA gates pass on the exact source head being released.
+The current governed learner candidate may be served under the explicitly non-production `/preview/` path after its software-controlled release gates pass. The GitHub Pages production root remains fail-closed until the exact learner-runtime fingerprint has current physical-device authorization under the governed PWA evidence contract.
 
-The authorised real-site pilot is a separate **evidence-maturity and claim-validation lane**. It is required before MouldMaster may claim that its diagnostic-learning workflow has been validated against an authorised site's real production history and independently investigated engineering finding. It is not required merely to publish or use the educational application.
+The first authorised real-site pilot is a separate evidence-maturity lane. It does **not** block the learner preview and it does **not** substitute for, or satisfy, the production-root physical-device gate.
 
-## Three separate states
+## Four separate states
 
-### 1. Public learner release
+### 1. Learner preview lane
 
-Release condition: `eligible-when-release-qa-passes`.
+Current condition: `preview-available-production-root-held-until-exact-runtime-physical-authorization`.
 
-This covers:
+The non-production `/preview/` lane may expose the current governed learner candidate for ordinary review, usability work and physical-device validation when:
 
-- hosted PWA learner use;
-- open Windows desktop learner use;
-- device-local lessons, labs, assessments and analytics;
-- synthetic process-data learning;
-- reviewed public measured-evidence and benchmark material within its stated provenance boundaries.
+- release QA passes on the exact candidate;
+- preview copy clearly states that it is non-production;
+- source/evidence provenance and safety boundaries remain intact;
+- the preview does not claim external validation, production recipe authority or automatic machine control.
 
-The real-site pilot does **not** block this lane.
+This lane is intentionally available while current-release physical-device evidence is still HOLD.
 
-### 2. Real-site evidence validation
+### 2. Production-root hosted PWA
 
-Current maturity: `pilot-ready-human-comparison-required` until issue #50's evidence criteria are actually satisfied.
+Production-root publication requires **current exact-runtime physical authorization**.
+
+The authorization must be bound to the candidate runtime fingerprint and must come from the governed physical-device contract. Full validation requires the required current physical-device matrix. A narrowly governed platform-risk authorization may be accepted only where the release workflow explicitly permits it; prior-release evidence never silently authorizes changed runtime bytes.
+
+The authorised real-site pilot is **not** a prerequisite for this gate.
+
+### 3. Real-site evidence validation
+
+Current maturity: `pilot-ready-human-comparison-required`.
 
 This lane requires external site authorisation, governed handling of prepared production data and comparison against an independently investigated or defensibly reviewed engineering finding. Until that is complete, the permitted claim is **pilot-ready**. The claim **validated on real production data** remains prohibited.
 
-### 3. Production-control authority
+Real-site evidence maturity does not block either the non-production preview lane or production-root release once the separate release/device gates are satisfied.
 
-Status: `not-provided`.
+### 4. Production-control authority
+
+Status: `not_provided`.
 
 MouldMaster does not authorise machine settings, production release, maintenance intervention, safeguarding changes or process changes. A real site must continue to use its approved procedures, competent engineering review, machine/material documentation, risk controls and change-control process.
 
-This absence of production-control authority does not block learner deployment; it defines the product's safe scope.
+This absence of production-control authority defines the product's safe scope; it does not grant or imply production authority through learner publication.
 
 ## Release-gate rule
 
-CI must fail if repository metadata collapses these three states into one. In particular it must reject any change that:
+CI must reject changes that collapse these namespaces. In particular it must reject any change that:
 
-- makes an authorised site pilot a prerequisite for ordinary public learner deployment;
+- serves the current learner candidate at the production root while the exact-runtime physical-device gate is still HOLD;
+- treats the `/preview/` lane as a production release;
+- makes an authorised real-site pilot a prerequisite for learner preview or production-root publication;
 - represents a public benchmark as an authorised site pilot;
-- claims real-production validation before issue #50's external evidence exists;
+- claims real-production validation before the external evidence exists;
+- carries physical-device evidence forward across changed runtime fingerprints without explicit re-authorization;
 - grants production-control authority to the educational app;
 - removes the fail-closed real-site intake/preflight governance boundary.
 
-The policy is intentionally machine-readable so release wording cannot drift back into treating an external validation milestone as a software deployment blocker.
+The policy is machine-readable so historical release wording cannot override the current publisher and external-validation contracts.
