@@ -12,7 +12,7 @@ MANIFEST = DATA / "manifest-v1.json"
 READINESS = DATA / "source-readiness-v2.json"
 PROMOTED = DATA / "promoted-v1.json"
 RUNTIME = ROOT / "measured-learning-library.js"
-FINALIZER = ROOT / "app-shell-finalize.js"
+FINALIZER = ROOT / "src/domains/shell/app-shell-finalize.js"
 SERVICE_WORKER = ROOT / "service-worker.js"
 
 REQUIRED_DIFFICULTIES = {"foundation", "intermediate", "advanced"}

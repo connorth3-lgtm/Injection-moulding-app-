@@ -101,7 +101,7 @@ def main() -> int:
             commands.append([sys.executable, "qa_data_integration.py"])
 
     learner_identity_changed = bool(files & {
-        "training-qa-fix.js",
+        "src/domains/learning/training-qa-fix.js",
         "src/domains/learning/backup-authority-notice.js",
         "qa_import_identity_integrity.cjs",
         "qa_final_audit_lifecycle.cjs",
