@@ -5,15 +5,15 @@ This packet governs **human** assistive-technology validation for web release `2
 ## Exact release boundary
 
 - web release: `2026.10.03.2`
-- retained pre-merge public candidate source commit: `80a0a5422e83be6b6edca93b6853de1e2c688226`
-- public-runtime fingerprint: `sha256:b37c0ef7bec4772609609ac6f7170f1c48c583ce413fa03e22df97c4691cd1cd`
-- retained physical candidate: `physical-pwa-candidate-80a0a5422e83be6b6edca93b6853de1e2c688226` (`11255612792`)
-- candidate build run: `37074352293` (`Pre-merge Public Candidate`)
-- artifact ZIP digest: `sha256:38ebedfd8fb576295428113bff5789cf43ca5d755242e35602192ddf83f88a63`
-- artifact retention expiry: `2026-11-01T22:48:16Z`
+- retained pre-merge public candidate source commit: `a2d0efeceab465ca834a0b0e433aa791dc89ca81`
+- public-runtime fingerprint: `sha256:7158ec361e08425fb04958048d91c761a7201def735364eff8f93ba687f86d50`
+- retained physical candidate: `physical-pwa-candidate-a2d0efeceab465ca834a0b0e433aa791dc89ca81` (`11257687067`)
+- candidate build run: `37078747245` (`Pre-merge Public Candidate`)
+- artifact ZIP digest: `sha256:13f19033ab0de4e453859253c6950c1a121c497569b329a9222572f3f8c10491`
+- artifact retention expiry: `2026-11-01T23:41:36Z`
 - evidence contract: `data/accessibility-real-at-validation-v1.json`
 
-This is a candidate **rebind**, not new AT evidence. Release `2026.10.03.2` is bound to exact pre-merge learner-runtime candidate `80a0a5422e83be6b6edca93b6853de1e2c688226` / `sha256:b37c0ef7bec4772609609ac6f7170f1c48c583ce413fa03e22df97c4691cd1cd`. No earlier human or device evidence is relabelled. If learner-facing runtime bytes change again, this packet must be rebound before new validation is recorded.
+This is a candidate **rebind**, not new AT evidence. Release `2026.10.03.2` is bound to exact pre-merge learner-runtime candidate `a2d0efeceab465ca834a0b0e433aa791dc89ca81` / `sha256:7158ec361e08425fb04958048d91c761a7201def735364eff8f93ba687f86d50`. No earlier human or device evidence is relabelled. If learner-facing runtime bytes change again, this packet must be rebound before new validation is recorded.
 
 ## Required matrix
 
