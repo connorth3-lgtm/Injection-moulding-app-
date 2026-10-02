@@ -107,7 +107,7 @@ pack_marker = '<script src="./src/domains/runtime-packs/evidence-runtime-pack.js
 need(pack_marker in index, "research evidence runtime pack not loaded by shell")
 positions = []
 for asset in ["reference-deep-dive.js", *ASSETS, "reference-sources.js"]:
-    marker = f"/* >>> {asset} */"
+    marker = f"/* >>> {asset.rsplit('/',1)[-1]} */"
     need(marker in evidence_pack, f"research runtime-pack member missing: {asset}")
     positions.append(evidence_pack.index(marker))
 need(positions == sorted(positions), "research extension order is wrong inside evidence runtime pack")
@@ -118,8 +118,9 @@ for asset in ASSETS:
 
 pkg = json.loads(text("desktop/electron/package.json"))
 from_paths = {x.get("from") for x in pkg["build"]["extraResources"] if isinstance(x, dict)}
+need("../../src/domains" in from_paths, "desktop package must include the canonical recursive domain runtime tree")
 for asset in ASSETS:
-    need(f"../../{asset}" in from_paths, f"research extension missing from desktop bundle: {asset}")
+    need(f"../../{asset}" not in from_paths, f"desktop package must not duplicate domain-owned research source: {asset}")
 
 integrity = text("desktop/electron/scripts/generate-integrity.cjs")
 for asset in ASSETS:
