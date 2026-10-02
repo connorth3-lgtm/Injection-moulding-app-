@@ -20,6 +20,7 @@ Exactly one active branch ruleset must govern `refs/heads/main`, with no bypass 
   - `build-windows`;
   - `question-quality-50-pass`;
   - `release-external-validation`;
+  - `exact-head-risk-coverage` (cross-workflow exact-head risk aggregation);
 - the existing CodeQL code-scanning rule;
 - the existing code-quality rule;
 - the existing Copilot code-review rule;
