@@ -5,17 +5,7 @@
   "rootRuntimeScriptCeiling": 0,
   "documentWriteCeiling": 0,
   "grandfatheredRootRuntimeScripts": [],
-  "grandfatheredCompatibilityLayers": [
-    "accessibility-hardening.js",
-    "app-shell-finalize.js",
-    "assessment-answer-cue-fix.js",
-    "assessment-final-hardening.js",
-    "assessment-psychometric-hardening.js",
-    "reference-20x-extension.js",
-    "reference-research-extension.js",
-    "specialist-evidence-gap-extension.js",
-    "training-qa-fix.js"
-  ],
+  "grandfatheredCompatibilityLayers": [],
   "notes": [
     "This is a ceiling, not a target. Removing root runtime scripts or compatibility layers is always allowed.",
     "New product capabilities belong under src/domains/<domain>/ and should replace legacy root layers rather than increasing the bootstrap count.",
@@ -35,9 +25,10 @@
     "2026-10-03 domain-ownership tranche moves production-health.js unchanged into src/domains/governance/, reducing directly injected root runtime scripts from 4 to 3.",
     "2026-10-03 domain-ownership tranche moves runtime-v2.js unchanged into src/domains/shared/, reducing directly injected root runtime scripts from 3 to 2.",
     "2026-10-03 domain-ownership tranche moves app-shell-registry.js unchanged into src/domains/shell/, reducing directly injected root runtime scripts from 2 to 1.",
-    "2026-10-03 domain-ownership tranche moves pwa-shell.js unchanged into src/domains/shell/, reducing directly injected root runtime scripts from 1 to the target 0."
+    "2026-10-03 domain-ownership tranche moves pwa-shell.js unchanged into src/domains/shell/, reducing directly injected root runtime scripts from 1 to the target 0.",
+    "2026-10-03 domain-ownership completion moves the final nine root compatibility sources into owning src/domains/ directories, reaching the governed compatibility-layer target 0 without changing their reviewed JavaScript semantics."
   ],
-  "compatibilityLayerCeiling": 9,
+  "compatibilityLayerCeiling": 0,
   "targetRootRuntimeScripts": 0,
   "targetCompatibilityLayers": 0
 }
