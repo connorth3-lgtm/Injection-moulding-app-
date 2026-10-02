@@ -135,7 +135,7 @@ QUALITATIVE_SIMULATOR_BOOTSTRAP = r'''function simPromptRows(){return []}
 function updateSimulator(){
  const rows=simPromptRows();
  const host=$("#riskList");
- if(host)host.innerHTML=rows.map(row=>\`<div class="risk" data-sim-cues="\${row.cues.length}"><span>\${esc(row.name)}</span><b>\${row.cues.length?"Check evidence":"No directional cue"}</b>\${row.cues.length?\`<small class="muted">\${row.cues.map(esc).join(" · ")}</small>\`:""}</div>\`).join("");
+ if(host)host.innerHTML=rows.map(row=>`<div class="risk" data-sim-cues="${row.cues.length}"><span>${esc(row.name)}</span><b>${row.cues.length?"Check evidence":"No directional cue"}</b>${row.cues.length?`<small class="muted">${row.cues.map(esc).join(" · ")}</small>`:""}</div>`).join("");
  const active=rows.filter(row=>row.cues.length);
  const advice=$("#simAdvice");
  if(advice)advice.textContent=active.length?"Baseline changes create mechanism prompts only. They are not ranked predictions. Verify the relevant machine, mould, material and part evidence before making another controlled change.":"No directional mechanism prompts are active at the current training baseline. This does not prove the real process is defect-free.";
@@ -169,7 +169,7 @@ function checkRescueChallenge(){
     toast("Training baseline restored");
   }else{
     const active=simPromptRows().filter(row=>row.cues.length).map(row=>row.name);
-    toast(active.length?\`Baseline not restored. Evidence prompts remain for: \${active.join(", ")}\`:"Baseline not restored yet. Match every displayed reference control.");
+    toast(active.length?`Baseline not restored. Evidence prompts remain for: ${active.join(", ")}`:"Baseline not restored yet. Match every displayed reference control.");
   }
 }'''
 
@@ -321,15 +321,19 @@ def runtime_transform(name: str, source: str) -> str:
             "Start from a deliberately changed relative condition and return every control to its displayed reference. The exercise has no defect probability, severity score, safe threshold or production-setting authority.",
             1,
         )
+        challenge_heading = '<span class="eyebrow">Process Rescue</span><h3>Can you stabilise the simulated process?</h3>'
+        if transformed.count(challenge_heading) < 1:
+            fail("frozen simulator challenge heading drifted")
         transformed = transformed.replace(
-            '<span class="eyebrow">Process Rescue</span><h3>Can you stabilise the simulated process?</h3>',
+            challenge_heading,
             '<span class="eyebrow">Baseline Recovery</span><h3>Can you restore the training baseline?</h3>',
-            1,
         )
+        challenge_buttons = '<button class="secondary" onclick="startRescueChallenge()">Start rescue</button> <button class="ghost" onclick="checkRescueChallenge()">Check my process</button>'
+        if transformed.count(challenge_buttons) < 1:
+            fail("frozen simulator challenge buttons drifted")
         transformed = transformed.replace(
-            '<button class="secondary" onclick="startRescueChallenge()">Start rescue</button> <button class="ghost" onclick="checkRescueChallenge()">Check my process</button>',
+            challenge_buttons,
             '<button class="secondary" onclick="startRescueChallenge()">Start baseline recovery</button> <button class="ghost" onclick="checkRescueChallenge()">Check baseline</button>',
-            1,
         )
         transformed = transformed.replace(
             '<div class="card output-panel"><span class="eyebrow">Educational response</span><h2>Relative defect-risk indicators</h2>',
