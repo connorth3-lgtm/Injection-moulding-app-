@@ -73,8 +73,13 @@ jobs:
       - name: Pure process statistics domain
         run: node qa_process_statistics_domain.mjs
 
+      - name: Generated engineering browser adapter
+        run: python tools/generate_engineering_browser_adapter.py --check
+
       - name: Pure injection-moulding engineering domain
-        run: node qa_engineering_domain.mjs
+        run: |
+          node qa_engineering_domain.mjs
+          node qa_engineer_simulator_units.cjs
 
       - name: Boundary
         if: always()
