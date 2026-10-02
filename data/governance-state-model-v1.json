@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "modelId": "mouldmaster-governance-state-model",
-  "version": "2026.10.02.1",
+  "version": "2026.10.03.1",
   "purpose": "One canonical vocabulary and transition model for technical automation, evidence maturity, publication authorization, external validation, distribution validation and production authority. Status words from different namespaces must never be treated as interchangeable.",
   "namespaces": {
     "technicalAutomation": {
@@ -51,6 +51,14 @@
         "automatic-machine-control"
       ],
       "meaning": "Authority boundary for production use. Current public MouldMaster is advisory-only. Higher authority requires a separate controlled-site safety and validation programme."
+    },
+    "repositoryGovernance": {
+      "states": [
+        "pending-native-ruleset-apply",
+        "enforced",
+        "failed"
+      ],
+      "meaning": "Server-side GitHub main protection state. Repository policy text and CI cannot substitute for the live native ruleset."
     }
   },
   "transitions": {
@@ -175,6 +183,23 @@
         "to": "advisory-only",
         "requires": "Machine-control authority expires, is revoked or its validation assumptions cease to hold."
       }
+    ],
+    "repositoryGovernance": [
+      {
+        "from": "pending-native-ruleset-apply",
+        "to": "enforced",
+        "requires": "An administrator verifies that the live GitHub main ruleset exactly matches the canonical independent-review policy and an independent reviewer can approve the latest head."
+      },
+      {
+        "from": "enforced",
+        "to": "failed",
+        "requires": "The live ruleset drifts, bypass becomes possible, required review/status/security controls are weakened, or post-merge provenance fails."
+      },
+      {
+        "from": "failed",
+        "to": "pending-native-ruleset-apply",
+        "requires": "A corrected canonical/native ruleset transition is prepared but has not yet been verified live."
+      }
     ]
   },
   "forbiddenCombinations": [
@@ -214,6 +239,13 @@
         "desktopReleaseImmutability": "validated"
       },
       "forbiddenUnless": "The exact governed desktop GitHub release reports platform-enforced immutable=true; asset hashes alone are insufficient."
+    },
+    {
+      "id": "native-governance-cannot-be-self-attested",
+      "when": {
+        "repositoryGovernance": "enforced"
+      },
+      "forbiddenUnless": "GitHub's live main ruleset has been read and verified against data/main-governance-policy-v1.json; repository text, CI self-tests and stale attestations are insufficient."
     }
   ],
   "currentReleaseBindings": {
@@ -223,7 +255,8 @@
     "bookIndependentSme": "data/book-sme-review-v1.json",
     "curriculumIndependentSme": "qa/curriculum-semantic-review.json",
     "nzqaExternalValidation": "data/nzqa-external-validation-v1.json",
-    "desktopReleasePlatform": "data/desktop-release-platform-v1.json"
+    "desktopReleasePlatform": "data/desktop-release-platform-v1.json",
+    "mainGovernancePolicy": "data/main-governance-policy-v1.json"
   },
   "invariants": [
     {
@@ -261,6 +294,10 @@
     {
       "id": "mutable-desktop-release-not-trusted",
       "rule": "A desktop GitHub release with immutable=false must remain a distribution immutability HOLD even when its assets have recorded hashes or publisher automation is one-shot."
+    },
+    {
+      "id": "live-governance-must-match-canonical-policy",
+      "rule": "repositoryGovernance=enforced is permitted only when the exact live GitHub main ruleset matches the one canonical policy and post-merge provenance verifies an independent latest-head approval."
     }
   ],
   "userFacingPrecedence": [
@@ -269,6 +306,7 @@
     "distributionValidation",
     "publicationAuthorization",
     "evidenceMaturity",
+    "repositoryGovernance",
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
@@ -282,7 +320,8 @@
     "learnerOutcomes": "hold",
     "nzqaProviderValidation": "hold",
     "productionAuthority": "advisory-only",
-    "desktopReleaseImmutability": "hold"
+    "desktopReleaseImmutability": "hold",
+    "repositoryGovernance": "pending-native-ruleset-apply"
   },
   "userFacingLabels": {
     "evidenceMaturity": {
@@ -307,7 +346,7 @@
   "currentAssuranceEvidence": {
     "staticContract": {
       "status": "pass",
-      "meaning": "Repository-controlled static, schema, arithmetic, source-binding and governance-contract checks pass on the current candidate."
+      "meaning": "Repository-controlled static, schema, arithmetic and source-binding checks pass on the current candidate. Live GitHub native governance is reported separately and does not inherit this pass."
     },
     "behavioralBrowser": {
       "status": "pass",
