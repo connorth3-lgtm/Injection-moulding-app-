@@ -30,8 +30,13 @@ jobs:
         run: python qa_external_validation_wave1.py
       - name: Exercise native ruleset verifier contract
         run: python tools/verify_main_ruleset.py --self-test
+      - name: Verify live native main ruleset against canonical policy
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python tools/verify_main_ruleset.py --repository "${{ github.repository }}"
       - name: Preserve human and operational evidence boundary
         run: |
           echo 'PASS means unsupported external-validation claims are blocked.'
-          echo 'PASS also means release-bound execution packets and Wave 1 contracts are internally coherent.'
+          echo 'PASS also means the live native main ruleset matches the canonical independent-review policy and release-bound execution packets are internally coherent.'
           echo 'It does not mean human AT, physical-device, Windows, SME, learner or site evidence has been performed.'
