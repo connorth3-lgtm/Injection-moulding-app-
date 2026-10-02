@@ -155,8 +155,8 @@
         "to": "mouldmaster/assessment-ux.css"
       },
       {
-        "from": "../../app-shell-registry.js",
-        "to": "mouldmaster/app-shell-registry.js"
+        "from": "../../src/domains/shell/app-shell-registry.js",
+        "to": "mouldmaster/src/domains/shell/app-shell-registry.js"
       },
       {
         "from": "../../assessment-multimodal.js",

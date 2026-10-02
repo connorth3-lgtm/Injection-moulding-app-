@@ -124,7 +124,7 @@ jobs:
           node --check reference-browser-ui.js
           node --check diagnostic-learning-labs.js
           node --check material-behaviour-labs.js
-          node --check app-shell-registry.js
+          node --check src/domains/shell/app-shell-registry.js
           node --check assessment-multimodal.js
           node --check pwa-shell.js
           node --check learning-experience.js

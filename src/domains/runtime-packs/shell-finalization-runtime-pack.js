@@ -8,7 +8,7 @@
 /* MouldMaster app-shell finalizer — 2026.09.10.1 */
 (function(){
 'use strict';
-if(!window.MM_APP_SHELL)throw new Error('app-shell-finalize.js requires app-shell-registry.js');
+if(!window.MM_APP_SHELL)throw new Error('app-shell-finalize.js requires src/domains/shell/app-shell-registry.js');
 if(!window.MM_LEARNING_EXPERIENCE)throw new Error('app-shell-finalize.js requires learning-experience.js');
 if(!window.MM_CURRICULUM_INTEGRATION)throw new Error('app-shell-finalize.js requires curriculum-integration.js');
 if(!window.MM_SPECIALIST_CURRICULUM)throw new Error('app-shell-finalize.js requires specialist-curriculum.js');

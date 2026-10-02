@@ -9,7 +9,7 @@ on:
       - 'index.html'
       - 'MouldMaster_Core_App.html'
       - '*.css'
-      - 'app-shell-registry.js'
+      - 'src/domains/shell/app-shell-registry.js'
       - 'app-shell-finalize.js'
       - 'mould-master-workspace.js'
       - 'learning-experience.js'
@@ -198,4 +198,3 @@ jobs:
             exit 1
           fi
           echo "All browser and visual approval gates passed."
-

@@ -32,7 +32,7 @@ on:
       - 'evidence-maturity-formal-bridge.js'
       - 'lesson-evidence-depth.js'
       - 'assessment-evidence-approval.js'
-      - 'app-shell-registry.js'
+      - 'src/domains/shell/app-shell-registry.js'
       - 'pwa-shell.js'
       - 'learning-experience.js'
       - 'process-data-diagnostics.js'
