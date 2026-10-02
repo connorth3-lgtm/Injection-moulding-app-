@@ -3,25 +3,13 @@ import json
 import re
 
 ROOT = Path(__file__).resolve().parent
-WORKFLOWS = [
-    ".github/workflows/qa.yml",
-    ".github/workflows/mobile-browser-qa.yml",
-    ".github/workflows/open-desktop-build.yml",
-    ".github/workflows/question-quality-50-pass.yml",
-    ".github/workflows/release-external-validation.yml",
-    ".github/workflows/pages.yml",
-    ".github/workflows/main-pr-provenance-guard.yml",
-    ".github/workflows/publish-open-desktop.yml",
-    ".github/workflows/microsoft-store-msix.yml",
-    ".github/workflows/desktop-release-immutability-guard.yml",
-    ".github/workflows/fast-feedback.yml",
-    ".github/workflows/desktop-dependency-lock.yml",
-    ".github/workflows/maturity-hardening-v2.yml",
-    ".github/workflows/primary-measured-evidence.yml",
-    ".github/workflows/real-site-pilot-preflight.yml",
-    ".github/workflows/specialist-evidence-gaps.yml",
-    ".github/workflows/deep-dive-v2.yml",
-]
+WORKFLOW_DIR = ROOT / ".github" / "workflows"
+WORKFLOWS = sorted(
+    path.relative_to(ROOT).as_posix()
+    for path in WORKFLOW_DIR.iterdir()
+    if path.is_file() and path.suffix in {".yml", ".yaml"}
+)
+
 PINNED = {
     "checkout": "3d3c42e5aac5ba805825da76410c181273ba90b1",
     "setup-node": "820762786026740c76f36085b0efc47a31fe5020",
@@ -54,7 +42,8 @@ for rel in WORKFLOWS:
     need(path.exists(), f"critical workflow missing: {rel}")
     text = path.read_text(encoding="utf-8")
     refs = governed_refs(text, rel)
-    need(refs, f"critical workflow has no governed core Action references: {rel}")
+    # A workflow may legitimately use no governed core Action. Any core Action
+    # reference that is present must still be exact-SHA pinned.
     report.append({
         "workflow": rel,
         "coreActionRefs": len(refs),
@@ -65,10 +54,11 @@ for rel in WORKFLOWS:
 (ROOT / "critical-actions-versions-report.json").write_text(json.dumps({
     "schema": 2,
     "result": "pass",
-    "criticalWorkflowCount": len(WORKFLOWS),
+    "workflowCount": len(WORKFLOWS),
     "policy": "exact-reviewed-sha",
     "approvedPins": PINNED,
     "workflows": report,
 }, indent=2) + "\n", encoding="utf-8")
 
-print(f"MouldMaster critical GitHub Actions QA passed ({len(WORKFLOWS)} critical workflows use exact reviewed SHA pins).")
+need(len(WORKFLOWS) >= 70, "workflow inventory unexpectedly shrank; repository-wide pin coverage may be incomplete")
+print(f"MouldMaster GitHub Actions QA passed ({len(WORKFLOWS)} workflows scanned; every governed core Action reference uses an exact reviewed SHA pin).")
