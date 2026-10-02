@@ -103,20 +103,12 @@
         "to": "mouldmaster/training-upgrade.js"
       },
       {
-        "from": "../../training-qa-fix.js",
-        "to": "mouldmaster/training-qa-fix.js"
-      },
-      {
         "from": "../../assessment-100-pass.js",
         "to": "mouldmaster/assessment-100-pass.js"
       },
       {
         "from": "../../assessment-deep-dive.js",
         "to": "mouldmaster/assessment-deep-dive.js"
-      },
-      {
-        "from": "../../assessment-answer-cue-fix.js",
-        "to": "mouldmaster/assessment-answer-cue-fix.js"
       },
       {
         "from": "../../assessment-storage-scope.js",
@@ -135,14 +127,6 @@
         "to": "mouldmaster/assessment-analytics-ui.js"
       },
       {
-        "from": "../../assessment-final-hardening.js",
-        "to": "mouldmaster/assessment-final-hardening.js"
-      },
-      {
-        "from": "../../src/domains/shared/runtime-v2.js",
-        "to": "mouldmaster/src/domains/shared/runtime-v2.js"
-      },
-      {
         "from": "../../assessment-runtime-v2.js",
         "to": "mouldmaster/assessment-runtime-v2.js"
       },
@@ -155,16 +139,8 @@
         "to": "mouldmaster/assessment-ux.css"
       },
       {
-        "from": "../../src/domains/shell/app-shell-registry.js",
-        "to": "mouldmaster/src/domains/shell/app-shell-registry.js"
-      },
-      {
         "from": "../../assessment-multimodal.js",
         "to": "mouldmaster/assessment-multimodal.js"
-      },
-      {
-        "from": "../../src/domains/shell/pwa-shell.js",
-        "to": "mouldmaster/src/domains/shell/pwa-shell.js"
       },
       {
         "from": "../../learning-experience.js",
@@ -247,10 +223,6 @@
         "to": "mouldmaster/specialist-curriculum.js"
       },
       {
-        "from": "../../specialist-evidence-gap-extension.js",
-        "to": "mouldmaster/specialist-evidence-gap-extension.js"
-      },
-      {
         "from": "../../mould-master-workspace.js",
         "to": "mouldmaster/mould-master-workspace.js"
       },
@@ -271,14 +243,6 @@
         "to": "mouldmaster/material-catalog-v1.json"
       },
       {
-        "from": "../../app-shell-finalize.js",
-        "to": "mouldmaster/app-shell-finalize.js"
-      },
-      {
-        "from": "../../src/domains/governance/production-health.js",
-        "to": "mouldmaster/src/domains/governance/production-health.js"
-      },
-      {
         "from": "../../data-integration-runtime.js",
         "to": "mouldmaster/data-integration-runtime.js"
       },
@@ -297,10 +261,6 @@
       {
         "from": "../../learning-analytics.js",
         "to": "mouldmaster/learning-analytics.js"
-      },
-      {
-        "from": "../../accessibility-hardening.js",
-        "to": "mouldmaster/accessibility-hardening.js"
       },
       {
         "from": "../../source-library.js",
@@ -343,14 +303,6 @@
         "to": "mouldmaster/reference-deep-dive.js"
       },
       {
-        "from": "../../reference-research-extension.js",
-        "to": "mouldmaster/reference-research-extension.js"
-      },
-      {
-        "from": "../../reference-20x-extension.js",
-        "to": "mouldmaster/reference-20x-extension.js"
-      },
-      {
         "from": "../../reference-2026-expansion.js",
         "to": "mouldmaster/reference-2026-expansion.js"
       },
@@ -381,10 +333,6 @@
       {
         "from": "../../evidence-maturity-formal-bridge.js",
         "to": "mouldmaster/evidence-maturity-formal-bridge.js"
-      },
-      {
-        "from": "../../assessment-psychometric-hardening.js",
-        "to": "mouldmaster/assessment-psychometric-hardening.js"
       },
       {
         "from": "../../assessment-evidence-integrity-upgrade.js",
