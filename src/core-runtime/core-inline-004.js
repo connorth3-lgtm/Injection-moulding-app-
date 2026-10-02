@@ -1370,10 +1370,10 @@ renderSimulator=function(){
   engagingBaseSimulator();
   const left=$("#simulator .form-card");
   if(left)left.insertAdjacentHTML("afterbegin",`<div class="sim-challenge">
-    <span class="eyebrow">Process Rescue</span><h3>Can you stabilise the simulated process?</h3>
+    <span class="eyebrow">Baseline Recovery</span><h3>Can you restore the training baseline?</h3>
     <p>Start from a deliberately changed training condition. Return every control to its displayed known-good baseline/reference. Success means only that the exercise baseline was restored; it is not process optimisation or a production recipe.</p>
-    <button class="secondary" data-mm-onclick="startRescueChallenge()">Start rescue</button>
-    <button class="ghost" data-mm-onclick="checkRescueChallenge()">Check my process</button>
+    <button class="secondary" data-mm-onclick="startRescueChallenge()">Start baseline recovery</button>
+    <button class="ghost" data-mm-onclick="checkRescueChallenge()">Check baseline</button>
   </div>`);
 };
 function startRescueChallenge(){
