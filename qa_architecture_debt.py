@@ -90,6 +90,12 @@ need(
     "grandfatheredCompatibilityLayers contains duplicate entries",
 )
 grandfathered_compat = set(grandfathered_compat_entries)
+need(
+    len(actual_compat) <= int(baseline["compatibilityLayerCeiling"]),
+    f"compatibility-layer debt grew: {len(actual_compat)} > ceiling {baseline['compatibilityLayerCeiling']}",
+)
+need(int(baseline.get("targetRootRuntimeScripts", -1)) == 0, "root runtime debt target must remain zero")
+need(int(baseline.get("targetCompatibilityLayers", -1)) == 0, "compatibility-layer debt target must remain zero")
 unknown_compat = sorted(actual_compat - grandfathered_compat)
 need(not unknown_compat, f"new root compatibility layers are frozen; consolidate under src/domains/: {unknown_compat}")
 stale_grandfathered_compat = sorted(grandfathered_compat - actual_compat)
@@ -248,7 +254,7 @@ print(
     "MouldMaster architecture debt guard passed: "
     f"{len(body_scripts)}/{baseline['runtimeBodyScriptCeiling']} bootstrap scripts; "
     f"{len(root_runtime_scripts)}/{baseline['rootRuntimeScriptCeiling']} grandfathered root scripts; "
-    f"{len(actual_compat)}/{len(grandfathered_compat)} exact grandfathered compatibility layers; "
+    f"{len(actual_compat)}/{baseline['compatibilityLayerCeiling']} grandfathered compatibility layers (target 0); "
     f"document.write {write_count}/{baseline['documentWriteCeiling']}; "
     f"{len(core_runtime_scripts)} runtime-externalized frozen core scripts with handler bridge folded into final slot; "
     "script-src self-only; script-src-attr none; style-src exact-hash/self-only with style-src-attr none; no unsafe-inline, cssText, setAttribute(style), active inline handlers, remote scripts, unsafe-eval, eval(), or new Function()"
