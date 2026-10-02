@@ -34,7 +34,7 @@ def main() -> None:
     bindings = model.get("currentReleaseBindings")
     if not isinstance(bindings, dict):
         raise AssertionError("canonical model has no currentReleaseBindings")
-    for key in ("externalValidation", "bookPublication", "bookIndependentSme", "curriculumIndependentSme", "nzqaExternalValidation"):
+    for key in ("externalValidation", "bookPublication", "bookIndependentSme", "curriculumIndependentSme", "nzqaExternalValidation", "desktopReleasePlatform"):
         referenced_file(f"currentReleaseBindings.{key}", bindings.get(key))
 
     external = load(str(bindings["externalValidation"]))
@@ -42,6 +42,7 @@ def main() -> None:
     book_sme = load(str(bindings["bookIndependentSme"]))
     curriculum_sme = load(str(bindings["curriculumIndependentSme"]))
     nzqa_external = load(str(bindings["nzqaExternalValidation"]))
+    desktop_release = load(str(bindings["desktopReleasePlatform"]))
 
     evidence_bindings = {
         "external-validation": external,
@@ -106,6 +107,7 @@ def main() -> None:
         "windowsDistribution",
         "learnerOutcomes",
         "nzqaProviderValidation",
+        "desktopReleaseImmutability",
         "productionAuthority",
     }
     if set(current) != expected_keys:
@@ -123,6 +125,7 @@ def main() -> None:
         "windowsDistribution": external["windowsDistribution"]["status"],
         "learnerOutcomes": external["learnerOutcomes"]["status"],
         "nzqaProviderValidation": external["nzqaProvider"]["status"],
+        "desktopReleaseImmutability": desktop_release["status"],
         "productionAuthority": external["productionUse"]["status"],
     }
     if current != derived:
@@ -135,7 +138,13 @@ def main() -> None:
         if str(state).lower() in forbidden_public:
             raise AssertionError(f"{key} exposes a transient/orphan-prone public state: {state}")
 
-    print("MouldMaster lifecycle orphan/stuck-state QA passed; all public states have live authoritative bindings and explicit exits")
+    assurance = model.get("currentAssuranceEvidence")
+    if not isinstance(assurance, dict) or set(assurance) != {"staticContract", "behavioralBrowser", "externalHumanDevice"}:
+        raise AssertionError("assurance evidence layers are missing/orphaned")
+    if assurance["externalHumanDevice"].get("status") != "hold":
+        raise AssertionError("external human/device assurance cannot outrun current external HOLDs")
+
+    print("MouldMaster lifecycle orphan/stuck-state QA passed; all public states and assurance layers have live authoritative bindings and explicit exits")
 
 
 if __name__ == "__main__":
