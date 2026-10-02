@@ -25,6 +25,9 @@ expected_integrity = {
     "node_modules/pngjs": "sha512-LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow==",
 }
 packages = lock.get("packages") or {}
+need((packages.get("node_modules/@playwright/test") or {}).get("bin") == {"playwright": "cli.js"}, "Playwright test bin metadata drifted")
+need((packages.get("node_modules/playwright") or {}).get("bin") == {"playwright": "cli.js"}, "Playwright bin metadata drifted")
+need((packages.get("node_modules/playwright-core") or {}).get("bin") == {"playwright-core": "cli.js"}, "Playwright core bin metadata drifted")
 for path, integrity in expected_integrity.items():
     need((packages.get(path) or {}).get("integrity") == integrity, f"browser QA lock integrity drifted: {path}")
 
