@@ -96,8 +96,11 @@ need("'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'" in sw,'o
 
 pkg=json.loads(text('desktop/electron/package.json'))
 froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
+need('../../src/domains' in froms,'desktop package must include the canonical recursive domain runtime tree')
+need('../../mould-master-workspace.js' in froms,'desktop package missing root workspace asset')
+for asset in ['src/domains/shell/app-shell-registry.js','src/domains/shell/app-shell-finalize.js']:
+    need('../../'+asset not in froms,f'desktop package must not duplicate domain-owned shell asset: {asset}')
 for asset in ['src/domains/shell/app-shell-registry.js','mould-master-workspace.js','src/domains/shell/app-shell-finalize.js']:
-    need('../../'+asset in froms,f'desktop package missing {asset}')
     need("'"+asset+"'" in text('desktop/electron/scripts/generate-integrity.cjs'),f'desktop integrity missing {asset}')
 
 finalizer=text('src/domains/shell/app-shell-finalize.js')
