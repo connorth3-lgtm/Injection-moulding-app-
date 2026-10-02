@@ -100,7 +100,7 @@ assert f"CACHE_VERSION='{WEB_RELEASE}'" in sw
 for asset in [
     "index.html", "src/core-runtime/core-source.txt", "manifest.webmanifest",
     "mouldmaster-192.png", "mouldmaster-512.png", "version.json", "reading-patch.css",
-    "src/domains/runtime-packs/learning-foundation-runtime-pack.js", "src/domains/runtime-packs/assessment-foundation-runtime-pack.js", "source-library.js", "pwa-shell.js", "learning-experience.js",
+    "src/domains/runtime-packs/learning-foundation-runtime-pack.js", "src/domains/runtime-packs/assessment-foundation-runtime-pack.js", "source-library.js", "src/domains/shell/pwa-shell.js", "learning-experience.js",
     "process-data-diagnostics.js", "curriculum-integration.js", "specialist-curriculum.js",
     "specialist-evidence-gap-extension.js", "mould-master-workspace.js", "src/domains/runtime-packs/shell-finalization-runtime-pack.js", "learning-analytics.js",
     "src/domains/shared/runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js",
@@ -195,7 +195,7 @@ storage_commit = bridge.index("for(const [k,v] of Object.entries(writes))localSt
 cleanup_commit = bridge.index("clearAllAnalyticsStores();", storage_commit)
 memory_commit = bridge.index("db=proposed;user=db.users[db.activeUser]")
 assert storage_commit < cleanup_commit < memory_commit, "imported learner registry must activate only after staged writes and verified analytics cleanup"
-shell = text("pwa-shell.js")
+shell = text("src/domains/shell/pwa-shell.js")
 assert f"const RELEASE='{WEB_RELEASE}'" in shell
 assert f"const CONTENT='{CONTENT_VERSION}'" in shell
 assert "NZ source-status (?:note|clarification)" in shell, "duplicate NZ note prevention missing"
@@ -212,7 +212,7 @@ assert Path("privacy.html").exists(), "public privacy page missing"
 assert Path("support.html").exists(), "public support page missing"
 assert Path("certification/README.md").exists(), "certification roadmap missing"
 assert Path("credentials/README.md").exists(), "credential governance spec missing"
-runtime = "\n".join(text(x) for x in ["MouldMaster_Core_App.html", "index.html", "training-upgrade.js", "source-library.js", "pwa-shell.js", "training-qa-fix.js", "assessment-quality-suite.js"])
+runtime = "\n".join(text(x) for x in ["MouldMaster_Core_App.html", "index.html", "training-upgrade.js", "source-library.js", "src/domains/shell/pwa-shell.js", "training-qa-fix.js", "assessment-quality-suite.js"])
 for claim in [r"\bNZQA approved\b", r"\bIACET CEUs?\b", r"\bMicrosoft certified\b", r"\bNZQA accredited\b"]:
     assert not re.search(claim, runtime, flags=re.I), f"premature external certification claim detected: {claim}"
 assert "not accredited" in core.lower() or "not third-party accredited" in core.lower(), "non-accredited certificate status must remain explicit"
@@ -250,7 +250,7 @@ if lock.exists():
 
 for js_name in [
     "service-worker.js", "src/domains/runtime-packs/learning-foundation-runtime-pack.js", "reading-patch.js", "training-upgrade.js", "training-qa-fix.js",
-    "assessment-quality-suite.js", "source-library.js", "pwa-shell.js", "specialist-curriculum.js",
+    "assessment-quality-suite.js", "source-library.js", "src/domains/shell/pwa-shell.js", "specialist-curriculum.js",
     "specialist-evidence-gap-extension.js", "mould-master-workspace.js", "app-shell-finalize.js",
     "src/domains/shared/runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js",
     "desktop/electron/src/main.cjs", "desktop/electron/scripts/generate-integrity.cjs", "desktop/electron/scripts/qa.cjs"

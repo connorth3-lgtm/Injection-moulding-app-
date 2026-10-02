@@ -52,7 +52,7 @@ changed = {x.strip() for x in git("diff", "--name-only", parent, "HEAD").splitli
 
 worker = (ROOT / "service-worker.js").read_text(encoding="utf-8")
 index = (ROOT / "index.html").read_text(encoding="utf-8")
-pwa_shell = (ROOT / "pwa-shell.js").read_text(encoding="utf-8")
+pwa_shell = (ROOT / "src/domains/shell/pwa-shell.js").read_text(encoding="utf-8")
 current = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
 current_web_raw = current.get("web_release")
 current_web = release_tuple(current_web_raw)
@@ -97,7 +97,7 @@ if not cache or cache.group(1) != current_web_raw or not revision or not revisio
 if not shell_release or shell_release.group(1) != current_web_raw:
     raise SystemExit("index.html SHELL_RELEASE is not bound to version.json web_release")
 if not pwa_release or pwa_release.group(1) != current_web_raw:
-    raise SystemExit("pwa-shell.js RELEASE is not bound to version.json web_release")
+    raise SystemExit("src/domains/shell/pwa-shell.js RELEASE is not bound to version.json web_release")
 
 runtime_changed = sorted(changed & governed)
 if not runtime_changed:

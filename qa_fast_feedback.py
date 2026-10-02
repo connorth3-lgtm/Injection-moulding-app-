@@ -165,7 +165,7 @@ def main() -> int:
         "support.html",
         "version.json",
         "index.html",
-        "pwa-shell.js",
+        "src/domains/shell/pwa-shell.js",
         "service-worker.js",
         "qa_release_docs.py",
     })

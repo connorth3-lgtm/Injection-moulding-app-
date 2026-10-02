@@ -62,7 +62,7 @@ need(f"const CACHE_VERSION='{release}';" in sw,'service-worker release marker st
 need("'./premium-ui.css'" in sw,'premium UI stylesheet missing from atomic offline cache')
 need("'./premium-dynamic.css'" in sw,'premium dynamic stylesheet missing from atomic offline cache')
 
-pwa=text('pwa-shell.js')
+pwa=text('src/domains/shell/pwa-shell.js')
 need(f"const RELEASE='{release}';" in pwa,'PWA shell release marker stale')
 
 pkg=json.loads(text('desktop/electron/package.json'))

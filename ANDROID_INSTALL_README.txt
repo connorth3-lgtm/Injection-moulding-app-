@@ -51,7 +51,7 @@ PWA / OFFLINE APPLICATION FILES
   evidence-maturity-formal-bridge.js
   lesson-evidence-depth.js
   assessment-evidence-approval.js
-  pwa-shell.js
+  src/domains/shell/pwa-shell.js
   privacy.html
   support.html
   mouldmaster-192.png
