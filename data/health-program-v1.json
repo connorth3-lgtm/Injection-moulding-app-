@@ -177,7 +177,7 @@
         "technology": "localStorage",
         "identity": "mm_production_health_v1",
         "version": 1,
-        "source": "production-health.js",
+        "source": "src/domains/governance/production-health.js",
         "sourceOfTruth": false,
         "rebuildable": true,
         "retentionMaxEvents": 120,

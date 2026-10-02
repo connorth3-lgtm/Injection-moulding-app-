@@ -28,7 +28,7 @@ jobs:
           python-version: '3.12'
       - name: JavaScript syntax
         run: |
-          node --check production-health.js
+          node --check src/domains/governance/production-health.js
           node --check app-shell-finalize.js
           node --check service-worker.js
       - name: Local-only observability and learner-report privacy integrity

@@ -26,7 +26,7 @@ def js_const(source: str, name: str) -> str:
     return match.group(1)
 
 
-health = text("production-health.js")
+health = text("src/domains/governance/production-health.js")
 index = text("index.html")
 support = text("support.html")
 privacy = text("privacy.html")
@@ -72,21 +72,21 @@ require(bool(cache_revision.strip()),
         "Service-worker cache revision must remain an explicit independent invalidation token")
 require(expected_static_cache == f"mouldmaster-static-{cache_version}-{cache_revision}",
         "Bootstrap expected cache does not exactly match the service-worker cache identity")
-require("['./production-health.js','<script src=\"./production-health.js\">']" in index,
+require("['./src/domains/governance/production-health.js','<script src=\"./src/domains/governance/production-health.js\">']" in index,
         "Browser runtime does not load production health before learner modules")
 learning_pack = "'./src/domains/runtime-packs/learning-foundation-runtime-pack.js'"
 require(learning_pack in index, "Learning foundation runtime pack is missing from browser bootstrap")
-require(index.index("'./production-health.js'") < index.index(learning_pack),
+require(index.index("'./src/domains/governance/production-health.js'") < index.index(learning_pack),
         "Production health must load before learner runtime modules")
 require("Promise.allSettled" in worker and "await caches.delete(STATIC_CACHE)" in worker,
         "Observability must coexist with fail-closed service-worker install rather than a partially active core cache")
-require("production-health.js" in finalize, "App-shell observability fallback loader missing")
-require("./production-health.js" in worker, "Production health is missing from the offline/public core")
-require("production-health.js" in package, "Desktop package does not include production health diagnostics")
-require("production-health.js" in integrity, "Desktop integrity manifest does not hash production health diagnostics")
+require("src/domains/governance/production-health.js" in finalize, "App-shell observability fallback loader missing")
+require("./src/domains/governance/production-health.js" in worker, "Production health is missing from the offline/public core")
+require("src/domains/governance/production-health.js" in package, "Desktop package does not include production health diagnostics")
+require("src/domains/governance/production-health.js" in integrity, "Desktop integrity manifest does not hash production health diagnostics")
 require(versions.get("production_observability_version") == VERSION, "version.json observability version mismatch")
 
-for marker in ("mmHealthStatus", "mmHealthRun", "mmHealthCopy", "mmHealthClear", "learner-problem.yml", "production-health.js"):
+for marker in ("mmHealthStatus", "mmHealthRun", "mmHealthCopy", "mmHealthClear", "learner-problem.yml", "src/domains/governance/production-health.js"):
     require(marker in support, f"Support diagnostic/reporting control missing: {marker}")
 require("Production health diagnostics" in privacy, "Privacy notice lacks production-health section")
 require("does not automatically upload" in privacy, "Privacy notice must state diagnostics are not automatically uploaded")

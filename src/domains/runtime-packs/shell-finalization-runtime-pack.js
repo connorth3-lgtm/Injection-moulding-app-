@@ -63,7 +63,7 @@ function patchEvidenceUi(){
 }
 function loadProductionHealth(){
   if(window.MM_PRODUCTION_HEALTH||document.querySelector('script[data-mm-production-health]'))return;
-  const script=document.createElement('script');script.src='./production-health.js';script.async=true;script.dataset.mmProductionHealth='1';document.head.appendChild(script);
+  const script=document.createElement('script');script.src='./src/domains/governance/production-health.js';script.async=true;script.dataset.mmProductionHealth='1';document.head.appendChild(script);
 }
 function loadConnectedDataRuntime(){
   if(window.MM_CONNECTED_PROCESS_DATA||document.querySelector('script[data-mm-connected-data]'))return;

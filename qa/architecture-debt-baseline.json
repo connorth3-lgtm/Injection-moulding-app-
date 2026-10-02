@@ -2,10 +2,9 @@
   "schemaVersion": 1,
   "capturedAt": "2026-09-17",
   "runtimeBodyScriptCeiling": 15,
-  "rootRuntimeScriptCeiling": 4,
+  "rootRuntimeScriptCeiling": 3,
   "documentWriteCeiling": 0,
   "grandfatheredRootRuntimeScripts": [
-    "./production-health.js",
     "./runtime-v2.js",
     "./app-shell-registry.js",
     "./pwa-shell.js"
@@ -36,7 +35,8 @@
     "2026-09-15 assessment-foundation pack concatenates eight reviewed assessment bootstrap sources in their historical order without transformation, reducing BODY_SCRIPTS from 37 to 30 and directly injected root runtime scripts from 33 to 25. Release 2026.09.15.3 was the historical exact physical-device candidate for that packing tranche only; current release-specific validation identity is governed by data/release-external-validation-v1.json and must not be inferred from this architecture history.",
     "2026-09-18 audit-remediation tranche reduces directly injected root runtime scripts to 5 while using contiguous generated packs that preserve the exact historical global bootstrap execution order; BODY_SCRIPTS ceiling is 15.",
     "2026-09-29 audit hardening packs app-shell-finalize.js into a deterministic domain runtime pack, reducing directly injected root runtime scripts from 5 to 4 without changing execution order.",
-    "2026-10-02 deep-fix adds a merge-base ratchet: numeric ceilings and grandfathered root/compatibility sets may only stay flat or decrease on pull requests; increasing architecture debt requires redesign rather than baseline expansion."
+    "2026-10-02 deep-fix adds a merge-base ratchet: numeric ceilings and grandfathered root/compatibility sets may only stay flat or decrease on pull requests; increasing architecture debt requires redesign rather than baseline expansion.",
+    "2026-10-03 domain-ownership tranche moves production-health.js unchanged into src/domains/governance/, reducing directly injected root runtime scripts from 4 to 3."
   ],
   "compatibilityLayerCeiling": 9,
   "targetRootRuntimeScripts": 0,

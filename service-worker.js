@@ -105,7 +105,7 @@ const CORE=[
   './learning-analytics.js',
   './accessibility-hardening.js',
   './src/domains/runtime-packs/shell-finalization-runtime-pack.js',
-  './production-health.js',
+  './src/domains/governance/production-health.js',
   './data-integration-runtime.js',
   './process-data-intelligence-ui.js',
   './process-data-semantic-registry.json',

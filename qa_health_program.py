@@ -97,7 +97,7 @@ def main() -> None:
         require(marker in backup_runtime, f"backup integrity runtime marker missing: {marker}")
     require(backup_runtime.index("await verifyEnvelope(parsed)") < backup_runtime.index("baseImportData(new Blob"), "backup payload can reach restore before SHA-256 verification")
 
-    health_runtime = (ROOT / "production-health.js").read_text(encoding="utf-8")
+    health_runtime = (ROOT / "src/domains/governance/production-health.js").read_text(encoding="utf-8")
     require("MAX_EVENTS=120" in health_runtime, "runtime diagnostic bound drifted")
     runtime_kinds = ["runtime_error", "promise_error", "resource_error", "offline", "online", "sw_update_found", "sw_installed", "sw_redundant", "sw_controller_change", "deployment_ok", "deployment_mismatch", "deployment_unreachable"]
     for kind in runtime_kinds:

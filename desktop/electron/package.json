@@ -275,8 +275,8 @@
         "to": "mouldmaster/app-shell-finalize.js"
       },
       {
-        "from": "../../production-health.js",
-        "to": "mouldmaster/production-health.js"
+        "from": "../../src/domains/governance/production-health.js",
+        "to": "mouldmaster/src/domains/governance/production-health.js"
       },
       {
         "from": "../../data-integration-runtime.js",
