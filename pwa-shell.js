@@ -31,7 +31,7 @@ function syncStandardsReviewDate(){
   if(window.MM_DATA?.standards)window.MM_DATA.standards.verified=reviewed;
   document.querySelectorAll('small,.tiny,.muted,p,span').forEach(el=>{
     const text=el.textContent||'';
-    if(/References reviewed\s+\d{1,2}\s+[A-Za-z]+\s+\d{4}/i.test(text))setText(el,text.replace(/(References reviewed\s+)\d{1,2}\s+[A-Za-z]+\s+\d{4}/gi,`$1${reviewed}`));
+    if(/References reviewed\s+\d{1,2}\s+[A-Za-z]+\s+\d{4}/i.test(text))setText(el,text.replace(/References reviewed\s+\d{1,2}\s+[A-Za-z]+\s+\d{4}/gi,`Core safety and assessment references reviewed ${reviewed}`));
   });
 }
 function syncUpdateCard(){
