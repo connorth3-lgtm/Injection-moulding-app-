@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "policyId": "mouldmaster-main-governance-policy",
-  "version": "2026.10.03.1",
+  "version": "2026.10.03.2",
   "targetRef": "refs/heads/main",
   "enforcement": "active",
   "bypassActors": [],
@@ -25,7 +25,8 @@
       "mobile-browser",
       "build-windows",
       "question-quality-50-pass",
-      "release-external-validation"
+      "release-external-validation",
+      "exact-head-risk-coverage"
     ]
   },
   "security": {
