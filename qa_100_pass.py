@@ -165,7 +165,7 @@ audit("find . -maxdepth 1 -type f -name '*.js'" in qy and "python qa_100_pass.py
 ow=text(".github/workflows/open-desktop-build.yml")
 audit("- 'assessment-100-pass.js'" in ow and "- 'qa_100_pass.py'" in ow and "python qa_100_pass.py" in ow,"desktop workflow audit")
 audit("python qa_100_pass.py" in text(".github/workflows/microsoft-store-msix.yml"),"store workflow audit")
-refs=["source-library.js","reference-data.js","reference-deep-dive.js","reference-research-extension.js","reference-20x-extension.js","reference-sources.js"]
+refs=["source-library.js","reference-data.js","reference-deep-dive.js","src/domains/research/reference-research-extension.js","src/domains/research/reference-20x-extension.js","reference-sources.js"]
 audit(all("activeExam" not in text(x) and "#examQuestions" not in text(x) for x in refs),"references isolated from exams")
 
 if N!=100: raise AssertionError(f"audit definition error: {N} checks")

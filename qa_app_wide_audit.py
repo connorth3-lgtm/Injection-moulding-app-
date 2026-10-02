@@ -77,7 +77,7 @@ runtime_packs = {
     "./src/domains/runtime-packs/process-data-runtime-pack.js",
 }
 need(runtime_packs <= body_scripts, f"required deterministic runtime packs missing from BODY_SCRIPTS: {sorted(runtime_packs - body_scripts)}")
-learning_sources = ("reading-patch.js", "training-upgrade.js", "training-qa-fix.js")
+learning_sources = ("reading-patch.js", "training-upgrade.js", "src/domains/learning/training-qa-fix.js")
 learning_pack = text("src/domains/runtime-packs/learning-foundation-runtime-pack.js")
 pack_builder = text("tools/build_runtime_packs.py")
 positions = []
@@ -93,12 +93,12 @@ need('"learning-foundation-runtime-pack.js"' in pack_builder, "learning foundati
 assessment_sources = (
     "assessment-100-pass.js",
     "assessment-deep-dive.js",
-    "assessment-answer-cue-fix.js",
+    "src/domains/assessment/assessment-answer-cue-fix.js",
     "assessment-storage-scope.js",
     "assessment-quality-suite.js",
     "assessment-stable-review-bridge.js",
     "assessment-analytics-ui.js",
-    "assessment-final-hardening.js",
+    "src/domains/assessment/assessment-final-hardening.js",
 )
 assessment_pack = text("src/domains/runtime-packs/assessment-foundation-runtime-pack.js")
 assessment_positions = []

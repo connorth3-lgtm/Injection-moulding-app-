@@ -148,4 +148,4 @@ Singapore Vistamaxx extension: seven validated ExxonMobil Vistamaxx grades retai
 
 ### 2026-09-29 hardening update
 
-The shell finalizer now runs from `src/domains/runtime-packs/shell-finalization-runtime-pack.js`, reducing direct root runtime injection from five to four without changing execution order. The reviewed `app-shell-finalize.js` source remains the deterministic pack input and compatibility source for non-web distribution lanes.
+The shell finalizer now runs from `src/domains/runtime-packs/shell-finalization-runtime-pack.js`, reducing direct root runtime injection from five to four without changing execution order. The reviewed `src/domains/shell/app-shell-finalize.js` source remains the deterministic pack input and compatibility source for non-web distribution lanes.

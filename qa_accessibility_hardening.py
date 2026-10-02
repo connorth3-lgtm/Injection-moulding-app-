@@ -5,7 +5,7 @@ ROOT=Path(__file__).resolve().parent
 def need(ok,msg):
     if not ok: raise AssertionError(msg)
 
-src=(ROOT/'accessibility-hardening.js').read_text(encoding='utf-8')
+src=(ROOT/'src/domains/shell/accessibility-hardening.js').read_text(encoding='utf-8')
 for marker in ['aria-modal','aria-labelledby','Close dialog','focusTrap:true','focusRestore:true','forced-colors:active','prefers-contrast:more','noopener','noreferrer','role\',\'status','formal WCAG conformance still requires manual']:
     need(marker in src,f'accessibility hardening marker missing: {marker}')
 need("e.key==='Escape'" in src and "window.closeModal()" in src,'dialog Escape-to-close handling missing')

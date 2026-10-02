@@ -68,7 +68,7 @@
       './src/core-runtime/core-inline-009.js',
       './src/core-runtime/core-inline-010.js'
     ];
-    const DOMAIN_DELEGATED_ASSETS=['./learning-analytics.js','./accessibility-hardening.js'];
+    const DOMAIN_DELEGATED_ASSETS=['./learning-analytics.js','./src/domains/shell/accessibility-hardening.js'];
     const closeScript='</scr'+'ipt>';
     function versionMarkup(markup){return String(markup).replace(/(src|href)="(\.\/[^"?]+)(?:\?[^" ]*)?"/g,(_m,attr,url)=>`${attr}="${url}?v=${RUNTIME_ASSET_VERSION}"`)}
     function ensureViewportFit(out){let found=false;out=out.replace(/<meta\b[^>]*\bname=["']viewport["'][^>]*>/i,tag=>{found=true;if(/viewport-fit\s*=\s*cover/i.test(tag))return tag;if(/\bcontent=["']/i.test(tag))return tag.replace(/\bcontent=(["'])(.*?)\1/i,(_m,q,value)=>`content=${q}${value},viewport-fit=cover${q}`);return tag.replace(/>$/, ' content="width=device-width,initial-scale=1,viewport-fit=cover">')});if(!found)out=out.replace(/<\/head>/i,'<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n</head>');return out}
