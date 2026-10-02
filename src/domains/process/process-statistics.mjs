@@ -86,25 +86,278 @@ export function symmetricGroupSeparation(leftValues, rightValues, minimumPerGrou
   });
 }
 
-export function energyPerGoodPart(rows, { energyKey, qualityKey, unit, samplingBasis }) {
+
+
+export function cavitySpecificSummary({
+  cavities,
+  measurementUnit,
+  samplingBasis,
+  samplingBasisRef,
+  measurementSystemAdequate = false,
+  measurementSystemBasisRef,
+  minimumPerCavity = 3,
+} = {}) {
+  const unit = String(measurementUnit || '').trim();
+  const basis = String(samplingBasis || '').trim();
+  const basisRef = String(samplingBasisRef || '').trim();
+  const measurementRef = String(measurementSystemBasisRef || '').trim();
+  if (!unit) return Object.freeze({ result: null, reason: 'measurement-unit-required' });
+  if (!basis) return Object.freeze({ result: null, reason: 'sampling-basis-required' });
+  if (!basisRef) return Object.freeze({ result: null, reason: 'sampling-basis-reference-required' });
+  if (measurementSystemAdequate !== true) {
+    return Object.freeze({ result: null, reason: 'measurement-system-not-confirmed' });
+  }
+  if (!measurementRef) return Object.freeze({ result: null, reason: 'measurement-system-basis-required' });
+  if (!Number.isInteger(minimumPerCavity) || minimumPerCavity < 2) {
+    return Object.freeze({ result: null, reason: 'invalid-minimum-per-cavity' });
+  }
+  if (!Array.isArray(cavities) || cavities.length < 2) {
+    return Object.freeze({ result: null, reason: 'at-least-two-cavities-required' });
+  }
+
+  const seen = new Set();
+  const summaries = [];
+  for (let index = 0; index < cavities.length; index += 1) {
+    const row = cavities[index] || {};
+    const cavityId = String(row.cavityId || '').trim();
+    if (!cavityId) return Object.freeze({ result: null, reason: 'cavity-id-required', cavityIndex: index });
+    if (seen.has(cavityId)) return Object.freeze({ result: null, reason: 'duplicate-cavity-id', cavityId });
+    seen.add(cavityId);
+    if (!Array.isArray(row.values)) {
+      return Object.freeze({ result: null, reason: 'cavity-values-required', cavityId });
+    }
+    const values = row.values.map(finiteNumber).filter(value => value !== null);
+    if (values.length !== row.values.length) {
+      return Object.freeze({ result: null, reason: 'non-finite-cavity-value', cavityId });
+    }
+    if (values.length < minimumPerCavity) {
+      return Object.freeze({
+        result: null,
+        reason: 'insufficient-cavity-support',
+        cavityId,
+        n: values.length,
+        minimumPerCavity,
+      });
+    }
+    summaries.push(Object.freeze({ cavityId, ...numericSummary(values) }));
+  }
+
+  const cavityMeans = summaries.map(summary => summary.mean);
+  const meanOfCavityMeans = mean(cavityMeans);
+  let minimum = summaries[0];
+  let maximum = summaries[0];
+  for (const summary of summaries.slice(1)) {
+    if (summary.mean < minimum.mean) minimum = summary;
+    if (summary.mean > maximum.mean) maximum = summary;
+  }
+  const rangeOfCavityMeans = maximum.mean - minimum.mean;
+  const relativeRangePct = Math.abs(meanOfCavityMeans) > Number.EPSILON
+    ? 100 * rangeOfCavityMeans / Math.abs(meanOfCavityMeans)
+    : null;
+
+  return Object.freeze({
+    result: Object.freeze({
+      cavityCount: summaries.length,
+      measurementUnit: unit,
+      samplingBasis: basis,
+      samplingBasisRef: basisRef,
+      measurementSystemBasisRef: measurementRef,
+      minimumPerCavity,
+      cavities: Object.freeze(summaries),
+      meanOfCavityMeans,
+      minimumMeanCavityId: minimum.cavityId,
+      minimumCavityMean: minimum.mean,
+      maximumMeanCavityId: maximum.cavityId,
+      maximumCavityMean: maximum.mean,
+      rangeOfCavityMeans,
+      relativeRangePct,
+    }),
+    reason: null,
+    assumptions: Object.freeze([
+      'Cavity identity is preserved; values are not pooled before each cavity is summarised.',
+      'The result is descriptive evidence of between-cavity response, not a universal balance acceptance decision.',
+      'A relative range is reported only when the mean of cavity means is meaningfully non-zero; no generic tolerance is applied.',
+      'Sampling basis and measurement-system adequacy are caller-confirmed with explicit evidence references; the function does not infer cycle alignment, rational subgrouping, causation or tooling root cause.',
+    ]),
+    authority: 'cavity-specific-descriptive-statistics-only',
+  });
+}
+
+export function capabilityIndices({
+  meanValue,
+  spreadValue,
+  lowerSpecLimit,
+  upperSpecLimit,
+  spreadBasis,
+  spreadEstimatorRef,
+  measurementUnit,
+  processStable = false,
+  processStabilityBasisRef,
+  measurementSystemAdequate = false,
+  measurementSystemBasisRef,
+  samplingAdequacyConfirmed = false,
+  samplingAdequacyBasisRef,
+  distributionModelAdequate = false,
+  distributionModelBasisRef,
+  specificationBasisRef,
+} = {}) {
+  const meanValueNumber = finiteNumber(meanValue);
+  const spread = finiteNumber(spreadValue);
+  const lsl = finiteNumber(lowerSpecLimit);
+  const usl = finiteNumber(upperSpecLimit);
+  const basis = String(spreadBasis || '').trim().toLowerCase();
+  const estimatorRef = String(spreadEstimatorRef || '').trim();
+  const unit = String(measurementUnit || '').trim();
+  const stabilityRef = String(processStabilityBasisRef || '').trim();
+  const measurementRef = String(measurementSystemBasisRef || '').trim();
+  const samplingRef = String(samplingAdequacyBasisRef || '').trim();
+  const distributionRef = String(distributionModelBasisRef || '').trim();
+  const specRef = String(specificationBasisRef || '').trim();
+
+  if (meanValueNumber === null) return Object.freeze({ indices: null, reason: 'invalid-mean' });
+  if (!(spread > 0)) return Object.freeze({ indices: null, reason: 'invalid-spread' });
+  if (lsl === null || usl === null) return Object.freeze({ indices: null, reason: 'two-sided-specification-required' });
+  if (!(lsl < usl)) return Object.freeze({ indices: null, reason: 'invalid-specification-order' });
+  if (!['within-subgroup', 'overall-long-term'].includes(basis)) {
+    return Object.freeze({ indices: null, reason: 'spread-basis-required', allowed: Object.freeze(['within-subgroup', 'overall-long-term']) });
+  }
+
+  const blockers = [];
+  if (processStable !== true) blockers.push('process-stability');
+  else if (!stabilityRef) blockers.push('process-stability-basis');
+  if (measurementSystemAdequate !== true) blockers.push('measurement-system');
+  else if (!measurementRef) blockers.push('measurement-system-basis');
+  if (samplingAdequacyConfirmed !== true) blockers.push('sampling-adequacy');
+  else if (!samplingRef) blockers.push('sampling-adequacy-basis');
+  if (distributionModelAdequate !== true) blockers.push('distribution-model');
+  else if (!distributionRef) blockers.push('distribution-model-basis');
+  if (!estimatorRef) blockers.push('spread-estimator');
+  if (!unit) blockers.push('measurement-unit');
+  if (!specRef) blockers.push('specification-basis');
+  if (blockers.length) {
+    return Object.freeze({
+      indices: null,
+      reason: 'capability-prerequisites-unmet',
+      blockers: Object.freeze(blockers),
+      spreadBasis: basis,
+    });
+  }
+
+  const potential = (usl - lsl) / (6 * spread);
+  const upper = (usl - meanValueNumber) / (3 * spread);
+  const lower = (meanValueNumber - lsl) / (3 * spread);
+  const centeringAdjusted = Math.min(upper, lower);
+  const family = basis === 'within-subgroup'
+    ? Object.freeze({ potential: 'Cp', centeringAdjusted: 'Cpk', upper: 'Cpu', lower: 'Cpl' })
+    : Object.freeze({ potential: 'Pp', centeringAdjusted: 'Ppk', upper: 'Ppu', lower: 'Ppl' });
+
+  return Object.freeze({
+    indices: Object.freeze({
+      [family.potential]: potential,
+      [family.centeringAdjusted]: centeringAdjusted,
+      [family.upper]: upper,
+      [family.lower]: lower,
+    }),
+    reason: null,
+    spreadBasis: basis,
+    family,
+    inputs: Object.freeze({
+      mean: meanValueNumber,
+      spread,
+      lowerSpecLimit: lsl,
+      upperSpecLimit: usl,
+      measurementUnit: unit,
+      spreadEstimatorRef: estimatorRef,
+      processStabilityBasisRef: stabilityRef,
+      measurementSystemBasisRef: measurementRef,
+      samplingAdequacyBasisRef: samplingRef,
+      distributionModelBasisRef: distributionRef,
+      specificationBasisRef: specRef,
+    }),
+    assumptions: Object.freeze([
+      'The supplied spread is an appropriate standard-deviation estimate for the declared spread basis, carries an explicit estimator reference and common measurement unit, and is not silently substituted between within-subgroup and overall/long-term variation.',
+      'Process stability, measurement-system adequacy, sampling adequacy, distribution/model adequacy and specification authority are caller-confirmed prerequisites with explicit basis references, not inferred from the arithmetic.',
+      'The calculation does not grade capability against a universal acceptance threshold; product/customer/site requirements control any acceptance criterion.',
+      'These indices describe spread and centring relative to specification under the stated assumptions and do not establish process causation or production authorization.',
+    ]),
+    authority: 'capability-arithmetic-only',
+  });
+}
+
+export function energyPerGoodPart(rows, {
+  energyKey,
+  qualityKey,
+  cycleIdKey,
+  unit,
+  samplingBasis,
+  samplingBasisRef,
+  energyMeasurementBasisRef,
+  qualityDispositionBasisRef,
+} = {}) {
+  const energyField = String(energyKey || '').trim();
+  const qualityField = String(qualityKey || '').trim();
+  const cycleField = String(cycleIdKey || '').trim();
+  const samplingRef = String(samplingBasisRef || '').trim();
+  const energyRef = String(energyMeasurementBasisRef || '').trim();
+  const qualityRef = String(qualityDispositionBasisRef || '').trim();
+
+  if (!energyField) return Object.freeze({ valueKwh: null, reason: 'energy-key-required' });
+  if (!qualityField) return Object.freeze({ valueKwh: null, reason: 'quality-key-required' });
+  if (!cycleField) return Object.freeze({ valueKwh: null, reason: 'cycle-id-key-required' });
   if (samplingBasis !== 'per-cycle') return Object.freeze({ valueKwh: null, reason: 'energy-not-confirmed-per-cycle' });
-  const factor = ({ kwh: 1, wh: 1 / 1000, j: 1 / 3.6e6, kj: 1 / 3600, mj: 1 / 3.6 })[String(unit || '').toLowerCase()];
+  if (!samplingRef) return Object.freeze({ valueKwh: null, reason: 'sampling-basis-reference-required' });
+  if (!energyRef) return Object.freeze({ valueKwh: null, reason: 'energy-measurement-basis-required' });
+  if (!qualityRef) return Object.freeze({ valueKwh: null, reason: 'quality-disposition-basis-required' });
+
+  const normalizedUnit = String(unit || '').toLowerCase();
+  const factor = ({ kwh: 1, wh: 1 / 1000, j: 1 / 3.6e6, kj: 1 / 3600, mj: 1 / 3.6 })[normalizedUnit];
   if (!factor) return Object.freeze({ valueKwh: null, reason: 'unsupported-energy-unit' });
   if (!Array.isArray(rows) || !rows.length) return Object.freeze({ valueKwh: null, reason: 'no-rows' });
 
   let total = 0;
   let good = 0;
-  for (const row of rows) {
-    const energy = finiteNumber(row?.[energyKey]);
-    const quality = row?.[qualityKey];
+  const seenCycleIds = new Set();
+  for (let index = 0; index < rows.length; index += 1) {
+    const row = rows[index] || {};
+    const cycleId = String(row?.[cycleField] ?? '').trim();
+    if (!cycleId) return Object.freeze({ valueKwh: null, reason: 'cycle-id-required', rowIndex: index });
+    if (seenCycleIds.has(cycleId)) {
+      return Object.freeze({ valueKwh: null, reason: 'duplicate-cycle-id', cycleId });
+    }
+    seenCycleIds.add(cycleId);
+
+    const energy = finiteNumber(row?.[energyField]);
+    const quality = row?.[qualityField];
     if (energy === null || (quality !== 0 && quality !== 1)) {
-      return Object.freeze({ valueKwh: null, reason: 'incomplete-aligned-coverage' });
+      return Object.freeze({ valueKwh: null, reason: 'incomplete-aligned-coverage', cycleId });
+    }
+    if (energy < 0) {
+      return Object.freeze({ valueKwh: null, reason: 'negative-energy-value', cycleId });
     }
     total += energy * factor;
     if (quality === 1) good += 1;
   }
   if (!good) return Object.freeze({ valueKwh: null, reason: 'no-good-parts' });
-  return Object.freeze({ valueKwh: total / good, reason: null, totalKwh: total, goodParts: good, rows: rows.length });
+  return Object.freeze({
+    valueKwh: total / good,
+    reason: null,
+    totalKwh: total,
+    goodParts: good,
+    rows: rows.length,
+    cycleCount: seenCycleIds.size,
+    samplingBasis: 'per-cycle',
+    samplingBasisRef: samplingRef,
+    energyMeasurementBasisRef: energyRef,
+    qualityDispositionBasisRef: qualityRef,
+    assumptions: Object.freeze([
+      'Every included row represents one uniquely identified cycle with aligned energy and quality disposition.',
+      'The energy channel is confirmed as per-cycle on the stated measurement basis and converted to kWh using only the declared unit.',
+      'All cycle energy, including energy consumed by rejected parts, remains in the numerator while only good parts contribute to the denominator.',
+      'The quality-disposition basis defines the entered 0/1 labels; the function does not infer product acceptance or root cause.',
+      'The result is descriptive energy intensity for the supplied aligned cycle set, not a universal efficiency target or causal proof.',
+    ]),
+    authority: 'aligned-energy-intensity-only',
+  });
 }
 
 export const PROCESS_STATISTICS_BOUNDARY = Object.freeze({

@@ -4,9 +4,84 @@
 const AREA_TO_M2 = Object.freeze({ m2: 1, cm2: 1e-4, mm2: 1e-6 });
 const PRESSURE_TO_PA = Object.freeze({ pa: 1, kpa: 1e3, mpa: 1e6, bar: 1e5 });
 const MASS_TO_G = Object.freeze({ g: 1, kg: 1000, mg: 0.001 });
+const FORCE_TO_N = Object.freeze({ n: 1, kn: 1000, mn: 1e6 });
+const VOLUME_RATE_TO_CM3_S = Object.freeze({
+  'cm3/s': 1,
+  'ml/s': 1,
+  'cm3/min': 1 / 60,
+  'l/min': 1000 / 60,
+});
+const LINEAR_SPEED_TO_MM_S = Object.freeze({
+  'mm/s': 1,
+  'cm/s': 10,
+  'm/s': 1000,
+});
+const VOLUME_TO_CM3 = Object.freeze({ cm3: 1, ml: 1, l: 1000, m3: 1e6, mm3: 0.001 });
+const LENGTH_TO_MM = Object.freeze({ mm: 1, cm: 10, m: 1000 });
+const TIME_TO_S = Object.freeze({ s: 1, sec: 1, min: 60, h: 3600 });
+const MASS_RATE_TO_G_S = Object.freeze({
+  'g/s': 1,
+  'kg/s': 1000,
+  'g/min': 1 / 60,
+  'kg/min': 1000 / 60,
+  'g/h': 1 / 3600,
+  'kg/h': 1000 / 3600,
+});
+const DIFFUSIVITY_TO_MM2_S = Object.freeze({ 'mm2/s': 1, 'cm2/s': 100, 'm2/s': 1e6 });
+const SHRINKAGE_TO_FRACTION = Object.freeze({ '%': 0.01, percent: 0.01, fraction: 1 });
+const MOISTURE_TO_FRACTION = Object.freeze({ '%': 0.01, ppm: 1e-6, fraction: 1 });
+const PRESSURE_KINDS = Object.freeze([
+  'hydraulic',
+  'specific-plastic',
+  'nozzle',
+  'runner',
+  'cavity',
+  'pack-command',
+]);
+const PLASTIC_SIDE_MEASURED_PRESSURE_KINDS = Object.freeze([
+  'specific-plastic',
+  'nozzle',
+  'runner',
+  'cavity',
+]);
+
+export const ENGINEERING_EQUATION_IDS = Object.freeze({
+  pressureConversion: 'EQ-PRESS-001',
+  measuredPressureDifference: 'EQ-PRESS-002',
+  clampSeparatingForce: 'EQ-CF-001',
+  clampSeparatingForceRange: 'EQ-CF-002',
+  aggregateShotMass: 'EQ-SHOT-001',
+  shotCapacityAssessment: 'EQ-SHOT-002',
+  clampCapacityAssessment: 'EQ-CAP-001',
+  specificPlasticPressureCapacityAssessment: 'EQ-CAP-002',
+  volumetricFlowCapacityAssessment: 'EQ-CAP-003',
+  plasticisingThroughputAssessment: 'EQ-CAP-004',
+  mouldHeightFit: 'EQ-FIT-001',
+  openingStrokeFit: 'EQ-FIT-002',
+  daylightFit: 'EQ-FIT-003',
+  tieBarClearanceFit: 'EQ-FIT-004',
+  ejectorStrokeFit: 'EQ-FIT-005',
+  machineSuitabilitySummary: 'EQ-FIT-006',
+  hydraulicDiameter: 'EQ-FLOWPATH-001',
+  uniformChannelVolume: 'EQ-FLOWPATH-002',
+  circularChannelApparentWallShearRate: 'EQ-FLOWPATH-003',
+  pressureLossModelReadiness: 'PROC-FLOWPATH-001',
+  fillStageRates: 'EQ-FLOW-001',
+  screwSweptVolume: 'EQ-MTRANS-001',
+  volumetricFlowFromScrewMotion: 'EQ-MTRANS-002',
+  screwSpeedForVolumetricFlow: 'EQ-MTRANS-003',
+  volumetricTransferBetweenScrews: 'EQ-MTRANS-004',
+  averageResidenceTime: 'EQ-RES-001',
+  averageResidenceFromShotCycle: 'EQ-RES-002',
+  relativeCoolingTimeScale: 'EQ-THERM-001',
+  amorphousSlabCoolingTimeEstimate: 'EQ-THERM-002',
+  linearShrinkageCompensationRange: 'EQ-SHR-001',
+  materialMoistureAcceptance: 'EQ-MAT-001',
+  gateSealPlateau: 'PROC-GATE-001',
+});
 
 function cleanUnit(unit) {
-  return String(unit ?? '').trim().toLowerCase().replace('²', '2');
+  return String(unit ?? '').trim().toLowerCase().replaceAll('²', '2').replaceAll('³', '3').replace(/\s+/g, '');
 }
 
 function finitePositive(value) {
@@ -22,14 +97,53 @@ function supported(value, metadata = {}) {
   return Object.freeze({ ok: true, value: Object.freeze(value), ...metadata });
 }
 
+function caseSensitiveEngineeringFactor(table, rawUnit) {
+  const raw = String(rawUnit ?? '').trim().replaceAll('²', '2').replaceAll('³', '3').replace(/\s+/g, '');
+  const exact = (map) => Object.prototype.hasOwnProperty.call(map, raw)
+    ? { factor: map[raw], unit: raw }
+    : null;
+
+  if (table === PRESSURE_TO_PA) return exact({ Pa: 1, kPa: 1e3, MPa: 1e6, bar: 1e5 });
+  if (table === FORCE_TO_N) return exact({ N: 1, kN: 1e3, MN: 1e6 });
+  if (table === AREA_TO_M2) return exact({ m2: 1, cm2: 1e-4, mm2: 1e-6 });
+  if (table === MASS_TO_G) return exact({ g: 1, kg: 1000, mg: 0.001 });
+  if (table === VOLUME_TO_CM3) {
+    const resolved = exact({ cm3: 1, mL: 1, ml: 1, L: 1000, l: 1000, m3: 1e6, mm3: 0.001 });
+    if (!resolved) return null;
+    const canonical = ({ ml: 'mL', l: 'L' })[resolved.unit] || resolved.unit;
+    return { factor: resolved.factor, unit: canonical };
+  }
+  if (table === LENGTH_TO_MM) return exact({ mm: 1, cm: 10, m: 1000 });
+  if (table === LINEAR_SPEED_TO_MM_S) return exact({ 'mm/s': 1, 'cm/s': 10, 'm/s': 1000 });
+  if (table === TIME_TO_S) return exact({ s: 1, sec: 1, min: 60, h: 3600 });
+  if (table === MASS_RATE_TO_G_S) return exact({
+    'g/s': 1,
+    'kg/s': 1000,
+    'g/min': 1 / 60,
+    'kg/min': 1000 / 60,
+    'g/h': 1 / 3600,
+    'kg/h': 1000 / 3600,
+  });
+  if (table === DIFFUSIVITY_TO_MM2_S) return exact({ 'mm2/s': 1, 'cm2/s': 100, 'm2/s': 1e6 });
+  if (table === VOLUME_RATE_TO_CM3_S) {
+    const resolved = exact({ 'cm3/s': 1, 'mL/s': 1, 'ml/s': 1, 'cm3/min': 1 / 60, 'L/min': 1000 / 60, 'l/min': 1000 / 60 });
+    if (!resolved) return null;
+    const canonical = ({ 'ml/s': 'mL/s', 'l/min': 'L/min' })[resolved.unit] || resolved.unit;
+    return { factor: resolved.factor, unit: canonical };
+  }
+
+  const unit = cleanUnit(raw);
+  const factor = table[unit];
+  return factor ? { factor, unit } : null;
+}
+
 function convertPositive(quantity, table, field) {
   if (!quantity || typeof quantity !== 'object') return unsupported(`missing-${field}`, { field });
   const value = finitePositive(quantity.value);
   if (value === null) return unsupported(`invalid-${field}-value`, { field });
-  const unit = cleanUnit(quantity.unit);
-  const factor = table[unit];
-  if (!factor) return unsupported(`unsupported-${field}-unit`, { field, unit: String(quantity.unit ?? '') });
-  return supported({ si: value * factor, inputValue: value, inputUnit: unit });
+  const resolved = caseSensitiveEngineeringFactor(table, quantity.unit);
+  if (!resolved) return unsupported(`unsupported-${field}-unit`, { field, unit: String(quantity.unit ?? '') });
+  return supported({ si: value * resolved.factor, inputValue: value, inputUnit: resolved.unit });
 }
 
 export function clampSeparatingForce({ projectedArea, representativePressure, provenance = null } = {}) {
@@ -41,6 +155,7 @@ export function clampSeparatingForce({ projectedArea, representativePressure, pr
   return supported(
     { newtons, kilonewtons: newtons / 1000 },
     {
+      equationId: ENGINEERING_EQUATION_IDS.clampSeparatingForce,
       units: Object.freeze({ force: 'kN', areaSI: 'm²', pressureSI: 'Pa' }),
       assumptions: Object.freeze([
         'The supplied projected area represents the area relevant to the stated engineering estimate.',
@@ -62,10 +177,9 @@ export function aggregateShotMass({ cavityCount, partMass, runnerMass = { value:
   if (runnerMass != null) {
     const raw = Number(runnerMass?.value);
     if (!Number.isFinite(raw) || raw < 0) return unsupported('invalid-runner-mass-value', { field: 'runner-mass' });
-    const unit = cleanUnit(runnerMass?.unit);
-    const factor = MASS_TO_G[unit];
-    if (!factor) return unsupported('unsupported-runner-mass-unit', { field: 'runner-mass', unit: String(runnerMass?.unit ?? '') });
-    runnerG = raw * factor;
+    const resolved = caseSensitiveEngineeringFactor(MASS_TO_G, runnerMass?.unit);
+    if (!resolved) return unsupported('unsupported-runner-mass-unit', { field: 'runner-mass', unit: String(runnerMass?.unit ?? '') });
+    runnerG = raw * resolved.factor;
   }
 
   const partsG = cavityCount * part.value.si;
@@ -73,6 +187,7 @@ export function aggregateShotMass({ cavityCount, partMass, runnerMass = { value:
   return supported(
     { partContributionG: partsG, runnerContributionG: runnerG, totalG, totalKg: totalG / 1000 },
     {
+      equationId: ENGINEERING_EQUATION_IDS.aggregateShotMass,
       units: Object.freeze({ mass: 'g' }),
       assumptions: Object.freeze([
         'Every counted cavity is assumed to produce one part of the supplied part mass for this arithmetic estimate.',
@@ -113,6 +228,1742 @@ export function gradeSpecificProcessingBoundary({ exactGrade, currentSupplierDoc
       assumptions: Object.freeze(['Processing settings and limits are grade-specific unless an authoritative source explicitly establishes otherwise.']),
       provenance: String(currentSupplierDocument).trim(),
       authority: 'source-first-boundary-only',
+    },
+  );
+}
+
+
+function convertPositiveBase(quantity, table, field, baseUnit) {
+  if (!quantity || typeof quantity !== 'object') return unsupported(`missing-${field}`, { field });
+  const value = finitePositive(quantity.value);
+  if (value === null) return unsupported(`invalid-${field}-value`, { field });
+  const resolved = caseSensitiveEngineeringFactor(table, quantity.unit);
+  if (!resolved) return unsupported(`unsupported-${field}-unit`, { field, unit: String(quantity.unit ?? '') });
+  return supported({ base: value * resolved.factor, baseUnit, inputValue: value, inputUnit: resolved.unit });
+}
+
+function optionalPositiveBase(quantity, table, field, baseUnit) {
+  if (quantity == null) return supported({ base: null, baseUnit, inputValue: null, inputUnit: null });
+  return convertPositiveBase(quantity, table, field, baseUnit);
+}
+
+export function pressureValue({ pressure, kind, provenance = null } = {}) {
+  const converted = convertPositive(pressure, PRESSURE_TO_PA, 'pressure');
+  if (!converted.ok) return converted;
+  const pressureKind = String(kind || '').trim().toLowerCase().replaceAll('_', '-');
+  if (!PRESSURE_KINDS.includes(pressureKind)) {
+    return unsupported('pressure-kind-required', {
+      field: 'kind',
+      allowedKinds: PRESSURE_KINDS,
+    });
+  }
+  const pascals = converted.value.si;
+  return supported(
+    {
+      pascals,
+      kilopascals: pascals / 1e3,
+      megapascals: pascals / 1e6,
+      bar: pascals / 1e5,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.pressureConversion,
+      pressureKind,
+      provenance,
+      assumptions: Object.freeze([
+        'This function converts units only. It does not convert one pressure location or machine pressure type into another.',
+        'Hydraulic, specific-plastic, nozzle, runner, cavity and pack-command pressures remain semantically distinct.',
+      ]),
+      authority: 'unit-conversion-only',
+    },
+  );
+}
+
+
+export function measuredPressureDifference({
+  upstreamPressure,
+  downstreamPressure,
+  upstreamKind,
+  downstreamKind,
+  upstreamLocationId,
+  downstreamLocationId,
+  measurementBasisRef,
+  provenance = null,
+} = {}) {
+  const allowedMeasuredKinds = PLASTIC_SIDE_MEASURED_PRESSURE_KINDS;
+  const upstream = pressureValue({ pressure: upstreamPressure, kind: upstreamKind, provenance });
+  if (!upstream.ok) return upstream;
+  const downstream = pressureValue({ pressure: downstreamPressure, kind: downstreamKind, provenance });
+  if (!downstream.ok) return downstream;
+  if (!allowedMeasuredKinds.includes(upstream.pressureKind)) {
+    return unsupported('unsupported-upstream-measured-pressure-kind', {
+      field: 'upstreamKind',
+      allowedKinds: allowedMeasuredKinds,
+    });
+  }
+  if (!allowedMeasuredKinds.includes(downstream.pressureKind)) {
+    return unsupported('unsupported-downstream-measured-pressure-kind', {
+      field: 'downstreamKind',
+      allowedKinds: allowedMeasuredKinds,
+    });
+  }
+  const upstreamLocation = String(upstreamLocationId || '').trim();
+  const downstreamLocation = String(downstreamLocationId || '').trim();
+  const basis = String(measurementBasisRef || '').trim();
+  if (!upstreamLocation) return unsupported('upstream-location-required', { field: 'upstreamLocationId' });
+  if (!downstreamLocation) return unsupported('downstream-location-required', { field: 'downstreamLocationId' });
+  if (upstreamLocation === downstreamLocation) return unsupported('distinct-pressure-locations-required', { field: 'upstreamLocationId|downstreamLocationId' });
+  if (!basis) return unsupported('measurement-basis-required', { field: 'measurementBasisRef' });
+
+  const differencePa = upstream.value.pascals - downstream.value.pascals;
+  return supported(
+    {
+      upstreamMegapascals: upstream.value.megapascals,
+      downstreamMegapascals: downstream.value.megapascals,
+      pressureDifferenceMegapascals: differencePa / 1e6,
+      upstreamKind: upstream.pressureKind,
+      downstreamKind: downstream.pressureKind,
+      upstreamLocationId: upstreamLocation,
+      downstreamLocationId: downstreamLocation,
+      measurementBasisRef: basis,
+      upstreamNotLowerThanDownstream: differencePa >= 0,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.measuredPressureDifference,
+      units: Object.freeze({ pressure: 'MPa' }),
+      assumptions: Object.freeze([
+        'Both pressures are actual plastic-side pressure measurements or verified plastic-side actuals associated with the same explicitly referenced comparison basis.',
+        'Hydraulic pressure and pressure commands are excluded because subtracting them directly from nozzle/runner/cavity pressure would not represent a like-for-like measured flow-path pressure difference.',
+        'The arithmetic difference is a measured signal comparison only. It is not automatically a pressure-loss coefficient, viscosity estimate, restriction diagnosis or causal attribution.',
+        'A negative difference is retained and flagged rather than silently corrected; investigate synchronization, calibration, location definitions and process dynamics before interpreting it.',
+      ]),
+      provenance,
+      authority: 'measured-pressure-difference-only',
+    },
+  );
+}
+
+export function clampSeparatingForceRange({ projectedArea, lowerRepresentativePressure, upperRepresentativePressure, provenance = null } = {}) {
+  const area = convertPositive(projectedArea, AREA_TO_M2, 'projected-area');
+  if (!area.ok) return area;
+  const low = convertPositive(lowerRepresentativePressure, PRESSURE_TO_PA, 'lower-representative-pressure');
+  if (!low.ok) return low;
+  const high = convertPositive(upperRepresentativePressure, PRESSURE_TO_PA, 'upper-representative-pressure');
+  if (!high.ok) return high;
+  if (low.value.si > high.value.si) {
+    return unsupported('pressure-range-reversed', { field: 'representative-pressure-range' });
+  }
+  const lowerNewtons = area.value.si * low.value.si;
+  const upperNewtons = area.value.si * high.value.si;
+  return supported(
+    {
+      lowerNewtons,
+      upperNewtons,
+      lowerKilonewtons: lowerNewtons / 1000,
+      upperKilonewtons: upperNewtons / 1000,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.clampSeparatingForceRange,
+      units: Object.freeze({ force: 'kN', areaSI: 'm²', pressureSI: 'Pa' }),
+      assumptions: Object.freeze([
+        'The pressure range is supplied explicitly and represents an engineering range for pressure acting over the stated projected area.',
+        'The result is a separating-force range, not a prescribed machine clamp setting or safety factor.',
+        'Spatial pressure gradients, mould/platen deflection, tie-bar load distribution and dynamic effects are not resolved by this screening calculation.',
+      ]),
+      provenance,
+      authority: 'engineering-range-estimate-only',
+    },
+  );
+}
+
+export function shotCapacityAssessment({
+  requiredShotMass,
+  usableMachineShotMass,
+  capacityBasisVerified = false,
+  capacityBasisRef,
+  machineConfigurationId,
+  injectionUnitConfigurationId,
+  provenance = null,
+} = {}) {
+  const machineId = explicitIdentity(machineConfigurationId, 'machine-configuration-id');
+  if (!machineId.ok) return machineId;
+  const injectionId = explicitIdentity(injectionUnitConfigurationId, 'injection-unit-configuration-id');
+  if (!injectionId.ok) return injectionId;
+  const basisRef = String(capacityBasisRef || '').trim();
+  if (!basisRef) return unsupported('capacity-basis-reference-required', { field: 'capacityBasisRef' });
+
+  const required = convertPositive(requiredShotMass, MASS_TO_G, 'required-shot-mass');
+  if (!required.ok) return required;
+  const usable = convertPositive(usableMachineShotMass, MASS_TO_G, 'usable-machine-shot-mass');
+  if (!usable.ok) return usable;
+  if (capacityBasisVerified !== true) {
+    return unsupported('capacity-basis-unverified', {
+      field: 'capacityBasisVerified',
+      detail: 'Mass-based machine shot capacity must be verified as applicable to the actual material/equivalent basis before comparison.',
+    });
+  }
+  const utilisationPct = 100 * required.value.si / usable.value.si;
+  return supported(
+    {
+      machineConfigurationId: machineId.value.id,
+      injectionUnitConfigurationId: injectionId.value.id,
+      capacityBasisRef: basisRef,
+      requiredShotG: required.value.si,
+      usableMachineShotG: usable.value.si,
+      utilisationPct,
+      capacityMarginG: usable.value.si - required.value.si,
+      exceedsUsableCapacity: required.value.si > usable.value.si,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.shotCapacityAssessment,
+      units: Object.freeze({ mass: 'g', utilisation: '%' }),
+      assumptions: Object.freeze([
+        'Required and usable machine shot masses are on a verified comparable material/equivalent basis tied to the stated machine and injection-unit configuration.',
+        'No universal preferred barrel-utilisation percentage is inferred by this function.',
+        'Machine suitability also depends on pressure, flow, plasticising, residence, mould fit and other machine/tool requirements.',
+      ]),
+      provenance,
+      authority: 'capacity-screen-only',
+    },
+  );
+}
+
+function capacityComparison(requiredBase, availableBase) {
+  const utilisationPct = 100 * requiredBase / availableBase;
+  return {
+    utilisationPct,
+    capacityMargin: availableBase - requiredBase,
+    exceedsAvailableCapacity: requiredBase > availableBase,
+  };
+}
+
+export function clampCapacityAssessment({
+  requiredClampForce,
+  availableClampForce,
+  machineConfigurationId,
+  capacityBasisRef,
+  provenance = null,
+} = {}) {
+  const machineId = explicitIdentity(machineConfigurationId, 'machine-configuration-id');
+  if (!machineId.ok) return machineId;
+  const basisRef = String(capacityBasisRef || '').trim();
+  if (!basisRef) return unsupported('capacity-basis-reference-required', { field: 'capacityBasisRef' });
+  const required = convertPositiveBase(requiredClampForce, FORCE_TO_N, 'required-clamp-force', 'N');
+  if (!required.ok) return required;
+  const available = convertPositiveBase(availableClampForce, FORCE_TO_N, 'available-clamp-force', 'N');
+  if (!available.ok) return available;
+  const comparison = capacityComparison(required.value.base, available.value.base);
+  return supported(
+    {
+      machineConfigurationId: machineId.value.id,
+      capacityBasisRef: basisRef,
+      requiredKilonewtons: required.value.base / 1000,
+      availableKilonewtons: available.value.base / 1000,
+      utilisationPct: comparison.utilisationPct,
+      capacityMarginKilonewtons: comparison.capacityMargin / 1000,
+      exceedsAvailableCapacity: comparison.exceedsAvailableCapacity,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.clampCapacityAssessment,
+      units: Object.freeze({ force: 'kN', utilisation: '%' }),
+      assumptions: Object.freeze([
+        'The required force supplied to this function is already the applicable engineering clamp requirement for the stated case.',
+        'The available force and capacity basis are verified for the exact stated machine configuration.',
+        'This function compares capacity only; it does not determine an appropriate operating clamp setpoint or invent a preferred utilisation margin.',
+      ]),
+      provenance,
+      authority: 'capacity-screen-only',
+    },
+  );
+}
+
+export function specificPlasticPressureCapacityAssessment({
+  requiredPressure,
+  availableMachinePressure,
+  machineConfigurationId,
+  injectionUnitConfigurationId,
+  capacityBasisRef,
+  provenance = null,
+} = {}) {
+  const machineId = explicitIdentity(machineConfigurationId, 'machine-configuration-id');
+  if (!machineId.ok) return machineId;
+  const injectionId = explicitIdentity(injectionUnitConfigurationId, 'injection-unit-configuration-id');
+  if (!injectionId.ok) return injectionId;
+  const basisRef = String(capacityBasisRef || '').trim();
+  if (!basisRef) return unsupported('capacity-basis-reference-required', { field: 'capacityBasisRef' });
+  const required = pressureValue({ pressure: requiredPressure, kind: 'specific-plastic', provenance });
+  if (!required.ok) return required;
+  const available = pressureValue({ pressure: availableMachinePressure, kind: 'specific-plastic', provenance });
+  if (!available.ok) return available;
+  const comparison = capacityComparison(required.value.pascals, available.value.pascals);
+  return supported(
+    {
+      machineConfigurationId: machineId.value.id,
+      injectionUnitConfigurationId: injectionId.value.id,
+      capacityBasisRef: basisRef,
+      requiredMegapascals: required.value.megapascals,
+      availableMegapascals: available.value.megapascals,
+      utilisationPct: comparison.utilisationPct,
+      capacityMarginMegapascals: comparison.capacityMargin / 1e6,
+      exceedsAvailableCapacity: comparison.exceedsAvailableCapacity,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.specificPlasticPressureCapacityAssessment,
+      units: Object.freeze({ pressure: 'MPa', utilisation: '%' }),
+      assumptions: Object.freeze([
+        'Both values are verified on the same specific-plastic/injection-pressure basis for the exact stated machine and injection-unit configuration; hydraulic pressure must not be substituted without a verified machine conversion basis.',
+        'The required pressure is established independently from appropriate process/mould evidence; this function does not predict cavity or flow-path pressure demand.',
+        'No preferred pressure-utilisation percentage is inferred.',
+      ]),
+      provenance,
+      authority: 'capacity-screen-only',
+    },
+  );
+}
+
+export function volumetricFlowCapacityAssessment({
+  requiredFlow,
+  availableMachineFlow,
+  machineConfigurationId,
+  injectionUnitConfigurationId,
+  capacityBasisRef,
+  provenance = null,
+} = {}) {
+  const machineId = explicitIdentity(machineConfigurationId, 'machine-configuration-id');
+  if (!machineId.ok) return machineId;
+  const injectionId = explicitIdentity(injectionUnitConfigurationId, 'injection-unit-configuration-id');
+  if (!injectionId.ok) return injectionId;
+  const basisRef = String(capacityBasisRef || '').trim();
+  if (!basisRef) return unsupported('capacity-basis-reference-required', { field: 'capacityBasisRef' });
+  const required = convertPositiveBase(requiredFlow, VOLUME_RATE_TO_CM3_S, 'required-volumetric-flow', 'cm3/s');
+  if (!required.ok) return required;
+  const available = convertPositiveBase(availableMachineFlow, VOLUME_RATE_TO_CM3_S, 'available-machine-flow', 'cm3/s');
+  if (!available.ok) return available;
+  const comparison = capacityComparison(required.value.base, available.value.base);
+  return supported(
+    {
+      machineConfigurationId: machineId.value.id,
+      injectionUnitConfigurationId: injectionId.value.id,
+      capacityBasisRef: basisRef,
+      requiredCm3S: required.value.base,
+      availableCm3S: available.value.base,
+      utilisationPct: comparison.utilisationPct,
+      capacityMarginCm3S: comparison.capacityMargin,
+      exceedsAvailableCapacity: comparison.exceedsAvailableCapacity,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.volumetricFlowCapacityAssessment,
+      units: Object.freeze({ flow: 'cm³/s', utilisation: '%' }),
+      assumptions: Object.freeze([
+        'Required and available flow values use a verified comparable volumetric basis for the exact stated machine and injection-unit configuration.',
+        'This is a machine-capacity comparison, not a melt-front velocity, gate shear-rate or cavity-fill prediction.',
+        'No preferred flow-utilisation percentage is inferred.',
+      ]),
+      provenance,
+      authority: 'capacity-screen-only',
+    },
+  );
+}
+
+export function plasticisingThroughputAssessment({
+  requiredMassRate,
+  availablePlasticisingRate,
+  machineConfigurationId,
+  injectionUnitConfigurationId,
+  materialGradeId,
+  capacityBasisRef,
+  provenance = null,
+} = {}) {
+  const machineId = explicitIdentity(machineConfigurationId, 'machine-configuration-id');
+  if (!machineId.ok) return machineId;
+  const injectionId = explicitIdentity(injectionUnitConfigurationId, 'injection-unit-configuration-id');
+  if (!injectionId.ok) return injectionId;
+  const gradeId = explicitIdentity(materialGradeId, 'material-grade-id');
+  if (!gradeId.ok) return gradeId;
+  const basisRef = String(capacityBasisRef || '').trim();
+  if (!basisRef) return unsupported('capacity-basis-reference-required', { field: 'capacityBasisRef' });
+  const required = convertPositiveBase(requiredMassRate, MASS_RATE_TO_G_S, 'required-mass-rate', 'g/s');
+  if (!required.ok) return required;
+  const available = convertPositiveBase(availablePlasticisingRate, MASS_RATE_TO_G_S, 'available-plasticising-rate', 'g/s');
+  if (!available.ok) return available;
+  const comparison = capacityComparison(required.value.base, available.value.base);
+  return supported(
+    {
+      machineConfigurationId: machineId.value.id,
+      injectionUnitConfigurationId: injectionId.value.id,
+      materialGradeId: gradeId.value.id,
+      capacityBasisRef: basisRef,
+      requiredGS: required.value.base,
+      availableGS: available.value.base,
+      utilisationPct: comparison.utilisationPct,
+      capacityMarginGS: comparison.capacityMargin,
+      exceedsAvailableCapacity: comparison.exceedsAvailableCapacity,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.plasticisingThroughputAssessment,
+      units: Object.freeze({ massRate: 'g/s', utilisation: '%' }),
+      assumptions: Object.freeze([
+        'Required and available plasticising rates are verified as comparable for the exact material grade, machine and injection-unit configuration stated.',
+        'Nominal catalogue plasticising rate is not assumed to equal usable grade-specific recovery capability unless that basis is verified.',
+        'No preferred throughput-utilisation percentage is inferred.',
+      ]),
+      provenance,
+      authority: 'capacity-screen-only',
+    },
+  );
+}
+
+
+function explicitIdentity(value, field) {
+  const clean = String(value || '').trim();
+  return clean ? supported({ id: clean }) : unsupported(`missing-${field}`, { field });
+}
+
+function lengthCapacityComparison(requiredQuantity, availableQuantity, requiredField, availableField) {
+  const required = convertPositiveBase(requiredQuantity, LENGTH_TO_MM, requiredField, 'mm');
+  if (!required.ok) return required;
+  const available = convertPositiveBase(availableQuantity, LENGTH_TO_MM, availableField, 'mm');
+  if (!available.ok) return available;
+  return supported({
+    requiredMm: required.value.base,
+    availableMm: available.value.base,
+    marginMm: available.value.base - required.value.base,
+    fits: required.value.base <= available.value.base,
+    state: required.value.base <= available.value.base ? 'PASS' : 'FAIL',
+  });
+}
+
+export function mouldHeightFit({
+  mouldHeight,
+  machineMinMouldHeight,
+  machineMaxMouldHeight,
+  machineConfigurationId,
+  mouldConfigurationId,
+  provenance = null,
+} = {}) {
+  const machineId = explicitIdentity(machineConfigurationId, 'machine-configuration-id');
+  if (!machineId.ok) return machineId;
+  const mouldId = explicitIdentity(mouldConfigurationId, 'mould-configuration-id');
+  if (!mouldId.ok) return mouldId;
+  const mould = convertPositiveBase(mouldHeight, LENGTH_TO_MM, 'mould-height', 'mm');
+  if (!mould.ok) return mould;
+  const minimum = convertPositiveBase(machineMinMouldHeight, LENGTH_TO_MM, 'machine-min-mould-height', 'mm');
+  if (!minimum.ok) return minimum;
+  const maximum = convertPositiveBase(machineMaxMouldHeight, LENGTH_TO_MM, 'machine-max-mould-height', 'mm');
+  if (!maximum.ok) return maximum;
+  if (minimum.value.base > maximum.value.base) {
+    return unsupported('machine-mould-height-range-reversed', { field: 'machine-mould-height-range' });
+  }
+  const fits = mould.value.base >= minimum.value.base && mould.value.base <= maximum.value.base;
+  return supported(
+    {
+      machineConfigurationId: machineId.value.id,
+      mouldConfigurationId: mouldId.value.id,
+      mouldHeightMm: mould.value.base,
+      machineMinMouldHeightMm: minimum.value.base,
+      machineMaxMouldHeightMm: maximum.value.base,
+      marginAboveMinimumMm: mould.value.base - minimum.value.base,
+      marginBelowMaximumMm: maximum.value.base - mould.value.base,
+      fits,
+      state: fits ? 'PASS' : 'FAIL',
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.mouldHeightFit,
+      units: Object.freeze({ length: 'mm' }),
+      assumptions: Object.freeze([
+        'Machine minimum and maximum mould-height values are verified for the exact machine/configuration and use the same physical definition as the mould-height measurement.',
+        'A geometric PASS means only that the stated mould height falls inside the stated machine range; it does not authorize installation or prove platen, tie-bar, ejector, nozzle, daylight or load compatibility.',
+      ]),
+      provenance,
+      authority: 'geometric-fit-screen-only',
+    },
+  );
+}
+
+export function openingStrokeFit({
+  requiredOpeningStroke,
+  availableOpeningStroke,
+  machineConfigurationId,
+  mouldConfigurationId,
+  provenance = null,
+} = {}) {
+  const machineId = explicitIdentity(machineConfigurationId, 'machine-configuration-id');
+  if (!machineId.ok) return machineId;
+  const mouldId = explicitIdentity(mouldConfigurationId, 'mould-configuration-id');
+  if (!mouldId.ok) return mouldId;
+  const comparison = lengthCapacityComparison(requiredOpeningStroke, availableOpeningStroke, 'required-opening-stroke', 'available-opening-stroke');
+  if (!comparison.ok) return comparison;
+  return supported(
+    {
+      machineConfigurationId: machineId.value.id,
+      mouldConfigurationId: mouldId.value.id,
+      requiredOpeningStrokeMm: comparison.value.requiredMm,
+      availableOpeningStrokeMm: comparison.value.availableMm,
+      marginMm: comparison.value.marginMm,
+      fits: comparison.value.fits,
+      state: comparison.value.state,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.openingStrokeFit,
+      units: Object.freeze({ length: 'mm' }),
+      assumptions: Object.freeze([
+        'Required opening stroke is established from the actual part/runner removal and mould action requirement, not inferred by this function.',
+        'Available opening stroke is verified for the exact machine/configuration and the same stroke definition.',
+        'PASS means only that the stated required stroke does not exceed the stated available stroke.',
+      ]),
+      provenance,
+      authority: 'geometric-fit-screen-only',
+    },
+  );
+}
+
+export function daylightFit({
+  mouldClosedHeight,
+  requiredOpenGap,
+  availableMaximumDaylight,
+  machineConfigurationId,
+  mouldConfigurationId,
+  provenance = null,
+} = {}) {
+  const machineId = explicitIdentity(machineConfigurationId, 'machine-configuration-id');
+  if (!machineId.ok) return machineId;
+  const mouldId = explicitIdentity(mouldConfigurationId, 'mould-configuration-id');
+  if (!mouldId.ok) return mouldId;
+  const closed = convertPositiveBase(mouldClosedHeight, LENGTH_TO_MM, 'mould-closed-height', 'mm');
+  if (!closed.ok) return closed;
+  const gap = convertPositiveBase(requiredOpenGap, LENGTH_TO_MM, 'required-open-gap', 'mm');
+  if (!gap.ok) return gap;
+  const daylight = convertPositiveBase(availableMaximumDaylight, LENGTH_TO_MM, 'available-maximum-daylight', 'mm');
+  if (!daylight.ok) return daylight;
+  const requiredSeparationMm = closed.value.base + gap.value.base;
+  const fits = requiredSeparationMm <= daylight.value.base;
+  return supported(
+    {
+      machineConfigurationId: machineId.value.id,
+      mouldConfigurationId: mouldId.value.id,
+      mouldClosedHeightMm: closed.value.base,
+      requiredOpenGapMm: gap.value.base,
+      requiredMaximumPlatenSeparationMm: requiredSeparationMm,
+      availableMaximumDaylightMm: daylight.value.base,
+      marginMm: daylight.value.base - requiredSeparationMm,
+      fits,
+      state: fits ? 'PASS' : 'FAIL',
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.daylightFit,
+      units: Object.freeze({ length: 'mm' }),
+      assumptions: Object.freeze([
+        'Available maximum daylight and required maximum platen separation use the same machine/OEM definition and datum basis.',
+        'Required open gap is independently established from actual ejection/removal/mould-action needs.',
+        'PASS does not by itself prove opening-stroke, tie-bar, ejector or safety compatibility.',
+      ]),
+      provenance,
+      authority: 'geometric-fit-screen-only',
+    },
+  );
+}
+
+export function tieBarClearanceFit({
+  orientedMouldWidth,
+  orientedMouldHeight,
+  horizontalTieBarClearance,
+  verticalTieBarClearance,
+  machineConfigurationId,
+  mouldConfigurationId,
+  provenance = null,
+} = {}) {
+  const machineId = explicitIdentity(machineConfigurationId, 'machine-configuration-id');
+  if (!machineId.ok) return machineId;
+  const mouldId = explicitIdentity(mouldConfigurationId, 'mould-configuration-id');
+  if (!mouldId.ok) return mouldId;
+  const width = convertPositiveBase(orientedMouldWidth, LENGTH_TO_MM, 'oriented-mould-width', 'mm');
+  if (!width.ok) return width;
+  const height = convertPositiveBase(orientedMouldHeight, LENGTH_TO_MM, 'oriented-mould-height', 'mm');
+  if (!height.ok) return height;
+  const horizontal = convertPositiveBase(horizontalTieBarClearance, LENGTH_TO_MM, 'horizontal-tie-bar-clearance', 'mm');
+  if (!horizontal.ok) return horizontal;
+  const vertical = convertPositiveBase(verticalTieBarClearance, LENGTH_TO_MM, 'vertical-tie-bar-clearance', 'mm');
+  if (!vertical.ok) return vertical;
+  const horizontalFits = width.value.base <= horizontal.value.base;
+  const verticalFits = height.value.base <= vertical.value.base;
+  const fits = horizontalFits && verticalFits;
+  return supported(
+    {
+      machineConfigurationId: machineId.value.id,
+      mouldConfigurationId: mouldId.value.id,
+      orientedMouldWidthMm: width.value.base,
+      orientedMouldHeightMm: height.value.base,
+      horizontalTieBarClearanceMm: horizontal.value.base,
+      verticalTieBarClearanceMm: vertical.value.base,
+      horizontalMarginMm: horizontal.value.base - width.value.base,
+      verticalMarginMm: vertical.value.base - height.value.base,
+      horizontalFits,
+      verticalFits,
+      fits,
+      state: fits ? 'PASS' : 'FAIL',
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.tieBarClearanceFit,
+      units: Object.freeze({ length: 'mm' }),
+      assumptions: Object.freeze([
+        'Mould width and height are supplied in the actual intended machine orientation; this function does not silently rotate the mould to obtain a pass.',
+        'Tie-bar clearances are verified for the exact machine/configuration and are measured on the same usable-clearance basis as the mould dimensions.',
+        'PASS does not account for hoses, manifolds, protrusions, handling path, platen hardware, locating ring, nozzle access or ancillary equipment unless those are already included in the entered envelope.',
+      ]),
+      provenance,
+      authority: 'geometric-fit-screen-only',
+    },
+  );
+}
+
+export function ejectorStrokeFit({
+  requiredEjectorStroke,
+  availableEjectorStroke,
+  machineConfigurationId,
+  mouldConfigurationId,
+  provenance = null,
+} = {}) {
+  const machineId = explicitIdentity(machineConfigurationId, 'machine-configuration-id');
+  if (!machineId.ok) return machineId;
+  const mouldId = explicitIdentity(mouldConfigurationId, 'mould-configuration-id');
+  if (!mouldId.ok) return mouldId;
+  const comparison = lengthCapacityComparison(requiredEjectorStroke, availableEjectorStroke, 'required-ejector-stroke', 'available-ejector-stroke');
+  if (!comparison.ok) return comparison;
+  return supported(
+    {
+      machineConfigurationId: machineId.value.id,
+      mouldConfigurationId: mouldId.value.id,
+      requiredEjectorStrokeMm: comparison.value.requiredMm,
+      availableEjectorStrokeMm: comparison.value.availableMm,
+      marginMm: comparison.value.marginMm,
+      fits: comparison.value.fits,
+      state: comparison.value.state,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.ejectorStrokeFit,
+      units: Object.freeze({ length: 'mm' }),
+      assumptions: Object.freeze([
+        'Required ejector stroke is established from the actual mould/ejection design and is not inferred by this function.',
+        'Available ejector stroke is verified for the exact machine/configuration and compatible ejector arrangement.',
+        'PASS does not prove ejector force, pattern, coupling, timing or interference compatibility.',
+      ]),
+      provenance,
+      authority: 'geometric-fit-screen-only',
+    },
+  );
+}
+
+function assessmentState(assessment, expectedIdentity = {}) {
+  if (!assessment || typeof assessment !== 'object') return { state: 'UNKNOWN', reason: 'missing-assessment' };
+  if (assessment.ok === false) return { state: 'UNKNOWN', reason: assessment.reason || 'unsupported-assessment' };
+
+  const value = assessment?.value && typeof assessment.value === 'object' ? assessment.value : assessment;
+  const identityChecks = [
+    ['machineConfigurationId', 'machine-configuration-mismatch'],
+    ['injectionUnitConfigurationId', 'injection-unit-configuration-mismatch'],
+    ['mouldConfigurationId', 'mould-configuration-mismatch'],
+  ];
+  let carriedIdentityCount = 0;
+  for (const [field, reason] of identityChecks) {
+    const actual = String(value?.[field] || '').trim();
+    const expected = String(expectedIdentity?.[field] || '').trim();
+    if (actual) carriedIdentityCount += 1;
+    if (actual && expected && actual !== expected) return { state: 'UNKNOWN', reason };
+  }
+
+  if (carriedIdentityCount === 0) {
+    const contextIndependent = assessment?.contextIndependent === true || value?.contextIndependent === true;
+    const contextBasisRef = String(assessment?.contextBasisRef || value?.contextBasisRef || '').trim();
+    if (!contextIndependent) return { state: 'UNKNOWN', reason: 'assessment-identity-unbound' };
+    if (!contextBasisRef) return { state: 'UNKNOWN', reason: 'context-basis-required' };
+  }
+
+  const explicit = String(value?.state || assessment?.state || '').toUpperCase();
+  if (explicit === 'MARGINAL') {
+    const marginalBasisRef = String(assessment?.marginalBasisRef || value?.marginalBasisRef || '').trim();
+    return marginalBasisRef
+      ? { state: 'MARGINAL', reason: null }
+      : { state: 'UNKNOWN', reason: 'marginal-basis-required' };
+  }
+  if (['PASS', 'FAIL', 'UNKNOWN'].includes(explicit)) return { state: explicit, reason: null };
+  if (typeof value?.exceedsAvailableCapacity === 'boolean') {
+    return { state: value.exceedsAvailableCapacity ? 'FAIL' : 'PASS', reason: null };
+  }
+  if (typeof value?.exceedsUsableCapacity === 'boolean') {
+    return { state: value.exceedsUsableCapacity ? 'FAIL' : 'PASS', reason: null };
+  }
+  if (typeof value?.fits === 'boolean') {
+    return { state: value.fits ? 'PASS' : 'FAIL', reason: null };
+  }
+  return { state: 'UNKNOWN', reason: 'assessment-state-unresolved' };
+}
+
+export function machineSuitabilitySummary({
+  machineConfigurationId,
+  injectionUnitConfigurationId,
+  mouldConfigurationId,
+  requiredAxisIds,
+  assessments,
+  basis,
+  provenance = null,
+} = {}) {
+  const machineId = explicitIdentity(machineConfigurationId, 'machine-configuration-id');
+  if (!machineId.ok) return machineId;
+  const injectionId = explicitIdentity(injectionUnitConfigurationId, 'injection-unit-configuration-id');
+  if (!injectionId.ok) return injectionId;
+  const mouldId = explicitIdentity(mouldConfigurationId, 'mould-configuration-id');
+  if (!mouldId.ok) return mouldId;
+  const cleanBasis = String(basis || '').trim();
+  if (!cleanBasis) return unsupported('suitability-basis-required', { field: 'basis' });
+  if (!Array.isArray(requiredAxisIds) || requiredAxisIds.length < 1) {
+    return unsupported('required-axis-list-required', { field: 'requiredAxisIds' });
+  }
+  const axisIds = [...new Set(requiredAxisIds.map(value => String(value || '').trim()).filter(Boolean))];
+  if (axisIds.length < 1) return unsupported('required-axis-list-required', { field: 'requiredAxisIds' });
+  const source = assessments && typeof assessments === 'object' ? assessments : {};
+  const expectedIdentity = Object.freeze({
+    machineConfigurationId: machineId.value.id,
+    injectionUnitConfigurationId: injectionId.value.id,
+    mouldConfigurationId: mouldId.value.id,
+  });
+  const axes = axisIds.map(id => {
+    const resolved = assessmentState(source[id], expectedIdentity);
+    return Object.freeze({ id, state: resolved.state, reason: resolved.reason });
+  });
+  const states = axes.map(axis => axis.state);
+  const summaryState = states.includes('FAIL')
+    ? 'FAIL'
+    : states.includes('UNKNOWN')
+      ? 'UNKNOWN'
+      : states.includes('MARGINAL')
+        ? 'MARGINAL'
+        : 'PASS';
+  return supported(
+    {
+      machineConfigurationId: machineId.value.id,
+      injectionUnitConfigurationId: injectionId.value.id,
+      mouldConfigurationId: mouldId.value.id,
+      basis: cleanBasis,
+      requiredAxisIds: Object.freeze(axisIds),
+      axes: Object.freeze(axes),
+      coverageComplete: !states.includes('UNKNOWN'),
+      summaryState,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.machineSuitabilitySummary,
+      assumptions: Object.freeze([
+        'The summary covers only the explicitly declared required axes and exact machine/injection-unit/mould identities supplied to this function; any identity carried by an assessment must match the summary identity or that axis becomes UNKNOWN. An assessment carrying no hardware identity must explicitly declare contextIndependent=true with a non-empty contextBasisRef or it is UNKNOWN.',
+        'FAIL dominates the summary. If no axis fails, any unresolved required axis forces UNKNOWN; MARGINAL is preserved only when an upstream assessment explicitly supplies that state together with a non-empty marginalBasisRef.',
+        'PASS means every declared required axis passed its stated comparison. It is not a universal declaration that the machine/mould combination is safe, validated, installable or production-ready.',
+        'Safety, guarding, utilities, platen/loading limits, nozzle/location compatibility, controls, ancillary equipment, local procedures and OEM requirements remain separate unless explicitly represented by required axes.',
+      ]),
+      provenance,
+      authority: 'declared-axis-composition-only',
+    },
+  );
+}
+
+
+export function hydraulicDiameter({
+  crossSectionArea,
+  wettedPerimeter,
+  provenance = null,
+} = {}) {
+  const area = convertPositive(crossSectionArea, AREA_TO_M2, 'cross-section-area');
+  if (!area.ok) return area;
+  const perimeter = convertPositiveBase(wettedPerimeter, LENGTH_TO_MM, 'wetted-perimeter', 'mm');
+  if (!perimeter.ok) return perimeter;
+  const perimeterM = perimeter.value.base / 1000;
+  const hydraulicDiameterM = 4 * area.value.si / perimeterM;
+  return supported(
+    {
+      hydraulicDiameterMm: hydraulicDiameterM * 1000,
+      crossSectionAreaM2: area.value.si,
+      wettedPerimeterMm: perimeter.value.base,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.hydraulicDiameter,
+      units: Object.freeze({ hydraulicDiameter: 'mm', area: 'm²', perimeter: 'mm' }),
+      assumptions: Object.freeze([
+        'Hydraulic diameter is defined here as 4A/P for a fully wetted internal flow passage.',
+        'Cross-sectional area and wetted perimeter must describe the same local passage section.',
+        'Hydraulic diameter is a geometric characteristic only; it does not by itself establish pressure loss, shear stress, viscosity or a recommended runner/gate size.',
+      ]),
+      provenance,
+      authority: 'flow-path-geometry-only',
+    },
+  );
+}
+
+export function uniformChannelVolume({
+  crossSectionArea,
+  channelLength,
+  provenance = null,
+} = {}) {
+  const area = convertPositive(crossSectionArea, AREA_TO_M2, 'cross-section-area');
+  if (!area.ok) return area;
+  const length = convertPositiveBase(channelLength, LENGTH_TO_MM, 'channel-length', 'mm');
+  if (!length.ok) return length;
+  const volumeCm3 = area.value.si * (length.value.base / 1000) * 1e6;
+  return supported(
+    {
+      volumeCm3,
+      crossSectionAreaM2: area.value.si,
+      channelLengthMm: length.value.base,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.uniformChannelVolume,
+      units: Object.freeze({ volume: 'cm³', area: 'm²', length: 'mm' }),
+      assumptions: Object.freeze([
+        'The supplied cross-section is uniform over the supplied channel length.',
+        'The result is geometric volume only; packing/compressibility, hot-runner thermal expansion, junction volumes and local transitions are excluded unless separately represented.',
+      ]),
+      provenance,
+      authority: 'flow-path-geometry-only',
+    },
+  );
+}
+
+export function circularChannelApparentWallShearRate({
+  volumetricFlow,
+  diameter,
+  provenance = null,
+} = {}) {
+  const flow = convertPositiveBase(volumetricFlow, VOLUME_RATE_TO_CM3_S, 'volumetric-flow', 'cm3/s');
+  if (!flow.ok) return flow;
+  const d = convertPositiveBase(diameter, LENGTH_TO_MM, 'diameter', 'mm');
+  if (!d.ok) return d;
+  const flowMm3S = flow.value.base * 1000;
+  const apparentWallShearRatePerS = 32 * flowMm3S / (Math.PI * d.value.base ** 3);
+  return supported(
+    {
+      apparentWallShearRatePerS,
+      volumetricFlowCm3S: flow.value.base,
+      diameterMm: d.value.base,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.circularChannelApparentWallShearRate,
+      units: Object.freeze({ shearRate: '1/s', flow: 'cm³/s', diameter: 'mm' }),
+      assumptions: Object.freeze([
+        'This is the nominal/apparent wall shear-rate expression 32Q/(πD³) for a fully filled circular channel.',
+        'It is a geometric kinematic screen and does not apply a Rabinowitsch correction for non-Newtonian polymer behaviour.',
+        'It does not calculate viscosity, shear stress, shear heating, pressure loss or a safe/recommended gate or runner shear-rate limit.',
+        'Flow must be the volumetric flow through this exact circular passage rather than a machine command or unrelated upstream total when branches divide flow.',
+      ]),
+      provenance,
+      authority: 'apparent-geometric-rate-only',
+    },
+  );
+}
+
+export function pressureLossModelReadiness({
+  materialGradeId,
+  rheologyModelRef,
+  thermalStateRef,
+  flowPathGeometryRef,
+  volumetricFlow,
+  upstreamPressureKind,
+  downstreamPressureKind,
+  upstreamLocationId,
+  downstreamLocationId,
+  provenance = null,
+} = {}) {
+  const blockers = [];
+  const grade = String(materialGradeId || '').trim();
+  const rheology = String(rheologyModelRef || '').trim();
+  const thermal = String(thermalStateRef || '').trim();
+  const geometry = String(flowPathGeometryRef || '').trim();
+  if (!grade) blockers.push('material-grade');
+  if (!rheology) blockers.push('rheology-model');
+  if (!thermal) blockers.push('thermal-state');
+  if (!geometry) blockers.push('flow-path-geometry');
+
+  const flow = convertPositiveBase(volumetricFlow, VOLUME_RATE_TO_CM3_S, 'volumetric-flow', 'cm3/s');
+  if (!flow.ok) blockers.push('volumetric-flow');
+
+  const upstream = String(upstreamPressureKind || '').trim().toLowerCase().replaceAll('_', '-');
+  const downstream = String(downstreamPressureKind || '').trim().toLowerCase().replaceAll('_', '-');
+  if (!PLASTIC_SIDE_MEASURED_PRESSURE_KINDS.includes(upstream)) blockers.push('upstream-pressure-kind');
+  if (!PLASTIC_SIDE_MEASURED_PRESSURE_KINDS.includes(downstream)) blockers.push('downstream-pressure-kind');
+
+  const upstreamLocation = String(upstreamLocationId || '').trim();
+  const downstreamLocation = String(downstreamLocationId || '').trim();
+  if (!upstreamLocation) blockers.push('upstream-pressure-location');
+  if (!downstreamLocation) blockers.push('downstream-pressure-location');
+  if (upstreamLocation && downstreamLocation && upstreamLocation === downstreamLocation) {
+    blockers.push('distinct-pressure-locations');
+  }
+
+  return Object.freeze({
+    ok: true,
+    value: Object.freeze({
+      ready: blockers.length === 0,
+      blockers: Object.freeze([...new Set(blockers)]),
+      materialGradeId: grade || null,
+      rheologyModelRef: rheology || null,
+      thermalStateRef: thermal || null,
+      flowPathGeometryRef: geometry || null,
+      volumetricFlowCm3S: flow.ok ? flow.value.base : null,
+      upstreamPressureKind: PLASTIC_SIDE_MEASURED_PRESSURE_KINDS.includes(upstream) ? upstream : null,
+      downstreamPressureKind: PLASTIC_SIDE_MEASURED_PRESSURE_KINDS.includes(downstream) ? downstream : null,
+      upstreamLocationId: upstreamLocation || null,
+      downstreamLocationId: downstreamLocation || null,
+    }),
+    equationId: ENGINEERING_EQUATION_IDS.pressureLossModelReadiness,
+    assumptions: Object.freeze([
+      'Readiness means the minimum modelling semantics are present; it does not mean the rheology model, geometry discretisation or boundary conditions are valid.',
+      'MFR/MFI alone is not accepted as a complete injection-moulding rheology model.',
+      'Pressure loss is not calculated unless geometry, flow, thermal state, material rheology and explicit upstream/downstream pressure locations are all defined.',
+    ]),
+    provenance,
+    authority: 'pressure-loss-readiness-only',
+  });
+}
+
+
+function screwCrossSectionAreaMm2(diameterMm) {
+  return Math.PI * diameterMm ** 2 / 4;
+}
+
+export function screwSweptVolume({
+  screwDiameter,
+  screwStroke,
+  injectionUnitConfigurationId,
+  screwGeometryBasisRef,
+  provenance = null,
+} = {}) {
+  const unitId = explicitIdentity(injectionUnitConfigurationId, 'injection-unit-configuration-id');
+  if (!unitId.ok) return unitId;
+  const geometryRef = String(screwGeometryBasisRef || '').trim();
+  if (!geometryRef) return unsupported('screw-geometry-basis-reference-required', { field: 'screwGeometryBasisRef' });
+  const diameter = convertPositiveBase(screwDiameter, LENGTH_TO_MM, 'screw-diameter', 'mm');
+  if (!diameter.ok) return diameter;
+  const stroke = convertPositiveBase(screwStroke, LENGTH_TO_MM, 'screw-stroke', 'mm');
+  if (!stroke.ok) return stroke;
+  const areaMm2 = screwCrossSectionAreaMm2(diameter.value.base);
+  const sweptVolumeCm3 = areaMm2 * stroke.value.base / 1000;
+  return supported(
+    {
+      injectionUnitConfigurationId: unitId.value.id,
+      screwGeometryBasisRef: geometryRef,
+      screwDiameterMm: diameter.value.base,
+      screwStrokeMm: stroke.value.base,
+      screwCrossSectionAreaMm2: areaMm2,
+      sweptVolumeCm3,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.screwSweptVolume,
+      units: Object.freeze({ diameter: 'mm', stroke: 'mm', area: 'mm²', volume: 'cm³' }),
+      assumptions: Object.freeze([
+        'The calculation is geometric swept barrel volume: πD²/4 × stroke.',
+        'The entered diameter and stroke are tied to the explicit screw-geometry basis reference for the exact injection-unit configuration.',
+        'Swept volume is not automatically delivered melt volume because non-return-valve backflow, compression, leakage, decompression and machine-specific signal definitions can change delivered material.',
+      ]),
+      provenance,
+      authority: 'machine-transfer-geometry-only',
+    },
+  );
+}
+
+export function volumetricFlowFromScrewMotion({
+  screwDiameter,
+  screwLinearSpeed,
+  injectionUnitConfigurationId,
+  screwGeometryBasisRef,
+  screwMotionBasisRef,
+  provenance = null,
+} = {}) {
+  const unitId = explicitIdentity(injectionUnitConfigurationId, 'injection-unit-configuration-id');
+  if (!unitId.ok) return unitId;
+  const geometryRef = String(screwGeometryBasisRef || '').trim();
+  if (!geometryRef) return unsupported('screw-geometry-basis-reference-required', { field: 'screwGeometryBasisRef' });
+  const motionRef = String(screwMotionBasisRef || '').trim();
+  if (!motionRef) return unsupported('screw-motion-basis-reference-required', { field: 'screwMotionBasisRef' });
+  const diameter = convertPositiveBase(screwDiameter, LENGTH_TO_MM, 'screw-diameter', 'mm');
+  if (!diameter.ok) return diameter;
+  const speed = convertPositiveBase(screwLinearSpeed, LINEAR_SPEED_TO_MM_S, 'screw-linear-speed', 'mm/s');
+  if (!speed.ok) return speed;
+  const areaMm2 = screwCrossSectionAreaMm2(diameter.value.base);
+  const volumetricFlowCm3S = areaMm2 * speed.value.base / 1000;
+  return supported(
+    {
+      injectionUnitConfigurationId: unitId.value.id,
+      screwGeometryBasisRef: geometryRef,
+      screwMotionBasisRef: motionRef,
+      screwDiameterMm: diameter.value.base,
+      screwLinearSpeedMmS: speed.value.base,
+      screwCrossSectionAreaMm2: areaMm2,
+      geometricVolumetricFlowCm3S: volumetricFlowCm3S,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.volumetricFlowFromScrewMotion,
+      units: Object.freeze({ diameter: 'mm', speed: 'mm/s', flow: 'cm³/s' }),
+      assumptions: Object.freeze([
+        'The geometric rate is calculated from screw cross-sectional area × actual forward screw speed.',
+        'Actual screw motion is required and retained with an explicit motion-basis reference; a controller command is not automatically equivalent to actual motion.',
+        'This is displaced barrel volume, not proven cavity volumetric flow. Check-ring behaviour, compressibility, leakage, decompression and machine-specific signal scaling remain outside the geometry.',
+      ]),
+      provenance,
+      authority: 'machine-transfer-geometry-only',
+    },
+  );
+}
+
+export function screwSpeedForVolumetricFlow({
+  screwDiameter,
+  targetVolumetricFlow,
+  injectionUnitConfigurationId,
+  screwGeometryBasisRef,
+  targetVolumetricFlowBasisRef,
+  provenance = null,
+} = {}) {
+  const unitId = explicitIdentity(injectionUnitConfigurationId, 'injection-unit-configuration-id');
+  if (!unitId.ok) return unitId;
+  const geometryRef = String(screwGeometryBasisRef || '').trim();
+  if (!geometryRef) return unsupported('screw-geometry-basis-reference-required', { field: 'screwGeometryBasisRef' });
+  const flowRef = String(targetVolumetricFlowBasisRef || '').trim();
+  if (!flowRef) return unsupported('target-volumetric-flow-basis-reference-required', { field: 'targetVolumetricFlowBasisRef' });
+  const diameter = convertPositiveBase(screwDiameter, LENGTH_TO_MM, 'screw-diameter', 'mm');
+  if (!diameter.ok) return diameter;
+  const flow = convertPositiveBase(targetVolumetricFlow, VOLUME_RATE_TO_CM3_S, 'target-volumetric-flow', 'cm3/s');
+  if (!flow.ok) return flow;
+  const areaMm2 = screwCrossSectionAreaMm2(diameter.value.base);
+  const requiredScrewLinearSpeedMmS = flow.value.base * 1000 / areaMm2;
+  return supported(
+    {
+      injectionUnitConfigurationId: unitId.value.id,
+      screwGeometryBasisRef: geometryRef,
+      targetVolumetricFlowBasisRef: flowRef,
+      screwDiameterMm: diameter.value.base,
+      targetVolumetricFlowCm3S: flow.value.base,
+      screwCrossSectionAreaMm2: areaMm2,
+      requiredScrewLinearSpeedMmS,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.screwSpeedForVolumetricFlow,
+      units: Object.freeze({ diameter: 'mm', flow: 'cm³/s', speed: 'mm/s' }),
+      assumptions: Object.freeze([
+        'The function inverts geometric screw displacement Q = πD²v/4.',
+        'The result is a geometric target for screw motion tied to the explicit target-flow and screw-geometry basis references, not a released machine velocity setpoint.',
+        'The target machine must separately be shown capable of the required volumetric rate, acceleration and pressure without becoming pressure-limited.',
+      ]),
+      provenance,
+      authority: 'machine-transfer-geometry-only',
+    },
+  );
+}
+
+export function volumetricTransferBetweenScrews({
+  sourceScrewDiameter,
+  sourceScrewLinearSpeed,
+  sourceInjectionUnitConfigurationId,
+  sourceScrewGeometryBasisRef,
+  sourceScrewMotionBasisRef,
+  targetScrewDiameter,
+  targetInjectionUnitConfigurationId,
+  targetScrewGeometryBasisRef,
+  transferStudyBasisRef,
+  provenance = null,
+} = {}) {
+  const source = volumetricFlowFromScrewMotion({
+    screwDiameter: sourceScrewDiameter,
+    screwLinearSpeed: sourceScrewLinearSpeed,
+    injectionUnitConfigurationId: sourceInjectionUnitConfigurationId,
+    screwGeometryBasisRef: sourceScrewGeometryBasisRef,
+    screwMotionBasisRef: sourceScrewMotionBasisRef,
+    provenance,
+  });
+  if (!source.ok) return source;
+  const target = screwSpeedForVolumetricFlow({
+    screwDiameter: targetScrewDiameter,
+    targetVolumetricFlow: { value: source.value.geometricVolumetricFlowCm3S, unit: 'cm3/s' },
+    injectionUnitConfigurationId: targetInjectionUnitConfigurationId,
+    screwGeometryBasisRef: targetScrewGeometryBasisRef,
+    targetVolumetricFlowBasisRef: transferStudyBasisRef,
+    provenance,
+  });
+  if (!target.ok) return target;
+  return supported(
+    {
+      sourceInjectionUnitConfigurationId: source.value.injectionUnitConfigurationId,
+      sourceScrewGeometryBasisRef: source.value.screwGeometryBasisRef,
+      sourceScrewMotionBasisRef: source.value.screwMotionBasisRef,
+      targetInjectionUnitConfigurationId: target.value.injectionUnitConfigurationId,
+      targetScrewGeometryBasisRef: target.value.screwGeometryBasisRef,
+      transferStudyBasisRef: target.value.targetVolumetricFlowBasisRef,
+      sourceScrewDiameterMm: source.value.screwDiameterMm,
+      sourceScrewLinearSpeedMmS: source.value.screwLinearSpeedMmS,
+      geometricVolumetricFlowCm3S: source.value.geometricVolumetricFlowCm3S,
+      targetScrewDiameterMm: target.value.screwDiameterMm,
+      targetGeometricScrewLinearSpeedMmS: target.value.requiredScrewLinearSpeedMmS,
+      speedRatioTargetToSource: target.value.requiredScrewLinearSpeedMmS / source.value.screwLinearSpeedMmS,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.volumetricTransferBetweenScrews,
+      units: Object.freeze({ diameter: 'mm', speed: 'mm/s', flow: 'cm³/s' }),
+      assumptions: Object.freeze([
+        'This preserves only the same geometric screw-displacement volumetric rate between two explicitly identified injection-unit configurations using referenced source motion, source/target screw geometry and transfer-study basis.',
+        'It does not prove equivalent cavity fill, melt-front velocity, shear history, pressure demand, acceleration response, check-ring behaviour, melt condition or part quality.',
+        'A transferred process still requires machine capability checks, actual trace comparison and product/process validation rather than copied screen numbers alone.',
+      ]),
+      provenance,
+      authority: 'machine-transfer-geometry-only',
+    },
+  );
+}
+
+export function fillStageRates({ fillTime, fillVolume = null, fillMass = null, injectionStroke = null, provenance = null } = {}) {
+  const time = convertPositiveBase(fillTime, TIME_TO_S, 'fill-time', 's');
+  if (!time.ok) return time;
+  const volume = optionalPositiveBase(fillVolume, VOLUME_TO_CM3, 'fill-volume', 'cm3');
+  if (!volume.ok) return volume;
+  const mass = optionalPositiveBase(fillMass, MASS_TO_G, 'fill-mass', 'g');
+  if (!mass.ok) return mass;
+  const stroke = optionalPositiveBase(injectionStroke, LENGTH_TO_MM, 'injection-stroke', 'mm');
+  if (!stroke.ok) return stroke;
+  if (volume.value.base === null && mass.value.base === null && stroke.value.base === null) {
+    return unsupported('fill-rate-numerator-required', { field: 'fillVolume|fillMass|injectionStroke' });
+  }
+  const seconds = time.value.base;
+  return supported(
+    {
+      fillTimeS: seconds,
+      volumetricFlowCm3S: volume.value.base === null ? null : volume.value.base / seconds,
+      massFlowGS: mass.value.base === null ? null : mass.value.base / seconds,
+      averageScrewRamSpeedMmS: stroke.value.base === null ? null : stroke.value.base / seconds,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.fillStageRates,
+      units: Object.freeze({ time: 's', volumetricFlow: 'cm³/s', massFlow: 'g/s', screwRamSpeed: 'mm/s' }),
+      assumptions: Object.freeze([
+        'Each numerator covers the same fill-stage interval as the supplied fill time.',
+        'Average screw/ram forward speed is not melt-front velocity.',
+        'No shear rate, apparent viscosity or pressure loss is inferred without flow-path geometry and appropriate rheology.',
+      ]),
+      provenance,
+      authority: 'measured-rate-arithmetic-only',
+    },
+  );
+}
+
+export function averageResidenceTimeEstimate({
+  meltInventoryMass,
+  massThroughputRate,
+  injectionUnitConfigurationId,
+  meltInventoryBasisRef,
+  throughputBasisRef,
+  provenance = null,
+} = {}) {
+  const injectionId = explicitIdentity(injectionUnitConfigurationId, 'injection-unit-configuration-id');
+  if (!injectionId.ok) return injectionId;
+  const inventoryRef = String(meltInventoryBasisRef || '').trim();
+  if (!inventoryRef) return unsupported('melt-inventory-basis-reference-required', { field: 'meltInventoryBasisRef' });
+  const throughputRef = String(throughputBasisRef || '').trim();
+  if (!throughputRef) return unsupported('throughput-basis-reference-required', { field: 'throughputBasisRef' });
+
+  const inventory = convertPositiveBase(meltInventoryMass, MASS_TO_G, 'melt-inventory-mass', 'g');
+  if (!inventory.ok) return inventory;
+  const throughput = convertPositiveBase(massThroughputRate, MASS_RATE_TO_G_S, 'mass-throughput-rate', 'g/s');
+  if (!throughput.ok) return throughput;
+  const seconds = inventory.value.base / throughput.value.base;
+
+  return supported(
+    {
+      injectionUnitConfigurationId: injectionId.value.id,
+      meltInventoryBasisRef: inventoryRef,
+      throughputBasisRef: throughputRef,
+      meltInventoryG: inventory.value.base,
+      throughputGS: throughput.value.base,
+      seconds,
+      minutes: seconds / 60,
+      hours: seconds / 3600,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.averageResidenceTime,
+      units: Object.freeze({ mass: 'g', time: 's', throughput: 'g/s' }),
+      assumptions: Object.freeze([
+        'This is a steady-throughput average inventory/throughput estimate tied to the exact stated injection-unit configuration and explicit inventory/throughput basis references.',
+        'It is not a residence-time distribution. Stagnant regions, screw-channel distribution, hot-runner inventory, interruptions, purging and material recirculation are not represented unless included in the referenced inventory/throughput basis.',
+        'The result does not establish a safe material residence limit or degradation verdict. Material limits remain exact-grade, melt-temperature and supplier-evidence dependent.',
+      ]),
+      provenance,
+      authority: 'average-residence-estimate-only',
+    },
+  );
+}
+
+export function averageResidenceTimeFromShotCycle({
+  meltInventoryMass,
+  shotMass,
+  cycleTime,
+  injectionUnitConfigurationId,
+  meltInventoryBasisRef,
+  shotMassBasisRef,
+  cycleTimeBasisRef,
+  provenance = null,
+} = {}) {
+  const injectionId = explicitIdentity(injectionUnitConfigurationId, 'injection-unit-configuration-id');
+  if (!injectionId.ok) return injectionId;
+  const inventoryRef = String(meltInventoryBasisRef || '').trim();
+  if (!inventoryRef) return unsupported('melt-inventory-basis-reference-required', { field: 'meltInventoryBasisRef' });
+  const shotRef = String(shotMassBasisRef || '').trim();
+  if (!shotRef) return unsupported('shot-mass-basis-reference-required', { field: 'shotMassBasisRef' });
+  const cycleRef = String(cycleTimeBasisRef || '').trim();
+  if (!cycleRef) return unsupported('cycle-time-basis-reference-required', { field: 'cycleTimeBasisRef' });
+
+  const inventory = convertPositiveBase(meltInventoryMass, MASS_TO_G, 'melt-inventory-mass', 'g');
+  if (!inventory.ok) return inventory;
+  const shot = convertPositiveBase(shotMass, MASS_TO_G, 'shot-mass', 'g');
+  if (!shot.ok) return shot;
+  const cycle = convertPositiveBase(cycleTime, TIME_TO_S, 'cycle-time', 's');
+  if (!cycle.ok) return cycle;
+
+  const throughputGS = shot.value.base / cycle.value.base;
+  const seconds = inventory.value.base / throughputGS;
+
+  return supported(
+    {
+      injectionUnitConfigurationId: injectionId.value.id,
+      meltInventoryBasisRef: inventoryRef,
+      shotMassBasisRef: shotRef,
+      cycleTimeBasisRef: cycleRef,
+      meltInventoryG: inventory.value.base,
+      shotMassG: shot.value.base,
+      cycleTimeS: cycle.value.base,
+      derivedThroughputGS: throughputGS,
+      seconds,
+      minutes: seconds / 60,
+      hours: seconds / 3600,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.averageResidenceFromShotCycle,
+      units: Object.freeze({ mass: 'g', time: 's', throughput: 'g/s' }),
+      assumptions: Object.freeze([
+        'The average is derived from referenced melt inventory, shot mass and cycle time for the exact stated injection-unit configuration.',
+        'The derived throughput assumes the referenced shot mass leaves the plasticising system once per referenced cycle; purge, reject, interruption and recirculation flows are excluded unless represented in the basis.',
+        'This remains an average inventory/throughput estimate, not a residence-time distribution or exact oldest-material age.',
+        'The result does not establish a safe material residence limit or degradation verdict; exact-grade supplier limits and actual thermal history remain controlling.',
+      ]),
+      provenance,
+      authority: 'average-residence-estimate-only',
+    },
+  );
+}
+
+export function relativeCoolingTimeScale({
+  referenceCoolingTime,
+  referenceThickness,
+  targetThickness,
+  referenceThermalDiffusivity = null,
+  targetThermalDiffusivity = null,
+  provenance = null,
+} = {}) {
+  const time = convertPositiveBase(referenceCoolingTime, TIME_TO_S, 'reference-cooling-time', 's');
+  if (!time.ok) return time;
+  const refThickness = convertPositiveBase(referenceThickness, LENGTH_TO_MM, 'reference-thickness', 'mm');
+  if (!refThickness.ok) return refThickness;
+  const targetThicknessValue = convertPositiveBase(targetThickness, LENGTH_TO_MM, 'target-thickness', 'mm');
+  if (!targetThicknessValue.ok) return targetThicknessValue;
+
+  let diffusivityRatio = 1;
+  let referenceAlpha = null;
+  let targetAlpha = null;
+  if (referenceThermalDiffusivity != null || targetThermalDiffusivity != null) {
+    if (referenceThermalDiffusivity == null || targetThermalDiffusivity == null) {
+      return unsupported('both-diffusivities-required', { field: 'referenceThermalDiffusivity|targetThermalDiffusivity' });
+    }
+    const refAlpha = convertPositiveBase(referenceThermalDiffusivity, DIFFUSIVITY_TO_MM2_S, 'reference-thermal-diffusivity', 'mm2/s');
+    if (!refAlpha.ok) return refAlpha;
+    const targetAlphaResult = convertPositiveBase(targetThermalDiffusivity, DIFFUSIVITY_TO_MM2_S, 'target-thermal-diffusivity', 'mm2/s');
+    if (!targetAlphaResult.ok) return targetAlphaResult;
+    referenceAlpha = refAlpha.value.base;
+    targetAlpha = targetAlphaResult.value.base;
+    diffusivityRatio = referenceAlpha / targetAlpha;
+  }
+
+  const thicknessRatio = targetThicknessValue.value.base / refThickness.value.base;
+  const scalingFactor = thicknessRatio ** 2 * diffusivityRatio;
+  return supported(
+    {
+      referenceCoolingTimeS: time.value.base,
+      estimatedTargetCoolingTimeS: time.value.base * scalingFactor,
+      scalingFactor,
+      thicknessRatio,
+      referenceThermalDiffusivityMm2S: referenceAlpha,
+      targetThermalDiffusivityMm2S: targetAlpha,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.relativeCoolingTimeScale,
+      units: Object.freeze({ time: 's', thickness: 'mm', thermalDiffusivity: 'mm²/s' }),
+      assumptions: Object.freeze([
+        'This is a first-order diffusion scaling comparison, not an absolute cooling-time prediction.',
+        'The reference and target are assumed to have comparable thermal boundary conditions, ejection criterion and one-dimensional characteristic thickness behaviour.',
+        'Crystallisation/latent heat, thermal contact resistance, local geometry, coolant circuit resistance, mould material and transient cycle-to-cycle thermal state can invalidate simple thickness-squared scaling.',
+      ]),
+      provenance,
+      authority: 'relative-thermal-screen-only',
+    },
+  );
+}
+
+
+function convertShrinkageFraction(quantity, field) {
+  if (!quantity || typeof quantity !== 'object') return unsupported(`missing-${field}`, { field });
+  const raw = Number(quantity.value);
+  if (!Number.isFinite(raw) || raw < 0) return unsupported(`invalid-${field}-value`, { field });
+  const unit = cleanUnit(quantity.unit);
+  const factor = SHRINKAGE_TO_FRACTION[unit];
+  if (!factor) return unsupported(`unsupported-${field}-unit`, { field, unit: String(quantity.unit ?? '') });
+  const fraction = raw * factor;
+  if (fraction >= 1) return unsupported(`invalid-${field}-fraction`, { field, fraction });
+  return supported({ fraction, inputValue: raw, inputUnit: unit });
+}
+
+
+function finiteTemperatureC(quantity, field) {
+  if (!quantity || typeof quantity !== 'object') return unsupported(`missing-${field}`, { field });
+  const value = Number(quantity.value);
+  if (!Number.isFinite(value)) return unsupported(`invalid-${field}-value`, { field });
+  const unit = String(quantity.unit || '').trim();
+  if (unit !== '°C' && unit !== 'C') {
+    return unsupported(`unsupported-${field}-unit`, { field, unit });
+  }
+  return supported({ celsius: value, inputUnit: unit });
+}
+
+export function amorphousSlabCoolingTimeEstimate({
+  partThickness,
+  thermalDiffusivity,
+  meltTemperature,
+  mouldSurfaceTemperature,
+  ejectionTemperature,
+  materialGradeId,
+  materialMorphology,
+  materialMorphologyRef,
+  ejectionCriterionType,
+  thermalDiffusivityRef,
+  ejectionCriterionRef,
+  mouldSurfaceTemperatureBasisRef,
+  thermalModelBasisRef,
+  provenance = null,
+} = {}) {
+  const gradeId = explicitIdentity(materialGradeId, 'material-grade-id');
+  if (!gradeId.ok) return gradeId;
+  const morphologyRef = String(materialMorphologyRef || '').trim();
+  if (!morphologyRef) return unsupported('material-morphology-reference-required', { field: 'materialMorphologyRef' });
+  const modelRef = String(thermalModelBasisRef || '').trim();
+  if (!modelRef) return unsupported('thermal-model-basis-reference-required', { field: 'thermalModelBasisRef' });
+
+  const morphology = String(materialMorphology || '').trim().toLowerCase();
+  if (morphology !== 'amorphous') {
+    return unsupported(
+      morphology === 'semi-crystalline'
+        ? 'semi-crystalline-requires-phase-change-model'
+        : 'amorphous-morphology-required',
+      { field: 'materialMorphology', received: materialMorphology ?? null },
+    );
+  }
+  const criterionType = String(ejectionCriterionType || '').trim();
+  if (criterionType !== 'centerline-temperature') {
+    return unsupported('centerline-ejection-criterion-required', {
+      field: 'ejectionCriterionType',
+      allowed: 'centerline-temperature',
+    });
+  }
+  const alphaRef = String(thermalDiffusivityRef || '').trim();
+  if (!alphaRef) return unsupported('thermal-diffusivity-reference-required', { field: 'thermalDiffusivityRef' });
+  const ejectRef = String(ejectionCriterionRef || '').trim();
+  if (!ejectRef) return unsupported('ejection-criterion-reference-required', { field: 'ejectionCriterionRef' });
+  const mouldRef = String(mouldSurfaceTemperatureBasisRef || '').trim();
+  if (!mouldRef) return unsupported('mould-surface-temperature-basis-required', { field: 'mouldSurfaceTemperatureBasisRef' });
+
+  const thickness = convertPositiveBase(partThickness, LENGTH_TO_MM, 'part-thickness', 'mm');
+  if (!thickness.ok) return thickness;
+  const alpha = convertPositiveBase(thermalDiffusivity, DIFFUSIVITY_TO_MM2_S, 'thermal-diffusivity', 'mm2/s');
+  if (!alpha.ok) return alpha;
+  const melt = finiteTemperatureC(meltTemperature, 'melt-temperature');
+  if (!melt.ok) return melt;
+  const mould = finiteTemperatureC(mouldSurfaceTemperature, 'mould-surface-temperature');
+  if (!mould.ok) return mould;
+  const eject = finiteTemperatureC(ejectionTemperature, 'ejection-temperature');
+  if (!eject.ok) return eject;
+
+  if (!(melt.value.celsius > eject.value.celsius && eject.value.celsius > mould.value.celsius)) {
+    return unsupported('invalid-thermal-temperature-order', {
+      requiredOrder: 'meltTemperature > ejectionTemperature > mouldSurfaceTemperature',
+    });
+  }
+
+  const logarithmArgument = (4 / Math.PI)
+    * ((melt.value.celsius - mould.value.celsius) / (eject.value.celsius - mould.value.celsius));
+  if (!(logarithmArgument > 1)) {
+    return unsupported('invalid-cooling-logarithm-argument', { logarithmArgument });
+  }
+
+  const coolingTimeS = (thickness.value.base ** 2 / (Math.PI ** 2 * alpha.value.base))
+    * Math.log(logarithmArgument);
+
+  return supported(
+    {
+      materialGradeId: gradeId.value.id,
+      materialMorphologyRef: morphologyRef,
+      thermalModelBasisRef: modelRef,
+      coolingTimeS,
+      partThicknessMm: thickness.value.base,
+      thermalDiffusivityMm2S: alpha.value.base,
+      meltTemperatureC: melt.value.celsius,
+      mouldSurfaceTemperatureC: mould.value.celsius,
+      ejectionTemperatureC: eject.value.celsius,
+      logarithmArgument,
+      materialMorphology: 'amorphous',
+      temperatureCriterion: 'centerline-first-term-plane-wall',
+      ejectionCriterionType: criterionType,
+      thermalDiffusivityRef: alphaRef,
+      ejectionCriterionRef: ejectRef,
+      mouldSurfaceTemperatureBasisRef: mouldRef,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.amorphousSlabCoolingTimeEstimate,
+      units: Object.freeze({ time: 's', thickness: 'mm', thermalDiffusivity: 'mm²/s', temperature: '°C' }),
+      assumptions: Object.freeze([
+        'This is the first-term one-dimensional plane-wall/centerline conduction estimate t = s²/(π²α) ln[(4/π)(Tm-Tw)/(Te-Tw)] using the full stated wall thickness and an explicitly centerline-temperature ejection criterion.',
+        'The exact material grade and its amorphous morphology classification are explicitly retained with a traceable morphology reference; semi-crystalline solidification/crystallisation requires a phase-change treatment and is rejected by this function.',
+        'The analytical model basis is explicitly referenced. Thermophysical properties and mould-surface boundary conditions are treated as constant/uniform first-order approximations over the calculation.',
+        'Thermal contact resistance, local ribs/bosses/corners, nonuniform filling temperature, cooling-channel resistance, mould transient state and post-ejection reheating are not resolved.',
+        'The output is an analytical screening estimate tied to the stated exact material grade, morphology, thermal-model, thermal-diffusivity, ejection-criterion and mould-surface-temperature references, not a guaranteed cycle-time setting.',
+      ]),
+      provenance,
+      authority: 'amorphous-1d-cooling-screen-only',
+    },
+  );
+}
+
+export function linearShrinkageCompensationRange({
+  targetPartDimension,
+  lowerShrinkage,
+  upperShrinkage,
+  materialGradeId,
+  shrinkageDirection,
+  directionBasisRef,
+  shrinkageBasisRef,
+  conditioningBasisRef,
+  definition = 'mould-referenced-linear',
+  provenance = null,
+} = {}) {
+  if (definition !== 'mould-referenced-linear') {
+    return unsupported('unsupported-shrinkage-definition', {
+      field: 'definition',
+      allowed: 'mould-referenced-linear',
+    });
+  }
+  const gradeId = explicitIdentity(materialGradeId, 'material-grade-id');
+  if (!gradeId.ok) return gradeId;
+  const direction = String(shrinkageDirection || '').trim();
+  if (!direction) return unsupported('shrinkage-direction-required', { field: 'shrinkageDirection' });
+  const directionRef = String(directionBasisRef || '').trim();
+  if (!directionRef) return unsupported('direction-basis-reference-required', { field: 'directionBasisRef' });
+  const shrinkageRef = String(shrinkageBasisRef || '').trim();
+  if (!shrinkageRef) return unsupported('shrinkage-basis-reference-required', { field: 'shrinkageBasisRef' });
+  const conditioningRef = String(conditioningBasisRef || '').trim();
+  if (!conditioningRef) return unsupported('conditioning-basis-reference-required', { field: 'conditioningBasisRef' });
+
+  const target = convertPositiveBase(targetPartDimension, LENGTH_TO_MM, 'target-part-dimension', 'mm');
+  if (!target.ok) return target;
+  const low = convertShrinkageFraction(lowerShrinkage, 'lower-shrinkage');
+  if (!low.ok) return low;
+  const high = convertShrinkageFraction(upperShrinkage, 'upper-shrinkage');
+  if (!high.ok) return high;
+  if (low.value.fraction > high.value.fraction) {
+    return unsupported('shrinkage-range-reversed', { field: 'shrinkage-range' });
+  }
+
+  const lowerMouldMm = target.value.base / (1 - low.value.fraction);
+  const upperMouldMm = target.value.base / (1 - high.value.fraction);
+  return supported(
+    {
+      materialGradeId: gradeId.value.id,
+      shrinkageDirection: direction,
+      directionBasisRef: directionRef,
+      shrinkageBasisRef: shrinkageRef,
+      conditioningBasisRef: conditioningRef,
+      targetPartDimensionMm: target.value.base,
+      lowerShrinkageFraction: low.value.fraction,
+      upperShrinkageFraction: high.value.fraction,
+      lowerStartingMouldDimensionMm: lowerMouldMm,
+      upperStartingMouldDimensionMm: upperMouldMm,
+      lowerCompensationMm: lowerMouldMm - target.value.base,
+      upperCompensationMm: upperMouldMm - target.value.base,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.linearShrinkageCompensationRange,
+      definition,
+      units: Object.freeze({ dimension: 'mm', shrinkage: 'fraction' }),
+      assumptions: Object.freeze([
+        'Shrinkage is explicitly defined here as (mould dimension - conditioned part dimension) / mould dimension for the stated linear direction.',
+        'The entered shrinkage range is source-backed for the exact material grade, stated direction and conditioning/dimensional basis; the function does not supply a generic polymer shrinkage constant.',
+        'Flow/transverse or other directional shrinkage values are not treated as interchangeable. The direction basis is retained explicitly with the result.',
+        'The output is a starting arithmetic compensation range, not a released tool dimension. Fibre orientation, pressure history, crystallisation, geometry, local cooling, mould restraint and product tolerances can shift the realised production dimension.',
+        'Final mould compensation requires the applicable drawing/tolerance framework and validated material/mould/process evidence.',
+      ]),
+      provenance,
+      authority: 'starting-compensation-range-only',
+    },
+  );
+}
+
+function convertMoistureMassFraction(quantity, field, { allowZero = true } = {}) {
+  if (!quantity || typeof quantity !== 'object') return unsupported(`missing-${field}`, { field });
+  const raw = Number(quantity.value);
+  if (!Number.isFinite(raw) || raw < 0 || (!allowZero && raw === 0)) {
+    return unsupported(`invalid-${field}-value`, { field });
+  }
+  const unit = String(quantity.unit || '').trim();
+  const factor = MOISTURE_TO_FRACTION[unit];
+  if (!factor) return unsupported(`unsupported-${field}-unit`, { field, unit });
+  const fraction = raw * factor;
+  if (!(fraction >= 0 && fraction < 1)) {
+    return unsupported(`invalid-${field}-fraction`, { field, fraction });
+  }
+  return supported({ fraction, inputValue: raw, inputUnit: unit });
+}
+
+export function materialMoistureAcceptance({
+  materialGradeId,
+  sampleId,
+  measuredMoisture,
+  maximumAllowedMoisture,
+  measurementUncertainty,
+  moistureBasis = 'mass-fraction',
+  measurementMethodRef,
+  supplierRequirementRef,
+  provenance = null,
+} = {}) {
+  const gradeId = explicitIdentity(materialGradeId, 'material-grade-id');
+  if (!gradeId.ok) return gradeId;
+  const sample = explicitIdentity(sampleId, 'sample-id');
+  if (!sample.ok) return sample;
+  if (String(moistureBasis || '').trim() !== 'mass-fraction') {
+    return unsupported('unsupported-moisture-basis', {
+      field: 'moistureBasis',
+      allowed: 'mass-fraction',
+    });
+  }
+  const methodRef = String(measurementMethodRef || '').trim();
+  if (!methodRef) return unsupported('measurement-method-required', { field: 'measurementMethodRef' });
+  const requirementRef = String(supplierRequirementRef || '').trim();
+  if (!requirementRef) return unsupported('supplier-requirement-required', { field: 'supplierRequirementRef' });
+
+  const measured = convertMoistureMassFraction(measuredMoisture, 'measured-moisture');
+  if (!measured.ok) return measured;
+  const maximum = convertMoistureMassFraction(maximumAllowedMoisture, 'maximum-allowed-moisture');
+  if (!maximum.ok) return maximum;
+  const uncertainty = convertMoistureMassFraction(measurementUncertainty, 'measurement-uncertainty');
+  if (!uncertainty.ok) return uncertainty;
+
+  const lowerFraction = Math.max(0, measured.value.fraction - uncertainty.value.fraction);
+  const upperFraction = measured.value.fraction + uncertainty.value.fraction;
+  if (upperFraction >= 1) {
+    return unsupported('measurement-uncertainty-range-invalid', {
+      field: 'measurementUncertainty',
+      upperFraction,
+    });
+  }
+
+  const state = upperFraction <= maximum.value.fraction
+    ? 'PASS'
+    : lowerFraction > maximum.value.fraction
+      ? 'FAIL'
+      : 'INDETERMINATE';
+
+  return supported(
+    {
+      materialGradeId: gradeId.value.id,
+      sampleId: sample.value.id,
+      state,
+      moistureBasis: 'mass-fraction',
+      measuredFraction: measured.value.fraction,
+      measuredPercent: measured.value.fraction * 100,
+      measuredPpm: measured.value.fraction * 1e6,
+      uncertaintyFraction: uncertainty.value.fraction,
+      uncertaintyPercent: uncertainty.value.fraction * 100,
+      uncertaintyPpm: uncertainty.value.fraction * 1e6,
+      lowerMeasurementBoundFraction: lowerFraction,
+      upperMeasurementBoundFraction: upperFraction,
+      maximumAllowedFraction: maximum.value.fraction,
+      maximumAllowedPercent: maximum.value.fraction * 100,
+      maximumAllowedPpm: maximum.value.fraction * 1e6,
+      nominalMarginToLimitFraction: maximum.value.fraction - measured.value.fraction,
+      conservativeMarginToLimitFraction: maximum.value.fraction - upperFraction,
+      measurementMethodRef: methodRef,
+      supplierRequirementRef: requirementRef,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.materialMoistureAcceptance,
+      units: Object.freeze({ moisture: 'mass fraction / % / ppm' }),
+      assumptions: Object.freeze([
+        'The supplier limit applies to the exact material grade, material condition and moisture definition represented by the entered requirement reference.',
+        'The measured value and stated uncertainty come from the identified measurement method and sample, on the same mass-fraction basis as the supplier limit.',
+        'PASS is returned only when the upper measurement bound is at or below the entered supplier limit; FAIL only when the lower bound is above it; overlap returns INDETERMINATE.',
+        'This function does not prescribe dryer temperature, drying time, dew point, airflow or residence. Those values remain grade-, dryer- and supplier-specific.',
+        'A moisture result alone does not prove or disprove the root cause of splay, hydrolysis, molecular-weight loss or another defect.',
+      ]),
+      provenance,
+      authority: 'grade-specific-moisture-comparison-only',
+    },
+  );
+}
+
+function sampleMean(values) {
+  return values.reduce((sum, value) => sum + value, 0) / values.length;
+}
+
+function sampleStandardDeviation(values, mean = sampleMean(values)) {
+  if (values.length < 2) return null;
+  const variance = values.reduce((sum, value) => sum + (value - mean) ** 2, 0) / (values.length - 1);
+  return Math.sqrt(variance);
+}
+
+export function gateSealPlateauAssessment({
+  points,
+  plateauToleranceMass,
+  materialGradeId,
+  mouldConfigurationId,
+  gateId,
+  massMeasurementScopeId,
+  thermalStateRef,
+  measurementSystemBasisRef,
+  studyBasisRef,
+  plateauToleranceBasisRef,
+  provenance = null,
+} = {}) {
+  const gradeId = explicitIdentity(materialGradeId, 'material-grade-id');
+  if (!gradeId.ok) return gradeId;
+  const mouldId = explicitIdentity(mouldConfigurationId, 'mould-configuration-id');
+  if (!mouldId.ok) return mouldId;
+  const gateIdentity = explicitIdentity(gateId, 'gate-id');
+  if (!gateIdentity.ok) return gateIdentity;
+  const massScope = explicitIdentity(massMeasurementScopeId, 'mass-measurement-scope-id');
+  if (!massScope.ok) return massScope;
+
+  const thermalRef = String(thermalStateRef || '').trim();
+  if (!thermalRef) return unsupported('thermal-state-reference-required', { field: 'thermalStateRef' });
+  const measurementRef = String(measurementSystemBasisRef || '').trim();
+  if (!measurementRef) return unsupported('measurement-system-basis-required', { field: 'measurementSystemBasisRef' });
+  const studyRef = String(studyBasisRef || '').trim();
+  if (!studyRef) return unsupported('study-basis-reference-required', { field: 'studyBasisRef' });
+  const toleranceRef = String(plateauToleranceBasisRef || '').trim();
+  if (!toleranceRef) return unsupported('plateau-tolerance-basis-required', { field: 'plateauToleranceBasisRef' });
+
+  if (!Array.isArray(points) || points.length < 3) {
+    return unsupported('at-least-three-hold-time-points-required', { field: 'points' });
+  }
+  const tolerance = convertPositiveBase(plateauToleranceMass, MASS_TO_G, 'plateau-tolerance-mass', 'g');
+  if (!tolerance.ok) return tolerance;
+
+  const rows = [];
+  const seenReplicateIds = new Set();
+  for (let index = 0; index < points.length; index += 1) {
+    const point = points[index] || {};
+    const hold = convertPositiveBase(point.holdTime, TIME_TO_S, `points[${index}].hold-time`, 's');
+    if (!hold.ok) return hold;
+    if (!Array.isArray(point.partMasses) || point.partMasses.length < 2) {
+      return unsupported('insufficient-replicates', { field: `points[${index}].partMasses`, minimum: 2 });
+    }
+    if (!Array.isArray(point.replicateIds) || point.replicateIds.length !== point.partMasses.length) {
+      return unsupported('replicate-id-alignment-required', {
+        field: `points[${index}].replicateIds`,
+        expectedCount: point.partMasses.length,
+      });
+    }
+
+    const masses = [];
+    const replicateIds = [];
+    for (let massIndex = 0; massIndex < point.partMasses.length; massIndex += 1) {
+      const replicateId = String(point.replicateIds[massIndex] || '').trim();
+      if (!replicateId) {
+        return unsupported('replicate-id-required', {
+          field: `points[${index}].replicateIds[${massIndex}]`,
+        });
+      }
+      if (seenReplicateIds.has(replicateId)) {
+        return unsupported('duplicate-replicate-id', { replicateId });
+      }
+      seenReplicateIds.add(replicateId);
+      replicateIds.push(replicateId);
+
+      const converted = convertPositiveBase(point.partMasses[massIndex], MASS_TO_G, `points[${index}].partMasses[${massIndex}]`, 'g');
+      if (!converted.ok) return converted;
+      masses.push(converted.value.base);
+    }
+    const meanG = sampleMean(masses);
+    rows.push({
+      holdTimeS: hold.value.base,
+      replicateIds: Object.freeze(replicateIds),
+      replicateCount: masses.length,
+      meanMassG: meanG,
+      sampleStandardDeviationG: sampleStandardDeviation(masses, meanG),
+      minimumMassG: Math.min(...masses),
+      maximumMassG: Math.max(...masses),
+    });
+  }
+
+  rows.sort((a, b) => a.holdTimeS - b.holdTimeS);
+  for (let index = 1; index < rows.length; index += 1) {
+    if (Math.abs(rows[index].holdTimeS - rows[index - 1].holdTimeS) < 1e-12) {
+      return unsupported('duplicate-hold-time', { field: 'points', holdTimeS: rows[index].holdTimeS });
+    }
+  }
+
+  const adjacentMeanChangesG = rows.slice(1).map((row, index) => ({
+    fromHoldTimeS: rows[index].holdTimeS,
+    toHoldTimeS: row.holdTimeS,
+    changeG: row.meanMassG - rows[index].meanMassG,
+    absoluteChangeG: Math.abs(row.meanMassG - rows[index].meanMassG),
+  }));
+
+  let candidateIndex = null;
+  for (let index = 0; index <= rows.length - 3; index += 1) {
+    const remainingChanges = adjacentMeanChangesG.slice(index);
+    if (remainingChanges.length >= 2 && remainingChanges.every(change => change.absoluteChangeG <= tolerance.value.base)) {
+      candidateIndex = index;
+      break;
+    }
+  }
+
+  const plateau = candidateIndex === null
+    ? null
+    : {
+        earliestConsistentHoldTimeS: rows[candidateIndex].holdTimeS,
+        consecutivePointCount: rows.length - candidateIndex,
+        maximumAdjacentMeanChangeG: Math.max(...adjacentMeanChangesG.slice(candidateIndex).map(change => change.absoluteChangeG)),
+      };
+
+  return supported(
+    {
+      materialGradeId: gradeId.value.id,
+      mouldConfigurationId: mouldId.value.id,
+      gateId: gateIdentity.value.id,
+      massMeasurementScopeId: massScope.value.id,
+      thermalStateRef: thermalRef,
+      measurementSystemBasisRef: measurementRef,
+      studyBasisRef: studyRef,
+      plateauToleranceBasisRef: toleranceRef,
+      conclusion: plateau ? 'plateau-consistent-with-entered-tolerance' : 'no-plateau-within-entered-range',
+      plateauToleranceG: tolerance.value.base,
+      plateau,
+      points: rows,
+      adjacentMeanChangesG,
+    },
+    {
+      equationId: ENGINEERING_EQUATION_IDS.gateSealPlateau,
+      units: Object.freeze({ time: 's', mass: 'g' }),
+      assumptions: Object.freeze([
+        'The tolerance is supplied from the stated decision basis for the exact measurement system/study context; the function does not invent a universal plateau threshold.',
+        'Every replicate mass is tied to a unique sample/cycle identifier, with at least two repeated observations at every hold time and at least three hold-time levels.',
+        'A mass plateau is evidence consistent with diminishing additional material transfer for the exact stated material grade, mould, gate, mass-measurement scope and thermal state; it is not universal proof of an exact physical gate-freeze instant.',
+        'Relevant dimensional, cavity-pressure or quality evidence may still be needed before declaring additional hold time ineffective.',
+      ]),
+      provenance,
+      authority: 'controlled-study-analysis-only',
     },
   );
 }
