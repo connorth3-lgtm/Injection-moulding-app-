@@ -63,10 +63,11 @@ def main() -> None:
         action: f"actions/{action}@{sha}"
         for action, sha in action_shas.items()
     }
+    require(set(action_majors) == set(action_shas), "critical GitHub Action major/SHA inventory keys drifted")
     for action, token in tokens.items():
         require(re.fullmatch(r"actions/[a-z-]+@[0-9a-f]{40}", token) is not None, f"critical GitHub Action inventory is not an exact SHA: {action}={token}")
+        require(int(action_majors[action]) >= 1, f"critical GitHub Action reviewed major is invalid: {action}")
         require(token in workflows, f"critical GitHub Action inventory drifted: {action} expected exact reviewed pin {token}")
-        require(f"# v{action_majors[action]}" in workflows or f"# v{action_majors[action]}." in workflows or action in action_shas, f"critical GitHub Action major annotation inventory missing: {action}")
 
     node_versions = set(re.findall(r"node-version:\s*['\"]?(\d+)", workflows))
     python_versions = set(re.findall(r"python-version:\s*['\"]?([0-9]+\.[0-9]+)", workflows))
