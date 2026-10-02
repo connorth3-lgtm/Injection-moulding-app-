@@ -70,8 +70,8 @@ async function clearTransientUi(page){
   });
 }
 
-async function normalizeCaptureState(page){
-  await page.evaluate(()=>{
+async function normalizeCaptureState(page,surface){
+  await page.evaluate(({surface})=>{
     document.querySelectorAll('.toast').forEach(node=>node.remove());
     const sidebar=document.querySelector('.sidebar');
     if(sidebar)sidebar.scrollTop=0;
@@ -79,7 +79,14 @@ async function normalizeCaptureState(page){
     if(nav)nav.scrollTop=0;
     const active=document.activeElement;
     if(active&&active!==document.body&&typeof active.blur==='function')active.blur();
-  });
+    document.querySelector('[data-mm-visual-stabilizer]')?.remove();
+    if(surface==='assessment'){
+      const style=document.createElement('style');
+      style.dataset.mmVisualStabilizer='assessment-shadow';
+      style.textContent='#modal .modal-card{box-shadow:none!important}';
+      document.head.appendChild(style);
+    }
+  },{surface});
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
 
@@ -147,7 +154,7 @@ async function prepareSurface(page,surface){
   }else{
     throw new Error(`Unknown visual surface: ${surface}`);
   }
-  await normalizeCaptureState(page);
+  await normalizeCaptureState(page,surface);
 }
 
 async function capture(page,file){
