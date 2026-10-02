@@ -173,7 +173,7 @@ need(
 )
 
 for marker in [
-    "independent human-review policy",
+    "independent human review plus automated evidence",
     "one required approving review",
     "approval of the latest push is required",
     "all review conversations resolved",
