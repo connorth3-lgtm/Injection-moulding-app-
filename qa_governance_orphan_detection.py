@@ -34,7 +34,7 @@ def main() -> None:
     bindings = model.get("currentReleaseBindings")
     if not isinstance(bindings, dict):
         raise AssertionError("canonical model has no currentReleaseBindings")
-    for key in ("externalValidation", "bookPublication", "bookIndependentSme", "curriculumIndependentSme", "nzqaExternalValidation", "desktopReleasePlatform"):
+    for key in ("externalValidation", "bookPublication", "bookIndependentSme", "curriculumIndependentSme", "nzqaExternalValidation", "desktopReleasePlatform", "mainGovernancePolicy"):
         referenced_file(f"currentReleaseBindings.{key}", bindings.get(key))
 
     external = load(str(bindings["externalValidation"]))
@@ -43,6 +43,11 @@ def main() -> None:
     curriculum_sme = load(str(bindings["curriculumIndependentSme"]))
     nzqa_external = load(str(bindings["nzqaExternalValidation"]))
     desktop_release = load(str(bindings["desktopReleasePlatform"]))
+    main_policy = load(str(bindings["mainGovernancePolicy"]))
+    if external.get("governance", {}).get("policyFile") != bindings["mainGovernancePolicy"]:
+        raise AssertionError("external-validation governance policy is orphaned from canonical main policy")
+    if main_policy.get("schemaVersion") != 1:
+        raise AssertionError("canonical main governance policy schema mismatch")
 
     evidence_bindings = {
         "external-validation": external,
@@ -99,6 +104,7 @@ def main() -> None:
         raise AssertionError("canonical model has no currentPublicBoundary")
     expected_keys = {
         "technicalAutomation",
+        "repositoryGovernance",
         "bookPublicationAuthorization",
         "bookIndependentSme",
         "curriculumIndependentSme",
@@ -117,6 +123,7 @@ def main() -> None:
 
     derived = {
         "technicalAutomation": external["technicalAutomation"]["status"],
+        "repositoryGovernance": external["governance"]["status"],
         "bookPublicationAuthorization": book_publication["status"],
         "bookIndependentSme": book_sme["status"],
         "curriculumIndependentSme": external["curriculumSme"]["status"],
@@ -131,8 +138,8 @@ def main() -> None:
     if current != derived:
         raise AssertionError(f"human-facing lifecycle state is stuck/orphaned from authoritative contracts: {current!r} != {derived!r}")
 
-    # HOLD is deliberately a stable blocked state. The public model must not expose
-    # transition placeholders such as pending/in-progress that can become silently stuck.
+    # External HOLDs are stable blocked states. Native-governance pending is also
+    # explicit and owned because it has a canonical policy, tracker and exit condition.
     forbidden_public = {"pending", "in-progress", "processing", "unknown", "unresolved"}
     for key, state in current.items():
         if str(state).lower() in forbidden_public:
