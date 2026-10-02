@@ -37,6 +37,12 @@ def main() -> None:
 
     require(data.get("schemaVersion") == 1, "health program schema mismatch")
     require(data.get("currentWebRelease") == version.get("web_release"), "health program web release drifted from version.json")
+    current_status = data.get("currentStatus", {})
+    require(current_status.get("repositoryEngineering") in {"OK", "DEGRADED", "BLOCKED / HOLD", "FAILED / STUCK"}, "current repository health state missing")
+    require(current_status.get("governance") in {"pending-native-ruleset-apply", "enforced", "failed"}, "current native-governance health state missing")
+    require(current_status.get("externalValidation") == "BLOCKED / HOLD", "current external-validation boundary must remain BLOCKED / HOLD")
+    require(str(current_status.get("reason") or "").strip(), "current health block reason missing")
+
     principles = data.get("principles", {})
     require(principles.get("protectedMainRequired") is True, "protected-main boundary missing")
     require(principles.get("failClosedEngineering") is True, "fail-closed engineering boundary missing")
@@ -179,6 +185,7 @@ def main() -> None:
     require("## Historical control baseline" in rendered, "health status must label retained PR #373 evidence as historical")
     require("Historical protected PR evidence" in rendered, "health status historical PR evidence label missing")
     require("## Current release contract" in rendered, "health status current-release contract section missing")
+    require(f"Current native governance: **{current_status['governance']}**" in rendered, "health status must surface native governance state")
     require("## Current baseline" not in rendered, "health status must not present historical PR evidence as the current baseline")
 
     governance_qa = (ROOT / "qa_governance_orphan_detection.py").read_text(encoding="utf-8")
