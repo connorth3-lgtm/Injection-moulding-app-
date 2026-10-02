@@ -212,7 +212,7 @@ printf '%s\n' "$effective" | jq -e --argjson app "$GITHUB_ACTIONS_APP_ID" '
     | all(. == $app)
   )
 ' >/dev/null || {
-  echo "Effective ruleset does not satisfy the MouldMaster solo-maintainer main policy." >&2
+  echo "Effective ruleset does not satisfy the MouldMaster independent-review main policy." >&2
   exit 1
 }
 
