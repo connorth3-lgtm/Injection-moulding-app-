@@ -55,6 +55,8 @@ jobs:
         run: python qa_critical_actions_versions.py
       - name: Architecture debt ceiling
         run: python qa_architecture_debt.py
+      - name: Architecture debt merge-base ratchet
+        run: python qa_architecture_debt_ratchet.py
       - name: MouldMaster Book governed content integrity
         run: |
           python qa_book_manifest.py
