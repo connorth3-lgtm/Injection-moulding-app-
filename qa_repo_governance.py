@@ -175,7 +175,7 @@ need(
 for marker in [
     "independent human review plus automated evidence",
     "one required approving review",
-    "approval of the latest push is required",
+    "approval of the **latest pushed head**",
     "all review conversations resolved",
     "stale approvals dismissed after new pushes",
     "`integrity`",
@@ -191,7 +191,7 @@ for marker in [
     "--dry-run",
     "--apply",
     "transforms that exact",
-    "latest-head approval and all five required checks are green",
+    "latest-head human approval, all five required checks are green",
     "Automated checks are necessary but are not equivalent to independent human review",
     "Issue #43",
 ]:
