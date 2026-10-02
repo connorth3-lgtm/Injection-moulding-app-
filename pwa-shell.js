@@ -1,7 +1,7 @@
 /* MouldMaster PWA shell controller — 2026.09.06 */
 (function(){
 'use strict';
-const RELEASE='2026.10.02.1';
+const RELEASE='2026.10.02.2';
 const CONTENT='2026.08.26.1';
 const REFERENCE_DATA_URL='./reference-data.html';
 function setText(el,value){if(el&&el.textContent!==value)el.textContent=value}
@@ -31,7 +31,7 @@ function syncStandardsReviewDate(){
   if(window.MM_DATA?.standards)window.MM_DATA.standards.verified=reviewed;
   document.querySelectorAll('small,.tiny,.muted,p,span').forEach(el=>{
     const text=el.textContent||'';
-    if(/References reviewed\s+\d{1,2}\s+[A-Za-z]+\s+\d{4}/i.test(text))setText(el,text.replace(/(References reviewed\s+)\d{1,2}\s+[A-Za-z]+\s+\d{4}/gi,`$1${reviewed}`));
+    if(/References reviewed\s+\d{1,2}\s+[A-Za-z]+\s+\d{4}/i.test(text))setText(el,text.replace(/References reviewed\s+\d{1,2}\s+[A-Za-z]+\s+\d{4}/gi,`Core safety and assessment references reviewed ${reviewed}`));
   });
 }
 function syncUpdateCard(){

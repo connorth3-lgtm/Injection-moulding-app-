@@ -120,7 +120,7 @@ function switchView(id){
     path:["My learning path","Follow a clear route from beginner fundamentals to expert engineering."],
     lesson:["Lesson","One focused topic at a time, with practical takeaways."],
     visuals:["Animated visuals","See the moulding process instead of only reading about it."],
-    simulator:["Process simulator","Move process variables and see how relative defect risk changes."],
+    simulator:["Process simulator","Move process variables and see how synthetic training signals respond."],
     defects:["Defect finder","Start with the symptom, then work toward evidence and likely causes."],
     scenarios:["Practice scenarios","Build troubleshooting judgement with realistic shop-floor problems."],
     coach:["Troubleshooting coach","Get structured guidance for defects, process questions and study topics."],
@@ -297,7 +297,7 @@ function renderSimulator(){
  <div class="grid2">
  <div class="card form-card">
   <span class="eyebrow">Educational process model</span><h2>Machine & process inputs</h2>
-  <p class="muted">Move the controls. The model predicts relative defect risk for learning only; it is not a replacement for material/machine/tooling data.</p>
+  <p class="muted">Move the controls to explore a synthetic sensitivity exercise. Fixed teaching weights are not probabilities, physical defect predictors, material or machine limits, process windows, or production settings.</p>
   <div class="form-grid">
    ${slider("Injection speed","speed",20,100,simulatorState.speed,"%")}
    ${slider("Transfer fill","transfer",85,100,simulatorState.transfer,"%")}
@@ -310,10 +310,10 @@ function renderSimulator(){
    ${slider("Venting quality","vent",10,100,simulatorState.vent,"%")}
    ${slider("Moisture risk","moisture",0,100,simulatorState.moisture,"%")}
   </div>
-  <div class="hero-buttons"><button class="secondary" data-mm-onclick="resetSimulator()">Reset</button><button class="ghost" data-mm-onclick="simPreset('robust')">Robust preset</button><button class="ghost" data-mm-onclick="simPreset('trouble')">Trouble preset</button></div>
+  <div class="hero-buttons"><button class="secondary" data-mm-onclick="resetSimulator()">Reset</button><button class="ghost" data-mm-onclick="simPreset('robust')">Lower-signal example</button><button class="ghost" data-mm-onclick="simPreset('trouble')">Higher-signal example</button></div>
  </div>
  <div class="card output-panel">
-   <span class="eyebrow">Predicted response</span><h2>Relative defect risk</h2>
+   <span class="eyebrow">Synthetic training response</span><h2>Relative teaching signals</h2>
    <div class="part-visual"><div class="part-shape"></div><div id="simOverlay" class="defect-overlay"></div></div>
    <div id="riskList"></div>
    <div class="callout" id="simAdvice"></div>
@@ -340,7 +340,7 @@ function updateSimulator(){
  const r=simRisks();
  $("#riskList").innerHTML=Object.entries(r).map(([k,v])=>`<div class="risk"><span>${k}</span><div class="riskbar"><span style="width:${v}%"></span></div><b>${Math.round(v)}</b></div>`).join("");
  const top=Object.entries(r).sort((a,b)=>b[1]-a[1])[0];
- let advice=top[1]<30?"The simulated process is in a relatively low-risk region. Now challenge one variable at a time to see which responses are most sensitive.":`Highest predicted risk: <b>${top[0]}</b>. Use the Defect Lab to inspect likely mechanisms, then make a controlled test rather than changing several settings.`;
+ let advice=top[1]<30?"The synthetic teaching signals are relatively low in this exercise. Change one variable at a time to see which labelled responses are most sensitive.":`Highest teaching signal: <b>${top[0]}</b>. This is not a defect probability or physical prediction. Use the Defect Lab to inspect plausible mechanisms, then make a controlled test rather than changing several settings.`;
  $("#simAdvice").innerHTML=advice;
  const ov=$("#simOverlay");let html="";
  if(r["Burn"]>55)html+=`<div style="position:absolute;width:28px;height:28px;border-radius:50%;background:#54200f;right:34%;top:32%;box-shadow:0 0 18px #ff7b00"></div>`;
@@ -399,7 +399,7 @@ function coachReply(q){
  if(d)return `<b>${esc(d.name)} — likely mechanisms to rank:</b><br>1) ${esc(d.mechanisms.slice(0,3).join("; "))}.<br><br><b>Next evidence:</b> ${esc(d.checks.slice(0,4).join("; "))}.<br><br>Change one variable at a time unless you are deliberately running a designed experiment.`;
  if(s.includes("cushion"))return "Cushion variation should be evaluated with part mass, transfer position, peak pressure and shot delivery. Check non-return valve repeatability, feed consistency, recovery and whether the process is pressure-limited before compensating with hold pressure.";
  if(s.includes("cpk")||s.includes("capability"))return "Before interpreting Cpk, confirm process stability, adequate sampling and a capable measurement system. Cpk reflects spread and centring relative to specification; it does not prove the process mechanism is understood.";
- if(s.includes("gate seal")||s.includes("hold time"))return "A gate-seal study typically increases hold time in steps while tracking part mass. When additional hold time no longer increases mass, the gate is effectively sealed for that condition.";
+ if(s.includes("gate seal")||s.includes("hold time"))return "A gate-seal study typically increases hold time in steps while tracking part mass. When added hold time no longer produces a repeatable mass increase, that plateau is evidence consistent with diminishing additional material transfer for the tested condition; confirm repeatability and, where available, cavity-pressure or dimensional evidence rather than treating it as universal proof of the exact gate-freeze instant.";
  if(s.includes("viscosity")||s.includes("fill speed"))return "For a scientific-moulding style speed study, keep the transfer condition consistent, vary fill speed deliberately, and compare fill time and peak pressure with a consistent relative-viscosity method. Look for a robust region, not a single magic speed.";
  return "Structure the problem as Material, Machine, Mould, Method and Measurement. Define exactly where and when the symptom occurs, compare current actuals with a known-good process, rank the mechanisms by evidence, then run one controlled confirmation test.";
 }

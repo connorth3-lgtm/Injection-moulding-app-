@@ -17,7 +17,7 @@ The project maintainers do not intend to seek patent protection over implementat
 
 ## Current release lanes
 
-- PWA / browser shell: `2026.10.02.1`
+- PWA / browser shell: `2026.10.02.2`
 - Open Windows desktop: `2026.09.29.1`
 - Android lane: `2026.08.26.2`
 - Training content: `2026.08.26.1`
@@ -33,9 +33,11 @@ Release lanes are not assumed to be feature-parity by date alone. In particular,
 
 ## Run the PWA
 
-The hosted PWA is published through GitHub Pages:
+The browser/PWA lane is published through GitHub Pages:
 
 `https://connorth3-lgtm.github.io/Injection-moulding-app-/`
+
+The Pages **production root is fail-closed** when the current learner-runtime fingerprint does not yet have current physical-device authorization. In that state the root serves a release-hold page and the exact governed learner candidate is available only under the clearly labelled non-production `/preview/` path for review and device validation. Prior-release physical evidence is never silently inherited by changed runtime bytes.
 
 The PWA uses an installable web manifest and a service worker for offline support after a successful initial load. The current shell caches the audited core, assessment/runtime layers, guided learning, specialist curriculum, reference data and the privacy/support pages required by the public app. Governed learner-runtime changes must advance the web release/cache identity; mandatory Release QA compares each change with its parent so an installed PWA cannot silently reuse the previous cache generation after runtime bytes change. Release QA also derives the browser shell/domain load graph independently and rejects any shell/runtime asset that is not present in the service-worker governance set.
 

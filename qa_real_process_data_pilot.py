@@ -94,34 +94,39 @@ need('REAL_PROCESS_DATA_PILOT_PROTOCOL.md' in readme, 'README must link the real
 need('real-process-data-pilot-template.csv' in readme, 'README must link the pilot CSV template')
 need('pilot-ready' in protocol and 'validated on real production data' in protocol, 'pilot maturity claim gate missing')
 
-# Public deployment, site-validation evidence, and production-control authority
-# are separate states. A missing external site pilot must not silently become a
-# software release blocker, while the stronger real-production validation claim
-# must still fail closed until the evidence exists.
+# Public learner preview, production-root publication, site-validation evidence,
+# and production-control authority are separate states. The real-site pilot
+# must not become a release prerequisite, while the hosted production root
+# remains fail-closed on exact-runtime physical-device authorization.
 need(live_policy.get('schema') == 1, 'live-release policy schema drifted')
-need(live_policy.get('reviewed') == '2026-08-31', 'live-release policy review date drifted')
+need(live_policy.get('reviewed') == '2026-10-02', 'live-release policy review date drifted')
 public_release = live_policy.get('public_learner_release', {})
 site_evidence = live_policy.get('real_site_evidence', {})
 production_authority = live_policy.get('production_control_authority', {})
-need(public_release.get('status') == 'eligible-when-release-qa-passes', 'public learner release must remain QA-gated')
-need(public_release.get('requires_authorised_site_pilot') is False, 'authorised site pilot must not block ordinary learner deployment')
-need(public_release.get('requires_real_production_validation_claim') is False, 'public learner deployment must not require an unsupported production-validation claim')
+need(public_release.get('status') == 'preview-available-production-root-held-until-exact-runtime-physical-authorization', 'public learner release boundary must match the current Pages publisher')
+need(public_release.get('preview_available_while_physical_hold') is True, 'non-production learner preview must remain available while physical validation is HOLD')
+need(public_release.get('production_root_requires_current_physical_pwa_authorization') is True, 'production root must remain bound to exact-runtime physical-device authorization')
+need(public_release.get('requires_authorised_site_pilot') is False, 'authorised site pilot must not block learner publication lanes')
+need(public_release.get('requires_real_production_validation_claim') is False, 'learner publication must not require an unsupported production-validation claim')
 need(site_evidence.get('status') == 'pilot-ready-human-comparison-required', 'real-site evidence maturity status drifted')
 need(site_evidence.get('requires_external_site_authorisation') is True, 'real-site evidence must retain external authorisation')
 need(site_evidence.get('requires_independent_engineering_finding_or_review') is True, 'real-site evidence must retain independent engineering comparison')
-need(site_evidence.get('blocks_public_learner_release') is False, 'site evidence maturity must not block public learner release')
+need(site_evidence.get('blocks_public_learner_preview') is False, 'site evidence maturity must not block learner preview')
+need(site_evidence.get('blocks_production_root_release') is False, 'site evidence maturity must not replace the production-root physical-device gate')
 need(site_evidence.get('claim_allowed_before_completion') == 'pilot-ready', 'permitted pre-pilot claim drifted')
 need(site_evidence.get('claim_forbidden_before_completion') == 'validated on real production data', 'forbidden pre-pilot claim drifted')
 need(production_authority.get('status') == 'not_provided', 'educational app must not gain production-control authority')
-need(production_authority.get('blocks_public_learner_release') is False, 'absence of production-control authority must define scope, not block learner deployment')
+need(production_authority.get('blocks_public_learner_preview') is False, 'absence of production-control authority must define scope, not block learner preview')
+need(production_authority.get('blocks_production_root_release') is False, 'absence of production-control authority must define scope, not replace release gates')
 need(production_authority.get('claim_forbidden') is True, 'production-control authority claim must remain forbidden')
 for marker in [
-    'public learner release is not blocked',
-    'eligible-when-release-qa-passes',
+    'Learner preview lane',
+    'Production-root hosted PWA',
+    'exact-runtime physical authorization',
     'pilot-ready-human-comparison-required',
     'validated on real production data',
     'Production-control authority',
-    'CI must fail',
+    'CI must reject',
 ]:
     need(marker in live_doc, f'live-release readiness boundary missing: {marker}')
 

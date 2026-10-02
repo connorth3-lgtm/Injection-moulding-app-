@@ -29,6 +29,8 @@ PRIORITY_ASSETS = [
     "./src/domains/materials/material-observation-v2.js",
     "./src/domains/process/evidence-granularity.js",
     "./src/domains/learning/content-intelligence.js",
+    "./src/domains/process/engineering-core-browser.js",
+    "./src/domains/engineering/engineer-simulator-ui.js",
 ]
 # Presentation repair must run after every other domain has had a chance to add
 # learner-facing shell/navigation chrome. Keeping this in the generator makes the

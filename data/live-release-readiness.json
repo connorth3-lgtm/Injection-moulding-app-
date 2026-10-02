@@ -1,17 +1,22 @@
 {
   "schema": 1,
-  "reviewed": "2026-08-31",
+  "reviewed": "2026-10-02",
   "public_learner_release": {
-    "status": "eligible-when-release-qa-passes",
+    "status": "preview-available-production-root-held-until-exact-runtime-physical-authorization",
+    "preview_available_while_physical_hold": true,
+    "production_root_requires_current_physical_pwa_authorization": true,
     "requires_authorised_site_pilot": false,
     "requires_real_production_validation_claim": false,
     "scope": [
-      "hosted PWA learner use",
-      "open Windows desktop learner use",
+      "non-production hosted PWA preview learner use while exact-runtime physical-device authorization is HOLD",
+      "production-root hosted PWA learner use after exact-runtime physical-device authorization",
+      "open Windows desktop learner use under its separate distribution-validation lane",
       "device-local assessment and learning workflows"
     ],
     "required_boundaries": [
       "release QA must pass on the exact source head",
+      "the current hosted learner candidate must remain under /preview/ while the production-root physical-device gate is HOLD",
+      "production-root publication requires physical-device evidence or an explicitly governed platform-risk authorization bound to the exact runtime fingerprint",
       "measured and synthetic evidence provenance must remain truthful",
       "safety and jurisdiction boundaries must remain intact",
       "the application must not claim production-control authority"
@@ -21,13 +26,15 @@
     "status": "pilot-ready-human-comparison-required",
     "requires_external_site_authorisation": true,
     "requires_independent_engineering_finding_or_review": true,
-    "blocks_public_learner_release": false,
+    "blocks_public_learner_preview": false,
+    "blocks_production_root_release": false,
     "claim_allowed_before_completion": "pilot-ready",
     "claim_forbidden_before_completion": "validated on real production data"
   },
   "production_control_authority": {
     "status": "not_provided",
-    "blocks_public_learner_release": false,
+    "blocks_public_learner_preview": false,
+    "blocks_production_root_release": false,
     "claim_forbidden": true,
     "boundary": "MouldMaster is an educational and diagnostic-learning resource; it does not authorise machine, mould, material, maintenance, process-release or production-setting changes."
   }

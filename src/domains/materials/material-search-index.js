@@ -65,7 +65,8 @@ function propertyKinds(g){
     mechanical:names.some(n=>/tensile|flexural|impact|modulus|strength/.test(n)),
     processing:(g?.processing||[]).length>0,
     comparisonReady:(g?.properties||[]).some(o=>o?.comparisonReady===true),
-    primarySource:(g?.sources||[]).some(s=>/manufacturer/.test(norm(s?.kind))||clean(s?.publisher)===clean(g?.manufacturer?.name))
+    primarySource:(g?.sources||[]).some(s=>/manufacturer/.test(norm(s?.kind))||clean(s?.publisher)===clean(g?.manufacturer?.name)),
+    regulatorySource:(g?.sources||[]).some(s=>norm(s?.kind)==='regulatory')
   };
 }
 function evidenceBadges(g){
@@ -77,6 +78,7 @@ function evidenceBadges(g){
   if(e.thermal)out.push('Thermal');
   if(e.processing)out.push('Processing guidance');
   if(e.primarySource)out.push('Primary source');
+  if(!e.primarySource&&e.regulatorySource)out.push('Regulatory evidence');
   return out;
 }
 function gradeSearchable(g){return [g?.id,g?.manufacturer?.name,g?.brand,g?.grade,...(g?.aliases||[]),g?.polymer?.family,g?.polymer?.blend,g?.identity?.variantId,g?.identity?.regionalVariant,manufacturerCountry(g),catalogRegion(g),...taxonomyTags(g,APPLICATION_RULES),...processTags(g),...evidenceBadges(g),g?.production?.country,g?.production?.plant].filter(Boolean).join(' ')}

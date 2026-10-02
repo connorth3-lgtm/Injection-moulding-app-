@@ -93,7 +93,7 @@ must(shell, [
     "el.textContent!==value", "syncUpdateCard", "[data-mm-update-card]",
     "data-mm-repair-link", "Repair app files", "./repair.html", "location.reload()", "Desktop package", "hideInternalQaProvenance", "Plugin-assisted QA provenance",
     "dockReferenceLauncher", "getElementById('mm-src-open')", "retired-duplicate-reference-launcher", "document.querySelector('.sidebar-foot')",
-    "sourceReviewDisplayDate", "qualitySuite?.sourceFreshnessReviewed", "syncStandardsReviewDate", "window.MM_DATA?.standards", "References reviewed\\s+\\d{1,2}",
+    "sourceReviewDisplayDate", "qualitySuite?.sourceFreshnessReviewed", "syncStandardsReviewDate", "window.MM_DATA?.standards", "References reviewed\\s+\\d{1,2}", "Core safety and assessment references reviewed",
     "open.style.position='static'", "open.style.zIndex='auto'", "configureReferenceDrawer",
     "modal.setAttribute('aria-modal','false')",
     "REFERENCE_DATA_URL='./reference-data.html'", "openStandaloneReferenceData", "location.assign(REFERENCE_DATA_URL)",

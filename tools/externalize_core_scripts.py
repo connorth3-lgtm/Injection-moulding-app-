@@ -92,6 +92,18 @@ safeSlider=function(label,key,min,max,val,help){
 };'''
 
 
+SIMULATOR_SEMANTIC_REPLACEMENTS = {
+    "Move process variables and see how relative defect risk changes.": "Move process variables and see how synthetic training signals respond.",
+    "Move the controls. The model predicts relative defect risk for learning only; it is not a replacement for material/machine/tooling data.": "Move the controls to explore a synthetic sensitivity exercise. Fixed teaching weights are not probabilities, physical defect predictors, material or machine limits, process windows, or production settings.",
+    ">Robust preset<": ">Lower-signal example<",
+    ">Trouble preset<": ">Higher-signal example<",
+    "<span class=\"eyebrow\">Predicted response</span><h2>Relative defect risk</h2>": "<span class=\"eyebrow\">Synthetic training response</span><h2>Relative teaching signals</h2>",
+    "The simulated process is in a relatively low-risk region. Now challenge one variable at a time to see which responses are most sensitive.": "The synthetic teaching signals are relatively low in this exercise. Change one variable at a time to see which labelled responses are most sensitive.",
+    "Highest predicted risk: <b>${top[0]}</b>. Use the Defect Lab to inspect likely mechanisms, then make a controlled test rather than changing several settings.": "Highest teaching signal: <b>${top[0]}</b>. This is not a defect probability or physical prediction. Use the Defect Lab to inspect plausible mechanisms, then make a controlled test rather than changing several settings.",
+    "When additional hold time no longer increases mass, the gate is effectively sealed for that condition.": "When added hold time no longer produces a repeatable mass increase, that plateau is evidence consistent with diminishing additional material transfer for the tested condition; confirm repeatability and, where available, cavity-pressure or dimensional evidence rather than treating it as universal proof of the exact gate-freeze instant.",
+}
+
+
 def fail(message: str) -> None:
     raise SystemExit(message)
 
@@ -140,6 +152,10 @@ def runtime_transform(name: str, source: str) -> str:
             fail("certificate print runtime transform did not match exactly once")
         if "document.write(" in transformed or "document.writeln(" in transformed:
             fail("certificate print runtime transform left document.write active")
+        for old, new in SIMULATOR_SEMANTIC_REPLACEMENTS.items():
+            if transformed.count(old) != 1:
+                fail(f"frozen simulator semantic source drifted for marker: {old}")
+            transformed = transformed.replace(old, new, 1)
     if name == "core-inline-007.js":
         if transformed.count(LEGACY_SIM_ACCESSIBILITY) != 1:
             fail("frozen simulator accessibility source drifted; review the runtime hardening transform")
@@ -285,6 +301,19 @@ def check_state() -> None:
     if "document.write(" in active_source or "document.writeln(" in active_source:
         fail("active generated core runtime still contains document.write")
     hardened = expected.get("core-inline-004.js", "")
+    for retired in SIMULATOR_SEMANTIC_REPLACEMENTS:
+        if retired in hardened:
+            fail(f"learner simulator still contains retired predictive wording: {retired}")
+    for required in (
+        "synthetic sensitivity exercise",
+        "not probabilities, physical defect predictors",
+        "Synthetic training response",
+        "Relative teaching signals",
+        "Highest teaching signal",
+        "universal proof of the exact gate-freeze instant",
+    ):
+        if required not in hardened:
+            fail(f"learner simulator semantic hardening marker missing: {required}")
     for marker in ("w.opener=null", "d.createElement(\"style\")", "d.body.appendChild(box)", "w.print()"):
         if marker not in hardened:
             fail(f"certificate print runtime hardening marker missing: {marker}")

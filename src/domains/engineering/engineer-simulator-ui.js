@@ -1,12 +1,17 @@
-/* MouldMaster engineer-friendly simulator UI — 2026.09.15 */
+/* MouldMaster engineer-friendly simulator UI — 2026.10.02.2 */
 (function(){
 'use strict';
 if(window.MM_ENGINEER_SIMULATOR_UI)return;
-const VERSION='2026.09.15.1';
+const VERSION='2026.10.02.2';
 const baseRender=window.renderSimulator;
 const baseUpdate=window.updateSimulator;
 if(typeof baseRender!=='function'||typeof baseUpdate!=='function'){
   console.warn('[MouldMaster] Engineer simulator UI unavailable: base simulator is not ready.');
+  return;
+}
+const engineeringCore=window.MM_ENGINEERING_CORE;
+if(!engineeringCore?.fillStageRates||!engineeringCore?.pressureValue||!engineeringCore?.clampSeparatingForce||!engineeringCore?.clampCapacityAssessment){
+  console.warn('[MouldMaster] Engineer simulator UI unavailable: governed engineering core adapter is not ready.');
   return;
 }
 const MODEL_KEYS=['fillAgg','transfer','pack','hold','meltOffset','mouldOffset','cooling','clampMargin'];
@@ -119,11 +124,20 @@ function calculateFlowMetrics(fillTime,volume,mass,stroke){
   const t=positive(fillTime);if(t==null)return null;
   const v=positive(volume),m=positive(mass),s=positive(stroke);
   if(v==null&&m==null&&s==null)return null;
+  const result=engineeringCore.fillStageRates({
+    fillTime:{value:t,unit:'s'},
+    fillVolume:v==null?null:{value:v,unit:'cm3'},
+    fillMass:m==null?null:{value:m,unit:'g'},
+    injectionStroke:s==null?null:{value:s,unit:'mm'},
+    provenance:'engineer-simulator-ui learner-entered measurement arithmetic'
+  });
+  if(!result?.ok)return null;
   return {
-    fillTime:t,
-    volumetricFlowCm3S:v==null?null:v/t,
-    massFlowGS:m==null?null:m/t,
-    averageStrokeSpeedMmS:s==null?null:s/t
+    fillTime:result.value.fillTimeS,
+    volumetricFlowCm3S:result.value.volumetricFlowCm3S,
+    massFlowGS:result.value.massFlowGS,
+    averageStrokeSpeedMmS:result.value.averageScrewRamSpeedMmS,
+    equationId:result.equationId
   };
 }
 function deriveFlowMetrics(){
@@ -138,7 +152,8 @@ function deriveFlowMetrics(){
 function renderFlowReadout(result){
   const el=document.getElementById('mmSimFlowReadout');if(!el)return;
   const packPressure=positive(document.getElementById('mm_current_packPressure')?.value);
-  const pressureText=packPressure==null?'':` Pack/hold pressure equivalent: ${packPressure.toFixed(2)} MPa = ${(packPressure*10).toFixed(1)} bar.`;
+  const pressureValue=packPressure==null?null:engineeringCore.pressureValue({pressure:{value:packPressure,unit:'MPa'},kind:'pack-command',provenance:'engineer-simulator-ui display conversion'});
+  const pressureText=!pressureValue?.ok?'':` Pack/hold pressure equivalent: ${pressureValue.value.megapascals.toFixed(2)} MPa = ${pressureValue.value.bar.toFixed(1)} bar.`;
   if(!result){el.textContent=`Enter current fill time plus at least one fill-stage volume, mass or injection-stroke measurement to calculate rates.${pressureText}`;return}
   const parts=[];
   if(result.volumetricFlowCm3S!=null)parts.push(`volumetric fill rate ${result.volumetricFlowCm3S.toFixed(2)} cm³/s`);
@@ -150,16 +165,38 @@ function deriveClamp(){
   const area=positive(document.getElementById('mm_clamp_area')?.value);
   const pressure=positive(document.getElementById('mm_clamp_pressure')?.value);
   const capacity=positive(document.getElementById('mm_clamp_capacity')?.value);
-  if(area==null||pressure==null||capacity==null)return null;
-  const openingForceKN=pressure*area*0.1;
-  const utilisationPct=100*openingForceKN/capacity;
-  const marginOnRequiredPct=100*(capacity/openingForceKN-1);
-  return {area,pressure,capacity,openingForceKN,utilisationPct,marginOnRequiredPct};
+  const machineConfigurationId=String(document.getElementById('mm_clamp_machine_id')?.value||'').trim();
+  const capacityBasisRef=String(document.getElementById('mm_clamp_capacity_ref')?.value||'').trim();
+  if(area==null||pressure==null||capacity==null||!machineConfigurationId||!capacityBasisRef)return null;
+  const force=engineeringCore.clampSeparatingForce({
+    projectedArea:{value:area,unit:'cm2'},
+    representativePressure:{value:pressure,unit:'MPa'},
+    provenance:'engineer-simulator-ui learner-entered projected-area pressure estimate'
+  });
+  if(!force?.ok)return null;
+  const capacityResult=engineeringCore.clampCapacityAssessment({
+    requiredClampForce:{value:force.value.kilonewtons,unit:'kN'},
+    availableClampForce:{value:capacity,unit:'kN'},
+    machineConfigurationId,
+    capacityBasisRef,
+    provenance:'engineer-simulator-ui learner-entered exact-machine capacity comparison'
+  });
+  if(!capacityResult?.ok)return null;
+  return {
+    area,pressure,capacity,machineConfigurationId,capacityBasisRef,
+    openingForceKN:force.value.kilonewtons,
+    utilisationPct:capacityResult.value.utilisationPct,
+    capacityMarginKilonewtons:capacityResult.value.capacityMarginKilonewtons,
+    exceedsAvailableCapacity:capacityResult.value.exceedsAvailableCapacity,
+    equationIds:[force.equationId,capacityResult.equationId]
+  };
 }
 function renderClampReadout(result){
   const el=document.getElementById('mmSimClampReadout');if(!el)return;
-  if(!result){el.textContent='Optional: enter projected area, representative average cavity pressure and machine clamp capacity to calculate a simple opening-force estimate.';return}
-  el.textContent=`Calculated estimate: opening force ${result.openingForceKN.toFixed(1)} kN; machine utilisation ${result.utilisationPct.toFixed(1)}%; capacity margin over estimated requirement ${result.marginOnRequiredPct.toFixed(1)}%. Pressure equivalent: ${result.pressure.toFixed(2)} MPa = ${(result.pressure*10).toFixed(1)} bar. Assumption: the entered pressure represents the average pressure acting over the entered projected area.`;
+  if(!result){el.textContent='Optional: enter projected area, representative cavity pressure, exact machine configuration ID, traceable capacity basis and machine clamp capacity. The comparison fails closed when identity/basis is missing.';return}
+  const pressureValue=engineeringCore.pressureValue({pressure:{value:result.pressure,unit:'MPa'},kind:'cavity',provenance:'engineer-simulator-ui display conversion'});
+  const pressureText=pressureValue?.ok?`${pressureValue.value.megapascals.toFixed(2)} MPa = ${pressureValue.value.bar.toFixed(1)} bar`:`${result.pressure.toFixed(2)} MPa`;
+  el.textContent=`Governed estimate: opening force ${result.openingForceKN.toFixed(1)} kN; exact-machine capacity utilisation ${result.utilisationPct.toFixed(1)}%; capacity margin ${result.capacityMarginKilonewtons.toFixed(1)} kN; available capacity exceeded: ${result.exceedsAvailableCapacity?'yes':'no'}. Pressure: ${pressureText}. Machine: ${result.machineConfigurationId}; basis: ${result.capacityBasisRef}. This is a capacity screen, not a clamp setpoint.`;
 }
 function syncModelDisplays(){
   for(const key of MODEL_KEYS){
@@ -173,9 +210,8 @@ function applyMetricModel(){
   Object.assign(window.simulatorState,result.derived);
   const clampResult=deriveClamp();
   if(clampResult){
-    window.simulatorState.clampMargin=clamp(clampResult.marginOnRequiredPct,0,50);
-    if(clampResult.marginOnRequiredPct>50)result.notes.push('Clamp margin exceeds the advisory model ceiling; the physical estimate is shown separately.');
-    if(clampResult.marginOnRequiredPct<0)result.notes.push('Estimated opening force exceeds entered machine clamp capacity.');
+    result.notes.push('Clamp-force/capacity arithmetic is shown separately from the synthetic defect-sensitivity weights and is not converted into a hidden model control.');
+    if(clampResult.exceedsAvailableCapacity)result.notes.push('Estimated opening force exceeds the entered exact-machine clamp capacity; verify the engineering basis before any production decision.');
   }
   state.lastDerived={...result,clamp:clampResult,flow:deriveFlowMetrics()};
   syncModelDisplays();renderClampReadout(clampResult);renderFlowReadout(state.lastDerived.flow);window.updateSimulator();
@@ -203,10 +239,14 @@ function buildMetricSection(form){
   const clampGrid=node('div','form-grid');
   [
     ['mm_clamp_area','Projected area (cm²)','0.1'],
-    ['mm_clamp_pressure','Average cavity pressure (MPa)','0.1'],
+    ['mm_clamp_pressure','Representative cavity pressure (MPa)','0.1'],
     ['mm_clamp_capacity','Machine clamp capacity (kN)','1']
   ].forEach(([id,labelText,step])=>{const label=node('label','',labelText);const input=document.createElement('input');input.type='number';input.inputMode='decimal';input.id=id;input.min='0';input.step=step;input.addEventListener('input',()=>renderClampReadout(deriveClamp()));label.append(input);clampGrid.append(label)});
-  clampBox.append(clampGrid);const clampReadout=node('p','tiny muted','Optional: enter projected area, representative average cavity pressure and machine clamp capacity to calculate a simple opening-force estimate.');clampReadout.id='mmSimClampReadout';clampReadout.setAttribute('aria-live','polite');clampBox.append(clampReadout);section.append(clampBox);
+  [
+    ['mm_clamp_machine_id','Exact machine configuration ID','e.g. machine-07-unit-b'],
+    ['mm_clamp_capacity_ref','Clamp capacity basis / source reference','e.g. OEM manual rev + page']
+  ].forEach(([id,labelText,placeholder])=>{const label=node('label','',labelText);const input=document.createElement('input');input.type='text';input.id=id;input.placeholder=placeholder;input.addEventListener('input',()=>renderClampReadout(deriveClamp()));label.append(input);clampGrid.append(label)});
+  clampBox.append(clampGrid);const clampReadout=node('p','tiny muted','Optional: enter projected area, representative cavity pressure, exact machine identity, traceable capacity basis and machine clamp capacity. Governed core arithmetic fails closed if any required identity/basis is missing.');clampReadout.id='mmSimClampReadout';clampReadout.setAttribute('aria-live','polite');clampBox.append(clampReadout);section.append(clampBox);
   const actions=node('div','hero-buttons');
   const capture=node('button','secondary','Capture current as baseline');capture.type='button';capture.addEventListener('click',copyCurrentToBaseline);
   const apply=node('button','primary','Apply metric values to model');apply.type='button';apply.addEventListener('click',applyMetricModel);
@@ -252,12 +292,12 @@ function engineeringDetail(output){
   const list=node('ul');
   [
     'Metric process inputs: fill/hold/cooling time in s; temperature in °C; pressure in MPa (bar equivalent shown); projected area in cm²; injection stroke in mm; clamp force in kN; mass in g.',
-    'Direct flow calculations: volumetric fill rate Q[cm³/s] = fill-stage volume[cm³] / fill time[s]; mass delivery rate ṁ[g/s] = fill-stage mass[g] / fill time[s]; average screw/ram speed v[mm/s] = fill stroke[mm] / fill time[s].',
+    'Direct fill-rate calculations are delegated to governed engineering-core equation EQ-FLOW-001; the UI does not maintain a second arithmetic implementation.',
     'Average screw/ram speed is not melt-front velocity. Shear rate, viscosity and pressure loss are not inferred without flow-path geometry and material rheology.',
     'Pressure conversion: 1 MPa = 10 bar. Keep hydraulic, plastic and cavity pressure definitions distinct; do not compare them as interchangeable values.',
     'Baseline-normalised ratio: model index = 50 × current/baseline. An unchanged current value maps to index 50. Fill aggressiveness uses the inverse fill-time ratio: 50 × baseline fill time/current fill time.',
     'Temperature model inputs are current minus baseline in °C and are bounded to the model validity range of ±20 °C.',
-    'Clamp opening-force estimate: F[kN] = average cavity pressure[MPa] × projected area[cm²] × 0.1. Distributed cavity pressure is more accurately integrated over projected area.',
+    'Clamp separating-force and exact-machine capacity comparison are delegated to governed engineering-core equations EQ-CF-001 and EQ-CAP-001. Exact machine identity and a traceable capacity basis are required; the result is not a clamp setpoint.',
     'The 0–100 defect values are advisory training indicators, not probabilities, Cp/Cpk values, specifications or production limits.',
     'Venting condition and moisture-control confidence remain qualitative indices because safe vent dimensions and moisture limits are material/tool specific.'
   ].forEach(text=>list.appendChild(node('li','',text)));

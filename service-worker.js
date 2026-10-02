@@ -1,5 +1,5 @@
-const CACHE_VERSION='2026.10.02.1';
-const CACHE_REVISION='deep-review-r1-20261002';
+const CACHE_VERSION='2026.10.02.2';
+const CACHE_REVISION='deep-review-r2-20261002';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both
@@ -56,6 +56,7 @@ const CORE=[
   './src/domains/engineering/engineering-store.js',
   './src/domains/engineering/evidence-chain.js',
   './src/domains/engineering/research-context.js',
+  './src/domains/process/engineering-core-browser.js',
   './src/domains/engineering/engineer-simulator-ui.js',
   './src/domains/governance/standards-readiness.js',
   './src/domains/learning/learning-analytics-loader.js',

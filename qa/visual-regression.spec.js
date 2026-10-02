@@ -59,6 +59,10 @@ async function openApp(page,url,id,{candidate=false}={}){
 
 async function clearTransientUi(page){
   await page.evaluate(()=>{
+    document.querySelectorAll('[data-mm-visual-bg-hidden="true"]').forEach(node=>{
+      node.hidden=false;
+      node.removeAttribute('data-mm-visual-bg-hidden');
+    });
     document.querySelectorAll('.toast').forEach(node=>node.remove());
     try{window.closeModal?.()}catch(_){}
     const details=document.querySelector('.mm-read-aloud details');
@@ -70,8 +74,8 @@ async function clearTransientUi(page){
   });
 }
 
-async function normalizeCaptureState(page){
-  await page.evaluate(()=>{
+async function normalizeCaptureState(page,surface){
+  await page.evaluate(({surface})=>{
     document.querySelectorAll('.toast').forEach(node=>node.remove());
     const sidebar=document.querySelector('.sidebar');
     if(sidebar)sidebar.scrollTop=0;
@@ -79,7 +83,16 @@ async function normalizeCaptureState(page){
     if(nav)nav.scrollTop=0;
     const active=document.activeElement;
     if(active&&active!==document.body&&typeof active.blur==='function')active.blur();
-  });
+    if(surface==='assessment'){
+      Array.from(document.body.children).forEach(node=>{
+        if(node.id==='modal'||node.tagName==='SCRIPT')return;
+        if(!node.hidden){
+          node.hidden=true;
+          node.setAttribute('data-mm-visual-bg-hidden','true');
+        }
+      });
+    }
+  },{surface});
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
 
@@ -147,10 +160,13 @@ async function prepareSurface(page,surface){
   }else{
     throw new Error(`Unknown visual surface: ${surface}`);
   }
-  await normalizeCaptureState(page);
+  await normalizeCaptureState(page,surface);
 }
 
-async function capture(page,file){
+async function capture(page,file,surface){
+  if(surface==='assessment'){
+    return page.locator('#modal .modal-card').screenshot({path:file,animations:'disabled',caret:'hide'});
+  }
   return page.screenshot({path:file,fullPage:false,animations:'disabled',caret:'hide'});
 }
 
@@ -184,8 +200,8 @@ for(const viewport of manifest.viewports){
         const candidatePath=path.join(ARTIFACT_ROOT,`${stem}.png`);
         const baselinePath=path.join(ARTIFACT_ROOT,`${stem}-baseline.png`);
         const diffPath=path.join(ARTIFACT_ROOT,`${stem}-diff.png`);
-        const candidateBuffer=await capture(candidate,candidatePath);
-        const baselineBuffer=await capture(baseline,baselinePath);
+        const candidateBuffer=await capture(candidate,candidatePath,surface);
+        const baselineBuffer=await capture(baseline,baselinePath,surface);
         const diffPixels=compare(baselineBuffer,candidateBuffer,diffPath);
         expect(diffPixels,`${stem} drifted by ${diffPixels} pixels from ${manifest.release} @ ${manifest.commit}`).toBeLessThanOrEqual(manifest.maxDiffPixels);
       }
