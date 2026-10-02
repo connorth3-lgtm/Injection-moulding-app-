@@ -27,7 +27,7 @@ on:
       - 'qa_webkit_regression.py'
       - 'docs/DOMAIN_ARCHITECTURE_V1.md'
       - 'index.html'
-      - 'pwa-shell.js'
+      - 'src/domains/shell/pwa-shell.js'
       - 'accessibility-hardening.js'
       - 'service-worker.js'
       - 'desktop/electron/**'

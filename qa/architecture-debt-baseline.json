@@ -2,11 +2,9 @@
   "schemaVersion": 1,
   "capturedAt": "2026-09-17",
   "runtimeBodyScriptCeiling": 15,
-  "rootRuntimeScriptCeiling": 1,
+  "rootRuntimeScriptCeiling": 0,
   "documentWriteCeiling": 0,
-  "grandfatheredRootRuntimeScripts": [
-    "./pwa-shell.js"
-  ],
+  "grandfatheredRootRuntimeScripts": [],
   "grandfatheredCompatibilityLayers": [
     "accessibility-hardening.js",
     "app-shell-finalize.js",
@@ -36,7 +34,8 @@
     "2026-10-02 deep-fix adds a merge-base ratchet: numeric ceilings and grandfathered root/compatibility sets may only stay flat or decrease on pull requests; increasing architecture debt requires redesign rather than baseline expansion.",
     "2026-10-03 domain-ownership tranche moves production-health.js unchanged into src/domains/governance/, reducing directly injected root runtime scripts from 4 to 3.",
     "2026-10-03 domain-ownership tranche moves runtime-v2.js unchanged into src/domains/shared/, reducing directly injected root runtime scripts from 3 to 2.",
-    "2026-10-03 domain-ownership tranche moves app-shell-registry.js unchanged into src/domains/shell/, reducing directly injected root runtime scripts from 2 to 1."
+    "2026-10-03 domain-ownership tranche moves app-shell-registry.js unchanged into src/domains/shell/, reducing directly injected root runtime scripts from 2 to 1.",
+    "2026-10-03 domain-ownership tranche moves pwa-shell.js unchanged into src/domains/shell/, reducing directly injected root runtime scripts from 1 to the target 0."
   ],
   "compatibilityLayerCeiling": 9,
   "targetRootRuntimeScripts": 0,

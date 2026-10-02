@@ -33,7 +33,7 @@ on:
       - 'lesson-evidence-depth.js'
       - 'assessment-evidence-approval.js'
       - 'src/domains/shell/app-shell-registry.js'
-      - 'pwa-shell.js'
+      - 'src/domains/shell/pwa-shell.js'
       - 'learning-experience.js'
       - 'process-data-diagnostics.js'
       - 'process-data-deep-dive-machine.js'

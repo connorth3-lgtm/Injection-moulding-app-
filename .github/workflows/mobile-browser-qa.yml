@@ -29,7 +29,7 @@ on:
       - 'qa_measured_evidence_integration.py'
       - 'qa_measured_evidence_decision_workflows.py'
       - 'learning-analytics.js'
-      - 'pwa-shell.js'
+      - 'src/domains/shell/pwa-shell.js'
       - 'reading-patch.js'
       - 'read-aloud.js'
       - 'qa_read_aloud.py'

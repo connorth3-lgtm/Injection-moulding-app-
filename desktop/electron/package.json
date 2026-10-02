@@ -163,8 +163,8 @@
         "to": "mouldmaster/assessment-multimodal.js"
       },
       {
-        "from": "../../pwa-shell.js",
-        "to": "mouldmaster/pwa-shell.js"
+        "from": "../../src/domains/shell/pwa-shell.js",
+        "to": "mouldmaster/src/domains/shell/pwa-shell.js"
       },
       {
         "from": "../../learning-experience.js",

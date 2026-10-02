@@ -126,7 +126,7 @@ jobs:
           node --check material-behaviour-labs.js
           node --check src/domains/shell/app-shell-registry.js
           node --check assessment-multimodal.js
-          node --check pwa-shell.js
+          node --check src/domains/shell/pwa-shell.js
           node --check learning-experience.js
           node --check process-data-diagnostics.js
           node --check process-data-deep-dive-machine.js
