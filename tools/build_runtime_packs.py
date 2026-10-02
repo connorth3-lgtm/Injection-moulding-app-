@@ -42,7 +42,8 @@ def render(name: str, sources: tuple[str, ...]) -> str:
         if not source_path.is_file():
             raise SystemExit(f"Runtime pack source is missing: {source_name}")
         source = source_path.read_text(encoding="utf-8").rstrip()
-        chunks.append(f"\n/* >>> {source_name} */\n{source}\n/* <<< {source_name} */\n")
+        label = Path(source_name).name
+        chunks.append(f"\n/* >>> {label} */\n{source}\n/* <<< {label} */\n")
     return "".join(chunks)
 
 
