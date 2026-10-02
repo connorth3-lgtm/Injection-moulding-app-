@@ -70,17 +70,17 @@ runtime_token=shell_match.group(1)
 cache_revision=cache_match.group(1)
 need(re.fullmatch(r'\d{4}\.\d{2}\.\d{2}\.\d+',runtime_token) is not None,'canonical browser release must use YYYY.MM.DD.N')
 need(bool(cache_revision.strip()),'PWA cache revision must remain an explicit independent invalidation token')
-need("'./runtime-v2.js'" in idx and "'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'" in idx,'maturity runtime must preserve psychometric bank while replacing only exam membership selection')
+need("'./src/domains/shared/runtime-v2.js'" in idx and "'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'" in idx,'maturity runtime must preserve psychometric bank while replacing only exam membership selection')
 bootstrap_pack=text('src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js')
 need('/* >>> assessment-runtime-v2.js */' in bootstrap_pack,'assessment runtime v2 missing from bootstrap assessment/source pack')
 
 for asset in ["'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'","'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'"]:
     need(asset in sw,f'offline cache missing runtime pack: {asset}')
-need("'./runtime-v2.js'" in sw and "'./assessment-runtime-v2.js'" in sw,'PWA cache must include assessment runtime v2')
+need("'./src/domains/shared/runtime-v2.js'" in sw and "'./assessment-runtime-v2.js'" in sw,'PWA cache must include assessment runtime v2')
 
 pkg=json.loads(text('desktop/electron/package.json'))
 froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
-for asset in ['assessment-psychometric-hardening.js','assessment-evidence-integrity-upgrade.js','assessment-psychometric-approval.js','real-measured-data-assessment.js','runtime-v2.js','assessment-runtime-v2.js']:
+for asset in ['assessment-psychometric-hardening.js','assessment-evidence-integrity-upgrade.js','assessment-psychometric-approval.js','real-measured-data-assessment.js','src/domains/shared/runtime-v2.js','assessment-runtime-v2.js']:
     need('../../'+asset in froms,f'desktop package missing {asset}')
     need("'"+asset+"'" in text('desktop/electron/scripts/generate-integrity.cjs'),f'desktop integrity manifest missing {asset}')
 

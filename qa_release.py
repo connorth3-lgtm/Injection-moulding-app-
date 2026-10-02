@@ -85,12 +85,12 @@ for asset in [
     "src/domains/runtime-packs/process-data-runtime-pack.js",
     "src/domains/runtime-packs/shell-finalization-runtime-pack.js",
     "learning-analytics.js",
-    "runtime-v2.js",
+    "src/domains/shared/runtime-v2.js",
     "accessibility-hardening.js",
 ]:
     assert f"'./{asset}'" in index, f"current learner-facing runtime asset not loaded by shell: {asset}"
 assert "['./reading-patch.js','<script" not in index and "['./training-upgrade.js','<script" not in index and "['./training-qa-fix.js','<script" not in index, "learning foundation source scripts must not return as direct bootstrap entries"
-assert index.index("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'") < index.index("'./runtime-v2.js'") < index.index("'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'"), "runtime-v2 assessment ownership load order is wrong"
+assert index.index("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'") < index.index("'./src/domains/shared/runtime-v2.js'") < index.index("'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'"), "runtime-v2 assessment ownership load order is wrong"
 assert index.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'"), "specialist evidence/runtime finalizer load order is wrong"
 for retired in ["assessment-100-pass.js","assessment-deep-dive.js","assessment-answer-cue-fix.js","assessment-storage-scope.js","assessment-quality-suite.js","assessment-stable-review-bridge.js","assessment-analytics-ui.js","assessment-final-hardening.js"]:
     assert f"['./{retired}','<script" not in index, f"assessment foundation direct source is still injected: {retired}"
@@ -103,7 +103,7 @@ for asset in [
     "src/domains/runtime-packs/learning-foundation-runtime-pack.js", "src/domains/runtime-packs/assessment-foundation-runtime-pack.js", "source-library.js", "pwa-shell.js", "learning-experience.js",
     "process-data-diagnostics.js", "curriculum-integration.js", "specialist-curriculum.js",
     "specialist-evidence-gap-extension.js", "mould-master-workspace.js", "src/domains/runtime-packs/shell-finalization-runtime-pack.js", "learning-analytics.js",
-    "runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js",
+    "src/domains/shared/runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js",
     "learner-ux-repair.css", "premium-ui.css", "premium-dynamic.css", "learner-ux-repair.js"
 ]:
     assert f"'./{asset}'" in sw, f"offline asset missing: {asset}"
@@ -127,7 +127,7 @@ assert ".put(" not in runtime_fetch, "runtime fetches must never mutate the vali
 assert "cacheAsset(" not in runtime_fetch, "install-only cache writer must not be reachable from runtime fetches"
 assert "mouldmaster-offline-asset-unavailable" in sw, "critical offline failure response must be explicit"
 
-runtime_v2 = text("runtime-v2.js")
+runtime_v2 = text("src/domains/shared/runtime-v2.js")
 for marker in ["one owner at a time", "setImplementation", "before:new Set(),after:new Set()", "registerModule", "scopedKey"]:
     assert marker in runtime_v2, f"runtime v2 invariant missing: {marker}"
 assessment_v2 = text("assessment-runtime-v2.js")
@@ -234,7 +234,7 @@ assert dpkg["license"] == "Apache-2.0", "desktop package must use Apache-2.0"
 for dep in ["electron", "electron-builder"]:
     assert re.fullmatch(r"\d+\.\d+\.\d+", dpkg["devDependencies"][dep]), f"{dep} must be exact-version pinned"
 from_paths = {x.get("from") for x in dpkg["build"].get("extraResources", []) if isinstance(x, dict)}
-for asset in ["runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js"]:
+for asset in ["src/domains/shared/runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js"]:
     assert f"../../{asset}" in from_paths, f"desktop bundle missing maturity-hardening asset: {asset}"
 assert "../../src/domains" in from_paths, "desktop bundle must include generated domain runtime packs"
 dmain = (desktop_root / "src" / "main.cjs").read_text(encoding="utf-8")
@@ -252,7 +252,7 @@ for js_name in [
     "service-worker.js", "src/domains/runtime-packs/learning-foundation-runtime-pack.js", "reading-patch.js", "training-upgrade.js", "training-qa-fix.js",
     "assessment-quality-suite.js", "source-library.js", "pwa-shell.js", "specialist-curriculum.js",
     "specialist-evidence-gap-extension.js", "mould-master-workspace.js", "app-shell-finalize.js",
-    "runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js",
+    "src/domains/shared/runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js",
     "desktop/electron/src/main.cjs", "desktop/electron/scripts/generate-integrity.cjs", "desktop/electron/scripts/qa.cjs"
 ]:
     p = subprocess.run([NODE, "--check", js_name], capture_output=True, text=True)

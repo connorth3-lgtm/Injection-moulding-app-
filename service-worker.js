@@ -32,7 +32,7 @@ const CORE=[
   './src/domains/runtime-packs/learning-foundation-runtime-pack.js',
   './src/domains/runtime-packs/assessment-foundation-runtime-pack.js',
   './read-aloud.js',
-  './runtime-v2.js',
+  './src/domains/shared/runtime-v2.js',
   './assessment-runtime-v2.js',
   './app-shell-registry.js',
   './pwa-shell.js',

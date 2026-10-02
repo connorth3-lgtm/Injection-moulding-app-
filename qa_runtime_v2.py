@@ -6,7 +6,7 @@ ROOT=Path(__file__).resolve().parent
 def need(ok,msg):
     if not ok: raise AssertionError(msg)
 
-src=(ROOT/'runtime-v2.js').read_text(encoding='utf-8')
+src=(ROOT/'src/domains/shared/runtime-v2.js').read_text(encoding='utf-8')
 for marker in ['one owner at a time','registerModule','setImplementation','beforeHooks','afterHooks','learnerToken','legacy-captured']:
     need(marker in src,f'runtime v2 marker missing: {marker}')
 
@@ -15,7 +15,7 @@ node=textwrap.dedent(r'''
  global.localStorage={x:{},getItem(k){return this.x[k]??null},setItem(k,v){this.x[k]=String(v)},removeItem(k){delete this.x[k]}};
  global.user={id:'learner-A'};
  for(const n of ['renderLesson','renderDashboard','switchView','startExam','gradeExam','getExamQuestions'])global[n]=function(){return `legacy-${n}`};
- require('./runtime-v2.js');
+ require('./src/domains/shared/runtime-v2.js');
  if(!global.MM_RUNTIME_V2)throw new Error('runtime missing');
  let before=0,after=0;
  MM_RUNTIME_V2.before('getExamQuestions',()=>before++);

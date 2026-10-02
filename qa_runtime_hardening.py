@@ -42,7 +42,7 @@ training = read("training-upgrade.js")
 sbom = read("desktop/electron/scripts/generate-sbom.cjs")
 assessment_qa = read("qa_assessment_quality.py")
 question_runtime = read("qa_question_quality_50_pass_runtime.py")
-runtime_v2 = read("runtime-v2.js")
+runtime_v2 = read("src/domains/shared/runtime-v2.js")
 assessment_runtime_v2 = read("assessment-runtime-v2.js")
 lesson_v2 = read("lesson-deep-authoring-v2.js")
 multimodal = read("assessment-multimodal.js")
@@ -68,13 +68,13 @@ must(index, [
     'throw new Error("Core training content is incomplete")', "versionMarkup", "?v=${RUNTIME_ASSET_VERSION}",
     "fetch(`${CORE_URL}?v=${RUNTIME_ASSET_VERSION}`", "window.MM_RUNTIME_ASSET_VERSION=RUNTIME_ASSET_VERSION",
     "Content-Security-Policy", "default-src 'self'", "object-src 'none'", "frame-src 'none'", "connect-src 'self'", "worker-src 'self'",
-    "'./runtime-v2.js'", "'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'", "'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'", "'./accessibility-hardening.js'",
+    "'./src/domains/shared/runtime-v2.js'", "'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'", "'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'", "'./accessibility-hardening.js'",
     "'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'", "'./src/domains/runtime-packs/evidence-runtime-pack.js'",
     "'./src/domains/runtime-packs/process-data-runtime-pack.js'", "'./src/domains/domain-bootstrap.js'"
 ], "bootstrap hardening")
 for forbidden in ("ensureCoherentRuntime", ".unregister()", "mmBundle"):
     require(forbidden not in index, f"bootstrap hardening: destructive browser/PWA reset marker remains: {forbidden}")
-require(index.index("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'") < index.index("'./runtime-v2.js'") < index.index("'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'"), "runtime v2 must capture the foundation assessment functions before the consolidated assessment runtime owns/decorates them")
+require(index.index("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'") < index.index("'./src/domains/shared/runtime-v2.js'") < index.index("'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'"), "runtime v2 must capture the foundation assessment functions before the consolidated assessment runtime owns/decorates them")
 require(index.index("'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/evidence-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'") < index.index("'./app-shell-registry.js'"), "assessment and evidence packs must load in deterministic historical order before shell registry")
 require(index.index("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/process-data-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'"), "operational evidence runtime must load before process-data runtime pack")
 require(index.rindex("'./accessibility-hardening.js'") > index.index("'./learning-analytics.js'"), "accessibility hardening must run after learner-facing runtime modules are installed")
@@ -136,7 +136,7 @@ must(service_worker, [
     "async function fetchNetwork(event)", "fetch(event.request,{cache:'no-store'})", "await fetchNetwork(event)||criticalOfflineResponse(url)", "'./reference-data.html'", "'./reference-2026-expansion.js'", "'./diagnostic-learning-labs.js'",
     "'./material-behaviour-labs.js'", "'./assessment-evidence-sources.js'", "'./evidence-maturity-deep-dive.js'", "'./evidence-maturity-formal-bridge.js'",
     "'./assessment-psychometric-hardening.js'", "'./assessment-evidence-integrity-upgrade.js'", "'./lesson-evidence-depth.js'", "'./lesson-deep-authoring-v2.js'", "'./assessment-evidence-approval.js'", "'./assessment-psychometric-approval.js'",
-    "'./runtime-v2.js'", "'./assessment-runtime-v2.js'", "'./assessment-multimodal.js'", "'./accessibility-hardening.js'",
+    "'./src/domains/shared/runtime-v2.js'", "'./assessment-runtime-v2.js'", "'./assessment-multimodal.js'", "'./accessibility-hardening.js'",
     "'./process-data-diagnostics.js'", "'./real-measured-data-assessment.js'", "'./curriculum-integration.js'", "'./specialist-curriculum.js'", "'./learning-analytics.js'",
     "Promise.allSettled", "if(failed.length)", "await caches.delete(STATIC_CACHE)", "keeping the previous worker", "mouldmaster-offline-asset-unavailable"
 ], "PWA hardening")

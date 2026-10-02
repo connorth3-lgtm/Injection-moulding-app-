@@ -14,7 +14,7 @@ def require(condition, message):
 
 ux = (ROOT / 'assessment-ux.js').read_text(encoding='utf-8')
 ux_css = (ROOT / 'assessment-ux.css').read_text(encoding='utf-8')
-runtime = (ROOT / 'runtime-v2.js').read_text(encoding='utf-8')
+runtime = (ROOT / 'src/domains/shared/runtime-v2.js').read_text(encoding='utf-8')
 index = (ROOT / 'index.html').read_text(encoding='utf-8')
 sw = (ROOT / 'service-worker.js').read_text(encoding='utf-8')
 integrity = (ROOT / 'desktop/electron/scripts/generate-integrity.cjs').read_text(encoding='utf-8')
@@ -34,7 +34,7 @@ require('D.exams' not in ux, 'assessment UX layer must not rewrite the exam ques
 require('activeExam.questions=' not in ux, 'assessment UX layer must not rewrite active assessment questions')
 require("transform:new Set()" in runtime and 'function transform(name,fn)' in runtime, 'runtime-v2 transform hook is required for assessment rotation')
 require("'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'" in index, 'assessment runtime pack must load from the runtime bootstrap')
-require(index.find('runtime-v2.js') < index.find('bootstrap-assessment-source-runtime-pack.js'), 'assessment runtime pack must load after runtime-v2')
+require(index.find('src/domains/shared/runtime-v2.js') < index.find('bootstrap-assessment-source-runtime-pack.js'), 'assessment runtime pack must load after runtime-v2')
 require("'./assessment-ux.js'" in sw, 'assessment UX must be available offline')
 require("'./assessment-ux.css'" in sw, 'assessment UX CSS must be available offline')
 require('.mm-focus-mode' in ux_css, 'assessment UX CSS must be externalized and contain focus-mode rules')
@@ -77,8 +77,8 @@ node_test = textwrap.dedent(r'''
     global.getExamQuestions=baseQuestions;
     global.startExam=()=>{};global.gradeExam=()=>{};global.renderLesson=()=>{};global.renderDashboard=()=>{};global.switchView=()=>{};global.answerScenario=()=>{};
     delete global.MM_RUNTIME_V2;delete global.MM_ASSESSMENT_UX;
-    delete require.cache[require.resolve('./runtime-v2.js')];delete require.cache[require.resolve('./assessment-ux.js')];
-    require('./runtime-v2.js');require('./assessment-ux.js');
+    delete require.cache[require.resolve('./src/domains/shared/runtime-v2.js')];delete require.cache[require.resolve('./assessment-ux.js')];
+    require('./src/domains/shared/runtime-v2.js');require('./assessment-ux.js');
   }
 
   install();
