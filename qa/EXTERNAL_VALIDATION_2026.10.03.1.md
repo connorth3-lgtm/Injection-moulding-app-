@@ -1,16 +1,16 @@
 # External validation boundary — 2026.10.03.1
 
-Release `2026.10.03.1` is technically automated and governed, but the following external workstreams remain explicit **HOLD**. This index does not create human, device, learner, accreditation, signing, distribution or production-site evidence.
+Release `2026.10.03.1` is technically automated; native main governance remains **pending-native-ruleset-apply**, and the following external workstreams remain explicit **HOLD**. This index does not create human, device, learner, accreditation, signing, distribution or production-site evidence.
 
 ## Exact current candidate
 
-- pre-merge candidate source: `98dc877f625a43d3bc34a0e5a2e7bc01258b94c2`
-- exact public-runtime fingerprint: `sha256:6f8065ee643e05895501f9b25b214a5fd7da6e88913a3255c83f8cb964d4a86f`
-- candidate build run: `36954600994` (**Pre-merge Public Candidate**)
-- retained physical candidate: `physical-pwa-candidate-98dc877f625a43d3bc34a0e5a2e7bc01258b94c2`
-- artifact id: `11206010309`
-- artifact ZIP digest: `sha256:c73ecad1d195fc9c152a5e2d885c40970f166c38fc486064085492192623b02d`
-- artifact retention expiry: `2026-11-01T02:13:18Z`
+- pre-merge candidate source: `68ecd9eac901b4ff8bb775c67489f72474e0e24b`
+- exact public-runtime fingerprint: `sha256:6eb6a125c44890de718b4c7be9a33ecba95a9fb7f160b2be2713cefc703eba24`
+- candidate build run: `37055513477` (**Pre-merge Public Candidate**)
+- retained physical candidate: `physical-pwa-candidate-68ecd9eac901b4ff8bb775c67489f72474e0e24b`
+- artifact id: `11248927695`
+- artifact ZIP digest: `sha256:60c8ef8bdd3077c695f63f6b7dd65e3b414fd217e59fc4e15098cd96866c869b`
+- artifact retention expiry: `2026-11-01T19:48:44Z`
 - Pages disposition: the retained artifact is the exact validation candidate for this release boundary; production publication remains governed separately and all external-evidence workstreams below stay HOLD.
 
 This is a release-boundary **rebind**, not external evidence. Earlier physical-device, assistive-technology, SME, learner, Windows-distribution or NZQA/provider records are not relabelled for the current runtime. Each workstream below remains HOLD until its genuine release-specific exit condition is satisfied.
