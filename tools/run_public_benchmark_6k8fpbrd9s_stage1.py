@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import urllib.request
+from http_retry import urlopen_with_retry
 from pathlib import Path
 
 DATASET_ID = "6k8fpbrd9s"
@@ -15,7 +16,7 @@ UA = "MouldMaster-Educational-Evidence-Profiler/1.0"
 
 def get_json(url: str):
     req = urllib.request.Request(url, headers={"Accept": "application/json", "User-Agent": UA})
-    with urllib.request.urlopen(req, timeout=60) as r:
+    with urlopen_with_retry(req, timeout=60) as r:
         return json.loads(r.read().decode("utf-8"))
 
 
