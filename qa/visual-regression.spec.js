@@ -59,8 +59,10 @@ async function openApp(page,url,id,{candidate=false}={}){
 
 async function clearTransientUi(page){
   await page.evaluate(()=>{
-    const app=document.getElementById('app');
-    if(app)app.hidden=false;
+    document.querySelectorAll('[data-mm-visual-bg-hidden="true"]').forEach(node=>{
+      node.hidden=false;
+      node.removeAttribute('data-mm-visual-bg-hidden');
+    });
     document.querySelectorAll('.toast').forEach(node=>node.remove());
     try{window.closeModal?.()}catch(_){}
     const details=document.querySelector('.mm-read-aloud details');
@@ -81,8 +83,15 @@ async function normalizeCaptureState(page,surface){
     if(nav)nav.scrollTop=0;
     const active=document.activeElement;
     if(active&&active!==document.body&&typeof active.blur==='function')active.blur();
-    const app=document.getElementById('app');
-    if(app)app.hidden=surface==='assessment';
+    if(surface==='assessment'){
+      Array.from(document.body.children).forEach(node=>{
+        if(node.id==='modal'||node.tagName==='SCRIPT')return;
+        if(!node.hidden){
+          node.hidden=true;
+          node.setAttribute('data-mm-visual-bg-hidden','true');
+        }
+      });
+    }
   },{surface});
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
