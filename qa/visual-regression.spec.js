@@ -83,7 +83,7 @@ async function normalizeCaptureState(page,surface){
     if(surface==='assessment'){
       const style=document.createElement('style');
       style.dataset.mmVisualStabilizer='assessment-shadow';
-      style.textContent='#modal .modal-card{box-shadow:none!important}';
+      style.textContent='#modal{background:#02080e!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}#modal .modal-card{box-shadow:none!important}';
       document.head.appendChild(style);
     }
   },{surface});
