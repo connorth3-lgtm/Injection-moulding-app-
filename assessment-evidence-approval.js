@@ -10,7 +10,7 @@ const APPROVED_INPUTS={
  'MouldMaster_Core_App.html':'c6b258ccd37d98b2f591f538b34eb33c7705dda6',
  'training-upgrade.js':'ea6ee84e69c4d5ed60776f2022f1bc9462425ea2',
  'assessment-deep-dive.js':'8f41edb8e855f1b3f8f2277873b7700aa1d4bf29',
- 'assessment-answer-cue-fix.js':'9a6ef14f5eac1e127255afdd050a6f47f6009587',
+ 'src/domains/assessment/assessment-answer-cue-fix.js':'9a6ef14f5eac1e127255afdd050a6f47f6009587',
  'assessment-quality-suite.js':'2f311bf1349d9c3ba4e5b54958efd3627c98991b',
  'assessment-stable-review-bridge.js':'b91ac5b4712f96634ffd76a842ae75a417ed6a85',
  'diagnostic-learning-labs.js':'582ac717d1e218c9144f9d3b69490933f01936da',
