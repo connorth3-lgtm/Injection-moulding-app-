@@ -71,7 +71,7 @@ function propertyKinds(g){
 }
 function evidenceBadges(g){
   const e=propertyKinds(g),out=[];
-  if(clean(g?.provenance?.stage)==='validated')out.push(e.primarySource?'Validated · primary-source backed':e.regulatorySource?'Validated record · regulatory evidence':'Validated record · source-qualified');
+  if(clean(g?.provenance?.stage)==='validated')out.push('Validated');
   if(e.comparisonReady)out.push('Comparison-ready property');
   if(e.rheology)out.push('Rheology');
   if(e.shrinkage)out.push('Shrinkage');
