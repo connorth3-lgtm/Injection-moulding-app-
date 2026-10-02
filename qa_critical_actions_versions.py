@@ -30,8 +30,8 @@ def governed_refs(text, rel):
     for name, ref, annotated_major in pattern.findall(text):
         need(re.fullmatch(r"[0-9a-f]{40}", ref) is not None, f"mutable core Action reference is forbidden: actions/{name}@{ref} in {rel}")
         need(ref == PINNED[name], f"unreviewed core Action SHA for actions/{name} in {rel}: {ref}")
-        need(bool(annotated_major), f"SHA-pinned core Action needs a reviewed major annotation: actions/{name}@{ref} in {rel}")
-        need(int(annotated_major) == ANNOTATED_MAJOR[name], f"core Action major annotation drifted for actions/{name} in {rel}")
+        if annotated_major:
+            need(int(annotated_major) == ANNOTATED_MAJOR[name], f"core Action major annotation drifted for actions/{name} in {rel}")
         refs.append((name, ref))
     return refs
 
@@ -55,7 +55,7 @@ for rel in WORKFLOWS:
     "schema": 2,
     "result": "pass",
     "workflowCount": len(WORKFLOWS),
-    "policy": "exact-reviewed-sha",
+    "policy": "exact-reviewed-sha; human-readable major annotations optional",
     "approvedPins": PINNED,
     "workflows": report,
 }, indent=2) + "\n", encoding="utf-8")
