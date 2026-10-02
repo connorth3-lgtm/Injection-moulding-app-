@@ -10,7 +10,7 @@ on:
       - 'MouldMaster_Core_App.html'
       - '*.css'
       - 'src/domains/shell/app-shell-registry.js'
-      - 'app-shell-finalize.js'
+      - 'src/domains/shell/app-shell-finalize.js'
       - 'mould-master-workspace.js'
       - 'learning-experience.js'
       - 'curriculum-integration.js'

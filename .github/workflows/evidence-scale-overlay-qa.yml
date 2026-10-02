@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'app-shell-finalize.js'
+      - 'src/domains/shell/app-shell-finalize.js'
       - 'data/content-scale-targets-overlay-v2.json'
       - 'data/evidence-promotion-overlay-v2.json'
       - 'data/machine-health-supporting-evidence-v1.json'
@@ -30,7 +30,7 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - 'app-shell-finalize.js'
+      - 'src/domains/shell/app-shell-finalize.js'
       - 'data/content-scale-targets-overlay-v2.json'
       - 'data/evidence-promotion-overlay-v2.json'
       - 'data/machine-health-supporting-evidence-v1.json'
@@ -93,4 +93,4 @@ jobs:
       - name: Prove measured-data closeout is unchanged after evidence materialization
         run: python qa_measured_data_collection_closeout.py
       - name: Runtime syntax
-        run: node --check app-shell-finalize.js
+        run: node --check src/domains/shell/app-shell-finalize.js

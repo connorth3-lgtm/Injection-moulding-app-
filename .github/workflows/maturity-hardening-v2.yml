@@ -28,7 +28,7 @@ jobs:
           node --check assessment-runtime-v2.js
           node --check lesson-deep-authoring-v2.js
           node --check assessment-multimodal.js
-          node --check accessibility-hardening.js
+          node --check src/domains/shell/accessibility-hardening.js
           node --check service-worker.js
       - name: Maturity hardening gates
         run: |

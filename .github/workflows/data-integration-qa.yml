@@ -15,7 +15,7 @@ on:
       - 'src/domains/process/process-data-integrity.js'
       - 'runtime-domain-manifest.json'
       - 'index.html'
-      - 'app-shell-finalize.js'
+      - 'src/domains/shell/app-shell-finalize.js'
       - 'service-worker.js'
       - 'desktop/electron/package.json'
       - 'desktop/electron/scripts/generate-integrity.cjs'
@@ -48,7 +48,7 @@ jobs:
           node --check process-data-intelligence-ui.js
           node --check src/domains/process/process-data-integrity.js
           node --check qa_process_data_integrity.cjs
-          node --check app-shell-finalize.js
+          node --check src/domains/shell/app-shell-finalize.js
           node --check service-worker.js
           node --check desktop/electron/scripts/generate-integrity.cjs
       - name: Process-data integrity regressions

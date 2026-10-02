@@ -29,7 +29,7 @@ jobs:
       - name: JavaScript syntax
         run: |
           node --check src/domains/governance/production-health.js
-          node --check app-shell-finalize.js
+          node --check src/domains/shell/app-shell-finalize.js
           node --check service-worker.js
       - name: Local-only observability and learner-report privacy integrity
         run: python qa_production_observability.py

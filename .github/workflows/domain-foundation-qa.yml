@@ -28,7 +28,7 @@ on:
       - 'docs/DOMAIN_ARCHITECTURE_V1.md'
       - 'index.html'
       - 'src/domains/shell/pwa-shell.js'
-      - 'accessibility-hardening.js'
+      - 'src/domains/shell/accessibility-hardening.js'
       - 'service-worker.js'
       - 'desktop/electron/**'
       - '.github/workflows/pages.yml'
