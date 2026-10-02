@@ -234,9 +234,11 @@ assert dpkg["license"] == "Apache-2.0", "desktop package must use Apache-2.0"
 for dep in ["electron", "electron-builder"]:
     assert re.fullmatch(r"\d+\.\d+\.\d+", dpkg["devDependencies"][dep]), f"{dep} must be exact-version pinned"
 from_paths = {x.get("from") for x in dpkg["build"].get("extraResources", []) if isinstance(x, dict)}
-for asset in ["src/domains/shared/runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "src/domains/shell/accessibility-hardening.js"]:
-    assert f"../../{asset}" in from_paths, f"desktop bundle missing maturity-hardening asset: {asset}"
-assert "../../src/domains" in from_paths, "desktop bundle must include generated domain runtime packs"
+for asset in ["assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js"]:
+    assert f"../../{asset}" in from_paths, f"desktop bundle missing root runtime asset: {asset}"
+assert "../../src/domains" in from_paths, "desktop bundle must include the canonical recursive domain runtime tree"
+for asset in ["src/domains/shared/runtime-v2.js", "src/domains/shell/accessibility-hardening.js"]:
+    assert f"../../{asset}" not in from_paths, f"desktop bundle must not duplicate domain-owned asset outside the recursive domain tree: {asset}"
 dmain = (desktop_root / "src" / "main.cjs").read_text(encoding="utf-8")
 for marker in ["nodeIntegration: false", "contextIsolation: true", "sandbox: true", "webSecurity: true", "allowRunningInsecureContent: false", "setPermissionRequestHandler", "setPermissionCheckHandler", "will-attach-webview", "setWindowOpenHandler", "const DESKTOP_PORT = 43139", "server.listen(DESKTOP_PORT, '127.0.0.1'", "requestSingleInstanceLock()", "SHA-256 verification failed"]:
     assert marker in dmain, f"open desktop security control missing: {marker}"
