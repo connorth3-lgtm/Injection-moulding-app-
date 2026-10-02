@@ -163,7 +163,10 @@ async function prepareSurface(page,surface){
   await normalizeCaptureState(page,surface);
 }
 
-async function capture(page,file){
+async function capture(page,file,surface){
+  if(surface==='assessment'){
+    return page.locator('#modal .modal-card').screenshot({path:file,animations:'disabled',caret:'hide'});
+  }
   return page.screenshot({path:file,fullPage:false,animations:'disabled',caret:'hide'});
 }
 
@@ -197,8 +200,8 @@ for(const viewport of manifest.viewports){
         const candidatePath=path.join(ARTIFACT_ROOT,`${stem}.png`);
         const baselinePath=path.join(ARTIFACT_ROOT,`${stem}-baseline.png`);
         const diffPath=path.join(ARTIFACT_ROOT,`${stem}-diff.png`);
-        const candidateBuffer=await capture(candidate,candidatePath);
-        const baselineBuffer=await capture(baseline,baselinePath);
+        const candidateBuffer=await capture(candidate,candidatePath,surface);
+        const baselineBuffer=await capture(baseline,baselinePath,surface);
         const diffPixels=compare(baselineBuffer,candidateBuffer,diffPath);
         expect(diffPixels,`${stem} drifted by ${diffPixels} pixels from ${manifest.release} @ ${manifest.commit}`).toBeLessThanOrEqual(manifest.maxDiffPixels);
       }
