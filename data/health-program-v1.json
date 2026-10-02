@@ -359,5 +359,11 @@
       "Independent human/device/platform evidence remains governed HOLD and is not counted as a defect.",
       "Repository-level immutable-release enablement remains an administrator action tracked separately."
     ]
+  },
+  "currentStatus": {
+    "repositoryEngineering": "BLOCKED / HOLD",
+    "governance": "pending-native-ruleset-apply",
+    "externalValidation": "BLOCKED / HOLD",
+    "reason": "Release promotion is blocked until GitHub's live main ruleset matches the canonical independent-review policy; current external human/device/platform evidence remains HOLD independently."
   }
 }
