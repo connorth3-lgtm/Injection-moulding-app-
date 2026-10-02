@@ -21,7 +21,7 @@ assert.ok(global.window.MM_ENGINEERING_CORE, 'generated engineering-core browser
 require(path.join(__dirname, 'src/domains/engineering/engineer-simulator-ui.js'));
 const api = global.window.MM_ENGINEER_SIMULATOR_UI;
 assert.ok(api, 'engineer simulator API was not registered');
-assert.equal(api.version, '2026.10.02.2');
+assert.equal(api.version, '2026.10.03.1');
 
 const flow = api.calculateFlowMetrics(2, 40, 30, 50);
 assert.ok(flow, 'valid flow measurements must produce a result');
