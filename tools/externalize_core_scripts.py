@@ -278,15 +278,33 @@ def runtime_transform(name: str, source: str) -> str:
             if transformed.count(old) != 1:
                 fail(f"frozen simulator semantic source drifted for marker: {old}")
             transformed = transformed.replace(old, new, 1)
-        if transformed.count(LEGACY_WEIGHTED_SIMULATOR) != 1:
-            fail("frozen weighted simulator source drifted")
-        transformed = transformed.replace(LEGACY_WEIGHTED_SIMULATOR, QUALITATIVE_SIMULATOR_BOOTSTRAP, 1)
-        if transformed.count(LEGACY_RESCUE_LOGIC) != 1:
-            fail("frozen simulator rescue source drifted")
-        transformed = transformed.replace(LEGACY_RESCUE_LOGIC, BASELINE_RECOVERY_LOGIC, 1)
-        if transformed.count(LEGACY_RELATIVE_SIMULATOR) != 1:
-            fail("frozen relative weighted simulator source drifted")
-        transformed = transformed.replace(LEGACY_RELATIVE_SIMULATOR, QUALITATIVE_RELATIVE_SIMULATOR, 1)
+        transformed, count = re.subn(
+            r"function clamp01\(x\)\{.*?\nfunction updateSimulator\(\)\{.*?\n\}\n(?=function resetSimulator\(\))",
+            QUALITATIVE_SIMULATOR_BOOTSTRAP + "\n",
+            transformed,
+            count=1,
+            flags=re.S,
+        )
+        if count != 1:
+            fail("frozen weighted simulator block drifted; expected one bounded clamp01/updateSimulator block")
+        transformed, count = re.subn(
+            r"function startRescueChallenge\(\)\{.*?\n\}\nfunction checkRescueChallenge\(\)\{.*?\n\}\n(?=\n/\* Wrap the final audited exam grader)",
+            BASELINE_RECOVERY_LOGIC + "\n",
+            transformed,
+            count=1,
+            flags=re.S,
+        )
+        if count != 1:
+            fail("frozen simulator rescue block drifted; expected one bounded challenge block")
+        transformed, count = re.subn(
+            r"simRisks=function\(\)\{.*?\n\};\n(?=simChange=function)",
+            QUALITATIVE_RELATIVE_SIMULATOR + "\n",
+            transformed,
+            count=1,
+            flags=re.S,
+        )
+        if count != 1:
+            fail("frozen relative weighted simulator block drifted; expected one bounded simRisks override")
         transformed = transformed.replace(
             "Move the controls to explore a synthetic sensitivity exercise. Fixed teaching weights are not probabilities, physical defect predictors, material or machine limits, process windows, or production settings.",
             "Move the controls to explore a synthetic baseline-direction exercise. The mechanism prompts are qualitative teaching cues, not probabilities, physical defect predictors, material or machine limits, process windows, or production settings.",
