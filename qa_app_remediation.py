@@ -214,9 +214,11 @@ for marker in ("MouldMaster Release QA", "MouldMaster Domain Foundation QA", "De
 release_workflow = text(".github/workflows/qa.yml")
 need("python qa_app_remediation.py" in release_workflow, "release QA must execute the full-app remediation contract")
 risk_meta = text("tools/verify_ci_risk_coverage.py")
+risk_workflow = text(".github/workflows/ci-risk-coverage.yml")
 domain_workflow = text(".github/workflows/domain-foundation-qa.yml")
-for marker in ("Exact-head CI risk coverage meta-gate","python tools/verify_ci_risk_coverage.py","CI_RISK_HEAD_SHA","actions: read"):
-    need(marker in mobile, f"protected mobile-browser risk meta-gate missing marker: {marker}")
+need("Exact-head CI risk coverage meta-gate" not in mobile, "Mobile Browser QA must not collapse cross-workflow governance failures into browser evidence")
+for marker in ("name: Exact-head CI Risk Coverage","python tools/verify_ci_risk_coverage.py","CI_RISK_HEAD_SHA","CI_RISK_ATTEMPTS","actions: read"):
+    need(marker in risk_workflow, f"dedicated CI risk-coverage workflow missing marker: {marker}")
 for marker in ("MouldMaster Release QA","MouldMaster Domain Foundation QA","Deep Audit Governance","CI_RISK_HEAD_SHA","head_sha","pull_request","conclusion"):
     need(marker in risk_meta, f"CI risk meta-gate missing exact-head enforcement marker: {marker}")
 need("pull_request:\n    branches: [main]\n  workflow_dispatch:" in domain_workflow, "Domain Foundation QA must run on every pull request to main")
