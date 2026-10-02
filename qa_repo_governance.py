@@ -28,6 +28,7 @@ external_validation = text(".github/workflows/release-external-validation.yml")
 protection_helper = text(".github/scripts/apply-main-ruleset.sh")
 protection_doc = text(".github/MAIN_PROTECTION.md")
 ruleset_verifier = text("tools/verify_main_ruleset.py")
+main_policy = text("data/main-governance-policy-v1.json")
 production_verifier = text("tools/verify_production_source.py")
 
 # Main provenance is a read-only post-push audit. Native ruleset prevention is
@@ -79,7 +80,9 @@ need("for attempt in {1..60}" in guard, "read-only workflow audit must tolerate 
 # review settings as well as the five governed automated contexts and existing
 # server-side protections.
 for marker in [
-    'MAIN_REF = "refs/heads/main"',
+    'POLICY_PATH = ROOT / "data" / "main-governance-policy-v1.json"',
+    'MAIN_REF = str(POLICY["targetRef"])',
+    'REQUIRED_CONTEXTS = set(POLICY["requiredStatusChecks"]["contexts"])',
     '"integrity"',
     '"mobile-browser"',
     '"build-windows"',
@@ -105,6 +108,27 @@ for marker in [
     'branch.get("protected") is not True',
 ]:
     need(marker in ruleset_verifier, f"effective main ruleset verifier missing marker: {marker}")
+
+for marker in [
+    '"targetRef": "refs/heads/main"',
+    '"minimumApprovals": 1',
+    '"independentReviewerRequired": true',
+    '"latestHeadApproval": true',
+    '"reviewThreadResolution": true',
+    '"dismissStaleReviews": true',
+    '"extraApprovalForUnattributedChanges": true',
+    '"squash"',
+    '"bypassActors": []',
+    '"strict": true',
+    '"enforceOnCreate": true',
+    '"integrationId": 15368',
+    '"integrity"',
+    '"mobile-browser"',
+    '"build-windows"',
+    '"question-quality-50-pass"',
+    '"release-external-validation"',
+]:
+    need(marker in main_policy, f"canonical main governance policy missing marker: {marker}")
 
 need(
     "from verify_main_ruleset import verify as verify_main_ruleset" in production_verifier,
@@ -220,6 +244,8 @@ for marker in [
     "tools/verify_release_external_validation.py",
     "Exercise native ruleset verifier contract",
     "tools/verify_main_ruleset.py --self-test",
+    "Verify live native main ruleset against canonical policy",
+    'tools/verify_main_ruleset.py --repository "${{ github.repository }}"',
     "PASS means unsupported external-validation claims are blocked.",
     "It does not mean human AT, physical-device, Windows, SME, learner or site evidence has been performed.",
 ]:
