@@ -1485,7 +1485,7 @@ for (const entry of calculationRegistry.entries) {
   assert.ok(entry.uncertaintyBoundary, `engineering calculation ${entry.id} is missing uncertainty boundary`);
   assert.ok(Array.isArray(entry.evidenceAnchors) && entry.evidenceAnchors.length > 0, `engineering calculation ${entry.id} is missing evidence anchors`);
   for (const anchor of entry.evidenceAnchors) {
-    assert.ok(!/^10\\.\\d{4,9}\\//i.test(anchor), `engineering calculation ${entry.id} uses a raw DOI as an evidence ID: ${anchor}`);
+    assert.ok(!/^10\.\d{4,9}\//i.test(anchor), `engineering calculation ${entry.id} uses a raw DOI as an evidence ID: ${anchor}`);
   }
 }
 
