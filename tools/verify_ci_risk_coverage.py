@@ -27,7 +27,7 @@ RISK_RULES = [
     (
         "browser/runtime",
         ["index.html", "*.css", "*.js", "src/domains/**", "src/core-runtime/**", "service-worker.js", "qa/**/*.spec.js"],
-        {"Premium UI QA", "MouldMaster Physical PWA Contract QA"},
+        {"Mobile Browser QA", "Premium UI QA", "MouldMaster Physical PWA Contract QA"},
     ),
     (
         "desktop",
