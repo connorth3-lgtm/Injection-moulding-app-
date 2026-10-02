@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.02.2",
+  "release": "2026.10.03.1",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.02.2.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.03.1.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 379,
