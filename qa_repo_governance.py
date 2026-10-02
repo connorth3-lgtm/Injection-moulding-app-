@@ -55,6 +55,7 @@ for marker in [
     "Mobile Browser QA",
     "Open Desktop Build",
     "Question Quality 50-Pass",
+    "Exact-head CI Risk Coverage",
     "actions/runs?head_sha=$PR_HEAD_SHA&event=pull_request",
     "all_required_success",
     "pulls/$PR_NUMBER/reviews",
