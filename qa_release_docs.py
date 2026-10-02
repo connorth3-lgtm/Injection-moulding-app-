@@ -123,10 +123,10 @@ need('--ia32' not in store_workflow,'Store MSIX lane must not reintroduce remove
 
 android=text('ANDROID_INSTALL_README.txt')
 for marker in [
- 'assessment-storage-scope.js','assessment-final-hardening.js','assessment-evidence-sources.js','assessment-evidence-approval.js',
- 'reference-20x-extension.js','diagnostic-learning-labs.js','material-behaviour-labs.js','process-data-diagnostics.js',
- 'learning-experience.js','curriculum-integration.js','specialist-curriculum.js','specialist-evidence-gap-extension.js','learning-analytics.js',
- 'src/domains/shell/app-shell-registry.js','mould-master-workspace.js','app-shell-finalize.js',
+ 'assessment-storage-scope.js','src/domains/assessment/assessment-final-hardening.js','assessment-evidence-sources.js','assessment-evidence-approval.js',
+ 'src/domains/research/reference-20x-extension.js','diagnostic-learning-labs.js','material-behaviour-labs.js','process-data-diagnostics.js',
+ 'learning-experience.js','curriculum-integration.js','specialist-curriculum.js','src/domains/learning/specialist-evidence-gap-extension.js','learning-analytics.js',
+ 'src/domains/shell/app-shell-registry.js','mould-master-workspace.js','src/domains/shell/app-shell-finalize.js',
  'evidence-maturity-deep-dive.js','evidence-maturity-formal-bridge.js','lesson-evidence-depth.js','privacy.html','support.html']:
     need(marker in android,f'Android install inventory missing: {marker}')
 for label,k in [('Android/PWA shell','android_release'),('Training content','content_version'),('Audited question bank','question_bank_version'),('Assessment quality / analytics hardening','assessment_quality_version'),('Learner-scoped assessment storage','assessment_storage_scope_version'),('Question evidence approval','assessment_evidence_version')]:
@@ -157,7 +157,7 @@ for marker in ['assessment analytics','scoped to the active learner profile','fi
 need('cleanup cannot be verified' in privacy,'privacy notice must disclose fail-closed reset/import cleanup behavior')
 
 sw=text('service-worker.js')
-for marker in ["'./privacy.html'","'./support.html'","'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'","'./assessment-evidence-sources.js'","'./assessment-evidence-approval.js'","'./curriculum-integration.js'","'./specialist-curriculum.js'","'./specialist-evidence-gap-extension.js'","'./src/domains/shell/app-shell-registry.js'","'./mould-master-workspace.js'","'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'"]:
+for marker in ["'./privacy.html'","'./support.html'","'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'","'./assessment-evidence-sources.js'","'./assessment-evidence-approval.js'","'./curriculum-integration.js'","'./specialist-curriculum.js'","'./src/domains/learning/specialist-evidence-gap-extension.js'","'./src/domains/shell/app-shell-registry.js'","'./mould-master-workspace.js'","'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'"]:
     need(marker in sw,f'offline compliance/runtime asset missing: {marker}')
 
 for name in ['README.md','ANDROID_INSTALL_README.txt','support.html','UPLOAD_README.txt']:

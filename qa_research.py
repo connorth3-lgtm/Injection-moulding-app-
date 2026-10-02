@@ -5,7 +5,7 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parent
-ASSETS = ["reference-research-extension.js", "reference-20x-extension.js"]
+ASSETS = ["src/domains/research/reference-research-extension.js", "src/domains/research/reference-20x-extension.js"]
 REGISTER = "sources/RESEARCH_20X_SOURCE_REGISTER.md"
 
 
@@ -22,7 +22,7 @@ for asset in ASSETS:
     need((ROOT / asset).exists(), f"research extension missing: {asset}")
 need((ROOT / REGISTER).exists(), "20-pass research source register missing")
 
-research = text("reference-research-extension.js")
+research = text("src/domains/research/reference-research-extension.js")
 for marker in [
     "window.MM_REFERENCE_DATA",
     "PCR-PP",
@@ -41,7 +41,7 @@ need("http://" not in research, "research sources must use HTTPS")
 need(len(re.findall(r"\{\s*name\s*:\s*'", research)) >= 70, "research extension unexpectedly small")
 need(len(set(re.findall(r"https://[^'\"\s<]+", research))) >= 9, "research source set unexpectedly small")
 
-x20 = text("reference-20x-extension.js")
+x20 = text("src/domains/research/reference-20x-extension.js")
 passes = [
     "rheology and shear response",
     "drying moisture and hydrolysis",

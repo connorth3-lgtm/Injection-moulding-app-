@@ -86,13 +86,13 @@ for asset in [
     "src/domains/runtime-packs/shell-finalization-runtime-pack.js",
     "learning-analytics.js",
     "src/domains/shared/runtime-v2.js",
-    "accessibility-hardening.js",
+    "src/domains/shell/accessibility-hardening.js",
 ]:
     assert f"'./{asset}'" in index, f"current learner-facing runtime asset not loaded by shell: {asset}"
-assert "['./reading-patch.js','<script" not in index and "['./training-upgrade.js','<script" not in index and "['./training-qa-fix.js','<script" not in index, "learning foundation source scripts must not return as direct bootstrap entries"
+assert "['./reading-patch.js','<script" not in index and "['./training-upgrade.js','<script" not in index and "['./src/domains/learning/training-qa-fix.js','<script" not in index, "learning foundation source scripts must not return as direct bootstrap entries"
 assert index.index("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'") < index.index("'./src/domains/shared/runtime-v2.js'") < index.index("'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'"), "runtime-v2 assessment ownership load order is wrong"
 assert index.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'"), "specialist evidence/runtime finalizer load order is wrong"
-for retired in ["assessment-100-pass.js","assessment-deep-dive.js","assessment-answer-cue-fix.js","assessment-storage-scope.js","assessment-quality-suite.js","assessment-stable-review-bridge.js","assessment-analytics-ui.js","assessment-final-hardening.js"]:
+for retired in ["assessment-100-pass.js","assessment-deep-dive.js","src/domains/assessment/assessment-answer-cue-fix.js","assessment-storage-scope.js","assessment-quality-suite.js","assessment-stable-review-bridge.js","assessment-analytics-ui.js","src/domains/assessment/assessment-final-hardening.js"]:
     assert f"['./{retired}','<script" not in index, f"assessment foundation direct source is still injected: {retired}"
 
 sw = text("service-worker.js")
@@ -102,12 +102,12 @@ for asset in [
     "mouldmaster-192.png", "mouldmaster-512.png", "version.json", "reading-patch.css",
     "src/domains/runtime-packs/learning-foundation-runtime-pack.js", "src/domains/runtime-packs/assessment-foundation-runtime-pack.js", "source-library.js", "src/domains/shell/pwa-shell.js", "learning-experience.js",
     "process-data-diagnostics.js", "curriculum-integration.js", "specialist-curriculum.js",
-    "specialist-evidence-gap-extension.js", "mould-master-workspace.js", "src/domains/runtime-packs/shell-finalization-runtime-pack.js", "learning-analytics.js",
-    "src/domains/shared/runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js",
+    "src/domains/learning/specialist-evidence-gap-extension.js", "mould-master-workspace.js", "src/domains/runtime-packs/shell-finalization-runtime-pack.js", "learning-analytics.js",
+    "src/domains/shared/runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "src/domains/shell/accessibility-hardening.js",
     "learner-ux-repair.css", "premium-ui.css", "premium-dynamic.css", "learner-ux-repair.js"
 ]:
     assert f"'./{asset}'" in sw, f"offline asset missing: {asset}"
-for retired in ["reading-patch.js", "training-upgrade.js", "training-qa-fix.js"]:
+for retired in ["reading-patch.js", "training-upgrade.js", "src/domains/learning/training-qa-fix.js"]:
     assert f"'./{retired}'" not in sw, f"retired direct learning source must not remain an offline release asset: {retired}"
 assert "'./MouldMaster_Academy_App.html'" not in sw.split("const OPTIONAL=", 1)[0], "frozen legacy Academy app must not be a current core cache asset"
 install = sw[sw.index("self.addEventListener('install'"):sw.index("self.addEventListener('activate'")]
@@ -139,7 +139,7 @@ assert "R.after('renderLesson'" in lesson_v2 and "window.renderLesson=function" 
 multimodal = text("assessment-multimodal.js")
 for marker in ["type:'chart'", "type:'table'", "type:'calculation'", "type:'sequence'", "formal certificate answer keys"]:
     assert marker in multimodal, f"multimodal assessment invariant missing: {marker}"
-a11y = text("accessibility-hardening.js")
+a11y = text("src/domains/shell/accessibility-hardening.js")
 for marker in ["aria-modal", "focusTrap:true", "focusRestore:true", "forced-colors:active", "prefers-contrast:more"]:
     assert marker in a11y, f"accessibility runtime invariant missing: {marker}"
 
@@ -188,7 +188,7 @@ assert "#examQuestions" not in source_lib and "activeExam" not in source_lib and
 assert "lesson()" in source_lib and "standards()" in source_lib, "sources must be limited to lesson/standards presentation"
 assert Path("sources/AUTHORITATIVE_SOURCE_REGISTER.md").exists(), "authoritative source register missing"
 
-bridge = text("training-qa-fix.js")
+bridge = text("src/domains/learning/training-qa-fix.js")
 for marker in ["file.size>10*1024*1024", "clean.id=sid", "clean.certificates=[]", "clean.certificateMeta={}", "clean.examPassStatus={}", "restoreSnapshot(before)", "Certificates must be re-earned", "db!==beforeDb", "LEARNING_ANALYTICS_PREFIX", "ANALYTICS_CLEANUP_CODE", "remaining key(s):", "clearAllAnalyticsStores();clearTrainingExtrasStores()", "analytics were cleared and verified"]:
     assert marker in bridge, f"import/reset hardening missing: {marker}"
 storage_commit = bridge.index("for(const [k,v] of Object.entries(writes))localStorage.setItem(k,v)")
@@ -212,7 +212,7 @@ assert Path("privacy.html").exists(), "public privacy page missing"
 assert Path("support.html").exists(), "public support page missing"
 assert Path("certification/README.md").exists(), "certification roadmap missing"
 assert Path("credentials/README.md").exists(), "credential governance spec missing"
-runtime = "\n".join(text(x) for x in ["MouldMaster_Core_App.html", "index.html", "training-upgrade.js", "source-library.js", "src/domains/shell/pwa-shell.js", "training-qa-fix.js", "assessment-quality-suite.js"])
+runtime = "\n".join(text(x) for x in ["MouldMaster_Core_App.html", "index.html", "training-upgrade.js", "source-library.js", "src/domains/shell/pwa-shell.js", "src/domains/learning/training-qa-fix.js", "assessment-quality-suite.js"])
 for claim in [r"\bNZQA approved\b", r"\bIACET CEUs?\b", r"\bMicrosoft certified\b", r"\bNZQA accredited\b"]:
     assert not re.search(claim, runtime, flags=re.I), f"premature external certification claim detected: {claim}"
 assert "not accredited" in core.lower() or "not third-party accredited" in core.lower(), "non-accredited certificate status must remain explicit"
@@ -234,7 +234,7 @@ assert dpkg["license"] == "Apache-2.0", "desktop package must use Apache-2.0"
 for dep in ["electron", "electron-builder"]:
     assert re.fullmatch(r"\d+\.\d+\.\d+", dpkg["devDependencies"][dep]), f"{dep} must be exact-version pinned"
 from_paths = {x.get("from") for x in dpkg["build"].get("extraResources", []) if isinstance(x, dict)}
-for asset in ["src/domains/shared/runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js"]:
+for asset in ["src/domains/shared/runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "src/domains/shell/accessibility-hardening.js"]:
     assert f"../../{asset}" in from_paths, f"desktop bundle missing maturity-hardening asset: {asset}"
 assert "../../src/domains" in from_paths, "desktop bundle must include generated domain runtime packs"
 dmain = (desktop_root / "src" / "main.cjs").read_text(encoding="utf-8")
@@ -249,10 +249,10 @@ if lock.exists():
     assert lock_data.get("lockfileVersion", 0) >= 2, "desktop npm lockfile is too old"
 
 for js_name in [
-    "service-worker.js", "src/domains/runtime-packs/learning-foundation-runtime-pack.js", "reading-patch.js", "training-upgrade.js", "training-qa-fix.js",
+    "service-worker.js", "src/domains/runtime-packs/learning-foundation-runtime-pack.js", "reading-patch.js", "training-upgrade.js", "src/domains/learning/training-qa-fix.js",
     "assessment-quality-suite.js", "source-library.js", "src/domains/shell/pwa-shell.js", "specialist-curriculum.js",
-    "specialist-evidence-gap-extension.js", "mould-master-workspace.js", "app-shell-finalize.js",
-    "src/domains/shared/runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "accessibility-hardening.js",
+    "src/domains/learning/specialist-evidence-gap-extension.js", "mould-master-workspace.js", "src/domains/shell/app-shell-finalize.js",
+    "src/domains/shared/runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "src/domains/shell/accessibility-hardening.js",
     "desktop/electron/src/main.cjs", "desktop/electron/scripts/generate-integrity.cjs", "desktop/electron/scripts/qa.cjs"
 ]:
     p = subprocess.run([NODE, "--check", js_name], capture_output=True, text=True)
