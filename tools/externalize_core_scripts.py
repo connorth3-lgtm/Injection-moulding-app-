@@ -14,6 +14,7 @@ generated core slot so this hardening does not increase BODY_SCRIPTS above 39.
 from __future__ import annotations
 
 import argparse
+import difflib
 import re
 from pathlib import Path
 
@@ -474,7 +475,17 @@ def check_state() -> None:
         path = OUT_DIR / name
         if not path.is_file():
             fail(f"missing generated core runtime asset: {name}")
-        if path.read_text(encoding="utf-8") != body:
+        actual_body = path.read_text(encoding="utf-8")
+        if actual_body != body:
+            diff = list(difflib.unified_diff(
+                actual_body.splitlines(),
+                body.splitlines(),
+                fromfile=f"committed/{name}",
+                tofile=f"generated/{name}",
+                lineterm="",
+                n=3,
+            ))
+            print("\n".join(diff[:240]))
             fail(f"generated core runtime asset is stale: {name}")
         if HANDLER_ATTR_RE.search(body):
             fail(f"generated core runtime still emits inline handler attributes: {name}")
