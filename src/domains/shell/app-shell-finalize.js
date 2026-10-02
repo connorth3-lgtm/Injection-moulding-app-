@@ -1,13 +1,13 @@
 /* MouldMaster app-shell finalizer — 2026.09.10.1 */
 (function(){
 'use strict';
-if(!window.MM_APP_SHELL)throw new Error('app-shell-finalize.js requires src/domains/shell/app-shell-registry.js');
+if(!window.MM_APP_SHELL)throw new Error('app-shell-finalize.js requires app-shell-registry.js');
 if(!window.MM_LEARNING_EXPERIENCE)throw new Error('app-shell-finalize.js requires learning-experience.js');
 if(!window.MM_CURRICULUM_INTEGRATION)throw new Error('app-shell-finalize.js requires curriculum-integration.js');
 if(!window.MM_SPECIALIST_CURRICULUM)throw new Error('app-shell-finalize.js requires specialist-curriculum.js');
 if(!window.MM_SPECIALIST_EVIDENCE_GAPS)throw new Error('app-shell-finalize.js requires specialist-evidence-gap-extension.js');
 if(!window.MM_MOULD_MASTER_WORKSPACE)throw new Error('app-shell-finalize.js requires mould-master-workspace.js');
-if(!window.MM_RUNTIME_V2)throw new Error('app-shell-finalize.js requires src/domains/shared/runtime-v2.js');
+if(!window.MM_RUNTIME_V2)throw new Error('app-shell-finalize.js requires runtime-v2.js');
 
 const VERSION='2026.09.10.3';
 const R=window.MM_RUNTIME_V2;
@@ -56,7 +56,7 @@ function patchEvidenceUi(){
 }
 function loadProductionHealth(){
   if(window.MM_PRODUCTION_HEALTH||document.querySelector('script[data-mm-production-health]'))return;
-  const script=document.createElement('script');script.src='./src/domains/governance/production-health.js';script.async=true;script.dataset.mmProductionHealth='1';document.head.appendChild(script);
+  const script=document.createElement('script');script.src='./production-health.js';script.async=true;script.dataset.mmProductionHealth='1';document.head.appendChild(script);
 }
 function loadConnectedDataRuntime(){
   if(window.MM_CONNECTED_PROCESS_DATA||document.querySelector('script[data-mm-connected-data]'))return;
