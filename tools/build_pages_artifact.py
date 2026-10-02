@@ -182,7 +182,7 @@ def validate_runtime_references(public_files: set[str]) -> None:
 
 
 def extract_runtime_metadata() -> tuple[str, str, str]:
-    hardening = (ROOT / "assessment-psychometric-hardening.js").read_text(encoding="utf-8")
+    hardening = (ROOT / "src/domains/assessment/assessment-psychometric-hardening.js").read_text(encoding="utf-8")
     version_match = re.search(r"""const\s+VERSION\s*=\s*['\"]([^'\"]+)['\"]""", hardening)
     if not version_match:
         raise SystemExit("Could not extract assessment psychometric runtime version")

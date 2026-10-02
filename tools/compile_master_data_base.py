@@ -217,8 +217,8 @@ def data_source_paths():
         "source-library.js",
         "reference-data.js",
         "reference-deep-dive.js",
-        "reference-research-extension.js",
-        "reference-20x-extension.js",
+        "src/domains/research/reference-research-extension.js",
+        "src/domains/research/reference-20x-extension.js",
         "reference-2026-expansion.js",
         "reference-sources.js",
         "diagnostic-learning-labs.js",
@@ -227,10 +227,10 @@ def data_source_paths():
         "evidence-maturity-formal-bridge.js",
         "lesson-evidence-depth.js",
         "training-upgrade.js",
-        "training-qa-fix.js",
+        "src/domains/learning/training-qa-fix.js",
         "curriculum-integration.js",
         "specialist-curriculum.js",
-        "specialist-evidence-gap-extension.js",
+        "src/domains/learning/specialist-evidence-gap-extension.js",
     ]
     patterns = ["assessment-*.js", "process-data-*.js"]
     paths = set(fixed)
@@ -255,12 +255,12 @@ def compile_app_sources():
     runtime, _ = json.JSONDecoder().raw_decode(core[core.index(marker) + len(marker):])
     need(len(runtime.get("lessons") or []) == 120, "canonical core lesson count drifted")
 
-    specialist_text = snapshots["specialist-curriculum.js"]["content"] + "\n" + snapshots["specialist-evidence-gap-extension.js"]["content"]
+    specialist_text = snapshots["specialist-curriculum.js"]["content"] + "\n" + snapshots["src/domains/learning/specialist-evidence-gap-extension.js"]["content"]
     specialist_ids = sorted(set(re.findall(r"\bid:'(S\d{2})',title:", specialist_text)))
     need(specialist_ids == [f"S{i:02d}" for i in range(1, 21)], f"specialist lesson IDs drifted: {specialist_ids}")
 
     reference_text = "\n".join(snapshots[x]["content"] for x in [
-        "reference-data.js", "reference-deep-dive.js", "reference-research-extension.js", "reference-20x-extension.js", "reference-2026-expansion.js"
+        "reference-data.js", "reference-deep-dive.js", "src/domains/research/reference-research-extension.js", "src/domains/research/reference-20x-extension.js", "reference-2026-expansion.js"
     ])
     structured_reference_entries = len(re.findall(r"\{\s*name\s*:\s*['\"]", reference_text))
     need(structured_reference_entries >= 180, "reference knowledge compilation unexpectedly small")
@@ -369,4 +369,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
