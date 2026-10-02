@@ -5,15 +5,15 @@ This packet governs hands-on physical-device validation of the exact MouldMaster
 ## Exact candidate
 
 - web release: `2026.10.03.1`
-- retained pre-merge public candidate source commit: `68ecd9eac901b4ff8bb775c67489f72474e0e24b`
-- public-runtime fingerprint: `sha256:6eb6a125c44890de718b4c7be9a33ecba95a9fb7f160b2be2713cefc703eba24`
-- exact candidate build run: `37055513477` (`Pre-merge Public Candidate`)
-- retained candidate artifact: `physical-pwa-candidate-68ecd9eac901b4ff8bb775c67489f72474e0e24b`
-- artifact id: `11248927695`
-- artifact ZIP digest: `sha256:60c8ef8bdd3077c695f63f6b7dd65e3b414fd217e59fc4e15098cd96866c869b`
-- artifact retention expiry: `2026-11-01T19:48:44Z`
+- retained pre-merge public candidate source commit: `ba7683358a0bb1fae74a43e24d7b740e643ad6ac`
+- public-runtime fingerprint: `sha256:9ed9eafe269e88d415bbc9129c927ed08bc55a2c6e7a8002e60005705a977674`
+- exact candidate build run: `37064989467` (`Pre-merge Public Candidate`)
+- retained candidate artifact: `physical-pwa-candidate-ba7683358a0bb1fae74a43e24d7b740e643ad6ac`
+- artifact id: `11251992404`
+- artifact ZIP digest: `sha256:17e36411db3f9fb48c330c6db83540fe52d85b6973b6daed15d389f94c2d59fa`
+- artifact retention expiry: `2026-11-01T21:08:20Z`
 
-The retained candidate was built from exact pre-merge source commit `68ecd9eac901b4ff8bb775c67489f72474e0e24b` by the governed Pages artifact builder and public-runtime fingerprint verifier. This is a **candidate rebind**, not physical-device evidence. Release `2026.10.03.1` incorporates the current navigation/mobile polish and governance hardening while preserving the existing physical-device evidence boundary. No earlier device evidence or risk waiver is relabelled for this runtime. Governance/QA-only commits after the retained source must remain byte-equivalent under `qa_release_validation_packets.py`.
+The retained candidate was built from exact pre-merge source commit `ba7683358a0bb1fae74a43e24d7b740e643ad6ac` by the governed Pages artifact builder and public-runtime fingerprint verifier. This is a **candidate rebind**, not physical-device evidence. Release `2026.10.03.1` incorporates the current navigation/mobile polish and governance hardening while preserving the existing physical-device evidence boundary. No earlier device evidence or risk waiver is relabelled for this runtime. Governance/QA-only commits after the retained source must remain byte-equivalent under `qa_release_validation_packets.py`.
 
 ## Required iOS / iPadOS execution
 
