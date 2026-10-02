@@ -15,8 +15,8 @@ def need(ok,msg):
     if not ok:
         raise AssertionError(msg)
 
-JS='specialist-evidence-gap-extension.js'
-FINALIZER='app-shell-finalize.js'
+JS='src/domains/learning/specialist-evidence-gap-extension.js'
+FINALIZER='src/domains/shell/app-shell-finalize.js'
 REGISTRY='data/evidence-coverage-v1.json'
 OVERLAY='data/evidence-promotion-overlay-v2.json'
 WORKFLOW='.github/workflows/specialist-evidence-gaps.yml'
@@ -102,10 +102,10 @@ idx=text('index.html')
 needle="['./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js','<script src=\"./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js\">']"
 need(needle in idx,'browser shell does not load specialist evidence-gap extension')
 need(idx.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'") < idx.index("'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'"),'specialist evidence pack/finalizer load order is wrong')
-sw=text('service-worker.js');need("'./specialist-evidence-gap-extension.js'" in sw,'specialist evidence-gap extension missing from offline cache');need("'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'" in sw,'packed evidence-status finalizer missing from offline cache')
-pkg=json.loads(text('desktop/electron/package.json'));froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)};need('../../specialist-evidence-gap-extension.js' in froms,'specialist evidence-gap extension missing from desktop package');need('../../app-shell-finalize.js' in froms,'evidence-status finalizer missing from desktop package')
-integrity=text('desktop/electron/scripts/generate-integrity.cjs');need("'specialist-evidence-gap-extension.js'" in integrity and "'app-shell-finalize.js'" in integrity,'specialist evidence assets missing from desktop integrity manifest')
-workflow=text(WORKFLOW);need("- 'app-shell-finalize.js'" in workflow,'specialist evidence workflow path filters must include app-shell-finalize.js');need("- 'data/evidence-promotion-overlay-v2.json'" in workflow,'specialist evidence workflow path filters must include formal promotion overlay');need('node --check specialist-evidence-gap-extension.js' in workflow and 'node --check app-shell-finalize.js' in workflow,'specialist evidence workflow missing JavaScript syntax checks');need('python qa_specialist_evidence_gaps.py' in workflow,'specialist evidence-gap workflow missing QA gate');need('python qa_evidence_coverage.py' in workflow,'specialist evidence-gap workflow must also verify the evidence registry')
+sw=text('service-worker.js');need("'./src/domains/learning/specialist-evidence-gap-extension.js'" in sw,'specialist evidence-gap extension missing from offline cache');need("'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'" in sw,'packed evidence-status finalizer missing from offline cache')
+pkg=json.loads(text('desktop/electron/package.json'));froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)};need('../../src/domains/learning/specialist-evidence-gap-extension.js' in froms,'specialist evidence-gap extension missing from desktop package');need('../../src/domains/shell/app-shell-finalize.js' in froms,'evidence-status finalizer missing from desktop package')
+integrity=text('desktop/electron/scripts/generate-integrity.cjs');need("'src/domains/learning/specialist-evidence-gap-extension.js'" in integrity and "'src/domains/shell/app-shell-finalize.js'" in integrity,'specialist evidence assets missing from desktop integrity manifest')
+workflow=text(WORKFLOW);need("- 'src/domains/shell/app-shell-finalize.js'" in workflow,'specialist evidence workflow path filters must include src/domains/shell/app-shell-finalize.js');need("- 'data/evidence-promotion-overlay-v2.json'" in workflow,'specialist evidence workflow path filters must include formal promotion overlay');need('node --check src/domains/learning/specialist-evidence-gap-extension.js' in workflow and 'node --check src/domains/shell/app-shell-finalize.js' in workflow,'specialist evidence workflow missing JavaScript syntax checks');need('python qa_specialist_evidence_gaps.py' in workflow,'specialist evidence-gap workflow missing QA gate');need('python qa_evidence_coverage.py' in workflow,'specialist evidence-gap workflow must also verify the evidence registry')
 
 promoted=sum(1 for a in expected_areas if resolved_status[a]=='promoted')
 print(f'MouldMaster specialist evidence-gap QA passed (8 extensions S13-S20; {promoted} formally promoted evidence lessons; governed runtime source; canonical 120 unchanged)')

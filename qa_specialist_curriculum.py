@@ -14,7 +14,7 @@ def need(ok,msg):
         raise AssertionError(msg)
 
 required=[
-    'specialist-curriculum.js','specialist-evidence-gap-extension.js','app-shell-finalize.js',
+    'specialist-curriculum.js','src/domains/learning/specialist-evidence-gap-extension.js','src/domains/shell/app-shell-finalize.js',
     'MouldMaster_Core_App.html','index.html','service-worker.js',
     'process-data-diagnostics.js','evidence-maturity-deep-dive.js','material-behaviour-labs.js',
     'data/evidence-coverage-v1.json','qa_evidence_coverage.py','qa_mechanism_promotion.py','qa_specialist_evidence_gaps.py',
@@ -122,7 +122,7 @@ need('python qa_specialist_curriculum.py' in qa,'Release QA missing specialist c
 
 win=text('.github/workflows/open-desktop-build.yml')
 need("- 'specialist-curriculum.js'" in win,'Windows build path filter missing specialist asset')
-need("- 'specialist-evidence-gap-extension.js'" in win,'Windows build path filter missing evidence-gap specialist asset')
+need("- 'src/domains/learning/specialist-evidence-gap-extension.js'" in win,'Windows build path filter missing evidence-gap specialist asset')
 need("- 'qa_specialist_curriculum.py'" in win,'Windows build path filter missing specialist QA')
 need("- 'qa_specialist_evidence_gaps.py'" in win,'Windows build path filter missing evidence-gap specialist QA')
 need('python qa_specialist_curriculum.py' in win,'Windows build missing specialist QA step')
