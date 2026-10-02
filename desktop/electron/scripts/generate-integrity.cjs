@@ -17,20 +17,20 @@ const REQUIRED_MANIFEST_FILES=[
 
 const BASE_FILES=[
   'index.html','manifest.webmanifest','mouldmaster-192.png','mouldmaster-512.png','version.json',
-  'reading-patch.css','ui-shell.css','premium-ui.css','premium-dynamic.css','assessment-ux.css','mobile-lesson-fix.css','learner-ux-repair.css','reading-patch.js','read-aloud.js','training-upgrade.js','training-qa-fix.js',
-  'assessment-100-pass.js','assessment-deep-dive.js','assessment-answer-cue-fix.js','assessment-storage-scope.js','assessment-quality-suite.js',
-  'assessment-stable-review-bridge.js','assessment-analytics-ui.js','assessment-final-hardening.js','src/domains/shared/runtime-v2.js','assessment-runtime-v2.js','assessment-ux.js',
-  'assessment-evidence-sources.js','evidence-maturity-deep-dive.js','evidence-maturity-formal-bridge.js','assessment-psychometric-hardening.js',
+  'reading-patch.css','ui-shell.css','premium-ui.css','premium-dynamic.css','assessment-ux.css','mobile-lesson-fix.css','learner-ux-repair.css','reading-patch.js','read-aloud.js','training-upgrade.js','src/domains/learning/training-qa-fix.js',
+  'assessment-100-pass.js','assessment-deep-dive.js','src/domains/assessment/assessment-answer-cue-fix.js','assessment-storage-scope.js','assessment-quality-suite.js',
+  'assessment-stable-review-bridge.js','assessment-analytics-ui.js','src/domains/assessment/assessment-final-hardening.js','src/domains/shared/runtime-v2.js','assessment-runtime-v2.js','assessment-ux.js',
+  'assessment-evidence-sources.js','evidence-maturity-deep-dive.js','evidence-maturity-formal-bridge.js','src/domains/assessment/assessment-psychometric-hardening.js',
   'assessment-evidence-integrity-upgrade.js','lesson-evidence-depth.js','lesson-deep-authoring-v2.js','assessment-evidence-approval.js','assessment-psychometric-approval.js',
   'src/domains/shell/app-shell-registry.js','assessment-multimodal.js','src/domains/shell/pwa-shell.js','learning-experience.js','lesson-simple-experience.js','primary-learning-practice-hubs.js','learner-ux-repair.js','process-data-diagnostics.js','real-measured-data-assessment.js',
   'process-data-deep-dive-machine.js','process-data-deep-dive-tooling.js','process-data-deep-dive-material.js','process-data-deep-dive-scientific.js',
   'process-data-deep-dive-quality.js','process-data-deep-dive-50.js','process-data-20-pass-01-05.js','process-data-20-pass-06-10.js',
   'process-data-20-pass-11-15.js','process-data-20-pass-16-20.js','process-data-20-pass-atlas.js','process-data-local-intake.js',
-  'curriculum-integration.js','specialist-curriculum.js','specialist-evidence-gap-extension.js','mould-master-workspace.js',
-  'src/domains/domain-bootstrap.js',RUNTIME_MANIFEST,'src/domains/runtime-packs/learning-foundation-runtime-pack.js','src/domains/runtime-packs/assessment-foundation-runtime-pack.js','src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js','src/domains/runtime-packs/evidence-runtime-pack.js','src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js','src/domains/runtime-packs/assessment-multimodal-runtime-pack.js','src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js','src/domains/runtime-packs/process-data-runtime-pack.js','src/domains/runtime-packs/curriculum-workspace-runtime-pack.js','src/domains/runtime-packs/shell-finalization-runtime-pack.js','app-shell-finalize.js','src/domains/governance/production-health.js','data-integration-runtime.js',
-  'process-data-intelligence-ui.js','process-data-semantic-registry.json','current-data-manifest.json','learning-analytics.js','accessibility-hardening.js',
+  'curriculum-integration.js','specialist-curriculum.js','src/domains/learning/specialist-evidence-gap-extension.js','mould-master-workspace.js',
+  'src/domains/domain-bootstrap.js',RUNTIME_MANIFEST,'src/domains/runtime-packs/learning-foundation-runtime-pack.js','src/domains/runtime-packs/assessment-foundation-runtime-pack.js','src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js','src/domains/runtime-packs/evidence-runtime-pack.js','src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js','src/domains/runtime-packs/assessment-multimodal-runtime-pack.js','src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js','src/domains/runtime-packs/process-data-runtime-pack.js','src/domains/runtime-packs/curriculum-workspace-runtime-pack.js','src/domains/runtime-packs/shell-finalization-runtime-pack.js','src/domains/shell/app-shell-finalize.js','src/domains/governance/production-health.js','data-integration-runtime.js',
+  'process-data-intelligence-ui.js','process-data-semantic-registry.json','current-data-manifest.json','learning-analytics.js','src/domains/shell/accessibility-hardening.js',
   'source-library.js','measured-evidence-integration.js','measured-evidence-decision.js','measured-learning-library.js','measured-learning-library.css',
-  'reference-data.js','reference-data.html','materials.html','reference-deep-dive.js','reference-research-extension.js','reference-20x-extension.js',
+  'reference-data.js','reference-data.html','materials.html','reference-deep-dive.js','src/domains/research/reference-research-extension.js','src/domains/research/reference-20x-extension.js',
   'reference-2026-expansion.js','reference-sources.js','reference-browser-ui.js','diagnostic-learning-labs.js','material-behaviour-labs.js',
   'src/domains/shell/learner-ui-polish.css','service-worker.js','repair.html','privacy.html','support.html'
 ];

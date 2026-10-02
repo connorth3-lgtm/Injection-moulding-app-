@@ -9,7 +9,7 @@ on:
       - 'MouldMaster_Core_App.html'
       - 'training-upgrade.js'
       - 'assessment-deep-dive.js'
-      - 'assessment-answer-cue-fix.js'
+      - 'src/domains/assessment/assessment-answer-cue-fix.js'
       - 'assessment-quality-suite.js'
       - 'assessment-stable-review-bridge.js'
       - 'assessment-ux.js'
@@ -17,15 +17,15 @@ on:
       - 'material-behaviour-labs.js'
       - 'evidence-maturity-deep-dive.js'
       - 'evidence-maturity-formal-bridge.js'
-      - 'assessment-psychometric-hardening.js'
+      - 'src/domains/assessment/assessment-psychometric-hardening.js'
       - 'assessment-psychometric-approval.js'
       - 'assessment-evidence-integrity-upgrade.js'
       - 'real-measured-data-assessment.js'
       - 'src/domains/shared/runtime-v2.js'
-      - 'app-shell-finalize.js'
+      - 'src/domains/shell/app-shell-finalize.js'
       - 'learning-analytics.js'
       - 'assessment-evidence-approval.js'
-      - 'accessibility-hardening.js'
+      - 'src/domains/shell/accessibility-hardening.js'
       - 'src/domains/process/evidence-granularity.js'
       - 'desktop/electron/package.json'
       - 'desktop/electron/scripts/generate-integrity.cjs'
@@ -63,7 +63,7 @@ jobs:
           python-version: '3.12'
       - name: Syntax-check evidence integrity assets
         run: |
-          node --check assessment-psychometric-hardening.js
+          node --check src/domains/assessment/assessment-psychometric-hardening.js
           node --check assessment-psychometric-approval.js
           node --check assessment-evidence-integrity-upgrade.js
           node --check real-measured-data-assessment.js

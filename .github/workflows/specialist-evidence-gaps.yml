@@ -5,8 +5,8 @@ on:
     branches: [main, evidence-coverage-hardening]
     paths:
       - 'specialist-curriculum.js'
-      - 'specialist-evidence-gap-extension.js'
-      - 'app-shell-finalize.js'
+      - 'src/domains/learning/specialist-evidence-gap-extension.js'
+      - 'src/domains/shell/app-shell-finalize.js'
       - 'qa_specialist_evidence_gaps.py'
       - 'qa_evidence_coverage.py'
       - 'qa_external_data_acquisition_readiness.py'
@@ -32,8 +32,8 @@ on:
     branches: [main]
     paths:
       - 'specialist-curriculum.js'
-      - 'specialist-evidence-gap-extension.js'
-      - 'app-shell-finalize.js'
+      - 'src/domains/learning/specialist-evidence-gap-extension.js'
+      - 'src/domains/shell/app-shell-finalize.js'
       - 'qa_specialist_evidence_gaps.py'
       - 'qa_evidence_coverage.py'
       - 'data/evidence-coverage-v1.json'
@@ -66,8 +66,8 @@ jobs:
           python-version: '3.12'
       - name: Specialist evidence JavaScript syntax
         run: |
-          node --check specialist-evidence-gap-extension.js
-          node --check app-shell-finalize.js
+          node --check src/domains/learning/specialist-evidence-gap-extension.js
+          node --check src/domains/shell/app-shell-finalize.js
       - name: Mechanism evidence coverage integrity
         run: python qa_evidence_coverage.py
       - name: Specialist evidence-gap curriculum integrity
