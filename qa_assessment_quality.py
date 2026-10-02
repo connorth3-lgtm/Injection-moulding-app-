@@ -121,12 +121,14 @@ assessment_pack='src/domains/runtime-packs/assessment-foundation-runtime-pack.js
 pack=text(assessment_pack)
 assessment_sources=['assessment-deep-dive.js','src/domains/assessment/assessment-answer-cue-fix.js','assessment-storage-scope.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']
 need(assessment_pack in idx and all(f'<script src="./{asset}">' not in idx for asset in assessment_sources),'assessment quality stack must load through deterministic pack only')
-positions=[pack.index(f'/* >>> {asset} */') for asset in assessment_sources]
+positions=[pack.index(f"/* >>> {asset.rsplit('/',1)[-1]} */") for asset in assessment_sources]
 need(positions==sorted(positions),'assessment quality pack source order wrong')
 sw=text('service-worker.js')
 need("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'" in sw,'assessment quality pack not cached offline')
 pkg=json.loads(text('desktop/electron/package.json'));froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
-for asset in ['assessment-storage-scope.js','src/domains/assessment/assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:need(f'../../{asset}' in froms,f'{asset} missing from desktop package')
+need('../../src/domains' in froms,'desktop package must include the canonical recursive domain runtime tree')
+need('../../src/domains/assessment/assessment-answer-cue-fix.js' not in froms,'desktop package must not duplicate domain-owned answer-cue source')
+for asset in ['assessment-storage-scope.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:need(f'../../{asset}' in froms,f'{asset} missing from desktop package')
 integrity=text('desktop/electron/scripts/generate-integrity.cjs')
 for asset in ['assessment-storage-scope.js','src/domains/assessment/assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:need(f"'{asset}'" in integrity,f'{asset} missing from integrity hashes')
 qy=text('.github/workflows/qa.yml')
