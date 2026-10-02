@@ -57,7 +57,8 @@ need("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'
 evidence_pack=text('src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js')
 learning_process_pack=text('src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js')
 for asset in ['src/domains/assessment/assessment-psychometric-hardening.js','assessment-evidence-integrity-upgrade.js','assessment-evidence-approval.js','assessment-psychometric-approval.js']:
-    need(f'/* >>> {asset} */' in evidence_pack,f'{asset} missing from assessment evidence-depth runtime pack')
+    label=asset.rsplit('/',1)[-1]
+    need(f'/* >>> {label} */' in evidence_pack,f'{asset} missing from assessment evidence-depth runtime pack')
 need('/* >>> real-measured-data-assessment.js */' in learning_process_pack,'real measured assessment missing from learning/process diagnostics runtime pack')
 need(idx.index("'./src/domains/runtime-packs/evidence-runtime-pack.js'") < idx.index("'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'") < idx.index("'./src/domains/shell/app-shell-registry.js'"),'psychometric/evidence browser load order is wrong')
 need(idx.index("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'") < idx.index("'./src/domains/runtime-packs/process-data-runtime-pack.js'"),'real measured assessment pack order is wrong')
@@ -80,8 +81,12 @@ need("'./src/domains/shared/runtime-v2.js'" in sw and "'./assessment-runtime-v2.
 
 pkg=json.loads(text('desktop/electron/package.json'))
 froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
-for asset in ['src/domains/assessment/assessment-psychometric-hardening.js','assessment-evidence-integrity-upgrade.js','assessment-psychometric-approval.js','real-measured-data-assessment.js','src/domains/shared/runtime-v2.js','assessment-runtime-v2.js']:
-    need('../../'+asset in froms,f'desktop package missing {asset}')
+need('../../src/domains' in froms,'desktop package must include the canonical recursive domain runtime tree')
+for asset in ['src/domains/assessment/assessment-psychometric-hardening.js','src/domains/shared/runtime-v2.js']:
+    need('../../'+asset not in froms,f'desktop package must not duplicate domain-owned asset: {asset}')
+    need("'"+asset+"'" in text('desktop/electron/scripts/generate-integrity.cjs'),f'desktop integrity manifest missing {asset}')
+for asset in ['assessment-evidence-integrity-upgrade.js','assessment-psychometric-approval.js','real-measured-data-assessment.js','assessment-runtime-v2.js']:
+    need('../../'+asset in froms,f'desktop package missing root asset {asset}')
     need("'"+asset+"'" in text('desktop/electron/scripts/generate-integrity.cjs'),f'desktop integrity manifest missing {asset}')
 
 release_workflow=text('.github/workflows/qa.yml')
