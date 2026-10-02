@@ -59,6 +59,8 @@ async function openApp(page,url,id,{candidate=false}={}){
 
 async function clearTransientUi(page){
   await page.evaluate(()=>{
+    const app=document.getElementById('app');
+    if(app)app.hidden=false;
     document.querySelectorAll('.toast').forEach(node=>node.remove());
     try{window.closeModal?.()}catch(_){}
     const details=document.querySelector('.mm-read-aloud details');
@@ -79,13 +81,8 @@ async function normalizeCaptureState(page,surface){
     if(nav)nav.scrollTop=0;
     const active=document.activeElement;
     if(active&&active!==document.body&&typeof active.blur==='function')active.blur();
-    document.querySelector('[data-mm-visual-stabilizer]')?.remove();
-    if(surface==='assessment'){
-      const style=document.createElement('style');
-      style.dataset.mmVisualStabilizer='assessment-shadow';
-      style.textContent='#modal{background:#02080e!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}#modal .modal-card{box-shadow:none!important}';
-      document.head.appendChild(style);
-    }
+    const app=document.getElementById('app');
+    if(app)app.hidden=surface==='assessment';
   },{surface});
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
