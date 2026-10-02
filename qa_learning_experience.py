@@ -153,7 +153,7 @@ need("url.pathname.endsWith('.js')" in sw,'PWA shell must remain on the network-
 pkg=json.loads(text('desktop/electron/package.json'))
 froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
 need('../../learning-experience.js' in froms,'learning experience missing from desktop package')
-need('../../src/domains/shell/pwa-shell.js' in froms,'PWA shell missing from desktop package')
+need('../../src/domains' in froms,'recursive domain runtime tree missing from desktop package')
 need("'learning-experience.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'learning experience missing from desktop integrity manifest')
 need("'src/domains/shell/pwa-shell.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'PWA shell missing from desktop integrity manifest')
 
