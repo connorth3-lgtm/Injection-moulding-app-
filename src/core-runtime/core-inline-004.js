@@ -1759,3 +1759,4 @@ createLearner=function(){
 
 /* Final home refresh after hardening overrides. */
 updateGlobalProgress();renderDashboard();
+
