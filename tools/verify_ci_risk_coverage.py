@@ -15,6 +15,8 @@ SHA = os.environ.get("CI_RISK_HEAD_SHA", "").strip() or os.environ.get("GITHUB_S
 TOKEN = os.environ.get("GITHUB_TOKEN", "")
 BASE_REF = os.environ.get("GITHUB_BASE_REF", "main")
 EVENT = os.environ.get("GITHUB_EVENT_NAME", "")
+ATTEMPTS = max(1, int(os.environ.get("CI_RISK_ATTEMPTS", "16")))
+SLEEP_SECONDS = max(1, int(os.environ.get("CI_RISK_SLEEP_SECONDS", "20")))
 
 UNIVERSAL = {
     "MouldMaster Release QA",
@@ -99,7 +101,7 @@ def main() -> None:
     print("Expected workflows:", ", ".join(sorted(expected)))
 
     latest: dict[str, dict] = {}
-    for attempt in range(16):
+    for attempt in range(ATTEMPTS):
         latest = api_runs()
         unresolved = []
         failed = []
@@ -116,10 +118,10 @@ def main() -> None:
         if not unresolved:
             print(f"CI risk coverage passed for {len(expected)} workflow(s) on {SHA}.")
             return
-        if attempt == 15:
+        if attempt == ATTEMPTS - 1:
             raise SystemExit("CI risk coverage incomplete on exact head: " + ", ".join(unresolved))
         print("Waiting for exact-head workflow coverage:", ", ".join(unresolved))
-        time.sleep(20)
+        time.sleep(SLEEP_SECONDS)
 
 if __name__ == "__main__":
     main()
