@@ -39,7 +39,7 @@ for marker in [
     "contents: read",
     "pull-requests: read",
     "actions: read",
-    "actions/checkout@v7",
+    "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
     "GITHUB_TOKEN: ${{ github.token }}",
     "HEAD_SHA: ${{ github.sha }}",
     "commits/$HEAD_SHA/pulls",
@@ -55,6 +55,8 @@ for marker in [
     "Question Quality 50-Pass",
     "actions/runs?head_sha=$PR_HEAD_SHA&event=pull_request",
     "all_required_success",
+    "pulls/$PR_NUMBER/reviews",
+    "Independent latest-head human approval verified",
     "native protection is authoritative",
 ]:
     need(marker in guard, f"main provenance guard missing marker: {marker}")
@@ -73,7 +75,7 @@ for forbidden in [
 need('"$conclusion" != "success"' in guard, "required PR workflows must still fail audit when completed unsuccessfully")
 need("for attempt in {1..60}" in guard, "read-only workflow audit must tolerate long-running required checks")
 
-# Effective ruleset verification must enforce the explicit solo-maintainer
+# Effective ruleset verification must enforce the explicit independent-review
 # review settings as well as the five governed automated contexts and existing
 # server-side protections.
 for marker in [
@@ -91,10 +93,11 @@ for marker in [
     '"code_scanning"',
     '"code_quality"',
     '"copilot_code_review"',
-    "required_approving_review_count must be 0 for the solo-maintainer repository",
+    "required_approving_review_count must be 1 for independent human review",
     "required_review_thread_resolution must be true",
     "dismiss_stale_reviews_on_push must be true",
-    "require_last_push_approval must be false for the solo-maintainer repository",
+    "require_last_push_approval must be true so the latest head is independently reviewed",
+    "require_extra_approval_for_unattributed_changes must be true",
     "strict_required_status_checks_policy",
     "do_not_enforce_on_create",
     '"~ALL"',
@@ -131,7 +134,7 @@ need("if: github.event_name != 'pull_request'" in pages, "Pages publication guar
 
 # The administrator helper must transform the live ruleset rather than replace
 # it with a stale static payload. It must preserve existing security/review
-# rules while applying solo-maintainer review semantics and the fifth release gate.
+# rules while applying independent human-review semantics and the fifth release gate.
 for marker in [
     'MODE="${1:---dry-run}"',
     "--dry-run|--apply",
@@ -142,10 +145,11 @@ for marker in [
     '"question-quality-50-pass"',
     '"release-external-validation"',
     'gh api "repos/$REPO/rulesets/$RULESET_ID" >"$live"',
-    '.parameters.required_approving_review_count = 0',
+    '.parameters.required_approving_review_count = 1',
     ".parameters.required_review_thread_resolution = true",
     ".parameters.dismiss_stale_reviews_on_push = true",
-    ".parameters.require_last_push_approval = false",
+    ".parameters.require_last_push_approval = true",
+    ".parameters.require_extra_approval_for_unattributed_changes = true",
     ".parameters.strict_required_status_checks_policy = true",
     ".parameters.do_not_enforce_on_create = false",
     'index("code_scanning")',
@@ -155,7 +159,7 @@ for marker in [
     'gh api --method PUT "repos/$REPO/rulesets/$RULESET_ID" --input "$payload"',
     'gh api "repos/$REPO/branches/main" --jq',
     'protected',
-    "only one write-capable maintainer",
+    "at least two trusted write-capable collaborators",
     "resolved review threads",
 ]:
     need(marker in protection_helper, f"native-protection helper missing marker: {marker}")
@@ -169,9 +173,9 @@ need(
 )
 
 for marker in [
-    "solo-maintainer policy",
-    "zero required approving reviews",
-    "approval of the latest push is disabled",
+    "independent human review plus automated evidence",
+    "one required approving review",
+    "approval of the **latest pushed head**",
     "all review conversations resolved",
     "stale approvals dismissed after new pushes",
     "`integrity`",
@@ -187,7 +191,7 @@ for marker in [
     "--dry-run",
     "--apply",
     "transforms that exact",
-    "all five required checks are green",
+    "latest-head human approval, all five required checks are green",
     "Automated checks are necessary but are not equivalent to independent human review",
     "Issue #43",
 ]:
@@ -243,8 +247,8 @@ for marker in [
     "desktop/electron/msix-toolchain/package-lock.json",
     "desktop/electron/scripts/run-msix-builder.cjs",
     "contents: read",
-    "actions/checkout@v7",
-    "actions/setup-node@v7",
+    "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+    "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
     "npm ci --prefix desktop/electron",
     "npm ci --prefix desktop/electron/msix-toolchain",
     "root electron-builder drift",
@@ -287,7 +291,7 @@ need("run: python qa_repo_governance.py" in release_qa, "release QA must run rep
 
 print(
     "MouldMaster repository governance QA passed "
-    "(main-only solo-maintainer native policy; five required contexts; live-preserving helper; "
+    "(main-only independent human-review native policy; five required contexts; live-preserving helper; "
     "post-push audit read-only; Pages requires exact native protection; dual locked desktop toolchains; "
     "guard-gated pruning; architecture debt gate)"
 )

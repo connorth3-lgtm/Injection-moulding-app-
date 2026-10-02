@@ -2,7 +2,7 @@ name: UX Polish and Book Endurance QA
 on:
   pull_request:
     branches: [main]
-    paths: ['book-runtime.js','src/domains/learning/book-runtime.js','ui-shell.css','premium-ui.css','premium-dynamic.css','qa/ux-polish.spec.js','playwright.ux-polish.config.cjs','version.json']
+    paths: ['book-runtime.js','src/domains/learning/book-runtime.js','ui-shell.css','premium-ui.css','premium-dynamic.css','qa/ux-polish.spec.js','playwright.ux-polish.config.cjs','package.json','package-lock.json','qa_browser_dependency_lock.py','version.json']
   push:
     branches: [main]
 permissions:
@@ -15,7 +15,7 @@ jobs:
       - run: python3 qa_premium_ui.py
       - name: Install browser QA
         run: |
-          npm install --no-save --no-package-lock @playwright/test@1.55.0
+          npm ci --no-audit --fund=false
           npx playwright install --with-deps chromium webkit
       - name: Run UX polish and repeat-use contracts
         run: npx playwright test -c playwright.ux-polish.config.cjs

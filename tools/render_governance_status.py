@@ -19,6 +19,7 @@ LABELS = {
     "windowsDistribution": "Signed/Store Windows distribution validation",
     "learnerOutcomes": "Real learner outcome evidence",
     "nzqaProviderValidation": "NZQA/provider/accreditation validation",
+    "desktopReleaseImmutability": "GitHub desktop-release immutability",
     "productionAuthority": "Production authority",
 }
 
@@ -34,8 +35,11 @@ def render() -> str:
     model = load(MODEL)
     version = load(VERSION)
     boundary = model.get("currentPublicBoundary")
+    assurance = model.get("currentAssuranceEvidence")
     if not isinstance(boundary, dict) or set(boundary) != set(LABELS):
         raise AssertionError("canonical public boundary does not match the governed human-facing status fields")
+    if not isinstance(assurance, dict) or set(assurance) != {"staticContract", "behavioralBrowser", "externalHumanDevice"}:
+        raise AssertionError("canonical assurance layers are incomplete")
     release = str(version.get("web_release") or "").strip()
     if not release:
         raise AssertionError("version.json web_release is missing")
@@ -59,6 +63,16 @@ def render() -> str:
         "`pass` describes software-controlled automation only. `authorized` describes internal publication authorization only. `hold` on an external-validation row is a truthful blocked state awaiting genuine release-bound human/device/platform evidence; it is not a software-test failure. `advisory-only` means MouldMaster does not provide validated production-recipe or automatic machine-control authority.",
         "",
         "The Book may therefore be publication-authorized while independent Book SME review remains on HOLD. Those states are intentionally different and must not be collapsed into a single 'validated' label.",
+        "",
+        "## Assurance evidence layers",
+        "",
+        "These layers are reported separately. Passing static/contract or automated browser QA does not convert the external human/device layer into a pass.",
+        "",
+        "| Layer | State | Meaning |",
+        "| --- | --- | --- |",
+        f"| Static / contract | **{assurance['staticContract']['status']}** | {assurance['staticContract']['meaning']} |",
+        f"| Behavioral / browser | **{assurance['behavioralBrowser']['status']}** | {assurance['behavioralBrowser']['meaning']} |",
+        f"| External human / device | **{assurance['externalHumanDevice']['status']}** | {assurance['externalHumanDevice']['meaning']} |",
         "",
     ])
     return "\n".join(lines)

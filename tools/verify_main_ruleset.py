@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify GitHub's effective native ruleset matches MouldMaster solo-maintainer main policy."""
+"""Verify GitHub's effective native ruleset matches MouldMaster independent-review main policy."""
 from __future__ import annotations
 
 import argparse
@@ -158,14 +158,16 @@ def valid_main_ruleset(
     pr_params = (rule_by_type(detail, "pull_request") or {}).get("parameters") or {}
     if pr_params.get("allowed_merge_methods") != ["squash"]:
         errors.append("pull_request.allowed_merge_methods must be ['squash']")
-    if pr_params.get("required_approving_review_count") != 0:
-        errors.append("pull_request.required_approving_review_count must be 0 for the solo-maintainer repository")
+    if pr_params.get("required_approving_review_count") != 1:
+        errors.append("pull_request.required_approving_review_count must be 1 for independent human review")
     if pr_params.get("required_review_thread_resolution") is not True:
         errors.append("pull_request.required_review_thread_resolution must be true")
     if pr_params.get("dismiss_stale_reviews_on_push") is not True:
         errors.append("pull_request.dismiss_stale_reviews_on_push must be true")
-    if pr_params.get("require_last_push_approval") is not False:
-        errors.append("pull_request.require_last_push_approval must be false for the solo-maintainer repository")
+    if pr_params.get("require_last_push_approval") is not True:
+        errors.append("pull_request.require_last_push_approval must be true so the latest head is independently reviewed")
+    if pr_params.get("require_extra_approval_for_unattributed_changes") is not True:
+        errors.append("pull_request.require_extra_approval_for_unattributed_changes must be true")
 
     status_params = (rule_by_type(detail, "required_status_checks") or {}).get("parameters") or {}
     if status_params.get("strict_required_status_checks_policy") is not True:
@@ -249,11 +251,11 @@ def verify(repository: str) -> None:
         fail("; ".join(overbroad))
     if not matches:
         detail_text = "; ".join(f"{name!r}: {', '.join(errors)}" for name, errors in candidates)
-        fail(f"no active ruleset exactly matches MouldMaster solo-maintainer main policy"
+        fail(f"no active ruleset exactly matches MouldMaster independent-review main policy"
              + (f" ({detail_text})" if detail_text else ""))
 
     print(
-        f"Verified protected solo-maintainer policy on {MAIN_REF}: pull requests, resolved threads, "
+        f"Verified protected independent-review policy on {MAIN_REF}: pull requests, one latest-head human approval, resolved threads, "
         f"{len(REQUIRED_CONTEXTS)} required checks, squash-only history and security/review controls."
     )
 
@@ -280,10 +282,11 @@ def self_test() -> None:
             {"type": "copilot_code_review", "parameters": {"review_on_push": True, "review_draft_pull_requests": True}},
             {"type": "pull_request", "parameters": {
                 "allowed_merge_methods": ["squash"],
-                "required_approving_review_count": 0,
+                "required_approving_review_count": 1,
                 "required_review_thread_resolution": True,
                 "dismiss_stale_reviews_on_push": True,
-                "require_last_push_approval": False,
+                "require_last_push_approval": True,
+                "require_extra_approval_for_unattributed_changes": True,
             }},
             {"type": "required_status_checks", "parameters": {
                 "do_not_enforce_on_create": False,
@@ -303,10 +306,11 @@ def self_test() -> None:
         mutator(candidate)
         assert not valid_main_ruleset(candidate)[0]
 
-    bad(lambda x: x["rules"][-2]["parameters"].update(required_approving_review_count=1))
+    bad(lambda x: x["rules"][-2]["parameters"].update(required_approving_review_count=0))
     bad(lambda x: x["rules"][-2]["parameters"].update(required_review_thread_resolution=False))
     bad(lambda x: x["rules"][-2]["parameters"].update(dismiss_stale_reviews_on_push=False))
-    bad(lambda x: x["rules"][-2]["parameters"].update(require_last_push_approval=True))
+    bad(lambda x: x["rules"][-2]["parameters"].update(require_last_push_approval=False))
+    bad(lambda x: x["rules"][-2]["parameters"].update(require_extra_approval_for_unattributed_changes=False))
     bad(lambda x: x["rules"][-1]["parameters"]["required_status_checks"].pop())
     bad(lambda x: x["rules"].__setitem__(3, {"type": "code_scanning", "parameters": {"code_scanning_tools": []}}))
     bad(lambda x: x["conditions"]["ref_name"].update(include=["refs/heads/Main"]))

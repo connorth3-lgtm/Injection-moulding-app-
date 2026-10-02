@@ -91,6 +91,7 @@ def main() -> None:
     book_sme = load("data/book-sme-review-v1.json")
     curriculum_sme = load("qa/curriculum-semantic-review.json")
     nzqa_external = load("data/nzqa-external-validation-v1.json")
+    desktop_release = load("data/desktop-release-platform-v1.json")
 
     validate_model_shape(model)
     labels = model.get("userFacingLabels") or {}
@@ -120,6 +121,7 @@ def main() -> None:
     state_allowed(model, "externalValidation", external["learnerOutcomes"]["status"])
     state_allowed(model, "externalValidation", external["nzqaProvider"]["status"])
     state_allowed(model, "distributionValidation", external["windowsDistribution"]["status"])
+    state_allowed(model, "distributionValidation", desktop_release["status"])
     state_allowed(model, "productionAuthority", external["productionUse"]["status"])
 
     assert book_auth["status"] == "authorized", "current Book publication authorization changed unexpectedly"
@@ -133,6 +135,17 @@ def main() -> None:
 
     for key in ("pwaPhysicalDevices", "accessibility", "windowsDistribution", "learnerOutcomes", "nzqaProvider"):
         assert external[key]["status"] == "hold", f"{key} must remain HOLD until genuine release-bound evidence exists"
+
+    assert desktop_release.get("release") == version.get("desktop_release")
+    assert desktop_release.get("tag") == version.get("desktop_release_tag")
+    if desktop_release.get("githubImmutable") is not True:
+        assert desktop_release.get("status") == "hold", "mutable desktop release must remain an immutability HOLD"
+
+    assurance = model.get("currentAssuranceEvidence") or {}
+    assert set(assurance) == {"staticContract", "behavioralBrowser", "externalHumanDevice"}, "assurance evidence layers drifted"
+    assert assurance["staticContract"].get("status") == "pass"
+    assert assurance["behavioralBrowser"].get("status") == "pass"
+    assert assurance["externalHumanDevice"].get("status") == "hold"
 
     assert external["productionUse"]["status"] == "advisory-only"
     assert external["productionUse"]["authority"] == "no-automatic-machine-control"
@@ -158,6 +171,7 @@ def main() -> None:
         "windowsDistribution": external["windowsDistribution"]["status"],
         "learnerOutcomes": external["learnerOutcomes"]["status"],
         "nzqaProviderValidation": external["nzqaProvider"]["status"],
+        "desktopReleaseImmutability": desktop_release["status"],
         "productionAuthority": external["productionUse"]["status"],
     }
     assert current == expected, f"canonical state snapshot drifted from governed contracts: {current!r} != {expected!r}"
@@ -193,6 +207,8 @@ def main() -> None:
         "production-authority-fails-closed",
         "claims-derive-from-evidence",
         "human-review-cannot-be-synthetic",
+        "assurance-layers-not-collapsed",
+        "mutable-desktop-release-not-trusted",
     }
     assert invariant_ids == required, "canonical governance invariants changed without an explicit model revision"
 

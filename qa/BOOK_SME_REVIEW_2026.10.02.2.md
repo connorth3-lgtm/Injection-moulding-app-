@@ -8,7 +8,9 @@ Automated evidence review, CI, browser tests and the Book publication authorizat
 
 Review every chapter listed in `data/book-sme-review-v1.json`. For the ten chapters with a `workedCaseId`, the chapter review must also inspect the complete worked example listed in `data/book-worked-engineering-cases-v1.json`, including arithmetic/reasoning, assumptions, units, evidence fit, synthetic-data labeling and non-universal boundaries. Start with its `priorityChapters`, especially safety foundations, V/P transfer, gate seal, diagnostic method, short shot, flash, burns, warpage, black specks, cavity pressure, process monitoring and complex diagnostics.
 
-For the ten chapters listed in `enrichmentChapterIds`, the reviewer must also inspect all current evidence-enrichment sections in `data/book-evidence-enrichment-v2.json`, including source fit, case-specific numerical context, uncertainty, non-universal boundaries and the ISO 9001:2026 quality-record section where applicable.\n\nFor each chapter explicitly assess all six dimensions:
+For the ten chapters listed in `enrichmentChapterIds`, the reviewer must also inspect all current evidence-enrichment sections in `data/book-evidence-enrichment-v2.json`, including source fit, case-specific numerical context, uncertainty, non-universal boundaries and the ISO 9001:2026 quality-record section where applicable.
+
+For each chapter explicitly assess all six dimensions:
 
 1. **Technical accuracy** — mechanisms and terminology are materially correct.
 2. **Applicability and exclusions** — generic guidance does not masquerade as a grade/machine/mould/site recipe.
@@ -48,7 +50,9 @@ Any unresolved material objection keeps the chapter and top-level contract on **
 
 For troubleshooting chapters, ask whether a learner could wrongly interpret the chapter as `symptom -> certain cause -> guaranteed fix`. If yes, the review fails until the wording is corrected.
 
-For the ten governed worked engineering cases, independently recompute or otherwise verify the calculation/reasoning and confirm the case-level evidence anchors fit the stated claim.\n\nFor numeric/process-setting content, ask whether the number is universal. If the correct answer depends on grade, machine, mould, hot runner, product or site, the chapter must make that dependency visible and point back to controlling documentation or measurement.
+For the ten governed worked engineering cases, independently recompute or otherwise verify the calculation/reasoning and confirm the case-level evidence anchors fit the stated claim.
+
+For numeric/process-setting content, ask whether the number is universal. If the correct answer depends on grade, machine, mould, hot runner, product or site, the chapter must make that dependency visible and point back to controlling documentation or measurement.
 
 For safety content, confirm that generic teaching never authorizes bypassing guards, interlocks, lockout/isolation requirements or manufacturer/site procedures.
 
