@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.03.1",
-  "validationIndex": "qa/EXTERNAL_VALIDATION_2026.10.03.1.md",
+  "release": "2026.10.03.2",
+  "validationIndex": "qa/EXTERNAL_VALIDATION_2026.10.03.2.md",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
     "status": "pass",
@@ -18,28 +18,28 @@
   "accessibility": {
     "status": "hold",
     "evidenceContract": "data/accessibility-real-at-validation-v1.json",
-    "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.10.03.1.md",
+    "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.10.03.2.md",
     "candidate": {
-      "release": "2026.10.03.1",
-      "sourceSha": "ba7683358a0bb1fae74a43e24d7b740e643ad6ac",
-      "runtimeFingerprint": "sha256:9ed9eafe269e88d415bbc9129c927ed08bc55a2c6e7a8002e60005705a977674"
+      "release": "2026.10.03.2",
+      "sourceSha": "80a0a5422e83be6b6edca93b6853de1e2c688226",
+      "runtimeFingerprint": "sha256:b37c0ef7bec4772609609ac6f7170f1c48c583ce413fa03e22df97c4691cd1cd"
     },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix."
   },
   "pwaPhysicalDevices": {
     "status": "hold",
     "evidenceContract": "data/pwa-physical-device-validation-v1.json",
-    "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.10.03.1.md",
+    "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.10.03.2.md",
     "currentCandidate": {
-      "release": "2026.10.03.1",
-      "sourceSha": "ba7683358a0bb1fae74a43e24d7b740e643ad6ac",
-      "runtimeFingerprint": "sha256:9ed9eafe269e88d415bbc9129c927ed08bc55a2c6e7a8002e60005705a977674",
-      "candidateRunId": 37064989467,
+      "release": "2026.10.03.2",
+      "sourceSha": "80a0a5422e83be6b6edca93b6853de1e2c688226",
+      "runtimeFingerprint": "sha256:b37c0ef7bec4772609609ac6f7170f1c48c583ce413fa03e22df97c4691cd1cd",
+      "candidateRunId": 37074352293,
       "candidateWorkflow": "Pre-merge Public Candidate",
-      "artifactId": 11251992404,
-      "artifactName": "physical-pwa-candidate-ba7683358a0bb1fae74a43e24d7b740e643ad6ac",
-      "artifactDigest": "sha256:17e36411db3f9fb48c330c6db83540fe52d85b6973b6daed15d389f94c2d59fa",
-      "artifactExpiresAt": "2026-11-01T21:08:20Z"
+      "artifactId": 11255612792,
+      "artifactName": "physical-pwa-candidate-80a0a5422e83be6b6edca93b6853de1e2c688226",
+      "artifactDigest": "sha256:38ebedfd8fb576295428113bff5789cf43ca5d755242e35602192ddf83f88a63",
+      "artifactExpiresAt": "2026-11-01T22:48:16Z"
     },
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release."
   },
@@ -47,7 +47,7 @@
     "status": "hold",
     "workflow": ".github/workflows/microsoft-store-msix.yml",
     "handoff": "certification/STORE_SUBMISSION_STATUS.md",
-    "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.10.03.1.md",
+    "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.10.03.2.md",
     "sourceSha": "aa5e0b89c193532b3294c360301f7251c562ed10",
     "desktopRelease": "2026.09.29.1",
     "evidence": null,
@@ -61,19 +61,19 @@
   "bookSme": {
     "status": "hold",
     "evidenceContract": "data/book-sme-review-v1.json",
-    "reviewPacket": "qa/BOOK_SME_REVIEW_2026.10.03.1.md",
+    "reviewPacket": "qa/BOOK_SME_REVIEW_2026.10.03.2.md",
     "required": "Independent human SME approval of all 46 governed Book chapters across the six required review dimensions."
   },
   "curriculumSme": {
     "status": "hold",
     "evidenceContract": "qa/curriculum-semantic-review.json",
-    "reviewPacket": "qa/CURRICULUM_SME_REVIEW_2026.10.03.1.md",
+    "reviewPacket": "qa/CURRICULUM_SME_REVIEW_2026.10.03.2.md",
     "required": "Traceable human SME semantic approval of all 120 canonical lessons."
   },
   "learnerOutcomes": {
     "status": "hold",
     "pilotContract": "data/learner-pilot-v1.json",
-    "pilotPacket": "qa/LEARNER_PILOT_2026.10.03.1.md",
+    "pilotPacket": "qa/LEARNER_PILOT_2026.10.03.2.md",
     "evidence": null,
     "required": "Longitudinal real-learner outcome evidence before efficacy or genuine psychometric-validity claims."
   },
@@ -96,11 +96,11 @@
   "nzqaProvider": {
     "status": "hold",
     "evidenceContract": "data/nzqa-external-validation-v1.json",
-    "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.03.1.md",
+    "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.03.2.md",
     "required": "Genuine provider ownership, stakeholder need, provider-approved design, authorised assessment/internal moderation, consent-to-assess/CMR confirmation, applicable national moderation, workplace evidence and provider-controlled review/change evidence for the exact governed release.",
     "candidate": {
-      "sourceSha": "ba7683358a0bb1fae74a43e24d7b740e643ad6ac",
-      "runtimeFingerprint": "sha256:9ed9eafe269e88d415bbc9129c927ed08bc55a2c6e7a8002e60005705a977674"
+      "sourceSha": "80a0a5422e83be6b6edca93b6853de1e2c688226",
+      "runtimeFingerprint": "sha256:b37c0ef7bec4772609609ac6f7170f1c48c583ce413fa03e22df97c4691cd1cd"
     }
   }
 }
