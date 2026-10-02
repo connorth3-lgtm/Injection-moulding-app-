@@ -82,7 +82,10 @@ require("Promise.allSettled" in worker and "await caches.delete(STATIC_CACHE)" i
         "Observability must coexist with fail-closed service-worker install rather than a partially active core cache")
 require("src/domains/governance/production-health.js" in finalize, "App-shell observability fallback loader missing")
 require("./src/domains/governance/production-health.js" in worker, "Production health is missing from the offline/public core")
-require("src/domains/governance/production-health.js" in package, "Desktop package does not include production health diagnostics")
+package_json = json.loads(package)
+domain_froms = {x.get("from") for x in package_json.get("build", {}).get("extraResources", []) if isinstance(x, dict)}
+require("../../src/domains" in domain_froms, "Desktop package does not include the recursive domain runtime tree")
+require("../../src/domains/governance/production-health.js" not in domain_froms, "Desktop package must not duplicate the domain-owned production health source")
 require("src/domains/governance/production-health.js" in integrity, "Desktop integrity manifest does not hash production health diagnostics")
 require(versions.get("production_observability_version") == VERSION, "version.json observability version mismatch")
 
