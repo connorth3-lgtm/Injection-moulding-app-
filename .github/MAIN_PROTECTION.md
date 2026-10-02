@@ -93,7 +93,7 @@ Do not treat configuration text as proof. Open a harmless test PR and verify:
 4. the latest head requires a fresh independent approval;
 5. merge remains blocked while a review conversation is unresolved;
 6. each required status context independently blocks merge while pending/failing;
-7. a squash merge succeeds only after the latest-head human approval, all five required checks are green and all review threads are resolved;
+7. a squash merge succeeds only after the latest-head human approval, all six required checks are green and all review threads are resolved;
 8. `Main PR Provenance Guard` succeeds after merge and proves the latest-head approval existed.
 
 ## External validation remains separate
