@@ -56,6 +56,7 @@ const CORE=[
   './src/domains/engineering/engineering-store.js',
   './src/domains/engineering/evidence-chain.js',
   './src/domains/engineering/research-context.js',
+  './src/domains/process/engineering-core-browser.js',
   './src/domains/engineering/engineer-simulator-ui.js',
   './src/domains/governance/standards-readiness.js',
   './src/domains/learning/learning-analytics-loader.js',
