@@ -1,6 +1,6 @@
 # CI risk coverage contract
 
-This file defines the minimum workflow coverage expected for pull requests to `main`. The contract is enforced at runtime by `tools/verify_ci_risk_coverage.py` in the dedicated `Exact-head CI Risk Coverage` workflow. The verifier classifies the exact PR diff, queries GitHub Actions for the exact head SHA, and fails if an applicable workflow is missing, remains unresolved beyond the bounded polling window, or completes non-successfully.
+This file defines the minimum workflow coverage expected for pull requests to `main`. The contract is enforced at runtime by `tools/verify_ci_risk_coverage.py` in the dedicated `Exact-head CI Risk Coverage` workflow. The verifier classifies the exact PR diff, queries GitHub Actions for the exact head SHA, and fails if an applicable workflow is missing, remains unresolved beyond the bounded polling window, or completes non-successfully. The canonical main policy requires its `exact-head-risk-coverage` job context independently of the browser job.
 
 schema: 1
 
