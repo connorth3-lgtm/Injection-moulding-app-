@@ -65,7 +65,7 @@ def desired_files() -> dict[Path, str]:
         "index EXPECTED_STATIC_CACHE",
     )
 
-    shell_path = ROOT / "pwa-shell.js"
+    shell_path = ROOT / "src/domains/shell/pwa-shell.js"
     shell = shell_path.read_text(encoding="utf-8")
     shell = replace_once(
         shell,

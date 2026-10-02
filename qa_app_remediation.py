@@ -22,7 +22,7 @@ def worker_assets(source, name):
 
 
 index = text("index.html")
-pwa = text("pwa-shell.js")
+pwa = text("src/domains/shell/pwa-shell.js")
 worker = text("service-worker.js")
 materials = text("src/domains/materials/material-registry.js")
 engineering = text("src/domains/engineering/engineering-store.js")

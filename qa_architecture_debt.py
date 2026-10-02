@@ -261,8 +261,7 @@ print(
 )
 
 need('window.openMobileMenu=function' not in read('primary-learning-practice-hubs.js'),'practice hubs reintroduced a mobile-menu wrapper; use shell lifecycle/navigation registry')
-for rel in ['pwa-shell.js','learning-analytics.js']:
+for rel in ['src/domains/shell/pwa-shell.js','learning-analytics.js']:
     need('window.openMobileMenu=function' not in read(rel),f'{rel} reintroduced a mobile-menu wrapper; app-shell-registry owns mobile More composition')
-pwa=read('pwa-shell.js')
+pwa=read('src/domains/shell/pwa-shell.js')
 need("MM_RUNTIME_V2.after('startExam'" in pwa,'PWA question disclosures must prefer Runtime V2 startExam lifecycle')
-

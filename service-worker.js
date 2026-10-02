@@ -35,7 +35,7 @@ const CORE=[
   './src/domains/shared/runtime-v2.js',
   './assessment-runtime-v2.js',
   './src/domains/shell/app-shell-registry.js',
-  './pwa-shell.js',
+  './src/domains/shell/pwa-shell.js',
   './learning-experience.js',
   './lesson-simple-experience.js',
   './primary-learning-practice-hubs.js',

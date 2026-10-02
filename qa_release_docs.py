@@ -164,7 +164,7 @@ for name in ['README.md','ANDROID_INSTALL_README.txt','support.html','UPLOAD_REA
     t=text(name);need('2026.08.23.10' not in t and '2026.08.23.5' not in t,f'stale August 23 release identifier remains in {name}')
 
 
-pwa_shell=text('pwa-shell.js')
+pwa_shell=text('src/domains/shell/pwa-shell.js')
 need('Android release ${RELEASE}' not in pwa_shell,'PWA shell must not relabel the independent Android lane with the web release')
 need('data-mm-android-pwa' not in pwa_shell,'retired Android/web label coupling must not return')
 
