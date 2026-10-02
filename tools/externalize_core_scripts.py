@@ -336,6 +336,14 @@ def runtime_transform(name: str, source: str) -> str:
             '<button class="secondary" onclick="startRescueChallenge()">Start baseline recovery</button> <button class="ghost" onclick="checkRescueChallenge()">Check baseline</button>',
         )
         transformed = transformed.replace(
+            '<button class="secondary" onclick="startRescueChallenge()">Start rescue</button>',
+            '<button class="secondary" onclick="startRescueChallenge()">Start baseline recovery</button>',
+        )
+        transformed = transformed.replace(
+            '<button class="ghost" onclick="checkRescueChallenge()">Check my process</button>',
+            '<button class="ghost" onclick="checkRescueChallenge()">Check baseline</button>',
+        )
+        transformed = transformed.replace(
             '<div class="card output-panel"><span class="eyebrow">Educational response</span><h2>Relative defect-risk indicators</h2>',
             '<div class="card output-panel"><span class="eyebrow">Educational response</span><h2>Mechanism prompts from baseline direction</h2>',
             1,
