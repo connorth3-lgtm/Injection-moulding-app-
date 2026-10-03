@@ -15,7 +15,7 @@
   const MATERIAL_REGIONAL_PATH=`${BOOK_DATA}book-material-regional-evidence-v1.json`;
   const MATERIAL_CATALOG_PATH='./material-catalog-v1.json';
   const BATCH_PATHS=[`${BOOK_DATA}book-authored-foundations-v1.json`,`${BOOK_DATA}book-evidence-registry-v1.json`,`${BOOK_DATA}book-chapters-materials-machine-v1.json`,`${BOOK_DATA}book-authored-remaining-v1.json`];
-  const AUTH_GIT_BLOB_SHA1='e0c34c9a372472b7d1eed647d5aa13eccf9f90ce';
+  const AUTH_GIT_BLOB_SHA1='b67b0248d3a5c045683c4d747eff69d77f5c05aa';
   const REQUIRED_INTEGRITY_FILES=['book-manifest-v1.json','book-sme-review-v1.json','book-qualification-resolution-all-v1.json','book-claim-resolution-high-risk-v1.json','book-authored-foundations-v1.json','book-evidence-registry-v1.json','book-chapters-materials-machine-v1.json','book-authored-remaining-v1.json','book-worked-engineering-cases-v1.json','book-engineering-diagrams-v1.json','book-evidence-enrichment-v2.json','book-material-grade-atlas-v1.json','book-material-regional-evidence-v1.json','material-catalog-v1.json'];
   const CANONICAL_SOURCE_URLS=Object.freeze({
     'OUBELLAOUCH-2024-FIBRE-ORIENTATION':'https://doi.org/10.1007/s00170-024-12990-5',
