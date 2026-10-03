@@ -27,8 +27,12 @@ need("serviceWorkers:'block'" in webkit,'WebKit config must explicitly exclude P
 need("devices['Desktop Safari']" in webkit,'WebKit full regression must keep desktop Safari-like device defaults')
 need("name:'webkit-tablet'" in cross and "devices['iPad (gen 7)']" in cross,'existing WebKit tablet smoke coverage must remain')
 need('npx playwright test --config=playwright.webkit-full.config.cjs' in workflow,'Mobile Browser QA does not execute full WebKit substantive regression')
-need("'playwright.webkit-full.config.cjs'" in workflow,'Mobile Browser QA path filter does not track the full WebKit config')
-need("'qa_webkit_regression.py'" in workflow,'Mobile Browser QA path filter does not track the WebKit coverage contract')
+preview_universal_trigger="push:\n    branches: [main, preview]\n  workflow_dispatch:" in workflow
+if not preview_universal_trigger:
+    need("'playwright.webkit-full.config.cjs'" in workflow,'Mobile Browser QA path filter does not track the full WebKit config')
+    need("'qa_webkit_regression.py'" in workflow,'Mobile Browser QA path filter does not track the WebKit coverage contract')
+else:
+    need("branches: [main, preview]" in workflow,'Mobile Browser QA universal trigger must include preview')
 
 # Visual review is an approval gate, not a reason to discard the remaining
 # browser evidence. Independent suites must run to completion and the final
