@@ -43,3 +43,27 @@ test('Book distinguishes source evidence review from independent human validatio
   await expect(boundary).toContainText('accreditation');
   await expect(boundary).toContainText('production validation');
 });
+
+test('Book defers governed payloads and heavy material evidence until requested',async({page})=>{
+  await openApp(page);
+  const initial=await page.evaluate(()=>({
+    manifest:window.MMBook?.getManifest?.()||null,
+    catalog:window.MMBook?.getMaterialCatalog?.()||null,
+    regional:window.MMBook?.getMaterialRegionalEvidence?.()||null,
+    resources:performance.getEntriesByType('resource').map(entry=>entry.name)
+  }));
+  expect(initial.manifest).toBeNull();
+  expect(initial.catalog).toBeNull();
+  expect(initial.regional).toBeNull();
+  expect(initial.resources.some(url=>url.includes('book-material-regional-evidence-v1.json'))).toBeFalsy();
+
+  await page.evaluate(()=>window.MMBook.open());
+  await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length===8);
+  expect(await page.evaluate(()=>window.MMBook.getMaterialCatalog())).toBeNull();
+  expect(await page.evaluate(()=>window.MMBook.getMaterialRegionalEvidence())).toBeNull();
+
+  await page.evaluate(()=>window.MMBook.openChapter('material-families'));
+  await page.waitForFunction(()=>window.MMBook?.getMaterialCatalog?.()?.grades?.length===260&&window.MMBook?.getMaterialRegionalEvidence?.()?.records?.length===284);
+  await expect(page.locator('[data-mm-book-catalog-grade]')).toHaveCount(24);
+  await expect(page.locator('[data-mm-book-regional-row]')).toHaveCount(24);
+});
