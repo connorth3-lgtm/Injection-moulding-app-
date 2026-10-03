@@ -2,6 +2,7 @@
 """Fail closed on unsupported or stale external-validation claims for the current release."""
 from __future__ import annotations
 
+import datetime as dt
 import json
 import re
 from pathlib import Path
@@ -133,7 +134,15 @@ def validate_web_candidate(data: dict, expected_release: str) -> dict:
     expected_name = f"physical-pwa-candidate-{source_sha}"
     if candidate.get("artifactName") != expected_name:
         fail(f"canonical webCandidate artifactName must be {expected_name}")
-    require_nonempty(candidate.get("artifactExpiresAt"), "canonical webCandidate artifactExpiresAt is missing")
+    artifact_expires_at = require_nonempty(candidate.get("artifactExpiresAt"), "canonical webCandidate artifactExpiresAt is missing")
+    try:
+        artifact_expiry = dt.datetime.fromisoformat(artifact_expires_at.replace("Z", "+00:00"))
+    except ValueError:
+        fail("canonical webCandidate artifactExpiresAt must be an ISO-8601 instant")
+    if artifact_expiry.tzinfo is None:
+        fail("canonical webCandidate artifactExpiresAt must include a timezone")
+    if artifact_expiry.astimezone(dt.timezone.utc) <= dt.datetime.now(dt.timezone.utc):
+        fail("canonical retained webCandidate artifact has expired and must be re-retained/rebound before validation continues")
 
     policy = data.get("candidatePolicy")
     if not isinstance(policy, dict):
