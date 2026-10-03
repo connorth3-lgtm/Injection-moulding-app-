@@ -51,7 +51,7 @@ def require_match(pattern: str, text: str, label: str) -> str:
     return match.group(1)
 
 
-def verify_once(base_url: str) -> None:
+def verify_once(base_url: str, expected_source_sha: str | None = None) -> None:
     root = base_url.rstrip("/") + "/"
     status, body = fetch(root)
     text = body.decode("utf-8", errors="replace")
@@ -128,6 +128,21 @@ def verify_once(base_url: str) -> None:
     if not web_release or not question_bank_version:
         raise AssertionError("preview version.json is missing web_release or question_bank_version")
 
+    deployment_status, deployment_body = fetch(urljoin(root, "preview/deployment.json"))
+    if deployment_status != 200:
+        raise AssertionError(f"non-production preview deployment.json unavailable: HTTP {deployment_status}")
+    try:
+        deployment = json.loads(deployment_body.decode("utf-8"))
+    except json.JSONDecodeError as exc:
+        raise AssertionError("non-production preview deployment.json is invalid JSON") from exc
+    deployed_source_sha = str(deployment.get("source_sha") or "")
+    if not re.fullmatch(r"[0-9a-f]{40}", deployed_source_sha):
+        raise AssertionError("preview deployment.json has no valid source_sha")
+    if expected_source_sha is not None and deployed_source_sha != expected_source_sha:
+        raise AssertionError(
+            f"preview deployment source mismatch: deployed={deployed_source_sha} expected={expected_source_sha}"
+        )
+
     shell_release = require_match(r'const\s+SHELL_RELEASE="([^"]+)"', preview_text, "preview shell release")
     if shell_release != web_release:
         raise AssertionError(f"preview shell/version mismatch: index={shell_release} version.json={web_release}")
@@ -176,6 +191,7 @@ def verify_once(base_url: str) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--base-url", required=True)
+    parser.add_argument("--expected-source-sha")
     parser.add_argument("--convergence-attempts", type=int, default=8)
     parser.add_argument("--convergence-delay", type=float, default=2.0)
     args = parser.parse_args()
@@ -184,7 +200,7 @@ def main() -> None:
     last_error: Exception | None = None
     for attempt in range(1, attempts + 1):
         try:
-            verify_once(args.base_url)
+            verify_once(args.base_url, args.expected_source_sha)
             print(
                 "Pages release-hold verification passed: production root remains held while normal root visits auto-forward to /preview/, migration is scoped to "
                 "approved MouldMaster entry paths, the preview release fingerprint is internally consistent, "
