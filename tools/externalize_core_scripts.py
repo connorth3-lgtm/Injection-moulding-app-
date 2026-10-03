@@ -357,6 +357,11 @@ def runtime_transform(name: str, source: str) -> str:
         if transformed.count(LEGACY_SIM_ACCESSIBILITY) != 1:
             fail("frozen simulator accessibility source drifted; review the runtime hardening transform")
         transformed = transformed.replace(LEGACY_SIM_ACCESSIBILITY, HARDENED_SIM_ACCESSIBILITY, 1)
+    if name == "core-inline-008.js":
+        startup_check = "}, 700);"
+        if transformed.count(startup_check) != 1:
+            fail("frozen startup self-check source drifted; review the runtime hardening transform")
+        transformed = transformed.replace(startup_check, "}, 3000);", 1)
     return retire_handler_attrs(transformed)
 
 
