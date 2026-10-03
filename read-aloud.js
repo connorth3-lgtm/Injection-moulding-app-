@@ -1,11 +1,11 @@
-/* MouldMaster Read Aloud + Listening — 2026.09.14.2
+/* MouldMaster Read Aloud + Listening — 2026.10.04.2
  * Learner-controlled text-to-speech using the browser/device speech-synthesis service.
  * No microphone access, recording, speech recognition, network upload, or learner-content storage.
  */
 (function(){
   'use strict';
 
-  const VERSION='2026.09.14.2';
+  const VERSION='2026.10.04.2';
   const synth=window.speechSynthesis;
   const supported=!!(synth&&window.SpeechSynthesisUtterance);
   const SPEEDS=[0.75,1,1.25,1.5];
