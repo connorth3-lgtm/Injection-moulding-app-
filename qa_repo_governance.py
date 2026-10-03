@@ -223,7 +223,7 @@ for marker in [
 
 # Ensure all six governed contexts remain real PR jobs.
 need("jobs:\n  integrity:" in release_qa, "required status context 'integrity' is no longer the Release QA job")
-need("jobs:\n  mobile-browser:" in mobile_qa, "required status context 'mobile-browser' is no longer the mobile QA job")
+need("  mobile-browser:\n    if: always()\n    needs: [browser-chromium, browser-webkit, browser-cross, app-500-reliability]" in mobile_qa, "required status context 'mobile-browser' must remain the fail-closed aggregate mobile QA job")
 need("jobs:\n  build-windows:" in desktop_build, "required status context 'build-windows' is no longer the desktop build job")
 need(
     "jobs:\n  question-quality-50-pass:" in question_quality,
@@ -242,7 +242,7 @@ for workflow_name, workflow in [
     ("question-quality", question_quality),
     ("release-external-validation", external_validation),
 ]:
-    need("pull_request:\n    branches: [main]" in workflow, f"{workflow_name} required check must run on every PR to main")
+    need(("pull_request:\n    branches: [main]" in workflow) or ("pull_request:\n    branches: [main, preview]" in workflow), f"{workflow_name} required check must run on every PR to main")
 
 for marker in [
     "Verify release-specific external validation boundaries",

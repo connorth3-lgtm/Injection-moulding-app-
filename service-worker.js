@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.10.03.2';
+const CACHE_VERSION='2026.10.03.3';
 const CACHE_REVISION='deep-review-r2-20261002';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
@@ -83,6 +83,15 @@ const CORE=[
   './src/domains/learning/book-data/book-chapters-materials-machine-v1.json',
   './src/domains/learning/book-data/book-authored-remaining-v1.json',
   './src/domains/learning/book-data/book-worked-engineering-cases-v1.json',
+  './src/domains/learning/book-data/book-engineering-diagrams-v1.json',
+  './assets/book-diagrams/vp-transfer.svg',
+  './assets/book-diagrams/cavity-pressure-cycle.svg',
+  './assets/book-diagrams/runner-gate-flow-path.svg',
+  './assets/book-diagrams/cooling-circuit-balance.svg',
+  './assets/book-diagrams/fountain-flow.svg',
+  './assets/book-diagrams/gate-seal.svg',
+  './assets/book-diagrams/multicavity-balance.svg',
+  './assets/book-diagrams/ejection-draft.svg',
   './src/domains/learning/book-data/book-evidence-enrichment-v2.json',
   './src/domains/learning/book-data/book-material-grade-atlas-v1.json',
   './src/domains/learning/book-data/book-material-regional-evidence-v1.json',

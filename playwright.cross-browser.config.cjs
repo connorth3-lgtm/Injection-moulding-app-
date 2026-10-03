@@ -5,7 +5,8 @@ module.exports=defineConfig({
   timeout:60000,
   expect:{timeout:15000},
   retries:1,
-  workers:1,
+  fullyParallel:true,
+  workers:3,
   reporter:[['line'],['html',{outputFolder:'qa-artifacts/cross-browser-report',open:'never'}]],
   use:{headless:true,trace:'retain-on-failure'},
   projects:[

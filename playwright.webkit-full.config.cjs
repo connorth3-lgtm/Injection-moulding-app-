@@ -21,7 +21,8 @@ module.exports=defineConfig({
   timeout:60000,
   expect:{timeout:15000},
   retries:1,
-  workers:1,
+  fullyParallel:true,
+  workers:2,
   reporter:[['line'],['html',{outputFolder:'qa-artifacts/webkit-full-report',open:'never'}]],
   use:{
     ...devices['Desktop Safari'],

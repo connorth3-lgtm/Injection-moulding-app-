@@ -23,6 +23,7 @@ MANIFEST = BOOK_ROOT + "book-manifest-v1.json"
 AUTH = BOOK_ROOT + "book-publication-authorization-v1.json"
 SME = BOOK_ROOT + "book-sme-review-v1.json"
 WORKED = BOOK_ROOT + "book-worked-engineering-cases-v1.json"
+DIAGRAMS = BOOK_ROOT + "book-engineering-diagrams-v1.json"
 ENRICHMENT = BOOK_ROOT + "book-evidence-enrichment-v2.json"
 MATERIAL_ATLAS = BOOK_ROOT + "book-material-grade-atlas-v1.json"
 MATERIAL_REGIONAL = BOOK_ROOT + "book-material-regional-evidence-v1.json"
@@ -58,6 +59,10 @@ RUNTIME_MARKERS = (
     "WORKED_CASES_PATH",
     "validateWorkedCases",
     "workedCaseHtml",
+    "DIAGRAMS_PATH",
+    "validateEngineeringDiagrams",
+    "diagramHtml",
+    "getEngineeringDiagrams",
     "ENRICHMENT_PATH",
     "validateEvidenceEnrichment",
     "getEvidenceEnrichment",
@@ -168,7 +173,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     cache_match = re.search(r"CACHE_VERSION\s*=\s*['\"]([^'\"]+)['\"]", worker)
     if not cache_match or cache_match.group(1) != web_release:
         raise AssertionError("candidate service-worker release does not match version.json")
-    for path in (RUNTIME, MANIFEST, AUTH, SME, WORKED, ENRICHMENT, MATERIAL_ATLAS, MATERIAL_REGIONAL, MATERIAL_CATALOG, *BATCHES):
+    for path in (RUNTIME, MANIFEST, AUTH, SME, WORKED, DIAGRAMS, ENRICHMENT, MATERIAL_ATLAS, MATERIAL_REGIONAL, MATERIAL_CATALOG, *BATCHES):
         marker = f"'./{path}'"
         if marker not in worker and f'"./{path}"' not in worker:
             raise AssertionError(f"candidate service worker does not govern Book asset: {path}")
@@ -204,7 +209,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     hashes = integrity.get("gitBlobSha1ByFile") if isinstance(integrity, dict) else None
     if not isinstance(hashes, dict) or integrity.get("algorithm") != "git-blob-sha1":
         raise AssertionError("live Book exact-byte authorization contract is missing")
-    integrity_paths = (MANIFEST, SME, WORKED, ENRICHMENT, MATERIAL_ATLAS, MATERIAL_REGIONAL, MATERIAL_CATALOG, *BATCHES)
+    integrity_paths = (MANIFEST, SME, WORKED, DIAGRAMS, ENRICHMENT, MATERIAL_ATLAS, MATERIAL_REGIONAL, MATERIAL_CATALOG, *BATCHES)
     for path in integrity_paths:
         name = path.rsplit("/", 1)[-1]
         expected = hashes.get(name)
@@ -217,7 +222,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     worked_auth = auth.get("workedCasesAuthorization")
     if not isinstance(worked_auth, dict) or worked_auth.get("status") != "authorized":
         raise AssertionError("live Book worked-case authorization is missing")
-    if worked_auth.get("caseCount") != 10 or worked_auth.get("claimCount") != 10:
+    if worked_auth.get("caseCount") != 18 or worked_auth.get("claimCount") != 18:
         raise AssertionError("live Book worked-case authorization counts drifted")
     if worked_auth.get("independentSmeStatus") != "hold":
         raise AssertionError("live Book worked-case authorization must preserve independent SME HOLD")
@@ -268,9 +273,27 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
         raise AssertionError("live Book worked-case ledger identity/release mismatch")
     if worked_release > web_release or worked_auth.get("release") != worked_release:
         raise AssertionError("live Book worked-case authorization is not bound to its governed content release")
-    if not isinstance(cases, list) or len(cases) != 10 or len({str(x.get("id")) for x in cases if isinstance(x, dict)}) != 10:
-        raise AssertionError("live Book worked-case ledger must contain exactly 10 unique cases")
+    if not isinstance(cases, list) or len(cases) != 18 or len({str(x.get("id")) for x in cases if isinstance(x, dict)}) != 18:
+        raise AssertionError("live Book worked-case ledger must contain exactly 18 unique cases")
     worked_ids = [str(x.get("id")) for x in cases]
+    diagrams = fetch_json(candidate, DIAGRAMS)
+    diagram_rows = diagrams.get("diagrams")
+    diagram_auth = auth.get("diagramAuthorization")
+    if not isinstance(diagram_auth, dict) or diagram_auth.get("status") != "authorized-instructional-diagrams" or diagram_auth.get("diagramCount") != 8 or diagram_auth.get("independentSmeStatus") != "hold":
+        raise AssertionError("live Book engineering-diagram authorization is missing or weakened")
+    if diagrams.get("schemaVersion") != 1 or diagrams.get("bookId") != "mouldmaster-book" or diagrams.get("release") != worked_release or not isinstance(diagram_rows, list) or len(diagram_rows) != 8:
+        raise AssertionError("live Book engineering-diagram ledger identity/count mismatch")
+    diagram_ids=[]
+    for item in diagram_rows:
+        asset=str(item.get("asset") or "")
+        expected=str(item.get("gitBlobSha1") or "")
+        if not re.fullmatch(r"assets/book-diagrams/[a-z0-9-]+\.svg", asset) or not re.fullmatch(r"[0-9a-f]{40}", expected):
+            raise AssertionError("live Book engineering-diagram asset contract is invalid")
+        if git_blob_sha(fetch_bytes(candidate, asset)) != expected:
+            raise AssertionError(f"live Book engineering-diagram byte mismatch: {asset}")
+        diagram_ids.append(str(item.get("id") or ""))
+    if len(set(diagram_ids)) != 8 or sme.get("diagramIds") != diagram_ids:
+        raise AssertionError("live Book SME contract does not cover the governed engineering diagrams")
     if sme.get("release") != worked_release or sme.get("workedCaseIds") != worked_ids:
         raise AssertionError("live Book SME contract does not cover the governed worked-case release")
     enrichment = fetch_json(candidate, ENRICHMENT)
@@ -324,7 +347,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
         f"Live MouldMaster Book candidate verified at {candidate}: release {web_release}; "
         "8 parts / 46 chapters; authorization 116 supported / 21 scoped-qualified / 0 hold / 0 conflict; "
         f"Book content release {worked_release}; independent SME contract status={sme_status!r}, approved={sme_approved}/{sme_total}; "
-        "10 byte-authorized worked cases and 13 enrichment sections are covered by the SME HOLD; "
+        "18 byte-authorized worked cases, 8 governed engineering diagrams and 13 enrichment sections are covered by the SME HOLD; "
         "the technical-review material reference exposes 260 canonical grades plus all 284 regional evidence rows and is excluded from listen-all; "
         "authored drafts remain non-self-promoting; Read/Listen shared-runtime markers are present."
     )

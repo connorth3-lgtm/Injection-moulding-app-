@@ -2,7 +2,7 @@ name: Pre-merge Public Candidate
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ main, preview ]
     paths:
       - 'latest.json'
       - 'version.json'

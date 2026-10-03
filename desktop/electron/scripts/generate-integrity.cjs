@@ -6,7 +6,7 @@ const crypto=require('crypto');
 const ROOT=path.resolve(__dirname,'..','..','..');
 const OUT=path.resolve(__dirname,'..','generated','integrity.json');
 const RUNTIME_MANIFEST='runtime-domain-manifest.json';
-const STATIC_RUNTIME_DIRS=['src/core-runtime'];
+const STATIC_RUNTIME_DIRS=['src/core-runtime','assets/book-diagrams'];
 const STATIC_DATA_DIRS=['data/measured-learning','src/domains/learning/book-data','src/domains/quality/data'];
 const REQUIRED_MANIFEST_FILES=[
   'src/domains/engineering/engineering-store.js',

@@ -9,6 +9,8 @@ async function openApp(page,width){
   await page.setViewportSize({width,height:900});
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>typeof window.MM_APP_SHELL_FINALIZED==='string'&&!document.getElementById('mmBootstrap')&&!!window.MMBook,{timeout:30000});
+  await page.evaluate(async()=>{if(window.MM_ACCESSIBILITY_HARDENING_LOADING)await window.MM_ACCESSIBILITY_HARDENING_LOADING});
+  await page.waitForFunction(()=>window.MM_ACCESSIBILITY_HARDENING?.nonBlockingDrawersExcluded===true,{timeout:10000});
   await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
 }
 async function mobileHub(page,name){await page.locator('.mobile-nav > button').filter({hasText:name}).click()}

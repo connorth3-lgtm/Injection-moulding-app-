@@ -113,7 +113,7 @@ required_integrity = {
     'book-manifest-v1.json', 'book-sme-review-v1.json', 'book-qualification-resolution-all-v1.json',
     'book-claim-resolution-high-risk-v1.json', 'book-authored-foundations-v1.json',
     'book-evidence-registry-v1.json', 'book-chapters-materials-machine-v1.json', 'book-authored-remaining-v1.json',
-    'book-worked-engineering-cases-v1.json', 'book-evidence-enrichment-v2.json', 'book-material-grade-atlas-v1.json',
+    'book-worked-engineering-cases-v1.json', 'book-engineering-diagrams-v1.json', 'book-evidence-enrichment-v2.json', 'book-material-grade-atlas-v1.json',
     'book-material-regional-evidence-v1.json', 'material-catalog-v1.json',
 }
 need(required_integrity <= set(sha_by_file), f'Book byte-integrity coverage incomplete: {sorted(required_integrity - set(sha_by_file))}')
@@ -122,7 +122,7 @@ for name in required_integrity:
     need(sha_by_file[name] == git_blob_sha(path), f'Book byte-integrity Git object mismatch: {name}')
 auth_blob = git_blob_sha(PACKAGED_ROOT / 'book-publication-authorization-v1.json')
 need(f"const AUTH_GIT_BLOB_SHA1='{auth_blob}'" in book_runtime, 'canonical runtime is not pinned to exact authorization bytes')
-for marker in ('gitBlobSha1', 'verifiedJson', 'validateIntegrityAuthorization', 'Book byte-integrity mismatch', 'WORKED_CASES_PATH', 'validateWorkedCases', 'workedCaseHtml', 'getWorkedCases', 'ENRICHMENT_PATH', 'validateEvidenceEnrichment', 'getEvidenceEnrichment', 'MATERIAL_ATLAS_PATH', 'MATERIAL_REGIONAL_PATH', 'MATERIAL_CATALOG_PATH', 'validateMaterialAtlas', 'validateMaterialCatalog', 'validateMaterialRegionalEvidence', 'materialAtlasHtml', 'getMaterialAtlas', 'getMaterialCatalog', 'getMaterialRegionalEvidence'):
+for marker in ('gitBlobSha1', 'verifiedJson', 'validateIntegrityAuthorization', 'Book byte-integrity mismatch', 'WORKED_CASES_PATH', 'validateWorkedCases', 'workedCaseHtml', 'getWorkedCases', 'DIAGRAMS_PATH', 'validateEngineeringDiagrams', 'diagramHtml', 'getEngineeringDiagrams', 'ENRICHMENT_PATH', 'validateEvidenceEnrichment', 'getEvidenceEnrichment', 'MATERIAL_ATLAS_PATH', 'MATERIAL_REGIONAL_PATH', 'MATERIAL_CATALOG_PATH', 'validateMaterialAtlas', 'validateMaterialCatalog', 'validateMaterialRegionalEvidence', 'materialAtlasHtml', 'getMaterialAtlas', 'getMaterialCatalog', 'getMaterialRegionalEvidence'):
     need(marker in book_runtime, f'Book runtime exact-byte safeguard missing: {marker}')
 need("auth?.authorizationBasis?.sourceRevision!=='7ef28bd8b02994223e320fda64e99808357d3219'" in book_runtime, 'runtime no longer enforces reviewed source revision')
 
@@ -131,13 +131,15 @@ need(book_sme.get('status') == 'hold' and book_sme.get('reviews') == [], 'indepe
 current_web_release=json.loads((ROOT / 'version.json').read_text(encoding='utf-8')).get('web_release')
 need(isinstance(book_sme.get('release'),str) and book_sme.get('release') <= current_web_release, 'Book SME evidence cannot target a future learner release')
 need(book_sme.get('release') == enrichment.get('release'), 'Book SME and evidence-enrichment review scope must remain bound to the same content release')
-need(len(book_sme.get('workedCaseIds', [])) == 10 and len(set(book_sme.get('workedCaseIds', []))) == 10, 'Book SME worked-case review scope is incomplete')
+need(len(book_sme.get('workedCaseIds', [])) == 18 and len(set(book_sme.get('workedCaseIds', []))) == 18, 'Book SME worked-case review scope is incomplete')
 need(len(book_sme.get('enrichmentChapterIds', [])) == 10 and len(set(book_sme.get('enrichmentChapterIds', []))) == 10, 'Book SME evidence-enrichment review scope is incomplete')
+need(len(book_sme.get('diagramIds', [])) == 8 and len(set(book_sme.get('diagramIds', []))) == 8, 'Book SME diagram review scope is incomplete')
 need(len(book_sme.get('chapterIds', [])) == 46 and len(set(book_sme['chapterIds'])) == 46, 'Book SME chapter coverage drift')
 need(qualification['effectiveCountsAfterQualificationReview'] == {'chapters':46,'claims':137,'supported':116,'qualified':21,'hold':0,'conflicting':0}, 'qualification counts drift')
 need(authorization['status'] == 'authorized' and authorization['authorizationType'] == 'governed-book-publication', 'publication authorization identity drift')
 need(authorization.get('revocationRules', {}).get('runtimeByteIntegrityMismatch') == 'fail-closed-runtime', 'runtime byte mismatch must revoke publication at runtime')
 need(authorization.get('revocationRules', {}).get('evidenceEnrichmentLedgerOrEvidenceMismatch') == 'fail-closed-runtime', 'evidence-enrichment mismatch must fail closed at runtime')
+need(authorization.get('revocationRules', {}).get('diagramLedgerOrAssetMismatch') == 'fail-closed-runtime', 'diagram ledger/asset mismatch must fail closed at runtime')
 need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('release') == enrichment.get('release'), 'evidence-enrichment authorization must remain bound to the reviewed content release')
 need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('sectionCount') == 13, 'evidence-enrichment authorization section count drifted')
 need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('independentSmeStatus') == 'hold', 'evidence-enrichment authorization must preserve SME HOLD')
@@ -160,4 +162,4 @@ need('STATIC_DATA_DIRS.flatMap(filesUnder)' in integrity_script, 'desktop static
 
 print('PASS: Book uses one canonical runtime with exact-byte publication binding and fail-closed authorization.')
 print('PASS: dynamic scripts are release-versioned before late loaders, Book is globally searchable, and learner-facing academic evidence uses canonical DOI links.')
-print('PASS: ten synthetic worked cases are byte-authorized and rendered through the canonical read/listen path while independent SME/external validation remains HOLD.')
+print('PASS: eighteen synthetic worked cases and eight governed engineering diagrams are integrated while independent SME/external validation remains HOLD.')

@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "bookId": "mouldmaster-book",
+  "release": "2026.10.01.3",
+  "status": "governed-instructional-diagrams",
+  "policy": "Instructional diagrams explain generic mechanisms. They are not scale drawings, CFD/FEA results, mould designs, safety drawings, machine-specific setup instructions or production limits.",
+  "diagrams": [
+    {
+      "id": "diagram-vp-transfer-v1",
+      "chapterId": "vp-transfer",
+      "title": "Velocity to pressure transfer",
+      "asset": "assets/book-diagrams/vp-transfer.svg",
+      "gitBlobSha1": "284ed3f5747502e85ad0159bd8c7e9c7a4f68c67",
+      "alt": "Conceptual graph showing screw-position/fill progression and cavity-pressure response around velocity-to-pressure transfer.",
+      "caption": "Transfer is a process transition, not a universal screw-position number. Interpret commanded state together with actual machine response and cavity evidence."
+    },
+    {
+      "id": "diagram-cavity-pressure-cycle-v1",
+      "chapterId": "cavity-pressure",
+      "title": "Cavity pressure through the moulding cycle",
+      "asset": "assets/book-diagrams/cavity-pressure-cycle.svg",
+      "gitBlobSha1": "b2fd092e9db6259b410a7e3fab74e65b9fe20a35",
+      "alt": "Conceptual cavity-pressure trace labelled fill, pack or hold influence, gate isolation and pressure decay.",
+      "caption": "Peak pressure alone can hide important process-history differences; location, calibration and the full trace remain part of the evidence."
+    },
+    {
+      "id": "diagram-feed-system-v1",
+      "chapterId": "feed-system",
+      "title": "Feed-system pressure-loss locations",
+      "asset": "assets/book-diagrams/runner-gate-flow-path.svg",
+      "gitBlobSha1": "62c5749ba9664df3a525ed47e5f4cc31e5c60741",
+      "alt": "Conceptual melt path from nozzle through sprue, runner and gate into the cavity.",
+      "caption": "Separate pressure demand by flow-path region rather than assuming the smallest feature is automatically the root cause."
+    },
+    {
+      "id": "diagram-cooling-balance-v1",
+      "chapterId": "cooling",
+      "title": "Cooling circuit balance",
+      "asset": "assets/book-diagrams/cooling-circuit-balance.svg",
+      "gitBlobSha1": "836053baff4eb8def2d5c75ad75fa58f38e8d0fa",
+      "alt": "Conceptual mould cooling circuit showing inlet and outlet evidence around an asymmetric hotter region.",
+      "caption": "Controller setpoints do not prove equal local thermal state. Compare flow, supply/return temperature, pressure drop and cavity-side evidence."
+    },
+    {
+      "id": "diagram-fountain-flow-v1",
+      "chapterId": "fill-study",
+      "title": "Fountain flow and frozen-layer development",
+      "asset": "assets/book-diagrams/fountain-flow.svg",
+      "gitBlobSha1": "b5db6d8cf37dc50b14d310d8c747cdab79ef3ec1",
+      "alt": "Conceptual cavity cross-section showing a hotter flowing core turning outward at the advancing flow front while cooler wall layers develop.",
+      "caption": "The diagram explains the mechanism only; actual layer thickness, orientation and thermal history depend on material, geometry and mould conditions."
+    },
+    {
+      "id": "diagram-gate-seal-v1",
+      "chapterId": "gate-seal",
+      "title": "Gate-seal response study",
+      "asset": "assets/book-diagrams/gate-seal.svg",
+      "gitBlobSha1": "1db697a621e05efb54d5564f98b840d81b395e37",
+      "alt": "Conceptual measured response versus hold-duration curve approaching a plateau.",
+      "caption": "A plateau can be useful evidence for the studied system, but it is not a universal hold-time prescription."
+    },
+    {
+      "id": "diagram-multicavity-balance-v1",
+      "chapterId": "multi-cavity",
+      "title": "Multi-cavity balance",
+      "asset": "assets/book-diagrams/multicavity-balance.svg",
+      "gitBlobSha1": "7b8b50b5e01bd2bf1caa77d0c8ef4e65afc1273d",
+      "alt": "Four-cavity layout fed from a common runner, illustrating why each cavity should retain its own identity.",
+      "caption": "Cavity-specific traces and quality results should be preserved before pooling; averages can hide systematic cavity offsets."
+    },
+    {
+      "id": "diagram-ejection-draft-v1",
+      "chapterId": "ejection-draft",
+      "title": "Draft and ejection evidence",
+      "asset": "assets/book-diagrams/ejection-draft.svg",
+      "gitBlobSha1": "e9d68cb718adf6c497d21b63e6f113b585f14be8",
+      "alt": "Conceptual moulded wall showing draft and an ejector-force direction.",
+      "caption": "Use ejector force/current, part temperature, surface condition and damage together; a rising ejector signal does not by itself prove inadequate draft."
+    }
+  ],
+  "authorityBoundary": {
+    "productionUse": "advisory-only",
+    "machineSpecific": false,
+    "scaleDrawing": false,
+    "validatedDesignAuthority": false,
+    "independentSmeStatus": "hold"
+  }
+}
