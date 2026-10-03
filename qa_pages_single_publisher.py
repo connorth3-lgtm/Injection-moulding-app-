@@ -27,6 +27,7 @@ need(shared_publish_concurrency in workflow, "main Pages deploy must use the sha
 need(shared_publish_concurrency in preview_workflow, "preview Pages deploy must use the shared site-wide publication concurrency group")
 need("cancel-in-progress: false" in workflow, "main Pages publication must not be cancelled mid-deploy by a later run")
 need("cancel-in-progress: false" in preview_workflow, "preview Pages publication must not be cancelled mid-deploy by a later run")
+need(preview_workflow.count("pull-requests: read") >= 2, "preview build and deploy provenance checks require pull-request read permission")
 for required in (
     "Require merged-PR preview provenance",
     "tools/verify_preview_source.py --self-test",
