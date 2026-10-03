@@ -51,36 +51,6 @@
       "scope": "Experimental in-mould sensing work supporting cavity-pressure trace interpretation, sensor-position context and process/quality monitoring boundaries."
     },
     {
-      "id": "BASF-INJECTION-TROUBLESHOOTER",
-      "type": "manufacturer-technical-guide",
-      "issuer": "BASF",
-      "title": "Injection Molding Troubleshooter",
-      "url": "https://plastics-rubber.basf.com/emea/en/performance_polymers/services/product_support_troubleshooting/injection_moulding_troubleshooter",
-      "scope": "Manufacturer troubleshooting guidance for engineering thermoplastics; BASF describes it as initial advice and explicitly states recommendations are non-binding.",
-      "checked": "2026-09-14",
-      "currentState": "current-public-manufacturer-page"
-    },
-    {
-      "id": "KUO-2022-COOLING-WARPAGE",
-      "type": "peer-reviewed-study",
-      "issuer": "The International Journal of Advanced Manufacturing Technology",
-      "title": "A simple method of improving warpage and cooling time of injection molded parts simultaneously",
-      "url": "https://doi.org/10.1007/s00170-022-09925-3",
-      "scope": "Experimental study comparing cooling-system configurations and their effects on cooling time and deformation in the studied injection-moulding setup; numerical results are study-specific.",
-      "checked": "2026-09-14",
-      "currentState": "peer-reviewed-2022"
-    },
-    {
-      "id": "BASF-ULTRAMID-B3Z1-2026",
-      "type": "grade-specific-processing-data",
-      "issuer": "BASF",
-      "title": "Ultramid® B3Z1 — Processing Data Sheet 02/2026",
-      "url": "https://download.basf.com/p1/8a8081c57fd4b609017fd65fb4f9262d/en/ULTRAMID%25C2%25AE_B3Z1",
-      "scope": "Current grade-specific PA6-I processing sheet for Ultramid B3Z1, including storage/drying, injection-moulding processing and thermal-exposure cautions. Values apply to this grade and stated conditions only.",
-      "checked": "2026-09-14",
-      "currentState": "current-public-processing-data-sheet-02-2026"
-    },
-    {
       "id": "BIELENBERG-2025-SWITCHOVER-REVIEW",
       "type": "peer-reviewed-review",
       "issuer": "Polymers",
@@ -89,16 +59,6 @@
       "checked": "2026-09-14",
       "state": "peer-reviewed-fetched",
       "scope": "Review of filling-to-holding switchover methods; supports early/late switchover consequences and sensitivity to material, machine and environmental conditions without defining a universal transfer point."
-    },
-    {
-      "id": "ISO-294-1-2017",
-      "type": "standard",
-      "issuer": "ISO",
-      "title": "Plastics — Injection moulding of test specimens of thermoplastic materials — Part 1: General principles, and moulding of multipurpose and bar test specimens",
-      "url": "https://www.iso.org/standard/67036.html",
-      "scope": "General injection-moulding principles, consistent process-parameter descriptions and reproducible reporting. ISO confirms the 2017 edition remains current after review in 2022.",
-      "checked": "2026-09-14",
-      "currentState": "published-confirmed"
     },
     {
       "id": "AUTODESK-RUNNER-LAYOUT",
@@ -119,26 +79,6 @@
       "checked": "2026-09-14",
       "state": "public-engineering-documentation",
       "scope": "Describes measured pressure loss through feed-system contractions such as sprue, runner and gate junctions and the influence of rheological quantities."
-    },
-    {
-      "id": "ASTM-D955-21",
-      "type": "standard",
-      "issuer": "ASTM International",
-      "title": "Standard Test Method of Measuring Shrinkage from Mold Dimensions of Thermoplastics",
-      "url": "https://store.astm.org/d0955-21.html",
-      "scope": "Thermoplastic moulding shrinkage test method; explicitly notes effects of mould/melt temperature, fill time and packing and limits extrapolation from standard specimens to production parts.",
-      "checked": "2026-09-14",
-      "currentState": "active-listed"
-    },
-    {
-      "id": "ISO-20457-2026",
-      "type": "standard",
-      "issuer": "ISO",
-      "title": "Plastics moulded parts — Tolerances and acceptance conditions",
-      "url": "https://www.iso.org/standard/90304.html",
-      "scope": "Current 2026 plastics-specific dimensional/geometrical tolerance and acceptance framework; identifies material, moulding shrinkage, processing conditions, geometry, cooling and warpage as dimensional influences.",
-      "checked": "2026-09-14",
-      "currentState": "published"
     }
   ],
   "cases": [
