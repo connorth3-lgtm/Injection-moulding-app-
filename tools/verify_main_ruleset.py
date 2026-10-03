@@ -210,6 +210,8 @@ def valid_main_ruleset(
     copilot_params = (rule_by_type(detail, "copilot_code_review") or {}).get("parameters") or {}
     if copilot_params.get("review_on_push") is not True:
         errors.append("copilot_code_review.review_on_push must be true")
+    if copilot_params.get("review_draft_pull_requests") is not True:
+        errors.append("copilot_code_review.review_draft_pull_requests must be true")
 
     return not errors, errors
 
@@ -323,6 +325,7 @@ def self_test() -> None:
     bad(lambda x: x["rules"][-2]["parameters"].update(require_extra_approval_for_unattributed_changes=False))
     bad(lambda x: x["rules"][-1]["parameters"]["required_status_checks"].pop())
     bad(lambda x: x["rules"].__setitem__(3, {"type": "code_scanning", "parameters": {"code_scanning_tools": []}}))
+    bad(lambda x: x["rules"][5]["parameters"].update(review_draft_pull_requests=False))
     bad(lambda x: x["conditions"]["ref_name"].update(include=["refs/heads/Main"]))
 
     matching_attestation = {
