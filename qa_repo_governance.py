@@ -242,7 +242,7 @@ for workflow_name, workflow in [
     ("question-quality", question_quality),
     ("release-external-validation", external_validation),
 ]:
-    need("pull_request:\n    branches: [main]" in workflow, f"{workflow_name} required check must run on every PR to main")
+    need(("pull_request:\n    branches: [main]" in workflow) or ("pull_request:\n    branches: [main, preview]" in workflow), f"{workflow_name} required check must run on every PR to main")
 
 for marker in [
     "Verify release-specific external validation boundaries",
