@@ -193,8 +193,11 @@ for marker in (
     need(marker in main_guard, f"post-merge cross-index provenance guard missing: {marker}")
 
 # Browser matrix and lifecycle regression coverage.
-for marker in ("chromium firefox webkit", "playwright.cross-browser.config.cjs", "qa/pwa-lifecycle.spec.js", "qa/cross-browser-smoke.spec.js"):
+for marker in ("chromium firefox webkit", "playwright.cross-browser.config.cjs"):
     need(marker in mobile, f"browser-matrix QA coverage missing: {marker}")
+need("npx playwright test --config=playwright.config.cjs" in mobile, "full Chromium regression suite is not executed")
+for spec in ("qa/pwa-lifecycle.spec.js", "qa/cross-browser-smoke.spec.js"):
+    need((ROOT / spec).exists(), f"browser-matrix QA spec missing: {spec}")
 cross = text("playwright.cross-browser.config.cjs")
 need("firefox-desktop" in cross and "webkit-tablet" in cross and "chromium-desktop" in cross, "cross-browser project matrix incomplete")
 smoke = text("qa/cross-browser-smoke.spec.js")
