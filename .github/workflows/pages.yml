@@ -12,7 +12,7 @@ permissions: {}
 
 concurrency:
   group: pages-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   production-source:
@@ -179,6 +179,9 @@ jobs:
       id-token: write
     if: github.event_name != 'pull_request'
     needs: build
+    concurrency:
+      group: mouldmaster-pages-site-publish
+      cancel-in-progress: false
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -205,6 +208,7 @@ jobs:
         run: >-
           python3 tools/verify_pages_hold.py
           --base-url "${{ needs.deploy.outputs.page_url }}"
+          --expected-source-sha "${{ github.sha }}"
           --convergence-attempts 12
           --convergence-delay 2
       - name: Verify preview-only release-hold remains stable after race window
@@ -212,5 +216,6 @@ jobs:
           sleep 15
           python3 tools/verify_pages_hold.py \
             --base-url "${{ needs.deploy.outputs.page_url }}" \
+            --expected-source-sha "${{ github.sha }}" \
             --convergence-attempts 6 \
             --convergence-delay 2
