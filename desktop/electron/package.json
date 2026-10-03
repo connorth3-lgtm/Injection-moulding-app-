@@ -235,6 +235,10 @@
         "to": "mouldmaster/src/domains"
       },
       {
+        "from": "../../assets/book-diagrams",
+        "to": "mouldmaster/assets/book-diagrams"
+      },
+      {
         "from": "../../runtime-domain-manifest.json",
         "to": "mouldmaster/runtime-domain-manifest.json"
       },
