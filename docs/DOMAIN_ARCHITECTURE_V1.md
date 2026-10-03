@@ -15,13 +15,13 @@ The 2026-09-03 deep-dive audit converted the freeze from documentation into a mo
 Current ceilings are:
 
 - at most 15 scripts in the ordered `BODY_SCRIPTS` bootstrap list;
-- at most 4 directly injected root-level runtime scripts;
+- **zero** directly injected root-level runtime scripts (the governed target is reached and must remain zero);
 - no new root runtime script outside the captured grandfathered set;
 - no new root `*-fix.js`, `*-hardening.js`, `*-finalize.js`, or `*-extension.js` compatibility layer outside the captured grandfathered set;
 - zero active `document.write` bootstrap calls;
 - no `eval()`, `new Function()`, remote runtime script tags, CSP `unsafe-eval`, or external `connect-src` endpoints in the active runtime.
 
-The budget is a ceiling, not a target. These current 15 / 4 / 0 ceilings reflect the 2026-09-29 audit-hardening tranche. Historically, on 2026-09-03 the first deterministic runtime-pack tranche retired 23 direct evidence/process-data bootstrap entries into two ordered generated packs, reducing BODY_SCRIPTS from 60 to 39 and direct root runtime scripts from 59 to 36 without changing source execution order. Removing a root layer, moving capability under `src/domains/`, removing `document.write`, or replacing `unsafe-inline` with a stricter nonce/hash design is always an improvement and remains allowed.
+The budget is a ceiling, not a target. The current governed ceilings are **15 / 0 / 0** for BODY_SCRIPTS / directly injected root runtime scripts / root compatibility layers. The root-runtime and compatibility targets were reached on 2026-10-03 and must not regress. Historically, on 2026-09-03 the first deterministic runtime-pack tranche retired 23 direct evidence/process-data bootstrap entries into two ordered generated packs, reducing BODY_SCRIPTS from 60 to 39 and direct root runtime scripts from 59 to 36 without changing source execution order. Removing a root layer, moving capability under `src/domains/`, removing `document.write`, or replacing `unsafe-inline` with a stricter nonce/hash design is always an improvement and remains allowed.
 
 ## Five user-facing product areas
 
