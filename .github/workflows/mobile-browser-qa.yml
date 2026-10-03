@@ -2,9 +2,9 @@ name: Mobile Browser QA
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, preview]
   push:
-    branches: [main]
+    branches: [main, preview]
     paths:
       - 'index.html'
       - 'MouldMaster_Core_App.html'
