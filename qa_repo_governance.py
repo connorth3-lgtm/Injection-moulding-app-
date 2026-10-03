@@ -376,7 +376,13 @@ for stale_branch in [
 ]:
     need(stale_branch not in pruner, f"historical cleanup branch still hard-coded: {stale_branch}")
 
-need("run: python qa_repo_governance.py" in release_qa, "release QA must run repository governance regression checks")
+for marker in (
+    "- name: Repository governance integrity",
+    "python qa_repo_governance.py",
+    "python qa_pages_single_publisher.py",
+    "python qa_release_supply_chain.py",
+):
+    need(marker in release_qa, f"release QA governance bundle missing marker: {marker}")
 
 print(
     "MouldMaster repository governance QA passed "
