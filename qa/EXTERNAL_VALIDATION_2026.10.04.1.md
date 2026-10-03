@@ -1,0 +1,28 @@
+# External validation boundary — 2026.10.04.1
+
+Release `2026.10.04.1` is technically automated; native main governance remains **pending-native-ruleset-apply**, and the following external workstreams remain explicit **HOLD**. This index does not create human, device, learner, accreditation, signing, distribution or production-site evidence.
+
+## Exact current candidate
+
+- pre-merge candidate source: `3a5bd47155001f201b879dfea9390735757ab50a`
+- exact public-runtime fingerprint: `sha256:a47a95e1a9a7060f5dcc29bd033ee494eb4fe96f29d2b24f324f28ab8dadd5be`
+- candidate build run: `37152740306` (**Pre-merge Public Candidate**)
+- retained physical candidate: `physical-pwa-candidate-3a5bd47155001f201b879dfea9390735757ab50a`
+- artifact id: `11284402718`
+- artifact ZIP digest: `sha256:0a56d78d390c7ad67aebfd9dee82f284eaa70bbd2d8efba0213d508bc57fa7cc`
+- artifact retention expiry: `2026-11-02T20:46:43Z`
+- Pages disposition: the retained artifact is the exact validation candidate for this release boundary; production publication remains governed separately and all external-evidence workstreams below stay HOLD.
+
+This is a release-boundary **rebind**, not external evidence. Earlier physical-device, assistive-technology, SME, learner, Windows-distribution or NZQA/provider records are not relabelled for the current runtime. Each workstream below remains HOLD until its genuine release-specific exit condition is satisfied.
+
+| Workstream | Status | Release packet | Required genuine evidence |
+| --- | --- | --- | --- |
+| Physical iOS/iPadOS + Android PWA | **HOLD** | `qa/PWA_PHYSICAL_DEVICE_2026.10.04.1.md` | Current-release hands-on device execution across the governed install/update/offline matrix. |
+| Real assistive technology | **HOLD** | `qa/ACCESSIBILITY_REAL_AT_2026.10.04.1.md` | Human NVDA and VoiceOver matrix evidence. |
+| Windows distribution | **HOLD** | `certification/WINDOWS_SIGNING_READINESS_2026.10.04.1.md` | Signed/Store provenance, physical Windows launch, reputation path and package validation. |
+| Independent Book SME | **HOLD** | `qa/BOOK_SME_REVIEW_2026.10.04.1.md` | 46/46 human chapter approvals across six dimensions. |
+| Curriculum SME | **HOLD** | `qa/CURRICULUM_SME_REVIEW_2026.10.04.1.md` | 120/120 human lesson semantic approvals. |
+| Learner outcomes | **HOLD** | `qa/LEARNER_PILOT_2026.10.04.1.md` | Real longitudinal learner evidence. |
+| NZQA/provider/accreditation | **HOLD** | `qa/NZQA_EXTERNAL_VALIDATION_2026.10.04.1.md` | Genuine provider ownership, need/support, provider-approved design/assessment, consent-to-assess/CMR confirmation, moderation, workplace evidence and provider review/change governance. |
+
+Production use remains **advisory-only**. No automatic machine control, validated recipe authority, accreditation, learner-efficacy claim or external certification is authorized by repository automation.

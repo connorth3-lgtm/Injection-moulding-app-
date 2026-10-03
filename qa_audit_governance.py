@@ -169,6 +169,7 @@ for marker in (
     'required_approving_review_count must be 1 for independent human review',
     'require_last_push_approval must be true so the latest head is independently reviewed',
     'require_extra_approval_for_unattributed_changes must be true',
+    'copilot_code_review.review_draft_pull_requests must be true',
 ):
     need(marker in ruleset, f"ruleset bypass fail-closed contract missing: {marker}")
 need(attestation.get("schema") == 1, "ruleset attestation schema must be 1")

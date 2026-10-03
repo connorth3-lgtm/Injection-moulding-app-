@@ -441,9 +441,9 @@ if(!R||typeof R.after!=='function')throw new Error('assessment-evidence-approval
 const APPROVED_INPUTS={
  'MouldMaster_Core_App.html':'c6b258ccd37d98b2f591f538b34eb33c7705dda6',
  'training-upgrade.js':'ea6ee84e69c4d5ed60776f2022f1bc9462425ea2',
- 'assessment-deep-dive.js':'8f41edb8e855f1b3f8f2277873b7700aa1d4bf29',
+ 'assessment-deep-dive.js':'367d941afc67ad62125e1e1cb16ff1a1e48d0123',
  'src/domains/assessment/assessment-answer-cue-fix.js':'9a6ef14f5eac1e127255afdd050a6f47f6009587',
- 'assessment-quality-suite.js':'2f311bf1349d9c3ba4e5b54958efd3627c98991b',
+ 'assessment-quality-suite.js':'40871d145ac71b6d8f3174a3e3860955f0147078',
  'assessment-stable-review-bridge.js':'b91ac5b4712f96634ffd76a842ae75a417ed6a85',
  'diagnostic-learning-labs.js':'582ac717d1e218c9144f9d3b69490933f01936da',
  'material-behaviour-labs.js':'6b0f489c59ef7d5f1e6ebdd5a01d527d294f3f3b'

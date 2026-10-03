@@ -110,6 +110,7 @@ for q in live_technical.values():
     abs_wrong=sum(1 for o in others if absolutes.search(o));abs_correct=bool(absolutes.search(correct));
     if abs_wrong>=2 and not abs_correct:cue_flags.append({'id':q['id'],'type':'absolute-language-distractors','distractors_flagged':abs_wrong})
 severe=[x for x in cue_flags if x['type']=='correct-option-length' and x.get('correct_length',0)>max(70,x.get('peer_median',1)*2.6)];need(not severe,'severe correct-option length cue detected: '+json.dumps(severe[:5]))
+need(not cue_flags,'assessment answer-cue heuristic flagged live technical items: '+json.dumps(cue_flags[:10],ensure_ascii=False))
 REPORT.write_text(json.dumps({'schema':1,'quality_version':'2026.08.24.2','scenario_count':40,'near_duplicate_flags':near,'runtime_answer_leak_flags':runtime_leaks,'multi_cue_answer_leak_flags':cue_flags,'strict_longest_answer_flags':strict_length_flags,'severe_answer_leaks':severe,'exam_blueprint_minimum':'7 technical items covering at least 5 technical competency groups plus regional safety/compliance','stable_review_ids':True,'analytics':'device-local'},indent=2)+'\n',encoding='utf-8')
 
 semantic=text('sources/ASSESSMENT_SEMANTIC_REVIEW_CONTRACT.md');need('197 learner-visible keyed decisions' in semantic and '57 live exam questions' in semantic and '40 shop-floor scenario drills' in semantic and '36 Diagnostic Learning Lab decisions' in semantic and '24 Material Behaviour Lab decisions' in semantic and '40 optional Material Practice decisions' in semantic,'semantic review contract coverage drift');
