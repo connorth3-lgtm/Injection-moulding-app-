@@ -12,9 +12,9 @@ permissions:
   actions: read
 
 jobs:
-  mobile-browser:
+  browser-substantive:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -83,10 +83,6 @@ jobs:
         id: visual_lock
         continue-on-error: true
         run: npx playwright test qa/visual-regression.spec.js --config=playwright.config.cjs
-      - name: 500 isolated app reliability runs
-        id: app_500
-        continue-on-error: true
-        run: npx playwright test --config=playwright.app-500.config.cjs
       - name: UI-only feature reachability audit
         id: reachability
         continue-on-error: true
@@ -103,11 +99,11 @@ jobs:
         id: cross_browser_smoke
         continue-on-error: true
         run: npx playwright test --config=playwright.cross-browser.config.cjs
-      - name: Upload browser QA artifacts
+      - name: Upload substantive browser QA artifacts
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: mobile-browser-qa
+          name: mobile-browser-substantive
           path: qa-artifacts/
           if-no-files-found: warn
           retention-days: 14
@@ -115,7 +111,6 @@ jobs:
         if: always()
         env:
           VISUAL_OUTCOME: ${{ steps.visual_lock.outcome }}
-          APP_500_OUTCOME: ${{ steps.app_500.outcome }}
           REACHABILITY_OUTCOME: ${{ steps.reachability.outcome }}
           CHROMIUM_OUTCOME: ${{ steps.chromium_regression.outcome }}
           WEBKIT_OUTCOME: ${{ steps.webkit_regression.outcome }}
@@ -131,7 +126,6 @@ jobs:
             fi
           }
           check_gate "Approved visual baseline" "$VISUAL_OUTCOME"
-          check_gate "500 isolated app reliability runs" "$APP_500_OUTCOME"
           check_gate "UI-only feature reachability audit" "$REACHABILITY_OUTCOME"
           check_gate "Chromium substantive regression suite" "$CHROMIUM_OUTCOME"
           check_gate "WebKit substantive learner suite" "$WEBKIT_OUTCOME"
@@ -140,4 +134,51 @@ jobs:
             echo "Browser evidence is complete for the executed suites; unresolved gates remain fail-closed."
             exit 1
           fi
-          echo "All browser and visual approval gates passed."
+          echo "All substantive browser and visual approval gates passed."
+
+  app-500-reliability:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Install pinned Chromium
+        run: |
+          npm ci --no-audit --fund=false
+          npx playwright install --with-deps chromium
+      - name: Start reliability candidate server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/mouldmaster-http.log 2>&1 &
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/mouldmaster-http.log
+          exit 1
+      - name: 500 isolated app reliability runs
+        run: npx playwright test --config=playwright.app-500.config.cjs
+      - name: Upload 500-run reliability artifacts
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: mobile-browser-app-500
+          path: qa-artifacts/app-500-report/
+          if-no-files-found: warn
+          retention-days: 14
+
+  mobile-browser:
+    if: always()
+    needs: [browser-substantive, app-500-reliability]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enforce complete mobile browser evidence
+        env:
+          SUBSTANTIVE: ${{ needs.browser-substantive.result }}
+          APP_500: ${{ needs.app-500-reliability.result }}
+        run: |
+          test "$SUBSTANTIVE" = "success" || { echo "::error::Substantive browser matrix did not pass: $SUBSTANTIVE"; exit 1; }
+          test "$APP_500" = "success" || { echo "::error::500 isolated app reliability runs did not pass: $APP_500"; exit 1; }
+          echo "Mobile Browser QA passed: substantive browser matrix and all 500 isolated reliability runs succeeded."
