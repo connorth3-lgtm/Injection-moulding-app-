@@ -45,6 +45,10 @@ jobs:
         run: python qa_runtime_hardening.py
       - name: Release and documentation coherence
         run: python qa_release_docs.py
+      - name: Exact external-validation candidate binding
+        run: |
+          python tools/verify_release_external_validation.py
+          python qa_release_validation_packets.py
       - name: Repository governance integrity
         run: python qa_repo_governance.py
       - name: Audit remediation governance regression

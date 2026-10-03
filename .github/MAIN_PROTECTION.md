@@ -29,6 +29,13 @@ Exactly one active branch ruleset must govern `refs/heads/main`, with no bypass 
 
 Automated checks are necessary but are not equivalent to independent human review. If fewer than two trusted write-capable collaborators are available, the safe state is **merge blocked** until an independent reviewer is added; the repository must not lower the approval requirement to make a merge convenient.
 
+
+## `preview` trust boundary
+
+The `preview` branch is an integration/staging branch and is **not** external-evidence authority. It may remain less protected than `main`, but no physical-device, assistive-technology, provider/NZQA, learner-outcome or other governed external evidence may bind to its mutable branch tip.
+
+Release-specific external evidence must bind to the immutable retained exact-head artifact recorded in `data/release-external-validation-v1.json:webCandidate`, including its source SHA, runtime fingerprint, workflow run, artifact id and artifact digest. A later learner-runtime change requires a fresh candidate rebind even when the web release label is unchanged.
+
 ## Applying the policy safely
 
 The reviewed helper is:

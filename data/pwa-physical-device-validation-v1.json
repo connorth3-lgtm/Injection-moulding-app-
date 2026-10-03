@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Automated browser, service-worker and assistive-technology regressions do not substitute for testing on physical iOS/iPadOS and Android devices. Fresh physical validation is required for the current release. Screen-reader conformance remains governed separately by data/accessibility-real-at-validation-v1.json.",
+  "boundary": "Automated browser, service-worker and assistive-technology regressions do not substitute for testing on physical iOS/iPadOS and Android devices. Fresh physical validation is required for the current release and must bind to the retained exact-head candidate artifact recorded here, never to the mutable preview branch. Screen-reader conformance remains governed separately by data/accessibility-real-at-validation-v1.json.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
@@ -40,5 +40,17 @@
       }
     }
   },
-  "privacyBoundary": "Public contract metadata must not include learner names, customer/site identifiers, email addresses, private screenshots, raw process data, backup content, filesystem/user paths or other personal/proprietary evidence. Keep detailed device evidence outside the public repository and reference it only with a non-sensitive review identifier."
+  "privacyBoundary": "Public contract metadata must not include learner names, customer/site identifiers, email addresses, private screenshots, raw process data, backup content, filesystem/user paths or other personal/proprietary evidence. Keep detailed device evidence outside the public repository and reference it only with a non-sensitive review identifier.",
+  "release": "2026.10.04.1",
+  "candidate": {
+    "release": "2026.10.04.1",
+    "sourceSha": "dedf5fd0c03b4580fbff5442cd5307d473459d50",
+    "runtimeFingerprint": "sha256:62cdf25d79db3edbcf792ae5032205d509c7c8421189a28672d6d1c471d06df2",
+    "candidateRunId": 37155328537,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 11286170385,
+    "artifactName": "physical-pwa-candidate-dedf5fd0c03b4580fbff5442cd5307d473459d50",
+    "artifactDigest": "sha256:40e496c4e93a304a8093ee126df498aff1ba40e7db496568ffe9c557b99939a3",
+    "artifactExpiresAt": "2026-11-02T21:31:07Z"
+  }
 }
