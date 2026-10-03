@@ -34,23 +34,28 @@ if not preview_universal_trigger:
 else:
     need("branches: [main, preview]" in workflow,'Mobile Browser QA universal trigger must include preview')
 
-# Visual review is an approval gate, not a reason to discard the remaining
-# browser evidence. Independent suites must run to completion and the final
-# workflow step must still fail closed if any tolerated test outcome failed.
-for step_id in ('visual_lock','chromium_regression','webkit_regression','cross_browser_smoke'):
-    need(f'id: {step_id}\n        continue-on-error: true' in workflow,f'{step_id} must collect its outcome without short-circuiting later browser evidence')
-need('name: Enforce browser and visual approval gates' in workflow,'Mobile Browser QA needs an explicit final fail-closed gate')
-need(workflow.index('name: Upload substantive browser QA artifacts') < workflow.index('name: Enforce browser and visual approval gates'),'browser artifacts must upload before the substantive approval gate is enforced')
+# Heavy browser evidence is fanned out across independent jobs so one slow suite
+# does not serialize unrelated coverage. The final mobile-browser job remains the
+# single fail-closed deployment gate.
+for job in ('browser-chromium:','browser-webkit:','browser-cross:','app-500-reliability:','mobile-browser:'):
+    need(job in workflow,f'Mobile Browser QA parallel job missing: {job}')
+need('matrix:\n        shard: [1, 2, 3, 4, 5]' in workflow,'500-run reliability suite must be split across five shards')
+need('fail-fast: false' in workflow,'reliability shards must all complete for full evidence')
+need('--shard=${{ matrix.shard }}/5' in workflow,'Playwright reliability sharding is not wired')
+need('npx playwright test --config=playwright.config.cjs --grep-invert "matches approved .* baseline across learner surfaces"' in workflow,'Chromium substantive suite missing')
+need('npx playwright test --config=playwright.webkit-full.config.cjs' in workflow,'WebKit substantive suite missing')
+need('npx playwright test --config=playwright.cross-browser.config.cjs' in workflow,'cross-browser smoke suite missing')
+need('npx playwright test --config=playwright.reachability.config.cjs' in workflow,'feature reachability suite missing')
+need('npx playwright test qa/visual-regression.spec.js --config=playwright.config.cjs' in workflow,'approved visual regression gate missing')
+need('needs: [browser-chromium, browser-webkit, browser-cross, app-500-reliability]' in workflow,'mobile-browser aggregator must depend on all browser jobs and all reliability shards')
+need('name: Enforce complete mobile browser evidence' in workflow,'mobile-browser aggregator must fail closed across all browser evidence')
 for expression in (
-    '${{ steps.visual_lock.outcome }}',
-    '${{ steps.chromium_regression.outcome }}',
-    '${{ steps.webkit_regression.outcome }}',
-    '${{ steps.cross_browser_smoke.outcome }}',
+    '${{ needs.browser-chromium.result }}',
+    '${{ needs.browser-webkit.result }}',
+    '${{ needs.browser-cross.result }}',
+    '${{ needs.app-500-reliability.result }}',
 ):
-    need(expression in workflow,f'final browser gate is not wired to {expression}')
-need('check_gate "Approved visual baseline" "$VISUAL_OUTCOME"' in workflow,'approved visual drift must remain fail-closed after evidence collection')
-need('if [ "$failed" -ne 0 ]; then' in workflow and 'exit 1' in workflow,'final browser gate must fail the job when an approval/test outcome is unresolved')
-need('needs: [browser-substantive, app-500-reliability]' in workflow,'mobile-browser aggregator must depend on both parallel browser jobs')
-need('name: Enforce complete mobile browser evidence' in workflow,'mobile-browser aggregator must fail closed across substantive and 500-run jobs')
+    need(expression in workflow,f'mobile-browser aggregator is not wired to {expression}')
+need('All five reliability shards did not pass' in workflow,'reliability shard failures must fail the aggregate gate')
 
 print(f'MouldMaster WebKit regression contract passed ({len(webkit_specs)} substantive specs + tablet smoke; Chromium-only service-worker PWA lifecycle/transition and approved visual baseline explicit; browser evidence remains complete before final fail-closed approval)')
