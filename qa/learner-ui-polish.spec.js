@@ -253,7 +253,7 @@ test('all major app surfaces remain reachable without shell clutter',async({page
 test('Book Materials chapter exposes the complete governed material datasets with structured technical-review rendering',async({page})=>{
   await page.setViewportSize({width:810,height:1080});
   await openApp(page);
-  await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
+  await page.evaluate(()=>window.MMBook.load());
   await page.evaluate(()=>window.MMBook.open());
   await page.locator('[data-mm-book-chapter="material-families"]').click();
   const atlas=page.locator('[data-mm-book-material-atlas]');
