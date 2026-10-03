@@ -141,8 +141,11 @@ def validate_web_candidate(data: dict, expected_release: str) -> dict:
         fail("canonical webCandidate artifactExpiresAt must be an ISO-8601 instant")
     if artifact_expiry.tzinfo is None:
         fail("canonical webCandidate artifactExpiresAt must include a timezone")
-    if artifact_expiry.astimezone(dt.timezone.utc) <= dt.datetime.now(dt.timezone.utc):
-        fail("canonical retained webCandidate artifact has expired and must be re-retained/rebound before validation continues")
+    # Wall-clock liveness is intentionally enforced by
+    # tools/verify_external_validation_live_bindings.py in the promotion gate.
+    # Keeping this repository-only validator time-independent leaves a repair path
+    # available to re-retain/rebind an expired artifact on preview.
+    artifact_expiry.astimezone(dt.timezone.utc)
 
     policy = data.get("candidatePolicy")
     if not isinstance(policy, dict):
