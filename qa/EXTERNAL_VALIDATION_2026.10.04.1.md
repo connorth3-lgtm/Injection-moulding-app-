@@ -4,14 +4,14 @@ Release `2026.10.04.1` is technically automated; native main governance remains 
 
 ## Exact current candidate
 
-- pre-merge candidate source: `3a5bd47155001f201b879dfea9390735757ab50a`
-- exact public-runtime fingerprint: `sha256:a47a95e1a9a7060f5dcc29bd033ee494eb4fe96f29d2b24f324f28ab8dadd5be`
-- candidate build run: `37152740306` (**Pre-merge Public Candidate**)
-- retained physical candidate: `physical-pwa-candidate-3a5bd47155001f201b879dfea9390735757ab50a`
-- artifact id: `11284402718`
-- artifact ZIP digest: `sha256:0a56d78d390c7ad67aebfd9dee82f284eaa70bbd2d8efba0213d508bc57fa7cc`
-- artifact retention expiry: `2026-11-02T20:46:43Z`
-- Pages disposition: the retained artifact is the exact validation candidate for this release boundary; production publication remains governed separately and all external-evidence workstreams below stay HOLD.
+- pre-merge candidate source: `dedf5fd0c03b4580fbff5442cd5307d473459d50`
+- exact public-runtime fingerprint: `sha256:62cdf25d79db3edbcf792ae5032205d509c7c8421189a28672d6d1c471d06df2`
+- candidate build run: `37155328537` (**Pre-merge Public Candidate**)
+- retained physical candidate: `physical-pwa-candidate-dedf5fd0c03b4580fbff5442cd5307d473459d50`
+- artifact id: `11286170385`
+- artifact ZIP digest: `sha256:40e496c4e93a304a8093ee126df498aff1ba40e7db496568ffe9c557b99939a3`
+- artifact retention expiry: `2026-11-02T21:31:07Z`
+- Pages disposition: the retained artifact is the exact validation candidate for this release boundary; its source tree is identical to squash commit `390c28b34f01395600170982b7bd4632aa809d45`. The mutable `preview` branch is not evidence authority; production publication remains governed separately and all external-evidence workstreams below stay HOLD.
 
 This is a release-boundary **rebind**, not external evidence. Earlier physical-device, assistive-technology, SME, learner, Windows-distribution or NZQA/provider records are not relabelled for the current runtime. Each workstream below remains HOLD until its genuine release-specific exit condition is satisfied.
 
