@@ -105,7 +105,48 @@ def require_not_future_release(evidence: dict, expected_release: str, label: str
         fail(f"{label} cannot target future release {release}")
 
 
-def validate_accessibility(section: dict, expected_release: str) -> None:
+def candidate_identity(candidate: dict) -> dict:
+    return {
+        "release": candidate.get("release"),
+        "sourceSha": candidate.get("sourceSha"),
+        "runtimeFingerprint": candidate.get("runtimeFingerprint"),
+    }
+
+
+def validate_web_candidate(data: dict, expected_release: str) -> dict:
+    candidate = data.get("webCandidate")
+    if not isinstance(candidate, dict):
+        fail("canonical webCandidate binding is missing")
+    if candidate.get("release") != expected_release:
+        fail("canonical webCandidate release is stale")
+    source_sha = require_sha(candidate.get("sourceSha"), "canonical webCandidate sourceSha")
+    require_fingerprint(candidate.get("runtimeFingerprint"), "canonical webCandidate runtimeFingerprint")
+    require_fingerprint(candidate.get("artifactDigest"), "canonical webCandidate artifactDigest")
+    run_id = candidate.get("candidateRunId")
+    if not isinstance(run_id, int) or run_id <= 0:
+        fail("canonical webCandidate candidateRunId must be a positive integer")
+    artifact_id = candidate.get("artifactId")
+    if not isinstance(artifact_id, int) or artifact_id <= 0:
+        fail("canonical webCandidate artifactId must be a positive integer")
+    if candidate.get("candidateWorkflow") != "Pre-merge Public Candidate":
+        fail("canonical webCandidate must come from Pre-merge Public Candidate")
+    expected_name = f"physical-pwa-candidate-{source_sha}"
+    if candidate.get("artifactName") != expected_name:
+        fail(f"canonical webCandidate artifactName must be {expected_name}")
+    require_nonempty(candidate.get("artifactExpiresAt"), "canonical webCandidate artifactExpiresAt is missing")
+
+    policy = data.get("candidatePolicy")
+    if not isinstance(policy, dict):
+        fail("candidatePolicy is missing")
+    if policy.get("previewBranchAuthoritative") is not False:
+        fail("mutable preview branch must never be authoritative external-evidence identity")
+    if policy.get("evidenceAuthority") != "retained-exact-head-artifact":
+        fail("candidatePolicy.evidenceAuthority must be retained-exact-head-artifact")
+    require_nonempty(policy.get("rule"), "candidatePolicy.rule is missing")
+    return candidate
+
+
+def validate_accessibility(section: dict, expected_release: str, web_candidate: dict) -> None:
     packet = require_release_packet(
         section.get("reviewPacket"),
         expected_release,
@@ -123,6 +164,8 @@ def validate_accessibility(section: dict, expected_release: str) -> None:
         fail("accessibility candidate binding is missing")
     if candidate.get("release") != expected_release:
         fail("accessibility candidate release is stale")
+    if candidate != candidate_identity(web_candidate):
+        fail("accessibility candidate does not match canonical webCandidate")
     if candidate.get("sourceSha") != source_sha or candidate.get("runtimeFingerprint") != fingerprint:
         fail("accessibility candidate does not match the governed real-AT contract")
 
@@ -142,7 +185,7 @@ def validate_accessibility(section: dict, expected_release: str) -> None:
             require_nonempty(row.get(key), f"validated real-AT row is missing {key}")
 
 
-def validate_pwa(section: dict, expected_release: str) -> None:
+def validate_pwa(section: dict, expected_release: str, web_candidate: dict) -> None:
     require_release_packet(
         section.get("reviewPacket"),
         expected_release,
@@ -154,6 +197,8 @@ def validate_pwa(section: dict, expected_release: str) -> None:
         fail("PWA currentCandidate binding is missing")
     if candidate.get("release") != expected_release:
         fail("PWA candidate release is stale")
+    if candidate != web_candidate:
+        fail("PWA currentCandidate must exactly match canonical webCandidate")
     source_sha = require_sha(candidate.get("sourceSha"), "PWA candidate sourceSha")
     require_fingerprint(candidate.get("runtimeFingerprint"), "PWA candidate runtimeFingerprint")
     require_fingerprint(candidate.get("artifactDigest"), "PWA candidate artifactDigest")
@@ -169,9 +214,15 @@ def validate_pwa(section: dict, expected_release: str) -> None:
     require_nonempty(candidate.get("artifactExpiresAt"), "PWA candidate artifactExpiresAt is missing")
 
     evidence = load_json(ROOT / section["evidenceContract"])
-    if section["status"] == "hold":
-        return
     require_current_release(evidence, expected_release, "PWA physical-device")
+    if evidence.get("candidate") != web_candidate:
+        fail("PWA physical-device contract candidate must exactly match canonical webCandidate")
+    if section["status"] == "hold":
+        if evidence.get("status") == "validated":
+            fail("PWA physical-device ledger is HOLD although its evidence contract says validated")
+        if evidence.get("runtimeFingerprint") is not None:
+            fail("PWA HOLD must not record a validated runtimeFingerprint before genuine device evidence")
+        return
     if evidence.get("status") != "validated":
         fail("current-release PWA cannot be validated without full physical iOS/iPadOS + Android evidence")
     if evidence.get("runtimeFingerprint") != candidate.get("runtimeFingerprint"):
@@ -295,7 +346,7 @@ def validate_learner(section: dict, expected_release: str) -> None:
         fail("validated learner evidence must explicitly declare synthetic=false")
 
 
-def validate_nzqa(section: dict, expected_release: str) -> None:
+def validate_nzqa(section: dict, expected_release: str, web_candidate: dict) -> None:
     packet = require_release_packet(
         section.get("reviewPacket"),
         expected_release,
@@ -320,6 +371,13 @@ def validate_nzqa(section: dict, expected_release: str) -> None:
     candidate = contract.get("candidate")
     if not isinstance(candidate, dict):
         fail("NZQA external-validation candidate binding is missing")
+    if candidate != candidate_identity(web_candidate):
+        fail("NZQA contract candidate does not match canonical webCandidate")
+    ledger_candidate = section.get("candidate")
+    if ledger_candidate != candidate_identity(web_candidate):
+        fail("NZQA release ledger candidate does not match canonical webCandidate")
+    if candidate != ledger_candidate:
+        fail("NZQA release ledger and external-validation contract candidate bindings disagree")
     require_sha(candidate.get("sourceSha"), "NZQA candidate sourceSha")
     require_fingerprint(candidate.get("runtimeFingerprint"), "NZQA candidate runtimeFingerprint")
     gates = contract.get("requiredGates")
@@ -374,6 +432,8 @@ def main() -> None:
     if (data.get("technicalAutomation") or {}).get("status") != "pass":
         fail("technicalAutomation.status must be pass for this audited release record")
 
+    web_candidate = validate_web_candidate(data, contract_release)
+
     for name, allowed in ALLOWED_SECTION_STATUS.items():
         section = data.get(name)
         if not isinstance(section, dict):
@@ -408,13 +468,13 @@ def main() -> None:
     else:
         require_nonempty(governance.get("required"), "pending native governance must have an explicit exit condition")
 
-    validate_accessibility(data["accessibility"], contract_release)
-    validate_pwa(data["pwaPhysicalDevices"], contract_release)
+    validate_accessibility(data["accessibility"], contract_release, web_candidate)
+    validate_pwa(data["pwaPhysicalDevices"], contract_release, web_candidate)
     validate_windows(data["windowsDistribution"], contract_release)
     validate_book_sme(data["bookSme"], contract_release)
     validate_curriculum(data["curriculumSme"], contract_release)
     validate_learner(data["learnerOutcomes"], contract_release)
-    validate_nzqa(data["nzqaProvider"], contract_release)
+    validate_nzqa(data["nzqaProvider"], contract_release, web_candidate)
 
     production = data["productionUse"]
     if production.get("status") != "advisory-only" or production.get("authority") != "no-automatic-machine-control":
