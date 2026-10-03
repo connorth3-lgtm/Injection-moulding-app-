@@ -57,6 +57,13 @@ def main() -> None:
         require(required in critical_rows, f"critical CI path missing: {required}")
     backup_regressions = set(critical_rows["backup-import"].get("regressions", []))
     require({"src/domains/learning/backup-authority-notice.js", "qa_learner_backup_integrity.cjs", "tools/health_restore_drill.py"}.issubset(backup_regressions), "backup integrity regression ownership incomplete")
+    for row in critical_rows.values():
+        for declared in row.get("regressions", []):
+            require((ROOT / declared).is_file(), f"health critical-path regression source does not exist: {row.get('id')} -> {declared}")
+    for store in data.get("persistence", {}).get("stores", []):
+        declared = store.get("source")
+        if declared:
+            require((ROOT / declared).is_file(), f"health persistence source does not exist: {store.get('id')} -> {declared}")
     require(set(ci.get("historicalDefectRegressions", [])) >= {281, 282, 283, 285, 288, 300, 311}, "historical audit regressions not tracked")
 
     workflow_text = "\n".join(path.read_text(encoding="utf-8") for path in (ROOT / ".github" / "workflows").glob("*.yml"))
