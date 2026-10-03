@@ -62,7 +62,11 @@ jobs:
           test -n "$BASELINE_REF"
           test "$BASELINE_SHA" != "${{ github.sha }}"
           git fetch --no-tags --depth=1 origin "refs/heads/$BASELINE_REF"
-          test "$(git rev-parse FETCH_HEAD)" = "$BASELINE_SHA"
+          FETCHED_BASELINE_SHA="$(git rev-parse FETCH_HEAD)"
+          if [ "$FETCHED_BASELINE_SHA" != "$BASELINE_SHA" ]; then
+            echo "::error::Visual baseline ref drifted: $BASELINE_REF expected $BASELINE_SHA but resolved $FETCHED_BASELINE_SHA"
+            exit 1
+          fi
           rm -rf /tmp/mm-visual-baseline
           git worktree add --detach /tmp/mm-visual-baseline "$BASELINE_SHA"
       - name: Start Chromium candidate server
