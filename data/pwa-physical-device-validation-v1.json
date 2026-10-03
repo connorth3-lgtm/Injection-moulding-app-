@@ -1,21 +1,15 @@
 {
   "schemaVersion": 2,
-  "status": "released-with-accepted-ios-risk",
-  "boundary": "Automated browser, service-worker and assistive-technology regressions do not substitute for testing on physical iOS/iPadOS and Android devices. Android has owner-attested evidence; iOS/iPadOS remains explicitly untested under the recorded release-risk waiver. Full physical validation requires reviewed evidence for both platforms. Screen-reader conformance remains governed separately by data/accessibility-real-at-validation-v1.json.",
-  "runtimeFingerprint": "sha256:3de533c64352b7c674c1a58eb7a14ecc51ba678464d047e6b1bd5294a9779b99",
-  "testedAt": "2026-09-06T20:55:00+12:00",
-  "testerReference": "repository-owner-android-attestation",
-  "evidenceReference": "pr-234-release-risk-acceptance",
-  "riskAcceptance": {
-    "status": "accepted",
-    "acceptedAt": "2026-09-06T20:55:00+12:00",
-    "acceptedBy": "repository-owner",
-    "scope": "Physical iOS/iPadOS validation was not performed because no device was available. Automated WebKit coverage passed and is not represented as physical iOS validation. Release 2026.09.06.16 is authorized with this remaining risk explicitly accepted."
-  },
+  "status": "pending-physical-device-validation",
+  "boundary": "Automated browser, service-worker and assistive-technology regressions do not substitute for testing on physical iOS/iPadOS and Android devices. Fresh physical validation is required for the current release. Screen-reader conformance remains governed separately by data/accessibility-real-at-validation-v1.json.",
+  "runtimeFingerprint": null,
+  "testedAt": null,
+  "testerReference": null,
+  "evidenceReference": null,
   "maxEvidenceAgeDays": 30,
   "platforms": {
     "ios": {
-      "status": "untested-risk-accepted",
+      "status": "pending",
       "deviceModel": null,
       "osVersion": null,
       "browserVersion": null,
@@ -31,18 +25,18 @@
       }
     },
     "android": {
-      "status": "owner-attested",
-      "deviceModel": "OPPO Find X9",
-      "osVersion": "Android 10",
-      "browserVersion": "Chrome 152.0.0.0",
-      "installedMode": "standalone",
+      "status": "pending",
+      "deviceModel": null,
+      "osVersion": null,
+      "browserVersion": null,
+      "installedMode": null,
       "checks": {
-        "installStandalone": "pass",
-        "fixedNavigationClearance": "pass",
-        "offlineRestart": "pass",
-        "offlineReboot": "pass",
-        "updateRecovery": "pass",
-        "storagePressure": "pass"
+        "installStandalone": "pending",
+        "fixedNavigationClearance": "pending",
+        "offlineRestart": "pending",
+        "offlineReboot": "pending",
+        "updateRecovery": "pending",
+        "storagePressure": "pending"
       }
     }
   },
