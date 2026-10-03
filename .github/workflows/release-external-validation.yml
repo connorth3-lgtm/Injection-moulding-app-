@@ -9,6 +9,8 @@ on:
 
 permissions:
   contents: read
+  actions: read
+  issues: read
 
 concurrency:
   group: release-external-validation-${{ github.ref }}
@@ -26,6 +28,12 @@ jobs:
         run: python tools/verify_release_external_validation.py
       - name: Verify exact release validation packets
         run: python qa_release_validation_packets.py
+      - name: Verify live retained artifact and external tracker bindings
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          python tools/verify_external_validation_live_bindings.py
+          --repository "${{ github.repository }}"
       - name: Verify External Validation Wave 1 integrity
         run: python qa_external_validation_wave1.py
       - name: Exercise native ruleset verifier contract
