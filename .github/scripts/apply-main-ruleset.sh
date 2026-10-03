@@ -110,6 +110,9 @@ jq '
         | .parameters.dismiss_stale_reviews_on_push = true
         | .parameters.require_last_push_approval = true
         | .parameters.require_extra_approval_for_unattributed_changes = true
+      elif .type == "copilot_code_review" then
+        .parameters.review_on_push = true
+        | .parameters.review_draft_pull_requests = true
       elif .type == "required_status_checks" then
         .parameters.strict_required_status_checks_policy = true
         | .parameters.do_not_enforce_on_create = false
@@ -138,6 +141,8 @@ jq -e --argjson app "$GITHUB_ACTIONS_APP_ID" '
   ([.rules[].type] | index("code_scanning")) != null and
   ([.rules[].type] | index("code_quality")) != null and
   ([.rules[].type] | index("copilot_code_review")) != null and
+  ([.rules[] | select(.type == "copilot_code_review") | .parameters.review_on_push] | .[0]) == true and
+  ([.rules[] | select(.type == "copilot_code_review") | .parameters.review_draft_pull_requests] | .[0]) == true and
   ([.rules[] | select(.type == "pull_request") | .parameters.allowed_merge_methods] | .[0]) == ["squash"] and
   ([.rules[] | select(.type == "pull_request") | .parameters.required_approving_review_count] | .[0]) == 1 and
   ([.rules[] | select(.type == "pull_request") | .parameters.required_review_thread_resolution] | .[0]) == true and
@@ -198,6 +203,8 @@ printf '%s\n' "$effective" | jq -e --argjson app "$GITHUB_ACTIONS_APP_ID" '
   ([.rules[].type] | index("code_scanning")) != null and
   ([.rules[].type] | index("code_quality")) != null and
   ([.rules[].type] | index("copilot_code_review")) != null and
+  ([.rules[] | select(.type == "copilot_code_review") | .parameters.review_on_push] | .[0]) == true and
+  ([.rules[] | select(.type == "copilot_code_review") | .parameters.review_draft_pull_requests] | .[0]) == true and
   ([.rules[] | select(.type == "pull_request") | .parameters.required_approving_review_count] | .[0]) == 1 and
   ([.rules[] | select(.type == "pull_request") | .parameters.required_review_thread_resolution] | .[0]) == true and
   ([.rules[] | select(.type == "pull_request") | .parameters.dismiss_stale_reviews_on_push] | .[0]) == true and
