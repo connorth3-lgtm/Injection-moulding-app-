@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.02.1",
-  "commit": "6fc1e04721281f53f2ee6db45af1850cf2d237f4",
+  "release": "2026.10.04.2",
+  "commit": "5dea1e13274468e2ddc1c6a35a165c70bba11b63",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,6 +41,6 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "2026.10.02.1 is the reviewed learner UI reference after the deep-review semantic changes pass structural and browser checks: learner-facing Book assurance says 'Source evidence reviewed' rather than implying independent verification; independent human SME status remains visibly separate; material exact-grade views distinguish evidence/provenance status from commercial/source currentness; Today's focus remains the single dominant Home action; Home duplicates none of Learn/Materials/Practice/Saved/Book navigation; Troubleshoot and Analyse data remain the two specialist shortcuts; a real recent troubleshooting case stays clear of fixed phone navigation; the Book Materials chapter exposes all 260 canonical exact grades plus all 284 governed Asia/Australia/New Zealand evidence rows; and the technical-review material appendix remains excluded from source-reviewed listen-all. Pixel tolerance remains locked at maxDiffPixels 12 and supplements—rather than substitutes for—structural, coverage, semantic and geometry assertions. Physical-device, real-AT and other human/external evidence remain separate HOLD/freshness gates.",
-  "ref": "visual-baseline/2026.10.02.1"
+  "policy": "2026.10.04.2 is the governed visual reference for the app/Book deep-review remediation. It preserves the existing learner IA while intentionally correcting the Listening speech-service/privacy disclosure, demand-loading governed Book content, and progressively rendering the 260-grade plus 284-row material appendix in 24-row batches. Complete governed Book/material coverage, source-review versus independent-SME boundaries, assessment semantics, fixed-navigation clearance and accessibility structure remain separately enforced by structural/browser QA. Pixel tolerance remains locked at maxDiffPixels 12 and supplements—rather than substitutes for—semantic, geometry, reachability and exact-data assertions. Physical-device, real-AT, SME, learner-outcome, NZQA/provider, Windows-distribution and production evidence remain separate HOLDs.",
+  "ref": "visual-baseline/2026.10.04.2"
 }
