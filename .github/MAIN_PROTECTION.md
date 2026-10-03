@@ -32,9 +32,11 @@ Automated checks are necessary but are not equivalent to independent human revie
 
 ## `preview` trust boundary
 
-The `preview` branch is an integration/staging branch and is **not** external-evidence authority. It may remain less protected than `main`, but no physical-device, assistive-technology, provider/NZQA, learner-outcome or other governed external evidence may bind to its mutable branch tip.
+The `preview` branch is an integration/staging branch and is **not** external-evidence authority. Native branch protection may remain weaker than `main`, but the public preview deployment is fail-closed: `.github/workflows/preview-pages.yml` accepts only the current `preview` head when that SHA is uniquely attributable to a merged PR targeting `preview`, and it requires the exact PR head's Release QA, Mobile Browser QA and Question Quality workflows to have succeeded. Direct pushes and workflow dispatch from arbitrary/stale refs cannot deploy.
 
-Release-specific external evidence must bind to the immutable retained exact-head artifact recorded in `data/release-external-validation-v1.json:webCandidate`, including its source SHA, runtime fingerprint, workflow run, artifact id and artifact digest. A later learner-runtime change requires a fresh candidate rebind even when the web release label is unchanged.
+The preview source is rechecked immediately before `deploy-pages` so a queued run cannot publish after `preview` moves. Main and preview deployment jobs share the repository-wide `mouldmaster-pages-site-publish` concurrency group with cancellation disabled, and live verification confirms `preview/deployment.json` contains the exact source SHA expected by the workflow.
+
+No physical-device, assistive-technology, provider/NZQA, learner-outcome or other governed external evidence may bind to the mutable preview branch tip. Release-specific external evidence must bind to the immutable retained exact-head artifact recorded in `data/release-external-validation-v1.json:webCandidate`, including its source SHA, runtime fingerprint, workflow run, artifact id and artifact digest. A later learner-runtime change requires a fresh candidate rebind even when the web release label is unchanged. Artifact liveness/expiry and the release-bound NZQA tracker are verified against live GitHub state by the main external-validation promotion gate.
 
 ## Applying the policy safely
 
