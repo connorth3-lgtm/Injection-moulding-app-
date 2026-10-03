@@ -1,6 +1,6 @@
 # CI risk coverage contract
 
-This file defines the minimum workflow coverage expected for pull requests to `main`. The contract is enforced at runtime by `tools/verify_ci_risk_coverage.py` inside the natively required `mobile-browser` protected context. The verifier classifies the exact PR diff, queries GitHub Actions for the exact head SHA, and fails if an applicable workflow is missing, remains unresolved beyond the bounded polling window, or completes non-successfully.
+This file defines the minimum workflow coverage expected for pull requests to `main`. The contract is enforced at runtime by `tools/verify_ci_risk_coverage.py` in the dedicated `Exact-head CI Risk Coverage` workflow. The verifier classifies the exact PR diff, queries GitHub Actions for the exact head SHA, and fails if an applicable workflow is missing, remains unresolved beyond the bounded polling window, or completes non-successfully. The canonical main policy requires its `exact-head-risk-coverage` job context independently of the browser job.
 
 schema: 1
 
@@ -41,4 +41,4 @@ A passing repository workflow is not physical-device, assistive-technology, SME,
 
 ## Runtime enforcement
 
-`MouldMaster Domain Foundation QA` runs on every pull request to `main`. At the end of the required Mobile Browser QA job, the exact-head meta-gate verifies the applicable workflows above using the pull-request head SHA. This closes the gap where a workflow trigger/event failure could otherwise look like a green subset of checks. The meta-gate does not treat its own `mobile-browser` run as external evidence; native branch protection still requires that job independently.
+`MouldMaster Domain Foundation QA` and `Mobile Browser QA` run independently on pull requests to `main`. The dedicated `Exact-head CI Risk Coverage` workflow verifies the applicable workflow set above against the exact pull-request head SHA. This keeps assurance layers honest: browser QA reports browser evidence only, while cross-workflow coverage reports aggregate release/governance coverage. A failure in native governance must not relabel otherwise-passing browser evidence as a browser failure.

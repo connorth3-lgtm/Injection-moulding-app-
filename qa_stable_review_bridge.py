@@ -56,7 +56,7 @@ need('/* >>> assessment-stable-review-bridge.js */' in pack,'assessment foundati
 need(pack.index('/* >>> assessment-quality-suite.js */')<pack.index('/* >>> assessment-stable-review-bridge.js */')<pack.index('/* >>> assessment-analytics-ui.js */'),'stable-review bridge pack load order wrong')
 bootstrap_pack='src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'
 need(bootstrap_pack in idx,'bootstrap assessment/source pack not loaded by shell')
-need(idx.index(assessment_pack)<idx.index('runtime-v2.js')<idx.index(bootstrap_pack),'assessment foundation pack shell boundary wrong')
+need(idx.index(assessment_pack)<idx.index('src/domains/shared/runtime-v2.js')<idx.index(bootstrap_pack),'assessment foundation pack shell boundary wrong')
 need("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'" in text('service-worker.js'),'assessment foundation pack missing from offline cache')
 pkg=json.loads(text('desktop/electron/package.json'));froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
 need('../../assessment-stable-review-bridge.js' in froms,'stable-review bridge missing from desktop package')

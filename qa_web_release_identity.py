@@ -25,7 +25,7 @@ idx=text('index.html')
 need(f'const SHELL_RELEASE="{web}";' in idx,'index shell release is not web_release')
 need('const RUNTIME_ASSET_VERSION=SHELL_RELEASE;' in idx,'runtime asset query identity is not derived from web_release')
 need(f'const EXPECTED_STATIC_CACHE="{expected}";' in idx,'index expected cache is not derived from web_release + cache revision')
-need(f"const RELEASE='{web}';" in text('pwa-shell.js'),'PWA display release is not web_release')
+need(f"const RELEASE='{web}';" in text('src/domains/shell/pwa-shell.js'),'PWA display release is not web_release')
 
 subprocess.run(['python','tools/sync_web_release.py','--check'],cwd=ROOT,check=True)
 env=os.environ.copy();env['GITHUB_SHA']='0123456789abcdef0123456789abcdef01234567';env['GITHUB_REF_NAME']='qa-web-release'

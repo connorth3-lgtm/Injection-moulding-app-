@@ -19,12 +19,12 @@ def git_blob_sha(path):
     return p.stdout.strip()
 
 for path in [
-    'assessment-psychometric-hardening.js','assessment-evidence-integrity-upgrade.js','assessment-psychometric-approval.js','assessment-evidence-approval.js','real-measured-data-assessment.js',
+    'src/domains/assessment/assessment-psychometric-hardening.js','assessment-evidence-integrity-upgrade.js','assessment-psychometric-approval.js','assessment-evidence-approval.js','real-measured-data-assessment.js',
     'index.html','service-worker.js','desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs',
     '.github/workflows/qa.yml','.github/workflows/question-quality-50-pass.yml','qa_question_quality_extreme_runtime_v2.py','qa_question_quality_50_pass_runtime.py','qa_assessment_evidence_integrity.py'
 ]: text(path)
 
-hardening=text('assessment-psychometric-hardening.js')
+hardening=text('src/domains/assessment/assessment-psychometric-hardening.js')
 approval=text('assessment-psychometric-approval.js')
 need("const VERSION='2026.09.01.6'" in hardening,'psychometric hardening compatibility version mismatch')
 need("const POLICY_VERSION='2026.09.10.1'" in hardening,'immutable psychometric policy version mismatch')
@@ -47,7 +47,7 @@ need("a.length===4" in approval,'approval must require four relative answer-leng
 
 m=re.search(r"const INPUT_BLOB='([0-9a-f]{40})'",approval)
 need(m is not None,'psychometric input blob pin missing')
-actual=git_blob_sha('assessment-psychometric-hardening.js')
+actual=git_blob_sha('src/domains/assessment/assessment-psychometric-hardening.js')
 need(actual==m.group(1),f'psychometric approval stale: pinned {m.group(1)}, current {actual}')
 
 idx=text('index.html')
@@ -56,10 +56,11 @@ need("'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'" i
 need("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'" in idx,'browser shell missing learning/process diagnostics runtime pack')
 evidence_pack=text('src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js')
 learning_process_pack=text('src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js')
-for asset in ['assessment-psychometric-hardening.js','assessment-evidence-integrity-upgrade.js','assessment-evidence-approval.js','assessment-psychometric-approval.js']:
-    need(f'/* >>> {asset} */' in evidence_pack,f'{asset} missing from assessment evidence-depth runtime pack')
+for asset in ['src/domains/assessment/assessment-psychometric-hardening.js','assessment-evidence-integrity-upgrade.js','assessment-evidence-approval.js','assessment-psychometric-approval.js']:
+    label=asset.rsplit('/',1)[-1]
+    need(f'/* >>> {label} */' in evidence_pack,f'{asset} missing from assessment evidence-depth runtime pack')
 need('/* >>> real-measured-data-assessment.js */' in learning_process_pack,'real measured assessment missing from learning/process diagnostics runtime pack')
-need(idx.index("'./src/domains/runtime-packs/evidence-runtime-pack.js'") < idx.index("'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'") < idx.index("'./app-shell-registry.js'"),'psychometric/evidence browser load order is wrong')
+need(idx.index("'./src/domains/runtime-packs/evidence-runtime-pack.js'") < idx.index("'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'") < idx.index("'./src/domains/shell/app-shell-registry.js'"),'psychometric/evidence browser load order is wrong')
 need(idx.index("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'") < idx.index("'./src/domains/runtime-packs/process-data-runtime-pack.js'"),'real measured assessment pack order is wrong')
 shell_match=re.search(r'const SHELL_RELEASE="([^"]+)"',idx)
 cache_match=re.search(r"const CACHE_REVISION='([^']+)'",sw)
@@ -70,24 +71,28 @@ runtime_token=shell_match.group(1)
 cache_revision=cache_match.group(1)
 need(re.fullmatch(r'\d{4}\.\d{2}\.\d{2}\.\d+',runtime_token) is not None,'canonical browser release must use YYYY.MM.DD.N')
 need(bool(cache_revision.strip()),'PWA cache revision must remain an explicit independent invalidation token')
-need("'./runtime-v2.js'" in idx and "'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'" in idx,'maturity runtime must preserve psychometric bank while replacing only exam membership selection')
+need("'./src/domains/shared/runtime-v2.js'" in idx and "'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'" in idx,'maturity runtime must preserve psychometric bank while replacing only exam membership selection')
 bootstrap_pack=text('src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js')
 need('/* >>> assessment-runtime-v2.js */' in bootstrap_pack,'assessment runtime v2 missing from bootstrap assessment/source pack')
 
 for asset in ["'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'","'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'"]:
     need(asset in sw,f'offline cache missing runtime pack: {asset}')
-need("'./runtime-v2.js'" in sw and "'./assessment-runtime-v2.js'" in sw,'PWA cache must include assessment runtime v2')
+need("'./src/domains/shared/runtime-v2.js'" in sw and "'./assessment-runtime-v2.js'" in sw,'PWA cache must include assessment runtime v2')
 
 pkg=json.loads(text('desktop/electron/package.json'))
 froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
-for asset in ['assessment-psychometric-hardening.js','assessment-evidence-integrity-upgrade.js','assessment-psychometric-approval.js','real-measured-data-assessment.js','runtime-v2.js','assessment-runtime-v2.js']:
-    need('../../'+asset in froms,f'desktop package missing {asset}')
+need('../../src/domains' in froms,'desktop package must include the canonical recursive domain runtime tree')
+for asset in ['src/domains/assessment/assessment-psychometric-hardening.js','src/domains/shared/runtime-v2.js']:
+    need('../../'+asset not in froms,f'desktop package must not duplicate domain-owned asset: {asset}')
+    need("'"+asset+"'" in text('desktop/electron/scripts/generate-integrity.cjs'),f'desktop integrity manifest missing {asset}')
+for asset in ['assessment-evidence-integrity-upgrade.js','assessment-psychometric-approval.js','real-measured-data-assessment.js','assessment-runtime-v2.js']:
+    need('../../'+asset in froms,f'desktop package missing root asset {asset}')
     need("'"+asset+"'" in text('desktop/electron/scripts/generate-integrity.cjs'),f'desktop integrity manifest missing {asset}')
 
 release_workflow=text('.github/workflows/qa.yml')
 need('python qa_psychometric_integration.py' in release_workflow,'release QA must retain psychometric production integration gate')
 question_workflow=text('.github/workflows/question-quality-50-pass.yml')
-for marker in ['node --check assessment-psychometric-hardening.js','node --check assessment-evidence-integrity-upgrade.js','node --check real-measured-data-assessment.js','python qa_assessment_evidence_integrity.py']:
+for marker in ['node --check src/domains/assessment/assessment-psychometric-hardening.js','node --check assessment-evidence-integrity-upgrade.js','node --check real-measured-data-assessment.js','python qa_assessment_evidence_integrity.py']:
     need(marker in question_workflow,f'question-quality workflow missing evidence/psychometric gate: {marker}')
 
 runtime=text('qa_question_quality_extreme_runtime_v2.py')

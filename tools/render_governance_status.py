@@ -11,6 +11,7 @@ OUTPUT = ROOT / "GOVERNANCE_STATUS.md"
 
 LABELS = {
     "technicalAutomation": "Technical automation",
+    "repositoryGovernance": "Native main governance",
     "bookPublicationAuthorization": "Book publication authorization",
     "bookIndependentSme": "Independent Book SME review",
     "curriculumIndependentSme": "Independent Academy SME review",
@@ -60,7 +61,7 @@ def render() -> str:
         "",
         "## Interpretation",
         "",
-        "`pass` describes software-controlled automation only. `authorized` describes internal publication authorization only. `hold` on an external-validation row is a truthful blocked state awaiting genuine release-bound human/device/platform evidence; it is not a software-test failure. `advisory-only` means MouldMaster does not provide validated production-recipe or automatic machine-control authority.",
+        "`pass` describes software-controlled automation only. `pending-native-ruleset-apply` means repository policy is ready but the live GitHub main ruleset has not yet been verified against it, so release promotion remains blocked. `authorized` describes internal publication authorization only. `hold` on an external-validation row is a truthful blocked state awaiting genuine release-bound human/device/platform evidence; it is not a software-test failure. `advisory-only` means MouldMaster does not provide validated production-recipe or automatic machine-control authority.",
         "",
         "The Book may therefore be publication-authorized while independent Book SME review remains on HOLD. Those states are intentionally different and must not be collapsed into a single 'validated' label.",
         "",

@@ -44,6 +44,21 @@ DATA_ASSETS = ["./material-catalog-v1.json"]
 # specific legacy ordering boundaries. Loading them again through the async
 # domain manifest would execute their source parts twice.
 EXCLUDED_DIRS = {"runtime-packs"}
+BOOTSTRAP_OR_PACK_OWNED_ASSETS = {
+    "./src/domains/governance/production-health.js",
+    "./src/domains/shared/runtime-v2.js",
+    "./src/domains/shell/app-shell-registry.js",
+    "./src/domains/shell/pwa-shell.js",
+    "./src/domains/shell/accessibility-hardening.js",
+    "./src/domains/shell/app-shell-finalize.js",
+    "./src/domains/assessment/assessment-answer-cue-fix.js",
+    "./src/domains/assessment/assessment-final-hardening.js",
+    "./src/domains/assessment/assessment-psychometric-hardening.js",
+    "./src/domains/research/reference-20x-extension.js",
+    "./src/domains/research/reference-research-extension.js",
+    "./src/domains/learning/specialist-evidence-gap-extension.js",
+    "./src/domains/learning/training-qa-fix.js",
+}
 
 
 def build_manifest() -> dict:
@@ -54,7 +69,10 @@ def build_manifest() -> dict:
         relative = path.relative_to(DOMAINS)
         if any(part in EXCLUDED_DIRS for part in relative.parts[:-1]):
             continue
-        discovered.append("./" + path.relative_to(ROOT).as_posix())
+        asset = "./" + path.relative_to(ROOT).as_posix()
+        if asset in BOOTSTRAP_OR_PACK_OWNED_ASSETS:
+            continue
+        discovered.append(asset)
     priority = [asset for asset in PRIORITY_ASSETS if asset in discovered]
     trailing = [asset for asset in TRAILING_ASSETS if asset in discovered]
     fixed = set(priority + trailing)

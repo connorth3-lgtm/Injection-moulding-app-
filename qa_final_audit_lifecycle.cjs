@@ -4,7 +4,7 @@ const vm=require('vm');
 const assert=require('assert');
 
 const analyticsSource=fs.readFileSync('src/domains/learning/learning-analytics-loader.js','utf8');
-const trainingSource=fs.readFileSync('training-qa-fix.js','utf8');
+const trainingSource=fs.readFileSync('src/domains/learning/training-qa-fix.js','utf8');
 
 // Learner-analytics cohort discovery must be derived from the current profile
 // registry. A syntactically valid strong-token bucket left by a removed/imported
@@ -119,7 +119,7 @@ function trainingSandbox(removeMode='normal'){
     startExam:undefined,activeExam:null,resetData(){},toast:msg=>toasts.push(String(msg)),
   };
   sandbox.user=sandbox.db.users[sandbox.db.activeUser];sandbox.window=sandbox;
-  vm.createContext(sandbox);vm.runInContext(trainingSource,sandbox,{filename:'training-qa-fix.js'});
+  vm.createContext(sandbox);vm.runInContext(trainingSource,sandbox,{filename:'src/domains/learning/training-qa-fix.js'});
   return {sandbox,memory,alerts,toasts,oldSerialized,bridge:sandbox.MM_TRAINING_DATA_BRIDGE};
 }
 

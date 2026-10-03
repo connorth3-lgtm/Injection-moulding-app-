@@ -1,8 +1,8 @@
-/* MouldMaster engineer-friendly simulator UI — 2026.10.02.2 */
+/* MouldMaster engineer-friendly simulator UI — 2026.10.03.1 */
 (function(){
 'use strict';
 if(window.MM_ENGINEER_SIMULATOR_UI)return;
-const VERSION='2026.10.02.2';
+const VERSION='2026.10.03.1';
 const baseRender=window.renderSimulator;
 const baseUpdate=window.updateSimulator;
 if(typeof baseRender!=='function'||typeof baseUpdate!=='function'){
@@ -64,7 +64,7 @@ function makeIntro(root){
   const intro=node('div','tip');intro.id='mmEngineerSimIntro';
   const icon=node('span','', '✓');
   const copy=node('div');
-  const strong=node('b','', 'Engineer workflow: validated baseline → measured change → model signal → verification');
+  const strong=node('b','', 'Engineer workflow: validated baseline → measured change → mechanism prompts → verification');
   const text=document.createTextNode(' Use metric process values where they are measurable. Ratio-normalised training indices use 50 as the unchanged baseline/reference point; they are not physical units or probabilities. The model does not prescribe universal settings.');
   copy.append(strong,text);intro.append(icon,copy);
   legal?.insertAdjacentElement('afterend',intro);
@@ -210,7 +210,7 @@ function applyMetricModel(){
   Object.assign(window.simulatorState,result.derived);
   const clampResult=deriveClamp();
   if(clampResult){
-    result.notes.push('Clamp-force/capacity arithmetic is shown separately from the synthetic defect-sensitivity weights and is not converted into a hidden model control.');
+    result.notes.push('Clamp-force/capacity arithmetic is shown separately from the qualitative mechanism prompts and is not converted into a hidden defect score or model control.');
     if(clampResult.exceedsAvailableCapacity)result.notes.push('Estimated opening force exceeds the entered exact-machine clamp capacity; verify the engineering basis before any production decision.');
   }
   state.lastDerived={...result,clamp:clampResult,flow:deriveFlowMetrics()};
@@ -298,7 +298,7 @@ function engineeringDetail(output){
     'Baseline-normalised ratio: model index = 50 × current/baseline. An unchanged current value maps to index 50. Fill aggressiveness uses the inverse fill-time ratio: 50 × baseline fill time/current fill time.',
     'Temperature model inputs are current minus baseline in °C and are bounded to the model validity range of ±20 °C.',
     'Clamp separating-force and exact-machine capacity comparison are delegated to governed engineering-core equations EQ-CF-001 and EQ-CAP-001. Exact machine identity and a traceable capacity basis are required; the result is not a clamp setpoint.',
-    'The 0–100 defect values are advisory training indicators, not probabilities, Cp/Cpk values, specifications or production limits.',
+    'Defect output is qualitative mechanism prompting only. No defect probability, severity score, ranking, Cp/Cpk interpretation, specification or production limit is generated.',
     'Venting condition and moisture-control confidence remain qualitative indices because safe vent dimensions and moisture limits are material/tool specific.'
   ].forEach(text=>list.appendChild(node('li','',text)));
   details.append(list);output.appendChild(details);
@@ -317,36 +317,38 @@ function enhanceStructure(){
   }
   if(output){
     const eyebrow=output.querySelector(':scope > .eyebrow');if(eyebrow)eyebrow.textContent='Engineering readout';
-    const title=output.querySelector(':scope > h2');if(title)title.textContent='What the advisory model is flagging';
-    if(!output.querySelector('#mmSimOutputScope')){const scope=node('p','muted','Advisory model output. Read the strongest signal first, then confirm it with measured machine, mould, material and part evidence.');scope.id='mmSimOutputScope';title?.insertAdjacentElement('afterend',scope)}
+    const title=output.querySelector(':scope > h2');if(title)title.textContent='Mechanism hypotheses to verify';
+    if(!output.querySelector('#mmSimOutputScope')){const scope=node('p','muted','Qualitative training prompts only. A prompt means a control moved from the baseline in a direction that makes that mechanism worth checking; prompts are not ranked, predictive or causal. Confirm them with measured machine, mould, material and part evidence.');scope.id='mmSimOutputScope';title?.insertAdjacentElement('afterend',scope)}
     const risk=output.querySelector('#riskList');if(risk){risk.setAttribute('aria-live','polite');risk.setAttribute('aria-atomic','true')}
     movePartVisual(output);engineeringDetail(output);
   }
 }
-function band(score){return score<30?'low model signal':score<55?'watch':'strong model signal'}
 function enhanceResult(){
   const root=document.getElementById('simulator');if(!root)return;
   const output=root.querySelector('.output-panel'),riskList=root.querySelector('#riskList');if(!output||!riskList)return;
   const rows=Array.from(riskList.querySelectorAll('.risk')).map(row=>{
     const name=row.querySelector(':scope > span')?.textContent?.trim()||'';
-    const value=Number.parseFloat(row.querySelector(':scope > b')?.textContent||'');
-    if(!name||!Number.isFinite(value))return null;
-    const score=Math.max(0,Math.min(100,Math.round(value)));
-    const valueEl=row.querySelector(':scope > b');if(valueEl)valueEl.textContent=`${score} / 100`;
-    row.setAttribute('aria-label',`${name}: advisory training indicator ${score} out of 100, ${band(score)}`);
-    return {name,score};
+    const cueCount=Number.parseInt(row.dataset.simCues||'0',10);
+    if(!name||!Number.isFinite(cueCount))return null;
+    row.setAttribute('aria-label',cueCount>0?`${name}: mechanism evidence prompt active; not ranked or predictive`:`${name}: no directional mechanism prompt from the current training controls`);
+    return {name,cueCount};
   }).filter(Boolean);
-  if(!rows.length)return;rows.sort((a,b)=>b.score-a.score);const top=rows[0];
+  if(!rows.length)return;
+  const active=rows.filter(row=>row.cueCount>0);
   let primary=output.querySelector('#mmSimPrimaryFinding');
   if(!primary){primary=node('div','callout');primary.id='mmSimPrimaryFinding';primary.setAttribute('role','status');primary.setAttribute('aria-live','polite');riskList.insertAdjacentElement('beforebegin',primary)}
-  primary.textContent=top.score<30?`Primary finding: no dominant advisory signal. Highest indicator is ${top.name} at ${top.score}/100 (${band(top.score)}).`:`Primary watch: ${top.name} · ${top.score}/100 (${band(top.score)}). This is a model indicator, not a probability.`;
-  const advice=root.querySelector('#simAdvice');if(advice)advice.replaceChildren(node('b','', 'What to verify next'),document.createElement('br'),document.createTextNode(VERIFY[top.name]||'Compare the changed condition with the known-good cycle and collect measured evidence before making another change.'));
+  primary.textContent=active.length?`${active.length} mechanism prompt group${active.length===1?' is':'s are'} active. None is ranked, scored, predictive or causal; verify each against measured evidence.`:'No directional mechanism prompts are active at the training baseline. This does not prove the real process is defect-free.';
+  const advice=root.querySelector('#simAdvice');
+  if(advice){
+    const checks=active.slice(0,3).map(row=>VERIFY[row.name]).filter(Boolean);
+    advice.replaceChildren(node('b','', 'What to verify next'),document.createElement('br'),document.createTextNode(checks.length?checks.join(' '):'Compare the changed condition with the known-good cycle and collect measured evidence before making another change.'));
+  }
 }
 function renderWrapped(){const result=baseRender.apply(this,arguments);enhanceStructure();enhanceResult();return result}
 function updateWrapped(){const result=baseUpdate.apply(this,arguments);enhanceResult();return result}
 window.renderSimulator=renderWrapped;
 window.updateSimulator=updateWrapped;
-if(window.MM_RUNTIME_V2?.registerModule)window.MM_RUNTIME_V2.registerModule('engineer-simulator-ui',{version:VERSION,type:'simulator-presentation',scope:'metric-baseline-normalised-advisory'});
+if(window.MM_RUNTIME_V2?.registerModule)window.MM_RUNTIME_V2.registerModule('engineer-simulator-ui',{version:VERSION,type:'simulator-presentation',scope:'metric-baseline-normalised-qualitative-evidence-prompts'});
 if(document.getElementById('simulator')?.children.length){enhanceStructure();enhanceResult()}
 window.MM_ENGINEER_SIMULATOR_UI=Object.freeze({version:VERSION,enhance(){enhanceStructure();enhanceResult()},deriveMetricModel,calculateFlowMetrics,deriveFlowMetrics,deriveClamp});
 })();

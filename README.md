@@ -17,7 +17,7 @@ The project maintainers do not intend to seek patent protection over implementat
 
 ## Current release lanes
 
-- PWA / browser shell: `2026.10.02.2`
+- PWA / browser shell: `2026.10.03.2`
 - Open Windows desktop: `2026.09.29.1`
 - Android lane: `2026.08.26.2`
 - Training content: `2026.08.26.1`
@@ -73,7 +73,7 @@ The canonical completion pathway remains **120 core lessons**. `curriculum-integ
 
 The optional specialist layer contains **20 lessons total** and remains separate from the canonical 120-lesson completion/certificate path. `specialist-curriculum.js` provides S01–S12: hazardous-energy intervention, clamp/projected-area reasoning, plasticising controls, reinforced polymers, purging/contamination, internal defects, SPC, Gage R&R/MSA, valve-gate timing, screw/barrel wear, ejector/tool condition, and energy/recycled-feedstock variability.
 
-`specialist-evidence-gap-extension.js` adds S13–S20 for evidence-depth gaps identified by the mechanism audit: residual stress/birefringence, weld-line structural strength, runner/gate/multicavity imbalance, hot-runner actual behaviour, liquid silicone rubber, gas/water/projectile-assisted moulding, surface replication/release and injection-compression/precision optics. Their learner-visible evidence status is controlled by `data/evidence-coverage-v1.json` through `app-shell-finalize.js`; learner completion never promotes evidence maturity. Promoted mechanisms require independent publisher-verified primary measured studies with measured signals, physical quality outcomes, context, limitations and bounded claims. Provisional lessons remain clearly labelled until their own promotion gate is met.
+`src/domains/learning/specialist-evidence-gap-extension.js` adds S13–S20 for evidence-depth gaps identified by the mechanism audit: residual stress/birefringence, weld-line structural strength, runner/gate/multicavity imbalance, hot-runner actual behaviour, liquid silicone rubber, gas/water/projectile-assisted moulding, surface replication/release and injection-compression/precision optics. Their learner-visible evidence status is controlled by `data/evidence-coverage-v1.json` through `src/domains/shell/app-shell-finalize.js`; learner completion never promotes evidence maturity. Promoted mechanisms require independent publisher-verified primary measured studies with measured signals, physical quality outcomes, context, limitations and bounded claims. Provisional lessons remain clearly labelled until their own promotion gate is met.
 
 Specialist completion is device-local and separate from the core pathway. These formative layers do not change formal assessment answers, certificate thresholds or production setpoints, and evidence promotion does not convert study-specific values into universal production recipes.
 

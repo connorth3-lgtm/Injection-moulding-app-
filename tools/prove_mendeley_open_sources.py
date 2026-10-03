@@ -7,6 +7,7 @@ Mendeley URL and redirects are checked before following them against an exact ho
 """
 from __future__ import annotations
 import hashlib, json, re, tempfile, urllib.parse, urllib.request, zipfile
+from http_retry import urlopen_with_retry
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
@@ -50,7 +51,7 @@ DOWNLOAD_OPENER=urllib.request.build_opener(AllowlistedRedirect())
 def get_json(url):
     assert_https_host(url,{MENDELEY_HOST})
     req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-measured-learning/2.4'})
-    with urllib.request.urlopen(req,timeout=60) as r:
+    with urlopen_with_retry(req,timeout=60) as r:
         assert_https_host(r.geturl(),{MENDELEY_HOST})
         return json.load(r)
 

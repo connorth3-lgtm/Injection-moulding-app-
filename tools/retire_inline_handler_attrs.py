@@ -18,7 +18,7 @@ TARGETS = (
     "curriculum-integration.js",
     "learning-experience.js",
     "specialist-curriculum.js",
-    "specialist-evidence-gap-extension.js",
+    "src/domains/learning/specialist-evidence-gap-extension.js",
     "training-upgrade.js",
 )
 HANDLER_ATTR_RE = re.compile(r"(?P<prefix>[\s<])on(?P<event>click|change|input|keydown)\s*=", re.I)

@@ -55,15 +55,19 @@ def main() -> None:
     require(dev.get("electron-builder") == rows["electron-builder"]["declared"], "electron-builder maintenance inventory drifted from package.json")
 
     workflows = "\n".join(path.read_text(encoding="utf-8") for path in (ROOT / ".github" / "workflows").glob("*.yml"))
-    action_majors = rows["github-actions-critical"]["declaredMajors"]
+    action_row = rows["github-actions-critical"]
+    action_majors = action_row["declaredMajors"]
+    action_shas = action_row.get("declaredShas") or {}
+    require(set(action_shas) == {"checkout", "setup-node", "setup-python", "upload-artifact"}, "critical GitHub Action exact-SHA inventory is incomplete")
     tokens = {
-        "checkout": f"actions/checkout@v{action_majors['checkout']}",
-        "setup-node": f"actions/setup-node@v{action_majors['setup-node']}",
-        "setup-python": f"actions/setup-python@v{action_majors['setup-python']}",
-        "upload-artifact": f"actions/upload-artifact@v{action_majors['upload-artifact']}",
+        action: f"actions/{action}@{sha}"
+        for action, sha in action_shas.items()
     }
+    require(set(action_majors) == set(action_shas), "critical GitHub Action major/SHA inventory keys drifted")
     for action, token in tokens.items():
-        require(token in workflows, f"critical GitHub Action inventory drifted: {action} expected {token}")
+        require(re.fullmatch(r"actions/[a-z-]+@[0-9a-f]{40}", token) is not None, f"critical GitHub Action inventory is not an exact SHA: {action}={token}")
+        require(int(action_majors[action]) >= 1, f"critical GitHub Action reviewed major is invalid: {action}")
+        require(token in workflows, f"critical GitHub Action inventory drifted: {action} expected exact reviewed pin {token}")
 
     node_versions = set(re.findall(r"node-version:\s*['\"]?(\d+)", workflows))
     python_versions = set(re.findall(r"python-version:\s*['\"]?([0-9]+\.[0-9]+)", workflows))

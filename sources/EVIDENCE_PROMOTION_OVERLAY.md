@@ -65,6 +65,6 @@ Current resin supplier data, machine/tool manufacturer instructions, approved si
 
 ## Learner-facing resolution
 
-The optional S13-S20 evidence-depth lessons keep conservative provisional fallback metadata inside `specialist-evidence-gap-extension.js`. `app-shell-finalize.js` exposes the formally resolved evidence state. QA compares its learner badges against the historical registry plus the formal overlay, so learner completion cannot promote evidence and a UI change cannot silently outrun the evidence dossiers.
+The optional S13-S20 evidence-depth lessons keep conservative provisional fallback metadata inside `src/domains/learning/specialist-evidence-gap-extension.js`. `src/domains/shell/app-shell-finalize.js` exposes the formally resolved evidence state. QA compares its learner badges against the historical registry plus the formal overlay, so learner completion cannot promote evidence and a UI change cannot silently outrun the evidence dossiers.
 
 The canonical 120 core lessons, assessment answers and certificate thresholds are unchanged by mechanism promotion.

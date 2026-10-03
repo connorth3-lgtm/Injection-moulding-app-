@@ -9,8 +9,8 @@ on:
       - 'index.html'
       - 'MouldMaster_Core_App.html'
       - '*.css'
-      - 'app-shell-registry.js'
-      - 'app-shell-finalize.js'
+      - 'src/domains/shell/app-shell-registry.js'
+      - 'src/domains/shell/app-shell-finalize.js'
       - 'mould-master-workspace.js'
       - 'learning-experience.js'
       - 'curriculum-integration.js'
@@ -29,7 +29,7 @@ on:
       - 'qa_measured_evidence_integration.py'
       - 'qa_measured_evidence_decision_workflows.py'
       - 'learning-analytics.js'
-      - 'pwa-shell.js'
+      - 'src/domains/shell/pwa-shell.js'
       - 'reading-patch.js'
       - 'read-aloud.js'
       - 'qa_read_aloud.py'
@@ -198,10 +198,3 @@ jobs:
             exit 1
           fi
           echo "All browser and visual approval gates passed."
-
-      - name: Exact-head CI risk coverage meta-gate
-        if: github.event_name == 'pull_request'
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          CI_RISK_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-        run: python tools/verify_ci_risk_coverage.py

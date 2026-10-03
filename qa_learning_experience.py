@@ -12,7 +12,7 @@ def js_const(source,name):
     return m.group(1)
 
 required=[
-    'learning-experience.js','pwa-shell.js','index.html','service-worker.js','desktop/electron/package.json',
+    'learning-experience.js','src/domains/shell/pwa-shell.js','index.html','service-worker.js','desktop/electron/package.json',
     'desktop/electron/scripts/generate-integrity.cjs'
 ]
 for name in required:
@@ -22,9 +22,9 @@ js=text('learning-experience.js')
 p=subprocess.run(['node','--check',str(ROOT/'learning-experience.js')],capture_output=True,text=True)
 need(p.returncode==0,'learning-experience.js syntax error: '+(p.stderr or p.stdout))
 
-shell=text('pwa-shell.js')
-p=subprocess.run(['node','--check',str(ROOT/'pwa-shell.js')],capture_output=True,text=True)
-need(p.returncode==0,'pwa-shell.js syntax error: '+(p.stderr or p.stdout))
+shell=text('src/domains/shell/pwa-shell.js')
+p=subprocess.run(['node','--check',str(ROOT/'src/domains/shell/pwa-shell.js')],capture_output=True,text=True)
+need(p.returncode==0,'src/domains/shell/pwa-shell.js syntax error: '+(p.stderr or p.stdout))
 
 markers=[
     "const VERSION='2026.09.10.3'",
@@ -130,7 +130,7 @@ need('fetch(' not in js,'learning experience must remain local-only and must not
 idx=text('index.html')
 need("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'" in idx,'browser shell does not load learning/process diagnostics runtime pack')
 need('/* >>> learning-experience.js */' in text('src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'),'learning experience missing from learning/process runtime pack')
-need(idx.index("'./pwa-shell.js'") < idx.index("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'"),'learning/process runtime pack must load after the existing runtime patches')
+need(idx.index("'./src/domains/shell/pwa-shell.js'") < idx.index("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'"),'learning/process runtime pack must load after the existing runtime patches')
 
 # Runtime coherence is structural. Browser/runtime asset identity derives from the canonical
 # web release, while CACHE_REVISION remains an independent invalidation token.
@@ -147,15 +147,15 @@ need(bool(cache_revision.strip()),'learning UX cache revision must remain an exp
 need(expected_cache==f'mouldmaster-static-{cache_version}-{cache_revision}','learning UX expected cache must match service-worker cache identity')
 need("'./learning-experience.js'" in sw,'learning experience missing from offline cache')
 need("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'" in sw,'learning/process runtime pack missing from offline cache')
-need("'./pwa-shell.js'" in sw,'PWA shell/mobile layout guard missing from offline cache')
+need("'./src/domains/shell/pwa-shell.js'" in sw,'PWA shell/mobile layout guard missing from offline cache')
 need("url.pathname.endsWith('.js')" in sw,'PWA shell must remain on the network-first runtime-critical path so installed apps receive mobile layout fixes')
 
 pkg=json.loads(text('desktop/electron/package.json'))
 froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
 need('../../learning-experience.js' in froms,'learning experience missing from desktop package')
-need('../../pwa-shell.js' in froms,'PWA shell missing from desktop package')
+need('../../src/domains' in froms,'recursive domain runtime tree missing from desktop package')
 need("'learning-experience.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'learning experience missing from desktop integrity manifest')
-need("'pwa-shell.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'PWA shell missing from desktop integrity manifest')
+need("'src/domains/shell/pwa-shell.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'PWA shell missing from desktop integrity manifest')
 
 # Guard the learner-flow intent itself: completion advances to the next canonical lesson,
 # while the final lesson remains completed without wrapping to lesson 1.

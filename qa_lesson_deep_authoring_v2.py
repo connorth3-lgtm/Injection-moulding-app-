@@ -23,7 +23,7 @@ node=textwrap.dedent(r'''
   global.MM_DATA={lessons:Array.from({length:120},(_,i)=>({id:i+1,title:`Lesson ${i+1} topic ${i%12}`,courseName:`Course ${1+(i%12)}`,summary:`Unique mechanism summary ${i+1}`,objectives:[`Identify evidence ${i+1}`,`Explain decision ${i+1}`],keypoints:[`Key mechanism ${i+1}`,`Boundary evidence ${i+1}`],exercise:`Apply controlled case ${i+1}`,mmGuide:{evidence:`Compare actual ${i+1}`,mistake:`Do not guess ${i+1}`}}))};
   for(const n of ['renderLesson','renderDashboard','switchView','startExam','gradeExam','getExamQuestions'])global[n]=()=>{};
   global.currentLesson=()=>MM_DATA.lessons[0];
-  require('./runtime-v2.js');
+  require('./src/domains/shared/runtime-v2.js');
   require('./lesson-deep-authoring-v2.js');
   const a=global.MM_LESSON_DEEP_AUTHORING_V2;
   if(a.total!==120)throw new Error(`expected 120 records, got ${a.total}`);
@@ -52,7 +52,7 @@ duplicate_node=textwrap.dedent(r'''
   lessons[1]={...lessons[0],id:2,title:'Different identity and title',courseName:'Different course'};
   global.MM_DATA={lessons};
   for(const n of ['renderLesson','renderDashboard','switchView','startExam','gradeExam','getExamQuestions'])global[n]=()=>{};
-  require('./runtime-v2.js');
+  require('./src/domains/shared/runtime-v2.js');
   require('./lesson-deep-authoring-v2.js');
 ''')
 dup=subprocess.run(['node','-e',duplicate_node],cwd=ROOT,text=True,capture_output=True)

@@ -15,7 +15,7 @@ def text(path):
     need(p.exists(),f'missing evidence-integrity asset: {path}')
     return p.read_text(encoding='utf-8')
 
-hardening=text('assessment-psychometric-hardening.js')
+hardening=text('src/domains/assessment/assessment-psychometric-hardening.js')
 bridge=text('assessment-stable-review-bridge.js')
 integrity=text('assessment-evidence-integrity-upgrade.js')
 real=text('real-measured-data-assessment.js')

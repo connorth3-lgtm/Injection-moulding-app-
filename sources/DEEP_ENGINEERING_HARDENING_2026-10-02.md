@@ -73,16 +73,20 @@ The Book publication-authorization record already carries canonical DOI mappings
 
 ## Highest remaining internal engineering debt
 
-### P0 — legacy simulator weighted signals
+### Resolved — legacy simulator weighted signals
 
-`src/core-runtime/core-inline-004.js` still contains fixed weighted formulas such as temperature/time/percentage thresholds for short-shot, flash, sink, burn, splay and warpage training signals. The later engineer UI correctly relabels these as advisory training indicators rather than probabilities, but the formulas themselves are not validated physical prediction models.
+The fixed weighted short-shot/flash/sink/burn/splay/warpage score formulas have been removed. The runtime now emits **qualitative mechanism prompts only** from the direction of change relative to the learner's known-good training baseline.
 
-Required direction:
+The replacement deliberately has:
 
-- do not promote these outputs as probability, Cp/Cpk, specification or production-setting authority;
-- replace fixed absolute thresholds with either (a) a clearly synthetic non-predictive training interaction or (b) a calibrated/measured model with retained validation data;
-- preserve the current evidence-led verification prompts.
+- no defect probability or severity score;
+- no ranked “highest risk” output;
+- no pseudo-safe numerical threshold;
+- no visual defect prediction;
+- no production-setting authority;
+- explicit evidence-verification prompts before any controlled change.
 
+The optional practice challenge is now baseline recovery: success means only that the exercise controls returned to the displayed reference state. `qa_engineer_simulator_units.cjs` rejects reintroduction of the retired weighted-score markers.
 ### P1 — migrate duplicate UI arithmetic to the pure domain
 
 `src/domains/engineering/engineer-simulator-ui.js` still contains duplicate clamp and fill-rate arithmetic. Future runtime work should consume the canonical engineering-domain implementation through a governed browser adapter/module path so the app has one source of truth.

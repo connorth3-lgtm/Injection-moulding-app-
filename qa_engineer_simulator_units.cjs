@@ -21,7 +21,7 @@ assert.ok(global.window.MM_ENGINEERING_CORE, 'generated engineering-core browser
 require(path.join(__dirname, 'src/domains/engineering/engineer-simulator-ui.js'));
 const api = global.window.MM_ENGINEER_SIMULATOR_UI;
 assert.ok(api, 'engineer simulator API was not registered');
-assert.equal(api.version, '2026.10.02.2');
+assert.equal(api.version, '2026.10.03.1');
 
 const flow = api.calculateFlowMetrics(2, 40, 30, 50);
 assert.ok(flow, 'valid flow measurements must produce a result');
@@ -99,12 +99,41 @@ for (const marker of [
   'unchanged current value maps to training index 50',
   'Ratio-normalised reference = 50',
   'not physical units or probabilities',
-  'not probabilities, Cp/Cpk values, specifications or production limits'
+  'qualitative mechanism prompts',
+  'No defect probability, severity score, ranking, Cp/Cpk interpretation, specification or production limit is generated.'
 ]) {
   assert.ok(source.includes(marker), `missing engineering-unit/scope marker: ${marker}`);
 }
 
 assert.ok(!source.includes('volumetricFlowCm3S:v==null?null:v/t'), 'UI must not carry a duplicate fill-rate arithmetic implementation');
 assert.ok(!source.includes('openingForceKN=pressure*area*0.1'), 'UI must not carry a duplicate clamp-force arithmetic implementation');
+for (const forbidden of ['function band(score)', 'Primary watch:', 'strong model signal', 'advisory training indicator']) {
+  assert.ok(!source.includes(forbidden), `engineer simulator must not rank or score defect prompts: ${forbidden}`);
+}
 
-console.log('Engineer simulator unit, arithmetic and baseline-index QA passed');
+const coreSource = require('node:fs').readFileSync(path.join(__dirname, 'src/core-runtime/core-inline-004.js'), 'utf8');
+for (const marker of [
+  'Mechanism prompts from baseline direction',
+  'They are not ranked, scored, predictive, causal',
+  'Baseline recovery started',
+  'MM_SIMULATOR_TRAINING_BASELINE',
+  'simPromptRows=function()'
+]) {
+  assert.ok(coreSource.includes(marker), `missing non-predictive simulator marker: ${marker}`);
+}
+for (const forbidden of [
+  'const short=clamp01',
+  'const flash=clamp01',
+  'const sink=clamp01',
+  'const burn=clamp01',
+  'const splay=clamp01',
+  'const warp=clamp01',
+  'Highest teaching signal',
+  'highest simulated risk',
+  'relative defect-risk score below 45',
+  'training-risk indicator below 45'
+]) {
+  assert.ok(!coreSource.includes(forbidden), `weighted/pseudo-predictive simulator logic must remain retired: ${forbidden}`);
+}
+
+console.log('Engineer simulator unit, arithmetic, baseline-index and non-predictive prompt QA passed');

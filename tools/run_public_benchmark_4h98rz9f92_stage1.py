@@ -7,6 +7,7 @@ import json
 import re
 import urllib.parse
 import urllib.request
+from http_retry import urlopen_with_retry
 from pathlib import Path
 
 DATASET_ID = "4h98rz9f92"
@@ -19,7 +20,7 @@ UA = "MouldMaster-Educational-Evidence-Profiler/1.0"
 
 def request_bytes(url: str, accept: str = "*/*"):
     req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": accept})
-    with urllib.request.urlopen(req, timeout=60) as r:
+    with urlopen_with_retry(req, timeout=60) as r:
         return r.read(), r.geturl(), r.headers.get("Content-Type")
 
 

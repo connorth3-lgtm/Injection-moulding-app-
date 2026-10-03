@@ -43,7 +43,7 @@ node=textwrap.dedent(r'''
   }
   for(const n of ['renderLesson','renderDashboard','switchView','startExam','gradeExam'])global[n]=()=>{};
   global.getExamQuestions=()=>[];
-  require('./runtime-v2.js');
+  require('./src/domains/shared/runtime-v2.js');
   require('./assessment-runtime-v2.js');
   const keyA=MM_ASSESSMENT_RUNTIME_V2.storageKey();
   backing[keyA]=JSON.stringify({schema:2,version:'stale-bank-runtime',forms:{Beginner:99},items:{'tech:Beginner:0':{count:99,last:99}}});

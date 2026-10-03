@@ -4,7 +4,7 @@ import subprocess
 
 ROOT=Path(__file__).resolve().parent
 PATCH='assessment-deep-dive.js'
-REGIONAL='assessment-answer-cue-fix.js'
+REGIONAL='src/domains/assessment/assessment-answer-cue-fix.js'
 REGISTER='sources/QUESTION_BANK_DEEP_DIVE.md'
 
 def text(p): return (ROOT/p).read_text(encoding='utf-8')
@@ -94,11 +94,11 @@ idx=text('index.html')
 assessment_pack='src/domains/runtime-packs/assessment-foundation-runtime-pack.js'
 pack=text(assessment_pack)
 need(pack.index('/* >>> assessment-deep-dive.js */')<pack.index('/* >>> assessment-answer-cue-fix.js */')<pack.index('/* >>> assessment-quality-suite.js */'),'assessment rewrite pack order wrong')
-need(assessment_pack in idx and idx.index(assessment_pack)<idx.index('runtime-v2.js'),'assessment rewrite pack load order wrong')
+need(assessment_pack in idx and idx.index(assessment_pack)<idx.index('src/domains/shared/runtime-v2.js'),'assessment rewrite pack load order wrong')
 need("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'" in text('service-worker.js'),'assessment patches pack not cached offline')
 pkg=json.loads(text('desktop/electron/package.json'));froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
-need('../../assessment-deep-dive.js' in froms and '../../assessment-answer-cue-fix.js' in froms,'assessment patches missing from desktop package')
-integ=text('desktop/electron/scripts/generate-integrity.cjs');need("'assessment-deep-dive.js'" in integ and "'assessment-answer-cue-fix.js'" in integ,'assessment patches missing from integrity set')
+need('../../assessment-deep-dive.js' in froms and '../../src/domains' in froms and '../../assessment-answer-cue-fix.js' not in froms,'assessment patches must use the canonical recursive domain package without a duplicate root compatibility copy')
+integ=text('desktop/electron/scripts/generate-integrity.cjs');need("'assessment-deep-dive.js'" in integ and "'src/domains/assessment/assessment-answer-cue-fix.js'" in integ,'assessment patches missing from integrity set')
 qy=text('.github/workflows/qa.yml');need("find . -maxdepth 1 -type f -name '*.js'" in qy and 'python qa_question_deep_dive.py' in qy,'release workflow missing question QA')
 need('python qa_question_deep_dive.py' in text('.github/workflows/open-desktop-build.yml'),'desktop workflow missing question QA')
 need('python qa_question_deep_dive.py' in text('.github/workflows/microsoft-store-msix.yml'),'Store workflow missing question QA')

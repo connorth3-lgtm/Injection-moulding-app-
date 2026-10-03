@@ -63,7 +63,7 @@ These are tracked in `data/evidence-coverage-v1.json`.
 
 Optional specialist education may teach a mechanism before that mechanism is promoted, but the learner must be shown the evidence state and uncertainty.
 
-The established specialist layer keeps S01-S12 unchanged. `specialist-evidence-gap-extension.js` adds S13-S20 for eight of the priority evidence areas:
+The established specialist layer keeps S01-S12 unchanged. `src/domains/learning/specialist-evidence-gap-extension.js` adds S13-S20 for eight of the priority evidence areas:
 
 - **S13** residual stress / birefringence;
 - **S14** weld-line structural strength;

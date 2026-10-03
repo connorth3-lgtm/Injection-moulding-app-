@@ -382,27 +382,31 @@ def main() -> None:
             fail(f"{name}.status must be one of {sorted(allowed)}")
 
     governance = data["governance"]
-    policy = governance.get("requiredPolicy") or {}
-    maintainer_mode = str(governance.get("maintainerMode") or "multi").strip().lower()
-    if maintainer_mode == "solo":
-        if governance.get("status") != "enforced":
-            fail("solo-maintainer governance must be recorded as enforced")
-        if policy.get("minimumApprovals") != 0:
-            fail("solo-maintainer governance requires minimumApprovals=0")
-        if policy.get("lastPushApproval") is not False:
-            fail("solo-maintainer governance requires lastPushApproval=false")
-        require_nonempty(
-            governance.get("soloMaintainerBoundary"),
-            "solo-maintainer governance must document its narrow exception boundary",
-        )
+    policy_ref = require_repo_file(
+        governance.get("policyFile"),
+        "governance.policyFile must reference the canonical main governance policy",
+    )
+    if policy_ref != "data/main-governance-policy-v1.json":
+        fail("governance.policyFile must be data/main-governance-policy-v1.json")
+    policy = load_json(ROOT / policy_ref)
+    if policy.get("schemaVersion") != 1:
+        fail("canonical main governance policy schemaVersion must be 1")
+    pr_policy = policy.get("pullRequest") or {}
+    if pr_policy.get("minimumApprovals", 0) < 1:
+        fail("canonical governance policy requires at least one independent approval")
+    if pr_policy.get("independentReviewerRequired") is not True:
+        fail("canonical governance policy must require an independent reviewer")
+    for key in ("latestHeadApproval", "reviewThreadResolution", "dismissStaleReviews", "extraApprovalForUnattributedChanges"):
+        if pr_policy.get(key) is not True:
+            fail(f"canonical governance pullRequest.{key} must be true")
+    if policy.get("bypassActors") != []:
+        fail("canonical governance policy must prohibit bypass actors")
+    if governance.get("status") == "enforced":
+        require_nonempty(governance.get("liveRulesetVerifiedAt"), "enforced governance requires liveRulesetVerifiedAt")
+        if not isinstance(governance.get("liveRulesetId"), int) or governance.get("liveRulesetId") <= 0:
+            fail("enforced governance requires a positive liveRulesetId")
     else:
-        if policy.get("minimumApprovals", 0) < 1:
-            fail("multi-maintainer governance requires at least one independent approval")
-        if policy.get("lastPushApproval") is not True:
-            fail("multi-maintainer governance requires latest-push approval")
-    for key in ("reviewThreadResolution", "dismissStaleReviews"):
-        if policy.get(key) is not True:
-            fail(f"governance.requiredPolicy.{key} must be true")
+        require_nonempty(governance.get("required"), "pending native governance must have an explicit exit condition")
 
     validate_accessibility(data["accessibility"], contract_release)
     validate_pwa(data["pwaPhysicalDevices"], contract_release)

@@ -297,7 +297,7 @@ function renderSimulator(){
  <div class="grid2">
  <div class="card form-card">
   <span class="eyebrow">Educational process model</span><h2>Machine & process inputs</h2>
-  <p class="muted">Move the controls to explore a synthetic sensitivity exercise. Fixed teaching weights are not probabilities, physical defect predictors, material or machine limits, process windows, or production settings.</p>
+  <p class="muted">Move the controls to explore a synthetic baseline-direction exercise. The mechanism prompts are qualitative teaching cues, not probabilities, physical defect predictors, material or machine limits, process windows, or production settings.</p>
   <div class="form-grid">
    ${slider("Injection speed","speed",20,100,simulatorState.speed,"%")}
    ${slider("Transfer fill","transfer",85,100,simulatorState.transfer,"%")}
@@ -324,30 +324,15 @@ function slider(label,key,min,max,val,unit){
  return `<label>${label}<div class="range-row"><input type="range" min="${min}" max="${max}" value="${val}" data-mm-oninput="simChange('${key}',this.value)"><input id="sim_${key}" value="${val}${unit}" readonly></div></label>`;
 }
 function simChange(k,v){simulatorState[k]=+v;const units={speed:"%",transfer:"%",hold:"%",holdTime:"s",melt:"°C",mould:"°C",cooling:"s",clamp:"%",vent:"%",moisture:"%"};$("#sim_"+k).value=v+units[k];updateSimulator()}
-function clamp01(x){return Math.max(0,Math.min(100,x))}
-function simRisks(){
- const s=simulatorState;
- return {
-  "Short shot":clamp01((95-s.transfer)*9 + (45-s.speed)*.8 + (220-s.melt)*.22 + (50-s.hold)*.18),
-  "Flash":clamp01((s.transfer-97)*12 + (s.hold-65)*.55 + (60-s.clamp)*1.1 + (s.melt-255)*.12),
-  "Sink":clamp01((55-s.hold)*.8 + (5-s.holdTime)*8 + (12-s.cooling)*1.7),
-  "Burn":clamp01((s.speed-70)*.8 + (55-s.vent)*1.1 + (s.melt-270)*.16),
-  "Splay":clamp01(s.moisture*.75 + (s.melt-285)*.15 + (s.speed-85)*.3),
-  "Warpage":clamp01((13-s.cooling)*3 + Math.abs(s.mould-60)*.28 + (s.hold-80)*.18)
- }
-}
+function simPromptRows(){return []}
 function updateSimulator(){
- const r=simRisks();
- $("#riskList").innerHTML=Object.entries(r).map(([k,v])=>`<div class="risk"><span>${k}</span><div class="riskbar"><span style="width:${v}%"></span></div><b>${Math.round(v)}</b></div>`).join("");
- const top=Object.entries(r).sort((a,b)=>b[1]-a[1])[0];
- let advice=top[1]<30?"The synthetic teaching signals are relatively low in this exercise. Change one variable at a time to see which labelled responses are most sensitive.":`Highest teaching signal: <b>${top[0]}</b>. This is not a defect probability or physical prediction. Use the Defect Lab to inspect plausible mechanisms, then make a controlled test rather than changing several settings.`;
- $("#simAdvice").innerHTML=advice;
- const ov=$("#simOverlay");let html="";
- if(r["Burn"]>55)html+=`<div style="position:absolute;width:28px;height:28px;border-radius:50%;background:#54200f;right:34%;top:32%;box-shadow:0 0 18px #ff7b00"></div>`;
- if(r["Flash"]>55)html+=`<div style="position:absolute;width:180px;height:8px;background:#55d6be;left:calc(50% - 90px);top:calc(50% + 56px);border-radius:50%"></div>`;
- if(r["Short shot"]>55)html+=`<div style="position:absolute;width:75px;height:125px;background:#0c182a;right:calc(50% - 80px);top:calc(50% - 62px);transform:rotate(12deg)"></div>`;
- if(r["Splay"]>55)html+=`<div style="position:absolute;width:95px;height:3px;background:#eef8ff;left:calc(50% - 45px);top:44%;transform:rotate(25deg);box-shadow:0 12px #eef8ff,0 24px #eef8ff"></div>`;
- ov.innerHTML=html;
+ const rows=simPromptRows();
+ const host=$("#riskList");
+ if(host)host.innerHTML=rows.map(row=>`<div class="risk" data-sim-cues="${row.cues.length}"><span>${esc(row.name)}</span><b>${row.cues.length?"Check evidence":"No directional cue"}</b>${row.cues.length?`<small class="muted">${row.cues.map(esc).join(" · ")}</small>`:""}</div>`).join("");
+ const active=rows.filter(row=>row.cues.length);
+ const advice=$("#simAdvice");
+ if(advice)advice.textContent=active.length?"Baseline changes create mechanism prompts only. They are not ranked predictions. Verify the relevant machine, mould, material and part evidence before making another controlled change.":"No directional mechanism prompts are active at the current training baseline. This does not prove the real process is defect-free.";
+ const ov=$("#simOverlay");if(ov)ov.replaceChildren();
 }
 function resetSimulator(){simulatorState={speed:55,transfer:96,hold:55,holdTime:5,melt:235,mould:55,cooling:14,clamp:75,vent:70,moisture:25};renderSimulator()}
 function simPreset(p){
@@ -1385,24 +1370,25 @@ renderSimulator=function(){
   engagingBaseSimulator();
   const left=$("#simulator .form-card");
   if(left)left.insertAdjacentHTML("afterbegin",`<div class="sim-challenge">
-    <span class="eyebrow">Process Rescue</span><h3>Can you stabilise the simulated process?</h3>
-    <p>Start from a deliberately poor simulated condition. Bring every displayed relative defect-risk score below 45. This is a game using the educational model — not a production recipe.</p>
-    <button class="secondary" data-mm-onclick="startRescueChallenge()">Start rescue</button>
-    <button class="ghost" data-mm-onclick="checkRescueChallenge()">Check my process</button>
+    <span class="eyebrow">Baseline Recovery</span><h3>Can you restore the training baseline?</h3>
+    <p>Start from a deliberately changed training condition. Return every control to its displayed known-good baseline/reference. Success means only that the exercise baseline was restored; it is not process optimisation or a production recipe.</p>
+    <button class="secondary" data-mm-onclick="startRescueChallenge()">Start baseline recovery</button>
+    <button class="ghost" data-mm-onclick="checkRescueChallenge()">Check baseline</button>
   </div>`);
 };
 function startRescueChallenge(){
-  rescueActive=true;simPreset("trouble");toast("Rescue started: get every simulated risk below 45");
+  rescueActive=true;simPreset("trouble");toast("Baseline recovery started: return every training control to its displayed reference");
 }
 function checkRescueChallenge(){
-  if(!rescueActive){toast("Start a rescue challenge first");return}
-  const r=simRisks(),max=Math.max(...Object.values(r));
-  if(max<45){
-    rescueActive=false;awardXP(60,"rescue-"+funToday(),"Process rescue",{celebrate:true});
-    toast("Process rescued in the learning simulator");
+  if(!rescueActive){toast("Start a baseline recovery challenge first");return}
+  const baseline=window.MM_SIMULATOR_TRAINING_BASELINE||{};
+  const restored=Object.keys(baseline).length>0&&Object.keys(baseline).every(key=>Number(simulatorState[key])===Number(baseline[key]));
+  if(restored){
+    rescueActive=false;awardXP(60,"rescue-"+funToday(),"Baseline recovery",{celebrate:true});
+    toast("Training baseline restored");
   }else{
-    const worst=Object.entries(r).sort((a,b)=>b[1]-a[1])[0];
-    toast(`Still unstable: highest simulated risk is ${worst[0]} (${Math.round(worst[1])})`);
+    const active=simPromptRows().filter(row=>row.cues.length).map(row=>row.name);
+    toast(active.length?`Baseline not restored. Evidence prompts remain for: ${active.join(", ")}`:"Baseline not restored yet. Match every displayed reference control.");
   }
 }
 
@@ -1653,15 +1639,46 @@ function safeSimLabel(k,v){
   return `${v}/100`;
 }
 function safeSlider(label,key,min,max,val,help){return `<label>${label}<div class="range-row"><input type="range" min="${min}" max="${max}" value="${val}" data-mm-oninput="simChange('${key}',this.value)"><input id="sim_${key}" value="${esc(safeSimLabel(key,val))}" readonly></div><span class="tiny muted">${help}</span></label>`}
-simRisks=function(){
-  const s=simulatorState;
-  const short=clamp01(8+(45-s.fillAgg)*.7+(47-s.transfer)*1.7+Math.max(0,-s.meltOffset)*1.5+(45-s.pack)*.35);
-  const flash=clamp01(6+(s.transfer-55)*1.8+(s.pack-62)*.8+(15-s.clampMargin)*2+Math.max(0,s.meltOffset)*.7);
-  const sink=clamp01(8+(48-s.pack)*1.2+(45-s.hold)*1.1+(42-s.cooling)*.5);
-  const burn=clamp01(5+(s.fillAgg-70)*1.1+(55-s.vent)*1.25+Math.max(0,s.meltOffset-8)*1.2);
-  const splay=clamp01(5+(60-s.moistureConfidence)*1.15+(s.fillAgg-82)*.35+Math.max(0,s.meltOffset-12)*.8);
-  const warp=clamp01(7+(42-s.cooling)*.9+Math.abs(s.mouldOffset)*1.15+Math.abs(s.pack-55)*.22);
-  return {"Short shot":short,"Flash":flash,"Sink":sink,"Burn":burn,"Splay":splay,"Warpage":warp};
+const SIM_TRAINING_BASELINE=Object.freeze({fillAgg:50,transfer:50,pack:50,hold:50,meltOffset:0,mouldOffset:0,cooling:50,clampMargin:25,vent:75,moistureConfidence:85});
+window.MM_SIMULATOR_TRAINING_BASELINE=SIM_TRAINING_BASELINE;
+simPromptRows=function(){
+  const s=simulatorState,b=SIM_TRAINING_BASELINE;
+  const cue=(condition,text)=>condition?text:null;
+  const rows=[
+    {name:"Short shot",cues:[
+      cue(s.fillAgg<b.fillAgg,"fill direction is less aggressive than the baseline"),
+      cue(s.transfer<b.transfer,"V/P transfer is earlier than the baseline"),
+      cue(s.pack<b.pack,"packing input is below the baseline"),
+      cue(s.meltOffset<0,"melt temperature is below the baseline")
+    ]},
+    {name:"Flash",cues:[
+      cue(s.transfer>b.transfer,"V/P transfer is later than the baseline"),
+      cue(s.pack>b.pack,"packing input is above the baseline"),
+      cue(s.clampMargin<b.clampMargin,"entered clamp-margin training control is below the baseline"),
+      cue(s.meltOffset>0,"melt temperature is above the baseline")
+    ]},
+    {name:"Sink",cues:[
+      cue(s.pack<b.pack,"packing input is below the baseline"),
+      cue(s.hold<b.hold,"hold duration is below the baseline"),
+      cue(s.cooling<b.cooling,"cooling margin is below the baseline")
+    ]},
+    {name:"Burn",cues:[
+      cue(s.fillAgg>b.fillAgg,"fill direction is more aggressive than the baseline"),
+      cue(s.vent<b.vent,"venting-condition confidence is below the baseline"),
+      cue(s.meltOffset>0,"melt temperature is above the baseline")
+    ]},
+    {name:"Splay",cues:[
+      cue(s.moistureConfidence<b.moistureConfidence,"moisture-control confidence is below the baseline"),
+      cue(s.fillAgg>b.fillAgg,"fill direction is more aggressive than the baseline"),
+      cue(s.meltOffset>0,"melt temperature is above the baseline")
+    ]},
+    {name:"Warpage",cues:[
+      cue(s.cooling<b.cooling,"cooling margin is below the baseline"),
+      cue(s.mouldOffset!==b.mouldOffset,"mould temperature differs from the baseline"),
+      cue(s.pack!==b.pack,"packing input differs from the baseline")
+    ]}
+  ];
+  return rows.map(row=>({name:row.name,cues:row.cues.filter(Boolean)}));
 };
 simChange=function(k,v){simulatorState[k]=+v;if($("#sim_"+k))$("#sim_"+k).value=safeSimLabel(k,+v);updateSimulator()};
 simPreset=function(p){
@@ -1672,7 +1689,7 @@ resetSimulator=function(){simulatorState={fillAgg:50,transfer:50,pack:50,hold:50
 renderSimulator=function(){
   $("#simulator").innerHTML=`<div class="legal-note"><b>Training model — not a processing recipe:</b> every setting below is relative to a material-, mould- and machine-specific validated/known-good baseline. This simulator intentionally does not provide universal melt, mould, transfer, packing or cooling targets.</div>
   <div class="grid2" style="margin-top:14px"><div class="card form-card">
-  <div class="sim-challenge"><span class="eyebrow">Process Rescue</span><h3>Can you stabilise the simulated process?</h3><p>Start from a deliberately poor relative condition. Bring every displayed training-risk indicator below 45. The indicators are educational scores, not probabilities, specifications or safe production limits.</p><button class="secondary" data-mm-onclick="startRescueChallenge()">Start rescue</button> <button class="ghost" data-mm-onclick="checkRescueChallenge()">Check my process</button></div>
+  <div class="sim-challenge"><span class="eyebrow">Baseline Recovery</span><h3>Can you restore the training baseline?</h3><p>Start from a deliberately changed relative condition and return every control to its displayed reference. The exercise has no defect probability, severity score, safe threshold or production-setting authority.</p><button class="secondary" data-mm-onclick="startRescueChallenge()">Start baseline recovery</button> <button class="ghost" data-mm-onclick="checkRescueChallenge()">Check baseline</button></div>
   <span class="eyebrow">Relative process model</span><h2>Move away from or back toward a known-good baseline</h2><div class="form-grid">
   ${safeSlider("Fill aggressiveness","fillAgg",0,100,simulatorState.fillAgg,"Relative training index; not a machine speed setting.")}
   ${safeSlider("V/P transfer timing","transfer",0,100,simulatorState.transfer,"50 = known-good baseline; left earlier, right later.")}
@@ -1685,7 +1702,7 @@ renderSimulator=function(){
   ${safeSlider("Venting condition","vent",0,100,simulatorState.vent,"Qualitative condition indicator, not a vent dimension.")}
   ${safeSlider("Moisture-control confidence","moistureConfidence",0,100,simulatorState.moistureConfidence,"Confidence in material-specific drying/handling control where applicable.")}
   </div><div class="hero-buttons"><button class="secondary" data-mm-onclick="resetSimulator()">Reset to baseline</button><button class="ghost" data-mm-onclick="simPreset('robust')">Balanced example</button><button class="ghost" data-mm-onclick="simPreset('trouble')">Unstable example</button></div></div>
-  <div class="card output-panel"><span class="eyebrow">Educational response</span><h2>Relative defect-risk indicators</h2><div class="part-visual"><div class="part-shape"></div><div id="simOverlay" class="defect-overlay"></div></div><div id="riskList"></div><div class="callout" id="simAdvice"></div><p class="tiny muted">These scores show direction-of-effect in a simplified training model. They are not defect probabilities and must not be used to set a production process.</p></div></div>`;
+  <div class="card output-panel"><span class="eyebrow">Educational response</span><h2>Mechanism prompts from baseline direction</h2><div class="part-visual"><div class="part-shape"></div><div id="simOverlay" class="defect-overlay"></div></div><div id="riskList"></div><div class="callout" id="simAdvice"></div><p class="tiny muted">These prompts only connect the direction of a training change to mechanisms worth checking. They are not ranked, scored, predictive, causal, or suitable for setting a production process.</p></div></div>`;
   updateSimulator();
 };
 

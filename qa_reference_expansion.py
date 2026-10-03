@@ -51,8 +51,8 @@ full_stack = [
     "source-library.js",
     "reference-data.js",
     "reference-deep-dive.js",
-    "reference-research-extension.js",
-    "reference-20x-extension.js",
+    "src/domains/research/reference-research-extension.js",
+    "src/domains/research/reference-20x-extension.js",
     "reference-2026-expansion.js",
 ]
 positions = []

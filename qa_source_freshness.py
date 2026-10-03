@@ -70,7 +70,7 @@ def main():
     need(MANIFEST.exists(),'sources/SOURCE_FRESHNESS.json missing')
     data=json.loads(MANIFEST.read_text(encoding='utf-8')); rows=static_check(data)
     quality=(ROOT/'assessment-quality-suite.js').read_text(encoding='utf-8')
-    shell=(ROOT/'pwa-shell.js').read_text(encoding='utf-8')
+    shell=(ROOT/'src/domains/shell/pwa-shell.js').read_text(encoding='utf-8')
     need(f"const SOURCE_REVIEWED='{data['reviewed']}'" in quality,'assessment source-reviewed date must match the authoritative manifest')
     need(f"const SOURCE_REVIEW_BY='{data['review_by']}'" in quality,'assessment source review-by date must match the authoritative manifest')
     need('sourceReviewDisplayDate' in shell and 'qualitySuite?.sourceFreshnessReviewed' in shell,'visible standards review date must derive from validated assessment source metadata')

@@ -10,16 +10,23 @@ import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
-MAIN_REF = "refs/heads/main"
-GITHUB_ACTIONS_APP_ID = 15368
-ATTESTATION_PATH = Path(__file__).resolve().parents[1] / ".github" / "main-ruleset-attestation.json"
-REQUIRED_CONTEXTS = {
-    "integrity",
-    "mobile-browser",
-    "build-windows",
-    "question-quality-50-pass",
-    "release-external-validation",
-}
+ROOT = Path(__file__).resolve().parents[1]
+POLICY_PATH = ROOT / "data" / "main-governance-policy-v1.json"
+ATTESTATION_PATH = ROOT / ".github" / "main-ruleset-attestation.json"
+
+def load_policy() -> dict:
+    try:
+        value = json.loads(POLICY_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise SystemExit(f"Native main ruleset verification failed: invalid canonical policy: {exc}") from exc
+    if not isinstance(value, dict) or value.get("schemaVersion") != 1:
+        raise SystemExit("Native main ruleset verification failed: canonical policy must be schemaVersion 1")
+    return value
+
+POLICY = load_policy()
+MAIN_REF = str(POLICY["targetRef"])
+GITHUB_ACTIONS_APP_ID = int(POLICY["requiredStatusChecks"]["integrationId"])
+REQUIRED_CONTEXTS = set(POLICY["requiredStatusChecks"]["contexts"])
 REQUIRED_RULE_TYPES = {
     "deletion",
     "non_fast_forward",
@@ -261,6 +268,9 @@ def verify(repository: str) -> None:
 
 
 def self_test() -> None:
+    pr_policy = POLICY["pullRequest"]
+    status_policy = POLICY["requiredStatusChecks"]
+    security_policy = POLICY["security"]
     good = {
         "id": 123,
         "updated_at": "2026-09-11T00:00:00Z",
@@ -274,23 +284,23 @@ def self_test() -> None:
             {"type": "non_fast_forward"},
             {"type": "required_linear_history"},
             {"type": "code_scanning", "parameters": {"code_scanning_tools": [{
-                "tool": "CodeQL",
-                "security_alerts_threshold": "medium_or_higher",
-                "alerts_threshold": "all",
+                "tool": security_policy["codeScanning"]["tool"],
+                "security_alerts_threshold": security_policy["codeScanning"]["securityAlertsThreshold"],
+                "alerts_threshold": security_policy["codeScanning"]["alertsThreshold"],
             }]}},
-            {"type": "code_quality", "parameters": {"severity": "all"}},
-            {"type": "copilot_code_review", "parameters": {"review_on_push": True, "review_draft_pull_requests": True}},
+            {"type": "code_quality", "parameters": {"severity": security_policy["codeQualitySeverity"]}},
+            {"type": "copilot_code_review", "parameters": {"review_on_push": security_policy["copilotReviewOnPush"], "review_draft_pull_requests": security_policy["copilotReviewDraftPullRequests"]}},
             {"type": "pull_request", "parameters": {
-                "allowed_merge_methods": ["squash"],
-                "required_approving_review_count": 1,
-                "required_review_thread_resolution": True,
-                "dismiss_stale_reviews_on_push": True,
-                "require_last_push_approval": True,
-                "require_extra_approval_for_unattributed_changes": True,
+                "allowed_merge_methods": pr_policy["allowedMergeMethods"],
+                "required_approving_review_count": pr_policy["minimumApprovals"],
+                "required_review_thread_resolution": pr_policy["reviewThreadResolution"],
+                "dismiss_stale_reviews_on_push": pr_policy["dismissStaleReviews"],
+                "require_last_push_approval": pr_policy["latestHeadApproval"],
+                "require_extra_approval_for_unattributed_changes": pr_policy["extraApprovalForUnattributedChanges"],
             }},
             {"type": "required_status_checks", "parameters": {
-                "do_not_enforce_on_create": False,
-                "strict_required_status_checks_policy": True,
+                "do_not_enforce_on_create": not status_policy["enforceOnCreate"],
+                "strict_required_status_checks_policy": status_policy["strict"],
                 "required_status_checks": [
                     {"context": context, "integration_id": GITHUB_ACTIONS_APP_ID}
                     for context in sorted(REQUIRED_CONTEXTS)
@@ -330,7 +340,10 @@ def self_test() -> None:
     stale = dict(matching_attestation, ruleset_updated_at="2026-09-10T12:00:00+12:00")
     assert not valid_main_ruleset(missing_bypass, stale, "example/project")[0]
 
-    print("Native main ruleset verifier self-test passed")
+    assert pr_policy["minimumApprovals"] >= 1 and pr_policy["independentReviewerRequired"] is True
+    assert pr_policy["latestHeadApproval"] is True
+    assert POLICY["bypassActors"] == []
+    print("Native main ruleset verifier self-test passed against canonical governance policy")
 
 
 def main() -> None:

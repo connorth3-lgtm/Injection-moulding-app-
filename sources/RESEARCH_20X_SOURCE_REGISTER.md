@@ -2,7 +2,7 @@
 
 Status date: 2026-08-24
 
-Purpose: document the twenty distinct research passes used for `reference-20x-extension.js`. The extension converts research into learning-oriented mechanisms, evidence prompts and diagnostic concepts. It deliberately does **not** copy paper-specific optimum machine settings into general production guidance.
+Purpose: document the twenty distinct research passes used for `src/domains/research/reference-20x-extension.js`. The extension converts research into learning-oriented mechanisms, evidence prompts and diagnostic concepts. It deliberately does **not** copy paper-specific optimum machine settings into general production guidance.
 
 ## Twenty research passes
 

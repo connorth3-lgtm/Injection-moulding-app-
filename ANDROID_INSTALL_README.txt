@@ -16,42 +16,42 @@ PWA / OFFLINE APPLICATION FILES
   reading-patch.css
   reading-patch.js
   training-upgrade.js
-  training-qa-fix.js
+  src/domains/learning/training-qa-fix.js
   assessment-100-pass.js
   assessment-deep-dive.js
-  assessment-answer-cue-fix.js
+  src/domains/assessment/assessment-answer-cue-fix.js
   assessment-storage-scope.js
   assessment-quality-suite.js
   assessment-stable-review-bridge.js
   assessment-analytics-ui.js
-  assessment-final-hardening.js
+  src/domains/assessment/assessment-final-hardening.js
   assessment-ux.js
   source-library.js
   reference-data.js
   reference-data.html
   reference-deep-dive.js
-  reference-research-extension.js
-  reference-20x-extension.js
+  src/domains/research/reference-research-extension.js
+  src/domains/research/reference-20x-extension.js
   reference-2026-expansion.js
   reference-sources.js
   reference-browser-ui.js
   diagnostic-learning-labs.js
   material-behaviour-labs.js
-  app-shell-registry.js
+  src/domains/shell/app-shell-registry.js
   process-data-diagnostics.js
   learning-experience.js
   curriculum-integration.js
   specialist-curriculum.js
-  specialist-evidence-gap-extension.js
+  src/domains/learning/specialist-evidence-gap-extension.js
   mould-master-workspace.js
-  app-shell-finalize.js
+  src/domains/shell/app-shell-finalize.js
   learning-analytics.js
   assessment-evidence-sources.js
   evidence-maturity-deep-dive.js
   evidence-maturity-formal-bridge.js
   lesson-evidence-depth.js
   assessment-evidence-approval.js
-  pwa-shell.js
+  src/domains/shell/pwa-shell.js
   privacy.html
   support.html
   mouldmaster-192.png

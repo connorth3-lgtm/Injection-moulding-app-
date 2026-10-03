@@ -11,6 +11,7 @@ REQUIRED_CONTEXTS=(
   "build-windows"
   "question-quality-50-pass"
   "release-external-validation"
+  "exact-head-risk-coverage"
 )
 
 usage() {
@@ -116,6 +117,7 @@ jq '
             (
               .parameters.required_status_checks
               + [{"context":"release-external-validation","integration_id":15368}]
+              + [{"context":"exact-head-risk-coverage","integration_id":15368}]
               | unique_by(.context)
             )
       else .
@@ -146,11 +148,11 @@ jq -e --argjson app "$GITHUB_ACTIONS_APP_ID" '
   ([.rules[] | select(.type == "required_status_checks") | .parameters.do_not_enforce_on_create] | .[0]) == false and
   (
     [.rules[] | select(.type == "required_status_checks") | .parameters.required_status_checks[].context]
-    | contains(["integrity","mobile-browser","build-windows","question-quality-50-pass","release-external-validation"])
+    | contains(["integrity","mobile-browser","build-windows","question-quality-50-pass","release-external-validation","exact-head-risk-coverage"])
   ) and
   (
     [.rules[] | select(.type == "required_status_checks") | .parameters.required_status_checks[]
-      | select(.context == "integrity" or .context == "mobile-browser" or .context == "build-windows" or .context == "question-quality-50-pass" or .context == "release-external-validation")
+      | select(.context == "integrity" or .context == "mobile-browser" or .context == "build-windows" or .context == "question-quality-50-pass" or .context == "release-external-validation" or .context == "exact-head-risk-coverage")
       | .integration_id]
     | all(. == $app)
   )
@@ -203,11 +205,11 @@ printf '%s\n' "$effective" | jq -e --argjson app "$GITHUB_ACTIONS_APP_ID" '
   ([.rules[] | select(.type == "pull_request") | .parameters.require_extra_approval_for_unattributed_changes] | .[0]) == true and
   (
     [.rules[] | select(.type == "required_status_checks") | .parameters.required_status_checks[].context]
-    | contains(["integrity","mobile-browser","build-windows","question-quality-50-pass","release-external-validation"])
+    | contains(["integrity","mobile-browser","build-windows","question-quality-50-pass","release-external-validation","exact-head-risk-coverage"])
   ) and
   (
     [.rules[] | select(.type == "required_status_checks") | .parameters.required_status_checks[]
-      | select(.context == "integrity" or .context == "mobile-browser" or .context == "build-windows" or .context == "question-quality-50-pass" or .context == "release-external-validation")
+      | select(.context == "integrity" or .context == "mobile-browser" or .context == "build-windows" or .context == "question-quality-50-pass" or .context == "release-external-validation" or .context == "exact-head-risk-coverage")
       | .integration_id]
     | all(. == $app)
   )

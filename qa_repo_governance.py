@@ -25,9 +25,11 @@ mobile_qa = text(".github/workflows/mobile-browser-qa.yml")
 desktop_build = text(".github/workflows/open-desktop-build.yml")
 question_quality = text(".github/workflows/question-quality-50-pass.yml")
 external_validation = text(".github/workflows/release-external-validation.yml")
+risk_coverage = text(".github/workflows/ci-risk-coverage.yml")
 protection_helper = text(".github/scripts/apply-main-ruleset.sh")
 protection_doc = text(".github/MAIN_PROTECTION.md")
 ruleset_verifier = text("tools/verify_main_ruleset.py")
+main_policy = text("data/main-governance-policy-v1.json")
 production_verifier = text("tools/verify_production_source.py")
 
 # Main provenance is a read-only post-push audit. Native ruleset prevention is
@@ -53,6 +55,7 @@ for marker in [
     "Mobile Browser QA",
     "Open Desktop Build",
     "Question Quality 50-Pass",
+    "Exact-head CI Risk Coverage",
     "actions/runs?head_sha=$PR_HEAD_SHA&event=pull_request",
     "all_required_success",
     "pulls/$PR_NUMBER/reviews",
@@ -76,15 +79,12 @@ need('"$conclusion" != "success"' in guard, "required PR workflows must still fa
 need("for attempt in {1..60}" in guard, "read-only workflow audit must tolerate long-running required checks")
 
 # Effective ruleset verification must enforce the explicit independent-review
-# review settings as well as the five governed automated contexts and existing
+# review settings as well as the six governed automated contexts and existing
 # server-side protections.
 for marker in [
-    'MAIN_REF = "refs/heads/main"',
-    '"integrity"',
-    '"mobile-browser"',
-    '"build-windows"',
-    '"question-quality-50-pass"',
-    '"release-external-validation"',
+    'POLICY_PATH = ROOT / "data" / "main-governance-policy-v1.json"',
+    'MAIN_REF = str(POLICY["targetRef"])',
+    'REQUIRED_CONTEXTS = set(POLICY["requiredStatusChecks"]["contexts"])',
     '"deletion"',
     '"non_fast_forward"',
     '"required_linear_history"',
@@ -105,6 +105,28 @@ for marker in [
     'branch.get("protected") is not True',
 ]:
     need(marker in ruleset_verifier, f"effective main ruleset verifier missing marker: {marker}")
+
+for marker in [
+    '"targetRef": "refs/heads/main"',
+    '"minimumApprovals": 1',
+    '"independentReviewerRequired": true',
+    '"latestHeadApproval": true',
+    '"reviewThreadResolution": true',
+    '"dismissStaleReviews": true',
+    '"extraApprovalForUnattributedChanges": true',
+    '"squash"',
+    '"bypassActors": []',
+    '"strict": true',
+    '"enforceOnCreate": true',
+    '"integrationId": 15368',
+    '"integrity"',
+    '"mobile-browser"',
+    '"build-windows"',
+    '"question-quality-50-pass"',
+    '"release-external-validation"',
+    '"exact-head-risk-coverage"',
+]:
+    need(marker in main_policy, f"canonical main governance policy missing marker: {marker}")
 
 need(
     "from verify_main_ruleset import verify as verify_main_ruleset" in production_verifier,
@@ -134,7 +156,7 @@ need("if: github.event_name != 'pull_request'" in pages, "Pages publication guar
 
 # The administrator helper must transform the live ruleset rather than replace
 # it with a stale static payload. It must preserve existing security/review
-# rules while applying independent human-review semantics and the fifth release gate.
+# rules while applying independent human-review semantics and the aggregate exact-head release gate.
 for marker in [
     'MODE="${1:---dry-run}"',
     "--dry-run|--apply",
@@ -144,6 +166,7 @@ for marker in [
     '"build-windows"',
     '"question-quality-50-pass"',
     '"release-external-validation"',
+    '"exact-head-risk-coverage"',
     'gh api "repos/$REPO/rulesets/$RULESET_ID" >"$live"',
     '.parameters.required_approving_review_count = 1',
     ".parameters.required_review_thread_resolution = true",
@@ -183,6 +206,7 @@ for marker in [
     "`build-windows`",
     "`question-quality-50-pass`",
     "`release-external-validation`",
+    "`exact-head-risk-coverage`",
     "CodeQL",
     "code-quality",
     "Copilot code-review",
@@ -191,13 +215,13 @@ for marker in [
     "--dry-run",
     "--apply",
     "transforms that exact",
-    "latest-head human approval, all five required checks are green",
+    "latest-head human approval, all six required checks are green",
     "Automated checks are necessary but are not equivalent to independent human review",
     "Issue #43",
 ]:
     need(marker in protection_doc, f"native-protection documentation missing marker: {marker}")
 
-# Ensure all five governed contexts remain real PR jobs.
+# Ensure all six governed contexts remain real PR jobs.
 need("jobs:\n  integrity:" in release_qa, "required status context 'integrity' is no longer the Release QA job")
 need("jobs:\n  mobile-browser:" in mobile_qa, "required status context 'mobile-browser' is no longer the mobile QA job")
 need("jobs:\n  build-windows:" in desktop_build, "required status context 'build-windows' is no longer the desktop build job")
@@ -209,6 +233,11 @@ need(
     "jobs:\n  release-external-validation:" in external_validation,
     "required status context 'release-external-validation' is no longer the external-validation boundary job",
 )
+need(
+    "jobs:\n  exact-head-risk-coverage:" in risk_coverage,
+    "required status context 'exact-head-risk-coverage' is no longer the aggregate CI risk job",
+)
+need("pull_request:\n    branches: [main]" in risk_coverage, "exact-head risk coverage required check must run on every PR to main")
 for workflow_name, workflow in [
     ("question-quality", question_quality),
     ("release-external-validation", external_validation),
@@ -220,6 +249,8 @@ for marker in [
     "tools/verify_release_external_validation.py",
     "Exercise native ruleset verifier contract",
     "tools/verify_main_ruleset.py --self-test",
+    "Verify live native main ruleset against canonical policy",
+    'tools/verify_main_ruleset.py --repository "${{ github.repository }}"',
     "PASS means unsupported external-validation claims are blocked.",
     "It does not mean human AT, physical-device, Windows, SME, learner or site evidence has been performed.",
 ]:
@@ -291,7 +322,7 @@ need("run: python qa_repo_governance.py" in release_qa, "release QA must run rep
 
 print(
     "MouldMaster repository governance QA passed "
-    "(main-only independent human-review native policy; five required contexts; live-preserving helper; "
+    "(main-only independent human-review native policy; six required contexts; live-preserving helper; "
     "post-push audit read-only; Pages requires exact native protection; dual locked desktop toolchains; "
     "guard-gated pruning; architecture debt gate)"
 )

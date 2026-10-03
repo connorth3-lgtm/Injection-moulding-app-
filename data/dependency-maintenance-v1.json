@@ -43,12 +43,23 @@
     },
     {
       "id": "github-actions-critical",
-      "declaredMajors": {"checkout":7, "setup-node":7, "setup-python":7, "upload-artifact":7},
-      "statusAtReview": "repository-governed",
+      "declaredMajors": {
+        "checkout": 7,
+        "setup-node": 7,
+        "setup-python": 7,
+        "upload-artifact": 7
+      },
+      "statusAtReview": "exact-sha-governed",
       "reviewRequired": true,
       "owner": "repository-maintainer",
-      "rationale": "Critical build/release automation actions are version-governed and separately checked by repository QA.",
-      "evidenceSource": ".github/workflows"
+      "rationale": "Critical build/release automation actions are pinned to reviewed immutable commit SHAs across workflows and separately checked by repository QA; major annotations are informational only.",
+      "evidenceSource": ".github/workflows",
+      "declaredShas": {
+        "checkout": "3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "setup-node": "820762786026740c76f36085b0efc47a31fe5020",
+        "setup-python": "5fda3b95a4ea91299a34e894583c3862153e4b97",
+        "upload-artifact": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a"
+      }
     }
   ],
   "exceptions": []

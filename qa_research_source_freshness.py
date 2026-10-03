@@ -67,7 +67,7 @@ def main():
     ap=argparse.ArgumentParser(); ap.add_argument('--network',action='store_true'); args=ap.parse_args()
     need(MANIFEST.exists(),'sources/RESEARCH_SOURCE_FRESHNESS.json missing')
     data=json.loads(MANIFEST.read_text(encoding='utf-8')); urls,per_file,locations=discover(data)
-    hardening=(ROOT/'assessment-final-hardening.js').read_text(encoding='utf-8')
+    hardening=(ROOT/'src/domains/assessment/assessment-final-hardening.js').read_text(encoding='utf-8')
     need(f"const SOURCE_REVIEWED='{data['reviewed']}'" in hardening,'assessment DOI-reviewed date must match the research manifest')
     need(f"const SOURCE_REVIEW_BY='{data['review_by']}'" in hardening,'assessment DOI review-by date must match the research manifest')
     report={'schema':1,'checked_at':datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z'),'mode':'network' if args.network else 'static','manifest_reviewed':data['reviewed'],'manifest_review_by':data['review_by'],'doi_count':len(urls),'source_file_counts':per_file,'source_locations':locations,'results':[]}

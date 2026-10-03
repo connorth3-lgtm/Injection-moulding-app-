@@ -29,12 +29,12 @@ def worker_assets(source, name):
 
 
 index = read("index.html")
-shell = read("pwa-shell.js")
+shell = read("src/domains/shell/pwa-shell.js")
 repair = read("repair.html")
 reference_page = read("reference-data.html")
 service_worker = read("service-worker.js")
 approval = read("assessment-evidence-approval.js")
-psychometric_hardening = read("assessment-psychometric-hardening.js")
+psychometric_hardening = read("src/domains/assessment/assessment-psychometric-hardening.js")
 proposition_integrity = read("assessment-evidence-integrity-upgrade.js")
 psychometric_approval = read("assessment-psychometric-approval.js")
 real_measured = read("real-measured-data-assessment.js")
@@ -42,11 +42,11 @@ training = read("training-upgrade.js")
 sbom = read("desktop/electron/scripts/generate-sbom.cjs")
 assessment_qa = read("qa_assessment_quality.py")
 question_runtime = read("qa_question_quality_50_pass_runtime.py")
-runtime_v2 = read("runtime-v2.js")
+runtime_v2 = read("src/domains/shared/runtime-v2.js")
 assessment_runtime_v2 = read("assessment-runtime-v2.js")
 lesson_v2 = read("lesson-deep-authoring-v2.js")
 multimodal = read("assessment-multimodal.js")
-a11y = read("accessibility-hardening.js")
+a11y = read("src/domains/shell/accessibility-hardening.js")
 ui_shell = read("ui-shell.css")
 learner_ux = read("learner-ux-repair.js")
 
@@ -68,16 +68,16 @@ must(index, [
     'throw new Error("Core training content is incomplete")', "versionMarkup", "?v=${RUNTIME_ASSET_VERSION}",
     "fetch(`${CORE_URL}?v=${RUNTIME_ASSET_VERSION}`", "window.MM_RUNTIME_ASSET_VERSION=RUNTIME_ASSET_VERSION",
     "Content-Security-Policy", "default-src 'self'", "object-src 'none'", "frame-src 'none'", "connect-src 'self'", "worker-src 'self'",
-    "'./runtime-v2.js'", "'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'", "'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'", "'./accessibility-hardening.js'",
+    "'./src/domains/shared/runtime-v2.js'", "'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'", "'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'", "'./src/domains/shell/accessibility-hardening.js'",
     "'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'", "'./src/domains/runtime-packs/evidence-runtime-pack.js'",
     "'./src/domains/runtime-packs/process-data-runtime-pack.js'", "'./src/domains/domain-bootstrap.js'"
 ], "bootstrap hardening")
 for forbidden in ("ensureCoherentRuntime", ".unregister()", "mmBundle"):
     require(forbidden not in index, f"bootstrap hardening: destructive browser/PWA reset marker remains: {forbidden}")
-require(index.index("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'") < index.index("'./runtime-v2.js'") < index.index("'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'"), "runtime v2 must capture the foundation assessment functions before the consolidated assessment runtime owns/decorates them")
-require(index.index("'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/evidence-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'") < index.index("'./app-shell-registry.js'"), "assessment and evidence packs must load in deterministic historical order before shell registry")
+require(index.index("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'") < index.index("'./src/domains/shared/runtime-v2.js'") < index.index("'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'"), "runtime v2 must capture the foundation assessment functions before the consolidated assessment runtime owns/decorates them")
+require(index.index("'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/evidence-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'") < index.index("'./src/domains/shell/app-shell-registry.js'"), "assessment and evidence packs must load in deterministic historical order before shell registry")
 require(index.index("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/process-data-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'"), "operational evidence runtime must load before process-data runtime pack")
-require(index.rindex("'./accessibility-hardening.js'") > index.index("'./learning-analytics.js'"), "accessibility hardening must run after learner-facing runtime modules are installed")
+require(index.rindex("'./src/domains/shell/accessibility-hardening.js'") > index.index("'./learning-analytics.js'"), "accessibility hardening must run after learner-facing runtime modules are installed")
 
 must(runtime_v2, ["const CORE=['renderLesson','renderDashboard','switchView','startExam','gradeExam','getExamQuestions']", "setImplementation", "already owned by", "before:new Set(),after:new Set()", "scopedKey", "registerModule", "one owner at a time"], "runtime v2")
 must(assessment_runtime_v2, ["technicalBankPerLevel:10", "technicalPerExam:7", "least-exposed blueprint-preserving stable IDs", "R.setImplementation('getExamQuestions',selector,'assessment-runtime-v2')", "BLUEPRINT=['materials','machine','tooling','process','quality','troubleshooting']", "coverageSimulation"], "assessment runtime v2")
@@ -135,15 +135,15 @@ must(service_worker, [
     "const RELEASE_PATHS=new Set(", "async function releaseCacheMatch(request)", "const cache=await caches.open(STATIC_CACHE)", "RELEASE_PATHS.has(url.pathname)",
     "async function fetchNetwork(event)", "fetch(event.request,{cache:'no-store'})", "await fetchNetwork(event)||criticalOfflineResponse(url)", "'./reference-data.html'", "'./reference-2026-expansion.js'", "'./diagnostic-learning-labs.js'",
     "'./material-behaviour-labs.js'", "'./assessment-evidence-sources.js'", "'./evidence-maturity-deep-dive.js'", "'./evidence-maturity-formal-bridge.js'",
-    "'./assessment-psychometric-hardening.js'", "'./assessment-evidence-integrity-upgrade.js'", "'./lesson-evidence-depth.js'", "'./lesson-deep-authoring-v2.js'", "'./assessment-evidence-approval.js'", "'./assessment-psychometric-approval.js'",
-    "'./runtime-v2.js'", "'./assessment-runtime-v2.js'", "'./assessment-multimodal.js'", "'./accessibility-hardening.js'",
+    "'./src/domains/assessment/assessment-psychometric-hardening.js'", "'./assessment-evidence-integrity-upgrade.js'", "'./lesson-evidence-depth.js'", "'./lesson-deep-authoring-v2.js'", "'./assessment-evidence-approval.js'", "'./assessment-psychometric-approval.js'",
+    "'./src/domains/shared/runtime-v2.js'", "'./assessment-runtime-v2.js'", "'./assessment-multimodal.js'", "'./src/domains/shell/accessibility-hardening.js'",
     "'./process-data-diagnostics.js'", "'./real-measured-data-assessment.js'", "'./curriculum-integration.js'", "'./specialist-curriculum.js'", "'./learning-analytics.js'",
     "Promise.allSettled", "if(failed.length)", "await caches.delete(STATIC_CACHE)", "keeping the previous worker", "mouldmaster-offline-asset-unavailable"
 ], "PWA hardening")
 core = worker_assets(service_worker, "CORE")
 optional = worker_assets(service_worker, "OPTIONAL")
 require("./MouldMaster_Academy_App.html" not in core | optional, "PWA hardening: frozen legacy Academy app must not be a current cached asset")
-for required_asset in ("./index.html", "./src/core-runtime/core-source.txt", "./pwa-shell.js", "./src/domains/domain-bootstrap.js", "./src/domains/engineering/engineering-store.js", "./material-catalog-v1.json"):
+for required_asset in ("./index.html", "./src/core-runtime/core-source.txt", "./src/domains/shell/pwa-shell.js", "./src/domains/domain-bootstrap.js", "./src/domains/engineering/engineering-store.js", "./material-catalog-v1.json"):
     require(required_asset in core, f"PWA hardening: required core asset missing: {required_asset}")
 install = service_worker[service_worker.index("self.addEventListener('install'"):service_worker.index("self.addEventListener('activate'")]
 require("cache.addAll" not in install, "service-worker install should identify the exact failed assets rather than use opaque addAll failure")

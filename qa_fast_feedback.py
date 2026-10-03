@@ -101,7 +101,7 @@ def main() -> int:
             commands.append([sys.executable, "qa_data_integration.py"])
 
     learner_identity_changed = bool(files & {
-        "training-qa-fix.js",
+        "src/domains/learning/training-qa-fix.js",
         "src/domains/learning/backup-authority-notice.js",
         "qa_import_identity_integrity.cjs",
         "qa_final_audit_lifecycle.cjs",
@@ -165,7 +165,7 @@ def main() -> int:
         "support.html",
         "version.json",
         "index.html",
-        "pwa-shell.js",
+        "src/domains/shell/pwa-shell.js",
         "service-worker.js",
         "qa_release_docs.py",
     })
@@ -194,7 +194,7 @@ def main() -> int:
     if browser_contract_changed and (ROOT / "qa_webkit_regression.py").exists():
         commands.append([sys.executable, "qa_webkit_regression.py"])
 
-    if any(p.startswith("src/domains/") or p in {"runtime-v2.js", "runtime-domain-manifest.json"} for p in files):
+    if any(p.startswith("src/domains/") or p in {"src/domains/shared/runtime-v2.js", "runtime-domain-manifest.json"} for p in files):
         if (ROOT / "qa_audit_consolidation.py").exists():
             commands.append([sys.executable, "qa_audit_consolidation.py"])
 

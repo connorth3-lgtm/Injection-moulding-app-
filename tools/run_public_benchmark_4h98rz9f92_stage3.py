@@ -6,6 +6,7 @@ import hashlib
 import json
 import tempfile
 import urllib.request
+from http_retry import urlopen_with_retry
 from pathlib import Path
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
@@ -49,7 +50,7 @@ EXPECTED_EXPERIMENT_IDENTIFIERS = 35
 
 def get(url: str, accept: str = "*/*"):
     req=urllib.request.Request(url,headers={"Accept":accept,"User-Agent":UA})
-    with urllib.request.urlopen(req,timeout=120) as r: return r.read(),r.geturl()
+    with urlopen_with_retry(req,timeout=120) as r: return r.read(),r.geturl()
 
 
 def flatten_files(payload):

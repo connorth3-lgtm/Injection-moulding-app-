@@ -8,14 +8,14 @@ def need(ok,msg):
     if not ok: raise AssertionError(msg)
 
 required=[
- 'assessment-storage-scope.js','assessment-final-hardening.js','sources/QUESTION_REVISION_INDEX.json','sources/RESEARCH_SOURCE_FRESHNESS.json',
+ 'assessment-storage-scope.js','src/domains/assessment/assessment-final-hardening.js','sources/QUESTION_REVISION_INDEX.json','sources/RESEARCH_SOURCE_FRESHNESS.json',
  'qa_research_source_freshness.py','index.html','service-worker.js','version.json','desktop/electron/package.json',
  'desktop/electron/scripts/generate-integrity.cjs','.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml',
  '.github/workflows/microsoft-store-msix.yml','.github/workflows/source-freshness.yml'
 ]
 for p in required: need((ROOT/p).exists(),f'final hardening file missing: {p}')
 
-js=text('assessment-final-hardening.js')
+js=text('src/domains/assessment/assessment-final-hardening.js')
 for marker in [
  "const VERSION='2026.08.24.3'","const BANK_VERSION='2026.08.30.1'","mm_assessment_exposure_timing_v1",
  "const S=window.MM_ASSESSMENT_STORAGE_SCOPE","const REVISION3=","const REGIONAL_REVISION_CHANGE=","REVISION3[id]||REVISION2[id]||BASELINE",
@@ -27,8 +27,8 @@ for marker in [
 ]: need(marker in js,f'final assessment hardening marker missing: {marker}')
 need('localStorage.removeItem(TIMING_KEY)' not in js,'final hardening must not bypass learner-scoped timing storage')
 need('mm-revision-detail' not in js and 'Research DOI resolver set reviewed' not in js,'learner answer review must not duplicate revision/source-governance metadata')
-p=subprocess.run(['node','--check',str(ROOT/'assessment-final-hardening.js')],capture_output=True,text=True)
-need(p.returncode==0,f'assessment-final-hardening.js syntax error: {p.stderr}')
+p=subprocess.run(['node','--check',str(ROOT/'src/domains/assessment/assessment-final-hardening.js')],capture_output=True,text=True)
+need(p.returncode==0,f'src/domains/assessment/assessment-final-hardening.js syntax error: {p.stderr}')
 
 rev=json.loads(text('sources/QUESTION_REVISION_INDEX.json'))
 need(rev.get('schema')==1 and rev.get('bank_version')=='2026.08.30.1','question revision index version mismatch')
@@ -62,7 +62,7 @@ const sandbox={window,document,localStorage,db,performance:{now:()=>1000},consol
 window.window=window;window.document=document;window.localStorage=localStorage;window.db=db;
 vm.createContext(sandbox);
 vm.runInContext(fs.readFileSync(%s,'utf8'),sandbox,{filename:'assessment-storage-scope.js'});
-vm.runInContext(fs.readFileSync(%s,'utf8'),sandbox,{filename:'assessment-final-hardening.js'});
+vm.runInContext(fs.readFileSync(%s,'utf8'),sandbox,{filename:'src/domains/assessment/assessment-final-hardening.js'});
 const scoped=window.MM_ASSESSMENT_STORAGE_SCOPE;
 if(!scoped||scoped.learnerScoped!==true||scoped.prototypeInterception!==false)throw new Error('explicit learner-scoped storage service did not initialize');
 scoped.setItem('mm_assessment_exposure_timing_v1',JSON.stringify({schema:1,questions:{sample:{attempts:1}}}));
@@ -70,7 +70,7 @@ const timingKey=scoped.timingKey();
 if(localStorage.getItem(timingKey)===null)throw new Error('timing fixture was not written to the active learner scope');
 window.MM_ASSESSMENT_ANALYTICS.reset();
 process.stdout.write(JSON.stringify({ids:window.MM_QUESTION_REVISIONS.stableIds,revision2:window.MM_QUESTION_REVISIONS.revision2,revision3:window.MM_QUESTION_REVISIONS.revision3,qa:D.assessmentQA.finalHardening,version:window.MM_ASSESSMENT_FINAL_HARDENING.version,timingCleared:localStorage.getItem(timingKey)===null,originalResetCalled,prototypeInterception:scoped.prototypeInterception}));
-'''%(json.dumps(str(ROOT/'assessment-storage-scope.js')),json.dumps(str(ROOT/'assessment-final-hardening.js')))
+'''%(json.dumps(str(ROOT/'assessment-storage-scope.js')),json.dumps(str(ROOT/'src/domains/assessment/assessment-final-hardening.js')))
 p=subprocess.run(['node','-e',node],capture_output=True,text=True)
 need(p.returncode==0,f'final hardening runtime QA failed: {p.stderr or p.stdout}')
 runtime=json.loads(p.stdout)
@@ -97,22 +97,23 @@ need(V.get('question_bank_version')=='2026.08.30.1','question bank version must 
 need(V.get('assessment_quality_version')=='2026.08.24.3','assessment quality version must remain 2026.08.24.3')
 
 idx=text('index.html');assessment_pack='src/domains/runtime-packs/assessment-foundation-runtime-pack.js';pack=text(assessment_pack)
-need(assessment_pack in idx and '<script src="./assessment-storage-scope.js">' not in idx and '<script src="./assessment-final-hardening.js">' not in idx,'assessment storage/final hardening must load through deterministic pack')
+need(assessment_pack in idx and '<script src="./assessment-storage-scope.js">' not in idx and '<script src="./src/domains/assessment/assessment-final-hardening.js">' not in idx,'assessment storage/final hardening must load through deterministic pack')
 need(pack.index('/* >>> assessment-storage-scope.js */')<pack.index('/* >>> assessment-analytics-ui.js */')<pack.index('/* >>> assessment-final-hardening.js */'),'final hardening/scoped-storage pack order wrong')
-need(idx.index(assessment_pack)<idx.index('runtime-v2.js')<idx.index('bootstrap-assessment-source-runtime-pack.js'),'assessment foundation pack boundary wrong')
+need(idx.index(assessment_pack)<idx.index('src/domains/shared/runtime-v2.js')<idx.index('bootstrap-assessment-source-runtime-pack.js'),'assessment foundation pack boundary wrong')
 need("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'" in text('service-worker.js'),'assessment foundation pack missing from offline cache')
 pkg=json.loads(text('desktop/electron/package.json'));froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
 need('../../assessment-storage-scope.js' in froms,'scoped assessment storage missing from desktop package')
-need('../../assessment-final-hardening.js' in froms,'final hardening missing from desktop package')
+need('../../src/domains' in froms,'desktop package must include the canonical recursive domain runtime tree')
+need('../../src/domains/assessment/assessment-final-hardening.js' not in froms,'desktop package must not duplicate domain-owned final hardening source')
 need("'assessment-storage-scope.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'scoped assessment storage missing from integrity set')
-need("'assessment-final-hardening.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'final hardening missing from integrity set')
+need("'src/domains/assessment/assessment-final-hardening.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'final hardening missing from integrity set')
 
 qy=text('.github/workflows/qa.yml')
 need("find . -maxdepth 1 -type f -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check" in qy,'release workflow missing filesystem JavaScript syntax gate')
 need('python qa_assessment_final_hardening.py' in qy,'release workflow missing final hardening QA')
 need('python qa_research_source_freshness.py' in qy,'release workflow missing research-source freshness QA')
 ow=text('.github/workflows/open-desktop-build.yml')
-for marker in ["- 'assessment-final-hardening.js'","- 'qa_assessment_final_hardening.py'","- 'qa_research_source_freshness.py'","- 'sources/RESEARCH_SOURCE_FRESHNESS.json'",'python qa_assessment_final_hardening.py','python qa_research_source_freshness.py']:
+for marker in ["- 'src/domains/assessment/assessment-final-hardening.js'","- 'qa_assessment_final_hardening.py'","- 'qa_research_source_freshness.py'","- 'sources/RESEARCH_SOURCE_FRESHNESS.json'",'python qa_assessment_final_hardening.py','python qa_research_source_freshness.py']:
     need(marker in ow,f'open-desktop workflow missing final hardening marker: {marker}')
 store_yml=text('.github/workflows/microsoft-store-msix.yml')
 need('python qa_assessment_final_hardening.py' in store_yml and 'python qa_research_source_freshness.py' in store_yml,'Store workflow missing final assessment/research QA')

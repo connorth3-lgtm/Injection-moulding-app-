@@ -10,13 +10,13 @@ def text(name):
 def need(ok,msg):
     if not ok: raise AssertionError(msg)
 
-required=['app-shell-registry.js','app-shell-finalize.js','mould-master-workspace.js','index.html','service-worker.js','desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs','qa/mobile-viewport.spec.js']
+required=['src/domains/shell/app-shell-registry.js','src/domains/shell/app-shell-finalize.js','mould-master-workspace.js','index.html','service-worker.js','desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs','qa/mobile-viewport.spec.js']
 for name in required: text(name)
-for js in ['app-shell-registry.js','app-shell-finalize.js','mould-master-workspace.js']:
+for js in ['src/domains/shell/app-shell-registry.js','src/domains/shell/app-shell-finalize.js','mould-master-workspace.js']:
     p=subprocess.run(['node','--check',str(ROOT/js)],capture_output=True,text=True)
     need(p.returncode==0,f'{js} syntax error: '+(p.stderr or p.stdout))
 
-shell=text('app-shell-registry.js')
+shell=text('src/domains/shell/app-shell-registry.js')
 for marker in [
     "const VERSION='2026.08.26.4'",
     'dashboardSections=new Map()',
@@ -80,27 +80,30 @@ for forbidden in ['correctIndex=', 'question_bank_version=', 'MM_DATA.exams=', '
     need(forbidden not in shell,f'app shell contains forbidden assessment/network mutation: {forbidden}')
 
 idx=text('index.html')
-need("['./app-shell-registry.js','<script src=\"./app-shell-registry.js\">']" in idx,'index missing app-shell-registry.js')
+need("['./src/domains/shell/app-shell-registry.js','<script src=\"./src/domains/shell/app-shell-registry.js\">']" in idx,'index missing src/domains/shell/app-shell-registry.js')
 need("['./src/domains/runtime-packs/shell-finalization-runtime-pack.js','<script src=\"./src/domains/runtime-packs/shell-finalization-runtime-pack.js\">']" in idx,'index missing packed shell finalizer')
-need("['./app-shell-finalize.js','<script" not in idx,'direct root shell finalizer must remain retired from browser bootstrap')
+need("['./src/domains/shell/app-shell-finalize.js','<script" not in idx,'direct root shell finalizer must remain retired from browser bootstrap')
 need("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'" in idx,'index missing packed mould-master workspace runtime')
-need(idx.index("'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'") < idx.index("'./app-shell-registry.js'"),'registry must capture the mature pre-shell core after packed assessment evidence patches')
-need(idx.index("'./app-shell-registry.js'") < idx.index("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'"),'registry must capture core before packed learner wrapper modules')
+need(idx.index("'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'") < idx.index("'./src/domains/shell/app-shell-registry.js'"),'registry must capture the mature pre-shell core after packed assessment evidence patches')
+need(idx.index("'./src/domains/shell/app-shell-registry.js'") < idx.index("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'"),'registry must capture core before packed learner wrapper modules')
 need(idx.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'") < idx.index("'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'"),'packed workspace runtime must be registered before shell finalization')
 need(idx.index("'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'") < idx.index("'./src/domains/domain-bootstrap.js'"),'shell finalization pack must run before domain bootstrap')
 
 sw=text('service-worker.js')
-for asset in ['app-shell-registry.js','mould-master-workspace.js']:
+for asset in ['src/domains/shell/app-shell-registry.js','mould-master-workspace.js']:
     need(f"'./{asset}'" in sw,f'offline cache missing {asset}')
 need("'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'" in sw,'offline cache missing packed shell finalizer')
 
 pkg=json.loads(text('desktop/electron/package.json'))
 froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
-for asset in ['app-shell-registry.js','mould-master-workspace.js','app-shell-finalize.js']:
-    need('../../'+asset in froms,f'desktop package missing {asset}')
+need('../../src/domains' in froms,'desktop package must include the canonical recursive domain runtime tree')
+need('../../mould-master-workspace.js' in froms,'desktop package missing root workspace asset')
+for asset in ['src/domains/shell/app-shell-registry.js','src/domains/shell/app-shell-finalize.js']:
+    need('../../'+asset not in froms,f'desktop package must not duplicate domain-owned shell asset: {asset}')
+for asset in ['src/domains/shell/app-shell-registry.js','mould-master-workspace.js','src/domains/shell/app-shell-finalize.js']:
     need("'"+asset+"'" in text('desktop/electron/scripts/generate-integrity.cjs'),f'desktop integrity missing {asset}')
 
-finalizer=text('app-shell-finalize.js')
+finalizer=text('src/domains/shell/app-shell-finalize.js')
 for dep in ['MM_APP_SHELL','MM_LEARNING_EXPERIENCE','MM_CURRICULUM_INTEGRATION','MM_SPECIALIST_CURRICULUM','MM_MOULD_MASTER_WORKSPACE']:
     need(dep in finalizer,f'finalizer dependency guard missing: {dep}')
 need('MM_APP_SHELL.finalize()' in finalizer,'finalizer does not activate canonical shell')

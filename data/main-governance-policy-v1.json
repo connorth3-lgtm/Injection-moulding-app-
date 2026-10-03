@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "policyId": "mouldmaster-main-governance-policy",
+  "version": "2026.10.03.2",
+  "targetRef": "refs/heads/main",
+  "enforcement": "active",
+  "bypassActors": [],
+  "pullRequest": {
+    "minimumApprovals": 1,
+    "independentReviewerRequired": true,
+    "dismissStaleReviews": true,
+    "latestHeadApproval": true,
+    "reviewThreadResolution": true,
+    "extraApprovalForUnattributedChanges": true,
+    "allowedMergeMethods": [
+      "squash"
+    ]
+  },
+  "requiredStatusChecks": {
+    "strict": true,
+    "enforceOnCreate": true,
+    "integrationId": 15368,
+    "contexts": [
+      "integrity",
+      "mobile-browser",
+      "build-windows",
+      "question-quality-50-pass",
+      "release-external-validation",
+      "exact-head-risk-coverage"
+    ]
+  },
+  "security": {
+    "codeScanning": {
+      "tool": "CodeQL",
+      "securityAlertsThreshold": "medium_or_higher",
+      "alertsThreshold": "all"
+    },
+    "codeQualitySeverity": "all",
+    "copilotReviewOnPush": true,
+    "copilotReviewDraftPullRequests": true
+  },
+  "branchHistory": {
+    "linearHistoryRequired": true,
+    "deletionBlocked": true,
+    "nonFastForwardBlocked": true
+  },
+  "exitCondition": "The live GitHub main ruleset exactly matches this policy and at least one trusted human other than the PR author can approve the exact latest PR head."
+}

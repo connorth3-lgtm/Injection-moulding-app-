@@ -92,6 +92,7 @@ def main() -> None:
     curriculum_sme = load("qa/curriculum-semantic-review.json")
     nzqa_external = load("data/nzqa-external-validation-v1.json")
     desktop_release = load("data/desktop-release-platform-v1.json")
+    main_policy = load("data/main-governance-policy-v1.json")
 
     validate_model_shape(model)
     labels = model.get("userFacingLabels") or {}
@@ -112,6 +113,7 @@ def main() -> None:
     assert external.get("release") == current_release, "external-validation boundary must be rebound to the current learner release"
 
     state_allowed(model, "technicalAutomation", external["technicalAutomation"]["status"])
+    state_allowed(model, "repositoryGovernance", external["governance"]["status"])
     state_allowed(model, "publicationAuthorization", book_auth["status"])
     state_allowed(model, "externalValidation", book_sme["status"])
     state_allowed(model, "externalValidation", external["bookSme"]["status"])
@@ -123,6 +125,14 @@ def main() -> None:
     state_allowed(model, "distributionValidation", external["windowsDistribution"]["status"])
     state_allowed(model, "distributionValidation", desktop_release["status"])
     state_allowed(model, "productionAuthority", external["productionUse"]["status"])
+
+    assert main_policy.get("schemaVersion") == 1
+    assert external["governance"].get("policyFile") == "data/main-governance-policy-v1.json"
+    assert main_policy["pullRequest"]["minimumApprovals"] >= 1
+    assert main_policy["pullRequest"]["independentReviewerRequired"] is True
+    assert main_policy["pullRequest"]["latestHeadApproval"] is True
+    assert main_policy["bypassActors"] == []
+    assert external["governance"]["status"] in {"pending-native-ruleset-apply", "enforced"}
 
     assert book_auth["status"] == "authorized", "current Book publication authorization changed unexpectedly"
     assert book_sme["status"] == "hold", "independent Book SME status must remain HOLD until real 46/46 human review exists"
@@ -163,6 +173,7 @@ def main() -> None:
     current = model["currentPublicBoundary"]
     expected = {
         "technicalAutomation": external["technicalAutomation"]["status"],
+        "repositoryGovernance": external["governance"]["status"],
         "bookPublicationAuthorization": book_auth["status"],
         "bookIndependentSme": book_sme["status"],
         "curriculumIndependentSme": external["curriculumSme"]["status"],
@@ -209,6 +220,7 @@ def main() -> None:
         "human-review-cannot-be-synthetic",
         "assurance-layers-not-collapsed",
         "mutable-desktop-release-not-trusted",
+        "live-governance-must-match-canonical-policy",
     }
     assert invariant_ids == required, "canonical governance invariants changed without an explicit model revision"
 

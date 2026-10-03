@@ -95,6 +95,7 @@ jobs:
             "Open Desktop Build"
             "Question Quality 50-Pass"
             "Release External Validation Boundary"
+            "Exact-head CI Risk Coverage"
           )
 
           all_required_success=false
