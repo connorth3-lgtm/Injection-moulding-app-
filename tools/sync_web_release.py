@@ -117,13 +117,13 @@ def desired_files() -> dict[Path, str]:
     health_status_path = ROOT / "HEALTH_STATUS.md"
     health_status = replace_once(
         health_status_path.read_text(encoding="utf-8"),
-        r"^(Current learner-facing web release: \*\*)[^*]+(\*\*)$",
+        r"^(Current governed web candidate: \*\*)[^*]+(\*\*)$",
         rf"\g<1>{web_release}\g<2>",
         "health status current release",
     )
     health_status = replace_once(
         health_status,
-        r"^(- Current learner-facing web release: \*\*)[^*]+(\*\*\.)$",
+        r"^(- Current governed web candidate: \*\*)[^*]+(\*\*\.)$",
         rf"\g<1>{web_release}\g<2>",
         "health status current release contract",
     )
@@ -131,7 +131,7 @@ def desired_files() -> dict[Path, str]:
     governance_status_path = ROOT / "GOVERNANCE_STATUS.md"
     governance_status = replace_once(
         governance_status_path.read_text(encoding="utf-8"),
-        r"^(Current learner-facing web release: \*\*`)[^`]+(`\*\*\.)$",
+        r"^(Current governed web candidate: \*\*`)[^`]+(`\*\*\.)$",
         rf"\g<1>{web_release}\g<2>",
         "governance status current release",
     )
