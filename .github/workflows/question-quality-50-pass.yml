@@ -5,41 +5,6 @@ on:
     branches: [main, preview]
   push:
     branches: [main, preview]
-    paths:
-      - 'MouldMaster_Core_App.html'
-      - 'training-upgrade.js'
-      - 'assessment-deep-dive.js'
-      - 'src/domains/assessment/assessment-answer-cue-fix.js'
-      - 'assessment-quality-suite.js'
-      - 'assessment-stable-review-bridge.js'
-      - 'assessment-ux.js'
-      - 'diagnostic-learning-labs.js'
-      - 'material-behaviour-labs.js'
-      - 'evidence-maturity-deep-dive.js'
-      - 'evidence-maturity-formal-bridge.js'
-      - 'src/domains/assessment/assessment-psychometric-hardening.js'
-      - 'assessment-psychometric-approval.js'
-      - 'assessment-evidence-integrity-upgrade.js'
-      - 'real-measured-data-assessment.js'
-      - 'src/domains/shared/runtime-v2.js'
-      - 'src/domains/shell/app-shell-finalize.js'
-      - 'learning-analytics.js'
-      - 'assessment-evidence-approval.js'
-      - 'src/domains/shell/accessibility-hardening.js'
-      - 'src/domains/process/evidence-granularity.js'
-      - 'desktop/electron/package.json'
-      - 'desktop/electron/scripts/generate-integrity.cjs'
-      - 'desktop/electron/scripts/qa.cjs'
-      - 'qa_audit_consolidation.py'
-      - 'qa_assessment_ux.py'
-      - 'qa_question_quality_50_pass.py'
-      - 'qa_question_quality_50_pass_runtime.py'
-      - 'qa_question_quality_50_pass_immutable.py'
-      - 'qa_question_quality_extreme_50_pass.py'
-      - 'qa_question_quality_extreme_runtime.py'
-      - 'qa_question_quality_extreme_runtime_v2.py'
-      - 'qa_assessment_evidence_integrity.py'
-      - '.github/workflows/question-quality-50-pass.yml'
   workflow_dispatch:
 
 permissions:
