@@ -40,7 +40,7 @@ else:
 for step_id in ('visual_lock','chromium_regression','webkit_regression','cross_browser_smoke'):
     need(f'id: {step_id}\n        continue-on-error: true' in workflow,f'{step_id} must collect its outcome without short-circuiting later browser evidence')
 need('name: Enforce browser and visual approval gates' in workflow,'Mobile Browser QA needs an explicit final fail-closed gate')
-need(workflow.index('name: Upload browser QA artifacts') < workflow.index('name: Enforce browser and visual approval gates'),'browser artifacts must upload before the final approval gate is enforced')
+need(workflow.index('name: Upload substantive browser QA artifacts') < workflow.index('name: Enforce browser and visual approval gates'),'browser artifacts must upload before the substantive approval gate is enforced')
 for expression in (
     '${{ steps.visual_lock.outcome }}',
     '${{ steps.chromium_regression.outcome }}',
@@ -50,5 +50,7 @@ for expression in (
     need(expression in workflow,f'final browser gate is not wired to {expression}')
 need('check_gate "Approved visual baseline" "$VISUAL_OUTCOME"' in workflow,'approved visual drift must remain fail-closed after evidence collection')
 need('if [ "$failed" -ne 0 ]; then' in workflow and 'exit 1' in workflow,'final browser gate must fail the job when an approval/test outcome is unresolved')
+need('needs: [browser-substantive, app-500-reliability]' in workflow,'mobile-browser aggregator must depend on both parallel browser jobs')
+need('name: Enforce complete mobile browser evidence' in workflow,'mobile-browser aggregator must fail closed across substantive and 500-run jobs')
 
 print(f'MouldMaster WebKit regression contract passed ({len(webkit_specs)} substantive specs + tablet smoke; Chromium-only service-worker PWA lifecycle/transition and approved visual baseline explicit; browser evidence remains complete before final fail-closed approval)')
