@@ -184,7 +184,13 @@ def verify(token: str, repository: str, source_sha: str, require_native_protecti
 
     branch = request_json(token, f"{API}/repos/{repository}/branches/main")
     protected = bool((branch or {}).get("protected")) if isinstance(branch, dict) else False
+    current_main_sha = str(((branch or {}).get("commit") or {}).get("sha") or "") if isinstance(branch, dict) else ""
     if require_native_protection:
+        if current_main_sha != source_sha:
+            raise SystemExit(
+                f"Production source must be the current main head; current={current_main_sha}, requested={source_sha}. "
+                "Historical or arbitrary workflow-dispatch refs cannot publish."
+            )
         if not protected:
             raise SystemExit("Native main protection is required for this production operation but GitHub reports protected=false")
         verify_main_ruleset(repository)

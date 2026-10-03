@@ -11,6 +11,7 @@ def need(ok, message):
 
 
 workflow = (ROOT / ".github" / "workflows" / "pages.yml").read_text(encoding="utf-8")
+preview_workflow = (ROOT / ".github" / "workflows" / "preview-pages.yml").read_text(encoding="utf-8")
 guard_path = ROOT / "tools" / "quarantine_legacy_pages.py"
 guard = guard_path.read_text(encoding="utf-8")
 verifier = (ROOT / "tools" / "verify_pages_deployment.py").read_text(encoding="utf-8")
@@ -20,6 +21,23 @@ hold_verifier = (ROOT / "tools" / "verify_pages_hold.py").read_text(encoding="ut
 
 publisher_block = workflow.split("  publisher-guard:", 1)[1].split("\n  build:", 1)[0]
 need("needs:" not in publisher_block, "publisher guard must start independently so legacy cancellation is not delayed")
+
+shared_publish_concurrency = "group: mouldmaster-pages-site-publish"
+need(shared_publish_concurrency in workflow, "main Pages deploy must use the shared site-wide publication concurrency group")
+need(shared_publish_concurrency in preview_workflow, "preview Pages deploy must use the shared site-wide publication concurrency group")
+need("cancel-in-progress: false" in workflow, "main Pages publication must not be cancelled mid-deploy by a later run")
+need("cancel-in-progress: false" in preview_workflow, "preview Pages publication must not be cancelled mid-deploy by a later run")
+need(preview_workflow.count("pull-requests: read") >= 2, "preview build and deploy provenance checks require pull-request read permission")
+for required in (
+    "Require merged-PR preview provenance",
+    "tools/verify_preview_source.py --self-test",
+    '--source-sha "${{ github.sha }}"',
+    "Recheck current merged preview provenance",
+    "xs.sort(key=lambda x:",
+    '--expected-source-sha "${{ github.sha }}"',
+):
+    need(required in preview_workflow, f"preview Pages provenance/serialization safeguard missing: {required}")
+need('--expected-source-sha "${{ github.sha }}"' in workflow, "main Pages live verification must bind to the exact deployed source SHA")
 
 for marker in (
     "actions: write",
@@ -216,7 +234,7 @@ for marker in ("--convergence-attempts", "--convergence-delay", "FORBIDDEN_PROBE
     need(marker in verifier, f"live production deployment verifier safeguard missing: {marker}")
 
 print(
-    "MouldMaster Pages single-publisher QA passed (workflow-only source, successful legacy-deploy detection, "
+    "MouldMaster Pages publisher-governance QA passed (serialized main/preview deployers, merged-PR preview provenance, exact deployed-source verification, workflow-only source, successful legacy-deploy detection, "
     "earliest-start guard, preview-only main publication, minimal base hold plus stale-root-PWA migration with /preview/ staged, "
     "root-to-preview Home forwarding, local-only metadata helper, and live 404 verification)"
 )

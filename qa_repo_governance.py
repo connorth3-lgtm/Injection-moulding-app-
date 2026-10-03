@@ -18,6 +18,7 @@ def text(path):
 
 guard = text(".github/workflows/main-pr-provenance-guard.yml")
 pages = text(".github/workflows/pages.yml")
+preview_pages = text(".github/workflows/preview-pages.yml")
 pruner = text(".github/workflows/prune-merged-branches.yml")
 dep_lock = text(".github/workflows/desktop-dependency-lock.yml")
 release_qa = text(".github/workflows/qa.yml")
@@ -31,6 +32,8 @@ protection_doc = text(".github/MAIN_PROTECTION.md")
 ruleset_verifier = text("tools/verify_main_ruleset.py")
 main_policy = text("data/main-governance-policy-v1.json")
 production_verifier = text("tools/verify_production_source.py")
+preview_verifier = text("tools/verify_preview_source.py")
+external_live_verifier = text("tools/verify_external_validation_live_bindings.py")
 
 # Main provenance is a read-only post-push audit. Native ruleset prevention is
 # authoritative; audit automation must never rewrite main after the fact.
@@ -136,6 +139,59 @@ need(
 need(
     "verify_main_ruleset(repository)" in production_verifier,
     "production verifier must validate the exact effective ruleset when native protection is required",
+)
+need(
+    "Production source must be the current main head" in production_verifier,
+    "production verifier must reject historical/arbitrary manual-dispatch sources",
+)
+for marker in (
+    "branches/preview",
+    "direct pushes and arbitrary workflow-dispatch refs are not deployable",
+    "merge_commit_sha",
+    "MouldMaster Release QA",
+    "Mobile Browser QA",
+    "Question Quality 50-Pass",
+):
+    need(marker in preview_verifier, f"preview-source verifier missing marker: {marker}")
+for marker in (
+    "actions/runs/{run_id}/artifacts",
+    "artifact.get(\"expired\") is not False",
+    "live artifact digest does not match canonical webCandidate",
+    "issues/{issue_number}",
+    "NZQA tracker",
+):
+    need(marker in external_live_verifier, f"external live-binding verifier missing marker: {marker}")
+for marker in (
+    "Require merged-PR preview provenance",
+    "Recheck current merged preview provenance",
+    "mouldmaster-pages-site-publish",
+    "xs.sort(key=lambda x:",
+):
+    need(marker in preview_pages, f"preview Pages governance missing marker: {marker}")
+need(
+    "mouldmaster-pages-site-publish" in pages,
+    "main Pages deploy must share one publication concurrency domain with preview Pages",
+)
+
+preview_self_test = subprocess.run(
+    [sys.executable, str(ROOT / "tools/verify_preview_source.py"), "--self-test"],
+    cwd=ROOT,
+    capture_output=True,
+    text=True,
+)
+need(
+    preview_self_test.returncode == 0,
+    f"preview-source verifier self-test failed: {(preview_self_test.stderr or preview_self_test.stdout).strip()}",
+)
+external_live_self_test = subprocess.run(
+    [sys.executable, str(ROOT / "tools/verify_external_validation_live_bindings.py"), "--self-test"],
+    cwd=ROOT,
+    capture_output=True,
+    text=True,
+)
+need(
+    external_live_self_test.returncode == 0,
+    f"external live-binding verifier self-test failed: {(external_live_self_test.stderr or external_live_self_test.stdout).strip()}",
 )
 
 self_test = subprocess.run(
@@ -320,11 +376,17 @@ for stale_branch in [
 ]:
     need(stale_branch not in pruner, f"historical cleanup branch still hard-coded: {stale_branch}")
 
-need("run: python qa_repo_governance.py" in release_qa, "release QA must run repository governance regression checks")
+for marker in (
+    "- name: Repository governance integrity",
+    "python qa_repo_governance.py",
+    "python qa_pages_single_publisher.py",
+    "python qa_release_supply_chain.py",
+):
+    need(marker in release_qa, f"release QA governance bundle missing marker: {marker}")
 
 print(
     "MouldMaster repository governance QA passed "
     "(main-only independent human-review native policy; six required contexts; live-preserving helper; "
-    "post-push audit read-only; Pages requires exact native protection; dual locked desktop toolchains; "
+    "post-push audit read-only; main/preview Pages publication provenance serialized and source-bound; Pages requires exact native protection; dual locked desktop toolchains; "
     "guard-gated pruning; architecture debt gate)"
 )

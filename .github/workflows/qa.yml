@@ -50,7 +50,10 @@ jobs:
           python tools/verify_release_external_validation.py
           python qa_release_validation_packets.py
       - name: Repository governance integrity
-        run: python qa_repo_governance.py
+        run: |
+          python qa_repo_governance.py
+          python qa_pages_single_publisher.py
+          python qa_release_supply_chain.py
       - name: Audit remediation governance regression
         run: python qa_audit_governance.py
       - name: Full-app remediation contract

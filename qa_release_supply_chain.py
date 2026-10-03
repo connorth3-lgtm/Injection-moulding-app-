@@ -83,16 +83,24 @@ need("permissions:" in publisher.split("needs:", 1)[0], "desktop publication per
 
 for marker in (
     'package-ecosystem: "github-actions"',
-    'directory: "/"',
     'package-ecosystem: "npm"',
     'directory: "/desktop/electron"',
+    'directory: "/desktop/electron/msix-toolchain"',
     'interval: "weekly"',
 ):
     need(marker in dependabot, f"Dependabot maintenance coverage missing: {marker}")
+need(
+    'package-ecosystem: "npm"\n    directory: "/"' in dependabot,
+    "Dependabot must cover the root browser-QA npm lock",
+)
+need(
+    dependabot.count('package-ecosystem: "npm"') >= 3,
+    "Dependabot must cover root browser QA, desktop runtime and isolated MSIX npm packages",
+)
 
 print(
     "MouldMaster release supply-chain QA passed "
     "(critical Pages/desktop Actions SHA-pinned; Node-24-capable Pages releases; "
     "desktop publication is gated by governed merged-main provenance before write authority; "
-    "GitHub Actions and desktop npm updates governed by Dependabot)"
+    "GitHub Actions plus root browser-QA, desktop runtime and isolated MSIX npm updates governed by Dependabot)"
 )
