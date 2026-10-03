@@ -17,4 +17,4 @@ setTimeout(function () {
   } catch (e) {
     window.__mmShowStartupFailure("Startup self-check failed: " + e.message);
   }
-}, 700);
+}, 3000);
