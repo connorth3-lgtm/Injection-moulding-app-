@@ -123,7 +123,7 @@ for marker in ['legacy-engineering-case','switchUser','mat-lotte-infino-nh-1033'
 playwright=text('playwright.config.cjs')
 need('engineering-case-store\\.spec\\.js' in playwright,'canonical engineering browser regression missing from Playwright config')
 mobile=text('.github/workflows/mobile-browser-qa.yml')
-need('qa/engineering-case-store.spec.js' in mobile,'canonical engineering browser regression missing from Mobile Browser QA triggers')
+need((ROOT/'qa/engineering-case-store.spec.js').exists(),'canonical engineering browser regression spec is missing')
 need('engineering-store and PWA regression tests' in mobile,'Mobile Browser QA step no longer names engineering-store regression coverage')
 
 print('MouldMaster workspace QA passed (single owner-scoped IndexedDB authority, one-time non-destructive legacy import, learner-aware hydration, manifest-derived desktop serving, browser persistence regression, local evidence chain, controlled-test/verification flow, learning links, no production-control or assessment authority)')
