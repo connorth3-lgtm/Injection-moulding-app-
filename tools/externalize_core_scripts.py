@@ -358,10 +358,52 @@ def runtime_transform(name: str, source: str) -> str:
             fail("frozen simulator accessibility source drifted; review the runtime hardening transform")
         transformed = transformed.replace(LEGACY_SIM_ACCESSIBILITY, HARDENED_SIM_ACCESSIBILITY, 1)
     if name == "core-inline-008.js":
-        startup_check = "}, 700);"
-        if transformed.count(startup_check) != 1:
+        legacy = """setTimeout(function () {
+  try {
+    var dash = document.getElementById("dashboard");
+    var navButtons = document.querySelectorAll("#nav button[data-view]");
+    if (!dash || !dash.innerHTML.trim()) {
+      window.__mmShowStartupFailure(
+        "The application scripts loaded but the Home dashboard did not render."
+      );
+      return;
+    }
+    if (!navButtons.length) {
+      window.__mmShowStartupFailure(
+        "The application rendered but navigation controls were not found."
+      );
+    }
+  } catch (e) {
+    window.__mmShowStartupFailure("Startup self-check failed: " + e.message);
+  }
+}, 700);"""
+        hardened = """(function mmStartupSelfCheck(){
+  var started=Date.now();
+  function check(){
+    try {
+      if (!window.MM_APP_SHELL_FINALIZED) {
+        if (Date.now()-started < 10000) { setTimeout(check,250); return; }
+        window.__mmShowStartupFailure("The application shell did not finish starting within 10 seconds.");
+        return;
+      }
+      var dash = document.getElementById("dashboard");
+      var navButtons = document.querySelectorAll("#nav button[data-view]");
+      if (!dash || !dash.innerHTML.trim()) {
+        window.__mmShowStartupFailure("The application scripts loaded but the Home dashboard did not render.");
+        return;
+      }
+      if (!navButtons.length) {
+        window.__mmShowStartupFailure("The application rendered but navigation controls were not found.");
+      }
+    } catch (e) {
+      window.__mmShowStartupFailure("Startup self-check failed: " + e.message);
+    }
+  }
+  setTimeout(check,250);
+})();"""
+        if transformed.count(legacy) != 1:
             fail("frozen startup self-check source drifted; review the runtime hardening transform")
-        transformed = transformed.replace(startup_check, "}, 3000);", 1)
+        transformed = transformed.replace(legacy, hardened, 1)
     return retire_handler_attrs(transformed)
 
 
