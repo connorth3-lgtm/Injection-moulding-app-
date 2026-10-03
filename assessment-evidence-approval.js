@@ -9,7 +9,7 @@ if(!R||typeof R.after!=='function')throw new Error('assessment-evidence-approval
 const APPROVED_INPUTS={
  'MouldMaster_Core_App.html':'c6b258ccd37d98b2f591f538b34eb33c7705dda6',
  'training-upgrade.js':'ea6ee84e69c4d5ed60776f2022f1bc9462425ea2',
- 'assessment-deep-dive.js':'73e75b6115d32e3f14e8c12a4d5dd8db733bdd08',
+ 'assessment-deep-dive.js':'367d941afc67ad62125e1e1cb16ff1a1e48d0123',
  'src/domains/assessment/assessment-answer-cue-fix.js':'9a6ef14f5eac1e127255afdd050a6f47f6009587',
  'assessment-quality-suite.js':'a98c77542ae0f38ddfb87ef9ba5fff032a6c4513',
  'assessment-stable-review-bridge.js':'b91ac5b4712f96634ffd76a842ae75a417ed6a85',
