@@ -89,6 +89,56 @@
       "checked": "2026-09-14",
       "state": "peer-reviewed-fetched",
       "scope": "Review of filling-to-holding switchover methods; supports early/late switchover consequences and sensitivity to material, machine and environmental conditions without defining a universal transfer point."
+    },
+    {
+      "id": "ISO-294-1-2017",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Injection moulding of test specimens of thermoplastic materials — Part 1: General principles, and moulding of multipurpose and bar test specimens",
+      "url": "https://www.iso.org/standard/67036.html",
+      "scope": "General injection-moulding principles, consistent process-parameter descriptions and reproducible reporting. ISO confirms the 2017 edition remains current after review in 2022.",
+      "checked": "2026-09-14",
+      "currentState": "published-confirmed"
+    },
+    {
+      "id": "AUTODESK-RUNNER-LAYOUT",
+      "type": "engineering-software-technical-documentation",
+      "issuer": "Autodesk",
+      "title": "Moldflow Insight — designing the runner layout",
+      "url": "https://help.autodesk.com/cloudhelp/2025/ENU/MoldflowInsight-CLC-Modelprep/files/Feed-system/Runners/Runner-properties/MoldflowInsight_CLC_Modelprep_Feed_system_Runners_Runner_properties_Designing_the_runner_layout_html.html",
+      "checked": "2026-09-14",
+      "state": "public-engineering-documentation",
+      "scope": "Documents sprue/runner/gate transport, runner pressure-drop effects, balance and dependence on material and processing conditions."
+    },
+    {
+      "id": "AUTODESK-JUNCTURE-LOSS",
+      "type": "engineering-software-technical-documentation",
+      "issuer": "Autodesk",
+      "title": "Moldflow Insight — Juncture Loss model",
+      "url": "https://help.autodesk.com/cloudhelp/2023/ENU/MoldflowInsight-CLC-Ref-Materials/files/sim-math-models/MoldflowInsight_CLC_Ref_Materials_sim_math_models_Juncture_Loss_model_html.html",
+      "checked": "2026-09-14",
+      "state": "public-engineering-documentation",
+      "scope": "Describes measured pressure loss through feed-system contractions such as sprue, runner and gate junctions and the influence of rheological quantities."
+    },
+    {
+      "id": "ASTM-D955-21",
+      "type": "standard",
+      "issuer": "ASTM International",
+      "title": "Standard Test Method of Measuring Shrinkage from Mold Dimensions of Thermoplastics",
+      "url": "https://store.astm.org/d0955-21.html",
+      "scope": "Thermoplastic moulding shrinkage test method; explicitly notes effects of mould/melt temperature, fill time and packing and limits extrapolation from standard specimens to production parts.",
+      "checked": "2026-09-14",
+      "currentState": "active-listed"
+    },
+    {
+      "id": "ISO-20457-2026",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics moulded parts — Tolerances and acceptance conditions",
+      "url": "https://www.iso.org/standard/90304.html",
+      "scope": "Current 2026 plastics-specific dimensional/geometrical tolerance and acceptance framework; identifies material, moulding shrinkage, processing conditions, geometry, cooling and warpage as dimensional influences.",
+      "checked": "2026-09-14",
+      "currentState": "published"
     }
   ],
   "cases": [
