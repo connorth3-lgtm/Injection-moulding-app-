@@ -15,8 +15,38 @@ jobs:
   build:
     permissions:
       contents: read
+      actions: read
     runs-on: ubuntu-latest
     steps:
+      - name: Require exact-head preview quality gates
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          required=(integrity mobile-browser question-quality-50-pass)
+          for attempt in {1..90}; do
+            checks="$(gh api -H "Accept: application/vnd.github+json"               "/repos/${GITHUB_REPOSITORY}/commits/${SOURCE_SHA}/check-runs?per_page=100")"
+            pending=0
+            failed=0
+            for name in "${required[@]}"; do
+              state="$(printf '%s' "$checks" | python3 -c 'import json,sys; d=json.load(sys.stdin); n=sys.argv[1]; xs=[x for x in d.get("check_runs",[]) if x.get("name")==n]; print("missing" if not xs else (xs[0].get("conclusion") or xs[0].get("status") or "unknown"))' "$name")"
+              case "$state" in
+                success) echo "$name: success" ;;
+                queued|in_progress|pending|requested|waiting|missing) echo "$name: $state"; pending=1 ;;
+                *) echo "::error::$name failed or was not successful: $state"; failed=1 ;;
+              esac
+            done
+            if [ "$failed" -ne 0 ]; then exit 1; fi
+            if [ "$pending" -eq 0 ]; then
+              echo "Exact-head preview gates passed for $SOURCE_SHA"
+              exit 0
+            fi
+            sleep 20
+          done
+          echo "::error::Timed out waiting for exact-head preview quality gates."
+          exit 1
       - name: Checkout preview branch
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Set up Python
