@@ -94,7 +94,7 @@
         "id": "desktop-integrity",
         "risk": "tampered-or-incoherent-package",
         "regressions": [
-          "desktop/electron/main.js",
+          "desktop/electron/src/main.cjs",
           "desktop/electron/scripts/generate-integrity.cjs"
         ],
         "tier": "deep-release"
