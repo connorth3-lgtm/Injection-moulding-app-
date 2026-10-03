@@ -82,7 +82,7 @@ jobs:
           name: physical-pwa-candidate-${{ github.event.pull_request.head.sha || github.sha }}
           path: .pages-dist
           if-no-files-found: error
-          retention-days: 30
+          retention-days: 90
           compression-level: 9
           include-hidden-files: true
 
