@@ -56,8 +56,9 @@ for marker in (
 ):
     need(marker in runtime, f"Read Aloud control/fallback missing: {marker}")
 
-# Dedicated long-session Listening mode must reuse the same device voice runtime,
-# consume authored lesson content only, and provide durable playback controls.
+# Dedicated long-session Listening mode must reuse the same speech-synthesis runtime,
+# consume authored lesson content only, provide durable playback controls, and avoid
+# implying that every browser/OS voice is processed entirely on-device.
 for marker in (
     "Long-session audio learning",
     "continuous listening",
@@ -73,8 +74,11 @@ for marker in (
     "playlistMode",
     "!playlistMode",
     "continues when this app tab is in the background",
+    "browser or operating-system speech service",
+    "voice-provider processing depends on your device, browser and selected voice",
 ):
     need(marker in runtime, f"Listening mode contract missing: {marker}")
+need("same local device voice" not in runtime, "Listening privacy copy must not imply all voice processing is local")
 
 # Read Aloud/Listening must not know or alter assessment keying/storage internals.
 for forbidden in (
