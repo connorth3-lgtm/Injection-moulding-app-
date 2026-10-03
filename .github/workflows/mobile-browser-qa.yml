@@ -13,13 +13,18 @@ permissions:
 
 jobs:
   browser-chromium:
+    strategy:
+      fail-fast: false
+      matrix:
+        task: [visual, reachability, substantive]
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        if: matrix.task == 'substantive'
         with:
           python-version: '3.13'
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -27,6 +32,7 @@ jobs:
           node-version: '22'
           package-manager-cache: false
       - name: Static shell, workspace and measured-evidence QA
+        if: matrix.task == 'substantive'
         run: |
           python qa_app_shell_registry.py
           python qa_mould_master_workspace.py
@@ -41,6 +47,7 @@ jobs:
           npm ci --no-audit --fund=false
           npx playwright install --with-deps chromium
       - name: Prepare approved visual baseline
+        if: matrix.task == 'visual'
         run: |
           readarray -t BASELINE_META < <(python - <<'PY'
           import json
@@ -58,28 +65,40 @@ jobs:
           test "$(git rev-parse FETCH_HEAD)" = "$BASELINE_SHA"
           rm -rf /tmp/mm-visual-baseline
           git worktree add --detach /tmp/mm-visual-baseline "$BASELINE_SHA"
-      - name: Start Chromium candidate and baseline servers
+      - name: Start Chromium candidate server
         run: |
           python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/mm-http.log 2>&1 &
-          python3 -m http.server 4174 --bind 127.0.0.1 --directory /tmp/mm-visual-baseline > /tmp/mm-baseline.log 2>&1 &
           for i in {1..20}; do
-            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null && curl -fsS http://127.0.0.1:4174/index.html >/dev/null; then exit 0; fi
+            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then exit 0; fi
             sleep 1
           done
           exit 1
-      - name: Chromium mobile density contract
-        run: npx playwright test qa/learn-practice-mobile-style.spec.js --config=playwright.config.cjs
+      - name: Start visual baseline server
+        if: matrix.task == 'visual'
+        run: |
+          python3 -m http.server 4174 --bind 127.0.0.1 --directory /tmp/mm-visual-baseline > /tmp/mm-baseline.log 2>&1 &
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:4174/index.html >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
       - name: Chromium approved visual regression lock
+        if: matrix.task == 'visual'
         run: npx playwright test qa/visual-regression.spec.js --config=playwright.config.cjs
       - name: UI-only feature reachability audit
+        if: matrix.task == 'reachability'
         run: npx playwright test --config=playwright.reachability.config.cjs
+      - name: Chromium mobile density contract
+        if: matrix.task == 'substantive'
+        run: npx playwright test qa/learn-practice-mobile-style.spec.js --config=playwright.config.cjs
       - name: Chromium substantive regression suite
+        if: matrix.task == 'substantive'
         run: npx playwright test --config=playwright.config.cjs --grep-invert "matches approved .* baseline across learner surfaces"
       - name: Upload Chromium QA artifacts
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: mobile-browser-chromium
+          name: mobile-browser-chromium-${{ matrix.task }}
           path: qa-artifacts/
           if-no-files-found: warn
           retention-days: 14
