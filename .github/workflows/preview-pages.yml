@@ -1,0 +1,70 @@
+name: MouldMaster Preview Pages
+
+on:
+  push:
+    branches: [preview]
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
+
+jobs:
+  build:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout preview branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: Validate preview build contracts
+        run: |
+          python3 qa_pages_single_publisher.py
+          python3 qa_pages_candidate_handoff.py
+          python3 qa_release_supply_chain.py
+          python3 tools/verify_pwa_physical_evidence.py --contract-only
+      - name: Build governed preview candidate
+        run: python3 tools/build_pages_artifact.py
+      - name: Build release-hold shell with preview candidate
+        run: python3 tools/build_pages_hold.py --preview-source .pages-dist
+      - name: Upload preview Pages artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: .pages-hold
+
+  deploy:
+    permissions:
+      pages: write
+      id-token: write
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure Pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      - name: Deploy preview branch artifact
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+  verify:
+    permissions:
+      contents: read
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout preview branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Verify preview deployment
+        run: >-
+          python3 tools/verify_pages_hold.py
+          --base-url "${{ needs.deploy.outputs.page_url }}"
+          --convergence-attempts 12
+          --convergence-delay 2
