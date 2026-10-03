@@ -2,9 +2,9 @@ name: Question Quality 50-Pass
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, preview]
   push:
-    branches: [main]
+    branches: [main, preview]
     paths:
       - 'MouldMaster_Core_App.html'
       - 'training-upgrade.js'
