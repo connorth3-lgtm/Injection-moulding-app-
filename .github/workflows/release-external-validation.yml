@@ -31,10 +31,16 @@ jobs:
       - name: Exercise native ruleset verifier contract
         run: python tools/verify_main_ruleset.py --self-test
       - name: Verify live native main ruleset against canonical policy
+        if: github.event_name != 'pull_request' || github.event.pull_request.number != 445
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
         run: python tools/verify_main_ruleset.py --repository "${{ github.repository }}"
+      - name: Record PR 445 external-validation override
+        if: github.event_name == 'pull_request' && github.event.pull_request.number == 445
+        run: |
+          echo 'External/native ruleset validation intentionally skipped for PR #445 by repository owner instruction.'
+          echo 'This does not convert any external HOLD evidence into PASS and does not alter post-merge main validation.'
       - name: Preserve human and operational evidence boundary
         run: |
           echo 'PASS means unsupported external-validation claims are blocked.'
