@@ -7,7 +7,13 @@ const CORE=['renderLesson','renderDashboard','switchView','startExam','gradeExam
 const modules=new Map(),slots=new Map();
 /* Legacy static-QA compatibility marker: before:new Set(),after:new Set().
    Runtime V2.1 preserves those hook classes and adds transform:new Set() between implementation and after hooks. */
-function learnerRaw(){try{if(window.db?.activeUser)return String(window.db.activeUser)}catch(_){}try{if(window.user?.id)return String(window.user.id)}catch(_){}return null}
+function learnerRaw(){
+ try{if(typeof db!=='undefined'&&db?.activeUser)return String(db.activeUser)}catch(_){}
+ try{if(typeof user!=='undefined'&&user?.id)return String(user.id)}catch(_){}
+ try{if(window.db?.activeUser)return String(window.db.activeUser)}catch(_){}
+ try{if(window.user?.id)return String(window.user.id)}catch(_){}
+ return null
+}
 function legacyTokenFor(raw='anonymous'){let h=2166136261;for(const ch of String(raw||'anonymous')){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return(h>>>0).toString(36)}
 function hash128(raw){
  const value=String(raw??'');let h1=1779033703,h2=3144134277,h3=1013904242,h4=2773480762;
@@ -18,9 +24,13 @@ function hash128(raw){
 }
 function strongTokenFor(raw='anonymous'){return hash128(`mm-learner-scope-v2|${String(raw||'anonymous')}`)}
 function rawScopedKey(base,token){return `${String(base)}::${String(token)}`}
-function profileRegistry(){try{if(window.db?.users&&typeof window.db.users==='object'&&!Array.isArray(window.db.users))return {available:true,ids:[...new Set(Object.keys(window.db.users).map(String).filter(Boolean))]}}catch(_){}return {available:false,ids:[]}}
+function profileRegistry(){
+ try{if(typeof db!=='undefined'&&db?.users&&typeof db.users==='object'&&!Array.isArray(db.users))return {available:true,ids:[...new Set(Object.keys(db.users).map(String).filter(Boolean))]}}catch(_){}
+ try{if(window.db?.users&&typeof window.db.users==='object'&&!Array.isArray(window.db.users))return {available:true,ids:[...new Set(Object.keys(window.db.users).map(String).filter(Boolean))]}}catch(_){}
+ return {available:false,ids:[]}
+}
 function quarantineLegacy(base,token,payload,reason){
- try{const source=rawScopedKey(base,token),target=`mm_scope_quarantine_v1::${hash128(`${base}::|${token}|${payload}`).slice(0,24)}`;if(localStorage.getItem(target)==null)localStorage.setItem(target,payload);if(localStorage.getItem(target)!==payload)return {status:'quarantine-write-failed'};localStorage.removeItem(source);return {status:'quarantined',reason,target}}catch(_){return {status:'quarantine-failed',reason}}
+ try{const source=rawScopedKey(base,token),target=`mm_scope_quarantine_v1::${hash128(`${base}::|${token}|${payload}`).slice(0,24)}`;if(localStorage.getItem(target)==null)localStorage.setItem(target,payload);if(localStorage.getItem(target)!==payload)return {status:'quarantine-write-failed'};localStorage.removeItem(source);if(localStorage.getItem(source)!=null)return {status:'quarantine-delete-failed',reason,target};return {status:'quarantined',reason,target}}catch(_){return {status:'quarantine-failed',reason}}
 }
 function fallbackMigrate(base,raw){
  const learner=String(raw||'anonymous'),legacy=legacyTokenFor(learner),registry=profileRegistry(),source=rawScopedKey(base,legacy),payload=localStorage.getItem(source);if(payload==null)return {status:'no-legacy'};
@@ -28,8 +38,8 @@ function fallbackMigrate(base,raw){
  const owners=registry.ids.filter(id=>legacyTokenFor(id)===legacy);
  if(owners.length!==1||owners[0]!==learner)return quarantineLegacy(base,legacy,payload,owners.length>1?'ambiguous-known-owners':'ownership-unproven');
  const target=rawScopedKey(base,strongTokenFor(learner)),current=localStorage.getItem(target);
- if(current==null){localStorage.setItem(target,payload);if(localStorage.getItem(target)===payload){localStorage.removeItem(source);return {status:'migrated'}}return {status:'copy-verification-failed'}}
- if(current===payload){localStorage.removeItem(source);return {status:'duplicate-removed'}}
+ if(current==null){localStorage.setItem(target,payload);if(localStorage.getItem(target)!==payload)return {status:'copy-verification-failed'};localStorage.removeItem(source);return localStorage.getItem(source)==null?{status:'migrated'}:{status:'legacy-delete-failed'}}
+ if(current===payload){localStorage.removeItem(source);return localStorage.getItem(source)==null?{status:'duplicate-removed'}:{status:'legacy-delete-failed'}}
  return {status:'parallel-stores'}
 }
 function scopedKey(base){
