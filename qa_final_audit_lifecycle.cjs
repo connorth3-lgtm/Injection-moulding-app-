@@ -25,6 +25,8 @@ for(const marker of [
   'function clearMatchingStores(',
   'remaining key(s):',
   'clearAllAnalyticsStores();',
+  "const existingAnalytics=matchingKeys(",
+  "'mouldmasterProDB',...existingTraining,...existingAnalytics,...Object.keys(trainingWrites)",
   'const rolledBack=restoreSnapshot(before)',
   'db=proposed;user=db.users[db.activeUser];committed=true;cancelActiveExam();',
   'buildTrainingExtras',
@@ -176,6 +178,23 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
   assert(!t.toasts.some(x=>/^Progress imported/i.test(x)),'failed cleanup falsely reported a successful import');
 }
 
+// A failure after analytics/training cleanup but before the replacement registry
+// commits must restore the complete last-known-good local learner state, including
+// derived analytics that were intentionally cleared as part of the staged import.
+{
+  const t=trainingSandbox('normal','fail-next-db');
+  const incoming={activeUser:'new',users:{new:{id:'new',name:'New learner',completed:[1,2]}},trainingExtras:{version:2,spacedReview:{items:{}},practicalSignoff:{checks:{}}}};
+  t.sandbox.importData({size:500,contents:JSON.stringify(incoming)});
+  assert.strictEqual(t.sandbox.db.activeUser,'old','failed final registry write activated imported learner state');
+  assert.strictEqual(t.memory.get('mouldmasterProDB'),t.oldSerialized,'failed final registry write did not restore learner registry');
+  assert.strictEqual(t.memory.get('mm_assessment_analytics_v1::strong-old'),'assessment-old','failed import did not restore assessment analytics');
+  assert(t.memory.has('mm_assessment_membership_history_v2::legacy-old')||t.memory.has('mm_assessment_membership_history_v2::strong-old'),'failed import did not restore assessment membership history');
+  assert.strictEqual(t.memory.get('mm_learning_analytics_v1::strong-old'),'learning-old','failed import did not restore Learning Insights analytics');
+  assert(t.memory.has('mm_spaced_review_v2::legacy-old')||t.memory.has('mm_spaced_review_v2::strong-old'),'failed import did not restore spaced-review state');
+  assert(t.memory.has('mm_real_measured_assessment_v1::legacy-old')||t.memory.has('mm_real_measured_assessment_v1::strong-old'),'failed import did not restore measured-assessment state');
+  assert(!t.toasts.some(x=>/^Progress imported/i.test(x)),'failed final registry write falsely reported successful import');
+}
+
 // Silent removeItem failure is just as unsafe as a thrown exception. Re-enumeration
 // must detect the retained key and fail closed.
 {
@@ -280,4 +299,4 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
   assert.strictEqual(t.memory.has('mm_material_behaviour_labs_v1::strong-a@b'),false,'ambiguous sanitized legacy material progress leaked to a@b strong store');
 }
 
-console.log('Final audit lifecycle QA passed: orphan analytics excluded; assessment membership history and learner-owned training/lab stores are collision-safe; import cleanup remains fail-closed; learner reset is scoped, peer-preserving and rollback-verified.');
+console.log('Final audit lifecycle QA passed: orphan analytics excluded; assessment membership history and learner-owned training/lab stores are collision-safe; import cleanup is fail-closed with full last-known-good rollback; learner reset is scoped, peer-preserving and rollback-verified.');
