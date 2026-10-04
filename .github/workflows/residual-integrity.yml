@@ -30,6 +30,10 @@ on:
       - '.github/workflows/residual-integrity.yml'
   workflow_dispatch:
 
+concurrency:
+  group: residual-integrity-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
