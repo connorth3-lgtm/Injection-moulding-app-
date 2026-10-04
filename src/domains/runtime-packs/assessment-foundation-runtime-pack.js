@@ -202,17 +202,18 @@ window.MM_REGIONAL_QUESTION_DEEP_DIVE={version:'2026-08-30',regionalRewrites:27,
 /* <<< assessment-answer-cue-fix.js */
 
 /* >>> assessment-storage-scope.js */
-/* MouldMaster learner-scoped assessment storage — 2026-10-05.1 */
+/* MouldMaster learner-scoped assessment storage — 2026-10-05.2 */
 (function(){
 'use strict';
 if(typeof window==='undefined'||typeof localStorage==='undefined')return;
-const VERSION='2026.10.05.1';
+const VERSION='2026.10.05.2';
 const ANALYTICS_BASE='mm_assessment_analytics_v1';
 const TIMING_BASE='mm_assessment_exposure_timing_v1';
 const ROTATION_BASE='mm_assessment_opening_history_v1';
+const UX_ROTATION_BASE='mm_assessment_opening_history_v2';
 const QUESTION_HISTORY_BASE='mm-assessment-question-history-v4';
 const RESULT_META_BASE='mm-assessment-result-meta-v1';
-const BASES=[ANALYTICS_BASE,TIMING_BASE,ROTATION_BASE,QUESTION_HISTORY_BASE,RESULT_META_BASE];
+const BASES=[ANALYTICS_BASE,TIMING_BASE,ROTATION_BASE,UX_ROTATION_BASE,QUESTION_HISTORY_BASE,RESULT_META_BASE];
 if(window.MM_ASSESSMENT_STORAGE_SCOPE?.version===VERSION)return;
 const rawGet=localStorage.getItem.bind(localStorage);
 const rawSet=localStorage.setItem.bind(localStorage);
