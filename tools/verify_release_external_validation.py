@@ -192,6 +192,12 @@ def validate_accessibility(section: dict, expected_release: str, web_candidate: 
         return
     if evidence.get("status") != "validated":
         fail("accessibility cannot be validated until the real-AT contract status is validated")
+    task_ids = evidence.get("requiredTaskIds")
+    task_labels = evidence.get("requiredTasks")
+    if not isinstance(task_ids, list) or len(task_ids) != 12 or len(set(task_ids)) != 12:
+        fail("validated real-AT evidence requires exactly 12 unique requiredTaskIds")
+    if not isinstance(task_labels, list) or len(task_labels) != 12 or len(set(task_labels)) != 12:
+        fail("validated real-AT evidence requires exactly 12 unique requiredTasks")
     matrix = evidence.get("requiredMatrix")
     if not isinstance(matrix, list) or not matrix:
         fail("validated real-AT evidence requires a non-empty requiredMatrix")
@@ -200,6 +206,14 @@ def validate_accessibility(section: dict, expected_release: str, web_candidate: 
             fail("validated real-AT evidence requires every matrix row to pass")
         for key in ("testedAt", "reviewer", "evidenceRef"):
             require_nonempty(row.get(key), f"validated real-AT row is missing {key}")
+        task_evidence = row.get("taskEvidence")
+        if not isinstance(task_evidence, dict) or set(task_evidence) != set(task_ids):
+            fail("validated real-AT row must contain exact taskEvidence for all 12 required tasks")
+        for task_id in task_ids:
+            record = task_evidence.get(task_id)
+            if not isinstance(record, dict) or record.get("status") != "pass":
+                fail(f"validated real-AT task did not pass: {task_id}")
+            require_nonempty(record.get("evidenceRef"), f"validated real-AT task is missing evidenceRef: {task_id}")
 
 
 def validate_pwa(section: dict, expected_release: str, web_candidate: dict) -> None:
