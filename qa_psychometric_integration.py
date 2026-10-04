@@ -83,7 +83,7 @@ need('/* >>> assessment-runtime-v2.js */' in bootstrap_pack,'assessment runtime 
 
 for asset in ["'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'","'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'"]:
     need(asset in sw,f'offline cache missing runtime pack: {asset}')
-need("'./src/domains/shared/runtime-v2.js'" in sw and "'./assessment-runtime-v2.js'" in sw,'PWA cache must include assessment runtime v2')
+need("'./src/domains/shared/runtime-v2.js'" in sw and "'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'" in sw,'PWA cache must include runtime-v2 and the packed assessment source runtime')
 
 pkg=json.loads(text('desktop/electron/package.json'))
 froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
