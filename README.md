@@ -24,7 +24,7 @@ The project maintainers do not intend to seek patent protection over implementat
 - Audited assessment bank: `2026.08.30.1`
 - Assessment quality / analytics hardening: `2026.08.24.3`
 - Learner-scoped assessment storage: `2026.08.24.4`
-- Question evidence approval: `2026.08.25.2`
+- Question evidence approval: `2026.10.05.1`
 - Frozen legacy Windows recovery lane: `2026.08.21.1`
 
 `version.json` is the machine-readable release record and is the source of truth for release identifiers.
