@@ -6,6 +6,7 @@ const {webcrypto}=require('crypto');
 const {TextEncoder}=require('util');
 
 const source=fs.readFileSync('src/domains/learning/backup-authority-notice.js','utf8');
+const learningPack=fs.readFileSync('src/domains/runtime-packs/learning-foundation-runtime-pack.js','utf8');
 
 async function waitFor(predicate,message,timeoutMs=2000){
   const started=Date.now();
@@ -129,5 +130,7 @@ function sandbox(){
   assert(source.includes('bridge.buildTrainingExtras(payload.users)'),'integrity wrapper must delegate scoped extras to the governed training bridge');
   for(const marker of ['measured-assessment','process-diagnostics','Diagnostic Learning Lab','Material Behaviour Lab']) assert(source.includes(marker),`backup authority disclosure missing ${marker}`);
   assert(!source.includes('payload.trainingExtras={\n  version:2'),'integrity wrapper reintroduced legacy unscoped training extras');
+  assert(learningPack.includes('/* >>> backup-authority-notice.js */')&&learningPack.includes('MM_LEARNER_BACKUP_INTEGRITY'),'learner-facing runtime pack does not include backup integrity wrapper');
+  assert(learningPack.indexOf('/* >>> training-qa-fix.js */')<learningPack.indexOf('/* >>> backup-authority-notice.js */'),'backup integrity wrapper loads before its base import/export bridge');
   console.log('Learner backup integrity QA passed: v3 SHA-256 envelope preserves multi-profile scoped training extras, verifies before restore, and tampering/unsupported metadata/oversize fail closed.');
 })().catch(error=>{console.error(error);process.exitCode=1});
