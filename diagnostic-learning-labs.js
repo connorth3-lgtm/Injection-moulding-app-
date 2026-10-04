@@ -23,7 +23,7 @@ const LABS=[
         ['A packing-stage holding-pressure deficit after the velocity-controlled filling phase has ended','Holding pressure acts after filling and does not explain why only one cavity repeatedly fails to complete fill.'],
         ['A clamp-force shortfall expected to show broader mould-opening or flash evidence across the tool','Clamp force is not the strongest explanation for a cavity-specific short shot with otherwise stable behaviour.']
       ],1),
-      S('Best next test','Which check gives the most diagnostic information next?','Cavity 8 gate, runner and vent condition compared with a known-good cavity before global changes first','Correct. Preserve cavity identity and compare the local flow path before changing a stable global process.',[
+      S('Best next test','Which check gives the most diagnostic information next?','Cavity 8 gate, runner and vent condition compared with a known-good cavity before making global process changes','Correct. Preserve cavity identity and compare the local flow path before changing a stable global process.',[
         ['Raise the barrel-temperature profile across the machine and judge whether all cavities respond together','That changes the full process before the local restriction hypothesis is tested.'],
         ['Increase hold time and use packed part mass as the main indicator even though cavity 8 is short during fill','Hold-time changes cannot restore material that never reached the end of the cavity during filling.'],
         ['Increase clamp force and use mould-opening response as the primary test of the cavity-specific short shot','That does not directly test the suspected local restriction or venting mechanism.']
@@ -84,7 +84,7 @@ const LABS=[
         ['Use total cycle time alone as the deciding signal even if the fill phase changes independently','Total cycle time can remain similar while the filling phase is pressure-limited.'],
         ['Use clamp tonnage alone to determine whether the machine can follow the requested injection-velocity profile','Clamp tonnage does not establish injection-velocity following capability.']
       ],1),
-      S('Controlled response','What is the right diagnostic principle?','The cause of high pressure demand established before requesting any additional injection speed first in the study','Correct. Investigate material state, restriction, thermal condition and machine capability before demanding an unattainable response.',[
+      S('Controlled response','What is the right diagnostic principle?','Cause of high pressure demand established before any additional speed request within the controlled study','Correct. Investigate material state, restriction, thermal condition and machine capability before demanding an unattainable response.',[
         ['Continue raising the velocity command until the displayed setpoint is well above the actual machine capability','A command above achievable capability does not create the intended actual velocity.'],
         ['Raise all available machine pressure and force limits before identifying why the process demand increased','Limits may protect machine, mould, material or process capability and should not be bypassed as a diagnostic shortcut.'],
         ['Ignore the actual velocity trace and tune from the saved recipe because commands define the physical process','Commands are not proof of the achieved physical process; the actual trace is central evidence.']
@@ -135,12 +135,12 @@ const LABS=[
         ['The part colour, treated as the primary explanation despite the measured cooling-circuit change','Colour alone does not explain the measured circuit and thermal imbalance.'],
         ['The operator shift, even though the symptom began with a documented physical maintenance intervention','The maintenance-linked physical evidence is stronger than a shift association.']
       ],1),
-      S('Best next test','What should be checked before process adjustment?','Circuit routing, flow, temperatures and local thermal balance assessed before process adjustment first','Correct. Confirm that the cooling system returned to its validated configuration before changing a previously stable recipe.',[
+      S('Best next test','What should be checked before process adjustment?','Circuit routing, flow, temperatures and local thermal balance assessed and verified before process adjustment','Correct. Confirm that the cooling system returned to its validated configuration before changing a previously stable recipe.',[
         ['Increase hold pressure immediately and judge warpage before checking whether the cooling circuit returned to baseline','That changes packing without testing the measured thermal imbalance.'],
         ['Increase injection velocity globally even though fill behaviour remained stable across the maintenance event','That does not explain the post-maintenance circuit-flow change.'],
         ['Ignore the measured flow difference because surface temperatures are close enough to the previous average','Temperature alone can mask a flow problem until local thermal balance shifts.']
       ],3),
-      S('Controlled response','If a circuit is misconnected or restricted, what is the preferred response?','The cooling-circuit baseline restored before part response is checked against the known process before tuning','Correct. Restore the physical cooling condition and verify temperature, dimensions, warpage and process stability.',[
+      S('Controlled response','If a circuit is misconnected or restricted, what is the preferred response?','The cooling-circuit baseline restored before part response is checked against the known process before any tuning','Correct. Restore the physical cooling condition and verify temperature, dimensions, warpage and process stability.',[
         ['Make a permanent packing-pressure compensation so production can continue without correcting the changed cooling condition','That can hide the cooling fault and introduce new residual-stress or dimensional effects.'],
         ['Lengthen cooling time until the symptom is hidden, without identifying whether a connection or restriction changed','More time may mask symptoms but does not correct the changed circuit condition.'],
         ['Increase mould-close force and treat the mechanical closing system as the primary control for coolant flow','Clamp closing force does not restore coolant routing or flow.']
@@ -163,7 +163,7 @@ const LABS=[
         ['Only total cycle time, even though it does not show whether additional material still passes through the gate','Cycle time does not establish whether packing material is still transmitted through the gate.'],
         ['Only clamp-force data, despite clamp load not being the response used to establish effective gate seal','Clamp force is not the primary response for this study.']
       ],2),
-      S('Best next test','How should the study be run?','Hold time varied alone while a repeatable part-mass response is recorded across the study across cycles','Correct. A controlled factor, stable important conditions and repeated response data make the gate-seal evidence interpretable.',[
+      S('Best next test','How should the study be run?','Hold time varied alone while a repeatable part-mass response is recorded across multiple controlled cycles','Correct. A controlled factor, stable important conditions and repeated response data make the gate-seal evidence interpretable.',[
         ['Change hold time, holding pressure and cooling together, then attribute any result to the time change','That confounds the study and makes causal interpretation weak.'],
         ['Use one shot at each condition and assume that a single observation is enough despite process variation','A single observation can be misleading when process or measurement variation is present.'],
         ['Copy the gate-seal time from another mould even though gate geometry, resin and thermal condition differ','Gate-seal behaviour is specific to the gate, resin, geometry and thermal condition.']
@@ -224,7 +224,7 @@ const LABS=[
         ['Use only total shot weight even though pooled mass can hide opposite cavity-to-cavity fill differences','Combined mass can hide branch and cavity imbalance.'],
         ['Use only cooling time and ignore fill-stage branch evidence because temperature problems occur after filling','The observed imbalance is occurring in the hot-runner/filling path, so fill-stage evidence is directly relevant.']
       ],2),
-      S('Controlled response','What should happen if a heater/thermocouple or branch fault is confirmed?','The local hardware or control fault repaired before branch balance is checked against baseline against baseline','Correct. Restore the physical/control system with approved procedures and demonstrate local recovery before rewriting the validated recipe.',[
+      S('Controlled response','What should happen if a heater/thermocouple or branch fault is confirmed?','The local hardware or control fault repaired before branch balance is checked against the established baseline','Correct. Restore the physical/control system with approved procedures and demonstrate local recovery before rewriting the validated recipe.',[
         ['Keep increasing the affected zone setpoint until the branch fills, without confirming heater or thermocouple health','Blindly raising setpoint can worsen thermal history and does not establish the fault mechanism.'],
         ['Raise all barrel-zone temperatures to compensate for the local branch while preserving the faulty hot-runner state','That changes the global thermal condition to hide a local hardware problem.'],
         ['Increase clamp force and use the change in mould restraint as the primary response to a hot-runner control fault','Clamp force cannot repair a heater, thermocouple or branch restriction.']
@@ -247,12 +247,12 @@ const LABS=[
         ['A material-drying problem that would be expected to affect resin condition rather than one repaired shutoff','Material moisture does not fit the local flash location and tool-work timing.'],
         ['A robot-vacuum fault occurring after moulding that cannot create flash at a specific shutoff interface','Robot vacuum acts after moulding and cannot create flash at the shutoff interface.']
       ],1),
-      S('Best next test','What is the strongest next action?','Flash location, seating or support, and tooling condition examined before global process changes at the tool first','Correct. Diagnose the changed physical interface with approved safe access before changing global process conditions.',[
+      S('Best next test','What is the strongest next action?','Flash location, seating or support, and tooling condition examined at the tool before any global process changes','Correct. Diagnose the changed physical interface with approved safe access before changing global process conditions.',[
         ['Raise global clamp force until the flash disappears, accepting higher mould load without inspecting the repaired shutoff','That can mask damage, increase mould stress and delay correction of the local mechanism.'],
         ['Reduce all pressure settings together and accept any new filling or packing changes as part of the correction','A global reduction can create other quality problems without fixing the local shutoff.'],
         ['Increase cooling time and use the cosmetic flash response as the main test of a local shutoff-seating problem','Cooling time does not test the suspected local sealing condition.']
       ],3),
-      S('Controlled response','If local damage is found, what is the educational principle?','The tooling condition restored before the known process is reconfirmed against the prior baseline at baseline','Correct. Mechanism-first troubleshooting protects tooling and quality; repair the local condition before using process force as compensation.',[
+      S('Controlled response','If local damage is found, what is the educational principle?','The tooling condition restored before the known process is reconfirmed against the established baseline','Correct. Mechanism-first troubleshooting protects tooling and quality; repair the local condition before using process force as compensation.',[
         ['Make the compensating process change permanent and allow the process window to depend on the unresolved tooling defect','That leaves the process dependent on an unresolved mechanical condition.'],
         ['Disable mould protection so the tool closes harder and use increased closing force to overcome the damaged interface','Safeguards must never be bypassed to maintain production or compensate for tooling damage.'],
         ['Ignore the defect location and treat every flash mechanism as a pressure-only problem across the full shot','Flash can result from local seating, damage, support, venting or process pressure; location remains diagnostic.']
