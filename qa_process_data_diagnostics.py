@@ -12,7 +12,7 @@ def js_const(source,name):
     return m.group(1)
 
 required=[
-    'process-data-diagnostics.js','evidence-maturity-deep-dive.js','index.html','service-worker.js',
+    'process-data-diagnostics.js','src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js','evidence-maturity-deep-dive.js','index.html','service-worker.js',
     'src/domains/process/process-statistics.js','qa_process_statistics_current.cjs','runtime-domain-manifest.json',
     'desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs'
 ]
@@ -20,6 +20,7 @@ for name in required:
     need((ROOT/name).exists(),f'guided data diagnostic dependency missing: {name}')
 
 js=text('process-data-diagnostics.js')
+learning_process_pack=text('src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js')
 p=subprocess.run(['node','--check',str(ROOT/'process-data-diagnostics.js')],capture_output=True,text=True)
 need(p.returncode==0,'process-data-diagnostics.js syntax error: '+(p.stderr or p.stdout))
 stat_js=text('src/domains/process/process-statistics.js')
@@ -80,7 +81,8 @@ need(re.fullmatch(r'\d{4}\.\d{2}\.\d{2}\.\d+',runtime_asset) is not None,'guided
 need(cache_version==runtime_asset,'guided data service-worker cache version must equal canonical web release')
 need(bool(cache_revision.strip()),'guided data cache revision must remain an explicit independent invalidation token')
 need(expected_cache==f'mouldmaster-static-{cache_version}-{cache_revision}','browser expected PWA cache must match the service-worker cache identity')
-need("'./process-data-diagnostics.js'" in sw,'guided data diagnostics missing from offline cache')
+need("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'" in sw,'guided data diagnostics runtime pack missing from offline cache')
+need('/* >>> process-data-diagnostics.js */' in learning_process_pack,'guided data diagnostics missing from packed offline runtime')
 need("'./src/domains/process/process-statistics.js'" in sw,'current process statistics service missing from atomic offline cache')
 manifest=json.loads(text('runtime-domain-manifest.json'))
 assets=manifest.get('assets') or []
