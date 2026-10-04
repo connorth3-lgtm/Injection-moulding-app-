@@ -127,6 +127,7 @@ function sandbox(){
   assert(t.toasts.some(message=>/SHA-256 integrity checksum/i.test(message)),'v3 export did not disclose integrity protection');
 
   assert(source.includes('bridge.buildTrainingExtras(payload.users)'),'integrity wrapper must delegate scoped extras to the governed training bridge');
+  for(const marker of ['measured-assessment','process-diagnostics','Diagnostic Learning Lab','Material Behaviour Lab']) assert(source.includes(marker),`backup authority disclosure missing ${marker}`);
   assert(!source.includes('payload.trainingExtras={\n  version:2'),'integrity wrapper reintroduced legacy unscoped training extras');
   console.log('Learner backup integrity QA passed: v3 SHA-256 envelope preserves multi-profile scoped training extras, verifies before restore, and tampering/unsupported metadata/oversize fail closed.');
 })().catch(error=>{console.error(error);process.exitCode=1});
