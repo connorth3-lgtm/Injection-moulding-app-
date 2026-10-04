@@ -4,6 +4,8 @@ import json
 import math
 import random
 import re
+import subprocess
+import tempfile
 from collections import Counter, defaultdict
 from urllib.parse import urlparse
 
