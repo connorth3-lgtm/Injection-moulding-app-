@@ -30,8 +30,8 @@ need("const VERSION='2026.09.01.6'" in hardening,'psychometric hardening compati
 need("const POLICY_VERSION='2026.09.10.1'" in hardening,'immutable psychometric policy version mismatch')
 need("const REQUIRED_VERSION='2026.09.01.6'" in approval,'psychometric approval required runtime version mismatch')
 need("const REQUIRED_POLICY_VERSION='2026.09.10.1'" in approval,'psychometric approval required policy version mismatch')
-need("itemsHardened:197" in approval and "optionsParallelised:788" in approval,'psychometric approval coverage contract missing')
-need("technicalKeyPositions:[8,8,7,7]" in approval and "scenarioKeyPositions:[10,10,10,10]" in approval,'balanced key-position approval missing')
+need("learnerVisibleDecisions:209" in approval and "itemsHardened:197" in approval and "measuredItemsGoverned:12" in approval and "optionsParallelised:788" in approval,'psychometric approval coverage contract missing')
+need("technicalKeyPositions:[8,8,7,7]" in approval and "scenarioKeyPositions:[10,10,10,10]" in approval and "measuredKeyPositions:[3,3,3,3]" in approval,'balanced key-position approval missing')
 for marker in ['semanticAnswerChanges:0','technicalTermSubstitutions:0','paddingApplied:false','keyedConciseEdits:0','distractorCueEdits:0','formClauseTrims:0']:
     need(marker in hardening and marker in approval,f'immutable psychometric integrity guard missing: {marker}')
 need('textMutationCount=countMutations(before,after)' in hardening and 'if(textMutationCount!==0)' in hardening,'runtime text mutation count must be computed and fail closed')
@@ -44,6 +44,8 @@ for marker in ['technicalLengthRanks','regionalLengthRanks','scenarioLengthRanks
 need('Math.max(124' not in hardening and 'cueNeutral' not in hardening,'generic semantic/padding transformer must be removed')
 need("initialization:'after-training-upgrade'" in hardening and 'scenarioCount!==40' in hardening and 'DOMContentLoaded' in hardening,'psychometric initialization guard missing')
 need("a.length===4" in approval,'approval must require four relative answer-length ranks')
+need("target=(caseIndex*3+qi)%4" in text('real-measured-data-assessment.js'),'measured assessment key-position balancing contract missing')
+need("209 learner-visible decisions" in approval,'psychometric approval must state complete learner-visible governance scope')
 
 m=re.search(r"const INPUT_BLOB='([0-9a-f]{40})'",approval)
 need(m is not None,'psychometric input blob pin missing')
