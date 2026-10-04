@@ -133,11 +133,20 @@
       {
         "id": "learner-scoped-extras",
         "technology": "localStorage",
-        "identity": "learner-scoped keys registered through MM_LEARNER_SCOPE",
+        "identity": "learner-scoped localStorage keys using MM_LEARNER_SCOPE-compatible 128-bit tokens",
         "source": "src/domains/shared/learner-scope.js",
         "sourceOfTruth": true,
-        "backupScope": "explicit-per-feature",
-        "deletionBoundary": "learner-reset"
+        "backupScope": "trainingExtras v4 backs up spaced review, practical sign-off and measured-assessment progress; assessment analytics/opening history remain derived/local and are resettable rather than backup-restored",
+        "deletionBoundary": "active-learner reset removes learner-owned review/sign-off, measured-assessment progress, assessment analytics/opening history and Learning Insights analytics without deleting peer profiles",
+        "learnerScope": "128-bit deterministic token with collision-aware legacy migration/quarantine",
+        "sources": [
+          "src/domains/shared/learner-scope.js",
+          "src/domains/shared/runtime-v2.js",
+          "assessment-storage-scope.js",
+          "assessment-ux.js",
+          "src/domains/learning/training-qa-fix.js",
+          "real-measured-data-assessment.js"
+        ]
       },
       {
         "id": "measured-assessment-progress",
@@ -217,7 +226,10 @@
         "integrityStatus": "unverified",
         "requiresExplicitUserDisclosure": true,
         "usesExistingStrictImporter": true
-      }
+      },
+      "unknownEnvelopePropertiesAccepted": false,
+      "unknownPayloadTopLevelPropertiesAccepted": true,
+      "payloadUnknownPropertyBoundary": "The integrity envelope is exact-key checked. The validated mouldmaster-backup-v2 payload requires its governed structures but currently tolerates additional top-level payload properties."
     },
     "migrationRules": [
       "validate-before-write",
