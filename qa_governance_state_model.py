@@ -4,6 +4,8 @@ from copy import deepcopy
 from pathlib import Path
 import json
 
+from qa_curriculum_semantic_review import canonical_lessons as canonical_curriculum_lessons, validate_contract as validate_curriculum_semantics
+
 ROOT = Path(__file__).resolve().parent
 
 
@@ -59,8 +61,10 @@ def validate_model_shape(model: dict) -> None:
 def validate_public_snapshot(snapshot: dict, *, book_sme: dict, curriculum_sme: dict, external: dict) -> None:
     if snapshot.get("bookIndependentSme") == "validated" and len(book_sme.get("reviews") or []) < 46:
         raise AssertionError("Book SME cannot be validated without genuine accepted human reviews for all 46 chapters")
-    if snapshot.get("curriculumIndependentSme") == "validated" and len(curriculum_sme.get("reviews") or []) < 120:
-        raise AssertionError("curriculum SME cannot be validated without genuine accepted human reviews for all 120 lessons")
+    if snapshot.get("curriculumIndependentSme") == "validated":
+        semantic = validate_curriculum_semantics(curriculum_sme, canonical_curriculum_lessons())
+        if semantic.get("status") != "HUMAN_SME_SEMANTIC_REVIEW_COMPLETE":
+            raise AssertionError("curriculum SME cannot be validated without all seven approved human-review dimensions for all 120 current lesson fingerprints")
     if snapshot.get("physicalPwa") == "validated" and external.get("pwaPhysicalDevices", {}).get("status") != "validated":
         raise AssertionError("physical PWA status cannot outrun the release-bound evidence contract")
     if snapshot.get("assistiveTechnology") == "validated" and external.get("accessibility", {}).get("status") != "validated":
