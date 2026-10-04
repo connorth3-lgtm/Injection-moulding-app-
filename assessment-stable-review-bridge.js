@@ -64,7 +64,7 @@ const STRICT_ANSWER_BALANCE={
  'reg:NZ:Advanced:1':'Assess the integrated system, interfaces, tasks and safeguards as a whole',
  'reg:NZ:Advanced:2':'Not yet in force; commencement is 1 April 2027',
 
- 'scenario:01':'Check shot-delivery/NRV, feed and injection actuals',
+ 'scenario:01':'Review shot-delivery/NRV and injection actuals',
  'scenario:02':'Inspect end-of-fill venting and test fill-speed sensitivity',
  'scenario:03':'Inspect local parting-line/insert seating',
  'scenario:04':'Study cooling time against ejection and part quality',
