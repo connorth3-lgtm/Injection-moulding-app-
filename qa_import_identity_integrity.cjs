@@ -8,10 +8,10 @@ for(const good of ['learner-1','learner-1723456789012','learner-A','legacy.user:
 for(const bad of ['', ' learner-1','learner 1','learner\"x','learner<x','learner\nx','x/'.repeat(50),'A'.repeat(161)])assert.throws(()=>fn(bad));
 const src=fs.readFileSync('src/domains/learning/training-qa-fix.js','utf8');
 assert(src.includes('const entries=Object.entries(x.users);'));
-assert(src.includes("if(entries.length>500)throw new Error('Too many learners in backup')"));
+assert(src.includes("if(!entries.length||entries.length>500)throw new Error('Invalid learner count in backup')"));
 assert(!src.includes('Object.entries(x.users).slice(0,500)'));
 assert(src.includes('const sid=canonicalLearnerId(id)'));assert(src.includes('canonicalLearnerId(u.id)!==sid'));assert(src.includes('const active=canonicalLearnerId(x.activeUser)'));
-assert(src.includes('hasOwnLearner(x.users,x.activeUser)'));assert(src.includes('Reset learner data'));assert(src.includes('Saved process-data evidence was not deleted'));
+assert(src.includes('hasOwnLearner(x.users,x.activeUser)'));assert(src.includes('Reset learner data'));assert(src.includes('Other local learner profiles and saved process-data evidence will be kept'));assert(src.includes("version:4,scope:'learner-registry'"));
 
 sandbox.importData=function(){};sandbox.window.importData=sandbox.importData;
 vm.runInContext(fs.readFileSync('src/domains/learning/learner-model.js','utf8'),sandbox);
