@@ -270,9 +270,14 @@ function trainingDestinationKey(base,learnerId){
  const id=canonicalLearnerId(learnerId),scope=learnerScope();
  return scope.storageKey(`${base}::`,scope.tokenFor(id))
 }
+function trainingKeyForBackup(base,learnerId){
+ const id=canonicalLearnerId(learnerId),scope=learnerScope(),prefix=`${base}::`,migration=scope.migrateStoragePrefix(prefix,id),status=String(migration?.status||'unknown');
+ if(/failed/.test(status))throw cleanupError('backup source',`learner storage migration could not be verified for ${prefix}${id}: ${status}`);
+ return scope.storageKey(prefix,scope.tokenFor(id))
+}
 function readTraining(base,d,learnerId){try{const x=JSON.parse(localStorage.getItem(trainingKey(base,learnerId))||'');return obj(x)?x:d}catch(_){return d}}
 function readTrainingForBackup(base,d,learnerId){
- const key=trainingKey(base,learnerId),raw=localStorage.getItem(key);
+ const key=trainingKeyForBackup(base,learnerId),raw=localStorage.getItem(key);
  if(raw==null||raw==='')return d;
  const parsed=JSON.parse(raw);
  if(!obj(parsed))throw new Error(`Backup source is invalid for ${key}`);
