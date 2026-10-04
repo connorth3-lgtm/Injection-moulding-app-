@@ -276,6 +276,12 @@ def option_features(option,stem):
     return feats
 
 
+def expected_tie_hit(scores,correct):
+    best=max(scores)
+    tied=[i for i,score in enumerate(scores) if math.isclose(score,best,rel_tol=0.0,abs_tol=1e-12)]
+    return (1.0/len(tied)) if correct in tied else 0.0
+
+
 def cue_model(items,passes=50):
     # Grouped cross-validation: the model never trains on another option from the held-out question.
     acc=[];by_kind=defaultdict(list)
@@ -301,7 +307,7 @@ def cue_model(items,passes=50):
                     for f in fs&vocab:
                         score+=math.log((pos[f]+1)/(pos_n+2))-math.log((neg[f]+1)/(neg_n+2))
                     scores.append(score)
-                pred=max(range(4),key=lambda i:scores[i]);hit=(pred==x['correct'])
+                hit=expected_tie_hit(scores,x['correct'])
                 hits+=hit;total+=1;kind_hits[x['kind']]+=hit;kind_total[x['kind']]+=1
         acc.append(hits/total)
         for kind in kind_total:by_kind[kind].append(kind_hits[kind]/kind_total[kind])
