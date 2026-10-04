@@ -29,8 +29,8 @@ spec.loader.exec_module(module)
 
 base = json.loads(CONTRACT.read_text(encoding="utf-8"))
 module.validate_contract(base)
-need(base["status"] == "released-with-accepted-ios-risk", "repository contract must record the explicit iOS risk-accepted release state")
-need(base["runtimeFingerprint"].startswith("sha256:"), "risk-accepted release must bind to an exact runtime fingerprint")
+need(base["status"] == "pending-physical-device-validation", "current repository contract must remain pending until fresh physical iOS/iPadOS and Android evidence is bound to the current runtime")
+need(base.get("runtimeFingerprint") in {None, ""}, "pending physical-device contract must not claim a validated runtime fingerprint")
 need("physical iOS/iPadOS and Android devices" in base["boundary"], "physical-device boundary must remain explicit")
 need("accessibility-real-at-validation-v1.json" in base["boundary"], "screen-reader evidence must remain separately governed")
 
@@ -77,12 +77,18 @@ need(
     "standalone physical PWA workflow must not unconditionally fail main when valid evidence belongs to older bytes",
 )
 
-risk_release = subprocess.run(
+pending_health = subprocess.run(
+    [sys.executable, str(TOOL), "--contract", str(CONTRACT), "--contract-only"],
+    capture_output=True,
+    text=True,
+)
+need(pending_health.returncode == 0, "pending physical-device contract failed structural validation")
+pending_authorization = subprocess.run(
     [sys.executable, str(TOOL), "--contract", str(CONTRACT), "--contract-only", "--require-release-authorized"],
     capture_output=True,
     text=True,
 )
-need(risk_release.returncode == 0, "explicit governed risk acceptance did not authorize its recorded release contract")
+need(pending_authorization.returncode != 0, "pending physical-device evidence must not authorize production publication")
 
 with tempfile.TemporaryDirectory() as td:
     artifact = Path(td) / "pages"
@@ -144,4 +150,4 @@ except SystemExit as exc:
 else:
     raise AssertionError("public physical-device contract accepted a forbidden personal-data field")
 
-print("MouldMaster physical PWA device contract QA passed: the recorded Android/iOS-risk contract remains structurally governed, exact-runtime production authorization still fails closed, and the standalone workflow treats valid older-byte evidence as an explicit HOLD rather than relabelling it.")
+print("MouldMaster physical PWA device contract QA passed: the current pending contract is structurally governed, cannot authorize production, historical Android/iOS-risk attestation remains separate, and exact-runtime validated evidence still fails closed on mismatch.")
