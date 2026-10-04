@@ -2411,7 +2411,7 @@
         "fnv1a-aade2b34"
       ],
       "contentFingerprint": "fnv1a-02b19978",
-      "correctChoiceFingerprint": "fnv1a-87325011",
+      "correctChoiceFingerprint": "fnv1a-80fe61fe",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
