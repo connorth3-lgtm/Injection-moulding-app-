@@ -262,6 +262,7 @@
   async function init(){createUI();armBookSearch();return true;}
   document.addEventListener('click',event=>{const target=event.target?.closest?.('nav button,[data-view],[data-page]');if(!target||target.dataset.mmBookTab)return;if(open)leaveBook();},true);
   let ready;
+  bindBookSearchInput();
   window.MMBook=Object.freeze({version:VERSION,open:openBook,openChapter,search:searchBook,load:ensureManifest,loadMaterials:ensureMaterialData,getManifest:()=>manifest,getPublicationAuthorization:()=>publicationAuthorization,getSmeReview:()=>bookSmeReview,getQualificationReview:()=>qualificationReview,getWorkedCases:()=>workedCaseLedger,getEvidenceEnrichment:()=>evidenceEnrichmentLedger,getEngineeringDiagrams:()=>diagramLedger,getMaterialAtlas:()=>materialAtlas,getMaterialCatalog:()=>materialCatalog,getMaterialRegionalEvidence:()=>materialRegionalEvidence,getIntegrityMap:()=>integrityMap?{...integrityMap}:null,verifiedChapters,startVerifiedListening,get ready(){return ready;}});
   ready=document.readyState==='loading'?new Promise(resolve=>document.addEventListener('DOMContentLoaded',()=>resolve(init()),{once:true})).then(x=>x):init();
 })();
