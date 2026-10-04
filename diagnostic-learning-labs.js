@@ -23,12 +23,12 @@ const LABS=[
         ['A packing-stage holding-pressure deficit after the velocity-controlled filling phase has ended','Holding pressure acts after filling and does not explain why only one cavity repeatedly fails to complete fill.'],
         ['A clamp-force shortfall expected to show broader mould-opening or flash evidence across the tool','Clamp force is not the strongest explanation for a cavity-specific short shot with otherwise stable behaviour.']
       ],1),
-      S('Best next test','Which check gives the most diagnostic information next?','Compare cavity 8 gate, runner and vent condition with a known-good cavity','Correct. Preserve cavity identity and compare the local flow path before changing a stable global process.',[
+      S('Best next test','Which check gives the most diagnostic information next?','Cavity 8 gate, runner and vent condition compared with a known-good cavity before global changes first','Correct. Preserve cavity identity and compare the local flow path before changing a stable global process.',[
         ['Raise the barrel-temperature profile across the machine and judge whether all cavities respond together','That changes the full process before the local restriction hypothesis is tested.'],
         ['Increase hold time and use packed part mass as the main indicator even though cavity 8 is short during fill','Hold-time changes cannot restore material that never reached the end of the cavity during filling.'],
         ['Increase clamp force and use mould-opening response as the primary test of the cavity-specific short shot','That does not directly test the suspected local restriction or venting mechanism.']
       ],3),
-      S('Controlled response','If the local restriction is confirmed, what is the best learning principle?','Correct the local restriction, then verify the validated process response','Correct. Fix the confirmed mechanism and demonstrate recovery rather than hiding it with unrelated global adjustments.',[
+      S('Controlled response','If the local restriction is confirmed, what is the best learning principle?','The confirmed local restriction corrected before the validated process response is reconfirmed before release','Correct. Fix the confirmed mechanism and demonstrate recovery rather than hiding it with unrelated global adjustments.',[
         ['Increase injection pressure until cavity 8 fills, accepting higher load across the otherwise stable cavities','That can mask a tooling problem and expose stable cavities or the mould to unnecessary load.'],
         ['Change injection speed, pressure and temperature together so the symptom is removed as quickly as possible','Multiple simultaneous changes destroy the evidence needed to learn which factor mattered.'],
         ['Ignore cavity identity and accept the pooled shot weight as proof that all cavities are filling correctly','Pooled shot data can hide one weak cavity and erase the most diagnostic pattern.']
@@ -51,12 +51,12 @@ const LABS=[
         ['Whether cooling time has become excessive and is creating the observed silver streak pattern after fill','Cooling time is not the strongest first explanation for streaking that begins with material exposure.'],
         ['Whether ejector speed changed during the same shift and is marking the part after it leaves the cavity','Ejection occurs after the streak-forming melt behaviour and does not fit the timing evidence.']
       ],2),
-      S('Best next test','Which test is strongest?','Measure resin moisture and verify the drying/handling path','Correct. Direct material-condition evidence plus the handling path discriminates moisture from filling or tooling alternatives.',[
+      S('Best next test','Which test is strongest?','Resin moisture measured together with the complete drying and handling path for the grade first','Correct. Direct material-condition evidence plus the handling path discriminates moisture from filling or tooling alternatives.',[
         ['Treat the normal displayed dew point as sufficient proof that dry resin is reaching the machine hopper','A normal dryer display alone does not prove that the pellets at the machine meet the grade moisture limit.'],
         ['Increase injection pressure and judge the streak response without first checking the material condition','That changes filling without testing the moisture hypothesis raised by the handling history.'],
         ['Polish the mould surface and use the cosmetic change as the primary test of the moisture hypothesis','Surface tooling is a weak first test when the defect timing points toward material condition.']
       ],0),
-      S('Controlled response','If excessive moisture is confirmed, what is the correct principle?','Restore approved conditioning, verify moisture, then reassess','Correct. Use the exact grade and site-approved requirement, confirm the actual material state, and only then judge the moulding response.',[
+      S('Controlled response','If excessive moisture is confirmed, what is the correct principle?','Approved conditioning restored and moisture confirmed before the moulding response is reassessed','Correct. Use the exact grade and site-approved requirement, confirm the actual material state, and only then judge the moulding response.',[
         ['Apply one fixed drying cycle to every nylon grade so material handling is standardised across jobs','Drying requirements are grade-, equipment- and handling-specific rather than one universal recipe.'],
         ['Raise melt temperature to drive moisture out during plasticising and judge the part appearance afterward','Processing wet moisture-sensitive resin can cause degradation; barrel heat is not a safe substitute for conditioning.'],
         ['Mask the visible streaking with colour adjustment while leaving the material-conditioning uncertainty unresolved','That hides appearance without correcting or verifying the material mechanism.']
@@ -74,17 +74,17 @@ const LABS=[
     evidence:['Commanded velocity was increased.','Actual velocity remains below the command during the same region of fill.','Injection pressure is running near the machine/process limit.','Fill time changes very little.'],
     related:['Injection velocity actual','Peak injection pressure','Pressure-limited fill detection','Machine setpoints vs actuals'],
     steps:[
-      S('Observe','What mechanism best fits?','The fill is pressure-limited and cannot achieve commanded velocity','Correct. The command rises but the achieved velocity does not, while pressure demand is near the applicable limit.',[
+      S('Observe','What mechanism best fits?','Pressure-limited filling that cannot achieve the commanded velocity despite a higher request now','Correct. The command rises but the achieved velocity does not, while pressure demand is near the applicable limit.',[
         ['The controller is ignoring the programmed velocity profile and should be treated as failed without further checks','The actual trace and pressure demand support a capability/pressure limitation before a controller-failure claim.'],
         ['Holding time is controlling screw velocity during the velocity-controlled filling phase of the cycle','Holding occurs after the filling phase and is not the command that sets injection velocity.'],
         ['Clamp force is determining the injection velocity because mould restraint directly sets screw speed','Clamp force restrains mould opening; it does not command screw velocity.']
       ],3),
-      S('Best next test','What should be compared next?','Compare commanded and actual velocity with pressure demand and limit','Correct. Those signals directly test whether the machine is following the requested profile within the approved capability envelope.',[
+      S('Best next test','What should be compared next?','Commanded and actual velocity compared with pressure demand and the applicable machine limit','Correct. Those signals directly test whether the machine is following the requested profile within the approved capability envelope.',[
         ['Review only the programmed velocity setpoint and assume the physical fill response should match that screen value','The problem is specifically a mismatch between command and achieved response, so setpoint alone is insufficient.'],
         ['Use total cycle time alone as the deciding signal even if the fill phase changes independently','Total cycle time can remain similar while the filling phase is pressure-limited.'],
         ['Use clamp tonnage alone to determine whether the machine can follow the requested injection-velocity profile','Clamp tonnage does not establish injection-velocity following capability.']
       ],1),
-      S('Controlled response','What is the right diagnostic principle?','Find the cause of high pressure demand before requesting more speed','Correct. Investigate material state, restriction, thermal condition and machine capability before demanding an unattainable response.',[
+      S('Controlled response','What is the right diagnostic principle?','The cause of high pressure demand established before requesting any additional injection speed first in the study','Correct. Investigate material state, restriction, thermal condition and machine capability before demanding an unattainable response.',[
         ['Continue raising the velocity command until the displayed setpoint is well above the actual machine capability','A command above achievable capability does not create the intended actual velocity.'],
         ['Raise all available machine pressure and force limits before identifying why the process demand increased','Limits may protect machine, mould, material or process capability and should not be bypassed as a diagnostic shortcut.'],
         ['Ignore the actual velocity trace and tune from the saved recipe because commands define the physical process','Commands are not proof of the achieved physical process; the actual trace is central evidence.']
@@ -102,12 +102,12 @@ const LABS=[
     evidence:['Cushion varies more than normal.','Transfer position and part mass move with the variation.','The programmed recipe has not changed.','The variation repeats over consecutive cycles.'],
     related:['Cushion','Transfer position','Part mass','Check-ring repeatability study','Non-return valve / check ring'],
     steps:[
-      S('Observe','Which system deserves early investigation?','Shot-delivery and check-ring repeatability','Correct. Coupled movement in cushion, transfer and mass is strong evidence to investigate effective shot delivery and non-return-valve repeatability.',[
+      S('Observe','Which system deserves early investigation?','Shot-delivery and check-ring repeatability across consecutive cycles and related process signals over time','Correct. Coupled movement in cushion, transfer and mass is strong evidence to investigate effective shot delivery and non-return-valve repeatability.',[
         ['Mould-surface texture variation that would change appearance without explaining cushion, transfer and mass movement','Texture does not explain the coupled process-signal movement shown here.'],
         ['Robot take-out timing variation occurring after moulding but coinciding with the observed shot-delivery drift','Robot timing can affect handling but not this linked shot-delivery signature.'],
         ['Clamp-opening speed variation after cooling that would not normally create the coupled filling signals shown','Clamp opening occurs after the shot is formed and is not linked to cushion/transfer variation.']
       ],0),
-      S('Best next test','What is the best learning-oriented test?','Run a repeatability study of transfer, cushion and part mass','Correct. A sequence of aligned shot-delivery responses can demonstrate repeatability before any compensating process change.',[
+      S('Best next test','What is the best learning-oriented test?','Transfer position, cushion and part-mass repeatability assessed across a controlled cycle sequence','Correct. A sequence of aligned shot-delivery responses can demonstrate repeatability before any compensating process change.',[
         ['Increase shot size until average mass returns to target and then treat the higher average as proof of repeatability','Changing the average can hide cycle-to-cycle instability rather than identify it.'],
         ['Change shot size and holding pressure together, then compare only the final average part mass','Changing multiple factors makes the shot-delivery mechanism harder to isolate.'],
         ['Judge the system from one cycle and assume that a single acceptable cushion value represents repeatability','Repeatability requires a sequence of cycles, not one acceptable observation.']
@@ -135,12 +135,12 @@ const LABS=[
         ['The part colour, treated as the primary explanation despite the measured cooling-circuit change','Colour alone does not explain the measured circuit and thermal imbalance.'],
         ['The operator shift, even though the symptom began with a documented physical maintenance intervention','The maintenance-linked physical evidence is stronger than a shift association.']
       ],1),
-      S('Best next test','What should be checked before process adjustment?','Verify circuit routing, flow, temperatures and local thermal balance','Correct. Confirm that the cooling system returned to its validated configuration before changing a previously stable recipe.',[
+      S('Best next test','What should be checked before process adjustment?','Circuit routing, flow, temperatures and local thermal balance assessed before process adjustment first','Correct. Confirm that the cooling system returned to its validated configuration before changing a previously stable recipe.',[
         ['Increase hold pressure immediately and judge warpage before checking whether the cooling circuit returned to baseline','That changes packing without testing the measured thermal imbalance.'],
         ['Increase injection velocity globally even though fill behaviour remained stable across the maintenance event','That does not explain the post-maintenance circuit-flow change.'],
         ['Ignore the measured flow difference because surface temperatures are close enough to the previous average','Temperature alone can mask a flow problem until local thermal balance shifts.']
       ],3),
-      S('Controlled response','If a circuit is misconnected or restricted, what is the preferred response?','Restore the cooling circuit baseline, then verify part response','Correct. Restore the physical cooling condition and verify temperature, dimensions, warpage and process stability.',[
+      S('Controlled response','If a circuit is misconnected or restricted, what is the preferred response?','The cooling-circuit baseline restored before part response is checked against the known process before tuning','Correct. Restore the physical cooling condition and verify temperature, dimensions, warpage and process stability.',[
         ['Make a permanent packing-pressure compensation so production can continue without correcting the changed cooling condition','That can hide the cooling fault and introduce new residual-stress or dimensional effects.'],
         ['Lengthen cooling time until the symptom is hidden, without identifying whether a connection or restriction changed','More time may mask symptoms but does not correct the changed circuit condition.'],
         ['Increase mould-close force and treat the mechanical closing system as the primary control for coolant flow','Clamp closing force does not restore coolant routing or flow.']
@@ -163,7 +163,7 @@ const LABS=[
         ['Only total cycle time, even though it does not show whether additional material still passes through the gate','Cycle time does not establish whether packing material is still transmitted through the gate.'],
         ['Only clamp-force data, despite clamp load not being the response used to establish effective gate seal','Clamp force is not the primary response for this study.']
       ],2),
-      S('Best next test','How should the study be run?','Vary hold time alone and record a repeatable response','Correct. A controlled factor, stable important conditions and repeated response data make the gate-seal evidence interpretable.',[
+      S('Best next test','How should the study be run?','Hold time varied alone while a repeatable part-mass response is recorded across the study across cycles','Correct. A controlled factor, stable important conditions and repeated response data make the gate-seal evidence interpretable.',[
         ['Change hold time, holding pressure and cooling together, then attribute any result to the time change','That confounds the study and makes causal interpretation weak.'],
         ['Use one shot at each condition and assume that a single observation is enough despite process variation','A single observation can be misleading when process or measurement variation is present.'],
         ['Copy the gate-seal time from another mould even though gate geometry, resin and thermal condition differ','Gate-seal behaviour is specific to the gate, resin, geometry and thermal condition.']
@@ -173,7 +173,7 @@ const LABS=[
         ['Holding pressure can be ignored completely once a mass plateau has appeared in the time study','Pressure magnitude and transmission remain relevant; the study addresses the time response being tested.'],
         ['Cooling time should automatically be set equal to the observed hold-time plateau for production','Cooling and gate seal are governed by different response criteria.']
       ],3),
-      S('Explain','Why is this better than guessing?','It links a controlled input change to a measured response','Correct. This is the scientific-moulding principle of relating a deliberate input to a repeatable measured outcome.',[
+      S('Explain','Why is this better than guessing?','A controlled input change linked to a measured response gives stronger evidence than guessing in a controlled study','Correct. This is the scientific-moulding principle of relating a deliberate input to a repeatable measured outcome.',[
         ['It guarantees full product validation from one gate-seal study without the remaining quality and capability evidence','A gate-seal study is one component of process-development evidence, not complete validation.'],
         ['It removes the need to verify material, machine and supplier constraints because the part-mass response is sufficient','Material and equipment limits still define the allowable study and production space.'],
         ['It proves longer hold time is universally harmful rather than establishing a condition-specific response plateau','The result is condition-specific and does not make longer hold universally wrong.']
@@ -191,7 +191,7 @@ const LABS=[
         ['Whether the mould surface should be reworked even though operator-to-operator measurement spread is already evident','The direct evidence points first to measurement-system adequacy, not mould rework.'],
         ['Whether robot speed should be adjusted because the measured dimension varies between operators','Robot speed is not supported by the operator-to-operator measurement evidence.']
       ],3),
-      S('Best next test','What should be standardised and studied?','Standardise method, fixture, conditioning and MSA checks','Correct. Establish resolution, repeatability, reproducibility, method, fixture and conditioning before interpreting small process shifts.',[
+      S('Best next test','What should be standardised and studied?','Method, fixture, conditioning and MSA checks standardised before comparing process outcomes together','Correct. Establish resolution, repeatability, reproducibility, method, fixture and conditioning before interpreting small process shifts.',[
         ['Review only the machine setpoint screen and assume a stable recipe proves the dimensional reading is accurate','Machine setpoints do not establish measurement-system capability.'],
         ['Average all readings together without separating operator, timing, fixture or repeatability effects','Averages can hide a measurement system that is not repeatable or reproducible.'],
         ['Use drawing tolerance alone to decide whether the measurement system is capable of supporting the decision','Tolerance matters, but a capable method must still be demonstrated.']
@@ -219,12 +219,12 @@ const LABS=[
         ['Every thermocouple should be treated as incorrect whenever two cavities supplied by one branch behave differently','The lesson is to combine sensor, controller and branch-response evidence, not distrust every thermocouple.'],
         ['Clamp force determines manifold temperature and should be adjusted before reviewing heater output or branch response','Clamp force is unrelated to manifold heater control.']
       ],0),
-      S('Best next test','What should be compared?','Compare zone actual/output, branch response and cavity pressure/fill','Correct. Relate controller demand and temperature actuals to branch/gate and cavity response so the local thermal/flow hypothesis can be tested.',[
+      S('Best next test','What should be compared?','Zone actual/output, branch response and cavity pressure or fill behaviour compared together in one study','Correct. Relate controller demand and temperature actuals to branch/gate and cavity response so the local thermal/flow hypothesis can be tested.',[
         ['Compare only the temperature setpoints because equal commands establish that each branch receives equal melt condition','Equal setpoints do not establish equal heater output, sensor condition or delivered melt state.'],
         ['Use only total shot weight even though pooled mass can hide opposite cavity-to-cavity fill differences','Combined mass can hide branch and cavity imbalance.'],
         ['Use only cooling time and ignore fill-stage branch evidence because temperature problems occur after filling','The observed imbalance is occurring in the hot-runner/filling path, so fill-stage evidence is directly relevant.']
       ],2),
-      S('Controlled response','What should happen if a heater/thermocouple or branch fault is confirmed?','Repair the local hardware/control fault, then verify branch balance','Correct. Restore the physical/control system with approved procedures and demonstrate local recovery before rewriting the validated recipe.',[
+      S('Controlled response','What should happen if a heater/thermocouple or branch fault is confirmed?','The local hardware or control fault repaired before branch balance is checked against baseline against baseline','Correct. Restore the physical/control system with approved procedures and demonstrate local recovery before rewriting the validated recipe.',[
         ['Keep increasing the affected zone setpoint until the branch fills, without confirming heater or thermocouple health','Blindly raising setpoint can worsen thermal history and does not establish the fault mechanism.'],
         ['Raise all barrel-zone temperatures to compensate for the local branch while preserving the faulty hot-runner state','That changes the global thermal condition to hide a local hardware problem.'],
         ['Increase clamp force and use the change in mould restraint as the primary response to a hot-runner control fault','Clamp force cannot repair a heater, thermocouple or branch restriction.']
@@ -247,12 +247,12 @@ const LABS=[
         ['A material-drying problem that would be expected to affect resin condition rather than one repaired shutoff','Material moisture does not fit the local flash location and tool-work timing.'],
         ['A robot-vacuum fault occurring after moulding that cannot create flash at a specific shutoff interface','Robot vacuum acts after moulding and cannot create flash at the shutoff interface.']
       ],1),
-      S('Best next test','What is the strongest next action?','Inspect the flash location, seating/support and tool condition','Correct. Diagnose the changed physical interface with approved safe access before changing global process conditions.',[
+      S('Best next test','What is the strongest next action?','Flash location, seating or support, and tooling condition examined before global process changes at the tool first','Correct. Diagnose the changed physical interface with approved safe access before changing global process conditions.',[
         ['Raise global clamp force until the flash disappears, accepting higher mould load without inspecting the repaired shutoff','That can mask damage, increase mould stress and delay correction of the local mechanism.'],
         ['Reduce all pressure settings together and accept any new filling or packing changes as part of the correction','A global reduction can create other quality problems without fixing the local shutoff.'],
         ['Increase cooling time and use the cosmetic flash response as the main test of a local shutoff-seating problem','Cooling time does not test the suspected local sealing condition.']
       ],3),
-      S('Controlled response','If local damage is found, what is the educational principle?','Restore the tooling condition, then verify the known process','Correct. Mechanism-first troubleshooting protects tooling and quality; repair the local condition before using process force as compensation.',[
+      S('Controlled response','If local damage is found, what is the educational principle?','The tooling condition restored before the known process is reconfirmed against the prior baseline at baseline','Correct. Mechanism-first troubleshooting protects tooling and quality; repair the local condition before using process force as compensation.',[
         ['Make the compensating process change permanent and allow the process window to depend on the unresolved tooling defect','That leaves the process dependent on an unresolved mechanical condition.'],
         ['Disable mould protection so the tool closes harder and use increased closing force to overcome the damaged interface','Safeguards must never be bypassed to maintain production or compensate for tooling damage.'],
         ['Ignore the defect location and treat every flash mechanism as a pressure-only problem across the full shot','Flash can result from local seating, damage, support, venting or process pressure; location remains diagnostic.']
