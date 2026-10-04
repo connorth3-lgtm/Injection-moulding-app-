@@ -172,7 +172,7 @@ must(psychometric_approval, [
 ], "psychometric approval hardening")
 require("_evaluate_balanced_length" in question_runtime and "hard.remove('correct-longest-or-tied')" in question_runtime, "final standard audit must remove the absolute longest-key prohibition while retaining salience checks")
 must(real_measured, ["evidenceType:'real-measured'", "decisionCount:CASES.reduce", "Pressure actual values excluded pending unit", "Preserve the codes without assigning unverified phase names"], "real measured assessment")
-process_diag=(ROOT/'process-data-diagnostics.js').read_text(encoding='utf-8')
+process_diag=read('process-data-diagnostics.js')
 require("MM_LEARNER_SCOPE" in process_diag and "migrateStoragePrefix" in process_diag and "2166136261" not in process_diag, "guided process-data diagnostic progress must use collision-safe canonical learner scope")
 require("throw new Error('Evidence approval coverage failure" not in approval, "incomplete evidence coverage must not crash the learning app")
 require("document.addEventListener('DOMContentLoaded',init)" in training, "training scenario upgrade remains DOMContentLoaded-driven")
