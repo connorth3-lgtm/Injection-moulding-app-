@@ -42,6 +42,7 @@ need("without scraping rendered CSS or score text" in js,'structured answer API 
 need("outside the formal assessment bank" in js,'guided cases must remain explicitly outside formal assessment')
 need('fetch(' not in js,'guided process-data module must remain local-only')
 need("localStorage.getItem(k)===payload" in js and "Progress could not be saved on this device." in js and "progress not saved" in js,'guided process-data persistence must verify writes and surface unsaved progress')
+need("return id?String(id):null" in js and "requires an active learner before persistence" in js,'guided process-data progress must not create a shared anonymous learner bucket')
 for forbidden in ['MM_DATA.exams=', 'regionalQuestions=', 'MM_EVIDENCE_APPROVAL.records=', 'question_bank_version=', 'correctIndex=']:
     need(forbidden not in js,f'guided data diagnostics must not mutate formal assessment truth: {forbidden}')
 
