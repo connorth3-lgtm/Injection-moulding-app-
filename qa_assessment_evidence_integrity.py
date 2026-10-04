@@ -1,4 +1,5 @@
 from pathlib import Path
+import ast
 import json
 import re
 
@@ -78,6 +79,30 @@ need("decisionCount:CASES.reduce" in real and "evidenceType:'real-measured'" in 
 need(real.count("contractPath:'data/public-benchmark-results/")==4,'expected four pinned real-data contracts')
 need(real.count("questions:[")==4,'expected four real measured cases')
 
+measured_questions=[]
+for line in real.splitlines():
+    stripped=line.strip().rstrip(',')
+    if stripped.startswith("['") and re.search(r"\],\s*0\s*,\s*'", stripped):
+        try:
+            row=ast.literal_eval(stripped)
+        except (SyntaxError,ValueError):
+            continue
+        if isinstance(row,list) and len(row)==4 and isinstance(row[1],list) and len(row[1])==4:
+            measured_questions.append(row)
+need(len(measured_questions)==12,f'real-measured keyed decision count changed: {len(measured_questions)}/12')
+need("target=(caseIndex*3+qi)%4" in real,'real-measured display key-position schedule is not explicitly balanced')
+display_positions=[(case_index*3+qi)%4 for case_index in range(4) for qi in range(3)]
+need([display_positions.count(i) for i in range(4)]==[3,3,3,3],f'real-measured display key positions are not 3/3/3/3: {display_positions}')
+measured_length_flags=[]
+for idx,row in enumerate(measured_questions):
+    options=row[1];correct=int(row[2]);lengths=[len(re.sub(r'\s+',' ',str(x).strip())) for x in options]
+    keyed=lengths[correct];distractors=[n for i,n in enumerate(lengths) if i!=correct]
+    median=sorted(distractors)[1]
+    if keyed>=max(distractors) or (keyed>median*1.40 and keyed-median>12):
+        measured_length_flags.append({'index':idx,'lengths':lengths,'correct':correct})
+need(not measured_length_flags,'real-measured answer-length cue detected: '+json.dumps(measured_length_flags))
+
+
 avaps=json.loads(text('data/public-benchmark-results/scatimdata-avaps-v1.json'))
 openmms=json.loads(text('data/public-benchmark-results/openmms-t4g-v1.json'))
 lower=json.loads(text('data/public-benchmark-results/cross-process-lower-workpiece-source-contract-v1.json'))
@@ -100,15 +125,15 @@ need('Assume bar because the lower workpiece uses bar' in real,'fail-closed uppe
 need('without assigning phase names until an authoritative mapping is found' in real,'fail-closed state-code boundary missing')
 
 report={
- 'version':'2026.09.01.5','learner_visible_keyed_decisions':len(items),'formal_decisions':len([x for x in items if x.get('scope')=='formal']),
- 'optional_decisions':len(optional),'real_measured_additional_decisions':12,'psychometric_keyed_propositions_preserved':True,
+ 'version':'2026.09.01.5','learner_visible_keyed_decisions':len(items)+len(measured_questions),'formal_decisions':len([x for x in items if x.get('scope')=='formal']),
+ 'optional_decisions':len(optional),'real_measured_additional_decisions':len(measured_questions),'real_measured_key_positions':[display_positions.count(i) for i in range(4)],'real_measured_answer_length_flags':len(measured_length_flags),'psychometric_keyed_propositions_preserved':True,
  'psychometric_technical_term_substitutions':0,'psychometric_padding_applied':False,'psychometric_reviewed_keyed_concise_overrides':3,
  'psychometric_distractor_cue_edits_tracked':True,'psychometric_form_clause_trims_tracked':True,'psychometric_four_rank_length_balancing':True,
  'psychometric_inverse_longest_cue_removed':True,
  'source_registration_hard_failures':len(hard),'source_registration_warnings':len(warnings),'independent_material_source_upgrades':upgrades,
  'real_measured_contracts':{'avaps_values':13631488,'openmms_values':298080,'cross_process_lower_values':7426743,'cross_process_upper_values':43814748,'cross_process_combined_values':7426743+43814748,'upper_pressure_values_excluded_pending_unit':21907374,'upper_state_values_excluded_pending_semantics':21907374},
- 'coverage_reconciliation':{'legacy_formal_approval_total':157,'proposition_formal_total':157,'optional_proposition_total':40,'learner_visible_total':197},
+ 'coverage_reconciliation':{'legacy_formal_approval_total':157,'proposition_formal_total':157,'optional_proposition_total':40,'learner_visible_total':209,'core_psychometric_total':197,'real_measured_total':12},
  'status':'passed'
 }
 REPORT.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
-print('Assessment evidence integrity passed: 197 keyed decisions + 12 real-measured decisions; keyed propositions/technical terms preserved; four-rank length balancing removes inverse longest cue; proposition/source relevance and unresolved-channel boundaries enforced')
+print('Assessment evidence integrity passed: 209 learner-visible keyed decisions (197 core + 12 real-measured); keyed propositions/technical terms preserved; four-rank length balancing removes inverse longest cue; proposition/source relevance and unresolved-channel boundaries enforced')
