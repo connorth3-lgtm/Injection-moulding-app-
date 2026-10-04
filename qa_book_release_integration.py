@@ -160,8 +160,10 @@ need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('independe
 need(authorization['authorizationBasis']['sourceRevision'] == '7ef28bd8b02994223e320fda64e99808357d3219', 'authorization provenance revision drift')
 
 # Book is now part of the primary search surface and read/listen still render one governed chapter representation.
-for marker in ('function searchBook(', 'function appendBookSearchResults(', 'function installBookSearch(', 'function openChapter('):
+for marker in ('function searchBook(', 'function appendBookSearchResults(', 'function installBookSearch(', 'function armBookSearch()', 'function openChapter('):
     need(marker in book_runtime, f'Book search integration missing: {marker}')
+need("window.addEventListener('mm:domains-ready',installBookSearch,{once:true})" in book_runtime, 'Book search binding must retry after manifest-driven domains are ready')
+need("window.__MM_BOOK_SEARCH_BOUND__===VERSION" in book_runtime, 'Book search binding must be idempotent for the current Book runtime')
 need('function verifiedChapterHtml(chapter,options={})' in book_runtime, 'verified chapter renderer missing')
 need("if(chapter.state==='verified')ui.reader.innerHTML=`${back}${verifiedChapterHtml(chapter)}`" in book_runtime, 'Book read surface no longer uses governed verified renderer')
 need("verified.map(chapter=>verifiedChapterHtml(chapter,{includeTechnicalMaterial:false})).join('')" in book_runtime, 'Book listen surface must exclude technical-review material appendix')
