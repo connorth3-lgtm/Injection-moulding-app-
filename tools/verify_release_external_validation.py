@@ -254,7 +254,19 @@ def validate_book_sme(section: dict, expected_release: str) -> None:
         "Book SME",
     )
     evidence = load_json(ROOT / section["evidenceContract"])
-    require_not_future_release(evidence, expected_release, "Book SME")
+    binding = load_json(ROOT / "data" / "book-sme-release-binding-v1.json")
+    worked = load_json(ROOT / "data" / "book-worked-engineering-cases-v1.json")
+    enrichment = load_json(ROOT / "data" / "book-evidence-enrichment-v2.json")
+    diagrams = load_json(ROOT / "data" / "book-engineering-diagrams-v1.json")
+
+    content_release = binding.get("contentRelease")
+    if evidence.get("release") != content_release:
+        fail("Book SME content release must equal book-sme-release-binding.contentRelease")
+    if binding.get("boundWebRelease") != expected_release:
+        fail("Book SME release binding must target the current learner web release")
+    if binding.get("status") not in {"hold", "validated"}:
+        fail("Book SME release binding status is invalid")
+
     chapter_ids = evidence.get("chapterIds")
     reviews = evidence.get("reviews")
     required_dimensions = set(evidence.get("requiredDimensions") or [])
@@ -262,20 +274,46 @@ def validate_book_sme(section: dict, expected_release: str) -> None:
         fail("Book SME contract must contain exactly 46 unique governed chapter ids")
     if not isinstance(reviews, list):
         fail("Book SME reviews must be a list")
+
+    governed_worked = evidence.get("workedCaseIds")
+    actual_worked = [row.get("id") for row in worked.get("cases", []) if isinstance(row, dict)]
+    if governed_worked != actual_worked or len(actual_worked) != 18:
+        fail("Book SME workedCaseIds must exactly match all 18 governed worked engineering cases")
+    governed_enrichment = evidence.get("enrichmentChapterIds")
+    actual_enrichment = [row.get("chapterId") for row in enrichment.get("chapterPatches", []) if isinstance(row, dict)]
+    if governed_enrichment != actual_enrichment:
+        fail("Book SME enrichmentChapterIds must exactly match current governed enrichment chapters")
+    governed_diagrams = evidence.get("diagramIds")
+    actual_diagrams = [row.get("id") for row in diagrams.get("diagrams", []) if isinstance(row, dict)]
+    if governed_diagrams != actual_diagrams:
+        fail("Book SME diagramIds must exactly match current governed instructional diagrams")
+
     if section["status"] == "hold":
         if evidence.get("status") == "validated":
             fail("Book SME is marked hold although its evidence contract says validated; reconcile explicitly")
         return
-    require_current_release(evidence, expected_release, "Book SME")
+
     if evidence.get("status") != "validated":
         fail("Book SME cannot be validated until the human-review contract status is validated")
+    if binding.get("status") != "validated":
+        fail("Book SME cannot be promoted until the content-release to web-release binding is validated")
     if len(required_dimensions) != 6:
         fail("validated Book SME evidence requires all six governed review dimensions")
     if len(reviews) != 46:
         fail("validated Book SME evidence requires one review record for every governed chapter")
+
     by_id = {row.get("chapterId"): row for row in reviews if isinstance(row, dict)}
     if set(by_id) != set(chapter_ids):
         fail("validated Book SME reviews must exactly cover the 46 governed chapters")
+
+    worked_by_chapter = {}
+    for row in worked.get("cases", []):
+        worked_by_chapter.setdefault(row.get("chapterId"), []).append(row.get("id"))
+    diagram_by_chapter = {}
+    for row in diagrams.get("diagrams", []):
+        diagram_by_chapter.setdefault(row.get("chapterId"), []).append(row.get("id"))
+    enrichment_chapters = set(actual_enrichment)
+
     for chapter_id, row in by_id.items():
         for key in ("reviewedAt", "reviewerReference", "evidenceRef"):
             require_nonempty(row.get(key), f"validated Book SME review {chapter_id} is missing {key}")
@@ -284,6 +322,16 @@ def validate_book_sme(section: dict, expected_release: str) -> None:
         dimensions = row.get("dimensions") or {}
         if set(dimensions) != required_dimensions or any(value != "pass" for value in dimensions.values()):
             fail(f"validated Book SME dimensions do not all pass: {chapter_id}")
+
+        expected_worked = worked_by_chapter.get(chapter_id, [])
+        if row.get("workedCaseIdsReviewed", []) != expected_worked:
+            fail(f"validated Book SME review does not prove exact worked-case coverage: {chapter_id}")
+        expected_diagrams = diagram_by_chapter.get(chapter_id, [])
+        if row.get("diagramIdsReviewed", []) != expected_diagrams:
+            fail(f"validated Book SME review does not prove exact diagram coverage: {chapter_id}")
+        expected_enrichment = chapter_id in enrichment_chapters
+        if row.get("enrichmentReviewed") is not expected_enrichment:
+            fail(f"validated Book SME review does not prove enrichment coverage: {chapter_id}")
 
 
 def validate_curriculum(section: dict, expected_release: str) -> None:
