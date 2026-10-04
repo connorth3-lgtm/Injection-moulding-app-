@@ -1709,21 +1709,25 @@ function quarantineMaterialLegacy(token,payload,reason){
   const source=STORAGE_BASE+':'+token,target=`mm_scope_quarantine_v1::material-labs::${token}`,wrapped=JSON.stringify({source,reason,payload:JSON.parse(payload)});
   if(localStorage.getItem(target)==null)localStorage.setItem(target,wrapped);
   if(localStorage.getItem(target)!==wrapped)return false;
-  localStorage.removeItem(source);return true
+  localStorage.removeItem(source);return localStorage.getItem(source)==null
  }catch(_){return false}
 }
 function migrateMaterialLegacy(scope,id){
- const token=legacyMaterialToken(id),oldKey=STORAGE_BASE+':'+token,payload=localStorage.getItem(oldKey);if(payload==null)return;
+ const token=legacyMaterialToken(id),oldKey=STORAGE_BASE+':'+token,payload=localStorage.getItem(oldKey);if(payload==null)return true;
  const owners=materialLegacyOwners(scope,token);
- if(owners.length!==1||owners[0]!==id){quarantineMaterialLegacy(token,payload,owners.length>1?'ambiguous-known-owners':'ownership-unproven');return}
+ if(owners.length!==1||owners[0]!==id)return quarantineMaterialLegacy(token,payload,owners.length>1?'ambiguous-known-owners':'ownership-unproven');
  const prefix=`${STORAGE_BASE}::`,next=scope.storageKey(prefix,scope.tokenFor(id)),current=localStorage.getItem(next);
- if(current==null){localStorage.setItem(next,payload);if(localStorage.getItem(next)===payload)localStorage.removeItem(oldKey)}
- else if(current===payload)localStorage.removeItem(oldKey)
+ if(current==null){
+  localStorage.setItem(next,payload);if(localStorage.getItem(next)!==payload)return false;
+  localStorage.removeItem(oldKey);return localStorage.getItem(oldKey)==null
+ }
+ if(current===payload){localStorage.removeItem(oldKey);return localStorage.getItem(oldKey)==null}
+ return quarantineMaterialLegacy(token,payload,'parallel-stores')
 }
 function key(){
  const scope=window.MM_LEARNER_SCOPE,id=learnerId(),prefix=`${STORAGE_BASE}::`;
  if(!id||!scope||typeof scope.tokenFor!=='function'||typeof scope.storageKey!=='function')return null;
- try{scope.registerStoragePrefix?.(prefix);migrateMaterialLegacy(scope,id);return scope.storageKey(prefix,scope.tokenFor(id))}catch(_){return null}
+ try{scope.registerStoragePrefix?.(prefix);const migrated=migrateMaterialLegacy(scope,id);if(migrated===false)return null;return scope.storageKey(prefix,scope.tokenFor(id))}catch(_){return null}
 }
 function read(){try{const k=key();return k?JSON.parse(localStorage.getItem(k)||'{}'):{} }catch(_){return{}}}
 function save(all){try{const k=key();if(!k)return false;const payload=JSON.stringify(all);localStorage.setItem(k,payload);return localStorage.getItem(k)===payload}catch(_){return false}}
