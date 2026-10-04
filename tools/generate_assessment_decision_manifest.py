@@ -16,7 +16,7 @@ OUT = ROOT / "data" / "assessment-decision-manifest-v1.json"
 MANIFEST_VERSION = "2026.09.04.1"
 QUESTION_BANK_VERSION = "2026.08.30.1"
 APPROVAL_VERSION = "2026.08.30.3"
-MEASURED_VERSION = "2026.09.01.1"
+MEASURED_VERSION = "2026.10.05.1"
 
 
 def need(ok: bool, message: str) -> None:
@@ -234,7 +234,7 @@ def build() -> dict[str, Any]:
         "questionBankVersion": QUESTION_BANK_VERSION,
         "evidenceApprovalVersion": APPROVAL_VERSION,
         "measuredAssessmentVersion": MEASURED_VERSION,
-        "boundary": "Audit-only canonical identity manifest. It contains no question stems, option text, rationales or raw answer text. Evidence-approved learning decisions remain distinct from measured-dataset contract decisions; neither scope grants production authority.",
+        "boundary": "Audit-only evidence-identity manifest for 157 evidence-approved decisions plus 12 measured-dataset contract decisions. It is not the complete learner-visible inventory: 40 optional Material Practice decisions are governed separately inside the 209-decision semantic/psychometric population. The manifest contains no question stems, option text, rationales or raw answer text; no scope grants production authority.",
         "counts": {
             "total": len(rows),
             "evidenceApproved": len(approved),
@@ -265,7 +265,7 @@ def main() -> int:
         if not output.exists() or output.read_text(encoding="utf-8") != payload:
             print(f"{output.relative_to(ROOT)} is stale; run tools/generate_assessment_decision_manifest.py", file=sys.stderr)
             return 1
-        print("Assessment decision manifest is current: 169 governed decisions, 676 globally unique question-scoped choice fingerprints.")
+        print("Assessment evidence-identity manifest is current: 169 rows (157 evidence-approved + 12 measured), within the separately governed 209 learner-visible decisions; 676 globally unique question-scoped choice fingerprints.")
         return 0
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(payload, encoding="utf-8")
