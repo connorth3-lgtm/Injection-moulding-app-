@@ -60,6 +60,9 @@ for asset in ['src/domains/assessment/assessment-psychometric-hardening.js','ass
     label=asset.rsplit('/',1)[-1]
     need(f'/* >>> {label} */' in evidence_pack,f'{asset} missing from assessment evidence-depth runtime pack')
 need('/* >>> real-measured-data-assessment.js */' in learning_process_pack,'real measured assessment missing from learning/process diagnostics runtime pack')
+real=text('real-measured-data-assessment.js')
+for marker in ["decisionCount:CASES.reduce", "psychometricAudit:PSYCHOMETRIC_AUDIT", "keyPositions.some(x=>x!==3)", "salientLength.length", "salientKeyLengthCueCount:0"]:
+    need(marker in real,f'real measured psychometric governance missing: {marker}')
 need(idx.index("'./src/domains/runtime-packs/evidence-runtime-pack.js'") < idx.index("'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'") < idx.index("'./src/domains/shell/app-shell-registry.js'"),'psychometric/evidence browser load order is wrong')
 need(idx.index("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'") < idx.index("'./src/domains/runtime-packs/process-data-runtime-pack.js'"),'real measured assessment pack order is wrong')
 shell_match=re.search(r'const SHELL_RELEASE="([^"]+)"',idx)
@@ -105,4 +108,4 @@ need('_evaluate_balanced_length' in standard and "hard.remove('correct-longest-o
 immutable=text('qa_question_quality_50_pass_immutable.py')
 need('authoring warnings retained' in immutable and 'textMutationCount' in immutable,'immutable wrapper must retain source-authoring warnings while hard-gating runtime text mutation')
 
-print(f'MouldMaster psychometric integration QA passed: 197 keyed decisions preserve exact learner-visible wording at runtime; answer-position balancing is allowed without semantic/text mutation; predictive surface-form findings remain an authoring backlog; proposition evidence is loaded before approval; 12 real-measured decisions are delivered; maturity assessment runtime changes membership exposure only; runtime={runtime_token}; cache={cache_revision}; blob pin={actual}')
+print(f'MouldMaster psychometric integration QA passed: the established 197-decision psychometric bank preserves exact learner-visible wording while the 12 measured-contract decisions enforce their own 3/3/3/3 displayed-key and salient-length-cue audit, reconciling 209 learner-visible decisions; maturity assessment runtime changes membership exposure only; runtime={runtime_token}; cache={cache_revision}; blob pin={actual}')
