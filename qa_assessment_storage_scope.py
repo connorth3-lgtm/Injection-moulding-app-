@@ -86,6 +86,11 @@ const y=make(['learner-a','learner-b'],'learner-a',{'mm_assessment_analytics_v1'
 if(y.api.legacyMigration.ambiguous<1)throw new Error('multi-profile unsuffixed legacy value was not marked ambiguous');
 if(native.get.call(y.localStorage,'mm_assessment_analytics_v1')===null)throw new Error('ambiguous legacy value was deleted');
 if(y.api.getItem('mm_assessment_analytics_v1')!==null)throw new Error('ambiguous legacy value was inherited by active learner');
+
+const z=make([],'',{});
+if(z.api.analyticsKey()!==null)throw new Error('missing learner identity produced an assessment analytics storage key');
+if(z.api.write('mm_assessment_analytics_v1',{owner:'anonymous'})!==false)throw new Error('missing learner identity accepted an assessment analytics write');
+if([...z.localStorage.m.keys()].some(k=>String(k).startsWith('mm_assessment_analytics_v1::')))throw new Error('missing learner identity created a durable anonymous assessment bucket');
 process.stdout.write(JSON.stringify({version:api.version,learnerScoped:api.learnerScoped,prototypeInterception:api.prototypeInterception,sharedMigration:api.sharedMigration,ambiguous:y.api.legacyMigration.ambiguous}));
 '''%json.dumps(str(scope))
 p=subprocess.run(['node','-e',node],capture_output=True,text=True)
