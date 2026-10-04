@@ -11,7 +11,7 @@ scope=ROOT/'assessment-storage-scope.js'
 need(scope.exists(),'assessment-storage-scope.js missing')
 js=text('assessment-storage-scope.js')
 for marker in [
-    "VERSION='2026.09.11.1'",
+    "VERSION='2026.10.05.1'",
     "ANALYTICS_BASE='mm_assessment_analytics_v1'",
     "TIMING_BASE='mm_assessment_exposure_timing_v1'",
     "ROTATION_BASE='mm_assessment_opening_history_v1'",
@@ -21,7 +21,7 @@ for marker in [
     'function getItem(base)', 'function setItem(base,value)', 'function removeItem(base)',
     'function read(base,fallback=null)', 'function write(base,value)',
     'prototypeInterception:false', 'learnerScoped:true', 'MM_LEARNER_SCOPE',
-    'function hashScope', 'migrateFallbackScopes', 'partial-fail-closed', 'scopeProvider',
+    'function hashScope', 'function strongFallbackToken', 'migrateFallbackScopes', 'partial-fail-closed', 'scopeProvider',
     'migrateLegacy', 'keysForLearner', 'clearLearner', 'clearAll', 'cancelInMemoryAttempt',
     "wrapLearnerChange('switchUser')", "wrapLearnerChange('createLearner')",
     'after!==before){cancelInMemoryAttempt();clearLearner(beforeLearner)}',
@@ -90,7 +90,7 @@ process.stdout.write(JSON.stringify({version:api.version,learnerScoped:api.learn
 p=subprocess.run(['node','-e',node],capture_output=True,text=True)
 need(p.returncode==0,f'assessment storage scope runtime QA failed: {p.stderr or p.stdout}')
 r=json.loads(p.stdout)
-need(r['version']=='2026.09.11.1' and r['learnerScoped'] is True and r['prototypeInterception'] is False,'assessment storage runtime metadata mismatch')
+need(r['version']=='2026.10.05.1' and r['learnerScoped'] is True and r['prototypeInterception'] is False,'assessment storage runtime metadata mismatch')
 need(r['sharedMigration']['conflicts']==0 and r['sharedMigration']['ambiguous']==0,'normal shared-scope migration unexpectedly failed closed')
 need(r['ambiguous']>=1,'ambiguous legacy fail-closed case was not exercised')
 
