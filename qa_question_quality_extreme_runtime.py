@@ -169,6 +169,10 @@ def main():
     extreme.main()
     items=load_psychometric_items()
     semantic=SEMANTIC_CUE_MODEL(items,50)
+    need(semantic['mean_accuracy']<=0.50,f"semantic/content cue model can guess correct answers too reliably: {semantic}")
+    for kind,acc in semantic['by_kind'].items():
+        if sum(x['kind']==kind for x in items)>=20:
+            need(acc<=0.58,f'semantic/content cue model too predictive for {kind}: {acc}')
     report=json.loads((ROOT/'question-quality-extreme-50-pass-report.json').read_text(encoding='utf-8'))
     report['psychometric_runtime']=PSYCHOMETRIC_META
     report['cross_item']['surface_cue_model']=report['cross_item'].pop('lexical_cue_model')
