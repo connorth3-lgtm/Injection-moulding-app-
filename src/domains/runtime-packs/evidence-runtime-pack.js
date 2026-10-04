@@ -1280,7 +1280,7 @@ const LABS=[
         ['Increase clamp force and use mould-opening response as the primary test of the cavity-specific short shot','That does not directly test the suspected local restriction or venting mechanism.']
       ],3),
       S('Controlled response','If the local restriction is confirmed, what is the best learning principle?','Correct the confirmed local restriction, then reconfirm the validated baseline response','Correct. Fix the confirmed mechanism and demonstrate recovery rather than hiding it with unrelated global adjustments.',[
-        ['Increase injection pressure until cavity 8 fills, accepting higher load across the otherwise stable cavities','That can mask a tooling problem and expose stable cavities or the mould to unnecessary load.'],
+        ['Increase injection pressure until cavity 8 fills','That can mask a tooling problem and expose stable cavities or the mould to unnecessary load.'],
         ['Change injection speed, pressure and temperature together so the symptom is removed as quickly as possible','Multiple simultaneous changes destroy the evidence needed to learn which factor mattered.'],
         ['Ignore cavity identity and accept the pooled shot weight as proof that all cavities are filling correctly','Pooled shot data can hide one weak cavity and erase the most diagnostic pattern.']
       ],0),
@@ -1369,7 +1369,7 @@ const LABS=[
         ['Stop recording cushion so the remaining process data appear more stable during production review','Removing a useful signal hides evidence instead of correcting the instability.']
       ],1),
       S('Explain','Why trend several signals together?','Converging signals strengthen or weaken a suspected mechanism','Correct. Independent responses that move together provide stronger diagnostic evidence than one isolated number.',[
-        ['Correlated movement guarantees one unique root cause and removes the need to test alternative explanations','Correlation strengthens a hypothesis but does not guarantee a single cause.'],
+        ['Treat correlation as proof of one root cause','Correlation strengthens a hypothesis but does not guarantee a single cause.'],
         ['Trending process signals replaces physical inspection and maintenance checks once a statistical pattern appears','Process data and physical inspection complement each other.'],
         ['Multiple signals make the time sequence unimportant even when the problem is intermittent or drifting','Time sequence is often essential for understanding drift and intermittency.']
       ],3)
@@ -1382,7 +1382,7 @@ const LABS=[
     related:['Warpage','Cooling-circuit flow','Cooling-circuit baseline','Mould-surface temperature'],
     steps:[
       S('Observe','What evidence is strongest?','The post-maintenance cooling-flow and thermal imbalance','Correct. Timing plus a measured circuit-flow and local-temperature change supports a thermal mechanism more strongly than unchanged commands.',[
-        ['The unchanged injection-speed command, despite no evidence that filling behaviour changed after maintenance','An unchanged setpoint is background information, not the strongest cause evidence.'],
+        ['Blame the unchanged injection-speed command','An unchanged setpoint is background information, not the strongest cause evidence.'],
         ['The part colour, treated as the primary explanation despite the measured cooling-circuit change','Colour alone does not explain the measured circuit and thermal imbalance.'],
         ['The operator shift, even though the symptom began with a documented physical maintenance intervention','The maintenance-linked physical evidence is stronger than a shift association.']
       ],1),
@@ -1397,7 +1397,7 @@ const LABS=[
         ['Increase mould-close force and treat the mechanical closing system as the primary control for coolant flow','Clamp closing force does not restore coolant routing or flow.']
       ],0),
       S('Explain','Why is a cooling baseline valuable?','A baseline makes cooling changes measurable rather than speculative','Correct. A known-good circuit and thermal reference makes post-maintenance routing, blockage and balance changes easier to isolate.',[
-        ['A cooling baseline means mould temperature should never vary and any change automatically indicates a failed circuit','Thermal systems vary; a baseline provides context for meaningful change rather than a no-variation rule.'],
+        ['Assume the baseline eliminates all variation','Thermal systems vary; a baseline provides context for meaningful change rather than a no-variation rule.'],
         ['A cooling baseline replaces dimensional and warpage inspection once flow and temperature values are recorded','Part-quality responses remain essential to deciding whether the process is acceptable.'],
         ['A cooling baseline provides one universal coolant-flow target that can be copied to any mould and circuit','Cooling requirements remain mould-, circuit- and product-specific.']
       ],2)
@@ -1410,17 +1410,17 @@ const LABS=[
     related:['Gate-seal study','Part mass','Process window study','Hold pressure actual'],
     steps:[
       S('Observe','What response is useful for a basic gate-seal study?','Part mass across controlled hold-time steps','Correct. A repeatable part-mass plateau is useful evidence that additional hold time is no longer adding measurable material for the tested condition.',[
-        ['Only the programmed hold-time value, without measuring whether the part or process response changes','A study needs a measured response, not the input value by itself.'],
+        ['Use only the programmed hold time','A study needs a measured response, not the input value by itself.'],
         ['Only total cycle time, even though it does not show whether additional material still passes through the gate','Cycle time does not establish whether packing material is still transmitted through the gate.'],
         ['Only clamp-force data, despite clamp load not being the response used to establish effective gate seal','Clamp force is not the primary response for this study.']
       ],2),
       S('Best next test','How should the study be run?','Vary hold time alone and record repeatable part mass across controlled cycles','Correct. A controlled factor, stable important conditions and repeated response data make the gate-seal evidence interpretable.',[
-        ['Change hold time, holding pressure and cooling together, then attribute any result to the time change','That confounds the study and makes causal interpretation weak.'],
+        ['Change hold time, pressure and cooling together','That confounds the study and makes causal interpretation weak.'],
         ['Use one shot at each condition and assume that a single observation is enough despite process variation','A single observation can be misleading when process or measurement variation is present.'],
         ['Copy the gate-seal time from another mould even though gate geometry, resin and thermal condition differ','Gate-seal behaviour is specific to the gate, resin, geometry and thermal condition.']
       ],0),
       S('Controlled response','What does a repeatable mass plateau mean?','Extra hold time no longer adds meaningful part mass','Correct. Under the studied stable condition, additional hold time is no longer producing a meaningful mass response; relevant dimensions and quality still require verification.',[
-        ['The same hold time is now proven correct for every resin, gate geometry and moulding condition','The conclusion is specific to the tested material, geometry and process state.'],
+        ['Use the same hold time for every mould','The conclusion is specific to the tested material, geometry and process state.'],
         ['Holding pressure can be ignored completely once a mass plateau has appeared in the time study','Pressure magnitude and transmission remain relevant; the study addresses the time response being tested.'],
         ['Cooling time should automatically be set equal to the observed hold-time plateau for production','Cooling and gate seal are governed by different response criteria.']
       ],3),
@@ -1438,7 +1438,7 @@ const LABS=[
     related:['Measurement system analysis','Measurement-system study before process adjustment','Measurement conditioning-time control','Dimensional drift'],
     steps:[
       S('Observe','What should be questioned first?','Whether the measurement can resolve the reported process shift','Correct. Adjustment and capability decisions are unreliable if measurement variation is comparable with the apparent process change.',[
-        ['Whether injection pressure should be changed before verifying that the dimensional measurement is repeatable','Changing a stable process before verifying measurement can turn gauge noise into real process variation.'],
+        ['Change injection pressure before checking the gauge','Changing a stable process before verifying measurement can turn gauge noise into real process variation.'],
         ['Whether the mould surface should be reworked even though operator-to-operator measurement spread is already evident','The direct evidence points first to measurement-system adequacy, not mould rework.'],
         ['Whether robot speed should be adjusted because the measured dimension varies between operators','Robot speed is not supported by the operator-to-operator measurement evidence.']
       ],3),
@@ -1448,12 +1448,12 @@ const LABS=[
         ['Use drawing tolerance alone to decide whether the measurement system is capable of supporting the decision','Tolerance matters, but a capable method must still be demonstrated.']
       ],1),
       S('Controlled response','What is the safest process-learning principle?','Verify the measurement before adjusting a stable process','Correct. Establish that the signal is real, then reassess the process evidence before making a production change.',[
-        ['Adjust the moulding process after every individual reading so the process follows the measurement in real time','That can create real process variation in response to measurement noise.'],
+        ['Adjust the process after every reading','That can create real process variation in response to measurement noise.'],
         ['Tighten process-control limits until the chart looks better, without establishing whether the gauge is resolving change','Control limits do not improve the measurement system.'],
         ['Stop measuring the characteristic so measurement variation no longer appears in the process review','The objective is trustworthy measurement, not removal of quality evidence.']
       ],2),
       S('Explain','Why can conditioning time matter for plastic parts?','Plastic dimensions can change during post-mould conditioning','Correct. Temperature, crystallisation and moisture state can continue changing after ejection, depending on the polymer and specification.',[
-        ['All plastic dimensions become fixed at ejection, so later changes must be measurement error or machine drift','Many polymers continue thermal, crystalline or moisture-related dimensional change after moulding.'],
+        ['Assume every part dimension is fixed at ejection','Many polymers continue thermal, crystalline or moisture-related dimensional change after moulding.'],
         ['Conditioning is only relevant to metals and does not affect polymer temperature, moisture or crystallisation state','Plastics can be strongly affected by temperature and moisture history.'],
         ['Conditioning time directly sets machine injection pressure and therefore should be treated as a machine parameter','Conditioning affects the part measurement state, not the machine pressure setpoint.']
       ],0)
@@ -1466,7 +1466,7 @@ const LABS=[
     related:['Hot-runner zone actuals','Hot-runner branch balance check','Hot-runner manifold','Cavity-to-cavity pressure delta'],
     steps:[
       S('Observe','Why is equal displayed temperature not enough?','Near-setpoint temperature does not prove equal delivered branch condition','Correct. Heater output, heat loss, local restriction and delivered melt condition can differ even while a sensor reads close to setpoint.',[
-        ['Hot-runner systems cannot affect cavity balance, so branch-specific fill differences must originate elsewhere','Hot-runner branch condition can directly affect delivered heat and pressure loss.'],
+        ['Assume hot runners cannot affect cavity balance','Hot-runner branch condition can directly affect delivered heat and pressure loss.'],
         ['Every thermocouple should be treated as incorrect whenever two cavities supplied by one branch behave differently','The lesson is to combine sensor, controller and branch-response evidence, not distrust every thermocouple.'],
         ['Clamp force determines manifold temperature and should be adjusted before reviewing heater output or branch response','Clamp force is unrelated to manifold heater control.']
       ],0),
@@ -1481,7 +1481,7 @@ const LABS=[
         ['Increase clamp force and use the change in mould restraint as the primary response to a hot-runner control fault','Clamp force cannot repair a heater, thermocouple or branch restriction.']
       ],1),
       S('Explain','What broader troubleshooting habit does this teach?','Use location, timing and multiple signals to separate local from global faults','Correct. Good diagnosis asks where the change occurs, when it appears and which independent actuals move with it.',[
-        ['Change the easiest available setting first and treat any short-term improvement as proof of root cause','Ease of adjustment is not evidence of causality.'],
+        ['Change the easiest setting first','Ease of adjustment is not evidence of causality.'],
         ['Treat displayed values as untrustworthy whenever one sensor disagrees with the observed part behaviour','Displayed values remain useful when interpreted with sensor limitations and independent evidence.'],
         ['Create a new process recipe for each defect instead of checking whether material, tooling or equipment changed','Many defects originate in material, tooling, maintenance or equipment conditions that should be corrected directly.']
       ],3)
@@ -1494,7 +1494,7 @@ const LABS=[
     related:['Flash','Parting line','Mould support / pillars','Process audit trail'],
     steps:[
       S('Observe','What should be suspected first?','A local shutoff seating, damage or support condition','Correct. Location and timing favour a local tooling mechanism before a whole-process clamp or packing explanation.',[
-        ['A global clamp-force shortage that should normally create broader mould-opening or flash evidence','A global clamp deficit is less consistent with one post-service shutoff being affected.'],
+        ['Blame a global clamp-force shortage','A global clamp deficit is less consistent with one post-service shutoff being affected.'],
         ['A material-drying problem that would be expected to affect resin condition rather than one repaired shutoff','Material moisture does not fit the local flash location and tool-work timing.'],
         ['A robot-vacuum fault occurring after moulding that cannot create flash at a specific shutoff interface','Robot vacuum acts after moulding and cannot create flash at the shutoff interface.']
       ],1),
@@ -1509,7 +1509,7 @@ const LABS=[
         ['Ignore the defect location and treat every flash mechanism as a pressure-only problem across the full shot','Flash can result from local seating, damage, support, venting or process pressure; location remains diagnostic.']
       ],0),
       S('Explain','Why should troubleshooting begin with defect location?','Location separates local mould features from whole-shot variables','Correct. A global variable is a weaker first hypothesis when only one local feature changes, although confirmation is still required.',[
-        ['Location proves the exact root cause without any confirming inspection, process comparison or controlled test','Location narrows hypotheses but does not prove the exact mechanism by itself.'],
+        ['Treat location as proof of root cause','Location narrows hypotheses but does not prove the exact mechanism by itself.'],
         ['Location removes the need to review process actuals because a local defect cannot have any process contribution','Process actuals still help establish whether global conditions changed.'],
         ['Location matters only for cosmetic defects and should not influence diagnosis of filling, flash or dimensional issues','Location is useful across filling, venting, flash, dimensions, ejection and other mechanisms.']
       ],2)
