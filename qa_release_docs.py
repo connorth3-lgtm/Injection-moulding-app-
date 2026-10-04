@@ -160,7 +160,7 @@ need('scoped cleanup or clean learner write cannot be verified' in privacy,'priv
 need('replaces the local learner registry after confirmation' in support,'support must disclose destructive backup registry replacement before import')
 
 sw=text('service-worker.js')
-for marker in ["'./privacy.html'","'./support.html'","'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'","'./assessment-evidence-sources.js'","'./assessment-evidence-approval.js'","'./curriculum-integration.js'","'./specialist-curriculum.js'","'./src/domains/learning/specialist-evidence-gap-extension.js'","'./src/domains/shell/app-shell-registry.js'","'./mould-master-workspace.js'","'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'"]:
+for marker in ["'./privacy.html'","'./support.html'","'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'","'./src/domains/runtime-packs/evidence-runtime-pack.js'","'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'","'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'","'./src/domains/shell/app-shell-registry.js'","'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'"]:
     need(marker in sw,f'offline compliance/runtime asset missing: {marker}')
 
 for name in ['README.md','ANDROID_INSTALL_README.txt','support.html','UPLOAD_README.txt']:
