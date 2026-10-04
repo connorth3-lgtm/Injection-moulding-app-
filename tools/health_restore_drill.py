@@ -192,7 +192,7 @@ def verify_runtime_contracts() -> None:
         "checksum is not a digital signature",
         "window.MM_LEARNER_BACKUP_INTEGRITY",
         "bridge.buildTrainingExtras(payload.users)",
-        "learner-scoped review/sign-off data",
+        "learner-scoped review, sign-off and measured-challenge progress",
     ]:
         require(token in backup, f"learner backup integrity runtime contract missing: {token}")
     require(
@@ -251,7 +251,7 @@ def run_drill() -> dict:
         "backupFormat": LEGACY_FORMAT,
         "activeUser": "learner-restored",
         "users": {"learner-restored": {"id": "learner-restored", "name": "Restored", "completed": [1, 2]}},
-        "trainingExtras": {"version": 4, "scope": "learner-registry", "learners": {"learner-restored": {"spacedReview": {"items": {}}, "practicalSignoff": {"checks": {}}}}},
+        "trainingExtras": {"version": 5, "scope": "learner-registry", "learners": {"learner-restored": {"spacedReview": {"items": {}}, "practicalSignoff": {"checks": {}}, "measuredAssessment": {"avaps-delivered-traces": {"best": 67, "last": 67}}}}},
     }
     envelope = build_v3_envelope(payload)
     restored, committed = restore_v3_transaction(current, envelope, len(stable_json(envelope).encode("utf-8")))
