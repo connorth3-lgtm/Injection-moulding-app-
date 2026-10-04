@@ -200,7 +200,7 @@ window.importData=function(file){
    try{
     clearTrainingExtrasStores();
     clearAllAnalyticsStores();
-    for(const [k,v] of Object.entries(trainingWrites))localStorage.setItem(k,v);
+    for(const [k,v] of Object.entries(trainingWrites)){localStorage.setItem(k,v);if(localStorage.getItem(k)!==v)throw new Error(`Training restore write could not be verified: ${k}`)}
     const serialized=JSON.stringify(proposed);localStorage.setItem('mouldmasterProDB',serialized);
     if(localStorage.getItem('mouldmasterProDB')!==serialized)throw new Error('Learner registry write could not be verified')
    }catch(storageError){
