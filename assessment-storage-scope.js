@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 if(typeof window==='undefined'||typeof localStorage==='undefined')return;
-const VERSION='2026.10.04.1';
+const VERSION='2026.09.11.1';
 const ANALYTICS_BASE='mm_assessment_analytics_v1';
 const TIMING_BASE='mm_assessment_exposure_timing_v1';
 const ROTATION_BASE='mm_assessment_opening_history_v1';
