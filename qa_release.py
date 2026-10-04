@@ -206,6 +206,7 @@ for marker in [
     "clearAllAnalyticsStores();",
     "for(const [k,v] of Object.entries(trainingWrites)){localStorage.setItem(k,v);if(localStorage.getItem(k)!==v)",
     "clearLearnerAnalyticsStores(active);clearLearnerTrainingExtras(active);",
+    "Learner reset was not started because the current learner state could not be read safely",
     "proposed.users[active]=cleanResetLearner(prior,active)",
     "Other local learner profiles and saved process-data evidence",
 ]:
