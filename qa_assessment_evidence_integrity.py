@@ -81,6 +81,7 @@ for x in optional: need(len(set(x.get('sourceIds') or []))>=2,f'optional item la
 need("decisionCount:CASES.reduce" in real and "evidenceType:'real-measured'" in real,'real-measured assessment metadata missing')
 need(real.count("contractPath:'data/public-benchmark-results/")==4,'expected four pinned real-data contracts')
 need(real.count("questions:[")==4,'expected four real measured cases')
+need("localStorage.getItem(k)===payload" in real and "Progress could not be saved on this device." in real and "progress not saved" in real,'real-measured progress persistence must verify writes and surface unsaved progress')
 
 avaps=json.loads(text('data/public-benchmark-results/scatimdata-avaps-v1.json'))
 openmms=json.loads(text('data/public-benchmark-results/openmms-t4g-v1.json'))
