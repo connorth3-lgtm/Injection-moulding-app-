@@ -127,7 +127,7 @@ for marker in ('gitBlobSha1', 'verifiedJson', 'validateIntegrityAuthorization', 
 load_manifest_block = book_runtime.split('async function loadManifest(){',1)[1].split('function failBook(',1)[0]
 for forbidden in ('MATERIAL_ATLAS_PATH', 'MATERIAL_CATALOG_PATH', 'MATERIAL_REGIONAL_PATH'):
     need(forbidden not in load_manifest_block, f'heavy material payload must not load during core Book manifest initialization: {forbidden}')
-need("async function init(){createUI();installBookSearch();return true;}" in book_runtime, 'Book shell must initialize without fetching governed Book payloads')
+need("async function init(){createUI();armBookSearch();return true;}" in book_runtime, 'Book shell must initialize without fetching governed Book payloads while retrying global-search binding')
 need("if(!manifest){ui.summary.textContent='Loading governed Book content on demand…'" in book_runtime, 'Book open action must demand-load governed content')
 need("materialSearchIndex={catalog:[],regional:[]}" in book_runtime, 'Book material search must use a precomputed normalized index')
 search_block = book_runtime.split('function searchBook(query){',1)[1].split('async function appendBookSearchResults',1)[0]
