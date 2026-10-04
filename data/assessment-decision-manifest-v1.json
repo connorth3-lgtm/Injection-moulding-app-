@@ -1,5 +1,5 @@
 {
-  "boundary": "Audit-only canonical identity manifest. It contains no question stems, option text, rationales or raw answer text. Evidence-approved learning decisions remain distinct from measured-dataset contract decisions; neither scope grants production authority.",
+  "boundary": "Audit-only evidence-identity manifest for 157 evidence-approved decisions plus 12 measured-dataset contract decisions. It is not the complete learner-visible inventory: 40 optional Material Practice decisions are governed separately inside the 209-decision semantic/psychometric population. The manifest contains no question stems, option text, rationales or raw answer text; no scope grants production authority.",
   "choiceIdentity": {
     "algorithm": "fnv1a(question_id + '@r' + revision + '|' + collapsed_whitespace_option_text)",
     "questionScoped": true,
@@ -4121,7 +4121,7 @@
   ],
   "evidenceApprovalVersion": "2026.08.30.3",
   "generated": true,
-  "measuredAssessmentVersion": "2026.09.01.1",
+  "measuredAssessmentVersion": "2026.10.05.1",
   "questionBankVersion": "2026.08.30.1",
   "schema": 1,
   "version": "2026.09.04.1"
