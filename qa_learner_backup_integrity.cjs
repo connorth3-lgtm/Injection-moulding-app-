@@ -53,9 +53,9 @@ function sandbox(){
     }},
     MM_TRAINING_DATA_BRIDGE:{buildTrainingExtras(users){
       assert.deepStrictEqual(Object.keys(users).sort(),['learner-a','learner-b']);
-      return {version:4,scope:'learner-registry',learners:{
-        'learner-a':{spacedReview:{items:{'tech:q1':{id:'tech:q1',stage:2}}},practicalSignoff:{checks:{safe:true},supervisor:'Reviewer',date:'2026-09-18',notes:'Synthetic QA'}},
-        'learner-b':{spacedReview:{items:{'tech:q2':{id:'tech:q2',stage:1}}},practicalSignoff:{checks:{peer:true},supervisor:'Reviewer B',date:'2026-09-19',notes:'Second learner QA'}}
+      return {version:5,scope:'learner-registry',learners:{
+        'learner-a':{spacedReview:{items:{'tech:q1':{id:'tech:q1',stage:2}}},practicalSignoff:{checks:{safe:true},supervisor:'Reviewer',date:'2026-09-18',notes:'Synthetic QA'},measuredAssessment:{'avaps-delivered-traces':{best:100,last:67}}},
+        'learner-b':{spacedReview:{items:{'tech:q2':{id:'tech:q2',stage:1}}},practicalSignoff:{checks:{peer:true},supervisor:'Reviewer B',date:'2026-09-19',notes:'Second learner QA'},measuredAssessment:{'cross-process-upper-boundary':{best:67,last:33}}}
       }}
     }},
     importData(file){baseImports.push(file)},
@@ -81,7 +81,7 @@ function sandbox(){
   assert.strictEqual(envelope.backupFormat,'mouldmaster-backup-v3');
   assert(/^[0-9a-f]{64}$/.test(envelope.integrity.digest),'export did not produce a SHA-256 digest');
   assert.strictEqual(envelope.payload.backupFormat,'mouldmaster-backup-v2','v3 envelope payload lost legacy importer compatibility');
-  assert.strictEqual(envelope.payload.trainingExtras.version,4,'integrity wrapper regressed scoped training extras to legacy v2');
+  assert.strictEqual(envelope.payload.trainingExtras.version,5,'integrity wrapper regressed scoped training extras or omitted measured challenge progress');
   assert.strictEqual(envelope.payload.trainingExtras.scope,'learner-registry');
   assert.deepStrictEqual(Object.keys(envelope.payload.trainingExtras.learners).sort(),['learner-a','learner-b'],'v3 envelope did not carry every local learner training scope');
   assert.strictEqual((await api.verifyEnvelope(envelope)).activeUser,'learner-a','valid envelope did not verify');
@@ -106,8 +106,10 @@ function sandbox(){
   assert.strictEqual(unwrapped.activeUser,'learner-a');
   assert.strictEqual(unwrapped.users['learner-a'].name,'Learner A');
   assert.strictEqual(unwrapped.users['learner-b'].name,'Learner B');
-  assert.strictEqual(unwrapped.trainingExtras.version,4);
+  assert.strictEqual(unwrapped.trainingExtras.version,5);
   assert(unwrapped.trainingExtras.learners['learner-b'],'verified envelope dropped non-active learner training extras');
+  assert.deepStrictEqual(unwrapped.trainingExtras.learners['learner-a'].measuredAssessment,{'avaps-delivered-traces':{best:100,last:67}},'verified envelope dropped learner A measured challenge progress');
+  assert.deepStrictEqual(unwrapped.trainingExtras.learners['learner-b'].measuredAssessment,{'cross-process-upper-boundary':{best:67,last:33}},'verified envelope dropped learner B measured challenge progress');
 
   const legacy={activeUser:'legacy',users:{legacy:{id:'legacy',name:'Legacy learner'}},backupFormat:'mouldmaster-backup-v2'};
   const legacyFile={size:JSON.stringify(legacy).length,text:async()=>JSON.stringify(legacy)};
@@ -128,5 +130,5 @@ function sandbox(){
 
   assert(source.includes('bridge.buildTrainingExtras(payload.users)'),'integrity wrapper must delegate scoped extras to the governed training bridge');
   assert(!source.includes('payload.trainingExtras={\n  version:2'),'integrity wrapper reintroduced legacy unscoped training extras');
-  console.log('Learner backup integrity QA passed: v3 SHA-256 envelope preserves multi-profile scoped training extras, verifies before restore, and tampering/unsupported metadata/oversize fail closed.');
+  console.log('Learner backup integrity QA passed: v3 SHA-256 envelope preserves multi-profile review/sign-off and measured-challenge progress, verifies before restore, and tampering/unsupported metadata/oversize fail closed.');
 })().catch(error=>{console.error(error);process.exitCode=1});
