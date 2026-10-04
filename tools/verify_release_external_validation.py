@@ -194,7 +194,7 @@ def validate_accessibility(section: dict, expected_release: str, web_candidate: 
         if not isinstance(task, dict):
             fail("real-AT canonical tasks must be objects")
         task_id = require_nonempty(task.get("id"), "real-AT canonical task id is missing")
-        require_nonempty(task.get("instruction"), f"real-AT canonical task {task_id} instruction is missing")
+        require_nonempty(task.get("description"), f"real-AT canonical task {task_id} description is missing")
         task_ids.append(task_id)
     if len(set(task_ids)) != 12:
         fail("real-AT canonical task IDs must be unique")
