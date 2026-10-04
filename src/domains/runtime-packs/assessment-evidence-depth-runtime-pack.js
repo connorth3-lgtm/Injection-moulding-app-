@@ -445,7 +445,7 @@ const APPROVED_INPUTS={
  'src/domains/assessment/assessment-answer-cue-fix.js':'0ddec63b62833e77b872c3251e061857b0796afc',
  'assessment-quality-suite.js':'748332080ca63da5319a53e74682414ce78cd7ce',
  'assessment-stable-review-bridge.js':'2c4ceb062a2b1866da464df050b15a84b007d350',
- 'diagnostic-learning-labs.js':'db8755e9fb515f1dd44fba86483ed3588c7377be',
+ 'diagnostic-learning-labs.js':'f573088cddb9eb081eb9cf88d266af6c7b31831d',
  'material-behaviour-labs.js':'3ce6b1f36c618e0b591b2b5cbb3321a0080ffe6a'
 };
 function buildApproval(){
