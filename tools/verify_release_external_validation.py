@@ -186,21 +186,54 @@ def validate_accessibility(section: dict, expected_release: str, web_candidate: 
     if candidate.get("sourceSha") != source_sha or candidate.get("runtimeFingerprint") != fingerprint:
         fail("accessibility candidate does not match the governed real-AT contract")
 
+    tasks = evidence.get("requiredTasks")
+    if not isinstance(tasks, list) or len(tasks) != 12:
+        fail("real-AT evidence contract must contain exactly 12 canonical tasks")
+    task_ids = []
+    for task in tasks:
+        if not isinstance(task, dict):
+            fail("real-AT canonical tasks must be objects")
+        task_id = require_nonempty(task.get("id"), "real-AT canonical task id is missing")
+        require_nonempty(task.get("instruction"), f"real-AT canonical task {task_id} instruction is missing")
+        task_ids.append(task_id)
+    if len(set(task_ids)) != 12:
+        fail("real-AT canonical task IDs must be unique")
+
+    matrix = evidence.get("requiredMatrix")
+    if not isinstance(matrix, list) or len(matrix) != 4:
+        fail("real-AT evidence requires the four governed matrix rows")
+    for row in matrix:
+        if not isinstance(row, dict):
+            fail("real-AT matrix row must be an object")
+        task_evidence = row.get("taskEvidence")
+        if not isinstance(task_evidence, dict) or set(task_evidence) != set(task_ids):
+            fail(f"real-AT row {row.get('id')} must contain task-level evidence for all 12 canonical tasks")
+        if row.get("status") == "validated":
+            for key in ("testedAt", "reviewer", "evidenceRef"):
+                require_nonempty(row.get(key), f"validated real-AT row is missing {key}")
+            for task_id in task_ids:
+                task = task_evidence[task_id]
+                if not isinstance(task, dict) or task.get("status") != "pass":
+                    fail(f"validated real-AT row {row.get('id')} has no pass for task {task_id}")
+                require_nonempty(task.get("evidenceRef"), f"validated real-AT row {row.get('id')} task {task_id} is missing evidenceRef")
+        elif row.get("status") == "pending":
+            if any(row.get(key) for key in ("testedAt", "reviewer", "evidenceRef")):
+                fail(f"pending real-AT row {row.get('id')} must not carry validation metadata")
+            for task_id in task_ids:
+                task = task_evidence[task_id]
+                if not isinstance(task, dict) or task.get("status") != "pending" or task.get("evidenceRef") is not None:
+                    fail(f"pending real-AT row {row.get('id')} task {task_id} must remain evidence-free")
+        else:
+            fail(f"real-AT row has invalid status: {row.get('id')}")
+
     if section["status"] == "hold":
         if evidence.get("status") == "validated":
             fail("accessibility is marked hold although its evidence contract says validated; reconcile explicitly")
         return
     if evidence.get("status") != "validated":
         fail("accessibility cannot be validated until the real-AT contract status is validated")
-    matrix = evidence.get("requiredMatrix")
-    if not isinstance(matrix, list) or not matrix:
-        fail("validated real-AT evidence requires a non-empty requiredMatrix")
-    for row in matrix:
-        if not isinstance(row, dict) or row.get("status") not in {"pass", "validated"}:
-            fail("validated real-AT evidence requires every matrix row to pass")
-        for key in ("testedAt", "reviewer", "evidenceRef"):
-            require_nonempty(row.get(key), f"validated real-AT row is missing {key}")
-
+    if any(row.get("status") != "validated" for row in matrix):
+        fail("validated real-AT evidence requires every matrix row to pass all 12 canonical tasks")
 
 def validate_pwa(section: dict, expected_release: str, web_candidate: dict) -> None:
     require_release_packet(
@@ -253,20 +286,37 @@ def validate_book_sme(section: dict, expected_release: str) -> None:
         f"qa/BOOK_SME_REVIEW_{expected_release}.md",
         "Book SME",
     )
-    evidence = load_json(ROOT / section["evidenceContract"])
-    require_not_future_release(evidence, expected_release, "Book SME")
+    evidence_path = ROOT / section["evidenceContract"]
+    evidence = load_json(evidence_path)
+    binding = load_json(ROOT / "data" / "book-sme-release-binding-v1.json")
+    if binding.get("contract") != section["evidenceContract"]:
+        fail("Book SME release binding must identify the governed evidence contract")
+    content_release = require_nonempty(binding.get("contentRelease"), "Book SME binding contentRelease is missing")
+    if evidence.get("release") != content_release:
+        fail("Book SME content release must equal binding.contentRelease")
+    if binding.get("boundWebRelease") != expected_release:
+        fail("Book SME binding.boundWebRelease must equal the current web release")
+    if binding.get("boundWebReleaseSource") != "version.json:web_release":
+        fail("Book SME binding must remain sourced from version.json:web_release")
+
     chapter_ids = evidence.get("chapterIds")
     reviews = evidence.get("reviews")
     required_dimensions = set(evidence.get("requiredDimensions") or [])
+    worked_case_ids = set(evidence.get("workedCaseIds") or [])
+    diagram_ids = set(evidence.get("diagramIds") or [])
+    enrichment_chapters = set(evidence.get("enrichmentChapterIds") or [])
     if not isinstance(chapter_ids, list) or len(chapter_ids) != 46 or len(set(chapter_ids)) != 46:
         fail("Book SME contract must contain exactly 46 unique governed chapter ids")
+    if len(worked_case_ids) != 18:
+        fail("Book SME contract must contain exactly 18 governed worked engineering cases")
+    if len(diagram_ids) != 8:
+        fail("Book SME contract must contain exactly 8 governed instructional diagrams")
     if not isinstance(reviews, list):
         fail("Book SME reviews must be a list")
     if section["status"] == "hold":
         if evidence.get("status") == "validated":
             fail("Book SME is marked hold although its evidence contract says validated; reconcile explicitly")
         return
-    require_current_release(evidence, expected_release, "Book SME")
     if evidence.get("status") != "validated":
         fail("Book SME cannot be validated until the human-review contract status is validated")
     if len(required_dimensions) != 6:
@@ -276,6 +326,9 @@ def validate_book_sme(section: dict, expected_release: str) -> None:
     by_id = {row.get("chapterId"): row for row in reviews if isinstance(row, dict)}
     if set(by_id) != set(chapter_ids):
         fail("validated Book SME reviews must exactly cover the 46 governed chapters")
+
+    reviewed_worked = set()
+    reviewed_diagrams = set()
     for chapter_id, row in by_id.items():
         for key in ("reviewedAt", "reviewerReference", "evidenceRef"):
             require_nonempty(row.get(key), f"validated Book SME review {chapter_id} is missing {key}")
@@ -283,8 +336,26 @@ def validate_book_sme(section: dict, expected_release: str) -> None:
             fail(f"validated Book SME review is not approved: {chapter_id}")
         dimensions = row.get("dimensions") or {}
         if set(dimensions) != required_dimensions or any(value != "pass" for value in dimensions.values()):
-            fail(f"validated Book SME dimensions do not all pass: {chapter_id}")
+            fail(f"validated Book SME review dimensions are incomplete: {chapter_id}")
+        worked = row.get("reviewedWorkedCaseIds") or []
+        diagrams = row.get("reviewedDiagramIds") or []
+        if not isinstance(worked, list) or not isinstance(diagrams, list):
+            fail(f"validated Book SME review sub-asset evidence must use lists: {chapter_id}")
+        if any(item not in worked_case_ids for item in worked):
+            fail(f"validated Book SME review references unknown worked case: {chapter_id}")
+        if any(item not in diagram_ids for item in diagrams):
+            fail(f"validated Book SME review references unknown diagram: {chapter_id}")
+        if len(worked) != len(set(worked)) or len(diagrams) != len(set(diagrams)):
+            fail(f"validated Book SME review duplicates sub-asset evidence: {chapter_id}")
+        reviewed_worked.update(worked)
+        reviewed_diagrams.update(diagrams)
+        if chapter_id in enrichment_chapters and row.get("reviewedEvidenceEnrichment") is not True:
+            fail(f"validated Book SME enrichment chapter lacks explicit enrichment review evidence: {chapter_id}")
 
+    if reviewed_worked != worked_case_ids:
+        fail("validated Book SME reviews must explicitly account for all 18 governed worked engineering cases")
+    if reviewed_diagrams != diagram_ids:
+        fail("validated Book SME reviews must explicitly account for all 8 governed instructional diagrams")
 
 def validate_curriculum(section: dict, expected_release: str) -> None:
     packet = require_release_packet(
