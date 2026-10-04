@@ -235,6 +235,7 @@ const ANALYTICS_CLEANUP_CODE='MM_ANALYTICS_CLEANUP_FAILED';
 const LEARNER_ID_RE=/^[A-Za-z0-9][A-Za-z0-9._:@+-]{0,159}$/;
 function canonicalLearnerId(v){const s=String(v??'');if(!LEARNER_ID_RE.test(s))throw new Error('Invalid learner identifier');return s}
 function hasOwnLearner(users,id){return !!users&&Object.prototype.hasOwnProperty.call(users,id)}
+function requireExactKeys(value,allowed,label){if(!obj(value))throw new Error(`${label} must be an object`);const extras=Object.keys(value).filter(k=>!allowed.includes(k));if(extras.length)throw new Error(`${label} contains unsupported field(s): ${extras.slice(0,3).join(', ')}`)}
 function cleanupError(area,detail){const e=new Error(`Local ${area} cleanup could not be verified${detail?`: ${detail}`:''}`);e.code=ANALYTICS_CLEANUP_CODE;e.area=area;return e}
 function matchingKeys(predicate,area){
  try{const out=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&predicate(k))out.push(k)}return [...new Set(out)]}
@@ -343,17 +344,24 @@ function buildTrainingExtras(users=(typeof db!=='undefined'?db?.users:null)){
 }
 function trainingExtrasForImport(extras,users,active){
  const out=new Map(),ids=Object.keys(users).map(canonicalLearnerId);
- if(!obj(extras)||!Object.keys(extras).length||extras.version===2)return out;
+ if(!obj(extras)||!Object.keys(extras).length)return out;
+ if(extras.version===2){
+  requireExactKeys(extras,['version','spacedReview','practicalSignoff'],'Legacy training extras');
+  return out
+ }
  if(extras.version===3){
+  requireExactKeys(extras,['version','scope','learnerId','spacedReview','practicalSignoff'],'Training extras v3');
   if(extras.scope!=='active-learner'||canonicalLearnerId(extras.learnerId)!==active)throw new Error('Training extras learner scope mismatch');
   out.set(active,{spacedReview:cleanReview(extras.spacedReview||{items:{}}),practicalSignoff:cleanSign(extras.practicalSignoff||{})});
   return out
  }
  if(![4,5].includes(extras.version)||extras.scope!=='learner-registry'||!obj(extras.learners))throw new Error('Unsupported training extras format');
+ requireExactKeys(extras,['version','scope','learners'],`Training extras v${extras.version}`);
  const extraIds=Object.keys(extras.learners).map(canonicalLearnerId).sort(),wanted=[...ids].sort();
  if(extraIds.length!==wanted.length||extraIds.some((id,index)=>id!==wanted[index]))throw new Error('Training extras registry does not match learner registry');
  for(const id of ids){
   const row=extras.learners[id];if(!obj(row))throw new Error(`Training extras missing learner ${id}`);
+  requireExactKeys(row,extras.version>=5?['spacedReview','practicalSignoff','measuredAssessment']:['spacedReview','practicalSignoff'],`Training extras learner ${id}`);
   out.set(id,{spacedReview:cleanReview(row.spacedReview||{items:{}}),practicalSignoff:cleanSign(row.practicalSignoff||{}),measuredAssessment:extras.version>=5?cleanMeasured(row.measuredAssessment||{}):{}})
  }
  return out
@@ -372,7 +380,10 @@ window.importData=function(file){
   let committed=false;
   try{
    const x=JSON.parse(r.result);
-   if(!obj(x)||!obj(x.users)||typeof x.activeUser!=='string'||!hasOwnLearner(x.users,x.activeUser))throw new Error('Invalid backup structure');
+   if(!obj(x))throw new Error('Invalid backup structure');
+   requireExactKeys(x,['activeUser','users','backupFormat','trainingExtras'],'Backup payload');
+   if(x.backupFormat!=null&&x.backupFormat!=='mouldmaster-backup-v2')throw new Error('Unsupported backup payload format');
+   if(!obj(x.users)||typeof x.activeUser!=='string'||!hasOwnLearner(x.users,x.activeUser))throw new Error('Invalid backup structure');
    if(typeof normaliseImportedUser!=='function')throw new Error('Core validator unavailable');
    const entries=Object.entries(x.users);
    if(!entries.length||entries.length>500)throw new Error('Invalid learner count in backup');
