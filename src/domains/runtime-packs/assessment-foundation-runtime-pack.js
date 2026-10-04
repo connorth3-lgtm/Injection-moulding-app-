@@ -762,7 +762,7 @@ function validateReviewedAnswers(requireFull){
   const id=s.mmStableId||`scenario:${String(i+1).padStart(2,'0')}`;let replacement=STRICT_ANSWER_BALANCE[id];if(!replacement)return;replacement=authorChoice(replacement);
   const opts=s.choices,key=Number(s.correct);if(!Array.isArray(opts)||opts.length!==4||key<0||key>3)throw new Error(`Strict answer-balance source invalid: ${id}`);if(String(opts[key])!==replacement)throw new Error(`Reviewed keyed answer drift: ${id}`);validated++;
  });
- if(validated>94||requireFull&&validated!==94)throw new Error(`Reviewed keyed answer coverage mismatch: ${validated}/94`);
+ if(validated>95||requireFull&&validated!==95)throw new Error(`Reviewed keyed answer coverage mismatch: ${validated}/95`);
  window.MM_STABLE_REVIEW_BRIDGE.strictAnswerBalance.validated=validated;
  return validated;
 }
