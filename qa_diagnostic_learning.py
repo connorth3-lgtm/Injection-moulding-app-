@@ -29,6 +29,7 @@ need("not universal production recipes" in JS, 'universal-recipe warning missing
 need("Verify the exact resin grade" in JS, 'grade/machine/mould verification warning missing')
 need("Diagnostic Learning Labs" in JS and "Evidence-first practice" in JS, 'diagnostic learning UI missing')
 need("Observe" in JS and "Best next test" in JS and "Controlled response" in JS and "Explain" in JS, 'learning-loop stages incomplete')
+need("localStorage.getItem(k)===payload" in JS and "Progress could not be saved on this device." in JS and "progress not saved" in JS, 'diagnostic lab persistence must verify writes and surface unsaved progress')
 
 ids = re.findall(r"\n\s*id:'([a-z0-9-]+)'", JS)
 need(len(ids) == 9, f'expected exactly 9 diagnostic labs, found {len(ids)}')
