@@ -11,7 +11,7 @@ scope=ROOT/'assessment-storage-scope.js'
 need(scope.exists(),'assessment-storage-scope.js missing')
 js=text('assessment-storage-scope.js')
 for marker in [
-    "VERSION='2026.09.11.1'",
+    "VERSION='2026.10.05.1'",
     "ANALYTICS_BASE='mm_assessment_analytics_v1'",
     "TIMING_BASE='mm_assessment_exposure_timing_v1'",
     "ROTATION_BASE='mm_assessment_opening_history_v1'",
@@ -90,7 +90,7 @@ process.stdout.write(JSON.stringify({version:api.version,learnerScoped:api.learn
 p=subprocess.run(['node','-e',node],capture_output=True,text=True)
 need(p.returncode==0,f'assessment storage scope runtime QA failed: {p.stderr or p.stdout}')
 r=json.loads(p.stdout)
-need(r['version']=='2026.09.11.1' and r['learnerScoped'] is True and r['prototypeInterception'] is False,'assessment storage runtime metadata mismatch')
+need(r['version']=='2026.10.05.1' and r['learnerScoped'] is True and r['prototypeInterception'] is False,'assessment storage runtime metadata mismatch')
 need(r['sharedMigration']['conflicts']==0 and r['sharedMigration']['ambiguous']==0,'normal shared-scope migration unexpectedly failed closed')
 need(r['ambiguous']>=1,'ambiguous legacy fail-closed case was not exercised')
 
@@ -122,7 +122,7 @@ for marker in ['clearAssessmentAnalyticsStores','clearLearningAnalyticsStores','
 
 V=json.loads(text('version.json'))
 need(V.get('assessment_storage_scope_version')=='2026.08.24.4','published assessment storage release lane drifted during migration-only hardening')
-need(V.get('assessment_storage_migration_version')=='2026.09.11.1','assessment storage migration/ownership version missing')
+need(V.get('assessment_storage_migration_version')=='2026.10.05.1','assessment storage migration/ownership version missing')
 for wf in ['.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml','.github/workflows/microsoft-store-msix.yml']:
     w=text(wf);need('python qa_assessment_storage_scope.py' in w,f'{wf} missing learner-scoped analytics QA')
 print('MouldMaster learner-scoped assessment storage QA passed: explicit persistence, native Storage preservation, learner isolation, fail-closed legacy migration, shared scope migration, and active-learner-only reset cleanup.')
