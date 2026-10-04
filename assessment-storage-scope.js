@@ -45,13 +45,14 @@ function sharedScope(){const s=window.MM_LEARNER_SCOPE;return s&&typeof s.tokenF
 function migrateFallbackScopes(){
  const shared=sharedScope();if(!shared)return {status:'shared-unavailable',migrated:0,removedDuplicate:0,conflicts:0,ambiguous:0};
  const ids=[...new Set(profileIds())],byOld=new Map();
- for(const id of ids){const token=hashScope(id);if(!byOld.has(token))byOld.set(token,[]);byOld.get(token).push(id)}
+ for(const id of ids)for(const token of [hashScope(id),strongFallbackToken(id)]){if(!byOld.has(token))byOld.set(token,[]);byOld.get(token).push(id)}
  let migrated=0,removedDuplicate=0,conflicts=0,ambiguous=0;
  for(const base of BASES){
   for(const [oldToken,owners] of byOld){
    const oldKey=rawScopedKey(base,oldToken),legacy=rawGet(oldKey);if(legacy==null)continue;
    if(owners.length!==1){ambiguous++;continue}
-   const target=rawScopedKey(base,shared.tokenFor(owners[0])),current=rawGet(target);
+   const target=rawScopedKey(base,shared.tokenFor(owners[0]));if(oldKey===target)continue;
+   const current=rawGet(target);
    if(current==null){rawSet(target,legacy);if(rawGet(target)===legacy){rawRemove(oldKey);migrated++}else conflicts++;continue}
    if(current===legacy){rawRemove(oldKey);removedDuplicate++;continue}
    conflicts++;
