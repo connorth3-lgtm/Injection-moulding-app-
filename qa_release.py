@@ -89,8 +89,11 @@ for asset in [
     "src/domains/shell/accessibility-hardening.js",
 ]:
     assert f"'./{asset}'" in index, f"current learner-facing runtime asset not loaded by shell: {asset}"
-assert "['./reading-patch.js','<script" not in index and "['./training-upgrade.js','<script" not in index and "['./src/domains/learning/training-qa-fix.js','<script" not in index, "learning foundation source scripts must not return as direct bootstrap entries"
+assert "['./reading-patch.js','<script" not in index and "['./training-upgrade.js','<script" not in index and "['./src/domains/learning/training-qa-fix.js','<script" not in index and "['./src/domains/learning/backup-authority-notice.js','<script" not in index, "learning foundation source scripts must not return as direct bootstrap entries"
 assert index.index("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'") < index.index("'./src/domains/shared/runtime-v2.js'") < index.index("'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'"), "runtime-v2 assessment ownership load order is wrong"
+learning_pack = text("src/domains/runtime-packs/learning-foundation-runtime-pack.js")
+assert "/* >>> backup-authority-notice.js */" in learning_pack and "MM_LEARNER_BACKUP_INTEGRITY" in learning_pack, "backup integrity runtime is not wired into the learner-facing foundation pack"
+assert learning_pack.index("/* >>> training-qa-fix.js */") < learning_pack.index("/* >>> backup-authority-notice.js */"), "backup integrity wrapper must load after the governed training import/export bridge"
 assert index.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'"), "specialist evidence/runtime finalizer load order is wrong"
 for retired in ["assessment-100-pass.js","assessment-deep-dive.js","src/domains/assessment/assessment-answer-cue-fix.js","assessment-storage-scope.js","assessment-quality-suite.js","assessment-stable-review-bridge.js","assessment-analytics-ui.js","src/domains/assessment/assessment-final-hardening.js"]:
     assert f"['./{retired}','<script" not in index, f"assessment foundation direct source is still injected: {retired}"
