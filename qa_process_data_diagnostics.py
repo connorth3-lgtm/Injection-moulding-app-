@@ -29,7 +29,7 @@ need(p.returncode==0,'process-statistics.js syntax error: '+(p.stderr or p.stdou
 p=subprocess.run(['node',str(ROOT/'qa_process_statistics_current.cjs')],cwd=ROOT,capture_output=True,text=True)
 need(p.returncode==0,'current process statistics runtime QA failed: '+(p.stderr or p.stdout))
 
-need("const VERSION='2026.09.10.1'" in js,'guided data diagnostic version marker missing')
+need("const VERSION='2026.10.05.1'" in js,'guided data diagnostic version marker missing')
 need("const PACK=window.MM_PROCESS_EVIDENCE_DATASETS" in js,'guided UI must consume the canonical evidence dataset pack')
 need("DATASETS.length!==PACK.datasets.length" in js,'guided UI must fail closed if a canonical dataset has no guide')
 need("24 baseline, 24 fault and 24 recovery" in js,'learner UI must explain the canonical phase structure')
