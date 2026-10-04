@@ -131,7 +131,7 @@ for(const lab of LABS)for(const step of lab.steps||[])for(const choice of step.c
 }
 
 function esc(v){return String(v??'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]))}
-function learnerId(){try{let id='';if(typeof db!=='undefined'&&db?.activeUser)id=db.activeUser;else id=window.db?.activeUser||window.user?.id||'';return String(id||'anonymous')}catch(_){return'anonymous'}}
+function learnerId(){try{let id='';if(typeof db!=='undefined'&&db?.activeUser)id=db.activeUser;else id=window.db?.activeUser||window.user?.id||'';return id?String(id):null}catch(_){return null}}
 function legacyMaterialToken(raw){return String(raw||'anonymous').replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,80)}
 function legacyMaterialKey(raw){return STORAGE_BASE+':'+legacyMaterialToken(raw)}
 function materialLegacyOwners(scope,token){try{return (scope.knownIds?.()||[]).filter(id=>legacyMaterialToken(id)===token)}catch(_){return[]}}
@@ -153,7 +153,7 @@ function migrateMaterialLegacy(scope,id){
 }
 function key(){
  const scope=window.MM_LEARNER_SCOPE,id=learnerId(),prefix=`${STORAGE_BASE}::`;
- if(!scope||typeof scope.tokenFor!=='function'||typeof scope.storageKey!=='function')return null;
+ if(!id||!scope||typeof scope.tokenFor!=='function'||typeof scope.storageKey!=='function')return null;
  try{scope.registerStoragePrefix?.(prefix);migrateMaterialLegacy(scope,id);return scope.storageKey(prefix,scope.tokenFor(id))}catch(_){return null}
 }
 function read(){try{const k=key();return k?JSON.parse(localStorage.getItem(k)||'{}'):{} }catch(_){return{}}}
