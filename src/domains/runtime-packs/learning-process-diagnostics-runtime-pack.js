@@ -250,11 +250,11 @@ if(typeof currentView==='string'){
 /* <<< learning-experience.js */
 
 /* >>> process-data-diagnostics.js */
-/* MouldMaster guided process-data diagnostics — 2026.08.26.1 */
+/* MouldMaster guided process-data diagnostics — 2026.10.05.1 */
 (function(){
 'use strict';
 
-const VERSION='2026.09.10.1';
+const VERSION='2026.10.05.1';
 const PACK=window.MM_PROCESS_EVIDENCE_DATASETS;
 const SOURCES=window.MM_EVIDENCE_SOURCES?.sources||{};
 if(!PACK||!Array.isArray(PACK.datasets))throw new Error('process-data-diagnostics.js requires MM_PROCESS_EVIDENCE_DATASETS');
@@ -337,13 +337,19 @@ const DATASETS=PACK.datasets.map(ds=>({...ds,guide:GUIDES[ds.id]})).filter(ds=>d
 if(DATASETS.length!==PACK.datasets.length)throw new Error('Every process evidence dataset must have a guided diagnostic case');
 
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function learnerToken(){
-  let raw='anonymous';try{raw=String(window.db?.activeUser||window.user?.id||'anonymous')}catch(_){}
-  let h=2166136261;for(let i=0;i<raw.length;i++){h^=raw.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(36)
+function learnerId(){try{return String(window.db?.activeUser||window.user?.id||'anonymous')}catch(_){return'anonymous'}}
+function learnerScope(){
+  const scope=window.MM_LEARNER_SCOPE;
+  if(!scope||typeof scope.tokenFor!=='function'||typeof scope.storageKey!=='function'||typeof scope.migrateStoragePrefix!=='function')throw new Error('process-data-diagnostics.js requires MM_LEARNER_SCOPE');
+  return scope
 }
-function storageKey(){return `${STORAGE_BASE}::${learnerToken()}`}
-function readState(){try{const s=JSON.parse(localStorage.getItem(storageKey())||'{}');return s&&typeof s==='object'?s:{}}catch(_){return {}}}
-function writeState(s){try{localStorage.setItem(storageKey(),JSON.stringify(s))}catch(_){}}
+function storageKey(){
+  const scope=learnerScope(),id=learnerId(),prefix=`${STORAGE_BASE}::`;
+  scope.registerStoragePrefix?.(prefix);scope.migrateStoragePrefix(prefix,id);
+  return scope.storageKey(prefix,scope.tokenFor(id))
+}
+function readState(){try{const s=JSON.parse(localStorage.getItem(storageKey())||'{}');return s&&typeof s==='object'&&!Array.isArray(s)?s:{}}catch(_){return {}}}
+function writeState(s){try{localStorage.setItem(storageKey(),JSON.stringify(s));return true}catch(_){return false}}
 function caseState(id){return readState()[id]||{attempts:0,completed:false,bestScore:0}}
 function saveCase(id,patch){const all=readState();all[id]={...(all[id]||{}),...patch};writeState(all)}
 
@@ -471,7 +477,7 @@ function handleClick(e){
 function install(){ensureStyle();const host=ensureSection();ensureNav();patchMobileMore();if(host&&!host.__mmPdClick){host.addEventListener('click',handleClick);host.__mmPdClick=true}}
 let queued=false;function schedule(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(()=>{queued=false;install()},0)}
 const observer=new MutationObserver(schedule);if(document.documentElement)observer.observe(document.documentElement,{childList:true,subtree:true});install();window.addEventListener('load',schedule);
-window.MM_PROCESS_DATA_DIAGNOSTICS={version:VERSION,cases:DATASETS.map(d=>({id:d.id,title:d.title,kind:d.kind,signals:Object.keys(d.signals),sourceIds:d.sourceIds})),open:openHome,evaluateChoice,scope:'Guided use of deterministic synthetic training data; outside the formal assessment bank and not a production recipe. evaluateChoice exposes structured practice correctness for local analytics without scraping rendered CSS or score text.'};
+window.MM_PROCESS_DATA_DIAGNOSTICS={version:VERSION,cases:DATASETS.map(d=>({id:d.id,title:d.title,kind:d.kind,signals:Object.keys(d.signals),sourceIds:d.sourceIds})),open:openHome,evaluateChoice,storage:'MM_LEARNER_SCOPE 128-bit collision-safe learner progress',storagePrefix:`${STORAGE_BASE}::`,scope:'Guided use of deterministic synthetic training data; outside the formal assessment bank and not a production recipe. evaluateChoice exposes structured practice correctness for local analytics without scraping rendered CSS or score text.'};
 })();
 /* <<< process-data-diagnostics.js */
 
