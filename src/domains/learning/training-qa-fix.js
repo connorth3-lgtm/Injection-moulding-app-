@@ -1,7 +1,7 @@
 /* MouldMaster training data/assessment bridge — 2026.10.04.1 */
 (function(){
 'use strict';
-const REVIEW_KEY='mm_spaced_review_v2', LEGACY_REVIEW='mm_spaced_review_v1', SIGN_KEY='mm_practical_signoff_v1';
+const REVIEW_KEY='mm_spaced_review_v2', LEGACY_REVIEW='mm_spaced_review_v1', SIGN_KEY='mm_practical_signoff_v1', MEASURED_KEY='mm_real_measured_assessment_v1';
 const ASSESSMENT_ANALYTICS_PREFIXES=['mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1','mm-assessment-question-history-v4','mm-assessment-result-meta-v1'];
 const LEARNING_ANALYTICS_PREFIX='mm_learning_analytics_v1::';
 const ANALYTICS_CLEANUP_CODE='MM_ANALYTICS_CLEANUP_FAILED';
@@ -28,18 +28,20 @@ function clearAllAnalyticsStores(){
  if(errors.length){const e=cleanupError('analytics',errors.map(x=>x.message).join(' | '));e.causes=errors;throw e}
  return Object.freeze({assessment:results.assessment.removed,learning:results.learning.removed,total:results.assessment.removed+results.learning.removed,verified:true})
 }
-function runtimeLearnerToken(raw){
- const id=String(raw||'anonymous'),scope=window.MM_LEARNER_SCOPE;
- if(scope&&typeof scope.legacyTokenFor==='function')return scope.legacyTokenFor(id);
- let h=2166136261;for(const ch of id){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return (h>>>0).toString(36)
+function learnerScope(){
+ const scope=window.MM_LEARNER_SCOPE;
+ if(!scope||typeof scope.tokenFor!=='function'||typeof scope.storageKey!=='function'||typeof scope.migrateStoragePrefix!=='function')throw cleanupError('learner storage','shared learner scope unavailable');
+ return scope
 }
 function trainingKey(base,learnerId){
- const id=learnerId==null?(typeof db!=='undefined'?db?.activeUser:null):learnerId;
- return `${base}::${runtimeLearnerToken(String(id||'anonymous'))}`
+ const id=String(learnerId==null?(typeof db!=='undefined'?db?.activeUser:null):learnerId||'anonymous'),scope=learnerScope(),prefix=`${base}::`;
+ scope.registerStoragePrefix?.(prefix);
+ scope.migrateStoragePrefix(prefix,id);
+ return scope.storageKey(prefix,scope.tokenFor(id))
 }
 function readTraining(base,d,learnerId){try{const x=JSON.parse(localStorage.getItem(trainingKey(base,learnerId))||'');return obj(x)?x:d}catch(_){return d}}
 function trainingStorePredicate(k){
- const prefixes=[REVIEW_KEY+'::',SIGN_KEY+'::'],globals=new Set([REVIEW_KEY,LEGACY_REVIEW,SIGN_KEY]);
+ const prefixes=[REVIEW_KEY+'::',SIGN_KEY+'::',MEASURED_KEY+'::'],globals=new Set([REVIEW_KEY,LEGACY_REVIEW,SIGN_KEY,MEASURED_KEY]);
  return globals.has(k)||prefixes.some(p=>k.startsWith(p))
 }
 function clearTrainingExtrasStores(){return clearMatchingStores('training extras',trainingStorePredicate)}
@@ -57,9 +59,9 @@ function learnerLearningAnalyticsKeys(learnerId){
  return uniqueKeys(keys)
 }
 function learnerTrainingKeys(learnerId){
- const keys=[trainingKey(REVIEW_KEY,learnerId),trainingKey(SIGN_KEY,learnerId)],scope=window.MM_LEARNER_SCOPE;
- if(scope&&typeof scope.tokenFor==='function'){
-  const strong=scope.tokenFor(learnerId);keys.push(`${REVIEW_KEY}::${strong}`,`${SIGN_KEY}::${strong}`)
+ const keys=[trainingKey(REVIEW_KEY,learnerId),trainingKey(SIGN_KEY,learnerId),trainingKey(MEASURED_KEY,learnerId)],scope=learnerScope(),plan=scope.migrationPlan?.(learnerId);
+ if(plan?.uniqueOwner&&plan.legacyToken){
+  keys.push(scope.storageKey(REVIEW_KEY+'::',plan.legacyToken),scope.storageKey(SIGN_KEY+'::',plan.legacyToken),scope.storageKey(MEASURED_KEY+'::',plan.legacyToken))
  }
  return uniqueKeys(keys)
 }
@@ -88,6 +90,7 @@ const baseStart=window.startExam;if(typeof baseStart==='function')window.startEx
 const obj=x=>x&&typeof x==='object'&&!Array.isArray(x), clamp=(n,a,b,d=0)=>Number.isFinite(+n)?Math.max(a,Math.min(b,+n)):d;
 function cleanReview(v){const out={items:{}};if(!obj(v)||!obj(v.items))return out;for(const [id,x] of Object.entries(v.items).slice(0,1000)){if(!obj(x))continue;const sid=String(id).slice(0,220);if(!/^(tech|reg|legacy):/.test(sid))continue;out.items[sid]={id:sid,stage:Math.floor(clamp(x.stage,0,5)),due:clamp(x.due,0,4102444800000,Date.now()),wrong:Math.floor(clamp(x.wrong,0,100000)),right:Math.floor(clamp(x.right,0,100000)),last:clamp(x.last,0,4102444800000),confidence:['low','medium','high'].includes(x.confidence)?x.confidence:'medium'}}return out}
 function cleanSign(v){const o={checks:{},supervisor:'',date:'',notes:''};if(!obj(v))return o;if(obj(v.checks))for(const [k,b] of Object.entries(v.checks).slice(0,50))o.checks[String(k).slice(0,20)]=b===true;o.supervisor=String(v.supervisor||'').slice(0,160);o.date=String(v.date||'').slice(0,20);o.notes=String(v.notes||'').slice(0,10000);return o}
+function cleanMeasured(v){const out={};if(!obj(v))return out;for(const [id,row] of Object.entries(v).slice(0,50)){if(!obj(row))continue;const sid=String(id).slice(0,160);if(!sid)continue;out[sid]={best:Math.round(clamp(row.best,0,100)),last:Math.round(clamp(row.last,0,100))}}return out}
 function read(k,d){try{const x=JSON.parse(localStorage.getItem(k)||'');return obj(x)?x:d}catch(_){return d}}
 function restoreSnapshot(before){let failed=false;for(const [k,v] of Object.entries(before)){try{v===null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(_){failed=true}}return !failed}
 function cleanupFailureMessage(action,rolledBack=true){return `${action} was not completed because local analytics/training cleanup could not be fully verified.${rolledBack?' Existing learner progress was kept.':''} Some old analytics may already have been removed. Clear this app/site data before handing the same browser profile to another learner if the warning persists.`}
@@ -97,7 +100,7 @@ function buildTrainingExtras(users=(typeof db!=='undefined'?db?.users:null)){
  const learners={};
  for(const id of Object.keys(users)){
   const sid=canonicalLearnerId(id);
-  learners[sid]={spacedReview:cleanReview(readTraining(REVIEW_KEY,{items:{}},sid)),practicalSignoff:cleanSign(readTraining(SIGN_KEY,{},sid))}
+  learners[sid]={spacedReview:cleanReview(readTraining(REVIEW_KEY,{items:{}},sid)),practicalSignoff:cleanSign(readTraining(SIGN_KEY,{},sid)),measuredAssessment:cleanMeasured(readTraining(MEASURED_KEY,{},sid))}
  }
  return {version:4,scope:'learner-registry',learners}
 }
@@ -106,7 +109,7 @@ function trainingExtrasForImport(extras,users,active){
  if(!obj(extras)||!Object.keys(extras).length||extras.version===2)return out;
  if(extras.version===3){
   if(extras.scope!=='active-learner'||canonicalLearnerId(extras.learnerId)!==active)throw new Error('Training extras learner scope mismatch');
-  out.set(active,{spacedReview:cleanReview(extras.spacedReview||{items:{}}),practicalSignoff:cleanSign(extras.practicalSignoff||{})});
+  out.set(active,{spacedReview:cleanReview(extras.spacedReview||{items:{}}),practicalSignoff:cleanSign(extras.practicalSignoff||{}),measuredAssessment:cleanMeasured(extras.measuredAssessment||{})});
   return out
  }
  if(extras.version!==4||extras.scope!=='learner-registry'||!obj(extras.learners))throw new Error('Unsupported training extras format');
@@ -114,14 +117,14 @@ function trainingExtrasForImport(extras,users,active){
  if(extraIds.length!==wanted.length||extraIds.some((id,index)=>id!==wanted[index]))throw new Error('Training extras registry does not match learner registry');
  for(const id of ids){
   const row=extras.learners[id];if(!obj(row))throw new Error(`Training extras missing learner ${id}`);
-  out.set(id,{spacedReview:cleanReview(row.spacedReview||{items:{}}),practicalSignoff:cleanSign(row.practicalSignoff||{})})
+  out.set(id,{spacedReview:cleanReview(row.spacedReview||{items:{}}),practicalSignoff:cleanSign(row.practicalSignoff||{}),measuredAssessment:cleanMeasured(row.measuredAssessment||{})})
  }
  return out
 }
 window.exportData=function(){try{
  const p=JSON.parse(JSON.stringify(db));p.backupFormat='mouldmaster-backup-v2';p.trainingExtras=buildTrainingExtras(p.users);
  const blob=new Blob([JSON.stringify(p,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mouldmaster-progress.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),0);
- window.toast?.('Backup exported with learner-scoped review and sign-off data')
+ window.toast?.('Backup exported with learner-scoped review, sign-off and measured-assessment data')
 }catch(e){console.error('[MouldMaster] backup export failed:',e);alert('Backup could not be created on this device.')}};
 
 window.importData=function(file){
@@ -150,7 +153,8 @@ window.importData=function(file){
    const trainingWrites={};
    for(const [id,row] of extras){
     trainingWrites[trainingKey(REVIEW_KEY,id)]=JSON.stringify(row.spacedReview);
-    trainingWrites[trainingKey(SIGN_KEY,id)]=JSON.stringify(row.practicalSignoff)
+    trainingWrites[trainingKey(SIGN_KEY,id)]=JSON.stringify(row.practicalSignoff);
+    trainingWrites[trainingKey(MEASURED_KEY,id)]=JSON.stringify(row.measuredAssessment||{})
    }
    const existingTraining=matchingKeys(trainingStorePredicate,'training extras');
    const before=snapshotKeys(['mouldmasterProDB',...existingTraining,...Object.keys(trainingWrites)]);
@@ -168,7 +172,7 @@ window.importData=function(file){
    }
    db=proposed;user=db.users[db.activeUser];committed=true;cancelActiveExam();
    try{updateGlobalProgress();switchView('profile')}catch(uiError){console.warn('[MouldMaster] imported data saved; view refresh failed:',uiError)}
-   window.toast?.('Progress imported. Learner-scoped review/sign-off data were restored. Certificates must be re-earned; local analytics were reset.')
+   window.toast?.('Progress imported. Learner-scoped review/sign-off and measured-assessment data were restored. Certificates must be re-earned; local analytics were reset.')
   }catch(e){
    if(e?.code===ANALYTICS_CLEANUP_CODE){alert(cleanupFailureMessage('Import',e.importRollbackVerified!==false));return}
    if(committed)alert('Progress was imported, but the screen could not refresh. Reopen MouldMaster.');
