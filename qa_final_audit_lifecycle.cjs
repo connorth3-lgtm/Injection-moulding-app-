@@ -160,7 +160,7 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
 {
   const t=trainingSandbox('silent');
   assert.throws(()=>t.bridge.clearAllAnalyticsStores(),e=>e&&e.code==='MM_ANALYTICS_CLEANUP_FAILED','silent analytics deletion failure was not detected by verification');
-  assert(t.memory.has('mm_learning_analytics_v1::old'),'silent-failure fixture unexpectedly deleted its retained analytics key');
+  assert(t.memory.has('mm_learning_analytics_v1::strong-old'),'silent-failure fixture unexpectedly deleted its retained analytics key');
 }
 
 // Successful learner reset clears only the active learner's scoped state and
