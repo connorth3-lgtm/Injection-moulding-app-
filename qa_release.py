@@ -189,12 +189,31 @@ assert "lesson()" in source_lib and "standards()" in source_lib, "sources must b
 assert Path("sources/AUTHORITATIVE_SOURCE_REGISTER.md").exists(), "authoritative source register missing"
 
 bridge = text("src/domains/learning/training-qa-fix.js")
-for marker in ["file.size>10*1024*1024", "clean.id=sid", "clean.certificates=[]", "clean.certificateMeta={}", "clean.examPassStatus={}", "restoreSnapshot(before)", "Certificates must be re-earned", "db!==beforeDb", "LEARNING_ANALYTICS_PREFIX", "ANALYTICS_CLEANUP_CODE", "remaining key(s):", "clearAllAnalyticsStores();clearTrainingExtrasStores()", "analytics were cleared and verified"]:
+for marker in [
+    "file.size>10*1024*1024",
+    "clean.id=sid",
+    "clean.certificates=[]",
+    "clean.certificateMeta={}",
+    "clean.examPassStatus={}",
+    "restoreSnapshot(before)",
+    "Certificates must be re-earned",
+    "db!==beforeDb",
+    "LEARNING_ANALYTICS_PREFIX",
+    "ANALYTICS_CLEANUP_CODE",
+    "remaining key(s):",
+    "clearTrainingExtrasStores();",
+    "clearAllAnalyticsStores();",
+    "for(const [k,v] of Object.entries(trainingWrites))localStorage.setItem(k,v)",
+    "clearLearnerAnalyticsStores(active);clearLearnerTrainingExtras(active);",
+    "proposed.users[active]=cleanResetLearner(prior,active)",
+    "Other local learner profiles and saved process-data evidence",
+]:
     assert marker in bridge, f"import/reset hardening missing: {marker}"
-storage_commit = bridge.index("for(const [k,v] of Object.entries(writes))localStorage.setItem(k,v)")
-cleanup_commit = bridge.index("clearAllAnalyticsStores();", storage_commit)
+cleanup_commit = bridge.index("clearTrainingExtrasStores();")
+analytics_commit = bridge.index("clearAllAnalyticsStores();", cleanup_commit)
+storage_commit = bridge.index("for(const [k,v] of Object.entries(trainingWrites))localStorage.setItem(k,v)", analytics_commit)
 memory_commit = bridge.index("db=proposed;user=db.users[db.activeUser]")
-assert storage_commit < cleanup_commit < memory_commit, "imported learner registry must activate only after staged writes and verified analytics cleanup"
+assert cleanup_commit < analytics_commit < storage_commit < memory_commit, "imported learner registry must activate only after verified cleanup and scoped training writes"
 shell = text("src/domains/shell/pwa-shell.js")
 assert f"const RELEASE='{WEB_RELEASE}'" in shell
 assert f"const CONTENT='{CONTENT_VERSION}'" in shell
