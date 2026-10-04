@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 if(window.MM_RUNTIME_V2)return;
-const VERSION='2026.10.04.1';
+const VERSION='2026.10.05.1';
 const CORE=['renderLesson','renderDashboard','switchView','startExam','gradeExam','getExamQuestions'];
 const modules=new Map(),slots=new Map();
 /* Legacy static-QA compatibility marker: before:new Set(),after:new Set().
