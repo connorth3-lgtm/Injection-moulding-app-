@@ -27,6 +27,15 @@ for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name
    else {const more=page.locator('#nav [data-mm-desktop-more-tools]');await expect(more).toBeVisible();await more.click();const book=page.locator('[data-mm-registry-menu="book"]');await expect(book).toBeVisible();await book.click()}
    await expectVisible(page,'#mmBookView');
   });
+  test('Measured Data catalog is reachable through visible More navigation',async({page})=>{
+   await openApp(page,viewport.width);
+   if(viewport.width<=900)await mobileMore(page);
+   else {const more=page.locator('#nav [data-mm-desktop-more-tools]');await expect(more).toBeVisible();await more.click();await expect(page.locator('#modal .modal-card')).toBeVisible()}
+   const measured=page.locator('[data-mm-registry-menu="measured-evidence"]');await expect(measured).toBeVisible();await measured.click();
+   await expectVisible(page,'#processDataLabs [data-mm-measured-evidence="catalog"]');
+   await expect(page.locator('#processDataLabs')).toContainText('Browse all 17 measured families');
+   await expect(page.locator('#pageTitle')).toHaveText('Measured Data');
+  });
   test('core learning and practice destinations are reachable by clicks',async({page})=>{
    await openApp(page,viewport.width);
    if(viewport.width<=900){
@@ -74,7 +83,7 @@ for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name
    await openApp(page,viewport.width);
    if(viewport.width<=900){
     await mobileMore(page);
-    for(const id of ['book','learning-insights','repair-app-files'])await expect(page.locator('[data-mm-registry-menu="'+id+'"]')).toBeVisible();
+    for(const id of ['book','learning-insights','repair-app-files','measured-evidence'])await expect(page.locator('[data-mm-registry-menu="'+id+'"]')).toBeVisible();
     await closeModal(page);await mobileHub(page,'Practice');
     for(const action of ['troubleshooting','process-data','labs'])await expect(page.locator('#scenarios [data-mm-hub-action="'+action+'"]')).toBeVisible();
    }else{
