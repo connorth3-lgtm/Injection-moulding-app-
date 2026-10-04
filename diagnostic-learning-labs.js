@@ -302,7 +302,14 @@ function install(){style();ensureSection();ensureNav();patchMobileMore();const h
 let queued=false;function schedule(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(()=>{queued=false;install()},0)}
 const observer=new MutationObserver(schedule);if(document.documentElement)observer.observe(document.documentElement,{childList:true,subtree:true});
 install();window.addEventListener('load',schedule);
-const authorChoice=window.MM_ASSESSMENT_AUTHOR_CHOICE||((value)=>String(value??''));
+const authorChoice=window.MM_ASSESSMENT_AUTHOR_CHOICE||((value)=>{let out=String(value??'');const rows=[
+ [/^Measure\/verify\s+/,'Measuring and verifying '],[/^Inspect\/clean\s+/,'Inspecting/cleaning '],
+ [/^Check\s+/,'Checking '],[/^Verify\s+/,'Verifying '],[/^Inspect\s+/,'Inspecting '],[/^Compare\s+/,'Comparing '],
+ [/^Measure\s+/,'Measuring '],[/^Investigate\s+/,'Investigating '],[/^Confirm\s+/,'Confirming '],
+ [/^Increase\s+/,'Increasing '],[/^Change\s+/,'Changing '],[/^Ignore\s+/,'Ignoring '],[/^Assume\s+/,'Assuming '],
+ [/^Reduce\s+/,'Reducing '],[/^Raise\s+/,'Raising '],[/^Lower\s+/,'Lowering '],[/^Decrease\s+/,'Decreasing '],
+ [/^Adjust\s+/,'Adjusting '],[/^Accept\s+/,'Accepting ']
+];for(const [p,r] of rows)if(p.test(out))return out.replace(p,r);return out});
 let starterCueEdits=0;
 for(const lab of LABS)for(const step of lab.steps||[])for(const choice of step.choices||[]){
  const next=authorChoice(choice.text);if(next!==choice.text){choice.text=next;starterCueEdits++}
