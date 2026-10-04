@@ -1945,12 +1945,12 @@
       "bankVersion": "2026.08.30.1",
       "choiceFingerprints": [
         "fnv1a-83494409",
-        "fnv1a-170a6464",
+        "fnv1a-823b626e",
         "fnv1a-d966463e",
         "fnv1a-9985f632"
       ],
-      "contentFingerprint": "fnv1a-042d8d80",
-      "correctChoiceFingerprint": "fnv1a-170a6464",
+      "contentFingerprint": "fnv1a-3a7a4466",
+      "correctChoiceFingerprint": "fnv1a-823b626e",
       "critical": true,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "direct-question-source",
@@ -2575,12 +2575,12 @@
       "bankVersion": null,
       "choiceFingerprints": [
         "fnv1a-fe669776",
-        "fnv1a-d612f56f",
+        "fnv1a-9292691f",
         "fnv1a-0edb0495",
         "fnv1a-b07034a3"
       ],
-      "contentFingerprint": "fnv1a-7d718e67",
-      "correctChoiceFingerprint": "fnv1a-d612f56f",
+      "contentFingerprint": "fnv1a-9abe417f",
+      "correctChoiceFingerprint": "fnv1a-9292691f",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -2646,13 +2646,13 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-b511a0ce",
+        "fnv1a-8e904174",
         "fnv1a-c7747c99",
         "fnv1a-dc8f0b8f",
         "fnv1a-d2305d2a"
       ],
-      "contentFingerprint": "fnv1a-4489e76e",
-      "correctChoiceFingerprint": "fnv1a-b511a0ce",
+      "contentFingerprint": "fnv1a-d55a7956",
+      "correctChoiceFingerprint": "fnv1a-8e904174",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -2672,12 +2672,12 @@
       "bankVersion": null,
       "choiceFingerprints": [
         "fnv1a-c9889091",
-        "fnv1a-b2859908",
+        "fnv1a-2bf557a2",
         "fnv1a-ad28d783",
         "fnv1a-b1c17cd8"
       ],
-      "contentFingerprint": "fnv1a-0edaa26d",
-      "correctChoiceFingerprint": "fnv1a-b2859908",
+      "contentFingerprint": "fnv1a-036a1843",
+      "correctChoiceFingerprint": "fnv1a-2bf557a2",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -2961,12 +2961,12 @@
       "bankVersion": null,
       "choiceFingerprints": [
         "fnv1a-54744379",
-        "fnv1a-9a575fd3",
+        "fnv1a-7392ddc4",
         "fnv1a-05dd08b3",
         "fnv1a-0b144cb3"
       ],
-      "contentFingerprint": "fnv1a-d53b6594",
-      "correctChoiceFingerprint": "fnv1a-9a575fd3",
+      "contentFingerprint": "fnv1a-70f6aab7",
+      "correctChoiceFingerprint": "fnv1a-7392ddc4",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -3158,12 +3158,12 @@
       "bankVersion": null,
       "choiceFingerprints": [
         "fnv1a-ab307e98",
-        "fnv1a-bddf8e87",
+        "fnv1a-981b50ab",
         "fnv1a-354aaf86",
         "fnv1a-91c4839f"
       ],
-      "contentFingerprint": "fnv1a-50ecc04b",
-      "correctChoiceFingerprint": "fnv1a-bddf8e87",
+      "contentFingerprint": "fnv1a-451ceab3",
+      "correctChoiceFingerprint": "fnv1a-981b50ab",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "direct-question-source",
@@ -3851,11 +3851,11 @@
       "choiceFingerprints": [
         "fnv1a-794a1591",
         "fnv1a-a8fe5cc8",
-        "fnv1a-d9b2e561",
+        "fnv1a-ae516af3",
         "fnv1a-f60247b5"
       ],
-      "contentFingerprint": "fnv1a-9b24f908",
-      "correctChoiceFingerprint": "fnv1a-d9b2e561",
+      "contentFingerprint": "fnv1a-d02dc5f0",
+      "correctChoiceFingerprint": "fnv1a-ae516af3",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -4001,12 +4001,12 @@
       "bankVersion": "2026.08.30.1",
       "choiceFingerprints": [
         "fnv1a-76056a45",
-        "fnv1a-c6e242d6",
+        "fnv1a-1cb9e31f",
         "fnv1a-d668598e",
         "fnv1a-bd5b4879"
       ],
-      "contentFingerprint": "fnv1a-64b8a7fa",
-      "correctChoiceFingerprint": "fnv1a-c6e242d6",
+      "contentFingerprint": "fnv1a-5c7affa3",
+      "correctChoiceFingerprint": "fnv1a-1cb9e31f",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
