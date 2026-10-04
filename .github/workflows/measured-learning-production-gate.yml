@@ -36,6 +36,10 @@ on:
       - '.github/workflows/measured-learning-production-gate.yml'
   workflow_dispatch:
 
+concurrency:
+  group: measured-learning-production-gate-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
