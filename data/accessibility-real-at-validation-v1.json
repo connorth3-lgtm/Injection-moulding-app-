@@ -15,7 +15,57 @@
       "status": "pending",
       "testedAt": null,
       "reviewer": null,
-      "evidenceRef": null
+      "evidenceRef": null,
+      "taskEvidence": {
+        "nav-primary": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "materials-search": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "exact-grade-evidence": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "assessment-announcements": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "evidence-case": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "book-search-deep-chapter": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "book-disclosures": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "interactive-controls": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "status-announcements": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "structure-zoom-focus": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "standards-readiness": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "book-worked-examples": {
+          "status": "pending",
+          "evidenceRef": null
+        }
+      }
     },
     {
       "id": "nvda-chromium-windows",
@@ -25,7 +75,57 @@
       "status": "pending",
       "testedAt": null,
       "reviewer": null,
-      "evidenceRef": null
+      "evidenceRef": null,
+      "taskEvidence": {
+        "nav-primary": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "materials-search": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "exact-grade-evidence": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "assessment-announcements": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "evidence-case": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "book-search-deep-chapter": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "book-disclosures": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "interactive-controls": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "status-announcements": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "structure-zoom-focus": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "standards-readiness": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "book-worked-examples": {
+          "status": "pending",
+          "evidenceRef": null
+        }
+      }
     },
     {
       "id": "voiceover-safari-macos",
@@ -35,7 +135,57 @@
       "status": "pending",
       "testedAt": null,
       "reviewer": null,
-      "evidenceRef": null
+      "evidenceRef": null,
+      "taskEvidence": {
+        "nav-primary": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "materials-search": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "exact-grade-evidence": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "assessment-announcements": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "evidence-case": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "book-search-deep-chapter": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "book-disclosures": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "interactive-controls": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "status-announcements": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "structure-zoom-focus": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "standards-readiness": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "book-worked-examples": {
+          "status": "pending",
+          "evidenceRef": null
+        }
+      }
     },
     {
       "id": "voiceover-safari-ios",
@@ -45,18 +195,108 @@
       "status": "pending",
       "testedAt": null,
       "reviewer": null,
-      "evidenceRef": null
+      "evidenceRef": null,
+      "taskEvidence": {
+        "nav-primary": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "materials-search": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "exact-grade-evidence": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "assessment-announcements": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "evidence-case": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "book-search-deep-chapter": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "book-disclosures": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "interactive-controls": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "status-announcements": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "structure-zoom-focus": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "standards-readiness": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "book-worked-examples": {
+          "status": "pending",
+          "evidenceRef": null
+        }
+      }
     }
   ],
   "requiredTasks": [
-    "Navigate primary product areas and return focus predictably",
-    "Search and paginate exact commercial material grades",
-    "Open sourced exact-grade details and understand property/process evidence boundaries",
-    "Complete core learner assessment interactions with announced state and errors",
-    "Create or edit a Mould Master evidence case without losing semantic context",
-    "Read a long governed Book chapter at 200% text zoom and use Read/Listen without losing context",
-    "Complete a long-stem assessment item, review all four choices, submit it and understand keyed feedback without relying on colour or option position",
-    "Open and close More Tools/Book modal surfaces and confirm focus returns to the invoking control"
+    {
+      "id": "nav-primary",
+      "description": "Navigate primary product areas and return focus predictably"
+    },
+    {
+      "id": "materials-search",
+      "description": "Search and paginate exact commercial material grades"
+    },
+    {
+      "id": "exact-grade-evidence",
+      "description": "Open sourced exact-grade details and understand property/process evidence boundaries"
+    },
+    {
+      "id": "assessment-announcements",
+      "description": "Complete core learner assessment interactions and confirm state/errors are announced meaningfully"
+    },
+    {
+      "id": "evidence-case",
+      "description": "Create or edit a Mould Master evidence case without losing semantic context"
+    },
+    {
+      "id": "book-search-deep-chapter",
+      "description": "Search for a Book topic, open a late chapter, confirm focus/reading starts at the chapter heading, and return to contents without losing place"
+    },
+    {
+      "id": "book-disclosures",
+      "description": "Exercise collapsed Book publication/review and accuracy/assurance disclosures and confirm their meaning remains understandable"
+    },
+    {
+      "id": "interactive-controls",
+      "description": "Exercise dialogs, menus, tab-like controls, expandable regions and form validation with keyboard/AT navigation"
+    },
+    {
+      "id": "status-announcements",
+      "description": "Confirm task-significant status changes are announced without forcing excessive verbosity"
+    },
+    {
+      "id": "structure-zoom-focus",
+      "description": "Confirm headings, landmarks, accessible names and focus order remain understandable at realistic zoom/text settings, including Home hierarchy and compact More-tools navigation"
+    },
+    {
+      "id": "standards-readiness",
+      "description": "Open Standards & readiness and confirm ISO/NZQA boundaries, current-vs-expired standards and external HOLD language remain understandable without implying certification, approval or competence"
+    },
+    {
+      "id": "book-worked-examples",
+      "description": "In affected Book chapters, navigate worked-example headings, data content, calculation steps, boundaries and evidence anchors, and confirm synthetic-data and independent-SME-HOLD wording is understandable"
+    }
   ],
   "auditScope": {
     "uiNavigation": true,
