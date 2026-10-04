@@ -161,7 +161,7 @@ for marker in ['Preferred capture hierarchy','Intervention record','Data-quality
 
 idx=text('index.html');sw=text('service-worker.js');pkg=json.loads(text('desktop/electron/package.json'));integrity=text('desktop/electron/scripts/generate-integrity.cjs');process_pack=text('src/domains/runtime-packs/process-data-runtime-pack.js')
 need('/* >>> '+MODULE+' */' in process_pack,'process-data runtime pack missing local intake module')
-need(f"'./{MODULE}'" in sw,'offline cache missing local intake module')
+need("'./src/domains/runtime-packs/process-data-runtime-pack.js'" in sw,'offline cache missing canonical process-data runtime pack')
 froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
 need('../../'+MODULE in froms,'desktop package missing local intake module')
 need("'"+MODULE+"'" in integrity,'desktop integrity manifest missing local intake module')
