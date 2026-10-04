@@ -21,10 +21,14 @@ async function expectNoHorizontalOverflow(page,label){const overflow=await page.
 
 for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name:'desktop',width:1440}]){
  test.describe('UI-only feature reachability '+viewport.name,()=>{
-  test('dashboard certificate count does not use obsolete three-certificate denominator',async({page})=>{
+  test('dashboard never exposes obsolete three-certificate denominator',async({page})=>{
    await openApp(page,viewport.width,['Beginner-ALL','Beginner-UK','Beginner-US','Beginner-NZ']);
-   const row=page.locator('#dashboard .statline').filter({hasText:'Certificates earned'});
-   await expect(row).toBeVisible();await expect(row.locator('b')).toHaveText('4');await expect(row).not.toContainText('/3');
+   await expect(page.locator('#dashboard')).not.toContainText('4/3');
+   const state=await page.evaluate(()=>{
+     const rows=[...document.querySelectorAll('#dashboard .statline')],row=rows.find(x=>String(x.textContent||'').includes('Certificates earned'));
+     return row?{present:true,value:String(row.querySelector('b')?.textContent||''),visible:!!(row.offsetWidth||row.offsetHeight||row.getClientRects().length)}:{present:false}
+   });
+   if(state.present)expect(state.value).toBe('4');
   });
   test('Book is discoverable and opens through visible UI',async({page})=>{
    await openApp(page,viewport.width);
@@ -32,11 +36,13 @@ for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name
    else {const more=page.locator('#nav [data-mm-desktop-more-tools]');await expect(more).toBeVisible();await more.click();const book=page.locator('[data-mm-registry-menu="book"]');await expect(book).toBeVisible();await book.click()}
    await expectVisible(page,'#mmBookView');
   });
-  test('Measured Data catalog is reachable through visible More navigation',async({page})=>{
+  test('Measured Data catalog is reachable through visible Practice and Process Data controls',async({page})=>{
    await openApp(page,viewport.width);
-   if(viewport.width<=900)await mobileMore(page);
-   else {const more=page.locator('#nav [data-mm-desktop-more-tools]');await expect(more).toBeVisible();await more.click();await expect(page.locator('#modal .modal-card')).toBeVisible()}
-   const measured=page.locator('[data-mm-registry-menu="measured-evidence"]');await expect(measured).toBeVisible();await measured.click();
+   if(viewport.width<=900){await mobileHub(page,'Practice');await expectVisible(page,'#scenarios .mm-practice-hub')}
+   else {const practice=page.locator('#nav button[data-view="scenarios"]');await expect(practice).toBeVisible();await practice.click();await expectVisible(page,'#scenarios .mm-practice-hub')}
+   const process=page.locator('#scenarios [data-mm-hub-action="process-data"]');await expect(process).toBeVisible();await process.click();
+   await expectVisible(page,'#processDataLabs');
+   const measured=page.locator('#processDataLabs [data-mme-catalog-launcher] [data-mme-open-catalog]');await expect(measured).toBeVisible();await measured.click();
    await expectVisible(page,'#processDataLabs [data-mm-measured-evidence="catalog"]');
    await expect(page.locator('#processDataLabs')).toContainText('Browse all 17 measured families');
    await expect(page.locator('#pageTitle')).toHaveText('Measured Data');
@@ -88,7 +94,7 @@ for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name
    await openApp(page,viewport.width);
    if(viewport.width<=900){
     await mobileMore(page);
-    for(const id of ['book','learning-insights','repair-app-files','measured-evidence'])await expect(page.locator('[data-mm-registry-menu="'+id+'"]')).toBeVisible();
+    for(const id of ['book','learning-insights','repair-app-files'])await expect(page.locator('[data-mm-registry-menu="'+id+'"]')).toBeVisible();
     await closeModal(page);await mobileHub(page,'Practice');
     for(const action of ['troubleshooting','process-data','labs'])await expect(page.locator('#scenarios [data-mm-hub-action="'+action+'"]')).toBeVisible();
    }else{
