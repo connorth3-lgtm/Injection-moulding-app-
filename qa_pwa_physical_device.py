@@ -58,7 +58,7 @@ need("validated physical evidence" in (unauthorized.stderr + unauthorized.stdout
 workflow = WORKFLOW.read_text(encoding="utf-8")
 for marker in (
     "python tools/verify_pwa_physical_evidence.py --contract-only",
-    "pending-physical-device-validation",
+    "Physical PWA evidence pending",
     "Physical PWA exact-runtime HOLD",
 ):
     need(marker in workflow, f"physical PWA workflow HOLD semantics missing marker: {marker}")
