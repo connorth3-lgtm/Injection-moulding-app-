@@ -150,9 +150,11 @@ for k,id_ in {'web_release':'mmPwa','desktop_release':'mmDesktop','content_versi
 need("fetch('./version.json',{cache:'no-store'})" in support,'support page must synchronise from version.json')
 need('MouldMaster GitHub Issues' in support and 'Do not post learner names' in support,'support contact/privacy warning missing')
 need('Learning insights events' in support and 'resets both analytics histories' in support,'support import analytics lifecycle disclosure is stale')
+for marker in ['measured-assessment','process-diagnostics','Diagnostic Learning Lab','Material Behaviour Lab']:
+    need(marker in support,f'support backup/reset scope disclosure missing: {marker}')
 
 privacy=text('privacy.html')
-for marker in ['assessment analytics','scoped to the active learner profile','first meaningful question exposure','does not currently upload','deliberately not included in the progress backup','successful progress-backup import resets local assessment analytics and Learning insights analytics','orphaned buckets','Reset local analytics','Reset learner data','other local learner profiles','all local learner profiles','replaces the local learner registry','10 MiB','Delete all local process-data evidence','mouldmaster-process-data-v1']:
+for marker in ['assessment analytics','scoped to the active learner profile','first meaningful question exposure','does not currently upload','deliberately not included in the progress backup','successful progress-backup import resets local assessment analytics and Learning insights analytics','orphaned buckets','Reset local analytics','Reset learner data','other local learner profiles','all local learner profiles','replaces the local learner registry','measured-assessment','process-diagnostics','Diagnostic Learning Lab','Material Behaviour Lab','10 MiB','Delete all local process-data evidence','mouldmaster-process-data-v1']:
     need(marker in privacy,f'privacy disclosure missing: {marker}')
 need('scoped cleanup or clean learner write cannot be verified' in privacy,'privacy notice must disclose fail-closed learner-reset cleanup/write behavior')
 need('replaces the local learner registry after confirmation' in support,'support must disclose destructive backup registry replacement before import')
