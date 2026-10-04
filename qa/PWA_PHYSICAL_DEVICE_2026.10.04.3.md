@@ -5,15 +5,15 @@ This packet governs hands-on physical-device validation of the exact MouldMaster
 ## Exact candidate
 
 - web release: `2026.10.04.3`
-- retained pre-merge public candidate source commit: `d0484518138bb072ad5048bc1e177494ccaf4da3`
-- public-runtime fingerprint: `sha256:7c17fadc898da9e2dc9178142a473e4826660db9f04dd437bde84ccc8e4f416d`
-- exact candidate build run: `37172377754` (`Pre-merge Public Candidate`)
-- retained candidate artifact: `physical-pwa-candidate-d0484518138bb072ad5048bc1e177494ccaf4da3`
-- artifact id: `11292001854`
-- artifact ZIP digest: `sha256:1e11fecb05bad38a1443462172050ec5651c835264070c34efe97b71a8caaafc`
-- artifact retention expiry: `2027-01-02T02:52:29Z`
+- retained pre-merge public candidate source commit: `2e376e961543364113c4c93c42bdaece8d911489`
+- public-runtime fingerprint: `sha256:3688ddb2d7ec667aa7fb710fe1dd05f13464970c846657c655fe898cfba845c0`
+- exact candidate build run: `37172853527` (`Pre-merge Public Candidate`)
+- retained candidate artifact: `physical-pwa-candidate-2e376e961543364113c4c93c42bdaece8d911489`
+- artifact id: `11292280872`
+- artifact ZIP digest: `sha256:a4e618a91126e758c71e6ecbef36035f214fb455860327cae567944eff0f5e09`
+- artifact retention expiry: `2027-01-02T03:01:55Z`
 
-The retained candidate was built from exact pre-merge source commit `d0484518138bb072ad5048bc1e177494ccaf4da3` by the governed Pages artifact builder and public-runtime fingerprint verifier. This is a **candidate rebind**, not physical-device evidence. Release `2026.10.04.3` incorporates the current navigation/mobile polish and governance hardening while preserving the existing physical-device evidence boundary. The prior release risk waiver is not carried forward; both physical platform rows are pending for this runtime. The retained source is the final exact PR head and has the same Git tree as squash commit `390c28b34f01395600170982b7bd4632aa809d45`. External evidence binds to this retained exact-head artifact, never to the mutable `preview` branch tip.
+The retained candidate was built from exact pre-merge source commit `2e376e961543364113c4c93c42bdaece8d911489` by the governed Pages artifact builder and public-runtime fingerprint verifier. This is a **candidate rebind**, not physical-device evidence. Release `2026.10.04.3` incorporates the current navigation/mobile polish and governance hardening while preserving the existing physical-device evidence boundary. The prior release risk waiver is not carried forward; both physical platform rows are pending for this runtime. The retained source is the final exact PR head and has the same Git tree as squash commit `390c28b34f01395600170982b7bd4632aa809d45`. External evidence binds to this retained exact-head artifact, never to the mutable `preview` branch tip.
 
 ## Required iOS / iPadOS execution
 
