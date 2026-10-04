@@ -122,7 +122,7 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
   let failedDbWrite=false,failedTrainingWrite=false;
   const localStorage={
     get length(){return memory.size},key(i){return [...memory.keys()][i]??null},
-    getItem(k){k=String(k);if(writeMode==='snapshot-read-fail'&&k==='mouldmasterProDB')throw new Error('simulated snapshot read failure');return memory.has(k)?memory.get(k):null},
+    getItem(k){k=String(k);if(writeMode==='snapshot-read-fail'&&k==='mouldmasterProDB')throw new Error('simulated snapshot read failure');if(writeMode==='backup-read-fail'&&k.startsWith('mm_real_measured_assessment_v1::'))throw new Error('simulated backup read failure');return memory.has(k)?memory.get(k):null},
     setItem(k,v){
       k=String(k);
       if((writeMode==='fail-next-db'||writeMode==='fail-db-silent-rollback')&&k==='mouldmasterProDB'&&!failedDbWrite){failedDbWrite=true;throw new Error('simulated registry write failure')}
@@ -167,6 +167,20 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
   sandbox.user=sandbox.db.users[sandbox.db.activeUser];sandbox.window=sandbox;
   vm.createContext(sandbox);vm.runInContext(trainingSource,sandbox,{filename:'src/domains/learning/training-qa-fix.js'});
   return {sandbox,memory,alerts,toasts,oldSerialized,bridge:sandbox.MM_TRAINING_DATA_BRIDGE}
+}
+
+// Backup export must fail closed when learner-owned training state cannot be
+// read. It must never substitute empty defaults and produce a valid-looking backup.
+{
+  const t=trainingSandbox('normal','backup-read-fail');
+  assert.throws(()=>t.bridge.buildTrainingExtras(t.sandbox.db.users),/simulated backup read failure/,'backup builder swallowed a training-store read failure');
+}
+
+{
+  const t=trainingSandbox();
+  const key='mm_process_data_diagnostics_v1::strong-old';
+  t.memory.set(key,'{malformed-json');
+  assert.throws(()=>t.bridge.buildTrainingExtras(t.sandbox.db.users),/JSON|Unexpected|position|property/i,'backup builder silently replaced malformed learner state with defaults');
 }
 
 // Thrown delete failure: an import may stage storage writes, but the imported
