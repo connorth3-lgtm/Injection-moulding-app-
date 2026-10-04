@@ -71,7 +71,7 @@ process.stdout.write(JSON.stringify({scenarios:D.scenarios,cue:window.MM_PSYCHOM
         _original_need(s['correct']==prior['correct'],f'post-approval key changed: {x["id"]}')
         _original_need(s.get('choices',[])==prior['options'],f'post-approval scenario option text/order changed: {x["id"]}')
         _original_need(s.get('feedback',[])==prior['feedback'],f'post-approval scenario feedback changed: {x["id"]}')
-    _original_need(len(items)==197,f'post-approval learner-visible item count mismatch: {len(items)}')
+    _original_need(len(items)==209,f'post-approval learner-visible item count mismatch: {len(items)}')
     _original_need(POST_APPROVAL_META.get('coverageOk') is True,f'post-approval coverage failed: {POST_APPROVAL_META}')
     _original_need(int(POST_APPROVAL_META.get('scenarioDistractorCueEdits',-1))==0,'post-approval cue metadata must confirm zero edits')
     _original_need(int(POST_APPROVAL_META.get('textMutationCount',-1))==0,'post-approval metadata must confirm zero text mutations')
