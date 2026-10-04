@@ -1553,7 +1553,12 @@ function install(){style();ensureSection();ensureNav();patchMobileMore();const h
 let queued=false;function schedule(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(()=>{queued=false;install()},0)}
 const observer=new MutationObserver(schedule);if(document.documentElement)observer.observe(document.documentElement,{childList:true,subtree:true});
 install();window.addEventListener('load',schedule);
-window.MM_DIAGNOSTIC_LABS={version:VERSION,labs:LABS,open:openLabs,storage:'learner-scoped local progress only'};
+const authorChoice=window.MM_ASSESSMENT_AUTHOR_CHOICE||((value)=>String(value??''));
+let starterCueEdits=0;
+for(const lab of LABS)for(const step of lab.steps||[])for(const choice of step.choices||[]){
+ const next=authorChoice(choice.text);if(next!==choice.text){choice.text=next;starterCueEdits++}
+}
+window.MM_DIAGNOSTIC_LABS={version:VERSION,labs:LABS,open:openLabs,storage:'learner-scoped local progress only',starterCueEdits};
 })();
 /* <<< diagnostic-learning-labs.js */
 
@@ -1684,6 +1689,11 @@ for(const lab of LABS){
  const specs=BALANCE[lab.id];if(!specs||specs.length!==lab.steps.length)throw new Error(`Material answer-balance map incomplete: ${lab.id}`);
  lab.steps.forEach((step,i)=>{const spec=specs[i],original=step.choices;if(!original||original.length!==4||original.findIndex(c=>c.correct===true)!==0)throw new Error(`Material answer-balance source changed: ${lab.id}/${i}`);spec.texts.forEach((t,n)=>original[n].text=t);step.choices=BALANCE_ORDER[spec.pos].map(n=>original[n])});
 }
+const authorChoice=window.MM_ASSESSMENT_AUTHOR_CHOICE||((value)=>String(value??''));
+let starterCueEdits=0;
+for(const lab of LABS)for(const step of lab.steps||[])for(const choice of step.choices||[]){
+ const next=authorChoice(choice.text);if(next!==choice.text){choice.text=next;starterCueEdits++}
+}
 
 function esc(v){return String(v??'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]))}
 function learnerToken(){try{let id='';if(typeof db!=='undefined'&&db?.activeUser)id=db.activeUser;else id=window.db?.activeUser||window.user?.id||'';return String(id||'anonymous').replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,80)}catch(_){return'anonymous'}}
@@ -1714,7 +1724,7 @@ function open(){style();const h=section();if(!h)return;hide();h.classList.remove
 function install(){style();nav();mobile();const h=section();if(h&&!h.__mmMl){h.addEventListener('click',click);h.__mmMl=true}}
 let queued=false;function schedule(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(()=>{queued=false;install()},0)}
 if(document.documentElement)new MutationObserver(schedule).observe(document.documentElement,{childList:true,subtree:true});install();window.addEventListener('load',schedule);
-window.MM_MATERIAL_BEHAVIOUR_LABS={version:VERSION,labs:LABS,open,storage:'learner-scoped local progress only',trainingBoundary:'Scenario-specific education; verify exact grade and approved real-world requirements.',answerBalanceVersion:ANSWER_BALANCE_VERSION};
+window.MM_MATERIAL_BEHAVIOUR_LABS={version:VERSION,labs:LABS,open,storage:'learner-scoped local progress only',trainingBoundary:'Scenario-specific education; verify exact grade and approved real-world requirements.',answerBalanceVersion:ANSWER_BALANCE_VERSION,starterCueEdits};
 })();
 /* <<< material-behaviour-labs.js */
 
@@ -1922,7 +1932,12 @@ const MATERIAL_PRACTICE=[
 ];
 function normalisePractice(){return MATERIAL_PRACTICE.map(l=>({...l,steps:l.steps.map(s=>({stage:s[0],question:s[1],choices:s.slice(2).map((text,i)=>({text,correct:i===0,feedback:i===0?'Correct. This choice tests the mechanism with the strongest evidence.':'Not the strongest evidence-first response for this scenario.'}))}))}))}
 const PRACTICE_LABS=normalisePractice();
-window.MM_MATERIAL_PRACTICE_EXTENSIONS={version:VERSION,reviewed:REVIEWED,reviewBy:REVIEW_BY,labs:PRACTICE_LABS,scope:'Extended scenario-specific practice; not part of the formal 157 keyed approval bank and not a universal production recipe.'};
+const authorChoice=window.MM_ASSESSMENT_AUTHOR_CHOICE||((value)=>String(value??''));
+let materialPracticeStarterCueEdits=0;
+for(const lab of PRACTICE_LABS)for(const step of lab.steps||[])for(const choice of step.choices||[]){
+ const next=authorChoice(choice.text);if(next!==choice.text){choice.text=next;materialPracticeStarterCueEdits++}
+}
+window.MM_MATERIAL_PRACTICE_EXTENSIONS={version:VERSION,reviewed:REVIEWED,reviewBy:REVIEW_BY,labs:PRACTICE_LABS,scope:'Extended scenario-specific practice; not part of the formal 157 keyed approval bank and not a universal production recipe.',starterCueEdits:materialPracticeStarterCueEdits};
 
 /* Deterministic synthetic process data: values are illustrative and deliberately not production setpoints. */
 function rng(seed){let x=(seed>>>0)||1;return()=>{x=(Math.imul(x,1664525)+1013904223)>>>0;return x/4294967296}}
