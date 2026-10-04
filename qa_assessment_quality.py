@@ -45,10 +45,19 @@ base=json.loads(json.dumps(D))
 for title in extra_titles: base['scenarios'].append({'title':title,'situation':'placeholder','choices':['a','b','c','d'],'correct':0,'why':'placeholder','feedback':['a','b','c','d']})
 
 node=r'''
-const fs=require('fs'),vm=require('vm');const D=%s;const store={};
+const fs=require('fs'),vm=require('vm');const D=%s;
+const store={
+ 'mm_spaced_review_v2::strong-learner-a':JSON.stringify({items:{'tech:2026.08.21.1:Beginner:0':{id:'tech:2026.08.21.1:Beginner:0',stage:1,due:1800000000000,wrong:1,right:2,last:1700000000000,confidence:'medium'}}}),
+ 'mm_spaced_review_v2::strong-learner-b':JSON.stringify({items:{'reg:2026.08.21.1:NZ:Beginner:0':{id:'reg:2026.08.21.1:NZ:Beginner:0',stage:2,due:1800000000000,wrong:0,right:3,last:1700000000000,confidence:'high'}}})
+};
 const localStorage={getItem:k=>Object.prototype.hasOwnProperty.call(store,k)?store[k]:null,setItem:(k,v)=>{store[k]=String(v)},removeItem:k=>{delete store[k]},key:i=>Object.keys(store)[i]||null,get length(){return Object.keys(store).length}};
 const document={getElementById:()=>null,querySelectorAll:()=>[],querySelector:()=>null,createElement:()=>({set id(v){this._id=v},get id(){return this._id},textContent:'',appendChild(){},setAttribute(){},insertAdjacentHTML(){},addEventListener(){}}),head:{appendChild(){}},body:{appendChild(){}},documentElement:{},readyState:'complete'};
-const sandbox={window:{MM_DATA:D,addEventListener(){}},document,localStorage,performance:{now:()=>1000},console,setTimeout:(fn)=>{if(typeof fn==='function')fn()},clearTimeout(){},Date,Math,JSON,Map,Set,Blob:function(){},URL:{createObjectURL:()=>'',revokeObjectURL(){}}};
+const db={activeUser:'learner-a',users:{'learner-a':{id:'learner-a'},'learner-b':{id:'learner-b'}}},user=db.users['learner-a'];
+const learnerScope={
+ tokenFor:id=>'strong-'+String(id),storageKey:(prefix,token)=>String(prefix)+String(token),knownIds:()=>Object.keys(db.users),
+ registerStoragePrefix(){},migrateStoragePrefix(){return {status:'no-legacy'}},migrationPlan:id=>({uniqueOwner:false,legacyToken:'legacy-'+String(id)})
+};
+const sandbox={window:{MM_DATA:D,MM_LEARNER_SCOPE:learnerScope,addEventListener(){}},document,localStorage,db,user,performance:{now:()=>1000},console,setTimeout:(fn)=>{if(typeof fn==='function')fn()},clearTimeout(){},Date,Math,JSON,Map,Set,Blob:function(){},URL:{createObjectURL:()=>'',revokeObjectURL(){}}};
 sandbox.window.window=sandbox.window;sandbox.window.localStorage=localStorage;sandbox.window.document=document;sandbox.window.URL=sandbox.URL;sandbox.window.setTimeout=sandbox.setTimeout;vm.createContext(sandbox);
 vm.runInContext(fs.readFileSync(%s,'utf8'),sandbox,{filename:'assessment-deep-dive.js'});
 vm.runInContext(fs.readFileSync(%s,'utf8'),sandbox,{filename:'src/domains/assessment/assessment-answer-cue-fix.js'});
@@ -61,14 +70,16 @@ const definitions=[];
 for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<(D.exams[level]||[]).length;i++){const q=D.exams[level][i];definitions.push({id:`tech:${level}:${i}`,kind:'technical-exam',options:q.options??q[1],correct:Number(q.correct??q[2]),stem:q.q??q[0]})}
 for(const region of ['UK','US','NZ'])for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<(D.regionalQuestions?.[region]?.[level]||[]).length;i++){const q=D.regionalQuestions[region][level][i];definitions.push({id:`reg:${region}:${level}:${i}`,kind:'regional-exam',options:q.options??q[1],correct:Number(q.correct??q[2]),stem:q.q??q[0]})}
 const scenarios=D.scenarios.map(s=>({id:s.mmStableId,title:s.title,options:s.choices,choices:s.choices.length,correct:s.correct,feedback:Array.isArray(s.feedback)?s.feedback.length:0,category:s.category,difficulty:s.difficulty,reference:s.reference||null,sourceUrl:s.sourceUrl||null}));
-process.stdout.write(JSON.stringify({scenarioCount:D.scenarios.length,definitions,exams,quality:Q,scenarios,qa:D.assessmentQA.qualitySuite,history:D.assessmentQA.questionRevisionHistory,bridge:sandbox.window.MM_STABLE_REVIEW_BRIDGE}));
+const reviewA=JSON.parse(store['mm_spaced_review_v2::strong-learner-a']);
+const reviewB=JSON.parse(store['mm_spaced_review_v2::strong-learner-b']);
+process.stdout.write(JSON.stringify({scenarioCount:D.scenarios.length,definitions,exams,quality:Q,scenarios,qa:D.assessmentQA.qualitySuite,history:D.assessmentQA.questionRevisionHistory,bridge:sandbox.window.MM_STABLE_REVIEW_BRIDGE,reviewA,reviewB,reviewBare:Object.prototype.hasOwnProperty.call(store,'mm_spaced_review_v2')}));
 '''%(json.dumps(base),json.dumps(str(ROOT/'assessment-deep-dive.js')),json.dumps(str(ROOT/'src/domains/assessment/assessment-answer-cue-fix.js')),json.dumps(str(ROOT/'assessment-storage-scope.js')),json.dumps(str(ROOT/'assessment-quality-suite.js')),json.dumps(str(ROOT/'assessment-stable-review-bridge.js')))
 with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False,encoding='utf-8') as handle: handle.write(node);node_path=Path(handle.name)
 try: p=subprocess.run(['node',str(node_path)],capture_output=True,text=True,encoding='utf-8',errors='replace')
 finally: node_path.unlink(missing_ok=True)
 need(p.returncode==0,f'assessment quality runtime QA failed: {p.stderr or p.stdout}');runtime=json.loads(p.stdout)
 need(runtime['scenarioCount']==40,f"expected 40 scenario drills, got {runtime['scenarioCount']}")
-need(runtime['qa']['scenarioDrills']==40,'runtime assessment metadata must report 40 scenarios');need(runtime['qa']['stableQuestionIds'] is True,'stable question IDs not enabled');need(runtime['qa']['analytics']=='device-local only','analytics privacy marker missing');need(runtime['bridge']['stableIdsPrimary'] is True,'stable review bridge not active');need(len(runtime.get('history',[]))>=3,'question revision history missing')
+need(runtime['qa']['scenarioDrills']==40,'runtime assessment metadata must report 40 scenarios');need(runtime['qa']['stableQuestionIds'] is True,'stable question IDs not enabled');need(runtime['qa']['analytics']=='device-local only','analytics privacy marker missing');need(runtime['qa'].get('reviewMigrationStatus')=='migrated','learner-scoped spaced-review migration did not run');need(runtime['qa'].get('migratedLegacyReviewRecords')==2,'expected two learner-scoped legacy review IDs to migrate');need('tech:Beginner:0' in runtime['reviewA']['items'] and 'tech:2026.08.21.1:Beginner:0' not in runtime['reviewA']['items'],'learner A stable review ID migration failed');need('reg:NZ:Beginner:0' in runtime['reviewB']['items'] and 'reg:2026.08.21.1:NZ:Beginner:0' not in runtime['reviewB']['items'],'learner B stable review ID migration failed');need(runtime['reviewBare'] is False,'stable review migration created or retained a bare global v2 review store');need(runtime['bridge']['stableIdsPrimary'] is True,'stable review bridge not active');need(len(runtime.get('history',[]))>=3,'question revision history missing')
 
 live_technical={}
 for level,regions in runtime['exams'].items():
