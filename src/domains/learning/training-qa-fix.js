@@ -238,7 +238,7 @@ function cleanResetLearner(prior,id){
 const baseReset=window.resetData;if(typeof baseReset==='function')window.resetData=function(){
  let active;try{active=canonicalLearnerId(db?.activeUser)}catch(_){alert('Learner reset is unavailable because the active learner identity is invalid.');return}
  const prior=db?.users?.[active];if(!prior){alert('Learner reset is unavailable because the active learner profile could not be found.');return}
- if(!confirm(`Reset learning data for "${String(prior.name||active)}" only? Other local learner profiles and saved process-data evidence will be kept. This learner's progress, notes, certificates, analytics and review/sign-off state will be cleared.`))return;
+ if(!confirm(`Reset learning data for "${String(prior.name||active)}" only? Other local learner profiles and saved process-data evidence will be kept. This learner's progress, notes, certificates, analytics, review/sign-off, measured-assessment, process-diagnostics and lab-progress state will be cleared.`))return;
  let owned;try{owned=learnerOwnedKeys(active)}catch(e){console.error('[MouldMaster] learner reset scope unavailable:',e);alert(cleanupFailureMessage('Learner reset',true));return}
  const before=snapshotKeys(['mouldmasterProDB',...owned]),proposed=JSON.parse(JSON.stringify(db));proposed.users[active]=cleanResetLearner(prior,active);proposed.activeUser=active;
  try{
