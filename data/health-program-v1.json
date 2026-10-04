@@ -136,8 +136,14 @@
         "identity": "learner-scoped keys registered through MM_LEARNER_SCOPE",
         "source": "src/domains/shared/learner-scope.js",
         "sourceOfTruth": true,
-        "backupScope": "explicit-per-feature",
-        "deletionBoundary": "learner-reset"
+        "backupScope": "all-current-learner-profiles-v5",
+        "deletionBoundary": "learner-reset",
+        "prefixes": [
+          "mm_spaced_review_v2::",
+          "mm_practical_signoff_v1::",
+          "mm_real_measured_assessment_v1::"
+        ],
+        "migration": "MM_LEARNER_SCOPE strong-token migration; ambiguous legacy 32-bit buckets are quarantined rather than assigned"
       },
       {
         "id": "engineering-cases",
@@ -207,7 +213,17 @@
         "integrityStatus": "unverified",
         "requiresExplicitUserDisclosure": true,
         "usesExistingStrictImporter": true
-      }
+      },
+      "trainingExtrasVersion": 5,
+      "includedLearnerExtras": [
+        "spaced-review",
+        "practical-signoff",
+        "measured-data-challenge-progress"
+      ],
+      "excludedLearnerStores": [
+        "assessment-analytics",
+        "learning-insights-analytics"
+      ]
     },
     "migrationRules": [
       "validate-before-write",
