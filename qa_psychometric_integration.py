@@ -45,7 +45,7 @@ need('Math.max(124' not in hardening and 'cueNeutral' not in hardening,'generic 
 need("initialization:'after-training-upgrade'" in hardening and 'scenarioCount!==40' in hardening and 'DOMContentLoaded' in hardening,'psychometric initialization guard missing')
 need("a.length===4" in approval,'approval must require four relative answer-length ranks')
 need("target=(caseIndex*3+qi)%4" in text('real-measured-data-assessment.js'),'measured assessment key-position balancing contract missing')
-need("209 learner-visible decisions" in approval,'psychometric approval must state complete learner-visible governance scope')
+need("Full 209-decision learnerVisibleCoverageOk" in approval,'psychometric approval must state complete learner-visible governance scope')
 need("function measuredCoverage()" in approval and "function applyMeasuredCoverage()" in approval,'psychometric approval must bind measured coverage from the live measured runtime')
 need("measuredCoverageOk:null" in approval and "learnerVisibleCoverageOk:false" in approval,'psychometric approval must not pre-approve measured coverage before runtime binding')
 need("Number(M.decisionCount)===EXPECTED.measuredItemsGoverned" in approval,'measured runtime decision count is not bound into psychometric approval')
