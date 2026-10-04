@@ -147,6 +147,7 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
     migrationPlan:id=>({uniqueOwner:true,legacyToken:`legacy-${id}`}),
     knownIds:()=>Object.keys(sandbox?.db?.users||oldDb.users),
     migrateStoragePrefix(prefix,id){
+      if(writeMode==='backup-migration-fail'&&prefix==='mm_real_measured_assessment_v1::')return {status:'copy-verification-failed'};
       const oldKey=`${prefix}legacy-${id}`,newKey=`${prefix}strong-${id}`,legacy=localStorage.getItem(oldKey),current=localStorage.getItem(newKey);
       if(legacy==null)return {status:'no-legacy'};
       if(current==null){localStorage.setItem(newKey,legacy);if(localStorage.getItem(newKey)===legacy)localStorage.removeItem(oldKey);return {status:'migrated'}}
@@ -179,6 +180,13 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
   t.memory.set(oldKey,JSON.stringify({'legacy-material-case':{attempts:2,completed:true,bestScore:100,firstTry:true}}));
   assert.throws(()=>t.bridge.buildTrainingExtras(t.sandbox.db.users),/material lab migration|legacy delete could not be verified/i,'backup accepted an unverifiable material-lab legacy migration');
   assert(t.memory.has(oldKey),'silent material-delete fixture unexpectedly removed the legacy bucket');
+}
+
+// A failed legacy-to-strong migration must block backup creation rather than
+// letting the strict reader interpret the missing strong key as empty learner state.
+{
+  const t=trainingSandbox('normal','backup-migration-fail');
+  assert.throws(()=>t.bridge.buildTrainingExtras(t.sandbox.db.users),/backup source|copy-verification-failed/i,'backup swallowed an unverified learner-scope migration');
 }
 
 // Backup export must fail closed when learner-owned training state cannot be
