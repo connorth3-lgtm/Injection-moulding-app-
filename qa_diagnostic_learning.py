@@ -23,7 +23,7 @@ def option_len(value):
 
 
 need("MM_DIAGNOSTIC_LABS" in JS, 'diagnostic lab public metadata missing')
-need("learner-scoped local progress only" in JS, 'diagnostic progress must remain local/learner scoped')
+need("const scope=window.MM_LEARNER_SCOPE" in JS and "MM_LEARNER_SCOPE collision-safe local progress; included in learner backup/reset" in JS, 'diagnostic progress must remain collision-safe, local and learner scoped')
 need("Training boundary:" in JS, 'educational/production boundary missing')
 need("not universal production recipes" in JS, 'universal-recipe warning missing')
 need("Verify the exact resin grade" in JS, 'grade/machine/mould verification warning missing')
