@@ -142,6 +142,7 @@ window.MM_ASSESSMENT_STORAGE_SCOPE={
  analyticsKey:()=>scopedKey(ANALYTICS_BASE),
  timingKey:()=>scopedKey(TIMING_BASE),
  rotationKey:()=>scopedKey(ROTATION_BASE),
+ uxRotationKey:()=>scopedKey(UX_ROTATION_BASE),
  questionHistoryKey:()=>scopedKey(QUESTION_HISTORY_BASE),
  resultMetaKey:()=>scopedKey(RESULT_META_BASE),
  keysForLearner,
