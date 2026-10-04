@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.10.05.1';
-const CACHE_REVISION='deep-review-r7-20261005';
+const CACHE_REVISION='deep-review-r8-20261005';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both
@@ -62,7 +62,6 @@ const CORE=[
   './src/domains/learning/learning-analytics-loader.js',
   './src/domains/learning/activity-events-v2.js',
   './src/domains/learning/learner-model.js',
-  './src/domains/learning/backup-authority-notice.js',
   './src/domains/learning/delayed-transfer-reviews.js',
   './src/domains/learning/book-runtime.js',
   './src/domains/learning/book-claim-trace.js',
