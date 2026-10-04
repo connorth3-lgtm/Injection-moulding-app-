@@ -137,9 +137,9 @@ pkg = json.loads(text('desktop/electron/package.json'))
 integrity = text('desktop/electron/scripts/generate-integrity.cjs')
 resource_from = {x.get('from') for x in pkg['build']['extraResources'] if isinstance(x, dict)}
 runtime_pack = text('src/domains/runtime-packs/process-data-runtime-pack.js')
+need("'./src/domains/runtime-packs/process-data-runtime-pack.js'" in sw, 'offline cache missing process-data runtime pack')
 for filename in ALL:
     need(filename in runtime_pack, f'process-data runtime pack missing {filename}')
-    need(f"'./{filename}'" in sw, f'offline cache missing {filename}')
     need('../../' + filename in resource_from, f'desktop package missing {filename}')
     need("'" + filename + "'" in integrity, f'desktop integrity manifest missing {filename}')
 need("'./src/domains/runtime-packs/process-data-runtime-pack.js'" in idx, 'browser shell missing process-data runtime pack')
