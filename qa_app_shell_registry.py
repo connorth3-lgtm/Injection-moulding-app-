@@ -90,8 +90,10 @@ need(idx.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.j
 need(idx.index("'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'") < idx.index("'./src/domains/domain-bootstrap.js'"),'shell finalization pack must run before domain bootstrap')
 
 sw=text('service-worker.js')
-for asset in ['src/domains/shell/app-shell-registry.js','mould-master-workspace.js']:
-    need(f"'./{asset}'" in sw,f'offline cache missing {asset}')
+need("'./src/domains/shell/app-shell-registry.js'" in sw,'offline cache missing app-shell registry')
+need("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'" in sw,'offline cache missing packed mould-master workspace runtime')
+workspace_pack=text('src/domains/runtime-packs/curriculum-workspace-runtime-pack.js')
+need('/* >>> mould-master-workspace.js */' in workspace_pack,'packed workspace runtime is missing mould-master-workspace.js')
 need("'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'" in sw,'offline cache missing packed shell finalizer')
 
 pkg=json.loads(text('desktop/electron/package.json'))
