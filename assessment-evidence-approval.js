@@ -10,8 +10,8 @@ const APPROVED_INPUTS={
  'MouldMaster_Core_App.html':'c6b258ccd37d98b2f591f538b34eb33c7705dda6',
  'training-upgrade.js':'ea6ee84e69c4d5ed60776f2022f1bc9462425ea2',
  'assessment-deep-dive.js':'367d941afc67ad62125e1e1cb16ff1a1e48d0123',
- 'src/domains/assessment/assessment-answer-cue-fix.js':'ae8f924e35e3c02b3296207437c34570a20d725e',
- 'assessment-quality-suite.js':'86d7be4c4393ebb54c9d46887a8f8bf458780a3c',
+ 'src/domains/assessment/assessment-answer-cue-fix.js':'7613d7c4deb45c69ddb9ec3deebf59bd51348a4c',
+ 'assessment-quality-suite.js':'6a03890d714c7a92a0a30ca91b19e8e3cd2baec4',
  'assessment-stable-review-bridge.js':'5ad415ddb65e37b08f00d4170a41adf256c6ee33',
  'diagnostic-learning-labs.js':'35664e47dee7145219a928d775bf8dca1e3024f9',
  'material-behaviour-labs.js':'2ce780ceb8fbeca95b253602717ab46cd03992d3'
