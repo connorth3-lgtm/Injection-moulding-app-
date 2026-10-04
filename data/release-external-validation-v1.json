@@ -21,8 +21,8 @@
     "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.10.04.3.md",
     "candidate": {
       "release": "2026.10.04.3",
-      "sourceSha": "858b0fddbbae777af6d8bc2c7707c13277e37424",
-      "runtimeFingerprint": "sha256:43b4a92642d9ae903019c487d9cb6e9d86637ecb461cc4c067b6e37e92dcccf3"
+      "sourceSha": "6aa25922621506d172b0102e69a45c8e7e5a0f4a",
+      "runtimeFingerprint": "sha256:5206425e22281834404cd7a870808f3a91a33652b7655bc67c5e424f2a88d5c8"
     },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix."
   },
@@ -32,14 +32,14 @@
     "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.10.04.3.md",
     "currentCandidate": {
       "release": "2026.10.04.3",
-      "sourceSha": "858b0fddbbae777af6d8bc2c7707c13277e37424",
-      "runtimeFingerprint": "sha256:43b4a92642d9ae903019c487d9cb6e9d86637ecb461cc4c067b6e37e92dcccf3",
-      "candidateRunId": 37173576918,
+      "sourceSha": "6aa25922621506d172b0102e69a45c8e7e5a0f4a",
+      "runtimeFingerprint": "sha256:5206425e22281834404cd7a870808f3a91a33652b7655bc67c5e424f2a88d5c8",
+      "candidateRunId": 37174067487,
       "candidateWorkflow": "Pre-merge Public Candidate",
-      "artifactId": 11292531749,
-      "artifactName": "physical-pwa-candidate-858b0fddbbae777af6d8bc2c7707c13277e37424",
-      "artifactDigest": "sha256:15284cc3b910d60fa1cec1b2afcfd7fa4b7183f3d1f28ed84b9747b571fc33b5",
-      "artifactExpiresAt": "2027-01-02T03:16:02Z"
+      "artifactId": 11291909401,
+      "artifactName": "physical-pwa-candidate-6aa25922621506d172b0102e69a45c8e7e5a0f4a",
+      "artifactDigest": "sha256:30d6f7d9ab1e5e1ae91f400ad746531dbcba66b5ffdd46b5949cf3cd2c08af43",
+      "artifactExpiresAt": "2027-01-02T03:26:08Z"
     },
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release."
   },
@@ -100,20 +100,20 @@
     "required": "Genuine provider ownership, stakeholder need, provider-approved design, authorised assessment/internal moderation, consent-to-assess/CMR confirmation, applicable national moderation, workplace evidence and provider-controlled review/change evidence for the exact governed release.",
     "candidate": {
       "release": "2026.10.04.3",
-      "sourceSha": "858b0fddbbae777af6d8bc2c7707c13277e37424",
-      "runtimeFingerprint": "sha256:43b4a92642d9ae903019c487d9cb6e9d86637ecb461cc4c067b6e37e92dcccf3"
+      "sourceSha": "6aa25922621506d172b0102e69a45c8e7e5a0f4a",
+      "runtimeFingerprint": "sha256:5206425e22281834404cd7a870808f3a91a33652b7655bc67c5e424f2a88d5c8"
     }
   },
   "webCandidate": {
     "release": "2026.10.04.3",
-    "sourceSha": "858b0fddbbae777af6d8bc2c7707c13277e37424",
-    "runtimeFingerprint": "sha256:43b4a92642d9ae903019c487d9cb6e9d86637ecb461cc4c067b6e37e92dcccf3",
-    "candidateRunId": 37173576918,
+    "sourceSha": "6aa25922621506d172b0102e69a45c8e7e5a0f4a",
+    "runtimeFingerprint": "sha256:5206425e22281834404cd7a870808f3a91a33652b7655bc67c5e424f2a88d5c8",
+    "candidateRunId": 37174067487,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 11292531749,
-    "artifactName": "physical-pwa-candidate-858b0fddbbae777af6d8bc2c7707c13277e37424",
-    "artifactDigest": "sha256:15284cc3b910d60fa1cec1b2afcfd7fa4b7183f3d1f28ed84b9747b571fc33b5",
-    "artifactExpiresAt": "2027-01-02T03:16:02Z"
+    "artifactId": 11291909401,
+    "artifactName": "physical-pwa-candidate-6aa25922621506d172b0102e69a45c8e7e5a0f4a",
+    "artifactDigest": "sha256:30d6f7d9ab1e5e1ae91f400ad746531dbcba66b5ffdd46b5949cf3cd2c08af43",
+    "artifactExpiresAt": "2027-01-02T03:26:08Z"
   },
   "candidatePolicy": {
     "previewBranchAuthoritative": false,
