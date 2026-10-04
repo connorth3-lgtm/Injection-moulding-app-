@@ -108,6 +108,16 @@ const STRICT_ANSWER_BALANCE={
 };
 
 const authorChoice=window.MM_ASSESSMENT_AUTHOR_CHOICE||((value)=>String(value??''));
+const CONCISE_SCENARIO_WORDING=new Set(['scenario:08','scenario:11','scenario:12','scenario:24','scenario:32']);
+function applyReviewedScenarioWording(){
+ (D.scenarios||[]).forEach((s,i)=>{
+  const id=s.mmStableId||`scenario:${String(i+1).padStart(2,'0')}`;if(!CONCISE_SCENARIO_WORDING.has(id))return;
+  const replacement=STRICT_ANSWER_BALANCE[id],opts=s.choices,key=Number(s.correct);
+  if(!replacement||!Array.isArray(opts)||opts.length!==4||key<0||key>3)throw new Error(`Reviewed scenario wording target changed: ${id}`);
+  opts[key]=authorChoice(replacement);
+ });
+}
+applyReviewedScenarioWording();
 function optionsOf(q){return q?.options??q?.[1]}
 function correctOf(q){return Number(q?.correct??q?.[2])}
 function validateReviewedAnswers(requireFull){
