@@ -53,8 +53,9 @@ function ensureProcessDataLauncher(){
  const host=document.getElementById('processDataLabs');
  if(!host||host.classList.contains('hidden')||host.querySelector('[data-mme-catalog-launcher]')||host.querySelector('[data-mm-measured-evidence="catalog"]'))return;
  const wrap=document.createElement('div');wrap.className='pd-toolbar mme-catalog-launcher';wrap.dataset.mmeCatalogLauncher='1';
- wrap.innerHTML='<div><b>Measured Data</b><div class="muted tiny">Browse the 17 governed measured-evidence families and source boundaries.</div></div><button class="ghost" type="button" data-mme-open-catalog>Browse measured data</button>';
+ wrap.innerHTML='<div><b>Measured Data</b><div class="muted tiny">Browse the 17 governed measured-evidence families or practise the 12 evidence-boundary challenges.</div></div><div class="pd-toolbar-actions"><button class="ghost" type="button" data-mme-open-catalog>Browse measured data</button><button class="secondary" type="button" data-mme-open-challenges>Evidence challenges</button></div>';
  wrap.querySelector('[data-mme-open-catalog]')?.addEventListener('click',openCatalog);
+ wrap.querySelector('[data-mme-open-challenges]')?.addEventListener('click',()=>window.MM_REAL_MEASURED_ASSESSMENT?.open?.());
  host.insertAdjacentElement('afterbegin',wrap)
 }
 function run(){
