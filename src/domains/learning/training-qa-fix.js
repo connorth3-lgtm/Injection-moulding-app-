@@ -4,7 +4,7 @@
 const REVIEW_KEY='mm_spaced_review_v2', LEGACY_REVIEW='mm_spaced_review_v1', SIGN_KEY='mm_practical_signoff_v1', MEASURED_KEY='mm_real_measured_assessment_v1', PROCESS_DIAG_KEY='mm_process_data_diagnostics_v1', DIAGNOSTIC_LABS_KEY='mm_diagnostic_labs_v1', MATERIAL_LABS_KEY='mm_material_behaviour_labs_v1', ASSESSMENT_MEMBERSHIP_KEY='mm_assessment_membership_history_v2';
 const ASSESSMENT_ANALYTICS_PREFIXES=['mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1','mm_assessment_opening_history_v2','mm-assessment-question-history-v4','mm-assessment-result-meta-v1',ASSESSMENT_MEMBERSHIP_KEY];
 const LEARNING_ANALYTICS_PREFIX='mm_learning_analytics_v1::';
-const ANALYTICS_CLEANUP_CODE='MM_ANALYTICS_CLEANUP_FAILED';
+const ANALYTICS_CLEANUP_CODE='MM_ANALYTICS_CLEANUP_FAILED', IMPORT_STORAGE_CODE='MM_IMPORT_STORAGE_FAILED';
 const LEARNER_ID_RE=/^[A-Za-z0-9][A-Za-z0-9._:@+-]{0,159}$/;
 function canonicalLearnerId(v){const s=String(v??'');if(!LEARNER_ID_RE.test(s))throw new Error('Invalid learner identifier');return s}
 function hasOwnLearner(users,id){return !!users&&Object.prototype.hasOwnProperty.call(users,id)}
@@ -205,8 +205,8 @@ window.importData=function(file){
     if(localStorage.getItem('mouldmasterProDB')!==serialized)throw new Error('Learner registry write could not be verified')
    }catch(storageError){
     const rolledBack=restoreSnapshot(before);
-    if(storageError?.code===ANALYTICS_CLEANUP_CODE){storageError.importRollbackVerified=rolledBack;throw storageError}
-    if(!rolledBack)storageError.importRollbackVerified=false;
+    storageError.importRollbackVerified=rolledBack;
+    if(storageError?.code!==ANALYTICS_CLEANUP_CODE)storageError.code=IMPORT_STORAGE_CODE;
     throw storageError
    }
    db=proposed;user=db.users[db.activeUser];committed=true;cancelActiveExam();
@@ -214,8 +214,11 @@ window.importData=function(file){
    window.toast?.('Progress imported. Learner-scoped review/sign-off, measured-assessment, process-diagnostics and lab progress were restored. Certificates must be re-earned; local analytics were reset.')
   }catch(e){
    if(e?.code===ANALYTICS_CLEANUP_CODE){alert(cleanupFailureMessage('Import',e.importRollbackVerified!==false));return}
+   if(e?.code===IMPORT_STORAGE_CODE){
+    alert(e.importRollbackVerified===true?'Import could not be saved because browser storage failed. Existing learner progress and local analytics/training state were restored.':'Import failed because browser storage could not be updated, and rollback could not be fully verified. Reopen MouldMaster and inspect local learner data before continuing.');
+    return
+   }
    if(committed)alert('Progress was imported, but the screen could not refresh. Reopen MouldMaster.');
-   else if(e?.importRollbackVerified===false)alert('Import failed and local rollback could not be fully verified. Reopen MouldMaster and inspect local learner data before continuing.');
    else alert('That file is not a valid MouldMaster backup. No existing data was changed.')
   }
  };
