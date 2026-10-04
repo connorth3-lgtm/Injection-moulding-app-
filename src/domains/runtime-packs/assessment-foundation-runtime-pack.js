@@ -125,31 +125,10 @@ window.MM_QUESTION_DEEP_DIVE={version:'2026-08-30',technicalRewrites:30,scenario
 (function(){
 'use strict';
 const D=window.MM_DATA;
-const STARTER_AUTHORING=[
- [/^Measure\/verify\s+/,'Measuring and verifying '],
- [/^Inspect\/clean\s+/,'Inspecting/cleaning '],
- [/^Check\s+/,'Checking '],
- [/^Verify\s+/,'Verifying '],
- [/^Inspect\s+/,'Inspecting '],
- [/^Compare\s+/,'Comparing '],
- [/^Measure\s+/,'Measuring '],
- [/^Investigate\s+/,'Investigating '],
- [/^Confirm\s+/,'Confirming '],
- [/^Increase\s+/,'Increasing '],
- [/^Change\s+/,'Changing '],
- [/^Ignore\s+/,'Ignoring '],
- [/^Assume\s+/,'Assuming '],
- [/^Reduce\s+/,'Reducing '],
- [/^Raise\s+/,'Raising '],
- [/^Lower\s+/,'Lowering '],
- [/^Decrease\s+/,'Decreasing '],
- [/^Adjust\s+/,'Adjusting '],
- [/^Accept\s+/,'Accepting ']
-];
+const STARTER_AUTHORING=/^(Measure\/verify|Inspect\/clean|Check|Verify|Inspect|Compare|Measure|Investigate|Confirm|Increase|Change|Ignore|Assume|Reduce|Raise|Lower|Decrease|Adjust|Accept)\s+/;
 function authorChoice(value){
- let out=String(value??'');
- for(const [pattern,replacement] of STARTER_AUTHORING){if(pattern.test(out))return out.replace(pattern,replacement)}
- return out
+ const out=String(value??'');
+ return out.replace(STARTER_AUTHORING,(_match,verb)=>`The response is to ${String(verb).toLowerCase()} `);
 }
 function authorChoices(options){return Array.isArray(options)?options.map(authorChoice):options}
 window.MM_ASSESSMENT_AUTHOR_CHOICE=authorChoice;
@@ -237,7 +216,7 @@ for(const scenario of D?.scenarios||[]){
 }
 D.assessmentQA=D.assessmentQA||{};
 D.assessmentQA.regionalDeepDive={reviewed:'30 August 2026',regionalItemsRewritten:27,regionalAnswerChanges:0,appliedSafety:true,officialSources:true};
-D.assessmentQA.answerStarterAuthoring={version:'2026.10.05.1',coreChoicesReauthored:authoredChoiceCount,policy:'Neutral grammatical answer fragments remove starter-word test-taking cues without changing answer keys or technical propositions.'};
+D.assessmentQA.answerStarterAuthoring={version:'2026.10.05.1',coreChoicesReauthored:authoredChoiceCount,policy:'A shared neutral response frame is applied to high-risk evidence and parameter-action starters so option grammar does not reveal answer keys; technical propositions and keys are unchanged.'};
 window.MM_REGIONAL_QUESTION_DEEP_DIVE={version:'2026-08-30',regionalRewrites:27,regionalAnswerChanges:0,appliedSafety:true,answerStarterAuthoring:true};
 })();
 /* <<< assessment-answer-cue-fix.js */
@@ -461,28 +440,11 @@ function scenarioId(index){return `scenario:${String(index+1).padStart(2,'0')}`}
 
 const META_BY_TEXT=new Map();
 function fnv1a32(value){let h=2166136261;for(const ch of String(value??'')){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return 'fnv1a-'+(h>>>0).toString(16).padStart(8,'0')}
-const IDENTITY_STARTER_CANON=[
- [/^measuring and verifying\s+/,'measure/verify '],
- [/^inspecting\/cleaning\s+/,'inspect/clean '],
- [/^checking\s+/,'check '],
- [/^verifying\s+/,'verify '],
- [/^inspecting\s+/,'inspect '],
- [/^comparing\s+/,'compare '],
- [/^measuring\s+/,'measure '],
- [/^investigating\s+/,'investigate '],
- [/^confirming\s+/,'confirm '],
- [/^increasing\s+/,'increase '],
- [/^changing\s+/,'change '],
- [/^ignoring\s+/,'ignore '],
- [/^assuming\s+/,'assume '],
- [/^reducing\s+/,'reduce '],
- [/^raising\s+/,'raise '],
- [/^lowering\s+/,'lower '],
- [/^decreasing\s+/,'decrease '],
- [/^adjusting\s+/,'adjust '],
- [/^accepting\s+/,'accept ']
-];
-function identityText(value){let out=norm(value);for(const [pattern,replacement] of IDENTITY_STARTER_CANON){if(pattern.test(out))return out.replace(pattern,replacement)}return out}
+function identityText(value){
+ let out=norm(value),prefix='the response is to ';
+ if(out.startsWith(prefix))out=out.slice(prefix.length);
+ return out
+}
 function identityFingerprint(q,kind,level,region){const options=Array.isArray(q?.[1])?q[1]:[],correct=Number(q?.[2]),sorted=options.map(identityText).sort(),correctText=Number.isInteger(correct)&&correct>=0&&correct<options.length?identityText(options[correct]):'';return fnv1a32([kind,level||'',region||'',norm(q?.[0]),sorted.join('␞'),correctText].join('␟'))}
 function identityFor(q,kind,level,region,index){
  const fingerprint=identityFingerprint(q,kind,level,region),locked=IDENTITY_BY_FINGERPRINT.get(fingerprint);
