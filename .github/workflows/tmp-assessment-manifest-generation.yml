@@ -21,10 +21,10 @@ jobs:
           node-version: '22.12.0'
           package-manager-cache: false
       - name: Generate canonical assessment decision manifest
-        run: python tools/generate_assessment_decision_manifest.py --output /tmp/assessment-decision-manifest-v1.json
+        run: python tools/generate_assessment_decision_manifest.py --output generated-assessment-decision-manifest-v1.json
       - name: Upload generated manifest
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: assessment-decision-manifest-209
-          path: /tmp/assessment-decision-manifest-v1.json
+          path: generated-assessment-decision-manifest-v1.json
           if-no-files-found: error
