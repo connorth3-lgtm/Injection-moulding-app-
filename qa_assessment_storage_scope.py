@@ -22,9 +22,9 @@ for marker in [
     'function read(base,fallback=null)', 'function write(base,value)',
     'prototypeInterception:false', 'learnerScoped:true', 'MM_LEARNER_SCOPE',
     'function hashScope', 'migrateFallbackScopes', 'partial-fail-closed', 'scopeProvider',
-    'migrateLegacy', 'clearAll', 'cancelInMemoryAttempt',
+    'migrateLegacy', 'keysForLearner', 'clearLearner', 'clearAll', 'cancelInMemoryAttempt',
     "wrapLearnerChange('switchUser')", "wrapLearnerChange('createLearner')",
-    'after!==before){cancelInMemoryAttempt();clearAll()',
+    'after!==before){cancelInMemoryAttempt();clearLearner(beforeLearner)}',
 ]:
     need(marker in js,f'assessment storage scope marker missing: {marker}')
 for forbidden in ['Storage.prototype', "Object.defineProperty(P,'getItem'", "Object.defineProperty(P,'setItem'", "Object.defineProperty(P,'removeItem'"]:
@@ -78,7 +78,7 @@ if(api.sharedMigration.conflicts!==0||api.sharedMigration.ambiguous!==0||api.sha
 
 let keepAttempt={level:'Advanced'};x.sandbox.activeExam=keepAttempt;x.window.activeExam=keepAttempt;x.window.__doReset=false;x.window.resetData();if(x.sandbox.activeExam!==keepAttempt||x.window.activeExam!==keepAttempt)throw new Error('no-op reset cancelled active exam');
 x.window.__doReset=true;x.window.resetData();if(x.sandbox.activeExam!==null||x.window.activeExam!==null)throw new Error('confirmed reset did not cancel active exam');
-for(const base of ['mm_assessment_analytics_v1','mm_assessment_opening_history_v1','mm-assessment-question-history-v4','mm-assessment-result-meta-v1']){x.db.activeUser='learner-a';if(api.getItem(base)!==null)throw new Error('reset did not clear learner A '+base);x.db.activeUser='learner-b';if(api.getItem(base)!==null)throw new Error('reset did not clear learner B '+base)}
+for(const base of ['mm_assessment_analytics_v1','mm_assessment_opening_history_v1','mm-assessment-question-history-v4','mm-assessment-result-meta-v1']){x.db.activeUser='learner-a';if(api.getItem(base)===null)throw new Error('learner B reset incorrectly cleared learner A '+base);x.db.activeUser='learner-b';if(api.getItem(base)!==null)throw new Error('reset did not clear active learner B '+base)}
 native.set.call(x.localStorage,'unrelated','keep');api.clearAll();if(native.get.call(x.localStorage,'unrelated')!=='keep')throw new Error('clearAll removed unrelated storage');
 
 const y=make(['learner-a','learner-b'],'learner-a',{'mm_assessment_analytics_v1':JSON.stringify({owner:'ambiguous-legacy'})});
@@ -117,7 +117,7 @@ for forbidden in ["localStorage.getItem(ASSESSMENT_HISTORY_KEY)", "localStorage.
     need(forbidden not in ux,f'learner UX assessment persistence bypasses scoped storage: {forbidden}')
 
 bridge=text('src/domains/learning/training-qa-fix.js')
-for marker in ['clearAssessmentAnalyticsStores','clearLearningAnalyticsStores','clearAllAnalyticsStores','clearTrainingExtrasStores','cancelActiveExam','mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1','mm-assessment-question-history-v4','mm-assessment-result-meta-v1','mm_learning_analytics_v1::','ANALYTICS_CLEANUP_CODE','remaining key(s):','restoreSnapshot(before)','clearAllAnalyticsStores();clearTrainingExtrasStores()','const proposedReset=JSON.parse(JSON.stringify(defaultDB))']:
+for marker in ['clearAssessmentAnalyticsStores','clearLearningAnalyticsStores','clearAllAnalyticsStores','clearTrainingExtrasStores','clearLearnerAnalyticsStores','clearLearnerTrainingExtras','learnerOwnedKeys','cancelActiveExam','mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1','mm-assessment-question-history-v4','mm-assessment-result-meta-v1','mm_learning_analytics_v1::','ANALYTICS_CLEANUP_CODE','remaining key(s):','restoreSnapshot(before)','clearLearnerAnalyticsStores(active);clearLearnerTrainingExtras(active)','proposed.users[active]=cleanResetLearner(prior,active)']:
     need(marker in bridge,f'training reset/import verified analytics cleanup missing: {marker}')
 
 V=json.loads(text('version.json'))
@@ -125,4 +125,4 @@ need(V.get('assessment_storage_scope_version')=='2026.08.24.4','published assess
 need(V.get('assessment_storage_migration_version')=='2026.09.11.1','assessment storage migration/ownership version missing')
 for wf in ['.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml','.github/workflows/microsoft-store-msix.yml']:
     w=text(wf);need('python qa_assessment_storage_scope.py' in w,f'{wf} missing learner-scoped analytics QA')
-print('MouldMaster learner-scoped assessment storage QA passed: explicit persistence, native Storage preservation, learner isolation, fail-closed legacy migration, shared scope migration, and verified reset cleanup.')
+print('MouldMaster learner-scoped assessment storage QA passed: explicit persistence, native Storage preservation, learner isolation, fail-closed legacy migration, shared scope migration, and active-learner-only reset cleanup.')
