@@ -7,12 +7,8 @@ CONTRACT=ROOT/'data'/'accessibility-real-at-validation-v1.json'
 VERSION=ROOT/'version.json'
 SHA_RE=re.compile(r'^[0-9a-f]{40}$')
 FP_RE=re.compile(r'^sha256:[0-9a-f]{64}$')
-PACKET_TASK_RE=re.compile(r'^\d+\. \[\x60([a-z0-9-]+)\x60\]',re.MULTILINE)
-EXPECTED_TASK_IDS={
-    'nav-primary','materials-search','exact-grade-evidence','assessment-announcements',
-    'evidence-case','book-search-deep-chapter','book-disclosures','interactive-controls',
-    'status-announcements','structure-zoom-focus','standards-readiness','book-worked-examples'
-}
+PACKET_TASK_RE=re.compile(r'^\d+\. \x60(AT-\d{2})\x60',re.MULTILINE)
+EXPECTED_TASK_IDS={f'AT-{i:02d}' for i in range(1,13)}
 
 def need(ok,msg):
     if not ok:
@@ -35,7 +31,7 @@ need('Automated browser and accessibility regressions do not substitute for real
 
 tasks=data.get('requiredTasks') or []
 need(len(tasks)==12,'real AT contract must contain exactly 12 canonical tasks')
-need(all(isinstance(t,dict) and t.get('id') and t.get('description') for t in tasks),'real AT tasks must use id+description objects')
+need(all(isinstance(t,dict) and t.get('id') and t.get('instruction') for t in tasks),'real AT tasks must use id+instruction objects')
 task_ids=[t['id'] for t in tasks]
 need(len(set(task_ids))==12 and set(task_ids)==EXPECTED_TASK_IDS,'real AT canonical task IDs drifted')
 packet_task_ids=PACKET_TASK_RE.findall(packet_path.read_text(encoding='utf-8'))
