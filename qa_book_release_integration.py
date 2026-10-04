@@ -135,6 +135,7 @@ need("JSON.stringify(row)" not in search_block, 'Book material search must not r
 need("materialSearchIndex.regional.some" in search_block, 'Book material search must query the precomputed regional evidence index')
 need("void ensureManifest().catch(()=>{})" in book_runtime, 'Book open must consume the controlled fail-closed manifest rejection')
 need("async function coldExactGradeHit(query)" in book_runtime, 'Book global search must support cold exact-grade discovery')
+need("await window.MM_DOMAIN_BOOTSTRAP?.ready" in book_runtime, 'Book cold material discovery must wait for manifest-driven material-domain readiness')
 need("engine.searchAllPage(q,{types:['exact-grade'],page:1,pageSize:1})" in book_runtime, 'Book cold material discovery must delegate to the governed exact-grade search engine')
 need("String(input.value||'').trim().toLowerCase()!==q" in book_runtime, 'Book async global search must reject stale query results')
 need("auth?.authorizationBasis?.sourceRevision!=='7ef28bd8b02994223e320fda64e99808357d3219'" in book_runtime, 'runtime no longer enforces reviewed source revision')
