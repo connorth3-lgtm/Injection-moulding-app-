@@ -146,6 +146,7 @@
         "sources": [
           "src/domains/shared/learner-scope.js",
           "src/domains/shared/runtime-v2.js",
+          "assessment-runtime-v2.js",
           "assessment-storage-scope.js",
           "assessment-ux.js",
           "src/domains/learning/training-qa-fix.js",
