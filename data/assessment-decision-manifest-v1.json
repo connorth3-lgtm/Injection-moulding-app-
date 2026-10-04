@@ -2406,11 +2406,11 @@
       "bankVersion": null,
       "choiceFingerprints": [
         "fnv1a-375b4fff",
-        "fnv1a-87325011",
+        "fnv1a-80fe61fe",
         "fnv1a-637c6a09",
         "fnv1a-aade2b34"
       ],
-      "contentFingerprint": "fnv1a-79305647",
+      "contentFingerprint": "fnv1a-02b19978",
       "correctChoiceFingerprint": "fnv1a-87325011",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
