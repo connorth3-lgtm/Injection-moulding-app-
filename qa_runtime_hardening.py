@@ -133,11 +133,10 @@ must(reference_page, ['<script src="./reference-data.js"></script>', '<script sr
 must(service_worker, [
     "${CACHE_VERSION}-${CACHE_REVISION}", "'./repair.html'", "runtimeCritical=url.pathname.endsWith('.js')||url.pathname.endsWith('.json')",
     "const RELEASE_PATHS=new Set(", "async function releaseCacheMatch(request)", "const cache=await caches.open(STATIC_CACHE)", "RELEASE_PATHS.has(url.pathname)",
-    "async function fetchNetwork(event)", "fetch(event.request,{cache:'no-store'})", "await fetchNetwork(event)||criticalOfflineResponse(url)", "'./reference-data.html'", "'./reference-2026-expansion.js'", "'./diagnostic-learning-labs.js'",
-    "'./material-behaviour-labs.js'", "'./assessment-evidence-sources.js'", "'./evidence-maturity-deep-dive.js'", "'./evidence-maturity-formal-bridge.js'",
-    "'./src/domains/assessment/assessment-psychometric-hardening.js'", "'./assessment-evidence-integrity-upgrade.js'", "'./lesson-evidence-depth.js'", "'./lesson-deep-authoring-v2.js'", "'./assessment-evidence-approval.js'", "'./assessment-psychometric-approval.js'",
-    "'./src/domains/shared/runtime-v2.js'", "'./assessment-runtime-v2.js'", "'./assessment-multimodal.js'", "'./src/domains/shell/accessibility-hardening.js'",
-    "'./process-data-diagnostics.js'", "'./real-measured-data-assessment.js'", "'./curriculum-integration.js'", "'./specialist-curriculum.js'", "'./learning-analytics.js'",
+    "async function fetchNetwork(event)", "fetch(event.request,{cache:'no-store'})", "await fetchNetwork(event)||criticalOfflineResponse(url)", "'./reference-data.html'", "'./reference-2026-expansion.js'",
+    "'./src/domains/runtime-packs/evidence-runtime-pack.js'", "'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'",
+    "'./src/domains/shared/runtime-v2.js'", "'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'", "'./src/domains/runtime-packs/assessment-multimodal-runtime-pack.js'", "'./src/domains/shell/accessibility-hardening.js'",
+    "'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'", "'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'", "'./learning-analytics.js'",
     "Promise.allSettled", "if(failed.length)", "await caches.delete(STATIC_CACHE)", "keeping the previous worker", "mouldmaster-offline-asset-unavailable"
 ], "PWA hardening")
 core = worker_assets(service_worker, "CORE")
