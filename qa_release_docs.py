@@ -152,9 +152,10 @@ need('MouldMaster GitHub Issues' in support and 'Do not post learner names' in s
 need('Learning insights events' in support and 'resets both analytics histories' in support,'support import analytics lifecycle disclosure is stale')
 
 privacy=text('privacy.html')
-for marker in ['assessment analytics','scoped to the active learner profile','first meaningful question exposure','does not currently upload','deliberately not included in the progress backup','successful progress-backup import resets local assessment analytics and Learning insights analytics','orphaned buckets','Reset local analytics','Reset learner data','Delete all local process-data evidence','mouldmaster-process-data-v1']:
+for marker in ['assessment analytics','scoped to the active learner profile','first meaningful question exposure','does not currently upload','deliberately not included in the progress backup','successful progress-backup import resets local assessment analytics and Learning insights analytics','orphaned buckets','Reset local analytics','Reset learner data','other local learner profiles','all local learner profiles','replaces the local learner registry','10 MiB','Delete all local process-data evidence','mouldmaster-process-data-v1']:
     need(marker in privacy,f'privacy disclosure missing: {marker}')
-need('cleanup cannot be verified' in privacy,'privacy notice must disclose fail-closed reset/import cleanup behavior')
+need('scoped cleanup or clean learner write cannot be verified' in privacy,'privacy notice must disclose fail-closed learner-reset cleanup/write behavior')
+need('replaces the local learner registry after confirmation' in support,'support must disclose destructive backup registry replacement before import')
 
 sw=text('service-worker.js')
 for marker in ["'./privacy.html'","'./support.html'","'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'","'./assessment-evidence-sources.js'","'./assessment-evidence-approval.js'","'./curriculum-integration.js'","'./specialist-curriculum.js'","'./src/domains/learning/specialist-evidence-gap-extension.js'","'./src/domains/shell/app-shell-registry.js'","'./mould-master-workspace.js'","'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'"]:
