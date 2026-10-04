@@ -68,7 +68,7 @@ test('Home is one primary lesson decision plus two non-duplicate specialist tool
 test('Book keeps governed status intact but progressively discloses assurance detail without a mutation loop',async({page})=>{
   await page.setViewportSize({width:412,height:915});
   await openApp(page);
-  await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
+  await page.evaluate(()=>window.MMBook.load());
   await page.evaluate(()=>window.MMBook.open());
 
   const governance=page.locator('#mmBookView .mm-book-governance');
@@ -253,7 +253,7 @@ test('all major app surfaces remain reachable without shell clutter',async({page
 test('Book Materials chapter exposes the complete governed material datasets with structured technical-review rendering',async({page})=>{
   await page.setViewportSize({width:810,height:1080});
   await openApp(page);
-  await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
+  await page.evaluate(()=>window.MMBook.load());
   await page.evaluate(()=>window.MMBook.open());
   await page.locator('[data-mm-book-chapter="material-families"]').click();
   const atlas=page.locator('[data-mm-book-material-atlas]');
@@ -269,7 +269,11 @@ test('Book Materials chapter exposes the complete governed material datasets wit
 
   const canonical=atlas.locator('[data-mm-book-canonical-catalog]');
   await canonical.locator('summary').click();
-  await expect(canonical.locator('[data-mm-book-catalog-grade]')).toHaveCount(260);
+  await expect(canonical.locator('[data-mm-book-catalog-grade]')).toHaveCount(24);
+  const canonicalMore=canonical.locator('[data-mm-book-material-more="catalog"]');
+  await expect(canonicalMore).toContainText('24/260 shown');
+  await canonicalMore.click();
+  await expect(canonical.locator('[data-mm-book-catalog-grade]')).toHaveCount(48);
   const firstGrade=canonical.locator('[data-mm-book-catalog-grade]').first();
   await firstGrade.locator('summary').click();
   await expect(firstGrade).toContainText(/Canonical exact-grade record/i);
@@ -280,7 +284,11 @@ test('Book Materials chapter exposes the complete governed material datasets wit
 
   const regional=atlas.locator('[data-mm-book-regional-evidence]');
   await regional.locator('summary').click();
-  await expect(regional.locator('[data-mm-book-regional-row]')).toHaveCount(284);
+  await expect(regional.locator('[data-mm-book-regional-row]')).toHaveCount(24);
+  const regionalMore=regional.locator('[data-mm-book-material-more="regional"]');
+  await expect(regionalMore).toContainText('24/284 shown');
+  await regionalMore.click();
+  await expect(regional.locator('[data-mm-book-regional-row]')).toHaveCount(48);
   const firstRegional=regional.locator('[data-mm-book-regional-row]').first();
   await firstRegional.locator('summary').click();
   await expect(firstRegional).toContainText(/Regional evidence row 1/i);

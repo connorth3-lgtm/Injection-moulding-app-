@@ -19,6 +19,10 @@ INDEX_PATH = ROOT / 'index.html'
 LEARNING_PACK = ROOT / 'src/domains/runtime-packs/learning-foundation-runtime-pack.js'
 DESKTOP_PACKAGE = ROOT / 'desktop/electron/package.json'
 INTEGRITY_SCRIPT = ROOT / 'desktop/electron/scripts/generate-integrity.cjs'
+MATERIAL_CATALOG_SOURCE = ROOT / 'material-catalog-v1.json'
+MATERIAL_REGIONAL_SOURCE = PACKAGED_ROOT / 'book-material-regional-evidence-v1.json'
+MATERIAL_SEARCH_INDEX_SOURCE = ROOT / 'data/book-material-search-index-v1.json'
+MATERIAL_SEARCH_INDEX_PACKAGED = PACKAGED_ROOT / 'book-material-search-index-v1.json'
 
 
 def git_blob_sha(path: Path) -> str:
@@ -29,6 +33,11 @@ def git_blob_sha(path: Path) -> str:
 def need(ok, message):
     if not ok:
         raise AssertionError(message)
+
+
+def normalize_search(value):
+    import re
+    return re.sub(r'\s+', ' ', re.sub(r'[^a-z0-9]+', ' ', str(value or '').lower())).strip()
 
 
 runtime_manifest = json.loads(MANIFEST_PATH.read_text(encoding='utf-8'))
@@ -66,6 +75,7 @@ book_data = [
     'book-evidence-enrichment-v2.json',
     'book-material-grade-atlas-v1.json',
     'book-material-regional-evidence-v1.json',
+    'book-material-search-index-v1.json',
 ]
 for name in book_data:
     packaged = f'./src/domains/learning/book-data/{name}'
@@ -106,6 +116,41 @@ need(authorization.get('canonicalAcademicEvidenceUrls', {}).get('PARIZS-2023-IN-
 
 # Authorization is now byte-bound to the exact served payloads that can influence publication promotion.
 need(AUTH_SOURCE.read_bytes() == (PACKAGED_ROOT / 'book-publication-authorization-v1.json').read_bytes(), 'packaged authorization drifted from governed source')
+need(MATERIAL_SEARCH_INDEX_SOURCE.read_bytes() == MATERIAL_SEARCH_INDEX_PACKAGED.read_bytes(), 'packaged Book material search index drifted from governed source')
+need('./src/domains/learning/book-data/book-material-search-index-v1.json' in sw, 'Book material search index missing from atomic offline cache')
+material_catalog = json.loads(MATERIAL_CATALOG_SOURCE.read_text(encoding='utf-8'))
+material_regional = json.loads(MATERIAL_REGIONAL_SOURCE.read_text(encoding='utf-8'))
+material_search_index = json.loads(MATERIAL_SEARCH_INDEX_SOURCE.read_text(encoding='utf-8'))
+need(material_search_index.get('schemaVersion') == 1 and material_search_index.get('release') == '2026.10.04.3', 'Book material search index identity drift')
+need(material_search_index.get('sourceCounts') == {'canonicalExactGrades':260,'regionalEvidenceRows':284,'total':544}, 'Book material search index source-count drift')
+expected_search_entries = []
+for grade in material_catalog.get('grades', []):
+    expected_search_entries.append({
+        'id': grade.get('id'),
+        'search': normalize_search(' '.join(str(x) for x in [
+            (grade.get('manufacturer') or {}).get('name'),
+            grade.get('brand'),
+            grade.get('grade'),
+            *((grade.get('aliases') or [])),
+            (grade.get('polymer') or {}).get('family'),
+        ] if x)),
+        'kind': 'canonical',
+    })
+for index, row in enumerate(material_regional.get('records', []), start=1):
+    expected_search_entries.append({
+        'id': f'regional-{index:03d}',
+        'search': normalize_search(' '.join(str(x) for x in [
+            row.get('manufacturer'),
+            row.get('grade'),
+            row.get('polymer'),
+            row.get('manufacturerCountry'),
+            row.get('region'),
+            row.get('status'),
+        ] if x)),
+        'kind': 'regional',
+    })
+need(len(expected_search_entries) == 544, 'Book material search source coverage drift')
+need(material_search_index.get('entries') == expected_search_entries, 'Book material search index drifted from canonical catalogue/regional evidence sources')
 byte_contract = authorization.get('runtimeIntegrity') or {}
 need(byte_contract.get('algorithm') == 'git-blob-sha1', 'Book runtime integrity algorithm missing')
 sha_by_file = byte_contract.get('gitBlobSha1ByFile') or {}
@@ -122,8 +167,27 @@ for name in required_integrity:
     need(sha_by_file[name] == git_blob_sha(path), f'Book byte-integrity Git object mismatch: {name}')
 auth_blob = git_blob_sha(PACKAGED_ROOT / 'book-publication-authorization-v1.json')
 need(f"const AUTH_GIT_BLOB_SHA1='{auth_blob}'" in book_runtime, 'canonical runtime is not pinned to exact authorization bytes')
-for marker in ('gitBlobSha1', 'verifiedJson', 'validateIntegrityAuthorization', 'Book byte-integrity mismatch', 'WORKED_CASES_PATH', 'validateWorkedCases', 'workedCaseHtml', 'getWorkedCases', 'DIAGRAMS_PATH', 'validateEngineeringDiagrams', 'diagramHtml', 'getEngineeringDiagrams', 'ENRICHMENT_PATH', 'validateEvidenceEnrichment', 'getEvidenceEnrichment', 'MATERIAL_ATLAS_PATH', 'MATERIAL_REGIONAL_PATH', 'MATERIAL_CATALOG_PATH', 'validateMaterialAtlas', 'validateMaterialCatalog', 'validateMaterialRegionalEvidence', 'materialAtlasHtml', 'getMaterialAtlas', 'getMaterialCatalog', 'getMaterialRegionalEvidence'):
-    need(marker in book_runtime, f'Book runtime exact-byte safeguard missing: {marker}')
+for marker in ('gitBlobSha1', 'verifiedJson', 'validateIntegrityAuthorization', 'Book byte-integrity mismatch', 'WORKED_CASES_PATH', 'validateWorkedCases', 'workedCaseHtml', 'getWorkedCases', 'DIAGRAMS_PATH', 'validateEngineeringDiagrams', 'diagramHtml', 'getEngineeringDiagrams', 'ENRICHMENT_PATH', 'validateEvidenceEnrichment', 'getEvidenceEnrichment', 'MATERIAL_ATLAS_PATH', 'MATERIAL_REGIONAL_PATH', 'MATERIAL_CATALOG_PATH', 'MATERIAL_SEARCH_INDEX_PATH', 'MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1', 'validateMaterialAtlas', 'validateMaterialCatalog', 'validateMaterialRegionalEvidence', 'materialAtlasHtml', 'ensureManifest', 'ensureMaterialData', 'hydrateMaterialAtlas', 'coldMaterialSearchTerms', 'coldMaterialHit', 'MATERIAL_PAGE_SIZE=24', 'data-mm-book-material-more', 'getMaterialAtlas', 'getMaterialCatalog', 'getMaterialRegionalEvidence'):
+    need(marker in book_runtime, f'Book runtime exact-byte/lazy-load safeguard missing: {marker}')
+load_manifest_block = book_runtime.split('async function loadManifest(){',1)[1].split('function failBook(',1)[0]
+for forbidden in ('MATERIAL_ATLAS_PATH', 'MATERIAL_CATALOG_PATH', 'MATERIAL_REGIONAL_PATH', 'MATERIAL_SEARCH_INDEX_PATH'):
+    need(forbidden not in load_manifest_block, f'heavy material payload must not load during core Book manifest initialization: {forbidden}')
+need("async function init(){createUI();armBookSearch();return true;}" in book_runtime, 'Book shell must initialize without fetching governed Book payloads while retrying global-search binding')
+need("if(!manifest){ui.summary.textContent='Loading governed Book content on demand…'" in book_runtime, 'Book open action must demand-load governed content')
+need("materialSearchIndex={catalog:[],regional:[]}" in book_runtime, 'Book material search must use a precomputed normalized index')
+search_block = book_runtime.split('function searchBook(query){',1)[1].split('async function appendBookSearchResults',1)[0]
+need("JSON.stringify(row)" not in search_block, 'Book material search must not re-serialize all regional evidence rows on every query')
+need("materialSearchIndex.regional.some" in search_block, 'Book material search must query the precomputed regional evidence index')
+need("void ensureManifest().catch(()=>{})" in book_runtime, 'Book open must consume the controlled fail-closed manifest rejection')
+need("async function coldMaterialSearchTerms()" in book_runtime and "verifiedJson(MATERIAL_SEARCH_INDEX_PATH,MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1)" in book_runtime, 'Book cold material discovery must use the exact-byte-pinned lightweight search index')
+need("async function coldMaterialHit(query)" in book_runtime, 'Book global search must support cold canonical and regional material discovery')
+need("counts.canonicalExactGrades!==260" in book_runtime and "counts.regionalEvidenceRows!==284" in book_runtime and "counts.total!==544" in book_runtime, 'Book cold search index must fail closed on coverage drift')
+need("String(input.value||'').trim().toLowerCase()!==q" in book_runtime, 'Book async global search must reject stale query results')
+need("function bindBookSearchInput()" in book_runtime and "event.target?.id==='globalSearch'" in book_runtime, 'Book global search must use delegated input integration that survives late doSearch replacement')
+need("window.__MM_BOOK_SEARCH_INPUT_BOUND__=VERSION" in book_runtime, 'Book delegated global-search binding must be idempotent')
+need("bindBookSearchInput();\n  window.MMBook=Object.freeze" in book_runtime, 'Book global-search listener must bind before MMBook becomes externally observable')
+search_index_blob = git_blob_sha(PACKAGED_ROOT / 'book-material-search-index-v1.json')
+need(f"const MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1='{search_index_blob}'" in book_runtime, 'Book material search index is not pinned to exact bytes')
 need("auth?.authorizationBasis?.sourceRevision!=='7ef28bd8b02994223e320fda64e99808357d3219'" in book_runtime, 'runtime no longer enforces reviewed source revision')
 
 # Publication/SME/qualification boundaries remain fail-closed and unchanged in meaning.
@@ -146,8 +210,10 @@ need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('independe
 need(authorization['authorizationBasis']['sourceRevision'] == '7ef28bd8b02994223e320fda64e99808357d3219', 'authorization provenance revision drift')
 
 # Book is now part of the primary search surface and read/listen still render one governed chapter representation.
-for marker in ('function searchBook(', 'function appendBookSearchResults(', 'function installBookSearch(', 'function openChapter('):
+for marker in ('function searchBook(', 'function appendBookSearchResults(', 'function installBookSearch(', 'function armBookSearch()', 'function openChapter('):
     need(marker in book_runtime, f'Book search integration missing: {marker}')
+need("window.addEventListener('mm:domains-ready',installBookSearch,{once:true})" in book_runtime, 'Book search binding must retry after manifest-driven domains are ready')
+need("window.__MM_BOOK_SEARCH_BOUND__===VERSION" in book_runtime, 'Book search binding must be idempotent for the current Book runtime')
 need('function verifiedChapterHtml(chapter,options={})' in book_runtime, 'verified chapter renderer missing')
 need("if(chapter.state==='verified')ui.reader.innerHTML=`${back}${verifiedChapterHtml(chapter)}`" in book_runtime, 'Book read surface no longer uses governed verified renderer')
 need("verified.map(chapter=>verifiedChapterHtml(chapter,{includeTechnicalMaterial:false})).join('')" in book_runtime, 'Book listen surface must exclude technical-review material appendix')

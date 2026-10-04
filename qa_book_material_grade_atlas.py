@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import re
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent
@@ -9,6 +10,8 @@ SOURCE=json.loads((ROOT/'data/asian-aus-nz-material-grade-extraction-wave2-v1.js
 ATLAS=json.loads((ROOT/'data/book-material-grade-atlas-v1.json').read_text(encoding='utf-8'))
 PACKAGED_ATLAS=json.loads((ROOT/'src/domains/learning/book-data/book-material-grade-atlas-v1.json').read_text(encoding='utf-8'))
 PACKAGED_REGIONAL=json.loads((ROOT/'src/domains/learning/book-data/book-material-regional-evidence-v1.json').read_text(encoding='utf-8'))
+SEARCH_INDEX=json.loads((ROOT/'data/book-material-search-index-v1.json').read_text(encoding='utf-8'))
+PACKAGED_SEARCH_INDEX=json.loads((ROOT/'src/domains/learning/book-data/book-material-search-index-v1.json').read_text(encoding='utf-8'))
 
 def need(ok,msg):
     if not ok:
@@ -16,6 +19,10 @@ def need(ok,msg):
 
 need(ATLAS==PACKAGED_ATLAS,'packaged Book material atlas manifest drifted from governed source')
 need(SOURCE==PACKAGED_REGIONAL,'packaged regional material evidence must preserve every governed source-wave row exactly')
+need(SEARCH_INDEX==PACKAGED_SEARCH_INDEX,'packaged Book material search index drifted from governed source')
+
+def norm(value):
+    return re.sub(r'[^a-z0-9]+',' ',str(value or '').lower()).strip()
 
 need(ATLAS.get('schemaVersion')==2 and ATLAS.get('bookId')=='mouldmaster-book','Book material atlas identity mismatch')
 need(ATLAS.get('status')=='technical-review-material-atlas','Book material atlas must remain technical review')
@@ -50,6 +57,25 @@ need(regional.get('packagedPath')=='src/domains/learning/book-data/book-material
 need(regional.get('recordCount')==284 and regional.get('statusCounts')==counts,'atlas regional complete-coverage declaration mismatch')
 need(profile.get('profileCount')==INDEX.get('uniqueExactCompleteProfiles')==89,'regional profile reconciliation count mismatch')
 need('does not define complete Book material coverage' in profile.get('role',''),'89-profile index must be explicitly non-authoritative for complete Book coverage')
+
+search_counts=SEARCH_INDEX.get('sourceCounts') or {}
+search_entries=SEARCH_INDEX.get('entries') or []
+need(SEARCH_INDEX.get('schemaVersion')==1 and SEARCH_INDEX.get('release')=='2026.10.04.3','Book material search index identity mismatch')
+need(search_counts=={'canonicalExactGrades':260,'regionalEvidenceRows':284,'total':544},'Book material search index source counts drifted')
+need(len(search_entries)==544,'Book material search index must cover all 544 governed material rows')
+expected_canonical=[
+    norm(' '.join(str(x) for x in [g.get('manufacturer',{}).get('name'),g.get('brand'),g.get('grade'),*(g.get('aliases') or []),g.get('polymer',{}).get('family')] if x))
+    for g in grades
+]
+expected_regional=[
+    norm(' '.join(str(x) for x in [row.get('manufacturer'),row.get('grade'),row.get('polymer'),row.get('manufacturerCountry'),row.get('region'),row.get('status')] if x))
+    for row in rows
+]
+actual_canonical=[entry.get('search') for entry in search_entries if entry.get('kind')=='canonical']
+actual_regional=[entry.get('search') for entry in search_entries if entry.get('kind')=='regional']
+need(actual_canonical==expected_canonical,'Book material search index canonical coverage/content drifted')
+need(actual_regional==expected_regional,'Book material search index regional coverage/content drifted')
+need(any('duracon m90 44' in text for text in actual_regional),'Book material search index lost governed DURACON M90-44 regional discovery')
 need(coverage=={
     'canonicalExactGrades':260,
     'regionalEvidenceRows':284,
@@ -63,3 +89,4 @@ for marker in ('not guaranteed specifications','universal settings','current sup
 
 print('PASS: Book material atlas consumes all 260 canonical exact grades and preserves all 284 regional evidence rows exactly.')
 print('PASS: the 89-profile regional index is reconciliation-only, not a completeness boundary.')
+print('PASS: lightweight Book search index exactly covers all 260 canonical grades and 284 regional evidence rows.')

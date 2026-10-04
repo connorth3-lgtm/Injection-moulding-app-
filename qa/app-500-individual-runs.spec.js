@@ -66,6 +66,7 @@ for(let run=1;run<=500;run++){
     }else if(family==='book'){
       await page.waitForFunction(()=>Boolean(window.MMBook?.open));await page.evaluate(()=>window.MMBook.open());
       await expect(page.locator('#mmBookView')).toBeVisible();
+      await page.evaluate(()=>window.MMBook.load());
       await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
       const chapters=page.locator('[data-mm-book-chapter]');
       expect(await chapters.count()).toBeGreaterThanOrEqual(46);

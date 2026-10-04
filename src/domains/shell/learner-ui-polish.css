@@ -1,4 +1,4 @@
-/* MouldMaster learner UI polish — 2026.10.04.1 */
+/* MouldMaster learner UI polish — 2026.10.04.3 */
 
 /* Book: the evidence contract stays visible and accessible, but it no longer
    competes with the learner's chapter choice above the fold. */
@@ -205,7 +205,7 @@
   }
 }
 
-/* Canonical Home hierarchy — 2026.10.04.1 */
+/* Canonical Home hierarchy — 2026.10.04.3 */
 /* Home has one job: resume learning. Specialist tools remain available without
    duplicating Learn, Materials, Practice, Saved lessons or Book navigation. */
 #dashboard{

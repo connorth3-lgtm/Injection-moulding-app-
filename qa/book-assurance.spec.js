@@ -43,3 +43,58 @@ test('Book distinguishes source evidence review from independent human validatio
   await expect(boundary).toContainText('accreditation');
   await expect(boundary).toContainText('production validation');
 });
+
+test('Book defers governed payloads and heavy material evidence until requested',async({page})=>{
+  await openApp(page);
+  const initial=await page.evaluate(()=>({
+    manifest:window.MMBook?.getManifest?.()||null,
+    catalog:window.MMBook?.getMaterialCatalog?.()||null,
+    regional:window.MMBook?.getMaterialRegionalEvidence?.()||null,
+    resources:performance.getEntriesByType('resource').map(entry=>entry.name)
+  }));
+  expect(initial.manifest).toBeNull();
+  expect(initial.catalog).toBeNull();
+  expect(initial.regional).toBeNull();
+  expect(initial.resources.some(url=>url.includes('book-material-regional-evidence-v1.json'))).toBeFalsy();
+
+  await page.evaluate(()=>window.MMBook.open());
+  await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length===8);
+  expect(await page.evaluate(()=>window.MMBook.getMaterialCatalog())).toBeNull();
+  expect(await page.evaluate(()=>window.MMBook.getMaterialRegionalEvidence())).toBeNull();
+
+  await page.evaluate(()=>window.MMBook.openChapter('material-families'));
+  await page.waitForFunction(()=>window.MMBook?.getMaterialCatalog?.()?.grades?.length===260&&window.MMBook?.getMaterialRegionalEvidence?.()?.records?.length===284);
+  await expect(page.locator('[data-mm-book-catalog-grade]')).toHaveCount(24);
+  await expect(page.locator('[data-mm-book-regional-row]')).toHaveCount(24);
+});
+
+test('Book open consumes governed-load rejection while remaining fail-closed',async({page})=>{
+  await page.addInitScript(()=>{
+    window.__mmBookUnhandled=[];
+    window.addEventListener('unhandledrejection',event=>window.__mmBookUnhandled.push(String(event.reason?.message||event.reason||'unknown')));
+  });
+  await page.route('**/src/domains/learning/book-data/book-manifest-v1.json',route=>route.fulfill({status:503,contentType:'application/json',body:'{}'}));
+  await openApp(page);
+  await page.evaluate(()=>window.MMBook.open());
+  await expect(page.locator('[data-mm-book-summary]')).toContainText('could not be verified');
+  await expect(page.locator('#mmBookView')).toContainText('Book unavailable');
+  await page.waitForTimeout(100);
+  expect(await page.evaluate(()=>window.__mmBookUnhandled)).toEqual([]);
+  expect(await page.evaluate(()=>window.MMBook.getManifest())).toBeNull();
+});
+
+test('Cold global search finds exact-grade Book material chapter without loading regional Book evidence',async({page})=>{
+  await openApp(page);
+  expect(await page.evaluate(()=>window.MMBook.getMaterialCatalog())).toBeNull();
+  expect(await page.evaluate(()=>window.MMBook.getMaterialRegionalEvidence())).toBeNull();
+  await page.evaluate(()=>window.openSearch());
+  const input=page.locator('#globalSearch');
+  await input.fill('DURACON M90-44');
+  await expect(page.locator('[data-mm-book-search-result]')).not.toHaveCount(0);
+  await expect(page.locator('[data-mm-book-search-result]').first()).toContainText('Book:');
+  expect(await page.evaluate(()=>window.MMBook.getMaterialCatalog())).toBeNull();
+  expect(await page.evaluate(()=>window.MMBook.getMaterialRegionalEvidence())).toBeNull();
+  const resources=await page.evaluate(()=>performance.getEntriesByType('resource').map(entry=>entry.name));
+  expect(resources.some(url=>url.includes('book-material-regional-evidence-v1.json'))).toBeFalsy();
+});
+

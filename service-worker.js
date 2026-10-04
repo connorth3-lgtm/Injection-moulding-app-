@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.10.04.1';
+const CACHE_VERSION='2026.10.04.3';
 const CACHE_REVISION='deep-review-r2-20261002';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
@@ -95,6 +95,7 @@ const CORE=[
   './src/domains/learning/book-data/book-evidence-enrichment-v2.json',
   './src/domains/learning/book-data/book-material-grade-atlas-v1.json',
   './src/domains/learning/book-data/book-material-regional-evidence-v1.json',
+  './src/domains/learning/book-data/book-material-search-index-v1.json',
   './src/domains/learning/book-data/nzqa-education-readiness-v1.json',
   './src/domains/learning/book-data/nzqa-provider-evidence-templates-v1.json',
   './src/domains/quality/data/quality-management-iso9001-v1.json',

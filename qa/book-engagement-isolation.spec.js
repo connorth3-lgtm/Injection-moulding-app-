@@ -18,6 +18,7 @@ test('Book engagement is learner-scoped, deduplicated and excluded from mastery'
   await openApp(page);
 
   const result=await page.evaluate(async()=>{
+    await window.MMBook.load();
     const chapters=window.MMBook.verifiedChapters();
     if(!chapters.length)throw new Error('No evidence-verified Book chapter available for regression test');
     const chapter=chapters[0];
