@@ -124,6 +124,11 @@ for(const lab of LABS){
  const specs=BALANCE[lab.id];if(!specs||specs.length!==lab.steps.length)throw new Error(`Material answer-balance map incomplete: ${lab.id}`);
  lab.steps.forEach((step,i)=>{const spec=specs[i],original=step.choices;if(!original||original.length!==4||original.findIndex(c=>c.correct===true)!==0)throw new Error(`Material answer-balance source changed: ${lab.id}/${i}`);spec.texts.forEach((t,n)=>original[n].text=t);step.choices=BALANCE_ORDER[spec.pos].map(n=>original[n])});
 }
+const authorChoice=window.MM_ASSESSMENT_AUTHOR_CHOICE||((value)=>String(value??''));
+let starterCueEdits=0;
+for(const lab of LABS)for(const step of lab.steps||[])for(const choice of step.choices||[]){
+ const next=authorChoice(choice.text);if(next!==choice.text){choice.text=next;starterCueEdits++}
+}
 
 function esc(v){return String(v??'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]))}
 function learnerToken(){try{let id='';if(typeof db!=='undefined'&&db?.activeUser)id=db.activeUser;else id=window.db?.activeUser||window.user?.id||'';return String(id||'anonymous').replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,80)}catch(_){return'anonymous'}}
@@ -154,5 +159,5 @@ function open(){style();const h=section();if(!h)return;hide();h.classList.remove
 function install(){style();nav();mobile();const h=section();if(h&&!h.__mmMl){h.addEventListener('click',click);h.__mmMl=true}}
 let queued=false;function schedule(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(()=>{queued=false;install()},0)}
 if(document.documentElement)new MutationObserver(schedule).observe(document.documentElement,{childList:true,subtree:true});install();window.addEventListener('load',schedule);
-window.MM_MATERIAL_BEHAVIOUR_LABS={version:VERSION,labs:LABS,open,storage:'learner-scoped local progress only',trainingBoundary:'Scenario-specific education; verify exact grade and approved real-world requirements.',answerBalanceVersion:ANSWER_BALANCE_VERSION};
+window.MM_MATERIAL_BEHAVIOUR_LABS={version:VERSION,labs:LABS,open,storage:'learner-scoped local progress only',trainingBoundary:'Scenario-specific education; verify exact grade and approved real-world requirements.',answerBalanceVersion:ANSWER_BALANCE_VERSION,starterCueEdits};
 })();
