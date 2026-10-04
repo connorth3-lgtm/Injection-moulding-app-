@@ -129,6 +129,10 @@ for forbidden in ('MATERIAL_ATLAS_PATH', 'MATERIAL_CATALOG_PATH', 'MATERIAL_REGI
     need(forbidden not in load_manifest_block, f'heavy material payload must not load during core Book manifest initialization: {forbidden}')
 need("async function init(){createUI();installBookSearch();return true;}" in book_runtime, 'Book shell must initialize without fetching governed Book payloads')
 need("if(!manifest){ui.summary.textContent='Loading governed Book content on demand…'" in book_runtime, 'Book open action must demand-load governed content')
+need("materialSearchIndex={catalog:[],regional:[]}" in book_runtime, 'Book material search must use a precomputed normalized index')
+search_block = book_runtime.split('function searchBook(query){',1)[1].split('async function appendBookSearchResults',1)[0]
+need("JSON.stringify(row)" not in search_block, 'Book material search must not re-serialize all regional evidence rows on every query')
+need("materialSearchIndex.regional.some" in search_block, 'Book material search must query the precomputed regional evidence index')
 need("auth?.authorizationBasis?.sourceRevision!=='7ef28bd8b02994223e320fda64e99808357d3219'" in book_runtime, 'runtime no longer enforces reviewed source revision')
 
 # Publication/SME/qualification boundaries remain fail-closed and unchanged in meaning.
