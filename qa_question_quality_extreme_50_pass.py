@@ -454,8 +454,8 @@ def main():
             need(acc<=0.58,f'lexical cue model too predictive for {kind}: {acc}')
     need(not high_repeat,'memorisation cue: distractor repeated >=8 times and never correct: '+json.dumps(high_repeat[:8],ensure_ascii=False))
     need(not hard,'extreme question-quality audit hard findings: '+json.dumps({'count':len(hard),'sample':list(hard.items())[:12]},ensure_ascii=False))
-    need(len(pass_rows)==50 and all(x['items']==197 for x in pass_rows),'extreme 50-pass execution incomplete')
-    print(f"MouldMaster EXTREME question audit passed: 197 decisions x 50 option permutations = {197*50:,}; cue-model={cue['mean_accuracy']:.3f}; warnings={sum(warning_types.values())}")
+    need(len(pass_rows)==50 and all(x['items']==209 for x in pass_rows),'extreme 50-pass execution incomplete')
+    print(f"MouldMaster EXTREME question audit passed: 209 decisions x 50 option permutations = {209*50:,}; cue-model={cue['mean_accuracy']:.3f}; warnings={sum(warning_types.values())}")
 
 
 if __name__=='__main__':
