@@ -301,10 +301,7 @@ function trainingStorePredicate(k){
 function clearTrainingExtrasStores(){return clearMatchingStores('training extras',trainingStorePredicate)}
 function uniqueKeys(values){return [...new Set(values.filter(Boolean))]}
 function learnerRuntimeAssessmentKeys(learnerId){
- const id=canonicalLearnerId(learnerId),scope=learnerScope(),prefix=ASSESSMENT_MEMBERSHIP_KEY+'::';
- scope.registerStoragePrefix?.(prefix);
- scope.migrateStoragePrefix(prefix,id);
- const keys=[scope.storageKey(prefix,scope.tokenFor(id))],plan=scope.migrationPlan?.(id);
+ const id=canonicalLearnerId(learnerId),scope=learnerScope(),prefix=ASSESSMENT_MEMBERSHIP_KEY+'::',keys=[scope.storageKey(prefix,scope.tokenFor(id))],plan=scope.migrationPlan?.(id);
  if(plan?.uniqueOwner&&plan.legacyToken)keys.push(scope.storageKey(prefix,plan.legacyToken));
  return uniqueKeys(keys)
 }
@@ -321,7 +318,7 @@ function learnerLearningAnalyticsKeys(learnerId){
  return uniqueKeys(keys)
 }
 function learnerTrainingKeys(learnerId){
- const id=canonicalLearnerId(learnerId),scope=learnerScope(),keys=[trainingKey(REVIEW_KEY,id),trainingKey(SIGN_KEY,id),trainingKey(MEASURED_KEY,id),trainingKey(PROCESS_DIAG_KEY,id),trainingKey(DIAGNOSTIC_LABS_KEY,id),materialLabsKey(id)],plan=scope.migrationPlan?.(id);
+ const id=canonicalLearnerId(learnerId),scope=learnerScope(),keys=[trainingDestinationKey(REVIEW_KEY,id),trainingDestinationKey(SIGN_KEY,id),trainingDestinationKey(MEASURED_KEY,id),trainingDestinationKey(PROCESS_DIAG_KEY,id),trainingDestinationKey(DIAGNOSTIC_LABS_KEY,id),trainingDestinationKey(MATERIAL_LABS_KEY,id)],plan=scope.migrationPlan?.(id);
  if(plan?.uniqueOwner&&plan.legacyToken){
   keys.push(scope.storageKey(REVIEW_KEY+'::',plan.legacyToken),scope.storageKey(SIGN_KEY+'::',plan.legacyToken),scope.storageKey(MEASURED_KEY+'::',plan.legacyToken),scope.storageKey(PROCESS_DIAG_KEY+'::',plan.legacyToken),scope.storageKey(DIAGNOSTIC_LABS_KEY+'::',plan.legacyToken))
  }
@@ -470,8 +467,12 @@ const baseReset=window.resetData;if(typeof baseReset==='function')window.resetDa
  let active;try{active=canonicalLearnerId(db?.activeUser)}catch(_){alert('Learner reset is unavailable because the active learner identity is invalid.');return}
  const prior=db?.users?.[active];if(!prior){alert('Learner reset is unavailable because the active learner profile could not be found.');return}
  if(!confirm(`Reset learning data for "${String(prior.name||active)}" only? Other local learner profiles and saved process-data evidence will be kept. This learner's progress, notes, certificates, analytics, review/sign-off, measured-assessment, process-diagnostics and lab-progress state will be cleared.`))return;
- let owned;try{owned=learnerOwnedKeys(active)}catch(e){console.error('[MouldMaster] learner reset scope unavailable:',e);alert(cleanupFailureMessage('Learner reset',true));return}
- const before=snapshotKeys(['mouldmasterProDB',...owned]),proposed=JSON.parse(JSON.stringify(db));proposed.users[active]=cleanResetLearner(prior,active);proposed.activeUser=active;
+ let owned,before,proposed;
+ try{
+  owned=learnerOwnedKeys(active);
+  before=snapshotKeys(['mouldmasterProDB',...owned]);
+  proposed=JSON.parse(JSON.stringify(db));proposed.users[active]=cleanResetLearner(prior,active);proposed.activeUser=active
+ }catch(e){console.error('[MouldMaster] learner reset snapshot unavailable:',e);alert('Learner reset was not started because the current learner state could not be read safely. Reopen MouldMaster and try again.');return}
  try{
   clearLearnerAnalyticsStores(active);clearLearnerTrainingExtras(active);
   const serialized=JSON.stringify(proposed);localStorage.setItem('mouldmasterProDB',serialized);
