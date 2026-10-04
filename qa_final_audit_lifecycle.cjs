@@ -134,6 +134,7 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
       k=String(k);
       if(k.startsWith('mm_learning_analytics_v1::')&&removeMode==='throw')throw new Error('simulated delete failure');
       if(k.startsWith('mm_learning_analytics_v1::')&&removeMode==='silent')return;
+      if(k.startsWith('mm_material_behaviour_labs_v1:')&&removeMode==='silent-material')return;
       memory.delete(k)
     },
   };
@@ -167,6 +168,16 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
   sandbox.user=sandbox.db.users[sandbox.db.activeUser];sandbox.window=sandbox;
   vm.createContext(sandbox);vm.runInContext(trainingSource,sandbox,{filename:'src/domains/learning/training-qa-fix.js'});
   return {sandbox,memory,alerts,toasts,oldSerialized,bridge:sandbox.MM_TRAINING_DATA_BRIDGE}
+}
+
+// Material-lab legacy migration must not claim a safe backup when the old
+// legacy bucket cannot be deleted after a verified strong-scope copy.
+{
+  const t=trainingSandbox('silent-material');
+  const oldKey='mm_material_behaviour_labs_v1:old';
+  t.memory.set(oldKey,JSON.stringify({'legacy-material-case':{attempts:2,completed:true,bestScore:100,firstTry:true}}));
+  assert.throws(()=>t.bridge.buildTrainingExtras(t.sandbox.db.users),/material lab migration|legacy delete could not be verified/i,'backup accepted an unverifiable material-lab legacy migration');
+  assert(t.memory.has(oldKey),'silent material-delete fixture unexpectedly removed the legacy bucket');
 }
 
 // Backup export must fail closed when learner-owned training state cannot be
