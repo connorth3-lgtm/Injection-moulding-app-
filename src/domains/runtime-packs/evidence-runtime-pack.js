@@ -1518,10 +1518,14 @@ const LABS=[
 ];
 
 function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
-function learnerToken(){let raw='anonymous';try{raw=String(window.db?.activeUser||window.user?.id||'anonymous')}catch(_){}let h=2166136261;for(let i=0;i<raw.length;i++){h^=raw.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(36)}
-function storageKey(){return `${STORAGE_BASE}::${learnerToken()}`}
-function readState(){try{const x=JSON.parse(localStorage.getItem(storageKey())||'{}');return x&&typeof x==='object'?x:{}}catch(_){return {}}}
-function writeState(state){try{localStorage.setItem(storageKey(),JSON.stringify(state))}catch(_){}}
+function learnerId(){try{return String(window.db?.activeUser||window.user?.id||'anonymous')}catch(_){return'anonymous'}}
+function storageKey(){
+ const scope=window.MM_LEARNER_SCOPE,id=learnerId(),prefix=`${STORAGE_BASE}::`;
+ if(!scope||typeof scope.tokenFor!=='function'||typeof scope.storageKey!=='function')return null;
+ try{scope.registerStoragePrefix?.(prefix);scope.migrateStoragePrefix?.(prefix,id);return scope.storageKey(prefix,scope.tokenFor(id))}catch(_){return null}
+}
+function readState(){try{const k=storageKey();if(!k)return{};const x=JSON.parse(localStorage.getItem(k)||'{}');return x&&typeof x==='object'?x:{}}catch(_){return {}}}
+function writeState(state){try{const k=storageKey();if(k)localStorage.setItem(k,JSON.stringify(state))}catch(_){}}
 function labState(id){const all=readState();return all[id]||{attempts:0,completed:false,bestScore:0,firstTry:false}}
 function saveLab(id,patch){const all=readState();all[id]={...(all[id]||{}),...patch};writeState(all)}
 let activeLabId=null,answers=[],attemptHadError=false;
@@ -1553,12 +1557,12 @@ function install(){style();ensureSection();ensureNav();patchMobileMore();const h
 let queued=false;function schedule(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(()=>{queued=false;install()},0)}
 const observer=new MutationObserver(schedule);if(document.documentElement)observer.observe(document.documentElement,{childList:true,subtree:true});
 install();window.addEventListener('load',schedule);
-const authorChoice=window.MM_ASSESSMENT_AUTHOR_CHOICE||((value)=>String(value??''));
+const authorChoice=window.MM_ASSESSMENT_AUTHOR_CHOICE||((value)=>String(value??'').replace(/^(Measure\/verify|Inspect\/clean|Check|Verify|Inspect|Compare|Measure|Investigate|Confirm|Increase|Change|Ignore|Assume|Reduce|Raise|Lower|Decrease|Adjust|Accept)\s+/,(_match,verb)=>`The response is to ${String(verb).toLowerCase()} `));
 let starterCueEdits=0;
 for(const lab of LABS)for(const step of lab.steps||[])for(const choice of step.choices||[]){
  const next=authorChoice(choice.text);if(next!==choice.text){choice.text=next;starterCueEdits++}
 }
-window.MM_DIAGNOSTIC_LABS={version:VERSION,labs:LABS,open:openLabs,storage:'learner-scoped local progress only',starterCueEdits};
+window.MM_DIAGNOSTIC_LABS={version:VERSION,labs:LABS,open:openLabs,storage:'MM_LEARNER_SCOPE collision-safe local progress; included in learner backup/reset',starterCueEdits};
 })();
 /* <<< diagnostic-learning-labs.js */
 
@@ -1689,17 +1693,40 @@ for(const lab of LABS){
  const specs=BALANCE[lab.id];if(!specs||specs.length!==lab.steps.length)throw new Error(`Material answer-balance map incomplete: ${lab.id}`);
  lab.steps.forEach((step,i)=>{const spec=specs[i],original=step.choices;if(!original||original.length!==4||original.findIndex(c=>c.correct===true)!==0)throw new Error(`Material answer-balance source changed: ${lab.id}/${i}`);spec.texts.forEach((t,n)=>original[n].text=t);step.choices=BALANCE_ORDER[spec.pos].map(n=>original[n])});
 }
-const authorChoice=window.MM_ASSESSMENT_AUTHOR_CHOICE||((value)=>String(value??''));
+const authorChoice=window.MM_ASSESSMENT_AUTHOR_CHOICE||((value)=>String(value??'').replace(/^(Measure\/verify|Inspect\/clean|Check|Verify|Inspect|Compare|Measure|Investigate|Confirm|Increase|Change|Ignore|Assume|Reduce|Raise|Lower|Decrease|Adjust|Accept)\s+/,(_match,verb)=>`The response is to ${String(verb).toLowerCase()} `));
 let starterCueEdits=0;
 for(const lab of LABS)for(const step of lab.steps||[])for(const choice of step.choices||[]){
  const next=authorChoice(choice.text);if(next!==choice.text){choice.text=next;starterCueEdits++}
 }
 
 function esc(v){return String(v??'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]))}
-function learnerToken(){try{let id='';if(typeof db!=='undefined'&&db?.activeUser)id=db.activeUser;else id=window.db?.activeUser||window.user?.id||'';return String(id||'anonymous').replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,80)}catch(_){return'anonymous'}}
-function key(){return STORAGE_BASE+':'+learnerToken()}
-function read(){try{return JSON.parse(localStorage.getItem(key())||'{}')}catch(_){return{}}}
-function save(all){try{localStorage.setItem(key(),JSON.stringify(all))}catch(_){}}
+function learnerId(){try{let id='';if(typeof db!=='undefined'&&db?.activeUser)id=db.activeUser;else id=window.db?.activeUser||window.user?.id||'';return String(id||'anonymous')}catch(_){return'anonymous'}}
+function legacyMaterialToken(raw){return String(raw||'anonymous').replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,80)}
+function legacyMaterialKey(raw){return STORAGE_BASE+':'+legacyMaterialToken(raw)}
+function materialLegacyOwners(scope,token){try{return (scope.knownIds?.()||[]).filter(id=>legacyMaterialToken(id)===token)}catch(_){return[]}}
+function quarantineMaterialLegacy(token,payload,reason){
+ try{
+  const source=STORAGE_BASE+':'+token,target=`mm_scope_quarantine_v1::material-labs::${token}`,wrapped=JSON.stringify({source,reason,payload:JSON.parse(payload)});
+  if(localStorage.getItem(target)==null)localStorage.setItem(target,wrapped);
+  if(localStorage.getItem(target)!==wrapped)return false;
+  localStorage.removeItem(source);return true
+ }catch(_){return false}
+}
+function migrateMaterialLegacy(scope,id){
+ const token=legacyMaterialToken(id),oldKey=STORAGE_BASE+':'+token,payload=localStorage.getItem(oldKey);if(payload==null)return;
+ const owners=materialLegacyOwners(scope,token);
+ if(owners.length!==1||owners[0]!==id){quarantineMaterialLegacy(token,payload,owners.length>1?'ambiguous-known-owners':'ownership-unproven');return}
+ const prefix=`${STORAGE_BASE}::`,next=scope.storageKey(prefix,scope.tokenFor(id)),current=localStorage.getItem(next);
+ if(current==null){localStorage.setItem(next,payload);if(localStorage.getItem(next)===payload)localStorage.removeItem(oldKey)}
+ else if(current===payload)localStorage.removeItem(oldKey)
+}
+function key(){
+ const scope=window.MM_LEARNER_SCOPE,id=learnerId(),prefix=`${STORAGE_BASE}::`;
+ if(!scope||typeof scope.tokenFor!=='function'||typeof scope.storageKey!=='function')return null;
+ try{scope.registerStoragePrefix?.(prefix);migrateMaterialLegacy(scope,id);return scope.storageKey(prefix,scope.tokenFor(id))}catch(_){return null}
+}
+function read(){try{const k=key();return k?JSON.parse(localStorage.getItem(k)||'{}'):{} }catch(_){return{}}}
+function save(all){try{const k=key();if(k)localStorage.setItem(k,JSON.stringify(all))}catch(_){}}
 function state(id){return read()[id]||{attempts:0,bestScore:0,completed:false}}
 function put(id,val){const a=read();a[id]=val;save(a)}
 let active=null,answers=[],hadError=false;
@@ -1932,7 +1959,7 @@ const MATERIAL_PRACTICE=[
 ];
 function normalisePractice(){return MATERIAL_PRACTICE.map(l=>({...l,steps:l.steps.map(s=>({stage:s[0],question:s[1],choices:s.slice(2).map((text,i)=>({text,correct:i===0,feedback:i===0?'Correct. This choice tests the mechanism with the strongest evidence.':'Not the strongest evidence-first response for this scenario.'}))}))}))}
 const PRACTICE_LABS=normalisePractice();
-const authorChoice=window.MM_ASSESSMENT_AUTHOR_CHOICE||((value)=>String(value??''));
+const authorChoice=window.MM_ASSESSMENT_AUTHOR_CHOICE||((value)=>String(value??'').replace(/^(Measure\/verify|Inspect\/clean|Check|Verify|Inspect|Compare|Measure|Investigate|Confirm|Increase|Change|Ignore|Assume|Reduce|Raise|Lower|Decrease|Adjust|Accept)\s+/,(_match,verb)=>`The response is to ${String(verb).toLowerCase()} `));
 let materialPracticeStarterCueEdits=0;
 for(const lab of PRACTICE_LABS)for(const step of lab.steps||[])for(const choice of step.choices||[]){
  const next=authorChoice(choice.text);if(next!==choice.text){choice.text=next;materialPracticeStarterCueEdits++}
