@@ -267,10 +267,10 @@ const LABS=[
 ];
 
 function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
-function learnerId(){try{return String(window.db?.activeUser||window.user?.id||'anonymous')}catch(_){return'anonymous'}}
+function learnerId(){try{const id=window.db?.activeUser||window.user?.id||'';return id?String(id):null}catch(_){return null}}
 function storageKey(){
  const scope=window.MM_LEARNER_SCOPE,id=learnerId(),prefix=`${STORAGE_BASE}::`;
- if(!scope||typeof scope.tokenFor!=='function'||typeof scope.storageKey!=='function')return null;
+ if(!id||!scope||typeof scope.tokenFor!=='function'||typeof scope.storageKey!=='function')return null;
  try{scope.registerStoragePrefix?.(prefix);scope.migrateStoragePrefix?.(prefix,id);return scope.storageKey(prefix,scope.tokenFor(id))}catch(_){return null}
 }
 function readState(){try{const k=storageKey();if(!k)return{};const x=JSON.parse(localStorage.getItem(k)||'{}');return x&&typeof x==='object'?x:{}}catch(_){return {}}}
