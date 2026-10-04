@@ -47,6 +47,14 @@ node=textwrap.dedent(r'''
  const migrated=MM_RUNTIME_V2.storage.get('unique-state',null);
  if(!migrated||migrated.ok!==1)throw new Error('unique legacy runtime-v2 state did not migrate');
  if(localStorage.getItem('unique-state::'+legacy)!==null)throw new Error('unique legacy runtime-v2 bucket was not removed after verified migration');
+
+ // Missing learner identity must never create a durable anonymous runtime bucket.
+ db.activeUser='';user.id='';
+ const beforeKeys=Object.keys(localStorage.x).slice().sort();
+ if(MM_RUNTIME_V2.storage.key('missing-state')!==null)throw new Error('missing learner identity produced a runtime storage key');
+ if(MM_RUNTIME_V2.storage.learnerToken()!==null)throw new Error('missing learner identity produced a runtime learner token');
+ if(MM_RUNTIME_V2.storage.set('missing-state',{unsafe:true})!==false)throw new Error('missing learner identity accepted a runtime storage write');
+ if(JSON.stringify(Object.keys(localStorage.x).slice().sort())!==JSON.stringify(beforeKeys))throw new Error('missing learner identity created durable runtime storage');
  console.log(JSON.stringify(MM_RUNTIME_V2.snapshot()));
 ''')
 proc=subprocess.run(['node','-e',node],cwd=ROOT,text=True,capture_output=True)
