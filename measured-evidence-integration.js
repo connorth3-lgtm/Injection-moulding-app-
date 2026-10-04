@@ -1,7 +1,7 @@
 /* MouldMaster canonical measured-evidence runtime bridge — 2026.10.04.1 */
 (function(){
 'use strict';
-const VERSION='2026.10.04.1';
+const VERSION='2026.10.05.1';
 const CANONICAL={inventoried:34,rightsExecutable:21,fullyProfiled:17,timeSeriesValues:85569824};
 const FAMILIES=[
  {id:'mendeley-gtnb4j7bfx-v1',title:'Injection production records',kind:'record-level production',scale:'4,502 injection records profiled',timeSeries:0,rights:'CC BY 4.0',restricted:false,source:'https://doi.org/10.17632/gtnb4j7bfx.1',topics:['quality','reject','flash','product weight','melt temperature','mould temperature','mold temperature','cycle time','cooling','injection pressure','hold pressure','injection speed','production'],boundary:'Production-order/run-level records are not assumed to be shot-resolved; correlations do not prove root cause or a validated process window.'},
