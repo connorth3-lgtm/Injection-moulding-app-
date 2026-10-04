@@ -140,6 +140,16 @@
         "deletionBoundary": "learner-reset"
       },
       {
+        "id": "measured-assessment-progress",
+        "technology": "localStorage",
+        "identity": "mm_real_measured_assessment_v1::<learner-token>",
+        "source": "src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js",
+        "sourceOfTruth": true,
+        "backupScope": "learner-core-backup-trainingExtras-v4",
+        "deletionBoundary": "learner-reset",
+        "learnerScope": "MM_LEARNER_SCOPE-128-bit-with-collision-aware-legacy-migration"
+      },
+      {
         "id": "engineering-cases",
         "technology": "IndexedDB",
         "identity": "mouldmaster-engineering-v2",
@@ -191,7 +201,7 @@
       "maxBytes": 10485760,
       "maxLearners": 500,
       "strictLearnerId": true,
-      "unknownTopLevelPropertiesAccepted": false,
+      "unknownTopLevelPropertiesAccepted": true,
       "commitAfterFullValidation": true,
       "failurePreservesExistingData": true,
       "integrity": {
