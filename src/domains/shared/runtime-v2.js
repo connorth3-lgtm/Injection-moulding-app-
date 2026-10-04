@@ -26,7 +26,7 @@ function scopedKey(base){
   shared.migrateStoragePrefix?.(prefix,raw);
   return shared.storageKey(prefix,shared.tokenFor(raw))
  }
- return `${prefix}${hash128(`mm-runtime-v2|${raw}`)}`
+ return `${prefix}${hash128(`mm-learner-scope-v2|${raw}`)}`
 }
 function learnerToken(){const shared=scope();return shared?shared.tokenFor(learnerRaw()):hash128(`mm-runtime-v2|${learnerRaw()}`)}
 const storage=Object.freeze({
