@@ -202,7 +202,7 @@ window.MM_REGIONAL_QUESTION_DEEP_DIVE={version:'2026-08-30',regionalRewrites:27,
 /* <<< assessment-answer-cue-fix.js */
 
 /* >>> assessment-storage-scope.js */
-/* MouldMaster learner-scoped assessment storage — 2026-09-11.1 */
+/* MouldMaster learner-scoped assessment storage — 2026-10-05.1 */
 (function(){
 'use strict';
 if(typeof window==='undefined'||typeof localStorage==='undefined')return;
