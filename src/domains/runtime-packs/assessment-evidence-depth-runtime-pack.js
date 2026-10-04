@@ -443,7 +443,7 @@ const APPROVED_INPUTS={
  'training-upgrade.js':'ea6ee84e69c4d5ed60776f2022f1bc9462425ea2',
  'assessment-deep-dive.js':'367d941afc67ad62125e1e1cb16ff1a1e48d0123',
  'src/domains/assessment/assessment-answer-cue-fix.js':'7613d7c4deb45c69ddb9ec3deebf59bd51348a4c',
- 'assessment-quality-suite.js':'6a03890d714c7a92a0a30ca91b19e8e3cd2baec4',
+ 'assessment-quality-suite.js':'d6f2aeea680e2892bcec9faf25866e8fd492debc',
  'assessment-stable-review-bridge.js':'5ad415ddb65e37b08f00d4170a41adf256c6ee33',
  'diagnostic-learning-labs.js':'35664e47dee7145219a928d775bf8dca1e3024f9',
  'material-behaviour-labs.js':'2ce780ceb8fbeca95b253602717ab46cd03992d3'
