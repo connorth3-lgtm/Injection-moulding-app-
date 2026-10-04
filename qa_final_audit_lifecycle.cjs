@@ -122,7 +122,7 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
   let failedDbWrite=false,failedTrainingWrite=false;
   const localStorage={
     get length(){return memory.size},key(i){return [...memory.keys()][i]??null},
-    getItem(k){return memory.has(String(k))?memory.get(String(k)):null},
+    getItem(k){k=String(k);if(writeMode==='snapshot-read-fail'&&k==='mouldmasterProDB')throw new Error('simulated snapshot read failure');return memory.has(k)?memory.get(k):null},
     setItem(k,v){
       k=String(k);
       if((writeMode==='fail-next-db'||writeMode==='fail-db-silent-rollback')&&k==='mouldmasterProDB'&&!failedDbWrite){failedDbWrite=true;throw new Error('simulated registry write failure')}
@@ -253,6 +253,19 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
   t.bridge.clearAllAnalyticsStores();
   assert.strictEqual([...t.memory.keys()].some(k=>k.startsWith('mm_assessment_membership_history_v2::')),false,'full learner-registry cleanup left assessment membership history behind');
   assert(t.memory.has('mm_spaced_review_v2::legacy-old'),'assessment cleanup incorrectly removed governed training backup state');
+}
+
+// Reset planning and snapshot reads must be side-effect free. If the current
+// learner registry cannot be read, reset must stop before deleting scoped state.
+{
+  const t=trainingSandbox('normal','snapshot-read-fail');
+  const oldAssessment=t.memory.get('mm_assessment_analytics_v1::strong-old');
+  const oldMeasured=t.memory.get('mm_real_measured_assessment_v1::strong-old');
+  t.sandbox.resetData();
+  assert.strictEqual(t.memory.get('mm_assessment_analytics_v1::strong-old'),oldAssessment,'snapshot read failure deleted assessment analytics');
+  assert.strictEqual(t.memory.get('mm_real_measured_assessment_v1::strong-old'),oldMeasured,'snapshot read failure deleted measured-assessment state');
+  assert.strictEqual(t.sandbox.db.activeUser,'old','snapshot read failure mutated active learner');
+  assert(t.alerts.some(x=>/could not be read safely/i.test(x)),'snapshot read failure did not surface a safe reset warning');
 }
 
 // Successful learner reset clears only the active learner's scoped state and
