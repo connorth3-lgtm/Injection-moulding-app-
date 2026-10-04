@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.10.05.1';
-const CACHE_REVISION='deep-review-r26-20261005';
+const CACHE_REVISION='deep-review-r27-20261005';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both
