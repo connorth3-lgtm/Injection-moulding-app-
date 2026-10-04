@@ -780,7 +780,7 @@ window.getExamQuestions=function(){
  return rows;
 };
 
-window.MM_STABLE_REVIEW_BRIDGE={version:'2026.09.10.1',stableIdsPrimary:true,fullBlueprintRequired:true,requiredTechnicalDomains:(S.blueprint||[]).slice(),legacyRecordsMigratedBy:'assessment-quality-suite.js',strictAnswerBalance:{validated:0,required:94,runtimeTextMutations:0,policy:'Reviewed keyed answer wording is source-authored; runtime validates drift only; key indexes unchanged'}};
+window.MM_STABLE_REVIEW_BRIDGE={version:'2026.09.10.1',stableIdsPrimary:true,fullBlueprintRequired:true,requiredTechnicalDomains:(S.blueprint||[]).slice(),legacyRecordsMigratedBy:'assessment-quality-suite.js',strictAnswerBalance:{validated:0,required:95,runtimeTextMutations:0,policy:'Reviewed keyed answer wording is source-authored; runtime validates drift only; key indexes unchanged'}};
 validateReviewedAnswers(false);
 function finalizeBalance(){validateReviewedAnswers(true)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',finalizeBalance,{once:true});else finalizeBalance();
