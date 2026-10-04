@@ -100,8 +100,8 @@ need(any(c['canonicalName']=='state' and not c['acceptedMeasuredValue'] and c['u
 
 for literal in ['13631488','298080','7426743','43814748','21907374','2,048','0.03 s','Pressure actual values excluded pending unit']:
     need(literal in real,f'real-measured learner snapshot missing canonical fact: {literal}')
-need('Assume bar because the lower workpiece uses bar' in real,'fail-closed upper pressure distractor/teaching boundary missing')
-need('without assigning phase names until an authoritative mapping is found' in real,'fail-closed state-code boundary missing')
+need('Treat them as bar because the lower workpiece records pressure in bar' in real,'fail-closed upper pressure distractor/teaching boundary missing')
+need('Preserve the codes without assigning unverified phase names' in real,'fail-closed state-code boundary missing')
 
 report={
  'version':'2026.10.05.1','learner_visible_keyed_decisions':len(items),'core_proposition_governed_decisions':len(core),
