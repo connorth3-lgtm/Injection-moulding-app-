@@ -12,7 +12,8 @@ for marker in ['one owner at a time','registerModule','setImplementation','befor
 
 node=textwrap.dedent(r'''
  global.window=global;
- global.localStorage={x:{},getItem(k){return Object.prototype.hasOwnProperty.call(this.x,k)?this.x[k]:null},setItem(k,v){this.x[k]=String(v)},removeItem(k){delete this.x[k]},key(i){return Object.keys(this.x)[i]??null},get length(){return Object.keys(this.x).length}};
+ global.silentRemoveKey=null;
+ global.localStorage={x:{},getItem(k){return Object.prototype.hasOwnProperty.call(this.x,k)?this.x[k]:null},setItem(k,v){this.x[k]=String(v)},removeItem(k){if(global.silentRemoveKey===k)return;delete this.x[k]},key(i){return Object.keys(this.x)[i]??null},get length(){return Object.keys(this.x).length}};
  global.user={id:'learner-A'};global.db={activeUser:'learner-A',users:{'learner-A':{},'learner-B':{}}};
  for(const n of ['renderLesson','renderDashboard','switchView','startExam','gradeExam','getExamQuestions'])global[n]=function(){return `legacy-${n}`};
  require('./src/domains/shared/runtime-v2.js');
@@ -47,6 +48,16 @@ node=textwrap.dedent(r'''
  const migrated=MM_RUNTIME_V2.storage.get('unique-state',null);
  if(!migrated||migrated.ok!==1)throw new Error('unique legacy runtime-v2 state did not migrate');
  if(localStorage.getItem('unique-state::'+legacy)!==null)throw new Error('unique legacy runtime-v2 bucket was not removed after verified migration');
+
+ // A silently ignored legacy delete must never be reported as a successful migration.
+ localStorage.setItem('silent-state::'+legacy,JSON.stringify({ok:2}));
+ global.silentRemoveKey='silent-state::'+legacy;
+ const silentResult=MM_LEARNER_SCOPE.migrateStoragePrefix('silent-state::','learner-A');
+ global.silentRemoveKey=null;
+ if(silentResult.status!=='legacy-delete-failed'||silentResult.migrated!==false)throw new Error('silent legacy delete was falsely reported as migrated');
+ if(localStorage.getItem('silent-state::'+legacy)===null)throw new Error('silent-delete fixture did not retain legacy bucket');
+ const strongSilent='silent-state::'+MM_LEARNER_SCOPE.tokenFor('learner-A');
+ if(localStorage.getItem(strongSilent)===null)throw new Error('verified copy was not retained when legacy delete failed');
 
  // Missing learner identity must never create a durable anonymous runtime bucket.
  db.activeUser='';user.id='';
