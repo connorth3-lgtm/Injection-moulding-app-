@@ -446,7 +446,7 @@ const APPROVED_INPUTS={
  'assessment-quality-suite.js':'748332080ca63da5319a53e74682414ce78cd7ce',
  'assessment-stable-review-bridge.js':'2c4ceb062a2b1866da464df050b15a84b007d350',
  'diagnostic-learning-labs.js':'db8755e9fb515f1dd44fba86483ed3588c7377be',
- 'material-behaviour-labs.js':'6636205231889d0a4fd393307fad4b945c40b51c'
+ 'material-behaviour-labs.js':'3ce6b1f36c618e0b591b2b5cbb3321a0080ffe6a'
 };
 function buildApproval(){
  const D=window.MM_DATA,E=window.MM_EVIDENCE_SOURCES;
