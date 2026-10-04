@@ -200,6 +200,8 @@ for marker in [
     "clean.examPassStatus={}",
     "restoreSnapshot(before)",
     "function trainingDestinationKey(base,learnerId)",
+    "function readTrainingForBackup(base,d,learnerId)",
+    "function readMaterialLabsForBackup(d,learnerId)",
     "Certificates must be re-earned",
     "db!==beforeDb",
     "LEARNING_ANALYTICS_PREFIX",
