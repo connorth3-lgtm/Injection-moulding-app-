@@ -12,13 +12,14 @@ def js_const(source,name):
     return m.group(1)
 
 required=[
-    'learning-experience.js','src/domains/shell/pwa-shell.js','index.html','service-worker.js','desktop/electron/package.json',
+    'learning-experience.js','src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js','src/domains/shell/pwa-shell.js','index.html','service-worker.js','desktop/electron/package.json',
     'desktop/electron/scripts/generate-integrity.cjs'
 ]
 for name in required:
     need((ROOT/name).exists(),f'learning experience dependency missing: {name}')
 
 js=text('learning-experience.js')
+learning_pack=text('src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js')
 p=subprocess.run(['node','--check',str(ROOT/'learning-experience.js')],capture_output=True,text=True)
 need(p.returncode==0,'learning-experience.js syntax error: '+(p.stderr or p.stdout))
 
@@ -145,8 +146,8 @@ need('const RUNTIME_ASSET_VERSION=SHELL_RELEASE;' in idx,'learning UX runtime id
 need(shell_release==cache_version,'learning UX shell release must match PWA cache version')
 need(bool(cache_revision.strip()),'learning UX cache revision must remain an explicit independent invalidation token')
 need(expected_cache==f'mouldmaster-static-{cache_version}-{cache_revision}','learning UX expected cache must match service-worker cache identity')
-need("'./learning-experience.js'" in sw,'learning experience missing from offline cache')
 need("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'" in sw,'learning/process runtime pack missing from offline cache')
+need('/* >>> learning-experience.js */' in learning_pack,'learning experience missing from packed offline runtime')
 need("'./src/domains/shell/pwa-shell.js'" in sw,'PWA shell/mobile layout guard missing from offline cache')
 need("url.pathname.endsWith('.js')" in sw,'PWA shell must remain on the network-first runtime-critical path so installed apps receive mobile layout fixes')
 
