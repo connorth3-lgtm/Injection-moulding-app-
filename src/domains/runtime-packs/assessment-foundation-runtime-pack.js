@@ -206,6 +206,12 @@ const R={
 };
 for(const [region,levels] of Object.entries(R))for(const [level,items] of Object.entries(levels))items.forEach((item,i)=>regionalSet(region,level,i,item));
 let authoredChoiceCount=0;
+const cushionVariationScenario=D?.scenarios?.[0];
+if(!cushionVariationScenario||!Array.isArray(cushionVariationScenario.choices)||cushionVariationScenario.choices.length!==4||Number(cushionVariationScenario.correct)!==1)throw new Error('Cushion-variation scenario shape changed');
+if(cushionVariationScenario.choices[1]!=='Review shot-delivery/NRV and injection actuals'){
+ cushionVariationScenario.choices[1]='Review shot-delivery/NRV and injection actuals';
+ authoredChoiceCount++;
+}
 for(const level of ['Beginner','Intermediate','Advanced'])for(const q of D?.exams?.[level]||[]){
  const options=q?.options??q?.[1];if(!Array.isArray(options))continue;
  for(let i=0;i<options.length;i++){const next=authorChoice(options[i]);if(next!==options[i]){options[i]=next;authoredChoiceCount++}}
@@ -666,7 +672,7 @@ const STRICT_ANSWER_BALANCE={
  'reg:NZ:Advanced:1':'Assess the integrated system, interfaces, tasks and safeguards as a whole',
  'reg:NZ:Advanced:2':'Not yet in force; commencement is 1 April 2027',
 
- 'scenario:01':'Check shot-delivery/NRV, feed and injection actuals',
+ 'scenario:01':'Review shot-delivery/NRV and injection actuals',
  'scenario:02':'Inspect end-of-fill venting and test fill-speed sensitivity',
  'scenario:03':'Inspect local parting-line/insert seating',
  'scenario:04':'Study cooling time against ejection and part quality',
