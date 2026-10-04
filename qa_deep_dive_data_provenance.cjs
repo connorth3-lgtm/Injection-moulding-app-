@@ -46,6 +46,26 @@ function loadScope({users,activeUser,storage}){
   assert.notStrictEqual(scope.token(),scope.tokenFor(a),'switching to colliding learner reused the first learner strong token');
 }
 
+// Regression for the learner-extra collision discovered during the 2026-10-05 audit.
+// These two valid learner IDs share the old FNV-1a token but must never share
+// review, sign-off or measured-challenge state under the strong scope.
+{
+  const a='u8jiUWwff',b='uqX4l4UnV',prefixes=['mm_spaced_review_v2::','mm_practical_signoff_v1::','mm_real_measured_assessment_v1::'];
+  const storage=memoryStorage(),{scope}=loadScope({users:{[a]:{id:a},[b]:{id:b}},activeUser:a,storage});
+  assert.strictEqual(scope.legacyTokenFor(a),'1w9oy6y','learner-extra collision fixture changed unexpectedly');
+  assert.strictEqual(scope.legacyTokenFor(a),scope.legacyTokenFor(b),'learner-extra collision fixture no longer collides under legacy token');
+  assert.notStrictEqual(scope.tokenFor(a),scope.tokenFor(b),'strong learner tokens collided for learner-extra fixture');
+  for(const prefix of prefixes){
+    const legacyKey=prefix+scope.legacyTokenFor(a),payload=JSON.stringify({prefix,owner:'ambiguous-legacy-fixture'});
+    storage.setItem(legacyKey,payload);scope.registerStoragePrefix(prefix);
+    assert.strictEqual(storage.getItem(legacyKey),null,`${prefix} ambiguous legacy bucket was left addressable`);
+    assert.strictEqual(storage.getItem(prefix+scope.tokenFor(a)),null,`${prefix} ambiguous bucket was assigned to learner A`);
+    assert.strictEqual(storage.getItem(prefix+scope.tokenFor(b)),null,`${prefix} ambiguous bucket was assigned to learner B`);
+  }
+  const quarantined=Object.keys(storage.dump()).filter(k=>k.startsWith('mm_scope_quarantine_v1::'));
+  assert.strictEqual(quarantined.length,3,'all three ambiguous learner-extra buckets must be preserved in quarantine');
+}
+
 // A uniquely owned legacy bucket may migrate losslessly to the strong token.
 {
   const id='learner-unique-1',prefix='mm_activity_events_v2::';
@@ -108,6 +128,10 @@ function loadScope({users,activeUser,storage}){
 // their scoped stores, filter unsafe legacy cohort buckets, and never restore the old
 // current-revision fallback in assessment snapshots.
 {
+  const training=fs.readFileSync('src/domains/learning/training-qa-fix.js','utf8');
+  const measured=fs.readFileSync('real-measured-data-assessment.js','utf8');
+  for(const token of ["scope.registerStoragePrefix?.(prefix)","scope.migrateStoragePrefix?.(prefix,id)","scope.tokenFor(id)"])assert(training.includes(token),`training extras strong-scope integration missing: ${token}`);
+  for(const token of ["sc.registerStoragePrefix?.(STORAGE_PREFIX)","sc.migrateStoragePrefix?.(STORAGE_PREFIX,id)","sc.tokenFor(id)"])assert(measured.includes(token),`measured assessment strong-scope integration missing: ${token}`);
   const loader=fs.readFileSync('src/domains/learning/learning-analytics-loader.js','utf8');
   const activity=fs.readFileSync('src/domains/learning/activity-events-v2.js','utf8');
   assert(loader.includes('scope.registerStoragePrefix?.(STORAGE_PREFIX)'),'learning analytics store is not registered for safe token migration');
@@ -116,4 +140,4 @@ function loadScope({users,activeUser,storage}){
   assert(activity.includes("revision:null,revisionStatus:'legacy-unversioned'"),'legacy assessment snapshot regained a fabricated current revision');
 }
 
-console.log('Deep-dive data provenance QA passed: learner-token collisions fail closed with safe migration/quarantine, legacy assessment baselines freeze unversioned, and future grades are revision-aware.');
+console.log('Deep-dive data provenance QA passed: learner-token collisions fail closed across analytics, review/sign-off and measured-assessment stores; legacy assessment baselines freeze unversioned; future grades are revision-aware.');
