@@ -133,11 +133,16 @@
       {
         "id": "learner-scoped-extras",
         "technology": "localStorage",
-        "identity": "learner-scoped keys registered through MM_LEARNER_SCOPE",
-        "source": "src/domains/shared/learner-scope.js",
+        "identity": "learner-scoped localStorage keys using MM_LEARNER_SCOPE 128-bit tokens; legacy shorter-token buckets migrate only with proven unique ownership",
         "sourceOfTruth": true,
-        "backupScope": "explicit-per-feature",
-        "deletionBoundary": "learner-reset"
+        "backupScope": "trainingExtras v4 backs up spaced review, practical sign-off and measured-assessment progress; assessment analytics/history remain derived/local and are resettable",
+        "deletionBoundary": "active-learner reset removes learner-owned review/sign-off, measured-assessment and assessment/learning analytics without deleting peer profiles",
+        "sources": [
+          "src/domains/shared/learner-scope.js",
+          "src/domains/learning/training-qa-fix.js",
+          "assessment-storage-scope.js",
+          "real-measured-data-assessment.js"
+        ]
       },
       {
         "id": "engineering-cases",
@@ -191,7 +196,6 @@
       "maxBytes": 10485760,
       "maxLearners": 500,
       "strictLearnerId": true,
-      "unknownTopLevelPropertiesAccepted": false,
       "commitAfterFullValidation": true,
       "failurePreservesExistingData": true,
       "integrity": {
@@ -207,7 +211,10 @@
         "integrityStatus": "unverified",
         "requiresExplicitUserDisclosure": true,
         "usesExistingStrictImporter": true
-      }
+      },
+      "unknownEnvelopePropertiesAccepted": false,
+      "unknownPayloadTopLevelPropertiesAccepted": true,
+      "payloadUnknownPropertyBoundary": "The integrity envelope is exact-key checked. The validated mouldmaster-backup-v2 payload requires its governed structures but currently tolerates additional top-level payload properties."
     },
     "migrationRules": [
       "validate-before-write",
