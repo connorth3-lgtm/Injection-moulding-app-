@@ -1,11 +1,11 @@
 const {test,expect}=require('@playwright/test');
 const BASE='http://127.0.0.1:4173/';
 
-async function openApp(page,width){
-  await page.addInitScript(()=>{
-    const id='reachability-qa',user={id,name:'Reachability QA',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
+async function openApp(page,width,certificates=[]){
+  await page.addInitScript(({certificates})=>{
+    const id='reachability-qa',user={id,name:'Reachability QA',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates,currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
     localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:id,users:{[id]:user}}));
-  });
+  },{certificates});
   await page.setViewportSize({width,height:900});
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>typeof window.MM_APP_SHELL_FINALIZED==='string'&&!document.getElementById('mmBootstrap')&&!!window.MMBook,{timeout:30000});
@@ -21,11 +21,31 @@ async function expectNoHorizontalOverflow(page,label){const overflow=await page.
 
 for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name:'desktop',width:1440}]){
  test.describe('UI-only feature reachability '+viewport.name,()=>{
+  test('dashboard never exposes obsolete three-certificate denominator',async({page})=>{
+   await openApp(page,viewport.width,['Beginner-ALL','Beginner-UK','Beginner-US','Beginner-NZ']);
+   await expect(page.locator('#dashboard')).not.toContainText('4/3');
+   const state=await page.evaluate(()=>{
+     const rows=[...document.querySelectorAll('#dashboard .statline')],row=rows.find(x=>String(x.textContent||'').includes('Certificates earned'));
+     return row?{present:true,value:String(row.querySelector('b')?.textContent||''),visible:!!(row.offsetWidth||row.offsetHeight||row.getClientRects().length)}:{present:false}
+   });
+   if(state.present)expect(state.value).toBe('4');
+  });
   test('Book is discoverable and opens through visible UI',async({page})=>{
    await openApp(page,viewport.width);
    if(viewport.width<=900){await mobileMore(page);const book=page.locator('[data-mm-registry-menu="book"]');await expect(book).toBeVisible();await book.click()}
    else {const more=page.locator('#nav [data-mm-desktop-more-tools]');await expect(more).toBeVisible();await more.click();const book=page.locator('[data-mm-registry-menu="book"]');await expect(book).toBeVisible();await book.click()}
    await expectVisible(page,'#mmBookView');
+  });
+  test('Measured Data catalog is reachable through visible Practice and Process Data controls',async({page})=>{
+   await openApp(page,viewport.width);
+   if(viewport.width<=900){await mobileHub(page,'Practice');await expectVisible(page,'#scenarios .mm-practice-hub')}
+   else {const practice=page.locator('#nav button[data-view="scenarios"]');await expect(practice).toBeVisible();await practice.click();await expectVisible(page,'#scenarios .mm-practice-hub')}
+   const process=page.locator('#scenarios [data-mm-hub-action="process-data"]');await expect(process).toBeVisible();await process.click();
+   await expectVisible(page,'#processDataLabs');
+   const measured=page.locator('#processDataLabs [data-mme-catalog-launcher] [data-mme-open-catalog]');await expect(measured).toBeVisible();await measured.click();
+   await expectVisible(page,'#processDataLabs [data-mm-measured-evidence="catalog"]');
+   await expect(page.locator('#processDataLabs')).toContainText('Browse all 17 measured families');
+   await expect(page.locator('#pageTitle')).toHaveText('Measured Data');
   });
   test('core learning and practice destinations are reachable by clicks',async({page})=>{
    await openApp(page,viewport.width);

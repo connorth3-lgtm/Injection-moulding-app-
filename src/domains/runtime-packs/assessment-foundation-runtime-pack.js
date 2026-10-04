@@ -272,6 +272,18 @@ function setItem(base,value){rawSet(scopedKey(base),String(value));return true}
 function removeItem(base){rawRemove(scopedKey(base));return true}
 function read(base,fallback=null){try{const raw=getItem(base);if(raw==null)return fallback;const value=JSON.parse(raw);return value==null?fallback:value}catch(_){return fallback}}
 function write(base,value){try{return setItem(base,JSON.stringify(value))}catch(_){return false}}
+function keysForLearner(raw=learnerId()){
+ const learner=String(raw||'anonymous'),tokens=new Set([hashScope(learner)]),shared=sharedScope();
+ if(shared)tokens.add(shared.tokenFor(learner));
+ return [...tokens].flatMap(token=>BASES.map(base=>rawScopedKey(base,token)))
+}
+function clearLearner(raw=learnerId()){
+ const keys=keysForLearner(raw);
+ for(const k of keys)rawRemove(k);
+ const remaining=keys.filter(k=>rawGet(k)!=null);
+ if(remaining.length)throw new Error(`Assessment learner cleanup could not be verified: ${remaining.slice(0,3).join(', ')}`);
+ return Object.freeze({learnerId:String(raw||'anonymous'),removed:keys.length,verified:true})
+}
 function clearAll(){for(const k of rawKeys())if(assessmentKey(k))rawRemove(k)}
 function cancelInMemoryAttempt(){
  try{if(typeof activeExam!=='undefined')activeExam=null}catch(_){}
@@ -305,9 +317,9 @@ wrapLearnerChange('createLearner');
 const baseReset=typeof window.resetData==='function'?window.resetData:null;
 if(baseReset&&!baseReset.__mmAssessmentScopeWrapped){
  const wrappedReset=function(){
-  let before=null;try{before=rawGet('mouldmasterProDB')}catch(_){}
+  let before=null,beforeLearner=learnerId();try{before=rawGet('mouldmasterProDB')}catch(_){}
   const r=baseReset.apply(this,arguments);
-  setTimeout(()=>{try{const after=rawGet('mouldmasterProDB');if(after!==before){cancelInMemoryAttempt();clearAll()}}catch(_){}},0);
+  setTimeout(()=>{try{const after=rawGet('mouldmasterProDB');if(after!==before){cancelInMemoryAttempt();clearLearner(beforeLearner)}}catch(error){console.warn('[MouldMaster assessment scope] learner reset cleanup:',error)}},0);
   return r;
  };
  Object.defineProperty(wrappedReset,'__mmAssessmentScopeWrapped',{value:true});window.resetData=wrappedReset;
@@ -327,6 +339,8 @@ window.MM_ASSESSMENT_STORAGE_SCOPE={
  rotationKey:()=>scopedKey(ROTATION_BASE),
  questionHistoryKey:()=>scopedKey(QUESTION_HISTORY_BASE),
  resultMetaKey:()=>scopedKey(RESULT_META_BASE),
+ keysForLearner,
+ clearLearner,
  clearAll,
  cancelInMemoryAttempt,
  migrateFallbackScopes:ensureSharedMigration,

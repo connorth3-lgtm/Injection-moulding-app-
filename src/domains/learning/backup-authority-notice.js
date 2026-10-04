@@ -1,9 +1,9 @@
-/* MouldMaster backup authority + integrity UX — 2026.09.18.1 */
+/* MouldMaster backup authority + integrity UX — 2026.10.04.1 */
 (function(){
 'use strict';
 if(window.MM_BACKUP_AUTHORITY_NOTICE)return;
 
-const VERSION='2026.09.18.1';
+const VERSION='2026.10.04.1';
 const BACKUP_FORMAT='mouldmaster-backup-v3';
 const LEGACY_FORMAT='mouldmaster-backup-v2';
 const INTEGRITY_ALGORITHM='SHA-256';
@@ -72,13 +72,10 @@ async function sha256Hex(value){
  return bytesToHex(await subtle.digest(INTEGRITY_ALGORITHM,bytes));
 }
 function legacyPayload(){
- const payload=JSON.parse(JSON.stringify(db));
+ const payload=JSON.parse(JSON.stringify(db)),bridge=window.MM_TRAINING_DATA_BRIDGE;
+ if(!bridge||typeof bridge.buildTrainingExtras!=='function')throw new Error('Learner-scoped backup bridge unavailable');
  payload.backupFormat=LEGACY_FORMAT;
- payload.trainingExtras={
-  version:2,
-  spacedReview:cleanReview(readLocalJson(REVIEW_KEY,{items:{}})),
-  practicalSignoff:cleanSign(readLocalJson(SIGN_KEY,{}))
- };
+ payload.trainingExtras=bridge.buildTrainingExtras(payload.users);
  return payload;
 }
 async function buildEnvelope(){
@@ -127,7 +124,7 @@ window.exportData=async function(){
  try{
   const envelope=await buildEnvelope();
   downloadJson(envelope);
-  window.toast?.('Backup exported with SHA-256 integrity checksum, review and sign-off data');
+  window.toast?.('Backup exported with SHA-256 integrity checksum and learner-scoped review/sign-off data');
  }catch(error){
   console.error('[MouldMaster backup] export failed:',error);
   alert('Backup could not be created with a verifiable SHA-256 integrity checksum on this device. No backup file was exported.');
@@ -165,7 +162,7 @@ function annotate(root=document){
   if(String(heading.textContent||'').trim()!=='Backup & reset')continue;
   const card=heading.closest('.card');if(!card||card.querySelector('[data-mm-backup-authority-note]'))continue;
   const note=document.createElement('div');note.className='callout';note.dataset.mmBackupAuthorityNote='1';
-  note.innerHTML='<b>Transfer boundary:</b> Current backups include a SHA-256 integrity checksum so corruption or file changes are detected before restore. The checksum is not a digital signature and does not prove who created the backup. Progress, notes and supported training extras can move in a backup; certificates, pass authority and local analytics do not transfer as trusted evidence and must be re-earned after import.';
+  note.innerHTML='<b>Transfer boundary:</b> Current backups include all local learner profiles plus each profile\'s scoped review/sign-off state, protected by a SHA-256 integrity checksum so corruption or file changes are detected before restore. Import replaces the local learner registry after confirmation. The checksum is not a digital signature and does not prove who created the backup. Certificates, pass authority and local analytics do not transfer as trusted evidence; certificates must be re-earned and analytics are reset after import.';
   const controls=card.querySelector('.hero-buttons');card.insertBefore(note,controls||null);
  }
 }

@@ -138,6 +138,9 @@ test('Mould Master uses one owner-scoped IndexedDB store with one-time legacy im
   expect(links.some(x=>x.kind==='mould'&&x.targetId==='MOULD-184')).toBeTruthy();
   expect(links.some(x=>x.kind==='product'&&x.targetId==='PROD-PUMP-01')).toBeTruthy();
   expect(links.some(x=>x.kind==='part'&&x.targetId==='PART-184-03')).toBeTruthy();
+  await page.evaluate(id=>window.MM_ENGINEERING_STORE.linkCaseDataset(id,'qa-process-dataset-001','QA prepared dataset'),materialCase);
+  links=await page.evaluate(id=>window.MM_ENGINEERING_STORE.linksForCase(id),materialCase);
+  expect(links.some(x=>x.kind==='process-dataset'&&x.targetId==='qa-process-dataset-001'&&x.meta?.label==='QA prepared dataset')).toBeTruthy();
 
   const context=await page.evaluate(id=>window.MM_MOULD_MASTER_WORKSPACE.engineeringContext(id),materialCase);
   expect(context.materialGradeId).toBe('mat-lotte-infino-nh-1033');
@@ -220,6 +223,12 @@ test('Mould Master uses one owner-scoped IndexedDB store with one-time legacy im
   expect(auditTrail[0].action).toBe('void');
   expect(auditTrail[0].reason).toContain('Superseded');
 
+  const orphanAuditError=await page.evaluate(id=>{
+    const store=window.MM_ENGINEERING_STORE,c={id,title:'Orphan audit QA'},evidence=[{id:'qa-evidence-1',recordType:'evidence',kind:'controlled-trial',title:'QA evidence',sourceRef:'QA',result:'retained'}];
+    try{store.validateCaseBundle({schema:4,case:c,evidence,evidenceAudit:[{recordType:'audit',action:'void',targetEvidenceId:'missing-evidence',reason:'invalid QA reference'}],links:[]});return null}catch(error){return String(error.message||error)}
+  },materialCase);
+  expect(orphanAuditError).toContain('unknown evidence id');
+
   const restoreResult=await page.evaluate(async id=>{
     const store=window.MM_ENGINEERING_STORE;
     const c=await store.getCase(id),evidence=await store.listCaseEvidence(id),evidenceAudit=await store.evidenceAuditTrail(id),links=await store.linksForCase(id);
@@ -228,6 +237,7 @@ test('Mould Master uses one owner-scoped IndexedDB store with one-time legacy im
   expect(restoreResult.caseId).not.toBe(materialCase);
   expect(restoreResult.evidenceImported).toBe(2);
   expect(restoreResult.auditImported).toBe(1);
+  expect(restoreResult.linksImported).toBe(6);
   expect(restoreResult.destructive).toBeFalsy();
   const restoredCase=await page.evaluate(id=>window.MM_ENGINEERING_STORE.getCase(id),restoreResult.caseId);
   expect(restoredCase.materialGradeId).toBe('mat-lotte-infino-nh-1033');
@@ -235,6 +245,9 @@ test('Mould Master uses one owner-scoped IndexedDB store with one-time legacy im
   expect(restoredCase.mouldId).toBe('MOULD-184');
   expect(restoredCase.productId).toBe('PROD-PUMP-01');
   expect(restoredCase.partId).toBe('PART-184-03');
+  const restoredLinks=await page.evaluate(id=>window.MM_ENGINEERING_STORE.linksForCase(id),restoreResult.caseId);
+  expect(restoredLinks).toHaveLength(6);
+  expect(restoredLinks.some(x=>x.kind==='process-dataset'&&x.targetId==='qa-process-dataset-001'&&x.meta?.label==='QA prepared dataset')).toBeTruthy();
   const restoredEvidence=await page.evaluate(id=>window.MM_ENGINEERING_STORE.listCaseEvidence(id),restoreResult.caseId);
   expect(restoredEvidence).toHaveLength(2);
   expect(restoredEvidence.filter(x=>x.voided)).toHaveLength(1);

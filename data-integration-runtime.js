@@ -6,6 +6,7 @@ const VERSION='2026.09.15.4';
 const DB_NAME='mouldmaster-process-data-v1';
 const DB_VERSION=1;
 const MAX_ROWS=50000;
+const MAX_CSV_BYTES=10*1024*1024;
 const ROLE_OPTIONS=['unresolved','actual','setpoint','command','state','quality','derived','structural'];
 const SAMPLING_OPTIONS=['unknown','per-cycle','trace-sample','event','batch'];
 const BLOCKING_SEMANTIC_KINDS=new Set(['unresolved']);
@@ -388,6 +389,7 @@ function wireAdvancedIntake(prepared){
   root.querySelector('[data-di-file]')?.addEventListener('change',async e=>{
     const file=e.target.files?.[0];if(!file)return;
     try{
+      if(!Number.isFinite(file.size)||file.size<0||file.size>MAX_CSV_BYTES)throw new Error('CSV exceeds the 10 MiB local intake safety limit. Choose a smaller source file.');
       const text=await file.text(),base=window.MM_PROCESS_DATA_LOCAL_INTAKE;if(!base)throw new Error('Local intake module unavailable');
       const parsed=base.parseCsv(text),privacyPrepared=base.__rawPrepare?base.__rawPrepare(parsed):base.prepare(parsed);
       preparedSession=enrichPrepared(privacyPrepared,{},readDatasetMeta(root));renderAdvancedIntake(preparedSession)

@@ -1,7 +1,7 @@
-/* MouldMaster canonical measured-evidence runtime bridge — 2026.08.30.1 */
+/* MouldMaster canonical measured-evidence runtime bridge — 2026.10.04.1 */
 (function(){
 'use strict';
-const VERSION='2026.08.30.1';
+const VERSION='2026.10.04.1';
 const CANONICAL={inventoried:34,rightsExecutable:21,fullyProfiled:17,timeSeriesValues:85569824};
 const FAMILIES=[
  {id:'mendeley-gtnb4j7bfx-v1',title:'Injection production records',kind:'record-level production',scale:'4,502 injection records profiled',timeSeries:0,rights:'CC BY 4.0',restricted:false,source:'https://doi.org/10.17632/gtnb4j7bfx.1',topics:['quality','reject','flash','product weight','melt temperature','mould temperature','mold temperature','cycle time','cooling','injection pressure','hold pressure','injection speed','production'],boundary:'Production-order/run-level records are not assumed to be shot-resolved; correlations do not prove root cause or a validated process window.'},
@@ -35,11 +35,33 @@ function style(){if(document.getElementById('mm-measured-evidence-style'))return
 function contextText(host){const fields=[...host.querySelectorAll('input,textarea,select')].map(x=>x.value||'').join(' ');return `${host.textContent||''} ${fields}`}
 function relevantPanel(text){const rows=select(text);if(!rows.length)return '';return `<section class="mme-panel" data-mm-measured-evidence="relevant"><div class="eyebrow">Canonical measured evidence</div><h3>Measured data behind this topic</h3><p>These source-profiled datasets show real measured behaviour in bounded experiments or production records. They support comparison and learning; they do not supply universal settings, prove root cause by themselves, or override the validated machine/mould/material/site process.</p><div class="mme-grid">${rows.map(card).join('')}</div></section>`}
 function catalogPanel(){return `<section class="mme-panel mme-workspace" data-mm-measured-evidence="catalog"><div class="eyebrow">Measured evidence baseline</div><h3>17 fully profiled dataset families are available as evidence context</h3><div class="mme-kpis"><div class="mme-kpi"><b>${CANONICAL.fullyProfiled}</b><span>profiled families</span></div><div class="mme-kpi"><b>${CANONICAL.rightsExecutable}</b><span>rights-executable sources</span></div><div class="mme-kpi"><b>${(CANONICAL.timeSeriesValues/1e6).toFixed(1)}M</b><span>process time-series values</span></div><div class="mme-kpi"><b>${CANONICAL.inventoried}</b><span>inventoried sources</span></div></div><p class="mme-boundary">Evidence is context-specific. Record-level, material-characterisation, specimen-test and waveform evidence remain distinct; restricted educational/noncommercial rights are preserved; unresolved channels and blocked sources are not silently counted.</p><details class="mme-all"><summary>Browse all 17 measured families</summary><div class="mme-grid">${FAMILIES.map(card).join('')}</div><div class="mme-restricted">Restricted-use families are labelled explicitly; opening a source does not change its reuse terms.</div></details></section>`}
-function addRelevant(host){if(!host||host.classList?.contains('hidden')||host.querySelector('[data-mm-measured-evidence="relevant"]'))return;const html=relevantPanel(contextText(host));if(html)host.insertAdjacentHTML('beforeend',html)}
+function addRelevant(host){if(!host||host.classList?.contains('hidden')||host.querySelector('[data-mm-measured-evidence="catalog"]')||host.querySelector('[data-mm-measured-evidence="relevant"]'))return;const html=relevantPanel(contextText(host));if(html)host.insertAdjacentHTML('beforeend',html)}
+function openCatalog(){
+ style();
+ document.querySelectorAll('.view').forEach(view=>view.classList.add('hidden'));
+ const host=document.getElementById('processDataLabs');if(!host)return false;
+ host.classList.remove('hidden');
+ const title=document.getElementById('pageTitle'),subtitle=document.getElementById('pageSubtitle');
+ if(title)title.textContent='Measured Data';
+ if(subtitle)subtitle.textContent='Browse the 17 governed measured-evidence families and their source boundaries.';
+ host.innerHTML=`<div class="pd-toolbar mme-catalog-toolbar"><button class="ghost" type="button" data-mme-back>← Data diagnosis</button></div>${catalogPanel()}`;
+ host.querySelector('[data-mme-back]')?.addEventListener('click',()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.());
+ window.scrollTo?.({top:0,behavior:'smooth'});
+ return true
+}
+function ensureProcessDataLauncher(){
+ const host=document.getElementById('processDataLabs');
+ if(!host||host.classList.contains('hidden')||host.querySelector('[data-mme-catalog-launcher]')||host.querySelector('[data-mm-measured-evidence="catalog"]'))return;
+ const wrap=document.createElement('div');wrap.className='pd-toolbar mme-catalog-launcher';wrap.dataset.mmeCatalogLauncher='1';
+ wrap.innerHTML='<div><b>Measured Data</b><div class="muted tiny">Browse the 17 governed measured-evidence families and source boundaries.</div></div><button class="ghost" type="button" data-mme-open-catalog>Browse measured data</button>';
+ wrap.querySelector('[data-mme-open-catalog]')?.addEventListener('click',openCatalog);
+ host.insertAdjacentElement('afterbegin',wrap)
+}
 function run(){
  style();
  const lesson=document.querySelector('#lesson article.lesson-body');if(lesson&&!lesson.querySelector('[data-mm-measured-evidence]')){const html=relevantPanel(contextText(lesson));if(html)lesson.insertAdjacentHTML('beforeend',html)}
  ['diagnosticLabs','processDataLabs'].forEach(id=>addRelevant(document.getElementById(id)));
+ ensureProcessDataLauncher();
  const material=[...document.querySelectorAll('.view[id]')].find(x=>/material.*lab/i.test(x.id));if(material)addRelevant(material);
  const ws=document.getElementById('mmMouldMasterWorkspace');if(ws&&!ws.classList.contains('hidden')){
    if(!ws.querySelector('[data-mm-measured-evidence="relevant"]')){const html=relevantPanel(contextText(ws));if(html)ws.insertAdjacentHTML('beforeend',html)}
@@ -49,5 +71,6 @@ function run(){
 let queued=false;function schedule(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(()=>{queued=false;run()},0)}
 const observer=new MutationObserver(schedule);if(document.documentElement)observer.observe(document.documentElement,{subtree:true,childList:true});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule);else schedule();window.addEventListener('load',schedule);
-window.MM_MEASURED_EVIDENCE={version:VERSION,canonical:{...CANONICAL},families:FAMILIES.map(x=>({...x,topics:[...x.topics]})),select:(text,limit=4)=>select(text,limit).map(x=>({...x,topics:[...x.topics]})),scope:'Metadata-only bridge to 17 canonically profiled measured families; no raw third-party rows, universal production recipes or root-cause authority.'};
+window.addEventListener?.('mm:domains-ready',schedule);
+window.MM_MEASURED_EVIDENCE={version:VERSION,canonical:{...CANONICAL},families:FAMILIES.map(x=>({...x,topics:[...x.topics]})),select:(text,limit=4)=>select(text,limit).map(x=>({...x,topics:[...x.topics]})),open:openCatalog,scope:'Metadata-only bridge to 17 canonically profiled measured families; no raw third-party rows, universal production recipes or root-cause authority.'};
 })();

@@ -1,11 +1,11 @@
-/* MouldMaster learner UI polish — 2026.10.04.3
+/* MouldMaster learner UI polish — 2026.10.04.4
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.10.04.3';
+const VERSION='2026.10.04.4';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -84,6 +84,13 @@ function syncHomeBalance(){
   else if(!anchor&&!panel.isConnected)root.prepend(panel);
 }
 
+function syncCertificateCounter(){
+  const root=document.getElementById('dashboard');if(!root)return;
+  for(const row of root.querySelectorAll('.statline')){
+    const label=row.querySelector('.muted.tiny');if(String(label?.textContent||'').trim()!=='Certificates earned')continue;
+    const value=row.querySelector('b');if(value)value.textContent=String(Array.isArray(user?.certificates)?user.certificates.length:0)
+  }
+}
 function syncBookDisclosure(){
   const view=document.getElementById('mmBookView');
   if(!view)return;
@@ -230,6 +237,7 @@ function syncReadAloudLabel(){
 }
 function run(){
   syncHomeBalance();
+  syncCertificateCounter();
   syncBookDisclosure();
   syncDesktopNavigation();
   syncTopbarContext();
