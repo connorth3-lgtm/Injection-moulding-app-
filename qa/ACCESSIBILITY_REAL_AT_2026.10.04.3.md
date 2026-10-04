@@ -5,15 +5,15 @@ This packet governs **human** assistive-technology validation for web release `2
 ## Exact release boundary
 
 - web release: `2026.10.04.3`
-- retained pre-merge public candidate source commit: `6aa25922621506d172b0102e69a45c8e7e5a0f4a`
-- public-runtime fingerprint: `sha256:5206425e22281834404cd7a870808f3a91a33652b7655bc67c5e424f2a88d5c8`
-- retained physical candidate: `physical-pwa-candidate-6aa25922621506d172b0102e69a45c8e7e5a0f4a` (`11291909401`)
-- candidate build run: `37174067487` (`Pre-merge Public Candidate`)
-- artifact ZIP digest: `sha256:30d6f7d9ab1e5e1ae91f400ad746531dbcba66b5ffdd46b5949cf3cd2c08af43`
-- artifact retention expiry: `2027-01-02T03:26:08Z`
+- retained pre-merge public candidate source commit: `ce79ddc7d27795b34daab25a93c26b47248c2639`
+- public-runtime fingerprint: `sha256:88430a78b47902b88948298d4387d9c82cd436326f0c648cc8b2cd236766d726`
+- retained physical candidate: `physical-pwa-candidate-ce79ddc7d27795b34daab25a93c26b47248c2639` (`11292004582`)
+- candidate build run: `37174498721` (`Pre-merge Public Candidate`)
+- artifact ZIP digest: `sha256:3ed005126dc05ba756764f9b05598559ab1ca43f8e647e39064bc17a6d4f4f95`
+- artifact retention expiry: `2027-01-02T03:35:18Z`
 - evidence contract: `data/accessibility-real-at-validation-v1.json`
 
-This is a candidate **rebind**, not new AT evidence. Release `2026.10.04.3` is bound to exact pre-merge learner-runtime candidate `6aa25922621506d172b0102e69a45c8e7e5a0f4a` / `sha256:5206425e22281834404cd7a870808f3a91a33652b7655bc67c5e424f2a88d5c8`. No earlier human or device evidence is relabelled. The retained source has the same Git tree as squash commit `390c28b34f01395600170982b7bd4632aa809d45`. If learner-facing runtime bytes change again, this packet must be rebound before new validation is recorded; the mutable `preview` branch tip is never validation identity.
+This is a candidate **rebind**, not new AT evidence. Release `2026.10.04.3` is bound to exact pre-merge learner-runtime candidate `ce79ddc7d27795b34daab25a93c26b47248c2639` / `sha256:88430a78b47902b88948298d4387d9c82cd436326f0c648cc8b2cd236766d726`. No earlier human or device evidence is relabelled. The retained source has the same Git tree as squash commit `390c28b34f01395600170982b7bd4632aa809d45`. If learner-facing runtime bytes change again, this packet must be rebound before new validation is recorded; the mutable `preview` branch tip is never validation identity.
 
 ## Required matrix
 
