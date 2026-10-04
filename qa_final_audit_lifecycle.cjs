@@ -175,6 +175,7 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
 {
   const t=trainingSandbox('silent-material');
   const oldKey='mm_material_behaviour_labs_v1:old';
+  t.memory.delete('mm_material_behaviour_labs_v1::strong-old');
   t.memory.set(oldKey,JSON.stringify({'legacy-material-case':{attempts:2,completed:true,bestScore:100,firstTry:true}}));
   assert.throws(()=>t.bridge.buildTrainingExtras(t.sandbox.db.users),/material lab migration|legacy delete could not be verified/i,'backup accepted an unverifiable material-lab legacy migration');
   assert(t.memory.has(oldKey),'silent material-delete fixture unexpectedly removed the legacy bucket');
