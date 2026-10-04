@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 const REVIEW_KEY='mm_spaced_review_v2', LEGACY_REVIEW='mm_spaced_review_v1', SIGN_KEY='mm_practical_signoff_v1', MEASURED_KEY='mm_real_measured_assessment_v1', PROCESS_DIAG_KEY='mm_process_data_diagnostics_v1', DIAGNOSTIC_LABS_KEY='mm_diagnostic_labs_v1', MATERIAL_LABS_KEY='mm_material_behaviour_labs_v1', ASSESSMENT_MEMBERSHIP_KEY='mm_assessment_membership_history_v2';
-const ASSESSMENT_ANALYTICS_PREFIXES=['mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1','mm_assessment_opening_history_v2','mm-assessment-question-history-v4','mm-assessment-result-meta-v1'];
+const ASSESSMENT_ANALYTICS_PREFIXES=['mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1','mm_assessment_opening_history_v2','mm-assessment-question-history-v4','mm-assessment-result-meta-v1',ASSESSMENT_MEMBERSHIP_KEY];
 const LEARNING_ANALYTICS_PREFIX='mm_learning_analytics_v1::';
 const ANALYTICS_CLEANUP_CODE='MM_ANALYTICS_CLEANUP_FAILED';
 const LEARNER_ID_RE=/^[A-Za-z0-9][A-Za-z0-9._:@+-]{0,159}$/;
