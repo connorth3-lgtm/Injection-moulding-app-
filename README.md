@@ -81,6 +81,8 @@ Specialist completion is device-local and separate from the core pathway. These 
 
 Learning Insights keeps bounded learner-scoped event logs locally. Cohort export is available only in the device-local instructor convenience view and contains aggregate metrics only. Cohort discovery is derived from the current learner registry: analytics buckets that no longer map to a current profile are excluded and cannot satisfy the minimum-five export threshold.
 
+Progress backups include learner-scoped spaced-review, practical-sign-off, measured-assessment, process-diagnostics, Diagnostic Learning Lab and Material Behaviour Lab progress. Assessment analytics, assessment exposure/membership histories and Learning Insights event logs remain derived local state and are deliberately excluded from backup restoration.
+
 Progress import and factory reset treat analytics deletion as a verified lifecycle boundary. Assessment and Learning Insights stores are deleted and re-enumerated before an imported/default learner registry becomes active. If cleanup cannot be verified, the operation fails closed and warns the learner rather than reporting a clean import/reset. Release QA fault-injects both thrown and silent local-storage deletion failures so this boundary is not tested only on the happy path.
 
 ## Open Windows desktop release
