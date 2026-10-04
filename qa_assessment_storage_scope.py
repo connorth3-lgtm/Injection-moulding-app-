@@ -118,7 +118,7 @@ for forbidden in ["localStorage.getItem(ASSESSMENT_HISTORY_KEY)", "localStorage.
     need(forbidden not in ux,f'learner UX assessment persistence bypasses scoped storage: {forbidden}')
 
 bridge=text('src/domains/learning/training-qa-fix.js')
-for marker in ['clearAssessmentAnalyticsStores','clearLearningAnalyticsStores','clearAllAnalyticsStores','clearTrainingExtrasStores','clearLearnerAnalyticsStores','clearLearnerTrainingExtras','learnerOwnedKeys','cancelActiveExam','mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1','mm_assessment_opening_history_v2','mm-assessment-question-history-v4','mm-assessment-result-meta-v1','mm_learning_analytics_v1::','ANALYTICS_CLEANUP_CODE','remaining key(s):','restoreSnapshot(before)','clearLearnerAnalyticsStores(active);clearLearnerTrainingExtras(active)','proposed.users[active]=cleanResetLearner(prior,active)']:
+for marker in ['clearAssessmentAnalyticsStores','clearLearningAnalyticsStores','clearAllAnalyticsStores','clearTrainingExtrasStores','clearLearnerAnalyticsStores','clearLearnerTrainingExtras','learnerOwnedKeys','cancelActiveExam','mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1','mm_assessment_opening_history_v2','mm-assessment-question-history-v4','mm-assessment-result-meta-v1','mm_assessment_membership_history_v2','learnerRuntimeAssessmentKeys','mm_learning_analytics_v1::','ANALYTICS_CLEANUP_CODE','remaining key(s):','restoreSnapshot(before)','clearLearnerAnalyticsStores(active);clearLearnerTrainingExtras(active)','proposed.users[active]=cleanResetLearner(prior,active)']:
     need(marker in bridge,f'training reset/import verified analytics cleanup missing: {marker}')
 
 V=json.loads(text('version.json'))
@@ -126,4 +126,4 @@ need(V.get('assessment_storage_scope_version')=='2026.08.24.4','published assess
 need(V.get('assessment_storage_migration_version')=='2026.10.05.2','assessment storage migration/ownership version missing')
 for wf in ['.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml','.github/workflows/microsoft-store-msix.yml']:
     w=text(wf);need('python qa_assessment_storage_scope.py' in w,f'{wf} missing learner-scoped analytics QA')
-print('MouldMaster learner-scoped assessment storage QA passed: explicit persistence, native Storage preservation, learner isolation, fail-closed legacy migration, shared scope migration, and active-learner-only reset cleanup.')
+print('MouldMaster learner-scoped assessment storage QA passed: explicit persistence, native Storage preservation, learner isolation, fail-closed legacy migration, shared scope migration, and active-learner-only reset cleanup including membership/exposure history.')
