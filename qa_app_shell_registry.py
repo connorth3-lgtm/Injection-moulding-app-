@@ -95,6 +95,7 @@ need("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'" in sw,
 workspace_pack=text('src/domains/runtime-packs/curriculum-workspace-runtime-pack.js')
 need('/* >>> mould-master-workspace.js */' in workspace_pack,'packed workspace runtime is missing mould-master-workspace.js')
 need("'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'" in sw,'offline cache missing packed shell finalizer')
+need("bindCanonicalCoreNavigation" in js and "event.stopImmediatePropagation()" in js and "},true);" in js,'core desktop navigation must route once through the canonical shell in capture phase')
 
 pkg=json.loads(text('desktop/electron/package.json'))
 froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
