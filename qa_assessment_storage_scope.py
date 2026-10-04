@@ -11,13 +11,14 @@ scope=ROOT/'assessment-storage-scope.js'
 need(scope.exists(),'assessment-storage-scope.js missing')
 js=text('assessment-storage-scope.js')
 for marker in [
-    "VERSION='2026.10.05.1'",
+    "VERSION='2026.10.05.2'",
     "ANALYTICS_BASE='mm_assessment_analytics_v1'",
     "TIMING_BASE='mm_assessment_exposure_timing_v1'",
     "ROTATION_BASE='mm_assessment_opening_history_v1'",
+    "UX_ROTATION_BASE='mm_assessment_opening_history_v2'",
     "QUESTION_HISTORY_BASE='mm-assessment-question-history-v4'",
     "RESULT_META_BASE='mm-assessment-result-meta-v1'",
-    "BASES=[ANALYTICS_BASE,TIMING_BASE,ROTATION_BASE,QUESTION_HISTORY_BASE,RESULT_META_BASE]",
+    "BASES=[ANALYTICS_BASE,TIMING_BASE,ROTATION_BASE,UX_ROTATION_BASE,QUESTION_HISTORY_BASE,RESULT_META_BASE]",
     'function getItem(base)', 'function setItem(base,value)', 'function removeItem(base)',
     'function read(base,fallback=null)', 'function write(base,value)',
     'prototypeInterception:false', 'learnerScoped:true', 'MM_LEARNER_SCOPE',
@@ -78,7 +79,7 @@ if(api.sharedMigration.conflicts!==0||api.sharedMigration.ambiguous!==0||api.sha
 
 let keepAttempt={level:'Advanced'};x.sandbox.activeExam=keepAttempt;x.window.activeExam=keepAttempt;x.window.__doReset=false;x.window.resetData();if(x.sandbox.activeExam!==keepAttempt||x.window.activeExam!==keepAttempt)throw new Error('no-op reset cancelled active exam');
 x.window.__doReset=true;x.window.resetData();if(x.sandbox.activeExam!==null||x.window.activeExam!==null)throw new Error('confirmed reset did not cancel active exam');
-for(const base of ['mm_assessment_analytics_v1','mm_assessment_opening_history_v1','mm-assessment-question-history-v4','mm-assessment-result-meta-v1']){x.db.activeUser='learner-a';if(api.getItem(base)===null)throw new Error('learner B reset incorrectly cleared learner A '+base);x.db.activeUser='learner-b';if(api.getItem(base)!==null)throw new Error('reset did not clear active learner B '+base)}
+for(const base of ['mm_assessment_analytics_v1','mm_assessment_opening_history_v1','mm_assessment_opening_history_v2','mm-assessment-question-history-v4','mm-assessment-result-meta-v1']){x.db.activeUser='learner-a';if(api.getItem(base)===null)throw new Error('learner B reset incorrectly cleared learner A '+base);x.db.activeUser='learner-b';if(api.getItem(base)!==null)throw new Error('reset did not clear active learner B '+base)}
 native.set.call(x.localStorage,'unrelated','keep');api.clearAll();if(native.get.call(x.localStorage,'unrelated')!=='keep')throw new Error('clearAll removed unrelated storage');
 
 const y=make(['learner-a','learner-b'],'learner-a',{'mm_assessment_analytics_v1':JSON.stringify({owner:'ambiguous-legacy'})});
@@ -117,12 +118,12 @@ for forbidden in ["localStorage.getItem(ASSESSMENT_HISTORY_KEY)", "localStorage.
     need(forbidden not in ux,f'learner UX assessment persistence bypasses scoped storage: {forbidden}')
 
 bridge=text('src/domains/learning/training-qa-fix.js')
-for marker in ['clearAssessmentAnalyticsStores','clearLearningAnalyticsStores','clearAllAnalyticsStores','clearTrainingExtrasStores','clearLearnerAnalyticsStores','clearLearnerTrainingExtras','learnerOwnedKeys','cancelActiveExam','mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1','mm-assessment-question-history-v4','mm-assessment-result-meta-v1','mm_learning_analytics_v1::','ANALYTICS_CLEANUP_CODE','remaining key(s):','restoreSnapshot(before)','clearLearnerAnalyticsStores(active);clearLearnerTrainingExtras(active)','proposed.users[active]=cleanResetLearner(prior,active)']:
+for marker in ['clearAssessmentAnalyticsStores','clearLearningAnalyticsStores','clearAllAnalyticsStores','clearTrainingExtrasStores','clearLearnerAnalyticsStores','clearLearnerTrainingExtras','learnerOwnedKeys','cancelActiveExam','mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1','mm_assessment_opening_history_v2','mm-assessment-question-history-v4','mm-assessment-result-meta-v1','mm_learning_analytics_v1::','ANALYTICS_CLEANUP_CODE','remaining key(s):','restoreSnapshot(before)','clearLearnerAnalyticsStores(active);clearLearnerTrainingExtras(active)','proposed.users[active]=cleanResetLearner(prior,active)']:
     need(marker in bridge,f'training reset/import verified analytics cleanup missing: {marker}')
 
 V=json.loads(text('version.json'))
 need(V.get('assessment_storage_scope_version')=='2026.08.24.4','published assessment storage release lane drifted during migration-only hardening')
-need(V.get('assessment_storage_migration_version')=='2026.10.05.1','assessment storage migration/ownership version missing')
+need(V.get('assessment_storage_migration_version')=='2026.10.05.2','assessment storage migration/ownership version missing')
 for wf in ['.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml','.github/workflows/microsoft-store-msix.yml']:
     w=text(wf);need('python qa_assessment_storage_scope.py' in w,f'{wf} missing learner-scoped analytics QA')
 print('MouldMaster learner-scoped assessment storage QA passed: explicit persistence, native Storage preservation, learner isolation, fail-closed legacy migration, shared scope migration, and active-learner-only reset cleanup.')
