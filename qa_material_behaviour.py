@@ -24,6 +24,7 @@ need('formaldehyde' in js.lower() and 'pvc' in js.lower(),'POM safety case must 
 need('safeguards and approved procedures must not be bypassed' in js.lower(),'material safety distractor must explicitly reject safeguard bypass')
 need('universal production recipes' in js.lower(),'material labs must reject universal recipes')
 need("localStorage.getItem(k)===payload" in js and "Progress could not be saved on this device." in js and "progress not saved" in js,'material lab persistence must verify writes and surface unsaved progress')
+need("return id?String(id):null" in js and "if(!id||!scope" in js,'material lab progress must fail closed until a real active learner exists')
 
 node=r'''
 const fs=require('fs'),vm=require('vm');
