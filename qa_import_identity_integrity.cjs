@@ -11,7 +11,7 @@ assert(src.includes('const entries=Object.entries(x.users);'));
 assert(src.includes("if(!entries.length||entries.length>500)throw new Error('Invalid learner count in backup')"));
 assert(!src.includes('Object.entries(x.users).slice(0,500)'));
 assert(src.includes('const sid=canonicalLearnerId(id)'));assert(src.includes('canonicalLearnerId(u.id)!==sid'));assert(src.includes('const active=canonicalLearnerId(x.activeUser)'));
-assert(src.includes('hasOwnLearner(x.users,x.activeUser)'));assert(src.includes('Reset learner data'));assert(src.includes('Other local learner profiles and saved process-data evidence will be kept'));assert(src.includes("version:4,scope:'learner-registry'"));
+assert(src.includes('hasOwnLearner(x.users,x.activeUser)'));assert(src.includes('Reset learner data'));assert(src.includes('Other local learner profiles and saved process-data evidence will be kept'));assert(src.includes("version:5,scope:'learner-registry'"));assert(src.includes("requireExactKeys(x,['activeUser','users','backupFormat','trainingExtras'],'Backup payload')"));assert(src.includes("['spacedReview','practicalSignoff','measuredAssessment']"));assert(src.includes("x.backupFormat!='mouldmaster-backup-v2'")||src.includes("x.backupFormat!=='mouldmaster-backup-v2'"));
 
 sandbox.importData=function(){};sandbox.window.importData=sandbox.importData;
 vm.runInContext(fs.readFileSync('src/domains/learning/learner-model.js','utf8'),sandbox);
@@ -24,4 +24,4 @@ assert.throws(()=>validate(JSON.stringify({activeUser:'toString',users:{}})),/Mi
 assert.throws(()=>validate(JSON.stringify({activeUser:'learner-1',users:{'learner-1':{id:'different'}}})),/mismatch/);
 const guardSrc=fs.readFileSync('src/domains/learning/learner-model.js','utf8');
 assert(guardSrc.includes('__mmImportIntegrityGuard'));assert(guardSrc.includes('Object.prototype.hasOwnProperty.call(x.users,x.activeUser)'));
-console.log('Import identity integrity QA passed: canonical IDs are aligned, oversized registries fail closed before mutation, own-property activation is required, embedded IDs must match, and the final learning-domain runtime guard prevents packed legacy code from reintroducing truncation.');
+console.log('Import identity integrity QA passed: canonical IDs and exact payload keys are enforced, oversized registries fail closed before mutation, embedded IDs must match, backup v5 includes measured progress, and packed legacy code cannot reintroduce truncation.');
