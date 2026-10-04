@@ -96,6 +96,12 @@ assert "/* >>> backup-authority-notice.js */" in learning_pack and "MM_LEARNER_B
 assert learning_pack.index("/* >>> training-qa-fix.js */") < learning_pack.index("/* >>> backup-authority-notice.js */"), "backup integrity wrapper must load after the governed training import/export bridge"
 manifest = text("runtime-domain-manifest.json")
 assert "./src/domains/learning/backup-authority-notice.js" not in manifest, "packed backup integrity source must not also load through the domain manifest"
+pack_builder = text("tools/build_runtime_packs.py")
+service_worker = text("service-worker.js")
+for packed_source in re.findall(r'"([^"]+\\.js)"', pack_builder):
+    if "runtime-pack" in packed_source:
+        continue
+    assert f"'./{packed_source}'" not in service_worker, f"retired packed source remains in PWA asset graph: {packed_source}"
 assert index.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'"), "specialist evidence/runtime finalizer load order is wrong"
 for retired in ["assessment-100-pass.js","assessment-deep-dive.js","src/domains/assessment/assessment-answer-cue-fix.js","assessment-storage-scope.js","assessment-quality-suite.js","assessment-stable-review-bridge.js","assessment-analytics-ui.js","src/domains/assessment/assessment-final-hardening.js"]:
     assert f"['./{retired}','<script" not in index, f"assessment foundation direct source is still injected: {retired}"
