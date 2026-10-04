@@ -27,9 +27,11 @@ for(const marker of [
   'clearAllAnalyticsStores();',
   'const rolledBack=restoreSnapshot(before)',
   'db=proposed;user=db.users[db.activeUser];committed=true;cancelActiveExam();',
-  'clearAllAnalyticsStores();clearTrainingExtrasStores()',
-  'const proposedReset=JSON.parse(JSON.stringify(defaultDB))',
-  'analytics were cleared and verified',
+  'buildTrainingExtras',
+  'trainingExtrasForImport',
+  'clearLearnerAnalyticsStores(active);clearLearnerTrainingExtras(active);',
+  "const proposed=JSON.parse(JSON.stringify(db));proposed.users[active]=cleanResetLearner(prior,active)",
+  'Other local learner profiles',
 ])assert(trainingSource.includes(marker),`training analytics cleanup marker missing: ${marker}`);
 
 // Cohort regression: 4 current profiles + 1 orphan must remain an undersized
@@ -84,35 +86,53 @@ for(const marker of [
   assert.strictEqual(memory.get('unrelated-app-key'),'keep-me','analytics cleanup removed unrelated local storage');
 }
 
-function trainingSandbox(removeMode='normal'){
-  const oldDb={activeUser:'old',users:{old:{id:'old',name:'Old learner',completed:[],certificates:[]}}};
+function trainingSandbox(removeMode='normal',writeMode='normal'){
+  const oldDb={activeUser:'old',users:{
+    old:{id:'old',name:'Old learner',role:'learner',completed:[1,2],bookmarks:[2],notes:{1:'old note'},examScores:{Beginner:90},certificates:['Beginner-ALL'],currentLesson:3},
+    peer:{id:'peer',name:'Peer learner',role:'learner',completed:[9],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:9}
+  }};
   const oldSerialized=JSON.stringify(oldDb);
   const memory=new Map([
     ['mouldmasterProDB',oldSerialized],
-    ['mm_spaced_review_v2',JSON.stringify({items:{}})],
-    ['mm_practical_signoff_v1',JSON.stringify({checks:{}})],
-    ['mm_assessment_analytics_v1::old','assessment-old'],
-    ['mm_learning_analytics_v1::old','learning-old'],
+    ['mm_spaced_review_v2::legacy-old',JSON.stringify({items:{'tech:q1':{id:'tech:q1',stage:2}}})],
+    ['mm_practical_signoff_v1::legacy-old',JSON.stringify({checks:{safe:true}})],
+    ['mm_spaced_review_v2::legacy-peer',JSON.stringify({items:{'tech:q2':{id:'tech:q2',stage:1}}})],
+    ['mm_practical_signoff_v1::legacy-peer',JSON.stringify({checks:{peer:true}})],
+    ['mm_assessment_analytics_v1::strong-old','assessment-old'],
+    ['mm_assessment_analytics_v1::strong-peer','assessment-peer'],
+    ['mm_learning_analytics_v1::strong-old','learning-old'],
+    ['mm_learning_analytics_v1::strong-peer','learning-peer'],
     ['unrelated-app-key','keep-me'],
   ]);
+  let failedDbWrite=false;
   const localStorage={
     get length(){return memory.size},key(i){return [...memory.keys()][i]??null},
     getItem(k){return memory.has(String(k))?memory.get(String(k)):null},
-    setItem(k,v){memory.set(String(k),String(v))},
+    setItem(k,v){
+      k=String(k);
+      if(writeMode==='fail-next-db'&&k==='mouldmasterProDB'&&!failedDbWrite){failedDbWrite=true;throw new Error('simulated registry write failure')}
+      memory.set(k,String(v))
+    },
     removeItem(k){
       k=String(k);
       if(k.startsWith('mm_learning_analytics_v1::')&&removeMode==='throw')throw new Error('simulated delete failure');
       if(k.startsWith('mm_learning_analytics_v1::')&&removeMode==='silent')return;
-      memory.delete(k);
+      memory.delete(k)
     },
   };
   const alerts=[],toasts=[];
   class FileReader{readAsText(file){this.result=file.contents;this.onload?.()}}
+  const learnerScope={
+    tokenFor:id=>`strong-${id}`,legacyTokenFor:id=>`legacy-${id}`,
+    storageKey:(prefix,token)=>`${prefix}${token}`,
+    migrationPlan:id=>({uniqueOwner:true,legacyToken:`legacy-${id}`})
+  };
+  const assessmentScope={keysForLearner:id=>[`mm_assessment_analytics_v1::strong-${id}`]};
   const sandbox={
     console,localStorage,Date,Math,Object,String,Number,JSON,Blob:function(){},URL:{createObjectURL:()=> 'blob:test',revokeObjectURL:()=>{}},
     FileReader,setTimeout:fn=>{if(typeof fn==='function')fn()},confirm:()=>true,
     alert:msg=>alerts.push(String(msg)),
-    db:JSON.parse(oldSerialized),user:null,
+    db:JSON.parse(oldSerialized),user:null,MM_LEARNER_SCOPE:learnerScope,MM_ASSESSMENT_STORAGE_SCOPE:assessmentScope,
     defaultDB:{activeUser:'learner-1',users:{'learner-1':{id:'learner-1',name:'Learner 1',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:'2026-09-05T00:00:00.000Z'}}},
     normaliseImportedUser:(u,id)=>({...u,id:String(id),completed:Array.isArray(u.completed)?u.completed:[]}),
     updateGlobalProgress(){},switchView(){},renderProfile(){},
@@ -120,7 +140,7 @@ function trainingSandbox(removeMode='normal'){
   };
   sandbox.user=sandbox.db.users[sandbox.db.activeUser];sandbox.window=sandbox;
   vm.createContext(sandbox);vm.runInContext(trainingSource,sandbox,{filename:'src/domains/learning/training-qa-fix.js'});
-  return {sandbox,memory,alerts,toasts,oldSerialized,bridge:sandbox.MM_TRAINING_DATA_BRIDGE};
+  return {sandbox,memory,alerts,toasts,oldSerialized,bridge:sandbox.MM_TRAINING_DATA_BRIDGE}
 }
 
 // Thrown delete failure: an import may stage storage writes, but the imported
@@ -143,17 +163,44 @@ function trainingSandbox(removeMode='normal'){
   assert(t.memory.has('mm_learning_analytics_v1::old'),'silent-failure fixture unexpectedly deleted its retained analytics key');
 }
 
-// Successful factory reset clears/verifies analytics and training extras before the
-// fresh default learner registry is activated, while unrelated storage survives.
+// Successful learner reset clears only the active learner's scoped state and
+// preserves every peer profile/store plus unrelated application storage.
 {
   const t=trainingSandbox('normal');
+  const extras=t.bridge.buildTrainingExtras(t.sandbox.db.users);
+  assert.strictEqual(extras.version,4);
+  assert.deepStrictEqual(Object.keys(extras.learners).sort(),['old','peer']);
+  assert(extras.learners.old.spacedReview.items['tech:q1'],'active learner review state missing from multi-profile backup payload');
+  assert(extras.learners.peer.spacedReview.items['tech:q2'],'peer review state missing from multi-profile backup payload');
   t.sandbox.resetData();
-  assert.strictEqual(t.sandbox.db.activeUser,'learner-1','verified factory reset did not activate the clean default learner registry');
-  assert.strictEqual([...t.memory.keys()].some(k=>k.startsWith('mm_assessment_analytics_')||k.startsWith('mm_learning_analytics_v1::')),false,'verified factory reset left analytics behind');
-  assert.strictEqual(t.memory.has('mm_spaced_review_v2'),false,'factory reset left spaced-review training extras behind');
-  assert.strictEqual(t.memory.has('mm_practical_signoff_v1'),false,'factory reset left practical sign-off training extras behind');
-  assert.strictEqual(t.memory.get('unrelated-app-key'),'keep-me','factory reset removed unrelated local storage');
-  assert(t.toasts.some(x=>/analytics were cleared and verified/i.test(x)),'factory reset did not report the verified cleanup boundary');
+  assert.strictEqual(t.sandbox.db.activeUser,'old','learner reset changed the active learner identity');
+  assert.deepStrictEqual(t.sandbox.db.users.old.completed,[],'active learner progress survived learner reset');
+  assert.deepStrictEqual(t.sandbox.db.users.old.certificates,[],'active learner certificates survived learner reset');
+  assert.deepStrictEqual(t.sandbox.db.users.peer.completed,[9],'learner reset deleted or changed a peer profile');
+  assert.strictEqual(t.memory.has('mm_assessment_analytics_v1::strong-old'),false,'active learner assessment analytics survived reset');
+  assert.strictEqual(t.memory.has('mm_learning_analytics_v1::strong-old'),false,'active learner Learning Insights survived reset');
+  assert.strictEqual(t.memory.has('mm_spaced_review_v2::legacy-old'),false,'active learner review state survived reset');
+  assert.strictEqual(t.memory.has('mm_practical_signoff_v1::legacy-old'),false,'active learner sign-off survived reset');
+  assert.strictEqual(t.memory.get('mm_assessment_analytics_v1::strong-peer'),'assessment-peer','learner reset removed peer assessment analytics');
+  assert.strictEqual(t.memory.get('mm_learning_analytics_v1::strong-peer'),'learning-peer','learner reset removed peer Learning Insights');
+  assert(t.memory.has('mm_spaced_review_v2::legacy-peer'),'learner reset removed peer review state');
+  assert(t.memory.has('mm_practical_signoff_v1::legacy-peer'),'learner reset removed peer sign-off');
+  assert.strictEqual(t.memory.get('unrelated-app-key'),'keep-me','learner reset removed unrelated local storage');
+  assert(t.toasts.some(x=>/Other local learner profiles/i.test(x)),'learner reset did not report peer-profile preservation');
 }
 
-console.log('Final audit lifecycle QA passed: orphan analytics excluded; reset/import cleanup is verified, failure-injected and fail-closed before learner-registry activation.');
+// If the final learner-registry write fails after scoped cleanup, the reset must
+// restore the active learner registry and its learner-owned stores.
+{
+  const t=trainingSandbox('normal','fail-next-db');
+  t.sandbox.resetData();
+  assert.strictEqual(t.sandbox.db.activeUser,'old','failed reset mutated the in-memory learner registry');
+  assert.strictEqual(t.memory.get('mouldmasterProDB'),t.oldSerialized,'failed reset did not restore the persisted learner registry');
+  assert.strictEqual(t.memory.get('mm_assessment_analytics_v1::strong-old'),'assessment-old','failed reset did not restore assessment analytics');
+  assert.strictEqual(t.memory.get('mm_learning_analytics_v1::strong-old'),'learning-old','failed reset did not restore Learning Insights');
+  assert(t.memory.has('mm_spaced_review_v2::legacy-old'),'failed reset did not restore spaced review state');
+  assert(t.memory.has('mm_practical_signoff_v1::legacy-old'),'failed reset did not restore sign-off state');
+  assert(t.alerts.some(x=>/Existing learner progress and scoped training state were restored/i.test(x)),'failed reset did not disclose verified rollback');
+}
+
+console.log('Final audit lifecycle QA passed: orphan analytics excluded; import cleanup remains fail-closed; learner reset is scoped, peer-preserving and rollback-verified.');
