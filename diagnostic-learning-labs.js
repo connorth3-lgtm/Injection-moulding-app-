@@ -302,5 +302,10 @@ function install(){style();ensureSection();ensureNav();patchMobileMore();const h
 let queued=false;function schedule(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(()=>{queued=false;install()},0)}
 const observer=new MutationObserver(schedule);if(document.documentElement)observer.observe(document.documentElement,{childList:true,subtree:true});
 install();window.addEventListener('load',schedule);
-window.MM_DIAGNOSTIC_LABS={version:VERSION,labs:LABS,open:openLabs,storage:'learner-scoped local progress only'};
+const authorChoice=window.MM_ASSESSMENT_AUTHOR_CHOICE||((value)=>String(value??''));
+let starterCueEdits=0;
+for(const lab of LABS)for(const step of lab.steps||[])for(const choice of step.choices||[]){
+ const next=authorChoice(choice.text);if(next!==choice.text){choice.text=next;starterCueEdits++}
+}
+window.MM_DIAGNOSTIC_LABS={version:VERSION,labs:LABS,open:openLabs,storage:'learner-scoped local progress only',starterCueEdits};
 })();
