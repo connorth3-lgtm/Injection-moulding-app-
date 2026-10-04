@@ -145,6 +145,16 @@
         ]
       },
       {
+        "id": "measured-assessment-progress",
+        "technology": "localStorage",
+        "identity": "mm_real_measured_assessment_v1::<learner-token>",
+        "source": "src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js",
+        "sourceOfTruth": true,
+        "backupScope": "learner-core-backup-trainingExtras-v4",
+        "deletionBoundary": "learner-reset",
+        "learnerScope": "MM_LEARNER_SCOPE-128-bit-with-collision-aware-legacy-migration"
+      },
+      {
         "id": "engineering-cases",
         "technology": "IndexedDB",
         "identity": "mouldmaster-engineering-v2",
@@ -214,7 +224,8 @@
       },
       "unknownEnvelopePropertiesAccepted": false,
       "unknownPayloadTopLevelPropertiesAccepted": true,
-      "payloadUnknownPropertyBoundary": "The integrity envelope is exact-key checked. The validated mouldmaster-backup-v2 payload requires its governed structures but currently tolerates additional top-level payload properties."
+      "payloadUnknownPropertyBoundary": "The integrity envelope is exact-key checked. The validated mouldmaster-backup-v2 payload requires its governed structures but currently tolerates additional top-level payload properties.",
+      "unknownTopLevelPropertiesAccepted": true
     },
     "migrationRules": [
       "validate-before-write",
