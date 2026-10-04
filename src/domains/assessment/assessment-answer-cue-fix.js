@@ -87,11 +87,6 @@ const conciseKeyedWording={
  'tech:Beginner:9':'Baseline comparison of current process actuals and material condition',
  'tech:Intermediate:5':'Shot-delivery, NRV, feed, transfer and injection-actual checks',
  'reg:NZ:Intermediate:2':'Safeguard verification before authorised return to service',
- 'scenario:08':'Local gate, geometry and cooling checks after gate seal',
- 'scenario:11':'Feed, recovery-actual and shot-delivery repeatability checks',
- 'scenario:12':'Cooling routing, flow and thermal-balance verification',
- 'scenario:24':'Valve-gate timing and cavity-evidence checks',
- 'scenario:32':'Local thermal, venting and microflow evidence checks'
 };
 for(const [id,text] of Object.entries(conciseKeyedWording)){
  if(id.startsWith('tech:')){
