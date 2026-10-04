@@ -128,7 +128,7 @@ function cleanProcessDiagnostics(v){const out={};if(!obj(v))return out;for(const
 function cleanLabProgress(v){const out={};if(!obj(v))return out;for(const [id,row] of Object.entries(v).slice(0,100)){if(!obj(row))continue;const sid=String(id).slice(0,160);if(!sid)continue;out[sid]={attempts:Math.floor(clamp(row.attempts,0,100000)),completed:row.completed===true,bestScore:Math.round(clamp(row.bestScore,0,100)),firstTry:row.firstTry===true}}return out}
 function read(k,d){try{const x=JSON.parse(localStorage.getItem(k)||'');return obj(x)?x:d}catch(_){return d}}
 function restoreSnapshot(before){let failed=false;for(const [k,v] of Object.entries(before)){try{v===null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(_){failed=true}}return !failed}
-function cleanupFailureMessage(action,rolledBack=true){return `${action} was not completed because local analytics/training cleanup could not be fully verified.${rolledBack?' Existing learner progress was kept.':''} Some old analytics may already have been removed. Clear this app/site data before handing the same browser profile to another learner if the warning persists.`}
+function cleanupFailureMessage(action,rolledBack=true){return rolledBack?`${action} was not completed because local analytics/training cleanup could not be fully verified. Existing learner progress and local analytics/training state were restored.`:`${action} was not completed because local analytics/training cleanup could not be fully verified, and rollback could not be fully verified. Some local analytics/training state may have changed. Reopen MouldMaster and inspect local learner data before continuing.`}
 
 function buildTrainingExtras(users=(typeof db!=='undefined'?db?.users:null)){
  if(!obj(users))throw new Error('Learner registry unavailable for backup');
@@ -195,7 +195,8 @@ window.importData=function(file){
     trainingWrites[materialLabsKey(id)]=JSON.stringify(row.materialLabs||{})
    }
    const existingTraining=matchingKeys(trainingStorePredicate,'training extras');
-   const before=snapshotKeys(['mouldmasterProDB',...existingTraining,...Object.keys(trainingWrites)]);
+   const existingAnalytics=matchingKeys(k=>ASSESSMENT_ANALYTICS_PREFIXES.some(p=>k===p||k.startsWith(p+'::'))||k.startsWith(LEARNING_ANALYTICS_PREFIX),'analytics');
+   const before=snapshotKeys(['mouldmasterProDB',...existingTraining,...existingAnalytics,...Object.keys(trainingWrites)]);
    try{
     clearTrainingExtrasStores();
     clearAllAnalyticsStores();
