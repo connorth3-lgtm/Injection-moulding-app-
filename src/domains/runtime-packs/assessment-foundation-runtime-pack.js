@@ -246,7 +246,7 @@ function learnerId(){
   if(typeof db!=='undefined'&&db&&db.activeUser)return String(db.activeUser).slice(0,160);
   if(typeof user!=='undefined'&&user&&user.id)return String(user.id).slice(0,160);
  }catch(_){}
- return 'anonymous';
+ return null;
 }
 function hashScope(value){
  const s=String(value||'anonymous');let h1=0xdeadbeef^s.length,h2=0x41c6ce57^s.length;
@@ -288,21 +288,23 @@ function ensureSharedMigration(){
  sharedMigration=migrateFallbackScopes();sharedMigrationComplete=true;return sharedMigration
 }
 function scopeToken(raw=learnerId()){
+ if(raw==null||String(raw)==='')return null;
  const shared=sharedScope();if(shared){ensureSharedMigration();return shared.tokenFor(raw)}
  return strongFallbackToken(raw)
 }
 function scopedKey(base,raw=learnerId()){
- const k=String(base);return BASES.includes(k)?rawScopedKey(k,scopeToken(raw)):k
+ const k=String(base);if(!BASES.includes(k))return k;const token=scopeToken(raw);return token?rawScopedKey(k,token):null
 }
 function rawKeys(){const out=[];for(let i=0;i<localStorage.length;i++){const k=rawKey(i);if(k!=null)out.push(k)}return out}
 function assessmentKey(k){return BASES.some(base=>k===base||k.startsWith(base+'::'))}
-function getItem(base){return rawGet(scopedKey(base))}
-function setItem(base,value){rawSet(scopedKey(base),String(value));return true}
-function removeItem(base){rawRemove(scopedKey(base));return true}
+function getItem(base){const k=scopedKey(base);return k?rawGet(k):null}
+function setItem(base,value){const k=scopedKey(base);if(!k)return false;rawSet(k,String(value));return rawGet(k)===String(value)}
+function removeItem(base){const k=scopedKey(base);if(!k)return false;rawRemove(k);return rawGet(k)==null}
 function read(base,fallback=null){try{const raw=getItem(base);if(raw==null)return fallback;const value=JSON.parse(raw);return value==null?fallback:value}catch(_){return fallback}}
 function write(base,value){try{return setItem(base,JSON.stringify(value))}catch(_){return false}}
 function keysForLearner(raw=learnerId()){
- const learner=String(raw||'anonymous'),tokens=new Set([hashScope(learner),strongFallbackToken(learner)]),shared=sharedScope();
+ if(raw==null||String(raw)==='')return [];
+ const learner=String(raw),tokens=new Set([hashScope(learner),strongFallbackToken(learner)]),shared=sharedScope();
  if(shared)tokens.add(shared.tokenFor(learner));
  return [...tokens].flatMap(token=>BASES.map(base=>rawScopedKey(base,token)))
 }
@@ -311,7 +313,7 @@ function clearLearner(raw=learnerId()){
  for(const k of keys)rawRemove(k);
  const remaining=keys.filter(k=>rawGet(k)!=null);
  if(remaining.length)throw new Error(`Assessment learner cleanup could not be verified: ${remaining.slice(0,3).join(', ')}`);
- return Object.freeze({learnerId:String(raw||'anonymous'),removed:keys.length,verified:true})
+ return Object.freeze({learnerId:raw==null?null:String(raw),removed:keys.length,verified:true})
 }
 function clearAll(){for(const k of rawKeys())if(assessmentKey(k))rawRemove(k)}
 function cancelInMemoryAttempt(){
