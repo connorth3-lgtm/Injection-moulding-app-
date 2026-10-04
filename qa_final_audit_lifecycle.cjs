@@ -48,6 +48,7 @@ for(const marker of [
     ['mm_learning_analytics_v1::strong-c',JSON.stringify({schema:1,events:[]})],
     ['mm_learning_analytics_v1::strong-d',JSON.stringify({schema:1,events:[]})],
     ['mm_learning_analytics_v1::strong-orphan',JSON.stringify({schema:1,events:[{type:'practice_start',module:'diagnostic',id:'orphan'}]})],
+    ['mm_material_behaviour_labs_v1:incoming_orphan',JSON.stringify({'legacy-case':{attempts:4,completed:true,bestScore:80}})],
     ['unrelated-app-key','keep-me'],
   ]);
   const localStorage={
@@ -222,6 +223,19 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
   assert(t.memory.has('mm_real_measured_assessment_v1::legacy-old')||t.memory.has('mm_real_measured_assessment_v1::strong-old'),'silent training restore failure did not restore prior measured-assessment state');
   assert(t.alerts.some(x=>/browser storage failed/i.test(x)),'silent training restore failure did not surface a storage warning');
   assert(!t.toasts.some(x=>/^Progress imported/i.test(x)),'silent training restore failure falsely reported success');
+}
+
+// Import planning must be side-effect free. An incoming learner id with an
+// orphan/sanitized legacy material-lab bucket must not quarantine or remove that
+// pre-existing key before the transactional snapshot is taken.
+{
+  const t=trainingSandbox('normal','fail-next-db');
+  const legacyKey='mm_material_behaviour_labs_v1:incoming_orphan';
+  const before=t.memory.get(legacyKey);
+  const incoming={activeUser:'incoming.orphan',users:{'incoming.orphan':{id:'incoming.orphan',name:'Incoming learner',completed:[]}},trainingExtras:{version:4,scope:'learner-registry',learners:{'incoming.orphan':{spacedReview:{items:{}},practicalSignoff:{checks:{}},measuredAssessment:{},processDiagnostics:{},diagnosticLabs:{},materialLabs:{}}}}};
+  t.sandbox.importData({size:800,contents:JSON.stringify(incoming)});
+  assert.strictEqual(t.memory.get(legacyKey),before,'import destination planning mutated/quarantined legacy material state before snapshot');
+  assert.strictEqual(t.sandbox.db.activeUser,'old','failed import activated incoming learner while checking side-effect-free planning');
 }
 
 // Silent removeItem failure is just as unsafe as a thrown exception. Re-enumeration
