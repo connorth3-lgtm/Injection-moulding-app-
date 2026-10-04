@@ -94,10 +94,12 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
   const oldSerialized=JSON.stringify(oldDb);
   const memory=new Map([
     ['mouldmasterProDB',oldSerialized],
-    ['mm_spaced_review_v2::legacy-old',JSON.stringify({items:{'tech:q1':{id:'tech:q1',stage:2}}})],
-    ['mm_practical_signoff_v1::legacy-old',JSON.stringify({checks:{safe:true}})],
-    ['mm_spaced_review_v2::legacy-peer',JSON.stringify({items:{'tech:q2':{id:'tech:q2',stage:1}}})],
-    ['mm_practical_signoff_v1::legacy-peer',JSON.stringify({checks:{peer:true}})],
+    ['mm_spaced_review_v2::strong-old',JSON.stringify({items:{'tech:q1':{id:'tech:q1',stage:2}}})],
+    ['mm_practical_signoff_v1::strong-old',JSON.stringify({checks:{safe:true}})],
+    ['mm_real_measured_assessment_v1::strong-old',JSON.stringify({'avaps-delivered-traces':{best:100,last:67}})],
+    ['mm_spaced_review_v2::strong-peer',JSON.stringify({items:{'tech:q2':{id:'tech:q2',stage:1}}})],
+    ['mm_practical_signoff_v1::strong-peer',JSON.stringify({checks:{peer:true}})],
+    ['mm_real_measured_assessment_v1::strong-peer',JSON.stringify({'cross-process-upper-boundary':{best:67,last:33}})],
     ['mm_assessment_analytics_v1::strong-old','assessment-old'],
     ['mm_assessment_analytics_v1::strong-peer','assessment-peer'],
     ['mm_learning_analytics_v1::strong-old','learning-old'],
@@ -125,7 +127,7 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
   const learnerScope={
     tokenFor:id=>`strong-${id}`,legacyTokenFor:id=>`legacy-${id}`,
     storageKey:(prefix,token)=>`${prefix}${token}`,
-    migrationPlan:id=>({uniqueOwner:true,legacyToken:`legacy-${id}`})
+    migrationPlan:id=>({uniqueOwner:true,legacyToken:`legacy-${id}`}),registerStoragePrefix(){},migrateStoragePrefix(){}
   };
   const assessmentScope={keysForLearner:id=>[`mm_assessment_analytics_v1::strong-${id}`]};
   const sandbox={
@@ -168,10 +170,12 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
 {
   const t=trainingSandbox('normal');
   const extras=t.bridge.buildTrainingExtras(t.sandbox.db.users);
-  assert.strictEqual(extras.version,4);
+  assert.strictEqual(extras.version,5);
   assert.deepStrictEqual(Object.keys(extras.learners).sort(),['old','peer']);
   assert(extras.learners.old.spacedReview.items['tech:q1'],'active learner review state missing from multi-profile backup payload');
   assert(extras.learners.peer.spacedReview.items['tech:q2'],'peer review state missing from multi-profile backup payload');
+  assert.strictEqual(extras.learners.old.measuredAssessment['avaps-delivered-traces'].best,100,'active learner measured challenge state missing from multi-profile backup payload');
+  assert.strictEqual(extras.learners.peer.measuredAssessment['cross-process-upper-boundary'].last,33,'peer measured challenge state missing from multi-profile backup payload');
   t.sandbox.resetData();
   assert.strictEqual(t.sandbox.db.activeUser,'old','learner reset changed the active learner identity');
   assert.strictEqual(t.sandbox.db.users.old.completed.length,0,'active learner progress survived learner reset');
@@ -179,12 +183,14 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
   assert.strictEqual(JSON.stringify(t.sandbox.db.users.peer.completed),'[9]','learner reset deleted or changed a peer profile');
   assert.strictEqual(t.memory.has('mm_assessment_analytics_v1::strong-old'),false,'active learner assessment analytics survived reset');
   assert.strictEqual(t.memory.has('mm_learning_analytics_v1::strong-old'),false,'active learner Learning Insights survived reset');
-  assert.strictEqual(t.memory.has('mm_spaced_review_v2::legacy-old'),false,'active learner review state survived reset');
-  assert.strictEqual(t.memory.has('mm_practical_signoff_v1::legacy-old'),false,'active learner sign-off survived reset');
+  assert.strictEqual(t.memory.has('mm_spaced_review_v2::strong-old'),false,'active learner review state survived reset');
+  assert.strictEqual(t.memory.has('mm_practical_signoff_v1::strong-old'),false,'active learner sign-off survived reset');
+  assert.strictEqual(t.memory.has('mm_real_measured_assessment_v1::strong-old'),false,'active learner measured challenge progress survived reset');
   assert.strictEqual(t.memory.get('mm_assessment_analytics_v1::strong-peer'),'assessment-peer','learner reset removed peer assessment analytics');
   assert.strictEqual(t.memory.get('mm_learning_analytics_v1::strong-peer'),'learning-peer','learner reset removed peer Learning Insights');
-  assert(t.memory.has('mm_spaced_review_v2::legacy-peer'),'learner reset removed peer review state');
-  assert(t.memory.has('mm_practical_signoff_v1::legacy-peer'),'learner reset removed peer sign-off');
+  assert(t.memory.has('mm_spaced_review_v2::strong-peer'),'learner reset removed peer review state');
+  assert(t.memory.has('mm_practical_signoff_v1::strong-peer'),'learner reset removed peer sign-off');
+  assert(t.memory.has('mm_real_measured_assessment_v1::strong-peer'),'learner reset removed peer measured challenge progress');
   assert.strictEqual(t.memory.get('unrelated-app-key'),'keep-me','learner reset removed unrelated local storage');
   assert(t.toasts.some(x=>/Other local learner profiles/i.test(x)),'learner reset did not report peer-profile preservation');
 }
@@ -198,9 +204,10 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
   assert.strictEqual(t.memory.get('mouldmasterProDB'),t.oldSerialized,'failed reset did not restore the persisted learner registry');
   assert.strictEqual(t.memory.get('mm_assessment_analytics_v1::strong-old'),'assessment-old','failed reset did not restore assessment analytics');
   assert.strictEqual(t.memory.get('mm_learning_analytics_v1::strong-old'),'learning-old','failed reset did not restore Learning Insights');
-  assert(t.memory.has('mm_spaced_review_v2::legacy-old'),'failed reset did not restore spaced review state');
-  assert(t.memory.has('mm_practical_signoff_v1::legacy-old'),'failed reset did not restore sign-off state');
+  assert(t.memory.has('mm_spaced_review_v2::strong-old'),'failed reset did not restore spaced review state');
+  assert(t.memory.has('mm_practical_signoff_v1::strong-old'),'failed reset did not restore sign-off state');
+  assert(t.memory.has('mm_real_measured_assessment_v1::strong-old'),'failed reset did not restore measured challenge progress');
   assert(t.alerts.some(x=>/Existing learner progress and scoped training state were restored/i.test(x)),'failed reset did not disclose verified rollback');
 }
 
-console.log('Final audit lifecycle QA passed: orphan analytics excluded; import cleanup remains fail-closed; learner reset is scoped, peer-preserving and rollback-verified.');
+console.log('Final audit lifecycle QA passed: import cleanup remains fail-closed; strong-scoped learner reset clears review/sign-off/measured progress, preserves peer state and verifies rollback.');
