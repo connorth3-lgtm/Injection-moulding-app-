@@ -395,7 +395,7 @@ window.importData=function(file){
    }
    db=proposed;user=db.users[db.activeUser];committed=true;cancelActiveExam();
    try{updateGlobalProgress();switchView('profile')}catch(uiError){console.warn('[MouldMaster] imported data saved; view refresh failed:',uiError)}
-   window.toast?.('Progress imported. Learner-scoped review/sign-off data were restored; certificates must be re-earned and local analytics were reset.')
+   window.toast?.('Progress imported. Learner-scoped review/sign-off data were restored. Certificates must be re-earned; local analytics were reset.')
   }catch(e){
    if(e?.code===ANALYTICS_CLEANUP_CODE){alert(cleanupFailureMessage('Import',e.importRollbackVerified!==false));return}
    if(committed)alert('Progress was imported, but the screen could not refresh. Reopen MouldMaster.');
