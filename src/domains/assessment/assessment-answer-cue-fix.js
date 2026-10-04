@@ -2,31 +2,10 @@
 (function(){
 'use strict';
 const D=window.MM_DATA;
-const STARTER_AUTHORING=[
- [/^Measure\/verify\s+/,'Measuring and verifying '],
- [/^Inspect\/clean\s+/,'Inspecting/cleaning '],
- [/^Check\s+/,'Checking '],
- [/^Verify\s+/,'Verifying '],
- [/^Inspect\s+/,'Inspecting '],
- [/^Compare\s+/,'Comparing '],
- [/^Measure\s+/,'Measuring '],
- [/^Investigate\s+/,'Investigating '],
- [/^Confirm\s+/,'Confirming '],
- [/^Increase\s+/,'Increasing '],
- [/^Change\s+/,'Changing '],
- [/^Ignore\s+/,'Ignoring '],
- [/^Assume\s+/,'Assuming '],
- [/^Reduce\s+/,'Reducing '],
- [/^Raise\s+/,'Raising '],
- [/^Lower\s+/,'Lowering '],
- [/^Decrease\s+/,'Decreasing '],
- [/^Adjust\s+/,'Adjusting '],
- [/^Accept\s+/,'Accepting ']
-];
+const STARTER_AUTHORING=/^(Measure\/verify|Inspect\/clean|Check|Verify|Inspect|Compare|Measure|Investigate|Confirm|Increase|Change|Ignore|Assume|Reduce|Raise|Lower|Decrease|Adjust|Accept)\s+/;
 function authorChoice(value){
- let out=String(value??'');
- for(const [pattern,replacement] of STARTER_AUTHORING){if(pattern.test(out))return out.replace(pattern,replacement)}
- return out
+ const out=String(value??'');
+ return out.replace(STARTER_AUTHORING,(_match,verb)=>`The response is to ${String(verb).toLowerCase()} `);
 }
 function authorChoices(options){return Array.isArray(options)?options.map(authorChoice):options}
 window.MM_ASSESSMENT_AUTHOR_CHOICE=authorChoice;
@@ -114,6 +93,6 @@ for(const scenario of D?.scenarios||[]){
 }
 D.assessmentQA=D.assessmentQA||{};
 D.assessmentQA.regionalDeepDive={reviewed:'30 August 2026',regionalItemsRewritten:27,regionalAnswerChanges:0,appliedSafety:true,officialSources:true};
-D.assessmentQA.answerStarterAuthoring={version:'2026.10.05.1',coreChoicesReauthored:authoredChoiceCount,policy:'Neutral grammatical answer fragments remove starter-word test-taking cues without changing answer keys or technical propositions.'};
+D.assessmentQA.answerStarterAuthoring={version:'2026.10.05.1',coreChoicesReauthored:authoredChoiceCount,policy:'A shared neutral response frame is applied to high-risk evidence and parameter-action starters so option grammar does not reveal answer keys; technical propositions and keys are unchanged.'};
 window.MM_REGIONAL_QUESTION_DEEP_DIVE={version:'2026-08-30',regionalRewrites:27,regionalAnswerChanges:0,appliedSafety:true,answerStarterAuthoring:true};
 })();
