@@ -462,25 +462,25 @@ function scenarioId(index){return `scenario:${String(index+1).padStart(2,'0')}`}
 const META_BY_TEXT=new Map();
 function fnv1a32(value){let h=2166136261;for(const ch of String(value??'')){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return 'fnv1a-'+(h>>>0).toString(16).padStart(8,'0')}
 const IDENTITY_STARTER_CANON=[
- [/^Measuring and verifying\s+/,'Measure/verify '],
- [/^Inspecting\/cleaning\s+/,'Inspect/clean '],
- [/^Checking\s+/,'Check '],
- [/^Verifying\s+/,'Verify '],
- [/^Inspecting\s+/,'Inspect '],
- [/^Comparing\s+/,'Compare '],
- [/^Measuring\s+/,'Measure '],
- [/^Investigating\s+/,'Investigate '],
- [/^Confirming\s+/,'Confirm '],
- [/^Increasing\s+/,'Increase '],
- [/^Changing\s+/,'Change '],
- [/^Ignoring\s+/,'Ignore '],
- [/^Assuming\s+/,'Assume '],
- [/^Reducing\s+/,'Reduce '],
- [/^Raising\s+/,'Raise '],
- [/^Lowering\s+/,'Lower '],
- [/^Decreasing\s+/,'Decrease '],
- [/^Adjusting\s+/,'Adjust '],
- [/^Accepting\s+/,'Accept ']
+ [/^measuring and verifying\s+/,'measure/verify '],
+ [/^inspecting\/cleaning\s+/,'inspect/clean '],
+ [/^checking\s+/,'check '],
+ [/^verifying\s+/,'verify '],
+ [/^inspecting\s+/,'inspect '],
+ [/^comparing\s+/,'compare '],
+ [/^measuring\s+/,'measure '],
+ [/^investigating\s+/,'investigate '],
+ [/^confirming\s+/,'confirm '],
+ [/^increasing\s+/,'increase '],
+ [/^changing\s+/,'change '],
+ [/^ignoring\s+/,'ignore '],
+ [/^assuming\s+/,'assume '],
+ [/^reducing\s+/,'reduce '],
+ [/^raising\s+/,'raise '],
+ [/^lowering\s+/,'lower '],
+ [/^decreasing\s+/,'decrease '],
+ [/^adjusting\s+/,'adjust '],
+ [/^accepting\s+/,'accept ']
 ];
 function identityText(value){let out=norm(value);for(const [pattern,replacement] of IDENTITY_STARTER_CANON){if(pattern.test(out))return out.replace(pattern,replacement)}return out}
 function identityFingerprint(q,kind,level,region){const options=Array.isArray(q?.[1])?q[1]:[],correct=Number(q?.[2]),sorted=options.map(identityText).sort(),correctText=Number.isInteger(correct)&&correct>=0&&correct<options.length?identityText(options[correct]):'';return fnv1a32([kind,level||'',region||'',norm(q?.[0]),sorted.join('␞'),correctText].join('␟'))}
