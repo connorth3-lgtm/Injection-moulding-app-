@@ -76,7 +76,7 @@
     "complex-diagnostics"
   ],
   "reviews": [],
-  "validationRule": "Validated requires one current human review record for every chapterId, all requiredDimensions explicitly passed or resolved, reviewerReference and reviewedAt present, and no unresolved safety/accuracy objection.",
+  "validationRule": "Validated requires one current human review record for every chapterId, all six requiredDimensions explicitly passed, reviewerReference/reviewedAt/evidenceRef present, exact workedCaseIdsReviewed and diagramIdsReviewed coverage for the chapter, enrichmentReviewed true exactly where governed enrichment exists, and no unresolved safety/accuracy objection.",
   "privacyBoundary": "Use a non-sensitive reviewerReference. Do not publish personal contact details, employer/customer identifiers or proprietary mould/process information.",
   "workedCaseIds": [
     "worked-clamp-force-v1",
@@ -98,7 +98,7 @@
     "worked-shot-utilisation-v1",
     "worked-process-window-v1"
   ],
-  "workedCaseReviewRule": "Each workedCaseId must be reviewed inside its owning chapter across the same six requiredDimensions. A chapter approval for this release must include the worked case where present; automation must not create or infer that approval.",
+  "workedCaseReviewRule": "Each of the 18 workedCaseIds must be reviewed inside its owning chapter across the same six requiredDimensions and listed in that chapter review's workedCaseIdsReviewed field. Automation verifies exact scope/identity only and must not create or infer human approval.",
   "enrichmentChapterIds": [
     "mould-anatomy",
     "cooling",
@@ -111,7 +111,7 @@
     "process-monitoring",
     "multi-cavity"
   ],
-  "enrichmentReviewRule": "Each enrichmentChapterId must be reviewed with all published evidence-enrichment sections in that chapter. Automation may verify scope and identity but must not create or infer human SME approval.",
+  "enrichmentReviewRule": "Each enrichmentChapterId must be reviewed with all published evidence-enrichment sections in that chapter and the chapter review must set enrichmentReviewed=true. Chapters without governed enrichment must set enrichmentReviewed=false.",
   "diagramIds": [
     "diagram-vp-transfer-v1",
     "diagram-cavity-pressure-cycle-v1",
@@ -122,5 +122,5 @@
     "diagram-multicavity-balance-v1",
     "diagram-ejection-draft-v1"
   ],
-  "diagramReviewRequirement": "Review all governed instructional diagrams for mechanism accuracy, labels, accessibility text, scale/non-scale boundary and consistency with chapter evidence. Diagrams do not count as independently SME-approved until the chapter review is approved."
+  "diagramReviewRequirement": "Review every governed instructional diagram in its owning chapter and list the exact diagram IDs in diagramIdsReviewed. Confirm mechanism accuracy, labels, accessibility text, scale/non-scale boundary and consistency with chapter evidence."
 }
