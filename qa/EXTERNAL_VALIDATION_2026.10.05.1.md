@@ -4,14 +4,14 @@ Release `2026.10.05.1` is technically automated; native main governance remains 
 
 ## Exact current candidate
 
-- pre-merge candidate source: `272d6ae08af9885d7160842e077c98a469058126`
-- exact public-runtime fingerprint: `sha256:385b1fa87a8e6987c664df3f76aa05683fe092c2d1e026cb29b0c4e0eaf72a9a`
-- candidate build run: `37227938018` (**Pre-merge Public Candidate**)
-- retained physical candidate: `physical-pwa-candidate-272d6ae08af9885d7160842e077c98a469058126`
-- artifact id: `11312721259`
-- artifact ZIP digest: `sha256:b33149a7a2db539290635ed6f4c2c9709ef2f73cd11f6f78921622656596552a`
-- artifact retention expiry: `2027-01-02T19:21:05Z`
-- Pages disposition: the retained artifact is the exact validation candidate for this release boundary; its source tree is identical to squash commit `390c28b34f01395600170982b7bd4632aa809d45`. The mutable `preview` branch is not evidence authority; production publication remains governed separately and all external-evidence workstreams below stay HOLD.
+- pre-merge candidate source: `3e7398dc9db0cf6400f4c6a7bc60b7391c9927d5`
+- exact public-runtime fingerprint: `sha256:3c57ca0b25826171b5723f960e6df33957abe2ba0a82163d86b08da12e44337f`
+- candidate build run: `37236274627` (**Pre-merge Public Candidate**)
+- retained physical candidate: `physical-pwa-candidate-3e7398dc9db0cf6400f4c6a7bc60b7391c9927d5`
+- artifact id: `11316240034`
+- artifact ZIP digest: `sha256:c9731b53c82482609468a0c38b683833b59f6cfefe834d7088c4117377a777bf`
+- artifact retention expiry: `2027-01-02T21:29:07Z`
+- Pages disposition: the retained artifact is the exact validation candidate for this release boundary and is bound to the source SHA and public-runtime fingerprint above. The mutable `preview` branch is not evidence authority; production publication remains governed separately and all external-evidence workstreams below stay HOLD.
 
 This is a release-boundary **rebind**, not external evidence. Earlier physical-device, assistive-technology, SME, learner, Windows-distribution or NZQA/provider records are not relabelled for the current runtime. Each workstream below remains HOLD until its genuine release-specific exit condition is satisfied.
 
