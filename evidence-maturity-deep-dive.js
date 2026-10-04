@@ -127,7 +127,12 @@ const MATERIAL_PRACTICE=[
 ];
 function normalisePractice(){return MATERIAL_PRACTICE.map(l=>({...l,steps:l.steps.map(s=>({stage:s[0],question:s[1],choices:s.slice(2).map((text,i)=>({text,correct:i===0,feedback:i===0?'Correct. This choice tests the mechanism with the strongest evidence.':'Not the strongest evidence-first response for this scenario.'}))}))}))}
 const PRACTICE_LABS=normalisePractice();
-window.MM_MATERIAL_PRACTICE_EXTENSIONS={version:VERSION,reviewed:REVIEWED,reviewBy:REVIEW_BY,labs:PRACTICE_LABS,scope:'Extended scenario-specific practice; not part of the formal 157 keyed approval bank and not a universal production recipe.'};
+const authorChoice=window.MM_ASSESSMENT_AUTHOR_CHOICE||((value)=>String(value??''));
+let materialPracticeStarterCueEdits=0;
+for(const lab of PRACTICE_LABS)for(const step of lab.steps||[])for(const choice of step.choices||[]){
+ const next=authorChoice(choice.text);if(next!==choice.text){choice.text=next;materialPracticeStarterCueEdits++}
+}
+window.MM_MATERIAL_PRACTICE_EXTENSIONS={version:VERSION,reviewed:REVIEWED,reviewBy:REVIEW_BY,labs:PRACTICE_LABS,scope:'Extended scenario-specific practice; not part of the formal 157 keyed approval bank and not a universal production recipe.',starterCueEdits:materialPracticeStarterCueEdits};
 
 /* Deterministic synthetic process data: values are illustrative and deliberately not production setpoints. */
 function rng(seed){let x=(seed>>>0)||1;return()=>{x=(Math.imul(x,1664525)+1013904223)>>>0;return x/4294967296}}
