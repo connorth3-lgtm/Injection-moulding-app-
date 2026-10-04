@@ -1,21 +1,40 @@
-/* MouldMaster canonical runtime v2 — explicit core dispatch, module registry and scoped storage 2026-09-10 */
+/* MouldMaster canonical runtime v2 — explicit core dispatch, module registry and strong learner-scoped storage 2026-10-04 */
 (function(){
 'use strict';
 if(window.MM_RUNTIME_V2)return;
-const VERSION='2026.09.10.2';
+const VERSION='2026.10.04.1';
 const CORE=['renderLesson','renderDashboard','switchView','startExam','gradeExam','getExamQuestions'];
 const modules=new Map(),slots=new Map();
 /* Legacy static-QA compatibility marker: before:new Set(),after:new Set().
    Runtime V2.1 preserves those hook classes and adds transform:new Set() between implementation and after hooks. */
 function learnerRaw(){try{if(window.db?.activeUser)return String(window.db.activeUser)}catch(_){}try{if(window.user?.id)return String(window.user.id)}catch(_){}return 'anonymous'}
-function hash(raw){let h=2166136261;for(const c of String(raw||'anonymous')){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return(h>>>0).toString(36)}
-function scopedKey(base){return `${String(base)}::${hash(learnerRaw())}`}
+function hash128(raw){
+ const value=String(raw||'anonymous');let h1=1779033703,h2=3144134277,h3=1013904242,h4=2773480762;
+ for(let i=0;i<value.length;i++){const k=value.charCodeAt(i);h1=h2^Math.imul(h1^k,597399067);h2=h3^Math.imul(h2^k,2869860233);h3=h4^Math.imul(h3^k,951274213);h4=h1^Math.imul(h4^k,2716044179)}
+ h1=Math.imul(h3^(h1>>>18),597399067);h2=Math.imul(h4^(h2>>>22),2869860233);h3=Math.imul(h1^(h3>>>17),951274213);h4=Math.imul(h2^(h4>>>19),2716044179);
+ h1=(h1^h2^h3^h4)>>>0;h2=(h2^h1)>>>0;h3=(h3^h1)>>>0;h4=(h4^h1)>>>0;
+ return [h1,h2,h3,h4].map(x=>x.toString(16).padStart(8,'0')).join('')
+}
+function scope(){
+ const shared=window.MM_LEARNER_SCOPE;
+ return shared&&typeof shared.tokenFor==='function'&&typeof shared.storageKey==='function'?shared:null
+}
+function scopedKey(base){
+ const raw=learnerRaw(),prefix=`${String(base)}::`,shared=scope();
+ if(shared){
+  shared.registerStoragePrefix?.(prefix);
+  shared.migrateStoragePrefix?.(prefix,raw);
+  return shared.storageKey(prefix,shared.tokenFor(raw))
+ }
+ return `${prefix}${hash128(`mm-runtime-v2|${raw}`)}`
+}
+function learnerToken(){const shared=scope();return shared?shared.tokenFor(learnerRaw()):hash128(`mm-runtime-v2|${learnerRaw()}`)}
 const storage=Object.freeze({
  key:scopedKey,
  get(base,fallback=null){try{const raw=localStorage.getItem(scopedKey(base));return raw==null?fallback:JSON.parse(raw)}catch(_){return fallback}},
  set(base,value){try{localStorage.setItem(scopedKey(base),JSON.stringify(value));return true}catch(_){return false}},
  remove(base){try{localStorage.removeItem(scopedKey(base));return true}catch(_){return false}},
- learnerToken:()=>hash(learnerRaw())
+ learnerToken
 });
 function installCore(name){
  const original=typeof window[name]==='function'?window[name]:null;if(!original)return;
