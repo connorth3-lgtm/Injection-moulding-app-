@@ -138,7 +138,7 @@
         "identity": "learner-scoped localStorage keys using MM_LEARNER_SCOPE-compatible 128-bit tokens",
         "source": "src/domains/shared/learner-scope.js",
         "sourceOfTruth": true,
-        "backupScope": "trainingExtras v4 backs up spaced review, practical sign-off, measured-assessment and guided process-diagnostics progress; assessment analytics/opening history remain derived/local and are resettable rather than backup-restored",
+        "backupScope": "trainingExtras v4 backs up spaced review, practical sign-off, measured-assessment progress and guided process-diagnostics progress; assessment analytics/opening history remain derived/local and are resettable rather than backup-restored",
         "deletionBoundary": "active-learner reset removes learner-owned review/sign-off, measured-assessment progress, guided process-diagnostics progress, assessment analytics/opening history and Learning Insights analytics without deleting peer profiles",
         "learnerScope": "128-bit deterministic token with collision-aware legacy migration/quarantine",
         "sources": [
