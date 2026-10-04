@@ -250,7 +250,7 @@ for marker in [
     assert marker in bridge, f"import/reset hardening missing: {marker}"
 cleanup_commit = bridge.index("clearTrainingExtrasStores();")
 analytics_commit = bridge.index("clearAllAnalyticsStores();", cleanup_commit)
-storage_commit = bridge.index("for(const [k,v] of Object.entries(trainingWrites))localStorage.setItem(k,v)", analytics_commit)
+storage_commit = bridge.index("for(const [k,v] of Object.entries(trainingWrites)){localStorage.setItem(k,v);if(localStorage.getItem(k)!==v)", analytics_commit)
 memory_commit = bridge.index("db=proposed;user=db.users[db.activeUser]")
 assert cleanup_commit < analytics_commit < storage_commit < memory_commit, "imported learner registry must activate only after verified cleanup and scoped training writes"
 shell = text("src/domains/shell/pwa-shell.js")
