@@ -44,6 +44,13 @@ function trainingDestinationKey(base,learnerId){
  return scope.storageKey(`${base}::`,scope.tokenFor(id))
 }
 function readTraining(base,d,learnerId){try{const x=JSON.parse(localStorage.getItem(trainingKey(base,learnerId))||'');return obj(x)?x:d}catch(_){return d}}
+function readTrainingForBackup(base,d,learnerId){
+ const key=trainingKey(base,learnerId),raw=localStorage.getItem(key);
+ if(raw==null||raw==='')return d;
+ const parsed=JSON.parse(raw);
+ if(!obj(parsed))throw new Error(`Backup source is invalid for ${key}`);
+ return parsed
+}
 function legacyMaterialToken(raw){return String(raw||'anonymous').replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,80)}
 function materialLegacyKey(raw){return MATERIAL_LABS_KEY+':'+legacyMaterialToken(raw)}
 function quarantineMaterialLegacy(raw,payload,reason){
@@ -67,6 +74,13 @@ function migrateMaterialLabsLegacy(learnerId){
 }
 function materialLabsKey(learnerId){return migrateMaterialLabsLegacy(canonicalLearnerId(learnerId))}
 function readMaterialLabs(d,learnerId){try{const x=JSON.parse(localStorage.getItem(materialLabsKey(learnerId))||'');return obj(x)?x:d}catch(_){return d}}
+function readMaterialLabsForBackup(d,learnerId){
+ const key=materialLabsKey(learnerId),raw=localStorage.getItem(key);
+ if(raw==null||raw==='')return d;
+ const parsed=JSON.parse(raw);
+ if(!obj(parsed))throw new Error(`Backup source is invalid for ${key}`);
+ return parsed
+}
 function trainingStorePredicate(k){
  const prefixes=[REVIEW_KEY+'::',SIGN_KEY+'::',MEASURED_KEY+'::',PROCESS_DIAG_KEY+'::',DIAGNOSTIC_LABS_KEY+'::',MATERIAL_LABS_KEY+'::',MATERIAL_LABS_KEY+':'],globals=new Set([REVIEW_KEY,LEGACY_REVIEW,SIGN_KEY,MEASURED_KEY,PROCESS_DIAG_KEY,DIAGNOSTIC_LABS_KEY,MATERIAL_LABS_KEY]);
  return globals.has(k)||prefixes.some(p=>k.startsWith(p))
@@ -136,7 +150,7 @@ function buildTrainingExtras(users=(typeof db!=='undefined'?db?.users:null)){
  const learners={};
  for(const id of Object.keys(users)){
   const sid=canonicalLearnerId(id);
-  learners[sid]={spacedReview:cleanReview(readTraining(REVIEW_KEY,{items:{}},sid)),practicalSignoff:cleanSign(readTraining(SIGN_KEY,{},sid)),measuredAssessment:cleanMeasured(readTraining(MEASURED_KEY,{},sid)),processDiagnostics:cleanProcessDiagnostics(readTraining(PROCESS_DIAG_KEY,{},sid)),diagnosticLabs:cleanLabProgress(readTraining(DIAGNOSTIC_LABS_KEY,{},sid)),materialLabs:cleanLabProgress(readMaterialLabs({},sid))}
+  learners[sid]={spacedReview:cleanReview(readTrainingForBackup(REVIEW_KEY,{items:{}},sid)),practicalSignoff:cleanSign(readTrainingForBackup(SIGN_KEY,{},sid)),measuredAssessment:cleanMeasured(readTrainingForBackup(MEASURED_KEY,{},sid)),processDiagnostics:cleanProcessDiagnostics(readTrainingForBackup(PROCESS_DIAG_KEY,{},sid)),diagnosticLabs:cleanLabProgress(readTrainingForBackup(DIAGNOSTIC_LABS_KEY,{},sid)),materialLabs:cleanLabProgress(readMaterialLabsForBackup({},sid))}
  }
  return {version:4,scope:'learner-registry',learners}
 }
