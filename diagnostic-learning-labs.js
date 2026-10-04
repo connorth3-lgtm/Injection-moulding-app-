@@ -267,10 +267,14 @@ const LABS=[
 ];
 
 function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
-function learnerToken(){let raw='anonymous';try{raw=String(window.db?.activeUser||window.user?.id||'anonymous')}catch(_){}let h=2166136261;for(let i=0;i<raw.length;i++){h^=raw.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(36)}
-function storageKey(){return `${STORAGE_BASE}::${learnerToken()}`}
-function readState(){try{const x=JSON.parse(localStorage.getItem(storageKey())||'{}');return x&&typeof x==='object'?x:{}}catch(_){return {}}}
-function writeState(state){try{localStorage.setItem(storageKey(),JSON.stringify(state))}catch(_){}}
+function learnerId(){try{return String(window.db?.activeUser||window.user?.id||'anonymous')}catch(_){return'anonymous'}}
+function storageKey(){
+ const scope=window.MM_LEARNER_SCOPE,id=learnerId(),prefix=`${STORAGE_BASE}::`;
+ if(!scope||typeof scope.tokenFor!=='function'||typeof scope.storageKey!=='function')return null;
+ try{scope.registerStoragePrefix?.(prefix);scope.migrateStoragePrefix?.(prefix,id);return scope.storageKey(prefix,scope.tokenFor(id))}catch(_){return null}
+}
+function readState(){try{const k=storageKey();if(!k)return{};const x=JSON.parse(localStorage.getItem(k)||'{}');return x&&typeof x==='object'?x:{}}catch(_){return {}}}
+function writeState(state){try{const k=storageKey();if(k)localStorage.setItem(k,JSON.stringify(state))}catch(_){}}
 function labState(id){const all=readState();return all[id]||{attempts:0,completed:false,bestScore:0,firstTry:false}}
 function saveLab(id,patch){const all=readState();all[id]={...(all[id]||{}),...patch};writeState(all)}
 let activeLabId=null,answers=[],attemptHadError=false;
@@ -307,5 +311,5 @@ let starterCueEdits=0;
 for(const lab of LABS)for(const step of lab.steps||[])for(const choice of step.choices||[]){
  const next=authorChoice(choice.text);if(next!==choice.text){choice.text=next;starterCueEdits++}
 }
-window.MM_DIAGNOSTIC_LABS={version:VERSION,labs:LABS,open:openLabs,storage:'learner-scoped local progress only',starterCueEdits};
+window.MM_DIAGNOSTIC_LABS={version:VERSION,labs:LABS,open:openLabs,storage:'MM_LEARNER_SCOPE collision-safe local progress; included in learner backup/reset',starterCueEdits};
 })();
