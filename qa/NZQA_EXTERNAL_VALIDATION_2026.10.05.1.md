@@ -2,12 +2,12 @@
 
 Release `2026.10.05.1` has a repository-controlled NZQA readiness layer, but external provider/NZQA validation remains **HOLD**.
 
-- retained learner-facing source: `f9492a898c08bbc4cec32345c72cd05f38313e0f`
-- runtime fingerprint: `sha256:045ca0871408cdd91180790ee16b7f53da2f8f0c895008d061b663e01ce964ba`
+- retained learner-facing source: `4f31c0246d2c0e07253e7fe6f5d0de4b7681b843`
+- runtime fingerprint: `sha256:b0d4f6a48fe0a7e5bdb795bf857482fbfa8640f28e036de224957fb0208bd52c`
 - readiness contract: `data/nzqa-education-readiness-v1.json`
 - provider evidence templates: `data/nzqa-provider-evidence-templates-v1.json`
 - external closeout tracker: #379
-- candidate authority: retained exact-head artifact from `Pre-merge Public Candidate` run `37237955953`; mutable `preview` is non-authoritative
+- candidate authority: retained exact-head artifact from `Pre-merge Public Candidate` run `37239085095`; mutable `preview` is non-authoritative
 
 The following gates require genuine external evidence:
 
