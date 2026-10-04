@@ -97,9 +97,11 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
     ['mm_spaced_review_v2::legacy-old',JSON.stringify({items:{'tech:q1':{id:'tech:q1',stage:2}}})],
     ['mm_practical_signoff_v1::legacy-old',JSON.stringify({checks:{safe:true}})],
     ['mm_real_measured_assessment_v1::legacy-old',JSON.stringify({'avaps-delivered-traces':{best:75,last:50}})],
+    ['mm_process_data_diagnostics_v1::legacy-old',JSON.stringify({'check-ring-leakage':{attempts:3,completed:true,bestScore:100}})],
     ['mm_spaced_review_v2::legacy-peer',JSON.stringify({items:{'tech:q2':{id:'tech:q2',stage:1}}})],
     ['mm_practical_signoff_v1::legacy-peer',JSON.stringify({checks:{peer:true}})],
     ['mm_real_measured_assessment_v1::legacy-peer',JSON.stringify({'openmms-time-samples':{best:100,last:75}})],
+    ['mm_process_data_diagnostics_v1::legacy-peer',JSON.stringify({'cooling-restriction':{attempts:2,completed:true,bestScore:75}})],
     ['mm_assessment_analytics_v1::strong-old','assessment-old'],
     ['mm_assessment_analytics_v1::strong-peer','assessment-peer'],
     ['mm_learning_analytics_v1::strong-old','learning-old'],
@@ -184,6 +186,8 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
   assert(extras.learners.peer.spacedReview.items['tech:q2'],'peer review state missing from multi-profile backup payload');
   assert.strictEqual(extras.learners.old.measuredAssessment['avaps-delivered-traces'].best,75,'active learner measured-assessment state missing from backup payload');
   assert.strictEqual(extras.learners.peer.measuredAssessment['openmms-time-samples'].last,75,'peer measured-assessment state missing from backup payload');
+  assert.strictEqual(extras.learners.old.processDiagnostics['check-ring-leakage'].bestScore,100,'active learner process-diagnostics progress missing from backup payload');
+  assert.strictEqual(extras.learners.peer.processDiagnostics['cooling-restriction'].attempts,2,'peer process-diagnostics progress missing from backup payload');
   t.sandbox.resetData();
   assert.strictEqual(t.sandbox.db.activeUser,'old','learner reset changed the active learner identity');
   assert.strictEqual(t.sandbox.db.users.old.completed.length,0,'active learner progress survived learner reset');
@@ -196,11 +200,13 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
   assert.strictEqual(t.memory.has('mm_spaced_review_v2::strong-old'),false,'active learner strong review state survived reset');
   assert.strictEqual(t.memory.has('mm_practical_signoff_v1::strong-old'),false,'active learner strong sign-off survived reset');
   assert.strictEqual(t.memory.has('mm_real_measured_assessment_v1::strong-old'),false,'active learner measured-assessment state survived reset');
+  assert.strictEqual(t.memory.has('mm_process_data_diagnostics_v1::strong-old'),false,'active learner process-diagnostics progress survived reset');
   assert.strictEqual(t.memory.get('mm_assessment_analytics_v1::strong-peer'),'assessment-peer','learner reset removed peer assessment analytics');
   assert.strictEqual(t.memory.get('mm_learning_analytics_v1::strong-peer'),'learning-peer','learner reset removed peer Learning Insights');
   assert(t.memory.has('mm_spaced_review_v2::strong-peer'),'learner reset removed peer review state');
   assert(t.memory.has('mm_practical_signoff_v1::strong-peer'),'learner reset removed peer sign-off');
   assert(t.memory.has('mm_real_measured_assessment_v1::strong-peer'),'learner reset removed peer measured-assessment state');
+  assert(t.memory.has('mm_process_data_diagnostics_v1::strong-peer'),'learner reset removed peer process-diagnostics progress');
   assert.strictEqual(t.memory.get('unrelated-app-key'),'keep-me','learner reset removed unrelated local storage');
   assert(t.toasts.some(x=>/Other local learner profiles/i.test(x)),'learner reset did not report peer-profile preservation');
 }
@@ -217,6 +223,7 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
   assert(t.memory.has('mm_spaced_review_v2::strong-old'),'failed reset did not restore spaced review state');
   assert(t.memory.has('mm_practical_signoff_v1::strong-old'),'failed reset did not restore sign-off state');
   assert(t.memory.has('mm_real_measured_assessment_v1::strong-old'),'failed reset did not restore measured-assessment state');
+  assert(t.memory.has('mm_process_data_diagnostics_v1::strong-old'),'failed reset did not restore process-diagnostics progress');
   assert(t.alerts.some(x=>/Existing learner progress and scoped training state were restored/i.test(x)),'failed reset did not disclose verified rollback');
 }
 
