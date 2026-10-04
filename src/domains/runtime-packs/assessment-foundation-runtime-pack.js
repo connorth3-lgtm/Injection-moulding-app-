@@ -206,6 +206,31 @@ const R={
 };
 for(const [region,levels] of Object.entries(R))for(const [level,items] of Object.entries(levels))items.forEach((item,i)=>regionalSet(region,level,i,item));
 let authoredChoiceCount=0;
+const conciseKeyedWording={
+ 'tech:Beginner:9':'Baseline comparison of current process actuals and material condition',
+ 'tech:Intermediate:5':'Shot-delivery, NRV, feed, transfer and injection-actual checks',
+ 'reg:NZ:Intermediate:2':'Safeguard verification before authorised return to service',
+ 'scenario:08':'Local gate, geometry and cooling checks after gate seal',
+ 'scenario:11':'Feed, recovery-actual and shot-delivery repeatability checks',
+ 'scenario:12':'Cooling routing, flow and thermal-balance verification',
+ 'scenario:24':'Valve-gate timing and cavity-evidence checks',
+ 'scenario:32':'Local thermal, venting and microflow evidence checks'
+};
+for(const [id,text] of Object.entries(conciseKeyedWording)){
+ if(id.startsWith('tech:')){
+  const [,level,index]=id.split(':'),q=D?.exams?.[level]?.[Number(index)],options=q?.options??q?.[1],key=Number(q?.correct??q?.[2]);
+  if(!Array.isArray(options)||key<0||key>=options.length)throw new Error(`Concise keyed wording target changed: ${id}`);
+  options[key]=text;authoredChoiceCount++;
+ }else if(id.startsWith('reg:')){
+  const [,region,level,index]=id.split(':'),q=D?.regionalQuestions?.[region]?.[level]?.[Number(index)],options=q?.[1],key=Number(q?.[2]);
+  if(!Array.isArray(options)||key<0||key>=options.length)throw new Error(`Concise keyed wording target changed: ${id}`);
+  options[key]=text;authoredChoiceCount++;
+ }else{
+  const index=Number(id.split(':')[1])-1,s=D?.scenarios?.[index],options=s?.choices,key=Number(s?.correct);
+  if(!Array.isArray(options)||key<0||key>=options.length)throw new Error(`Concise keyed wording target changed: ${id}`);
+  options[key]=text;authoredChoiceCount++;
+ }
+}
 const cushionVariationScenario=D?.scenarios?.[0];
 if(!cushionVariationScenario||!Array.isArray(cushionVariationScenario.choices)||cushionVariationScenario.choices.length!==4||Number(cushionVariationScenario.correct)!==1)throw new Error('Cushion-variation scenario shape changed');
 if(cushionVariationScenario.choices[1]!=='Review shot-delivery/NRV and injection actuals'){
@@ -625,7 +650,8 @@ const STRICT_ANSWER_BALANCE={
  'tech:Beginner:6':'Inspect the serviced local shutoff before changing global clamp force',
  'tech:Beginner:7':'Check the repaired runner/gate branch with cavity-specific fill evidence',
  'tech:Beginner:8':'Verify cooling flow, routing and local mould temperatures',
- 'tech:Beginner:9':'Compare current process actuals and material condition with the known-good baseline',
+ 'tech:Beginner:9':'Baseline comparison of current process actuals and material condition',
+ 'tech:Intermediate:5':'Shot-delivery, NRV, feed, transfer and injection-actual checks',
  'tech:Intermediate:0':'A repeatable part-mass plateau as hold time increases',
  'tech:Intermediate:1':'Trapped gas at the end-of-fill vent',
  'tech:Intermediate:3':'Inspect the local insert/shutoff before global process changes',
@@ -667,7 +693,7 @@ const STRICT_ANSWER_BALANCE={
  'reg:NZ:Beginner:2':'Keep it out of use until the safeguard is restored',
  'reg:NZ:Intermediate:0':'Isolate all energy and verify safe state',
  'reg:NZ:Intermediate:1':'Use AS/NZS 4024 as safety evidence while still meeting legal duties',
- 'reg:NZ:Intermediate:2':'Verify safeguards before authorised return to service',
+ 'reg:NZ:Intermediate:2':'Safeguard verification before authorised return to service',
  'reg:NZ:Advanced:0':'HSWA duties remain; standards inform controls',
  'reg:NZ:Advanced:1':'Assess the integrated system, interfaces, tasks and safeguards as a whole',
  'reg:NZ:Advanced:2':'Not yet in force; commencement is 1 April 2027',
@@ -679,11 +705,11 @@ const STRICT_ANSWER_BALANCE={
  'scenario:05':'Verify drying history and actual material moisture',
  'scenario:06':'Run a cavity-balance study and inspect the repaired runner',
  'scenario:07':'Trend cooling, material, process and measurement evidence by shift',
- 'scenario:08':'Check local gate, geometry and cooling after gate seal',
+ 'scenario:08':'Local gate, geometry and cooling checks after gate seal',
  'scenario:09':'Compare current fill/pressure, material and thermal actuals with baseline',
  'scenario:10':'Inspect the affected branch/gate using cavity-specific fill evidence',
- 'scenario:11':'Check feed, recovery actuals and shot-delivery repeatability',
- 'scenario:12':'Verify cooling routing, flow and thermal balance against baseline',
+ 'scenario:11':'Feed, recovery-actual and shot-delivery repeatability checks',
+ 'scenario:12':'Cooling routing, flow and thermal-balance verification',
  'scenario:13':'Review draft, texture, cooling, ejection load and tooling condition',
  'scenario:14':'Verify the new measurement fixture before interpreting Cpk',
  'scenario:15':'Treat run order as a confounder; randomise/block the study',
@@ -695,7 +721,7 @@ const STRICT_ANSWER_BALANCE={
  'scenario:21':'Check local venting',
  'scenario:22':'Validate weld-line flow and mechanics',
  'scenario:23':'Inspect the local shutoff',
- 'scenario:24':'Check valve-gate timing and cavity evidence',
+ 'scenario:24':'Valve-gate timing and cavity-evidence checks',
  'scenario:25':'Review pressure history, transfer and sensor health',
  'scenario:26':'Verify vision metrology before changing moulding',
  'scenario:27':'Check sensor zero and acquisition path',
@@ -703,7 +729,7 @@ const STRICT_ANSWER_BALANCE={
  'scenario:29':'Check energy phases and boundary',
  'scenario:30':'Map interface thermal/flow history',
  'scenario:31':'Record insert/interface thermal state and transfer delay',
- 'scenario:32':'Check local thermal, venting and microflow evidence',
+ 'scenario:32':'Local thermal, venting and microflow evidence checks',
  'scenario:33':'Check cell structure and relevant mechanical response',
  'scenario:34':'Check skin/thermal history and foaming method',
  'scenario:35':'Compare process actuals with rheology evidence',
