@@ -25,6 +25,8 @@ need('safeguards and approved procedures must not be bypassed' in js.lower(),'ma
 need('universal production recipes' in js.lower(),'material labs must reject universal recipes')
 need("localStorage.getItem(k)===payload" in js and "Progress could not be saved on this device." in js and "progress not saved" in js,'material lab persistence must verify writes and surface unsaved progress')
 need("return id?String(id):null" in js and "if(!id||!scope" in js,'material lab progress must fail closed until a real active learner exists')
+need("return localStorage.getItem(source)==null" in js,'material legacy quarantine must verify source deletion')
+need("if(localStorage.getItem(next)!==payload)return false" in js and "if(migrated===false)return null" in js,'material legacy migration must verify copy/delete and fail closed')
 
 node=r'''
 const fs=require('fs'),vm=require('vm');
