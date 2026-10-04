@@ -7,7 +7,7 @@ const CORE=['renderLesson','renderDashboard','switchView','startExam','gradeExam
 const modules=new Map(),slots=new Map();
 /* Legacy static-QA compatibility marker: before:new Set(),after:new Set().
    Runtime V2.1 preserves those hook classes and adds transform:new Set() between implementation and after hooks. */
-function learnerRaw(){try{if(window.db?.activeUser)return String(window.db.activeUser)}catch(_){}try{if(window.user?.id)return String(window.user.id)}catch(_){}return 'anonymous'}
+function learnerRaw(){try{if(window.db?.activeUser)return String(window.db.activeUser)}catch(_){}try{if(window.user?.id)return String(window.user.id)}catch(_){}return null}
 function legacyTokenFor(raw='anonymous'){let h=2166136261;for(const ch of String(raw||'anonymous')){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return(h>>>0).toString(36)}
 function hash128(raw){
  const value=String(raw??'');let h1=1779033703,h2=3144134277,h3=1013904242,h4=2773480762;
@@ -33,7 +33,8 @@ function fallbackMigrate(base,raw){
  return {status:'parallel-stores'}
 }
 function scopedKey(base){
- const learner=learnerRaw(),prefix=`${String(base)}::`,shared=window.MM_LEARNER_SCOPE;
+ const learner=learnerRaw();if(!learner)return null;
+ const prefix=`${String(base)}::`,shared=window.MM_LEARNER_SCOPE;
  if(shared&&typeof shared.tokenFor==='function'&&typeof shared.storageKey==='function'){
   try{shared.registerStoragePrefix?.(prefix);shared.migrateStoragePrefix?.(prefix,learner);return shared.storageKey(prefix,shared.tokenFor(learner))}catch(_){}
  }
@@ -42,10 +43,10 @@ function scopedKey(base){
 }
 const storage=Object.freeze({
  key:scopedKey,
- get(base,fallback=null){try{const raw=localStorage.getItem(scopedKey(base));return raw==null?fallback:JSON.parse(raw)}catch(_){return fallback}},
- set(base,value){try{localStorage.setItem(scopedKey(base),JSON.stringify(value));return true}catch(_){return false}},
- remove(base){try{localStorage.removeItem(scopedKey(base));return true}catch(_){return false}},
- learnerToken:()=>{const learner=learnerRaw(),shared=window.MM_LEARNER_SCOPE;try{if(shared&&typeof shared.tokenFor==='function')return shared.tokenFor(learner)}catch(_){}return strongTokenFor(learner)}
+ get(base,fallback=null){try{const k=scopedKey(base);if(!k)return fallback;const raw=localStorage.getItem(k);return raw==null?fallback:JSON.parse(raw)}catch(_){return fallback}},
+ set(base,value){try{const k=scopedKey(base);if(!k)return false;const payload=JSON.stringify(value);localStorage.setItem(k,payload);return localStorage.getItem(k)===payload}catch(_){return false}},
+ remove(base){try{const k=scopedKey(base);if(!k)return false;localStorage.removeItem(k);return localStorage.getItem(k)==null}catch(_){return false}},
+ learnerToken:()=>{const learner=learnerRaw();if(!learner)return null;const shared=window.MM_LEARNER_SCOPE;try{if(shared&&typeof shared.tokenFor==='function')return shared.tokenFor(learner)}catch(_){}return strongTokenFor(learner)}
 });
 function installCore(name){
  const original=typeof window[name]==='function'?window[name]:null;if(!original)return;
