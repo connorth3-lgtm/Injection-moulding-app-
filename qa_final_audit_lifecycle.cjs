@@ -242,4 +242,25 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
   assert(t.alerts.some(x=>/Existing learner progress and scoped training state were restored/i.test(x)),'failed reset did not disclose verified rollback');
 }
 
-console.log('Final audit lifecycle QA passed: orphan analytics excluded; import cleanup remains fail-closed; learner reset is scoped, peer-preserving and rollback-verified.');
+// Legacy material-lab keys used a lossy sanitized learner ID. Two valid IDs such
+// as a.b and a@b both mapped to a_b; ambiguous legacy progress must be quarantined
+// rather than assigned to either learner during backup/migration.
+{
+  const t=trainingSandbox('normal');
+  t.sandbox.db={activeUser:'a.b',users:{
+    'a.b':{id:'a.b',name:'Dot learner',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1},
+    'a@b':{id:'a@b',name:'At learner',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1}
+  }};
+  t.sandbox.user=t.sandbox.db.users['a.b'];
+  const legacyKey='mm_material_behaviour_labs_v1:a_b';
+  t.memory.set(legacyKey,JSON.stringify({'pp-vs-pc-drying':{attempts:9,completed:true,bestScore:100}}));
+  const extras=t.bridge.buildTrainingExtras(t.sandbox.db.users);
+  assert.deepStrictEqual(Object.keys(extras.learners['a.b'].materialLabs),[],'ambiguous sanitized legacy material progress was assigned to a.b');
+  assert.deepStrictEqual(Object.keys(extras.learners['a@b'].materialLabs),[],'ambiguous sanitized legacy material progress was assigned to a@b');
+  assert.strictEqual(t.memory.has(legacyKey),false,'ambiguous sanitized legacy material key was not removed after quarantine');
+  assert([...t.memory.keys()].some(k=>k.startsWith('mm_scope_quarantine_v1::material-labs::a_b')),'ambiguous sanitized legacy material progress was not quarantined');
+  assert.strictEqual(t.memory.has('mm_material_behaviour_labs_v1::strong-a.b'),false,'ambiguous sanitized legacy material progress leaked to a.b strong store');
+  assert.strictEqual(t.memory.has('mm_material_behaviour_labs_v1::strong-a@b'),false,'ambiguous sanitized legacy material progress leaked to a@b strong store');
+}
+
+console.log('Final audit lifecycle QA passed: orphan analytics excluded; learner-owned training/lab stores are collision-safe; import cleanup remains fail-closed; learner reset is scoped, peer-preserving and rollback-verified.');
