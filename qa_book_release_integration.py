@@ -19,6 +19,10 @@ INDEX_PATH = ROOT / 'index.html'
 LEARNING_PACK = ROOT / 'src/domains/runtime-packs/learning-foundation-runtime-pack.js'
 DESKTOP_PACKAGE = ROOT / 'desktop/electron/package.json'
 INTEGRITY_SCRIPT = ROOT / 'desktop/electron/scripts/generate-integrity.cjs'
+MATERIAL_CATALOG_SOURCE = ROOT / 'material-catalog-v1.json'
+MATERIAL_REGIONAL_SOURCE = PACKAGED_ROOT / 'book-material-regional-evidence-v1.json'
+MATERIAL_SEARCH_INDEX_SOURCE = ROOT / 'data/book-material-search-index-v1.json'
+MATERIAL_SEARCH_INDEX_PACKAGED = PACKAGED_ROOT / 'book-material-search-index-v1.json'
 
 
 def git_blob_sha(path: Path) -> str:
@@ -29,6 +33,11 @@ def git_blob_sha(path: Path) -> str:
 def need(ok, message):
     if not ok:
         raise AssertionError(message)
+
+
+def normalize_search(value):
+    import re
+    return re.sub(r'\s+', ' ', re.sub(r'[^a-z0-9]+', ' ', str(value or '').lower())).strip()
 
 
 runtime_manifest = json.loads(MANIFEST_PATH.read_text(encoding='utf-8'))
@@ -107,6 +116,41 @@ need(authorization.get('canonicalAcademicEvidenceUrls', {}).get('PARIZS-2023-IN-
 
 # Authorization is now byte-bound to the exact served payloads that can influence publication promotion.
 need(AUTH_SOURCE.read_bytes() == (PACKAGED_ROOT / 'book-publication-authorization-v1.json').read_bytes(), 'packaged authorization drifted from governed source')
+need(MATERIAL_SEARCH_INDEX_SOURCE.read_bytes() == MATERIAL_SEARCH_INDEX_PACKAGED.read_bytes(), 'packaged Book material search index drifted from governed source')
+need('./src/domains/learning/book-data/book-material-search-index-v1.json' in sw, 'Book material search index missing from atomic offline cache')
+material_catalog = json.loads(MATERIAL_CATALOG_SOURCE.read_text(encoding='utf-8'))
+material_regional = json.loads(MATERIAL_REGIONAL_SOURCE.read_text(encoding='utf-8'))
+material_search_index = json.loads(MATERIAL_SEARCH_INDEX_SOURCE.read_text(encoding='utf-8'))
+need(material_search_index.get('schemaVersion') == 1 and material_search_index.get('release') == '2026.10.04.3', 'Book material search index identity drift')
+need(material_search_index.get('sourceCounts') == {'canonicalExactGrades':260,'regionalEvidenceRows':284,'total':544}, 'Book material search index source-count drift')
+expected_search_entries = []
+for grade in material_catalog.get('grades', []):
+    expected_search_entries.append({
+        'id': grade.get('id'),
+        'search': normalize_search(' '.join(str(x) for x in [
+            (grade.get('manufacturer') or {}).get('name'),
+            grade.get('brand'),
+            grade.get('grade'),
+            *((grade.get('aliases') or [])),
+            (grade.get('polymer') or {}).get('family'),
+        ] if x)),
+        'kind': 'canonical',
+    })
+for index, row in enumerate(material_regional.get('records', []), start=1):
+    expected_search_entries.append({
+        'id': f'regional-{index:03d}',
+        'search': normalize_search(' '.join(str(x) for x in [
+            row.get('manufacturer'),
+            row.get('grade'),
+            row.get('polymer'),
+            row.get('manufacturerCountry'),
+            row.get('region'),
+            row.get('status'),
+        ] if x)),
+        'kind': 'regional',
+    })
+need(len(expected_search_entries) == 544, 'Book material search source coverage drift')
+need(material_search_index.get('entries') == expected_search_entries, 'Book material search index drifted from canonical catalogue/regional evidence sources')
 byte_contract = authorization.get('runtimeIntegrity') or {}
 need(byte_contract.get('algorithm') == 'git-blob-sha1', 'Book runtime integrity algorithm missing')
 sha_by_file = byte_contract.get('gitBlobSha1ByFile') or {}
