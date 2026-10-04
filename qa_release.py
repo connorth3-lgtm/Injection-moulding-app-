@@ -125,10 +125,19 @@ assert f"CACHE_VERSION='{WEB_RELEASE}'" in sw
 for asset in [
     "index.html", "src/core-runtime/core-source.txt", "manifest.webmanifest",
     "mouldmaster-192.png", "mouldmaster-512.png", "version.json", "reading-patch.css",
-    "src/domains/runtime-packs/learning-foundation-runtime-pack.js", "src/domains/runtime-packs/assessment-foundation-runtime-pack.js", "source-library.js", "src/domains/shell/pwa-shell.js", "learning-experience.js",
-    "process-data-diagnostics.js", "curriculum-integration.js", "specialist-curriculum.js",
-    "src/domains/learning/specialist-evidence-gap-extension.js", "mould-master-workspace.js", "src/domains/runtime-packs/shell-finalization-runtime-pack.js", "learning-analytics.js",
-    "src/domains/shared/runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "src/domains/shell/accessibility-hardening.js",
+    "src/domains/runtime-packs/learning-foundation-runtime-pack.js",
+    "src/domains/runtime-packs/assessment-foundation-runtime-pack.js",
+    "src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js",
+    "src/domains/runtime-packs/evidence-runtime-pack.js",
+    "src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js",
+    "src/domains/runtime-packs/assessment-multimodal-runtime-pack.js",
+    "src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js",
+    "src/domains/runtime-packs/process-data-runtime-pack.js",
+    "src/domains/runtime-packs/curriculum-workspace-runtime-pack.js",
+    "src/domains/runtime-packs/shell-finalization-runtime-pack.js",
+    "source-library.js", "reference-data.js", "reference-deep-dive.js", "reference-2026-expansion.js",
+    "src/domains/shell/pwa-shell.js", "learning-analytics.js",
+    "src/domains/shared/runtime-v2.js", "src/domains/shell/accessibility-hardening.js",
     "learner-ux-repair.css", "premium-ui.css", "premium-dynamic.css", "learner-ux-repair.js"
 ]:
     assert f"'./{asset}'" in sw, f"offline asset missing: {asset}"
