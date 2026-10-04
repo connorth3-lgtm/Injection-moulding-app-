@@ -5,6 +5,7 @@
 - Re-authored the keyed option for `scenario:01` from the longer shot-delivery wording to **“Review shot-delivery/NRV and injection actuals”** to remove an extreme answer-length cue while retaining answer key 1 and the same delivered-shot diagnostic conclusion.
 - Re-reviewed the scenario rationale and existing authoritative source mapping for non-return-valve/shot-delivery and injection-actual evidence; no new production-setting claim or external accreditation/SME endorsement is implied.
 - Re-pinned the exact reviewed assessment cue/stable-review source blobs, regenerated the governed decision identity, and advanced `assessment_evidence_version` to `2026.10.05.1`.
+- Re-reviewed 13 Diagnostic Learning Lab keyed options that were longest/tied-longest, shortened their wording without changing any answer key or technical conclusion, re-pinned the lab source blob, and regenerated all 36 diagnostic decision identities.
 - `question_bank_version` remains `2026.08.30.1` because that version identifies the technical/regional exam bank; scenario decision identity is governed separately by stable scenario IDs and the assessment decision manifest.
 
 This register records assessment changes that can affect learner interpretation, difficulty, evidence or spaced-review identity. It is deliberately separate from general release notes so an assessment reviewer can see what changed and why.
