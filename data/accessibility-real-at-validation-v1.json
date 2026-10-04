@@ -15,7 +15,57 @@
       "status": "pending",
       "testedAt": null,
       "reviewer": null,
-      "evidenceRef": null
+      "evidenceRef": null,
+      "taskEvidence": {
+        "AT-01": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-02": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-03": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-04": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-05": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-06": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-07": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-08": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-09": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-10": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-11": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-12": {
+          "status": "pending",
+          "evidenceRef": null
+        }
+      }
     },
     {
       "id": "nvda-chromium-windows",
@@ -25,7 +75,57 @@
       "status": "pending",
       "testedAt": null,
       "reviewer": null,
-      "evidenceRef": null
+      "evidenceRef": null,
+      "taskEvidence": {
+        "AT-01": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-02": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-03": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-04": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-05": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-06": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-07": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-08": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-09": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-10": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-11": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-12": {
+          "status": "pending",
+          "evidenceRef": null
+        }
+      }
     },
     {
       "id": "voiceover-safari-macos",
@@ -35,7 +135,57 @@
       "status": "pending",
       "testedAt": null,
       "reviewer": null,
-      "evidenceRef": null
+      "evidenceRef": null,
+      "taskEvidence": {
+        "AT-01": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-02": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-03": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-04": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-05": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-06": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-07": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-08": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-09": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-10": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-11": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-12": {
+          "status": "pending",
+          "evidenceRef": null
+        }
+      }
     },
     {
       "id": "voiceover-safari-ios",
@@ -45,18 +195,108 @@
       "status": "pending",
       "testedAt": null,
       "reviewer": null,
-      "evidenceRef": null
+      "evidenceRef": null,
+      "taskEvidence": {
+        "AT-01": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-02": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-03": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-04": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-05": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-06": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-07": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-08": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-09": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-10": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-11": {
+          "status": "pending",
+          "evidenceRef": null
+        },
+        "AT-12": {
+          "status": "pending",
+          "evidenceRef": null
+        }
+      }
     }
   ],
   "requiredTasks": [
-    "Navigate primary product areas and return focus predictably",
-    "Search and paginate exact commercial material grades",
-    "Open sourced exact-grade details and understand property/process evidence boundaries",
-    "Complete core learner assessment interactions with announced state and errors",
-    "Create or edit a Mould Master evidence case without losing semantic context",
-    "Read a long governed Book chapter at 200% text zoom and use Read/Listen without losing context",
-    "Complete a long-stem assessment item, review all four choices, submit it and understand keyed feedback without relying on colour or option position",
-    "Open and close More Tools/Book modal surfaces and confirm focus returns to the invoking control"
+    {
+      "id": "AT-01",
+      "instruction": "Navigate the primary product areas and return focus predictably."
+    },
+    {
+      "id": "AT-02",
+      "instruction": "Search and paginate exact commercial material grades."
+    },
+    {
+      "id": "AT-03",
+      "instruction": "Open sourced exact-grade details and understand property/process evidence boundaries."
+    },
+    {
+      "id": "AT-04",
+      "instruction": "Complete core learner assessment interactions and confirm state/errors are announced meaningfully."
+    },
+    {
+      "id": "AT-05",
+      "instruction": "Create or edit a Mould Master evidence case without losing semantic context."
+    },
+    {
+      "id": "AT-06",
+      "instruction": "Search for a Book topic from the global search, open a late Book chapter from deep in the contents, confirm focus/reading starts at the chapter heading, then return to contents without losing the reader's place."
+    },
+    {
+      "id": "AT-07",
+      "instruction": "Exercise the collapsed Book publication/review and accuracy/assurance disclosures; confirm their summaries, expanded content and independent-SME HOLD remain understandable without excessive verbosity."
+    },
+    {
+      "id": "AT-08",
+      "instruction": "Exercise dialogs, menus, tab-like controls, expandable regions and form validation with keyboard/AT navigation."
+    },
+    {
+      "id": "AT-09",
+      "instruction": "Confirm status changes that matter to task completion are announced without forcing excessive verbosity."
+    },
+    {
+      "id": "AT-10",
+      "instruction": "Confirm headings, landmarks, accessible names and focus order remain understandable at realistic zoom/text settings, including the Home page hierarchy where Today's focus precedes the secondary Workbench and the compact desktop More-tools navigation where applicable."
+    },
+    {
+      "id": "AT-11",
+      "instruction": "Open Standards & readiness and confirm ISO/NZQA boundaries, current-vs-expired standards, and external HOLD language remain understandable without implying certification, approval or competence."
+    },
+    {
+      "id": "AT-12",
+      "instruction": "In affected Book chapters, navigate the worked-example heading, data table/list content, calculation steps, boundaries and evidence anchors; confirm the synthetic-data and independent-SME-HOLD wording is understandable with the named real assistive technology."
+    }
   ],
   "auditScope": {
     "uiNavigation": true,
