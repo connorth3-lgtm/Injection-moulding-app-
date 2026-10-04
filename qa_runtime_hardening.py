@@ -168,11 +168,11 @@ require("Math.max(124" not in psychometric_hardening and "cueNeutral" not in psy
 require("kp.chars>=Math.max" not in psychometric_hardening, "psychometric layer must not create a longest-is-always-wrong inverse cue")
 must(proposition_integrity, ["records.length===197", "supportLocator", "limitations", "relevanceStatus", "weakOptional.length===0", "context-only", "sourceUpgrades:Object.keys(SOURCE_UPGRADES)"], "proposition evidence integrity")
 must(psychometric_approval, [
-    "const REQUIRED_VERSION='2026.09.01.6'", "itemsHardened:197", "optionsParallelised:788", "technicalKeyPositions:[8,8,7,7]", "technicalTermSubstitutions:0", "paddingApplied:false", "keyedConciseEdits:3",
+    "const REQUIRED_VERSION='2026.09.01.6'", "learnerVisibleDecisions:209", "itemsHardened:197", "measuredItemsGoverned:12", "optionsParallelised:788", "technicalKeyPositions:[8,8,7,7]", "measuredKeyPositions:[3,3,3,3]", "technicalTermSubstitutions:0", "paddingApplied:false", "keyedConciseEdits:3",
     "distractorCueEdits", "formClauseTrims", "technicalLengthRanks", "regionalLengthRanks", "scenarioLengthRanks", "diagnosticLengthRanks", "materialLengthRanks", "optionalLengthRanks", "verificationPolicy", "psychometricCoverageOk", "a.length===4"
 ], "psychometric approval hardening")
 require("_evaluate_balanced_length" in question_runtime and "hard.remove('correct-longest-or-tied')" in question_runtime, "final standard audit must remove the absolute longest-key prohibition while retaining salience checks")
-must(real_measured, ["evidenceType:'real-measured'", "decisionCount:CASES.reduce", "Pressure actual values excluded pending unit", "without assigning phase names until an authoritative mapping is found"], "real measured assessment")
+must(real_measured, ["evidenceType:'real-measured'", "decisionCount:CASES.reduce", "Pressure actual values excluded pending unit", "Preserve the codes without assigning unverified phase names"], "real measured assessment")
 require("throw new Error('Evidence approval coverage failure" not in approval, "incomplete evidence coverage must not crash the learning app")
 require("document.addEventListener('DOMContentLoaded',init)" in training, "training scenario upgrade remains DOMContentLoaded-driven")
 require("MM_RUNTIME_V2?.storage" in training and "scopedStore()?.get?.(k,d)" in training and "scopedStore()?.set?.(k,v)" in training, "training review/sign-off persistence must use learner-scoped Runtime V2 storage")
