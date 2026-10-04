@@ -5,9 +5,14 @@ from __future__ import annotations
 import datetime as dt
 import json
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+from qa_curriculum_semantic_review import canonical_lessons as canonical_curriculum_lessons, validate_contract as validate_curriculum_semantics
+
 CONTRACT = ROOT / "data" / "release-external-validation-v1.json"
 VERSION = ROOT / "version.json"
 ALLOWED_SECTION_STATUS = {
@@ -292,19 +297,20 @@ def validate_curriculum(section: dict, expected_release: str) -> None:
     require_current_release(evidence, expected_release, "curriculum SME")
     if evidence.get("packet") != packet:
         fail("curriculum SME contract packet does not match the release ledger")
-    reviews = evidence.get("reviews")
-    lesson_ids = evidence.get("lessonIds")
-    if not isinstance(lesson_ids, list) or len(lesson_ids) != 120 or len(set(lesson_ids)) != 120:
-        fail("curriculum SME contract must contain the canonical 120 unique lesson ids")
-    if not isinstance(reviews, list):
-        fail("curriculum SME reviews must be a list")
+    try:
+        semantic = validate_curriculum_semantics(evidence, canonical_curriculum_lessons())
+    except AssertionError as exc:
+        fail(f"curriculum SME semantic-review contract failed: {exc}")
+    complete = semantic.get("status") == "HUMAN_SME_SEMANTIC_REVIEW_COMPLETE"
     if section["status"] == "hold":
+        if complete:
+            fail("curriculum SME release ledger is HOLD although all seven human-reviewed dimensions are complete for all 120 current lesson fingerprints")
         return
-    if len(reviews) != 120:
-        fail("curriculum SME validation requires one review record for each of 120 lessons")
-    reviewed_ids = {row.get("lessonId") for row in reviews if isinstance(row, dict)}
-    if reviewed_ids != set(lesson_ids):
-        fail("curriculum SME review records do not exactly cover the canonical lesson set")
+    if not complete:
+        fail(
+            "curriculum SME cannot be validated until all 120 current lesson fingerprints have explicit approved human reviews "
+            "for all seven governed semantic dimensions"
+        )
 
 
 def validate_windows(section: dict, expected_release: str) -> None:
