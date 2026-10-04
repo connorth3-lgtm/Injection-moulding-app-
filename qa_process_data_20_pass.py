@@ -145,9 +145,9 @@ for sid,doi in {
 idx=text('index.html'); sw=text('service-worker.js'); pkg=json.loads(text('desktop/electron/package.json')); integrity=text('desktop/electron/scripts/generate-integrity.cjs')
 resource_from={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
 runtime_pack=text('src/domains/runtime-packs/process-data-runtime-pack.js')
+need("'./src/domains/runtime-packs/process-data-runtime-pack.js'" in sw,'offline cache missing process-data runtime pack')
 for f in ALL:
     need(f in runtime_pack,f'process-data runtime pack missing {f}')
-    need(f"'./{f}'" in sw,f'offline cache missing {f}')
     need('../../'+f in resource_from,f'desktop package missing {f}')
     need("'"+f+"'" in integrity,f'desktop integrity manifest missing {f}')
 need("'./src/domains/runtime-packs/process-data-runtime-pack.js'" in idx,'browser shell missing process-data runtime pack')
