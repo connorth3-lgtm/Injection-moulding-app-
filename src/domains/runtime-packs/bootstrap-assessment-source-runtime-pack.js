@@ -417,21 +417,22 @@ function openCatalog(){
  if(subtitle)subtitle.textContent='Browse the 17 governed measured-evidence families and their source boundaries.';
  host.innerHTML=`<div class="pd-toolbar mme-catalog-toolbar"><button class="ghost" type="button" data-mme-back>← Data diagnosis</button></div>${catalogPanel()}`;
  host.querySelector('[data-mme-back]')?.addEventListener('click',()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.());
- window.MM_APP_SHELL?.navigation?.setCustomActive?.('measured-evidence','more');
  window.scrollTo?.({top:0,behavior:'smooth'});
  return true
 }
-let navigationRegistered=false;
-function registerNavigation(){
- if(navigationRegistered)return true;
- const nav=window.MM_APP_SHELL?.navigation;if(!nav||typeof nav.register!=='function')return false;
- nav.register({id:'measured-evidence',label:'Measured Data',icon:'▥',description:'Browse 17 governed measured-data families and source boundaries.',order:35,group:'practice',mobileGroup:'more',action:openCatalog});
- navigationRegistered=true;return true
+function ensureProcessDataLauncher(){
+ const host=document.getElementById('processDataLabs');
+ if(!host||host.classList.contains('hidden')||host.querySelector('[data-mme-catalog-launcher]')||host.querySelector('[data-mm-measured-evidence="catalog"]'))return;
+ const wrap=document.createElement('div');wrap.className='pd-toolbar mme-catalog-launcher';wrap.dataset.mmeCatalogLauncher='1';
+ wrap.innerHTML='<div><b>Measured Data</b><div class="muted tiny">Browse the 17 governed measured-evidence families and source boundaries.</div></div><button class="ghost" type="button" data-mme-open-catalog>Browse measured data</button>';
+ wrap.querySelector('[data-mme-open-catalog]')?.addEventListener('click',openCatalog);
+ host.insertAdjacentElement('afterbegin',wrap)
 }
 function run(){
  style();
  const lesson=document.querySelector('#lesson article.lesson-body');if(lesson&&!lesson.querySelector('[data-mm-measured-evidence]')){const html=relevantPanel(contextText(lesson));if(html)lesson.insertAdjacentHTML('beforeend',html)}
  ['diagnosticLabs','processDataLabs'].forEach(id=>addRelevant(document.getElementById(id)));
+ ensureProcessDataLauncher();
  const material=[...document.querySelectorAll('.view[id]')].find(x=>/material.*lab/i.test(x.id));if(material)addRelevant(material);
  const ws=document.getElementById('mmMouldMasterWorkspace');if(ws&&!ws.classList.contains('hidden')){
    if(!ws.querySelector('[data-mm-measured-evidence="relevant"]')){const html=relevantPanel(contextText(ws));if(html)ws.insertAdjacentHTML('beforeend',html)}
@@ -440,9 +441,8 @@ function run(){
 }
 let queued=false;function schedule(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(()=>{queued=false;run()},0)}
 const observer=new MutationObserver(schedule);if(document.documentElement)observer.observe(document.documentElement,{subtree:true,childList:true});
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule);else schedule();window.addEventListener('load',()=>{schedule();registerNavigation()});
-window.addEventListener?.('mm:domains-ready',registerNavigation);
-registerNavigation();
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule);else schedule();window.addEventListener('load',schedule);
+window.addEventListener?.('mm:domains-ready',schedule);
 window.MM_MEASURED_EVIDENCE={version:VERSION,canonical:{...CANONICAL},families:FAMILIES.map(x=>({...x,topics:[...x.topics]})),select:(text,limit=4)=>select(text,limit).map(x=>({...x,topics:[...x.topics]})),open:openCatalog,scope:'Metadata-only bridge to 17 canonically profiled measured families; no raw third-party rows, universal production recipes or root-cause authority.'};
 })();
 /* <<< measured-evidence-integration.js */
