@@ -141,6 +141,7 @@ need("counts.canonicalExactGrades!==260" in book_runtime and "counts.regionalEvi
 need("String(input.value||'').trim().toLowerCase()!==q" in book_runtime, 'Book async global search must reject stale query results')
 need("function bindBookSearchInput()" in book_runtime and "event.target?.id==='globalSearch'" in book_runtime, 'Book global search must use delegated input integration that survives late doSearch replacement')
 need("window.__MM_BOOK_SEARCH_INPUT_BOUND__=VERSION" in book_runtime, 'Book delegated global-search binding must be idempotent')
+need("bindBookSearchInput();\n  window.MMBook=Object.freeze" in book_runtime, 'Book global-search listener must bind before MMBook becomes externally observable')
 search_index_blob = git_blob_sha(PACKAGED_ROOT / 'book-material-search-index-v1.json')
 need(f"const MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1='{search_index_blob}'" in book_runtime, 'Book material search index is not pinned to exact bytes')
 need("auth?.authorizationBasis?.sourceRevision!=='7ef28bd8b02994223e320fda64e99808357d3219'" in book_runtime, 'runtime no longer enforces reviewed source revision')
