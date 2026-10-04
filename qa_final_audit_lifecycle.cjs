@@ -30,7 +30,7 @@ for(const marker of [
   'buildTrainingExtras',
   'trainingExtrasForImport',
   'clearLearnerAnalyticsStores(active);clearLearnerTrainingExtras(active);',
-  "const proposed=JSON.parse(JSON.stringify(db));proposed.users[active]=cleanResetLearner(prior,active)",
+  'proposed=JSON.parse(JSON.stringify(db));proposed.users[active]=cleanResetLearner(prior,active)',
   'Other local learner profiles',
 ])assert(trainingSource.includes(marker),`training analytics cleanup marker missing: ${marker}`);
 
