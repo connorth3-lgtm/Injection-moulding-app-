@@ -192,6 +192,8 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
   assert.strictEqual(t.memory.get('mm_learning_analytics_v1::strong-old'),'learning-old','failed import did not restore Learning Insights analytics');
   assert(t.memory.has('mm_spaced_review_v2::legacy-old')||t.memory.has('mm_spaced_review_v2::strong-old'),'failed import did not restore spaced-review state');
   assert(t.memory.has('mm_real_measured_assessment_v1::legacy-old')||t.memory.has('mm_real_measured_assessment_v1::strong-old'),'failed import did not restore measured-assessment state');
+  assert(t.alerts.some(x=>/browser storage failed/i.test(x)),'storage write failure was misreported as an invalid backup');
+  assert(!t.alerts.some(x=>/not a valid MouldMaster backup/i.test(x)),'storage write failure was incorrectly blamed on backup validity');
   assert(!t.toasts.some(x=>/^Progress imported/i.test(x)),'failed final registry write falsely reported successful import');
 }
 
