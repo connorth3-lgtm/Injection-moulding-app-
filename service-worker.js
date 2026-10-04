@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.10.05.1';
-const CACHE_REVISION='deep-review-r10-20261005';
+const CACHE_REVISION='deep-review-r11-20261005';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both
@@ -119,6 +119,12 @@ const CORE=[
 const OPTIONAL=[
   './src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js',
   './src/domains/runtime-packs/evidence-runtime-pack.js',
+  './source-library.js',
+  './reference-data.js',
+  './reference-deep-dive.js',
+  './src/domains/research/reference-research-extension.js',
+  './src/domains/research/reference-20x-extension.js',
+  './reference-2026-expansion.js',
   './src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js',
   './src/domains/runtime-packs/assessment-multimodal-runtime-pack.js',
   './src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js',
