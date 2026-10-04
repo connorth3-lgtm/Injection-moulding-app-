@@ -28,18 +28,18 @@ Every row must be tested by a human reviewer using the named real assistive tech
 
 ## Required tasks for each row
 
-1. Navigate the primary product areas and return focus predictably.
-2. Search and paginate exact commercial material grades.
-3. Open sourced exact-grade details and understand property/process evidence boundaries.
-4. Complete core learner assessment interactions and confirm state/errors are announced meaningfully.
-5. Create or edit a Mould Master evidence case without losing semantic context.
-6. Search for a Book topic from the global search, open a late Book chapter from deep in the contents, confirm focus/reading starts at the chapter heading, then return to contents without losing the reader's place.
-7. Exercise the collapsed Book publication/review and accuracy/assurance disclosures; confirm their summaries, expanded content and independent-SME HOLD remain understandable without excessive verbosity.
-8. Exercise dialogs, menus, tab-like controls, expandable regions and form validation with keyboard/AT navigation.
-9. Confirm status changes that matter to task completion are announced without forcing excessive verbosity.
-10. Confirm headings, landmarks, accessible names and focus order remain understandable at realistic zoom/text settings, including the Home page hierarchy where Today's focus precedes the secondary Workbench and the compact desktop More-tools navigation where applicable.
-11. Open Standards & readiness and confirm ISO/NZQA boundaries, current-vs-expired standards, and external HOLD language remain understandable without implying certification, approval or competence.
-12. In affected Book chapters, navigate the worked-example heading, data table/list content, calculation steps, boundaries and evidence anchors; confirm the synthetic-data and independent-SME-HOLD wording is understandable with the named real assistive technology.
+1. `primary-navigation-focus` — Navigate the primary product areas and return focus predictably.
+2. `commercial-grade-search` — Search and paginate exact commercial material grades.
+3. `grade-evidence-boundaries` — Open sourced exact-grade details and understand property/process evidence boundaries.
+4. `assessment-announcements` — Complete core learner assessment interactions and confirm state/errors are announced meaningfully, including the Measured-Data Evidence Challenges.
+5. `mould-master-evidence-case` — Create or edit a Mould Master evidence case without losing semantic context.
+6. `book-deep-navigation` — Search for a Book topic from the global search, open a late Book chapter from deep in the contents, confirm focus/reading starts at the chapter heading, then return to contents without losing the reader's place.
+7. `book-assurance-disclosures` — Exercise the collapsed Book publication/review and accuracy/assurance disclosures; confirm their summaries, expanded content and independent-SME HOLD remain understandable without excessive verbosity.
+8. `interactive-controls-validation` — Exercise dialogs, menus, tab-like controls, expandable regions and form validation with keyboard/AT navigation.
+9. `status-announcements` — Confirm status changes that matter to task completion are announced without forcing excessive verbosity.
+10. `structure-focus-zoom` — Confirm headings, landmarks, accessible names and focus order remain understandable at realistic zoom/text settings, including the Home page hierarchy where Today's focus precedes the secondary Workbench and the compact desktop More-tools navigation where applicable.
+11. `standards-readiness-boundaries` — Open Standards & readiness and confirm ISO/NZQA boundaries, current-vs-expired standards, and external HOLD language remain understandable without implying certification, approval or competence.
+12. `book-worked-example-reading` — In affected Book chapters, navigate the worked-example heading, data table/list content, calculation steps, boundaries and evidence anchors; confirm the synthetic-data and independent-SME-HOLD wording is understandable with the named real assistive technology.
 
 ## Evidence rules
 
