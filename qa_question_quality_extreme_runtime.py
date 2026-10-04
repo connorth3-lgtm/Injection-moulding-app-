@@ -105,6 +105,12 @@ def surface_features(option,stem):
     return feats
 
 
+def expected_tie_hit(scores,correct):
+    best=max(scores)
+    tied=[i for i,score in enumerate(scores) if math.isclose(score,best,rel_tol=0.0,abs_tol=1e-12)]
+    return (1.0/len(tied)) if correct in tied else 0.0
+
+
 def model_with_features(items,feature_fn,passes=50):
     acc=[];by_kind=defaultdict(list)
     for pass_no in range(passes):
@@ -125,7 +131,7 @@ def model_with_features(items,feature_fn,passes=50):
                     fs=feature_fn(o,x['stem']);score=math.log((pos_n+1)/(pos_n+neg_n+2))
                     for f in fs&vocab:score+=math.log((pos[f]+1)/(pos_n+2))-math.log((neg[f]+1)/(neg_n+2))
                     scores.append(score)
-                pred=max(range(4),key=lambda i:scores[i]);hit=pred==x['correct'];hits+=hit;total+=1;kind_hits[x['kind']]+=hit;kind_total[x['kind']]+=1
+                hit=expected_tie_hit(scores,x['correct']);hits+=hit;total+=1;kind_hits[x['kind']]+=hit;kind_total[x['kind']]+=1
         acc.append(hits/total)
         for kind in kind_total:by_kind[kind].append(kind_hits[kind]/kind_total[kind])
     return {'passes':passes,'chance':0.25,'mean_accuracy':round(sum(acc)/len(acc),3),'min_accuracy':round(min(acc),3),'max_accuracy':round(max(acc),3),'by_kind':{k:round(sum(v)/len(v),3) for k,v in sorted(by_kind.items())}}
