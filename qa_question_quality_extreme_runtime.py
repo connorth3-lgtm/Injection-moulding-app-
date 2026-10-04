@@ -76,6 +76,10 @@ process.stdout.write(JSON.stringify({items:out,meta:window.MM_PSYCHOMETRIC_HARDE
     need(PSYCHOMETRIC_META and PSYCHOMETRIC_META.get('optionsParallelised')==788,f'psychometric coverage mismatch: {PSYCHOMETRIC_META}')
     need(PSYCHOMETRIC_META.get('scenarioKeyPositions')==[10,10,10,10],f'scenario key positions not balanced: {PSYCHOMETRIC_META}')
     need(PSYCHOMETRIC_META.get('technicalKeyPositions')==[8,8,7,7],f'technical key positions not balanced: {PSYCHOMETRIC_META}')
+    measured=extreme.load_measured_runtime()
+    need(len(measured)==12,'measured assessment must contribute exactly 12 governed decisions')
+    out.extend(measured)
+    need(len(out)==209,f'final governed item count mismatch: {len(out)}')
     return out
 
 
