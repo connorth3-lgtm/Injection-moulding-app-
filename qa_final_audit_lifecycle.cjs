@@ -184,6 +184,15 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
   assert(t.memory.has('mm_learning_analytics_v1::strong-old'),'silent-failure fixture unexpectedly deleted its retained analytics key');
 }
 
+// Full-registry import cleanup must remove derived generated-form membership
+// history for every prior learner, just like the other assessment analytics.
+{
+  const t=trainingSandbox('normal');
+  t.bridge.clearAllAnalyticsStores();
+  assert.strictEqual([...t.memory.keys()].some(k=>k.startsWith('mm_assessment_membership_history_v2::')),false,'full learner-registry cleanup left assessment membership history behind');
+  assert(t.memory.has('mm_spaced_review_v2::legacy-old'),'assessment cleanup incorrectly removed governed training backup state');
+}
+
 // Successful learner reset clears only the active learner's scoped state and
 // preserves every peer profile/store plus unrelated application storage.
 {
