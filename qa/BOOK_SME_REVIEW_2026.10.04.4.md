@@ -6,7 +6,7 @@ Automated evidence review, CI, browser tests and the Book publication authorizat
 
 ## Scope
 
-Review every chapter listed in `data/book-sme-review-v1.json`. For the ten chapters with a `workedCaseId`, the chapter review must also inspect the complete worked example listed in `data/book-worked-engineering-cases-v1.json`, including arithmetic/reasoning, assumptions, units, evidence fit, synthetic-data labeling and non-universal boundaries. Start with its `priorityChapters`, especially safety foundations, V/P transfer, gate seal, diagnostic method, short shot, flash, burns, warpage, black specks, cavity pressure, process monitoring and complex diagnostics.
+Review every chapter listed in `data/book-sme-review-v1.json`. For the chapters with governed worked examples (18 worked cases in total), the chapter review must also inspect the complete worked example listed in `data/book-worked-engineering-cases-v1.json`, including arithmetic/reasoning, assumptions, units, evidence fit, synthetic-data labeling and non-universal boundaries. Start with its `priorityChapters`, especially safety foundations, V/P transfer, gate seal, diagnostic method, short shot, flash, burns, warpage, black specks, cavity pressure, process monitoring and complex diagnostics.
 
 For the ten chapters listed in `enrichmentChapterIds`, the reviewer must also inspect all current evidence-enrichment sections in `data/book-evidence-enrichment-v2.json`, including source fit, case-specific numerical context, uncertainty, non-universal boundaries and the ISO 9001:2026 quality-record section where applicable.
 
@@ -40,9 +40,14 @@ Each record should contain:
   },
   "conclusion": "approved",
   "evidenceRef": "non-sensitive-review-record",
+  "reviewedWorkedCaseIds": ["worked-vp-transfer-v1"],
+  "reviewedDiagramIds": ["diagram-vp-transfer-v1"],
+  "reviewedEvidenceEnrichment": true,
   "notes": "Optional public-safe summary only."
 }
 ```
+
+For each chapter, record the exact governed worked-case and diagram IDs actually reviewed. For chapters listed in `enrichmentChapterIds`, set `reviewedEvidenceEnrichment` to `true` only after all governed enrichment sections in that chapter were inspected. Empty arrays are valid where the chapter owns no governed worked case or diagram.
 
 Any unresolved material objection keeps the chapter and top-level contract on **HOLD**. Do not record an approval from an AI review, automated source check, repository owner self-attestation presented as independent review, or a reviewer who did not inspect the chapter.
 
@@ -50,7 +55,7 @@ Any unresolved material objection keeps the chapter and top-level contract on **
 
 For troubleshooting chapters, ask whether a learner could wrongly interpret the chapter as `symptom -> certain cause -> guaranteed fix`. If yes, the review fails until the wording is corrected.
 
-For the ten governed worked engineering cases, independently recompute or otherwise verify the calculation/reasoning and confirm the case-level evidence anchors fit the stated claim.
+For all 18 governed worked engineering cases, independently recompute or otherwise verify the calculation/reasoning and confirm the case-level evidence anchors fit the stated claim.
 
 For numeric/process-setting content, ask whether the number is universal. If the correct answer depends on grade, machine, mould, hot runner, product or site, the chapter must make that dependency visible and point back to controlling documentation or measurement.
 
