@@ -12,7 +12,7 @@ const APPROVED_INPUTS={
  'assessment-deep-dive.js':'367d941afc67ad62125e1e1cb16ff1a1e48d0123',
  'src/domains/assessment/assessment-answer-cue-fix.js':'14cdc9e7dde1aa1a3dcdae8d5fc8c924f8f60bc0',
  'assessment-quality-suite.js':'bec32a5b02de3eacd6f43db6ee4e57609478662d',
- 'assessment-stable-review-bridge.js':'60d41367b2394d071bdb45f22a95517554dd7681',
+ 'assessment-stable-review-bridge.js':'c178e846a58a76b44ee2a123b021ddf2cfb258d6',
  'diagnostic-learning-labs.js':'f573088cddb9eb081eb9cf88d266af6c7b31831d',
  'material-behaviour-labs.js':'3ce6b1f36c618e0b591b2b5cbb3321a0080ffe6a'
 };
