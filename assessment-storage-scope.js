@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 if(typeof window==='undefined'||typeof localStorage==='undefined')return;
-const VERSION='2026.09.11.1';
+const VERSION='2026.10.05.1';
 const ANALYTICS_BASE='mm_assessment_analytics_v1';
 const TIMING_BASE='mm_assessment_exposure_timing_v1';
 const ROTATION_BASE='mm_assessment_opening_history_v1';
@@ -30,6 +30,14 @@ function hashScope(value){
  h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);
  return (4294967296*(2097151&h2)+(h1>>>0)).toString(36);
 }
+function strongFallbackToken(raw){
+ const value=String(raw||'anonymous');let h1=1779033703,h2=3144134277,h3=1013904242,h4=2773480762;
+ const seeded=`mm-learner-scope-v2|${value}`;
+ for(let i=0;i<seeded.length;i++){const k=seeded.charCodeAt(i);h1=h2^Math.imul(h1^k,597399067);h2=h3^Math.imul(h2^k,2869860233);h3=h4^Math.imul(h3^k,951274213);h4=h1^Math.imul(h4^k,2716044179)}
+ h1=Math.imul(h3^(h1>>>18),597399067);h2=Math.imul(h4^(h2>>>22),2869860233);h3=Math.imul(h1^(h3>>>17),951274213);h4=Math.imul(h2^(h4>>>19),2716044179);
+ h1=(h1^h2^h3^h4)>>>0;h2=(h2^h1)>>>0;h3=(h3^h1)>>>0;h4=(h4^h1)>>>0;
+ return [h1,h2,h3,h4].map(x=>x.toString(16).padStart(8,'0')).join('')
+}
 function profileIds(){try{return typeof db!=='undefined'&&db?.users&&typeof db.users==='object'&&!Array.isArray(db.users)?Object.keys(db.users).map(String).filter(Boolean):[]}catch(_){return[]}}
 function rawScopedKey(base,token){return `${base}::${String(token)}`}
 function sharedScope(){const s=window.MM_LEARNER_SCOPE;return s&&typeof s.tokenFor==='function'?s:null}
@@ -56,7 +64,7 @@ function ensureSharedMigration(){
 }
 function scopeToken(raw=learnerId()){
  const shared=sharedScope();if(shared){ensureSharedMigration();return shared.tokenFor(raw)}
- return hashScope(raw)
+ return strongFallbackToken(raw)
 }
 function scopedKey(base,raw=learnerId()){
  const k=String(base);return BASES.includes(k)?rawScopedKey(k,scopeToken(raw)):k
@@ -69,7 +77,7 @@ function removeItem(base){rawRemove(scopedKey(base));return true}
 function read(base,fallback=null){try{const raw=getItem(base);if(raw==null)return fallback;const value=JSON.parse(raw);return value==null?fallback:value}catch(_){return fallback}}
 function write(base,value){try{return setItem(base,JSON.stringify(value))}catch(_){return false}}
 function keysForLearner(raw=learnerId()){
- const learner=String(raw||'anonymous'),tokens=new Set([hashScope(learner)]),shared=sharedScope();
+ const learner=String(raw||'anonymous'),tokens=new Set([hashScope(learner),strongFallbackToken(learner)]),shared=sharedScope();
  if(shared)tokens.add(shared.tokenFor(learner));
  return [...tokens].flatMap(token=>BASES.map(base=>rawScopedKey(base,token)))
 }
