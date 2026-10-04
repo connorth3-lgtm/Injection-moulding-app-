@@ -66,6 +66,7 @@ book_data = [
     'book-evidence-enrichment-v2.json',
     'book-material-grade-atlas-v1.json',
     'book-material-regional-evidence-v1.json',
+    'book-material-search-index-v1.json',
 ]
 for name in book_data:
     packaged = f'./src/domains/learning/book-data/{name}'
@@ -122,10 +123,10 @@ for name in required_integrity:
     need(sha_by_file[name] == git_blob_sha(path), f'Book byte-integrity Git object mismatch: {name}')
 auth_blob = git_blob_sha(PACKAGED_ROOT / 'book-publication-authorization-v1.json')
 need(f"const AUTH_GIT_BLOB_SHA1='{auth_blob}'" in book_runtime, 'canonical runtime is not pinned to exact authorization bytes')
-for marker in ('gitBlobSha1', 'verifiedJson', 'validateIntegrityAuthorization', 'Book byte-integrity mismatch', 'WORKED_CASES_PATH', 'validateWorkedCases', 'workedCaseHtml', 'getWorkedCases', 'DIAGRAMS_PATH', 'validateEngineeringDiagrams', 'diagramHtml', 'getEngineeringDiagrams', 'ENRICHMENT_PATH', 'validateEvidenceEnrichment', 'getEvidenceEnrichment', 'MATERIAL_ATLAS_PATH', 'MATERIAL_REGIONAL_PATH', 'MATERIAL_CATALOG_PATH', 'validateMaterialAtlas', 'validateMaterialCatalog', 'validateMaterialRegionalEvidence', 'materialAtlasHtml', 'ensureManifest', 'ensureMaterialData', 'hydrateMaterialAtlas', 'MATERIAL_PAGE_SIZE=24', 'data-mm-book-material-more', 'getMaterialAtlas', 'getMaterialCatalog', 'getMaterialRegionalEvidence'):
+for marker in ('gitBlobSha1', 'verifiedJson', 'validateIntegrityAuthorization', 'Book byte-integrity mismatch', 'WORKED_CASES_PATH', 'validateWorkedCases', 'workedCaseHtml', 'getWorkedCases', 'DIAGRAMS_PATH', 'validateEngineeringDiagrams', 'diagramHtml', 'getEngineeringDiagrams', 'ENRICHMENT_PATH', 'validateEvidenceEnrichment', 'getEvidenceEnrichment', 'MATERIAL_ATLAS_PATH', 'MATERIAL_REGIONAL_PATH', 'MATERIAL_CATALOG_PATH', 'MATERIAL_SEARCH_INDEX_PATH', 'MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1', 'validateMaterialAtlas', 'validateMaterialCatalog', 'validateMaterialRegionalEvidence', 'materialAtlasHtml', 'ensureManifest', 'ensureMaterialData', 'hydrateMaterialAtlas', 'coldMaterialSearchTerms', 'coldMaterialHit', 'MATERIAL_PAGE_SIZE=24', 'data-mm-book-material-more', 'getMaterialAtlas', 'getMaterialCatalog', 'getMaterialRegionalEvidence'):
     need(marker in book_runtime, f'Book runtime exact-byte/lazy-load safeguard missing: {marker}')
 load_manifest_block = book_runtime.split('async function loadManifest(){',1)[1].split('function failBook(',1)[0]
-for forbidden in ('MATERIAL_ATLAS_PATH', 'MATERIAL_CATALOG_PATH', 'MATERIAL_REGIONAL_PATH'):
+for forbidden in ('MATERIAL_ATLAS_PATH', 'MATERIAL_CATALOG_PATH', 'MATERIAL_REGIONAL_PATH', 'MATERIAL_SEARCH_INDEX_PATH'):
     need(forbidden not in load_manifest_block, f'heavy material payload must not load during core Book manifest initialization: {forbidden}')
 need("async function init(){createUI();armBookSearch();return true;}" in book_runtime, 'Book shell must initialize without fetching governed Book payloads while retrying global-search binding')
 need("if(!manifest){ui.summary.textContent='Loading governed Book content on demand…'" in book_runtime, 'Book open action must demand-load governed content')
@@ -134,15 +135,14 @@ search_block = book_runtime.split('function searchBook(query){',1)[1].split('asy
 need("JSON.stringify(row)" not in search_block, 'Book material search must not re-serialize all regional evidence rows on every query')
 need("materialSearchIndex.regional.some" in search_block, 'Book material search must query the precomputed regional evidence index')
 need("void ensureManifest().catch(()=>{})" in book_runtime, 'Book open must consume the controlled fail-closed manifest rejection')
-need("async function coldExactGradeHit(query)" in book_runtime, 'Book global search must support cold exact-grade discovery')
-need("async function waitForMaterialSearchEngine(timeoutMs=5000)" in book_runtime, 'Book cold material discovery must use a bounded material-search readiness wait')
-need("window.addEventListener('mm:domains-ready',check)" in book_runtime, 'Book cold material discovery must observe manifest-driven domain readiness')
-need("poll=setInterval(check,25)" in book_runtime and "timer=setTimeout(()=>finish(null),timeoutMs)" in book_runtime, 'Book cold material discovery must cover bootstrap-install races without waiting indefinitely')
-need("engine.searchAllPage(q,{types:['exact-grade'],page:1,pageSize:1})" in book_runtime, 'Book cold material discovery must delegate to the governed exact-grade search engine')
+need("async function coldMaterialSearchTerms()" in book_runtime and "verifiedJson(MATERIAL_SEARCH_INDEX_PATH,MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1)" in book_runtime, 'Book cold material discovery must use the exact-byte-pinned lightweight search index')
+need("async function coldMaterialHit(query)" in book_runtime, 'Book global search must support cold canonical and regional material discovery')
+need("counts.canonicalExactGrades!==260" in book_runtime and "counts.regionalEvidenceRows!==284" in book_runtime and "counts.total!==544" in book_runtime, 'Book cold search index must fail closed on coverage drift')
 need("String(input.value||'').trim().toLowerCase()!==q" in book_runtime, 'Book async global search must reject stale query results')
-need("async function coldCatalogSearchTerms()" in book_runtime and "verifiedJson(MATERIAL_CATALOG_PATH)" in book_runtime, 'Book cold exact-grade routing must have a byte-verified canonical-catalog fallback')
 need("function bindBookSearchInput()" in book_runtime and "event.target?.id==='globalSearch'" in book_runtime, 'Book global search must use delegated input integration that survives late doSearch replacement')
 need("window.__MM_BOOK_SEARCH_INPUT_BOUND__=VERSION" in book_runtime, 'Book delegated global-search binding must be idempotent')
+search_index_blob = git_blob_sha(PACKAGED_ROOT / 'book-material-search-index-v1.json')
+need(f"const MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1='{search_index_blob}'" in book_runtime, 'Book material search index is not pinned to exact bytes')
 need("auth?.authorizationBasis?.sourceRevision!=='7ef28bd8b02994223e320fda64e99808357d3219'" in book_runtime, 'runtime no longer enforces reviewed source revision')
 
 # Publication/SME/qualification boundaries remain fail-closed and unchanged in meaning.
