@@ -46,6 +46,10 @@ need("initialization:'after-training-upgrade'" in hardening and 'scenarioCount!=
 need("a.length===4" in approval,'approval must require four relative answer-length ranks')
 need("target=(caseIndex*3+qi)%4" in text('real-measured-data-assessment.js'),'measured assessment key-position balancing contract missing')
 need("209 learner-visible decisions" in approval,'psychometric approval must state complete learner-visible governance scope')
+need("function measuredCoverage()" in approval and "function applyMeasuredCoverage()" in approval,'psychometric approval must bind measured coverage from the live measured runtime')
+need("measuredCoverageOk:null" in approval and "learnerVisibleCoverageOk:false" in approval,'psychometric approval must not pre-approve measured coverage before runtime binding')
+need("Number(M.decisionCount)===EXPECTED.measuredItemsGoverned" in approval,'measured runtime decision count is not bound into psychometric approval')
+need("sameArray(positions,EXPECTED.measuredKeyPositions)" in approval,'measured runtime key-position balance is not bound into psychometric approval')
 
 m=re.search(r"const INPUT_BLOB='([0-9a-f]{40})'",approval)
 need(m is not None,'psychometric input blob pin missing')
