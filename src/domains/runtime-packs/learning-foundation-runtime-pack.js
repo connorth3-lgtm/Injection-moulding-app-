@@ -286,17 +286,27 @@ function quarantineMaterialLegacy(raw,payload,reason){
   const wrapped=JSON.stringify({source,reason,payload:JSON.parse(payload)});
   if(localStorage.getItem(target)==null)localStorage.setItem(target,wrapped);
   if(localStorage.getItem(target)!==wrapped)return false;
-  localStorage.removeItem(source);return true
+  localStorage.removeItem(source);return localStorage.getItem(source)==null
  }catch(_){return false}
 }
 function migrateMaterialLabsLegacy(learnerId){
  const id=canonicalLearnerId(learnerId),scope=learnerScope(),oldKey=materialLegacyKey(id),payload=localStorage.getItem(oldKey);
  if(payload==null)return trainingKey(MATERIAL_LABS_KEY,id);
  const token=legacyMaterialToken(id),owners=(scope.knownIds?.()||[]).filter(other=>legacyMaterialToken(other)===token);
- if(owners.length!==1||owners[0]!==id){quarantineMaterialLegacy(id,payload,owners.length>1?'ambiguous-known-owners':'ownership-unproven');return trainingKey(MATERIAL_LABS_KEY,id)}
+ if(owners.length!==1||owners[0]!==id){
+  if(!quarantineMaterialLegacy(id,payload,owners.length>1?'ambiguous-known-owners':'ownership-unproven'))throw cleanupError('material lab migration','legacy quarantine could not be verified');
+  return trainingKey(MATERIAL_LABS_KEY,id)
+ }
  const next=trainingKey(MATERIAL_LABS_KEY,id),current=localStorage.getItem(next);
- if(current==null){localStorage.setItem(next,payload);if(localStorage.getItem(next)===payload)localStorage.removeItem(oldKey)}
- else if(current===payload)localStorage.removeItem(oldKey);
+ if(current==null){
+  localStorage.setItem(next,payload);
+  if(localStorage.getItem(next)!==payload)throw cleanupError('material lab migration','copy could not be verified');
+  localStorage.removeItem(oldKey);
+  if(localStorage.getItem(oldKey)!=null)throw cleanupError('material lab migration','legacy delete could not be verified')
+ }else if(current===payload){
+  localStorage.removeItem(oldKey);
+  if(localStorage.getItem(oldKey)!=null)throw cleanupError('material lab migration','duplicate legacy delete could not be verified')
+ }
  return next
 }
 function materialLabsKey(learnerId){return migrateMaterialLabsLegacy(canonicalLearnerId(learnerId))}
