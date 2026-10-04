@@ -357,13 +357,14 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
   assert.strictEqual(t.sandbox.db.activeUser,'old','failed reset mutated the in-memory learner registry');
   assert.strictEqual(t.memory.get('mouldmasterProDB'),t.oldSerialized,'failed reset did not restore the persisted learner registry');
   assert.strictEqual(t.memory.get('mm_assessment_analytics_v1::strong-old'),'assessment-old','failed reset did not restore assessment analytics');
-  assert(t.memory.has('mm_assessment_membership_history_v2::strong-old'),'failed reset did not restore assessment membership history');
+  assert(t.memory.has('mm_assessment_membership_history_v2::legacy-old'),'failed reset did not restore the original legacy assessment membership history');
+  assert.strictEqual(t.memory.has('mm_assessment_membership_history_v2::strong-old'),false,'failed reset mutated membership-history key form during rollback');
   assert.strictEqual(t.memory.get('mm_learning_analytics_v1::strong-old'),'learning-old','failed reset did not restore Learning Insights');
-  assert(t.memory.has('mm_spaced_review_v2::strong-old'),'failed reset did not restore spaced review state');
-  assert(t.memory.has('mm_practical_signoff_v1::strong-old'),'failed reset did not restore sign-off state');
-  assert(t.memory.has('mm_real_measured_assessment_v1::strong-old'),'failed reset did not restore measured-assessment state');
-  assert(t.memory.has('mm_process_data_diagnostics_v1::strong-old'),'failed reset did not restore process-diagnostics progress');
-  assert(t.memory.has('mm_diagnostic_labs_v1::strong-old'),'failed reset did not restore diagnostic-lab progress');
+  assert(t.memory.has('mm_spaced_review_v2::legacy-old'),'failed reset did not restore the original legacy spaced-review state');
+  assert(t.memory.has('mm_practical_signoff_v1::legacy-old'),'failed reset did not restore the original legacy sign-off state');
+  assert(t.memory.has('mm_real_measured_assessment_v1::legacy-old'),'failed reset did not restore the original legacy measured-assessment state');
+  assert(t.memory.has('mm_process_data_diagnostics_v1::legacy-old'),'failed reset did not restore the original legacy process-diagnostics state');
+  assert(t.memory.has('mm_diagnostic_labs_v1::legacy-old'),'failed reset did not restore the original legacy diagnostic-lab state');
   assert(t.memory.has('mm_material_behaviour_labs_v1::strong-old'),'failed reset did not restore material-lab progress');
   assert(t.alerts.some(x=>/Existing learner progress and scoped training state were restored/i.test(x)),'failed reset did not disclose verified rollback');
 }
