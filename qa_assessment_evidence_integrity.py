@@ -82,6 +82,7 @@ need("decisionCount:CASES.reduce" in real and "evidenceType:'real-measured'" in 
 need(real.count("contractPath:'data/public-benchmark-results/")==4,'expected four pinned real-data contracts')
 need(real.count("questions:[")==4,'expected four real measured cases')
 need("localStorage.getItem(k)===payload" in real and "Progress could not be saved on this device." in real and "progress not saved" in real,'real-measured progress persistence must verify writes and surface unsaved progress')
+need("return id?String(id):null" in real and "if(!id||!scope" in real,'real-measured progress must fail closed until a real active learner exists')
 
 avaps=json.loads(text('data/public-benchmark-results/scatimdata-avaps-v1.json'))
 openmms=json.loads(text('data/public-benchmark-results/openmms-t4g-v1.json'))
