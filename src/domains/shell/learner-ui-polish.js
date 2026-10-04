@@ -84,6 +84,13 @@ function syncHomeBalance(){
   else if(!anchor&&!panel.isConnected)root.prepend(panel);
 }
 
+function syncCertificateCounter(){
+  const root=document.getElementById('dashboard');if(!root)return;
+  for(const row of root.querySelectorAll('.statline')){
+    const label=row.querySelector('.muted.tiny');if(String(label?.textContent||'').trim()!=='Certificates earned')continue;
+    const value=row.querySelector('b');if(value)value.textContent=String(Array.isArray(user?.certificates)?user.certificates.length:0)
+  }
+}
 function syncBookDisclosure(){
   const view=document.getElementById('mmBookView');
   if(!view)return;
@@ -230,6 +237,7 @@ function syncReadAloudLabel(){
 }
 function run(){
   syncHomeBalance();
+  syncCertificateCounter();
   syncBookDisclosure();
   syncDesktopNavigation();
   syncTopbarContext();
