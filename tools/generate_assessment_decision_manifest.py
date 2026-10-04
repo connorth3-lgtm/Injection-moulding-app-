@@ -12,11 +12,15 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+import qa_question_quality_50_pass_runtime as question_runtime
+
 OUT = ROOT / "data" / "assessment-decision-manifest-v1.json"
-MANIFEST_VERSION = "2026.09.04.1"
+MANIFEST_VERSION = "2026.10.05.1"
 QUESTION_BANK_VERSION = "2026.08.30.1"
 APPROVAL_VERSION = "2026.08.30.3"
-MEASURED_VERSION = "2026.09.01.1"
+MEASURED_VERSION = "2026.10.05.1"
 
 
 def need(ok: bool, message: str) -> None:
@@ -180,6 +184,40 @@ def approved_rows(snap: dict[str, Any], revisions: dict[str, Any]) -> list[dict[
     return rows
 
 
+def optional_rows(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    rows = []
+    for item in items:
+        rid = str(item.get("id") or "")
+        need(rid.startswith("optional-material:"), f"optional decision id is not canonical: {rid}")
+        choices = list(item.get("options") or [])
+        correct = int(item.get("correct", -1))
+        need(len(choices) == 4 and 0 <= correct < 4, f"optional decision shape drift: {rid}")
+        revision = 1
+        fps = [choice_fingerprint(rid, revision, choice) for choice in choices]
+        need(len(set(fps)) == 4, f"optional decision choice identity drift: {rid}")
+        source_ids = list(item.get("sourceIds") or [])
+        need(len(set(source_ids)) >= 2, f"optional decision requires at least two governed source ids: {rid}")
+        rows.append({
+            "id": rid,
+            "kind": "optional-material-practice",
+            "decisionScope": "optional-practice-learning",
+            "revision": revision,
+            "bankVersion": QUESTION_BANK_VERSION,
+            "contentFingerprint": fnv1a(compact_json([
+                item.get("stem"), choices, correct, item.get("rationale"), source_ids
+            ])),
+            "evidenceStatus": "proposition-audited",
+            "evidenceSourceMode": "mapped-authoritative-source",
+            "sourceIds": source_ids,
+            "sourceFingerprint": fnv1a(compact_json(sorted(source_ids))),
+            "choiceFingerprints": fps,
+            "correctChoiceFingerprint": fps[correct],
+            "critical": bool(item.get("critical", False)),
+        })
+    need(len(rows) == 40, f"optional governed decision count drift: {len(rows)}/40")
+    return rows
+
+
 def measured_rows(snap: dict[str, Any]) -> list[dict[str, Any]]:
     rows = []
     for case in snap["measured"]:
@@ -218,15 +256,16 @@ def build() -> dict[str, Any]:
     need(revisions.get("bank_version") == QUESTION_BANK_VERSION, "question revision index bank version drift")
     snap = runtime_snapshot(extract_core_data())
     approved = approved_rows(snap, revisions)
+    optional = optional_rows(question_runtime.load_optional_runtime())
     measured = measured_rows(snap)
-    rows = sorted([*approved, *measured], key=lambda x: x["id"])
+    rows = sorted([*approved, *optional, *measured], key=lambda x: x["id"])
     counts: dict[str, int] = {}
     for row in rows:
         counts[row["kind"]] = counts.get(row["kind"], 0) + 1
-    need(len(approved) == 157 and len(measured) == 12 and len(rows) == 169, "canonical governed decision count drift")
+    need(len(approved) == 157 and len(optional) == 40 and len(measured) == 12 and len(rows) == 209, "canonical governed decision count drift")
     need(len({row["id"] for row in rows}) == len(rows), "canonical decision IDs are not unique")
     all_choice_fps = [fp for row in rows for fp in row["choiceFingerprints"]]
-    need(len(all_choice_fps) == 676 and len(set(all_choice_fps)) == 676, "question-scoped choice fingerprints must be globally unique")
+    need(len(all_choice_fps) == 836 and len(set(all_choice_fps)) == 836, "question-scoped choice fingerprints must be globally unique")
     return {
         "schema": 1,
         "version": MANIFEST_VERSION,
@@ -234,10 +273,11 @@ def build() -> dict[str, Any]:
         "questionBankVersion": QUESTION_BANK_VERSION,
         "evidenceApprovalVersion": APPROVAL_VERSION,
         "measuredAssessmentVersion": MEASURED_VERSION,
-        "boundary": "Audit-only canonical identity manifest. It contains no question stems, option text, rationales or raw answer text. Evidence-approved learning decisions remain distinct from measured-dataset contract decisions; neither scope grants production authority.",
+        "boundary": "Audit-only canonical identity manifest for all 209 learner-visible keyed decisions. It contains no question stems, option text, rationales or raw answer text. Evidence-approved formal decisions, optional proposition-audited practice decisions and measured-dataset contract decisions remain distinct scopes; no scope grants production authority.",
         "counts": {
             "total": len(rows),
             "evidenceApproved": len(approved),
+            "optionalPractice": len(optional),
             "measuredEvidence": len(measured),
             "byKind": dict(sorted(counts.items())),
         },
@@ -265,7 +305,7 @@ def main() -> int:
         if not output.exists() or output.read_text(encoding="utf-8") != payload:
             print(f"{output.relative_to(ROOT)} is stale; run tools/generate_assessment_decision_manifest.py", file=sys.stderr)
             return 1
-        print("Assessment decision manifest is current: 169 governed decisions, 676 globally unique question-scoped choice fingerprints.")
+        print("Assessment decision manifest is current: 209 governed learner-visible decisions, 836 globally unique question-scoped choice fingerprints.")
         return 0
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(payload, encoding="utf-8")
