@@ -2,16 +2,47 @@
 (function(){
 'use strict';
 const D=window.MM_DATA;
+const STARTER_AUTHORING=[
+ [/^Measure\/verify\s+/,'Measuring and verifying '],
+ [/^Inspect\/clean\s+/,'Inspecting/cleaning '],
+ [/^Check\s+/,'Checking '],
+ [/^Verify\s+/,'Verifying '],
+ [/^Inspect\s+/,'Inspecting '],
+ [/^Compare\s+/,'Comparing '],
+ [/^Measure\s+/,'Measuring '],
+ [/^Investigate\s+/,'Investigating '],
+ [/^Confirm\s+/,'Confirming '],
+ [/^Increase\s+/,'Increasing '],
+ [/^Change\s+/,'Changing '],
+ [/^Ignore\s+/,'Ignoring '],
+ [/^Assume\s+/,'Assuming '],
+ [/^Reduce\s+/,'Reducing '],
+ [/^Raise\s+/,'Raising '],
+ [/^Lower\s+/,'Lowering '],
+ [/^Decrease\s+/,'Decreasing '],
+ [/^Adjust\s+/,'Adjusting '],
+ [/^Accept\s+/,'Accepting ']
+];
+function authorChoice(value){
+ let out=String(value??'');
+ for(const [pattern,replacement] of STARTER_AUTHORING){if(pattern.test(out))return out.replace(pattern,replacement)}
+ return out
+}
+function authorChoices(options){return Array.isArray(options)?options.map(authorChoice):options}
+window.MM_ASSESSMENT_AUTHOR_CHOICE=authorChoice;
 const transfer=D?.exams?.Advanced?.[7];
 if(!Array.isArray(transfer)||!Array.isArray(transfer[1])||transfer[1].length!==4||transfer[2]!==2)throw new Error('Advanced process-transfer question shape changed');
 transfer[1][2]='Match validated physical process outputs on a capable receiving machine';
 
 if(!D?.regionalQuestions)throw new Error('Regional assessment data must load before regional hardening');
-const regionalRow=(question,options,correct,why,reference,url)=>[
- question,options,correct,why,reference,url,
- options.map((option,i)=>i===correct?`Correct. ${why}`:`Not the best answer. “${option}” does not satisfy the cited requirement for this case. ${why}`),
- true
-];
+const regionalRow=(question,options,correct,why,reference,url)=>{
+ const authored=authorChoices(options);
+ return [
+  question,authored,correct,why,reference,url,
+  authored.map((option,i)=>i===correct?`Correct. ${why}`:`Not the best answer. “${option}” does not satisfy the cited requirement for this case. ${why}`),
+  true
+ ];
+};
 function regionalSet(region,level,index,item){
  const current=D.regionalQuestions?.[region]?.[level]?.[index];
  if(!current)throw new Error(`Missing regional question ${region}/${level}/${index}`);
@@ -72,7 +103,17 @@ const R={
  }
 };
 for(const [region,levels] of Object.entries(R))for(const [level,items] of Object.entries(levels))items.forEach((item,i)=>regionalSet(region,level,i,item));
+let authoredChoiceCount=0;
+for(const level of ['Beginner','Intermediate','Advanced'])for(const q of D?.exams?.[level]||[]){
+ const options=q?.options??q?.[1];if(!Array.isArray(options))continue;
+ for(let i=0;i<options.length;i++){const next=authorChoice(options[i]);if(next!==options[i]){options[i]=next;authoredChoiceCount++}}
+}
+for(const scenario of D?.scenarios||[]){
+ if(!Array.isArray(scenario?.choices))continue;
+ for(let i=0;i<scenario.choices.length;i++){const next=authorChoice(scenario.choices[i]);if(next!==scenario.choices[i]){scenario.choices[i]=next;authoredChoiceCount++}}
+}
 D.assessmentQA=D.assessmentQA||{};
 D.assessmentQA.regionalDeepDive={reviewed:'30 August 2026',regionalItemsRewritten:27,regionalAnswerChanges:0,appliedSafety:true,officialSources:true};
-window.MM_REGIONAL_QUESTION_DEEP_DIVE={version:'2026-08-30',regionalRewrites:27,regionalAnswerChanges:0,appliedSafety:true};
+D.assessmentQA.answerStarterAuthoring={version:'2026.10.05.1',coreChoicesReauthored:authoredChoiceCount,policy:'Neutral grammatical answer fragments remove starter-word test-taking cues without changing answer keys or technical propositions.'};
+window.MM_REGIONAL_QUESTION_DEEP_DIVE={version:'2026-08-30',regionalRewrites:27,regionalAnswerChanges:0,appliedSafety:true,answerStarterAuthoring:true};
 })();
