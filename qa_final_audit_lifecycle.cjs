@@ -174,9 +174,9 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
   assert(extras.learners.peer.spacedReview.items['tech:q2'],'peer review state missing from multi-profile backup payload');
   t.sandbox.resetData();
   assert.strictEqual(t.sandbox.db.activeUser,'old','learner reset changed the active learner identity');
-  assert.deepStrictEqual(t.sandbox.db.users.old.completed,[],'active learner progress survived learner reset');
-  assert.deepStrictEqual(t.sandbox.db.users.old.certificates,[],'active learner certificates survived learner reset');
-  assert.deepStrictEqual(t.sandbox.db.users.peer.completed,[9],'learner reset deleted or changed a peer profile');
+  assert.strictEqual(t.sandbox.db.users.old.completed.length,0,'active learner progress survived learner reset');
+  assert.strictEqual(t.sandbox.db.users.old.certificates.length,0,'active learner certificates survived learner reset');
+  assert.strictEqual(JSON.stringify(t.sandbox.db.users.peer.completed),'[9]','learner reset deleted or changed a peer profile');
   assert.strictEqual(t.memory.has('mm_assessment_analytics_v1::strong-old'),false,'active learner assessment analytics survived reset');
   assert.strictEqual(t.memory.has('mm_learning_analytics_v1::strong-old'),false,'active learner Learning Insights survived reset');
   assert.strictEqual(t.memory.has('mm_spaced_review_v2::legacy-old'),false,'active learner review state survived reset');
