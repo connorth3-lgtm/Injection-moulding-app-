@@ -39,6 +39,10 @@ function trainingKey(base,learnerId){
  scope.migrateStoragePrefix(prefix,id);
  return scope.storageKey(prefix,scope.tokenFor(id))
 }
+function trainingDestinationKey(base,learnerId){
+ const id=canonicalLearnerId(learnerId),scope=learnerScope();
+ return scope.storageKey(`${base}::`,scope.tokenFor(id))
+}
 function readTraining(base,d,learnerId){try{const x=JSON.parse(localStorage.getItem(trainingKey(base,learnerId))||'');return obj(x)?x:d}catch(_){return d}}
 function legacyMaterialToken(raw){return String(raw||'anonymous').replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,80)}
 function materialLegacyKey(raw){return MATERIAL_LABS_KEY+':'+legacyMaterialToken(raw)}
@@ -187,12 +191,12 @@ window.importData=function(file){
    if(typeof confirm==='function'&&!confirm(`Import this backup and replace all ${existingCount} local learner profile${existingCount===1?'':'s'} with the ${entries.length} profile${entries.length===1?'':'s'} in the backup? Existing local assessment and Learning Insights analytics will be cleared. Saved process-data evidence is managed separately.`))return;
    const trainingWrites={};
    for(const [id,row] of extras){
-    trainingWrites[trainingKey(REVIEW_KEY,id)]=JSON.stringify(row.spacedReview);
-    trainingWrites[trainingKey(SIGN_KEY,id)]=JSON.stringify(row.practicalSignoff);
-    trainingWrites[trainingKey(MEASURED_KEY,id)]=JSON.stringify(row.measuredAssessment||{});
-    trainingWrites[trainingKey(PROCESS_DIAG_KEY,id)]=JSON.stringify(row.processDiagnostics||{});
-    trainingWrites[trainingKey(DIAGNOSTIC_LABS_KEY,id)]=JSON.stringify(row.diagnosticLabs||{});
-    trainingWrites[materialLabsKey(id)]=JSON.stringify(row.materialLabs||{})
+    trainingWrites[trainingDestinationKey(REVIEW_KEY,id)]=JSON.stringify(row.spacedReview);
+    trainingWrites[trainingDestinationKey(SIGN_KEY,id)]=JSON.stringify(row.practicalSignoff);
+    trainingWrites[trainingDestinationKey(MEASURED_KEY,id)]=JSON.stringify(row.measuredAssessment||{});
+    trainingWrites[trainingDestinationKey(PROCESS_DIAG_KEY,id)]=JSON.stringify(row.processDiagnostics||{});
+    trainingWrites[trainingDestinationKey(DIAGNOSTIC_LABS_KEY,id)]=JSON.stringify(row.diagnosticLabs||{});
+    trainingWrites[trainingDestinationKey(MATERIAL_LABS_KEY,id)]=JSON.stringify(row.materialLabs||{})
    }
    const existingTraining=matchingKeys(trainingStorePredicate,'training extras');
    const existingAnalytics=matchingKeys(k=>ASSESSMENT_ANALYTICS_PREFIXES.some(p=>k===p||k.startsWith(p+'::'))||k.startsWith(LEARNING_ANALYTICS_PREFIX),'analytics');
