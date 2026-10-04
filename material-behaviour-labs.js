@@ -131,10 +131,33 @@ for(const lab of LABS)for(const step of lab.steps||[])for(const choice of step.c
 }
 
 function esc(v){return String(v??'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]))}
-function learnerToken(){try{let id='';if(typeof db!=='undefined'&&db?.activeUser)id=db.activeUser;else id=window.db?.activeUser||window.user?.id||'';return String(id||'anonymous').replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,80)}catch(_){return'anonymous'}}
-function key(){return STORAGE_BASE+':'+learnerToken()}
-function read(){try{return JSON.parse(localStorage.getItem(key())||'{}')}catch(_){return{}}}
-function save(all){try{localStorage.setItem(key(),JSON.stringify(all))}catch(_){}}
+function learnerId(){try{let id='';if(typeof db!=='undefined'&&db?.activeUser)id=db.activeUser;else id=window.db?.activeUser||window.user?.id||'';return String(id||'anonymous')}catch(_){return'anonymous'}}
+function legacyMaterialToken(raw){return String(raw||'anonymous').replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,80)}
+function legacyMaterialKey(raw){return STORAGE_BASE+':'+legacyMaterialToken(raw)}
+function materialLegacyOwners(scope,token){try{return (scope.knownIds?.()||[]).filter(id=>legacyMaterialToken(id)===token)}catch(_){return[]}}
+function quarantineMaterialLegacy(token,payload,reason){
+ try{
+  const source=STORAGE_BASE+':'+token,target=`mm_scope_quarantine_v1::material-labs::${token}`,wrapped=JSON.stringify({source,reason,payload:JSON.parse(payload)});
+  if(localStorage.getItem(target)==null)localStorage.setItem(target,wrapped);
+  if(localStorage.getItem(target)!==wrapped)return false;
+  localStorage.removeItem(source);return true
+ }catch(_){return false}
+}
+function migrateMaterialLegacy(scope,id){
+ const token=legacyMaterialToken(id),oldKey=STORAGE_BASE+':'+token,payload=localStorage.getItem(oldKey);if(payload==null)return;
+ const owners=materialLegacyOwners(scope,token);
+ if(owners.length!==1||owners[0]!==id){quarantineMaterialLegacy(token,payload,owners.length>1?'ambiguous-known-owners':'ownership-unproven');return}
+ const prefix=`${STORAGE_BASE}::`,next=scope.storageKey(prefix,scope.tokenFor(id)),current=localStorage.getItem(next);
+ if(current==null){localStorage.setItem(next,payload);if(localStorage.getItem(next)===payload)localStorage.removeItem(oldKey)}
+ else if(current===payload)localStorage.removeItem(oldKey)
+}
+function key(){
+ const scope=window.MM_LEARNER_SCOPE,id=learnerId(),prefix=`${STORAGE_BASE}::`;
+ if(!scope||typeof scope.tokenFor!=='function'||typeof scope.storageKey!=='function')return null;
+ try{scope.registerStoragePrefix?.(prefix);migrateMaterialLegacy(scope,id);return scope.storageKey(prefix,scope.tokenFor(id))}catch(_){return null}
+}
+function read(){try{const k=key();return k?JSON.parse(localStorage.getItem(k)||'{}'):{} }catch(_){return{}}}
+function save(all){try{const k=key();if(k)localStorage.setItem(k,JSON.stringify(all))}catch(_){}}
 function state(id){return read()[id]||{attempts:0,bestScore:0,completed:false}}
 function put(id,val){const a=read();a[id]=val;save(a)}
 let active=null,answers=[],hadError=false;
