@@ -228,7 +228,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 /* MouldMaster training data/assessment bridge — 2026.10.04.1 */
 (function(){
 'use strict';
-const REVIEW_KEY='mm_spaced_review_v2', LEGACY_REVIEW='mm_spaced_review_v1', SIGN_KEY='mm_practical_signoff_v1', MEASURED_KEY='mm_real_measured_assessment_v1', PROCESS_DIAG_KEY='mm_process_data_diagnostics_v1';
+const REVIEW_KEY='mm_spaced_review_v2', LEGACY_REVIEW='mm_spaced_review_v1', SIGN_KEY='mm_practical_signoff_v1', MEASURED_KEY='mm_real_measured_assessment_v1', PROCESS_DIAG_KEY='mm_process_data_diagnostics_v1', DIAGNOSTIC_LABS_KEY='mm_diagnostic_labs_v1', MATERIAL_LABS_KEY='mm_material_behaviour_labs_v1';
 const ASSESSMENT_ANALYTICS_PREFIXES=['mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1','mm_assessment_opening_history_v2','mm-assessment-question-history-v4','mm-assessment-result-meta-v1'];
 const LEARNING_ANALYTICS_PREFIX='mm_learning_analytics_v1::';
 const ANALYTICS_CLEANUP_CODE='MM_ANALYTICS_CLEANUP_FAILED';
@@ -267,8 +267,31 @@ function trainingKey(base,learnerId){
  return scope.storageKey(prefix,scope.tokenFor(id))
 }
 function readTraining(base,d,learnerId){try{const x=JSON.parse(localStorage.getItem(trainingKey(base,learnerId))||'');return obj(x)?x:d}catch(_){return d}}
+function legacyMaterialToken(raw){return String(raw||'anonymous').replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,80)}
+function materialLegacyKey(raw){return MATERIAL_LABS_KEY+':'+legacyMaterialToken(raw)}
+function quarantineMaterialLegacy(raw,payload,reason){
+ const token=legacyMaterialToken(raw),source=MATERIAL_LABS_KEY+':'+token,target=`mm_scope_quarantine_v1::material-labs::${token}`;
+ try{
+  const wrapped=JSON.stringify({source,reason,payload:JSON.parse(payload)});
+  if(localStorage.getItem(target)==null)localStorage.setItem(target,wrapped);
+  if(localStorage.getItem(target)!==wrapped)return false;
+  localStorage.removeItem(source);return true
+ }catch(_){return false}
+}
+function migrateMaterialLabsLegacy(learnerId){
+ const id=canonicalLearnerId(learnerId),scope=learnerScope(),oldKey=materialLegacyKey(id),payload=localStorage.getItem(oldKey);
+ if(payload==null)return trainingKey(MATERIAL_LABS_KEY,id);
+ const token=legacyMaterialToken(id),owners=(scope.knownIds?.()||[]).filter(other=>legacyMaterialToken(other)===token);
+ if(owners.length!==1||owners[0]!==id){quarantineMaterialLegacy(id,payload,owners.length>1?'ambiguous-known-owners':'ownership-unproven');return trainingKey(MATERIAL_LABS_KEY,id)}
+ const next=trainingKey(MATERIAL_LABS_KEY,id),current=localStorage.getItem(next);
+ if(current==null){localStorage.setItem(next,payload);if(localStorage.getItem(next)===payload)localStorage.removeItem(oldKey)}
+ else if(current===payload)localStorage.removeItem(oldKey);
+ return next
+}
+function materialLabsKey(learnerId){return migrateMaterialLabsLegacy(canonicalLearnerId(learnerId))}
+function readMaterialLabs(d,learnerId){try{const x=JSON.parse(localStorage.getItem(materialLabsKey(learnerId))||'');return obj(x)?x:d}catch(_){return d}}
 function trainingStorePredicate(k){
- const prefixes=[REVIEW_KEY+'::',SIGN_KEY+'::',MEASURED_KEY+'::',PROCESS_DIAG_KEY+'::'],globals=new Set([REVIEW_KEY,LEGACY_REVIEW,SIGN_KEY,MEASURED_KEY,PROCESS_DIAG_KEY]);
+ const prefixes=[REVIEW_KEY+'::',SIGN_KEY+'::',MEASURED_KEY+'::',PROCESS_DIAG_KEY+'::',DIAGNOSTIC_LABS_KEY+'::',MATERIAL_LABS_KEY+'::',MATERIAL_LABS_KEY+':'],globals=new Set([REVIEW_KEY,LEGACY_REVIEW,SIGN_KEY,MEASURED_KEY,PROCESS_DIAG_KEY,DIAGNOSTIC_LABS_KEY,MATERIAL_LABS_KEY]);
  return globals.has(k)||prefixes.some(p=>k.startsWith(p))
 }
 function clearTrainingExtrasStores(){return clearMatchingStores('training extras',trainingStorePredicate)}
@@ -286,10 +309,12 @@ function learnerLearningAnalyticsKeys(learnerId){
  return uniqueKeys(keys)
 }
 function learnerTrainingKeys(learnerId){
- const keys=[trainingKey(REVIEW_KEY,learnerId),trainingKey(SIGN_KEY,learnerId),trainingKey(MEASURED_KEY,learnerId),trainingKey(PROCESS_DIAG_KEY,learnerId)],scope=learnerScope(),plan=scope.migrationPlan?.(learnerId);
+ const id=canonicalLearnerId(learnerId),scope=learnerScope(),keys=[trainingKey(REVIEW_KEY,id),trainingKey(SIGN_KEY,id),trainingKey(MEASURED_KEY,id),trainingKey(PROCESS_DIAG_KEY,id),trainingKey(DIAGNOSTIC_LABS_KEY,id),materialLabsKey(id)],plan=scope.migrationPlan?.(id);
  if(plan?.uniqueOwner&&plan.legacyToken){
-  keys.push(scope.storageKey(REVIEW_KEY+'::',plan.legacyToken),scope.storageKey(SIGN_KEY+'::',plan.legacyToken),scope.storageKey(MEASURED_KEY+'::',plan.legacyToken),scope.storageKey(PROCESS_DIAG_KEY+'::',plan.legacyToken))
+  keys.push(scope.storageKey(REVIEW_KEY+'::',plan.legacyToken),scope.storageKey(SIGN_KEY+'::',plan.legacyToken),scope.storageKey(MEASURED_KEY+'::',plan.legacyToken),scope.storageKey(PROCESS_DIAG_KEY+'::',plan.legacyToken),scope.storageKey(DIAGNOSTIC_LABS_KEY+'::',plan.legacyToken))
  }
+ const materialToken=legacyMaterialToken(id),materialOwners=(scope.knownIds?.()||[]).filter(other=>legacyMaterialToken(other)===materialToken);
+ if(materialOwners.length===1&&materialOwners[0]===id)keys.push(materialLegacyKey(id));
  return uniqueKeys(keys)
 }
 function learnerOwnedKeys(learnerId){return uniqueKeys([...learnerAssessmentKeys(learnerId),...learnerLearningAnalyticsKeys(learnerId),...learnerTrainingKeys(learnerId)])}
@@ -319,6 +344,7 @@ function cleanReview(v){const out={items:{}};if(!obj(v)||!obj(v.items))return ou
 function cleanSign(v){const o={checks:{},supervisor:'',date:'',notes:''};if(!obj(v))return o;if(obj(v.checks))for(const [k,b] of Object.entries(v.checks).slice(0,50))o.checks[String(k).slice(0,20)]=b===true;o.supervisor=String(v.supervisor||'').slice(0,160);o.date=String(v.date||'').slice(0,20);o.notes=String(v.notes||'').slice(0,10000);return o}
 function cleanMeasured(v){const out={};if(!obj(v))return out;for(const [id,row] of Object.entries(v).slice(0,50)){if(!obj(row))continue;const sid=String(id).slice(0,160);if(!sid)continue;out[sid]={best:Math.round(clamp(row.best,0,100)),last:Math.round(clamp(row.last,0,100))}}return out}
 function cleanProcessDiagnostics(v){const out={};if(!obj(v))return out;for(const [id,row] of Object.entries(v).slice(0,100)){if(!obj(row))continue;const sid=String(id).slice(0,160);if(!sid)continue;out[sid]={attempts:Math.floor(clamp(row.attempts,0,100000)),completed:row.completed===true,bestScore:Math.round(clamp(row.bestScore,0,100))}}return out}
+function cleanLabProgress(v){const out={};if(!obj(v))return out;for(const [id,row] of Object.entries(v).slice(0,100)){if(!obj(row))continue;const sid=String(id).slice(0,160);if(!sid)continue;out[sid]={attempts:Math.floor(clamp(row.attempts,0,100000)),completed:row.completed===true,bestScore:Math.round(clamp(row.bestScore,0,100)),firstTry:row.firstTry===true}}return out}
 function read(k,d){try{const x=JSON.parse(localStorage.getItem(k)||'');return obj(x)?x:d}catch(_){return d}}
 function restoreSnapshot(before){let failed=false;for(const [k,v] of Object.entries(before)){try{v===null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(_){failed=true}}return !failed}
 function cleanupFailureMessage(action,rolledBack=true){return `${action} was not completed because local analytics/training cleanup could not be fully verified.${rolledBack?' Existing learner progress was kept.':''} Some old analytics may already have been removed. Clear this app/site data before handing the same browser profile to another learner if the warning persists.`}
@@ -328,7 +354,7 @@ function buildTrainingExtras(users=(typeof db!=='undefined'?db?.users:null)){
  const learners={};
  for(const id of Object.keys(users)){
   const sid=canonicalLearnerId(id);
-  learners[sid]={spacedReview:cleanReview(readTraining(REVIEW_KEY,{items:{}},sid)),practicalSignoff:cleanSign(readTraining(SIGN_KEY,{},sid)),measuredAssessment:cleanMeasured(readTraining(MEASURED_KEY,{},sid)),processDiagnostics:cleanProcessDiagnostics(readTraining(PROCESS_DIAG_KEY,{},sid))}
+  learners[sid]={spacedReview:cleanReview(readTraining(REVIEW_KEY,{items:{}},sid)),practicalSignoff:cleanSign(readTraining(SIGN_KEY,{},sid)),measuredAssessment:cleanMeasured(readTraining(MEASURED_KEY,{},sid)),processDiagnostics:cleanProcessDiagnostics(readTraining(PROCESS_DIAG_KEY,{},sid)),diagnosticLabs:cleanLabProgress(readTraining(DIAGNOSTIC_LABS_KEY,{},sid)),materialLabs:cleanLabProgress(readMaterialLabs({},sid))}
  }
  return {version:4,scope:'learner-registry',learners}
 }
@@ -337,7 +363,7 @@ function trainingExtrasForImport(extras,users,active){
  if(!obj(extras)||!Object.keys(extras).length||extras.version===2)return out;
  if(extras.version===3){
   if(extras.scope!=='active-learner'||canonicalLearnerId(extras.learnerId)!==active)throw new Error('Training extras learner scope mismatch');
-  out.set(active,{spacedReview:cleanReview(extras.spacedReview||{items:{}}),practicalSignoff:cleanSign(extras.practicalSignoff||{}),measuredAssessment:cleanMeasured(extras.measuredAssessment||{}),processDiagnostics:cleanProcessDiagnostics(extras.processDiagnostics||{})});
+  out.set(active,{spacedReview:cleanReview(extras.spacedReview||{items:{}}),practicalSignoff:cleanSign(extras.practicalSignoff||{}),measuredAssessment:cleanMeasured(extras.measuredAssessment||{}),processDiagnostics:cleanProcessDiagnostics(extras.processDiagnostics||{}),diagnosticLabs:cleanLabProgress(extras.diagnosticLabs||{}),materialLabs:cleanLabProgress(extras.materialLabs||{})});
   return out
  }
  if(extras.version!==4||extras.scope!=='learner-registry'||!obj(extras.learners))throw new Error('Unsupported training extras format');
@@ -345,14 +371,14 @@ function trainingExtrasForImport(extras,users,active){
  if(extraIds.length!==wanted.length||extraIds.some((id,index)=>id!==wanted[index]))throw new Error('Training extras registry does not match learner registry');
  for(const id of ids){
   const row=extras.learners[id];if(!obj(row))throw new Error(`Training extras missing learner ${id}`);
-  out.set(id,{spacedReview:cleanReview(row.spacedReview||{items:{}}),practicalSignoff:cleanSign(row.practicalSignoff||{}),measuredAssessment:cleanMeasured(row.measuredAssessment||{}),processDiagnostics:cleanProcessDiagnostics(row.processDiagnostics||{})})
+  out.set(id,{spacedReview:cleanReview(row.spacedReview||{items:{}}),practicalSignoff:cleanSign(row.practicalSignoff||{}),measuredAssessment:cleanMeasured(row.measuredAssessment||{}),processDiagnostics:cleanProcessDiagnostics(row.processDiagnostics||{}),diagnosticLabs:cleanLabProgress(row.diagnosticLabs||{}),materialLabs:cleanLabProgress(row.materialLabs||{})})
  }
  return out
 }
 window.exportData=function(){try{
  const p=JSON.parse(JSON.stringify(db));p.backupFormat='mouldmaster-backup-v2';p.trainingExtras=buildTrainingExtras(p.users);
  const blob=new Blob([JSON.stringify(p,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mouldmaster-progress.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),0);
- window.toast?.('Backup exported with learner-scoped review, sign-off, measured-assessment and process-diagnostics progress')
+ window.toast?.('Backup exported with learner-scoped review, sign-off, measured-assessment, process-diagnostics and lab progress')
 }catch(e){console.error('[MouldMaster] backup export failed:',e);alert('Backup could not be created on this device.')}};
 
 window.importData=function(file){
@@ -383,7 +409,9 @@ window.importData=function(file){
     trainingWrites[trainingKey(REVIEW_KEY,id)]=JSON.stringify(row.spacedReview);
     trainingWrites[trainingKey(SIGN_KEY,id)]=JSON.stringify(row.practicalSignoff);
     trainingWrites[trainingKey(MEASURED_KEY,id)]=JSON.stringify(row.measuredAssessment||{});
-    trainingWrites[trainingKey(PROCESS_DIAG_KEY,id)]=JSON.stringify(row.processDiagnostics||{})
+    trainingWrites[trainingKey(PROCESS_DIAG_KEY,id)]=JSON.stringify(row.processDiagnostics||{});
+    trainingWrites[trainingKey(DIAGNOSTIC_LABS_KEY,id)]=JSON.stringify(row.diagnosticLabs||{});
+    trainingWrites[materialLabsKey(id)]=JSON.stringify(row.materialLabs||{})
    }
    const existingTraining=matchingKeys(trainingStorePredicate,'training extras');
    const before=snapshotKeys(['mouldmasterProDB',...existingTraining,...Object.keys(trainingWrites)]);
@@ -401,7 +429,7 @@ window.importData=function(file){
    }
    db=proposed;user=db.users[db.activeUser];committed=true;cancelActiveExam();
    try{updateGlobalProgress();switchView('profile')}catch(uiError){console.warn('[MouldMaster] imported data saved; view refresh failed:',uiError)}
-   window.toast?.('Progress imported. Learner-scoped review/sign-off, measured-assessment and process-diagnostics progress were restored. Certificates must be re-earned; local analytics were reset.')
+   window.toast?.('Progress imported. Learner-scoped review/sign-off, measured-assessment, process-diagnostics and lab progress were restored. Certificates must be re-earned; local analytics were reset.')
   }catch(e){
    if(e?.code===ANALYTICS_CLEANUP_CODE){alert(cleanupFailureMessage('Import',e.importRollbackVerified!==false));return}
    if(committed)alert('Progress was imported, but the screen could not refresh. Reopen MouldMaster.');
