@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.10.05.1';
-const CACHE_REVISION='deep-review-r11-20261005';
+const CACHE_REVISION='deep-review-r12-20261005';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both
@@ -140,7 +140,6 @@ const OPTIONAL=[
   './data/measured-learning/source-readiness-v2.json',
   './reference-data.html',
   './materials.html',
-  './process-data-20-pass-atlas.js'
 ];
 const RELEASE_ASSETS=[...new Set([...CORE,...OPTIONAL])];
 const RELEASE_PATHS=new Set(RELEASE_ASSETS.map(asset=>new URL(asset,self.registration.scope).pathname));
