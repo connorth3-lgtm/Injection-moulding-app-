@@ -101,7 +101,9 @@ need("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'" in idx
 need(idx.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'") < idx.index("'./src/domains/domain-bootstrap.js'"),'domain bootstrap must load after packed workspace surface so canonical-store hydration can complete')
 
 sw=text('service-worker.js')
-need("'./mould-master-workspace.js'" in sw,'Mould Master workspace missing from offline cache')
+workspace_pack=text('src/domains/runtime-packs/curriculum-workspace-runtime-pack.js')
+need("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'" in sw,'curriculum/workspace runtime pack missing from offline cache')
+need('/* >>> mould-master-workspace.js */' in workspace_pack,'Mould Master workspace missing from packed offline runtime')
 need("'./src/domains/engineering/engineering-store.js'" in sw,'canonical engineering store missing from offline cache')
 need("store-bridge.js" not in sw,'retired engineering bridge remains in offline runtime')
 
