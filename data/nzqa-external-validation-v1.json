@@ -8,8 +8,8 @@
   "issueNumber": 379,
   "candidate": {
     "release": "2026.10.05.1",
-    "sourceSha": "f9492a898c08bbc4cec32345c72cd05f38313e0f",
-    "runtimeFingerprint": "sha256:045ca0871408cdd91180790ee16b7f53da2f8f0c895008d061b663e01ce964ba"
+    "sourceSha": "4f31c0246d2c0e07253e7fe6f5d0de4b7681b843",
+    "runtimeFingerprint": "sha256:b0d4f6a48fe0a7e5bdb795bf857482fbfa8640f28e036de224957fb0208bd52c"
   },
   "boundary": "Repository readiness, mappings, templates and automated QA do not create NZQA approval, provider accreditation, consent to assess, moderation acceptance, learner competence, workplace competence or qualification award.",
   "requiredGates": [
