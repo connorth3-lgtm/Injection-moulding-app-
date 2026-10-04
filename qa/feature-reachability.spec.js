@@ -1,11 +1,11 @@
 const {test,expect}=require('@playwright/test');
 const BASE='http://127.0.0.1:4173/';
 
-async function openApp(page,width){
-  await page.addInitScript(()=>{
-    const id='reachability-qa',user={id,name:'Reachability QA',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
+async function openApp(page,width,certificates=[]){
+  await page.addInitScript(({certificates})=>{
+    const id='reachability-qa',user={id,name:'Reachability QA',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates,currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
     localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:id,users:{[id]:user}}));
-  });
+  },{certificates});
   await page.setViewportSize({width,height:900});
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>typeof window.MM_APP_SHELL_FINALIZED==='string'&&!document.getElementById('mmBootstrap')&&!!window.MMBook,{timeout:30000});
@@ -21,6 +21,11 @@ async function expectNoHorizontalOverflow(page,label){const overflow=await page.
 
 for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name:'desktop',width:1440}]){
  test.describe('UI-only feature reachability '+viewport.name,()=>{
+  test('dashboard certificate count does not use obsolete three-certificate denominator',async({page})=>{
+   await openApp(page,viewport.width,['Beginner-ALL','Beginner-UK','Beginner-US','Beginner-NZ']);
+   const row=page.locator('#dashboard .statline').filter({hasText:'Certificates earned'});
+   await expect(row).toBeVisible();await expect(row.locator('b')).toHaveText('4');await expect(row).not.toContainText('/3');
+  });
   test('Book is discoverable and opens through visible UI',async({page})=>{
    await openApp(page,viewport.width);
    if(viewport.width<=900){await mobileMore(page);const book=page.locator('[data-mm-registry-menu="book"]');await expect(book).toBeVisible();await book.click()}
