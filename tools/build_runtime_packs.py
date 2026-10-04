@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = ROOT / "src" / "domains" / "runtime-packs"
 
 PACKS: dict[str, tuple[str, ...]] = {
-    "learning-foundation-runtime-pack.js": ("reading-patch.js","training-upgrade.js","src/domains/learning/training-qa-fix.js"),
+    "learning-foundation-runtime-pack.js": ("reading-patch.js","training-upgrade.js","src/domains/learning/training-qa-fix.js","src/domains/learning/backup-authority-notice.js"),
     "assessment-foundation-runtime-pack.js": ("assessment-100-pass.js","assessment-deep-dive.js","src/domains/assessment/assessment-answer-cue-fix.js","assessment-storage-scope.js","assessment-quality-suite.js","assessment-stable-review-bridge.js","assessment-analytics-ui.js","src/domains/assessment/assessment-final-hardening.js"),
     "bootstrap-assessment-source-runtime-pack.js": ("assessment-runtime-v2.js","assessment-ux.js","source-library.js","measured-evidence-integration.js","measured-evidence-decision.js"),
     "evidence-runtime-pack.js": ("reference-data.js","reference-deep-dive.js","src/domains/research/reference-research-extension.js","src/domains/research/reference-20x-extension.js","reference-2026-expansion.js","reference-sources.js","reference-browser-ui.js","diagnostic-learning-labs.js","material-behaviour-labs.js","assessment-evidence-sources.js","evidence-maturity-deep-dive.js","evidence-maturity-formal-bridge.js"),
