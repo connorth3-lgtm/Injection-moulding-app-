@@ -128,6 +128,9 @@ function sandbox(){
   assert(t.toasts.some(message=>/SHA-256 integrity checksum/i.test(message)),'v3 export did not disclose integrity protection');
 
   assert(source.includes('bridge.buildTrainingExtras(payload.users)'),'integrity wrapper must delegate scoped extras to the governed training bridge');
+  const trainingSource=fs.readFileSync('src/domains/learning/training-qa-fix.js','utf8');
+  assert(trainingSource.includes('readTrainingForBackup')&&trainingSource.includes('readMaterialLabsForBackup'),'backup builder does not use strict learner-state readers');
+  assert(!/buildTrainingExtras[\s\S]{0,2500}readTraining\(/.test(trainingSource),'backup builder regressed to tolerant runtime training reads');
   for(const marker of ['measured-assessment','process-diagnostics','Diagnostic Learning Lab','Material Behaviour Lab']) assert(source.includes(marker),`backup authority disclosure missing ${marker}`);
   assert(!source.includes('payload.trainingExtras={\n  version:2'),'integrity wrapper reintroduced legacy unscoped training extras');
   assert(learningPack.includes('/* >>> backup-authority-notice.js */')&&learningPack.includes('MM_LEARNER_BACKUP_INTEGRITY'),'learner-facing runtime pack does not include backup integrity wrapper');
