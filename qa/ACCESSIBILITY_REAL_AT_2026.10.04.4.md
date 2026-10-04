@@ -28,20 +28,18 @@ Every row must be tested by a human reviewer using the named real assistive tech
 
 ## Required tasks for each row
 
-The task IDs below are canonical and must exactly match `data/accessibility-real-at-validation-v1.json`. Every matrix row records task-level status/evidence for all 12 IDs.
-
-1. [`nav-primary`] Navigate the primary product areas and return focus predictably.
-2. [`materials-search`] Search and paginate exact commercial material grades.
-3. [`exact-grade-evidence`] Open sourced exact-grade details and understand property/process evidence boundaries.
-4. [`assessment-announcements`] Complete core learner assessment interactions and confirm state/errors are announced meaningfully.
-5. [`evidence-case`] Create or edit a Mould Master evidence case without losing semantic context.
-6. [`book-search-deep-chapter`] Search for a Book topic from the global search, open a late Book chapter from deep in the contents, confirm focus/reading starts at the chapter heading, then return to contents without losing the reader's place.
-7. [`book-disclosures`] Exercise the collapsed Book publication/review and accuracy/assurance disclosures; confirm their summaries, expanded content and independent-SME HOLD remain understandable without excessive verbosity.
-8. [`interactive-controls`] Exercise dialogs, menus, tab-like controls, expandable regions and form validation with keyboard/AT navigation.
-9. [`status-announcements`] Confirm status changes that matter to task completion are announced without forcing excessive verbosity.
-10. [`structure-zoom-focus`] Confirm headings, landmarks, accessible names and focus order remain understandable at realistic zoom/text settings, including the Home page hierarchy where Today's focus precedes the secondary Workbench and the compact desktop More-tools navigation where applicable.
-11. [`standards-readiness`] Open Standards & readiness and confirm ISO/NZQA boundaries, current-vs-expired standards, and external HOLD language remain understandable without implying certification, approval or competence.
-12. [`book-worked-examples`] In affected Book chapters, navigate the worked-example heading, data table/list content, calculation steps, boundaries and evidence anchors; confirm the synthetic-data and independent-SME-HOLD wording is understandable with the named real assistive technology.
+1. `AT-01` — Navigate the primary product areas and return focus predictably.
+2. `AT-02` — Search and paginate exact commercial material grades.
+3. `AT-03` — Open sourced exact-grade details and understand property/process evidence boundaries.
+4. `AT-04` — Complete core learner assessment interactions and confirm state/errors are announced meaningfully.
+5. `AT-05` — Create or edit a Mould Master evidence case without losing semantic context.
+6. `AT-06` — Search for a Book topic from the global search, open a late Book chapter from deep in the contents, confirm focus/reading starts at the chapter heading, then return to contents without losing the reader's place.
+7. `AT-07` — Exercise the collapsed Book publication/review and accuracy/assurance disclosures; confirm their summaries, expanded content and independent-SME HOLD remain understandable without excessive verbosity.
+8. `AT-08` — Exercise dialogs, menus, tab-like controls, expandable regions and form validation with keyboard/AT navigation.
+9. `AT-09` — Confirm status changes that matter to task completion are announced without forcing excessive verbosity.
+10. `AT-10` — Confirm headings, landmarks, accessible names and focus order remain understandable at realistic zoom/text settings, including the Home page hierarchy where Today's focus precedes the secondary Workbench and the compact desktop More-tools navigation where applicable.
+11. `AT-11` — Open Standards & readiness and confirm ISO/NZQA boundaries, current-vs-expired standards, and external HOLD language remain understandable without implying certification, approval or competence.
+12. `AT-12` — In affected Book chapters, navigate the worked-example heading, data table/list content, calculation steps, boundaries and evidence anchors; confirm the synthetic-data and independent-SME-HOLD wording is understandable with the named real assistive technology.
 
 ## Evidence rules
 
