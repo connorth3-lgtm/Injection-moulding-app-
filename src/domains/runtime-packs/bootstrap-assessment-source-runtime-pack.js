@@ -372,7 +372,7 @@ window.MM_SOURCE_LIBRARY=SOURCES;
 /* MouldMaster canonical measured-evidence runtime bridge — 2026.10.04.1 */
 (function(){
 'use strict';
-const VERSION='2026.10.04.1';
+const VERSION='2026.10.05.1';
 const CANONICAL={inventoried:34,rightsExecutable:21,fullyProfiled:17,timeSeriesValues:85569824};
 const FAMILIES=[
  {id:'mendeley-gtnb4j7bfx-v1',title:'Injection production records',kind:'record-level production',scale:'4,502 injection records profiled',timeSeries:0,rights:'CC BY 4.0',restricted:false,source:'https://doi.org/10.17632/gtnb4j7bfx.1',topics:['quality','reject','flash','product weight','melt temperature','mould temperature','mold temperature','cycle time','cooling','injection pressure','hold pressure','injection speed','production'],boundary:'Production-order/run-level records are not assumed to be shot-resolved; correlations do not prove root cause or a validated process window.'},
@@ -424,8 +424,9 @@ function ensureProcessDataLauncher(){
  const host=document.getElementById('processDataLabs');
  if(!host||host.classList.contains('hidden')||host.querySelector('[data-mme-catalog-launcher]')||host.querySelector('[data-mm-measured-evidence="catalog"]'))return;
  const wrap=document.createElement('div');wrap.className='pd-toolbar mme-catalog-launcher';wrap.dataset.mmeCatalogLauncher='1';
- wrap.innerHTML='<div><b>Measured Data</b><div class="muted tiny">Browse the 17 governed measured-evidence families and source boundaries.</div></div><button class="ghost" type="button" data-mme-open-catalog>Browse measured data</button>';
+ wrap.innerHTML='<div><b>Measured Data</b><div class="muted tiny">Browse the 17 governed measured-evidence families or practise the 12 evidence-boundary challenges.</div></div><div class="pd-toolbar-actions"><button class="ghost" type="button" data-mme-open-catalog>Browse measured data</button><button class="secondary" type="button" data-mme-open-challenges>Evidence challenges</button></div>';
  wrap.querySelector('[data-mme-open-catalog]')?.addEventListener('click',openCatalog);
+ wrap.querySelector('[data-mme-open-challenges]')?.addEventListener('click',()=>window.MM_REAL_MEASURED_ASSESSMENT?.open?.());
  host.insertAdjacentElement('afterbegin',wrap)
 }
 function run(){
