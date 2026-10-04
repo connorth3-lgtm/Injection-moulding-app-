@@ -83,6 +83,12 @@ const R={
 };
 for(const [region,levels] of Object.entries(R))for(const [level,items] of Object.entries(levels))items.forEach((item,i)=>regionalSet(region,level,i,item));
 let authoredChoiceCount=0;
+const cushionVariationScenario=D?.scenarios?.[0];
+if(!cushionVariationScenario||!Array.isArray(cushionVariationScenario.choices)||cushionVariationScenario.choices.length!==4||Number(cushionVariationScenario.correct)!==1)throw new Error('Cushion-variation scenario shape changed');
+if(cushionVariationScenario.choices[1]!=='Review shot-delivery/NRV and injection actuals'){
+ cushionVariationScenario.choices[1]='Review shot-delivery/NRV and injection actuals';
+ authoredChoiceCount++;
+}
 for(const level of ['Beginner','Intermediate','Advanced'])for(const q of D?.exams?.[level]||[]){
  const options=q?.options??q?.[1];if(!Array.isArray(options))continue;
  for(let i=0;i<options.length;i++){const next=authorChoice(options[i]);if(next!==options[i]){options[i]=next;authoredChoiceCount++}}
