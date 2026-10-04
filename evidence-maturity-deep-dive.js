@@ -127,14 +127,7 @@ const MATERIAL_PRACTICE=[
 ];
 function normalisePractice(){return MATERIAL_PRACTICE.map(l=>({...l,steps:l.steps.map(s=>({stage:s[0],question:s[1],choices:s.slice(2).map((text,i)=>({text,correct:i===0,feedback:i===0?'Correct. This choice tests the mechanism with the strongest evidence.':'Not the strongest evidence-first response for this scenario.'}))}))}))}
 const PRACTICE_LABS=normalisePractice();
-const authorChoice=window.MM_ASSESSMENT_AUTHOR_CHOICE||((value)=>{let out=String(value??'');const rows=[
- [/^Measure\/verify\s+/,'Measuring and verifying '],[/^Inspect\/clean\s+/,'Inspecting/cleaning '],
- [/^Check\s+/,'Checking '],[/^Verify\s+/,'Verifying '],[/^Inspect\s+/,'Inspecting '],[/^Compare\s+/,'Comparing '],
- [/^Measure\s+/,'Measuring '],[/^Investigate\s+/,'Investigating '],[/^Confirm\s+/,'Confirming '],
- [/^Increase\s+/,'Increasing '],[/^Change\s+/,'Changing '],[/^Ignore\s+/,'Ignoring '],[/^Assume\s+/,'Assuming '],
- [/^Reduce\s+/,'Reducing '],[/^Raise\s+/,'Raising '],[/^Lower\s+/,'Lowering '],[/^Decrease\s+/,'Decreasing '],
- [/^Adjust\s+/,'Adjusting '],[/^Accept\s+/,'Accepting ']
-];for(const [p,r] of rows)if(p.test(out))return out.replace(p,r);return out});
+const authorChoice=window.MM_ASSESSMENT_AUTHOR_CHOICE||((value)=>String(value??'').replace(/^(Measure\/verify|Inspect\/clean|Check|Verify|Inspect|Compare|Measure|Investigate|Confirm|Increase|Change|Ignore|Assume|Reduce|Raise|Lower|Decrease|Adjust|Accept)\s+/,(_match,verb)=>`The response is to ${String(verb).toLowerCase()} `));
 let materialPracticeStarterCueEdits=0;
 for(const lab of PRACTICE_LABS)for(const step of lab.steps||[])for(const choice of step.choices||[]){
  const next=authorChoice(choice.text);if(next!==choice.text){choice.text=next;materialPracticeStarterCueEdits++}
