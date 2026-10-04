@@ -1850,9 +1850,9 @@
         "fnv1a-fb6922b7",
         "fnv1a-eeabe1bc",
         "fnv1a-5671624d",
-        "fnv1a-0833ed26"
+        "fnv1a-69363b93"
       ],
-      "contentFingerprint": "fnv1a-20cf90a1",
+      "contentFingerprint": "fnv1a-a7b6c40e",
       "correctChoiceFingerprint": "fnv1a-eeabe1bc",
       "critical": true,
       "decisionScope": "evidence-approved-learning",
@@ -1922,9 +1922,9 @@
         "fnv1a-f5335bf0",
         "fnv1a-b098d561",
         "fnv1a-43fb86fb",
-        "fnv1a-60a1a35f"
+        "fnv1a-04ad2584"
       ],
-      "contentFingerprint": "fnv1a-79cfafc2",
+      "contentFingerprint": "fnv1a-c483c8b7",
       "correctChoiceFingerprint": "fnv1a-f5335bf0",
       "critical": true,
       "decisionScope": "evidence-approved-learning",
@@ -1945,12 +1945,12 @@
       "bankVersion": "2026.08.30.1",
       "choiceFingerprints": [
         "fnv1a-83494409",
-        "fnv1a-d4d06f73",
+        "fnv1a-170a6464",
         "fnv1a-d966463e",
         "fnv1a-9985f632"
       ],
-      "contentFingerprint": "fnv1a-990327b5",
-      "correctChoiceFingerprint": "fnv1a-d4d06f73",
+      "contentFingerprint": "fnv1a-042d8d80",
+      "correctChoiceFingerprint": "fnv1a-170a6464",
       "critical": true,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "direct-question-source",
@@ -2017,12 +2017,12 @@
     {
       "bankVersion": "2026.08.30.1",
       "choiceFingerprints": [
-        "fnv1a-c9527576",
-        "fnv1a-a669e33d",
+        "fnv1a-3ebe9fd7",
+        "fnv1a-2e37db22",
         "fnv1a-8dfad961",
         "fnv1a-2e9a55c2"
       ],
-      "contentFingerprint": "fnv1a-c4560032",
+      "contentFingerprint": "fnv1a-6c8e7b62",
       "correctChoiceFingerprint": "fnv1a-8dfad961",
       "critical": true,
       "decisionScope": "evidence-approved-learning",
@@ -2094,11 +2094,11 @@
       "bankVersion": "2026.08.30.1",
       "choiceFingerprints": [
         "fnv1a-a5d76bc7",
-        "fnv1a-1f201c1e",
+        "fnv1a-399f7029",
         "fnv1a-72efe2d1",
-        "fnv1a-d2de729a"
+        "fnv1a-d030299b"
       ],
-      "contentFingerprint": "fnv1a-2b93dd0d",
+      "contentFingerprint": "fnv1a-de8af8a5",
       "correctChoiceFingerprint": "fnv1a-a5d76bc7",
       "critical": true,
       "decisionScope": "evidence-approved-learning",
@@ -2140,9 +2140,9 @@
         "fnv1a-175a3147",
         "fnv1a-38b555a0",
         "fnv1a-8cf5fe26",
-        "fnv1a-65a84941"
+        "fnv1a-9836d35a"
       ],
-      "contentFingerprint": "fnv1a-bc0c6665",
+      "contentFingerprint": "fnv1a-dd146c2e",
       "correctChoiceFingerprint": "fnv1a-8cf5fe26",
       "critical": true,
       "decisionScope": "evidence-approved-learning",
@@ -2406,12 +2406,12 @@
       "bankVersion": null,
       "choiceFingerprints": [
         "fnv1a-375b4fff",
-        "fnv1a-561adaf0",
+        "fnv1a-87325011",
         "fnv1a-637c6a09",
-        "fnv1a-f5c1fbc7"
+        "fnv1a-aade2b34"
       ],
-      "contentFingerprint": "fnv1a-bbf708b1",
-      "correctChoiceFingerprint": "fnv1a-561adaf0",
+      "contentFingerprint": "fnv1a-79305647",
+      "correctChoiceFingerprint": "fnv1a-87325011",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -2430,13 +2430,13 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-be1e2fb3",
+        "fnv1a-523a64a0",
         "fnv1a-1eb356f6",
-        "fnv1a-de9f52d1",
+        "fnv1a-da9c5e2a",
         "fnv1a-57ac2c3f"
       ],
-      "contentFingerprint": "fnv1a-2b072a1b",
-      "correctChoiceFingerprint": "fnv1a-be1e2fb3",
+      "contentFingerprint": "fnv1a-12e6986f",
+      "correctChoiceFingerprint": "fnv1a-523a64a0",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -2453,13 +2453,13 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-5cba8fcb",
-        "fnv1a-398419a5",
-        "fnv1a-8317c99d",
+        "fnv1a-a6faf56e",
+        "fnv1a-8aa50614",
+        "fnv1a-1309efa8",
         "fnv1a-795ee89f"
       ],
-      "contentFingerprint": "fnv1a-002e01a4",
-      "correctChoiceFingerprint": "fnv1a-5cba8fcb",
+      "contentFingerprint": "fnv1a-7a5cf4ff",
+      "correctChoiceFingerprint": "fnv1a-a6faf56e",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -2479,11 +2479,11 @@
       "bankVersion": null,
       "choiceFingerprints": [
         "fnv1a-cbeb43b8",
-        "fnv1a-06e641b9",
-        "fnv1a-11e60900",
-        "fnv1a-4942f208"
+        "fnv1a-a6a29e74",
+        "fnv1a-b518c855",
+        "fnv1a-c11a0b9d"
       ],
-      "contentFingerprint": "fnv1a-614fbbe4",
+      "contentFingerprint": "fnv1a-f0590fd1",
       "correctChoiceFingerprint": "fnv1a-cbeb43b8",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
@@ -2503,13 +2503,13 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-dcdda72b",
-        "fnv1a-2f3c582b",
-        "fnv1a-cbeafcdc",
-        "fnv1a-f8e0f958"
+        "fnv1a-d86912e4",
+        "fnv1a-786387cc",
+        "fnv1a-9c780833",
+        "fnv1a-0675f561"
       ],
-      "contentFingerprint": "fnv1a-43100738",
-      "correctChoiceFingerprint": "fnv1a-dcdda72b",
+      "contentFingerprint": "fnv1a-7a6ab226",
+      "correctChoiceFingerprint": "fnv1a-d86912e4",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -2527,11 +2527,11 @@
       "bankVersion": null,
       "choiceFingerprints": [
         "fnv1a-aa6de70e",
-        "fnv1a-5d977b58",
-        "fnv1a-01cd74c2",
+        "fnv1a-8e002b4f",
+        "fnv1a-e1ab7701",
         "fnv1a-197ef631"
       ],
-      "contentFingerprint": "fnv1a-a467e2b4",
+      "contentFingerprint": "fnv1a-8ec335ba",
       "correctChoiceFingerprint": "fnv1a-aa6de70e",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
@@ -2550,11 +2550,11 @@
       "bankVersion": null,
       "choiceFingerprints": [
         "fnv1a-3d6315f0",
-        "fnv1a-84b91c54",
-        "fnv1a-bfa33848",
-        "fnv1a-79b204a5"
+        "fnv1a-433d7109",
+        "fnv1a-2b20867d",
+        "fnv1a-44a39ecc"
       ],
-      "contentFingerprint": "fnv1a-8e737b1d",
+      "contentFingerprint": "fnv1a-db1aa7c2",
       "correctChoiceFingerprint": "fnv1a-3d6315f0",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
@@ -2575,12 +2575,12 @@
       "bankVersion": null,
       "choiceFingerprints": [
         "fnv1a-fe669776",
-        "fnv1a-4323d26a",
-        "fnv1a-a7b79278",
-        "fnv1a-2ade15fa"
+        "fnv1a-d612f56f",
+        "fnv1a-0edb0495",
+        "fnv1a-b07034a3"
       ],
-      "contentFingerprint": "fnv1a-8af5ceb0",
-      "correctChoiceFingerprint": "fnv1a-4323d26a",
+      "contentFingerprint": "fnv1a-7d718e67",
+      "correctChoiceFingerprint": "fnv1a-d612f56f",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -2599,13 +2599,13 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-d24a5f19",
-        "fnv1a-eb1235f5",
-        "fnv1a-aadd8236",
+        "fnv1a-ea9014f2",
+        "fnv1a-ec4aa400",
+        "fnv1a-ad2611cf",
         "fnv1a-56371c8c"
       ],
-      "contentFingerprint": "fnv1a-c26658f9",
-      "correctChoiceFingerprint": "fnv1a-eb1235f5",
+      "contentFingerprint": "fnv1a-ab507092",
+      "correctChoiceFingerprint": "fnv1a-ec4aa400",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -2623,13 +2623,13 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-0285bf39",
-        "fnv1a-cba88ae9",
-        "fnv1a-3801fd0b",
+        "fnv1a-3687f610",
+        "fnv1a-f5a199d2",
+        "fnv1a-cb4b0fc2",
         "fnv1a-ed407968"
       ],
-      "contentFingerprint": "fnv1a-d1e84036",
-      "correctChoiceFingerprint": "fnv1a-cba88ae9",
+      "contentFingerprint": "fnv1a-c1ea88c5",
+      "correctChoiceFingerprint": "fnv1a-f5a199d2",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -2646,13 +2646,13 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-a73fbf5f",
+        "fnv1a-b511a0ce",
         "fnv1a-c7747c99",
-        "fnv1a-a28af91a",
+        "fnv1a-dc8f0b8f",
         "fnv1a-d2305d2a"
       ],
-      "contentFingerprint": "fnv1a-9103b4ba",
-      "correctChoiceFingerprint": "fnv1a-a73fbf5f",
+      "contentFingerprint": "fnv1a-4489e76e",
+      "correctChoiceFingerprint": "fnv1a-b511a0ce",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -2671,13 +2671,13 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-1e202aac",
-        "fnv1a-74238819",
+        "fnv1a-c9889091",
+        "fnv1a-b2859908",
         "fnv1a-ad28d783",
         "fnv1a-b1c17cd8"
       ],
-      "contentFingerprint": "fnv1a-996e51e9",
-      "correctChoiceFingerprint": "fnv1a-74238819",
+      "contentFingerprint": "fnv1a-0edaa26d",
+      "correctChoiceFingerprint": "fnv1a-b2859908",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -2697,11 +2697,11 @@
       "bankVersion": null,
       "choiceFingerprints": [
         "fnv1a-a8ab8fae",
-        "fnv1a-8ea19f06",
-        "fnv1a-975b90b6",
+        "fnv1a-4ac484bb",
+        "fnv1a-29d12155",
         "fnv1a-09c521e0"
       ],
-      "contentFingerprint": "fnv1a-6188959b",
+      "contentFingerprint": "fnv1a-bf092263",
       "correctChoiceFingerprint": "fnv1a-a8ab8fae",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
@@ -2719,13 +2719,13 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-f4e56861",
-        "fnv1a-64fcacda",
-        "fnv1a-26829ac1",
+        "fnv1a-30a98478",
+        "fnv1a-1384041d",
+        "fnv1a-ff589aaa",
         "fnv1a-18cc50ca"
       ],
-      "contentFingerprint": "fnv1a-91c5f3e4",
-      "correctChoiceFingerprint": "fnv1a-64fcacda",
+      "contentFingerprint": "fnv1a-3cd8e77b",
+      "correctChoiceFingerprint": "fnv1a-1384041d",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -2744,12 +2744,12 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-4a226b7b",
+        "fnv1a-4750a012",
         "fnv1a-9904ec68",
         "fnv1a-7812e319",
         "fnv1a-0aa965f2"
       ],
-      "contentFingerprint": "fnv1a-26685e88",
+      "contentFingerprint": "fnv1a-e2c5cbbb",
       "correctChoiceFingerprint": "fnv1a-9904ec68",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
@@ -2769,9 +2769,9 @@
         "fnv1a-ddc1ecc9",
         "fnv1a-81bfab7c",
         "fnv1a-0e0dd829",
-        "fnv1a-af9425fe"
+        "fnv1a-4e363391"
       ],
-      "contentFingerprint": "fnv1a-963ef1d2",
+      "contentFingerprint": "fnv1a-5a149b2f",
       "correctChoiceFingerprint": "fnv1a-81bfab7c",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
@@ -2791,13 +2791,13 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-70be15d2",
-        "fnv1a-c9b13d09",
-        "fnv1a-8dbe6bbc",
-        "fnv1a-62b20f15"
+        "fnv1a-643b68bd",
+        "fnv1a-cfd45412",
+        "fnv1a-93cb6ab7",
+        "fnv1a-5d4fafa6"
       ],
-      "contentFingerprint": "fnv1a-7421a88c",
-      "correctChoiceFingerprint": "fnv1a-c9b13d09",
+      "contentFingerprint": "fnv1a-cec495a8",
+      "correctChoiceFingerprint": "fnv1a-cfd45412",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "direct-question-source",
@@ -2817,13 +2817,13 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-db4cb4bc",
-        "fnv1a-04cff67b",
-        "fnv1a-b98c62fd",
-        "fnv1a-c06fdb27"
+        "fnv1a-fcdae619",
+        "fnv1a-b86b6eec",
+        "fnv1a-fdf56f08",
+        "fnv1a-a98dfdec"
       ],
-      "contentFingerprint": "fnv1a-5439c674",
-      "correctChoiceFingerprint": "fnv1a-04cff67b",
+      "contentFingerprint": "fnv1a-ab1628fa",
+      "correctChoiceFingerprint": "fnv1a-b86b6eec",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "direct-question-source",
@@ -2843,11 +2843,11 @@
       "bankVersion": null,
       "choiceFingerprints": [
         "fnv1a-2cfe4a6c",
-        "fnv1a-c627a897",
-        "fnv1a-ba3d35be",
-        "fnv1a-d02b12f2"
+        "fnv1a-0205c952",
+        "fnv1a-51c4de37",
+        "fnv1a-d8f94f2d"
       ],
-      "contentFingerprint": "fnv1a-6f5df854",
+      "contentFingerprint": "fnv1a-7c246453",
       "correctChoiceFingerprint": "fnv1a-2cfe4a6c",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
@@ -2864,12 +2864,12 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-86488274",
+        "fnv1a-f3d99c0f",
         "fnv1a-2649625b",
-        "fnv1a-93752188",
-        "fnv1a-a63a05dc"
+        "fnv1a-6285250f",
+        "fnv1a-32047021"
       ],
-      "contentFingerprint": "fnv1a-871c63bb",
+      "contentFingerprint": "fnv1a-f088260c",
       "correctChoiceFingerprint": "fnv1a-2649625b",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
@@ -2886,13 +2886,13 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-5622e8e5",
-        "fnv1a-d2e72b0f",
-        "fnv1a-eba7309d",
-        "fnv1a-b4afb03f"
+        "fnv1a-9e358124",
+        "fnv1a-56a75290",
+        "fnv1a-00248536",
+        "fnv1a-309b060e"
       ],
-      "contentFingerprint": "fnv1a-f27342c1",
-      "correctChoiceFingerprint": "fnv1a-5622e8e5",
+      "contentFingerprint": "fnv1a-7559d35b",
+      "correctChoiceFingerprint": "fnv1a-9e358124",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "direct-question-source",
@@ -2913,10 +2913,10 @@
       "choiceFingerprints": [
         "fnv1a-7849c46e",
         "fnv1a-53d449bf",
-        "fnv1a-1bcad70c",
+        "fnv1a-1bc9de15",
         "fnv1a-984787f9"
       ],
-      "contentFingerprint": "fnv1a-5813c1d6",
+      "contentFingerprint": "fnv1a-f43b5dcb",
       "correctChoiceFingerprint": "fnv1a-53d449bf",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
@@ -2935,13 +2935,13 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-e9c6f244",
-        "fnv1a-fdde9eee",
-        "fnv1a-a92b22e0",
-        "fnv1a-47e36dab"
+        "fnv1a-f6ff8f3b",
+        "fnv1a-e630239b",
+        "fnv1a-236e51e1",
+        "fnv1a-b6b3950c"
       ],
-      "contentFingerprint": "fnv1a-71860f22",
-      "correctChoiceFingerprint": "fnv1a-fdde9eee",
+      "contentFingerprint": "fnv1a-e101fd84",
+      "correctChoiceFingerprint": "fnv1a-e630239b",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -2960,13 +2960,13 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-07225a62",
-        "fnv1a-b073b9b8",
-        "fnv1a-5c47229a",
+        "fnv1a-54744379",
+        "fnv1a-9a575fd3",
+        "fnv1a-05dd08b3",
         "fnv1a-0b144cb3"
       ],
-      "contentFingerprint": "fnv1a-61fcd597",
-      "correctChoiceFingerprint": "fnv1a-b073b9b8",
+      "contentFingerprint": "fnv1a-d53b6594",
+      "correctChoiceFingerprint": "fnv1a-9a575fd3",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -2987,10 +2987,10 @@
       "choiceFingerprints": [
         "fnv1a-7d0a85c0",
         "fnv1a-37eabd0a",
-        "fnv1a-d5c93cb9",
-        "fnv1a-580baa52"
+        "fnv1a-19bfcdca",
+        "fnv1a-96da45bb"
       ],
-      "contentFingerprint": "fnv1a-64fe8537",
+      "contentFingerprint": "fnv1a-5efe81af",
       "correctChoiceFingerprint": "fnv1a-37eabd0a",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
@@ -3009,13 +3009,13 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-88796b11",
-        "fnv1a-47bd026e",
+        "fnv1a-28e10050",
+        "fnv1a-8fe3bd9b",
         "fnv1a-44de47fa",
-        "fnv1a-ed7f1908"
+        "fnv1a-e7fea10b"
       ],
-      "contentFingerprint": "fnv1a-ed33a003",
-      "correctChoiceFingerprint": "fnv1a-47bd026e",
+      "contentFingerprint": "fnv1a-a8e2c8c4",
+      "correctChoiceFingerprint": "fnv1a-8fe3bd9b",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "direct-question-source",
@@ -3034,12 +3034,12 @@
       "bankVersion": null,
       "choiceFingerprints": [
         "fnv1a-148329fd",
-        "fnv1a-00ad650e",
-        "fnv1a-622a3ccd",
-        "fnv1a-2d18ea51"
+        "fnv1a-35045b61",
+        "fnv1a-ea2a5d08",
+        "fnv1a-7dd9ad92"
       ],
-      "contentFingerprint": "fnv1a-f70d22a6",
-      "correctChoiceFingerprint": "fnv1a-00ad650e",
+      "contentFingerprint": "fnv1a-6cdcbd29",
+      "correctChoiceFingerprint": "fnv1a-35045b61",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "direct-question-source",
@@ -3059,13 +3059,13 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-1c87f62a",
-        "fnv1a-8b99d0ff",
-        "fnv1a-0ff9f350",
-        "fnv1a-2b1460a6"
+        "fnv1a-562ccb55",
+        "fnv1a-d22d4fc0",
+        "fnv1a-4bc9679d",
+        "fnv1a-0cb962c3"
       ],
-      "contentFingerprint": "fnv1a-cff6a5be",
-      "correctChoiceFingerprint": "fnv1a-8b99d0ff",
+      "contentFingerprint": "fnv1a-a36627b8",
+      "correctChoiceFingerprint": "fnv1a-d22d4fc0",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -3084,13 +3084,13 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-6b51dead",
-        "fnv1a-0bb35598",
-        "fnv1a-c8f35390",
-        "fnv1a-1a2ebefe"
+        "fnv1a-00f8bd4e",
+        "fnv1a-3f47ea07",
+        "fnv1a-8b6eb06f",
+        "fnv1a-0bec39bf"
       ],
-      "contentFingerprint": "fnv1a-0c4f1e8b",
-      "correctChoiceFingerprint": "fnv1a-0bb35598",
+      "contentFingerprint": "fnv1a-58b93409",
+      "correctChoiceFingerprint": "fnv1a-3f47ea07",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -3108,12 +3108,12 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-8b128b0a",
+        "fnv1a-328bf22b",
         "fnv1a-274f5ef8",
-        "fnv1a-9dbadd4f",
+        "fnv1a-9dbaad30",
         "fnv1a-2ed42f57"
       ],
-      "contentFingerprint": "fnv1a-7f034b5d",
+      "contentFingerprint": "fnv1a-b4bdea31",
       "correctChoiceFingerprint": "fnv1a-274f5ef8",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
@@ -3133,11 +3133,11 @@
       "bankVersion": null,
       "choiceFingerprints": [
         "fnv1a-f65cd9e7",
-        "fnv1a-a0470eb0",
-        "fnv1a-f8c8b418",
-        "fnv1a-5e96197b"
+        "fnv1a-305bd12b",
+        "fnv1a-60b8e39b",
+        "fnv1a-d04a6894"
       ],
-      "contentFingerprint": "fnv1a-b4fb7467",
+      "contentFingerprint": "fnv1a-8251329e",
       "correctChoiceFingerprint": "fnv1a-f65cd9e7",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
@@ -3157,13 +3157,13 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-62a14941",
-        "fnv1a-678ed136",
-        "fnv1a-f736b82d",
+        "fnv1a-ab307e98",
+        "fnv1a-bddf8e87",
+        "fnv1a-354aaf86",
         "fnv1a-91c4839f"
       ],
-      "contentFingerprint": "fnv1a-f5c578b4",
-      "correctChoiceFingerprint": "fnv1a-678ed136",
+      "contentFingerprint": "fnv1a-50ecc04b",
+      "correctChoiceFingerprint": "fnv1a-bddf8e87",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "direct-question-source",
@@ -3181,13 +3181,13 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-2c271b3b",
-        "fnv1a-23b6d53d",
-        "fnv1a-ba58e389",
-        "fnv1a-d73826ac"
+        "fnv1a-71604cb2",
+        "fnv1a-14fe802e",
+        "fnv1a-1681523e",
+        "fnv1a-7d941971"
       ],
-      "contentFingerprint": "fnv1a-4afa45e1",
-      "correctChoiceFingerprint": "fnv1a-23b6d53d",
+      "contentFingerprint": "fnv1a-4d763ff7",
+      "correctChoiceFingerprint": "fnv1a-14fe802e",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "direct-question-source",
@@ -3204,12 +3204,12 @@
       "bankVersion": null,
       "choiceFingerprints": [
         "fnv1a-491e6096",
-        "fnv1a-cadceadd",
-        "fnv1a-0a985acf",
-        "fnv1a-fe97aa20"
+        "fnv1a-25cda3c4",
+        "fnv1a-100d5686",
+        "fnv1a-9a782c8f"
       ],
-      "contentFingerprint": "fnv1a-5a8e8ec1",
-      "correctChoiceFingerprint": "fnv1a-cadceadd",
+      "contentFingerprint": "fnv1a-04793d90",
+      "correctChoiceFingerprint": "fnv1a-25cda3c4",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "direct-question-source",
@@ -3230,12 +3230,12 @@
       "bankVersion": null,
       "choiceFingerprints": [
         "fnv1a-d5de0a74",
-        "fnv1a-fa0b9b73",
+        "fnv1a-dfcd3b26",
         "fnv1a-27cace7b",
-        "fnv1a-737bacf1"
+        "fnv1a-38b5dd56"
       ],
-      "contentFingerprint": "fnv1a-d59e9961",
-      "correctChoiceFingerprint": "fnv1a-fa0b9b73",
+      "contentFingerprint": "fnv1a-ef3b7e6f",
+      "correctChoiceFingerprint": "fnv1a-dfcd3b26",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "direct-question-source",
@@ -3257,10 +3257,10 @@
       "choiceFingerprints": [
         "fnv1a-e64d958a",
         "fnv1a-3b4fd2c0",
-        "fnv1a-ebfbe83b",
-        "fnv1a-9e0ea69a"
+        "fnv1a-975849f6",
+        "fnv1a-5d633707"
       ],
-      "contentFingerprint": "fnv1a-3a72fc6a",
+      "contentFingerprint": "fnv1a-be7afc1c",
       "correctChoiceFingerprint": "fnv1a-3b4fd2c0",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
@@ -3281,10 +3281,10 @@
       "choiceFingerprints": [
         "fnv1a-65f9fe45",
         "fnv1a-65e03167",
-        "fnv1a-4c0b80e6",
+        "fnv1a-3af660a1",
         "fnv1a-83610e72"
       ],
-      "contentFingerprint": "fnv1a-6a90ccb8",
+      "contentFingerprint": "fnv1a-d0b4654f",
       "correctChoiceFingerprint": "fnv1a-65e03167",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
@@ -3306,10 +3306,10 @@
       "choiceFingerprints": [
         "fnv1a-b107cf8a",
         "fnv1a-a1d58eec",
-        "fnv1a-5d517249",
-        "fnv1a-5e967691"
+        "fnv1a-6c9573b0",
+        "fnv1a-e4f9ab24"
       ],
-      "contentFingerprint": "fnv1a-eb16f855",
+      "contentFingerprint": "fnv1a-788163bf",
       "correctChoiceFingerprint": "fnv1a-a1d58eec",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
@@ -3328,13 +3328,13 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-24c2814b",
-        "fnv1a-e4073ec1",
-        "fnv1a-6680f77a",
+        "fnv1a-6e83bc22",
+        "fnv1a-953117ce",
+        "fnv1a-83c2ba97",
         "fnv1a-66c067c3"
       ],
-      "contentFingerprint": "fnv1a-e1240e86",
-      "correctChoiceFingerprint": "fnv1a-e4073ec1",
+      "contentFingerprint": "fnv1a-71d3049d",
+      "correctChoiceFingerprint": "fnv1a-953117ce",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -3352,10 +3352,10 @@
       "choiceFingerprints": [
         "fnv1a-4d3843a2",
         "fnv1a-cc310b3f",
-        "fnv1a-2a8c1bc6",
+        "fnv1a-9e92c521",
         "fnv1a-bdbb77c3"
       ],
-      "contentFingerprint": "fnv1a-10fc0fb2",
+      "contentFingerprint": "fnv1a-aceac58d",
       "correctChoiceFingerprint": "fnv1a-cc310b3f",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
@@ -3400,12 +3400,12 @@
       "bankVersion": "2026.08.30.1",
       "choiceFingerprints": [
         "fnv1a-a0574819",
-        "fnv1a-c5344346",
-        "fnv1a-5fd4e180",
+        "fnv1a-b4c0dd0b",
+        "fnv1a-07ad69e1",
         "fnv1a-64fffe70"
       ],
-      "contentFingerprint": "fnv1a-ff52dfd1",
-      "correctChoiceFingerprint": "fnv1a-c5344346",
+      "contentFingerprint": "fnv1a-079e6939",
+      "correctChoiceFingerprint": "fnv1a-b4c0dd0b",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "direct-question-source",
@@ -3523,12 +3523,12 @@
     {
       "bankVersion": "2026.08.30.1",
       "choiceFingerprints": [
-        "fnv1a-d3b76d58",
+        "fnv1a-b01b28f7",
         "fnv1a-f9edf91d",
-        "fnv1a-7df7a490",
+        "fnv1a-7ae10f4f",
         "fnv1a-46cb9e84"
       ],
-      "contentFingerprint": "fnv1a-5e9b4a68",
+      "contentFingerprint": "fnv1a-af54bcb4",
       "correctChoiceFingerprint": "fnv1a-f9edf91d",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
@@ -3600,11 +3600,11 @@
       "bankVersion": "2026.08.30.1",
       "choiceFingerprints": [
         "fnv1a-91fbd051",
-        "fnv1a-8b07e437",
+        "fnv1a-8d028c4a",
         "fnv1a-1f22c932",
         "fnv1a-1a477a35"
       ],
-      "contentFingerprint": "fnv1a-74f6b49b",
+      "contentFingerprint": "fnv1a-a7598dec",
       "correctChoiceFingerprint": "fnv1a-1f22c932",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
@@ -3725,12 +3725,12 @@
       "bankVersion": "2026.08.30.1",
       "choiceFingerprints": [
         "fnv1a-149636b0",
-        "fnv1a-9e08e1af",
-        "fnv1a-1ac834c3",
+        "fnv1a-6f379716",
+        "fnv1a-5f13a1ea",
         "fnv1a-fdf036d4"
       ],
-      "contentFingerprint": "fnv1a-9431db61",
-      "correctChoiceFingerprint": "fnv1a-9e08e1af",
+      "contentFingerprint": "fnv1a-f75a27e3",
+      "correctChoiceFingerprint": "fnv1a-6f379716",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -3750,12 +3750,12 @@
       "bankVersion": "2026.08.30.1",
       "choiceFingerprints": [
         "fnv1a-224e8a2c",
-        "fnv1a-23604b37",
+        "fnv1a-821a9c40",
         "fnv1a-b208f3f3",
-        "fnv1a-f666dfc3"
+        "fnv1a-99ae1b66"
       ],
-      "contentFingerprint": "fnv1a-5347c66d",
-      "correctChoiceFingerprint": "fnv1a-23604b37",
+      "contentFingerprint": "fnv1a-60f39949",
+      "correctChoiceFingerprint": "fnv1a-821a9c40",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "direct-question-source",
@@ -3775,13 +3775,13 @@
     {
       "bankVersion": "2026.08.30.1",
       "choiceFingerprints": [
-        "fnv1a-abeabf2f",
-        "fnv1a-7eef35fb",
-        "fnv1a-7aed54d6",
+        "fnv1a-9ee37768",
+        "fnv1a-9536ecc0",
+        "fnv1a-568690e3",
         "fnv1a-f32ddb5e"
       ],
-      "contentFingerprint": "fnv1a-e43bd8ad",
-      "correctChoiceFingerprint": "fnv1a-7eef35fb",
+      "contentFingerprint": "fnv1a-639a003c",
+      "correctChoiceFingerprint": "fnv1a-9536ecc0",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -3800,13 +3800,13 @@
     {
       "bankVersion": "2026.08.30.1",
       "choiceFingerprints": [
-        "fnv1a-0249e24f",
+        "fnv1a-02d5660c",
         "fnv1a-c1aa6121",
         "fnv1a-c0a68eb1",
         "fnv1a-b453a213"
       ],
-      "contentFingerprint": "fnv1a-6aa6de51",
-      "correctChoiceFingerprint": "fnv1a-0249e24f",
+      "contentFingerprint": "fnv1a-e4d0a4f8",
+      "correctChoiceFingerprint": "fnv1a-02d5660c",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "direct-question-source",
@@ -3824,13 +3824,13 @@
     {
       "bankVersion": "2026.08.30.1",
       "choiceFingerprints": [
-        "fnv1a-9c79ccb8",
-        "fnv1a-0f974bab",
-        "fnv1a-9c5203cf",
-        "fnv1a-23d235ed"
+        "fnv1a-a83ab88b",
+        "fnv1a-a7d63d8e",
+        "fnv1a-5b15fc6a",
+        "fnv1a-b2331c68"
       ],
-      "contentFingerprint": "fnv1a-08012b43",
-      "correctChoiceFingerprint": "fnv1a-9c79ccb8",
+      "contentFingerprint": "fnv1a-9a294a93",
+      "correctChoiceFingerprint": "fnv1a-a83ab88b",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "direct-question-source",
@@ -3849,13 +3849,13 @@
     {
       "bankVersion": "2026.08.30.1",
       "choiceFingerprints": [
-        "fnv1a-222e6946",
+        "fnv1a-794a1591",
         "fnv1a-a8fe5cc8",
-        "fnv1a-e1d179ae",
+        "fnv1a-d9b2e561",
         "fnv1a-f60247b5"
       ],
-      "contentFingerprint": "fnv1a-106504d6",
-      "correctChoiceFingerprint": "fnv1a-e1d179ae",
+      "contentFingerprint": "fnv1a-9b24f908",
+      "correctChoiceFingerprint": "fnv1a-d9b2e561",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -3950,13 +3950,13 @@
     {
       "bankVersion": "2026.08.30.1",
       "choiceFingerprints": [
-        "fnv1a-182928fd",
-        "fnv1a-8a41865a",
-        "fnv1a-65f6553d",
+        "fnv1a-3c62e354",
+        "fnv1a-91591c33",
+        "fnv1a-0604e872",
         "fnv1a-92cf9e23"
       ],
-      "contentFingerprint": "fnv1a-31eef55a",
-      "correctChoiceFingerprint": "fnv1a-182928fd",
+      "contentFingerprint": "fnv1a-2f50b587",
+      "correctChoiceFingerprint": "fnv1a-3c62e354",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -3975,13 +3975,13 @@
     {
       "bankVersion": "2026.08.30.1",
       "choiceFingerprints": [
-        "fnv1a-f46d7f71",
-        "fnv1a-e5302660",
+        "fnv1a-35b4c44c",
+        "fnv1a-af1e9481",
         "fnv1a-db81c3d0",
-        "fnv1a-b056dc28"
+        "fnv1a-b8c12bab"
       ],
-      "contentFingerprint": "fnv1a-9edca544",
-      "correctChoiceFingerprint": "fnv1a-f46d7f71",
+      "contentFingerprint": "fnv1a-63fca4a1",
+      "correctChoiceFingerprint": "fnv1a-35b4c44c",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "direct-question-source",
@@ -4001,12 +4001,12 @@
       "bankVersion": "2026.08.30.1",
       "choiceFingerprints": [
         "fnv1a-76056a45",
-        "fnv1a-133b0c27",
-        "fnv1a-6f609781",
+        "fnv1a-c6e242d6",
+        "fnv1a-d668598e",
         "fnv1a-bd5b4879"
       ],
-      "contentFingerprint": "fnv1a-e29bd500",
-      "correctChoiceFingerprint": "fnv1a-133b0c27",
+      "contentFingerprint": "fnv1a-64b8a7fa",
+      "correctChoiceFingerprint": "fnv1a-c6e242d6",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "mapped-authoritative-source",
@@ -4074,13 +4074,13 @@
     {
       "bankVersion": "2026.08.30.1",
       "choiceFingerprints": [
-        "fnv1a-882daeb9",
-        "fnv1a-a753bd18",
-        "fnv1a-d1b647ca",
-        "fnv1a-fa020d2d"
+        "fnv1a-19e4768a",
+        "fnv1a-92ecfb31",
+        "fnv1a-205dfbf1",
+        "fnv1a-23bf4972"
       ],
-      "contentFingerprint": "fnv1a-eacc6fa7",
-      "correctChoiceFingerprint": "fnv1a-882daeb9",
+      "contentFingerprint": "fnv1a-4929bc2d",
+      "correctChoiceFingerprint": "fnv1a-19e4768a",
       "critical": false,
       "decisionScope": "evidence-approved-learning",
       "evidenceSourceMode": "direct-question-source",
