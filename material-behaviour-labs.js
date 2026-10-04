@@ -124,14 +124,7 @@ for(const lab of LABS){
  const specs=BALANCE[lab.id];if(!specs||specs.length!==lab.steps.length)throw new Error(`Material answer-balance map incomplete: ${lab.id}`);
  lab.steps.forEach((step,i)=>{const spec=specs[i],original=step.choices;if(!original||original.length!==4||original.findIndex(c=>c.correct===true)!==0)throw new Error(`Material answer-balance source changed: ${lab.id}/${i}`);spec.texts.forEach((t,n)=>original[n].text=t);step.choices=BALANCE_ORDER[spec.pos].map(n=>original[n])});
 }
-const authorChoice=window.MM_ASSESSMENT_AUTHOR_CHOICE||((value)=>{let out=String(value??'');const rows=[
- [/^Measure\/verify\s+/,'Measuring and verifying '],[/^Inspect\/clean\s+/,'Inspecting/cleaning '],
- [/^Check\s+/,'Checking '],[/^Verify\s+/,'Verifying '],[/^Inspect\s+/,'Inspecting '],[/^Compare\s+/,'Comparing '],
- [/^Measure\s+/,'Measuring '],[/^Investigate\s+/,'Investigating '],[/^Confirm\s+/,'Confirming '],
- [/^Increase\s+/,'Increasing '],[/^Change\s+/,'Changing '],[/^Ignore\s+/,'Ignoring '],[/^Assume\s+/,'Assuming '],
- [/^Reduce\s+/,'Reducing '],[/^Raise\s+/,'Raising '],[/^Lower\s+/,'Lowering '],[/^Decrease\s+/,'Decreasing '],
- [/^Adjust\s+/,'Adjusting '],[/^Accept\s+/,'Accepting ']
-];for(const [p,r] of rows)if(p.test(out))return out.replace(p,r);return out});
+const authorChoice=window.MM_ASSESSMENT_AUTHOR_CHOICE||((value)=>String(value??'').replace(/^(Measure\/verify|Inspect\/clean|Check|Verify|Inspect|Compare|Measure|Investigate|Confirm|Increase|Change|Ignore|Assume|Reduce|Raise|Lower|Decrease|Adjust|Accept)\s+/,(_match,verb)=>`The response is to ${String(verb).toLowerCase()} `));
 let starterCueEdits=0;
 for(const lab of LABS)for(const step of lab.steps||[])for(const choice of step.choices||[]){
  const next=authorChoice(choice.text);if(next!==choice.text){choice.text=next;starterCueEdits++}
