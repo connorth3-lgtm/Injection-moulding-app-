@@ -118,13 +118,14 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
     ['mm_learning_analytics_v1::strong-peer','learning-peer'],
     ['unrelated-app-key','keep-me'],
   ]);
-  let failedDbWrite=false;
+  let failedDbWrite=false,failedTrainingWrite=false;
   const localStorage={
     get length(){return memory.size},key(i){return [...memory.keys()][i]??null},
     getItem(k){return memory.has(String(k))?memory.get(String(k)):null},
     setItem(k,v){
       k=String(k);
       if(writeMode==='fail-next-db'&&k==='mouldmasterProDB'&&!failedDbWrite){failedDbWrite=true;throw new Error('simulated registry write failure')}
+      if(writeMode==='silent-training'&&k.startsWith('mm_real_measured_assessment_v1::')&&!failedTrainingWrite){failedTrainingWrite=true;return}
       memory.set(k,String(v))
     },
     removeItem(k){
@@ -195,6 +196,19 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
   assert(t.alerts.some(x=>/browser storage failed/i.test(x)),'storage write failure was misreported as an invalid backup');
   assert(!t.alerts.some(x=>/not a valid MouldMaster backup/i.test(x)),'storage write failure was incorrectly blamed on backup validity');
   assert(!t.toasts.some(x=>/^Progress imported/i.test(x)),'failed final registry write falsely reported successful import');
+}
+
+// A silent failure while restoring one learner-owned training store must be detected
+// before the replacement learner registry commits, and the prior state must roll back.
+{
+  const t=trainingSandbox('normal','silent-training');
+  const incoming={activeUser:'new',users:{new:{id:'new',name:'New learner',completed:[1,2]}},trainingExtras:{version:4,scope:'learner-registry',learners:{new:{spacedReview:{items:{}},practicalSignoff:{checks:{}},measuredAssessment:{'case-a':{best:100,last:100}},processDiagnostics:{},diagnosticLabs:{},materialLabs:{}}}}};
+  t.sandbox.importData({size:800,contents:JSON.stringify(incoming)});
+  assert.strictEqual(t.sandbox.db.activeUser,'old','silent training restore failure activated imported learner state');
+  assert.strictEqual(t.memory.get('mouldmasterProDB'),t.oldSerialized,'silent training restore failure did not restore learner registry');
+  assert(t.memory.has('mm_real_measured_assessment_v1::legacy-old')||t.memory.has('mm_real_measured_assessment_v1::strong-old'),'silent training restore failure did not restore prior measured-assessment state');
+  assert(t.alerts.some(x=>/browser storage failed/i.test(x)),'silent training restore failure did not surface a storage warning');
+  assert(!t.toasts.some(x=>/^Progress imported/i.test(x)),'silent training restore failure falsely reported success');
 }
 
 // Silent removeItem failure is just as unsafe as a thrown exception. Re-enumeration
