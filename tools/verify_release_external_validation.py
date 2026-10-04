@@ -186,21 +186,54 @@ def validate_accessibility(section: dict, expected_release: str, web_candidate: 
     if candidate.get("sourceSha") != source_sha or candidate.get("runtimeFingerprint") != fingerprint:
         fail("accessibility candidate does not match the governed real-AT contract")
 
+    tasks = evidence.get("requiredTasks")
+    if not isinstance(tasks, list) or len(tasks) != 12:
+        fail("real-AT evidence contract must contain exactly 12 canonical tasks")
+    task_ids = []
+    for task in tasks:
+        if not isinstance(task, dict):
+            fail("real-AT canonical tasks must be objects")
+        task_id = require_nonempty(task.get("id"), "real-AT canonical task id is missing")
+        require_nonempty(task.get("description"), f"real-AT canonical task {task_id} description is missing")
+        task_ids.append(task_id)
+    if len(set(task_ids)) != 12:
+        fail("real-AT canonical task IDs must be unique")
+
+    matrix = evidence.get("requiredMatrix")
+    if not isinstance(matrix, list) or len(matrix) != 4:
+        fail("real-AT evidence requires the four governed matrix rows")
+    for row in matrix:
+        if not isinstance(row, dict):
+            fail("real-AT matrix row must be an object")
+        task_evidence = row.get("taskEvidence")
+        if not isinstance(task_evidence, dict) or set(task_evidence) != set(task_ids):
+            fail(f"real-AT row {row.get('id')} must contain task-level evidence for all 12 canonical tasks")
+        if row.get("status") == "validated":
+            for key in ("testedAt", "reviewer", "evidenceRef"):
+                require_nonempty(row.get(key), f"validated real-AT row is missing {key}")
+            for task_id in task_ids:
+                task = task_evidence[task_id]
+                if not isinstance(task, dict) or task.get("status") != "pass":
+                    fail(f"validated real-AT row {row.get('id')} has no pass for task {task_id}")
+                require_nonempty(task.get("evidenceRef"), f"validated real-AT row {row.get('id')} task {task_id} is missing evidenceRef")
+        elif row.get("status") == "pending":
+            if any(row.get(key) for key in ("testedAt", "reviewer", "evidenceRef")):
+                fail(f"pending real-AT row {row.get('id')} must not carry validation metadata")
+            for task_id in task_ids:
+                task = task_evidence[task_id]
+                if not isinstance(task, dict) or task.get("status") != "pending" or task.get("evidenceRef") is not None:
+                    fail(f"pending real-AT row {row.get('id')} task {task_id} must remain evidence-free")
+        else:
+            fail(f"real-AT row has invalid status: {row.get('id')}")
+
     if section["status"] == "hold":
         if evidence.get("status") == "validated":
             fail("accessibility is marked hold although its evidence contract says validated; reconcile explicitly")
         return
     if evidence.get("status") != "validated":
         fail("accessibility cannot be validated until the real-AT contract status is validated")
-    matrix = evidence.get("requiredMatrix")
-    if not isinstance(matrix, list) or not matrix:
-        fail("validated real-AT evidence requires a non-empty requiredMatrix")
-    for row in matrix:
-        if not isinstance(row, dict) or row.get("status") not in {"pass", "validated"}:
-            fail("validated real-AT evidence requires every matrix row to pass")
-        for key in ("testedAt", "reviewer", "evidenceRef"):
-            require_nonempty(row.get(key), f"validated real-AT row is missing {key}")
-
+    if any(row.get("status") != "validated" for row in matrix):
+        fail("validated real-AT evidence requires every matrix row to pass all 12 canonical tasks")
 
 def validate_pwa(section: dict, expected_release: str, web_candidate: dict) -> None:
     require_release_packet(
