@@ -25,10 +25,10 @@ const CASES=[
  ]}
 ];
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function learnerId(){try{return String(window.db?.activeUser||window.user?.id||'anonymous')}catch(_){return'anonymous'}}
+function learnerId(){try{const id=window.db?.activeUser||window.user?.id||'';return id?String(id):null}catch(_){return null}}
 function key(){
  const scope=window.MM_LEARNER_SCOPE,id=learnerId();
- if(!scope||typeof scope.tokenFor!=='function'||typeof scope.storageKey!=='function')return null;
+ if(!id||!scope||typeof scope.tokenFor!=='function'||typeof scope.storageKey!=='function')return null;
  try{scope.registerStoragePrefix?.(STORAGE_PREFIX);scope.migrateStoragePrefix?.(STORAGE_PREFIX,id);return scope.storageKey(STORAGE_PREFIX,scope.tokenFor(id))}catch(_){return null}
 }
 function state(){try{const k=key();return k?JSON.parse(localStorage.getItem(k)||'{}'):{} }catch(_){return{}}}
