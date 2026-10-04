@@ -49,7 +49,7 @@ Each record should contain:
 
 For each chapter, record the exact governed worked-case and diagram IDs actually reviewed. For chapters listed in `enrichmentChapterIds`, set `reviewedEvidenceEnrichment` to `true` only after all governed enrichment sections in that chapter were inspected. Empty arrays are valid where the chapter owns no governed worked case or diagram.
 
-Any unresolved material objection keeps the chapter and top-level contract on **HOLD**. Do not record an approval from an AI review, automated source check, repository owner self-attestation presented as independent review, or a reviewer who did not inspect the chapter.
+Where a chapter owns a governed worked case or instructional diagram, list that exact ID in the review record. For chapters in `enrichmentChapterIds`, set `reviewedEvidenceEnrichment` to `true` only after all governed enrichment sections have been reviewed. Any unresolved material objection keeps the chapter and top-level contract on **HOLD**. Do not record an approval from an AI review, automated source check, repository owner self-attestation presented as independent review, or a reviewer who did not inspect the chapter.
 
 ## Required challenge questions
 
