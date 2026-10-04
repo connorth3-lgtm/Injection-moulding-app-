@@ -74,6 +74,8 @@ const reviewA=JSON.parse(store['mm_spaced_review_v2::strong-learner-a']);
 const reviewB=JSON.parse(store['mm_spaced_review_v2::strong-learner-b']);
 process.stdout.write(JSON.stringify({scenarioCount:D.scenarios.length,definitions,exams,quality:Q,scenarios,qa:D.assessmentQA.qualitySuite,history:D.assessmentQA.questionRevisionHistory,bridge:sandbox.window.MM_STABLE_REVIEW_BRIDGE,reviewA,reviewB,reviewBare:Object.prototype.hasOwnProperty.call(store,'mm_spaced_review_v2')}));
 '''%(json.dumps(base),json.dumps(str(ROOT/'assessment-deep-dive.js')),json.dumps(str(ROOT/'src/domains/assessment/assessment-answer-cue-fix.js')),json.dumps(str(ROOT/'assessment-storage-scope.js')),json.dumps(str(ROOT/'assessment-quality-suite.js')),json.dumps(str(ROOT/'assessment-stable-review-bridge.js')))
+bridge_source=(ROOT/'assessment-stable-review-bridge.js').read_text(encoding='utf-8')
+need("replacement=authorChoice(replacement)" in bridge_source and "(D.scenarios||[]).forEach" in bridge_source,'stable review bridge must validate scenario keyed answers after applying the authored-choice normalization contract')
 with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False,encoding='utf-8') as handle: handle.write(node);node_path=Path(handle.name)
 try: p=subprocess.run(['node',str(node_path)],capture_output=True,text=True,encoding='utf-8',errors='replace')
 finally: node_path.unlink(missing_ok=True)
