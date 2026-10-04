@@ -529,8 +529,8 @@ const MORE_SCENARIOS=[
 ];
 function scenarioFeedback(options,correct,why){return options.map((_,i)=>i===correct?'Correct. '+why:'Not the strongest first move. This option does not test the mechanism most directly supported by the stated evidence.')}
 function addScenarios(){
- const have=new Set(D.scenarios.map(s=>norm(s.title)));
- for(const a of MORE_SCENARIOS){if(have.has(norm(a[0])))continue;D.scenarios.push({title:a[0],situation:a[1],choices:a[2],correct:a[3],why:a[4],feedback:scenarioFeedback(a[2],a[3],a[4]),category:a[5],difficulty:a[6],reference:a[7],sourceUrl:a[8]||null})}
+ const have=new Set(D.scenarios.map(s=>norm(s.title))),authorChoice=window.MM_ASSESSMENT_AUTHOR_CHOICE||((value)=>String(value??''));
+ for(const a of MORE_SCENARIOS){if(have.has(norm(a[0])))continue;const choices=a[2].map(authorChoice);D.scenarios.push({title:a[0],situation:a[1],choices,correct:a[3],why:a[4],feedback:scenarioFeedback(choices,a[3],a[4]),category:a[5],difficulty:a[6],reference:a[7],sourceUrl:a[8]||null})}
  D.scenarios.forEach((s,i)=>{s.mmStableId=s.mmStableId||scenarioId(i);s.difficulty=s.difficulty|| (i<8?'Foundation':i<16?'Diagnostic':'Applied');s.category=s.category||primaryCompetency(s.title+' '+s.situation,i);s.revision=VERSION});
 }
 
