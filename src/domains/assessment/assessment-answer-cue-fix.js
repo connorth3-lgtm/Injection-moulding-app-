@@ -83,6 +83,31 @@ const R={
 };
 for(const [region,levels] of Object.entries(R))for(const [level,items] of Object.entries(levels))items.forEach((item,i)=>regionalSet(region,level,i,item));
 let authoredChoiceCount=0;
+const conciseKeyedWording={
+ 'tech:Beginner:9':'Baseline comparison of current process actuals and material condition',
+ 'tech:Intermediate:5':'Shot-delivery, NRV, feed, transfer and injection-actual checks',
+ 'reg:NZ:Intermediate:2':'Safeguard verification before authorised return to service',
+ 'scenario:08':'Local gate, geometry and cooling checks after gate seal',
+ 'scenario:11':'Feed, recovery-actual and shot-delivery repeatability checks',
+ 'scenario:12':'Cooling routing, flow and thermal-balance verification',
+ 'scenario:24':'Valve-gate timing and cavity-evidence checks',
+ 'scenario:32':'Local thermal, venting and microflow evidence checks'
+};
+for(const [id,text] of Object.entries(conciseKeyedWording)){
+ if(id.startsWith('tech:')){
+  const [,level,index]=id.split(':'),q=D?.exams?.[level]?.[Number(index)],options=q?.options??q?.[1],key=Number(q?.correct??q?.[2]);
+  if(!Array.isArray(options)||key<0||key>=options.length)throw new Error(`Concise keyed wording target changed: ${id}`);
+  options[key]=text;authoredChoiceCount++;
+ }else if(id.startsWith('reg:')){
+  const [,region,level,index]=id.split(':'),q=D?.regionalQuestions?.[region]?.[level]?.[Number(index)],options=q?.[1],key=Number(q?.[2]);
+  if(!Array.isArray(options)||key<0||key>=options.length)throw new Error(`Concise keyed wording target changed: ${id}`);
+  options[key]=text;authoredChoiceCount++;
+ }else{
+  const index=Number(id.split(':')[1])-1,s=D?.scenarios?.[index],options=s?.choices,key=Number(s?.correct);
+  if(!Array.isArray(options)||key<0||key>=options.length)throw new Error(`Concise keyed wording target changed: ${id}`);
+  options[key]=text;authoredChoiceCount++;
+ }
+}
 const cushionVariationScenario=D?.scenarios?.[0];
 if(!cushionVariationScenario||!Array.isArray(cushionVariationScenario.choices)||cushionVariationScenario.choices.length!==4||Number(cushionVariationScenario.correct)!==1)throw new Error('Cushion-variation scenario shape changed');
 if(cushionVariationScenario.choices[1]!=='Review shot-delivery/NRV and injection actuals'){
