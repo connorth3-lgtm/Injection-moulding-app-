@@ -409,8 +409,11 @@ const esc=v=>String(v??'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&
 const norm=v=>String(v??'').trim().toLowerCase().replace(/\s+/g,' ');
 const shuffle=a=>{const x=a.slice();for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x};
 const obj=x=>x&&typeof x==='object'&&!Array.isArray(x);
-function read(k,d){try{const x=JSON.parse(localStorage.getItem(k)||'');return obj(x)?x:d}catch(_){return d}}
-function write(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(_){return false}}
+function reviewScope(){const s=window.MM_LEARNER_SCOPE;return s&&typeof s.tokenFor==='function'&&typeof s.storageKey==='function'&&typeof s.migrateStoragePrefix==='function'?s:null}
+function reviewLearnerIds(){const s=reviewScope();if(s&&typeof s.knownIds==='function'){const ids=s.knownIds();if(Array.isArray(ids)&&ids.length)return [...new Set(ids.map(String).filter(Boolean))]}try{if(typeof db!=='undefined'&&db?.users&&typeof db.users==='object'&&!Array.isArray(db.users))return [...new Set(Object.keys(db.users).map(String).filter(Boolean))]}catch(_){}return[]}
+function reviewKeyFor(learnerId){const s=reviewScope();if(!s)return null;const id=String(learnerId||'');if(!id)return null;const prefix=REVIEW_KEY+'::';s.registerStoragePrefix?.(prefix);s.migrateStoragePrefix(prefix,id);return s.storageKey(prefix,s.tokenFor(id))}
+function readReview(learnerId){const k=reviewKeyFor(learnerId);if(!k)return null;try{const x=JSON.parse(localStorage.getItem(k)||'');return obj(x)?x:null}catch(_){return null}}
+function writeReview(learnerId,v){const k=reviewKeyFor(learnerId);if(!k)return false;try{localStorage.setItem(k,JSON.stringify(v));return localStorage.getItem(k)===JSON.stringify(v)}catch(_){return false}}
 
 function competencySet(text){
  const t=norm(text),out=[];
@@ -491,14 +494,19 @@ window.getExamQuestions=function(level,region){
 
 function mergeReview(a,b){return {id:b.id||a.id,stage:Math.max(+a.stage||0,+b.stage||0),due:Math.min(+a.due||Date.now(),+b.due||Date.now()),wrong:(+a.wrong||0)+(+b.wrong||0),right:(+a.right||0)+(+b.right||0),last:Math.max(+a.last||0,+b.last||0),confidence:b.confidence||a.confidence||'medium'}}
 function migrateStableReviewIds(){
- const st=read(REVIEW_KEY,{items:{}});if(!obj(st.items))return 0;let moved=0;
- for(const [id,x] of Object.entries({...st.items})){
-  let m=/^tech:[^:]+:([^:]+):(\d+)$/.exec(id),stable=null;
-  if(m)stable=techId(m[1],+m[2]);
-  if(!stable){m=/^reg:[^:]+:([^:]+):([^:]+):(\d+)$/.exec(id);if(m)stable=regId(m[1],m[2],+m[3])}
-  if(stable&&stable!==id){const v={...x,id:stable};st.items[stable]=st.items[stable]?mergeReview(st.items[stable],v):v;delete st.items[id];moved++}
+ const scope=reviewScope();if(!scope)return {status:'deferred',moved:0,learners:0};
+ let moved=0,learners=0;
+ for(const learnerId of reviewLearnerIds()){
+  const st=readReview(learnerId);if(!st||!obj(st.items))continue;let changed=0;learners++;
+  for(const [id,x] of Object.entries({...st.items})){
+   let m=/^tech:[^:]+:([^:]+):(\d+)$/.exec(id),stable=null;
+   if(m)stable=techId(m[1],+m[2]);
+   if(!stable){m=/^reg:[^:]+:([^:]+):([^:]+):(\d+)$/.exec(id);if(m)stable=regId(m[1],m[2],+m[3])}
+   if(stable&&stable!==id){const v={...x,id:stable};st.items[stable]=st.items[stable]?mergeReview(st.items[stable],v):v;delete st.items[id];changed++;moved++}
+  }
+  if(changed&&!writeReview(learnerId,st))throw new Error('Learner-scoped spaced-review ID migration could not be verified');
  }
- if(moved)write(REVIEW_KEY,st);return moved;
+ return {status:'migrated',moved,learners};
 }
 
 const MORE_SCENARIOS=[
@@ -573,9 +581,11 @@ if(baseRenderExams)window.renderExams=function(){const r=baseRenderExams.apply(t
 function nearDuplicates(){const rows=[];for(const level of LEVELS)for(const q of D.exams[level]||[])rows.push({id:META_BY_TEXT.get(norm(q[0]))?.stableId||'',text:q[0],level});const pairs=[];const tok=s=>new Set(norm(s).split(/[^a-z0-9]+/).filter(x=>x.length>3&&!['which','what','strongest','first','most','when','does','with','from','that','this'].includes(x)));for(let i=0;i<rows.length;i++)for(let j=i+1;j<rows.length;j++){if(rows[i].level!==rows[j].level)continue;const a=tok(rows[i].text),b=tok(rows[j].text),inter=[...a].filter(x=>b.has(x)).length,uni=new Set([...a,...b]).size,score=uni?inter/uni:0;if(score>=.72)pairs.push({...rows[i],other:rows[j].id,score:+score.toFixed(2)})}return pairs}
 function leakRisks(){const out=[];for(const level of LEVELS)(D.exams[level]||[]).forEach((q,i)=>{const lens=q[1].map(x=>String(x).length),c=lens[q[2]],others=lens.filter((_,j)=>j!==q[2]),med=others.sort((a,b)=>a-b)[1];if(c>med*1.85&&c-med>28)out.push({id:identityFor(q,'technical',level,null,i).stableId,type:'correct-option-length',correctLength:c,peerMedian:med})});return out}
 
-addScenarios();rebuildMeta();const migrated=migrateStableReviewIds();addStyles();
+addScenarios();rebuildMeta();addStyles();
 D.assessmentQA=D.assessmentQA||{};
-D.assessmentQA.qualitySuite={version:VERSION,reviewed:'26 August 2026',questionBankRevision:VERSION,stableQuestionIds:true,identityLockVersion:IDENTITY_LOCK_VERSION,identityLockedQuestions:LOCKED_IDENTITIES.length,analytics:'device-local only',examBlueprint:['Materials & rheology','Machine & controls','Tooling & thermal','Process development','Quality & statistics','Troubleshooting','Safety & compliance'],technicalExamItems:30,regionalExamItems:27,totalExamItems:57,scenarioDrills:D.scenarios.length,sourceFreshnessReviewed:SOURCE_REVIEWED,sourceFreshnessReviewBy:SOURCE_REVIEW_BY,migratedLegacyReviewRecords:migrated};
+D.assessmentQA.qualitySuite={version:VERSION,reviewed:'26 August 2026',questionBankRevision:VERSION,stableQuestionIds:true,identityLockVersion:IDENTITY_LOCK_VERSION,identityLockedQuestions:LOCKED_IDENTITIES.length,analytics:'device-local only',examBlueprint:['Materials & rheology','Machine & controls','Tooling & thermal','Process development','Quality & statistics','Troubleshooting','Safety & compliance'],technicalExamItems:30,regionalExamItems:27,totalExamItems:57,scenarioDrills:D.scenarios.length,sourceFreshnessReviewed:SOURCE_REVIEWED,sourceFreshnessReviewBy:SOURCE_REVIEW_BY,migratedLegacyReviewRecords:0,reviewMigrationStatus:'deferred'};
+function runStableReviewMigration(){const result=migrateStableReviewIds();D.assessmentQA.qualitySuite.migratedLegacyReviewRecords=result.moved;D.assessmentQA.qualitySuite.reviewMigrationStatus=result.status;return result}
+if(reviewScope())runStableReviewMigration();else window.addEventListener?.('mm:domains-ready',()=>runStableReviewMigration(),{once:true});
 if(D.assessmentQA.deepAudit)D.assessmentQA.deepAudit.scenarioDrills=D.scenarios.length;
 D.assessmentQA.questionRevisionHistory=[
  {version:'2026.08.21.1',date:'21 August 2026',change:'Prior stable assessment bank identifier used by spaced review.'},
