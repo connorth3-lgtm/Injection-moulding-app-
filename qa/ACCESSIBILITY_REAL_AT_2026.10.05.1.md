@@ -1,0 +1,69 @@
+# MouldMaster real assistive-technology validation — 2026.10.05.1
+
+This packet governs **human** assistive-technology validation for web release `2026.10.05.1`. Automated accessibility checks, browser regressions and synthetic screen-reader simulations do not satisfy this boundary.
+
+## Exact release boundary
+
+- web release: `2026.10.05.1`
+- retained pre-merge public candidate source commit: `e86d958bc8a2a43df30486ab6b81566ee3ec03db`
+- public-runtime fingerprint: `sha256:3d6fa3d41feb927f0102180b0ad3bdf51de517357841872b56e98f72bb6b4faf`
+- retained physical candidate: `physical-pwa-candidate-e86d958bc8a2a43df30486ab6b81566ee3ec03db` (`11311030195`)
+- candidate build run: `37222038770` (`Pre-merge Public Candidate`)
+- artifact ZIP digest: `sha256:9b7160ddfce233c7df72e6becd197e7bade04e5fe468c147528d1a3f9472c63d`
+- artifact retention expiry: `2027-01-02T17:50:32Z`
+- evidence contract: `data/accessibility-real-at-validation-v1.json`
+
+This is a candidate **rebind**, not new AT evidence. Release `2026.10.05.1` is bound to exact pre-merge learner-runtime candidate `e86d958bc8a2a43df30486ab6b81566ee3ec03db` / `sha256:3d6fa3d41feb927f0102180b0ad3bdf51de517357841872b56e98f72bb6b4faf`. No earlier human or device evidence is relabelled. If learner-facing runtime bytes change again, this packet must be rebound before new validation is recorded; the mutable `preview` branch tip is never validation identity.
+
+## Required matrix
+
+Every row must be tested by a human reviewer using the named real assistive technology:
+
+| Matrix row | Platform | Browser | Assistive technology | Current status |
+| --- | --- | --- | --- | --- |
+| `nvda-firefox-windows` | Windows | Firefox | NVDA | pending |
+| `nvda-chromium-windows` | Windows | Chrome/Chromium | NVDA | pending |
+| `voiceover-safari-macos` | macOS | Safari | VoiceOver | pending |
+| `voiceover-safari-ios` | iOS | Safari | VoiceOver | pending |
+
+## Required tasks for each row
+
+The task IDs below are canonical and must exactly match `data/accessibility-real-at-validation-v1.json`. Every matrix row records task-level status/evidence for all 12 IDs.
+
+1. [`nav-primary`] Navigate the primary product areas and return focus predictably.
+2. [`materials-search`] Search and paginate exact commercial material grades.
+3. [`exact-grade-evidence`] Open sourced exact-grade details and understand property/process evidence boundaries.
+4. [`assessment-announcements`] Complete core learner assessment interactions and confirm state/errors are announced meaningfully.
+5. [`evidence-case`] Create or edit a Mould Master evidence case without losing semantic context.
+6. [`book-search-deep-chapter`] Search for a Book topic from the global search, open a late Book chapter from deep in the contents, confirm focus/reading starts at the chapter heading, then return to contents without losing the reader's place.
+7. [`book-disclosures`] Exercise the collapsed Book publication/review and accuracy/assurance disclosures; confirm their summaries, expanded content and independent-SME HOLD remain understandable without excessive verbosity.
+8. [`interactive-controls`] Exercise dialogs, menus, tab-like controls, expandable regions and form validation with keyboard/AT navigation.
+9. [`status-announcements`] Confirm status changes that matter to task completion are announced without forcing excessive verbosity.
+10. [`structure-zoom-focus`] Confirm headings, landmarks, accessible names and focus order remain understandable at realistic zoom/text settings, including the Home page hierarchy where Today's focus precedes the secondary Workbench and the compact desktop More-tools navigation where applicable.
+11. [`standards-readiness`] Open Standards & readiness and confirm ISO/NZQA boundaries, current-vs-expired standards, and external HOLD language remain understandable without implying certification, approval or competence.
+12. [`book-worked-examples`] In affected Book chapters, navigate the worked-example heading, data table/list content, calculation steps, boundaries and evidence anchors; confirm the synthetic-data and independent-SME-HOLD wording is understandable with the named real assistive technology.
+
+## Evidence rules
+
+For each validated matrix row, record only public-safe metadata in `data/accessibility-real-at-validation-v1.json`:
+
+- `testedAt` with timezone;
+- all 12 `taskEvidence` entries marked `pass`, each with a non-sensitive task-level `evidenceRef`; 
+- a non-sensitive `reviewer` reference;
+- a non-sensitive `evidenceRef` pointing to externally retained notes/evidence.
+
+Do not commit recordings, screenshots with personal data, customer/site identifiers, credentials or proprietary process information.
+
+## Completion boundary
+
+The top-level accessibility status may move from `hold` to `validated` only after all four matrix rows genuinely pass and `python qa_accessibility_real_at_contract.py` plus `python tools/verify_release_external_validation.py` both pass for this exact release/candidate.
+
+Until then, real-AT validation remains **HOLD**.
+
+> Merge-candidate CI governance note: release identity is `2026.10.05.1`; this packet is documentation-only and does not assert fresh physical-device or assistive-technology validation.
+
+> Final CI provenance note: this packet remains HOLD for human validation; repository CI evidence is not a substitute for real-device/assistive-technology validation.
+
+## Deep-review regression focus
+
+Confirm that **Source evidence reviewed** and **Independent human SME review: pending** are distinguishable by the named assistive technology, and that material-grade details expose evidence provenance separately from commercial/source currentness.
