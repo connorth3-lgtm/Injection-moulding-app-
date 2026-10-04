@@ -140,6 +140,9 @@ need("window.addEventListener('mm:domains-ready',check)" in book_runtime, 'Book 
 need("poll=setInterval(check,25)" in book_runtime and "timer=setTimeout(()=>finish(null),timeoutMs)" in book_runtime, 'Book cold material discovery must cover bootstrap-install races without waiting indefinitely')
 need("engine.searchAllPage(q,{types:['exact-grade'],page:1,pageSize:1})" in book_runtime, 'Book cold material discovery must delegate to the governed exact-grade search engine')
 need("String(input.value||'').trim().toLowerCase()!==q" in book_runtime, 'Book async global search must reject stale query results')
+need("async function coldCatalogSearchTerms()" in book_runtime and "verifiedJson(MATERIAL_CATALOG_PATH)" in book_runtime, 'Book cold exact-grade routing must have a byte-verified canonical-catalog fallback')
+need("function bindBookSearchInput()" in book_runtime and "event.target?.id==='globalSearch'" in book_runtime, 'Book global search must use delegated input integration that survives late doSearch replacement')
+need("window.__MM_BOOK_SEARCH_INPUT_BOUND__=VERSION" in book_runtime, 'Book delegated global-search binding must be idempotent')
 need("auth?.authorizationBasis?.sourceRevision!=='7ef28bd8b02994223e320fda64e99808357d3219'" in book_runtime, 'runtime no longer enforces reviewed source revision')
 
 # Publication/SME/qualification boundaries remain fail-closed and unchanged in meaning.
