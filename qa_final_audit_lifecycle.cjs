@@ -124,8 +124,9 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
     getItem(k){return memory.has(String(k))?memory.get(String(k)):null},
     setItem(k,v){
       k=String(k);
-      if(writeMode==='fail-next-db'&&k==='mouldmasterProDB'&&!failedDbWrite){failedDbWrite=true;throw new Error('simulated registry write failure')}
+      if((writeMode==='fail-next-db'||writeMode==='fail-db-silent-rollback')&&k==='mouldmasterProDB'&&!failedDbWrite){failedDbWrite=true;throw new Error('simulated registry write failure')}
       if(writeMode==='silent-training'&&k.startsWith('mm_real_measured_assessment_v1::')&&!failedTrainingWrite){failedTrainingWrite=true;return}
+      if(writeMode==='fail-db-silent-rollback'&&failedDbWrite&&k==='mm_learning_analytics_v1::strong-old')return
       memory.set(k,String(v))
     },
     removeItem(k){
@@ -196,6 +197,18 @@ function trainingSandbox(removeMode='normal',writeMode='normal'){
   assert(t.alerts.some(x=>/browser storage failed/i.test(x)),'storage write failure was misreported as an invalid backup');
   assert(!t.alerts.some(x=>/not a valid MouldMaster backup/i.test(x)),'storage write failure was incorrectly blamed on backup validity');
   assert(!t.toasts.some(x=>/^Progress imported/i.test(x)),'failed final registry write falsely reported successful import');
+}
+
+// Rollback verification must detect a storage layer that silently drops a restore
+// write after the staged import has already cleared old learner-owned data.
+{
+  const t=trainingSandbox('normal','fail-db-silent-rollback');
+  const incoming={activeUser:'new',users:{new:{id:'new',name:'New learner',completed:[1,2]}},trainingExtras:{version:2,spacedReview:{items:{}},practicalSignoff:{checks:{}}}};
+  t.sandbox.importData({size:500,contents:JSON.stringify(incoming)});
+  assert.strictEqual(t.sandbox.db.activeUser,'old','failed registry write activated imported learner state');
+  assert.strictEqual(t.memory.get('mm_learning_analytics_v1::strong-old'),undefined,'silent rollback fixture unexpectedly restored the dropped analytics write');
+  assert(t.alerts.some(x=>/rollback could not be fully verified/i.test(x)),'silent rollback loss was incorrectly reported as verified');
+  assert(!t.toasts.some(x=>/^Progress imported/i.test(x)),'rollback verification failure falsely reported successful import');
 }
 
 // A silent failure while restoring one learner-owned training store must be detected
