@@ -49,7 +49,9 @@
           "src/domains/learning/training-qa-fix.js",
           "src/domains/learning/backup-authority-notice.js",
           "qa_learner_backup_integrity.cjs",
-          "tools/health_restore_drill.py"
+          "tools/health_restore_drill.py",
+          "qa_assessment_storage_scope.py",
+          "qa_runtime_v2.py"
         ],
         "tier": "deep-release"
       },
