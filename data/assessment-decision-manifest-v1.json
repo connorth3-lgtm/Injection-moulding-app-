@@ -1422,18 +1422,18 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-b6f6fc61",
-        "fnv1a-1e0fa10c",
-        "fnv1a-ddd66dec",
-        "fnv1a-8eaa0751"
+        "fnv1a-7a435d54",
+        "fnv1a-d75f62b3",
+        "fnv1a-5fd953e4",
+        "fnv1a-89022253"
       ],
-      "contentFingerprint": "fnv1a-21320988",
+      "contentFingerprint": "fnv1a-e027c426",
       "contract": {
         "blob": "7692f3f029cd4ab1227db1f39e0376023c0eebbf",
         "license": "CC BY 4.0",
         "path": "data/public-benchmark-results/scatimdata-avaps-v1.json"
       },
-      "correctChoiceFingerprint": "fnv1a-b6f6fc61",
+      "correctChoiceFingerprint": "fnv1a-7a435d54",
       "critical": false,
       "decisionScope": "measured-evidence-learning",
       "evidenceSourceMode": "measured-dataset-contract",
@@ -1449,18 +1449,18 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-1fd5ff30",
-        "fnv1a-904ab096",
-        "fnv1a-94ee9275",
-        "fnv1a-3e800188"
+        "fnv1a-6bf41cef",
+        "fnv1a-8fb5088f",
+        "fnv1a-ebc7db9a",
+        "fnv1a-5ee949b3"
       ],
-      "contentFingerprint": "fnv1a-082baa27",
+      "contentFingerprint": "fnv1a-a563eb57",
       "contract": {
         "blob": "7692f3f029cd4ab1227db1f39e0376023c0eebbf",
         "license": "CC BY 4.0",
         "path": "data/public-benchmark-results/scatimdata-avaps-v1.json"
       },
-      "correctChoiceFingerprint": "fnv1a-1fd5ff30",
+      "correctChoiceFingerprint": "fnv1a-6bf41cef",
       "critical": false,
       "decisionScope": "measured-evidence-learning",
       "evidenceSourceMode": "measured-dataset-contract",
@@ -1476,18 +1476,18 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-a7a85b60",
-        "fnv1a-74263a91",
-        "fnv1a-6c23ec25",
-        "fnv1a-78bddcff"
+        "fnv1a-786e93a9",
+        "fnv1a-a2a3dbca",
+        "fnv1a-33e6674b",
+        "fnv1a-2a0dc9b2"
       ],
-      "contentFingerprint": "fnv1a-0a2f9e31",
+      "contentFingerprint": "fnv1a-ea0d6128",
       "contract": {
         "blob": "7692f3f029cd4ab1227db1f39e0376023c0eebbf",
         "license": "CC BY 4.0",
         "path": "data/public-benchmark-results/scatimdata-avaps-v1.json"
       },
-      "correctChoiceFingerprint": "fnv1a-a7a85b60",
+      "correctChoiceFingerprint": "fnv1a-786e93a9",
       "critical": false,
       "decisionScope": "measured-evidence-learning",
       "evidenceSourceMode": "measured-dataset-contract",
@@ -1504,11 +1504,11 @@
       "bankVersion": null,
       "choiceFingerprints": [
         "fnv1a-df0cf07e",
-        "fnv1a-46d417b0",
-        "fnv1a-5ba166f4",
-        "fnv1a-34b113cd"
+        "fnv1a-1f39c05a",
+        "fnv1a-84907a38",
+        "fnv1a-8d6fc20c"
       ],
-      "contentFingerprint": "fnv1a-d63703ea",
+      "contentFingerprint": "fnv1a-df1d8c05",
       "contract": {
         "blob": "94bea551aa3e4755c435b663d2553b53bcc0c6c2",
         "license": "CC BY 4.0",
@@ -1530,18 +1530,18 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-52a40dbc",
-        "fnv1a-762b2f9b",
-        "fnv1a-67ba3a59",
-        "fnv1a-61264de9"
+        "fnv1a-9b9f5f5c",
+        "fnv1a-8919ed2f",
+        "fnv1a-f7b856ea",
+        "fnv1a-ba762d37"
       ],
-      "contentFingerprint": "fnv1a-a38e6cba",
+      "contentFingerprint": "fnv1a-33d80e09",
       "contract": {
         "blob": "94bea551aa3e4755c435b663d2553b53bcc0c6c2",
         "license": "CC BY 4.0",
         "path": "data/public-benchmark-results/cross-process-lower-workpiece-source-contract-v1.json"
       },
-      "correctChoiceFingerprint": "fnv1a-52a40dbc",
+      "correctChoiceFingerprint": "fnv1a-9b9f5f5c",
       "critical": false,
       "decisionScope": "measured-evidence-learning",
       "evidenceSourceMode": "measured-dataset-contract",
@@ -1557,18 +1557,18 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-62f99e9e",
-        "fnv1a-7c7c8af0",
-        "fnv1a-998959ef",
-        "fnv1a-39a6aef5"
+        "fnv1a-9928e954",
+        "fnv1a-a1c572e9",
+        "fnv1a-e5545eee",
+        "fnv1a-2da88af3"
       ],
-      "contentFingerprint": "fnv1a-f03eeca8",
+      "contentFingerprint": "fnv1a-4269967a",
       "contract": {
         "blob": "94bea551aa3e4755c435b663d2553b53bcc0c6c2",
         "license": "CC BY 4.0",
         "path": "data/public-benchmark-results/cross-process-lower-workpiece-source-contract-v1.json"
       },
-      "correctChoiceFingerprint": "fnv1a-62f99e9e",
+      "correctChoiceFingerprint": "fnv1a-9928e954",
       "critical": false,
       "decisionScope": "measured-evidence-learning",
       "evidenceSourceMode": "measured-dataset-contract",
@@ -1611,18 +1611,18 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-4c259188",
-        "fnv1a-341e1566",
-        "fnv1a-114d9bb7",
-        "fnv1a-7c6f87ea"
+        "fnv1a-7979d862",
+        "fnv1a-9e1756f6",
+        "fnv1a-69b6d439",
+        "fnv1a-fc80ff83"
       ],
-      "contentFingerprint": "fnv1a-72d9b638",
+      "contentFingerprint": "fnv1a-7042236f",
       "contract": {
         "blob": "a3e23a0ecd5711158c3937f47a031212e7d1de8d",
         "license": "CC BY 4.0",
         "path": "data/public-benchmark-results/cross-process-upper-workpiece-source-contract-v1.json"
       },
-      "correctChoiceFingerprint": "fnv1a-4c259188",
+      "correctChoiceFingerprint": "fnv1a-7979d862",
       "critical": false,
       "decisionScope": "measured-evidence-learning",
       "evidenceSourceMode": "measured-dataset-contract",
@@ -1638,18 +1638,18 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-5c799a7d",
-        "fnv1a-8ec34f45",
-        "fnv1a-68609b55",
-        "fnv1a-1b4a5dbc"
+        "fnv1a-4b41b8ee",
+        "fnv1a-be6223ac",
+        "fnv1a-76d96ada",
+        "fnv1a-f5045bbb"
       ],
-      "contentFingerprint": "fnv1a-63cc107e",
+      "contentFingerprint": "fnv1a-b3a25eb0",
       "contract": {
         "blob": "a3e23a0ecd5711158c3937f47a031212e7d1de8d",
         "license": "CC BY 4.0",
         "path": "data/public-benchmark-results/cross-process-upper-workpiece-source-contract-v1.json"
       },
-      "correctChoiceFingerprint": "fnv1a-5c799a7d",
+      "correctChoiceFingerprint": "fnv1a-4b41b8ee",
       "critical": false,
       "decisionScope": "measured-evidence-learning",
       "evidenceSourceMode": "measured-dataset-contract",
@@ -1665,18 +1665,18 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-b8cb9979",
-        "fnv1a-3307a3ce",
-        "fnv1a-fc6bf172",
-        "fnv1a-3726c7f3"
+        "fnv1a-73bd4e48",
+        "fnv1a-2a623eaa",
+        "fnv1a-19fd0a8c",
+        "fnv1a-0c1e4bda"
       ],
-      "contentFingerprint": "fnv1a-8ecd4180",
+      "contentFingerprint": "fnv1a-acd5fe8c",
       "contract": {
         "blob": "b1ae42ff8af7926e08bf5aabc1d6b3a99afc4208",
         "license": "BSD-3-Clause",
         "path": "data/public-benchmark-results/openmms-t4g-v1.json"
       },
-      "correctChoiceFingerprint": "fnv1a-b8cb9979",
+      "correctChoiceFingerprint": "fnv1a-73bd4e48",
       "critical": false,
       "decisionScope": "measured-evidence-learning",
       "evidenceSourceMode": "measured-dataset-contract",
@@ -1692,18 +1692,18 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-629a5a93",
-        "fnv1a-7a7c0a37",
-        "fnv1a-3d3d9e44",
-        "fnv1a-9e86bda6"
+        "fnv1a-f7768ad3",
+        "fnv1a-4a630711",
+        "fnv1a-31f79a47",
+        "fnv1a-3812dd44"
       ],
-      "contentFingerprint": "fnv1a-b09b4c91",
+      "contentFingerprint": "fnv1a-4ec697aa",
       "contract": {
         "blob": "b1ae42ff8af7926e08bf5aabc1d6b3a99afc4208",
         "license": "BSD-3-Clause",
         "path": "data/public-benchmark-results/openmms-t4g-v1.json"
       },
-      "correctChoiceFingerprint": "fnv1a-629a5a93",
+      "correctChoiceFingerprint": "fnv1a-f7768ad3",
       "critical": false,
       "decisionScope": "measured-evidence-learning",
       "evidenceSourceMode": "measured-dataset-contract",
@@ -1719,18 +1719,18 @@
     {
       "bankVersion": null,
       "choiceFingerprints": [
-        "fnv1a-ba229bf9",
-        "fnv1a-9b525d06",
-        "fnv1a-7b511b31",
-        "fnv1a-9b9e1374"
+        "fnv1a-5dc2e955",
+        "fnv1a-d28c6165",
+        "fnv1a-bffa3540",
+        "fnv1a-bd577f81"
       ],
-      "contentFingerprint": "fnv1a-728fd96b",
+      "contentFingerprint": "fnv1a-5d5c4c78",
       "contract": {
         "blob": "b1ae42ff8af7926e08bf5aabc1d6b3a99afc4208",
         "license": "BSD-3-Clause",
         "path": "data/public-benchmark-results/openmms-t4g-v1.json"
       },
-      "correctChoiceFingerprint": "fnv1a-ba229bf9",
+      "correctChoiceFingerprint": "fnv1a-5dc2e955",
       "critical": false,
       "decisionScope": "measured-evidence-learning",
       "evidenceSourceMode": "measured-dataset-contract",
