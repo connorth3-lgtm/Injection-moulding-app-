@@ -47,6 +47,28 @@ test('Home Book opens on first load and Keep Reading is learner scoped',async({p
   expect(bKey).not.toBe(aKey);
 });
 
+test('Keep Reading distinguishes duplicate heading text with ordinal anchors',async({page})=>{
+  await boot(page);
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r08'));
+  const dup=page.getByRole('heading',{name:'What evidence should change the conclusion?',exact:true});
+  await expect(dup).toHaveCount(2);
+  await dup.nth(1).scrollIntoViewIfNeeded();
+  await page.evaluate(()=>window.scrollBy(0,80));
+  const secondTop=await dup.nth(1).evaluate(el=>Math.round(el.getBoundingClientRect().top));
+  await page.getByRole('button',{name:'Home'}).first().click();
+  const saved=await page.evaluate(()=>window.MMBook.getResume());
+  expect(Number.isInteger(saved.anchorIndex)).toBeTruthy();
+  expect(saved.anchorText).toBe('What evidence should change the conclusion?');
+
+  await page.locator('#dashboard [data-mm-home-book]').getByRole('button',{name:'Keep Reading'}).click();
+  await expect(dup).toHaveCount(2);
+  await page.waitForTimeout(50);
+  const firstTop=await dup.nth(0).evaluate(el=>Math.round(el.getBoundingClientRect().top));
+  const restoredSecondTop=await dup.nth(1).evaluate(el=>Math.round(el.getBoundingClientRect().top));
+  expect(Math.abs(restoredSecondTop-secondTop)).toBeLessThan(140);
+  expect(Math.abs(restoredSecondTop)).toBeLessThan(Math.abs(firstTop));
+});
+
 test('Keep Reading restores, stale IDs fail to contents, and learner reset clears only active resume',async({page})=>{
   await boot(page);
   await page.evaluate(()=>window.MMBook.openReaderChapter('r02'));
