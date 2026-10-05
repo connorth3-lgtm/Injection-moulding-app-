@@ -133,7 +133,7 @@ must(reference_page, ['<script src="./reference-data.js"></script>', '<script sr
 must(service_worker, [
     "${CACHE_VERSION}-${CACHE_REVISION}", "'./repair.html'", "runtimeCritical=url.pathname.endsWith('.js')||url.pathname.endsWith('.json')",
     "const RELEASE_PATHS=new Set(", "async function releaseCacheMatch(request)", "const cache=await caches.open(STATIC_CACHE)", "RELEASE_PATHS.has(url.pathname)",
-    "async function fetchNetwork(event)", "fetch(event.request,{cache:'no-store'})", "await fetchNetwork(event)||criticalOfflineResponse(url)", "'./reference-data.html'", "'./reference-2026-expansion.js'",
+    "async function fetchNetwork(event)", "fetch(event.request,{cache:'no-store'})", "function unlistedRuntimeResponse(url)", "mouldmaster-unlisted-runtime-asset", "event.respondWith(unlistedRuntimeResponse(url))", "'./reference-data.html'", "'./reference-2026-expansion.js'",
     "'./src/domains/runtime-packs/evidence-runtime-pack.js'", "'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'",
     "'./src/domains/shared/runtime-v2.js'", "'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'", "'./src/domains/runtime-packs/assessment-multimodal-runtime-pack.js'", "'./src/domains/shell/accessibility-hardening.js'",
     "'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'", "'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'", "'./learning-analytics.js'",
@@ -154,6 +154,9 @@ runtime_fetch = service_worker[service_worker.index("self.addEventListener('fetc
 require("caches.match(" not in runtime_fetch, "service-worker runtime must never search across release generations")
 require(".put(" not in runtime_fetch, "service-worker runtime fetches must never mutate the validated release cache")
 require("cacheAsset(" not in runtime_fetch, "service-worker install-only cache writer must not be reachable from runtime fetches")
+runtime_critical = runtime_fetch[runtime_fetch.index("const runtimeCritical="):runtime_fetch.index("event.respondWith((async()=>await fetchNetwork(event)||new Response")]
+require("fetchNetwork(event)" not in runtime_critical, "unlisted same-origin JS/JSON must fail closed instead of mixing live network bytes into an older runtime")
+require("unlistedRuntimeResponse(url)" in runtime_critical, "unlisted same-origin runtime assets must use the explicit fail-closed response")
 
 # Preserve the original assessment/evidence/security integrity assertions.
 must(approval, ["const coverageOk=!(summary.total!==157", "status:coverageOk?'approved':'update-required'", "function scheduleApproval()", "DOMContentLoaded',()=>setTimeout(buildApproval,0)", "Evidence metadata could not finish loading.", "showUpdateWarning"], "evidence approval hardening")
