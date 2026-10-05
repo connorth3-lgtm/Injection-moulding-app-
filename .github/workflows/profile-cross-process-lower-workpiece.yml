@@ -68,7 +68,7 @@ jobs:
           mkdir -p qa-artifacts/profile-output/data/public-benchmark-results
           cp data/public-benchmark-results/cross-process-lower-workpiece-source-contract-v1.json qa-artifacts/profile-output/data/public-benchmark-results/
       - name: Retain validated aggregate output
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v5.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: cross-process-lower-profile-${{ steps.source.outputs.sha }}
           path: qa-artifacts/profile-output
