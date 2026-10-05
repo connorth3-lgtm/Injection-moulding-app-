@@ -43,7 +43,7 @@ def changed_files(base:str,head:str="HEAD")->set[str]:
     return {x.strip() for x in out.splitlines() if x.strip()}
 
 def classify(files:set[str])->dict[str,bool]:
-    graph_areas=set(graph_impact(files)["areas"])
+    graph_areas=set(graph_impact(files)["directAreas"])
     runtime=bool(graph_areas & {"shell","assessment","process-data","measured-learning","book","preview-release"}) or any(
         p in RUNTIME_ROOT_FILES
         or p.startswith("src/")
