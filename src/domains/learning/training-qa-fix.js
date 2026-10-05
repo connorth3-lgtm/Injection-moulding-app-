@@ -3,7 +3,7 @@
 'use strict';
 const REVIEW_KEY='mm_spaced_review_v2', LEGACY_REVIEW='mm_spaced_review_v1', SIGN_KEY='mm_practical_signoff_v1', MEASURED_KEY='mm_real_measured_assessment_v1', PROCESS_DIAG_KEY='mm_process_data_diagnostics_v1', DIAGNOSTIC_LABS_KEY='mm_diagnostic_labs_v1', MATERIAL_LABS_KEY='mm_material_behaviour_labs_v1', ASSESSMENT_MEMBERSHIP_KEY='mm_assessment_membership_history_v2';
 const ASSESSMENT_ANALYTICS_PREFIXES=['mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1','mm_assessment_opening_history_v2','mm-assessment-question-history-v4','mm-assessment-result-meta-v1',ASSESSMENT_MEMBERSHIP_KEY];
-const LEARNING_ANALYTICS_PREFIX='mm_learning_analytics_v1::';
+const LEARNING_ANALYTICS_PREFIX='mm_learning_analytics_v1::', BOOK_RESUME_PREFIX='mm_book_resume_v1::';
 const ANALYTICS_CLEANUP_CODE='MM_ANALYTICS_CLEANUP_FAILED', IMPORT_STORAGE_CODE='MM_IMPORT_STORAGE_FAILED';
 const LEARNER_ID_RE=/^[A-Za-z0-9][A-Za-z0-9._:@+-]{0,159}$/;
 function canonicalLearnerId(v){const s=String(v??'');if(!LEARNER_ID_RE.test(s))throw new Error('Invalid learner identifier');return s}
@@ -120,7 +120,7 @@ function learnerLearningAnalyticsKeys(learnerId){
  return uniqueKeys(keys)
 }
 function learnerTrainingKeys(learnerId){
- const id=canonicalLearnerId(learnerId),scope=learnerScope(),keys=[trainingDestinationKey(REVIEW_KEY,id),trainingDestinationKey(SIGN_KEY,id),trainingDestinationKey(MEASURED_KEY,id),trainingDestinationKey(PROCESS_DIAG_KEY,id),trainingDestinationKey(DIAGNOSTIC_LABS_KEY,id),trainingDestinationKey(MATERIAL_LABS_KEY,id)],plan=scope.migrationPlan?.(id);
+ const id=canonicalLearnerId(learnerId),scope=learnerScope(),keys=[trainingDestinationKey(REVIEW_KEY,id),trainingDestinationKey(SIGN_KEY,id),trainingDestinationKey(MEASURED_KEY,id),trainingDestinationKey(PROCESS_DIAG_KEY,id),trainingDestinationKey(DIAGNOSTIC_LABS_KEY,id),trainingDestinationKey(MATERIAL_LABS_KEY,id),scope.storageKey(BOOK_RESUME_PREFIX,scope.tokenFor(id))],plan=scope.migrationPlan?.(id);
  if(plan?.uniqueOwner&&plan.legacyToken){
   keys.push(scope.storageKey(REVIEW_KEY+'::',plan.legacyToken),scope.storageKey(SIGN_KEY+'::',plan.legacyToken),scope.storageKey(MEASURED_KEY+'::',plan.legacyToken),scope.storageKey(PROCESS_DIAG_KEY+'::',plan.legacyToken),scope.storageKey(DIAGNOSTIC_LABS_KEY+'::',plan.legacyToken))
  }
