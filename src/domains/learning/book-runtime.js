@@ -30,14 +30,64 @@
     'LI-2024-WELD-LINE-REVIEW':'https://doi.org/10.1007/s00170-024-13607-7'
   });
   let manifest=null,manifestPromise=null,materialPromise=null,coldMaterialSearchPromise=null,publicationAuthorization=null,bookSmeReview=null,qualificationReview=null,highRiskReview=null,workedCaseLedger=null,workedCasesByChapter=new Map(),diagramLedger=null,diagramsByChapter=new Map(),evidenceEnrichmentLedger=null,readerArchitecture=null,editorialExpansionReview=null,materialAtlas=null,materialCatalog=null,materialRegionalEvidence=null,materialSearchIndex={catalog:[],regional:[]},integrityMap=null,ui=null,previousView=null,open=false,contentsScrollY=0;
-  const BOOK_RESUME_KEY='mouldmasterBookResume:v1';
+  const BOOK_RESUME_PREFIX='mm_book_resume_v1::',LEGACY_BOOK_RESUME_KEY='mouldmasterBookResume:v1',BOOK_RESUME_SCHEMA=1;
   let activeReadingPosition=null,resumeScrollTimer=0;
-  function readResume(){try{const value=JSON.parse(localStorage.getItem(BOOK_RESUME_KEY)||'null');return value&&typeof value==='object'&&typeof value.id==='string'&&['reader-chapter','chapter'].includes(value.kind)?value:null}catch(_){return null}}
-  function writeResume(position){try{localStorage.setItem(BOOK_RESUME_KEY,JSON.stringify(position));window.dispatchEvent(new CustomEvent('mm:book-resume-change',{detail:{...position}}));return true}catch(_){return false}}
-  function rememberReadingPosition(kind,id,title,scrollY=0){const position={kind,id,title:String(title||'Book'),scrollY:Math.max(0,Math.round(Number(scrollY)||0)),updatedAt:new Date().toISOString()};activeReadingPosition=position;writeResume(position);return position}
-  function updateReadingScroll(){if(!open||!activeReadingPosition||ui?.reader?.hidden)return;const next={...activeReadingPosition,scrollY:bookScrollTop(),updatedAt:new Date().toISOString()};activeReadingPosition=next;writeResume(next)}
-  function queueReadingScrollSave(){if(!open||!activeReadingPosition)return;clearTimeout(resumeScrollTimer);resumeScrollTimer=setTimeout(updateReadingScroll,180)}
+  function resumeStorageKey(){
+    const scope=window.MM_LEARNER_SCOPE;
+    if(!scope?.storageKey||!scope?.token)return null;
+    try{scope.registerStoragePrefix?.(BOOK_RESUME_PREFIX);return scope.storageKey(BOOK_RESUME_PREFIX,scope.token())}catch(_){return null}
+  }
+  function migrateExperimentalResume(){
+    const key=resumeStorageKey();if(!key)return;
+    try{
+      const legacy=localStorage.getItem(LEGACY_BOOK_RESUME_KEY);if(legacy==null)return;
+      const ids=window.MM_LEARNER_SCOPE?.knownIds?.()||[];
+      if(ids.length===1&&localStorage.getItem(key)==null)localStorage.setItem(key,legacy);
+      localStorage.removeItem(LEGACY_BOOK_RESUME_KEY);
+    }catch(_){}
+  }
+  function validResumeShape(value){return value&&typeof value==='object'&&value.schema===BOOK_RESUME_SCHEMA&&value.bookRelease===VERSION&&typeof value.id==='string'&&value.id.length>0&&['reader-chapter','chapter'].includes(value.kind)}
+  function readResume(){
+    const key=resumeStorageKey();if(!key)return null;
+    try{const value=JSON.parse(localStorage.getItem(key)||'null');if(!validResumeShape(value)){if(value!=null)localStorage.removeItem(key);return null}return value}catch(_){return null}
+  }
+  function writeResume(position,{notify=false}={}){
+    const key=resumeStorageKey();if(!key)return false;
+    try{localStorage.setItem(key,JSON.stringify(position));if(notify)window.dispatchEvent(new CustomEvent('mm:book-resume-change',{detail:{...position}}));return true}catch(_){return false}
+  }
+  function readerAnchor(){
+    if(!ui?.reader||ui.reader.hidden)return {anchorText:'',anchorOffset:0};
+    const top=80,heads=[...ui.reader.querySelectorAll('h2,h3')],eligible=heads.map(el=>({el,rect:el.getBoundingClientRect()})).filter(x=>x.rect.top<=top);
+    const picked=(eligible.length?eligible[eligible.length-1]:heads[0]?{el:heads[0],rect:heads[0].getBoundingClientRect()}:null);
+    return picked?{anchorText:String(picked.el.textContent||'').trim().slice(0,240),anchorOffset:Math.round(picked.rect.top)}:{anchorText:'',anchorOffset:0};
+  }
+  function rememberReadingPosition(kind,id,title,scrollY=0){
+    const anchor=readerAnchor(),position={schema:BOOK_RESUME_SCHEMA,bookRelease:VERSION,kind,id,title:String(title||'Book'),scrollY:Math.max(0,Math.round(Number(scrollY)||0)),anchorText:anchor.anchorText,anchorOffset:anchor.anchorOffset,updatedAt:new Date().toISOString()};
+    activeReadingPosition=position;writeResume(position,{notify:true});return position
+  }
+  function updateReadingScroll({notify=false}={}){
+    if(!open||!activeReadingPosition||ui?.reader?.hidden)return false;
+    const anchor=readerAnchor(),next={...activeReadingPosition,scrollY:bookScrollTop(),anchorText:anchor.anchorText,anchorOffset:anchor.anchorOffset,updatedAt:new Date().toISOString()};
+    activeReadingPosition=next;return writeResume(next,{notify})
+  }
+  function flushReadingPosition({notify=false}={}){clearTimeout(resumeScrollTimer);resumeScrollTimer=0;return updateReadingScroll({notify})}
+  function queueReadingScrollSave(){if(!open||!activeReadingPosition)return;clearTimeout(resumeScrollTimer);resumeScrollTimer=setTimeout(()=>updateReadingScroll(),180)}
+  function restoreReadingPosition(snapshot){
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      const wanted=String(snapshot.anchorText||'').trim(),heading=wanted?[...ui.reader.querySelectorAll('h2,h3')].find(el=>String(el.textContent||'').trim()===wanted):null;
+      if(heading){heading.scrollIntoView({block:'start',behavior:'auto'});window.scrollBy({top:Number(snapshot.anchorOffset)||0,left:0,behavior:'auto'});}
+      else window.scrollTo({top:Math.max(0,Number(snapshot.scrollY)||0),behavior:'auto'});
+      activeReadingPosition={...snapshot};
+    }));
+  }
+  function clearResume(){
+    const key=resumeStorageKey();activeReadingPosition=null;clearTimeout(resumeScrollTimer);resumeScrollTimer=0;
+    if(!key)return false;try{localStorage.removeItem(key);window.dispatchEvent(new CustomEvent('mm:book-resume-change',{detail:null}));return localStorage.getItem(key)==null}catch(_){return false}
+  }
+  migrateExperimentalResume();
   window.addEventListener('scroll',queueReadingScrollSave,{passive:true});
+  window.addEventListener('pagehide',()=>flushReadingPosition());
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flushReadingPosition()});
   const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const stateLabel=state=>({planned:'Planned','source-review':'Source review','technical-review':'Technical review',verified:'Source evidence reviewed',hold:'Hold'}[state]||state);
   const fileName=path=>String(path||'').split('/').pop();
@@ -332,9 +382,19 @@
   function startVerifiedListening(){if(!ui)return;const verified=verifiedChapters();if(!verified.length)return;const reader=window.MMReadAloud,details=document.querySelector('.mm-read-aloud details'),play=document.querySelector('.mm-read-aloud [data-mm-read="play"]');if(!reader?.supported||!details||!play){ui.summary.textContent='Source-reviewed Book text is available to read, but device speech synthesis is unavailable.';return;}reader.stop?.();const back='<button type="button" class="ghost" data-mm-book-back>← Book contents</button>';ui.reader.innerHTML=`${back}${verified.map(chapter=>verifiedChapterHtml(chapter,{includeTechnicalMaterial:false})).join('')}`;ui.contents.hidden=true;ui.hero.hidden=true;ui.accuracy.hidden=true;ui.reader.hidden=false;bindBack();scrollBookReaderToTop();requestAnimationFrame(()=>{reader.refresh?.();details.open=true;play.click();});emitBookRender('listening');}
   function openBook(){if(!ui)return;previousView=[...document.querySelectorAll('.view')].find(v=>!v.classList.contains('hidden')&&v!==ui.view)||previousView;document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));ui.view.classList.remove('hidden');restoreBookChrome();open=true;document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('active'));ui.nav.classList.add('active');const title=document.getElementById('pageTitle'),subtitle=document.getElementById('pageSubtitle');if(title)title.textContent='Book';if(subtitle)subtitle.textContent='Evidence-governed injection moulding reference — 20 reader chapters preserve 46 module-level claim and source boundaries.';contentsScrollY=0;showContents();emitBookRender('contents');if(!manifest){ui.summary.textContent='Loading governed Book content on demand…';ui.smeStatus.textContent='Independent human SME review status loads with the Book content.';void ensureManifest().catch(()=>{});}}
   async function openChapter(id){openBook();try{await ensureManifest();showChapter(id);}catch(_){}}
-  async function openResume(){const saved=readResume();if(!saved){openBook();return false}openBook();try{await ensureManifest();const snapshot={...saved};if(snapshot.kind==='reader-chapter')showReaderChapter(snapshot.id);else showChapter(snapshot.id);requestAnimationFrame(()=>requestAnimationFrame(()=>{window.scrollTo({top:Math.max(0,Number(snapshot.scrollY)||0),behavior:'auto'});activeReadingPosition={...snapshot};}));return true}catch(_){return false}}
+  async function openResume(){
+    const saved=readResume();if(!saved){openBook();return false}
+    openBook();
+    try{
+      await ensureManifest();const snapshot={...saved};
+      const exists=snapshot.kind==='reader-chapter'?allReaderChapters().some(x=>x.id===snapshot.id):allChapters().some(x=>x.id===snapshot.id);
+      if(!exists){clearResume();showContents();return false}
+      if(snapshot.kind==='reader-chapter')showReaderChapter(snapshot.id);else showChapter(snapshot.id);
+      restoreReadingPosition(snapshot);return true
+    }catch(_){return false}
+  }
   function getResume(){const saved=readResume();return saved?{...saved}:null}
-  function leaveBook(){if(!open)return;stopBookSpeech();open=false;ui?.view?.classList.add('hidden');ui?.nav?.classList.remove('active');}
+  function leaveBook(){if(!open)return;flushReadingPosition({notify:true});stopBookSpeech();open=false;ui?.view?.classList.add('hidden');ui?.nav?.classList.remove('active');}
   function searchBook(query){const q=String(query||'').trim().toLowerCase();if(q.length<2||!manifest)return[];const matches=allChapters().filter(ch=>[ch.title,ch.applicability,...(ch.sections||[]).flatMap(s=>[s.title,s.text])].join(' ').toLowerCase().includes(q));const materialHit=materialSearchIndex.catalog.some(text=>text.includes(q))||materialSearchIndex.regional.some(text=>text.includes(q));if(materialHit){const chapter=allChapters().find(ch=>ch.id==='material-families');if(chapter&&!matches.includes(chapter))matches.unshift(chapter);}return matches.slice(0,6);}
   const normalizeMaterialSearch=value=>String(value??'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
   async function coldMaterialSearchTerms(){if(materialSearchIndex.catalog.length||materialSearchIndex.regional.length)return [...materialSearchIndex.catalog,...materialSearchIndex.regional];if(!coldMaterialSearchPromise)coldMaterialSearchPromise=verifiedJson(MATERIAL_SEARCH_INDEX_PATH,MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1).then(data=>{const counts=data?.sourceCounts||{},entries=Array.isArray(data?.entries)?data.entries:[];if(data?.schemaVersion!==1||data?.release!=='2026.10.04.3'||counts.canonicalExactGrades!==260||counts.regionalEvidenceRows!==284||counts.total!==544||entries.length!==544)throw new Error('Book material search index identity check failed');const terms=entries.map(item=>String(item?.search||'').trim()).filter(Boolean);if(terms.length!==544)throw new Error('Book material search index coverage mismatch');return terms;}).catch(error=>{coldMaterialSearchPromise=null;throw error});return coldMaterialSearchPromise;}
@@ -348,6 +408,6 @@
   document.addEventListener('click',event=>{const target=event.target?.closest?.('nav button,[data-view],[data-page]');if(!target||target.dataset.mmBookTab)return;if(open)leaveBook();},true);
   let ready;
   bindBookSearchInput();
-  window.MMBook=Object.freeze({version:VERSION,open:openBook,openResume,getResume,openChapter,openReaderChapter:async id=>{openBook();try{await ensureManifest();showReaderChapter(id);}catch(_){}},search:searchBook,load:ensureManifest,loadMaterials:ensureMaterialData,getManifest:()=>manifest,getReaderArchitecture:()=>readerArchitecture,getEditorialExpansionReview:()=>editorialExpansionReview,getPublicationAuthorization:()=>publicationAuthorization,getSmeReview:()=>bookSmeReview,getQualificationReview:()=>qualificationReview,getWorkedCases:()=>workedCaseLedger,getEvidenceEnrichment:()=>evidenceEnrichmentLedger,getEngineeringDiagrams:()=>diagramLedger,getMaterialAtlas:()=>materialAtlas,getMaterialCatalog:()=>materialCatalog,getMaterialRegionalEvidence:()=>materialRegionalEvidence,getIntegrityMap:()=>integrityMap?{...integrityMap}:null,verifiedChapters,startVerifiedListening,get ready(){return ready;}});
+  window.MMBook=Object.freeze({version:VERSION,open:openBook,openResume,getResume,clearResume,resumeStorageKey,openChapter,openReaderChapter:async id=>{openBook();try{await ensureManifest();showReaderChapter(id);}catch(_){}},search:searchBook,load:ensureManifest,loadMaterials:ensureMaterialData,getManifest:()=>manifest,getReaderArchitecture:()=>readerArchitecture,getEditorialExpansionReview:()=>editorialExpansionReview,getPublicationAuthorization:()=>publicationAuthorization,getSmeReview:()=>bookSmeReview,getQualificationReview:()=>qualificationReview,getWorkedCases:()=>workedCaseLedger,getEvidenceEnrichment:()=>evidenceEnrichmentLedger,getEngineeringDiagrams:()=>diagramLedger,getMaterialAtlas:()=>materialAtlas,getMaterialCatalog:()=>materialCatalog,getMaterialRegionalEvidence:()=>materialRegionalEvidence,getIntegrityMap:()=>integrityMap?{...integrityMap}:null,verifiedChapters,startVerifiedListening,get ready(){return ready;}});
   ready=document.readyState==='loading'?new Promise(resolve=>document.addEventListener('DOMContentLoaded',()=>resolve(init()),{once:true})).then(x=>x):init();
 })();
