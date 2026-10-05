@@ -28,6 +28,18 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: '3.12'
+      - name: Developer doctor fast triage
+        run: python tools/mouldmaster_doctor.py
+      - name: Upload developer doctor report
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: mouldmaster-doctor
+          path: |
+            qa-artifacts/doctor-report.md
+            qa-artifacts/doctor-report.json
+          if-no-files-found: warn
+          retention-days: 14
       - name: Locked browser QA dependency graph
         run: python qa_browser_dependency_lock.py
       - name: JavaScript syntax
