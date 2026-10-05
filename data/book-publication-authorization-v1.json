@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "bookId": "mouldmaster-book",
-  "version": "2026.10.06.4",
+  "version": "2026.10.06.5",
   "status": "authorized",
   "authorizationType": "governed-book-publication",
   "authorizedAt": "2026-10-06",
@@ -21,24 +21,25 @@
   },
   "runtimeIntegrity": {
     "algorithm": "git-blob-sha1",
-    "scope": "Exact served bytes for every payload that can influence Book publication promotion, reader composition, editorial expansion review or independent-SME status. Git object identity is checked in-browser before JSON parsing; any mismatch fails closed.",
+    "scope": "Exact served bytes for every payload that can influence Book publication promotion, reader composition, claim-evidence transparency, editorial expansion review or independent-SME status. Git object identity is checked in-browser before JSON parsing; any mismatch fails closed.",
     "gitBlobSha1ByFile": {
       "book-manifest-v1.json": "59efb8048451389ebb610566e13607d2d9c47cdd",
-      "book-sme-review-v1.json": "b54e4f4f68142c961b53204b63bd8d72082dbefa",
+      "book-sme-review-v1.json": "19865114eefb9907a7906264b4cb0db9304f3c57",
       "book-qualification-resolution-all-v1.json": "c6da26d0c4ed3608b1a19b1551856c1d80c03a8f",
       "book-claim-resolution-high-risk-v1.json": "84d007a72c16b60e01ba392f9ca6e0f6d487cc85",
       "book-authored-foundations-v1.json": "d2aa8528f5fd3fe67a54825f88bb14ddb7730777",
       "book-evidence-registry-v1.json": "24cbe1b1777fa4e2377226a8789815b7321d66a9",
       "book-chapters-materials-machine-v1.json": "2d8a8e95af5ea582361b9e8481e90bc1caabe9af",
       "book-authored-remaining-v1.json": "839159d93c61a47b1faa758cec95c7a63e27fa5f",
-      "book-worked-engineering-cases-v1.json": "e8ea4f317fa803fedeaa1a352a40ae604bf23812",
-      "book-evidence-enrichment-v2.json": "b7cba0e45190fd63531c3abfa3f2fc22fe311ed0",
-      "book-material-grade-atlas-v1.json": "c8b797ea52422c3ae7275c2ac369ba3b4a12288f",
+      "book-worked-engineering-cases-v1.json": "b3e376105aec6f4046b1c3eac5ed051e813010c8",
+      "book-evidence-enrichment-v2.json": "ae4deeb8c8ed3f7f38f65f494ff52bbfb3923202",
+      "book-material-grade-atlas-v1.json": "bd2fb844ba853987dc43ab536d04b6e8c0baa582",
       "book-material-regional-evidence-v1.json": "4a42fa97f737b13271518d63672d3c4a01421e14",
       "material-catalog-v1.json": "88ac789aef21314cf2fbef194937ea3dca180471",
-      "book-engineering-diagrams-v1.json": "f64b3241b5265ec7191c450fc4266e2888452b53",
-      "book-reader-architecture-v2.json": "dddafd4a5acc47cabc30c9ac2df3d36805c65e9a",
-      "book-editorial-expansion-review-v1.json": "32dfe06a0d7dbc701bbf87310a603ba888545142"
+      "book-engineering-diagrams-v1.json": "0a2883d595bb55670596b87178888f44c3b06592",
+      "book-reader-architecture-v2.json": "65708fe61a510bb8424ba3878d85b22409059b72",
+      "book-editorial-expansion-review-v1.json": "6a97bd39a3d2e6d38788afc9357397a25a5c25ff",
+      "book-claim-evidence-reference-v1.json": "9907d6fb9b09bd230f0e333beb2ba3a6344305d9"
     }
   },
   "canonicalAcademicEvidenceUrls": {
@@ -126,7 +127,7 @@
     "The 2026-10-06 editorial expansion across 37 governed modules is bound to each module's existing governed claim IDs by data/book-editorial-expansion-review-v1.json; the completed depth pass adds mechanism, measurement, discriminating-evidence and falsification guidance without adding universal setpoints, machine-control authority or independent human SME approval.",
     "Reader-level depth bands, learning objectives, knowledge checks and application prompts are derived teaching scaffolds only; they cannot add claims, upgrade evidence status or create production authority.",
     "Packaging certification marks are interpreted only at their supported management-system scope: an ISO 9001/SAI Global marking does not certify resin properties, exact grade identity, processing conditions, lot acceptance or product conformity; current certificate validity and scope require separate verification.",
-    "The 2026-10-06.4 deep-fix revision repairs the runtime and QA inventory contracts to 26 worked cases and 21 diagrams, adds a governed r12 filling-boundary diagnostic case, corrects awkward non-substantive editorial substitutions, rebinds the editorial-review ledger to the exact current authored/reader bytes, and preserves independent human SME review as HOLD."
+    "The 2026-10-06.5 evidence-transparency revision adds an exact-byte 46-module/27-source claim-evidence reference index derived from the governed claim-review ledgers, exposes those sources in module and reader references, aligns worked-case evidence with parent claim governance, adds a synthetic r09 defensible-baseline record, and preserves independent human SME review as HOLD."
   ],
   "revocationRules": {
     "claimHoldOrConflict": "block-release",
@@ -141,16 +142,17 @@
     "materialAtlasLedgerOrEvidenceMismatch": "fail-closed-runtime",
     "diagramLedgerOrAssetMismatch": "fail-closed-runtime",
     "readerArchitectureOrCoverageMismatch": "fail-closed-runtime",
-    "editorialExpansionReviewOrByteMismatch": "fail-closed-runtime"
+    "editorialExpansionReviewOrByteMismatch": "fail-closed-runtime",
+    "claimEvidenceReferenceMismatch": "fail-closed-runtime"
   },
   "workedCasesAuthorization": {
     "status": "authorized",
     "authorizedAt": "2026-10-03",
-    "release": "2026.10.06.4",
+    "release": "2026.10.06.5",
     "ledger": "data/book-worked-engineering-cases-v1.json",
-    "caseCount": 26,
-    "claimCount": 26,
-    "scope": "Twenty-six synthetic worked engineering teaching cases with explicit assumptions, measurements/reasoning, uncertainty boundaries, evidence anchors and non-universal applicability boundaries, including the complex-diagnostics capstone and an r12 filling-boundary diagnostic case.",
+    "caseCount": 27,
+    "claimCount": 27,
+    "scope": "Twenty-seven synthetic worked engineering teaching cases with explicit assumptions, measurements/reasoning, uncertainty boundaries, evidence anchors and non-universal applicability boundaries, including the complex-diagnostics capstone, r12 filling-boundary diagnosis and r09 defensible-baseline record.",
     "independentSmeStatus": "hold",
     "independentSmeContract": "data/book-sme-review-v1.json",
     "authorityBoundary": "advisory-only; no validated recipe or automatic machine-control authority"
@@ -158,7 +160,7 @@
   "evidenceEnrichmentAuthorization": {
     "status": "authorized",
     "authorizedAt": "2026-09-18",
-    "release": "2026.10.06.4",
+    "release": "2026.10.06.5",
     "ledger": "data/book-evidence-enrichment-v2.json",
     "ledgerId": "book-evidence-enrichment-2026-09-18-v2",
     "chapterCount": 10,
@@ -207,7 +209,7 @@
   "diagramAuthorization": {
     "status": "authorized-instructional-diagrams",
     "authorizedAt": "2026-10-03",
-    "release": "2026.10.06.4",
+    "release": "2026.10.06.5",
     "ledger": "data/book-engineering-diagrams-v1.json",
     "diagramCount": 21,
     "scope": "Twenty-one generic explanatory SVG diagrams bound to governed Book modules; each asset hash is recorded in the governed diagram ledger.",
@@ -217,7 +219,7 @@
   },
   "readerArchitectureAuthorization": {
     "status": "authorized-derived-structure",
-    "release": "2026.10.06.4",
+    "release": "2026.10.06.5",
     "ledger": "data/book-reader-architecture-v2.json",
     "readerChapterCount": 20,
     "governedModuleCount": 46,
@@ -227,11 +229,21 @@
   },
   "editorialExpansionAuthorization": {
     "status": "authorized-repository-technical-source-review",
-    "release": "2026.10.06.4",
+    "release": "2026.10.06.5",
     "ledger": "data/book-editorial-expansion-review-v1.json",
     "moduleCount": 37,
     "noNewClaimIds": true,
     "independentSmeStatus": "hold",
     "authorityBoundary": "Expanded prose across 37 governed modules is authorized only within each module's mapped existing governed claim scope; no independent human SME approval, universal recipe or production authority is implied."
+  },
+  "claimEvidenceReferenceAuthorization": {
+    "status": "authorized-derived-evidence-index",
+    "release": "2026.10.06.5",
+    "ledger": "data/book-claim-evidence-reference-v1.json",
+    "chapterCount": 46,
+    "sourceCount": 27,
+    "noNewClaims": true,
+    "independentSmeStatus": "hold",
+    "authorityBoundary": "Presentation/traceability index only; it exposes governed claim-review evidence to readers without changing claim conclusions, evidence status, production authority or independent human SME status."
   }
 }
