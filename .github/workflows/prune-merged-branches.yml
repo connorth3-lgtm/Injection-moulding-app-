@@ -7,17 +7,118 @@ on:
     types: [completed]
     branches: [main]
 
-permissions:
-  contents: write
-  pull-requests: read
+permissions: {}
 
 concurrency:
   group: prune-fully-merged-branches
   cancel-in-progress: false
 
 jobs:
+  manual-preview:
+    if: github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: read
+      pull-requests: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: Preview fully merged branches without deletion
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          owner="${GH_REPO%%/*}"
+          candidates=0
+          kept=0
+          while IFS=    steps:
+      - name: Delete fully merged branches
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          owner="${GH_REPO%%/*}"
+          deleted=0
+          kept=0
+
+          while IFS=$'\t' read -r branch sha; do
+            [[ -z "$branch" || "$branch" == "main" ]] && continue
+            case "$branch" in
+              visual-baseline/*)
+                echo "Keeping retained visual baseline ref: $branch ($sha)"
+                kept=$((kept+1))
+                continue
+                ;;
+            esac
+
+            ahead=$(gh api "repos/$GH_REPO/compare/main...$sha" --jq '.ahead_by')
+            reason=""
+
+            if [[ "$ahead" == "0" ]]; then
+              reason="no commits ahead of main"
+            else
+              merged_same_head=$(gh api --method GET "repos/$GH_REPO/pulls" \
+                -f state=closed \
+                -f base=main \
+                -f head="$owner:$branch" \
+                -f per_page=100 \
+                --jq "[.[] | select(.merged_at != null and .head.sha == \"$sha\")] | length")
+              if [[ "$merged_same_head" != "0" ]]; then
+                reason="current head exactly matches a merged PR into main"
+              fi
+            fi
+
+            if [[ -n "$reason" ]]; then
+              live_sha=$(gh api "repos/$GH_REPO/git/ref/heads/$branch" --jq '.object.sha' 2>/dev/null || true)
+              if [[ -z "$live_sha" || "$live_sha" != "$sha" ]]; then
+                echo "Keeping branch whose head moved during prune evaluation: $branch (expected $sha, now ${live_sha:-missing})"
+                kept=$((kept+1))
+                continue
+              fi
+              echo "Deleting merged branch: $branch ($reason; live SHA rechecked)"
+              gh api --method DELETE "repos/$GH_REPO/git/refs/heads/$branch"
+              deleted=$((deleted+1))
+            else
+              echo "Keeping branch with $ahead unique commit(s) and no merged PR at its current head: $branch"
+              kept=$((kept+1))
+            fi
+          done < <(gh api --paginate "repos/$GH_REPO/branches?per_page=100" --jq '.[] | [.name,.commit.sha] | @tsv')
+
+          echo "Deleted $deleted proven merged branch(es); kept $kept branch(es) whose current head is not proven safe to remove." >> "$GITHUB_STEP_SUMMARY"
+\t' read -r branch sha; do
+            [[ -z "$branch" || "$branch" == "main" ]] && continue
+            case "$branch" in
+              visual-baseline/*)
+                echo "Keeping retained visual baseline ref: $branch ($sha)"
+                kept=$((kept+1))
+                continue
+                ;;
+            esac
+            ahead=$(gh api "repos/$GH_REPO/compare/main...$sha" --jq '.ahead_by')
+            reason=""
+            if [[ "$ahead" == "0" ]]; then
+              reason="no commits ahead of main"
+            else
+              merged_same_head=$(gh api --method GET "repos/$GH_REPO/pulls"                 -f state=closed -f base=main -f head="$owner:$branch" -f per_page=100                 --jq "[.[] | select(.merged_at != null and .head.sha == \"$sha\")] | length")
+              [[ "$merged_same_head" != "0" ]] && reason="current head exactly matches a merged PR into main"
+            fi
+            if [[ -n "$reason" ]]; then
+              echo "Would delete merged branch after live-SHA recheck: $branch ($reason)"
+              candidates=$((candidates+1))
+            else
+              echo "Would keep branch with $ahead unique commit(s): $branch"
+              kept=$((kept+1))
+            fi
+          done < <(gh api --paginate "repos/$GH_REPO/branches?per_page=100" --jq '.[] | [.name,.commit.sha] | @tsv')
+          echo "Manual preview only: $candidates deletion candidate(s), $kept retained branch(es). No refs were changed." >> "$GITHUB_STEP_SUMMARY"
+
   prune:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+      contents: write
+      pull-requests: read
     runs-on: ubuntu-latest
     steps:
       - name: Delete fully merged branches
