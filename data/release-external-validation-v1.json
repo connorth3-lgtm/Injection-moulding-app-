@@ -62,7 +62,7 @@
     "status": "hold",
     "evidenceContract": "data/book-sme-review-v1.json",
     "reviewPacket": "qa/BOOK_SME_REVIEW_2026.10.06.1.md",
-    "required": "Independent human SME approval of all 46 governed Book chapters across the six required review dimensions."
+    "required": "Independent human SME approval of all 46 governed Book modules across the six required review dimensions; the 20 reader chapters are structural groupings only."
   },
   "curriculumSme": {
     "status": "hold",
