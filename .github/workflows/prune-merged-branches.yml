@@ -33,7 +33,7 @@ jobs:
           kept=0
 
           while IFS=$'\t' read -r branch sha; do
-            [[ -z "$branch" || "$branch" == "main" ]] && continue
+            [[ -z "$branch" || "$branch" == "main" || "$branch" == "preview" ]] && continue
             case "$branch" in
               visual-baseline/*)
                 echo "Keeping retained visual baseline ref: $branch ($sha)"
@@ -89,7 +89,7 @@ jobs:
           kept=0
 
           while IFS=$'\t' read -r branch sha; do
-            [[ -z "$branch" || "$branch" == "main" ]] && continue
+            [[ -z "$branch" || "$branch" == "main" || "$branch" == "preview" ]] && continue
             case "$branch" in
               visual-baseline/*)
                 echo "Keeping retained visual baseline ref: $branch ($sha)"
