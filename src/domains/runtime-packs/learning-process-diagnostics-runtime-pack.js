@@ -66,11 +66,15 @@ function jumpTo(id){
 window.mmLearningJump=jumpTo;
 
 function saveNotesNow(id,area,status){
-  if(!area)return;
+  if(!area)return false;
   user.notes=user.notes||{};
   user.notes[id]=area.value;
-  persist();
-  if(status){status.textContent='Saved';status.dataset.state='saved'}
+  const durable=persist();
+  if(status){
+    status.textContent=durable?'Saved':'Session only';
+    status.dataset.state=durable?'saved':'session-only';
+  }
+  return durable;
 }
 
 function installAutosave(lesson){
