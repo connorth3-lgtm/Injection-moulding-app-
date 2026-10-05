@@ -99,8 +99,8 @@ need(
     "direct learner artifact upload must be limited to PR validation and never selected for main publication",
 )
 need(
-    "if: github.event_name != 'pull_request'\n    needs: build" in workflow,
-    "main Pages deploy must publish the preview-only release-hold artifact",
+    "if: github.event_name == 'push'\n    needs: build" in workflow,
+    "main Pages deploy must be limited to protected-main pushes and publish the release-hold artifact",
 )
 need("production_ready == 'true'" not in workflow.split("      - name: Build release-hold Pages artifact",1)[1], "production readiness must not switch main publication away from preview-only mode")
 
