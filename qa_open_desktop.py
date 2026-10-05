@@ -44,6 +44,13 @@ lock = json.loads((DESKTOP / "package-lock.json").read_text(encoding="utf-8"))
 msix_pkg = json.loads((DESKTOP / "msix-toolchain" / "package.json").read_text(encoding="utf-8"))
 msix_lock = json.loads((DESKTOP / "msix-toolchain" / "package-lock.json").read_text(encoding="utf-8"))
 msix_runner = (DESKTOP / "scripts" / "run-msix-builder.cjs").read_text(encoding="utf-8")
+windows_verifier = (DESKTOP / "scripts" / "verify-real-windows-release.ps1").read_text(encoding="utf-8")
+for marker in (
+    "$matchingHashes = @()",
+    "$matchingHashes.Count -ne 1",
+    "Expected exactly one SHA-256 entry",
+):
+    require(marker in windows_verifier, f"real Windows release checksum verifier missing ambiguity guard: {marker}")
 require(pkg.get("license") == "Apache-2.0", "desktop package must remain Apache-2.0")
 require(lock.get("lockfileVersion", 0) >= 3, "desktop npm lockfile must be v3+")
 for dep in ("electron", "electron-builder"):
