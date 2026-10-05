@@ -2,12 +2,12 @@
 
 Release `2026.10.06.1` has a repository-controlled NZQA readiness layer, but external provider/NZQA validation remains **HOLD**.
 
-- retained learner-facing source: `71dcf9d26249b7565db8f2807100c11135e4333f`
-- runtime fingerprint: `sha256:08c98a550fa72a2f9b68c1f39ab405e6150713bebde7a9b381c8ca3356d1f23d`
+- retained learner-facing source: `2200aca525121de10d54d8663af00535b39979f0`
+- runtime fingerprint: `sha256:366b6f3a458d58deee47b032163ec5e36ebded30655085dd15e0f8007d7aa948`
 - readiness contract: `data/nzqa-education-readiness-v1.json`
 - provider evidence templates: `data/nzqa-provider-evidence-templates-v1.json`
 - external closeout tracker: #379
-- candidate authority: retained exact-head artifact from `Pre-merge Public Candidate` run `37239810375`; mutable `preview` is non-authoritative
+- candidate authority: retained exact-head artifact from `Pre-merge Public Candidate` run `37353639908`; mutable `preview` is non-authoritative
 
 The following gates require genuine external evidence:
 
@@ -23,3 +23,5 @@ The following gates require genuine external evidence:
 | G8 review | **HOLD** | Provider-controlled review/change governance and any required NZQA change approval. |
 
 MouldMaster completion does not award NZQA credits, establish workplace competence, grant consent to assess, make the repository an accredited provider, or prove national moderation acceptance. Automated QA may verify this contract and the readiness mapping, but it must never manufacture provider/NZQA evidence.
+
+The Book’s 20 reader-facing chapters remain a structural presentation of the same 46 governed modules used by the readiness mapping; consolidation does not create NZQA approval, credits, provider status or competence evidence.
