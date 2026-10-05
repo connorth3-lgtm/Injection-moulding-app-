@@ -46,6 +46,9 @@ jobs:
           assert cross['source']['publisherChecksum'] == 'md5:069e190338b2ca29f736b21fabf407ba'
           assert cross['profile']['archiveMembers'] > 0
           assert cross['profile']['acceptedMeasuredTimeSeriesSamples'] == 0
+          assert 'members' not in cross and 'schemas' not in cross
+          assert len(cross['structureSummary']['schemaFamilies']) == 4
+          assert sum(c['files'] for c in cross['structureSummary']['schemaFamilies']) == cross['profile']['injectionTabularFiles']
           assert not impure['profile']['rawRowsOrCellValuesEmitted']
           assert not cross['profile']['rawRowsOrCellValuesEmitted']
           PY
