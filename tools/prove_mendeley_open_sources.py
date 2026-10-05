@@ -99,7 +99,9 @@ def pinned_download_urls(short_id,version,file_id):
         raise RuntimeError('invalid locally pinned Mendeley file id')
     encoded_id=urllib.parse.quote(file_id,safe='')
     return [
-        assert_https_host(f'{MENDELEY_DOWNLOAD}{short_id}/files/{encoded_id}/file_downloaded',{MENDELEY_HOST}),
+        # Governance pins an explicit dataset version. Do not try the unversioned
+        # convenience route first: it can resolve to bytes outside the governed
+        # version while preserving the same file UUID.
         assert_https_host(f'{MENDELEY_DOWNLOAD}{short_id}/versions/{version}/files/{encoded_id}/file_downloaded',{MENDELEY_HOST}),
     ]
 
