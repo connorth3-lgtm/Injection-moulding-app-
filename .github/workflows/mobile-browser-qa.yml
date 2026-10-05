@@ -26,7 +26,7 @@ jobs:
           fetch-depth: 0
       - name: Classify browser impact
         id: classify
-        run: python3 tools/ci_impact.py
+        run: python3 tools/ci_impact.py --governed-candidate
 
   browser-chromium:
     needs: impact
