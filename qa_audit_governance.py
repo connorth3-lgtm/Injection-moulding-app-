@@ -54,6 +54,8 @@ need(pages.count("actions: write") == 1, "actions:write must be limited to the p
 need(pages.count("pages: write") == 2, "pages:write must be limited to publisher containment and deploy")
 need(pages.count("id-token: write") == 1, "OIDC write permission must be limited to deploy")
 for marker in (
+    "Verify preview deployment remains stable after race window",
+    "Reconfirm preview is still on the deployed SHA after race window",
     "Checkout exact main source before deployment",
     "Recheck current protected-main provenance before deployment",
     "Recheck current protected-main provenance after deployment",
