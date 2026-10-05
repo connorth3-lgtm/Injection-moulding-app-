@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 
-const VERSION='2026.09.01.1';
+const VERSION='2026.10.06.1';
 const STORE_KEY='mm_production_health_v1';
 const MAX_EVENTS=120;
 const ALLOWED_KINDS=new Set([
