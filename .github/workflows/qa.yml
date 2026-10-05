@@ -70,6 +70,24 @@ jobs:
             -not -path './.venv/*' \
             -not -path './venv/*' \
             -print0 | sort -z | xargs -0 -n1 python -m py_compile
+      - name: Repository-wide JSON syntax
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          excluded = {'.git', 'node_modules', 'dist', '.venv', 'venv'}
+          paths = [
+              path for path in Path('.').rglob('*.json')
+              if not any(part in excluded for part in path.parts)
+          ]
+          for path in sorted(paths):
+              try:
+                  json.loads(path.read_text(encoding='utf-8'))
+              except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+                  raise SystemExit(f"{path}: invalid repository JSON: {exc}") from exc
+          print(f"Repository-wide JSON syntax passed: {len(paths)} files")
+          PY
       - name: Strict style CSP hash determinism
         run: node tools/generate_style_csp.cjs --check
       - name: Release and assessment integrity
