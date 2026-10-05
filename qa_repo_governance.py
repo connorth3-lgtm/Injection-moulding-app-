@@ -187,6 +187,10 @@ for marker in (
 ):
     need(marker in preview_verifier, f"preview-source verifier missing marker: {marker}")
 for marker in (
+    "actions/runs/{run_id}",
+    '"Pre-merge Public Candidate"',
+    '".github/workflows/premerge-public-candidate.yml"',
+    'run.get("event") != "pull_request"',
     "actions/runs/{run_id}/artifacts",
     "artifact.get(\"expired\") is not False",
     "live artifact digest does not match canonical webCandidate",
