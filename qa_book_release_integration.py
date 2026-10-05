@@ -314,6 +314,7 @@ need("ids=[...new Set([...(chapter.sourceIds||[]),...claimEvidenceIds(chapter.id
 for marker in ('EVIDENCE_IDENTITIES','BASF-INJECTION-PROBLEMS','NIST-SEMATECH-DOE','NIST-SEMATECH-CAPABILITY','PARIZS-2023-IN-MOLD-SENSORS-WORKED','getEvidenceIdentity'):
     need(marker in book_runtime, f'evidence alias/family normalization missing from Book runtime: {marker}')
 need('getEvidenceIdentity' in claim_trace_runtime and 'Evidence family:' in claim_trace_runtime, 'complete claim trace must explain evidence-family relationships')
+need('data.sourceSeeds.length!==52' in book_runtime, 'Book runtime must require all 52 final governed claim-evidence source records')
 need('await window.MMBook?.load?.()' in claim_trace_runtime, 'complete claim trace must load exact-byte Book authorization before fetching governed ledgers')
 need('getClaimEvidenceReference' in book_runtime and 'getClaimEvidenceReference' in claim_trace_runtime, 'complete claim trace must reconcile against the governed final claim-evidence index')
 need('Complete claim trace final evidence mismatch' in claim_trace_runtime and 'source metadata missing' in claim_trace_runtime, 'complete claim trace must fail closed on final-evidence or source-metadata divergence')
