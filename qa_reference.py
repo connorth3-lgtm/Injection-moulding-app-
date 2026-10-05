@@ -208,7 +208,8 @@ require("setWindowOpenHandler" in main and "shell.openExternal(url)" in main, "d
 require("/^https:\\/\\//i.test(url)" in main, "desktop external reference links must be HTTPS-only")
 
 qa_workflow = text(".github/workflows/qa.yml")
-require("find . -maxdepth 1 -type f -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check" in qa_workflow, "release QA must retain the filesystem JavaScript syntax gate")
+require("Repository-wide JavaScript syntax" in qa_workflow, "release QA must retain the repository-wide JavaScript syntax gate")
+require("-name '*.js'" in qa_workflow and "-name '*.cjs'" in qa_workflow and "-name '*.mjs'" in qa_workflow, "release QA syntax gate must cover JS, CJS and MJS")
 require("python qa_reference.py" in qa_workflow, "release QA must run reference integrity QA")
 
 open_desktop = text(".github/workflows/open-desktop-build.yml")
