@@ -121,6 +121,8 @@ jobs:
   verify:
     permissions:
       contents: read
+      actions: read
+      pull-requests: read
     needs: deploy
     runs-on: ubuntu-latest
     steps:
@@ -128,6 +130,14 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.sha }}
+          fetch-depth: 0
+      - name: Recheck current merged preview provenance after deployment
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          python3 tools/verify_preview_source.py
+          --repository "${{ github.repository }}"
+          --source-sha "${{ github.sha }}"
       - name: Verify preview deployment
         run: >-
           python3 tools/verify_pages_hold.py
@@ -135,3 +145,4 @@ jobs:
           --expected-source-sha "${{ github.sha }}"
           --convergence-attempts 12
           --convergence-delay 2
+
