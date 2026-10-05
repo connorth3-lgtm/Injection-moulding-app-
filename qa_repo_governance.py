@@ -415,6 +415,17 @@ need(
 )
 need("pull_request:\n    branches: [main]" in risk_coverage, "exact-head risk coverage required check must run on every PR to main")
 need("workflow_dispatch:" not in risk_coverage, "exact-head risk coverage must remain PR-only because non-PR execution cannot prove PR-head coverage")
+risk_verifier = text("tools/verify_ci_risk_coverage.py")
+for marker in (
+    '".github/workflows/pages.yml"',
+    '".github/workflows/preview-pages.yml"',
+    '"tools/verify_production_source.py"',
+    '"tools/verify_main_ruleset.py"',
+    '"data/main-governance-policy-v1.json"',
+    '".github/workflows/publish-open-desktop.yml"',
+    '".github/workflows/microsoft-store-msix.yml"',
+):
+    need(marker in risk_verifier, f"exact-head release/provenance risk classifier missing control-plane path: {marker}")
 for workflow_name, workflow in [
     ("question-quality", question_quality),
     ("release-external-validation", external_validation),
