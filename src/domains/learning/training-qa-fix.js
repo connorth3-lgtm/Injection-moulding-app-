@@ -288,7 +288,7 @@ const baseReset=window.resetData;if(typeof baseReset==='function')window.resetDa
  }
  const beforeDb=db;db=proposed;user=db.users[active];if(db!==beforeDb)cancelActiveExam();
  try{updateGlobalProgress();renderProfile()}catch(uiError){console.warn('[MouldMaster] learner reset saved; view refresh failed:',uiError)}
- try{window.dispatchEvent(new CustomEvent('mm:book-resume-change',{detail:null}))}catch(_){ }
+ try{if(typeof window.MMBook?.clearResume==='function')window.MMBook.clearResume();else window.dispatchEvent(new CustomEvent('mm:book-resume-change',{detail:null}))}catch(_){ }
  window.toast?.('This learner was reset, including the saved Book reading position. Other local learner profiles and saved process-data evidence were kept.');
  labelLearnerReset()
 };
