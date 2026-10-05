@@ -47,9 +47,9 @@ jobs:
           PY
           )"
           if [ -n "$BOUND_SOURCE" ] && git cat-file -e "$BOUND_SOURCE^{commit}" 2>/dev/null; then
-            python3 tools/ci_impact.py --base "$BOUND_SOURCE"
+            python3 tools/ci_impact.py --governed-candidate --base "$BOUND_SOURCE"
           else
-            python3 tools/ci_impact.py
+            python3 tools/ci_impact.py --governed-candidate
           fi
 
       - name: Skip redundant candidate rebuild
