@@ -464,7 +464,12 @@ for marker in [
     'workflows: ["Main PR Provenance Guard"]',
     "types: [completed]",
     "branches: [main]",
-    "github.event.workflow_run.conclusion == 'success'",
+    "permissions: {}",
+    "manual-preview:",
+    "Preview fully merged branches without deletion",
+    "Manual preview only:",
+    "github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'",
+    "contents: write",
     "group: prune-fully-merged-branches",
     "cancel-in-progress: false",
     '[[ -z "$branch" || "$branch" == "main" ]] && continue',
@@ -474,6 +479,9 @@ for marker in [
 ]:
     need(marker in pruner, f"merged-branch pruner missing marker: {marker}")
 need("\n  push:\n" not in pruner, "pruner must not race the provenance audit on raw main pushes")
+manual_prune_block = pruner.split("  manual-preview:", 1)[1].split("\n  prune:", 1)[0]
+need("contents: write" not in manual_prune_block, "manual branch-prune preview must remain read-only")
+need("gh api --method DELETE" not in manual_prune_block, "manual branch-prune preview must never delete refs")
 need("superseded" not in pruner.lower(), "one-time superseded-branch deletion allowlist must not remain")
 for stale_branch in [
     "codex/source-freshness-coherence-20260826",
