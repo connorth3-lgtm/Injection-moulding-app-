@@ -55,11 +55,14 @@ need(pages.count("actions: write") == 1, "actions:write must be limited to the p
 need(pages.count("pages: write") == 2, "pages:write must be limited to publisher containment and deploy")
 need(pages.count("id-token: write") == 1, "OIDC write permission must be limited to deploy")
 for marker in (
-    "Recheck current merged preview provenance after deployment",
-    "Verify preview deployment remains stable after race window",
-    "Reconfirm preview is still on the deployed SHA after race window",
+    "name: MouldMaster Preview Candidate",
+    "Verify retained preview candidate locally",
+    "Retain exact preview candidate",
+    "main is the sole live Pages publisher",
 ):
-    need(marker in preview_pages, f"Preview Pages post-deploy race verification missing: {marker}")
+    need(marker in preview_pages, f"Preview candidate non-publishing contract missing: {marker}")
+for forbidden in ("actions/deploy-pages@", "actions/upload-pages-artifact@", "pages: write", "id-token: write"):
+    need(forbidden not in preview_pages, f"Preview workflow must not publish the repository Pages site: {forbidden}")
 for marker in (
     "Checkout exact main source before deployment",
     "Recheck current protected-main provenance before deployment",
@@ -208,7 +211,7 @@ self_test = subprocess.run(
 need(self_test.returncode == 0, f"ruleset verifier self-test failed: {self_test.stderr or self_test.stdout}")
 
 print(
-    "Audit governance QA passed: assessment-evidence workflows retain full Git history, least-privilege Pages permissions, "
+    "Audit governance QA passed: assessment-evidence workflows retain full Git history, main-only live Pages publication, retained exact-SHA preview candidates, least-privilege Pages permissions, "
     "physical-test runtime fingerprint reporting, live critical-byte SHA-256 deployment verification, preview-only protected-main publication with root-to-preview Home forwarding and a separated non-production learner runtime "
     "and local-only device metadata helper, live branch-prune SHA recheck and fail-closed ruleset bypass verification are enforced."
 )
