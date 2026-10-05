@@ -1,19 +1,11 @@
 name: Pre-merge Public Candidate
 
 on:
+  # Always create the exact-head candidate gate for governed PRs. The workflow's
+  # impact classifier makes non-runtime changes cheap without leaving a missing
+  # required preview-provenance signal.
   pull_request:
     branches: [ main, preview ]
-    paths:
-      - 'latest.json'
-      - 'version.json'
-      - 'index.html'
-      - 'service-worker.js'
-      - 'src/domains/shell/pwa-shell.js'
-      - 'src/**'
-      - '*.js'
-      - '*.css'
-      - '*.html'
-      - 'manifest.webmanifest'
   workflow_dispatch:
 
 permissions:
