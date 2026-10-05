@@ -59,6 +59,16 @@
       "checked": "2026-09-14",
       "state": "peer-reviewed-fetched",
       "scope": "Review of filling-to-holding switchover methods; supports early/late switchover consequences and sensitivity to material, machine and environmental conditions without defining a universal transfer point."
+    },
+    {
+      "id": "RJG-DECOUPLED-WORKSHOP",
+      "type": "manufacturer-training-method-outline",
+      "issuer": "RJG, Inc.",
+      "title": "DECOUPLED MOLDING® Workshop",
+      "url": "https://rjginc.com/training/registration/decoupled-molding-workshop/",
+      "scope": "Public RJG training outline naming pressure-loss testing, gate-seal study, mould temperature mapping and machine/mould capability validation as controlled process-development exercises; not a universal production procedure.",
+      "checked": "2026-09-14",
+      "currentState": "current-public-training-outline"
     }
   ],
   "cases": [
@@ -1286,12 +1296,104 @@
           ]
         }
       ]
+    },
+    {
+      "id": "worked-process-baseline-record-v1",
+      "chapterId": "process-baseline",
+      "title": "Defensible baseline record: preserve state, evidence and unknowns",
+      "synthetic": true,
+      "setup": "A synthetic four-cavity production process is stable before planned maintenance. The task is to create a baseline record that another competent technician can audit after the mould returns, without treating a screenshot of setpoints as proof that the same physical process state has been restored.",
+      "table": {
+        "columns": [
+          "Record element",
+          "Synthetic entry",
+          "Why it matters"
+        ],
+        "rows": [
+          [
+            "Material identity",
+            "Exact grade and lot recorded; values are synthetic",
+            "Separates material change from machine or mould change."
+          ],
+          [
+            "Machine and mould identity",
+            "Machine, mould revision and cavity map recorded",
+            "Prevents comparing unlike equipment/tool states."
+          ],
+          [
+            "Commands",
+            "Controlled process-sheet revision referenced; numeric settings intentionally omitted here",
+            "Preserves commanded state without turning the teaching case into a recipe."
+          ],
+          [
+            "Actual process signals",
+            "Cycle time, recovery/cushion trend and pressure/position traces recorded over a stable sample",
+            "Shows what the machine actually did, not only what was commanded."
+          ],
+          [
+            "Mould thermal state",
+            "Stabilisation condition and relevant temperature/cooling observations recorded",
+            "Makes thermal starting state visible."
+          ],
+          [
+            "Part outputs",
+            "Cavity identity, measurement timing and required quality results recorded",
+            "Connects process evidence to the product result."
+          ],
+          [
+            "Unknowns / missing evidence",
+            "Any unavailable value is marked missing, not reconstructed",
+            "Prevents later confidence from being built on invented history."
+          ]
+        ]
+      },
+      "observations": [
+        "The record separates material, machine, mould, process-signal and part-output evidence.",
+        "Cavity identity and measurement timing are preserved instead of pooling results.",
+        "Negative or inconclusive observations are retained rather than removed from the history.",
+        "The baseline defines the events that would invalidate comparison, including material, maintenance, tooling, measurement or control changes."
+      ],
+      "assumptions": [
+        "All entries are synthetic teaching data and intentionally omit production setpoints.",
+        "The example assumes the process was already authorised and stable under the site's quality and safety controls.",
+        "The baseline does not replace the machine record, mould record, approved process sheet or product-control plan."
+      ],
+      "calculationSteps": [
+        "Separate commanded conditions from measured process signals and measured part outputs.",
+        "Record identity and context before interpreting trends: material lot, machine, mould revision, cavity, time and measurement condition.",
+        "Mark unavailable evidence as missing rather than estimating it after the event.",
+        "Define which future changes invalidate direct comparison with this baseline and therefore require re-establishing evidence."
+      ],
+      "interpretation": "A defensible baseline is an auditable evidence package, not a single settings screenshot. Its value comes from preserving identity, context, actual process response, product response and uncertainty well enough that later changes can be compared without inventing missing history.",
+      "boundaries": [
+        "No value in this synthetic record is a machine setting, process recipe or acceptance limit.",
+        "Product disposition remains controlled by the applicable quality plan and measurement requirements.",
+        "Maintenance, setup and safety actions remain controlled by machine, mould and site procedures.",
+        "A baseline supports comparison; it does not by itself prove future capability or root cause."
+      ],
+      "sourceIds": [
+        "ISO-294-1-2017",
+        "ASTM-D3641-24",
+        "RJG-DECOUPLED-WORKSHOP"
+      ],
+      "claims": [
+        {
+          "id": "worked-process-baseline-record-v1-claim-1",
+          "statement": "A defensible moulding-process baseline should preserve process identity, commanded conditions, relevant measured response, product response and known uncertainty so later changes can be compared without treating setpoints alone as proof of equivalent process state.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "ISO-294-1-2017",
+            "ASTM-D3641-24",
+            "RJG-DECOUPLED-WORKSHOP"
+          ]
+        }
+      ]
     }
   ],
   "humanReviewScope": {
     "status": "hold",
     "contract": "data/book-sme-review-v1.json",
-    "required": "All 26 worked cases are attached to chapters inside the 46-chapter independent human SME scope; each case requires arithmetic/reasoning, assumptions, evidence fit, synthetic-data labelling and non-universal-boundary review."
+    "required": "All 27 worked cases are attached to chapters inside the 46-chapter independent human SME scope; each case requires arithmetic/reasoning, assumptions, evidence fit, synthetic-data labelling and non-universal-boundary review."
   },
   "authorityBoundary": {
     "productionUse": "advisory-only",
