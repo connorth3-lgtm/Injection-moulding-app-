@@ -222,7 +222,7 @@ def verify(repository: str, branch: str, sha: str, token: str) -> None:
 def self_test() -> None:
     payload = {
         "workflow_runs": [
-            {"id": i + 1, "name": name, "status": "completed", "conclusion": "success", "updated_at": f"2026-10-05T00:00:{i:02d}Z"}
+            {"id": i + 1, "name": name, "path": REQUIRED_WORKFLOW_PATHS[name], "status": "completed", "conclusion": "success", "updated_at": f"2026-10-05T00:00:{i:02d}Z"}
             for i, name in enumerate(REQUIRED["preview"])
         ]
     }
@@ -231,7 +231,7 @@ def self_test() -> None:
     assert all(value == ("completed", "success") for value in states.values())
     assert all(run.get("id") for run in runs.values())
     payload["workflow_runs"].append(
-        {"id": 99, "name": "MouldMaster Release QA", "status": "completed", "conclusion": "failure", "updated_at": "2026-10-05T01:00:00Z"}
+        {"id": 99, "name": "MouldMaster Release QA", "path": REQUIRED_WORKFLOW_PATHS["MouldMaster Release QA"], "status": "completed", "conclusion": "failure", "updated_at": "2026-10-05T01:00:00Z"}
     )
     assert latest_states(payload, REQUIRED["preview"])["MouldMaster Release QA"] == ("completed", "failure")
     print("Branch-assurance verifier self-test passed")
