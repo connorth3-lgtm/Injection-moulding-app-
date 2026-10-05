@@ -955,6 +955,18 @@
         {
           "title": "What evidence should change the conclusion?",
           "text": "Change the working diagnosis when the dimensional trend follows conditioning rather than process settings, differs by cavity or direction, disappears with improved measurement control, or persists after the suspected process variable is stabilised. The appropriate conclusion may be material-, tooling-, measurement- or product-design related rather than process-only."
+        },
+        {
+          "title": "Build a dimensional time profile",
+          "text": "When a dimension evolves after moulding, measure it at defined intervals under controlled conditions rather than choosing one convenient time. The resulting profile can show rapid thermal contraction followed by slower material or moisture-related change. This helps distinguish a process change from a difference in when the part happened to be measured."
+        },
+        {
+          "title": "Define datum strategy before analysing small changes",
+          "text": "A component can appear to change dimension because the measurement datum or fixturing changes as the part distorts. Use a repeatable datum system that reflects the product requirement, and record whether the measurement is size, position, form or a derived relationship. For flexible parts, measurement force and support can be part of the observed variation."
+        },
+        {
+          "title": "Separate cavity bias from common drift",
+          "text": "If one cavity is consistently offset while all cavities move together over time, there may be both a cavity-specific effect and a shared thermal or material effect. Analyse those components separately. Pooling them into one average can hide a persistent tooling difference and exaggerate apparent random process variation."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -988,6 +1000,18 @@
         {
           "title": "Infer carefully and measure where it matters",
           "text": "Flow direction and geometry can suggest likely orientation, but they do not uniquely determine the final distribution. Dimensional vectors, mechanical testing, microscopy or validated simulation may be needed when orientation is critical. Treat orientation-based explanations as hypotheses until the evidence matches the required decision."
+        },
+        {
+          "title": "Skin-core structure can create competing directions",
+          "text": "Flow near the mould wall and flow in the core can develop different fibre orientations, particularly around changes in section or converging fronts. The final dimensional and mechanical behaviour reflects the combined local structure, not a single global flow arrow. This is one reason warpage in reinforced parts can be difficult to infer from surface flow marks alone."
+        },
+        {
+          "title": "Geometry changes can redirect orientation",
+          "text": "Gates, ribs, holes, thickness transitions and weld regions change the local flow field and therefore can change orientation patterns. When a dimensional or strength problem is tied to one feature, consider whether the geometry creates a local orientation mechanism rather than assuming the material behaves uniformly through the part."
+        },
+        {
+          "title": "Validate simulations against physical evidence",
+          "text": "Flow and orientation simulation can be valuable for comparing designs and forming hypotheses, but its prediction depends on material models, mesh, boundary conditions and process inputs. Where the decision is important, compare simulation trends with measurements, microscopy, mechanical tests or observed dimensional directionality. Simulation should strengthen an evidence chain, not replace it."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -1132,6 +1156,22 @@
         {
           "title": "What evidence should change the conclusion?",
           "text": "Reduce confidence when a prediction fails, the effect cannot be repeated, the symptom crosses the supposed boundary, or new evidence supports an alternative mechanism. When available evidence cannot discriminate among causes, document the unresolved set and hold the root-cause claim rather than inventing certainty."
+        },
+        {
+          "title": "Build a causal timeline",
+          "text": "For difficult problems, reconstruct the sequence from the last known-good state to the current symptom. Include material changes, mould maintenance, machine intervention, parameter revisions, environmental shifts, stoppages and quality measurements. A timeline can reveal whether the effect begins before or after a suspected event and whether recovery follows the reverse sequence."
+        },
+        {
+          "title": "Use population boundaries as experiments",
+          "text": "Compare what is affected and what is not: one cavity versus all cavities, one machine versus another, one material lot versus the next, one shift versus all shifts, or one insert versus its neighbour. An unaffected comparison group can be as informative as the failing group because it constrains where the mechanism can plausibly exist."
+        },
+        {
+          "title": "Beware compensating mechanisms",
+          "text": "Two problems can partly cancel each other. One change may reduce a dimensional bias while another increases it, producing an apparently stable result until either condition moves. When evidence does not fit a simple one-cause model, consider whether multiple mechanisms are interacting rather than assuming the remaining unexplained variation is random noise."
+        },
+        {
+          "title": "Define the stopping rule for investigation",
+          "text": "An investigation should stop when the evidence is sufficient for the decision being made, not when every conceivable uncertainty is removed. Define what must be demonstrated for containment, corrective action and verification. If the consequence of being wrong is high, require stronger evidence and independent review. If evidence remains inadequate, preserve the unresolved status instead of declaring certainty."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
