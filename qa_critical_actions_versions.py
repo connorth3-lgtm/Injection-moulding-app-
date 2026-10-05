@@ -65,16 +65,11 @@ def pinned_pip_specs(text, rel):
         tail = line.split("pip install", 1)[1].strip()
         if not tail:
             continue
+        need(not tail.endswith("\\"), f"multi-line pip install is forbidden in {rel}:{line_no}; keep exact pins on one audited line")
         tokens = shlex.split(tail)
-        skip_next = False
         for token in tokens:
-            if skip_next:
-                skip_next = False
-                continue
-            if token in value_options:
-                skip_next = True
-                continue
-            if token.startswith("-") or token == "\\":
+            need(token not in value_options, f"indirect pip requirements/constraints are forbidden in workflow YAML {rel}:{line_no}: {token}")
+            if token.startswith("-"):
                 continue
             need(
                 "==" in token,
@@ -120,7 +115,7 @@ for rel in WORKFLOWS:
     })
 
 (ROOT / "critical-actions-versions-report.json").write_text(json.dumps({
-    "schema": 2,
+    "schema": 3,
     "result": "pass",
     "workflowCount": len(WORKFLOWS),
     "policy": "all-external-actions-immutable; governed-core-actions-exact-reviewed-sha; workflow-pip-dependencies-exact-version; human-readable major annotations optional",
