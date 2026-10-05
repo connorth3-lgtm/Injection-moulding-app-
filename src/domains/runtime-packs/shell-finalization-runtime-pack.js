@@ -211,6 +211,20 @@ function adoptShellRuntime(){
   R.registerModule('app-shell-runtime-adoption',{version:VERSION,type:'runtime-v2-core-owner',owned:['renderDashboard','renderLesson','switchView']});
 }
 function resyncGovernedEvidence(){syncEvidenceExports();patchEvidenceUi()}
+const STARTUP_CORE_VIEWS=new Set(['dashboard','path','materials','lesson','visuals','simulator','defects','scenarios','coach','exams','certificates','instructor','glossary','profile','standards']);
+function requestedStartupView(){
+  try{return String(new URLSearchParams(location.search).get('view')||'').trim()}catch(_){return ''}
+}
+function applyStartupRoute(){
+  const requested=requestedStartupView();if(!requested)return false;
+  if(STARTUP_CORE_VIEWS.has(requested)){window.switchView?.(requested);return true}
+  if(requested==='assessment'){window.switchView?.('exams');return true}
+  if(requested==='book'){window.MMBook?.open?.();return true}
+  if(requested==='processDataLabs'||requested==='process-data'){window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.();return true}
+  if(requested==='standards-readiness'){window.MM_STANDARDS_READINESS?.open?.();return true}
+  if(requested==='reference'||requested==='reference-data'){location.replace('./reference-data.html');return true}
+  return false
+}
 
 syncEvidenceExports();
 window.MM_SPECIALIST_EVIDENCE_STATUS=EVIDENCE_EXPORT;
@@ -230,7 +244,7 @@ loadSimpleLessonRuntime();
 window.MM_APP_SHELL.navigation?.sync?.();
 window.addEventListener('popstate',()=>window.MM_APP_SHELL.navigation?.sync?.());
 window.addEventListener('mm:domains-ready',resyncGovernedEvidence);
-requestAnimationFrame(()=>{window.MM_APP_SHELL.geometry?.sync?.();patchEvidenceUi();simplifyHomeScreen();stabilizeRetiredChrome();window.MM_APP_SHELL.navigation?.sync?.()});
+requestAnimationFrame(()=>{window.MM_APP_SHELL.geometry?.sync?.();patchEvidenceUi();simplifyHomeScreen();stabilizeRetiredChrome();window.MM_APP_SHELL.navigation?.sync?.();applyStartupRoute()});
 window.MM_APP_SHELL_FINALIZED=VERSION;
 })();
 /* <<< app-shell-finalize.js */
