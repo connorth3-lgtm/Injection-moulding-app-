@@ -39,7 +39,7 @@ def download_verified(source: dict, expected_name: str) -> tuple[Path, tempfile.
     file_spec=next(x for x in source["files"] if x[1]==expected_name)
     file_id,name,expected_sha=file_spec
     _,meta=public_files(source["shortId"],source["version"])
-    _chosen,_resolved,urls=resolve_file(meta,file_id,name,source["shortId"],source["version"])
+    _chosen,_resolved,urls=resolve_file(meta,file_id,name,source["shortId"],source["version"],expected_sha)
     td=tempfile.TemporaryDirectory()
     path=Path(td.name)/name
     download_first(urls,path)
