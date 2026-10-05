@@ -265,6 +265,14 @@ need(
     "retain-exact-candidate" not in preview_pages.split("Require exact-head preview quality gates", 1)[1].split("Validate preview build contracts", 1)[0],
     "preview push-SHA polling must not require the PR-only public-candidate job",
 )
+for marker in (
+    "Live protected-main governance policy",
+    "github.base_ref == 'main'",
+    "github.ref == 'refs/heads/main'",
+    'python tools/verify_main_ruleset.py --repository "${{ github.repository }}"',
+):
+    need(marker in release_qa, f"release QA missing live protected-main fail-closed governance marker: {marker}")
+
 need("pull_request:\n    branches: [ main, preview ]" in premerge_public_candidate,
      "public-candidate gate must run on every governed PR")
 need("\n    paths:\n" not in premerge_public_candidate.split("pull_request:", 1)[1].split("workflow_dispatch:", 1)[0],
