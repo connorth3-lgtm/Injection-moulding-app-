@@ -24,7 +24,7 @@ Required coverage: Open Desktop Build.
 
 ## Release/provenance risk
 
-Paths: `version.json`, `service-worker.js`, `runtime-domain-manifest.json`, `release-asset-graph.json`, `tools/build_pages_artifact.py`, `data/release-external-validation-v1.json`
+Paths include release identity/runtime files plus the release control plane: `version.json`, `service-worker.js`, `runtime-domain-manifest.json`, `release-asset-graph.json`, Pages build/hold/verifier tooling, production/preview/branch provenance verifiers, main ruleset policy/attestation/helper files, Pages/preview/provenance/assurance/public-candidate workflows, desktop publication/MSIX/immutability workflows, and their governance QA.
 
 Required coverage: MouldMaster Pages Release Readiness, Release External Validation Boundary, MouldMaster Physical PWA Contract QA, Open Desktop Build.
 
