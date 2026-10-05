@@ -23,10 +23,18 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
       - name: Classify browser impact
         id: classify
-        run: python3 tools/ci_impact.py --governed-candidate
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TARGET="${{ github.event.pull_request.head.sha || github.sha }}"
+          BASE="$(python3 tools/github_workflow_baseline.py --workflow mobile-browser-qa.yml --target "$TARGET")"
+          python3 tools/ci_impact.py --base "$BASE" --head "$TARGET"
 
   browser-chromium:
     needs: impact
