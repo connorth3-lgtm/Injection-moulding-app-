@@ -5,7 +5,7 @@
   "status": "repository-technical-review-complete",
   "reviewType": "editorial-expansion-claim-boundary-review",
   "purpose": "Bind the 2026-10-06 instructional-depth expansion and 20-chapter reader consolidation to the existing governed claim inventory without manufacturing independent human SME approval.",
-  "reviewBoundary": "Repository-controlled technical/source review only. It confirms that added explanatory prose remains within existing governed claim scope; it is not independent human SME validation and cannot create machine-, mould-, grade-, product- or site-specific production authority.",
+  "reviewBoundary": "Repository-controlled technical/source review of the governed content, including the 2026-10-06 human-voice editorial pass. The voice pass may change headings, chapter openings/closings and explanatory phrasing only where the governed claim meaning, safety boundary and uncertainty level remain unchanged. It is not independent human SME validation.",
   "readerArchitecture": {
     "path": "data/book-reader-architecture-v2.json",
     "gitBlobSha1": "529928cd366853093266a107034eacc2c5482d15",
@@ -15,7 +15,7 @@
     {
       "moduleId": "what-injection-moulding-is",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "e8f4347a488c377c15a86ea640a014b462c38ef9",
+      "authoredGitBlobSha1": "7f8cf29ca93cd3797b02f3f586c6182f5c8e9a62",
       "governedClaimIds": [
         "what-injection-moulding-is-01",
         "what-injection-moulding-is-02",
@@ -34,7 +34,7 @@
     {
       "moduleId": "cycle",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "e8f4347a488c377c15a86ea640a014b462c38ef9",
+      "authoredGitBlobSha1": "7f8cf29ca93cd3797b02f3f586c6182f5c8e9a62",
       "governedClaimIds": [
         "cycle-01",
         "cycle-02",
@@ -54,7 +54,7 @@
     {
       "moduleId": "machine-anatomy",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "e8f4347a488c377c15a86ea640a014b462c38ef9",
+      "authoredGitBlobSha1": "7f8cf29ca93cd3797b02f3f586c6182f5c8e9a62",
       "governedClaimIds": [
         "machine-anatomy-01",
         "machine-anatomy-02",
@@ -73,7 +73,7 @@
     {
       "moduleId": "mould-anatomy",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "e8f4347a488c377c15a86ea640a014b462c38ef9",
+      "authoredGitBlobSha1": "7f8cf29ca93cd3797b02f3f586c6182f5c8e9a62",
       "governedClaimIds": [
         "mould-anatomy-01",
         "mould-anatomy-02",
@@ -92,7 +92,7 @@
     {
       "moduleId": "safety-foundations",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "e8f4347a488c377c15a86ea640a014b462c38ef9",
+      "authoredGitBlobSha1": "7f8cf29ca93cd3797b02f3f586c6182f5c8e9a62",
       "governedClaimIds": [
         "safety-foundations-01",
         "safety-foundations-02",
@@ -110,7 +110,7 @@
     {
       "moduleId": "polymer-structure",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "authoredGitBlobSha1": "1eb6d8ae71db922a579d4f69c0cffeee3408226c",
+      "authoredGitBlobSha1": "9366c1f7ba3b5136faa9a4f8d89dc5fe6aeb8cd4",
       "governedClaimIds": [
         "polymer-structure-01",
         "polymer-structure-02"
@@ -127,7 +127,7 @@
     {
       "moduleId": "rheology",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "authoredGitBlobSha1": "1eb6d8ae71db922a579d4f69c0cffeee3408226c",
+      "authoredGitBlobSha1": "9366c1f7ba3b5136faa9a4f8d89dc5fe6aeb8cd4",
       "governedClaimIds": [
         "rheology-01",
         "rheology-02"
@@ -144,7 +144,7 @@
     {
       "moduleId": "moisture-drying",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "authoredGitBlobSha1": "1eb6d8ae71db922a579d4f69c0cffeee3408226c",
+      "authoredGitBlobSha1": "9366c1f7ba3b5136faa9a4f8d89dc5fe6aeb8cd4",
       "governedClaimIds": [
         "moisture-drying-01",
         "moisture-drying-02",
@@ -162,7 +162,7 @@
     {
       "moduleId": "thermal-history",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "authoredGitBlobSha1": "1eb6d8ae71db922a579d4f69c0cffeee3408226c",
+      "authoredGitBlobSha1": "9366c1f7ba3b5136faa9a4f8d89dc5fe6aeb8cd4",
       "governedClaimIds": [
         "thermal-history-01",
         "thermal-history-02"
@@ -179,7 +179,7 @@
     {
       "moduleId": "material-families",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "authoredGitBlobSha1": "1eb6d8ae71db922a579d4f69c0cffeee3408226c",
+      "authoredGitBlobSha1": "9366c1f7ba3b5136faa9a4f8d89dc5fe6aeb8cd4",
       "governedClaimIds": [
         "material-families-01",
         "material-families-02"
@@ -196,7 +196,7 @@
     {
       "moduleId": "fillers-additives",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "authoredGitBlobSha1": "1eb6d8ae71db922a579d4f69c0cffeee3408226c",
+      "authoredGitBlobSha1": "9366c1f7ba3b5136faa9a4f8d89dc5fe6aeb8cd4",
       "governedClaimIds": [
         "fillers-additives-01",
         "fillers-additives-02"
@@ -213,7 +213,7 @@
     {
       "moduleId": "plasticising-unit",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "authoredGitBlobSha1": "1eb6d8ae71db922a579d4f69c0cffeee3408226c",
+      "authoredGitBlobSha1": "9366c1f7ba3b5136faa9a4f8d89dc5fe6aeb8cd4",
       "governedClaimIds": [
         "plasticising-unit-01",
         "plasticising-unit-02",
@@ -231,7 +231,7 @@
     {
       "moduleId": "vp-transfer",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "vp-transfer-01",
         "vp-transfer-02",
@@ -249,7 +249,7 @@
     {
       "moduleId": "clamp",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "clamp-01",
         "clamp-02",
@@ -267,7 +267,7 @@
     {
       "moduleId": "cooling",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "cooling-01",
         "cooling-02",
@@ -285,7 +285,7 @@
     {
       "moduleId": "ejection-draft",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "ejection-draft-01",
         "ejection-draft-02",
@@ -303,7 +303,7 @@
     {
       "moduleId": "process-baseline",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "process-baseline-01",
         "process-baseline-02",
@@ -321,7 +321,7 @@
     {
       "moduleId": "documentation",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "documentation-01",
         "documentation-02",
@@ -339,7 +339,7 @@
     {
       "moduleId": "diagnostic-method",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "diagnostic-method-01",
         "diagnostic-method-02",
@@ -357,7 +357,7 @@
     {
       "moduleId": "short-shot",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "short-shot-01",
         "short-shot-02",
@@ -375,7 +375,7 @@
     {
       "moduleId": "flash",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "flash-01",
         "flash-02",
@@ -393,7 +393,7 @@
     {
       "moduleId": "sink-voids",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "sink-voids-01",
         "sink-voids-02",
@@ -411,7 +411,7 @@
     {
       "moduleId": "splay",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "splay-01",
         "splay-02",
@@ -429,7 +429,7 @@
     {
       "moduleId": "burns",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "burns-01",
         "burns-02",
@@ -447,7 +447,7 @@
     {
       "moduleId": "weld-lines",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "weld-lines-01",
         "weld-lines-02",
@@ -465,7 +465,7 @@
     {
       "moduleId": "warpage",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "warpage-01",
         "warpage-02",
@@ -483,7 +483,7 @@
     {
       "moduleId": "black-specks",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "black-specks-01",
         "black-specks-02",
@@ -501,7 +501,7 @@
     {
       "moduleId": "cavity-pressure",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "cavity-pressure-01",
         "cavity-pressure-02",
@@ -519,7 +519,7 @@
     {
       "moduleId": "doe",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "doe-01",
         "doe-02",
@@ -537,7 +537,7 @@
     {
       "moduleId": "capability",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "capability-01",
         "capability-02",
@@ -555,7 +555,7 @@
     {
       "moduleId": "process-monitoring",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "process-monitoring-01",
         "process-monitoring-02",
@@ -573,7 +573,7 @@
     {
       "moduleId": "dimensional-stability",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "dimensional-stability-01",
         "dimensional-stability-02",
@@ -591,7 +591,7 @@
     {
       "moduleId": "fibre-orientation",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "fibre-orientation-01",
         "fibre-orientation-02",
@@ -609,7 +609,7 @@
     {
       "moduleId": "thin-wall",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "thin-wall-01",
         "thin-wall-02",
@@ -627,7 +627,7 @@
     {
       "moduleId": "multi-cavity",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "multi-cavity-01",
         "multi-cavity-02",
@@ -645,7 +645,7 @@
     {
       "moduleId": "high-performance-polymers",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "high-performance-polymers-01",
         "high-performance-polymers-02",
@@ -663,7 +663,7 @@
     {
       "moduleId": "complex-diagnostics",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
+      "authoredGitBlobSha1": "14c53d17e03048f8da64c8e47a7eb753ca3ee0b1",
       "governedClaimIds": [
         "complex-diagnostics-01",
         "complex-diagnostics-02",
