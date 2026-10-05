@@ -17,6 +17,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 import time
@@ -173,6 +174,8 @@ def successful_required_workflows(payload: object, pr_number: int | None = None)
 
 
 def verify(token: str, repository: str, source_sha: str, require_native_protection: bool) -> None:
+    if re.fullmatch(r"[0-9a-f]{40}", source_sha) is None:
+        raise SystemExit("Production source SHA must be a full lowercase 40-character commit SHA")
     pr = resolve_merged_pr(token, repository, source_sha)
     pr_number = int(pr["number"])
     pr_head = str((pr.get("head") or {}).get("sha") or "")
