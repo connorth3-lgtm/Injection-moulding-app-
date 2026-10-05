@@ -5,14 +5,17 @@ from __future__ import annotations
 import fnmatch
 import json
 import os
+import re
 import subprocess
 import time
 import urllib.parse
 import urllib.request
+from urllib.error import HTTPError, URLError
 
 REPO = os.environ.get("GITHUB_REPOSITORY", "connorth3-lgtm/Injection-moulding-app-")
 SHA = os.environ.get("CI_RISK_HEAD_SHA", "").strip() or os.environ.get("GITHUB_SHA", "")
 TOKEN = os.environ.get("GITHUB_TOKEN", "")
+PR_NUMBER = int(os.environ.get("CI_RISK_PR_NUMBER", "0") or "0")
 BASE_REF = os.environ.get("GITHUB_BASE_REF", "main")
 EVENT = os.environ.get("GITHUB_EVENT_NAME", "")
 ATTEMPTS = max(1, int(os.environ.get("CI_RISK_ATTEMPTS", "16")))
@@ -67,6 +70,16 @@ def expected_for(paths: list[str]) -> tuple[set[str], list[str]]:
             classes.append(name)
     return expected, classes
 
+def run_matches_pr(run: dict) -> bool:
+    prs = run.get("pull_requests") or []
+    return any(
+        isinstance(pr, dict)
+        and int(pr.get("number") or 0) == PR_NUMBER
+        and ((pr.get("base") or {}).get("ref") == BASE_REF)
+        for pr in prs
+    )
+
+
 def api_runs() -> dict[str, dict]:
     query = urllib.parse.urlencode({"head_sha": SHA, "event": "pull_request", "per_page": 100})
     req = urllib.request.Request(
@@ -78,13 +91,33 @@ def api_runs() -> dict[str, dict]:
             "User-Agent": "mouldmaster-ci-risk-coverage",
         },
     )
-    with urllib.request.urlopen(req, timeout=20) as response:
-        payload = json.load(response)
+    detail = "unknown API error"
+    payload: object = {}
+    for attempt in range(1, 5):
+        try:
+            with urllib.request.urlopen(req, timeout=20) as response:
+                payload = json.load(response)
+            break
+        except (HTTPError, URLError, TimeoutError, json.JSONDecodeError) as exc:
+            detail = str(exc)
+            if attempt < 4:
+                time.sleep(attempt * 2)
+    else:
+        raise RuntimeError(f"GitHub CI risk-coverage query failed after 4 attempts: {detail}")
+
     latest: dict[str, dict] = {}
-    for run in payload.get("workflow_runs", []):
+    rows = payload.get("workflow_runs", []) if isinstance(payload, dict) else []
+    for run in rows:
+        if not isinstance(run, dict) or not run_matches_pr(run):
+            continue
         name = str(run.get("name") or "")
         prior = latest.get(name)
-        if prior is None or str(run.get("created_at") or "") > str(prior.get("created_at") or ""):
+        key = (str(run.get("updated_at") or run.get("created_at") or ""), int(run.get("id") or 0))
+        prior_key = (
+            str(prior.get("updated_at") or prior.get("created_at") or ""),
+            int(prior.get("id") or 0),
+        ) if prior else ("", 0)
+        if prior is None or key > prior_key:
             latest[name] = run
     return latest
 
@@ -92,8 +125,8 @@ def main() -> None:
     if EVENT != "pull_request":
         print("CI risk-coverage runtime meta-gate: non-PR event; exact-head workflow enforcement skipped.")
         return
-    if not SHA or not TOKEN:
-        raise SystemExit("Exact PR head SHA/GITHUB_TOKEN required for CI risk-coverage verification")
+    if re.fullmatch(r"[0-9a-f]{40}", SHA) is None or not TOKEN or PR_NUMBER < 1:
+        raise SystemExit("Canonical exact PR head SHA, PR number and GITHUB_TOKEN required for CI risk-coverage verification")
     paths = changed_paths()
     expected, classes = expected_for(paths)
     print("Changed paths:", json.dumps(paths))
@@ -102,7 +135,10 @@ def main() -> None:
 
     latest: dict[str, dict] = {}
     for attempt in range(ATTEMPTS):
-        latest = api_runs()
+        try:
+            latest = api_runs()
+        except RuntimeError as exc:
+            raise SystemExit(str(exc))
         unresolved = []
         failed = []
         for name in sorted(expected):
