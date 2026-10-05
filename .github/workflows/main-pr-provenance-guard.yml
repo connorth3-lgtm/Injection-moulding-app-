@@ -119,6 +119,17 @@ jobs:
             "Release External Validation Boundary"
             "Exact-head CI Risk Coverage"
           )
+          workflow_path_for() {
+            case "$1" in
+              "MouldMaster Release QA") echo ".github/workflows/qa.yml" ;;
+              "Mobile Browser QA") echo ".github/workflows/mobile-browser-qa.yml" ;;
+              "Open Desktop Build") echo ".github/workflows/open-desktop-build.yml" ;;
+              "Question Quality 50-Pass") echo ".github/workflows/question-quality-50-pass.yml" ;;
+              "Release External Validation Boundary") echo ".github/workflows/release-external-validation.yml" ;;
+              "Exact-head CI Risk Coverage") echo ".github/workflows/ci-risk-coverage.yml" ;;
+              *) fail_audit "No canonical workflow path registered for '$1'." ;;
+            esac
+          }
 
           all_required_success=false
           for attempt in {1..60}; do
@@ -127,11 +138,12 @@ jobs:
             all_seen=true
 
             for workflow in "${required_workflows[@]}"; do
-              status=$(jq -r --arg workflow "$workflow" --argjson pr "$PR_NUMBER" --arg head_ref "$PR_HEAD_REF" --argjson head_repo "$PR_HEAD_REPO_ID" \
-                '[.workflow_runs[] | select(.name == $workflow and ((any(.pull_requests[]?; (.number == $pr and .base.ref == "main"))) or (((.pull_requests // []) | length) == 0 and .head_branch == $head_ref and (.head_repository.id // 0) == $head_repo)))] | sort_by([(.updated_at // .created_at // ""), (.id // 0)]) | reverse | (.[0].status // "missing")' \
+              workflow_path="$(workflow_path_for "$workflow")"
+              status=$(jq -r --arg workflow "$workflow" --arg workflow_path "$workflow_path" --argjson pr "$PR_NUMBER" --arg head_ref "$PR_HEAD_REF" --argjson head_repo "$PR_HEAD_REPO_ID" \
+                '[.workflow_runs[] | select(.name == $workflow and .path == $workflow_path and ((any(.pull_requests[]?; (.number == $pr and .base.ref == "main"))) or (((.pull_requests // []) | length) == 0 and .head_branch == $head_ref and (.head_repository.id // 0) == $head_repo)))] | sort_by([(.updated_at // .created_at // ""), (.id // 0)]) | reverse | (.[0].status // "missing")' \
                 <<<"$runs_json")
-              conclusion=$(jq -r --arg workflow "$workflow" --argjson pr "$PR_NUMBER" --arg head_ref "$PR_HEAD_REF" --argjson head_repo "$PR_HEAD_REPO_ID" \
-                '[.workflow_runs[] | select(.name == $workflow and ((any(.pull_requests[]?; (.number == $pr and .base.ref == "main"))) or (((.pull_requests // []) | length) == 0 and .head_branch == $head_ref and (.head_repository.id // 0) == $head_repo)))] | sort_by([(.updated_at // .created_at // ""), (.id // 0)]) | reverse | (.[0].conclusion // "missing")' \
+              conclusion=$(jq -r --arg workflow "$workflow" --arg workflow_path "$workflow_path" --argjson pr "$PR_NUMBER" --arg head_ref "$PR_HEAD_REF" --argjson head_repo "$PR_HEAD_REPO_ID" \
+                '[.workflow_runs[] | select(.name == $workflow and .path == $workflow_path and ((any(.pull_requests[]?; (.number == $pr and .base.ref == "main"))) or (((.pull_requests // []) | length) == 0 and .head_branch == $head_ref and (.head_repository.id // 0) == $head_repo)))] | sort_by([(.updated_at // .created_at // ""), (.id // 0)]) | reverse | (.[0].conclusion // "missing")' \
                 <<<"$runs_json")
 
               echo "$workflow: status=$status conclusion=$conclusion"
