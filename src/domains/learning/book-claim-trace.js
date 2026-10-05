@@ -47,6 +47,9 @@ function overlayResolution(resolution,label){
 function buildTrace(reviews,resolutions){
  claims=new Map();sources=new Map();
  for(const s of window.MMBook?.getManifest?.()?.sourceSeeds||[])addSource(s);
+ const finalIndex=window.MMBook?.getClaimEvidenceReference?.();
+ if(finalIndex?.status!=='governed-reader-claim-evidence-index'||finalIndex?.chapterCount!==46||finalIndex?.claimCount!==137||finalIndex?.sourceCount!==52)throw new Error('Complete claim trace final evidence index is unavailable or invalid');
+ for(const s of finalIndex.sourceSeeds||[])addSource(s);
  const chapterIds=new Set();
  for(const ledger of reviews){
   if(ledger?.schema!==1||ledger?.bookId!=='mouldmaster-book'||!Array.isArray(ledger.chapters))throw new Error('Book claim-review ledger identity check failed');
@@ -75,6 +78,18 @@ function buildTrace(reviews,resolutions){
  const counts={chapters:chapterIds.size,claims:claims.size,supported:0,qualified:0,hold:0,conflicting:0};
  for(const claim of claims.values()){const key=claim.conclusion;if(Object.prototype.hasOwnProperty.call(counts,key))counts[key]++}
  for(const [key,value] of Object.entries(EXPECTED))if(counts[key]!==value)throw new Error(`Book complete claim trace mismatch: ${key}=${counts[key]} expected ${value}`);
+ const indexedClaims=new Map();
+ for(const chapter of finalIndex.chapters||[])for(const row of chapter.claims||[]){
+  if(!row?.claimId||indexedClaims.has(row.claimId))throw new Error(`Complete claim trace final index contains duplicate/missing claim id: ${row?.claimId||'<missing>'}`);
+  indexedClaims.set(row.claimId,{chapterId:chapter.chapterId,evidence:[...(row.evidenceIds||[])]});
+ }
+ if(indexedClaims.size!==EXPECTED.claims)throw new Error(`Complete claim trace final index claim coverage mismatch: ${indexedClaims.size}/${EXPECTED.claims}`);
+ for(const [claimId,claim] of claims){
+  const indexed=indexedClaims.get(claimId);if(!indexed||indexed.chapterId!==claim.chapterId)throw new Error(`Complete claim trace final index chapter mismatch for ${claimId}`);
+  const actual=[...new Set(claim.evidence||[])],expected=[...new Set(indexed.evidence||[])];
+  if(actual.length!==expected.length||actual.some((id,i)=>id!==expected[i]))throw new Error(`Complete claim trace final evidence mismatch for ${claimId}`);
+  for(const id of actual)if(!sources.has(id))throw new Error(`Complete claim trace source metadata missing for ${id}`);
+ }
  return counts;
 }
 function chapterClaims(id){return [...claims.values()].filter(x=>x.chapterId===id).sort((a,b)=>String(a.claimId).localeCompare(String(b.claimId),undefined,{numeric:true}))}
@@ -89,6 +104,7 @@ function installStatus(){const accuracy=document.querySelector('[data-mm-book-ac
 async function init(){
  try{
   await window.MMBook?.ready;
+  await window.MMBook?.load?.();
   const [reviews,resolutions]=await Promise.all([Promise.all(REVIEW_FILES.map(json)),Promise.all(RESOLUTION_FILES.map(json))]);
   buildTrace(reviews,resolutions);ready=true;window.dispatchEvent(new CustomEvent('mm:book-claim-trace-ready',{detail:{version:VERSION,claims:claims.size}}));
  }catch(e){error=e;console.error('[MouldMaster Book complete claim trace]',e);window.dispatchEvent(new CustomEvent('mm:book-claim-trace-failed',{detail:{version:VERSION,message:String(e?.message||e)}}));}
