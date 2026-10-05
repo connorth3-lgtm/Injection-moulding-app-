@@ -27,6 +27,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           CI_RISK_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          CI_RISK_PR_NUMBER: ${{ github.event.pull_request.number }}
           CI_RISK_ATTEMPTS: '60'
           CI_RISK_SLEEP_SECONDS: '20'
         run: python tools/verify_ci_risk_coverage.py
