@@ -292,6 +292,17 @@ need(
 # Production publication must require GitHub's effective native protection.
 need("--require-native-protection" in pages, "Pages publication does not require native main protection")
 for marker in (
+    "legacy-containment:",
+    "--contain-only",
+    "needs: [production-source, legacy-containment]",
+    "needs.production-source.result == 'success'",
+    "Confirm workflow-mode Pages publisher after provenance",
+):
+    need(marker in pages, f"Pages containment/provenance privilege split missing: {marker}")
+containment_block = pages.split("  legacy-containment:", 1)[1].split("\n  publisher-guard:", 1)[0]
+need("actions: write" in containment_block and "pages: write" not in containment_block,
+     "early legacy Pages containment must not receive Pages settings mutation authority")
+for marker in (
     "Checkout exact main source before deployment",
     "Recheck current protected-main provenance before deployment",
     "Recheck current protected-main provenance after deployment",
