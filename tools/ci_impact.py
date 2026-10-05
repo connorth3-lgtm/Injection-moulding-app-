@@ -42,6 +42,7 @@ def main()->int:
     ap=argparse.ArgumentParser()
     ap.add_argument("--base")
     ap.add_argument("--head",default="HEAD")
+    ap.add_argument("--base")
     ap.add_argument("--github-output",default=os.environ.get("GITHUB_OUTPUT",""))
     ap.add_argument("--summary",default=os.environ.get("GITHUB_STEP_SUMMARY",""))
     a=ap.parse_args()
