@@ -164,7 +164,8 @@
         "Why does a hot-runner setpoint not prove identical material history at every drop?"
       ],
       "applyPrompt": "Map a multi-cavity flow path and mark where pressure loss, gas evacuation and thermal history could diverge.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "sequencePrompt": "Read this chapter as one connected melt-delivery path: feed system and gate behaviour set pressure/flow conditions, venting governs displaced-gas escape, and hot-runner zones add local thermal/residence history. Keep location and timing attached to every observation so a symptom is not reduced to a generic setting change."
     },
     {
       "id": "r08",
@@ -229,7 +230,8 @@
         "How can a pressure-loss study guide investigation without proving root cause?"
       ],
       "applyPrompt": "Design a staged development sequence for a new mould, naming the question answered by each study.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "sequencePrompt": "Use this chapter as a staged development sequence rather than four independent studies: establish the baseline, isolate filling, map pressure demand, determine whether the feed path still transmits useful packing pressure, then test robustness across the intended operating region and document what would invalidate the conclusion."
     },
     {
       "id": "r11",
@@ -418,7 +420,8 @@
         "Why must high-performance polymer processing remain supplier-led?"
       ],
       "applyPrompt": "For a four-cavity thin-wall part, list which machine, mould, material and cavity-specific evidence you would preserve.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "sequencePrompt": "Treat these advanced topics as boundary-heavy applications of the earlier method: preserve cavity identity, equipment capability, material-grade limits and measured response. Thin-wall, multi-cavity and high-performance processing become unsafe teaching topics when exact machine, mould or supplier constraints are replaced by generic recipes."
     },
     {
       "id": "r20",
@@ -449,5 +452,5 @@
     "Can a beginner read chapters 1–10 sequentially and an experienced technician enter at chapters 11–20 without losing critical safety context?"
   ],
   "release": "2026.10.06.1",
-  "pedagogyPolicy": "Reader-level objectives, checks and application prompts are derived learning scaffolds only. They add no technical claims, do not alter governed module evidence status and cannot create production authority."
+  "pedagogyPolicy": "Reader-level objectives, checks and application prompts are derived learning scaffolds only. They add no technical claims, do not alter governed module evidence status and cannot create production authority. Sequence prompts are reader-orientation scaffolds derived from existing governed module order; they add no independent technical authority."
 }
