@@ -4,7 +4,7 @@ from pathlib import Path
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parent/"tools"))
 from change_impact import classify
-from dependency_graph import impact as graph_impact
+from dependency_graph import impact as graph_impact, load_graph
 
 def need(cond,msg):
     if not cond:
@@ -49,6 +49,21 @@ for files,direct,downstream in graph_cases:
     need(direct in graph["directAreas"],f"{sorted(files)} must have direct graph owner {direct}")
     for area in downstream:
         need(area in graph["affectedAreas"],f"{sorted(files)} must affect downstream graph area {area}")
+
+graph_contract=load_graph()
+need(graph_contract.get("schema")==1,"dependency graph schema must remain 1")
+areas=graph_contract.get("areas") or {}
+need(areas,"dependency graph must declare owned areas")
+prefixes=[]
+for area,spec in areas.items():
+    prefix=spec.get("failureIdPrefix")
+    need(isinstance(prefix,str) and prefix.strip(),f"dependency area {area} missing failureIdPrefix")
+    prefixes.append(prefix)
+    need(isinstance(spec.get("sources"),list) and spec["sources"],f"dependency area {area} missing source ownership")
+    need(isinstance(spec.get("checks"),list),f"dependency area {area} checks must be a list")
+    for dep in spec.get("dependsOn") or []:
+        need(dep in areas,f"dependency area {area} references unknown dependency {dep}")
+need(len(prefixes)==len(set(prefixes)),"dependency failure-ID prefixes must be unique")
 
 metadata_graph=graph_impact({"data/release-external-validation-v1.json"})
 need("shell" not in metadata_graph["directAreas"],"release metadata must not be directly owned by shell")
