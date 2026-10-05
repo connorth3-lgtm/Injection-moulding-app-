@@ -55,7 +55,7 @@ Where a governed module owns a governed worked case or instructional diagram, li
 
 For troubleshooting chapters, ask whether a learner could wrongly interpret the chapter as `symptom -> certain cause -> guaranteed fix`. If yes, the review fails until the wording is corrected.
 
-For all 18 governed worked engineering cases, independently recompute or otherwise verify the calculation/reasoning and confirm the case-level evidence anchors fit the stated claim.
+For all 24 governed worked engineering cases, independently recompute or otherwise verify the calculation/reasoning and confirm the case-level evidence anchors fit the stated claim. Review all 18 governed instructional diagrams for mechanism accuracy, labels, accessibility text, non-scale boundaries and consistency with the owning module.
 
 For numeric/process-setting content, ask whether the number is universal. If the correct answer depends on grade, machine, mould, hot runner, product or site, the chapter must make that dependency visible and point back to controlling documentation or measurement.
 
