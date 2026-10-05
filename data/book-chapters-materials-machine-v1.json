@@ -95,6 +95,10 @@
         {
           "title": "Separate moisture evidence from similar-looking symptoms",
           "text": "Surface streaks, bubbles, degradation or unstable processing can be consistent with moisture, but appearance alone does not prove it. Compare material history, measured moisture where appropriate, dryer condition, timing, affected lots and the response to controlled handling. If the symptom persists with verified material condition, widen the diagnosis to other volatile, thermal, contamination, machine or mould mechanisms instead of repeatedly increasing drying severity."
+        },
+        {
+          "title": "Dryer performance and material exposure are separate questions",
+          "text": "A dryer can operate normally while the material reaching the machine no longer represents the intended condition because of conveying, hopper exposure, leaks, residence distribution or sampling error. When moisture is suspected, separate equipment status from actual material condition. The strongest conclusion combines current supplier requirements, a credible measurement or handling record, and a symptom pattern that changes consistently when the moisture state changes."
         }
       ]
     },
@@ -122,6 +126,10 @@
         {
           "title": "Look for evidence of changing residence or degradation",
           "text": "Colour shift, odour, deposits, black specks, viscosity change or unstable recovery can support a thermal-history hypothesis, but none is uniquely diagnostic. Compare start-up, steady running, stoppages, purge history, shot utilisation, hot-runner behaviour and material lot information. A strong diagnosis explains why the symptom appears at a particular time or process state and predicts what should change when the suspected residence mechanism is controlled."
+        },
+        {
+          "title": "Use interruptions as diagnostic evidence",
+          "text": "Start-up, extended residence, short stoppages and prolonged shutdowns create different thermal histories even when the displayed setpoints are unchanged. If discoloration, gas or contamination appears preferentially after a particular interruption pattern, that timing supports a residence or degradation hypothesis. Confirm the relationship rather than treating the first successful purge or temperature change as proof."
         }
       ]
     },
@@ -157,6 +165,10 @@
         {
           "title": "Do not infer interchangeability from similar labels",
           "text": "Two grades in the same polymer family may differ enough in reinforcement, viscosity, additive package or thermal stability that a process transferred between them behaves differently. When substituting material, treat the change as a new evidence question: confirm grade identity, supplier constraints, drying or conditioning requirements where applicable, and the product characteristics that must be reverified."
+        },
+        {
+          "title": "Connect family behaviour to observable process evidence",
+          "text": "Family knowledge becomes useful when it predicts what to watch. A more moisture-sensitive grade should make material handling and verified moisture state more important; a semi-crystalline formulation may make thermal history and dimensional development especially relevant; a reinforced grade raises orientation and anisotropy questions. These are starting hypotheses, not permissions to copy another material's settings. Confirm the exact grade, its supplier limits and the measured response of the real process."
         }
       ]
     },
@@ -184,6 +196,10 @@
         {
           "title": "Reinforcement introduces directional evidence",
           "text": "Fibre-filled materials can develop direction-dependent behaviour because flow influences fibre orientation. That can affect shrinkage, stiffness, strength and warpage differently along and across local flow directions. Orientation is not directly known from one machine setting, so part geometry, flow path, cavity pattern, measurement direction and, where justified, simulation or destructive analysis may all contribute to the evidence."
+        },
+        {
+          "title": "Treat formulation changes as process changes",
+          "text": "A colour, reinforcement level, flame-retardant package or other modifier can change more than appearance. Flow resistance, shrinkage direction, thermal response, wear, surface quality and degradation sensitivity may all move together. When a formulation changes, compare the process and part evidence that matter to the product instead of assuming that a familiar base-polymer name makes the old process directly transferable."
         }
       ]
     },
@@ -246,6 +262,14 @@
         {
           "title": "Avoid universal shot-utilisation percentages",
           "text": "A machine can be too large or too small for a process for several reasons, including residence exposure, plasticising capacity, available injection pressure or rate, metering repeatability and clamp requirements. A single universal percentage cannot establish suitability. Evaluate the machine, material, mould and required process window together."
+        },
+        {
+          "title": "Machine suitability is multi-dimensional",
+          "text": "Shot utilisation should be considered together with residence exposure, plasticising capacity, available injection rate and pressure, screw recovery consistency, metering repeatability and clamp requirements. A machine can appear acceptable by nominal shot volume while still being a poor process match in another dimension. Record which limitation is actually being evaluated rather than relying on a single utilisation percentage."
+        },
+        {
+          "title": "Use cushion and screw position as trends, not verdicts",
+          "text": "A stable position trend can support consistent delivery, while drift or unusual variation can justify investigation of metering, non-return behaviour or material feed. But the interpretation depends on the machine's position convention and the rest of the cycle. Compare position with part mass, pressure response, recovery behaviour and other relevant evidence before naming a cause."
         }
       ]
     },
@@ -269,6 +293,14 @@
         {
           "title": "Transfer changes the control objective",
           "text": "The transition from filling to packing/holding changes what the process is trying to control. Transfer position or other transfer criteria must be interpreted with the mould filling state, machine response and process evidence. Generic transfer positions are not portable between moulds."
+        },
+        {
+          "title": "Compare commanded velocity with achieved motion",
+          "text": "When pressure demand approaches a programmed or machine limit, the actual screw motion may no longer follow the requested profile. That distinction matters because a process that is nominally velocity controlled can behave as though it is pressure constrained. Review the achieved velocity, position and pressure traces together when deciding whether the process is truly following the intended filling strategy."
+        },
+        {
+          "title": "Rate changes can alter several physical conditions at once",
+          "text": "Changing filling rate can change pressure demand, shear history, thermal loss, flow-front timing and the way gas is displaced. A part response that improves after a rate change therefore does not identify which mechanism caused the improvement. Use the change as evidence and test the competing explanations rather than turning the successful setting into a universal rule."
         }
       ]
     }
