@@ -52,12 +52,16 @@ test('Keep Reading restores, stale IDs fail to contents, and learner reset clear
   await page.evaluate(()=>window.MMBook.openReaderChapter('r02'));
   await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
   await page.evaluate(()=>window.scrollTo(0,420));
+  const beforeLeaveY=await page.evaluate(()=>window.scrollY);
   const aKey=await page.evaluate(()=>window.MMBook.resumeStorageKey());
   await page.getByRole('button',{name:'Home'}).first().click();
 
   await page.locator('#dashboard [data-mm-home-book]').getByRole('button',{name:'Keep Reading'}).click();
   await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
   expect(await page.evaluate(()=>window.MMBook.getResume().id)).toBe('r02');
+  await page.waitForTimeout(50);
+  const restoredY=await page.evaluate(()=>window.scrollY);
+  expect(Math.abs(restoredY-beforeLeaveY)).toBeLessThan(140);
 
   await activate(page,'reader-b');
   await page.evaluate(()=>window.MMBook.openReaderChapter('r03'));
@@ -65,6 +69,8 @@ test('Keep Reading restores, stale IDs fail to contents, and learner reset clear
   await page.getByRole('button',{name:'Home'}).first().click();
   page.once('dialog',d=>d.accept());
   await page.evaluate(()=>window.resetData());
+  await expect(page.locator('#dashboard [data-mm-home-book]')).toContainText('Injection moulding reference');
+  await expect(page.locator('#dashboard [data-mm-home-book]').getByRole('button',{name:'Open Book'})).toBeVisible();
   expect(await page.evaluate(key=>localStorage.getItem(key),bKey)).toBeNull();
   expect(await page.evaluate(key=>localStorage.getItem(key),aKey)).not.toBeNull();
 
