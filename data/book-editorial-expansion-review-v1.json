@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "bookId": "mouldmaster-book",
-  "release": "2026.10.06.4",
+  "release": "2026.10.06.5",
   "status": "repository-technical-review-complete",
   "reviewType": "editorial-expansion-claim-boundary-review",
   "purpose": "Bind the 2026-10-06 instructional-depth expansion and 20-chapter reader consolidation to the existing governed claim inventory without manufacturing independent human SME approval.",
   "reviewBoundary": "Repository-controlled technical/source review only. It confirms that added explanatory prose remains within existing governed claim scope; it is not independent human SME validation and cannot create machine-, mould-, grade-, product- or site-specific production authority.",
   "readerArchitecture": {
     "path": "data/book-reader-architecture-v2.json",
-    "gitBlobSha1": "dddafd4a5acc47cabc30c9ac2df3d36805c65e9a",
+    "gitBlobSha1": "65708fe61a510bb8424ba3878d85b22409059b72",
     "conclusion": "structural-only-no-new-technical-claims"
   },
   "reviewedModules": [
