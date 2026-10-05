@@ -40,13 +40,26 @@ def expand_dependencies(areas:set[str],graph:dict)->set[str]:
                     out.add(dep);changed=True
     return out
 
+def expand_dependents(areas:set[str],graph:dict)->set[str]:
+    out=set(areas)
+    changed=True
+    while changed:
+        changed=False
+        for area,spec in graph["areas"].items():
+            if area in out:
+                continue
+            if any(dep in out for dep in spec.get("dependsOn") or []):
+                out.add(area);changed=True
+    return out
+
 def impact(files:set[str])->dict:
     graph=load_graph()
     direct=direct_areas(files,graph)
-    expanded=expand_dependencies(direct,graph)
+    prerequisites=expand_dependencies(direct,graph)
+    affected=expand_dependents(direct,graph)
     owners={}
     checks=set();workflows=set();surfaces=set();generated=set()
-    for area in sorted(expanded):
+    for area in sorted(affected):
         spec=graph["areas"][area]
         owners[area]=spec.get("failureIdPrefix")
         checks.update(spec.get("checks") or [])
@@ -55,7 +68,9 @@ def impact(files:set[str])->dict:
         generated.update(spec.get("generatedOutputs") or [])
     return {
         "directAreas":sorted(direct),
-        "areas":sorted(expanded),
+        "prerequisites":sorted(prerequisites-direct),
+        "affectedAreas":sorted(affected),
+        "areas":sorted(affected),
         "owners":owners,
         "checks":sorted(checks),
         "workflows":sorted(workflows),
