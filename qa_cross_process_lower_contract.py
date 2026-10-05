@@ -85,7 +85,7 @@ else:
     raise AssertionError("time-step drift must fail closed")
 
 runner_text = RUNNER.read_text(encoding="utf-8")
-for marker in ["EXPECTED_PUBLISHER_BYTES = 685541746","EXPECTED_PUBLISHER_MD5 = \"069e190338b2ca29f736b21fabf407ba\"","EXPECTED_PUBLISHER_SHA256 = \"a0c7c07997e6c5a996823744aceb82bfc7b4efd371c7be0f4afc60d04771ec90\"","publisher size metadata drifted","publisher SHA-256 mismatch"]:
+for marker in ["EXPECTED_PUBLISHER_BYTES = 685541746","EXPECTED_PUBLISHER_MD5 = \"069e190338b2ca29f736b21fabf407ba\"","EXPECTED_PUBLISHER_SHA256 = \"a0c7c07997e6c5a996823744aceb82bfc7b4efd371c7be0f4afc60d04771ec90\"","publisher size metadata drifted","publisher SHA-256 mismatch","MAX_PUBLISHER_FILE_BYTES = 2 * 1024 * 1024 * 1024","received > expected_size","received > MAX_PUBLISHER_FILE_BYTES"]:
     need(marker in runner_text, f"publisher archive identity guard missing: {marker}")
 
 print("Cross-process lower-workpiece source contract QA passed")
