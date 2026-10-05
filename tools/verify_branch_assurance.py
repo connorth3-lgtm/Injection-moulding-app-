@@ -19,6 +19,17 @@ TOKEN = os.environ.get("GITHUB_TOKEN", "").strip()
 ATTEMPTS = max(1, int(os.environ.get("BRANCH_ASSURANCE_ATTEMPTS", "90")))
 SLEEP_SECONDS = max(1, int(os.environ.get("BRANCH_ASSURANCE_SLEEP_SECONDS", "20")))
 
+REQUIRED_WORKFLOW_PATHS = {
+    "MouldMaster Release QA": ".github/workflows/qa.yml",
+    "Mobile Browser QA": ".github/workflows/mobile-browser-qa.yml",
+    "Question Quality 50-Pass": ".github/workflows/question-quality-50-pass.yml",
+    "Deep Audit Governance": ".github/workflows/deep-audit-governance.yml",
+    "Release External Validation Boundary": ".github/workflows/release-external-validation.yml",
+    "MouldMaster Pages Release Readiness": ".github/workflows/pages.yml",
+    "Main PR Provenance Guard": ".github/workflows/main-pr-provenance-guard.yml",
+    "MouldMaster Preview Candidate": ".github/workflows/preview-pages.yml",
+}
+
 REQUIRED = {
     "main": (
         "MouldMaster Release QA",
@@ -42,7 +53,10 @@ def latest_runs(payload: object, required: tuple[str, ...]) -> dict[str, dict]:
     rows = (payload or {}).get("workflow_runs", []) if isinstance(payload, dict) else []
     result: dict[str, dict] = {}
     for name in required:
-        matches = [row for row in rows if row.get("name") == name]
+        matches = [
+            row for row in rows
+            if row.get("name") == name and row.get("path") == REQUIRED_WORKFLOW_PATHS[name]
+        ]
         matches.sort(
             key=lambda row: (str(row.get("updated_at") or row.get("created_at") or ""), int(row.get("id") or 0)),
             reverse=True,
