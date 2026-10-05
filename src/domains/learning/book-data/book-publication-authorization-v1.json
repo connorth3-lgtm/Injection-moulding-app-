@@ -27,10 +27,10 @@
       "book-sme-review-v1.json": "86648d8f0b7dc998c0c640140d87438c8d52ada2",
       "book-qualification-resolution-all-v1.json": "c6da26d0c4ed3608b1a19b1551856c1d80c03a8f",
       "book-claim-resolution-high-risk-v1.json": "84d007a72c16b60e01ba392f9ca6e0f6d487cc85",
-      "book-authored-foundations-v1.json": "3fcd5cdd976551fcc188562eff653033f5f4d4bf",
+      "book-authored-foundations-v1.json": "e8f4347a488c377c15a86ea640a014b462c38ef9",
       "book-evidence-registry-v1.json": "24cbe1b1777fa4e2377226a8789815b7321d66a9",
-      "book-chapters-materials-machine-v1.json": "36e603e4dd4dd32fd608b6e3518f900b0e9e8ac8",
-      "book-authored-remaining-v1.json": "b2e77eb98355ba04ce0cba07f30ebbd7d13118c6",
+      "book-chapters-materials-machine-v1.json": "3bf3a804749b76ef58f6fd4e07731962947b4fdc",
+      "book-authored-remaining-v1.json": "e24f890a1b4f22daac8dc3619acfc60168e98303",
       "book-worked-engineering-cases-v1.json": "05349fa9df9f0bb842c9847537c94e482fae166d",
       "book-evidence-enrichment-v2.json": "50814a93670e64318ab113b57fcf64e113eecc92",
       "book-material-grade-atlas-v1.json": "08eee66fc266a76806a4a9f85f06afde6427cd74",
@@ -38,7 +38,7 @@
       "material-catalog-v1.json": "88ac789aef21314cf2fbef194937ea3dca180471",
       "book-engineering-diagrams-v1.json": "c99d5310441b21c33749f27c8d731dca333b3648",
       "book-reader-architecture-v2.json": "db56f66558fd05cfed3bb05e07aaeedcd9f692d2",
-      "book-editorial-expansion-review-v1.json": "03b3251f35ac1b85c84bcac6fad48db6acc541fd"
+      "book-editorial-expansion-review-v1.json": "c4e163c6a5c086977b654e7ced759d1342f2a159"
     }
   },
   "canonicalAcademicEvidenceUrls": {
@@ -123,7 +123,7 @@
     "Instructional SVG diagrams are generic mechanism explanations with governed asset hashes and explicit non-scale boundaries; they are not CFD/FEA outputs, mould designs, machine-specific setup drawings, safety drawings or independent SME approval.",
     "Any later hold, conflicting evidence, stale controlling source, read/listen divergence, byte-integrity mismatch or claim-ledger regression must fail closed and block/revoke publication in release QA.",
     "The 20 reader-facing chapters are structural groupings of the 46 governed modules. Reader grouping adds no technical claim and cannot change a module's claim, publication, SME, accreditation or production status.",
-    "The 2026-10-06 editorial expansion is bound to existing governed claim IDs by data/book-editorial-expansion-review-v1.json; it adds instructional explanation but no new universal setpoint, machine-control authority or independent human SME approval."
+    "The 2026-10-06 editorial expansion across 37 governed modules is bound to each module's existing governed claim IDs by data/book-editorial-expansion-review-v1.json; it adds instructional explanation but no new universal setpoint, machine-control authority or independent human SME approval."
   ],
   "revocationRules": {
     "claimHoldOrConflict": "block-release",
@@ -226,9 +226,9 @@
     "status": "authorized-repository-technical-source-review",
     "release": "2026.10.06.1",
     "ledger": "data/book-editorial-expansion-review-v1.json",
-    "moduleCount": 12,
+    "moduleCount": 37,
     "noNewClaimIds": true,
     "independentSmeStatus": "hold",
-    "authorityBoundary": "Expanded prose is authorized only within the mapped existing governed claim scope; no independent human SME approval or production authority is implied."
+    "authorityBoundary": "Expanded prose across 37 governed modules is authorized only within each module's mapped existing governed claim scope; no independent human SME approval, universal recipe or production authority is implied."
   }
 }
