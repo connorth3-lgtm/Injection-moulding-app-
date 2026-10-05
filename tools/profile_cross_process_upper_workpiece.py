@@ -34,6 +34,7 @@ EXPECTED_PUBLISHER_MD5 = "069e190338b2ca29f736b21fabf407ba"
 EXPECTED_PUBLISHER_SHA256 = "a0c7c07997e6c5a996823744aceb82bfc7b4efd371c7be0f4afc60d04771ec90"
 EXPECTED_UPPER_SERIAL_FILES = 10_697
 USER_AGENT = "MouldMaster-cross-process-upper-profiler/1.0 (aggregate research profiling)"
+MAX_PUBLISHER_FILE_BYTES = 2 * 1024 * 1024 * 1024
 
 
 def fetch_json(url: str) -> dict:
@@ -50,6 +51,8 @@ def fetch_json(url: str) -> dict:
 
 
 def download(url: str, target: Path, expected_size: int | None = None) -> tuple[str, str]:
+    if expected_size is not None and (expected_size < 0 or expected_size > MAX_PUBLISHER_FILE_BYTES):
+        raise AssertionError(f"publisher file size is outside the local safety bound: {expected_size}")
     md5 = hashlib.md5(usedforsecurity=False)
     sha256 = hashlib.sha256()
     request = Request(url, headers={"User-Agent": USER_AGENT})
@@ -57,6 +60,8 @@ def download(url: str, target: Path, expected_size: int | None = None) -> tuple[
     with urlopen(request, timeout=180) as response, target.open("wb") as output:
         while chunk := response.read(1024 * 1024):
             received += len(chunk)
+            if received > MAX_PUBLISHER_FILE_BYTES:
+                raise AssertionError(f"download exceeded local file safety bound for {target.name}: {received}")
             if expected_size is not None and received > expected_size:
                 raise AssertionError(f"download exceeded expected size for {target.name}: {received} > {expected_size}")
             output.write(chunk)
