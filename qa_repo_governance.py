@@ -62,6 +62,9 @@ for marker in [
     "Open Desktop Build",
     "Question Quality 50-Pass",
     "Exact-head CI Risk Coverage",
+    "workflow_path_for",
+    ".github/workflows/ci-risk-coverage.yml",
+    ".path == $workflow_path",
     "actions/runs?head_sha=$PR_HEAD_SHA&event=pull_request",
     "PR_HEAD_REF",
     "PR_HEAD_REPO_ID",
@@ -160,6 +163,8 @@ for marker in (
     "run_matches_main_pr",
     '((pr.get("base") or {}).get("ref") == "main")',
     "successful_required_workflows(runs, pr_number, pr_head_ref, pr_head_repo_id)",
+    "REQUIRED_WORKFLOW_PATHS",
+    'r.get("path") == REQUIRED_WORKFLOW_PATHS[name]',
     '"Exact-head CI Risk Coverage"',
     "full lowercase 40-character commit SHA",
     "no usable canonical exact head SHA",
@@ -176,6 +181,8 @@ for marker in (
     "run_matches_pr",
     '((pr.get("base") or {}).get("ref") == "preview")',
     "latest_required_states(runs, pr_number, pr_head_ref, pr_head_repo_id)",
+    "REQUIRED_WORKFLOW_PATHS",
+    'row.get("path") == REQUIRED_WORKFLOW_PATHS[name]',
     "full lowercase 40-character commit SHA",
 ):
     need(marker in preview_verifier, f"preview-source verifier missing marker: {marker}")
@@ -416,6 +423,8 @@ need(
 need("pull_request:\n    branches: [main]" in risk_coverage, "exact-head risk coverage required check must run on every PR to main")
 need("workflow_dispatch:" not in risk_coverage, "exact-head risk coverage must remain PR-only because non-PR execution cannot prove PR-head coverage")
 risk_verifier = text("tools/verify_ci_risk_coverage.py")
+need("WORKFLOW_PATHS" in risk_verifier and 'run.get("path") != WORKFLOW_PATHS[name]' in risk_verifier,
+     "exact-head risk coverage must bind evidence to canonical workflow paths")
 for marker in (
     '".github/workflows/pages.yml"',
     '".github/workflows/preview-pages.yml"',
