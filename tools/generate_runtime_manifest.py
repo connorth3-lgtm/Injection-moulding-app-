@@ -57,6 +57,7 @@ BOOTSTRAP_OR_PACK_OWNED_ASSETS = {
     "./src/domains/research/reference-research-extension.js",
     "./src/domains/learning/specialist-evidence-gap-extension.js",
     "./src/domains/learning/training-qa-fix.js",
+    "./src/domains/learning/backup-authority-notice.js",
 }
 
 
