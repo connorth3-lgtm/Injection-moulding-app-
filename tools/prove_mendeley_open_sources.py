@@ -2,8 +2,7 @@
 """Retrieve benchmark-pinned open Mendeley workbooks and emit text/schema-only proof.
 
 No numeric worksheet values are emitted. Every publisher file ID, filename and SHA-256 is
-stored locally. Remote metadata is consistency evidence only. Downloads start from a fixed
-Mendeley URL and redirects are checked before following them against an exact host allow-list.
+stored locally. Remote metadata is version-pinned consistency evidence and supplies the exact public download URL only after file ID/name and publisher SHA checks. Redirects are checked before following them against an exact host allow-list.
 """
 from __future__ import annotations
 import hashlib, json, re, tempfile, urllib.parse, urllib.request, zipfile
@@ -194,7 +193,7 @@ def main():
             source_proof['files'].append({'name':name,'resolvedFileId':resolved_id,'sha256':'sha256:'+digest,'downloadRoute':used,'sheets':schema})
         source_proof['status']='source-proof-passed'; source_proof['rawNumericValuesEmitted']=False; proofs.append(source_proof)
         print(json.dumps({'status':'source-proof-passed','datasetId':source['datasetId'],'files':[f['name'] for f in source_proof['files']]},separators=(',',':')))
-    result={'schemaVersion':2,'status':'source-proofs-passed','sources':proofs,'boundary':'Workbook IDs, names, exact hashes, sheet names and bounded text/header labels only. Remote metadata is checked separately and cannot influence URL construction. Download redirects are checked before following and restricted to Mendeley plus its exact public-file S3 host. Numeric worksheet values are not emitted.'}
+    result={'schemaVersion':2,'status':'source-proofs-passed','sources':proofs,'boundary':'Workbook IDs, names, exact hashes, sheet names and bounded text/header labels only. Version-pinned remote metadata must match the governed file identity and SHA before its public download URL is accepted. Download redirects are checked before following and restricted to Mendeley plus its exact public-file S3 host. Numeric worksheet values are not emitted.'}
     (out/'mendeley-open-workbook-source-proofs.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
     return 0
 if __name__=='__main__': raise SystemExit(main())
