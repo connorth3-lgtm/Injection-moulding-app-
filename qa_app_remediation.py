@@ -107,19 +107,29 @@ schema = json.loads(text("data/materials/material-grade.schema.json"))
 need("identity" in schema["properties"], "material schema missing identity variant object")
 need("production" in schema["properties"], "material schema missing production provenance object")
 
-# Production artifact/build work must wait for both provenance verification and the
-# independently-started legacy Pages publisher guard. The guard itself must not wait
-# behind provenance because cancellation latency is release-safety critical.
+# Production artifact/build work must wait for provenance plus the post-provenance
+# Pages settings guard. Same-SHA legacy cancellation starts independently with actions
+# authority only; Pages settings mutation must not occur until provenance succeeds.
 for marker in (
     "production-source:",
+    "legacy-containment:",
     "publisher-guard:",
     "tools/verify_production_source.py",
     "Require merged-PR provenance before publication",
+    "--contain-only",
+    "needs: [production-source, legacy-containment]",
     "needs: [production-source, publisher-guard]",
 ):
     need(marker in pages, f"Pages pre-deploy provenance/publisher gate missing: {marker}")
+containment_block = pages.split("  legacy-containment:", 1)[1].split("\n  publisher-guard:", 1)[0]
 publisher_block = pages.split("  publisher-guard:", 1)[1].split("\n  build:", 1)[0]
-need("needs:" not in publisher_block, "legacy Pages publisher guard must start independently of production-source")
+need("needs:" not in containment_block, "legacy Pages containment must start independently of production-source")
+need("actions: write" in containment_block and "pages: write" not in containment_block,
+     "independent legacy Pages containment must be actions-only")
+need("needs: [production-source, legacy-containment]" in publisher_block,
+     "Pages settings mutation must wait for provenance and legacy containment")
+need("needs.production-source.result == 'success'" in publisher_block,
+     "Pages settings mutation must require successful exact main provenance")
 run = subprocess.run(["python", "tools/verify_production_source.py", "--self-test"], cwd=ROOT, capture_output=True, text=True)
 need(run.returncode == 0, f"production-source verifier self-test failed: {run.stdout}\n{run.stderr}")
 
@@ -274,4 +284,4 @@ for key in ("web_release", "desktop_release", "android_release", "windows_recove
     need(str(version_meta[key]) in compatibility_matrix, f"client compatibility matrix stale for {key}")
 need("external HOLD" in compatibility_matrix, "client compatibility matrix must preserve external validation boundary")
 
-print("MouldMaster app-wide remediation QA passed: PR-safe Pages verifier contract plus protected-main publication authorization and earliest-start legacy publisher guard, aligned gh api negotiation, cross-index fail-closed provenance, single authoritative owner-scoped engineering case store, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
+print("MouldMaster app-wide remediation QA passed: PR-safe Pages verifier contract plus protected-main publication authorization and earliest-start actions-only legacy containment plus post-provenance Pages settings guard, aligned gh api negotiation, cross-index fail-closed provenance, single authoritative owner-scoped engineering case store, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
