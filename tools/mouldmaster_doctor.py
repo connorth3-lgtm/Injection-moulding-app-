@@ -58,6 +58,20 @@ def plan(files,deep):
         if p.endswith((".js",".cjs",".mjs")) and (ROOT/p).exists():
             c.append(Check("syntax:"+p,"syntax",("node","--check",p),
               "Changed JavaScript must parse before deeper QA is useful.",(p,)))
+        if p.endswith(".py") and (ROOT/p).exists():
+            c.append(Check("syntax:"+p,"syntax",(PY,"-m","py_compile",p),
+              "Changed Python must compile before deeper QA is useful.",(p,)))
+
+    toolchain=any(p in {"package.json","package-lock.json","qa_browser_dependency_lock.py"} or p.startswith(".github/workflows/") for p in files)
+    add(c,toolchain or deep,Check("browser-toolchain","toolchain",(PY,"qa_browser_dependency_lock.py"),
+      "Browser QA dependencies or CI workflow contracts changed.",
+      ("package.json","package-lock.json","qa_browser_dependency_lock.py"),
+      "Keep browser QA dependencies exactly pinned and regenerate the lock only through the approved toolchain."))
+    workflows=any(p.startswith(".github/workflows/") for p in files)
+    add(c,workflows or deep,Check("actions-versions","ci-governance",(PY,"qa_critical_actions_versions.py"),
+      "GitHub Actions workflow code changed.",
+      (".github/workflows/","qa_critical_actions_versions.py"),
+      "Use the repository-approved immutable action revisions; do not loosen the version guard."))
 
     pages=any(("pages" in p and (p.startswith(".github/workflows/") or p.startswith("tools/"))) or p in {
       "qa_pages_single_publisher.py","qa_pages_candidate_handoff.py","qa_release_supply_chain.py"} for p in files)
