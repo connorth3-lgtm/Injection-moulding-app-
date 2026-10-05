@@ -27,6 +27,7 @@ RELNS='{http://schemas.openxmlformats.org/package/2006/relationships}'
 MENDELEY_API='https://data.mendeley.com/public-api/datasets/'
 MENDELEY_DOWNLOAD='https://data.mendeley.com/public-files/datasets/'
 MENDELEY_HOST='data.mendeley.com'
+MENDELEY_API_HOST='api.data.mendeley.com'
 MENDELEY_FILE_HOST='prod-dcd-datasets-public-files-eu-west-1.s3.eu-west-1.amazonaws.com'
 FILE_ID_RE=re.compile(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$')
 SHORT_ID_RE=re.compile(r'^[a-z0-9]{10}$')
@@ -41,7 +42,7 @@ def assert_https_host(url,allowed_hosts):
 
 class AllowlistedRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self,req,fp,code,msg,headers,newurl):
-        assert_https_host(newurl,{MENDELEY_HOST,MENDELEY_FILE_HOST})
+        assert_https_host(newurl,{MENDELEY_HOST,MENDELEY_API_HOST,MENDELEY_FILE_HOST})
         return super().redirect_request(req,fp,code,msg,headers,newurl)
 
 
@@ -99,10 +100,12 @@ def pinned_download_urls(short_id,version,file_id):
         raise RuntimeError('invalid locally pinned Mendeley file id')
     encoded_id=urllib.parse.quote(file_id,safe='')
     return [
-        # Governance pins an explicit dataset version. Do not try the unversioned
-        # convenience route first: it can resolve to bytes outside the governed
-        # version while preserving the same file UUID.
-        assert_https_host(f'{MENDELEY_DOWNLOAD}{short_id}/versions/{version}/files/{encoded_id}/file_downloaded',{MENDELEY_HOST}),
+        # Governance pins an explicit dataset version. Use Mendeley's API route
+        # with ?version=N rather than the unversioned public convenience URL.
+        assert_https_host(
+            f'https://{MENDELEY_API_HOST}/datasets/{short_id}/files/{encoded_id}/file_downloaded?version={version}',
+            {MENDELEY_API_HOST},
+        ),
     ]
 
 
@@ -118,10 +121,10 @@ def download_first(urls,destination):
     errors=[]
     for url in urls:
         try:
-            assert_https_host(url,{MENDELEY_HOST})
+            assert_https_host(url,{MENDELEY_HOST,MENDELEY_API_HOST})
             req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-measured-learning/2.4'})
             with DOWNLOAD_OPENER.open(req,timeout=90) as r, open(destination,'wb') as out:
-                assert_https_host(r.geturl(),{MENDELEY_HOST,MENDELEY_FILE_HOST})
+                assert_https_host(r.geturl(),{MENDELEY_HOST,MENDELEY_API_HOST,MENDELEY_FILE_HOST})
                 while True:
                     chunk=r.read(1024*1024)
                     if not chunk: break
