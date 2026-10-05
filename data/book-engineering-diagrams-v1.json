@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "bookId": "mouldmaster-book",
-  "release": "2026.10.06.3",
+  "release": "2026.10.06.4",
   "status": "governed-instructional-diagrams",
   "policy": "Instructional diagrams explain generic mechanisms. They are not scale drawings, CFD/FEA results, mould designs, safety drawings, machine-specific setup instructions or production limits.",
   "diagrams": [
