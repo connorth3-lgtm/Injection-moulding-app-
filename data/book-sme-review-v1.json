@@ -103,7 +103,8 @@
     "worked-dimensional-conditioning-v1",
     "worked-process-monitoring-alarm-v1",
     "worked-black-speck-source-map-v1",
-    "worked-complex-diagnostics-v1"
+    "worked-complex-diagnostics-v1",
+    "worked-filling-boundary-defect-v1"
   ],
   "workedCaseReviewRule": "Each workedCaseId must be reviewed inside its owning governed module across the same six requiredDimensions. Where a module has multiple cases, all of them are in scope. Automation must not create or infer approval.",
   "enrichmentChapterIds": [
