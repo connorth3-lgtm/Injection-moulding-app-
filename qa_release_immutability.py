@@ -38,7 +38,11 @@ for marker in [
     'types: [completed]',
     'branches: [main]',
     'permissions: {}',
-    "if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}",
+    "manual-verify-platform-immutability:",
+    "if: github.event_name == 'workflow_dispatch'",
+    "contents: read",
+    "Manual verification is read-only",
+    "if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' }}",
     'contents: write',
     'ref: ${{ github.event.workflow_run.head_sha || github.sha }}',
     'fetch-depth: 2',
@@ -59,7 +63,9 @@ for marker in [
     'The newly created mutable release/tag was removed.',
     'Existing releases are never auto-deleted.',
 ]: need(marker in guard,f'platform immutable release guard safeguard missing: {marker}')
-need("TRIGGER_EVENT\" == \"push\"" in guard,'guard must distinguish normal push publisher runs from manual publication verification')
+need("manual-verify-platform-immutability:" in guard,'manual immutability verification job missing')
+need("Manual verification performed with read-only contents permission." in guard,'manual verification must explicitly remain read-only')
+need("TRIGGER_EVENT\" == \"push\"" in guard,'automatic cleanup guard must distinguish normal push publisher runs')
 need(guard.find('current == "$previous"') < guard.find('releases/tags/${tag}'),'web-only desktop-identity skip must occur before release lookup')
 need(guard.find('immutable\") is True') < guard.find('created_by_this_run="false"'),'platform immutable state must be checked before mutable-release cleanup provenance is considered')
 need(guard.find('if [[ "$created_by_this_run" == "true" ]]') < guard.find('gh release delete "$tag" --repo "$REPOSITORY" --yes --cleanup-tag'),'mutable release deletion must be restricted to a release proven to come from the triggering publisher run')
