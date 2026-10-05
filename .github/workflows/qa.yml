@@ -30,6 +30,16 @@ jobs:
           python-version: '3.12'
       - name: Developer doctor fast triage
         run: python tools/mouldmaster_doctor.py
+      - name: Publish developer doctor summary
+        if: always()
+        shell: bash
+        run: |
+          if [ -f qa-artifacts/doctor-report.md ]; then
+            cat qa-artifacts/doctor-report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "### MouldMaster Doctor" >> "$GITHUB_STEP_SUMMARY"
+            echo "Doctor did not produce a report; inspect the Doctor step bootstrap failure." >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Upload developer doctor report
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
