@@ -1,12 +1,12 @@
 # MouldMaster Book SME review packet — 2026.10.06.6
 
-This packet governs the **human** technical review of MouldMaster Book content release `2026.10.06.2`: 20 reader-facing chapters composed from 46 governed review modules, bound to learner web release `2026.10.06.6` / Book manifest `2026.09.14.1`.
+This packet governs the **human** technical review of MouldMaster Book content release `2026.10.06.3`: 20 reader-facing chapters composed from 46 governed review modules, bound to learner web release `2026.10.06.6` / Book manifest `2026.09.14.1`.
 
 Automated evidence review, CI, browser tests and the Book publication authorization are necessary but are not a substitute for an independent experienced injection-moulding practitioner reviewing the teaching as a practitioner would use it.
 
 ## Scope
 
-Review every governed module ID listed in `data/book-sme-review-v1.json`. The contract retains the legacy field name `chapterIds`; those 46 IDs are the claim/source/SME review units underneath the 20 reader-facing chapters in `data/book-reader-architecture-v2.json`. For the chapters with governed worked examples (24 worked cases in total), the chapter review must also inspect the complete worked example listed in `data/book-worked-engineering-cases-v1.json`, including arithmetic/reasoning, assumptions, units, evidence fit, synthetic-data labeling and non-universal boundaries. Start with its `priorityChapters`, especially safety foundations, V/P transfer, gate seal, diagnostic method, short shot, flash, burns, warpage, black specks, cavity pressure, process monitoring and complex diagnostics.
+Review every governed module ID listed in `data/book-sme-review-v1.json`. The contract retains the legacy field name `chapterIds`; those 46 IDs are the claim/source/SME review units underneath the 20 reader-facing chapters in `data/book-reader-architecture-v2.json`. For the chapters with governed worked examples (25 worked cases in total), the chapter review must also inspect the complete worked example listed in `data/book-worked-engineering-cases-v1.json`, including arithmetic/reasoning, assumptions, units, evidence fit, synthetic-data labeling and non-universal boundaries. Start with its `priorityChapters`, especially safety foundations, V/P transfer, gate seal, diagnostic method, short shot, flash, burns, warpage, black specks, cavity pressure, process monitoring and complex diagnostics.
 
 For the ten chapters listed in `enrichmentChapterIds`, the reviewer must also inspect all current evidence-enrichment sections in `data/book-evidence-enrichment-v2.json`, including source fit, case-specific numerical context, uncertainty, non-universal boundaries and the ISO 9001:2026 quality-record section where applicable.
 
@@ -55,7 +55,7 @@ Where a governed module owns a governed worked case or instructional diagram, li
 
 For troubleshooting chapters, ask whether a learner could wrongly interpret the chapter as `symptom -> certain cause -> guaranteed fix`. If yes, the review fails until the wording is corrected.
 
-For all 24 governed worked engineering cases, independently recompute or otherwise verify the calculation/reasoning and confirm the case-level evidence anchors fit the stated claim. Review all 18 governed instructional diagrams for mechanism accuracy, labels, accessibility text, non-scale boundaries and consistency with the owning module.
+For all 25 governed worked engineering cases, independently recompute or otherwise verify the calculation/reasoning and confirm the case-level evidence anchors fit the stated claim. Review all 21 governed instructional diagrams for mechanism accuracy, labels, accessibility text, non-scale boundaries and consistency with the owning module.
 
 For numeric/process-setting content, ask whether the number is universal. If the correct answer depends on grade, machine, mould, hot runner, product or site, the chapter must make that dependency visible and point back to controlling documentation or measurement.
 
@@ -71,4 +71,4 @@ For the 37 modules covered by the current editorial-expansion review, confirm th
 
 ## 2026.10.06.6 Keep Reading / Home integration emphasis
 
-Book technical content is now content release `2026.10.06.2` after the final pre-read accuracy revision; independent human SME approval remains unchanged on HOLD. Confirm the Home **Book / Keep Reading** entry does not blur the distinction between learner navigation state and governed technical authority, and that the learner-facing phrase **Source evidence reviewed** cannot reasonably be mistaken for independent human SME approval.
+Book technical content is now content release `2026.10.06.3` after the 100-pass editorial and teaching remediation; independent human SME approval remains unchanged on HOLD. Confirm the Home **Book / Keep Reading** entry does not blur the distinction between learner navigation state and governed technical authority, and that the learner-facing phrase **Source evidence reviewed** cannot reasonably be mistaken for independent human SME approval.
