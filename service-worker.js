@@ -1,5 +1,5 @@
-const CACHE_VERSION='2026.10.05.1';
-const CACHE_REVISION='deep-review-r29-20261005';
+const CACHE_VERSION='2026.10.06.1';
+const CACHE_REVISION='book-reader-r30-20261006';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both
@@ -84,6 +84,8 @@ const CORE=[
   './assets/book-diagrams/multicavity-balance.svg',
   './assets/book-diagrams/ejection-draft.svg',
   './src/domains/learning/book-data/book-evidence-enrichment-v2.json',
+  './src/domains/learning/book-data/book-reader-architecture-v2.json',
+  './src/domains/learning/book-data/book-editorial-expansion-review-v1.json',
   './src/domains/learning/book-data/book-material-grade-atlas-v1.json',
   './src/domains/learning/book-data/book-material-regional-evidence-v1.json',
   './src/domains/learning/book-data/book-material-search-index-v1.json',
