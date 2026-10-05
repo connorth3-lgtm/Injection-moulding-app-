@@ -129,8 +129,8 @@ def verify(token: str, repository: str, source_sha: str) -> None:
     pr = matches[0]
     pr_number = int(pr["number"])
     pr_head = str((pr.get("head") or {}).get("sha") or "")
-    if len(pr_head) != 40:
-        raise SystemExit(f"Merged preview PR #{pr_number} has no usable exact head SHA")
+    if re.fullmatch(r"[0-9a-f]{40}", pr_head) is None:
+        raise SystemExit(f"Merged preview PR #{pr_number} has no usable canonical exact head SHA")
 
     runs_query = urlencode({"head_sha": pr_head, "event": "pull_request", "per_page": 100})
     states: dict[str, tuple[str, str]] = {}
