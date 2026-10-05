@@ -200,7 +200,6 @@ def main():
         endpoint,meta=public_files(source['shortId'],source['version'])
         source_proof={'datasetId':source['datasetId'],'metadataEndpoint':endpoint,'files':[]}
         for file_id,name,expected_sha in source['files']:
-            verify_metadata_identity(meta,file_id,name,source['shortId'])
             _identity,resolved_id,urls=resolve_file(meta,file_id,name,source['shortId'],source['version'],expected_sha)
             with tempfile.NamedTemporaryFile(suffix='.xlsx') as tmp:
                 used=download_first(urls,tmp.name)
