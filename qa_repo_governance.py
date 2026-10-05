@@ -155,6 +155,10 @@ for marker in (
     "Mobile Browser QA",
     "Question Quality 50-Pass",
     "Pre-merge Public Candidate",
+    "run_matches_pr",
+    '((pr.get("base") or {}).get("ref") == "preview")',
+    "latest_required_states(runs, pr_number)",
+    "full lowercase 40-character commit SHA",
 ):
     need(marker in preview_verifier, f"preview-source verifier missing marker: {marker}")
 for marker in (
@@ -214,6 +218,7 @@ for marker in (
     '"MouldMaster Pages Release Readiness"',
     '"Main PR Provenance Guard"',
     '"MouldMaster Preview Pages"',
+    '"branch": branch',
     '"event": "push"',
     "head_sha",
 ):
