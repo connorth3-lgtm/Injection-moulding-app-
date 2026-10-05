@@ -107,6 +107,20 @@ def plan(files,deep):
       ("version.json","index.html","service-worker.js","qa_release_docs.py"),
       "Synchronize release/cache identity; never rewrite evidence to hide candidate drift."))
 
+    candidate_binding=release or any(
+      p.startswith("src/domains/runtime-packs/") or p.startswith("src/domains/shell/") or
+      p.startswith("data/accessibility-real-at-validation") or p.startswith("data/nzqa-external-validation") or
+      p.startswith("data/pwa-physical-device-validation") or p.startswith("data/release-external-validation")
+      for p in files
+    )
+    add(c,candidate_binding or deep,Check("exact-candidate-binding","release-integrity",
+      (PY,"tools/verify_release_external_validation.py"),
+      "Learner runtime or external HOLD metadata changed, so the retained candidate identity may be stale.",
+      ("data/release-external-validation-v1.json","data/pwa-physical-device-validation-v1.json",
+       "data/accessibility-real-at-validation-v1.json","data/nzqa-external-validation-v1.json",
+       "tools/verify_release_external_validation.py"),
+      "Retain the exact current runtime candidate first, then rebind HOLD metadata to its real source SHA, runtime fingerprint and artifact provenance. Do not alter external validation status."))
+
     if deep:
         c.extend([
           Check("app-wide-audit","cross-domain",(PY,"qa_app_wide_audit.py"),
