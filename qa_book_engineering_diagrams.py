@@ -5,6 +5,7 @@ import hashlib, json, re
 ROOT=Path(__file__).resolve().parent
 LEDGER=ROOT/'data/book-engineering-diagrams-v1.json'
 SME=ROOT/'data/book-sme-review-v1.json'
+BINDING=ROOT/'data/book-sme-release-binding-v1.json'
 
 def need(ok,msg):
     if not ok: raise AssertionError(msg)
@@ -14,8 +15,9 @@ def git_blob_sha1(path):
     return hashlib.sha1(f'blob {len(body)}\0'.encode()+body).hexdigest()
 
 data=json.loads(LEDGER.read_text(encoding='utf-8'))
+binding=json.loads(BINDING.read_text(encoding='utf-8'))
 rows=data.get('diagrams') or []
-need(data.get('release')=='2026.10.01.3' and data.get('status')=='governed-instructional-diagrams','diagram release identity mismatch')
+need(data.get('release')==binding.get('contentRelease') and data.get('status')=='governed-instructional-diagrams','diagram release identity mismatch')
 need(len(rows)==8 and len({x['id'] for x in rows})==8 and len({x['chapterId'] for x in rows})==8,'diagram identity/chapter coverage mismatch')
 for row in rows:
     path=ROOT/row['asset']
