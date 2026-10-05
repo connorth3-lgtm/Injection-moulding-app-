@@ -193,8 +193,16 @@ async function fetchNetwork(event){
   try{return await fetch(event.request,{cache:'no-store'})}catch(_){return null}
 }
 function criticalOfflineResponse(url){
-  if(url.pathname.endsWith('.json'))return new Response(JSON.stringify({error:'mouldmaster-offline-asset-unavailable'}),{status:503,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}});
-  return new Response('/* MouldMaster runtime asset is unavailable offline. Reconnect and reopen the app to cache this runtime feature pack. */\n',{status:503,headers:{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}})
+  const path=url.pathname.toLowerCase();
+  let type='text/plain; charset=utf-8',body='MouldMaster governed asset is unavailable offline. Reconnect and reopen the app to restore the validated release.\n';
+  if(path.endsWith('.json')){type='application/json; charset=utf-8';body=JSON.stringify({error:'mouldmaster-offline-asset-unavailable'})}
+  else if(path.endsWith('.js')){type='text/javascript; charset=utf-8';body='/* MouldMaster governed runtime asset is unavailable offline. Reconnect and reopen the app to restore the validated release. */\n'}
+  else if(path.endsWith('.css')){type='text/css; charset=utf-8';body='/* MouldMaster governed stylesheet is unavailable offline. Reconnect and reopen the app to restore the validated release. */\n'}
+  else if(path.endsWith('.html')){type='text/html; charset=utf-8';body='<!doctype html><meta charset="utf-8"><title>MouldMaster asset unavailable</title><p>MouldMaster governed content is unavailable offline. Reconnect and reopen the app to restore the validated release.</p>'}
+  else if(path.endsWith('.webmanifest')){type='application/manifest+json; charset=utf-8';body=JSON.stringify({error:'mouldmaster-offline-asset-unavailable'})}
+  else if(path.endsWith('.svg')){type='image/svg+xml; charset=utf-8';body='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><title>MouldMaster governed asset unavailable</title></svg>'}
+  else if(path.endsWith('.png')){type='image/png';body=''}
+  return new Response(body,{status:503,headers:{'Content-Type':type,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}})
 }
 function unlistedRuntimeResponse(url){
   if(url.pathname.endsWith('.json'))return new Response(JSON.stringify({error:'mouldmaster-unlisted-runtime-asset'}),{status:503,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}});
