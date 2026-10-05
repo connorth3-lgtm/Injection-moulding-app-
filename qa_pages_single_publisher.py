@@ -239,6 +239,10 @@ for marker in (
     "release-hold migration worker mismatch",
     'fetch(urljoin(root, "device-validation.html"))',
     "device metadata helper violates local-only boundary",
+    "critical_assets",
+    "preview pages-manifest has no hash record for critical asset",
+    "critical preview asset byte-size mismatch",
+    "critical preview asset SHA-256 mismatch",
 ):
     need(marker in hold_verifier, f"release-hold live verifier safeguard missing: {marker}")
 
@@ -248,5 +252,5 @@ for marker in ("--convergence-attempts", "--convergence-delay", "FORBIDDEN_PROBE
 print(
     "MouldMaster Pages publisher-governance QA passed (serialized main/preview deployers, merged-PR preview provenance, exact deployed-source verification, workflow-only source, successful legacy-deploy detection, "
     "earliest-start guard, preview-only main publication, minimal base hold plus stale-root-PWA migration with /preview/ staged, "
-    "root-to-preview Home forwarding, local-only metadata helper, and live 404 verification)"
+    "root-to-preview Home forwarding, local-only metadata helper, live critical-byte SHA-256 verification, and live 404 verification)"
 )
