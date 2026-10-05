@@ -42,20 +42,22 @@ def add(items,cond,item):
 
 def plan(files,deep):
     impact=classify(files)
-    c=[
-      Check("runtime-packs","generated-runtime",(PY,"tools/build_runtime_packs.py","--check"),
-        "Generated runtime packs must exactly match reviewed source scripts.",
-        ("tools/build_runtime_packs.py","src/domains/runtime-packs/"),
-        "Run python tools/build_runtime_packs.py",(PY,"tools/build_runtime_packs.py")),
-      Check("runtime-manifest","generated-runtime",(PY,"tools/generate_runtime_manifest.py","--check"),
-        "The domain manifest must match the current domain tree and ownership rules.",
-        ("tools/generate_runtime_manifest.py","runtime-domain-manifest.json","src/domains/"),
-        "Run python tools/generate_runtime_manifest.py",(PY,"tools/generate_runtime_manifest.py")),
-      Check("style-csp","security-shell",("node","tools/generate_style_csp.cjs","--check"),
-        "Runtime-created styles must remain covered by deterministic CSP hashes.",
-        ("tools/generate_style_csp.cjs","index.html","src/domains/"),
-        "Run node tools/generate_style_csp.cjs",("node","tools/generate_style_csp.cjs")),
-    ]
+    c=[]
+    add(c,impact["runtime"] or impact["generated"] or deep,Check(
+      "runtime-packs","generated-runtime",(PY,"tools/build_runtime_packs.py","--check"),
+      "Generated runtime packs must exactly match reviewed source scripts.",
+      ("tools/build_runtime_packs.py","src/domains/runtime-packs/"),
+      "Run python tools/build_runtime_packs.py",(PY,"tools/build_runtime_packs.py")))
+    add(c,impact["runtime"] or impact["generated"] or deep,Check(
+      "runtime-manifest","generated-runtime",(PY,"tools/generate_runtime_manifest.py","--check"),
+      "The domain manifest must match the current domain tree and ownership rules.",
+      ("tools/generate_runtime_manifest.py","runtime-domain-manifest.json","src/domains/"),
+      "Run python tools/generate_runtime_manifest.py",(PY,"tools/generate_runtime_manifest.py")))
+    add(c,impact["runtime"] or impact["shell"] or deep,Check(
+      "style-csp","security-shell",("node","tools/generate_style_csp.cjs","--check"),
+      "Runtime-created styles must remain covered by deterministic CSP hashes.",
+      ("tools/generate_style_csp.cjs","index.html","src/domains/"),
+      "Run node tools/generate_style_csp.cjs",("node","tools/generate_style_csp.cjs")))
     for p in sorted(files):
         if p.endswith((".js",".cjs",".mjs")) and (ROOT/p).exists():
             c.append(Check("syntax:"+p,"syntax",("node","--check",p),
