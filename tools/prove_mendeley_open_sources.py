@@ -5,7 +5,7 @@ No numeric worksheet values are emitted. Every publisher file ID, filename and S
 stored locally. Remote metadata is version-pinned consistency evidence and supplies the exact public download URL only after file ID/name and publisher SHA checks. Redirects are checked before following them against an exact host allow-list.
 """
 from __future__ import annotations
-import hashlib, json, re, tempfile, urllib.parse, urllib.request, zipfile
+import hashlib, json, re, tempfile, time, urllib.parse, urllib.request, zipfile
 from http_retry import urlopen_with_retry
 from pathlib import Path
 from xml.etree import ElementTree as ET
@@ -29,7 +29,192 @@ MENDELEY_HOST='data.mendeley.com'
 MENDELEY_API_HOST='api.data.mendeley.com'
 MENDELEY_FILE_HOST='prod-dcd-datasets-public-files-eu-west-1.s3.eu-west-1.amazonaws.com'
 FILE_ID_RE=re.compile(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$')
-SHORT_ID_RE=re.compile(r'^[a-z0-9]{10}$')
+SHORT_ID_RE=re.compile(r'^[a-z0-9]{10}
+
+def assert_https_host(url,allowed_hosts):
+    parsed=urllib.parse.urlsplit(url)
+    if parsed.scheme!='https' or parsed.hostname not in allowed_hosts or parsed.username or parsed.password:
+        raise RuntimeError(f'Mendeley retrieval escaped fixed HTTPS hosts: {url}')
+    return url
+
+
+class AllowlistedRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self,req,fp,code,msg,headers,newurl):
+        assert_https_host(newurl,{MENDELEY_HOST,MENDELEY_API_HOST,MENDELEY_FILE_HOST})
+        return super().redirect_request(req,fp,code,msg,headers,newurl)
+
+
+DOWNLOAD_OPENER=urllib.request.build_opener(AllowlistedRedirect())
+
+
+def get_json(url):
+    assert_https_host(url,{MENDELEY_HOST})
+    req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-measured-learning/2.4'})
+    with urlopen_with_retry(req,timeout=60) as r:
+        assert_https_host(r.geturl(),{MENDELEY_HOST})
+        return json.load(r)
+
+
+def walk_files(value):
+    if isinstance(value,dict):
+        name=value.get('filename') or value.get('file_name') or value.get('name')
+        file_id=value.get('id') or value.get('file_id')
+        if name or file_id: yield value
+        for child in value.values(): yield from walk_files(child)
+    elif isinstance(value,list):
+        for child in value: yield from walk_files(child)
+
+
+def public_files(short_id,version):
+    if not SHORT_ID_RE.fullmatch(short_id) or not isinstance(version,int) or version<1:
+        raise RuntimeError('invalid locally governed Mendeley dataset identity')
+    endpoint=f'{MENDELEY_API}{short_id}/files?folder_id=root&version={version}'
+    return endpoint,get_json(endpoint)
+
+
+def validate_pinned_identity(file_id,name):
+    if not FILE_ID_RE.fullmatch(file_id):
+        raise RuntimeError(f'invalid locally pinned Mendeley file id: {file_id!r}')
+    if not name or '/' in name or '\\' in name or name in {'.','..'}:
+        raise RuntimeError(f'invalid locally pinned Mendeley filename: {name!r}')
+
+
+def verify_metadata_identity(meta,file_id,name,short_id):
+    validate_pinned_identity(file_id,name)
+    for obj in walk_files(meta):
+        obj_id=str(obj.get('id') or obj.get('file_id') or '')
+        obj_name=str(obj.get('filename') or obj.get('file_name') or obj.get('name') or '')
+        if obj_id==file_id:
+            if obj_name!=name:
+                raise RuntimeError(f'Mendeley filename drift for {short_id}/{name}: {obj_name!r}')
+            return obj
+    raise RuntimeError(f'pinned Mendeley file id/name missing from metadata: {short_id}/{name}')
+
+
+def metadata_download_url(item,file_id,name,short_id,expected_sha):
+    validate_pinned_identity(file_id,name)
+    details=item.get('content_details') or item.get('contentDetails') or {}
+    publisher_sha=str(
+        details.get('sha256_hash') or details.get('sha256Hash')
+        or item.get('sha256') or item.get('sha256_hash') or ''
+    ).lower()
+    if publisher_sha and publisher_sha!=expected_sha:
+        raise RuntimeError(f'Mendeley publisher SHA drift for {short_id}/{name}: {publisher_sha}')
+    url=(
+        details.get('download_url') or details.get('downloadUrl')
+        or item.get('download_url') or item.get('downloadUrl')
+    )
+    if not url:
+        raise RuntimeError(f'Mendeley version-pinned metadata has no download URL: {short_id}/{name}')
+    return assert_https_host(str(url),{MENDELEY_HOST,MENDELEY_API_HOST,MENDELEY_FILE_HOST})
+
+
+def resolve_file(meta,file_id,name,short_id,version,expected_sha=None):
+    """Resolve the exact file from version-pinned publisher metadata.
+
+    Mendeley's public metadata API can transiently return an incomplete file list.
+    Retry the same pinned dataset/version identity a bounded number of times, but
+    never fall back to another version, filename, UUID or unversioned download.
+    """
+    if expected_sha is None:
+        raise RuntimeError('expected source SHA is required for Mendeley resolution')
+    last_error=None
+    current_meta=meta
+    for attempt in range(1,METADATA_IDENTITY_ATTEMPTS+1):
+        try:
+            item=verify_metadata_identity(current_meta,file_id,name,short_id)
+            url=metadata_download_url(item,file_id,name,short_id,expected_sha)
+            local_identity={'id':file_id,'filename':name,'identitySource':'version-pinned-publisher-metadata'}
+            return local_identity,file_id,[url]
+        except RuntimeError as exc:
+            last_error=exc
+            if attempt>=METADATA_IDENTITY_ATTEMPTS:
+                break
+            time.sleep(min(attempt*2,6))
+            _,current_meta=public_files(short_id,version)
+    raise RuntimeError(
+        f'Mendeley version-pinned metadata identity unresolved after {METADATA_IDENTITY_ATTEMPTS} attempts: {last_error}'
+    )
+
+
+def download_first(urls,destination):
+    errors=[]
+    for url in urls:
+        try:
+            assert_https_host(url,{MENDELEY_HOST,MENDELEY_API_HOST,MENDELEY_FILE_HOST})
+            req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-measured-learning/2.4'})
+            with DOWNLOAD_OPENER.open(req,timeout=90) as r, open(destination,'wb') as out:
+                assert_https_host(r.geturl(),{MENDELEY_HOST,MENDELEY_API_HOST,MENDELEY_FILE_HOST})
+                while True:
+                    chunk=r.read(1024*1024)
+                    if not chunk: break
+                    out.write(chunk)
+            if Path(destination).stat().st_size>0: return url
+        except Exception as exc:
+            errors.append(f'{url}: {exc}')
+    raise RuntimeError('; '.join(errors))
+
+
+def col_index(ref):
+    letters=''.join(ch for ch in ref if ch.isalpha()).upper(); n=0
+    for ch in letters: n=n*26+(ord(ch)-64)
+    return n
+
+
+def workbook_text_schema(path):
+    with zipfile.ZipFile(path) as z:
+        shared=[]
+        if 'xl/sharedStrings.xml' in z.namelist():
+            root=ET.fromstring(z.read('xl/sharedStrings.xml'))
+            for si in root.findall('m:si',NS): shared.append(''.join(t.text or '' for t in si.iterfind('.//m:t',NS)))
+        wb=ET.fromstring(z.read('xl/workbook.xml'))
+        relroot=ET.fromstring(z.read('xl/_rels/workbook.xml.rels'))
+        rels={r.attrib['Id']:r.attrib['Target'] for r in relroot.findall(f'{RELNS}Relationship')}
+        sheets=[]
+        for sheet in wb.find('m:sheets',NS):
+            name=sheet.attrib['name']; target=rels[sheet.attrib[f'{{{NS["r"]}}}id']]
+            target='xl/'+target.lstrip('/') if not target.startswith('xl/') else target
+            xml=ET.fromstring(z.read(target))
+            labels=[]; max_col=0; max_row=0
+            for row in xml.findall('.//m:sheetData/m:row',NS):
+                rnum=int(row.attrib.get('r','0')); max_row=max(max_row,rnum)
+                if rnum>25: continue
+                for cell in row.findall('m:c',NS):
+                    ref=cell.attrib.get('r',''); max_col=max(max_col,col_index(ref))
+                    typ=cell.attrib.get('t'); text=None
+                    if typ=='s':
+                        v=cell.find('m:v',NS)
+                        if v is not None and v.text is not None:
+                            idx=int(v.text); text=shared[idx] if 0<=idx<len(shared) else None
+                    elif typ=='inlineStr': text=''.join(t.text or '' for t in cell.iterfind('.//m:t',NS))
+                    elif typ=='str':
+                        v=cell.find('m:v',NS); text=v.text if v is not None else None
+                    if text and text.strip(): labels.append({'cell':ref,'text':text.strip()[:240]})
+            sheets.append({'name':name,'boundedTextLabels':labels[:120],'maxObservedTextColumnIndexFirst25Rows':max_col,'maxRowFromWorksheetXml':max_row})
+        return sheets
+
+
+def main():
+    out=Path('measured-source-proof'); out.mkdir(exist_ok=True); proofs=[]
+    for source in SOURCES:
+        endpoint,meta=public_files(source['shortId'],source['version'])
+        source_proof={'datasetId':source['datasetId'],'metadataEndpoint':endpoint,'files':[]}
+        for file_id,name,expected_sha in source['files']:
+            verify_metadata_identity(meta,file_id,name,source['shortId'])
+            _identity,resolved_id,urls=resolve_file(meta,file_id,name,source['shortId'],source['version'],expected_sha)
+            with tempfile.NamedTemporaryFile(suffix='.xlsx') as tmp:
+                used=download_first(urls,tmp.name)
+                digest=hashlib.sha256(Path(tmp.name).read_bytes()).hexdigest()
+                if digest!=expected_sha: raise SystemExit(f'{source["datasetId"]}/{name} SHA mismatch: {digest}')
+                schema=workbook_text_schema(tmp.name)
+            source_proof['files'].append({'name':name,'resolvedFileId':resolved_id,'sha256':'sha256:'+digest,'downloadRoute':used,'sheets':schema})
+        source_proof['status']='source-proof-passed'; source_proof['rawNumericValuesEmitted']=False; proofs.append(source_proof)
+        print(json.dumps({'status':'source-proof-passed','datasetId':source['datasetId'],'files':[f['name'] for f in source_proof['files']]},separators=(',',':')))
+    result={'schemaVersion':2,'status':'source-proofs-passed','sources':proofs,'boundary':'Workbook IDs, names, exact hashes, sheet names and bounded text/header labels only. Version-pinned remote metadata must match the governed file identity and SHA before its public download URL is accepted. Download redirects are checked before following and restricted to Mendeley plus its exact public-file S3 host. Numeric worksheet values are not emitted.'}
+    (out/'mendeley-open-workbook-source-proofs.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
+    return 0
+if __name__=='__main__': raise SystemExit(main()))
+METADATA_IDENTITY_ATTEMPTS=5
 
 
 def assert_https_host(url,allowed_hosts):
