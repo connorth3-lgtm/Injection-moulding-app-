@@ -45,7 +45,7 @@ for marker in (
     '"Release External Validation Boundary"',
     '"MouldMaster Pages Release Readiness"',
     '"Main PR Provenance Guard"',
-    '"MouldMaster Preview Pages"',
+    '"MouldMaster Preview Candidate"',
     '"branch": branch',
     '"event": "push"',
     "head_sha",
