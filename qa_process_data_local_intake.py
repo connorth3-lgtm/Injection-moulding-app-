@@ -57,6 +57,7 @@ const quotedNewline=api.parseCsv('a,b\\n"line1\\nline2",3\\n');
 const trailingBlank=api.parseCsv('a,b\\r\\n1,2\\r\\n\\r\\n');
 let oversizedError='',tooWideError='',unterminatedQuoteError='',tooManyCellsError='',tooFewCellsError='';
 try{{const oversized='fill_time_s\\n'+Array.from({{length:50001}},(_,i)=>String(i+1)).join('\\n')+'\\n';api.parseCsv(oversized)}}catch(err){{oversizedError=String(err&&err.message||err)}}
+try{{const tooWide=Array.from({{length:513}},(_,i)=>'c'+i).join(',')+'\\n'+Array.from({{length:513}},()=> '1').join(',')+'\\n';api.parseCsv(tooWide)}}catch(err){{tooWideError=String(err&&err.message||err)}}
 try{{api.parseCsv('a,b\\n"SECRET-UNTERMINATED,2')}}catch(err){{unterminatedQuoteError=String(err&&err.message||err)}}
 try{{api.parseCsv('a,b\\nSECRET-A,2,EXTRA-SECRET\\n')}}catch(err){{tooManyCellsError=String(err&&err.message||err)}}
 try{{api.parseCsv('a,b\\nSECRET-B\\n')}}catch(err){{tooFewCellsError=String(err&&err.message||err)}}
