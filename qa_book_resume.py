@@ -48,6 +48,7 @@ for marker in [
     "Book reading position",
     "including the saved Book reading position",
     "mm:book-resume-change",
+    "MMBook?.clearResume",
 ]:
     need(marker in training,f"learner reset Book ownership missing: {marker}")
 
