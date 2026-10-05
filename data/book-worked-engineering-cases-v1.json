@@ -945,6 +945,251 @@
           ]
         }
       ]
+    },
+    {
+      "id": "worked-warpage-discrimination-v1",
+      "chapterId": "warpage",
+      "title": "Warpage diagnosis: use direction, cavity and time to discriminate",
+      "synthetic": true,
+      "setup": "A synthetic flat moulding shows 1.2 mm bow immediately after ejection. After 24 h at the defined conditioning state, bow is 1.8 mm. Cavity 1 averages 1.8 mm while cavity 2 averages 0.7 mm.",
+      "observations": [
+        "Warpage increases after ejection rather than remaining constant.",
+        "The two cavities show a persistent offset under the same nominal machine cycle.",
+        "The direction of bow is repeatable relative to part geometry."
+      ],
+      "assumptions": [
+        "Measurement datum, fixture and conditioning state are held constant.",
+        "The values are synthetic and illustrate diagnostic reasoning only."
+      ],
+      "calculationSteps": [
+        "Post-mould change = 1.8 - 1.2 = 0.6 mm.",
+        "Cavity mean difference = 1.8 - 0.7 = 1.1 mm."
+      ],
+      "interpretation": "The time trend supports a post-mould dimensional-development contribution, while the cavity offset supports a local mould/thermal/flow contribution. Neither observation alone proves one root cause; the next tests should discriminate thermal balance, orientation/packing and measurement effects.",
+      "boundaries": [
+        "Do not convert these synthetic magnitudes into acceptance limits.",
+        "Tooling or process changes require product, material, mould and site authority."
+      ],
+      "sourceIds": [
+        "ISO-20457-2026",
+        "ASTM-D955-21",
+        "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW",
+        "KUO-2022-COOLING-WARPAGE"
+      ],
+      "claims": [
+        {
+          "id": "worked-warpage-discrimination-v1-claim-1",
+          "statement": "Warpage diagnosis can use controlled time trends, direction and cavity pattern as discriminating evidence while preserving multiple plausible mechanisms.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "ISO-20457-2026",
+            "ASTM-D955-21",
+            "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW",
+            "KUO-2022-COOLING-WARPAGE"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-weld-line-diagnosis-v1",
+      "chapterId": "weld-lines",
+      "title": "Weld-line diagnosis: appearance is not the same as structural performance",
+      "synthetic": true,
+      "setup": "A synthetic moulding has a visible line downstream of a hole. The line is present in both accepted and rejected samples, while a product-specific strength test differs.",
+      "observations": [
+        "The interface location follows the split-and-rejoin flow path around the hole.",
+        "Visual severity and measured strength do not rank samples in exactly the same order.",
+        "Vent condition and local front-arrival state remain candidate contributors."
+      ],
+      "assumptions": [
+        "The product-specific test is defined by the controlling quality requirement.",
+        "No generic temperature or speed change is treated as an approved remedy."
+      ],
+      "calculationSteps": [
+        "Classify the evidence into geometry-fixed observations, process-sensitive observations and product-performance measurements.",
+        "Select a test whose predicted result differs between gas/venting, thermal/front-condition and material-history hypotheses."
+      ],
+      "interpretation": "The visible line establishes the interface location but not the product consequence or root cause. Geometry, local flow-front condition, gas evacuation and material state must be considered together.",
+      "boundaries": [
+        "The case does not define an allowable weld-line strength.",
+        "Process and tooling changes remain within supplier, mould and site limits."
+      ],
+      "sourceIds": [
+        "BASF-INJECTION-TROUBLESHOOTER",
+        "ISO-20457-2026"
+      ],
+      "claims": [
+        {
+          "id": "worked-weld-line-diagnosis-v1-claim-1",
+          "statement": "A visible weld line should be evaluated against the actual product requirement and competing flow, gas, material and geometry mechanisms rather than by appearance alone.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "BASF-INJECTION-TROUBLESHOOTER",
+            "ISO-20457-2026"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-splay-boundary-v1",
+      "chapterId": "splay",
+      "title": "Splay investigation: follow the defect across material and machine boundaries",
+      "synthetic": true,
+      "setup": "Silver streaking appears after a material container change. It is present in all cavities on Machine A, disappears when a verified-dry sample is introduced, and does not reproduce with the original suspect material after a later handling correction.",
+      "observations": [
+        "The symptom initially follows a material-handling event rather than one cavity.",
+        "All cavities respond together.",
+        "A controlled material-condition change alters the symptom."
+      ],
+      "assumptions": [
+        "The material identity is confirmed and drying/handling follows current supplier documentation.",
+        "The example does not claim that all silver streaks are moisture-related."
+      ],
+      "calculationSteps": [
+        "Use the boundary pattern to rank common upstream mechanisms ahead of cavity-local mechanisms.",
+        "Repeat the comparison to test whether the symptom follows measured material condition rather than the first successful adjustment."
+      ],
+      "interpretation": "The evidence strengthens a material-condition hypothesis but still requires credible moisture/handling records and exclusion of other volatile or air-entrainment mechanisms.",
+      "boundaries": [
+        "Supplier grade instructions control drying conditions.",
+        "A successful drying-related change is evidence, not universal proof that every future splay event has the same cause."
+      ],
+      "sourceIds": [
+        "BASF-ULTRAMID-B3Z1-2026",
+        "BASF-INJECTION-TROUBLESHOOTER"
+      ],
+      "claims": [
+        {
+          "id": "worked-splay-boundary-v1-claim-1",
+          "statement": "Material-, cavity- and machine-boundary patterns can help discriminate splay mechanisms, but moisture must be confirmed with material-specific evidence rather than assumed from appearance.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "BASF-ULTRAMID-B3Z1-2026",
+            "BASF-INJECTION-TROUBLESHOOTER"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-dimensional-conditioning-v1",
+      "chapterId": "dimensional-stability",
+      "title": "Dimensional conditioning: define when the measurement exists",
+      "synthetic": true,
+      "setup": "A synthetic critical dimension measures 50.08 mm at 30 min after moulding, 50.03 mm at 24 h and 50.02 mm at 72 h under a defined conditioning environment.",
+      "observations": [
+        "The measured dimension changes with elapsed conditioning time.",
+        "The largest change occurs before the final observation interval."
+      ],
+      "assumptions": [
+        "The same measurement method, datum and environment are used.",
+        "The synthetic values are not a product tolerance."
+      ],
+      "calculationSteps": [
+        "30 min → 24 h change = -0.05 mm.",
+        "24 h → 72 h change = -0.01 mm."
+      ],
+      "interpretation": "A process comparison made at inconsistent measurement times could confuse conditioning response with process change. The measurement reference condition must be part of the engineering result.",
+      "boundaries": [
+        "Actual conditioning requirements follow the applicable material/product standard and quality plan.",
+        "The plateau-like trend does not prove that every material has stabilised by 72 h."
+      ],
+      "sourceIds": [
+        "ISO-20457-2026",
+        "ISO-294-4-2018",
+        "ASTM-D955-21"
+      ],
+      "claims": [
+        {
+          "id": "worked-dimensional-conditioning-v1-claim-1",
+          "statement": "Dimensional comparisons require a defined measurement and conditioning reference because post-mould dimensions can change with time and environment.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "ISO-20457-2026",
+            "ISO-294-4-2018",
+            "ASTM-D955-21"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-process-monitoring-alarm-v1",
+      "chapterId": "process-monitoring",
+      "title": "Monitoring alarm: a signal excursion is a trigger, not a root cause",
+      "synthetic": true,
+      "setup": "A synthetic cavity-pressure feature has a stable baseline of 42–46 MPa over the studied window. One cycle records 51 MPa while the measured part characteristic remains within specification.",
+      "observations": [
+        "The monitored feature is outside the established study window for one cycle.",
+        "The product measurement remains acceptable for that sampled part.",
+        "The next three cycles return to the prior signal range."
+      ],
+      "assumptions": [
+        "Sensor identity, calibration and sampling configuration are unchanged.",
+        "The alarm threshold is a study-specific monitoring rule, not a universal production limit."
+      ],
+      "calculationSteps": [
+        "Flag the excursion for investigation rather than automatically declaring product failure or root cause.",
+        "Compare the event with other process signals, cavity identity and subsequent recurrence before escalating the hypothesis."
+      ],
+      "interpretation": "A process alarm is evidence that the process differed from its monitored baseline. Product disposition and root-cause conclusions require the quality plan and corroborating evidence.",
+      "boundaries": [
+        "Real alarm actions must be predefined by the site's quality/control plan.",
+        "This example does not authorize automated machine-control changes."
+      ],
+      "sourceIds": [
+        "PARIZS-2023-IN-MOLD-SENSORS-WORKED",
+        "ISO-294-1-2017"
+      ],
+      "claims": [
+        {
+          "id": "worked-process-monitoring-alarm-v1-claim-1",
+          "statement": "A monitored process excursion can justify investigation without itself proving product nonconformance or root cause.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "PARIZS-2023-IN-MOLD-SENSORS-WORKED",
+            "ISO-294-1-2017"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-black-speck-source-map-v1",
+      "chapterId": "black-specks",
+      "title": "Black-speck source map: use cavity and chronology before repeated purging",
+      "synthetic": true,
+      "setup": "Synthetic black specks occur in all cavities immediately after a long interruption, diminish over ten cycles, then disappear. On another run they occur only in cavity 4 and persist.",
+      "observations": [
+        "The first pattern is time-linked and common to all cavities.",
+        "The second pattern is cavity-specific and persistent.",
+        "Both symptoms look visually similar."
+      ],
+      "assumptions": [
+        "Approved machine/material procedures govern any purge, inspection or disassembly.",
+        "No intervention is performed solely from this conceptual example."
+      ],
+      "calculationSteps": [
+        "Pattern A prioritises common upstream residence/degradation or contamination mechanisms.",
+        "Pattern B prioritises a local downstream/hot-runner/cavity-path mechanism before assuming the same upstream cause."
+      ],
+      "interpretation": "Chronology and cavity distribution can make the source search more efficient and reduce repeated corrective actions that do not test the suspected location.",
+      "boundaries": [
+        "Appearance alone cannot distinguish contamination from degradation.",
+        "Hot polymer, nozzle, barrel and hot-runner work requires approved supplier/site safety procedures."
+      ],
+      "sourceIds": [
+        "BASF-INJECTION-TROUBLESHOOTER",
+        "ISO-20430-2020"
+      ],
+      "claims": [
+        {
+          "id": "worked-black-speck-source-map-v1-claim-1",
+          "statement": "Time and cavity patterns can help localise plausible black-speck sources while preserving uncertainty between contamination and degradation mechanisms.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "BASF-INJECTION-TROUBLESHOOTER",
+            "ISO-20430-2020"
+          ]
+        }
+      ]
     }
   ],
   "humanReviewScope": {
