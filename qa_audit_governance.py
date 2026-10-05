@@ -24,6 +24,24 @@ pruner = text(".github/workflows/prune-merged-branches.yml")
 ruleset = text("tools/verify_main_ruleset.py")
 attestation = json.loads(text(".github/main-ruleset-attestation.json"))
 
+cross_process_result_path = ROOT / "data/public-benchmark-results/cross-process-chain-17240390-v1.json"
+cross_process_result = json.loads(cross_process_result_path.read_text(encoding="utf-8"))
+cross_profile = cross_process_result.get("profile") or {}
+cross_structure = cross_process_result.get("structureSummary") or {}
+cross_families = cross_structure.get("schemaFamilies") or []
+need("members" not in cross_process_result and "schemas" not in cross_process_result,
+     "cross-process review evidence must remain compact aggregate-only")
+need(cross_process_result_path.stat().st_size < 100_000,
+     "cross-process aggregate review evidence unexpectedly expanded above 100 KB")
+need(len(cross_families) == 4, "cross-process compact schema-family count drifted")
+need(sum(int(x.get("files") or 0) for x in cross_families) == int(cross_profile.get("injectionTabularFiles") or -1),
+     "cross-process compact schema-family file totals drifted")
+need(sum(int(x.get("rows") or 0) for x in cross_families) == int(cross_profile.get("injectionRows") or -1),
+     "cross-process compact schema-family row totals drifted")
+need(sum(int(x.get("numericValues") or 0) for x in cross_families) == int(cross_profile.get("injectionNumericValuesProfiled") or -1),
+     "cross-process compact schema-family numeric totals drifted")
+
+
 # The question-evidence approval gate may need to read an older approved Git blob so
 # unrelated core-shell edits can be distinguished from assessment-bearing changes.
 # Every workflow that can execute that gate must therefore retain full history.
