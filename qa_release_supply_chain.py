@@ -6,6 +6,8 @@ PAGES = ROOT / ".github" / "workflows" / "pages.yml"
 PREVIEW = ROOT / ".github" / "workflows" / "preview-pages.yml"
 DESKTOP = ROOT / ".github" / "workflows" / "publish-open-desktop.yml"
 DEPENDABOT = ROOT / ".github" / "dependabot.yml"
+QUEUED_PROFILE = ROOT / ".github" / "workflows" / "profile-queued-zenodo-data.yml"
+LOWER_PROFILE = ROOT / ".github" / "workflows" / "profile-cross-process-lower-workpiece.yml"
 
 
 def need(ok, message):
@@ -32,6 +34,8 @@ pages = PAGES.read_text(encoding="utf-8")
 preview = PREVIEW.read_text(encoding="utf-8")
 desktop = DESKTOP.read_text(encoding="utf-8")
 dependabot = DEPENDABOT.read_text(encoding="utf-8")
+queued_profile = QUEUED_PROFILE.read_text(encoding="utf-8")
+lower_profile = LOWER_PROFILE.read_text(encoding="utf-8")
 
 assert_pinned_actions(
     "Pages",
@@ -61,6 +65,25 @@ assert_pinned_actions(
     {
         "actions/checkout": "3d3c42e5aac5ba805825da76410c181273ba90b1",
         "actions/setup-node": "820762786026740c76f36085b0efc47a31fe5020",
+        "actions/setup-python": "5fda3b95a4ea91299a34e894583c3862153e4b97",
+        "actions/upload-artifact": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+    },
+)
+
+assert_pinned_actions(
+    "queued Zenodo profiler",
+    queued_profile,
+    {
+        "actions/checkout": "3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "actions/setup-python": "5fda3b95a4ea91299a34e894583c3862153e4b97",
+        "actions/upload-artifact": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+    },
+)
+assert_pinned_actions(
+    "cross-process lower profiler",
+    lower_profile,
+    {
+        "actions/checkout": "3d3c42e5aac5ba805825da76410c181273ba90b1",
         "actions/setup-python": "5fda3b95a4ea91299a34e894583c3862153e4b97",
         "actions/upload-artifact": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
     },
