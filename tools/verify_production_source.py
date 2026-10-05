@@ -276,7 +276,7 @@ def verify(token: str, repository: str, source_sha: str, require_native_protecti
 def self_test() -> None:
     sample = {
         "workflow_runs": [
-            {"name": name, "status": "completed", "conclusion": "success", "updated_at": "2026-09-03T00:00:00Z"}
+            {"name": name, "path": REQUIRED_WORKFLOW_PATHS[name], "status": "completed", "conclusion": "success", "updated_at": "2026-09-03T00:00:00Z"}
             for name in REQUIRED_WORKFLOWS
         ]
     }
@@ -313,6 +313,7 @@ def self_test() -> None:
         "workflow_runs": [
             {
                 "name": name,
+                "path": REQUIRED_WORKFLOW_PATHS[name],
                 "status": "completed",
                 "conclusion": "success",
                 "updated_at": "2026-09-03T02:00:00Z",
@@ -327,6 +328,10 @@ def self_test() -> None:
     assert ok
     ok, _ = successful_required_workflows(historical, 1, "wrong/source", 123)
     assert not ok
+    spoofed = json.loads(json.dumps(bound))
+    spoofed["workflow_runs"][0]["path"] = ".github/workflows/fake.yml"
+    ok, spoofed_states = successful_required_workflows(spoofed, 1)
+    assert not ok and spoofed_states[REQUIRED_WORKFLOWS[0]] == ("missing", "missing")
 
     assert api_endpoint("https://api.github.com/repos/example/project/pulls?state=closed") == "repos/example/project/pulls?state=closed"
     for invalid in ("http://api.github.com/repos/a/b", "https://example.com/repos/a/b", "https://api.github.com/user"):
