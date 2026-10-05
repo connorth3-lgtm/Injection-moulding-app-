@@ -55,12 +55,18 @@ for marker in (
     "first unresolved dependency",
     "GITHUB_STEP_SUMMARY",
     "run_url",
+    "workflow-state API unavailable",
+    "GitHub workflow-state query failed after 4 attempts",
+    "full lowercase 40-character commit SHA",
 ):
     need(marker in verifier, f"verifier missing marker: {marker}")
 
 need("contents: write" not in workflow, "assurance workflow must remain read-only")
 need("pages: write" not in workflow, "assurance workflow must not publish")
 need("pull-requests: write" not in workflow, "assurance workflow must not mutate pull requests")
+need("Upload branch assurance diagnostics" in workflow, "assurance diagnostics are not retained")
+need("actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a" in workflow, "assurance artifact uploader is not pinned")
+need("branch-assurance-report.md" in workflow and "branch-assurance-report.json" in workflow, "assurance report artifact paths are incomplete")
 
 run = subprocess.run(
     [sys.executable, str(ROOT / "tools/verify_branch_assurance.py"), "--self-test"],
