@@ -227,6 +227,32 @@
         "MouldMaster Release QA"
       ],
       "dependsOn": []
+    },
+    "production-health": {
+      "failureIdPrefix": "HEALTH",
+      "sources": [
+        "src/domains/governance/production-health.js",
+        "support.html",
+        "privacy.html",
+        "qa_production_observability.py"
+      ],
+      "generatedOutputs": [],
+      "runtimeSurfaces": [
+        "local-diagnostics",
+        "preview-self-diagnostics",
+        "deployment-health"
+      ],
+      "checks": [
+        "qa_production_observability.py"
+      ],
+      "workflows": [
+        "MouldMaster Release QA",
+        "Mobile Browser QA",
+        "Pre-merge Public Candidate"
+      ],
+      "dependsOn": [
+        "shell"
+      ]
     }
   }
 }
