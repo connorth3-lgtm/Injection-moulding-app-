@@ -4,7 +4,7 @@ from __future__ import annotations
 import hashlib, json, math, tempfile
 from pathlib import Path
 from openpyxl import load_workbook
-from prove_mendeley_open_sources import SOURCES, public_files, resolve_file, download_first
+from prove_mendeley_open_sources import SOURCES, materialize_verified_file
 
 OUT=Path('measured-source-proof/4h98-direct-unreviewed-learning-candidate.json')
 
@@ -16,11 +16,10 @@ def make_signal(sid,source_channel,semantic,unit,values):
     return {'id':sid,'label':sid.replace('-',' '),'sourceChannel':source_channel,'semantic':semantic,'unit':unit,'representation':rep,'representationFingerprint':sha(rep)}
 def main():
     source=next(s for s in SOURCES if s['datasetId']=='mendeley-4h98rz9f92-v3')
-    file_id,name,expected=source['files'][0]; _,meta=public_files(source['shortId'],source['version']); _,_,urls=resolve_file(meta,file_id,name,source['shortId'],source['version'],expected)
-    td=tempfile.TemporaryDirectory(); path=Path(td.name)/name
+    file_id,name,expected=source['files'][0]
+    path,digest_uri=materialize_verified_file(source,name)
+    digest=digest_uri.split(':',1)[1]
     try:
-        download_first(urls,path); digest=hashlib.sha256(path.read_bytes()).hexdigest()
-        if digest!=expected: raise RuntimeError(f'4h98 SHA mismatch: {digest}')
         wb=load_workbook(path,read_only=False,data_only=False); ws=wb['Sheet1']
         specs=[('tensile-replicates',list('EFGHI'),'Sheet1!E:I','tensile-modulus-replicates','GPa'),('hardness-replicates',list('KLMNO'),'Sheet1!K:O','hardness-replicates','HV'),('toughness-replicates',list('QRSTU'),'Sheet1!Q:U','toughness-replicates','J')]
         signals=[]
@@ -38,6 +37,6 @@ def main():
         result={'schemaVersion':1,'status':'unreviewed-source-derived-candidates','promotionEligible':False,'candidateCount':1,'candidates':[candidate],'boundary':'Authoring evidence only; independent engineering review and a case-specific governed binding are required before learner promotion.'}
         OUT.parent.mkdir(exist_ok=True); OUT.write_text(json.dumps(result,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
         print(json.dumps({'status':result['status'],'candidateId':candidate['candidateId']},separators=(',',':')))
-    finally: td.cleanup()
+    finally: pass
     return 0
 if __name__=='__main__': raise SystemExit(main())
