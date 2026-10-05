@@ -80,9 +80,18 @@ def request_json(token: str, url: str) -> object:
 
 
 def legacy_runs(token: str, repository: str, source_sha: str) -> list[dict]:
-    query = urlencode({"head_sha": source_sha, "per_page": 100})
-    payload = request_json(token, f"https://api.github.com/repos/{repository}/actions/runs?{query}")
-    rows = payload.get("workflow_runs", []) if isinstance(payload, dict) else []
+    rows: list[dict] = []
+    for page in range(1, 11):
+        query = urlencode({"head_sha": source_sha, "per_page": 100, "page": page})
+        payload = request_json(token, f"https://api.github.com/repos/{repository}/actions/runs?{query}")
+        page_rows = payload.get("workflow_runs", []) if isinstance(payload, dict) else []
+        if not isinstance(page_rows, list):
+            raise SystemExit("GitHub Actions workflow_runs payload is invalid")
+        rows.extend(run for run in page_rows if isinstance(run, dict))
+        if len(page_rows) < 100:
+            break
+    else:
+        raise SystemExit("Legacy Pages run query exceeded the 1000-run pagination safety bound")
     return [
         run
         for run in rows
