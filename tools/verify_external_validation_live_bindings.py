@@ -67,12 +67,27 @@ def verify(repository: str, token: str) -> None:
     artifact_id = candidate.get("artifactId")
     artifact_name = str(candidate.get("artifactName") or "")
     artifact_digest = str(candidate.get("artifactDigest") or "")
+    candidate_workflow = str(candidate.get("candidateWorkflow") or "")
     contract_expiry = parse_instant(candidate.get("artifactExpiresAt"), "webCandidate.artifactExpiresAt")
     if contract_expiry <= dt.datetime.now(dt.timezone.utc):
         fail(f"canonical retained artifact expired at {contract_expiry.isoformat()}")
 
     if not isinstance(run_id, int) or run_id <= 0 or not isinstance(artifact_id, int) or artifact_id <= 0:
         fail("candidate run/artifact identifiers are invalid")
+
+    run = request_json(token, f"repos/{repository}/actions/runs/{run_id}")
+    if not isinstance(run, dict):
+        fail(f"candidate workflow run {run_id} is not an object")
+    if candidate_workflow != "Pre-merge Public Candidate":
+        fail(f"canonical webCandidate names unsupported producer workflow: {candidate_workflow!r}")
+    if run.get("name") != candidate_workflow:
+        fail("live candidate workflow name does not match canonical webCandidate")
+    if run.get("path") != ".github/workflows/premerge-public-candidate.yml":
+        fail("live candidate workflow path is not the governed public-candidate workflow")
+    if run.get("event") != "pull_request":
+        fail("live candidate workflow event is not pull_request")
+    if run.get("head_sha") != source_sha:
+        fail("live candidate workflow head SHA does not match canonical webCandidate")
 
     payload = request_json(token, f"repos/{repository}/actions/runs/{run_id}/artifacts?per_page=100")
     rows = payload.get("artifacts", []) if isinstance(payload, dict) else []
@@ -113,7 +128,8 @@ def verify(repository: str, token: str) -> None:
             fail(f"NZQA tracker #{issue_number} does not contain current {label}: {value}")
 
     print(
-        f"External live bindings verified: retained artifact {artifact_id} is present/unexpired with exact digest/source; "
+        f"External live bindings verified: governed {candidate_workflow} run {run_id} produced retained artifact {artifact_id} "
+        f"with exact path/event/digest/source; "
         f"NZQA tracker #{issue_number} is open and bound to release {release} / {source_sha}."
     )
 
