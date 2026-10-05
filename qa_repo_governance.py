@@ -153,6 +153,7 @@ for marker in (
     "MouldMaster Release QA",
     "Mobile Browser QA",
     "Question Quality 50-Pass",
+    "Pre-merge Public Candidate",
 ):
     need(marker in preview_verifier, f"preview-source verifier missing marker: {marker}")
 for marker in (
@@ -168,6 +169,7 @@ for marker in (
     "Recheck current merged preview provenance",
     "mouldmaster-pages-site-publish",
     "xs.sort(key=lambda x:",
+    "retain-exact-candidate",
 ):
     need(marker in preview_pages, f"preview Pages governance missing marker: {marker}")
 need(
