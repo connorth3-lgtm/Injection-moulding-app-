@@ -87,6 +87,14 @@
         {
           "title": "Keep the material dry after drying",
           "text": "Drying performance can be lost if dried hygroscopic material is exposed to humid air during conveying, storage or machine feeding. The material path from dryer to feed throat is part of the controlled process and should be assessed when moisture-related evidence persists."
+        },
+        {
+          "title": "Moisture state is a condition to verify",
+          "text": "For moisture-sensitive materials, the important question is not whether a dryer was switched on but whether the material entering the process satisfies the current grade-specific requirement. Storage history, exposure, dryer performance, hopper residence and sampling method can all affect that conclusion. Use current supplier documentation and an appropriate measurement method where required rather than treating a generic time-and-temperature pair as universal proof of dryness."
+        },
+        {
+          "title": "Separate moisture evidence from similar-looking symptoms",
+          "text": "Surface streaks, bubbles, degradation or unstable processing can be consistent with moisture, but appearance alone does not prove it. Compare material history, measured moisture where appropriate, dryer condition, timing, affected lots and the response to controlled handling. If the symptom persists with verified material condition, widen the diagnosis to other volatile, thermal, contamination, machine or mould mechanisms instead of repeatedly increasing drying severity."
         }
       ]
     },
@@ -106,6 +114,14 @@
         {
           "title": "Treat degradation as an evidence problem",
           "text": "Discolouration, odour, gas, deposits, viscosity change or mechanical-property loss can be consistent with degradation, but none alone proves it. Check actual melt conditions, residence pathways, interruptions, contamination and grade-specific limits before changing the process."
+        },
+        {
+          "title": "Time and temperature act together",
+          "text": "A polymer's thermal history accumulates through drying where applicable, barrel residence, shear heating, hot-runner residence and interruptions. A temperature that is acceptable for a short period may become damaging when residence increases, and a nominally moderate setpoint does not prove the material has avoided excessive thermal exposure. Current grade-specific supplier limits and actual process history therefore matter more than a generic barrel-temperature number."
+        },
+        {
+          "title": "Look for evidence of changing residence or degradation",
+          "text": "Colour shift, odour, deposits, black specks, viscosity change or unstable recovery can support a thermal-history hypothesis, but none is uniquely diagnostic. Compare start-up, steady running, stoppages, purge history, shot utilisation, hot-runner behaviour and material lot information. A strong diagnosis explains why the symptom appears at a particular time or process state and predicts what should change when the suspected residence mechanism is controlled."
         }
       ]
     },
@@ -125,6 +141,14 @@
         {
           "title": "The grade is the actionable identity",
           "text": "Two grades from the same polymer family may differ through molecular weight, reinforcement, flame retardants, impact modifiers, colour systems or processing aids. Production decisions should therefore resolve the full commercial grade and revision of its supplier information before relying on family-level guidance."
+        },
+        {
+          "title": "Family names describe tendencies, not production windows",
+          "text": "A polymer family can suggest broad behaviour such as crystallinity, moisture sensitivity, temperature capability or reinforcement response, but grades within one family can differ substantially through molecular design, fillers, additives, flame-retardant systems, impact modifiers and intended application. Family knowledge is useful for forming expectations; current grade documentation controls actual processing limits and property claims."
+        },
+        {
+          "title": "Use family knowledge to ask better questions",
+          "text": "When an unfamiliar material behaves differently from expectation, ask which property of the formulation could explain the observation: crystallisation behaviour, reinforcement, viscosity, moisture sensitivity, additive package, thermal stability or another grade-specific feature. This approach is safer than copying a familiar recipe from another grade simply because the polymer-family label is similar."
         }
       ]
     },
@@ -144,6 +168,14 @@
         {
           "title": "Do not transfer settings between modified grades by name alone",
           "text": "A reinforced, flame-retarded or otherwise modified grade should be treated as its own processing material. Confirm the supplier's grade-specific processing guidance and qualification requirements rather than assuming that settings for an unfilled or differently modified resin are interchangeable."
+        },
+        {
+          "title": "Modifiers change more than one property at a time",
+          "text": "Glass fibre, mineral filler, impact modifier, flame retardant, lubricant, colourant and other additives can affect flow, shrinkage, anisotropy, thermal response, wear and surface appearance simultaneously. A formulation change can therefore alter both processing behaviour and final-part response. Treat the exact commercial grade as the evidence unit rather than assuming a neat-resin family description remains quantitatively valid after modification."
+        },
+        {
+          "title": "Reinforcement introduces directional evidence",
+          "text": "Fibre-filled materials can develop direction-dependent behaviour because flow influences fibre orientation. That can affect shrinkage, stiffness, strength and warpage differently along and across local flow directions. Orientation is not directly known from one machine setting, so part geometry, flow path, cavity pattern, measurement direction and, where justified, simulation or destructive analysis may all contribute to the evidence."
         }
       ]
     },
