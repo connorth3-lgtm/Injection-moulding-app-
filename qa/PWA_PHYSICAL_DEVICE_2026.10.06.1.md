@@ -5,15 +5,15 @@ This packet governs hands-on physical-device validation of the exact MouldMaster
 ## Exact candidate
 
 - web release: `2026.10.06.1`
-- retained pre-merge public candidate source commit: `303a9ef423ef483c0bf1e76b36fc1d7fad158ea7`
-- public-runtime fingerprint: `sha256:fc5ddd5901308fb6c6f3dcf1733b939f5de6403a2093c2595b97d514324d16bd`
-- exact candidate build run: `37244511647` (`Pre-merge Public Candidate`)
-- retained candidate artifact: `physical-pwa-candidate-303a9ef423ef483c0bf1e76b36fc1d7fad158ea7`
-- artifact id: `11318068856`
-- artifact ZIP digest: `sha256:c1017bd9c576cc568a0461c45b8a08a52b76bb55b6751ec88b379b588357d693`
-- artifact retention expiry: `2027-01-02T23:38:54Z`
+- retained pre-merge public candidate source commit: `2200aca525121de10d54d8663af00535b39979f0`
+- public-runtime fingerprint: `sha256:366b6f3a458d58deee47b032163ec5e36ebded30655085dd15e0f8007d7aa948`
+- exact candidate build run: `37353639908` (`Pre-merge Public Candidate`)
+- retained candidate artifact: `physical-pwa-candidate-2200aca525121de10d54d8663af00535b39979f0`
+- artifact id: `11364245102`
+- artifact ZIP digest: `sha256:8164ae1c30649f6f55934559304ba3b3d96d8a4bd50893b096b2cba048ba79ab`
+- artifact retention expiry: `2027-01-03T18:08:00Z`
 
-The retained candidate was built from exact pre-merge source commit `303a9ef423ef483c0bf1e76b36fc1d7fad158ea7` by the governed Pages artifact builder and public-runtime fingerprint verifier. This is a **candidate rebind**, not physical-device evidence. Release `2026.10.06.1` incorporates the current navigation/mobile polish and governance hardening while preserving the existing physical-device evidence boundary. The prior release risk waiver is not carried forward; both physical platform rows are pending for this runtime. External evidence binds to this retained exact-head artifact, never to the mutable `preview` branch tip.
+The retained candidate was built from exact pre-merge source commit `2200aca525121de10d54d8663af00535b39979f0` by the governed Pages artifact builder and public-runtime fingerprint verifier. This is a **candidate rebind**, not physical-device evidence. Release `2026.10.06.1` incorporates the current navigation/mobile polish and governance hardening while preserving the existing physical-device evidence boundary. The prior release risk waiver is not carried forward; both physical platform rows are pending for this runtime. External evidence binds to this retained exact-head artifact, never to the mutable `preview` branch tip.
 
 ## Required iOS / iPadOS execution
 
@@ -25,7 +25,7 @@ Using a physical Android device and Chrome, complete the same governed matrix in
 
 ## Audit-fix regression focus
 
-Additionally verify the Standards & readiness view opens, remains read-only, distinguishes current/superseded ISO and current/expired NZQA context, and keeps external approval/competence gates explicit. Also verify on physical devices that each affected Book chapter renders its worked example, tables/calculation steps and synthetic/non-universal/SME-HOLD boundaries coherently, and that a valid v3 learner backup imports, SHA-256 tampering plus oversized/malformed backups fail closed without replacing existing state, and legacy unverified backups disclose that boundary before import, Book evidence links open externally, Book search opens the intended chapter, Book chapter entry starts at the chapter heading, returning to contents restores the reader's prior position, the publication/review and accuracy/assurance disclosures remain operable and truthful, and the complete claim-trace disclosure remains readable without implying independent SME approval. On iPad/tablet widths also verify the Home workspace uses the available canvas without obscuring content, while phone Home remains lean. On desktop-width devices confirm specialist tools remain reachable through Practice/More despite the compact primary navigation.
+Additionally verify the Standards & readiness view opens, remains read-only, distinguishes current/superseded ISO and current/expired NZQA context, and keeps external approval/competence gates explicit. Also verify on physical devices that the 20-reader-chapter contents and expandable 46-module index are coherent, and each affected governed module renders its worked example, tables/calculation steps and synthetic/non-universal/SME-HOLD boundaries coherently, and that a valid v3 learner backup imports, SHA-256 tampering plus oversized/malformed backups fail closed without replacing existing state, and legacy unverified backups disclose that boundary before import, Book evidence links open externally, Book search opens the intended chapter, Book chapter entry starts at the chapter heading, returning to contents restores the reader's prior position, the publication/review and accuracy/assurance disclosures remain operable and truthful, and the complete claim-trace disclosure remains readable without implying independent SME approval. On iPad/tablet widths also verify the Home workspace uses the available canvas without obscuring content, while phone Home remains lean. On desktop-width devices confirm specialist tools remain reachable through Practice/More despite the compact primary navigation.
 
 ## Evidence hygiene
 
