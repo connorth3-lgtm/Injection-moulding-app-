@@ -36,21 +36,7 @@ jobs:
 
       - name: Classify runtime impact since retained candidate
         id: impact
-        shell: bash
-        run: |
-          set -euo pipefail
-          BOUND_SOURCE="$(python3 - <<'PY'
-          import json
-          from pathlib import Path
-          data=json.loads(Path('data/release-external-validation-v1.json').read_text(encoding='utf-8'))
-          print((data.get('webCandidate') or {}).get('sourceSha') or '')
-          PY
-          )"
-          if [ -n "$BOUND_SOURCE" ] && git cat-file -e "$BOUND_SOURCE^{commit}" 2>/dev/null; then
-            python3 tools/ci_impact.py --governed-candidate --base "$BOUND_SOURCE"
-          else
-            python3 tools/ci_impact.py --governed-candidate
-          fi
+        run: python3 tools/ci_impact.py --governed-candidate
 
       - name: Skip redundant candidate rebuild
         if: steps.impact.outputs.runtime != 'true'
