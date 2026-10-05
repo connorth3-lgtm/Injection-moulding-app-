@@ -52,6 +52,8 @@ jobs:
             qa-artifacts/doctor-report.json
           if-no-files-found: warn
           retention-days: 14
+      - name: Shared change-impact routing integrity
+        run: python qa_change_impact.py
       - name: Locked browser QA dependency graph
         run: python qa_browser_dependency_lock.py
       - name: JavaScript syntax
