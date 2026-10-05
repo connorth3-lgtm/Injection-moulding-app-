@@ -34,6 +34,12 @@ EXPECTED = {
     "worked-fill-study-v1": "fill-study",
     "worked-shot-utilisation-v1": "shot-utilisation",
     "worked-process-window-v1": "process-window",
+    "worked-warpage-discrimination-v1": "warpage",
+    "worked-weld-line-diagnosis-v1": "weld-lines",
+    "worked-splay-boundary-v1": "splay",
+    "worked-dimensional-conditioning-v1": "dimensional-stability",
+    "worked-process-monitoring-alarm-v1": "process-monitoring",
+    "worked-black-speck-source-map-v1": "black-specks",
 }
 
 
@@ -66,7 +72,7 @@ def main() -> None:
     need(LEDGER.read_bytes() == RUNTIME_LEDGER.read_bytes(), "authoritative/runtime worked-case ledgers differ")
 
     cases = ledger.get("cases") or []
-    need(len(cases) == 18, f"expected eighteen governed worked cases, found {len(cases)}")
+    need(len(cases) == 24, f"expected twenty-four governed worked cases, found {len(cases)}")
     by_id = {item.get("id"): item for item in cases}
     need(set(by_id) == set(EXPECTED), "worked-case identity set drifted")
     need(len(by_id) == len(cases), "duplicate worked-case IDs")
@@ -104,7 +110,7 @@ def main() -> None:
     worked_auth = auth.get("workedCasesAuthorization") or {}
     need(worked_auth.get("status") == "authorized", "worked-case publication authorization missing")
     need(worked_auth.get("release") == content_release, "worked-case authorization release mismatch")
-    need(worked_auth.get("caseCount") == 18 and worked_auth.get("claimCount") == 18, "worked-case authorization counts drifted")
+    need(worked_auth.get("caseCount") == 24 and worked_auth.get("claimCount") == 24, "worked-case authorization counts drifted")
     need(worked_auth.get("independentSmeStatus") == "hold", "worked-case authorization falsely promotes SME status")
     hashes = (auth.get("runtimeIntegrity") or {}).get("gitBlobSha1ByFile") or {}
     need(hashes.get(LEDGER.name) == git_blob_sha(RUNTIME_LEDGER), "worked-case ledger is not exact-byte authorized")
@@ -137,7 +143,7 @@ def main() -> None:
     for pattern in unsafe_patterns:
         need(not re.search(pattern, lower), f"unsafe worked-case claim detected: {pattern}")
 
-    print("MouldMaster governed worked-case integration QA passed: 18 learner-facing synthetic cases, 18 case claims, exact-byte authorization, explicit SME HOLD and no production-control authority.")
+    print("MouldMaster governed worked-case integration QA passed: 24 learner-facing synthetic cases, 24 case claims, exact-byte authorization, explicit SME HOLD and no production-control authority.")
 
 
 if __name__ == "__main__":
