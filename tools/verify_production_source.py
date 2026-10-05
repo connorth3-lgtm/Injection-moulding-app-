@@ -37,6 +37,14 @@ REQUIRED_WORKFLOWS = (
     "Release External Validation Boundary",
     "Exact-head CI Risk Coverage",
 )
+REQUIRED_WORKFLOW_PATHS = {
+    "MouldMaster Release QA": ".github/workflows/qa.yml",
+    "Mobile Browser QA": ".github/workflows/mobile-browser-qa.yml",
+    "Open Desktop Build": ".github/workflows/open-desktop-build.yml",
+    "Question Quality 50-Pass": ".github/workflows/question-quality-50-pass.yml",
+    "Release External Validation Boundary": ".github/workflows/release-external-validation.yml",
+    "Exact-head CI Risk Coverage": ".github/workflows/ci-risk-coverage.yml",
+}
 
 
 def api_endpoint(url: str) -> str:
@@ -207,6 +215,7 @@ def successful_required_workflows(
         candidates = [
             r for r in runs
             if r.get("name") == name
+            and r.get("path") == REQUIRED_WORKFLOW_PATHS[name]
             and (pr_number is None or run_matches_main_pr(r, pr_number, pr_head_ref, pr_head_repo_id))
         ]
         candidates.sort(key=lambda r: str(r.get("updated_at") or ""), reverse=True)
