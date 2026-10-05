@@ -21,7 +21,8 @@ for marker in [
     'Sequence review required','Sequence check','sourceShotIndex','timestampChecks','strictly increasing','structured measurement unit',
     'explicitOperationalIdentifier','ALIAS_ID_TOKEN_RE','ALIAS_EXACT_RE','enforceRowLimit','rejected rather than silently truncated',
     'invalidNumericValues','invalidNumericByColumn','omitted rather than converted to NaN','unterminated quoted field','Structurally malformed CSV',
-    'Object.create(null)'
+    'Object.create(null)','MAX_FILE_BYTES=50*1024*1024','MAX_TEXT_CHARS=50*1024*1024','MAX_COLUMNS=512',
+    'Number(file.size)>MAX_FILE_BYTES','raw.length>MAX_TEXT_CHARS','headerWidth>MAX_COLUMNS'
 ]:
     need(marker in body,f'local intake marker missing: {marker}')
 for forbidden in ['fetch(', 'XMLHttpRequest', 'WebSocket', 'localStorage', 'sessionStorage', 'indexedDB', 'MM_DATA.exams=', 'correctIndex=', 'regionalQuestions=']:
@@ -54,12 +55,12 @@ const quotedComma=api.parseCsv('a,b\\n"1,2",3\\n');
 const escapedQuote=api.parseCsv('a,b\\n"say ""hi""'+String.fromCharCode(34)+',3\\n');
 const quotedNewline=api.parseCsv('a,b\\n"line1\\nline2",3\\n');
 const trailingBlank=api.parseCsv('a,b\\r\\n1,2\\r\\n\\r\\n');
-let oversizedError='',unterminatedQuoteError='',tooManyCellsError='',tooFewCellsError='';
+let oversizedError='',tooWideError='',unterminatedQuoteError='',tooManyCellsError='',tooFewCellsError='';
 try{{const oversized='fill_time_s\\n'+Array.from({{length:50001}},(_,i)=>String(i+1)).join('\\n')+'\\n';api.parseCsv(oversized)}}catch(err){{oversizedError=String(err&&err.message||err)}}
 try{{api.parseCsv('a,b\\n"SECRET-UNTERMINATED,2')}}catch(err){{unterminatedQuoteError=String(err&&err.message||err)}}
 try{{api.parseCsv('a,b\\nSECRET-A,2,EXTRA-SECRET\\n')}}catch(err){{tooManyCellsError=String(err&&err.message||err)}}
 try{{api.parseCsv('a,b\\nSECRET-B\\n')}}catch(err){{tooFewCellsError=String(err&&err.message||err)}}
-process.stdout.write(JSON.stringify({{parsed,prepared,csv:api.toCsv(prepared),template:api.templateCsv(),scope:api.scope,maxRows:api.maxRows,badPrepared,badCsv:api.toCsv(badPrepared),pilotPrepared,numericIdPrepared,malformedPrepared,malformedCsv:api.toCsv(malformedPrepared),constructorDup,constructorPrepared,oversizedError,quotedComma,escapedQuote,quotedNewline,trailingBlank,unterminatedQuoteError,tooManyCellsError,tooFewCellsError}}));
+process.stdout.write(JSON.stringify({{parsed,prepared,csv:api.toCsv(prepared),template:api.templateCsv(),scope:api.scope,maxRows:api.maxRows,badPrepared,badCsv:api.toCsv(badPrepared),pilotPrepared,numericIdPrepared,malformedPrepared,malformedCsv:api.toCsv(malformedPrepared),constructorDup,constructorPrepared,oversizedError,tooWideError,quotedComma,escapedQuote,quotedNewline,trailingBlank,unterminatedQuoteError,tooManyCellsError,tooFewCellsError}}));
 """
 p=subprocess.run(['node','-e',node],capture_output=True,text=True)
 need(p.returncode==0,'local intake runtime failed: '+p.stderr)
@@ -125,6 +126,7 @@ need(constructor_prepared['rules'][0]['key']=='constructor' and constructor_prep
 need(constructor_prepared['validation']['reviewRequired'] is True and constructor_prepared['validation']['invalidNumericValues']==1,'constructor-named malformed numeric input must remain fail-closed')
 need(constructor_prepared['validation']['invalidNumericByColumn']==[{'column':'constructor','count':1}],'constructor-named invalid numeric count must remain numeric and attributable')
 need('exceeds the 50,000 data-row safety limit' in r['oversizedError'],'50,001-row source must be rejected rather than silently truncated')
+need('exceeds the 512-column safety limit' in r['tooWideError'],'513-column source must be rejected before preparation')
 
 bad=r['badPrepared']
 need(bad['headers'].count('shot_index')==1,'pre-existing shot_index must not create a duplicate output header')
@@ -150,7 +152,7 @@ need('test-01' not in json.dumps(pilot).lower(),'raw intervention labels must no
 need('timestamp' in r['template'] and 'shot_index' in r['template'] and 'peak_cavity_pressure_mpa' in r['template'] and 'part_mass_g' in r['template'],'template must request sequence plus high-value shot evidence fields')
 need('phase' in r['template'] and 'intervention_code' in r['template'] and 'dimension_unit' in r['template'],'local template must map cleanly toward the prepared pilot schema')
 need('pseudonym' in prepared['boundary'].lower() and 'not proof of anonymity' in prepared['boundary'].lower(),'prepared output must preserve the privacy limitation')
-need('files over the row safety limit are rejected rather than silently truncated' in prepared['boundary'].lower(),'prepared boundary must disclose fail-closed oversized-file handling')
+need('files over the byte, text, row or column safety limits are rejected rather than silently truncated' in prepared['boundary'].lower(),'prepared boundary must disclose all fail-closed resource limits')
 need('malformed nonblank values in retained numeric columns are omitted and reported by column rather than converted to nan' in prepared['boundary'].lower(),'prepared boundary must disclose invalid numeric handling')
 need('structurally malformed csv rows and unterminated quoted fields are rejected before preparation' in prepared['boundary'].lower(),'prepared boundary must disclose fail-closed structural CSV validation')
 need('timestamp and source shot-index values may be inspected in-session only' in prepared['boundary'].lower(),'prepared boundary must disclose transient sequence checking')
