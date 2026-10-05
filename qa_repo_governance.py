@@ -232,7 +232,7 @@ for marker in (
     '"Question Quality 50-Pass"',
     '"MouldMaster Pages Release Readiness"',
     '"Main PR Provenance Guard"',
-    '"MouldMaster Preview Pages"',
+    '"MouldMaster Preview Candidate"',
     '"branch": branch',
     '"event": "push"',
     "head_sha",
