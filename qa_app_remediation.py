@@ -242,6 +242,9 @@ for marker in (
     "Repository-wide Python syntax",
     "-name '*.py'",
     "python -m py_compile",
+    "Repository-wide JSON syntax",
+    "json.loads",
+    "Repository-wide JSON syntax passed",
 ):
     need(marker in release_workflow, f"release QA whole-code syntax coverage missing: {marker}")
 risk_meta = text("tools/verify_ci_risk_coverage.py")
