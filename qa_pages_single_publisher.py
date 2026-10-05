@@ -34,11 +34,13 @@ for required in (
     '--source-sha "${{ github.sha }}"',
     "Recheck current merged preview provenance",
     "xs.sort(key=lambda x:",
-    "retain-exact-candidate",
+    "verify_preview_source.py",
     '--expected-source-sha "${{ github.sha }}"',
 ):
     need(required in preview_workflow, f"preview Pages provenance/serialization safeguard missing: {required}")
 need('--expected-source-sha "${{ github.sha }}"' in workflow, "main Pages live verification must bind to the exact deployed source SHA")
+need("retain-exact-candidate" not in preview_workflow.split("Require exact-head preview quality gates", 1)[1].split("Validate preview build contracts", 1)[0],
+     "preview merge-SHA polling must not wait for the PR-only public-candidate job")
 
 for marker in (
     "actions: write",
