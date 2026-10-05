@@ -166,6 +166,33 @@
       "gitBlobSha1": "331559507583cc67a73084371d2ffe7ef9a9d861",
       "alt": "Conceptual dimension-versus-time response approaching a more stable conditioning state.",
       "caption": "Measurement timing, temperature, humidity, material and product requirements remain part of the result."
+    },
+    {
+      "id": "diagram-machine-mould-system-overview-v1",
+      "chapterId": "machine-anatomy",
+      "title": "Machine, mould and safety system overview",
+      "asset": "assets/book-diagrams/machine-mould-system-overview.svg",
+      "gitBlobSha1": "9b51cd82ec3cf28f2197972d9a224e55647f0515",
+      "alt": "Conceptual flow from material feed through the injection unit, mould and ejection, with cooling and a distinct guarded intervention boundary.",
+      "caption": "Use the diagram to orient functions and evidence paths; actual architecture, guarding, isolation and access remain machine-, mould- and site-specific."
+    },
+    {
+      "id": "diagram-rheology-shear-temperature-v1",
+      "chapterId": "rheology",
+      "title": "Viscosity response to shear rate and temperature",
+      "asset": "assets/book-diagrams/rheology-shear-temperature.svg",
+      "gitBlobSha1": "f91fe5fcd6963733c58c62431a6b75cef03cf9bb",
+      "alt": "Conceptual downward-sloping apparent-viscosity curves versus shear rate, with a higher-temperature curve shown at lower resistance.",
+      "caption": "The curves illustrate shear-thinning and temperature sensitivity only; they contain no grade-specific values or universal processing settings."
+    },
+    {
+      "id": "diagram-complex-diagnostics-evidence-ledger-v1",
+      "chapterId": "complex-diagnostics",
+      "title": "Complex diagnostics evidence ledger",
+      "asset": "assets/book-diagrams/complex-diagnostics-evidence-ledger.svg",
+      "gitBlobSha1": "1d15e96cc178520fb730865d6a51f6f6e799a525",
+      "alt": "Conceptual evidence ledger linking one observed symptom to three competing hypotheses, predictions, discriminating tests, contradictions and updated confidence.",
+      "caption": "The ledger supports disciplined reasoning and visible uncertainty; it does not authorize unsafe tests or turn correlation into root-cause proof."
     }
   ],
   "authorityBoundary": {
