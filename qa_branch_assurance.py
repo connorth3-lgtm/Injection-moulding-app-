@@ -23,6 +23,8 @@ for marker in (
     "name: Branch Release Assurance",
     "branches: [main, preview]",
     "pull_request:",
+    "workflow_dispatch:",
+    "github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'",
     "actions: read",
     "contract-self-test:",
     "Exercise assurance verifier and governance contract",
