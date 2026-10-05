@@ -64,6 +64,8 @@ for marker in (
 for forbidden in ("actions/deploy-pages@", "actions/upload-pages-artifact@", "pages: write", "id-token: write"):
     need(forbidden not in preview_pages, f"Preview workflow must not publish the repository Pages site: {forbidden}")
 for marker in (
+    "Manual dispatch is contract-only",
+    "Manual dispatch does not receive Pages mutation or publication authority.",
     "Checkout exact main source before deployment",
     "Recheck current protected-main provenance before deployment",
     "Recheck current protected-main provenance after deployment",
@@ -100,7 +102,7 @@ for marker in (
     "Upload preview-only release-hold Pages artifact",
     "github.event_name != 'pull_request'",
     "path: .pages-hold",
-    "if: github.event_name != 'pull_request'\n    needs: build",
+    "if: github.event_name == 'push'\n    needs: build",
     "Verify preview-only release-hold deployment",
     "Verify preview-only release-hold deployment",
     "python3 tools/verify_pages_hold.py",
