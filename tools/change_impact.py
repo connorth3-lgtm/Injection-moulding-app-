@@ -127,6 +127,7 @@ def classify(files:set[str])->dict[str,bool]:
     workflow=any(p.startswith(".github/workflows/") for p in files)
     tooling=any(
         p.startswith("tools/") or p.startswith("qa_") or p.startswith("qa/")
+        or p.startswith(".github/workflows/")
         or p in {"package.json","package-lock.json"}
         for p in files
     )
