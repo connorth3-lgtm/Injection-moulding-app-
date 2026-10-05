@@ -29,7 +29,7 @@ jobs:
         with: {python-version: '3.12'}
       - name: Install semantic profiling dependencies
         run: |
-          python -m pip install --disable-pip-version-check openpyxl
+          python -m pip install --disable-pip-version-check openpyxl==3.1.5
           sudo apt-get update -qq
           sudo apt-get install -y -qq p7zip-full
       - name: Validate stage-two evidence boundary
