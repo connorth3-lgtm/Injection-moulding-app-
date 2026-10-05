@@ -1,0 +1,211 @@
+{
+  "schema": 1,
+  "bookId": "mouldmaster-book",
+  "version": "2026.10.06-reader-architecture-draft",
+  "status": "technical-review-draft",
+  "purpose": "Reader-facing consolidation of the 46 governed content modules into substantial book chapters while preserving module IDs for claim, source, SME and runtime traceability.",
+  "targetWordsPerReaderChapter": {
+    "nominal": 1000,
+    "range": [
+      850,
+      1400
+    ],
+    "rule": "Longer only when governed evidence, worked cases or diagrams add real instructional value; never pad with unsupported process recipes or generic filler."
+  },
+  "governanceBoundary": "This architecture does not replace, merge or delete the 46 governed module IDs. Publication authorization, claim review and independent SME review remain bound to those modules until governance is deliberately migrated and revalidated.",
+  "readerChapters": [
+    {
+      "id": "r01",
+      "title": "How Injection Moulding Works",
+      "moduleIds": [
+        "what-injection-moulding-is",
+        "cycle"
+      ],
+      "goal": "Build a mental model of the complete cycle before introducing machine settings."
+    },
+    {
+      "id": "r02",
+      "title": "Machine, Mould and Safety Foundations",
+      "moduleIds": [
+        "machine-anatomy",
+        "mould-anatomy",
+        "safety-foundations"
+      ],
+      "goal": "Give learners the physical vocabulary and safety boundaries needed for every later chapter."
+    },
+    {
+      "id": "r03",
+      "title": "Polymer Structure and Material Families",
+      "moduleIds": [
+        "polymer-structure",
+        "material-families",
+        "fillers-additives"
+      ],
+      "goal": "Connect structure, family and modifiers to observable moulding behaviour without turning family descriptions into grade recipes."
+    },
+    {
+      "id": "r04",
+      "title": "Rheology, Moisture and Thermal History",
+      "moduleIds": [
+        "rheology",
+        "moisture-drying",
+        "thermal-history"
+      ],
+      "goal": "Explain why flow and degradation depend on temperature, shear, moisture and time."
+    },
+    {
+      "id": "r05",
+      "title": "Plasticising and Machine Delivery",
+      "moduleIds": [
+        "plasticising-unit",
+        "shot-utilisation",
+        "velocity-pressure"
+      ],
+      "goal": "Explain how the machine prepares and delivers melt and which signals describe that delivery."
+    },
+    {
+      "id": "r06",
+      "title": "Transfer, Packing and Clamp Behaviour",
+      "moduleIds": [
+        "vp-transfer",
+        "clamp"
+      ],
+      "goal": "Connect filling/packing transition, pressure development and mould-closing requirements."
+    },
+    {
+      "id": "r07",
+      "title": "Feed Systems, Venting and Hot Runners",
+      "moduleIds": [
+        "feed-system",
+        "venting",
+        "hot-runners"
+      ],
+      "goal": "Treat the complete flow path and gas/thermal management as one mould-system problem."
+    },
+    {
+      "id": "r08",
+      "title": "Cooling, Release and Cycle Stability",
+      "moduleIds": [
+        "cooling",
+        "ejection-draft"
+      ],
+      "goal": "Explain heat removal, release forces and their effect on cycle repeatability and part condition."
+    },
+    {
+      "id": "r09",
+      "title": "Establishing a Defensible Process Baseline",
+      "moduleIds": [
+        "process-baseline",
+        "documentation"
+      ],
+      "goal": "Show how to create a reproducible, auditable process state before optimisation."
+    },
+    {
+      "id": "r10",
+      "title": "Scientific Process Development",
+      "moduleIds": [
+        "fill-study",
+        "pressure-loss",
+        "gate-seal",
+        "process-window"
+      ],
+      "goal": "Teach staged experiments that separate filling, restriction, post-fill response and robustness."
+    },
+    {
+      "id": "r11",
+      "title": "A Diagnostic Method for Moulding Problems",
+      "moduleIds": [
+        "diagnostic-method"
+      ],
+      "goal": "Teach hypothesis-driven troubleshooting as a reusable method before defect-specific chapters."
+    },
+    {
+      "id": "r12",
+      "title": "Filling and Boundary Defects",
+      "moduleIds": [
+        "short-shot",
+        "flash"
+      ],
+      "goal": "Contrast insufficient effective filling with material escaping intended boundaries."
+    },
+    {
+      "id": "r13",
+      "title": "Shrinkage, Voids and Warpage",
+      "moduleIds": [
+        "sink-voids",
+        "warpage"
+      ],
+      "goal": "Connect volumetric contraction, pressure transmission, anisotropy and differential cooling."
+    },
+    {
+      "id": "r14",
+      "title": "Surface Defects, Gas and Degradation",
+      "moduleIds": [
+        "splay",
+        "burns",
+        "black-specks"
+      ],
+      "goal": "Separate visually similar symptoms caused by volatiles, trapped gas, contamination and thermal history."
+    },
+    {
+      "id": "r15",
+      "title": "Weld Lines and Flow-Front Interaction",
+      "moduleIds": [
+        "weld-lines"
+      ],
+      "goal": "Give weld-line formation, evidence and design/process interactions enough depth to stand alone."
+    },
+    {
+      "id": "r16",
+      "title": "Cavity Pressure and Process Monitoring",
+      "moduleIds": [
+        "cavity-pressure",
+        "process-monitoring"
+      ],
+      "goal": "Explain measurement location, signal meaning, baselines, alarms and limits of inference."
+    },
+    {
+      "id": "r17",
+      "title": "DOE, Measurement and Capability",
+      "moduleIds": [
+        "doe",
+        "capability"
+      ],
+      "goal": "Connect experimental design, measurement credibility, stability and capability rather than teaching them as isolated statistical topics."
+    },
+    {
+      "id": "r18",
+      "title": "Dimensional Stability and Reinforced Materials",
+      "moduleIds": [
+        "dimensional-stability",
+        "fibre-orientation"
+      ],
+      "goal": "Explain time-dependent dimensions, directional behaviour and anisotropy with explicit measurement conditions."
+    },
+    {
+      "id": "r19",
+      "title": "Thin-Wall, Multi-Cavity and High-Performance Processing",
+      "moduleIds": [
+        "thin-wall",
+        "multi-cavity",
+        "high-performance-polymers"
+      ],
+      "goal": "Cover advanced situations where machine, mould, material and supplier limits become especially important."
+    },
+    {
+      "id": "r20",
+      "title": "Complex Diagnostics and Engineering Judgment",
+      "moduleIds": [
+        "complex-diagnostics"
+      ],
+      "goal": "Finish with competing hypotheses, uncertainty, evidence ledgers and escalation rather than false certainty."
+    }
+  ],
+  "reviewQuestions": [
+    "Does each reader chapter have one coherent learner decision or mental model?",
+    "Can every technical claim still be traced to a governed module and evidence record?",
+    "Does consolidation reduce repetition without hiding important applicability boundaries?",
+    "Are worked cases and diagrams placed where they teach interpretation rather than decorate the text?",
+    "Can a beginner read chapters 1–10 sequentially and an experienced technician enter at chapters 11–20 without losing critical safety context?"
+  ]
+}
