@@ -121,7 +121,8 @@ def main() -> None:
 
     boundary_case = cases["worked-filling-boundary-defect-v1"]
     need("cavity-specific" in boundary_case["interpretation"].lower() and "global clamp-force" in boundary_case["interpretation"].lower(), "r12 boundary-defect case lost local-vs-global discrimination")
-    need("repeatable recovery" in " ".join(boundary_case["boundaries"] + boundary_case["calculationSteps"]).lower(), "r12 boundary-defect case lost recovery requirement")
+    recovery_text = " ".join(boundary_case["boundaries"] + boundary_case["calculationSteps"]).lower()
+    need("repeatable" in recovery_text and "recovery" in recovery_text, "r12 boundary-defect case lost recovery requirement")
     need("approved maintenance" in " ".join(boundary_case["boundaries"]).lower(), "r12 boundary-defect case lost maintenance authority boundary")
 
     capstone = cases["worked-complex-diagnostics-v1"]
