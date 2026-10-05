@@ -5,6 +5,7 @@ import argparse, json, os, shlex, subprocess, sys, time
 from dataclasses import dataclass, asdict
 from pathlib import Path
 from change_impact import classify
+from dependency_graph import impact as graph_impact
 
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/"qa-artifacts"
@@ -146,15 +147,18 @@ def output_tail(text,n=5000):
     return s if len(s)<=n else s[-n:]
 
 def reports(files,base,head,results,fixed):
+    graph=graph_impact(files)
     OUT.mkdir(parents=True,exist_ok=True)
     summary={"checks":len(results),"passed":sum(r["status"]=="pass" for r in results),
              "failed":sum(r["status"]=="fail" for r in results)}
     data={"schema":1,"tool":"mouldmaster-doctor","base":base,"head":head,"changedFiles":sorted(files),
-          "safeFixesApplied":fixed,"summary":summary,"results":results,
+          "dependencyGraph":graph,"safeFixesApplied":fixed,"summary":summary,"results":results,
           "boundary":"Developer triage aid only; governed Release QA and external validation remain authoritative."}
     (OUT/"doctor-report.json").write_text(json.dumps(data,indent=2)+"\n",encoding="utf-8")
     lines=["# MouldMaster Doctor","",f"Base: {base}",f"Head: {head}",
-           f"Changed files: {len(files)}",f"Checks: {summary['checks']} | Pass: {summary['passed']} | Fail: {summary['failed']}",""]
+           f"Changed files: {len(files)}",f"Direct owners: {', '.join(graph['directAreas']) or 'none'}",
+           f"Downstream affected: {', '.join(graph['affectedAreas']) or 'none'}",
+           f"Checks: {summary['checks']} | Pass: {summary['passed']} | Fail: {summary['failed']}",""]
     if fixed:
         lines+=["## Safe fixes applied",""]+["- "+x for x in fixed]+[""]
     failed=[r for r in results if r["status"]=="fail"]
