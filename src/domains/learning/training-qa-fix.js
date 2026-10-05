@@ -270,7 +270,7 @@ function cleanResetLearner(prior,id){
 const baseReset=window.resetData;if(typeof baseReset==='function')window.resetData=function(){
  let active;try{active=canonicalLearnerId(db?.activeUser)}catch(_){alert('Learner reset is unavailable because the active learner identity is invalid.');return}
  const prior=db?.users?.[active];if(!prior){alert('Learner reset is unavailable because the active learner profile could not be found.');return}
- if(!confirm(`Reset learning data for "${String(prior.name||active)}" only? Other local learner profiles and saved process-data evidence will be kept. This learner's progress, notes, certificates, analytics, review/sign-off, measured-assessment, process-diagnostics and lab-progress state will be cleared.`))return;
+ if(!confirm(`Reset learning data for "${String(prior.name||active)}" only? Other local learner profiles and saved process-data evidence will be kept. This learner's progress, notes, certificates, Book reading position, analytics, review/sign-off, measured-assessment, process-diagnostics and lab-progress state will be cleared.`))return;
  let owned,before,proposed;
  try{
   owned=learnerOwnedKeys(active);
@@ -288,7 +288,7 @@ const baseReset=window.resetData;if(typeof baseReset==='function')window.resetDa
  }
  const beforeDb=db;db=proposed;user=db.users[active];if(db!==beforeDb)cancelActiveExam();
  try{updateGlobalProgress();renderProfile()}catch(uiError){console.warn('[MouldMaster] learner reset saved; view refresh failed:',uiError)}
- window.toast?.('This learner was reset. Other local learner profiles and saved process-data evidence were kept.');
+ window.toast?.('This learner was reset, including the saved Book reading position. Other local learner profiles and saved process-data evidence were kept.');
  labelLearnerReset()
 };
 labelLearnerReset();
