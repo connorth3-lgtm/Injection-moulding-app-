@@ -234,4 +234,4 @@ need('STATIC_DATA_DIRS.flatMap(filesUnder)' in integrity_script, 'desktop static
 
 print('PASS: Book uses one canonical runtime with exact-byte publication binding and fail-closed authorization.')
 print('PASS: dynamic scripts are release-versioned before late loaders, Book is globally searchable, and learner-facing academic evidence uses canonical DOI links.')
-print('PASS: eighteen synthetic worked cases and eight governed engineering diagrams are integrated while independent SME/external validation remains HOLD.')
+print('PASS: twenty-four synthetic worked cases and eighteen governed engineering diagrams are integrated while independent SME/external validation remains HOLD.')
