@@ -86,6 +86,42 @@ def classify(files:set[str])->dict[str,bool]:
         or p.startswith("src/domains/runtime-packs/shell-")
         for p in files
     )
+    question_quality=assessment or any(
+        p.startswith("qa_question_")
+        or p in {
+            "real-measured-data-assessment.js",
+            "assessment-psychometric-approval.js",
+            "assessment-evidence-integrity-upgrade.js",
+            "qa_audit_consolidation.py",
+            ".github/workflows/question-quality-50-pass.yml",
+        }
+        for p in files
+    )
+    measured_learning=any(
+        p.startswith("data/measured-learning/")
+        or p in {
+            "measured-learning-library.js","measured-learning-library.css",
+            "src/domains/shell/app-shell-finalize.js","service-worker.js",
+            "tools/measured_learning_core.py","tools/build_measured_learning_case.py",
+            "tools/promote_measured_learning_release.py",
+            "qa_measured_learning_production_gate.py","qa_measured_learning_launch_gate.py",
+            "tests/test_measured_learning_production_gate.py","tests/test_measured_learning_activation.js",
+            "sources/MEASURED_LEARNING_PRODUCTION_GATE_V2.md",
+            ".github/workflows/measured-learning-production-gate.yml",
+        }
+        for p in files
+    )
+    residual_integrity=any(
+        p in {
+            "data-integration-runtime.js","process-data-intelligence-ui.js",
+            "src/domains/learning/training-qa-fix.js",
+            "src/domains/process/process-data-integrity.js","privacy.html",
+            "qa_data_integration.py","qa_process_data_integrity.cjs",
+            "qa_process_statistics_integrity.cjs","qa_import_identity_integrity.cjs",
+            "qa_final_audit_lifecycle.cjs",".github/workflows/residual-integrity.yml",
+        }
+        for p in files
+    )
     workflow=any(p.startswith(".github/workflows/") for p in files)
     tooling=any(
         p.startswith("tools/") or p.startswith("qa_") or p.startswith("qa/")
@@ -102,6 +138,9 @@ def classify(files:set[str])->dict[str,bool]:
         "process_data":process_data,
         "book":book,
         "shell":shell,
+        "question_quality":question_quality,
+        "measured_learning":measured_learning,
+        "residual_integrity":residual_integrity,
         "workflow":workflow,
         "tooling":tooling,
         "candidate_binding":runtime or release_metadata,
