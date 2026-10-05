@@ -87,7 +87,7 @@
       "datasetId": "mendeley-4h98rz9f92-v3",
       "benchmarkResult": "data/public-benchmark-results/4h98rz9f92-v3.json",
       "artifacts": [
-        {"artifactId":"raw-data-xlsx","name":"Raw Data.xlsx","sha256":"sha256:39210169aac62a1455603d37cdffaca93cf0c46189ea4258c5f3c0a4a37255c9"}
+        {"artifactId":"raw-data-xlsx","name":"Raw Data.xlsx","sha256":"sha256:452fc2077ae9227b8816ae73431c048ac294c87aa40b8abe919371ae3b87c6bc"}
       ]
     },
     {
