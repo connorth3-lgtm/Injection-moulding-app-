@@ -144,6 +144,7 @@ for label,k in [('CURRENT LEGACY RECOVERY CONTENT','windows_recovery_release'),(
 need('must NOT be silently inserted into this legacy feed' in upload,'recovery/PWA lane separation warning missing')
 
 support=text('support.html')
+learner_ui=text('src/domains/shell/learner-ui-polish.js')
 for k,id_ in {'web_release':'mmPwa','desktop_release':'mmDesktop','content_version':'mmContent','question_bank_version':'mmBank','assessment_quality_version':'mmQuality','assessment_storage_scope_version':'mmScope','assessment_evidence_version':'mmEvidence','windows_recovery_release':'mmRecovery'}.items():
     need(f'id="{id_}">{V[k]}' in support,f'support fallback version stale: {k}')
     need(f"{k}:'{id_}'" in support,f'support dynamic version mapping missing: {k}')
@@ -160,6 +161,7 @@ for marker in ['assessment analytics','scoped to the active learner profile','fi
     need(marker in privacy,f'privacy disclosure missing: {marker}')
 need('scoped cleanup or clean learner write cannot be verified' in privacy,'privacy notice must disclose fail-closed learner-reset cleanup/write behavior')
 need('replaces the local learner registry after confirmation' in support,'support must disclose destructive backup registry replacement before import')
+need("support.html#data-reset" in learner_ui and "Data & Reset" in learner_ui,'Profile must link to the canonical Data & Reset guide')
 
 sw=text('service-worker.js')
 for marker in ["'./privacy.html'","'./support.html'","'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'","'./src/domains/runtime-packs/evidence-runtime-pack.js'","'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'","'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'","'./src/domains/shell/app-shell-registry.js'","'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'"]:
