@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import time
 import urllib.parse
 import urllib.request
@@ -128,8 +129,8 @@ def api_runs(repository: str, sha: str, token: str) -> object:
 def verify(repository: str, branch: str, sha: str, token: str) -> None:
     if branch not in REQUIRED:
         raise SystemExit(f"Unsupported governed branch: {branch}")
-    if len(sha) != 40:
-        raise SystemExit("Branch assurance requires a full 40-character exact source SHA")
+    if not re.fullmatch(r"[0-9a-f]{40}", sha):
+        raise SystemExit("Branch assurance requires a full lowercase 40-character commit SHA")
     if not token:
         raise SystemExit("GITHUB_TOKEN is required for branch assurance")
 
