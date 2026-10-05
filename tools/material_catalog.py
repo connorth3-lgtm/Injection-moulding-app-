@@ -104,7 +104,7 @@ def validate_grade(grade: dict[str, Any], context: str = "grade") -> list[str]:
         source_ids.add(sid)
         need(bool(str(source.get("publisher", "")).strip()), f"{context}: source {sid} publisher required", errors)
         need(bool(str(source.get("title", "")).strip()), f"{context}: source {sid} title required", errors)
-        need(str(source.get("url", "")).startswith(("https://", "http://")), f"{context}: source {sid} URL required", errors)
+        need(str(source.get("url", "")).startswith("https://"), f"{context}: source {sid} URL must use HTTPS", errors)
         need(bool(str(source.get("retrievedAt", "")).strip()), f"{context}: source {sid} retrievedAt required", errors)
 
     observation_ids: set[str] = set()
