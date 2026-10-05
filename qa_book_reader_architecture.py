@@ -66,7 +66,7 @@ assert editorial.get("schemaVersion")==1 and editorial.get("bookId")=="mouldmast
 assert editorial.get("release")==version.get("web_release")
 assert editorial.get("status")=="repository-technical-review-complete"
 reviews=editorial.get("reviewedModules") or []
-assert len(reviews)==12 and len({x.get("moduleId") for x in reviews})==12
+assert len(reviews)==37 and len({x.get("moduleId") for x in reviews})==12
 for row in reviews:
     mid=row["moduleId"]
     assert mid in set(module_ids)
@@ -85,7 +85,7 @@ assert permit.get("status")=="authorized-derived-structure" and permit.get("rele
 assert permit.get("readerChapterCount")==20 and permit.get("governedModuleCount")==46 and permit.get("noNewTechnicalClaims") is True
 edit_permit=auth.get("editorialExpansionAuthorization") or {}
 assert edit_permit.get("status")=="authorized-repository-technical-source-review"
-assert edit_permit.get("release")==version.get("web_release") and edit_permit.get("moduleCount")==12 and edit_permit.get("noNewClaimIds") is True
+assert edit_permit.get("release")==version.get("web_release") and edit_permit.get("moduleCount")==37 and edit_permit.get("noNewClaimIds") is True
 hashes=auth.get("runtimeIntegrity",{}).get("gitBlobSha1ByFile",{})
 for name in ("book-reader-architecture-v2.json","book-editorial-expansion-review-v1.json"):
     assert hashes.get(name)==git_blob(PACKAGED/name), f"authorization hash drift for {name}"
@@ -97,4 +97,4 @@ for asset in ("./src/domains/learning/book-data/book-reader-architecture-v2.json
     assert asset in sw, f"reader governance asset missing from atomic cache: {asset}"
 
 print("PASS: 20 reader chapters derive exactly once from all 46 governed modules; no second claim/status authority was introduced.")
-print("PASS: expanded prose is exact-byte bound to the complete existing claim inventory for all 12 changed modules; independent human SME remains HOLD.")
+print("PASS: expanded prose is exact-byte bound to the complete existing claim inventory for all 37 expanded modules; independent human SME remains HOLD.")
