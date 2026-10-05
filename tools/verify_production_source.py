@@ -35,6 +35,7 @@ REQUIRED_WORKFLOWS = (
     "Open Desktop Build",
     "Question Quality 50-Pass",
     "Release External Validation Boundary",
+    "Exact-head CI Risk Coverage",
 )
 
 
@@ -228,7 +229,7 @@ def self_test() -> None:
         ]
     }
     ok, states = successful_required_workflows(sample)
-    assert ok and len(states) == 5
+    assert ok and len(states) == len(REQUIRED_WORKFLOWS)
     bound = {
         "workflow_runs": [
             {
