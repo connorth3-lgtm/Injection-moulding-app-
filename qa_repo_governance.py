@@ -152,6 +152,7 @@ for marker in (
     '((pr.get("base") or {}).get("ref") == "main")',
     "successful_required_workflows(runs, pr_number)",
     "full lowercase 40-character commit SHA",
+    "no usable canonical exact head SHA",
 ):
     need(marker in production_verifier, f"production verifier missing exact originating-PR evidence binding: {marker}")
 for marker in (
