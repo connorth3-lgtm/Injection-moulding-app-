@@ -33,6 +33,7 @@ EXPECTED_CHAPTERS = {
     "worked-black-speck-source-map-v1": "black-specks",
     "worked-complex-diagnostics-v1": "complex-diagnostics",
     "worked-filling-boundary-defect-v1": "flash",
+    "worked-process-baseline-record-v1": "process-baseline",
 }
 
 
@@ -119,6 +120,12 @@ def main() -> None:
     black = cases["worked-black-speck-source-map-v1"]
     need("all cavities" in " ".join(black.get("observations", [])).lower() and "cavity 4" in black["setup"].lower(), "black-speck source-map pattern regression")
 
+    baseline = cases["worked-process-baseline-record-v1"]
+    need("auditable evidence package" in baseline["interpretation"].lower(), "r09 baseline case lost evidence-package interpretation")
+    need("settings screenshot" in baseline["interpretation"].lower(), "r09 baseline case lost setpoint-vs-state boundary")
+    need("marked missing" in " ".join(baseline["calculationSteps"]).lower(), "r09 baseline case lost missing-evidence rule")
+    need("no value" in " ".join(baseline["boundaries"]).lower() and "process recipe" in " ".join(baseline["boundaries"]).lower(), "r09 baseline case lost non-recipe boundary")
+
     boundary_case = cases["worked-filling-boundary-defect-v1"]
     need("cavity-specific" in boundary_case["interpretation"].lower() and "global clamp-force" in boundary_case["interpretation"].lower(), "r12 boundary-defect case lost local-vs-global discrimination")
     recovery_text = " ".join(boundary_case["boundaries"] + boundary_case["calculationSteps"]).lower()
@@ -140,7 +147,7 @@ def main() -> None:
         },
         "worked-case production authority boundary weakened",
     )
-    print("MouldMaster worked-case calculation QA passed: 26 governed synthetic cases retain exact arithmetic/diagnostic boundaries and fail-closed production authority.")
+    print("MouldMaster worked-case calculation QA passed: 27 governed synthetic cases retain exact arithmetic/diagnostic boundaries and fail-closed production authority.")
 
 
 if __name__ == "__main__":
