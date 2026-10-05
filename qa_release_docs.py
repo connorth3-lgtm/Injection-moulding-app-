@@ -150,6 +150,8 @@ for k,id_ in {'web_release':'mmPwa','desktop_release':'mmDesktop','content_versi
 need("fetch('./version.json',{cache:'no-store'})" in support,'support page must synchronise from version.json')
 need('MouldMaster GitHub Issues' in support and 'Do not post learner names' in support,'support contact/privacy warning missing')
 need('Learning insights events' in support and 'resets both analytics histories' in support,'support import analytics lifecycle disclosure is stale')
+for marker in ('Data &amp; Reset','mouldmaster-process-data-v1','mouldmaster-engineering-v2','Delete all local process-data evidence','Full erasure is reserved','browser/OS site-data controls'):
+    need(marker in support,f'support Data & Reset ownership map missing marker: {marker}')
 for marker in ['measured-assessment','process-diagnostics','Diagnostic Learning Lab','Material Behaviour Lab']:
     need(marker in support,f'support backup/reset scope disclosure missing: {marker}')
 
