@@ -63,6 +63,10 @@ for marker in [
     "Question Quality 50-Pass",
     "Exact-head CI Risk Coverage",
     "actions/runs?head_sha=$PR_HEAD_SHA&event=pull_request",
+    "PR_HEAD_REF",
+    "PR_HEAD_REPO_ID",
+    ".head_repository.id",
+    '.user.type == "User"',
     "all_required_success",
     "pulls/$PR_NUMBER/reviews",
     "Independent latest-head human approval verified",
@@ -153,7 +157,7 @@ need(
 for marker in (
     "run_matches_main_pr",
     '((pr.get("base") or {}).get("ref") == "main")',
-    "successful_required_workflows(runs, pr_number)",
+    "successful_required_workflows(runs, pr_number, pr_head_ref, pr_head_repo_id)",
     '"Exact-head CI Risk Coverage"',
     "full lowercase 40-character commit SHA",
     "no usable canonical exact head SHA",
@@ -169,7 +173,7 @@ for marker in (
     "Pre-merge Public Candidate",
     "run_matches_pr",
     '((pr.get("base") or {}).get("ref") == "preview")',
-    "latest_required_states(runs, pr_number)",
+    "latest_required_states(runs, pr_number, pr_head_ref, pr_head_repo_id)",
     "full lowercase 40-character commit SHA",
 ):
     need(marker in preview_verifier, f"preview-source verifier missing marker: {marker}")
