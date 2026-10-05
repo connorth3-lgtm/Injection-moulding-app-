@@ -192,7 +192,13 @@ with tempfile.TemporaryDirectory() as tmp:
         "preview release-hold root must add only the migration worker to the three safe hold files",
     )
     need("preview/index.html" in files and "preview/service-worker.js" in files, "preview runtime was not staged under /preview/")
-    preview_index = (target / "preview" / "index.html").read_text(encoding="utf-8")
+    preview_index_path = target / "preview" / "index.html"
+    preview_index = preview_index_path.read_text(encoding="utf-8")
+    staged_manifest = __import__("json").loads((target / "preview" / "pages-manifest.json").read_text(encoding="utf-8"))
+    staged_index_record = staged_manifest["assets"]["index.html"]
+    staged_index_bytes = preview_index_path.read_bytes()
+    need(staged_index_record["bytes"] == len(staged_index_bytes), "staged preview manifest index byte count was not rebound")
+    need(staged_index_record["sha256"] == __import__("hashlib").sha256(staged_index_bytes).hexdigest(), "staged preview manifest index SHA-256 was not rebound")
     need(f'<meta name="mm-preview-source-sha" content="{source_sha}">' in preview_index, "staged preview HTML missing exact source SHA provenance")
     need('<meta name="mm-preview-web-release" content="2026.10.05.1">' in preview_index, "staged preview HTML missing release provenance")
     index = (target / "index.html").read_text(encoding="utf-8")
