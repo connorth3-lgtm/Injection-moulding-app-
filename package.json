@@ -11,6 +11,8 @@
   "scripts": {
     "doctor": "python tools/mouldmaster_doctor.py",
     "doctor:deep": "python tools/mouldmaster_doctor.py --deep",
-    "doctor:fix": "python tools/mouldmaster_doctor.py --fix-safe"
+    "doctor:fix": "python tools/mouldmaster_doctor.py --fix-safe",
+    "verify": "python tools/mouldmaster_verify.py",
+    "verify:deep": "python tools/mouldmaster_verify.py --deep"
   }
 }
