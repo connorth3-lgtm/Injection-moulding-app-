@@ -123,15 +123,19 @@ def resolve_file(meta,file_id,name,short_id,version,expected_sha=None):
     for attempt in range(1,METADATA_IDENTITY_ATTEMPTS+1):
         try:
             item=verify_metadata_identity(current_meta,file_id,name,short_id)
-            url=metadata_download_url(item,file_id,name,short_id,expected_sha)
-            local_identity={'id':file_id,'filename':name,'identitySource':'version-pinned-publisher-metadata'}
-            return local_identity,file_id,[url]
         except RuntimeError as exc:
             last_error=exc
             if attempt>=METADATA_IDENTITY_ATTEMPTS:
                 break
             time.sleep(min(attempt*2,6))
             _,current_meta=public_files(short_id,version)
+            continue
+        # Once the exact version/file identity exists, checksum or download-URL
+        # drift is authoritative and must fail immediately rather than be treated
+        # as eventual-consistency noise.
+        url=metadata_download_url(item,file_id,name,short_id,expected_sha)
+        local_identity={'id':file_id,'filename':name,'identitySource':'version-pinned-publisher-metadata'}
+        return local_identity,file_id,[url]
     raise RuntimeError(
         f'Mendeley version-pinned metadata identity unresolved after {METADATA_IDENTITY_ATTEMPTS} attempts: {last_error}'
     )
