@@ -89,39 +89,43 @@ def verify_metadata_identity(meta,file_id,name,short_id):
         if obj_id==file_id:
             if obj_name!=name:
                 raise RuntimeError(f'Mendeley filename drift for {short_id}/{name}: {obj_name!r}')
-            return
+            return obj
     raise RuntimeError(f'pinned Mendeley file id/name missing from metadata: {short_id}/{name}')
 
 
-def pinned_download_urls(short_id,version,file_id):
-    if not SHORT_ID_RE.fullmatch(short_id) or not isinstance(version,int) or version<1:
-        raise RuntimeError('invalid locally governed Mendeley dataset identity')
-    if not FILE_ID_RE.fullmatch(file_id):
-        raise RuntimeError('invalid locally pinned Mendeley file id')
-    encoded_id=urllib.parse.quote(file_id,safe='')
-    return [
-        # Governance pins an explicit dataset version. Use Mendeley's API route
-        # with ?version=N rather than the unversioned public convenience URL.
-        assert_https_host(
-            f'https://{MENDELEY_API_HOST}/datasets/{short_id}/files/{encoded_id}/file_downloaded?version={version}',
-            {MENDELEY_API_HOST},
-        ),
-    ]
-
-
-def resolve_file(_meta,file_id,name,short_id,version):
-    """Legacy call shape; resolution is intentionally local-only and metadata-independent."""
+def metadata_download_url(item,file_id,name,short_id,expected_sha):
     validate_pinned_identity(file_id,name)
-    urls=pinned_download_urls(short_id,version,file_id)
-    local_identity={'id':file_id,'filename':name,'identitySource':'repository-pinned'}
-    return local_identity,file_id,urls
+    details=item.get('content_details') or item.get('contentDetails') or {}
+    publisher_sha=str(
+        details.get('sha256_hash') or details.get('sha256Hash')
+        or item.get('sha256') or item.get('sha256_hash') or ''
+    ).lower()
+    if publisher_sha and publisher_sha!=expected_sha:
+        raise RuntimeError(f'Mendeley publisher SHA drift for {short_id}/{name}: {publisher_sha}')
+    url=(
+        details.get('download_url') or details.get('downloadUrl')
+        or item.get('download_url') or item.get('downloadUrl')
+    )
+    if not url:
+        raise RuntimeError(f'Mendeley version-pinned metadata has no download URL: {short_id}/{name}')
+    return assert_https_host(str(url),{MENDELEY_HOST,MENDELEY_API_HOST,MENDELEY_FILE_HOST})
+
+
+def resolve_file(meta,file_id,name,short_id,version,expected_sha=None):
+    """Resolve the exact file from version-pinned publisher metadata."""
+    item=verify_metadata_identity(meta,file_id,name,short_id)
+    if expected_sha is None:
+        raise RuntimeError('expected source SHA is required for Mendeley resolution')
+    url=metadata_download_url(item,file_id,name,short_id,expected_sha)
+    local_identity={'id':file_id,'filename':name,'identitySource':'version-pinned-publisher-metadata'}
+    return local_identity,file_id,[url]
 
 
 def download_first(urls,destination):
     errors=[]
     for url in urls:
         try:
-            assert_https_host(url,{MENDELEY_HOST,MENDELEY_API_HOST})
+            assert_https_host(url,{MENDELEY_HOST,MENDELEY_API_HOST,MENDELEY_FILE_HOST})
             req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-measured-learning/2.4'})
             with DOWNLOAD_OPENER.open(req,timeout=90) as r, open(destination,'wb') as out:
                 assert_https_host(r.geturl(),{MENDELEY_HOST,MENDELEY_API_HOST,MENDELEY_FILE_HOST})
@@ -181,7 +185,7 @@ def main():
         source_proof={'datasetId':source['datasetId'],'metadataEndpoint':endpoint,'files':[]}
         for file_id,name,expected_sha in source['files']:
             verify_metadata_identity(meta,file_id,name,source['shortId'])
-            _identity,resolved_id,urls=resolve_file(None,file_id,name,source['shortId'],source['version'])
+            _identity,resolved_id,urls=resolve_file(meta,file_id,name,source['shortId'],source['version'],expected_sha)
             with tempfile.NamedTemporaryFile(suffix='.xlsx') as tmp:
                 used=download_first(urls,tmp.name)
                 digest=hashlib.sha256(Path(tmp.name).read_bytes()).hexdigest()
