@@ -47,7 +47,7 @@ for marker in (
     "publisher-guard:\n    permissions:\n      contents: read\n      actions: write\n      pages: write",
     "build:\n    permissions:\n      contents: read",
     "deploy:\n    permissions:\n      contents: read\n      pull-requests: read\n      actions: read\n      pages: write\n      id-token: write",
-    "verify:\n    permissions:\n      contents: read",
+    "verify:\n    permissions:\n      contents: read\n      pull-requests: read\n      actions: read",
 ):
     need(marker in pages, f"Pages job-scoped permission contract missing: {marker}")
 need(pages.count("actions: write") == 1, "actions:write must be limited to the publisher guard")
@@ -56,6 +56,8 @@ need(pages.count("id-token: write") == 1, "OIDC write permission must be limited
 for marker in (
     "Checkout exact main source before deployment",
     "Recheck current protected-main provenance before deployment",
+    "Recheck current protected-main provenance after deployment",
+    "Reconfirm main is still on the deployed SHA after race window",
     '--source-sha "${{ github.sha }}"',
     "--require-native-protection",
 ):
