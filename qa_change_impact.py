@@ -25,6 +25,8 @@ cases=[
      {"measured_learning"}),
     ({"src/domains/process/process-data-integrity.js"},
      {"runtime","browser","process_data","residual_integrity","candidate_binding"}),
+    ({"src/domains/governance/production-health.js"},
+     {"runtime","browser","candidate_binding"}),
     ({".github/workflows/question-quality-50-pass.yml"},
      {"question_quality","workflow","tooling"}),
 ]
