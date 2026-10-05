@@ -105,6 +105,11 @@ jobs:
           python qa_release_validation_packets.py
       - name: Repository governance integrity
         run: python qa_repo_governance.py
+      - name: Live protected-main governance policy
+        if: (github.event_name == 'pull_request' && github.base_ref == 'main') || github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python tools/verify_main_ruleset.py --repository "${{ github.repository }}"
       - name: Pages publisher governance integrity
         run: python qa_pages_single_publisher.py
       - name: Release supply-chain governance integrity
