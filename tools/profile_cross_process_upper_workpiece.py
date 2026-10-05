@@ -53,13 +53,17 @@ def download(url: str, target: Path, expected_size: int | None = None) -> tuple[
     md5 = hashlib.md5(usedforsecurity=False)
     sha256 = hashlib.sha256()
     request = Request(url, headers={"User-Agent": USER_AGENT})
+    received = 0
     with urlopen(request, timeout=180) as response, target.open("wb") as output:
         while chunk := response.read(1024 * 1024):
+            received += len(chunk)
+            if expected_size is not None and received > expected_size:
+                raise AssertionError(f"download exceeded expected size for {target.name}: {received} > {expected_size}")
             output.write(chunk)
             md5.update(chunk)
             sha256.update(chunk)
-    if expected_size is not None and target.stat().st_size != expected_size:
-        raise AssertionError(f"archive size mismatch: {target.stat().st_size} != {expected_size}")
+    if expected_size is not None and received != expected_size:
+        raise AssertionError(f"archive size mismatch: {received} != {expected_size}")
     return md5.hexdigest(), sha256.hexdigest()
 
 
