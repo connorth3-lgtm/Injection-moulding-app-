@@ -33,7 +33,7 @@ def need(ok, msg):
 
 def all_external_refs(text, rel):
     refs = []
-    pattern = re.compile(r"(?m)^\\s*(?:-\\s*)?uses:\\s+([^\\s#]+)")
+    pattern = re.compile(r"(?m)^\s*(?:-\s*)?uses:\s+([^\s#]+)")
     for ref in pattern.findall(text):
         if ref.startswith("./"):
             continue
