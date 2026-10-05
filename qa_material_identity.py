@@ -112,3 +112,7 @@ print(
 ROOT = Path(__file__).resolve().parent
 runpy.run_path(str(ROOT / "qa_material_schema_v2.py"), run_name="__main__")
 subprocess.run(["node", str(ROOT / "qa_material_search_index.cjs")], cwd=ROOT, check=True)
+
+registry = (ROOT / "src/domains/materials/material-registry.js").read_text(encoding="utf-8")
+need("'\"':'&quot;'" in registry, "material registry quote escaping must emit a complete HTML entity")
+need("'\"':'&quot'" not in registry.replace("'\"':'&quot;'", ""), "material registry contains malformed quote escaping")
