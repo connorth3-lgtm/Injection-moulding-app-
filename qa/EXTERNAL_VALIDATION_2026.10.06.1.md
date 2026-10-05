@@ -4,13 +4,13 @@ Release `2026.10.06.1` is technically automated; native main governance remains 
 
 ## Exact current candidate
 
-- pre-merge candidate source: `303a9ef423ef483c0bf1e76b36fc1d7fad158ea7`
-- exact public-runtime fingerprint: `sha256:fc5ddd5901308fb6c6f3dcf1733b939f5de6403a2093c2595b97d514324d16bd`
-- candidate build run: `37244511647` (**Pre-merge Public Candidate**)
-- retained physical candidate: `physical-pwa-candidate-303a9ef423ef483c0bf1e76b36fc1d7fad158ea7`
-- artifact id: `11318068856`
-- artifact ZIP digest: `sha256:c1017bd9c576cc568a0461c45b8a08a52b76bb55b6751ec88b379b588357d693`
-- artifact retention expiry: `2027-01-02T23:38:54Z`
+- pre-merge candidate source: `2200aca525121de10d54d8663af00535b39979f0`
+- exact public-runtime fingerprint: `sha256:366b6f3a458d58deee47b032163ec5e36ebded30655085dd15e0f8007d7aa948`
+- candidate build run: `37353639908` (**Pre-merge Public Candidate**)
+- retained physical candidate: `physical-pwa-candidate-2200aca525121de10d54d8663af00535b39979f0`
+- artifact id: `11364245102`
+- artifact ZIP digest: `sha256:8164ae1c30649f6f55934559304ba3b3d96d8a4bd50893b096b2cba048ba79ab`
+- artifact retention expiry: `2027-01-03T18:08:00Z`
 - Pages disposition: the retained artifact is the exact validation candidate for this release boundary and is bound to the source SHA and public-runtime fingerprint above. The mutable `preview` branch is not evidence authority; production publication remains governed separately and all external-evidence workstreams below stay HOLD.
 
 This is a release-boundary **rebind**, not external evidence. Earlier physical-device, assistive-technology, SME, learner, Windows-distribution or NZQA/provider records are not relabelled for the current runtime. Each workstream below remains HOLD until its genuine release-specific exit condition is satisfied.
