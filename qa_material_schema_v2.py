@@ -54,6 +54,10 @@ BASE = {
 
 assert not validate_grade_v2(BASE), "complete v2 example should validate"
 
+insecure_source = copy.deepcopy(BASE)
+insecure_source["sources"][0]["url"] = "http://example.invalid/ex-100.pdf"
+assert any("HTTPS" in x for x in validate_grade_v2(insecure_source)), "material evidence source URLs must reject plain HTTP"
+
 missing_fingerprint = copy.deepcopy(BASE)
 missing_fingerprint["sources"][0].pop("fingerprint")
 assert any("fingerprint" in x for x in validate_grade_v2(missing_fingerprint)), "validated evidence must require a fingerprint"
