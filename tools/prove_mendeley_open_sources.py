@@ -31,6 +31,7 @@ MENDELEY_FILE_HOST='prod-dcd-datasets-public-files-eu-west-1.s3.eu-west-1.amazon
 FILE_ID_RE=re.compile(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$')
 SHORT_ID_RE=re.compile(r'^[a-z0-9]{10}$')
 METADATA_IDENTITY_ATTEMPTS=5
+CACHE_DIR=Path('.mouldmaster-mendeley-cache')
 
 class MendeleyTransportUnavailable(RuntimeError):
     """Pinned Mendeley source could not be reached after bounded transport retries."""
@@ -227,6 +228,34 @@ def workbook_text_schema(path):
             sheets.append({'name':name,'boundedTextLabels':labels[:120],'maxObservedTextColumnIndexFirst25Rows':max_col,'maxRowFromWorksheetXml':max_row})
         return sheets
 
+
+
+def materialize_verified_file(source, expected_name):
+    """Return a job-local SHA-verified workbook, reusing bytes already proven in this job."""
+    file_id,name,expected_sha=next(x for x in source['files'] if x[1]==expected_name)
+    CACHE_DIR.mkdir(exist_ok=True)
+    suffix=Path(name).suffix or '.bin'
+    cached=CACHE_DIR/f'{expected_sha}{suffix}'
+    if cached.is_file():
+        digest=hashlib.sha256(cached.read_bytes()).hexdigest()
+        if digest==expected_sha:
+            return cached,'sha256:'+digest
+        cached.unlink()
+    _,meta=public_files(source['shortId'],source['version'])
+    _,_,urls=resolve_file(meta,file_id,name,source['shortId'],source['version'],expected_sha)
+    tmp=CACHE_DIR/f'.{expected_sha}.tmp'
+    if tmp.exists():
+        tmp.unlink()
+    try:
+        download_first(urls,tmp)
+        digest=hashlib.sha256(tmp.read_bytes()).hexdigest()
+        if digest!=expected_sha:
+            raise RuntimeError(f"{source['datasetId']}/{name} SHA mismatch: {digest}")
+        tmp.replace(cached)
+    finally:
+        if tmp.exists():
+            tmp.unlink()
+    return cached,'sha256:'+expected_sha
 
 def main():
     try:
