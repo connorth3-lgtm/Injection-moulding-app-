@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Regression contract for centralized change-impact classification."""
 from pathlib import Path
+import json
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parent/"tools"))
 from change_impact import classify
@@ -70,6 +71,19 @@ need(len(prefixes)==len(set(prefixes)),"dependency failure-ID prefixes must be u
 metadata_graph=graph_impact({"data/release-external-validation-v1.json"})
 need("shell" not in metadata_graph["directAreas"],"release metadata must not be directly owned by shell")
 need(classify({"data/release-external-validation-v1.json"})["runtime"] is False,"release metadata must remain non-runtime after graph expansion")
+
+root=Path(__file__).resolve().parent
+for tool in (
+    "tools/change_impact.py","tools/ci_impact.py","tools/dependency_graph.py",
+    "tools/mouldmaster_doctor.py","tools/mouldmaster_verify.py",
+    "tools/rebind_external_hold_candidate.py",
+):
+    source=(root/tool).read_text(encoding="utf-8")
+    compile(source,tool,"exec")
+package=json.loads((root/"package.json").read_text(encoding="utf-8"))
+scripts=package.get("scripts") or {}
+need(scripts.get("verify")=="python tools/mouldmaster_verify.py","package verify command must use canonical verifier")
+need(scripts.get("verify:deep")=="python tools/mouldmaster_verify.py --deep","package deep verify command must use canonical verifier")
 
 candidate_workflow=(Path(__file__).resolve().parent/".github/workflows/premerge-public-candidate.yml").read_text(encoding="utf-8")
 ci_impact_source=(Path(__file__).resolve().parent/"tools/ci_impact.py").read_text(encoding="utf-8")
