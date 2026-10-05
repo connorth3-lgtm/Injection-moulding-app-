@@ -42,6 +42,7 @@ assert len(readers)==20 and len({r.get("id") for r in readers})==20
 covered=[]
 for row in readers:
     assert row.get("id") and row.get("title") and row.get("goal")
+    assert row.get("readerIntro") and row.get("closingThought")
     assert row.get("depthBand") in {"Foundation","Technician","Engineer","Advanced"}
     assert len(row.get("learningObjectives") or []) >= 2
     assert len(row.get("checkQuestions") or []) >= 3
