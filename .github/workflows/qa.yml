@@ -139,6 +139,7 @@ jobs:
           python qa_book_derived_governance.py
           python qa_book_release_integration.py
           python qa_book_reader_architecture.py
+          python qa_book_resume.py
           python qa_book_engineering_diagrams.py
           python qa_book_worked_cases_next_release.py
           python qa_book_worked_case_calculations.py
