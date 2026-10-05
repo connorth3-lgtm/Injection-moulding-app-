@@ -123,7 +123,8 @@ def main() -> None:
     baseline = cases["worked-process-baseline-record-v1"]
     need("auditable evidence package" in baseline["interpretation"].lower(), "r09 baseline case lost evidence-package interpretation")
     need("settings screenshot" in baseline["interpretation"].lower(), "r09 baseline case lost setpoint-vs-state boundary")
-    need("marked missing" in " ".join(baseline["calculationSteps"]).lower(), "r09 baseline case lost missing-evidence rule")
+    baseline_steps = " ".join(baseline["calculationSteps"]).lower()
+    need("missing" in baseline_steps and ("unavailable" in baseline_steps or "unknown" in baseline_steps), "r09 baseline case lost missing-evidence rule")
     need("no value" in " ".join(baseline["boundaries"]).lower() and "process recipe" in " ".join(baseline["boundaries"]).lower(), "r09 baseline case lost non-recipe boundary")
 
     boundary_case = cases["worked-filling-boundary-defect-v1"]
