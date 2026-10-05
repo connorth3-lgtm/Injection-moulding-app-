@@ -25,6 +25,7 @@ for marker in [
     "window.addEventListener('pagehide'",
     "visibilityState==='hidden'",
     "clearResume()",
+    "top:-(Number(snapshot.anchorOffset)||0)",
 ]:
     need(marker in book,f"Book resume hardening missing: {marker}")
 
@@ -46,6 +47,7 @@ for marker in [
     "scope.storageKey(BOOK_RESUME_PREFIX,scope.tokenFor(id))",
     "Book reading position",
     "including the saved Book reading position",
+    "mm:book-resume-change",
 ]:
     need(marker in training,f"learner reset Book ownership missing: {marker}")
 
