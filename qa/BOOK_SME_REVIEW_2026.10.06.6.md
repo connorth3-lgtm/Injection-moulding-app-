@@ -1,6 +1,6 @@
 # MouldMaster Book SME review packet — 2026.10.06.6
 
-This packet governs the **human** technical review of MouldMaster Book content release `2026.10.06.1`: 20 reader-facing chapters composed from 46 governed review modules, bound to learner web release `2026.10.06.6` / Book manifest `2026.09.14.1`.
+This packet governs the **human** technical review of MouldMaster Book content release `2026.10.06.2`: 20 reader-facing chapters composed from 46 governed review modules, bound to learner web release `2026.10.06.6` / Book manifest `2026.09.14.1`.
 
 Automated evidence review, CI, browser tests and the Book publication authorization are necessary but are not a substitute for an independent experienced injection-moulding practitioner reviewing the teaching as a practitioner would use it.
 
@@ -71,4 +71,4 @@ For the 37 modules covered by the current editorial-expansion review, confirm th
 
 ## 2026.10.06.6 Keep Reading / Home integration emphasis
 
-Book technical content remains content release `2026.10.06.1`; this web-release rebind does not claim new technical content or SME approval. Confirm the Home **Book / Keep Reading** entry does not blur the distinction between learner navigation state and governed technical authority, and that the learner-facing phrase **Source evidence reviewed** cannot reasonably be mistaken for independent human SME approval.
+Book technical content is now content release `2026.10.06.2` after the final pre-read accuracy revision; independent human SME approval remains unchanged on HOLD. Confirm the Home **Book / Keep Reading** entry does not blur the distinction between learner navigation state and governed technical authority, and that the learner-facing phrase **Source evidence reviewed** cannot reasonably be mistaken for independent human SME approval.
