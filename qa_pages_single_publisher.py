@@ -27,12 +27,13 @@ need(shared_publish_concurrency in workflow, "main Pages deploy must use the sha
 need(shared_publish_concurrency in preview_workflow, "preview Pages deploy must use the shared site-wide publication concurrency group")
 need("cancel-in-progress: false" in workflow, "main Pages publication must not be cancelled mid-deploy by a later run")
 need("cancel-in-progress: false" in preview_workflow, "preview Pages publication must not be cancelled mid-deploy by a later run")
-need(preview_workflow.count("pull-requests: read") >= 2, "preview build and deploy provenance checks require pull-request read permission")
+need(preview_workflow.count("pull-requests: read") >= 3, "preview build, deploy and post-deploy verification require pull-request read permission")
 for required in (
     "Require merged-PR preview provenance",
     "tools/verify_preview_source.py --self-test",
     '--source-sha "${{ github.sha }}"',
     "Recheck current merged preview provenance",
+    "Recheck current merged preview provenance after deployment",
     "xs.sort(key=lambda x:",
     "verify_preview_source.py",
     '--expected-source-sha "${{ github.sha }}"',
@@ -56,6 +57,8 @@ for marker in (
     "path: .pages-hold",
     "Checkout exact main source before deployment",
     "Recheck current protected-main provenance before deployment",
+    "Recheck current protected-main provenance after deployment",
+    "Reconfirm main is still on the deployed SHA after race window",
     '--require-native-protection',
     "Deploy selected Pages artifact",
     "Verify preview-only release-hold deployment",
