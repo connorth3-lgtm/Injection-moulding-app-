@@ -80,6 +80,8 @@ jobs:
           python qa_repo_governance.py
           python qa_pages_single_publisher.py
           python qa_release_supply_chain.py
+      - name: Preview/main exact-push assurance contract
+        run: python qa_branch_assurance.py
       - name: Audit remediation governance regression
         run: python qa_audit_governance.py
       - name: Full-app remediation contract
