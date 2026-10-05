@@ -30,6 +30,13 @@ need([x.get("clause") for x in q.get("supportMap",[])]==["4","5","6","7","8","9"
 for row in q["supportMap"]:
     need(row.get("mouldmasterSupport") and row.get("notProvided"),f"QMS clause {row.get('clause')} lacks support/exclusion separation")
 need({x.get("id") for x in q.get("recordTemplates",[])}=={"audit-evidence","nonconformity-capa","measurement-resource","competence","document-change"},"QMS template set mismatch")
+examples=q.get("packagingExamples",[])
+need(len(examples)>=1,"QMS packaging example missing")
+marlex=next((x for x in examples if x.get("id")=="marlex-polyethylene-sai-global-qms-marking-observation-v1"),None)
+need(marlex is not None,"Marlex ISO 9001 packaging example missing")
+need((marlex.get("observedMaterialIdentity") or {}).get("exactGradeStatus")=="unresolved-from-photo","Marlex exact grade must remain unresolved")
+need("not as ISO 9001 certification of the polyethylene resin" in marlex.get("interpretation",""),"QMS/product-certification boundary weakened")
+need(marlex.get("currentCertificateStatus")=="not-verified-from-packaging","packaging mark must not imply current certificate validation")
 need(re.search(r"\bshall\b",qsrc.read_text(encoding="utf-8").lower()) is None,"QMS contract appears to reproduce normative ISO wording")
 iso_register=text(ROOT/"sources/ISO9001_2026_QMS_REGISTER.md")
 for marker in ["ISO 9001:2026","ISO 9000:2026","superseded transition history","does **not** establish organisational conformity"]:
@@ -87,7 +94,7 @@ need(e.get("schemaVersion")==1 and e.get("bookId")=="mouldmaster-book","Book enr
 need(re.fullmatch(r"\d{4}\.\d{2}\.\d{2}\.\d+",str(e.get("release") or "")) is not None,"Book enrichment release identity invalid")
 patches=e.get("chapterPatches",[])
 need(len(patches)==10 and len({x["chapterId"] for x in patches})==10,"Book enrichment must cover 10 unique chapters")
-need(sum(len(x.get("sections",[])) for x in patches)==13,"Book enrichment must contain 13 governed sections")
+need(sum(len(x.get("sections",[])) for x in patches)==14,"Book enrichment must contain 14 governed sections")
 titles={s["title"] for p in patches for s in p.get("sections",[])}
 for title in [
     "Command is not cavity state","Build evidence before naming the cause","Diagnose, restore and verify",
@@ -95,11 +102,12 @@ for title in [
     "Measured quality outcomes from distributed melt control","Total flow can recover while one cavity stays different",
     "Record maintenance so recovery can be proved","Recovery needs a trajectory, not one good part",
     "Pressure only means something when you know where it was measured","Similar warpage can come from different mechanisms",
-    "Choose a robust region, not one optimum point","Quality records need evidence, not just completion"
+    "Choose a robust region, not one optimum point","Quality records need evidence, not just completion",
+    "Reading ISO 9001 marks on material packaging"
 ]:
     need(title in titles,f"Book enrichment section missing: {title}")
 doc=next(x for x in patches if x["chapterId"]=="documentation")
-need({"ISO-9001-2026","ISO-9000-2026"}.issubset(set(doc["sourceIds"])),"Book documentation patch lacks current ISO anchors")
+need({"ISO-9001-2026","ISO-9000-2026","INTERTEK-CERT-MARK-2023"}.issubset(set(doc["sourceIds"])),"Book documentation patch lacks ISO/certification-mark anchors")
 authority=e.get("authorityBoundary",{})
 need(authority.get("productionUse")=="advisory-only" and authority.get("automaticMachineControl") is False and authority.get("universalSetpoints") is False,"Book enrichment authority boundary weakened")
 
@@ -123,7 +131,7 @@ permit=auth.get("evidenceEnrichmentAuthorization",{})
 need(permit.get("status")=="authorized" and permit.get("release")==e.get("release"),"Book enrichment authorization must bind the governed enrichment content release")
 need(permit.get("release")<=version.get("web_release"),"Book enrichment authorization cannot target a future learner release")
 need(permit.get("ledger")=="data/book-evidence-enrichment-v2.json","Book enrichment authorization ledger mismatch")
-need(permit.get("sectionCount")==13 and permit.get("chapterCount")==10,"Book enrichment authorization counts mismatch")
+need(permit.get("sectionCount")==14 and permit.get("chapterCount")==10,"Book enrichment authorization counts mismatch")
 need(permit.get("independentSmeStatus")=="hold","Book enrichment must preserve independent SME HOLD")
 need("book-evidence-enrichment-v2.json" in auth.get("runtimeIntegrity",{}).get("gitBlobSha1ByFile",{}),"Book enrichment missing from exact-byte authorization")
 
