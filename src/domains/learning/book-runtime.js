@@ -68,7 +68,7 @@
     if(data.readerChapters.length!==20)throw new Error('Book reader chapter count mismatch');
     const readerIds=new Set(),moduleIds=[];
     for(const reader of data.readerChapters){
-      if(!reader?.id||readerIds.has(reader.id)||!reader?.title||!reader?.goal||!Array.isArray(reader.moduleIds)||!reader.moduleIds.length||!['Foundation','Technician','Engineer','Advanced'].includes(reader.depthBand)||!Array.isArray(reader.learningObjectives)||reader.learningObjectives.length<2||!Array.isArray(reader.checkQuestions)||reader.checkQuestions.length<3||!reader.applyPrompt||!reader.evidenceBoundary)throw new Error('Invalid Book reader chapter');
+      if(!reader?.id||readerIds.has(reader.id)||!reader?.title||!reader?.goal||!reader?.readerIntro||!reader?.closingThought||!Array.isArray(reader.moduleIds)||!reader.moduleIds.length||!['Foundation','Technician','Engineer','Advanced'].includes(reader.depthBand)||!Array.isArray(reader.learningObjectives)||reader.learningObjectives.length<2||!Array.isArray(reader.checkQuestions)||reader.checkQuestions.length<3||!reader.applyPrompt||!reader.evidenceBoundary)throw new Error('Invalid Book reader chapter');
       readerIds.add(reader.id);
       for(const id of reader.moduleIds){if(!declared.has(id))throw new Error(`Unknown governed module in reader architecture: ${id}`);moduleIds.push(id);}
     }
@@ -301,7 +301,7 @@
   function readerChapterHtml(reader){
     const modules=reader.moduleIds.map(id=>allChapters().find(ch=>ch.id===id));if(modules.some(x=>!x))throw new Error(`Reader chapter contains unavailable governed module: ${reader.id}`);
     const verified=modules.every(ch=>ch.state==='verified'),label=verified?'Source evidence reviewed modules':'Contains technical-review module(s)';
-    return `<article class="mm-book-reader-chapter" data-mm-book-reader-chapter="${esc(reader.id)}"><span class="eyebrow">Reader chapter · ${esc(reader.depthBand)} depth · ${esc(label)}</span><h2>${esc(reader.title)}</h2><p>${esc(reader.goal)}</p>${reader.sequencePrompt?`<div class="callout"><b>How to read this chapter:</b> ${esc(reader.sequencePrompt)}</div>`:''}<div class="callout"><b>How this chapter is governed:</b> This reader chapter is a structural grouping of ${modules.length} governed module${modules.length===1?'':'s'}. Technical claims, evidence status and independent SME review remain attached to those modules.</div>${modules.map(readerModuleHtml).join('')}${readerLearningHtml(reader)}${readerReferencesHtml(reader,modules)}</article>`;
+    return `<article class="mm-book-reader-chapter" data-mm-book-reader-chapter="${esc(reader.id)}"><span class="eyebrow">Reader chapter · ${esc(reader.depthBand)} depth · ${esc(label)}</span><h2>${esc(reader.title)}</h2><p class="mm-book-reader-intro">${esc(reader.readerIntro)}</p>${reader.sequencePrompt?`<div class="callout"><b>How to read this chapter:</b> ${esc(reader.sequencePrompt)}</div>`:''}<div class="callout"><b>How this chapter is governed:</b> This reader chapter is a structural grouping of ${modules.length} governed module${modules.length===1?'':'s'}. Technical claims, evidence status and independent SME review remain attached to those modules.</div>${modules.map(readerModuleHtml).join('')}<section class="mm-book-reader-close"><h3>Before you move on</h3><p>${esc(reader.closingThought)}</p></section>${readerLearningHtml(reader)}${readerReferencesHtml(reader,modules)}</article>`;
   }
   function renderOverview(){
     if(!ui||!manifest||!readerArchitecture)return;
