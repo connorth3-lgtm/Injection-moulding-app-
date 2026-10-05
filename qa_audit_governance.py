@@ -46,13 +46,20 @@ for marker in (
     "production-source:\n    permissions:\n      contents: read\n      pull-requests: read\n      actions: read",
     "publisher-guard:\n    permissions:\n      contents: read\n      actions: write\n      pages: write",
     "build:\n    permissions:\n      contents: read",
-    "deploy:\n    permissions:\n      pages: write\n      id-token: write",
+    "deploy:\n    permissions:\n      contents: read\n      pull-requests: read\n      actions: read\n      pages: write\n      id-token: write",
     "verify:\n    permissions:\n      contents: read",
 ):
     need(marker in pages, f"Pages job-scoped permission contract missing: {marker}")
 need(pages.count("actions: write") == 1, "actions:write must be limited to the publisher guard")
 need(pages.count("pages: write") == 2, "pages:write must be limited to publisher containment and deploy")
 need(pages.count("id-token: write") == 1, "OIDC write permission must be limited to deploy")
+for marker in (
+    "Checkout exact main source before deployment",
+    "Recheck current protected-main provenance before deployment",
+    '--source-sha "${{ github.sha }}"',
+    "--require-native-protection",
+):
+    need(marker in pages, f"Pages deploy-time current-main provenance recheck missing: {marker}")
 
 # PRs may validate a pending evidence contract. On main, pending valid evidence never
 # selects the learner artifact as the production-root publication. Instead the root
