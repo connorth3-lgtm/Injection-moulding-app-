@@ -34,6 +34,8 @@ for required in (
     '--source-sha "${{ github.sha }}"',
     "Recheck current merged preview provenance",
     "Recheck current merged preview provenance after deployment",
+    "Verify preview deployment remains stable after race window",
+    "Reconfirm preview is still on the deployed SHA after race window",
     "xs.sort(key=lambda x:",
     "verify_preview_source.py",
     '--expected-source-sha "${{ github.sha }}"',
