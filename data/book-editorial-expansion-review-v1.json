@@ -1,0 +1,240 @@
+{
+  "schemaVersion": 1,
+  "bookId": "mouldmaster-book",
+  "release": "2026.10.06.1",
+  "status": "repository-technical-review-complete",
+  "reviewType": "editorial-expansion-claim-boundary-review",
+  "purpose": "Bind the 2026-10-06 instructional-depth expansion and reader consolidation to the already governed claim inventory without manufacturing independent human SME approval.",
+  "reviewBoundary": "This is repository-controlled technical/source review, not independent human SME validation. It may confirm that new prose stays inside existing governed claim scope; it cannot validate machine-, mould-, grade-, product- or site-specific production instructions.",
+  "readerArchitecture": {
+    "path": "data/book-reader-architecture-v2.json",
+    "gitBlobSha1": "db56f66558fd05cfed3bb05e07aaeedcd9f692d2",
+    "conclusion": "structural-only-no-new-technical-claims"
+  },
+  "reviewedModules": [
+    {
+      "moduleId": "what-injection-moulding-is",
+      "authoredPath": "data/book-authored-foundations-v1.json",
+      "authoredGitBlobSha1": "3fcd5cdd976551fcc188562eff653033f5f4d4bf",
+      "governedClaimIds": [
+        "what-injection-moulding-is-01",
+        "what-injection-moulding-is-02",
+        "what-injection-moulding-is-03",
+        "what-injection-moulding-is-04"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint or timing value added.",
+        "No machine, mould, hot-runner, product or site instruction promoted from generic guidance.",
+        "No correlation represented as proof of causation.",
+        "Uncertainty and evidence-changing conditions remain explicit.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
+      "moduleId": "cycle",
+      "authoredPath": "data/book-authored-foundations-v1.json",
+      "authoredGitBlobSha1": "3fcd5cdd976551fcc188562eff653033f5f4d4bf",
+      "governedClaimIds": [
+        "cycle-01",
+        "cycle-02",
+        "cycle-03",
+        "cycle-04",
+        "cycle-05"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint or timing value added.",
+        "No machine, mould, hot-runner, product or site instruction promoted from generic guidance.",
+        "No correlation represented as proof of causation.",
+        "Uncertainty and evidence-changing conditions remain explicit.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
+      "moduleId": "polymer-structure",
+      "authoredPath": "data/book-chapters-materials-machine-v1.json",
+      "authoredGitBlobSha1": "36e603e4dd4dd32fd608b6e3518f900b0e9e8ac8",
+      "governedClaimIds": [
+        "polymer-structure-01",
+        "polymer-structure-02"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint or timing value added.",
+        "No machine, mould, hot-runner, product or site instruction promoted from generic guidance.",
+        "No correlation represented as proof of causation.",
+        "Uncertainty and evidence-changing conditions remain explicit.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
+      "moduleId": "rheology",
+      "authoredPath": "data/book-chapters-materials-machine-v1.json",
+      "authoredGitBlobSha1": "36e603e4dd4dd32fd608b6e3518f900b0e9e8ac8",
+      "governedClaimIds": [
+        "rheology-01",
+        "rheology-02"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint or timing value added.",
+        "No machine, mould, hot-runner, product or site instruction promoted from generic guidance.",
+        "No correlation represented as proof of causation.",
+        "Uncertainty and evidence-changing conditions remain explicit.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
+      "moduleId": "plasticising-unit",
+      "authoredPath": "data/book-chapters-materials-machine-v1.json",
+      "authoredGitBlobSha1": "36e603e4dd4dd32fd608b6e3518f900b0e9e8ac8",
+      "governedClaimIds": [
+        "plasticising-unit-01",
+        "plasticising-unit-02",
+        "plasticising-unit-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint or timing value added.",
+        "No machine, mould, hot-runner, product or site instruction promoted from generic guidance.",
+        "No correlation represented as proof of causation.",
+        "Uncertainty and evidence-changing conditions remain explicit.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
+      "moduleId": "warpage",
+      "authoredPath": "data/book-authored-remaining-v1.json",
+      "authoredGitBlobSha1": "b2e77eb98355ba04ce0cba07f30ebbd7d13118c6",
+      "governedClaimIds": [
+        "warpage-01",
+        "warpage-02",
+        "warpage-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint or timing value added.",
+        "No machine, mould, hot-runner, product or site instruction promoted from generic guidance.",
+        "No correlation represented as proof of causation.",
+        "Uncertainty and evidence-changing conditions remain explicit.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
+      "moduleId": "doe",
+      "authoredPath": "data/book-authored-remaining-v1.json",
+      "authoredGitBlobSha1": "b2e77eb98355ba04ce0cba07f30ebbd7d13118c6",
+      "governedClaimIds": [
+        "doe-01",
+        "doe-02",
+        "doe-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint or timing value added.",
+        "No machine, mould, hot-runner, product or site instruction promoted from generic guidance.",
+        "No correlation represented as proof of causation.",
+        "Uncertainty and evidence-changing conditions remain explicit.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
+      "moduleId": "capability",
+      "authoredPath": "data/book-authored-remaining-v1.json",
+      "authoredGitBlobSha1": "b2e77eb98355ba04ce0cba07f30ebbd7d13118c6",
+      "governedClaimIds": [
+        "capability-01",
+        "capability-02",
+        "capability-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint or timing value added.",
+        "No machine, mould, hot-runner, product or site instruction promoted from generic guidance.",
+        "No correlation represented as proof of causation.",
+        "Uncertainty and evidence-changing conditions remain explicit.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
+      "moduleId": "process-monitoring",
+      "authoredPath": "data/book-authored-remaining-v1.json",
+      "authoredGitBlobSha1": "b2e77eb98355ba04ce0cba07f30ebbd7d13118c6",
+      "governedClaimIds": [
+        "process-monitoring-01",
+        "process-monitoring-02",
+        "process-monitoring-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint or timing value added.",
+        "No machine, mould, hot-runner, product or site instruction promoted from generic guidance.",
+        "No correlation represented as proof of causation.",
+        "Uncertainty and evidence-changing conditions remain explicit.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
+      "moduleId": "dimensional-stability",
+      "authoredPath": "data/book-authored-remaining-v1.json",
+      "authoredGitBlobSha1": "b2e77eb98355ba04ce0cba07f30ebbd7d13118c6",
+      "governedClaimIds": [
+        "dimensional-stability-01",
+        "dimensional-stability-02",
+        "dimensional-stability-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint or timing value added.",
+        "No machine, mould, hot-runner, product or site instruction promoted from generic guidance.",
+        "No correlation represented as proof of causation.",
+        "Uncertainty and evidence-changing conditions remain explicit.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
+      "moduleId": "multi-cavity",
+      "authoredPath": "data/book-authored-remaining-v1.json",
+      "authoredGitBlobSha1": "b2e77eb98355ba04ce0cba07f30ebbd7d13118c6",
+      "governedClaimIds": [
+        "multi-cavity-01",
+        "multi-cavity-02",
+        "multi-cavity-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint or timing value added.",
+        "No machine, mould, hot-runner, product or site instruction promoted from generic guidance.",
+        "No correlation represented as proof of causation.",
+        "Uncertainty and evidence-changing conditions remain explicit.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
+      "moduleId": "complex-diagnostics",
+      "authoredPath": "data/book-authored-remaining-v1.json",
+      "authoredGitBlobSha1": "b2e77eb98355ba04ce0cba07f30ebbd7d13118c6",
+      "governedClaimIds": [
+        "complex-diagnostics-01",
+        "complex-diagnostics-02",
+        "complex-diagnostics-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint or timing value added.",
+        "No machine, mould, hot-runner, product or site instruction promoted from generic guidance.",
+        "No correlation represented as proof of causation.",
+        "Uncertainty and evidence-changing conditions remain explicit.",
+        "Independent human SME status remains HOLD."
+      ]
+    }
+  ],
+  "acceptanceRules": {
+    "everyExpandedModuleMustHaveGovernedClaims": true,
+    "noNewClaimIdsIntroduced": true,
+    "authoredBytesMustMatchReviewedHashes": true,
+    "readerArchitectureMustCoverEachGovernedModuleExactlyOnce": true,
+    "independentSmeStatus": "hold"
+  }
+}
