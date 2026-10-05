@@ -18,6 +18,7 @@ REQUIRED_WORKFLOWS = (
     "MouldMaster Release QA",
     "Mobile Browser QA",
     "Question Quality 50-Pass",
+    "Pre-merge Public Candidate",
 )
 
 
