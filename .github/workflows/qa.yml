@@ -64,6 +64,12 @@ jobs:
             -not -path './desktop/electron/msix-toolchain/node_modules/*' \
             -not -path './desktop/electron/dist/*' \
             -print0 | sort -z | xargs -0 -n1 node --check
+      - name: Repository-wide Python syntax
+        run: |
+          find . -type f -name '*.py' \
+            -not -path './.venv/*' \
+            -not -path './venv/*' \
+            -print0 | sort -z | xargs -0 -n1 python -m py_compile
       - name: Strict style CSP hash determinism
         run: node tools/generate_style_csp.cjs --check
       - name: Release and assessment integrity
