@@ -150,23 +150,43 @@ def resolve_merged_pr(token: str, repository: str, source_sha: str) -> dict:
     )
 
 
-def run_matches_main_pr(row: dict, pr_number: int) -> bool:
+def run_matches_main_pr(
+    row: dict,
+    pr_number: int,
+    pr_head_ref: str = "",
+    pr_head_repo_id: int | None = None,
+) -> bool:
     prs = row.get("pull_requests") or []
-    return any(
-        isinstance(pr, dict)
-        and int(pr.get("number") or 0) == pr_number
-        and ((pr.get("base") or {}).get("ref") == "main")
-        for pr in prs
-    )
+    if prs:
+        return any(
+            isinstance(pr, dict)
+            and int(pr.get("number") or 0) == pr_number
+            and ((pr.get("base") or {}).get("ref") == "main")
+            for pr in prs
+        )
+    # GitHub may clear workflow_run.pull_requests after merge. Fall back to
+    # immutable source-branch/repository identity while head_sha is already
+    # constrained by the API query.
+    if not pr_head_ref or row.get("head_branch") != pr_head_ref:
+        return False
+    if pr_head_repo_id is not None:
+        return int(((row.get("head_repository") or {}).get("id")) or 0) == pr_head_repo_id
+    return True
 
 
-def successful_required_workflows(payload: object, pr_number: int | None = None) -> tuple[bool, dict[str, tuple[str, str]]]:
+def successful_required_workflows(
+    payload: object,
+    pr_number: int | None = None,
+    pr_head_ref: str = "",
+    pr_head_repo_id: int | None = None,
+) -> tuple[bool, dict[str, tuple[str, str]]]:
     runs = (payload or {}).get("workflow_runs", []) if isinstance(payload, dict) else []
     states: dict[str, tuple[str, str]] = {}
     for name in REQUIRED_WORKFLOWS:
         candidates = [
             r for r in runs
-            if r.get("name") == name and (pr_number is None or run_matches_main_pr(r, pr_number))
+            if r.get("name") == name
+            and (pr_number is None or run_matches_main_pr(r, pr_number, pr_head_ref, pr_head_repo_id))
         ]
         candidates.sort(key=lambda r: str(r.get("updated_at") or ""), reverse=True)
         latest = candidates[0] if candidates else {}
@@ -179,7 +199,10 @@ def verify(token: str, repository: str, source_sha: str, require_native_protecti
         raise SystemExit("Production source SHA must be a full lowercase 40-character commit SHA")
     pr = resolve_merged_pr(token, repository, source_sha)
     pr_number = int(pr["number"])
-    pr_head = str((pr.get("head") or {}).get("sha") or "")
+    pr_head_info = pr.get("head") or {}
+    pr_head = str(pr_head_info.get("sha") or "")
+    pr_head_ref = str(pr_head_info.get("ref") or "")
+    pr_head_repo_id = int(((pr_head_info.get("repo") or {}).get("id")) or 0) or None
     if re.fullmatch(r"[0-9a-f]{40}", pr_head) is None:
         raise SystemExit(f"Merged PR #{pr_number} has no usable canonical exact head SHA")
 
@@ -187,7 +210,7 @@ def verify(token: str, repository: str, source_sha: str, require_native_protecti
     states: dict[str, tuple[str, str]] = {}
     for attempt in range(1, 11):
         runs = request_json(token, f"{API}/repos/{repository}/actions/runs?{query}")
-        ok, states = successful_required_workflows(runs, pr_number)
+        ok, states = successful_required_workflows(runs, pr_number, pr_head_ref, pr_head_repo_id)
         if ok:
             break
         if any(status == "completed" and conclusion not in {"success", "missing"} for status, conclusion in states.values()):
@@ -255,6 +278,24 @@ def self_test() -> None:
     }
     ok, wrong_states = successful_required_workflows(wrong_pr, 1)
     assert not ok and wrong_states[REQUIRED_WORKFLOWS[0]] == ("missing", "missing")
+    historical = {
+        "workflow_runs": [
+            {
+                "name": name,
+                "status": "completed",
+                "conclusion": "success",
+                "updated_at": "2026-09-03T02:00:00Z",
+                "pull_requests": [],
+                "head_branch": "feature/source",
+                "head_repository": {"id": 123},
+            }
+            for name in REQUIRED_WORKFLOWS
+        ]
+    }
+    ok, _ = successful_required_workflows(historical, 1, "feature/source", 123)
+    assert ok
+    ok, _ = successful_required_workflows(historical, 1, "wrong/source", 123)
+    assert not ok
 
     assert api_endpoint("https://api.github.com/repos/example/project/pulls?state=closed") == "repos/example/project/pulls?state=closed"
     for invalid in ("http://api.github.com/repos/a/b", "https://example.com/repos/a/b", "https://api.github.com/user"):
