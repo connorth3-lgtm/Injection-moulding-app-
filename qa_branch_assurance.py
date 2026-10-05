@@ -46,6 +46,7 @@ for marker in (
     '"MouldMaster Pages Release Readiness"',
     '"Main PR Provenance Guard"',
     '"MouldMaster Preview Pages"',
+    '"branch": branch',
     '"event": "push"',
     "head_sha",
     "completed",
