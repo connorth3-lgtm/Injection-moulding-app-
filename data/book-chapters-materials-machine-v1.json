@@ -149,6 +149,14 @@
         {
           "title": "Use family knowledge to ask better questions",
           "text": "When an unfamiliar material behaves differently from expectation, ask which property of the formulation could explain the observation: crystallisation behaviour, reinforcement, viscosity, moisture sensitivity, additive package, thermal stability or another grade-specific feature. This approach is safer than copying a familiar recipe from another grade simply because the polymer-family label is similar."
+        },
+        {
+          "title": "Compare materials by the behaviour relevant to the decision",
+          "text": "A useful material comparison starts with the product and process question: dimensional stability, toughness, temperature exposure, moisture response, flow length, surface requirement, chemical resistance or another defined need. Comparing only family names can hide the grade features that actually control the decision. Use family knowledge to narrow the search, then verify the exact grade data, test conditions and supplier guidance that apply to the intended use."
+        },
+        {
+          "title": "Do not infer interchangeability from similar labels",
+          "text": "Two grades in the same polymer family may differ enough in reinforcement, viscosity, additive package or thermal stability that a process transferred between them behaves differently. When substituting material, treat the change as a new evidence question: confirm grade identity, supplier constraints, drying or conditioning requirements where applicable, and the product characteristics that must be reverified."
         }
       ]
     },
@@ -211,6 +219,14 @@
         {
           "title": "Residence history links plasticising to material risk",
           "text": "Material can experience different time-at-temperature histories depending on shot utilisation, recovery pattern, interruptions and the volume of melt retained in the system. For heat- or moisture-sensitive grades, the correct limits must come from current supplier and equipment documentation. Generic advice to increase temperature, back pressure or residence time should never replace grade-specific evidence."
+        },
+        {
+          "title": "Recovery repeatability is a useful process signal",
+          "text": "Screw recovery time, final screw position and the pattern of recovery can reveal changes in feeding, material condition, drive response or plasticising load. Interpret them as trends rather than universal acceptance limits. A stable recovery signal supports repeatability, but it does not by itself prove uniform melt quality or correct material temperature."
+        },
+        {
+          "title": "Separate preparation problems from injection-delivery problems",
+          "text": "An inconsistent shot can originate while the material is being prepared, while the shot is being transferred forward, or elsewhere in the flow path. Compare recovery behaviour, cushion or screw-end position, part mass, pressure response and timing to locate the likely stage. This avoids treating every weight or fill variation as evidence of one favourite component such as the check valve."
         }
       ]
     },
