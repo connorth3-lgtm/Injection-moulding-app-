@@ -138,6 +138,8 @@ for marker in (
     '"location.replace(preview.href)"',
     "non-production preview runtime asset unavailable",
     "device metadata helper violates local-only boundary",
+    "critical_assets",
+    "critical preview asset SHA-256 mismatch",
 ):
     need(marker in hold_verifier, f"release-hold live verifier does not prove preview isolation, stale-content removal and helper isolation: {marker}")
 
@@ -190,6 +192,6 @@ need(self_test.returncode == 0, f"ruleset verifier self-test failed: {self_test.
 
 print(
     "Audit governance QA passed: assessment-evidence workflows retain full Git history, least-privilege Pages permissions, "
-    "physical-test runtime fingerprint reporting, preview-only protected-main publication with root-to-preview Home forwarding and a separated non-production learner runtime "
+    "physical-test runtime fingerprint reporting, live critical-byte SHA-256 deployment verification, preview-only protected-main publication with root-to-preview Home forwarding and a separated non-production learner runtime "
     "and local-only device metadata helper, live branch-prune SHA recheck and fail-closed ruleset bypass verification are enforced."
 )
