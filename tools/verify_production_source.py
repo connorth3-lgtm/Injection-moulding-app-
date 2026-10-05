@@ -148,11 +148,24 @@ def resolve_merged_pr(token: str, repository: str, source_sha: str) -> dict:
     )
 
 
-def successful_required_workflows(payload: object) -> tuple[bool, dict[str, tuple[str, str]]]:
+def run_matches_main_pr(row: dict, pr_number: int) -> bool:
+    prs = row.get("pull_requests") or []
+    return any(
+        isinstance(pr, dict)
+        and int(pr.get("number") or 0) == pr_number
+        and ((pr.get("base") or {}).get("ref") == "main")
+        for pr in prs
+    )
+
+
+def successful_required_workflows(payload: object, pr_number: int | None = None) -> tuple[bool, dict[str, tuple[str, str]]]:
     runs = (payload or {}).get("workflow_runs", []) if isinstance(payload, dict) else []
     states: dict[str, tuple[str, str]] = {}
     for name in REQUIRED_WORKFLOWS:
-        candidates = [r for r in runs if r.get("name") == name]
+        candidates = [
+            r for r in runs
+            if r.get("name") == name and (pr_number is None or run_matches_main_pr(r, pr_number))
+        ]
         candidates.sort(key=lambda r: str(r.get("updated_at") or ""), reverse=True)
         latest = candidates[0] if candidates else {}
         states[name] = (str(latest.get("status") or "missing"), str(latest.get("conclusion") or "missing"))
@@ -170,7 +183,7 @@ def verify(token: str, repository: str, source_sha: str, require_native_protecti
     states: dict[str, tuple[str, str]] = {}
     for attempt in range(1, 11):
         runs = request_json(token, f"{API}/repos/{repository}/actions/runs?{query}")
-        ok, states = successful_required_workflows(runs)
+        ok, states = successful_required_workflows(runs, pr_number)
         if ok:
             break
         if any(status == "completed" and conclusion not in {"success", "missing"} for status, conclusion in states.values()):
@@ -213,6 +226,31 @@ def self_test() -> None:
     }
     ok, states = successful_required_workflows(sample)
     assert ok and len(states) == 5
+    bound = {
+        "workflow_runs": [
+            {
+                "name": name,
+                "status": "completed",
+                "conclusion": "success",
+                "updated_at": "2026-09-03T00:00:00Z",
+                "pull_requests": [{"number": 1, "base": {"ref": "main"}}],
+            }
+            for name in REQUIRED_WORKFLOWS
+        ]
+    }
+    ok, _ = successful_required_workflows(bound, 1)
+    assert ok
+    wrong_pr = {
+        "workflow_runs": [{
+            "name": REQUIRED_WORKFLOWS[0],
+            "status": "completed",
+            "conclusion": "success",
+            "updated_at": "2026-09-03T01:00:00Z",
+            "pull_requests": [{"number": 2, "base": {"ref": "preview"}}],
+        }]
+    }
+    ok, wrong_states = successful_required_workflows(wrong_pr, 1)
+    assert not ok and wrong_states[REQUIRED_WORKFLOWS[0]] == ("missing", "missing")
 
     assert api_endpoint("https://api.github.com/repos/example/project/pulls?state=closed") == "repos/example/project/pulls?state=closed"
     for invalid in ("http://api.github.com/repos/a/b", "https://example.com/repos/a/b", "https://api.github.com/user"):
