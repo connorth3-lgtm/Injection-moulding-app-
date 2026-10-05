@@ -34,6 +34,7 @@ for required in (
     '--source-sha "${{ github.sha }}"',
     "Recheck current merged preview provenance",
     "xs.sort(key=lambda x:",
+    "retain-exact-candidate",
     '--expected-source-sha "${{ github.sha }}"',
 ):
     need(required in preview_workflow, f"preview Pages provenance/serialization safeguard missing: {required}")
