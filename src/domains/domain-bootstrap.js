@@ -31,7 +31,10 @@ async function boot(){
   if(manifest?.schemaVersion!==1||!Array.isArray(manifest.assets))throw new Error('Invalid domain runtime manifest');
   const loaded=[];
   for(const src of manifest.assets){
-    if(typeof src!=='string'||!src.startsWith('./src/domains/')||!src.endsWith('.js'))throw new Error(`Unsafe domain asset: ${src}`);
+    const safe=typeof src==='string'
+      && /^\.\/src\/domains\/(?:[A-Za-z0-9._-]+\/)*[A-Za-z0-9._-]+\.js$/.test(src)
+      && !src.split('/').includes('..');
+    if(!safe)throw new Error(`Unsafe domain asset: ${src}`);
     await loadScript(src);loaded.push(src);
   }
   window.dispatchEvent(new CustomEvent('mm:domains-ready',{detail:{version:VERSION,loaded}}));
