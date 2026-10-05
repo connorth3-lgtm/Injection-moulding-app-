@@ -96,7 +96,15 @@ function unsupported(reason, details = {}) {
   return Object.freeze({ ok: false, reason, ...details });
 }
 
+function finiteEngineeringValue(value) {
+  if (typeof value === 'number') return Number.isFinite(value);
+  if (Array.isArray(value)) return value.every(finiteEngineeringValue);
+  if (value && typeof value === 'object') return Object.values(value).every(finiteEngineeringValue);
+  return true;
+}
+
 function supported(value, metadata = {}) {
+  if (!finiteEngineeringValue(value)) return unsupported('non-finite-engineering-result');
   return Object.freeze({ ok: true, value: Object.freeze(value), ...metadata });
 }
 
