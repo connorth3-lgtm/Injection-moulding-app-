@@ -124,6 +124,7 @@ for marker in (
     "validate_helper(helper_payload)",
     "No learner application runtime",
     "release-hold artifact boundary mismatch",
+    "Rebind the copied manifest's index.html integrity record",
 ):
     need(marker in hold_builder, f"release-hold builder does not enforce the deployed public boundary: {marker}")
 for marker in (
@@ -140,7 +141,6 @@ for marker in (
     "device metadata helper violates local-only boundary",
     "critical_assets",
     "critical preview asset SHA-256 mismatch",
-    "Rebind the copied manifest's index.html integrity record",
 ):
     need(marker in hold_verifier, f"release-hold live verifier does not prove preview isolation, stale-content removal and helper isolation: {marker}")
 
