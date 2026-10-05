@@ -76,10 +76,11 @@ jobs:
           python tools/verify_release_external_validation.py
           python qa_release_validation_packets.py
       - name: Repository governance integrity
-        run: |
-          python qa_repo_governance.py
-          python qa_pages_single_publisher.py
-          python qa_release_supply_chain.py
+        run: python qa_repo_governance.py
+      - name: Pages publisher governance integrity
+        run: python qa_pages_single_publisher.py
+      - name: Release supply-chain governance integrity
+        run: python qa_release_supply_chain.py
       - name: Preview/main exact-push assurance contract
         run: python qa_branch_assurance.py
       - name: Audit remediation governance regression
