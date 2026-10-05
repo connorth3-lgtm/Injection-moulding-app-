@@ -65,7 +65,7 @@ def source_spec(): return next(s for s in SOURCES if s['datasetId']=='mendeley-g
 
 def download_verified():
     source=source_spec(); file_id,name,expected_sha=source['files'][0]
-    _,meta=public_files(source['shortId'],source['version']); _,_,urls=resolve_file(meta,file_id,name,source['shortId'],source['version'])
+    _,meta=public_files(source['shortId'],source['version']); _,_,urls=resolve_file(meta,file_id,name,source['shortId'],source['version'],expected_sha)
     td=tempfile.TemporaryDirectory(); path=Path(td.name)/name; download_first(urls,path)
     digest=hashlib.sha256(path.read_bytes()).hexdigest()
     if digest!=expected_sha: td.cleanup(); raise RuntimeError(f'GTNB SHA mismatch: {digest}')
