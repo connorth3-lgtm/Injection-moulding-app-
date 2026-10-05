@@ -33,7 +33,9 @@
         "Which observations describe what the process actually did rather than what was commanded?"
       ],
       "applyPrompt": "Take a familiar moulding cycle and identify one input, one process signal and one part output for each major stage.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readerIntro": "Injection moulding can look simple from the outside: close the mould, inject plastic, open it, repeat. The useful engineering view is more interesting. Every cycle is a chain of linked events, and what happens early in that chain often shows up later as a quality problem.",
+      "closingThought": "When a process starts to drift, resist the urge to stare at one setting. Go back to the cycle as a whole and ask which stage changed first."
     },
     {
       "id": "r02",
@@ -55,7 +57,9 @@
         "Why can tooling condition change the interpretation of a process symptom?"
       ],
       "applyPrompt": "Trace the physical path from material feed to ejection and mark where machine-, mould- and site-specific procedures control access or intervention.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readerIntro": "Before settings and process windows make sense, you need a clear picture of the machine, the mould and the hazards around them. This chapter gives you that shared language. It also draws a firm line between what can be learned from a book and what must come from the actual machine, mould and site procedures.",
+      "closingThought": "Good process work starts with knowing what the equipment is doing—and knowing when the safe answer is to stop and use the approved machine or site procedure."
     },
     {
       "id": "r03",
@@ -77,7 +81,9 @@
         "When must supplier grade documentation override generic family guidance?"
       ],
       "applyPrompt": "Choose one material family and list which process observations you would verify before transferring a process from another grade.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readerIntro": "Polymer names are useful, but they can be deceptive. Two materials from the same family can behave very differently once reinforcement, additives, molecular design and grade-specific requirements enter the picture. The aim here is to learn the patterns without mistaking them for recipes.",
+      "closingThought": "Use the polymer family to form better questions. Use the exact commercial grade and measured part response to make production decisions."
     },
     {
       "id": "r04",
@@ -99,7 +105,9 @@
         "What timing pattern could support a residence/degradation hypothesis?"
       ],
       "applyPrompt": "Build two competing explanations for a silver-streak symptom and state what observation would distinguish them.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readerIntro": "A polymer melt is not a simple liquid, and a dryer being switched on does not prove the material is dry. Flow, moisture and thermal history all depend on what the material has actually experienced. Once you start thinking in those terms, a lot of 'mystery' variation becomes easier to investigate.",
+      "closingThought": "The strongest material diagnosis links what the polymer experienced to what the process and part actually did. A label such as 'moisture' or 'degradation' is only the start of the investigation."
     },
     {
       "id": "r05",
@@ -121,7 +129,9 @@
         "How can a pressure limit change achieved filling velocity?"
       ],
       "applyPrompt": "Review a hypothetical shot-delivery problem and identify which screw, recovery, pressure and part measurements would be most useful.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readerIntro": "The injection unit has one basic job: prepare a repeatable shot of melt and deliver it when the mould needs it. In practice, that job depends on screw recovery, non-return behaviour, residence history, pressure capability and the difference between what the controller asks for and what the machine actually achieves.",
+      "closingThought": "Watch the machine as a delivery system, not just a page of settings. Stable commands are useful; stable delivered melt is what matters."
     },
     {
       "id": "r06",
@@ -142,7 +152,9 @@
         "When should flash evidence trigger tooling inspection rather than more clamp?"
       ],
       "applyPrompt": "Compare two cycles with the same commanded transfer point but different achieved pressure histories and state what else you would measure.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readerIntro": "The end of filling is one of the easiest places to create confusion. Transfer, packing and clamp behaviour are connected, but they are not the same thing. This chapter separates them so that a pressure rise, a flash defect or a transfer position is not asked to explain more than the evidence allows.",
+      "closingThought": "A good transfer and packing strategy is not a magic percentage. It is a repeatable transition that makes sense for the actual mould, material, machine and part."
     },
     {
       "id": "r07",
@@ -165,7 +177,9 @@
       ],
       "applyPrompt": "Map a multi-cavity flow path and mark where pressure loss, gas evacuation and thermal history could diverge.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
-      "sequencePrompt": "Read this chapter as one connected melt-delivery path: feed system and gate behaviour set pressure/flow conditions, venting governs displaced-gas escape, and hot-runner zones add local thermal/residence history. Keep location and timing attached to every observation so a symptom is not reduced to a generic setting change."
+      "sequencePrompt": "Read this chapter as one connected melt-delivery path: feed system and gate behaviour set pressure/flow conditions, venting governs displaced-gas escape, and hot-runner zones add local thermal/residence history. Keep location and timing attached to every observation so a symptom is not reduced to a generic setting change.",
+      "readerIntro": "From the nozzle to the cavity, the melt is constantly losing pressure, exchanging heat and pushing air out of the way. Runners, gates, vents and hot runners therefore make more sense when they are treated as one connected system rather than four separate topics.",
+      "closingThought": "When a problem is local, follow the melt path. Location, timing and cavity identity often tell you more than another round of global machine changes."
     },
     {
       "id": "r08",
@@ -186,7 +200,9 @@
         "How can ejection marks distinguish local tooling interaction from general part softness?"
       ],
       "applyPrompt": "For a warped part that sticks on one core, list the thermal and mechanical observations you would collect before changing the process.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readerIntro": "Cooling is where the mould quietly does a huge amount of work. The part is losing heat, changing stiffness, shrinking against the tool and getting ready to be released—all at the same time. That is why a cooling problem can later appear as a dimensional, warpage or ejection problem.",
+      "closingThought": "If the part is difficult to release or changes shape after ejection, look at the thermal story as well as the mechanical one."
     },
     {
       "id": "r09",
@@ -207,7 +223,9 @@
         "Why should negative experimental results be preserved?"
       ],
       "applyPrompt": "Draft a baseline record for one moulding process that another competent technician could reproduce and audit.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readerIntro": "Optimisation is pointless if you do not know what you started from. A defensible baseline is the process equivalent of a clean reference point: clear material identity, known machine and mould state, meaningful measurements and enough context that another competent person could understand what you actually ran.",
+      "closingThought": "A baseline is valuable because it makes later learning believable. If the starting state is vague, every comparison built on it is weaker."
     },
     {
       "id": "r10",
@@ -231,7 +249,9 @@
       ],
       "applyPrompt": "Design a staged development sequence for a new mould, naming the question answered by each study.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
-      "sequencePrompt": "Use this chapter as a staged development sequence rather than four independent studies: establish the baseline, isolate filling, map pressure demand, determine whether the feed path still transmits useful packing pressure, then test robustness across the intended operating region and document what would invalidate the conclusion."
+      "sequencePrompt": "Use this chapter as a staged development sequence rather than four independent studies: establish the baseline, isolate filling, map pressure demand, determine whether the feed path still transmits useful packing pressure, then test robustness across the intended operating region and document what would invalidate the conclusion.",
+      "readerIntro": "Scientific process development is really a sequence of good questions. How does the cavity fill? Where is pressure being lost? When does packing stop influencing the part? How wide is the region where the process still behaves well? The studies in this chapter are useful because each one answers a different part of that story.",
+      "closingThought": "The goal is not to discover one perfect setting. It is to understand the process well enough to choose a robust region and recognise when the system has moved away from it."
     },
     {
       "id": "r11",
@@ -251,7 +271,9 @@
         "What observation would force you to reject your preferred hypothesis?"
       ],
       "applyPrompt": "Take one defect and write three competing mechanisms, one prediction for each, and one discriminating test.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readerIntro": "Troubleshooting gets expensive when the first plausible explanation becomes the only explanation. A better habit is to slow the diagnosis down just enough to define the symptom, list competing mechanisms and choose a test that can actually separate them.",
+      "closingThought": "The best diagnostic question is often not 'What should I change?' but 'What observation would prove my favourite explanation wrong?'"
     },
     {
       "id": "r12",
@@ -272,7 +294,9 @@
         "Why can local flash persist even when total clamp capacity appears sufficient?"
       ],
       "applyPrompt": "Create a two-column evidence table for a short-shot event: observations supporting a common upstream cause versus a cavity-local cause.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readerIntro": "Short shots and flash look like opposite defects—too little material in one case, too much outside the intended boundary in the other. Both are useful reminders that the visible defect is an outcome, not a diagnosis. Delivery, restriction, pressure history and tooling condition can all be part of the story.",
+      "closingThought": "Use where the defect occurs, when it occurs and which cavities are involved before reaching for more pressure, more clamp or a permanent tooling change."
     },
     {
       "id": "r13",
@@ -293,7 +317,9 @@
         "What would make you reconsider cooling as the dominant mechanism?"
       ],
       "applyPrompt": "For a bowed reinforced part, write a mechanism map covering packing, cooling, orientation, geometry and conditioning.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readerIntro": "Shrinkage, voids and warpage are where material behaviour, pressure transmission, cooling and geometry become hard to separate. The good news is that they do leave clues. Direction, cavity pattern, time after moulding and response to controlled changes can help narrow the mechanism without pretending there is one universal cause.",
+      "closingThought": "A warped or sunken part is not asking for a favourite setting. It is asking you to work out where the material lost support, cooled differently or developed unequal strain."
     },
     {
       "id": "r14",
@@ -315,7 +341,9 @@
         "How can cavity distribution help localise black-speck sources?"
       ],
       "applyPrompt": "Build a source map for a dark-speck complaint and rank likely locations for an all-cavity versus one-cavity pattern.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readerIntro": "Splay, burns and black specks can all tempt people into fast labels: moisture, trapped gas, contamination, degradation. Sometimes those labels are right. The challenge is proving which one fits the timing, location and material history well enough to act on it.",
+      "closingThought": "Treat appearance as the beginning of the investigation. Chronology and boundaries are what turn a visual symptom into useful evidence."
     },
     {
       "id": "r15",
@@ -335,7 +363,9 @@
         "Why is increasing melt temperature not a complete diagnosis?"
       ],
       "applyPrompt": "For a weld line downstream of a hole, identify geometry-fixed evidence, process-sensitive evidence and product-performance evidence.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readerIntro": "A weld line forms because flow fronts have separated and met again. Whether that interface matters depends on much more than whether you can see it. Geometry, gas escape, local temperature, pressure, material history and the product requirement all shape the engineering significance.",
+      "closingThought": "Do not ask only how to make the line disappear. Ask what created the meeting condition and whether the real product property actually needs to change."
     },
     {
       "id": "r16",
@@ -356,7 +386,9 @@
         "What is the difference between a process alarm and a product disposition decision?"
       ],
       "applyPrompt": "Choose one monitored signal and define its origin, units, baseline, alarm meaning and required follow-up.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readerIntro": "Process monitoring becomes powerful when the signal has a clear physical meaning. Cavity pressure can tell you a great deal, but only if you remember where the sensor is, what stage of the cycle you are looking at and what the signal has actually been shown to correlate with.",
+      "closingThought": "A monitor is most useful when it tells you that the process changed. It should not be allowed to pretend that it knows the root cause—or the product disposition—without supporting evidence."
     },
     {
       "id": "r17",
@@ -377,7 +409,9 @@
         "Why can pooled multi-cavity capability answer the wrong question?"
       ],
       "applyPrompt": "Sketch a two-factor experiment and state the nuisance variables, confirmation step and population definition needed before a capability claim.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readerIntro": "DOE and capability are often taught as statistics first and engineering second. In moulding, that order can be dangerous. The numbers only become useful when the experiment is physically sensible, the measurement system is credible and the population being described is stable and clearly defined.",
+      "closingThought": "A tidy statistic cannot rescue a poor experiment or a mixed population. Start with the engineering question, then make the statistics answer that question honestly."
     },
     {
       "id": "r18",
@@ -398,7 +432,9 @@
         "Why should reinforced grades not use generic isotropic shrinkage assumptions?"
       ],
       "applyPrompt": "Plan a dimensional study that separates conditioning time, cavity identity and measurement direction.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readerIntro": "A dimension is not always finished changing when the part leaves the mould. Conditioning, crystallisation, moisture uptake, residual stress and fibre orientation can all change what you measure and in which direction. That makes measurement timing and orientation part of the engineering result, not paperwork around it.",
+      "closingThought": "If a dimension matters, define when, where and in which direction it is measured. Otherwise two correct measurements can still describe different physical states."
     },
     {
       "id": "r19",
@@ -421,7 +457,9 @@
       ],
       "applyPrompt": "For a four-cavity thin-wall part, list which machine, mould, material and cavity-specific evidence you would preserve.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
-      "sequencePrompt": "Treat these advanced topics as boundary-heavy applications of the earlier method: preserve cavity identity, equipment capability, material-grade limits and measured response. Thin-wall, multi-cavity and high-performance processing become unsafe teaching topics when exact machine, mould or supplier constraints are replaced by generic recipes."
+      "sequencePrompt": "Treat these advanced topics as boundary-heavy applications of the earlier method: preserve cavity identity, equipment capability, material-grade limits and measured response. Thin-wall, multi-cavity and high-performance processing become unsafe teaching topics when exact machine, mould or supplier constraints are replaced by generic recipes.",
+      "readerIntro": "Thin-wall parts, multi-cavity tools and high-performance polymers all magnify small weaknesses in the process. Machine capability, cavity-to-cavity balance and grade-specific material limits matter more, not less. This is the point where generic advice becomes especially risky.",
+      "closingThought": "Advanced processing is still the same engineering discipline: preserve identity, measure the real response and stay inside the limits of the actual equipment, tool and material."
     },
     {
       "id": "r20",
@@ -441,7 +479,9 @@
         "How should safety consequence affect hypothesis priority?"
       ],
       "applyPrompt": "Write an evidence ledger for a complex defect with at least three hypotheses, predicted observations, contradictions and a next test.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readerIntro": "Real production problems are rarely polite enough to have one clean cause. Several mechanisms can overlap, the first fix can work for the wrong reason, and the most valuable piece of evidence may be the one that contradicts the team's favourite theory. This chapter is about staying useful when the answer is not obvious.",
+      "closingThought": "Good engineering judgement is not certainty. It is knowing what the evidence supports, what remains unresolved and what test or escalation would change the conclusion."
     }
   ],
   "reviewQuestions": [
@@ -452,5 +492,5 @@
     "Can a beginner read chapters 1–10 sequentially and an experienced technician enter at chapters 11–20 without losing critical safety context?"
   ],
   "release": "2026.10.06.1",
-  "pedagogyPolicy": "Reader-level objectives, checks and application prompts are derived learning scaffolds only. They add no technical claims, do not alter governed module evidence status and cannot create production authority. Sequence prompts are reader-orientation scaffolds derived from existing governed module order; they add no independent technical authority."
+  "pedagogyPolicy": "Reader-level objectives, checks and application prompts are derived learning scaffolds only. They add no technical claims, do not alter governed module evidence status and cannot create production authority. Sequence prompts are reader-orientation scaffolds derived from existing governed module order; they add no independent technical authority. Reader introductions and closing thoughts are editorial voice scaffolds derived from governed module themes; they add no independent technical claims or production authority."
 }
