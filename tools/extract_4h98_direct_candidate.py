@@ -16,7 +16,7 @@ def make_signal(sid,source_channel,semantic,unit,values):
     return {'id':sid,'label':sid.replace('-',' '),'sourceChannel':source_channel,'semantic':semantic,'unit':unit,'representation':rep,'representationFingerprint':sha(rep)}
 def main():
     source=next(s for s in SOURCES if s['datasetId']=='mendeley-4h98rz9f92-v3')
-    file_id,name,expected=source['files'][0]; _,meta=public_files(source['shortId'],source['version']); _,_,urls=resolve_file(meta,file_id,name,source['shortId'],source['version'])
+    file_id,name,expected=source['files'][0]; _,meta=public_files(source['shortId'],source['version']); _,_,urls=resolve_file(meta,file_id,name,source['shortId'],source['version'],expected)
     td=tempfile.TemporaryDirectory(); path=Path(td.name)/name
     try:
         download_first(urls,path); digest=hashlib.sha256(path.read_bytes()).hexdigest()
