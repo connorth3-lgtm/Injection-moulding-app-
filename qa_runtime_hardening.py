@@ -137,7 +137,8 @@ must(service_worker, [
     "'./src/domains/runtime-packs/evidence-runtime-pack.js'", "'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'",
     "'./src/domains/shared/runtime-v2.js'", "'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'", "'./src/domains/runtime-packs/assessment-multimodal-runtime-pack.js'", "'./src/domains/shell/accessibility-hardening.js'",
     "'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'", "'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'", "'./learning-analytics.js'",
-    "Promise.allSettled", "if(failed.length)", "await caches.delete(STATIC_CACHE)", "keeping the previous worker", "mouldmaster-offline-asset-unavailable"
+    "Promise.allSettled", "if(failed.length)", "await caches.delete(STATIC_CACHE)", "keeping the previous worker", "mouldmaster-offline-asset-unavailable",
+    "text/css; charset=utf-8", "text/html; charset=utf-8", "application/manifest+json; charset=utf-8", "image/svg+xml; charset=utf-8", "image/png"
 ], "PWA hardening")
 core = worker_assets(service_worker, "CORE")
 optional = worker_assets(service_worker, "OPTIONAL")
