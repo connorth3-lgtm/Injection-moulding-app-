@@ -40,18 +40,32 @@ external_live_verifier = text("tools/verify_external_validation_live_bindings.py
 queued_profile = text(".github/workflows/profile-queued-zenodo-data.yml")
 lower_profile = text(".github/workflows/profile-cross-process-lower-workpiece.yml")
 
-# Data-profiling jobs need write authority only for the final governed aggregate commit.
-# Checkout must not persist a write-capable Git credential across remote-data parsing.
+# Remote-data parsing must run without repository-write authority. Validated
+# aggregate outputs cross into a separate minimal publish job through a retained
+# artifact; only that second job receives contents:write.
 for workflow_name, workflow in (
     ("queued Zenodo profiling", queued_profile),
     ("cross-process lower profiling", lower_profile),
 ):
-    need("permissions:\n  contents: write" in workflow, f"{workflow_name} publish workflow lost its explicit contents-write declaration")
-    need("persist-credentials: false" in workflow, f"{workflow_name} checkout must not persist write credentials")
-    need("GH_TOKEN: ${{ github.token }}" in workflow and "gh auth setup-git" in workflow,
-         f"{workflow_name} must expose write credentials only in the final publish step")
-    need(workflow.index("persist-credentials: false") < workflow.index("gh auth setup-git"),
-         f"{workflow_name} publish credential setup must occur after checkout credential isolation")
+    need("permissions:\n  contents: read" in workflow, f"{workflow_name} must default to read-only repository access")
+    need("persist-credentials: false" in workflow, f"{workflow_name} checkout must not persist credentials")
+    need("actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a" in workflow,
+         f"{workflow_name} must hand validated output to the publisher through the pinned artifact action")
+    need("\n  publish:\n" in workflow, f"{workflow_name} must isolate publication in a separate job")
+    profile_block = workflow.split("  profile:\n", 1)[1].split("\n  publish:\n", 1)[0]
+    publish_block = workflow.split("\n  publish:\n", 1)[1]
+    for forbidden in ("contents: write", "GH_TOKEN:", "gh auth setup-git", "git push"):
+        need(forbidden not in profile_block, f"{workflow_name} profiling job must remain write-token free: {forbidden}")
+    for marker in (
+        "permissions:\n      actions: read\n      contents: write",
+        "GH_TOKEN: ${{ github.token }}",
+        "gh auth setup-git",
+        "actions/runs/$GITHUB_RUN_ID/artifacts",
+        'test "$remote_head" = "$SOURCE_SHA"',
+        'git push origin "HEAD:$TARGET_BRANCH"',
+    ):
+        need(marker in publish_block, f"{workflow_name} isolated publisher missing marker: {marker}")
+    need("uses:" not in publish_block, f"{workflow_name} write-capable publish job must not execute third-party actions")
 
 # Main provenance is a read-only post-push audit. Native ruleset prevention is
 # authoritative; audit automation must never rewrite main after the fact.
