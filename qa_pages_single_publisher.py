@@ -19,9 +19,14 @@ hold_builder_path = ROOT / "tools" / "build_pages_hold.py"
 hold_builder = hold_builder_path.read_text(encoding="utf-8")
 hold_verifier = (ROOT / "tools" / "verify_pages_hold.py").read_text(encoding="utf-8")
 
+containment_block = workflow.split("  legacy-containment:", 1)[1].split("\n  publisher-guard:", 1)[0]
 publisher_block = workflow.split("  publisher-guard:", 1)[1].split("\n  build:", 1)[0]
-need("needs:" not in publisher_block, "publisher guard must start independently so legacy cancellation is not delayed")
-need("if: github.event_name == 'push'" in publisher_block, "publisher guard write authority must be limited to protected-main push events")
+need("needs:" not in containment_block, "legacy containment must start independently for earliest cancellation")
+need("actions: write" in containment_block and "pages: write" not in containment_block, "early legacy containment must be actions-only")
+need("--contain-only" in containment_block, "early legacy containment must not mutate Pages settings")
+need("needs: [production-source, legacy-containment]" in publisher_block, "Pages settings mutation must wait for provenance and containment")
+need("needs.production-source.result == 'success'" in publisher_block, "Pages settings mutation must require successful main provenance")
+need("pages: write" in publisher_block, "post-provenance publisher guard must own Pages settings mutation authority")
 need("Manual dispatch is contract-only" in workflow, "manual Pages dispatch must be explicitly non-publishing")
 
 shared_publish_concurrency = "group: mouldmaster-pages-site-publish"
@@ -65,7 +70,8 @@ need('--expected-source-sha "${{ github.sha }}"' in workflow, "main Pages live v
 for marker in (
     "actions: write",
     "publisher-guard:",
-    "Block competing legacy branch Pages publisher",
+    "Contain competing legacy branch Pages publisher",
+    "Confirm workflow-mode Pages publisher after provenance",
     "python3 tools/quarantine_legacy_pages.py",
     "needs: [production-source, publisher-guard]",
     "Build release-hold Pages artifact",
@@ -120,6 +126,8 @@ for marker in (
     '"api",',
     '"Accept: application/vnd.github+json"',
     "api_endpoint",
+    "--contain-only",
+    "1000-run pagination safety bound",
 ):
     need(marker in guard, f"legacy Pages fail-closed safeguard missing: {marker}")
 
