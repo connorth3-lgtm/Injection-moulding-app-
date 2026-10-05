@@ -307,8 +307,8 @@ def validate_book_sme(section: dict, expected_release: str) -> None:
     enrichment_chapters = set(evidence.get("enrichmentChapterIds") or [])
     if not isinstance(chapter_ids, list) or len(chapter_ids) != 46 or len(set(chapter_ids)) != 46:
         fail("Book SME contract must contain exactly 46 unique governed chapter ids")
-    if len(worked_case_ids) != 26:
-        fail("Book SME contract must contain exactly 26 governed worked engineering cases")
+    if len(worked_case_ids) != 27:
+        fail("Book SME contract must contain exactly 27 governed worked engineering cases")
     if len(diagram_ids) != 21:
         fail("Book SME contract must contain exactly 21 governed instructional diagrams")
     if not isinstance(reviews, list):
@@ -353,7 +353,7 @@ def validate_book_sme(section: dict, expected_release: str) -> None:
             fail(f"validated Book SME enrichment chapter lacks explicit enrichment review evidence: {chapter_id}")
 
     if reviewed_worked != worked_case_ids:
-        fail("validated Book SME reviews must explicitly account for all 26 governed worked engineering cases")
+        fail("validated Book SME reviews must explicitly account for all 27 governed worked engineering cases")
     if reviewed_diagrams != diagram_ids:
         fail("validated Book SME reviews must explicitly account for all 21 governed instructional diagrams")
 
