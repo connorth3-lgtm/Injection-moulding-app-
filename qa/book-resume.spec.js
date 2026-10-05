@@ -55,8 +55,11 @@ test('Keep Reading distinguishes duplicate heading text with ordinal anchors',as
   await dup.nth(1).scrollIntoViewIfNeeded();
   await page.evaluate(()=>window.scrollBy(0,80));
   const secondTop=await dup.nth(1).evaluate(el=>Math.round(el.getBoundingClientRect().top));
+  const secondAnchor=await dup.nth(1).getAttribute('data-mm-book-anchor');
+  expect(secondAnchor).toBeTruthy();
   await page.getByRole('button',{name:'Home'}).first().click();
   const saved=await page.evaluate(()=>window.MMBook.getResume());
+  expect(saved.anchorId).toBe(secondAnchor);
   expect(Number.isInteger(saved.anchorIndex)).toBeTruthy();
   expect(saved.anchorText).toBe('What evidence should change the conclusion?');
 
@@ -67,6 +70,27 @@ test('Keep Reading distinguishes duplicate heading text with ordinal anchors',as
   const restoredSecondTop=await dup.nth(1).evaluate(el=>Math.round(el.getBoundingClientRect().top));
   expect(Math.abs(restoredSecondTop-secondTop)).toBeLessThan(140);
   expect(Math.abs(restoredSecondTop)).toBeLessThan(Math.abs(firstTop));
+});
+
+test('Keep Reading survives Material Atlas hydration without anchor drift',async({page})=>{
+  await boot(page);
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r03'));
+  const atlasHeading=page.getByRole('heading',{name:'Complete Material Data Atlas',exact:true});
+  await expect(atlasHeading).toBeVisible();
+  await expect(atlasHeading).toHaveAttribute('data-mm-book-anchor','module:material-families:atlas');
+  await page.waitForFunction(()=>document.querySelector('[data-mm-book-material-atlas]')&&!document.querySelector('[data-mm-book-material-status]'));
+  await expect(atlasHeading).toHaveAttribute('data-mm-book-anchor','module:material-families:atlas');
+  await atlasHeading.scrollIntoViewIfNeeded();
+  await page.evaluate(()=>window.scrollBy(0,70));
+  const beforeTop=await atlasHeading.evaluate(el=>Math.round(el.getBoundingClientRect().top));
+  await page.getByRole('button',{name:'Home'}).first().click();
+  const saved=await page.evaluate(()=>window.MMBook.getResume());
+  expect(saved.anchorId).toBe('module:material-families:atlas');
+  await page.locator('#dashboard [data-mm-home-book]').getByRole('button',{name:'Keep Reading'}).click();
+  await page.waitForFunction(()=>document.querySelector('[data-mm-book-material-atlas]')&&!document.querySelector('[data-mm-book-material-status]'));
+  await expect(atlasHeading).toHaveAttribute('data-mm-book-anchor','module:material-families:atlas');
+  const afterTop=await atlasHeading.evaluate(el=>Math.round(el.getBoundingClientRect().top));
+  expect(Math.abs(afterTop-beforeTop)).toBeLessThan(140);
 });
 
 test('Keep Reading restores, stale IDs fail to contents, and learner reset clears only active resume',async({page})=>{
