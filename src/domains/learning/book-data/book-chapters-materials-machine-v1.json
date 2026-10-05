@@ -54,7 +54,7 @@
         },
         {
           "title": "Viscosity is a process response, not a fixed material number",
-          "text": "The apparent resistance of a polymer melt to flow depends on temperature, deformation rate and material state. Many thermoplastic melts exhibit shear-thinning behaviour, so the apparent viscosity can decrease as shear rate increases. This is one reason that flow rate, geometry and temperature interact strongly during filling rather than acting as independent knobs."
+          "text": "The apparent resistance of a polymer melt to flow depends on temperature, deformation rate and material state. Many thermoplastic melts exhibit shear-thinning behaviour, so the apparent viscosity can decrease as shear rate increases. This is one reason that flow rate, geometry and temperature interact strongly during filling instead of acting as independent knobs."
         },
         {
           "title": "Geometry converts rheology into pressure demand",
@@ -90,7 +90,7 @@
         },
         {
           "title": "Moisture state is a condition to verify",
-          "text": "For moisture-sensitive materials, the important question is not whether a dryer was switched on but whether the material entering the process satisfies the current grade-specific requirement. Storage history, exposure, dryer performance, hopper residence and sampling method can all affect that conclusion. Use current supplier documentation and an appropriate measurement method where required rather than treating a generic time-and-temperature pair as universal proof of dryness."
+          "text": "For moisture-sensitive materials, the important question is not whether a dryer was switched on but whether the material entering the process satisfies the current grade-specific requirement. Storage history, exposure, dryer performance, hopper residence and sampling method can all affect that conclusion. Use current supplier documentation and an appropriate measurement method where required instead of treating a generic time-and-temperature pair as universal proof of dryness."
         },
         {
           "title": "Separate moisture evidence from similar-looking symptoms",
@@ -187,7 +187,7 @@
         },
         {
           "title": "Do not transfer settings between modified grades by name alone",
-          "text": "A reinforced, flame-retarded or otherwise modified grade should be treated as its own processing material. Confirm the supplier's grade-specific processing guidance and qualification requirements rather than assuming that settings for an unfilled or differently modified resin are interchangeable."
+          "text": "A reinforced, flame-retarded or otherwise modified grade should be treated as its own processing material. Confirm the supplier's grade-specific processing guidance and qualification requirements instead of assuming that settings for an unfilled or differently modified resin are interchangeable."
         },
         {
           "title": "Modifiers change more than one property at a time",
@@ -218,7 +218,7 @@
         },
         {
           "title": "The non-return valve matters during injection",
-          "text": "A check-ring or other non-return-valve system is intended to restrict reverse flow during injection so forward screw movement can displace melt toward the mould. Wear, contamination or poor sealing can contribute to shot inconsistency, but diagnosis should use repeatability evidence rather than assuming every cushion or weight variation is a valve fault."
+          "text": "A check-ring or other non-return-valve system is intended to restrict reverse flow during injection so forward screw movement can displace melt toward the mould. Wear, contamination or poor sealing can contribute to shot inconsistency, but diagnosis should use repeatability evidence instead of assuming every cushion or weight variation is a valve fault."
         },
         {
           "title": "Hardware suitability is material dependent",
@@ -265,7 +265,7 @@
         },
         {
           "title": "Machine suitability is multi-dimensional",
-          "text": "Shot utilisation should be considered together with residence exposure, plasticising capacity, available injection rate and pressure, screw recovery consistency, metering repeatability and clamp requirements. A machine can appear acceptable by nominal shot volume while still being a poor process match in another dimension. Record which limitation is actually being evaluated rather than relying on a single utilisation percentage."
+          "text": "Shot utilisation should be considered together with residence exposure, plasticising capacity, available injection rate and pressure, screw recovery consistency, metering repeatability and clamp requirements. A machine can appear acceptable by nominal shot volume while still being a poor process match in another dimension. Record which limitation is actually being evaluated instead of relying on a single utilisation percentage."
         },
         {
           "title": "Use cushion and screw position as trends, not verdicts",
