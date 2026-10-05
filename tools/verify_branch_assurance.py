@@ -139,7 +139,13 @@ def verify(repository: str, branch: str, sha: str, token: str) -> None:
 
     last_runs: dict[str, dict] = {}
     for attempt in range(1, ATTEMPTS + 1):
-        last_runs = latest_runs(api_runs(repository, sha, token), required)
+        try:
+            payload = api_runs(repository, sha, token)
+        except RuntimeError as exc:
+            reason = f"workflow-state API unavailable: {exc}"
+            write_report(branch, sha, last_runs, "error", reason)
+            raise SystemExit(reason)
+        last_runs = latest_runs(payload, required)
         states = {
             name: (str(run.get("status") or "missing"), str(run.get("conclusion") or "missing"))
             for name, run in last_runs.items()
