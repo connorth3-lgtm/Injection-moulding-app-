@@ -253,6 +253,15 @@ jobs:
           "MM_RELEASE_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           "MM_RELEASE_TAG=$tag" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           "MM_RELEASE_DIR=$releaseDir" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Recheck governed current-main source before release write
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          python tools/verify_production_source.py
+          --repository "${{ github.repository }}"
+          --source-sha "${{ github.sha }}"
+          --require-native-protection
       - name: Publish one-shot release without asset replacement
         shell: pwsh
         env:
