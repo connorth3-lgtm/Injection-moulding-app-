@@ -169,12 +169,16 @@ for marker in (
     "Recheck current merged preview provenance",
     "mouldmaster-pages-site-publish",
     "xs.sort(key=lambda x:",
-    "retain-exact-candidate",
+    "verify_preview_source.py",
 ):
     need(marker in preview_pages, f"preview Pages governance missing marker: {marker}")
 need(
     "mouldmaster-pages-site-publish" in pages,
     "main Pages deploy must share one publication concurrency domain with preview Pages",
+)
+need(
+    "retain-exact-candidate" not in preview_pages.split("Require exact-head preview quality gates", 1)[1].split("Validate preview build contracts", 1)[0],
+    "preview push-SHA polling must not require the PR-only public-candidate job",
 )
 
 # Preview and main must also converge after merge/push on one exact SHA. This
