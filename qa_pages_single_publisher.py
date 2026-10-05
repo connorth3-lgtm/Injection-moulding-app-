@@ -173,7 +173,16 @@ with tempfile.TemporaryDirectory() as tmp:
     (preview / "index.html").write_text("<!doctype html><html><head></head><body>preview</body></html>", encoding="utf-8")
     (preview / "manifest.webmanifest").write_text("{}", encoding="utf-8")
     (preview / "service-worker.js").write_text("self.addEventListener('fetch',()=>{});", encoding="utf-8")
-    (preview / "version.json").write_text("{}", encoding="utf-8")
+    (preview / "version.json").write_text('{"web_release":"2026.10.05.1"}', encoding="utf-8")
+    source_sha = "0123456789abcdef0123456789abcdef01234567"
+    (preview / "deployment.json").write_text(
+        '{"schema":3,"web_release":"2026.10.05.1","source_sha":"'+source_sha+'"}',
+        encoding="utf-8",
+    )
+    (preview / "pages-manifest.json").write_text(
+        '{"schema":3,"web_release":"2026.10.05.1","source_sha":"'+source_sha+'","assets":{"index.html":{},"version.json":{},"service-worker.js":{},"deployment.json":{}}}',
+        encoding="utf-8",
+    )
     target = root / "hold"
     files = hold_module.build(target, preview_source=preview)
     root_files = {path.name for path in target.iterdir() if path.is_file()}
@@ -182,6 +191,9 @@ with tempfile.TemporaryDirectory() as tmp:
         "preview release-hold root must add only the migration worker to the three safe hold files",
     )
     need("preview/index.html" in files and "preview/service-worker.js" in files, "preview runtime was not staged under /preview/")
+    preview_index = (target / "preview" / "index.html").read_text(encoding="utf-8")
+    need(f'<meta name="mm-preview-source-sha" content="{source_sha}">' in preview_index, "staged preview HTML missing exact source SHA provenance")
+    need('<meta name="mm-preview-web-release" content="2026.10.05.1">' in preview_index, "staged preview HTML missing release provenance")
     index = (target / "index.html").read_text(encoding="utf-8")
     worker = (target / "service-worker.js").read_text(encoding="utf-8")
     need('data-mm-release-hold-migration="true"' in index, "release-hold root must register the migration worker")
