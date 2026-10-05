@@ -41,9 +41,9 @@ def file_name(item): return str(item.get("filename") or item.get("name") or "").
 
 
 def file_url(item):
-    # The governed source is dataset-version specific. Metadata convenience
-    # URLs may resolve through an unversioned alias, so construct the explicit
-    # versioned download route locally from the pinned identity.
+    details = item.get("content_details") or item.get("contentDetails") or {}
+    for candidate in (details.get("download_url"), details.get("downloadUrl"), item.get("download_url"), item.get("downloadUrl")):
+        if candidate: return str(candidate)
     return f"{API_ROOT}/datasets/{DATASET_ID}/files/{file_id(item)}/file_downloaded?version={VERSION}"
 
 
