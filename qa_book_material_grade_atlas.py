@@ -27,7 +27,7 @@ def norm(value):
 need(ATLAS.get('schemaVersion')==2 and ATLAS.get('bookId')=='mouldmaster-book','Book material atlas identity mismatch')
 need(ATLAS.get('status')=='technical-review-material-atlas','Book material atlas must remain technical review')
 need(ATLAS.get('atlasVersion')=='2026.10.01.2','Book material atlas version mismatch')
-need(ATLAS.get('bookRuntimeCompatibility')=='2026.10.01.3','Book material atlas runtime compatibility mismatch')
+need(ATLAS.get('bookRuntimeCompatibility')=='2026.10.06.2','Book material atlas runtime compatibility mismatch')
 
 need(CATALOG.get('schemaVersion')==1 and CATALOG.get('status')=='validated','canonical material catalogue identity mismatch')
 grades=CATALOG.get('grades') or []
