@@ -31,6 +31,29 @@ def need(ok, msg):
         raise AssertionError(msg)
 
 
+def all_external_refs(text, rel):
+    refs = []
+    pattern = re.compile(r"(?m)^\\s*(?:-\\s*)?uses:\\s+([^\\s#]+)")
+    for ref in pattern.findall(text):
+        if ref.startswith("./"):
+            continue
+        if ref.startswith("docker://"):
+            need(
+                re.search(r"@sha256:[0-9a-f]{64}$", ref) is not None,
+                f"mutable Docker action/image reference is forbidden in {rel}: {ref}",
+            )
+            refs.append(ref)
+            continue
+        need("@" in ref, f"external Action reference is missing an immutable ref in {rel}: {ref}")
+        version = ref.rsplit("@", 1)[1]
+        need(
+            re.fullmatch(r"[0-9a-f]{40}", version) is not None,
+            f"mutable external Action reference is forbidden in {rel}: {ref}",
+        )
+        refs.append(ref)
+    return refs
+
+
 def governed_refs(text, rel):
     refs = []
     pattern = re.compile(r"actions/(checkout|setup-python|setup-node|upload-artifact|download-artifact)@([^\s#]+)(?:\s+#\s*v(\d+)(?:\.\d+(?:\.\d+)?)?)?")
@@ -49,23 +72,26 @@ for rel in WORKFLOWS:
     need(path.exists(), f"critical workflow missing: {rel}")
     text = path.read_text(encoding="utf-8")
     refs = governed_refs(text, rel)
-    # A workflow may legitimately use no governed core Action. Any core Action
-    # reference that is present must still be exact-SHA pinned.
+    external_refs = all_external_refs(text, rel)
+    # A workflow may legitimately use no governed core Action. Every external
+    # Action reference that is present must still be immutable; local ./ actions
+    # and local reusable workflows remain repository-bound.
     report.append({
         "workflow": rel,
         "coreActionRefs": len(refs),
-        "shaPinnedRefs": len(refs),
-        "pins": sorted({f"{name}@{sha}" for name, sha in refs}),
+        "externalActionRefs": len(external_refs),
+        "shaPinnedRefs": len(external_refs),
+        "pins": sorted(set(external_refs)),
     })
 
 (ROOT / "critical-actions-versions-report.json").write_text(json.dumps({
     "schema": 2,
     "result": "pass",
     "workflowCount": len(WORKFLOWS),
-    "policy": "exact-reviewed-sha; human-readable major annotations optional",
+    "policy": "all-external-actions-immutable; governed-core-actions-exact-reviewed-sha; human-readable major annotations optional",
     "approvedPins": PINNED,
     "workflows": report,
 }, indent=2) + "\n", encoding="utf-8")
 
 need(len(WORKFLOWS) >= 70, "workflow inventory unexpectedly shrank; repository-wide pin coverage may be incomplete")
-print(f"MouldMaster GitHub Actions QA passed ({len(WORKFLOWS)} workflows scanned; every governed core Action reference uses an exact reviewed SHA pin).")
+print(f"MouldMaster GitHub Actions QA passed ({len(WORKFLOWS)} workflows scanned; every external Action reference is immutable and every governed core Action uses the exact reviewed SHA pin).")
