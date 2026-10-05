@@ -19,14 +19,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Classify question-quality impact
+        id: impact
+        run: python3 tools/ci_impact.py
+      - name: Skip unrelated update
+        if: steps.impact.outputs.question_quality != 'true'
+        run: echo "Question Quality 50-Pass skipped: latest update does not affect assessment/question-quality contracts."
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        if: steps.impact.outputs.question_quality == 'true'
         with:
           node-version: '22.12.0'
           package-manager-cache: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        if: steps.impact.outputs.question_quality == 'true'
         with:
           python-version: '3.12'
       - name: Syntax-check evidence integrity assets
+        if: steps.impact.outputs.question_quality == 'true'
         run: |
           node --check src/domains/assessment/assessment-psychometric-hardening.js
           node --check assessment-psychometric-approval.js
@@ -34,17 +45,22 @@ jobs:
           node --check real-measured-data-assessment.js
           python -m py_compile qa_assessment_evidence_integrity.py qa_audit_consolidation.py qa_question_quality_50_pass_immutable.py
       - name: Run whole-app audit consolidation guard
+        if: steps.impact.outputs.question_quality == 'true'
         run: python qa_audit_consolidation.py
       - name: Run assessment UX regression checks
+        if: steps.impact.outputs.question_quality == 'true'
         run: python qa_assessment_ux.py
       - name: Run 50-pass quality audit across formal and optional learner-visible questions
+        if: steps.impact.outputs.question_quality == 'true'
         run: python qa_question_quality_50_pass_immutable.py
       - name: Run extreme 50-pass psychometric and evidence audit
+        if: steps.impact.outputs.question_quality == 'true'
         run: python qa_question_quality_extreme_runtime_v2.py
       - name: Run proposition/source relevance and real measured-data contract audit
+        if: steps.impact.outputs.question_quality == 'true'
         run: python qa_assessment_evidence_integrity.py
       - name: Upload question quality reports
-        if: always()
+        if: ${{ always() && steps.impact.outputs.question_quality == 'true' }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: mouldmaster-question-quality-50-pass
