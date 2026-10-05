@@ -42,6 +42,10 @@ assert len(readers)==20 and len({r.get("id") for r in readers})==20
 covered=[]
 for row in readers:
     assert row.get("id") and row.get("title") and row.get("goal")
+    assert row.get("depthBand") in {"Foundation","Technician","Engineer","Advanced"}
+    assert len(row.get("learningObjectives") or []) >= 2
+    assert len(row.get("checkQuestions") or []) >= 3
+    assert row.get("applyPrompt") and row.get("evidenceBoundary")
     mids=row.get("moduleIds") or []
     assert mids and len(mids)==len(set(mids))
     assert set(mids)<=set(module_ids)
@@ -94,7 +98,7 @@ for name in ("book-reader-architecture-v2.json","book-editorial-expansion-review
     assert hashes.get(name)==git_blob(PACKAGED/name), f"authorization hash drift for {name}"
 
 assert sme.get("status")=="hold" and sme.get("reviews")==[] and len(sme.get("chapterIds",[]))==46
-for marker in ("READER_PATH","EDITORIAL_REVIEW_PATH","validateReaderArchitecture","validateEditorialExpansionReview","showReaderChapter","readerChapterHtml","20 substantial chapters","46 governed modules","getReaderArchitecture","getEditorialExpansionReview"):
+for marker in ("READER_PATH","EDITORIAL_REVIEW_PATH","validateReaderArchitecture","validateEditorialExpansionReview","showReaderChapter","readerChapterHtml","readerLearningHtml","readerReferencesHtml","20 substantial chapters","46 governed modules","getReaderArchitecture","getEditorialExpansionReview"):
     assert marker in runtime, f"reader runtime marker missing: {marker}"
 for asset in ("./src/domains/learning/book-data/book-reader-architecture-v2.json","./src/domains/learning/book-data/book-editorial-expansion-review-v1.json"):
     assert asset in sw, f"reader governance asset missing from atomic cache: {asset}"
