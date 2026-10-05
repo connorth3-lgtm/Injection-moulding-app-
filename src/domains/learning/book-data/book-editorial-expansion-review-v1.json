@@ -231,7 +231,7 @@
     {
       "moduleId": "vp-transfer",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "vp-transfer-01",
         "vp-transfer-02",
@@ -249,7 +249,7 @@
     {
       "moduleId": "clamp",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "clamp-01",
         "clamp-02",
@@ -267,7 +267,7 @@
     {
       "moduleId": "cooling",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "cooling-01",
         "cooling-02",
@@ -285,7 +285,7 @@
     {
       "moduleId": "ejection-draft",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "ejection-draft-01",
         "ejection-draft-02",
@@ -303,7 +303,7 @@
     {
       "moduleId": "process-baseline",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "process-baseline-01",
         "process-baseline-02",
@@ -321,7 +321,7 @@
     {
       "moduleId": "documentation",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "documentation-01",
         "documentation-02",
@@ -339,7 +339,7 @@
     {
       "moduleId": "diagnostic-method",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "diagnostic-method-01",
         "diagnostic-method-02",
@@ -357,7 +357,7 @@
     {
       "moduleId": "short-shot",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "short-shot-01",
         "short-shot-02",
@@ -375,7 +375,7 @@
     {
       "moduleId": "flash",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "flash-01",
         "flash-02",
@@ -393,7 +393,7 @@
     {
       "moduleId": "sink-voids",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "sink-voids-01",
         "sink-voids-02",
@@ -411,7 +411,7 @@
     {
       "moduleId": "splay",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "splay-01",
         "splay-02",
@@ -429,7 +429,7 @@
     {
       "moduleId": "burns",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "burns-01",
         "burns-02",
@@ -447,7 +447,7 @@
     {
       "moduleId": "weld-lines",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "weld-lines-01",
         "weld-lines-02",
@@ -465,7 +465,7 @@
     {
       "moduleId": "warpage",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "warpage-01",
         "warpage-02",
@@ -483,7 +483,7 @@
     {
       "moduleId": "black-specks",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "black-specks-01",
         "black-specks-02",
@@ -501,7 +501,7 @@
     {
       "moduleId": "cavity-pressure",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "cavity-pressure-01",
         "cavity-pressure-02",
@@ -519,7 +519,7 @@
     {
       "moduleId": "doe",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "doe-01",
         "doe-02",
@@ -537,7 +537,7 @@
     {
       "moduleId": "capability",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "capability-01",
         "capability-02",
@@ -555,7 +555,7 @@
     {
       "moduleId": "process-monitoring",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "process-monitoring-01",
         "process-monitoring-02",
@@ -573,7 +573,7 @@
     {
       "moduleId": "dimensional-stability",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "dimensional-stability-01",
         "dimensional-stability-02",
@@ -591,7 +591,7 @@
     {
       "moduleId": "fibre-orientation",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "fibre-orientation-01",
         "fibre-orientation-02",
@@ -609,7 +609,7 @@
     {
       "moduleId": "thin-wall",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "thin-wall-01",
         "thin-wall-02",
@@ -627,7 +627,7 @@
     {
       "moduleId": "multi-cavity",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "multi-cavity-01",
         "multi-cavity-02",
@@ -645,7 +645,7 @@
     {
       "moduleId": "high-performance-polymers",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "high-performance-polymers-01",
         "high-performance-polymers-02",
@@ -663,7 +663,7 @@
     {
       "moduleId": "complex-diagnostics",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "e24f890a1b4f22daac8dc3619acfc60168e98303",
+      "authoredGitBlobSha1": "6e2021e8999ee1c217b211475ee7803b58b97f3d",
       "governedClaimIds": [
         "complex-diagnostics-01",
         "complex-diagnostics-02",
