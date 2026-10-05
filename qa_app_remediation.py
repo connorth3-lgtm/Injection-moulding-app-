@@ -212,7 +212,7 @@ need("new MutationObserver" not in materials, "Materials domain still uses docum
 need("mutationScope:'changed-subtrees'" in a11y, "accessibility safety net is not constrained to changed subtrees")
 
 ci_contract = text("docs/CI_RISK_COVERAGE.md")
-for marker in ("MouldMaster Release QA", "MouldMaster Domain Foundation QA", "Deep Audit Governance", "Mobile Browser QA", "Premium UI QA", "MouldMaster Physical PWA Contract QA", "Open Desktop Build", "MouldMaster Pages Release Readiness", "Release External Validation Boundary", "Question Quality 50-Pass"):
+for marker in ("MouldMaster Release QA", "MouldMaster Domain Foundation QA", "Deep Audit Governance", "Mobile Browser QA", "Premium UI QA", "MouldMaster Physical PWA Contract QA", "Open Desktop Build", "MouldMaster Pages Release Readiness", "Release External Validation Boundary", "Question Quality 50-Pass", "Branch Release Assurance"):
     need(marker in ci_contract, f"CI risk coverage contract missing workflow: {marker}")
 release_workflow = text(".github/workflows/qa.yml")
 need("python qa_app_remediation.py" in release_workflow, "release QA must execute the full-app remediation contract")
