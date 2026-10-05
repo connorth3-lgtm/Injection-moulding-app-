@@ -148,6 +148,12 @@ need(
     "production verifier must reject historical/arbitrary manual-dispatch sources",
 )
 for marker in (
+    "run_matches_main_pr",
+    '((pr.get("base") or {}).get("ref") == "main")',
+    "successful_required_workflows(runs, pr_number)",
+):
+    need(marker in production_verifier, f"production verifier missing exact originating-PR evidence binding: {marker}")
+for marker in (
     "branches/preview",
     "direct pushes and arbitrary workflow-dispatch refs are not deployable",
     "merge_commit_sha",
@@ -268,6 +274,11 @@ need(
 
 # Production publication must require GitHub's effective native protection.
 need("--require-native-protection" in pages, "Pages publication does not require native main protection")
+for marker in (
+    "Checkout exact main source before deployment",
+    "Recheck current protected-main provenance before deployment",
+):
+    need(marker in pages, f"Pages deploy-time current-main recheck missing: {marker}")
 need("Require merged-PR provenance before publication" in pages, "Pages stable provenance gate label is missing")
 need("native protection mandatory" in pages, "Pages native-protection requirement is not explicit")
 need("if: github.event_name != 'pull_request'" in pages, "Pages publication guard must remain push/manual only")
