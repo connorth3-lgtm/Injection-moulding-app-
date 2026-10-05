@@ -1,4 +1,4 @@
-/* MouldMaster local production health diagnostics — 2026.09.01.1 */
+/* MouldMaster local production health diagnostics — 2026.10.05.2 */
 (function(){
 'use strict';
 
