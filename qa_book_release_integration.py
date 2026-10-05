@@ -13,6 +13,7 @@ QUAL_SOURCE = ROOT / 'data/book-qualification-resolution-all-v1.json'
 HIGH_RISK_SOURCE = ROOT / 'data/book-claim-resolution-high-risk-v1.json'
 HIGH_RISK_V2_SOURCE = ROOT / 'data/book-claim-resolution-high-risk-v2.json'
 ENRICHMENT_SOURCE = ROOT / 'data/book-evidence-enrichment-v2.json'
+CLAIM_EVIDENCE_SOURCE = ROOT / 'data/book-claim-evidence-reference-v1.json'
 MANIFEST_PATH = ROOT / 'runtime-domain-manifest.json'
 SW_PATH = ROOT / 'service-worker.js'
 INDEX_PATH = ROOT / 'index.html'
@@ -52,6 +53,7 @@ qualification = json.loads(QUAL_SOURCE.read_text(encoding='utf-8'))
 high_risk = json.loads(HIGH_RISK_SOURCE.read_text(encoding='utf-8'))
 high_risk_v2 = json.loads(HIGH_RISK_V2_SOURCE.read_text(encoding='utf-8'))
 enrichment = json.loads(ENRICHMENT_SOURCE.read_text(encoding='utf-8'))
+claim_evidence = json.loads(CLAIM_EVIDENCE_SOURCE.read_text(encoding='utf-8'))
 desktop = json.loads(DESKTOP_PACKAGE.read_text(encoding='utf-8'))
 integrity_script = INTEGRITY_SCRIPT.read_text(encoding='utf-8')
 
@@ -73,6 +75,7 @@ book_data = [
     'book-authored-remaining-v1.json',
     'book-worked-engineering-cases-v1.json',
     'book-evidence-enrichment-v2.json',
+    'book-claim-evidence-reference-v1.json',
     'book-reader-architecture-v2.json',
     'book-editorial-expansion-review-v1.json',
     'book-material-grade-atlas-v1.json',
@@ -160,7 +163,7 @@ required_integrity = {
     'book-manifest-v1.json', 'book-sme-review-v1.json', 'book-qualification-resolution-all-v1.json',
     'book-claim-resolution-high-risk-v1.json', 'book-authored-foundations-v1.json',
     'book-evidence-registry-v1.json', 'book-chapters-materials-machine-v1.json', 'book-authored-remaining-v1.json',
-    'book-worked-engineering-cases-v1.json', 'book-engineering-diagrams-v1.json', 'book-evidence-enrichment-v2.json', 'book-reader-architecture-v2.json', 'book-editorial-expansion-review-v1.json', 'book-material-grade-atlas-v1.json',
+    'book-worked-engineering-cases-v1.json', 'book-engineering-diagrams-v1.json', 'book-evidence-enrichment-v2.json', 'book-claim-evidence-reference-v1.json', 'book-reader-architecture-v2.json', 'book-editorial-expansion-review-v1.json', 'book-material-grade-atlas-v1.json',
     'book-material-regional-evidence-v1.json', 'material-catalog-v1.json',
 }
 need(required_integrity <= set(sha_by_file), f'Book byte-integrity coverage incomplete: {sorted(required_integrity - set(sha_by_file))}')
@@ -169,7 +172,7 @@ for name in required_integrity:
     need(sha_by_file[name] == git_blob_sha(path), f'Book byte-integrity Git object mismatch: {name}')
 auth_blob = git_blob_sha(PACKAGED_ROOT / 'book-publication-authorization-v1.json')
 need(f"const AUTH_GIT_BLOB_SHA1='{auth_blob}'" in book_runtime, 'canonical runtime is not pinned to exact authorization bytes')
-for marker in ('gitBlobSha1', 'verifiedJson', 'validateIntegrityAuthorization', 'Book byte-integrity mismatch', 'WORKED_CASES_PATH', 'validateWorkedCases', 'workedCaseHtml', 'getWorkedCases', 'DIAGRAMS_PATH', 'validateEngineeringDiagrams', 'diagramHtml', 'getEngineeringDiagrams', 'ENRICHMENT_PATH', 'validateEvidenceEnrichment', 'getEvidenceEnrichment', 'MATERIAL_ATLAS_PATH', 'MATERIAL_REGIONAL_PATH', 'MATERIAL_CATALOG_PATH', 'MATERIAL_SEARCH_INDEX_PATH', 'MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1', 'validateMaterialAtlas', 'validateMaterialCatalog', 'validateMaterialRegionalEvidence', 'materialAtlasHtml', 'ensureManifest', 'ensureMaterialData', 'hydrateMaterialAtlas', 'coldMaterialSearchTerms', 'coldMaterialHit', 'MATERIAL_PAGE_SIZE=24', 'data-mm-book-material-more', 'getMaterialAtlas', 'getMaterialCatalog', 'getMaterialRegionalEvidence', 'READER_PATH', 'EDITORIAL_REVIEW_PATH', 'validateReaderArchitecture', 'validateEditorialExpansionReview', 'readerChapterHtml', 'readerLearningHtml', 'readerReferencesHtml', 'showReaderChapter', 'getReaderArchitecture', 'getEditorialExpansionReview'):
+for marker in ('gitBlobSha1', 'verifiedJson', 'validateIntegrityAuthorization', 'Book byte-integrity mismatch', 'WORKED_CASES_PATH', 'validateWorkedCases', 'workedCaseHtml', 'getWorkedCases', 'DIAGRAMS_PATH', 'validateEngineeringDiagrams', 'diagramHtml', 'getEngineeringDiagrams', 'ENRICHMENT_PATH', 'validateEvidenceEnrichment', 'getEvidenceEnrichment', 'CLAIM_EVIDENCE_PATH', 'validateClaimEvidenceReference', 'MATERIAL_ATLAS_PATH', 'MATERIAL_REGIONAL_PATH', 'MATERIAL_CATALOG_PATH', 'MATERIAL_SEARCH_INDEX_PATH', 'MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1', 'validateMaterialAtlas', 'validateMaterialCatalog', 'validateMaterialRegionalEvidence', 'materialAtlasHtml', 'ensureManifest', 'ensureMaterialData', 'hydrateMaterialAtlas', 'coldMaterialSearchTerms', 'coldMaterialHit', 'MATERIAL_PAGE_SIZE=24', 'data-mm-book-material-more', 'getMaterialAtlas', 'getMaterialCatalog', 'getMaterialRegionalEvidence', 'READER_PATH', 'EDITORIAL_REVIEW_PATH', 'validateReaderArchitecture', 'validateEditorialExpansionReview', 'readerChapterHtml', 'readerLearningHtml', 'readerReferencesHtml', 'showReaderChapter', 'getReaderArchitecture', 'getEditorialExpansionReview'):
     need(marker in book_runtime, f'Book runtime exact-byte/lazy-load safeguard missing: {marker}')
 load_manifest_block = book_runtime.split('async function loadManifest(){',1)[1].split('function failBook(',1)[0]
 for forbidden in ('MATERIAL_ATLAS_PATH', 'MATERIAL_CATALOG_PATH', 'MATERIAL_REGIONAL_PATH', 'MATERIAL_SEARCH_INDEX_PATH'):
@@ -197,7 +200,7 @@ need(book_sme.get('status') == 'hold' and book_sme.get('reviews') == [], 'indepe
 current_web_release=json.loads((ROOT / 'version.json').read_text(encoding='utf-8')).get('web_release')
 need(isinstance(book_sme.get('release'),str) and book_sme.get('release') <= current_web_release, 'Book SME evidence cannot target a future learner release')
 need(book_sme.get('release') == enrichment.get('release'), 'Book SME and evidence-enrichment review scope must remain bound to the same content release')
-need(len(book_sme.get('workedCaseIds', [])) == 26 and len(set(book_sme.get('workedCaseIds', []))) == 26, 'Book SME worked-case review scope is incomplete')
+need(len(book_sme.get('workedCaseIds', [])) == 27 and len(set(book_sme.get('workedCaseIds', []))) == 27, 'Book SME worked-case review scope is incomplete')
 need(len(book_sme.get('enrichmentChapterIds', [])) == 10 and len(set(book_sme.get('enrichmentChapterIds', []))) == 10, 'Book SME evidence-enrichment review scope is incomplete')
 need(len(book_sme.get('diagramIds', [])) == 21 and len(set(book_sme.get('diagramIds', []))) == 21, 'Book SME diagram review scope is incomplete')
 need(len(book_sme.get('chapterIds', [])) == 46 and len(set(book_sme['chapterIds'])) == 46, 'Book SME chapter coverage drift')
@@ -213,6 +216,35 @@ need(editorial_auth.get('status')=='authorized-repository-technical-source-revie
 need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('release') == enrichment.get('release'), 'evidence-enrichment authorization must remain bound to the reviewed content release')
 need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('sectionCount') == 14, 'evidence-enrichment authorization section count drifted')
 need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('independentSmeStatus') == 'hold', 'evidence-enrichment authorization must preserve SME HOLD')
+
+claim_auth=authorization.get('claimEvidenceReferenceAuthorization') or {}
+need(claim_auth.get('status')=='authorized-derived-evidence-index' and claim_auth.get('release')==claim_evidence.get('release') and claim_auth.get('ledger')=='data/book-claim-evidence-reference-v1.json' and claim_auth.get('chapterCount')==46 and claim_auth.get('sourceCount')==27 and claim_auth.get('noNewClaims') is True and claim_auth.get('independentSmeStatus')=='hold', 'claim-evidence reference authorization boundary drift')
+need(claim_evidence.get('schemaVersion')==1 and claim_evidence.get('bookId')=='mouldmaster-book' and claim_evidence.get('status')=='governed-reader-claim-evidence-index', 'claim-evidence reference identity drift')
+need(claim_evidence.get('release')==book_sme.get('release') and claim_evidence.get('chapterCount')==46 and claim_evidence.get('sourceCount')==27, 'claim-evidence reference release/coverage drift')
+claim_review_paths=[
+    ROOT / 'data/book-claim-review-foundations-materials-machine-v1.json',
+    ROOT / 'data/book-claim-review-process-tooling-v1.json',
+    ROOT / 'data/book-claim-review-troubleshooting-v1.json',
+    ROOT / 'data/book-claim-review-engineering-advanced-v1.json',
+    ROOT / 'data/book-claim-review-high-risk-v1.json',
+]
+expected_claim_evidence={}
+for path in claim_review_paths:
+    ledger=json.loads(path.read_text(encoding='utf-8'))
+    for chapter in ledger.get('chapters', []):
+        row=expected_claim_evidence.setdefault(chapter.get('chapterId'), [])
+        for claim in chapter.get('claims', []):
+            for source_id in claim.get('evidence', []):
+                if source_id not in row:
+                    row.append(source_id)
+actual_claim_evidence={row.get('chapterId'):row.get('evidenceIds') for row in claim_evidence.get('chapters', [])}
+need(len(expected_claim_evidence)==46 and actual_claim_evidence==expected_claim_evidence, 'reader claim-evidence index drifted from governed claim-review ledgers')
+expected_source_ids={source_id for ids in expected_claim_evidence.values() for source_id in ids}
+actual_source_ids={source.get('id') for source in claim_evidence.get('sourceSeeds', [])}
+need(len(expected_source_ids)==27 and actual_source_ids==expected_source_ids, 'reader claim-evidence source coverage drift')
+boundary=claim_evidence.get('authorityBoundary') or {}
+need(boundary.get('presentationOnly') is True and boundary.get('noNewClaims') is True and boundary.get('noEvidenceUpgrades') is True and boundary.get('noProductionAuthority') is True and boundary.get('independentSmeStatus')=='hold', 'reader claim-evidence authority boundary weakened')
+
 need(authorization['authorizationBasis']['sourceRevision'] == '7ef28bd8b02994223e320fda64e99808357d3219', 'authorization provenance revision drift')
 
 # Book is now part of the primary search surface and read/listen still render one governed chapter representation.
@@ -234,4 +266,4 @@ need('STATIC_DATA_DIRS.flatMap(filesUnder)' in integrity_script, 'desktop static
 
 print('PASS: Book uses one canonical runtime with exact-byte publication binding and fail-closed authorization.')
 print('PASS: dynamic scripts are release-versioned before late loaders, Book is globally searchable, and learner-facing academic evidence uses canonical DOI links.')
-print('PASS: twenty-six synthetic worked cases and twenty-one governed engineering diagrams are integrated while independent SME/external validation remains HOLD.')
+print('PASS: twenty-seven synthetic worked cases, twenty-one governed engineering diagrams and complete governed claim-evidence references are integrated while independent SME/external validation remains HOLD.')
