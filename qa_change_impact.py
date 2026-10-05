@@ -76,7 +76,7 @@ root=Path(__file__).resolve().parent
 for tool in (
     "tools/change_impact.py","tools/ci_impact.py","tools/dependency_graph.py",
     "tools/mouldmaster_doctor.py","tools/mouldmaster_verify.py",
-    "tools/rebind_external_hold_candidate.py",
+    "tools/rebind_external_hold_candidate.py","tools/github_workflow_baseline.py",
 ):
     source=(root/tool).read_text(encoding="utf-8")
     compile(source,tool,"exec")
@@ -84,6 +84,17 @@ package=json.loads((root/"package.json").read_text(encoding="utf-8"))
 scripts=package.get("scripts") or {}
 need(scripts.get("verify")=="python tools/mouldmaster_verify.py","package verify command must use canonical verifier")
 need(scripts.get("verify:deep")=="python tools/mouldmaster_verify.py --deep","package deep verify command must use canonical verifier")
+
+mobile_workflow=(Path(__file__).resolve().parent/".github/workflows/mobile-browser-qa.yml").read_text(encoding="utf-8")
+need("tools/github_workflow_baseline.py --workflow mobile-browser-qa.yml" in mobile_workflow,
+     "Mobile Browser QA must route impact from the last successful browser proof")
+need("tools/ci_impact.py --base \"$BASE\" --head \"$TARGET\"" in mobile_workflow,
+     "Mobile Browser QA must classify the exact range from successful proof to current PR head")
+need("cancel-in-progress: true" in mobile_workflow,
+     "Mobile Browser QA may cancel superseded runs only because its next run inherits the last successful proof baseline")
+baseline_source=(Path(__file__).resolve().parent/"tools/github_workflow_baseline.py").read_text(encoding="utf-8")
+need('"status":"success"' in baseline_source and "governed_candidate()" in baseline_source,
+     "browser proof resolver must select successful runs and retain a conservative governed-candidate fallback")
 
 candidate_workflow=(Path(__file__).resolve().parent/".github/workflows/premerge-public-candidate.yml").read_text(encoding="utf-8")
 ci_impact_source=(Path(__file__).resolve().parent/"tools/ci_impact.py").read_text(encoding="utf-8")
