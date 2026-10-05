@@ -130,7 +130,7 @@ for marker in [
     "typeof window.MM_APP_SHELL_FINALIZED==='string'",
     'window.MM_APP_SHELL_FINALIZED.length>0',
     "!document.getElementById('mmBootstrap')",
-    "Home is lean, XP-free, clear of duplicate reference launchers, and Practice owns troubleshooting",
+    "Home is lean, XP-free, includes the Book resume surface, and Practice owns troubleshooting",
     "Primary mobile navigation and the reduced More tools are keyboard reachable",
     "data-mm-registry-menu=\"learning-insights\"", "data-mm-registry-menu=\"repair-app-files\"",
     "late dashboard modules recompose idempotently",
