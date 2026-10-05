@@ -59,6 +59,8 @@ for marker in (
     "first unresolved dependency",
     "GITHUB_STEP_SUMMARY",
     "run_url",
+    "run_attempt",
+    "head_branch",
     "workflow-state API unavailable",
     "GitHub workflow-state query failed after 4 attempts",
     "full lowercase 40-character commit SHA",
