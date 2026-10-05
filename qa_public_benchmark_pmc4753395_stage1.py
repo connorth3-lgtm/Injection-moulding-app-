@@ -26,7 +26,7 @@ for marker in ["zipfile.is_zipfile","tensile-data.xlsx","porfiri","rawNumericVal
 need("to_numpy().ravel" in text,"aggregate-only numeric-cell scan missing")
 need("rawMembersUploadedAsArtifact\": False" in text,"raw member upload guard missing")
 prover=SOURCE_PROVER.read_text(encoding="utf-8")
-for marker in ["safe_archive_member", "PurePosixPath", 'replace("\\\\", "/")', '"l", "-slt", "-ba"', '"x", "-so"', "MAX_MEMBER_BYTES"]:
+for marker in ["safe_archive_member", "PurePosixPath", 'replace("\\\\", "/")', '"l", "-slt", "-ba"', '"x", "-so"', "MAX_MEMBER_BYTES", "MAX_NETWORK_BYTES", "read(MAX_NETWORK_BYTES + 1)", "Content-Length"]:
     need(marker in prover,f"PMC source prover archive-safety guard missing: {marker}")
 need('f"-o{extract_dir}"' not in prover and '"x", "-y"' not in prover,
      "PMC source prover must not filesystem-extract an untrusted nested RAR")
