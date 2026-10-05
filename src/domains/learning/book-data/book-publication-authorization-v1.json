@@ -32,7 +32,7 @@
       "book-chapters-materials-machine-v1.json": "1eb6d8ae71db922a579d4f69c0cffeee3408226c",
       "book-authored-remaining-v1.json": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
       "book-worked-engineering-cases-v1.json": "7107f84aa6d1cd4ab9c65a8e8792a2d8cdcacfad",
-      "book-evidence-enrichment-v2.json": "50814a93670e64318ab113b57fcf64e113eecc92",
+      "book-evidence-enrichment-v2.json": "828bebbf1a20d54844d00979607751b7c08aa0ec",
       "book-material-grade-atlas-v1.json": "08eee66fc266a76806a4a9f85f06afde6427cd74",
       "book-material-regional-evidence-v1.json": "4a42fa97f737b13271518d63672d3c4a01421e14",
       "material-catalog-v1.json": "88ac789aef21314cf2fbef194937ea3dca180471",
@@ -124,7 +124,8 @@
     "Any later hold, conflicting evidence, stale controlling source, read/listen divergence, byte-integrity mismatch or claim-ledger regression must fail closed and block/revoke publication in release QA.",
     "The 20 reader-facing chapters are structural groupings of the 46 governed modules. Reader grouping adds no technical claim and cannot change a module's claim, publication, SME, accreditation or production status.",
     "The 2026-10-06 editorial expansion across 37 governed modules is bound to each module's existing governed claim IDs by data/book-editorial-expansion-review-v1.json; the completed depth pass adds mechanism, measurement, discriminating-evidence and falsification guidance without adding universal setpoints, machine-control authority or independent human SME approval.",
-    "Reader-level depth bands, learning objectives, knowledge checks and application prompts are derived teaching scaffolds only; they cannot add claims, upgrade evidence status or create production authority."
+    "Reader-level depth bands, learning objectives, knowledge checks and application prompts are derived teaching scaffolds only; they cannot add claims, upgrade evidence status or create production authority.",
+    "Packaging certification marks are interpreted only at their supported management-system scope: an ISO 9001/SAI Global marking does not certify resin properties, exact grade identity, processing conditions, lot acceptance or product conformity; current certificate validity and scope require separate verification."
   ],
   "revocationRules": {
     "claimHoldOrConflict": "block-release",
@@ -160,9 +161,9 @@
     "ledger": "data/book-evidence-enrichment-v2.json",
     "ledgerId": "book-evidence-enrichment-2026-09-18-v2",
     "chapterCount": 10,
-    "sectionCount": 13,
-    "sourceCount": 23,
-    "scope": "Evidence-backed Book enrichment across 10 existing chapters, including maintenance/recovery, hot-runner observability, cooling diagnosis, contamination reasoning, pressure loss, process-window robustness, warpage discrimination, process monitoring and ISO 9001:2026 quality-record discipline.",
+    "sectionCount": 14,
+    "sourceCount": 24,
+    "scope": "Evidence-backed Book enrichment across 10 existing chapters, including maintenance/recovery, hot-runner observability, cooling diagnosis, contamination reasoning, pressure loss, process-window robustness, warpage discrimination, process monitoring, ISO 9001:2026 quality-record discipline and certification-mark interpretation.",
     "authorizationBasis": {
       "recoveredValidatedStack": [
         "PR #339 exact editorial integration",
