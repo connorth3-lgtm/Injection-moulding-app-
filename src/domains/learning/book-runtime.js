@@ -56,26 +56,26 @@
     try{localStorage.setItem(key,JSON.stringify(position));if(notify)window.dispatchEvent(new CustomEvent('mm:book-resume-change',{detail:{...position}}));return true}catch(_){return false}
   }
   function readerAnchor(){
-    if(!ui?.reader||ui.reader.hidden)return {anchorIndex:-1,anchorText:'',anchorOffset:0};
-    const top=80,heads=[...ui.reader.querySelectorAll('h2,h3,h4')],eligible=heads.map((el,index)=>({el,index,rect:el.getBoundingClientRect()})).filter(x=>x.rect.top<=top);
+    if(!ui?.reader||ui.reader.hidden)return {anchorId:'',anchorIndex:-1,anchorText:'',anchorOffset:0};
+    const top=80,heads=[...ui.reader.querySelectorAll('h2[data-mm-book-anchor],h3[data-mm-book-anchor],h4[data-mm-book-anchor]')],eligible=heads.map((el,index)=>({el,index,rect:el.getBoundingClientRect()})).filter(x=>x.rect.top<=top);
     const picked=(eligible.length?eligible[eligible.length-1]:heads[0]?{el:heads[0],index:0,rect:heads[0].getBoundingClientRect()}:null);
-    return picked?{anchorIndex:picked.index,anchorText:String(picked.el.textContent||'').trim().slice(0,240),anchorOffset:Math.round(picked.rect.top)}:{anchorIndex:-1,anchorText:'',anchorOffset:0};
+    return picked?{anchorId:String(picked.el.dataset.mmBookAnchor||''),anchorIndex:picked.index,anchorText:String(picked.el.textContent||'').trim().slice(0,240),anchorOffset:Math.round(picked.rect.top)}:{anchorId:'',anchorIndex:-1,anchorText:'',anchorOffset:0};
   }
   function rememberReadingPosition(kind,id,title,scrollY=0){
-    const anchor=readerAnchor(),position={schema:BOOK_RESUME_SCHEMA,bookRelease:VERSION,kind,id,title:String(title||'Book'),scrollY:Math.max(0,Math.round(Number(scrollY)||0)),anchorIndex:anchor.anchorIndex,anchorText:anchor.anchorText,anchorOffset:anchor.anchorOffset,updatedAt:new Date().toISOString()};
+    const anchor=readerAnchor(),position={schema:BOOK_RESUME_SCHEMA,bookRelease:VERSION,kind,id,title:String(title||'Book'),scrollY:Math.max(0,Math.round(Number(scrollY)||0)),anchorId:anchor.anchorId,anchorIndex:anchor.anchorIndex,anchorText:anchor.anchorText,anchorOffset:anchor.anchorOffset,updatedAt:new Date().toISOString()};
     activeReadingPosition=position;writeResume(position,{notify:true});return position
   }
   function updateReadingScroll({notify=false}={}){
     if(!open||!activeReadingPosition||ui?.reader?.hidden)return false;
-    const anchor=readerAnchor(),next={...activeReadingPosition,scrollY:bookScrollTop(),anchorIndex:anchor.anchorIndex,anchorText:anchor.anchorText,anchorOffset:anchor.anchorOffset,updatedAt:new Date().toISOString()};
+    const anchor=readerAnchor(),next={...activeReadingPosition,scrollY:bookScrollTop(),anchorId:anchor.anchorId,anchorIndex:anchor.anchorIndex,anchorText:anchor.anchorText,anchorOffset:anchor.anchorOffset,updatedAt:new Date().toISOString()};
     activeReadingPosition=next;return writeResume(next,{notify})
   }
   function flushReadingPosition({notify=false}={}){clearTimeout(resumeScrollTimer);resumeScrollTimer=0;return updateReadingScroll({notify})}
   function queueReadingScrollSave(){if(!open||!activeReadingPosition)return;clearTimeout(resumeScrollTimer);resumeScrollTimer=setTimeout(()=>updateReadingScroll(),180)}
   function restoreReadingPosition(snapshot){
     requestAnimationFrame(()=>requestAnimationFrame(()=>{
-      const heads=[...ui.reader.querySelectorAll('h2,h3,h4')],index=Number.isInteger(snapshot.anchorIndex)?snapshot.anchorIndex:-1,wanted=String(snapshot.anchorText||'').trim();
-      const heading=(index>=0&&index<heads.length?heads[index]:null)||(wanted?heads.find(el=>String(el.textContent||'').trim()===wanted):null);
+      const heads=[...ui.reader.querySelectorAll('h2[data-mm-book-anchor],h3[data-mm-book-anchor],h4[data-mm-book-anchor]')],anchorId=String(snapshot.anchorId||''),index=Number.isInteger(snapshot.anchorIndex)?snapshot.anchorIndex:-1,wanted=String(snapshot.anchorText||'').trim();
+      const heading=(anchorId?heads.find(el=>el.dataset.mmBookAnchor===anchorId):null)||(index>=0&&index<heads.length?heads[index]:null)||(wanted?heads.find(el=>String(el.textContent||'').trim()===wanted):null);
       if(heading){heading.scrollIntoView({block:'start',behavior:'auto'});window.scrollBy({top:-(Number(snapshot.anchorOffset)||0),left:0,behavior:'auto'});}
       else window.scrollTo({top:Math.max(0,Number(snapshot.scrollY)||0),behavior:'auto'});
       activeReadingPosition={...snapshot};
@@ -255,7 +255,7 @@
   }
   function materialAtlasHtml(chapter){
     if(chapter?.id!=='material-families')return '';
-    if(!materialAtlas||!materialCatalog||!materialRegionalEvidence)return '<section class="mm-book-material-atlas" data-mm-book-material-atlas><span class="eyebrow">Technical-review material reference — excluded from source-reviewed listen-all</span><h3>Complete Material Data Atlas</h3><p data-mm-book-material-status role="status">Loading governed material evidence on demand…</p></section>';
+    if(!materialAtlas||!materialCatalog||!materialRegionalEvidence)return '<section class="mm-book-material-atlas" data-mm-book-material-atlas><span class="eyebrow">Technical-review material reference — excluded from source-reviewed listen-all</span><h3 data-mm-book-anchor="module:material-families:atlas">Complete Material Data Atlas</h3><p data-mm-book-material-status role="status">Loading governed material evidence on demand…</p></section>';
     const gradeCount=Math.min(MATERIAL_PAGE_SIZE,materialCatalog.grades.length),regionalCount=Math.min(MATERIAL_PAGE_SIZE,materialRegionalEvidence.records.length);
     const grades=materialCatalog.grades.slice(0,gradeCount).map(canonicalGradeHtml).join('');
     const regional=materialRegionalEvidence.records.slice(0,regionalCount).map((row,index)=>regionalRecordHtml(row,index)).join('');
@@ -336,7 +336,7 @@
     const list=(title,rows)=>Array.isArray(rows)&&rows.length?`<h4>${esc(title)}</h4><ul>${rows.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'';
     return items.map(item=>{
       const table=item.table&&Array.isArray(item.table.columns)&&Array.isArray(item.table.rows)?`<div class="mm-book-table-wrap"><table><thead><tr>${item.table.columns.map(x=>`<th scope="col">${esc(x)}</th>`).join('')}</tr></thead><tbody>${item.table.rows.map(row=>`<tr>${row.map((x,i)=>i===0?`<th scope="row">${esc(x)}</th>`:`<td>${esc(x)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:'';
-      return `<section class="mm-book-worked-case" data-mm-worked-case="${esc(item.id)}"><span class="eyebrow">Worked example — synthetic teaching data</span><h3>${esc(item.title)}</h3><p>${esc(item.setup)}</p>${table}${list('Observations',item.observations)}${list('Assumptions',item.assumptions)}${list('Units',item.units)}${list('Calculation / reasoning',item.calculationSteps)}<h4>Interpretation</h4><p>${esc(item.interpretation)}</p>${list('Boundaries',item.boundaries)}<h4>Evidence anchors</h4><ul>${item.sourceIds.map(id=>`<li>${evidenceItem(id)}</li>`).join('')}</ul><p><small>Case claim: ${esc(item.claims[0].id)} · ${esc(item.claims[0].conclusion)}. Independent human SME review remains pending.</small></p></section>`;
+      return `<section class="mm-book-worked-case" data-mm-worked-case="${esc(item.id)}"><span class="eyebrow">Worked example — synthetic teaching data</span><h3 data-mm-book-anchor="case:${esc(item.id)}">${esc(item.title)}</h3><p>${esc(item.setup)}</p>${table}${list('Observations',item.observations)}${list('Assumptions',item.assumptions)}${list('Units',item.units)}${list('Calculation / reasoning',item.calculationSteps)}<h4>Interpretation</h4><p>${esc(item.interpretation)}</p>${list('Boundaries',item.boundaries)}<h4>Evidence anchors</h4><ul>${item.sourceIds.map(id=>`<li>${evidenceItem(id)}</li>`).join('')}</ul><p><small>Case claim: ${esc(item.claims[0].id)} · ${esc(item.claims[0].conclusion)}. Independent human SME review remains pending.</small></p></section>`;
     }).join('');
   }
   function readerReferencesHtml(reader,modules){
@@ -345,22 +345,22 @@
     for(const patch of evidenceEnrichmentLedger?.chapterPatches||[])if(reader.moduleIds.includes(patch.chapterId))for(const id of patch.sourceIds||[])ids.add(id);
     for(const item of workedCaseLedger?.cases||[])if(reader.moduleIds.includes(item.chapterId))for(const id of item.sourceIds||[])ids.add(id);
     if(!ids.size)return '';
-    return `<section class="mm-book-reader-references"><h3>Chapter references</h3><p><small>Conventional reader view of governed evidence used by the modules, enrichment and worked cases in this chapter.</small></p><ul>${[...ids].map(id=>`<li>${evidenceItem(id)}</li>`).join('')}</ul></section>`;
+    return `<section class="mm-book-reader-references"><h3 data-mm-book-anchor="reader:${esc(reader.id)}:references">Chapter references</h3><p><small>Conventional reader view of governed evidence used by the modules, enrichment and worked cases in this chapter.</small></p><ul>${[...ids].map(id=>`<li>${evidenceItem(id)}</li>`).join('')}</ul></section>`;
   }
   function readerLearningHtml(reader){
-    return `<section class="mm-book-reader-learning"><span class="eyebrow">${esc(reader.depthBand)} depth</span><h3>Learning check</h3><h4>By the end of this chapter</h4><ul>${reader.learningObjectives.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><h4>Check your understanding</h4><ol>${reader.checkQuestions.map(x=>`<li>${esc(x)}</li>`).join('')}</ol><h4>Apply it</h4><p>${esc(reader.applyPrompt)}</p><p><small><b>Evidence boundary:</b> ${esc(reader.evidenceBoundary)}</small></p></section>`;
+    return `<section class="mm-book-reader-learning"><span class="eyebrow">${esc(reader.depthBand)} depth</span><h3 data-mm-book-anchor="reader:${esc(reader.id)}:learning">Learning check</h3><h4 data-mm-book-anchor="reader:${esc(reader.id)}:learning:objectives">By the end of this chapter</h4><ul>${reader.learningObjectives.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><h4 data-mm-book-anchor="reader:${esc(reader.id)}:learning:check">Check your understanding</h4><ol>${reader.checkQuestions.map(x=>`<li>${esc(x)}</li>`).join('')}</ol><h4 data-mm-book-anchor="reader:${esc(reader.id)}:learning:apply">Apply it</h4><p>${esc(reader.applyPrompt)}</p><p><small><b>Evidence boundary:</b> ${esc(reader.evidenceBoundary)}</small></p></section>`;
   }
-  function verifiedChapterHtml(chapter,options={}){const sections=Array.isArray(chapter.sections)?chapter.sections:[],includeTechnicalMaterial=options.includeTechnicalMaterial!==false;return `<article class="mm-book-verified-chapter" data-mm-book-verified-chapter="${esc(chapter.id)}"><span class="eyebrow">Source evidence reviewed</span><h2>${esc(chapter.title)}</h2><p><b>Applicability:</b> ${esc(chapter.applicability||'See attached evidence and controlling documentation.')}</p>${sections.map(s=>`<section><h3>${esc(s.title||'')}</h3><p>${esc(s.text||'')}</p></section>`).join('')}${diagramHtml(chapter)}${workedCaseHtml(chapter)}${includeTechnicalMaterial?materialAtlasHtml(chapter):''}${sourceHtml(chapter)}${claimTraceHtml(chapter)}</article>`;}
+  function verifiedChapterHtml(chapter,options={}){const sections=Array.isArray(chapter.sections)?chapter.sections:[],includeTechnicalMaterial=options.includeTechnicalMaterial!==false;return `<article class="mm-book-verified-chapter" data-mm-book-verified-chapter="${esc(chapter.id)}"><span class="eyebrow">Source evidence reviewed</span><h2 data-mm-book-anchor="chapter:${esc(chapter.id)}">${esc(chapter.title)}</h2><p><b>Applicability:</b> ${esc(chapter.applicability||'See attached evidence and controlling documentation.')}</p>${sections.map((s,index)=>`<section><h3 data-mm-book-anchor="chapter:${esc(chapter.id)}:section:${index}">${esc(s.title||'')}</h3><p>${esc(s.text||'')}</p></section>`).join('')}${diagramHtml(chapter)}${workedCaseHtml(chapter)}${includeTechnicalMaterial?materialAtlasHtml(chapter):''}${sourceHtml(chapter)}${claimTraceHtml(chapter)}</article>`;}
   function readerModuleHtml(chapter){
     const sections=Array.isArray(chapter.sections)?chapter.sections:[],verified=chapter.state==='verified';
     const status=verified?'Source evidence reviewed':stateLabel(chapter.state);
     const boundary=!verified&&chapter.reviewBoundary?`<div class="callout"><b>Review boundary:</b> ${esc(chapter.reviewBoundary)}</div>`:'';
-    return `<section class="mm-book-reader-module" data-mm-book-reader-module="${esc(chapter.id)}"><span class="eyebrow">${esc(status)} · governed module</span><h3>${esc(chapter.title)}</h3><p><b>Applicability:</b> ${esc(chapter.applicability||'See governed module scope.')}</p>${boundary}${sections.map(s=>`<section><h4>${esc(s.title||'')}</h4><p>${esc(s.text||'')}</p></section>`).join('')}${diagramHtml(chapter)}${workedCaseHtml(chapter)}${chapter.id==='material-families'?materialAtlasHtml(chapter):''}${sourceHtml(chapter)}${verified?claimTraceHtml(chapter):''}</section>`;
+    return `<section class="mm-book-reader-module" data-mm-book-reader-module="${esc(chapter.id)}"><span class="eyebrow">${esc(status)} · governed module</span><h3 data-mm-book-anchor="module:${esc(chapter.id)}">${esc(chapter.title)}</h3><p><b>Applicability:</b> ${esc(chapter.applicability||'See governed module scope.')}</p>${boundary}${sections.map((s,index)=>`<section><h4 data-mm-book-anchor="module:${esc(chapter.id)}:section:${index}">${esc(s.title||'')}</h4><p>${esc(s.text||'')}</p></section>`).join('')}${diagramHtml(chapter)}${workedCaseHtml(chapter)}${chapter.id==='material-families'?materialAtlasHtml(chapter):''}${sourceHtml(chapter)}${verified?claimTraceHtml(chapter):''}</section>`;
   }
   function readerChapterHtml(reader){
     const modules=reader.moduleIds.map(id=>allChapters().find(ch=>ch.id===id));if(modules.some(x=>!x))throw new Error(`Reader chapter contains unavailable governed module: ${reader.id}`);
     const verified=modules.every(ch=>ch.state==='verified'),label=verified?'Source evidence reviewed modules':'Contains technical-review module(s)';
-    return `<article class="mm-book-reader-chapter" data-mm-book-reader-chapter="${esc(reader.id)}"><span class="eyebrow">Reader chapter · ${esc(reader.depthBand)} depth · ${esc(label)}</span><h2>${esc(reader.title)}</h2><p>${esc(reader.goal)}</p>${reader.sequencePrompt?`<div class="callout"><b>How to read this chapter:</b> ${esc(reader.sequencePrompt)}</div>`:''}<div class="callout"><b>How this chapter is governed:</b> This reader chapter is a structural grouping of ${modules.length} governed module${modules.length===1?'':'s'}. Technical claims, evidence status and independent SME review remain attached to those modules.</div>${modules.map(readerModuleHtml).join('')}${readerLearningHtml(reader)}${readerReferencesHtml(reader,modules)}</article>`;
+    return `<article class="mm-book-reader-chapter" data-mm-book-reader-chapter="${esc(reader.id)}"><span class="eyebrow">Reader chapter · ${esc(reader.depthBand)} depth · ${esc(label)}</span><h2 data-mm-book-anchor="reader:${esc(reader.id)}">${esc(reader.title)}</h2><p>${esc(reader.goal)}</p>${reader.sequencePrompt?`<div class="callout"><b>How to read this chapter:</b> ${esc(reader.sequencePrompt)}</div>`:''}<div class="callout"><b>How this chapter is governed:</b> This reader chapter is a structural grouping of ${modules.length} governed module${modules.length===1?'':'s'}. Technical claims, evidence status and independent SME review remain attached to those modules.</div>${modules.map(readerModuleHtml).join('')}${readerLearningHtml(reader)}${readerReferencesHtml(reader,modules)}</article>`;
   }
   function renderOverview(){
     if(!ui||!manifest||!readerArchitecture)return;
