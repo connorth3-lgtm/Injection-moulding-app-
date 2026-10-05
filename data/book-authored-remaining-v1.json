@@ -673,6 +673,18 @@
         {
           "title": "What evidence should change the conclusion?",
           "text": "Revise the working explanation when the line location does not follow expected flow-front changes, when strength does not track appearance, or when cavity and vent patterns contradict the assumed mechanism. Escalate to design, tooling, material or simulation evidence where process observations cannot discriminate the cause."
+        },
+        {
+          "title": "Flow-front temperature is only part of the story",
+          "text": "The ability of two fronts to form a useful interface depends on local thermal and pressure history, material condition, contamination, venting and the way orientation develops as the fronts meet. Raising a nominal melt or mould setting can alter some of these factors, but it is not a universal weld-line cure. The actual material and product requirement determine whether appearance, strength, sealing or another response is the critical outcome."
+        },
+        {
+          "title": "Geometry can dominate where the line forms",
+          "text": "Holes, bosses, inserts, multiple gates and changes in wall section divide and redirect the melt, creating predictable meeting regions. When the weld-line location is structurally or cosmetically unacceptable, the solution space may include gate strategy, feature geometry or tooling changes in addition to process development. Process optimisation cannot always overcome a geometry that repeatedly forces an unfavourable meeting location."
+        },
+        {
+          "title": "Use testing that matches the real product risk",
+          "text": "A weld line that looks improved may still have inadequate mechanical performance, and a visible line may be acceptable where the part is not structurally limited. Select measurements that represent the actual requirement, such as relevant dimensional, leak, impact, tensile or functional testing where applicable. Avoid using appearance alone as a universal proxy for interface quality."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -776,6 +788,18 @@
         {
           "title": "Use the trace as evidence of sequence",
           "text": "The shape and timing of a cavity-pressure trace can help show filling arrival, transfer response, post-fill pressure transmission and decay, but the trace does not name root cause by itself. Combine it with machine signals, cavity identity, part measurements and controlled process changes. The most useful interpretation explains both the signal change and the product response."
+        },
+        {
+          "title": "Establish a reference trace before using limits",
+          "text": "A pressure limit is most meaningful when derived from a known, stable process state and a defined sensor location. Record the material, thermal and process conditions associated with that state and understand normal cycle-to-cycle variation. Arbitrary limits based on one apparently good cycle can create nuisance alarms or miss meaningful drift."
+        },
+        {
+          "title": "Compare features that have physical meaning",
+          "text": "Useful trace features can include arrival timing, pressure at a defined event, peak behaviour or decay characteristics where these are technically justified. Feature choice should correspond to a mechanism or product response, not simply to what the software can calculate. A mathematically convenient feature with no stable physical interpretation can create false confidence."
+        },
+        {
+          "title": "Sensor health belongs in the diagnosis",
+          "text": "Mounting condition, preload, contamination, cable faults, drift or replacement can change the measured signal. When a pressure pattern changes unexpectedly, verify the measurement chain before concluding the process changed. Sensor maintenance and calibration requirements come from the applicable sensor and equipment documentation."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -885,6 +909,14 @@
         {
           "title": "What evidence should change the conclusion?",
           "text": "Revisit monitoring logic when alarms do not correspond to meaningful process or product changes, significant defects occur without signal movement, sensor behavior changes, or a new process state shifts the normal population. Monitoring models require maintenance just as the physical process does."
+        },
+        {
+          "title": "Design monitoring around decisions",
+          "text": "Before collecting more signals, define the decision each signal is intended to support: detecting drift, protecting a process window, identifying a cavity deviation, prompting additional measurement or documenting production state. Monitoring that has no defined action can generate data without improving control. Conversely, an alarm should not trigger an automatic product conclusion unless that relationship has been separately validated."
+        },
+        {
+          "title": "Use multivariate context carefully",
+          "text": "Several signals can move together because they share a common thermal, material or machine cause. Correlated channels are not independent confirmations of the same root cause. Compare their timing and physical relationships and avoid counting multiple derived values from one underlying sensor as separate evidence. More channels improve diagnosis only when they add distinct information."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
