@@ -87,13 +87,29 @@ jobs:
 
           reviews_pages=$(gh api --paginate --slurp "repos/$GH_REPO/pulls/$PR_NUMBER/reviews?per_page=100")
           reviews_json=$(jq 'add' <<<"$reviews_pages")
-          latest_head_independent_approvals=$(jq -r --arg head "$PR_HEAD_SHA" --arg author "$PR_AUTHOR" \
-            '[.[] | select(.state == "APPROVED" and .commit_id == $head and .user.login != $author and .user.type == "User")] | length' \
-            <<<"$reviews_json")
-          if [[ "$latest_head_independent_approvals" -lt 1 ]]; then
-            fail_audit "Merged PR #$PR_NUMBER lacks an independent APPROVED review bound to exact latest head $PR_HEAD_SHA."
+          candidate_reviewers=$(jq -r --arg head "$PR_HEAD_SHA" --arg author "$PR_AUTHOR" \
+            '.[] | select(.state == "APPROVED" and .commit_id == $head and .user.login != $author and .user.type == "User") | .user.login' \
+            <<<"$reviews_json" | sort -u)
+          trusted_latest_head_approval=false
+          while IFS= read -r reviewer; do
+            [[ -z "$reviewer" ]] && continue
+            permission_json=$(gh api "repos/$GH_REPO/collaborators/$reviewer/permission" 2>/dev/null || true)
+            permission=$(jq -r '.permission // "none"' <<<"$permission_json" 2>/dev/null || echo "none")
+            case "$permission" in
+              write|maintain|admin)
+                echo "Trusted exact-head approval: reviewer=$reviewer permission=$permission"
+                trusted_latest_head_approval=true
+                break
+                ;;
+              *)
+                echo "Ignoring exact-head approval from reviewer=$reviewer with repository permission=$permission"
+                ;;
+            esac
+          done <<<"$candidate_reviewers"
+          if [[ "$trusted_latest_head_approval" != "true" ]]; then
+            fail_audit "Merged PR #$PR_NUMBER lacks an independent trusted human APPROVED review bound to exact latest head $PR_HEAD_SHA."
           fi
-          echo "Independent latest-head human approval verified for merged PR #$PR_NUMBER."
+          echo "Independent trusted latest-head human approval verified for merged PR #$PR_NUMBER."
 
           required_workflows=(
             "MouldMaster Release QA"
