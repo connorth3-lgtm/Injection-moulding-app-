@@ -179,7 +179,7 @@ def yxz(source):
                 sigs.append(signal(col,f"{sheet}!{col}",semantic,unit,"observation-index","index",x,vals,"direct-injection-block-values-no-interpolation",len(vals),"increasing"))
             results.append({"candidateId":f"MEND-YXZ-{sheet.upper()}-01","datasetId":source["datasetId"],"sourceArtifact":name,"sourceFingerprint":fp,"sourceScope":{"sheet":sheet,"marker":marker_text,"columns":cols,"rows":list(rows)},"signals":sigs,"candidateFingerprint":sha256_json(sigs),"suggestedCatalogueCases":cases,"evidenceBoundary":"Only the explicitly labelled injection-moulded block is included; FDM, energy, impact and formula-derived content remain excluded."})
         finally:
-        if td is not None: td.cleanup()
+            if td is not None: td.cleanup()
 
     tensile,bending=results
     combined_signals=[
