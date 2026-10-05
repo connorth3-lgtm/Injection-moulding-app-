@@ -233,6 +233,17 @@ for marker in ("MouldMaster Release QA", "MouldMaster Domain Foundation QA", "De
     need(marker in ci_contract, f"CI risk coverage contract missing workflow: {marker}")
 release_workflow = text(".github/workflows/qa.yml")
 need("python qa_app_remediation.py" in release_workflow, "release QA must execute the full-app remediation contract")
+for marker in (
+    "Repository-wide JavaScript syntax",
+    "-name '*.js'",
+    "-name '*.cjs'",
+    "-name '*.mjs'",
+    "node --check",
+    "Repository-wide Python syntax",
+    "-name '*.py'",
+    "python -m py_compile",
+):
+    need(marker in release_workflow, f"release QA whole-code syntax coverage missing: {marker}")
 risk_meta = text("tools/verify_ci_risk_coverage.py")
 risk_workflow = text(".github/workflows/ci-risk-coverage.yml")
 premerge = text(".github/workflows/premerge-public-candidate.yml")
