@@ -56,25 +56,26 @@
     try{localStorage.setItem(key,JSON.stringify(position));if(notify)window.dispatchEvent(new CustomEvent('mm:book-resume-change',{detail:{...position}}));return true}catch(_){return false}
   }
   function readerAnchor(){
-    if(!ui?.reader||ui.reader.hidden)return {anchorText:'',anchorOffset:0};
-    const top=80,heads=[...ui.reader.querySelectorAll('h2,h3')],eligible=heads.map(el=>({el,rect:el.getBoundingClientRect()})).filter(x=>x.rect.top<=top);
-    const picked=(eligible.length?eligible[eligible.length-1]:heads[0]?{el:heads[0],rect:heads[0].getBoundingClientRect()}:null);
-    return picked?{anchorText:String(picked.el.textContent||'').trim().slice(0,240),anchorOffset:Math.round(picked.rect.top)}:{anchorText:'',anchorOffset:0};
+    if(!ui?.reader||ui.reader.hidden)return {anchorIndex:-1,anchorText:'',anchorOffset:0};
+    const top=80,heads=[...ui.reader.querySelectorAll('h2,h3,h4')],eligible=heads.map((el,index)=>({el,index,rect:el.getBoundingClientRect()})).filter(x=>x.rect.top<=top);
+    const picked=(eligible.length?eligible[eligible.length-1]:heads[0]?{el:heads[0],index:0,rect:heads[0].getBoundingClientRect()}:null);
+    return picked?{anchorIndex:picked.index,anchorText:String(picked.el.textContent||'').trim().slice(0,240),anchorOffset:Math.round(picked.rect.top)}:{anchorIndex:-1,anchorText:'',anchorOffset:0};
   }
   function rememberReadingPosition(kind,id,title,scrollY=0){
-    const anchor=readerAnchor(),position={schema:BOOK_RESUME_SCHEMA,bookRelease:VERSION,kind,id,title:String(title||'Book'),scrollY:Math.max(0,Math.round(Number(scrollY)||0)),anchorText:anchor.anchorText,anchorOffset:anchor.anchorOffset,updatedAt:new Date().toISOString()};
+    const anchor=readerAnchor(),position={schema:BOOK_RESUME_SCHEMA,bookRelease:VERSION,kind,id,title:String(title||'Book'),scrollY:Math.max(0,Math.round(Number(scrollY)||0)),anchorIndex:anchor.anchorIndex,anchorText:anchor.anchorText,anchorOffset:anchor.anchorOffset,updatedAt:new Date().toISOString()};
     activeReadingPosition=position;writeResume(position,{notify:true});return position
   }
   function updateReadingScroll({notify=false}={}){
     if(!open||!activeReadingPosition||ui?.reader?.hidden)return false;
-    const anchor=readerAnchor(),next={...activeReadingPosition,scrollY:bookScrollTop(),anchorText:anchor.anchorText,anchorOffset:anchor.anchorOffset,updatedAt:new Date().toISOString()};
+    const anchor=readerAnchor(),next={...activeReadingPosition,scrollY:bookScrollTop(),anchorIndex:anchor.anchorIndex,anchorText:anchor.anchorText,anchorOffset:anchor.anchorOffset,updatedAt:new Date().toISOString()};
     activeReadingPosition=next;return writeResume(next,{notify})
   }
   function flushReadingPosition({notify=false}={}){clearTimeout(resumeScrollTimer);resumeScrollTimer=0;return updateReadingScroll({notify})}
   function queueReadingScrollSave(){if(!open||!activeReadingPosition)return;clearTimeout(resumeScrollTimer);resumeScrollTimer=setTimeout(()=>updateReadingScroll(),180)}
   function restoreReadingPosition(snapshot){
     requestAnimationFrame(()=>requestAnimationFrame(()=>{
-      const wanted=String(snapshot.anchorText||'').trim(),heading=wanted?[...ui.reader.querySelectorAll('h2,h3')].find(el=>String(el.textContent||'').trim()===wanted):null;
+      const heads=[...ui.reader.querySelectorAll('h2,h3,h4')],index=Number.isInteger(snapshot.anchorIndex)?snapshot.anchorIndex:-1,wanted=String(snapshot.anchorText||'').trim();
+      const heading=(index>=0&&index<heads.length?heads[index]:null)||(wanted?heads.find(el=>String(el.textContent||'').trim()===wanted):null);
       if(heading){heading.scrollIntoView({block:'start',behavior:'auto'});window.scrollBy({top:-(Number(snapshot.anchorOffset)||0),left:0,behavior:'auto'});}
       else window.scrollTo({top:Math.max(0,Number(snapshot.scrollY)||0),behavior:'auto'});
       activeReadingPosition={...snapshot};
