@@ -443,6 +443,18 @@
         {
           "title": "Verify recovery and guard against coincidence",
           "text": "A part improving after a change is useful evidence but does not automatically prove root cause. Confirm the effect is repeatable, that the predicted process signal or boundary also changed, and that the improvement survives normal process variation. If the evidence does not discriminate between plausible causes, retain the uncertainty."
+        },
+        {
+          "title": "Use chronology to reduce the search space",
+          "text": "Ask what changed before the symptom appeared: material lot, drying history, colour change, mould maintenance, machine change, start-up state, ambient condition, operator sequence or production interruption. Chronology does not prove causation, but it can identify boundaries that make one mechanism more plausible than another. A symptom that appears immediately after one controlled change deserves a different first test from a symptom that drifts gradually over many hours."
+        },
+        {
+          "title": "Prefer tests that can falsify a favourite explanation",
+          "text": "Troubleshooting becomes more reliable when a test is chosen because it could show the leading hypothesis is wrong. If the suspected cause predicts a cavity pattern, time trend or signal change, look for that pattern explicitly. A test that can only confirm what the investigator already expects has weak diagnostic value. Good engineering preserves the possibility of being wrong and updates the working model when observations fail the prediction."
+        },
+        {
+          "title": "Escalate when the evidence boundary is reached",
+          "text": "Some problems cannot be resolved from controller data and visual inspection alone. When competing mechanisms remain plausible, escalate to evidence capable of separating them: tooling inspection, material testing, cavity sensing, metrology, microscopy, maintenance history, supplier support or validated simulation. The correct outcome of a disciplined investigation can be 'not yet distinguished' rather than a falsely precise root-cause statement."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -476,6 +488,14 @@
         {
           "title": "Separate command limits from delivered process",
           "text": "Check whether the machine actually reached the commanded velocity, position and pressure behaviour and whether transfer or protection limits intervened. A short shot can occur even with apparently generous setpoints if the effective shot, flow path, material state or machine delivery differs from the assumption. Measured response is therefore more informative than the setting alone."
+        },
+        {
+          "title": "Separate repeatable shortage from intermittent loss",
+          "text": "A consistently unfilled region can indicate a stable restriction, thermal condition, shot-delivery limit or venting problem. An intermittent short shot can point toward inconsistent check-valve behaviour, material feed, transfer repeatability, air, machine delivery or changing mould conditions. Time-order the events rather than pooling good and bad cycles; intermittency itself is evidence about the mechanism."
+        },
+        {
+          "title": "Use cavity comparison in multi-cavity moulds",
+          "text": "When only one cavity shorts, compare that cavity's runner or gate path, venting, thermal condition and local filling evidence with the others. When every cavity degrades together, upstream material or machine effects become more plausible. A global setting change may temporarily fill the weak cavity while overdriving the others, so cavity-resolved evidence should precede permanent compensation."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -509,6 +529,14 @@
         {
           "title": "Treat process compensation as evidence, not proof",
           "text": "If a pressure or temperature change reduces flash, that shows the defect responds to the process state but does not prove the mould is healthy or identify the root cause. Verify whether the corrected condition remains inside the qualified process window and whether tooling inspection is warranted before institutionalising compensation."
+        },
+        {
+          "title": "Parting-line support and local pressure matter",
+          "text": "A mould can experience local opening or material escape even when the nominal machine clamp setting appears adequate. Local geometry, support, wear, contamination and pressure distribution influence what happens at a specific region. Because pressure falls through the flow path and varies with time, a machine pressure display cannot by itself establish the local force acting where flash appears."
+        },
+        {
+          "title": "Verify the fix does not create a new defect",
+          "text": "A change that removes flash can also alter fill balance, packing, dimensions, residual stress or mould protection margin. Re-check the product characteristics and process signals that matter after any corrective trial. A defensible fix should restore the intended boundary without merely moving the process to another edge of its operating window."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
