@@ -250,7 +250,7 @@
         },
         {
           "title": "Do not cure tooling problems blindly",
-          "text": "Process changes can alter release forces, but persistent mechanical interference or inadequate draft should be evaluated as tooling/design conditions instead of hidden with unsafe or unstable settings."
+          "text": "Process changes can alter release forces, but persistent mechanical interference or inadequate draft should be evaluated as tooling/design conditions rather than being hidden with unsafe or unstable settings."
         },
         {
           "title": "Release force carries information",
