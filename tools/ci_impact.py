@@ -38,15 +38,28 @@ def resolve_base()->str:
     except subprocess.CalledProcessError:
         return git("rev-parse","HEAD")
 
+def governed_candidate_base()->str:
+    path=ROOT/"data/release-external-validation-v1.json"
+    if path.is_file():
+        try:
+            data=json.loads(path.read_text(encoding="utf-8"))
+            ref=str((data.get("webCandidate") or {}).get("sourceSha") or "").strip()
+            if valid_commit(ref):
+                return ref
+        except Exception:
+            pass
+    return resolve_base()
+
 def main()->int:
     ap=argparse.ArgumentParser()
     ap.add_argument("--base")
+    ap.add_argument("--governed-candidate",action="store_true")
     ap.add_argument("--head",default="HEAD")
     ap.add_argument("--base")
     ap.add_argument("--github-output",default=os.environ.get("GITHUB_OUTPUT",""))
     ap.add_argument("--summary",default=os.environ.get("GITHUB_STEP_SUMMARY",""))
     a=ap.parse_args()
-    base=a.base if a.base and valid_commit(a.base) else resolve_base()
+    base=(governed_candidate_base() if a.governed_candidate else (a.base if a.base and valid_commit(a.base) else resolve_base()))
     files=changed_files(base,a.head)
     impact=classify(files)
     print(f"CI IMPACT: base={base} head={a.head} files={len(files)}")
