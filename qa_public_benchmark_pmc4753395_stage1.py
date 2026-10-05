@@ -4,6 +4,7 @@ import json
 ROOT = Path(__file__).resolve().parent
 CONTRACT = ROOT / "data/public-benchmark-contracts/pmc4753395-hdpe-cenosphere-v1.json"
 RUNNER = ROOT / "tools/run_public_benchmark_pmc4753395_stage1.py"
+SOURCE_PROVER = ROOT / "tools/prove_pmc_hdpe_source.py"
 
 
 def need(ok, msg):
@@ -24,4 +25,9 @@ for marker in ["zipfile.is_zipfile","tensile-data.xlsx","porfiri","rawNumericVal
     need(marker in text,f"runner guard missing: {marker}")
 need("to_numpy().ravel" in text,"aggregate-only numeric-cell scan missing")
 need("rawMembersUploadedAsArtifact\": False" in text,"raw member upload guard missing")
+prover=SOURCE_PROVER.read_text(encoding="utf-8")
+for marker in ["safe_archive_member", "PurePosixPath", 'replace("\\\\", "/")', '"l", "-slt", "-ba"', '"x", "-so"', "MAX_MEMBER_BYTES"]:
+    need(marker in prover,f"PMC source prover archive-safety guard missing: {marker}")
+need('f"-o{extract_dir}"' not in prover and '"x", "-y"' not in prover,
+     "PMC source prover must not filesystem-extract an untrusted nested RAR")
 print("MouldMaster PMC4753395 HDPE cenosphere stage-one QA passed")
