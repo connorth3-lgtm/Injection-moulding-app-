@@ -8,7 +8,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-VERSION = "2026.10.05.2"
+VERSION = "2026.10.06.1"
 
 
 def text(path: str) -> str:
