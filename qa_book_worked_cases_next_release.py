@@ -42,6 +42,7 @@ EXPECTED = {
     "worked-black-speck-source-map-v1": "black-specks",
     "worked-complex-diagnostics-v1": "complex-diagnostics",
     "worked-filling-boundary-defect-v1": "flash",
+    "worked-process-baseline-record-v1": "process-baseline",
 }
 
 
@@ -74,7 +75,7 @@ def main() -> None:
     need(LEDGER.read_bytes() == RUNTIME_LEDGER.read_bytes(), "authoritative/runtime worked-case ledgers differ")
 
     cases = ledger.get("cases") or []
-    need(len(cases) == 26, f"expected twenty-six governed worked cases, found {len(cases)}")
+    need(len(cases) == 27, f"expected twenty-seven governed worked cases, found {len(cases)}")
     by_id = {item.get("id"): item for item in cases}
     need(set(by_id) == set(EXPECTED), "worked-case identity set drifted")
     need(len(by_id) == len(cases), "duplicate worked-case IDs")
@@ -112,7 +113,7 @@ def main() -> None:
     worked_auth = auth.get("workedCasesAuthorization") or {}
     need(worked_auth.get("status") == "authorized", "worked-case publication authorization missing")
     need(worked_auth.get("release") == content_release, "worked-case authorization release mismatch")
-    need(worked_auth.get("caseCount") == 26 and worked_auth.get("claimCount") == 26, "worked-case authorization counts drifted")
+    need(worked_auth.get("caseCount") == 27 and worked_auth.get("claimCount") == 27, "worked-case authorization counts drifted")
     need(worked_auth.get("independentSmeStatus") == "hold", "worked-case authorization falsely promotes SME status")
     hashes = (auth.get("runtimeIntegrity") or {}).get("gitBlobSha1ByFile") or {}
     need(hashes.get(LEDGER.name) == git_blob_sha(RUNTIME_LEDGER), "worked-case ledger is not exact-byte authorized")
@@ -145,7 +146,7 @@ def main() -> None:
     for pattern in unsafe_patterns:
         need(not re.search(pattern, lower), f"unsafe worked-case claim detected: {pattern}")
 
-    print("MouldMaster governed worked-case integration QA passed: 26 learner-facing synthetic cases, 26 case claims, exact-byte authorization, explicit SME HOLD and no production-control authority.")
+    print("MouldMaster governed worked-case integration QA passed: 27 learner-facing synthetic cases, 27 case claims, exact-byte authorization, explicit SME HOLD and no production-control authority.")
 
 
 if __name__ == "__main__":
