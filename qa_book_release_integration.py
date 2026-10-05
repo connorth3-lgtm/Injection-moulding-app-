@@ -75,6 +75,12 @@ book_data = [
     'book-qualification-resolution-all-v1.json',
     'book-claim-resolution-high-risk-v1.json',
     'book-claim-resolution-high-risk-v2.json',
+    'book-claim-resolution-all-v1.json',
+    'book-claim-review-foundations-materials-machine-v1.json',
+    'book-claim-review-process-tooling-v1.json',
+    'book-claim-review-troubleshooting-v1.json',
+    'book-claim-review-engineering-advanced-v1.json',
+    'book-claim-review-high-risk-v1.json',
     'book-authored-foundations-v1.json',
     'book-evidence-registry-v1.json',
     'book-chapters-materials-machine-v1.json',
@@ -167,7 +173,10 @@ need(byte_contract.get('algorithm') == 'git-blob-sha1', 'Book runtime integrity 
 sha_by_file = byte_contract.get('gitBlobSha1ByFile') or {}
 required_integrity = {
     'book-manifest-v1.json', 'book-sme-review-v1.json', 'book-qualification-resolution-all-v1.json',
-    'book-claim-resolution-high-risk-v1.json', 'book-authored-foundations-v1.json',
+    'book-claim-resolution-high-risk-v1.json', 'book-claim-resolution-high-risk-v2.json', 'book-claim-resolution-all-v1.json',
+    'book-claim-review-foundations-materials-machine-v1.json', 'book-claim-review-process-tooling-v1.json',
+    'book-claim-review-troubleshooting-v1.json', 'book-claim-review-engineering-advanced-v1.json', 'book-claim-review-high-risk-v1.json',
+    'book-authored-foundations-v1.json',
     'book-evidence-registry-v1.json', 'book-chapters-materials-machine-v1.json', 'book-authored-remaining-v1.json',
     'book-worked-engineering-cases-v1.json', 'book-engineering-diagrams-v1.json', 'book-evidence-enrichment-v2.json', 'book-claim-evidence-reference-v1.json', 'book-reader-architecture-v2.json', 'book-editorial-expansion-review-v1.json', 'book-material-grade-atlas-v1.json',
     'book-material-regional-evidence-v1.json', 'material-catalog-v1.json',
@@ -305,6 +314,7 @@ need("ids=[...new Set([...(chapter.sourceIds||[]),...claimEvidenceIds(chapter.id
 for marker in ('EVIDENCE_IDENTITIES','BASF-INJECTION-PROBLEMS','NIST-SEMATECH-DOE','NIST-SEMATECH-CAPABILITY','PARIZS-2023-IN-MOLD-SENSORS-WORKED','getEvidenceIdentity'):
     need(marker in book_runtime, f'evidence alias/family normalization missing from Book runtime: {marker}')
 need('getEvidenceIdentity' in claim_trace_runtime and 'Evidence family:' in claim_trace_runtime, 'complete claim trace must explain evidence-family relationships')
+need("getIntegrityMap" in claim_trace_runtime and "gitBlobSha1" in claim_trace_runtime and "byte-integrity mismatch" in claim_trace_runtime, 'complete claim trace must verify exact governed ledger bytes before rendering')
 boundary=claim_evidence.get('authorityBoundary') or {}
 need(boundary.get('presentationOnly') is True and boundary.get('noNewClaims') is True and boundary.get('noEvidenceUpgrades') is True and boundary.get('noProductionAuthority') is True and boundary.get('independentSmeStatus')=='hold', 'reader claim-evidence authority boundary weakened')
 

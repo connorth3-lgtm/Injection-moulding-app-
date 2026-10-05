@@ -20,7 +20,21 @@ const RESOLUTION_FILES=[
 const EXPECTED={chapters:46,claims:137,supported:116,qualified:21,hold:0,conflicting:0};
 let ready=false,claims=new Map(),sources=new Map(),error=null,queued=false;
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-async function json(name){const r=await fetch(ROOT+name,{cache:'no-store',credentials:'same-origin'});if(!r.ok)throw new Error(`${name} unavailable (${r.status})`);return r.json()}
+const hex=buffer=>Array.from(new Uint8Array(buffer),b=>b.toString(16).padStart(2,'0')).join('');
+async function gitBlobSha1(bytes){
+ if(!globalThis.crypto?.subtle)throw new Error('Complete claim trace byte-integrity verification is unavailable in this browser');
+ const body=new Uint8Array(bytes),header=new TextEncoder().encode(`blob ${body.byteLength}\0`),payload=new Uint8Array(header.byteLength+body.byteLength);
+ payload.set(header,0);payload.set(body,header.byteLength);
+ return hex(await crypto.subtle.digest('SHA-1',payload));
+}
+async function json(name){
+ const expected=window.MMBook?.getIntegrityMap?.()?.[name];
+ if(!/^[0-9a-f]{40}$/.test(String(expected||'')))throw new Error(`Complete claim trace integrity identity missing for ${name}`);
+ const r=await fetch(ROOT+name,{cache:'no-store',credentials:'same-origin'});if(!r.ok)throw new Error(`${name} unavailable (${r.status})`);
+ const bytes=await r.arrayBuffer(),actual=await gitBlobSha1(bytes);
+ if(actual!==expected)throw new Error(`Complete claim trace byte-integrity mismatch for ${name}`);
+ return JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));
+}
 function canonicalUrl(source){const map=window.MMBook?.getPublicationAuthorization?.()?.canonicalAcademicEvidenceUrls||{};return String(map[source?.id]||source?.canonicalUrl||source?.url||'')}
 function addSource(s){if(!s?.id)return;if(!sources.has(s.id))sources.set(s.id,s)}
 function evidenceHtml(ids){const unique=[...new Set(ids||[])];if(!unique.length)return '<li>No evidence identifier recorded.</li>';return unique.map(id=>{const s=sources.get(id);if(!s)return `<li><code>${esc(id)}</code> — source metadata unavailable</li>`;const meta=esc([s.issuer,s.scope].filter(Boolean).join(' — ')),identity=window.MMBook?.getEvidenceIdentity?.(id)||null,identityMeta=esc([`Evidence record: ${id}`,identity?.family?`Evidence family: ${identity.family}`:'',identity?.sameAs&&identity.sameAs!==id?`Same underlying record as: ${identity.sameAs}`:''].filter(Boolean).join(' · ')),url=canonicalUrl(s);const label=esc(s.title||s.id);return /^https:\/\//i.test(url)?`<li><a href="${esc(url)}" target="_blank" rel="noopener noreferrer"><b>${label}</b></a>${meta?`<br><small>${meta}</small>`:''}${identityMeta?`<br><small>${identityMeta}</small>`:''}</li>`:`<li><b>${label}</b>${meta?`<br><small>${meta}</small>`:''}${identityMeta?`<br><small>${identityMeta}</small>`:''}</li>`}).join('')}

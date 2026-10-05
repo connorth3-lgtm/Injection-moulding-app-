@@ -21,7 +21,7 @@
   },
   "runtimeIntegrity": {
     "algorithm": "git-blob-sha1",
-    "scope": "Exact served bytes for every payload that can influence Book publication promotion, reader composition, claim-evidence transparency, editorial expansion review or independent-SME status. Git object identity is checked in-browser before JSON parsing; any mismatch fails closed.",
+    "scope": "Exact served bytes for every payload that can influence Book publication promotion, reader composition, claim-evidence transparency, complete claim-history rendering, editorial expansion review or independent-SME status. Git object identity is checked in-browser before JSON parsing; any mismatch fails closed.",
     "gitBlobSha1ByFile": {
       "book-manifest-v1.json": "59efb8048451389ebb610566e13607d2d9c47cdd",
       "book-sme-review-v1.json": "19865114eefb9907a7906264b4cb0db9304f3c57",
@@ -39,7 +39,14 @@
       "book-engineering-diagrams-v1.json": "0a2883d595bb55670596b87178888f44c3b06592",
       "book-reader-architecture-v2.json": "65708fe61a510bb8424ba3878d85b22409059b72",
       "book-editorial-expansion-review-v1.json": "6a97bd39a3d2e6d38788afc9357397a25a5c25ff",
-      "book-claim-evidence-reference-v1.json": "c13490a71021fb3b46c9b76b7bd260df86d9036d"
+      "book-claim-evidence-reference-v1.json": "c13490a71021fb3b46c9b76b7bd260df86d9036d",
+      "book-claim-review-foundations-materials-machine-v1.json": "7d5c2ffa6d3b609c1766bc50923b2896998ff77c",
+      "book-claim-review-process-tooling-v1.json": "525a946af21ea069ab7c3c003c5d7a6963d01707",
+      "book-claim-review-troubleshooting-v1.json": "4e18733c5e8268f093c31788c85177aa3a9aff1f",
+      "book-claim-review-engineering-advanced-v1.json": "9e5ce1202dc7bf88dafa54a837e778624b65120d",
+      "book-claim-review-high-risk-v1.json": "ba46cdf63811e4df1bd274df240756586380b406",
+      "book-claim-resolution-high-risk-v2.json": "bbced00a8b699809fb1c4e55132d2265021bb278",
+      "book-claim-resolution-all-v1.json": "1f3e6495947727f9ca73e3cf13b550aa24b38764"
     }
   },
   "canonicalAcademicEvidenceUrls": {
@@ -143,7 +150,8 @@
     "diagramLedgerOrAssetMismatch": "fail-closed-runtime",
     "readerArchitectureOrCoverageMismatch": "fail-closed-runtime",
     "editorialExpansionReviewOrByteMismatch": "fail-closed-runtime",
-    "claimEvidenceReferenceMismatch": "fail-closed-runtime"
+    "claimEvidenceReferenceMismatch": "fail-closed-runtime",
+    "completeClaimTraceIntegrityMismatch": "fail-closed-supplemental-trace"
   },
   "workedCasesAuthorization": {
     "status": "authorized",
