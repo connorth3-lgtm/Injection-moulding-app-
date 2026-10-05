@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse, json, os, shlex, subprocess, sys, time
 from dataclasses import dataclass, asdict
 from pathlib import Path
+from change_impact import classify
 
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/"qa-artifacts"
@@ -40,6 +41,7 @@ def add(items,cond,item):
     if cond and all(x.id!=item.id for x in items):items.append(item)
 
 def plan(files,deep):
+    impact=classify(files)
     c=[
       Check("runtime-packs","generated-runtime",(PY,"tools/build_runtime_packs.py","--check"),
         "Generated runtime packs must exactly match reviewed source scripts.",
@@ -73,16 +75,13 @@ def plan(files,deep):
       (".github/workflows/","qa_critical_actions_versions.py"),
       "Use the repository-approved immutable action revisions; do not loosen the version guard."))
 
-    pages=any(("pages" in p and (p.startswith(".github/workflows/") or p.startswith("tools/"))) or p in {
-      "qa_pages_single_publisher.py","qa_pages_candidate_handoff.py","qa_release_supply_chain.py"} for p in files)
+    pages=impact["pages"]
     add(c,pages or deep,Check("pages-governance","preview-release",(PY,"qa_pages_single_publisher.py"),
       "Preview publication/provenance contracts changed.",
       (".github/workflows/pages.yml",".github/workflows/preview-pages.yml","tools/build_pages_hold.py","tools/verify_pages_hold.py"),
       "Fix the builder/verifier contract; do not weaken the provenance guard."))
 
-    shell=any(p in {"index.html","service-worker.js","materials.html","src/domains/shell/app-shell-finalize.js",
-      "src/domains/shell/app-shell-registry.js","src/domains/shell/pwa-shell.js"} or
-      p.startswith("src/domains/runtime-packs/shell-") or p.startswith("qa/feature-reachability") for p in files)
+    shell=impact["shell"] or any(p.startswith("qa/feature-reachability") for p in files)
     add(c,shell or deep,Check("app-shell","navigation-shell",(PY,"qa_app_shell_registry.py"),
       "Shell/navigation/runtime ownership changed.",
       ("src/domains/shell/","index.html","service-worker.js","qa_app_shell_registry.py"),
@@ -100,19 +99,13 @@ def plan(files,deep):
       ("src/domains/governance/production-health.js","support.html","privacy.html"),
       "Keep diagnostics local-only and reproduce with the safe snapshot."))
 
-    release=any(p in {"version.json","index.html","service-worker.js","support.html","privacy.html"} or
-      p.startswith("data/release-external-validation") or p.startswith("data/pwa-physical-device-validation") for p in files)
+    release=impact["runtime"] or impact["release_metadata"] or any(p in {"support.html","privacy.html"} for p in files)
     add(c,release or deep,Check("release-identity","release-integrity",(PY,"qa_release_docs.py"),
       "Release identity/cache/docs/validation binding changed.",
       ("version.json","index.html","service-worker.js","qa_release_docs.py"),
       "Synchronize release/cache identity; never rewrite evidence to hide candidate drift."))
 
-    candidate_binding=release or any(
-      p.startswith("src/domains/runtime-packs/") or p.startswith("src/domains/shell/") or
-      p.startswith("data/accessibility-real-at-validation") or p.startswith("data/nzqa-external-validation") or
-      p.startswith("data/pwa-physical-device-validation") or p.startswith("data/release-external-validation")
-      for p in files
-    )
+    candidate_binding=impact["candidate_binding"]
     add(c,candidate_binding or deep,Check("exact-candidate-binding","release-integrity",
       (PY,"tools/verify_release_external_validation.py"),
       "Learner runtime or external HOLD metadata changed, so the retained candidate identity may be stale.",
