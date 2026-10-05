@@ -57,7 +57,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
   test.describe(viewport.name,()=>{
     test.use({viewport:{width:viewport.width,height:viewport.height}});
 
-    test('Home is lean, XP-free, clear of duplicate reference launchers, and Practice owns troubleshooting',async({page})=>{
+    test('Home is lean, XP-free, includes the Book resume surface, and Practice owns troubleshooting',async({page})=>{
       await openApp(page);
       await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
       const homeBook=page.locator('#dashboard [data-mm-home-book]');
