@@ -263,3 +263,22 @@ jobs:
           name: mouldmaster-evidence-maturity-audit
           path: evidence-maturity-report.json
           if-no-files-found: error
+      - name: Upload consolidated diagnostic bundle
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: mouldmaster-diagnostic-bundle
+          path: |
+            qa-artifacts/doctor-report.md
+            qa-artifacts/doctor-report.json
+            qa-artifacts/verify-report.md
+            qa-artifacts/verify-report.json
+            audit-consolidation-report.json
+            assessment-evidence-integrity-report.json
+            critical-actions-versions-report.json
+            evidence-maturity-report.json
+            measured-evidence-integration-report.json
+            measured-evidence-decision-workflow-report.json
+            real-site-feedback-contract-report.json
+          if-no-files-found: warn
+          retention-days: 14
