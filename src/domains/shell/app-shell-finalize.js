@@ -135,8 +135,7 @@ function renderHomeBookCard(root){
     const focus=root.querySelector('.mm-today-focus');
     if(focus?.nextSibling)root.insertBefore(host,focus.nextSibling);else root.prepend(host);
   }
-  const book=window.MMBook;
-  const saved=book?.getResume?.()||null;
+  const saved=window.MMBook?.getResume?.()||null;
   const savedTitle=String(saved?.title||'').trim();
   const safe=value=>String(value??'').replace(/[&<>\"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[ch]));
   const hasResume=!!saved?.id;
@@ -150,10 +149,11 @@ function renderHomeBookCard(root){
       <button type="button" class="primary" data-mm-home-book-primary>${hasResume?'Keep Reading':'Open Book'}</button>
       ${hasResume?'<button type="button" class="ghost" data-mm-home-book-contents>Book contents</button>':''}
     </div>`;
-  host.querySelector('[data-mm-home-book-primary]')?.addEventListener('click',()=>{if(hasResume&&typeof book?.openResume==='function')void book.openResume();else book?.open?.()});
-  host.querySelector('[data-mm-home-book-contents]')?.addEventListener('click',()=>book?.open?.());
+  host.querySelector('[data-mm-home-book-primary]')?.addEventListener('click',()=>{const book=window.MMBook;if(hasResume&&typeof book?.openResume==='function')void book.openResume();else book?.open?.()});
+  host.querySelector('[data-mm-home-book-contents]')?.addEventListener('click',()=>window.MMBook?.open?.());
 }
 window.addEventListener('mm:book-resume-change',()=>renderHomeBookCard(document.getElementById('dashboard')));
+window.addEventListener('mm:domains-ready',()=>renderHomeBookCard(document.getElementById('dashboard')));
 function simplifyHomeScreen(){
   const root=document.getElementById('dashboard');
   if(!root)return;
