@@ -451,6 +451,6 @@
     "Are worked cases and diagrams placed where they teach interpretation rather than decorate the text?",
     "Can a beginner read chapters 1–10 sequentially and an experienced technician enter at chapters 11–20 without losing critical safety context?"
   ],
-  "release": "2026.10.06.1",
+  "release": "2026.10.06.2",
   "pedagogyPolicy": "Reader-level objectives, checks and application prompts are derived learning scaffolds only. They add no technical claims, do not alter governed module evidence status and cannot create production authority. Sequence prompts are reader-orientation scaffolds derived from existing governed module order; they add no independent technical authority."
 }
