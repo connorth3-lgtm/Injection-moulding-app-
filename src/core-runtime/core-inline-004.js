@@ -742,15 +742,23 @@ function regionButtons(){
     ${["ALL","UK","US","NZ"].map(r=>`<button class="${user.region===r?"active":""}" data-mm-onclick="setRegion('${r}')">${r==="ALL"?"Compare all":r}</button>`).join("")}
   </div>`;
 }
+function pvSafeExternalUrl(raw){
+  const url=String(raw||'').trim();
+  return /^https:\/\/[^\s]+$/i.test(url)?url:'';
+}
+function pvStandardsLink(item,label){
+  const url=pvSafeExternalUrl(item?.url);
+  return url?`<a class="standard-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`:'<span class="tiny muted">Official source URL unavailable</span>';
+}
 function renderStandards(){
   const selected=user.region==="ALL"?["UK","US","NZ"]:[user.region];
   const cards = [];
   for(const item of D.standards.common){
-    cards.push(`<div class="card standard-card"><span class="eyebrow">International</span><h3>${esc(item.name)}</h3><p>${esc(item.scope)}</p><a class="standard-link" href="${item.url}" target="_blank" rel="noopener">Open official/reference source ↗</a></div>`);
+    cards.push(`<div class="card standard-card"><span class="eyebrow">International</span><h3>${esc(item.name)}</h3><p>${esc(item.scope)}</p>${pvStandardsLink(item,'Open official/reference source ↗')}</div>`);
   }
   for(const r of selected){
     for(const item of D.standards[r]){
-      cards.push(`<div class="card standard-card"><span class="eyebrow">${esc(regionName(r))}</span><h3>${esc(item.name)}</h3><p>${esc(item.scope)}</p><a class="standard-link" href="${item.url}" target="_blank" rel="noopener">Open source ↗</a></div>`);
+      cards.push(`<div class="card standard-card"><span class="eyebrow">${esc(regionName(r))}</span><h3>${esc(item.name)}</h3><p>${esc(item.scope)}</p>${pvStandardsLink(item,'Open source ↗')}</div>`);
     }
   }
   $("#standards").innerHTML=`
