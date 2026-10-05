@@ -1,6 +1,6 @@
 # MouldMaster Book SME review packet — 2026.10.06.2
 
-This packet governs the **human** technical review of the MouldMaster Book: 20 reader-facing chapters composed from 46 governed review modules for web release `2026.10.06.2` / Book manifest `2026.09.14.1`.
+This packet governs the **human** technical review of MouldMaster Book content release `2026.10.06.1`: 20 reader-facing chapters composed from 46 governed review modules, bound to learner web release `2026.10.06.2` / Book manifest `2026.09.14.1`.
 
 Automated evidence review, CI, browser tests and the Book publication authorization are necessary but are not a substitute for an independent experienced injection-moulding practitioner reviewing the teaching as a practitioner would use it.
 
@@ -67,7 +67,7 @@ The Book SME status may become `validated` only when all 46 governed module IDs 
 
 ## Editorial expansion scope
 
-For the 12 modules expanded in this release, confirm the new prose remains inside the claim IDs and exact reviewed bytes recorded in `data/book-editorial-expansion-review-v1.json`. Also review the 20-chapter composition in `data/book-reader-architecture-v2.json` for misleading transitions or scope bleed between adjacent governed modules.
+For the 37 modules covered by the current editorial-expansion review, confirm the revised prose remains inside the claim IDs and exact reviewed bytes recorded in `data/book-editorial-expansion-review-v1.json`. Also review the 20-chapter composition in `data/book-reader-architecture-v2.json` for misleading transitions or scope bleed between adjacent governed modules.
 
 ## 2026.10.06.2 deep-review emphasis
 
