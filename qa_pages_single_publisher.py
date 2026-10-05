@@ -242,6 +242,8 @@ for marker in (
     "device metadata helper violates local-only boundary",
     "critical_assets",
     "preview pages-manifest has no hash record for critical asset",
+    "Rebind the copied manifest's index.html integrity record",
+    'assets["index.html"] = {',
     "critical preview asset byte-size mismatch",
     "critical preview asset SHA-256 mismatch",
 ):
