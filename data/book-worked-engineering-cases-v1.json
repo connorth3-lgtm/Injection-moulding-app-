@@ -1190,12 +1190,61 @@
           ]
         }
       ]
+    },
+    {
+      "id": "worked-complex-diagnostics-v1",
+      "chapterId": "complex-diagnostics",
+      "title": "Capstone investigation: competing causes after a maintenance change",
+      "synthetic": true,
+      "setup": "A synthetic four-cavity part develops a 0.20–0.28 mm dimensional shift after planned mould maintenance and a material-lot change on the same shift. Cavity 3 moves most; the other cavities move less. Machine setpoints are unchanged.",
+      "observations": [
+        "The dimensional shift begins on the first production run after maintenance and the material-lot change.",
+        "Cavity 3 shows the largest offset, while all cavities show a smaller common shift.",
+        "The measurement system repeats within the established study tolerance when the same conditioned parts are remeasured.",
+        "Coolant flow on the circuit nearest cavity 3 is lower than its previous documented baseline, while common machine-side pressure traces remain close to the prior baseline.",
+        "A retained sample from the previous material lot, processed after thermal stabilisation, reduces the common shift but does not remove the cavity-3 offset."
+      ],
+      "assumptions": [
+        "All observations and values are synthetic teaching data.",
+        "Any cooling-circuit inspection or maintenance follows approved mould/site procedures.",
+        "The example does not establish product disposition, a universal tolerance, or a production setpoint."
+      ],
+      "calculationSteps": [
+        "Separate the pattern into a common shift affecting all cavities and an additional cavity-3-specific offset.",
+        "Retain at least three live hypotheses: material-condition/lot contribution to the common shift, local cooling or tooling contribution near cavity 3, and a measurement/conditioning explanation.",
+        "Use the repeat measurement and retained-lot comparison to reduce confidence in a measurement-only explanation while preserving uncertainty about material versus thermal/tooling contribution.",
+        "Treat the low local coolant-flow evidence as support for a cavity-local thermal hypothesis, not proof; require recovery of the hydraulic/thermal evidence and part response before claiming correction."
+      ],
+      "interpretation": "The evidence supports a mixed-mechanism model more strongly than any single-cause story: the retained-lot comparison suggests a material-related contribution to the common shift, while the persistent cavity-3 offset and local cooling evidence support an additional cavity-local mechanism. The investigation should preserve both until controlled recovery evidence separates them.",
+      "boundaries": [
+        "A successful process adjustment that masks the dimensional shift would be containment evidence, not automatic root-cause proof.",
+        "Tooling or cooling intervention requires approved maintenance authority and post-intervention verification.",
+        "Product acceptance and disposition remain governed by the applicable quality plan and measurement requirements.",
+        "No automated machine-control or universal process recipe authority is created."
+      ],
+      "sourceIds": [
+        "ISO-294-1-2017",
+        "ISO-20457-2026",
+        "NIST-SEMATECH-DOE"
+      ],
+      "claims": [
+        {
+          "id": "worked-complex-diagnostics-v1-claim-1",
+          "statement": "A complex moulding problem can require more than one active mechanism; cavity, chronology, retained-material, measurement and system-response evidence can be combined to update competing hypotheses without forcing premature single-cause certainty.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "ISO-294-1-2017",
+            "ISO-20457-2026",
+            "NIST-SEMATECH-DOE"
+          ]
+        }
+      ]
     }
   ],
   "humanReviewScope": {
     "status": "hold",
     "contract": "data/book-sme-review-v1.json",
-    "required": "All eighteen worked cases are attached to chapters inside the 46-chapter independent human SME scope; each case requires arithmetic/reasoning, assumptions, evidence fit, synthetic-data labelling and non-universal-boundary review."
+    "required": "All 25 worked cases are attached to chapters inside the 46-chapter independent human SME scope; each case requires arithmetic/reasoning, assumptions, evidence fit, synthetic-data labelling and non-universal-boundary review."
   },
   "authorityBoundary": {
     "productionUse": "advisory-only",
