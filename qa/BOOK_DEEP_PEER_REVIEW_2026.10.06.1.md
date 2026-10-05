@@ -2,7 +2,7 @@
 
 ## Review basis
 
-This review covers the governed MouldMaster Book candidate for web release `2026.10.06.1`, including the 20-reader-chapter architecture, all 46 governed modules, 18 worked engineering cases, 8 instructional diagrams, evidence-enrichment layers, publication authorization and independent-SME boundary.
+This review covers governed MouldMaster Book content release `2026.10.06.1`, including the 20-reader-chapter architecture, all 46 governed modules, 24 worked engineering cases, 18 instructional diagrams, evidence-enrichment layers, publication authorization and independent-SME boundary. The Book content release is separate from the learner-facing web/PWA shell release and this review does not assert current web-candidate provenance.
 
 This is repository-controlled peer/technical review. It is **not** independent human SME approval, learner-outcome validation, accreditation, physical-device validation or production authorization.
 
@@ -20,7 +20,7 @@ The Book remains **external HOLD**. The remaining HOLD is primarily human valida
 - Added an exact-byte editorial-expansion review binding the 37 expanded governed modules to their complete existing governed claim inventories.
 - Kept independent human SME status at HOLD.
 - Kept reader grouping structural-only: it cannot promote publication, evidence, SME, accreditation or production status.
-- Rebound the current release to a fresh retained exact-head candidate while leaving accessibility, physical-device, curriculum-SME, Book-SME, learner-outcome, Windows and NZQA/provider evidence on HOLD.
+- Preserved fail-closed release-specific candidate governance while leaving accessibility, physical-device, curriculum-SME, Book-SME, learner-outcome, Windows and NZQA/provider evidence on HOLD. Exact web-candidate provenance must be evaluated against the current learner-facing web release ledger, not inferred from this Book content-review record.
 - Replaced a brittle worked-case release-date magic constant with relational release invariants.
 
 ## Reader architecture judgement
