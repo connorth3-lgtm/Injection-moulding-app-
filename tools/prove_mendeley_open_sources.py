@@ -231,7 +231,13 @@ def workbook_text_schema(path):
 
 
 def materialize_verified_file(source, expected_name):
-    """Return a job-local SHA-verified workbook, reusing bytes already proven in this job."""
+    """Return a job-local SHA-verified workbook, reusing bytes already proven in this job.
+
+    The version-pinned metadata must already report the governed SHA. If the
+    delivered body does not match that SHA, retry the body fetch; repeated
+    mismatch is treated as transport corruption/unavailability, never accepted
+    as source drift and never used as evidence.
+    """
     file_id,name,expected_sha=next(x for x in source['files'] if x[1]==expected_name)
     CACHE_DIR.mkdir(exist_ok=True)
     suffix=Path(name).suffix or '.bin'
@@ -244,18 +250,26 @@ def materialize_verified_file(source, expected_name):
     _,meta=public_files(source['shortId'],source['version'])
     _,_,urls=resolve_file(meta,file_id,name,source['shortId'],source['version'],expected_sha)
     tmp=CACHE_DIR/f'.{expected_sha}.tmp'
-    if tmp.exists():
-        tmp.unlink()
-    try:
-        download_first(urls,tmp)
-        digest=hashlib.sha256(tmp.read_bytes()).hexdigest()
-        if digest!=expected_sha:
-            raise RuntimeError(f"{source['datasetId']}/{name} SHA mismatch: {digest}")
-        tmp.replace(cached)
-    finally:
+    observed=[]
+    for attempt in range(3):
         if tmp.exists():
             tmp.unlink()
-    return cached,'sha256:'+expected_sha
+        try:
+            download_first(urls,tmp)
+            digest=hashlib.sha256(tmp.read_bytes()).hexdigest()
+            if digest==expected_sha:
+                tmp.replace(cached)
+                return cached,'sha256:'+expected_sha
+            observed.append(digest)
+        finally:
+            if tmp.exists():
+                tmp.unlink()
+        if attempt < 2:
+            time.sleep(2 ** attempt)
+    raise MendeleyTransportUnavailable(
+        f"{source['datasetId']}/{name} metadata still pins {expected_sha}, "
+        f"but delivered bodies failed SHA verification after 3 attempts: {observed}"
+    )
 
 def main():
     try:
