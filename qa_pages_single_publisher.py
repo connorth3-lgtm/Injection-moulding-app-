@@ -231,6 +231,8 @@ for marker in (
     'data-mm-release-hold="true"',
     "No learner application runtime",
     "release-hold artifact boundary mismatch",
+    "Rebind the copied manifest's index.html integrity record",
+    'assets["index.html"] = {',
 ):
     need(marker in hold_builder, f"release-hold builder safeguard missing: {marker}")
 for marker in (
@@ -248,8 +250,6 @@ for marker in (
     "device metadata helper violates local-only boundary",
     "critical_assets",
     "preview pages-manifest has no hash record for critical asset",
-    "Rebind the copied manifest's index.html integrity record",
-    'assets["index.html"] = {',
     "critical preview asset byte-size mismatch",
     "critical preview asset SHA-256 mismatch",
 ):
