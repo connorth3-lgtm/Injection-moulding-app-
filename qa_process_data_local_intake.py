@@ -20,7 +20,8 @@ for marker in [
     'unknown labels aliased per file','MM_PROCESS_DATA_LOCAL_INTAKE','MAX_ROWS=50000','operator_id','employee_id',
     'Sequence review required','Sequence check','sourceShotIndex','timestampChecks','strictly increasing','structured measurement unit',
     'explicitOperationalIdentifier','ALIAS_ID_TOKEN_RE','ALIAS_EXACT_RE','enforceRowLimit','rejected rather than silently truncated',
-    'invalidNumericValues','invalidNumericByColumn','omitted rather than converted to NaN','unterminated quoted field','Structurally malformed CSV'
+    'invalidNumericValues','invalidNumericByColumn','omitted rather than converted to NaN','unterminated quoted field','Structurally malformed CSV',
+    'Object.create(null)'
 ]:
     need(marker in body,f'local intake marker missing: {marker}')
 for forbidden in ['fetch(', 'XMLHttpRequest', 'WebSocket', 'localStorage', 'sessionStorage', 'indexedDB', 'MM_DATA.exams=', 'correctIndex=', 'regionalQuestions=']:
@@ -46,6 +47,9 @@ const numericIds='machine_id,cavity_id,material_grade,peak_cavity_pressure_mpa,m
 const numericIdPrepared=api.prepare(api.parseCsv(numericIds));
 const malformedNumeric='fill_time_s,cycle_time_s\\n1.0,20\\n1.1,21\\n1.2,22\\n1.3,23\\n1.4,24\\n1.5,25\\n1.6,26\\n1.7,27\\n1.8,28\\nBAD,29\\n';
 const malformedPrepared=api.prepare(api.parseCsv(malformedNumeric));
+const constructorDup=api.parseCsv('constructor,constructor\\n1,2\\n3,4\\n');
+const constructorMalformed='constructor,cycle_time_s\\n1,20\\n2,21\\n3,22\\n4,23\\n5,24\\n6,25\\n7,26\\n8,27\\n9,28\\nBAD,29\\n';
+const constructorPrepared=api.prepare(api.parseCsv(constructorMalformed));
 const quotedComma=api.parseCsv('a,b\\n"1,2",3\\n');
 const escapedQuote=api.parseCsv('a,b\\n"say ""hi""'+String.fromCharCode(34)+',3\\n');
 const quotedNewline=api.parseCsv('a,b\\n"line1\\nline2",3\\n');
@@ -55,7 +59,7 @@ try{{const oversized='fill_time_s\\n'+Array.from({{length:50001}},(_,i)=>String(
 try{{api.parseCsv('a,b\\n"SECRET-UNTERMINATED,2')}}catch(err){{unterminatedQuoteError=String(err&&err.message||err)}}
 try{{api.parseCsv('a,b\\nSECRET-A,2,EXTRA-SECRET\\n')}}catch(err){{tooManyCellsError=String(err&&err.message||err)}}
 try{{api.parseCsv('a,b\\nSECRET-B\\n')}}catch(err){{tooFewCellsError=String(err&&err.message||err)}}
-process.stdout.write(JSON.stringify({{parsed,prepared,csv:api.toCsv(prepared),template:api.templateCsv(),scope:api.scope,maxRows:api.maxRows,badPrepared,badCsv:api.toCsv(badPrepared),pilotPrepared,numericIdPrepared,malformedPrepared,malformedCsv:api.toCsv(malformedPrepared),oversizedError,quotedComma,escapedQuote,quotedNewline,trailingBlank,unterminatedQuoteError,tooManyCellsError,tooFewCellsError}}));
+process.stdout.write(JSON.stringify({{parsed,prepared,csv:api.toCsv(prepared),template:api.templateCsv(),scope:api.scope,maxRows:api.maxRows,badPrepared,badCsv:api.toCsv(badPrepared),pilotPrepared,numericIdPrepared,malformedPrepared,malformedCsv:api.toCsv(malformedPrepared),constructorDup,constructorPrepared,oversizedError,quotedComma,escapedQuote,quotedNewline,trailingBlank,unterminatedQuoteError,tooManyCellsError,tooFewCellsError}}));
 """
 p=subprocess.run(['node','-e',node],capture_output=True,text=True)
 need(p.returncode==0,'local intake runtime failed: '+p.stderr)
@@ -115,6 +119,11 @@ need(malformed['rows'][-1]['fill_time_s']=='','malformed nonblank numeric value 
 need(malformed['validation']['reviewRequired'] is True and malformed['validation']['invalidNumericValues']==1,'malformed numeric values must require explicit review')
 need(malformed['validation']['invalidNumericByColumn']==[{'column':'fill_time_s','count':1}],'invalid numeric count must identify the affected column without retaining raw bad text')
 need('NaN' not in r['malformedCsv'] and 'BAD' not in r['malformedCsv'],'prepared CSV must contain neither NaN nor the malformed raw value')
+need(r['constructorDup']['headers']==['constructor','constructor_2'],'inherited Object constructor must not break duplicate-header numbering')
+constructor_prepared=r['constructorPrepared']
+need(constructor_prepared['rules'][0]['key']=='constructor' and constructor_prepared['rules'][0]['action']=='keep','constructor-named numeric column must remain an ordinary imported data column')
+need(constructor_prepared['validation']['reviewRequired'] is True and constructor_prepared['validation']['invalidNumericValues']==1,'constructor-named malformed numeric input must remain fail-closed')
+need(constructor_prepared['validation']['invalidNumericByColumn']==[{'column':'constructor','count':1}],'constructor-named invalid numeric count must remain numeric and attributable')
 need('exceeds the 50,000 data-row safety limit' in r['oversizedError'],'50,001-row source must be rejected rather than silently truncated')
 
 bad=r['badPrepared']
@@ -170,6 +179,6 @@ need(process_pack.index("/* >>> process-data-20-pass-atlas.js */") < process_pac
 for wf in ['.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml','.github/workflows/publish-open-desktop.yml','.github/workflows/microsoft-store-msix.yml']:
     need('python qa_process_data_local_intake.py' in text(wf),f'{wf} must gate local process-data intake')
 release_workflow=text('.github/workflows/qa.yml')
-need("find . -maxdepth 1 -type f -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check" in release_workflow,'release filesystem JavaScript syntax gate missing')
+need("Repository-wide JavaScript syntax" in release_workflow and "-name '*.js'" in release_workflow and "-name '*.cjs'" in release_workflow and "-name '*.mjs'" in release_workflow,'release repository-wide JavaScript syntax gate missing')
 
 print('MouldMaster local process-data intake QA passed (oversized/malformed CSV rejected; quoted fields preserved; malformed numeric values omitted/reported; numeric moulding signals preserved; numeric IDs pseudonymised; sequence audit; local-only packaging)')
