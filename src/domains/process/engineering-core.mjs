@@ -1527,6 +1527,9 @@ function finiteTemperatureC(quantity, field) {
   if (unit !== '°C' && unit !== 'C') {
     return unsupported(`unsupported-${field}-unit`, { field, unit });
   }
+  if (value < -273.15) {
+    return unsupported(`invalid-${field}-value`, { field, minimumCelsius: -273.15 });
+  }
   return supported({ celsius: value, inputUnit: unit });
 }
 
