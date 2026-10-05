@@ -25,6 +25,12 @@ EXPECTED_CHAPTERS = {
     "worked-fill-study-v1": "fill-study",
     "worked-shot-utilisation-v1": "shot-utilisation",
     "worked-process-window-v1": "process-window",
+    "worked-warpage-discrimination-v1": "warpage",
+    "worked-weld-line-diagnosis-v1": "weld-lines",
+    "worked-splay-boundary-v1": "splay",
+    "worked-dimensional-conditioning-v1": "dimensional-stability",
+    "worked-process-monitoring-alarm-v1": "process-monitoring",
+    "worked-black-speck-source-map-v1": "black-specks",
 }
 
 
@@ -88,6 +94,15 @@ def main() -> None:
     need(Decimal("180") / Decimal("300") * Decimal("100") == Decimal("60"), "shot-utilisation arithmetic regression")
     need("acceptable" in " ".join(sum(cases["worked-process-window-v1"]["table"]["rows"], [])), "process-window robust-region teaching table missing")
 
+    need(Decimal("1.8") - Decimal("1.2") == Decimal("0.6"), "warpage post-mould delta regression")
+    need(Decimal("1.8") - Decimal("0.7") == Decimal("1.1"), "warpage cavity delta regression")
+    need(Decimal("50.03") - Decimal("50.08") == Decimal("-0.05"), "dimensional 30 min→24 h regression")
+    need(Decimal("50.02") - Decimal("50.03") == Decimal("-0.01"), "dimensional 24 h→72 h regression")
+    need("appearance" in cases["worked-weld-line-diagnosis-v1"]["title"].lower(), "weld-line product-requirement teaching case drifted")
+    need("material" in " ".join(cases["worked-splay-boundary-v1"]["observations"]).lower(), "splay boundary case lost material evidence")
+    need("trigger" in cases["worked-process-monitoring-alarm-v1"]["title"].lower(), "monitoring alarm decision-boundary case drifted")
+    need("cavity" in " ".join(cases["worked-black-speck-source-map-v1"]["observations"]).lower(), "black-speck source map lost cavity evidence")
+
     diagnosis = cases["worked-diagnostic-short-shot-v1"]
     need(len(diagnosis.get("observations", [])) >= 4, "diagnostic case lost discriminating observations")
     joined = " ".join(diagnosis["boundaries"]).lower()
@@ -103,7 +118,7 @@ def main() -> None:
         },
         "worked-case production authority boundary weakened",
     )
-    print("MouldMaster worked-case calculation QA passed: 18 governed synthetic cases retain exact arithmetic/diagnostic boundaries and fail-closed production authority.")
+    print("MouldMaster worked-case calculation QA passed: 24 governed synthetic cases retain exact arithmetic/diagnostic boundaries and fail-closed production authority.")
 
 
 if __name__ == "__main__":
