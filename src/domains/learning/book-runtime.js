@@ -1,7 +1,7 @@
 /* MouldMaster Book runtime — evidence-governed publication authorization. */
 (function(){
   'use strict';
-  const VERSION='2026.10.06.4';
+  const VERSION='2026.10.06.5';
   if(window.MMBook?.version===VERSION)return;
   const BOOK_DATA='./src/domains/learning/book-data/';
   const AUTH_PATH=`${BOOK_DATA}book-publication-authorization-v1.json`;
@@ -11,6 +11,7 @@
   const WORKED_CASES_PATH=`${BOOK_DATA}book-worked-engineering-cases-v1.json`;
   const DIAGRAMS_PATH=`${BOOK_DATA}book-engineering-diagrams-v1.json`;
   const ENRICHMENT_PATH=`${BOOK_DATA}book-evidence-enrichment-v2.json`;
+  const CLAIM_EVIDENCE_PATH=`${BOOK_DATA}book-claim-evidence-reference-v1.json`;
   const READER_PATH=`${BOOK_DATA}book-reader-architecture-v2.json`;
   const EDITORIAL_REVIEW_PATH=`${BOOK_DATA}book-editorial-expansion-review-v1.json`;
   const MATERIAL_ATLAS_PATH=`${BOOK_DATA}book-material-grade-atlas-v1.json`;
@@ -21,7 +22,7 @@
   const MATERIAL_PAGE_SIZE=24;
   const BATCH_PATHS=[`${BOOK_DATA}book-authored-foundations-v1.json`,`${BOOK_DATA}book-evidence-registry-v1.json`,`${BOOK_DATA}book-chapters-materials-machine-v1.json`,`${BOOK_DATA}book-authored-remaining-v1.json`];
   const AUTH_GIT_BLOB_SHA1='9b997c3b818570fe978835640ec967c71f85ffc1';
-  const REQUIRED_INTEGRITY_FILES=['book-manifest-v1.json','book-sme-review-v1.json','book-qualification-resolution-all-v1.json','book-claim-resolution-high-risk-v1.json','book-authored-foundations-v1.json','book-evidence-registry-v1.json','book-chapters-materials-machine-v1.json','book-authored-remaining-v1.json','book-worked-engineering-cases-v1.json','book-engineering-diagrams-v1.json','book-evidence-enrichment-v2.json','book-reader-architecture-v2.json','book-editorial-expansion-review-v1.json','book-material-grade-atlas-v1.json','book-material-regional-evidence-v1.json','material-catalog-v1.json'];
+  const REQUIRED_INTEGRITY_FILES=['book-manifest-v1.json','book-sme-review-v1.json','book-qualification-resolution-all-v1.json','book-claim-resolution-high-risk-v1.json','book-authored-foundations-v1.json','book-evidence-registry-v1.json','book-chapters-materials-machine-v1.json','book-authored-remaining-v1.json','book-worked-engineering-cases-v1.json','book-engineering-diagrams-v1.json','book-evidence-enrichment-v2.json','book-claim-evidence-reference-v1.json','book-reader-architecture-v2.json','book-editorial-expansion-review-v1.json','book-material-grade-atlas-v1.json','book-material-regional-evidence-v1.json','material-catalog-v1.json'];
   const CANONICAL_SOURCE_URLS=Object.freeze({
     'OUBELLAOUCH-2024-FIBRE-ORIENTATION':'https://doi.org/10.1007/s00170-024-12990-5',
     'BIELENBERG-2025-SWITCHOVER-REVIEW':'https://doi.org/10.3390/polym17081096',
@@ -29,7 +30,7 @@
     'PARIZS-2023-IN-MOLD-SENSORS':'https://doi.org/10.3390/s23031735',
     'LI-2024-WELD-LINE-REVIEW':'https://doi.org/10.1007/s00170-024-13607-7'
   });
-  let manifest=null,manifestPromise=null,materialPromise=null,coldMaterialSearchPromise=null,publicationAuthorization=null,bookSmeReview=null,qualificationReview=null,highRiskReview=null,workedCaseLedger=null,workedCasesByChapter=new Map(),diagramLedger=null,diagramsByChapter=new Map(),evidenceEnrichmentLedger=null,readerArchitecture=null,editorialExpansionReview=null,materialAtlas=null,materialCatalog=null,materialRegionalEvidence=null,materialSearchIndex={catalog:[],regional:[]},integrityMap=null,ui=null,previousView=null,open=false,contentsScrollY=0;
+  let manifest=null,manifestPromise=null,materialPromise=null,coldMaterialSearchPromise=null,publicationAuthorization=null,bookSmeReview=null,qualificationReview=null,highRiskReview=null,workedCaseLedger=null,workedCasesByChapter=new Map(),diagramLedger=null,diagramsByChapter=new Map(),evidenceEnrichmentLedger=null,claimEvidenceReference=null,claimEvidenceByChapter=new Map(),readerArchitecture=null,editorialExpansionReview=null,materialAtlas=null,materialCatalog=null,materialRegionalEvidence=null,materialSearchIndex={catalog:[],regional:[]},integrityMap=null,ui=null,previousView=null,open=false,contentsScrollY=0;
   const BOOK_RESUME_PREFIX='mm_book_resume_v1::',LEGACY_BOOK_RESUME_KEY='mouldmasterBookResume:v1',BOOK_RESUME_SCHEMA=1;
   let activeReadingPosition=null,resumeScrollTimer=0;
   function resumeStorageKey(){
@@ -156,9 +157,9 @@
   function validateQualificationReview(data){if(data?.schema!==1||data?.bookId!=='mouldmaster-book'||!Array.isArray(data.resolutions)||!Array.isArray(data.remainingQualifiedClaims))throw new Error('Book qualification-resolution identity check failed');const c=data.effectiveCountsAfterQualificationReview||{};if(c.chapters!==46||c.claims!==137||c.supported!==116||c.qualified!==21||c.hold!==0||c.conflicting!==0)throw new Error('Book qualification-resolution counts mismatch');return data;}
   function validateWorkedCases(data,declared,sourceMap,manifestData,auth){
     if(data?.schemaVersion!==1||data?.bookId!=='mouldmaster-book'||data?.release!==VERSION||data?.status!=='authorized-synthetic-teaching'||!Array.isArray(data.cases)||!Array.isArray(data.sourceSeeds))throw new Error('Book worked-case ledger identity check failed');
-    const permit=auth?.workedCasesAuthorization;if(permit?.status!=='authorized'||permit?.release!==VERSION||permit?.ledger!=='data/book-worked-engineering-cases-v1.json'||permit?.caseCount!==26||permit?.claimCount!==26||permit?.independentSmeStatus!=='hold')throw new Error('Book worked-case publication authorization missing');
+    const permit=auth?.workedCasesAuthorization;if(permit?.status!=='authorized'||permit?.release!==VERSION||permit?.ledger!=='data/book-worked-engineering-cases-v1.json'||permit?.caseCount!==27||permit?.claimCount!==27||permit?.independentSmeStatus!=='hold')throw new Error('Book worked-case publication authorization missing');
     for(const source of data.sourceSeeds){if(!source?.id||!source?.title||!source?.url||!source?.scope)throw new Error('Incomplete worked-case evidence source');if(sourceMap.has(source.id))throw new Error(`Duplicate worked-case source id: ${source.id}`);sourceMap.set(source.id,source);manifestData.sourceSeeds.push(source);}
-    if(data.cases.length!==26)throw new Error('Book worked-case count mismatch');const caseIds=new Set(),claimIds=new Set();
+    if(data.cases.length!==27)throw new Error('Book worked-case count mismatch');const caseIds=new Set(),claimIds=new Set();
     for(const item of data.cases){
       if(!item?.id||caseIds.has(item.id))throw new Error(`Duplicate or missing worked-case id: ${item?.id||'missing'}`);caseIds.add(item.id);
       if(!item?.chapterId||!declared.has(item.chapterId))throw new Error(`Invalid worked-case chapter binding: ${item?.chapterId||'missing'}`);
@@ -184,6 +185,17 @@
     const boundary=data.authorityBoundary||{};if(boundary.productionUse!=='advisory-only'||boundary.machineSpecific!==false||boundary.scaleDrawing!==false||boundary.validatedDesignAuthority!==false||boundary.independentSmeStatus!=='hold')throw new Error('Book engineering-diagram authority boundary weakened');
     return data;
   }
+  function validateClaimEvidenceReference(data,declared,sourceMap,manifestData,auth){
+    if(data?.schemaVersion!==1||data?.bookId!=='mouldmaster-book'||data?.release!==VERSION||data?.status!=='governed-reader-claim-evidence-index'||!Array.isArray(data.sourceSeeds)||!Array.isArray(data.chapters))throw new Error('Book claim-evidence reference identity check failed');
+    const permit=auth?.claimEvidenceReferenceAuthorization;if(permit?.status!=='authorized-derived-evidence-index'||permit?.release!==VERSION||permit?.ledger!=='data/book-claim-evidence-reference-v1.json'||permit?.chapterCount!==46||permit?.sourceCount!==27||permit?.noNewClaims!==true||permit?.independentSmeStatus!=='hold')throw new Error('Book claim-evidence reference authorization missing');
+    if(data.chapterCount!==46||data.sourceCount!==27||data.sourceSeeds.length!==27||data.chapters.length!==46)throw new Error('Book claim-evidence reference coverage mismatch');
+    const sourceIds=new Set();for(const source of data.sourceSeeds){if(!source?.id||!source?.title||!source?.url||!source?.scope||sourceIds.has(source.id))throw new Error('Invalid or duplicate claim-evidence source');sourceIds.add(source.id);if(!sourceMap.has(source.id)){sourceMap.set(source.id,source);manifestData.sourceSeeds.push(source);}}
+    const chapterIds=new Set();for(const row of data.chapters){if(!row?.chapterId||chapterIds.has(row.chapterId)||!declared.has(row.chapterId)||!Array.isArray(row.evidenceIds)||!row.evidenceIds.length)throw new Error('Invalid claim-evidence chapter coverage');chapterIds.add(row.chapterId);if(new Set(row.evidenceIds).size!==row.evidenceIds.length)throw new Error(`Duplicate claim-evidence id in ${row.chapterId}`);for(const id of row.evidenceIds)if(!sourceMap.has(id))throw new Error(`Unknown claim-evidence source ${id} in ${row.chapterId}`);}
+    if(chapterIds.size!==declared.size||[...declared.keys()].some(id=>!chapterIds.has(id)))throw new Error('Book claim-evidence chapter coverage incomplete');
+    const boundary=data.authorityBoundary||{};if(boundary.presentationOnly!==true||boundary.noNewClaims!==true||boundary.noEvidenceUpgrades!==true||boundary.noProductionAuthority!==true||boundary.independentSmeStatus!=='hold')throw new Error('Book claim-evidence authority boundary weakened');
+    return data;
+  }
+  function claimEvidenceIds(chapterId){return claimEvidenceByChapter.get(chapterId)||[];}
   function validateEvidenceEnrichment(data,declared,sourceMap,manifestData,auth){
     if(data?.schemaVersion!==1||data?.bookId!=='mouldmaster-book'||data?.release!==VERSION||data?.status!=='governed-publication-candidate'||!Array.isArray(data.chapterPatches)||!Array.isArray(data.sourceSeeds))throw new Error('Book evidence-enrichment ledger identity check failed');
     const permit=auth?.evidenceEnrichmentAuthorization;if(permit?.status!=='authorized'||permit?.release!==VERSION||permit?.ledger!=='data/book-evidence-enrichment-v2.json'||permit?.chapterCount!==10||permit?.sectionCount!==14||permit?.independentSmeStatus!=='hold')throw new Error('Book evidence-enrichment publication authorization missing');
@@ -289,6 +301,7 @@
     qualificationReview=validateQualificationReview(await verifiedJson(QUAL_PATH));
     highRiskReview=await verifiedJson(HIGH_RISK_PATH);if(highRiskReview?.schema!==1||highRiskReview?.bookId!==data.bookId)throw new Error('Book high-risk evidence identity mismatch');
     for(const ledger of [highRiskReview,qualificationReview])for(const source of ledger?.newEvidence||[])if(source?.id&&!sourceMap.has(source.id))sourceMap.set(source.id,source);
+    claimEvidenceReference=validateClaimEvidenceReference(await verifiedJson(CLAIM_EVIDENCE_PATH),declared,sourceMap,data,auth);claimEvidenceByChapter=new Map(claimEvidenceReference.chapters.map(row=>[row.chapterId,row.evidenceIds]));
     workedCaseLedger=validateWorkedCases(await verifiedJson(WORKED_CASES_PATH),declared,sourceMap,data,auth);workedCasesByChapter=new Map();for(const item of workedCaseLedger.cases){const rows=workedCasesByChapter.get(item.chapterId)||[];rows.push(item);workedCasesByChapter.set(item.chapterId,rows);}
     diagramLedger=validateEngineeringDiagrams(await verifiedJson(DIAGRAMS_PATH),declared,auth);diagramsByChapter=new Map();for(const item of diagramLedger.diagrams){const rows=diagramsByChapter.get(item.chapterId)||[];rows.push(item);diagramsByChapter.set(item.chapterId,rows);}
     evidenceEnrichmentLedger=validateEvidenceEnrichment(await verifiedJson(ENRICHMENT_PATH),declared,sourceMap,data,auth);
@@ -328,8 +341,8 @@
   const allChapters=()=> (manifest?.parts||[]).flatMap(part=>part.chapters||[]),allReaderChapters=()=>readerArchitecture?.readerChapters||[],verifiedChapters=()=>allChapters().filter(ch=>ch.state==='verified');
   function evidenceMap(){const map=new Map((manifest?.sourceSeeds||[]).map(x=>[x.id,x]));for(const ledger of [highRiskReview,qualificationReview])for(const x of ledger?.newEvidence||[])if(x?.id&&!map.has(x.id))map.set(x.id,x);for(const x of workedCaseLedger?.sourceSeeds||[])if(x?.id&&!map.has(x.id))map.set(x.id,x);return map;}
   function evidenceItem(id){const s=evidenceMap().get(id);if(!s)return `<code>${esc(id)}</code>`;const label=esc(s.title||s.id),meta=esc([s.issuer,s.scope].filter(Boolean).join(' — ')),url=canonicalUrl(s);return url?`<a href="${esc(url)}" target="_blank" rel="noopener noreferrer"><b>${label}</b></a>${meta?`<br><small>${meta}</small>`:''}`:`<b>${label}</b>${meta?`<br><small>${meta}</small>`:''}`;}
-  function sourceHtml(chapter){const map=evidenceMap(),sources=(chapter.sourceIds||[]).map(id=>map.get(id)).filter(Boolean);return sources.length?`<h4>Chapter evidence anchors</h4><ul>${sources.map(s=>{const url=canonicalUrl(s);return `<li>${url?`<a href="${esc(url)}" target="_blank" rel="noopener noreferrer"><b>${esc(s.title)}</b></a>`:`<b>${esc(s.title)}</b>`}<br><small>${esc(s.id)} — ${esc(s.scope)}</small></li>`}).join('')}</ul>`:'<p>No chapter source anchor has been attached.</p>';}
-  function claimTraceHtml(chapter){if(!qualificationReview)return '<p><small>Publication claim trace unavailable.</small></p>';const prefix=`${chapter.id}-`,resolved=(qualificationReview.resolutions||[]).filter(x=>String(x.claimId||'').startsWith(prefix)),qualified=(qualificationReview.remainingQualifiedClaims||[]).filter(x=>String(x.claimId||'').startsWith(prefix));if(!resolved.length&&!qualified.length)return '<p><small>No later qualification decision changed this chapter; use the attached chapter anchors and governed publication authorization.</small></p>';const rows=resolved.map(x=>`<li><b>${esc(x.claimId)} — ${esc(x.newConclusion||'reviewed')}</b><p>${esc(x.reason||'')}</p>${(x.evidence||[]).length?`<ul>${x.evidence.map(id=>`<li>${evidenceItem(id)}</li>`).join('')}</ul>`:''}</li>`).join(''),qs=qualified.map(x=>`<li><b>${esc(x.claimId)} — scope-qualified</b><p>${esc(x.reason||'')}</p><small>${esc(x.qualificationType||'scope boundary')} · publication blocking: ${x.blockingPublication?'yes':'no'}</small></li>`).join('');return `<details class="mm-book-claim-trace"><summary><b>Publication claim trace</b> — why this wording was authorized</summary><p>This trace shows final evidence upgrades and deliberate scope qualifications. It supplements, rather than replaces, the chapter's source anchors.</p><ul>${rows}${qs}</ul></details>`;}
+  function sourceHtml(chapter){const map=evidenceMap(),ids=[...new Set([...(chapter.sourceIds||[]),...claimEvidenceIds(chapter.id)])],sources=ids.map(id=>map.get(id)).filter(Boolean);return sources.length?`<h4>Chapter evidence anchors</h4><ul>${sources.map(s=>{const url=canonicalUrl(s);return `<li>${url?`<a href="${esc(url)}" target="_blank" rel="noopener noreferrer"><b>${esc(s.title)}</b></a>`:`<b>${esc(s.title)}</b>`}<br><small>${esc(s.id)} — ${esc(s.scope)}</small></li>`}).join('')}</ul>`:'<p>No chapter source anchor has been attached.</p>';}
+  function claimTraceHtml(chapter){if(!qualificationReview)return '<p><small>Publication claim trace unavailable.</small></p>';const prefix=`${chapter.id}-`,resolved=(qualificationReview.resolutions||[]).filter(x=>String(x.claimId||'').startsWith(prefix)),qualified=(qualificationReview.remainingQualifiedClaims||[]).filter(x=>String(x.claimId||'').startsWith(prefix));if(!resolved.length&&!qualified.length)return '<p><small>No later qualification decision changed this chapter; use the attached chapter anchors, including governed claim-review evidence, and the governed publication authorization.</small></p>';const rows=resolved.map(x=>`<li><b>${esc(x.claimId)} — ${esc(x.newConclusion||'reviewed')}</b><p>${esc(x.reason||'')}</p>${(x.evidence||[]).length?`<ul>${x.evidence.map(id=>`<li>${evidenceItem(id)}</li>`).join('')}</ul>`:''}</li>`).join(''),qs=qualified.map(x=>`<li><b>${esc(x.claimId)} — scope-qualified</b><p>${esc(x.reason||'')}</p><small>${esc(x.qualificationType||'scope boundary')} · publication blocking: ${x.blockingPublication?'yes':'no'}</small></li>`).join('');return `<details class="mm-book-claim-trace"><summary><b>Publication claim trace</b> — why this wording was authorized</summary><p>This trace shows final evidence upgrades and deliberate scope qualifications. It supplements, rather than replaces, the chapter's source anchors.</p><ul>${rows}${qs}</ul></details>`;}
   function diagramHtml(chapter){const items=diagramsByChapter.get(chapter.id)||[];return items.map(item=>`<figure class="mm-book-engineering-diagram" data-mm-book-diagram="${esc(item.id)}"><img src="./${esc(item.asset)}" alt="${esc(item.alt)}" loading="lazy" decoding="async"><figcaption><b>${esc(item.title)}</b><br><span>${esc(item.caption)}</span><br><small>Governed instructional diagram · not to scale · independent human SME review remains pending.</small></figcaption></figure>`).join('');}
   function workedCaseHtml(chapter){
     const items=workedCasesByChapter.get(chapter.id)||[];
@@ -341,7 +354,7 @@
   }
   function readerReferencesHtml(reader,modules){
     const ids=new Set();
-    for(const ch of modules)for(const id of ch.sourceIds||[])ids.add(id);
+    for(const ch of modules){for(const id of ch.sourceIds||[])ids.add(id);for(const id of claimEvidenceIds(ch.id))ids.add(id);}
     for(const patch of evidenceEnrichmentLedger?.chapterPatches||[])if(reader.moduleIds.includes(patch.chapterId))for(const id of patch.sourceIds||[])ids.add(id);
     for(const item of workedCaseLedger?.cases||[])if(reader.moduleIds.includes(item.chapterId))for(const id of item.sourceIds||[])ids.add(id);
     if(!ids.size)return '';
