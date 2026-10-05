@@ -191,6 +191,8 @@ for marker in (
     '"Pre-merge Public Candidate"',
     '".github/workflows/premerge-public-candidate.yml"',
     'run.get("event") != "pull_request"',
+    'run.get("status") != "completed"',
+    'run.get("conclusion") != "success"',
     "actions/runs/{run_id}/artifacts",
     "artifact.get(\"expired\") is not False",
     "live artifact digest does not match canonical webCandidate",
