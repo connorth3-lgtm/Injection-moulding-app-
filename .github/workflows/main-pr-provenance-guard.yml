@@ -77,6 +77,8 @@ jobs:
 
           PR_NUMBER=$(jq -r '.number' <<<"$merged_pr_json")
           PR_HEAD_SHA=$(jq -r '.head.sha' <<<"$merged_pr_json")
+          PR_HEAD_REF=$(jq -r '.head.ref' <<<"$merged_pr_json")
+          PR_HEAD_REPO_ID=$(jq -r '.head.repo.id' <<<"$merged_pr_json")
           PR_AUTHOR=$(jq -r '.user.login' <<<"$merged_pr_json")
           if [[ ! "$PR_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]; then
             fail_audit "Merged PR #$PR_NUMBER returned a non-canonical exact head SHA."
@@ -107,11 +109,11 @@ jobs:
             all_seen=true
 
             for workflow in "${required_workflows[@]}"; do
-              status=$(jq -r --arg workflow "$workflow" --argjson pr "$PR_NUMBER" \
-                '[.workflow_runs[] | select(.name == $workflow and any(.pull_requests[]?; (.number == $pr and .base.ref == "main")))] | sort_by([(.updated_at // .created_at // ""), (.id // 0)]) | reverse | (.[0].status // "missing")' \
+              status=$(jq -r --arg workflow "$workflow" --argjson pr "$PR_NUMBER" --arg head_ref "$PR_HEAD_REF" --argjson head_repo "$PR_HEAD_REPO_ID" \
+                '[.workflow_runs[] | select(.name == $workflow and ((any(.pull_requests[]?; (.number == $pr and .base.ref == "main"))) or (((.pull_requests // []) | length) == 0 and .head_branch == $head_ref and (.head_repository.id // 0) == $head_repo)))] | sort_by([(.updated_at // .created_at // ""), (.id // 0)]) | reverse | (.[0].status // "missing")' \
                 <<<"$runs_json")
-              conclusion=$(jq -r --arg workflow "$workflow" --argjson pr "$PR_NUMBER" \
-                '[.workflow_runs[] | select(.name == $workflow and any(.pull_requests[]?; (.number == $pr and .base.ref == "main")))] | sort_by([(.updated_at // .created_at // ""), (.id // 0)]) | reverse | (.[0].conclusion // "missing")' \
+              conclusion=$(jq -r --arg workflow "$workflow" --argjson pr "$PR_NUMBER" --arg head_ref "$PR_HEAD_REF" --argjson head_repo "$PR_HEAD_REPO_ID" \
+                '[.workflow_runs[] | select(.name == $workflow and ((any(.pull_requests[]?; (.number == $pr and .base.ref == "main"))) or (((.pull_requests // []) | length) == 0 and .head_branch == $head_ref and (.head_repository.id // 0) == $head_repo)))] | sort_by([(.updated_at // .created_at // ""), (.id // 0)]) | reverse | (.[0].conclusion // "missing")' \
                 <<<"$runs_json")
 
               echo "$workflow: status=$status conclusion=$conclusion"
