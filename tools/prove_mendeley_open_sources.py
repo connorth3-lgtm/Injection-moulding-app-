@@ -32,6 +32,10 @@ FILE_ID_RE=re.compile(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f
 SHORT_ID_RE=re.compile(r'^[a-z0-9]{10}$')
 METADATA_IDENTITY_ATTEMPTS=5
 
+class MendeleyTransportUnavailable(RuntimeError):
+    """Pinned Mendeley source could not be reached after bounded transport retries."""
+
+
 
 def assert_https_host(url,allowed_hosts):
     parsed=urllib.parse.urlsplit(url)
@@ -52,9 +56,14 @@ DOWNLOAD_OPENER=urllib.request.build_opener(AllowlistedRedirect())
 def get_json(url):
     assert_https_host(url,{MENDELEY_HOST})
     req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-measured-learning/2.4'})
-    with urlopen_with_retry(req,timeout=60,attempts=8,base_delay=1.5,max_delay=20.0) as r:
-        assert_https_host(r.geturl(),{MENDELEY_HOST})
-        return json.load(r)
+    try:
+        with urlopen_with_retry(req,timeout=60,attempts=8,base_delay=1.5,max_delay=20.0) as r:
+            assert_https_host(r.geturl(),{MENDELEY_HOST})
+            return json.load(r)
+    except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, socket.timeout, ConnectionError) as exc:
+        if isinstance(exc, urllib.error.HTTPError) and exc.code not in RETRYABLE_HTTP:
+            raise
+        raise MendeleyTransportUnavailable(f'Mendeley metadata unavailable after bounded retries: {exc}') from exc
 
 
 def walk_files(value):
@@ -151,6 +160,7 @@ def _retryable_download_error(exc):
 
 def download_first(urls,destination):
     errors=[]
+    transport_only=True
     for url in urls:
         assert_https_host(url,{MENDELEY_HOST,MENDELEY_API_HOST,MENDELEY_FILE_HOST})
         for attempt in range(5):
@@ -164,12 +174,18 @@ def download_first(urls,destination):
                         out.write(chunk)
                 if Path(destination).stat().st_size>0:
                     return url
-                raise RuntimeError('download returned zero bytes')
+                transport_only=False
+                errors.append(f'{url} attempt {attempt+1}/5: download returned zero bytes')
+                break
             except Exception as exc:
+                retryable=_retryable_download_error(exc)
+                transport_only=transport_only and retryable
                 errors.append(f'{url} attempt {attempt+1}/5: {exc}')
-                if not _retryable_download_error(exc) or attempt==4:
+                if not retryable or attempt==4:
                     break
                 time.sleep(min(12,1.5*(2**attempt)))
+    if transport_only:
+        raise MendeleyTransportUnavailable('; '.join(errors))
     raise RuntimeError('; '.join(errors))
 
 
@@ -213,21 +229,36 @@ def workbook_text_schema(path):
 
 
 def main():
-    out=Path('measured-source-proof'); out.mkdir(exist_ok=True); proofs=[]
-    for source in SOURCES:
-        endpoint,meta=public_files(source['shortId'],source['version'])
-        source_proof={'datasetId':source['datasetId'],'metadataEndpoint':endpoint,'files':[]}
-        for file_id,name,expected_sha in source['files']:
-            _identity,resolved_id,urls=resolve_file(meta,file_id,name,source['shortId'],source['version'],expected_sha)
-            with tempfile.NamedTemporaryFile(suffix='.xlsx') as tmp:
-                used=download_first(urls,tmp.name)
-                digest=hashlib.sha256(Path(tmp.name).read_bytes()).hexdigest()
-                if digest!=expected_sha: raise SystemExit(f'{source["datasetId"]}/{name} SHA mismatch: {digest}')
-                schema=workbook_text_schema(tmp.name)
-            source_proof['files'].append({'name':name,'resolvedFileId':resolved_id,'sha256':'sha256:'+digest,'downloadRoute':used,'sheets':schema})
-        source_proof['status']='source-proof-passed'; source_proof['rawNumericValuesEmitted']=False; proofs.append(source_proof)
-        print(json.dumps({'status':'source-proof-passed','datasetId':source['datasetId'],'files':[f['name'] for f in source_proof['files']]},separators=(',',':')))
-    result={'schemaVersion':2,'status':'source-proofs-passed','sources':proofs,'boundary':'Workbook IDs, names, exact hashes, sheet names and bounded text/header labels only. Version-pinned remote metadata must match the governed file identity and SHA before its public download URL is accepted. Download redirects are checked before following and restricted to Mendeley plus its exact public-file S3 host. Numeric worksheet values are not emitted.'}
-    (out/'mendeley-open-workbook-source-proofs.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
-    return 0
+    try:
+        out=Path('measured-source-proof'); out.mkdir(exist_ok=True); proofs=[]
+        for source in SOURCES:
+            endpoint,meta=public_files(source['shortId'],source['version'])
+            source_proof={'datasetId':source['datasetId'],'metadataEndpoint':endpoint,'files':[]}
+            for file_id,name,expected_sha in source['files']:
+                _identity,resolved_id,urls=resolve_file(meta,file_id,name,source['shortId'],source['version'],expected_sha)
+                with tempfile.NamedTemporaryFile(suffix='.xlsx') as tmp:
+                    used=download_first(urls,tmp.name)
+                    digest=hashlib.sha256(Path(tmp.name).read_bytes()).hexdigest()
+                    if digest!=expected_sha: raise SystemExit(f'{source["datasetId"]}/{name} SHA mismatch: {digest}')
+                    schema=workbook_text_schema(tmp.name)
+                source_proof['files'].append({'name':name,'resolvedFileId':resolved_id,'sha256':'sha256:'+digest,'downloadRoute':used,'sheets':schema})
+            source_proof['status']='source-proof-passed'; source_proof['rawNumericValuesEmitted']=False; proofs.append(source_proof)
+            print(json.dumps({'status':'source-proof-passed','datasetId':source['datasetId'],'files':[f['name'] for f in source_proof['files']]},separators=(',',':')))
+        result={'schemaVersion':2,'status':'source-proofs-passed','sources':proofs,'boundary':'Workbook IDs, names, exact hashes, sheet names and bounded text/header labels only. Version-pinned remote metadata must match the governed file identity and SHA before its public download URL is accepted. Download redirects are checked before following and restricted to Mendeley plus its exact public-file S3 host. Numeric worksheet values are not emitted.'}
+        (out/'mendeley-open-workbook-source-proofs.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
+        return 0
+    except MendeleyTransportUnavailable as exc:
+        out=Path('measured-source-proof'); out.mkdir(exist_ok=True)
+        status={
+            'schemaVersion':1,
+            'status':'transport-unavailable',
+            'promotionEligible':False,
+            'governedDatasetIds':[source['datasetId'] for source in SOURCES],
+            'reason':str(exc),
+            'boundary':'Transport-only outage. No source identity, filename, version, SHA, schema, semantic or promotion requirement is relaxed.'
+        }
+        (out/'mendeley-live-status.json').write_text(json.dumps(status,indent=2)+'\n',encoding='utf-8')
+        print(json.dumps({'status':'mendeley-transport-unavailable','promotionEligible':False},separators=(',',':')))
+        return 75
+
 if __name__=='__main__': raise SystemExit(main())
