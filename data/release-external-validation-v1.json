@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.06.1",
+  "release": "2026.10.06.2",
   "validationIndex": "qa/EXTERNAL_VALIDATION_2026.10.06.1.md",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
@@ -62,7 +62,8 @@
     "status": "hold",
     "evidenceContract": "data/book-sme-review-v1.json",
     "reviewPacket": "qa/BOOK_SME_REVIEW_2026.10.06.1.md",
-    "required": "Independent human SME approval of all 46 governed Book modules across the six required review dimensions; the 20 reader chapters are structural groupings only."
+    "required": "Independent human SME approval of all 46 governed Book modules across the six required review dimensions; the 20 reader chapters are structural groupings only.",
+    "contentRelease": "2026.10.06.1"
   },
   "curriculumSme": {
     "status": "hold",
