@@ -48,11 +48,33 @@ jobs:
           --source-sha "${{ github.sha }}"
           --require-native-protection
 
-  # Start independently of production-source so a competing GitHub-managed legacy
-  # Pages run gets the earliest possible cancellation attempt. This remains damage
-  # limitation only: if workflow mode cannot be confirmed, the guard fails closed.
-  publisher-guard:
+  # Start actions-only containment immediately so a competing GitHub-managed
+  # legacy Pages run can be cancelled before it deploys. This job cannot change
+  # repository Pages settings; mutation authority is granted only after provenance passes.
+  legacy-containment:
     if: github.event_name == 'push'
+    permissions:
+      contents: read
+      actions: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Contain competing legacy branch Pages publisher
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          python3 tools/quarantine_legacy_pages.py
+          --repository "${{ github.repository }}"
+          --source-sha "${{ github.sha }}"
+          --contain-only
+
+  publisher-guard:
+    if: >-
+      github.event_name == 'push' &&
+      needs.production-source.result == 'success' &&
+      needs.legacy-containment.result == 'success'
+    needs: [production-source, legacy-containment]
     permissions:
       contents: read
       actions: write
@@ -61,19 +83,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Block competing legacy branch Pages publisher
-        if: github.event_name != 'pull_request'
+      - name: Confirm workflow-mode Pages publisher after provenance
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: >-
           python3 tools/quarantine_legacy_pages.py
           --repository "${{ github.repository }}"
           --source-sha "${{ github.sha }}"
-      - name: PRs validate release readiness but never publish
-        if: github.event_name == 'pull_request'
-        run: echo "PR validation checks production provenance, the physical-device contract and exact build behavior without claiming device evidence, mutating Pages settings or publishing."
       - name: Confirm protected-main preview-only publication path
-        if: github.event_name == 'push'
         run: echo "Protected main pushes always publish the release-hold artifact with the complete governed learner candidate under /preview/. Production-root publication is disabled in this workflow."
 
   build:
