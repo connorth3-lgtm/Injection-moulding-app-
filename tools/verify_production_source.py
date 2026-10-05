@@ -286,6 +286,7 @@ def self_test() -> None:
         "workflow_runs": [
             {
                 "name": name,
+                "path": REQUIRED_WORKFLOW_PATHS[name],
                 "status": "completed",
                 "conclusion": "success",
                 "updated_at": "2026-09-03T00:00:00Z",
@@ -299,6 +300,7 @@ def self_test() -> None:
     wrong_pr = {
         "workflow_runs": [{
             "name": REQUIRED_WORKFLOWS[0],
+            "path": REQUIRED_WORKFLOW_PATHS[REQUIRED_WORKFLOWS[0]],
             "status": "completed",
             "conclusion": "success",
             "updated_at": "2026-09-03T01:00:00Z",
