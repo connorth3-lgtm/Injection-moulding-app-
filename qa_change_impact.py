@@ -25,7 +25,7 @@ cases=[
     ({"data/measured-learning/promoted-v1.json"},
      {"measured_learning"}),
     ({"src/domains/process/process-data-integrity.js"},
-     {"runtime","browser","process_data","residual_integrity","candidate_binding"}),
+     {"runtime","browser","process_data","residual_integrity","candidate_binding","measured_learning"}),
     ({"src/domains/governance/production-health.js"},
      {"runtime","browser","candidate_binding"}),
     ({".github/workflows/question-quality-50-pass.yml"},
@@ -71,6 +71,10 @@ need(len(prefixes)==len(set(prefixes)),"dependency failure-ID prefixes must be u
 metadata_graph=graph_impact({"data/release-external-validation-v1.json"})
 need("shell" not in metadata_graph["directAreas"],"release metadata must not be directly owned by shell")
 need(classify({"data/release-external-validation-v1.json"})["runtime"] is False,"release metadata must remain non-runtime after graph expansion")
+need(classify({"src/domains/process/process-data-integrity.js"})["measured_learning"] is True,
+     "downstream measured-learning risk must inherit process-data changes from the dependency graph")
+need(classify({"src/domains/shell/pwa-shell.js"})["measured_learning"] is True,
+     "downstream measured-learning risk must inherit shell changes from the dependency graph")
 
 root=Path(__file__).resolve().parent
 for tool in (
