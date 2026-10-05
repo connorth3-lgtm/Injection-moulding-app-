@@ -1,6 +1,7 @@
 from pathlib import Path
 import json
 import re
+import shlex
 
 ROOT = Path(__file__).resolve().parent
 WORKFLOW_DIR = ROOT / ".github" / "workflows"
@@ -54,6 +55,37 @@ def all_external_refs(text, rel):
     return refs
 
 
+
+def pinned_pip_specs(text, rel):
+    specs = []
+    value_options = {"-r", "--requirement", "-c", "--constraint", "--index-url", "--extra-index-url", "--find-links"}
+    for line_no, line in enumerate(text.splitlines(), 1):
+        if "pip install" not in line:
+            continue
+        tail = line.split("pip install", 1)[1].strip()
+        if not tail:
+            continue
+        tokens = shlex.split(tail)
+        skip_next = False
+        for token in tokens:
+            if skip_next:
+                skip_next = False
+                continue
+            if token in value_options:
+                skip_next = True
+                continue
+            if token.startswith("-") or token == "\\":
+                continue
+            need(
+                "==" in token,
+                f"unpinned workflow-time pip dependency is forbidden in {rel}:{line_no}: {token}",
+            )
+            name, version = token.split("==", 1)
+            need(name.strip() and version.strip(), f"malformed pinned pip dependency in {rel}:{line_no}: {token}")
+            specs.append(token)
+    return specs
+
+
 def governed_refs(text, rel):
     refs = []
     pattern = re.compile(r"actions/(checkout|setup-python|setup-node|upload-artifact|download-artifact)@([^\s#]+)(?:\s+#\s*v(\d+)(?:\.\d+(?:\.\d+)?)?)?")
@@ -73,25 +105,28 @@ for rel in WORKFLOWS:
     text = path.read_text(encoding="utf-8")
     refs = governed_refs(text, rel)
     external_refs = all_external_refs(text, rel)
+    pip_specs = pinned_pip_specs(text, rel)
     # A workflow may legitimately use no governed core Action. Every external
-    # Action reference that is present must still be immutable; local ./ actions
-    # and local reusable workflows remain repository-bound.
+    # Action reference must be immutable, and workflow-time Python packages must
+    # use exact versions rather than mutable latest-resolution installs.
     report.append({
         "workflow": rel,
         "coreActionRefs": len(refs),
         "externalActionRefs": len(external_refs),
         "shaPinnedRefs": len(external_refs),
+        "pinnedPipSpecs": len(pip_specs),
         "pins": sorted(set(external_refs)),
+        "pipPins": sorted(set(pip_specs)),
     })
 
 (ROOT / "critical-actions-versions-report.json").write_text(json.dumps({
     "schema": 2,
     "result": "pass",
     "workflowCount": len(WORKFLOWS),
-    "policy": "all-external-actions-immutable; governed-core-actions-exact-reviewed-sha; human-readable major annotations optional",
+    "policy": "all-external-actions-immutable; governed-core-actions-exact-reviewed-sha; workflow-pip-dependencies-exact-version; human-readable major annotations optional",
     "approvedPins": PINNED,
     "workflows": report,
 }, indent=2) + "\n", encoding="utf-8")
 
 need(len(WORKFLOWS) >= 70, "workflow inventory unexpectedly shrank; repository-wide pin coverage may be incomplete")
-print(f"MouldMaster GitHub Actions QA passed ({len(WORKFLOWS)} workflows scanned; every external Action reference is immutable and every governed core Action uses the exact reviewed SHA pin).")
+print(f"MouldMaster GitHub Actions QA passed ({len(WORKFLOWS)} workflows scanned; every external Action reference is immutable, every governed core Action uses the exact reviewed SHA pin, and workflow-time pip dependencies are exact-version pinned).")
