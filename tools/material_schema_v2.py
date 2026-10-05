@@ -107,6 +107,7 @@ def validate_grade_v2(grade: dict[str, Any], context: str = "grade") -> list[str
         _need(sid.startswith("src-"), f"{source_context}: id must start src-", errors)
         _need(sid not in source_ids, f"{source_context}: duplicate source id {sid}", errors)
         source_ids.add(sid)
+        _need(_text(source.get("url")).startswith("https://"), f"{source_context}: source URL must use HTTPS", errors)
         _need(bool(_text(source.get("retrievedAt"))), f"{source_context}: retrievedAt is required", errors)
         if stage in {"validated", "published"}:
             _need(bool(_text(source.get("revision"))), f"{source_context}: revision is required for {stage} evidence", errors)
