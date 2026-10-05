@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.06.1",
+  "release": "2026.10.06.2",
   "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.06.1.md",
   "sourceSha": "edf2aa5ba6783d4452263330cdaae9b74dadc8ea",
   "runtimeFingerprint": "sha256:f5457ffcb9f60cf6e8680b2f2faf13fc3f46a83269100744495d6951336e2abb",
