@@ -197,9 +197,9 @@ need(book_sme.get('status') == 'hold' and book_sme.get('reviews') == [], 'indepe
 current_web_release=json.loads((ROOT / 'version.json').read_text(encoding='utf-8')).get('web_release')
 need(isinstance(book_sme.get('release'),str) and book_sme.get('release') <= current_web_release, 'Book SME evidence cannot target a future learner release')
 need(book_sme.get('release') == enrichment.get('release'), 'Book SME and evidence-enrichment review scope must remain bound to the same content release')
-need(len(book_sme.get('workedCaseIds', [])) == 24 and len(set(book_sme.get('workedCaseIds', []))) == 24, 'Book SME worked-case review scope is incomplete')
+need(len(book_sme.get('workedCaseIds', [])) == 26 and len(set(book_sme.get('workedCaseIds', []))) == 26, 'Book SME worked-case review scope is incomplete')
 need(len(book_sme.get('enrichmentChapterIds', [])) == 10 and len(set(book_sme.get('enrichmentChapterIds', []))) == 10, 'Book SME evidence-enrichment review scope is incomplete')
-need(len(book_sme.get('diagramIds', [])) == 18 and len(set(book_sme.get('diagramIds', []))) == 18, 'Book SME diagram review scope is incomplete')
+need(len(book_sme.get('diagramIds', [])) == 21 and len(set(book_sme.get('diagramIds', []))) == 21, 'Book SME diagram review scope is incomplete')
 need(len(book_sme.get('chapterIds', [])) == 46 and len(set(book_sme['chapterIds'])) == 46, 'Book SME chapter coverage drift')
 need(qualification['effectiveCountsAfterQualificationReview'] == {'chapters':46,'claims':137,'supported':116,'qualified':21,'hold':0,'conflicting':0}, 'qualification counts drift')
 need(authorization['status'] == 'authorized' and authorization['authorizationType'] == 'governed-book-publication', 'publication authorization identity drift')
@@ -234,4 +234,4 @@ need('STATIC_DATA_DIRS.flatMap(filesUnder)' in integrity_script, 'desktop static
 
 print('PASS: Book uses one canonical runtime with exact-byte publication binding and fail-closed authorization.')
 print('PASS: dynamic scripts are release-versioned before late loaders, Book is globally searchable, and learner-facing academic evidence uses canonical DOI links.')
-print('PASS: twenty-four synthetic worked cases and eighteen governed engineering diagrams are integrated while independent SME/external validation remains HOLD.')
+print('PASS: twenty-six synthetic worked cases and twenty-one governed engineering diagrams are integrated while independent SME/external validation remains HOLD.')
