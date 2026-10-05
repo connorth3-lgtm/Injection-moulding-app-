@@ -303,9 +303,12 @@ def runtime_transform(name: str, source: str) -> str:
   const url=String(raw||'').trim();
   return /^https:\/\/[^\s]+$/i.test(url)?url:'';
 }
+function pvSafeSourceLink(raw,label){
+  const url=pvSafeExternalUrl(raw);
+  return url?`<a class="standard-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)} ↗</a>`:'<span class="tiny muted">Official source URL unavailable</span>';
+}
 function pvStandardsLink(item,label){
-  const url=pvSafeExternalUrl(item?.url);
-  return url?`<a class="standard-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`:'<span class="tiny muted">Official source URL unavailable</span>';
+  return pvSafeSourceLink(item?.url,label);
 }
 '''
         transformed = transformed.replace(standards_marker, standards_helper + standards_marker, 1)
@@ -317,6 +320,14 @@ function pvStandardsLink(item,label){
             if transformed.count(old) != 1:
                 fail(f"frozen standards link source drifted for marker: {old}")
             transformed = transformed.replace(old, new, 1)
+        assessment_source_link = '<a class="standard-link" href="${x.sourceUrl}" target="_blank" rel="noopener">${esc(x.reference)} ↗</a>'
+        assessment_source_count = transformed.count(assessment_source_link)
+        if assessment_source_count != 2:
+            fail(f"frozen assessment source-link count drifted: expected 2, got {assessment_source_count}")
+        transformed = transformed.replace(
+            assessment_source_link,
+            "${pvSafeSourceLink(x.sourceUrl,x.reference)}",
+        )
         for old, new in SIMULATOR_SEMANTIC_REPLACEMENTS.items():
             if transformed.count(old) != 1:
                 fail(f"frozen simulator semantic source drifted for marker: {old}")
@@ -624,6 +635,10 @@ def check_state() -> None:
         fail("active learner creation must not use timestamp-only profile IDs")
     if 'href="${item.url}"' in hardened:
         fail("active standards renderer must not interpolate raw governed URLs into href")
+    if 'href="${x.sourceUrl}"' in hardened:
+        fail("active assessment renderer must not interpolate raw source URLs into href")
+    if "function pvSafeSourceLink(raw,label)" not in hardened:
+        fail("active assessment/source link renderer is missing the HTTPS-safe link helper")
     final_slot = expected[expected_names[-1]]
     for marker in ("MM_INLINE_HANDLER_BRIDGE", "ALLOWED_CALLS", "executeHandler"):
         if marker not in final_slot:
