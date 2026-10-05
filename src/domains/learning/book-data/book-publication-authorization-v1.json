@@ -37,8 +37,8 @@
       "book-material-regional-evidence-v1.json": "4a42fa97f737b13271518d63672d3c4a01421e14",
       "material-catalog-v1.json": "88ac789aef21314cf2fbef194937ea3dca180471",
       "book-engineering-diagrams-v1.json": "60e9c1d63711da600a2baf9f51a247ba6876d021",
-      "book-reader-architecture-v2.json": "a285929999b4121922670c46ae33ddc019f333d8",
-      "book-editorial-expansion-review-v1.json": "9cf60554af9ae433cb710e7ba02a16fae1a18163"
+      "book-reader-architecture-v2.json": "529928cd366853093266a107034eacc2c5482d15",
+      "book-editorial-expansion-review-v1.json": "37828ac049441964e960d403ff67983290b24d9d"
     }
   },
   "canonicalAcademicEvidenceUrls": {
@@ -222,7 +222,7 @@
     "governedModuleCount": 46,
     "noNewTechnicalClaims": true,
     "independentSmeStatus": "hold",
-    "authorityBoundary": "Reader chapters are editorial groupings with derived depth labels, objectives, knowledge checks and application prompts. These learning scaffolds add no technical claims; underlying governed module state, claims, evidence and SME status remain authoritative."
+    "authorityBoundary": "Reader chapters are editorial groupings with derived depth labels, objectives, knowledge checks, application prompts and selected sequence prompts for continuity. These scaffolds add no technical claims; underlying governed module state, claims, evidence and SME status remain authoritative."
   },
   "editorialExpansionAuthorization": {
     "status": "authorized-repository-technical-source-review",
