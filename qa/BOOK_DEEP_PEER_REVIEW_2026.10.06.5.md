@@ -39,12 +39,16 @@ The 2026.10.06.5 revision closes defects found only after rereading the expanded
 
 ## Evidence-transparency follow-up after the third 100-lens review
 
-The 2026.10.06.5 revision closes the reader-facing evidence transparency gap found after the .4 runtime/governance fixes:
+The 2026.10.06.5 revision closes the reader-facing evidence transparency gap found after the .4 runtime/governance fixes. A post-review integrity run then caught a malformed first-pass index: claim IDs had not been serialized correctly and the hot-runner module's initial-review evidence was empty even though its final supported state is evidence-backed by later resolution ledgers. The corrected index therefore derives the **final governed evidence state**, not only the initial review snapshot:
 
-- adds an exact-byte claim-evidence reference index derived from the five governed claim-review ledgers;
-- covers all 46 governed modules and all 27 distinct evidence IDs used by those claim reviews;
-- makes module and reader chapter reference surfaces include governed claim-review evidence instead of relying only on authored sourceIds, enrichment and worked-case anchors;
-- aligns nine previously zero-overlap worked cases with at least one parent-module governed evidence source while preserving their specialised case references;
+- derives from all five governed claim-review ledgers plus all four resolution/qualification ledgers;
+- preserves all 137 real claim IDs and requires non-empty final evidence for every claim and every one of the 46 governed modules;
+- exposes all 52 distinct evidence IDs used by the final governed claim state;
+- makes module and all 20 reader-chapter reference surfaces include 100% of their governed final claim evidence instead of relying only on authored sourceIds, enrichment and worked-case anchors;
+- restores the resolved hot-runner evidence (Husky, Mold-Masters and BASF) that an initial-review-only index could not represent;
+- labels known evidence aliases/families (including BASF Troubleshooter, NIST/SEMATECH and Parizs variants) without rewriting or collapsing the governed source IDs;
+- keeps the r12 filling-boundary/flash case explicitly anchored to the BASF Injection Molding Troubleshooter;
+- aligns worked cases with parent-module governed evidence while preserving their specialised case references;
 - adds a 27th synthetic worked case for r09 showing a defensible baseline record without publishing production settings;
 - preserves all technical claim conclusions, authority boundaries and independent human SME status unchanged.
 

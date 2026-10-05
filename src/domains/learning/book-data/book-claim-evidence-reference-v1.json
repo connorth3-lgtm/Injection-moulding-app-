@@ -8,11 +8,25 @@
     "data/book-claim-review-process-tooling-v1.json",
     "data/book-claim-review-troubleshooting-v1.json",
     "data/book-claim-review-engineering-advanced-v1.json",
-    "data/book-claim-review-high-risk-v1.json"
+    "data/book-claim-review-high-risk-v1.json",
+    "data/book-claim-resolution-high-risk-v1.json",
+    "data/book-claim-resolution-high-risk-v2.json",
+    "data/book-claim-resolution-all-v1.json",
+    "data/book-qualification-resolution-all-v1.json"
   ],
   "chapterCount": 46,
-  "sourceCount": 27,
+  "sourceCount": 52,
   "sourceSeeds": [
+    {
+      "id": "ARBURG-PLASTICISING-SERVICE",
+      "type": "machine-manufacturer-technical-brochure",
+      "issuer": "ARBURG",
+      "title": "Service plasticising — injection-unit configuration and plasticising components",
+      "url": "https://www.arburg.com/media/daten/publications/brochures/arburg_service_plasticising_526421_en_gb.pdf",
+      "checked": "2026-09-14",
+      "state": "current-public-manufacturer-document",
+      "scope": "Machine-manufacturer guidance on screw/cylinder/non-return-valve components, dosage volume, residence/melting capacity, injection flow and pressure capability. Numeric recommendations remain ARBURG/application-specific and are not imported as universal Book setpoints."
+    },
     {
       "id": "ASTM-D3641-24",
       "type": "standard",
@@ -32,6 +46,86 @@
       "checked": "2026-09-14",
       "state": "active-listed",
       "scope": "Thermoplastic moulding shrinkage test method and limitations of extrapolating standard specimens to production parts."
+    },
+    {
+      "id": "AUTODESK-DRAFT-ANGLE",
+      "type": "engineering-software-technical-documentation",
+      "issuer": "Autodesk",
+      "title": "Moldflow — Draft Angle result",
+      "url": "https://help.autodesk.com/cloudhelp/2017/ENU/MoldflowComm-UsersGuide/files/GUID-7F36552A-8F0E-4965-BEBD-A12A346382C1.htm",
+      "checked": "2026-09-14",
+      "state": "public-engineering-documentation",
+      "scope": "Documents shrink-on-core behaviour and the influence of draft, surface texture, part complexity, ejection depth and material on demoulding. Numeric examples remain context-specific and are not imported as universal Book rules."
+    },
+    {
+      "id": "AUTODESK-GATE-DESIGN",
+      "type": "engineering-software-technical-documentation",
+      "issuer": "Autodesk",
+      "title": "Moldflow — runner systems and gates",
+      "url": "https://help.autodesk.com/cloudhelp/2017/ENU/MoldflowComm-UsersGuide/files/GUID-BBA99501-232C-4892-B605-6D9204134A73.htm",
+      "checked": "2026-09-14",
+      "state": "public-engineering-documentation",
+      "scope": "Defines gates as the runner-to-cavity restriction and documents gate/runner geometry effects on pressure drop and filling."
+    },
+    {
+      "id": "AUTODESK-JUNCTURE-LOSS",
+      "type": "engineering-software-technical-documentation",
+      "issuer": "Autodesk",
+      "title": "Moldflow Insight — Juncture Loss model",
+      "url": "https://help.autodesk.com/cloudhelp/2023/ENU/MoldflowInsight-CLC-Ref-Materials/files/sim-math-models/MoldflowInsight_CLC_Ref_Materials_sim_math_models_Juncture_Loss_model_html.html",
+      "checked": "2026-09-14",
+      "state": "public-engineering-documentation",
+      "scope": "Describes measured pressure loss through feed-system contractions such as sprue, runner and gate junctions and the influence of rheological quantities."
+    },
+    {
+      "id": "AUTODESK-MOLDFLOW-CLAMP-FORCE",
+      "type": "engineering-software-documentation",
+      "issuer": "Autodesk",
+      "title": "Moldflow Insight — Modeling for accurate clamp force prediction",
+      "url": "https://help.autodesk.com/cloudhelp/2019/ENU/MoldflowInsight-Modelprep/files/GUID-5C97629F-C5C5-4A6D-BD2A-55FE6A4A5EE2.htm",
+      "checked": "2026-09-14",
+      "state": "public-engineering-documentation",
+      "scope": "Defines clamp-force calculation as integration of pressure over projected area, supporting the physical opening-load relationship without authorizing a generic machine-sizing safety factor."
+    },
+    {
+      "id": "AUTODESK-RUNNER-LAYOUT",
+      "type": "engineering-software-technical-documentation",
+      "issuer": "Autodesk",
+      "title": "Moldflow Insight — designing the runner layout",
+      "url": "https://help.autodesk.com/cloudhelp/2025/ENU/MoldflowInsight-CLC-Modelprep/files/Feed-system/Runners/Runner-properties/MoldflowInsight_CLC_Modelprep_Feed_system_Runners_Runner_properties_Designing_the_runner_layout_html.html",
+      "checked": "2026-09-14",
+      "state": "public-engineering-documentation",
+      "scope": "Documents sprue/runner/gate transport, runner pressure-drop effects, balance and dependence on material and processing conditions."
+    },
+    {
+      "id": "AUTODESK-SINK-VOIDS",
+      "type": "engineering-software-technical-documentation",
+      "issuer": "Autodesk",
+      "title": "Moldflow Insight — troubleshooting sink marks and voids",
+      "url": "https://help.autodesk.com/cloudhelp/2023/ENU/MoldflowInsight-CLC-Troubleshoot/files/Troubleshooting-molding-problems/LM_SINK_MARKS_AND_VOIDS.html",
+      "checked": "2026-09-14",
+      "state": "public-engineering-documentation",
+      "scope": "Explains thermal contraction, thick-section effects and the surface-sink versus internal-void outcome when the outer skin resists deformation; also identifies packing/gate/cooling interactions."
+    },
+    {
+      "id": "AUTODESK-THIN-SECTION",
+      "type": "engineering-software-technical-documentation",
+      "issuer": "Autodesk",
+      "title": "Moldflow Insight — Injection Into Thin Section",
+      "url": "https://help.autodesk.com/cloudhelp/2018/ENU/MoldflowInsight-Modelprep/files/GUID-2A308AE3-4803-4318-B74D-18D215F64AC7.htm",
+      "checked": "2026-09-14",
+      "state": "public-engineering-documentation",
+      "scope": "Documents early freeze, pressure-transmission loss and fill/packing consequences in thin sections. Used with machine-manufacturer thin-wall evidence; no universal thickness or speed threshold is adopted."
+    },
+    {
+      "id": "AUTODESK-VISCOSITY-MODELS",
+      "type": "engineering-software-technical-documentation",
+      "issuer": "Autodesk",
+      "title": "Moldflow Insight — viscosity and flow simulation models",
+      "url": "https://help.autodesk.com/cloudhelp/2019/ENU/MoldflowInsight-Reference/files/GUID-EC0F471C-A2C5-4461-9C83-B62B85936166.htm",
+      "checked": "2026-09-14",
+      "state": "public-engineering-documentation",
+      "scope": "Documents viscosity models dependent on measured material data, temperature, shear rate and pressure. Used for mechanism support, not as a production-material data source."
     },
     {
       "id": "BASF-ELASTOLLAN-565",
@@ -104,6 +198,16 @@
       "scope": "Ultramid-family processing guidance; exact grade data remains controlling."
     },
     {
+      "id": "BASF-ULTRAMID-T-KR-4350-2026",
+      "type": "grade-specific-processing-data",
+      "issuer": "BASF",
+      "title": "Ultramid T KR 4350 — Product Datasheet 2026",
+      "url": "https://download.basf.com/p1/8a8082587fd4b608017fd635021b21ed/en/ULTRAMID%25C2%25AE_T_KR_4350",
+      "checked": "2026-09-14",
+      "state": "current-public-grade-sheet-2026",
+      "scope": "Grade-specific storage/handling documentation requiring dry storage, careful resealing and condensation avoidance. Used only to corroborate that post-drying/post-opening handling can alter moisture condition; values are not generalized."
+    },
+    {
       "id": "BASF-ULTRASON-INJECTION",
       "type": "manufacturer-guide",
       "issuer": "BASF",
@@ -124,6 +228,26 @@
       "scope": "Review of filling-to-holding switchover methods; supports early/late switchover consequences and sensitivity to material, machine and environmental conditions without defining a universal transfer point."
     },
     {
+      "id": "DME-SINTERED-VENTS-FAQ",
+      "type": "mould-component-manufacturer-guidance",
+      "issuer": "DME",
+      "title": "Sintered Vents FAQ",
+      "url": "https://www.dme.net/sintered-vents-faq/",
+      "checked": "2026-09-14",
+      "state": "current-public-manufacturer-guidance",
+      "scope": "States that vent selection and performance vary with resin grade/viscosity and refers users to product installation specifications and resin suppliers for application-specific limits."
+    },
+    {
+      "id": "DME-VENTING-SOLUTIONS",
+      "type": "mould-component-manufacturer-guidance",
+      "issuer": "DME",
+      "title": "Venting Solutions",
+      "url": "https://www.dme.net/venting-solutions/",
+      "checked": "2026-09-14",
+      "state": "current-public-manufacturer-guidance",
+      "scope": "Describes application-specific venting methods, placement and engineered components and identifies short-shot studies as a way to locate critical venting areas. Does not establish one universal vent geometry."
+    },
+    {
       "id": "ENGEL-IQ-PROCESS-CONTROL",
       "type": "manufacturer-technical-guidance",
       "issuer": "ENGEL",
@@ -132,6 +256,56 @@
       "checked": "2026-09-14",
       "state": "current-public-manufacturer-guidance",
       "scope": "Application-specific adjustment of injection profile, switchover point, holding pressure and clamping force based on measured process signals; specific to ENGEL systems."
+    },
+    {
+      "id": "ENGEL-MELT-CUSHION-OPTIMISATION",
+      "type": "machine-manufacturer-process-guidance",
+      "issuer": "ENGEL",
+      "title": "Tips for process optimization in injection molding",
+      "url": "https://www.engelglobal.com/us/blog/tips-for-process-optimization-in-injection-molding",
+      "checked": "2026-09-14",
+      "state": "current-public-manufacturer-guidance",
+      "scope": "Treats melt-cushion fluctuation as a monitored process signal and links variation to settings and screw condition. Does not define a universal cushion value."
+    },
+    {
+      "id": "ENGEL-THIN-WALL-E-SPEED",
+      "type": "machine-manufacturer-technical-guidance",
+      "issuer": "ENGEL",
+      "title": "Thin wall injection molding machine for plastic parts",
+      "url": "https://www.engelglobal.com/en/us/products/injection-molding-machines/thin-wall-injection-molding-machine",
+      "checked": "2026-09-14",
+      "state": "current-public-manufacturer-guidance",
+      "scope": "ENGEL explicitly links thin-wall filling capability to rapid acceleration, injection speed and available injection pressure, demonstrating that machine dynamics/capability matter beyond a nominal pressure number. Product-specific numeric performance is not imported as a Book setpoint."
+    },
+    {
+      "id": "HUSKY-EMI-HOT-RUNNER-2024",
+      "type": "manufacturer-service-manual",
+      "issuer": "Husky Technologies",
+      "title": "EMI Hot Runner Service Manual v2.4",
+      "url": "https://www.husky.co/contentassets/59b3dcff9d564dc998b386aa0f5ebb6b/hr_emi_v2-4_eng_202405_5079195.pdf",
+      "checked": "2026-09-14",
+      "state": "public-manufacturer-service-manual",
+      "scope": "For purge/start-up activity, directs users to the injection-machine manufacturer's documentation and includes system-specific operating/safety instructions. Supports the Book boundary that purging and hot machine intervention cannot be governed by generic troubleshooting text."
+    },
+    {
+      "id": "HUSKY-SCVG-HOT-SPRUE-SERVICE-2024",
+      "type": "manufacturer-service-manual",
+      "issuer": "Husky Technologies",
+      "title": "Single Cavity Valve Gates (SCVG) and Hot Sprues — Hot Runner Service Manual v2.4",
+      "url": "https://www.husky.co/contentassets/59b3dcff9d564dc998b386aa0f5ebb6b/hr_scvg_hs_v2-4_eng_202405_4803621.pdf",
+      "checked": "2026-09-14",
+      "state": "current-public-manufacturer-manual",
+      "scope": "Hot-runner startup/operation sequence and explicit requirement to follow machine-manufacturer documentation; applies to the covered Husky system, not all hot runners."
+    },
+    {
+      "id": "HUSKY-ULTRASHOT-SERVICE-2023",
+      "type": "manufacturer-service-manual",
+      "issuer": "Husky Technologies",
+      "title": "UltraShot Injection System — Hot Runner Service Manual v1.1",
+      "url": "https://www.husky.co/contentassets/59b3dcff9d564dc998b386aa0f5ebb6b/hr_ultrashot_v1-1_eng_202305_10991396.pdf",
+      "checked": "2026-09-14",
+      "state": "public-manufacturer-service-manual",
+      "scope": "Requires qualified personnel and lockout/tagout of electrical, pneumatic and hydraulic energy sources before servicing or entering the mould area; system-specific and does not replace site isolation procedure."
     },
     {
       "id": "ISO-12165-2019",
@@ -204,6 +378,16 @@
       "scope": "Injection-moulding process monitoring using cavity pressure, temperature and machine signals; manufacturer-specific implementation evidence."
     },
     {
+      "id": "KISTLER-MOULD-TEMPERATURE-MONITORING",
+      "type": "sensor-manufacturer-technical-guidance",
+      "issuer": "Kistler",
+      "title": "Predictive maintenance and mold monitoring in injection molding",
+      "url": "https://www.kistler.com/INT/en/predictive-maintenance-and-mold-monitoring-in-injection-molding/C00000573",
+      "checked": "2026-09-14",
+      "state": "current-public-manufacturer-guidance",
+      "scope": "Explains that controlled mould heat removal depends on the temperature-control medium/system and that in-mould temperature sensing can detect restricted flow or heat-transfer malfunctions. Supports measurement-based cooling diagnosis rather than treating a controller setpoint as proof of mould thermal state."
+    },
+    {
       "id": "KUO-2022-COOLING-WARPAGE",
       "type": "peer-reviewed-study",
       "issuer": "The International Journal of Advanced Manufacturing Technology",
@@ -218,10 +402,20 @@
       "type": "peer-reviewed-review",
       "issuer": "The International Journal of Advanced Manufacturing Technology",
       "title": "A review of research progress on the minimization of weld lines in injection molding",
-      "url": "https://doi.org/10.1007/s00170-024-13607-7",
+      "url": "https://consensus.app/papers/a-review-of-research-progress-on-the-minimization-of-weld-li-zuo/c253cc9c68cd5db1b1afec5c98425d9d/",
       "checked": "2026-09-14",
       "state": "peer-reviewed-fetched",
       "scope": "Review of weld-line formation, influencing factors, mechanisms, prediction and improvement methods; does not establish a universal fix."
+    },
+    {
+      "id": "MOLD-MASTERS-HOT-RUNNER-USER-MANUAL-2020",
+      "type": "manufacturer-user-manual",
+      "issuer": "Mold-Masters",
+      "title": "Hot Runner User Manual — System Startup and Shutdown",
+      "url": "https://www.moldmasters.com/sites/default/files/2021-11/ENG%20HR%20UM_1.pdf",
+      "checked": "2026-09-14",
+      "state": "public-manufacturer-manual",
+      "scope": "System-specific startup/shutdown and thermally-sensitive-material cautions; evidence that procedures depend on system/material, not a universal recipe."
     },
     {
       "id": "NIST-MEASUREMENT-CHARACTERIZATION",
@@ -248,7 +442,7 @@
       "type": "peer-reviewed",
       "issuer": "The International Journal of Advanced Manufacturing Technology",
       "title": "Assessment of fiber orientation models predictability by comparison with X-ray µCT data in injection-molded short glass fiber-reinforced polyamide",
-      "url": "https://doi.org/10.1007/s00170-024-12990-5",
+      "url": "https://consensus.app/papers/assessment-of-fiber-orientation-models-predictability-by-oubellaouch-pelaccia/c82506ff62375c969e92b74a15c92c3c/",
       "checked": "2026-09-14",
       "state": "peer-reviewed-fetched",
       "scope": "Experimental evidence that local fibre orientation in short-glass-fibre mouldings varies with flow and affects anisotropic properties and shrinkage/warpage-related behaviour."
@@ -258,7 +452,7 @@
       "type": "peer-reviewed",
       "issuer": "Sensors",
       "title": "Multiple In-Mold Sensors for Quality and Process Control in Injection Molding",
-      "url": "https://doi.org/10.3390/s23031735",
+      "url": "https://consensus.app/papers/multiple-inmold-sensors-for-quality-and-process-control-in-p%C3%A1rizs-t%C3%B6r%C3%B6k/4c976e13bbb957b0862288b2202429ee/",
       "checked": "2026-09-14",
       "state": "peer-reviewed-fetched",
       "scope": "Experimental multi-cavity pressure-sensor work covering clamping, switchover, holding and gate freeze-off interpretation."
@@ -274,11 +468,71 @@
       "currentState": "current-public-training-outline"
     },
     {
+      "id": "RJG-FILL-ONLY-PART",
+      "type": "industry-process-guidance",
+      "issuer": "RJG, Inc.",
+      "title": "Mastering Fill Only Parts in Molding",
+      "url": "https://rjginc.com/establishing-a-fill-only-part-sometimes-easier-said-than-done/",
+      "checked": "2026-09-14",
+      "state": "current-public",
+      "scope": "Directly discusses establishing fill-only parts, the limits of part-weight interpretation and the need to account for compressibility and gate state. Used to support the existence/purpose of a controlled fill-only study, not a universal fill percentage."
+    },
+    {
+      "id": "RJG-GATE-SEAL-STUDY",
+      "type": "industry-process-guidance",
+      "issuer": "RJG, Inc.",
+      "title": "Seeing Gate Discharge with Sensors",
+      "url": "https://rjginc.com/tip/seeing-gate-discharge-with-sensors/",
+      "checked": "2026-09-14",
+      "state": "current-public",
+      "scope": "Describes a gate-seal study using part weight at different hold times and an alternative cavity-pressure-curve method; explicitly notes measurement and mould-behaviour limitations."
+    },
+    {
+      "id": "RJG-MIV-CONSORTIUM-WHITE-PAPER",
+      "type": "industry-consortium-white-paper",
+      "issuer": "RJG / Medical Device OEM Consortium",
+      "title": "Machine Independent Variables white paper",
+      "url": "https://rjginc.com/wp-content/uploads/2022/06/MIV-White-Paper-FINAL.pdf",
+      "checked": "2026-09-14",
+      "state": "current-public",
+      "scope": "Requires machine capability to cover acceptable shot capacity, melt preparation, volumetric injection rate and non-pressure-limited operation when transferring a process between machines. Used as corroborating capability evidence, not as a universal suitability percentage."
+    },
+    {
+      "id": "RJG-PRESSURE-LIMITED-FILL",
+      "type": "industry-process-guidance",
+      "issuer": "RJG, Inc.",
+      "title": "How to Prevent and Troubleshoot Short Shots",
+      "url": "https://rjginc.com/short-shots-whats-the-deal/",
+      "checked": "2026-09-14",
+      "state": "current-public",
+      "scope": "States that insufficient available injection pressure or an injection-pressure limit set too low can make a filling process pressure-limited so constant commanded velocity is not maintained as resistance changes. Used as process-control evidence, not as a universal pressure-setting source."
+    },
+    {
+      "id": "SUMITOMO-INTELECT-ACTIVEPROTECT",
+      "type": "machine-manufacturer-technical-documentation",
+      "issuer": "Sumitomo (SHI) Demag",
+      "title": "IntElect — activeProtect mould protection",
+      "url": "https://www.sumitomo-shi-demag.eu/fileadmin/user_upload/DownloadCentre/15-28-26-SD_IntElect_Brochure_EN_Image.pdf",
+      "checked": "2026-09-14",
+      "state": "current-public-manufacturer-brochure",
+      "scope": "Describes activeProtect monitoring of clamp-force transmission during mould closing using force-signature sensing; specific to applicable Sumitomo IntElect equipment."
+    },
+    {
+      "id": "SUMITOMO-SE-EV-S-TECHDATA",
+      "type": "machine-manufacturer-technical-data",
+      "issuer": "Sumitomo (SHI) Demag",
+      "title": "SE-EV-S technical data",
+      "url": "https://brasil.sumitomo-shi-demag.eu/fileadmin/user_upload/Subs/BR/SE-EV-S_techdata_e.pdf",
+      "checked": "2026-09-14",
+      "state": "current-public-manufacturer-document",
+      "scope": "Documents machine-specific screw-position display, maximum/minimum cushion monitoring, filling-pressure monitoring and V/P switchover functions. Supports use of screw position/cushion as controller-specific process signals, not a universal cushion target."
+    },
+    {
       "id": "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW",
       "type": "peer-reviewed-review",
       "issuer": "The International Journal of Advanced Manufacturing Technology",
       "title": "Recent progress in minimizing the warpage and shrinkage deformations by the optimization of process parameters in plastic injection molding: a review",
-      "url": "https://doi.org/10.1007/s00170-022-08859-0",
+      "url": "https://consensus.app/papers/recent-progress-in-minimizing-the-warpage-and-shrinkage-zhao-lian/87423bb5d6e15bcba62bfe49843785c7/",
       "checked": "2026-09-14",
       "state": "peer-reviewed-fetched",
       "scope": "Multi-variable warpage/shrinkage mechanisms and process-parameter interactions; not a universal recipe."
@@ -290,23 +544,30 @@
       "evidenceIds": [
         "BASF-INJECTION-TROUBLESHOOTER",
         "BASF-ULTRAMID-PROCESSING",
-        "ISO-20430-2020"
+        "ISO-20430-2020",
+        "HUSKY-EMI-HOT-RUNNER-2024",
+        "HUSKY-ULTRASHOT-SERVICE-2023"
       ],
       "claims": [
         {
+          "claimId": "black-specks-01",
           "evidenceIds": [
             "BASF-INJECTION-TROUBLESHOOTER",
             "BASF-ULTRAMID-PROCESSING"
           ]
         },
         {
+          "claimId": "black-specks-02",
           "evidenceIds": [
             "BASF-INJECTION-TROUBLESHOOTER"
           ]
         },
         {
+          "claimId": "black-specks-03",
           "evidenceIds": [
-            "ISO-20430-2020"
+            "ISO-20430-2020",
+            "HUSKY-EMI-HOT-RUNNER-2024",
+            "HUSKY-ULTRASHOT-SERVICE-2023"
           ]
         }
       ]
@@ -319,17 +580,20 @@
       ],
       "claims": [
         {
+          "claimId": "burns-01",
           "evidenceIds": [
             "BASF-INJECTION-TROUBLESHOOTER",
             "BASF-ULTRAMID-PROCESSING"
           ]
         },
         {
+          "claimId": "burns-02",
           "evidenceIds": [
             "BASF-INJECTION-TROUBLESHOOTER"
           ]
         },
         {
+          "claimId": "burns-03",
           "evidenceIds": [
             "BASF-INJECTION-TROUBLESHOOTER",
             "BASF-ULTRAMID-PROCESSING"
@@ -345,17 +609,20 @@
       ],
       "claims": [
         {
+          "claimId": "capability-01",
           "evidenceIds": [
             "NIST-SEMATECH-HANDBOOK",
             "NIST-MEASUREMENT-CHARACTERIZATION"
           ]
         },
         {
+          "claimId": "capability-02",
           "evidenceIds": [
             "NIST-MEASUREMENT-CHARACTERIZATION"
           ]
         },
         {
+          "claimId": "capability-03",
           "evidenceIds": [
             "NIST-SEMATECH-HANDBOOK"
           ]
@@ -372,18 +639,21 @@
       ],
       "claims": [
         {
+          "claimId": "cavity-pressure-01",
           "evidenceIds": [
             "KISTLER-CAVITY-PRESSURE-MEDTECH",
             "PARIZS-2023-IN-MOLD-SENSORS"
           ]
         },
         {
+          "claimId": "cavity-pressure-02",
           "evidenceIds": [
             "KISTLER-CAVITY-PRESSURE-MONITORING",
             "PARIZS-2023-IN-MOLD-SENSORS"
           ]
         },
         {
+          "claimId": "cavity-pressure-03",
           "evidenceIds": [
             "KISTLER-CAVITY-PRESSURE-MEDTECH",
             "NIST-SEMATECH-HANDBOOK"
@@ -394,22 +664,32 @@
     {
       "chapterId": "clamp",
       "evidenceIds": [
-        "ISO-20430-2020"
+        "ISO-20430-2020",
+        "AUTODESK-MOLDFLOW-CLAMP-FORCE",
+        "ENGEL-IQ-PROCESS-CONTROL",
+        "SUMITOMO-INTELECT-ACTIVEPROTECT"
       ],
       "claims": [
         {
+          "claimId": "clamp-01",
           "evidenceIds": [
-            "ISO-20430-2020"
+            "ISO-20430-2020",
+            "AUTODESK-MOLDFLOW-CLAMP-FORCE",
+            "ENGEL-IQ-PROCESS-CONTROL"
           ]
         },
         {
+          "claimId": "clamp-02",
           "evidenceIds": [
-            "ISO-20430-2020"
+            "ISO-20430-2020",
+            "ENGEL-IQ-PROCESS-CONTROL"
           ]
         },
         {
+          "claimId": "clamp-03",
           "evidenceIds": [
-            "ISO-20430-2020"
+            "ISO-20430-2020",
+            "SUMITOMO-INTELECT-ACTIVEPROTECT"
           ]
         }
       ]
@@ -423,17 +703,20 @@
       ],
       "claims": [
         {
+          "claimId": "complex-diagnostics-01",
           "evidenceIds": [
             "ISO-20457-2026",
             "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW"
           ]
         },
         {
+          "claimId": "complex-diagnostics-02",
           "evidenceIds": [
             "NIST-SEMATECH-HANDBOOK"
           ]
         },
         {
+          "claimId": "complex-diagnostics-03",
           "evidenceIds": [
             "NIST-SEMATECH-HANDBOOK"
           ]
@@ -446,10 +729,13 @@
         "ASTM-D955-21",
         "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW",
         "KUO-2022-COOLING-WARPAGE",
-        "RJG-DECOUPLED-WORKSHOP"
+        "KISTLER-MOULD-TEMPERATURE-MONITORING",
+        "RJG-DECOUPLED-WORKSHOP",
+        "NIST-MEASUREMENT-CHARACTERIZATION"
       ],
       "claims": [
         {
+          "claimId": "cooling-01",
           "evidenceIds": [
             "ASTM-D955-21",
             "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW",
@@ -457,14 +743,19 @@
           ]
         },
         {
+          "claimId": "cooling-02",
           "evidenceIds": [
-            "KUO-2022-COOLING-WARPAGE"
+            "KUO-2022-COOLING-WARPAGE",
+            "KISTLER-MOULD-TEMPERATURE-MONITORING"
           ]
         },
         {
+          "claimId": "cooling-03",
           "evidenceIds": [
             "RJG-DECOUPLED-WORKSHOP",
-            "KUO-2022-COOLING-WARPAGE"
+            "KUO-2022-COOLING-WARPAGE",
+            "KISTLER-MOULD-TEMPERATURE-MONITORING",
+            "NIST-MEASUREMENT-CHARACTERIZATION"
           ]
         }
       ]
@@ -474,35 +765,54 @@
       "evidenceIds": [
         "BASF-ULTRASON-INJECTION",
         "BASF-ULTRAMID-PROCESSING",
+        "ARBURG-PLASTICISING-SERVICE",
         "ISO-294-1-2017",
         "ASTM-D3641-24",
-        "BASF-ULTRADUR-FAMILY"
+        "PARIZS-2023-IN-MOLD-SENSORS",
+        "KISTLER-CAVITY-PRESSURE-MONITORING",
+        "BIELENBERG-2025-SWITCHOVER-REVIEW",
+        "ENGEL-IQ-PROCESS-CONTROL",
+        "BASF-ULTRADUR-FAMILY",
+        "AUTODESK-DRAFT-ANGLE",
+        "KISTLER-MOULD-TEMPERATURE-MONITORING"
       ],
       "claims": [
         {
+          "claimId": "cycle-01",
           "evidenceIds": [
             "BASF-ULTRASON-INJECTION",
-            "BASF-ULTRAMID-PROCESSING"
+            "BASF-ULTRAMID-PROCESSING",
+            "ARBURG-PLASTICISING-SERVICE"
           ]
         },
         {
+          "claimId": "cycle-02",
           "evidenceIds": [
             "ISO-294-1-2017",
-            "ASTM-D3641-24"
+            "ASTM-D3641-24",
+            "PARIZS-2023-IN-MOLD-SENSORS",
+            "KISTLER-CAVITY-PRESSURE-MONITORING"
           ]
         },
         {
+          "claimId": "cycle-03",
           "evidenceIds": [
             "ISO-294-1-2017",
-            "ASTM-D3641-24"
+            "ASTM-D3641-24",
+            "BIELENBERG-2025-SWITCHOVER-REVIEW",
+            "ENGEL-IQ-PROCESS-CONTROL"
           ]
         },
         {
+          "claimId": "cycle-04",
           "evidenceIds": [
-            "BASF-ULTRADUR-FAMILY"
+            "BASF-ULTRADUR-FAMILY",
+            "AUTODESK-DRAFT-ANGLE",
+            "KISTLER-MOULD-TEMPERATURE-MONITORING"
           ]
         },
         {
+          "claimId": "cycle-05",
           "evidenceIds": [
             "BASF-ULTRAMID-PROCESSING",
             "ISO-294-1-2017"
@@ -513,22 +823,27 @@
     {
       "chapterId": "diagnostic-method",
       "evidenceIds": [
-        "BASF-INJECTION-TROUBLESHOOTER"
+        "BASF-INJECTION-TROUBLESHOOTER",
+        "NIST-SEMATECH-HANDBOOK"
       ],
       "claims": [
         {
+          "claimId": "diagnostic-method-01",
           "evidenceIds": [
             "BASF-INJECTION-TROUBLESHOOTER"
           ]
         },
         {
+          "claimId": "diagnostic-method-02",
           "evidenceIds": [
             "BASF-INJECTION-TROUBLESHOOTER"
           ]
         },
         {
+          "claimId": "diagnostic-method-03",
           "evidenceIds": [
-            "BASF-INJECTION-TROUBLESHOOTER"
+            "BASF-INJECTION-TROUBLESHOOTER",
+            "NIST-SEMATECH-HANDBOOK"
           ]
         }
       ]
@@ -543,18 +858,21 @@
       ],
       "claims": [
         {
+          "claimId": "dimensional-stability-01",
           "evidenceIds": [
             "ISO-294-4-2018",
             "ASTM-D955-21"
           ]
         },
         {
+          "claimId": "dimensional-stability-02",
           "evidenceIds": [
             "ISO-20457-2026",
             "ISO-294-4-2018"
           ]
         },
         {
+          "claimId": "dimensional-stability-03",
           "evidenceIds": [
             "ISO-20457-2026",
             "ASTM-D955-21",
@@ -567,21 +885,26 @@
       "chapterId": "documentation",
       "evidenceIds": [
         "ASTM-D3641-24",
-        "NIST-SEMATECH-HANDBOOK"
+        "NIST-SEMATECH-HANDBOOK",
+        "SUMITOMO-SE-EV-S-TECHDATA"
       ],
       "claims": [
         {
+          "claimId": "documentation-01",
           "evidenceIds": [
             "ASTM-D3641-24",
             "NIST-SEMATECH-HANDBOOK"
           ]
         },
         {
+          "claimId": "documentation-02",
           "evidenceIds": [
-            "ASTM-D3641-24"
+            "ASTM-D3641-24",
+            "SUMITOMO-SE-EV-S-TECHDATA"
           ]
         },
         {
+          "claimId": "documentation-03",
           "evidenceIds": [
             "NIST-SEMATECH-HANDBOOK"
           ]
@@ -596,16 +919,19 @@
       ],
       "claims": [
         {
+          "claimId": "doe-01",
           "evidenceIds": [
             "NIST-SEMATECH-HANDBOOK"
           ]
         },
         {
+          "claimId": "doe-02",
           "evidenceIds": [
             "NIST-SEMATECH-HANDBOOK"
           ]
         },
         {
+          "claimId": "doe-03",
           "evidenceIds": [
             "NIST-SEMATECH-HANDBOOK",
             "NIST-MEASUREMENT-CHARACTERIZATION"
@@ -617,23 +943,30 @@
       "chapterId": "ejection-draft",
       "evidenceIds": [
         "BASF-INJECTION-PROBLEMS",
-        "ISO-20457-2026"
+        "ISO-20457-2026",
+        "AUTODESK-DRAFT-ANGLE"
       ],
       "claims": [
         {
+          "claimId": "ejection-draft-01",
           "evidenceIds": [
             "BASF-INJECTION-PROBLEMS",
-            "ISO-20457-2026"
+            "ISO-20457-2026",
+            "AUTODESK-DRAFT-ANGLE"
           ]
         },
         {
+          "claimId": "ejection-draft-02",
           "evidenceIds": [
-            "BASF-INJECTION-PROBLEMS"
+            "BASF-INJECTION-PROBLEMS",
+            "AUTODESK-DRAFT-ANGLE"
           ]
         },
         {
+          "claimId": "ejection-draft-03",
           "evidenceIds": [
-            "BASF-INJECTION-PROBLEMS"
+            "BASF-INJECTION-PROBLEMS",
+            "AUTODESK-DRAFT-ANGLE"
           ]
         }
       ]
@@ -643,24 +976,35 @@
       "evidenceIds": [
         "ISO-294-1-2017",
         "RJG-DECOUPLED-WORKSHOP",
-        "BASF-INJECTION-PROBLEMS"
+        "AUTODESK-RUNNER-LAYOUT",
+        "AUTODESK-JUNCTURE-LOSS",
+        "BASF-INJECTION-PROBLEMS",
+        "AUTODESK-GATE-DESIGN"
       ],
       "claims": [
         {
+          "claimId": "feed-system-01",
           "evidenceIds": [
             "ISO-294-1-2017",
-            "RJG-DECOUPLED-WORKSHOP"
+            "RJG-DECOUPLED-WORKSHOP",
+            "AUTODESK-RUNNER-LAYOUT",
+            "AUTODESK-JUNCTURE-LOSS"
           ]
         },
         {
+          "claimId": "feed-system-02",
           "evidenceIds": [
             "ISO-294-1-2017",
-            "BASF-INJECTION-PROBLEMS"
+            "BASF-INJECTION-PROBLEMS",
+            "AUTODESK-GATE-DESIGN",
+            "AUTODESK-RUNNER-LAYOUT"
           ]
         },
         {
+          "claimId": "feed-system-03",
           "evidenceIds": [
-            "RJG-DECOUPLED-WORKSHOP"
+            "RJG-DECOUPLED-WORKSHOP",
+            "AUTODESK-JUNCTURE-LOSS"
           ]
         }
       ]
@@ -673,17 +1017,20 @@
       ],
       "claims": [
         {
+          "claimId": "fibre-orientation-01",
           "evidenceIds": [
             "OUBELLAOUCH-2024-FIBRE-ORIENTATION"
           ]
         },
         {
+          "claimId": "fibre-orientation-02",
           "evidenceIds": [
             "OUBELLAOUCH-2024-FIBRE-ORIENTATION",
             "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW"
           ]
         },
         {
+          "claimId": "fibre-orientation-03",
           "evidenceIds": [
             "OUBELLAOUCH-2024-FIBRE-ORIENTATION"
           ]
@@ -694,6 +1041,7 @@
       "chapterId": "fill-study",
       "evidenceIds": [
         "RJG-DECOUPLED-WORKSHOP",
+        "RJG-FILL-ONLY-PART",
         "ISO-294-1-2017",
         "ASTM-D3641-24",
         "BIELENBERG-2025-SWITCHOVER-REVIEW",
@@ -701,17 +1049,22 @@
       ],
       "claims": [
         {
+          "claimId": "fill-study-01",
           "evidenceIds": [
-            "RJG-DECOUPLED-WORKSHOP"
+            "RJG-DECOUPLED-WORKSHOP",
+            "RJG-FILL-ONLY-PART"
           ]
         },
         {
+          "claimId": "fill-study-02",
           "evidenceIds": [
             "ISO-294-1-2017",
-            "ASTM-D3641-24"
+            "ASTM-D3641-24",
+            "RJG-FILL-ONLY-PART"
           ]
         },
         {
+          "claimId": "fill-study-03",
           "evidenceIds": [
             "BIELENBERG-2025-SWITCHOVER-REVIEW",
             "ENGEL-IQ-PROCESS-CONTROL"
@@ -728,12 +1081,14 @@
       ],
       "claims": [
         {
+          "claimId": "fillers-additives-01",
           "evidenceIds": [
             "BASF-ULTRADUR-FAMILY",
             "OUBELLAOUCH-2024-FIBRE-ORIENTATION"
           ]
         },
         {
+          "claimId": "fillers-additives-02",
           "evidenceIds": [
             "ASTM-D3641-24",
             "BASF-ULTRADUR-FAMILY"
@@ -748,16 +1103,19 @@
       ],
       "claims": [
         {
+          "claimId": "flash-01",
           "evidenceIds": [
             "BASF-INJECTION-TROUBLESHOOTER"
           ]
         },
         {
+          "claimId": "flash-02",
           "evidenceIds": [
             "BASF-INJECTION-TROUBLESHOOTER"
           ]
         },
         {
+          "claimId": "flash-03",
           "evidenceIds": [
             "BASF-INJECTION-TROUBLESHOOTER"
           ]
@@ -769,24 +1127,35 @@
       "evidenceIds": [
         "ASTM-D955-21",
         "RJG-DECOUPLED-WORKSHOP",
+        "PARIZS-2023-IN-MOLD-SENSORS",
+        "RJG-GATE-SEAL-STUDY",
         "ASTM-D3641-24"
       ],
       "claims": [
         {
+          "claimId": "gate-seal-01",
           "evidenceIds": [
             "ASTM-D955-21",
-            "RJG-DECOUPLED-WORKSHOP"
+            "RJG-DECOUPLED-WORKSHOP",
+            "PARIZS-2023-IN-MOLD-SENSORS",
+            "RJG-GATE-SEAL-STUDY"
           ]
         },
         {
+          "claimId": "gate-seal-02",
           "evidenceIds": [
-            "RJG-DECOUPLED-WORKSHOP"
+            "RJG-DECOUPLED-WORKSHOP",
+            "RJG-GATE-SEAL-STUDY",
+            "PARIZS-2023-IN-MOLD-SENSORS"
           ]
         },
         {
+          "claimId": "gate-seal-03",
           "evidenceIds": [
             "ASTM-D3641-24",
-            "ASTM-D955-21"
+            "ASTM-D955-21",
+            "PARIZS-2023-IN-MOLD-SENSORS",
+            "RJG-GATE-SEAL-STUDY"
           ]
         }
       ]
@@ -800,6 +1169,7 @@
       ],
       "claims": [
         {
+          "claimId": "high-performance-polymers-01",
           "evidenceIds": [
             "ASTM-D3641-24",
             "BASF-ULTRASON-INJECTION",
@@ -807,12 +1177,14 @@
           ]
         },
         {
+          "claimId": "high-performance-polymers-02",
           "evidenceIds": [
             "ASTM-D3641-24",
             "BASF-ULTRASON-INJECTION"
           ]
         },
         {
+          "claimId": "high-performance-polymers-03",
           "evidenceIds": [
             "BASF-ULTRASON-INJECTION"
           ]
@@ -821,16 +1193,32 @@
     },
     {
       "chapterId": "hot-runners",
-      "evidenceIds": [],
+      "evidenceIds": [
+        "HUSKY-SCVG-HOT-SPRUE-SERVICE-2024",
+        "MOLD-MASTERS-HOT-RUNNER-USER-MANUAL-2020",
+        "BASF-ULTRAMID-PROCESSING"
+      ],
       "claims": [
         {
-          "evidenceIds": []
+          "claimId": "hot-runners-01",
+          "evidenceIds": [
+            "HUSKY-SCVG-HOT-SPRUE-SERVICE-2024",
+            "MOLD-MASTERS-HOT-RUNNER-USER-MANUAL-2020"
+          ]
         },
         {
-          "evidenceIds": []
+          "claimId": "hot-runners-02",
+          "evidenceIds": [
+            "MOLD-MASTERS-HOT-RUNNER-USER-MANUAL-2020",
+            "BASF-ULTRAMID-PROCESSING"
+          ]
         },
         {
-          "evidenceIds": []
+          "claimId": "hot-runners-03",
+          "evidenceIds": [
+            "HUSKY-SCVG-HOT-SPRUE-SERVICE-2024",
+            "MOLD-MASTERS-HOT-RUNNER-USER-MANUAL-2020"
+          ]
         }
       ]
     },
@@ -839,26 +1227,32 @@
       "evidenceIds": [
         "BASF-ULTRASON-INJECTION",
         "BASF-ELASTOLLAN-565",
+        "ARBURG-PLASTICISING-SERVICE",
         "ISO-20430-2020"
       ],
       "claims": [
         {
+          "claimId": "machine-anatomy-01",
           "evidenceIds": [
             "BASF-ULTRASON-INJECTION",
-            "BASF-ELASTOLLAN-565"
+            "BASF-ELASTOLLAN-565",
+            "ARBURG-PLASTICISING-SERVICE"
           ]
         },
         {
+          "claimId": "machine-anatomy-02",
           "evidenceIds": [
             "ISO-20430-2020"
           ]
         },
         {
+          "claimId": "machine-anatomy-03",
           "evidenceIds": [
             "ISO-20430-2020"
           ]
         },
         {
+          "claimId": "machine-anatomy-04",
           "evidenceIds": [
             "ISO-20430-2020"
           ]
@@ -875,6 +1269,7 @@
       ],
       "claims": [
         {
+          "claimId": "material-families-01",
           "evidenceIds": [
             "ASTM-D3641-24",
             "BASF-ULTRADUR-FAMILY",
@@ -882,6 +1277,7 @@
           ]
         },
         {
+          "claimId": "material-families-02",
           "evidenceIds": [
             "ASTM-D3641-24",
             "BASF-ELASTOLLAN-565"
@@ -893,24 +1289,32 @@
       "chapterId": "moisture-drying",
       "evidenceIds": [
         "BASF-ULTRASON-INJECTION",
+        "BASF-ULTRAMID-PROCESSING",
         "ASTM-D3641-24",
-        "BASF-ULTRAMID-B3Z1-2026"
+        "BASF-ULTRAMID-B3Z1-2026",
+        "BASF-ULTRAMID-T-KR-4350-2026"
       ],
       "claims": [
         {
+          "claimId": "moisture-drying-01",
           "evidenceIds": [
-            "BASF-ULTRASON-INJECTION"
+            "BASF-ULTRASON-INJECTION",
+            "BASF-ULTRAMID-PROCESSING"
           ]
         },
         {
+          "claimId": "moisture-drying-02",
           "evidenceIds": [
             "ASTM-D3641-24",
             "BASF-ULTRAMID-B3Z1-2026"
           ]
         },
         {
+          "claimId": "moisture-drying-03",
           "evidenceIds": [
-            "BASF-ULTRAMID-B3Z1-2026"
+            "BASF-ULTRAMID-B3Z1-2026",
+            "BASF-ULTRAMID-T-KR-4350-2026",
+            "BASF-ULTRASON-INJECTION"
           ]
         }
       ]
@@ -919,28 +1323,36 @@
       "chapterId": "mould-anatomy",
       "evidenceIds": [
         "ISO-12165-2019",
-        "BASF-ULTRADUR-FAMILY"
+        "BASF-ULTRADUR-FAMILY",
+        "KISTLER-MOULD-TEMPERATURE-MONITORING",
+        "KUO-2022-COOLING-WARPAGE"
       ],
       "claims": [
         {
+          "claimId": "mould-anatomy-01",
           "evidenceIds": [
             "ISO-12165-2019"
           ]
         },
         {
+          "claimId": "mould-anatomy-02",
           "evidenceIds": [
             "ISO-12165-2019",
             "BASF-ULTRADUR-FAMILY"
           ]
         },
         {
+          "claimId": "mould-anatomy-03",
           "evidenceIds": [
             "ISO-12165-2019"
           ]
         },
         {
+          "claimId": "mould-anatomy-04",
           "evidenceIds": [
-            "BASF-ULTRADUR-FAMILY"
+            "BASF-ULTRADUR-FAMILY",
+            "KISTLER-MOULD-TEMPERATURE-MONITORING",
+            "KUO-2022-COOLING-WARPAGE"
           ]
         }
       ]
@@ -954,18 +1366,21 @@
       ],
       "claims": [
         {
+          "claimId": "multi-cavity-01",
           "evidenceIds": [
             "PARIZS-2023-IN-MOLD-SENSORS",
             "KISTLER-CAVITY-PRESSURE-MONITORING"
           ]
         },
         {
+          "claimId": "multi-cavity-02",
           "evidenceIds": [
             "PARIZS-2023-IN-MOLD-SENSORS",
             "NIST-SEMATECH-HANDBOOK"
           ]
         },
         {
+          "claimId": "multi-cavity-03",
           "evidenceIds": [
             "PARIZS-2023-IN-MOLD-SENSORS",
             "NIST-SEMATECH-HANDBOOK"
@@ -977,21 +1392,29 @@
       "chapterId": "plasticising-unit",
       "evidenceIds": [
         "BASF-ULTRASON-INJECTION",
-        "BASF-ELASTOLLAN-565"
+        "BASF-ELASTOLLAN-565",
+        "ARBURG-PLASTICISING-SERVICE",
+        "ENGEL-MELT-CUSHION-OPTIMISATION"
       ],
       "claims": [
         {
+          "claimId": "plasticising-unit-01",
           "evidenceIds": [
             "BASF-ULTRASON-INJECTION",
-            "BASF-ELASTOLLAN-565"
+            "BASF-ELASTOLLAN-565",
+            "ARBURG-PLASTICISING-SERVICE"
           ]
         },
         {
+          "claimId": "plasticising-unit-02",
           "evidenceIds": [
-            "BASF-ELASTOLLAN-565"
+            "BASF-ELASTOLLAN-565",
+            "ARBURG-PLASTICISING-SERVICE",
+            "ENGEL-MELT-CUSHION-OPTIMISATION"
           ]
         },
         {
+          "claimId": "plasticising-unit-03",
           "evidenceIds": [
             "BASF-ULTRASON-INJECTION",
             "BASF-ELASTOLLAN-565"
@@ -1008,12 +1431,14 @@
       ],
       "claims": [
         {
+          "claimId": "polymer-structure-01",
           "evidenceIds": [
             "BASF-ULTRADUR-FAMILY",
             "BASF-ULTRASON-INJECTION"
           ]
         },
         {
+          "claimId": "polymer-structure-02",
           "evidenceIds": [
             "BASF-ULTRADUR-FAMILY",
             "OUBELLAOUCH-2024-FIBRE-ORIENTATION"
@@ -1026,25 +1451,36 @@
       "evidenceIds": [
         "RJG-DECOUPLED-WORKSHOP",
         "ISO-294-1-2017",
+        "AUTODESK-JUNCTURE-LOSS",
+        "AUTODESK-RUNNER-LAYOUT",
         "BIELENBERG-2025-SWITCHOVER-REVIEW",
-        "ENGEL-IQ-PROCESS-CONTROL"
+        "ENGEL-IQ-PROCESS-CONTROL",
+        "PARIZS-2023-IN-MOLD-SENSORS",
+        "KISTLER-CAVITY-PRESSURE-MONITORING"
       ],
       "claims": [
         {
+          "claimId": "pressure-loss-01",
           "evidenceIds": [
             "RJG-DECOUPLED-WORKSHOP",
             "ISO-294-1-2017"
           ]
         },
         {
+          "claimId": "pressure-loss-02",
           "evidenceIds": [
-            "RJG-DECOUPLED-WORKSHOP"
+            "RJG-DECOUPLED-WORKSHOP",
+            "AUTODESK-JUNCTURE-LOSS",
+            "AUTODESK-RUNNER-LAYOUT"
           ]
         },
         {
+          "claimId": "pressure-loss-03",
           "evidenceIds": [
             "BIELENBERG-2025-SWITCHOVER-REVIEW",
-            "ENGEL-IQ-PROCESS-CONTROL"
+            "ENGEL-IQ-PROCESS-CONTROL",
+            "PARIZS-2023-IN-MOLD-SENSORS",
+            "KISTLER-CAVITY-PRESSURE-MONITORING"
           ]
         }
       ]
@@ -1054,23 +1490,28 @@
       "evidenceIds": [
         "ASTM-D3641-24",
         "ISO-294-1-2017",
-        "RJG-DECOUPLED-WORKSHOP"
+        "RJG-DECOUPLED-WORKSHOP",
+        "NIST-SEMATECH-HANDBOOK"
       ],
       "claims": [
         {
+          "claimId": "process-baseline-01",
           "evidenceIds": [
             "ASTM-D3641-24"
           ]
         },
         {
+          "claimId": "process-baseline-02",
           "evidenceIds": [
             "ISO-294-1-2017",
             "ASTM-D3641-24"
           ]
         },
         {
+          "claimId": "process-baseline-03",
           "evidenceIds": [
-            "RJG-DECOUPLED-WORKSHOP"
+            "RJG-DECOUPLED-WORKSHOP",
+            "NIST-SEMATECH-HANDBOOK"
           ]
         }
       ]
@@ -1084,18 +1525,21 @@
       ],
       "claims": [
         {
+          "claimId": "process-monitoring-01",
           "evidenceIds": [
             "KISTLER-CAVITY-PRESSURE-MONITORING",
             "NIST-SEMATECH-HANDBOOK"
           ]
         },
         {
+          "claimId": "process-monitoring-02",
           "evidenceIds": [
             "NIST-SEMATECH-HANDBOOK",
             "NIST-MEASUREMENT-CHARACTERIZATION"
           ]
         },
         {
+          "claimId": "process-monitoring-03",
           "evidenceIds": [
             "KISTLER-CAVITY-PRESSURE-MONITORING",
             "NIST-SEMATECH-HANDBOOK"
@@ -1112,17 +1556,20 @@
       ],
       "claims": [
         {
+          "claimId": "process-window-01",
           "evidenceIds": [
             "NIST-SEMATECH-HANDBOOK"
           ]
         },
         {
+          "claimId": "process-window-02",
           "evidenceIds": [
             "NIST-SEMATECH-HANDBOOK",
             "ISO-20457-2026"
           ]
         },
         {
+          "claimId": "process-window-03",
           "evidenceIds": [
             "NIST-SEMATECH-HANDBOOK",
             "ASTM-D3641-24"
@@ -1135,18 +1582,28 @@
       "evidenceIds": [
         "BASF-ULTRADUR-FAMILY",
         "BASF-ULTRASON-INJECTION",
-        "ISO-294-1-2017"
+        "AUTODESK-VISCOSITY-MODELS",
+        "ISO-294-1-2017",
+        "PARIZS-2023-IN-MOLD-SENSORS",
+        "KISTLER-CAVITY-PRESSURE-MONITORING",
+        "RJG-PRESSURE-LIMITED-FILL"
       ],
       "claims": [
         {
+          "claimId": "rheology-01",
           "evidenceIds": [
             "BASF-ULTRADUR-FAMILY",
-            "BASF-ULTRASON-INJECTION"
+            "BASF-ULTRASON-INJECTION",
+            "AUTODESK-VISCOSITY-MODELS"
           ]
         },
         {
+          "claimId": "rheology-02",
           "evidenceIds": [
-            "ISO-294-1-2017"
+            "ISO-294-1-2017",
+            "PARIZS-2023-IN-MOLD-SENSORS",
+            "KISTLER-CAVITY-PRESSURE-MONITORING",
+            "RJG-PRESSURE-LIMITED-FILL"
           ]
         }
       ]
@@ -1154,22 +1611,28 @@
     {
       "chapterId": "safety-foundations",
       "evidenceIds": [
-        "ISO-20430-2020"
+        "ISO-20430-2020",
+        "HUSKY-ULTRASHOT-SERVICE-2023"
       ],
       "claims": [
         {
+          "claimId": "safety-foundations-01",
           "evidenceIds": [
             "ISO-20430-2020"
           ]
         },
         {
+          "claimId": "safety-foundations-02",
           "evidenceIds": [
-            "ISO-20430-2020"
+            "ISO-20430-2020",
+            "HUSKY-ULTRASHOT-SERVICE-2023"
           ]
         },
         {
+          "claimId": "safety-foundations-03",
           "evidenceIds": [
-            "ISO-20430-2020"
+            "ISO-20430-2020",
+            "HUSKY-ULTRASHOT-SERVICE-2023"
           ]
         }
       ]
@@ -1177,20 +1640,27 @@
     {
       "chapterId": "short-shot",
       "evidenceIds": [
-        "BASF-INJECTION-TROUBLESHOOTER"
+        "BASF-INJECTION-TROUBLESHOOTER",
+        "RJG-PRESSURE-LIMITED-FILL",
+        "DME-VENTING-SOLUTIONS"
       ],
       "claims": [
         {
+          "claimId": "short-shot-01",
           "evidenceIds": [
             "BASF-INJECTION-TROUBLESHOOTER"
           ]
         },
         {
+          "claimId": "short-shot-02",
           "evidenceIds": [
-            "BASF-INJECTION-TROUBLESHOOTER"
+            "BASF-INJECTION-TROUBLESHOOTER",
+            "RJG-PRESSURE-LIMITED-FILL",
+            "DME-VENTING-SOLUTIONS"
           ]
         },
         {
+          "claimId": "short-shot-03",
           "evidenceIds": [
             "BASF-INJECTION-TROUBLESHOOTER"
           ]
@@ -1201,19 +1671,29 @@
       "chapterId": "shot-utilisation",
       "evidenceIds": [
         "ASTM-D3641-24",
+        "SUMITOMO-SE-EV-S-TECHDATA",
+        "ENGEL-MELT-CUSHION-OPTIMISATION",
         "BASF-ULTRAMID-PROCESSING",
-        "BASF-ELASTOLLAN-565"
+        "BASF-ELASTOLLAN-565",
+        "ARBURG-PLASTICISING-SERVICE",
+        "RJG-MIV-CONSORTIUM-WHITE-PAPER"
       ],
       "claims": [
         {
+          "claimId": "shot-utilisation-01",
           "evidenceIds": [
-            "ASTM-D3641-24"
+            "ASTM-D3641-24",
+            "SUMITOMO-SE-EV-S-TECHDATA",
+            "ENGEL-MELT-CUSHION-OPTIMISATION"
           ]
         },
         {
+          "claimId": "shot-utilisation-02",
           "evidenceIds": [
             "BASF-ULTRAMID-PROCESSING",
-            "BASF-ELASTOLLAN-565"
+            "BASF-ELASTOLLAN-565",
+            "ARBURG-PLASTICISING-SERVICE",
+            "RJG-MIV-CONSORTIUM-WHITE-PAPER"
           ]
         }
       ]
@@ -1222,21 +1702,27 @@
       "chapterId": "sink-voids",
       "evidenceIds": [
         "ASTM-D955-21",
-        "BASF-INJECTION-TROUBLESHOOTER"
+        "BASF-INJECTION-TROUBLESHOOTER",
+        "AUTODESK-SINK-VOIDS"
       ],
       "claims": [
         {
+          "claimId": "sink-voids-01",
           "evidenceIds": [
             "ASTM-D955-21",
-            "BASF-INJECTION-TROUBLESHOOTER"
+            "BASF-INJECTION-TROUBLESHOOTER",
+            "AUTODESK-SINK-VOIDS"
           ]
         },
         {
+          "claimId": "sink-voids-02",
           "evidenceIds": [
-            "BASF-INJECTION-TROUBLESHOOTER"
+            "BASF-INJECTION-TROUBLESHOOTER",
+            "AUTODESK-SINK-VOIDS"
           ]
         },
         {
+          "claimId": "sink-voids-03",
           "evidenceIds": [
             "ASTM-D955-21",
             "BASF-INJECTION-TROUBLESHOOTER"
@@ -1253,18 +1739,21 @@
       ],
       "claims": [
         {
+          "claimId": "splay-01",
           "evidenceIds": [
             "BASF-INJECTION-TROUBLESHOOTER",
             "BASF-ULTRASON-INJECTION"
           ]
         },
         {
+          "claimId": "splay-02",
           "evidenceIds": [
             "BASF-ULTRAMID-PROCESSING",
             "BASF-ULTRASON-INJECTION"
           ]
         },
         {
+          "claimId": "splay-03",
           "evidenceIds": [
             "BASF-ULTRAMID-PROCESSING",
             "BASF-ULTRASON-INJECTION"
@@ -1276,18 +1765,22 @@
       "chapterId": "thermal-history",
       "evidenceIds": [
         "BASF-ULTRAMID-B3Z1-2026",
-        "BASF-ULTRASON-INJECTION"
+        "BASF-ULTRASON-INJECTION",
+        "BASF-INJECTION-TROUBLESHOOTER"
       ],
       "claims": [
         {
+          "claimId": "thermal-history-01",
           "evidenceIds": [
             "BASF-ULTRAMID-B3Z1-2026",
             "BASF-ULTRASON-INJECTION"
           ]
         },
         {
+          "claimId": "thermal-history-02",
           "evidenceIds": [
-            "BASF-ULTRASON-INJECTION"
+            "BASF-ULTRASON-INJECTION",
+            "BASF-INJECTION-TROUBLESHOOTER"
           ]
         }
       ]
@@ -1295,20 +1788,35 @@
     {
       "chapterId": "thin-wall",
       "evidenceIds": [
-        "ASTM-D3641-24"
+        "ASTM-D3641-24",
+        "AUTODESK-THIN-SECTION",
+        "ENGEL-THIN-WALL-E-SPEED",
+        "RJG-MIV-CONSORTIUM-WHITE-PAPER",
+        "AUTODESK-VISCOSITY-MODELS"
       ],
       "claims": [
         {
+          "claimId": "thin-wall-01",
           "evidenceIds": [
-            "ASTM-D3641-24"
+            "ASTM-D3641-24",
+            "AUTODESK-THIN-SECTION",
+            "ENGEL-THIN-WALL-E-SPEED"
           ]
         },
         {
-          "evidenceIds": []
+          "claimId": "thin-wall-02",
+          "evidenceIds": [
+            "ENGEL-THIN-WALL-E-SPEED",
+            "RJG-MIV-CONSORTIUM-WHITE-PAPER"
+          ]
         },
         {
+          "claimId": "thin-wall-03",
           "evidenceIds": [
-            "ASTM-D3641-24"
+            "ASTM-D3641-24",
+            "AUTODESK-THIN-SECTION",
+            "AUTODESK-VISCOSITY-MODELS",
+            "ENGEL-THIN-WALL-E-SPEED"
           ]
         }
       ]
@@ -1317,21 +1825,34 @@
       "chapterId": "velocity-pressure",
       "evidenceIds": [
         "ASTM-D3641-24",
-        "ISO-294-1-2017"
+        "RJG-PRESSURE-LIMITED-FILL",
+        "SUMITOMO-SE-EV-S-TECHDATA",
+        "ISO-294-1-2017",
+        "BIELENBERG-2025-SWITCHOVER-REVIEW",
+        "ENGEL-IQ-PROCESS-CONTROL"
       ],
       "claims": [
         {
+          "claimId": "velocity-pressure-01",
           "evidenceIds": [
-            "ASTM-D3641-24"
+            "ASTM-D3641-24",
+            "RJG-PRESSURE-LIMITED-FILL",
+            "SUMITOMO-SE-EV-S-TECHDATA"
           ]
         },
         {
-          "evidenceIds": []
+          "claimId": "velocity-pressure-02",
+          "evidenceIds": [
+            "RJG-PRESSURE-LIMITED-FILL"
+          ]
         },
         {
+          "claimId": "velocity-pressure-03",
           "evidenceIds": [
             "ISO-294-1-2017",
-            "ASTM-D3641-24"
+            "ASTM-D3641-24",
+            "BIELENBERG-2025-SWITCHOVER-REVIEW",
+            "ENGEL-IQ-PROCESS-CONTROL"
           ]
         }
       ]
@@ -1340,25 +1861,33 @@
       "chapterId": "venting",
       "evidenceIds": [
         "BASF-INJECTION-PROBLEMS",
+        "DME-VENTING-SOLUTIONS",
         "BASF-INJECTION-TROUBLESHOOTER",
         "BASF-ULTRASON-INJECTION",
-        "ISO-12165-2019"
+        "ISO-12165-2019",
+        "DME-SINTERED-VENTS-FAQ"
       ],
       "claims": [
         {
+          "claimId": "venting-01",
           "evidenceIds": [
-            "BASF-INJECTION-PROBLEMS"
+            "BASF-INJECTION-PROBLEMS",
+            "DME-VENTING-SOLUTIONS"
           ]
         },
         {
+          "claimId": "venting-02",
           "evidenceIds": [
             "BASF-INJECTION-TROUBLESHOOTER",
             "BASF-ULTRASON-INJECTION"
           ]
         },
         {
+          "claimId": "venting-03",
           "evidenceIds": [
-            "ISO-12165-2019"
+            "ISO-12165-2019",
+            "DME-VENTING-SOLUTIONS",
+            "DME-SINTERED-VENTS-FAQ"
           ]
         }
       ]
@@ -1366,22 +1895,35 @@
     {
       "chapterId": "vp-transfer",
       "evidenceIds": [
-        "ASTM-D3641-24"
+        "ASTM-D3641-24",
+        "BIELENBERG-2025-SWITCHOVER-REVIEW",
+        "ENGEL-IQ-PROCESS-CONTROL",
+        "RJG-FILL-ONLY-PART"
       ],
       "claims": [
         {
+          "claimId": "vp-transfer-01",
           "evidenceIds": [
-            "ASTM-D3641-24"
+            "ASTM-D3641-24",
+            "BIELENBERG-2025-SWITCHOVER-REVIEW",
+            "ENGEL-IQ-PROCESS-CONTROL"
           ]
         },
         {
+          "claimId": "vp-transfer-02",
           "evidenceIds": [
-            "ASTM-D3641-24"
+            "ASTM-D3641-24",
+            "BIELENBERG-2025-SWITCHOVER-REVIEW",
+            "ENGEL-IQ-PROCESS-CONTROL"
           ]
         },
         {
+          "claimId": "vp-transfer-03",
           "evidenceIds": [
-            "ASTM-D3641-24"
+            "ASTM-D3641-24",
+            "ENGEL-IQ-PROCESS-CONTROL",
+            "BIELENBERG-2025-SWITCHOVER-REVIEW",
+            "RJG-FILL-ONLY-PART"
           ]
         }
       ]
@@ -1392,10 +1934,12 @@
         "ISO-294-4-2018",
         "ASTM-D955-21",
         "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW",
+        "OUBELLAOUCH-2024-FIBRE-ORIENTATION",
         "ISO-20457-2026"
       ],
       "claims": [
         {
+          "claimId": "warpage-01",
           "evidenceIds": [
             "ISO-294-4-2018",
             "ASTM-D955-21",
@@ -1403,11 +1947,14 @@
           ]
         },
         {
+          "claimId": "warpage-02",
           "evidenceIds": [
-            "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW"
+            "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW",
+            "OUBELLAOUCH-2024-FIBRE-ORIENTATION"
           ]
         },
         {
+          "claimId": "warpage-03",
           "evidenceIds": [
             "ASTM-D955-21",
             "ISO-20457-2026",
@@ -1424,16 +1971,19 @@
       ],
       "claims": [
         {
+          "claimId": "weld-lines-01",
           "evidenceIds": [
             "LI-2024-WELD-LINE-REVIEW"
           ]
         },
         {
+          "claimId": "weld-lines-02",
           "evidenceIds": [
             "LI-2024-WELD-LINE-REVIEW"
           ]
         },
         {
+          "claimId": "weld-lines-03",
           "evidenceIds": [
             "LI-2024-WELD-LINE-REVIEW",
             "BASF-INJECTION-TROUBLESHOOTER"
@@ -1446,30 +1996,36 @@
       "evidenceIds": [
         "ISO-294-1-2017",
         "ASTM-D3641-24",
-        "ISO-20430-2020"
+        "ISO-20430-2020",
+        "NIST-SEMATECH-HANDBOOK"
       ],
       "claims": [
         {
+          "claimId": "what-injection-moulding-is-01",
           "evidenceIds": [
             "ISO-294-1-2017",
             "ASTM-D3641-24"
           ]
         },
         {
+          "claimId": "what-injection-moulding-is-02",
           "evidenceIds": [
             "ASTM-D3641-24",
             "ISO-20430-2020"
           ]
         },
         {
+          "claimId": "what-injection-moulding-is-03",
           "evidenceIds": [
             "ASTM-D3641-24",
             "ISO-294-1-2017"
           ]
         },
         {
+          "claimId": "what-injection-moulding-is-04",
           "evidenceIds": [
-            "ISO-294-1-2017"
+            "ISO-294-1-2017",
+            "NIST-SEMATECH-HANDBOOK"
           ]
         }
       ]
@@ -1481,7 +2037,7 @@
     "noEvidenceUpgrades": true,
     "noProductionAuthority": true,
     "independentSmeStatus": "hold",
-    "purpose": "Expose the same governed claim-review evidence at claim, module and reader-chapter level without changing claim conclusions or technical wording."
+    "purpose": "Expose the final governed claim evidence after technical review, evidence resolution and retained qualification at claim, module and reader-chapter level without changing claim conclusions or technical wording."
   },
   "claimCount": 137
 }

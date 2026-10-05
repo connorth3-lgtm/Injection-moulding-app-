@@ -39,7 +39,7 @@
       "book-engineering-diagrams-v1.json": "0a2883d595bb55670596b87178888f44c3b06592",
       "book-reader-architecture-v2.json": "65708fe61a510bb8424ba3878d85b22409059b72",
       "book-editorial-expansion-review-v1.json": "6a97bd39a3d2e6d38788afc9357397a25a5c25ff",
-      "book-claim-evidence-reference-v1.json": "2b87438e09c093cf8b9ff58988853a1437dd1f3e"
+      "book-claim-evidence-reference-v1.json": "c13490a71021fb3b46c9b76b7bd260df86d9036d"
     }
   },
   "canonicalAcademicEvidenceUrls": {
@@ -127,7 +127,7 @@
     "The 2026-10-06 editorial expansion across 37 governed modules is bound to each module's existing governed claim IDs by data/book-editorial-expansion-review-v1.json; the completed depth pass adds mechanism, measurement, discriminating-evidence and falsification guidance without adding universal setpoints, machine-control authority or independent human SME approval.",
     "Reader-level depth bands, learning objectives, knowledge checks and application prompts are derived teaching scaffolds only; they cannot add claims, upgrade evidence status or create production authority.",
     "Packaging certification marks are interpreted only at their supported management-system scope: an ISO 9001/SAI Global marking does not certify resin properties, exact grade identity, processing conditions, lot acceptance or product conformity; current certificate validity and scope require separate verification.",
-    "The 2026-10-06.5 evidence-transparency revision adds an exact-byte claim-evidence reference index derived from the governed claim-review ledgers, covering all 137 claims, 46 modules and 27 distinct evidence sources; exposes those sources in claim traces plus module/reader references; aligns worked-case evidence with parent claim governance; adds a synthetic r09 defensible-baseline record; and preserves independent human SME review as HOLD."
+    "The 2026-10-06.5 evidence-transparency revision exposes the final governed claim-evidence state derived from all five claim-review ledgers plus all four resolution/qualification ledgers, covering all 137 claims, 46 modules and 52 distinct final evidence IDs; requires non-empty final evidence for every claim/module; exposes those sources in claim traces plus module/reader references; labels known evidence aliases/families without rewriting governed IDs; aligns worked-case evidence with parent claim governance; adds a synthetic r09 defensible-baseline record; and preserves independent human SME review as HOLD."
   ],
   "revocationRules": {
     "claimHoldOrConflict": "block-release",
@@ -241,10 +241,10 @@
     "release": "2026.10.06.5",
     "ledger": "data/book-claim-evidence-reference-v1.json",
     "chapterCount": 46,
-    "sourceCount": 27,
+    "sourceCount": 52,
     "noNewClaims": true,
     "independentSmeStatus": "hold",
-    "authorityBoundary": "Presentation/traceability index only; it exposes the exact governed claim-review evidence for all 137 claims and their 46 modules without changing claim conclusions, evidence status, production authority or independent human SME status.",
+    "authorityBoundary": "Presentation/traceability index only; it exposes the final governed evidence state for all 137 claims after technical review, evidence-resolution and retained-qualification overlays across all 46 modules, without changing claim conclusions, evidence status, production authority or independent human SME status.",
     "claimCount": 137
   }
 }
