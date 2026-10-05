@@ -18,7 +18,7 @@ data=json.loads(LEDGER.read_text(encoding='utf-8'))
 binding=json.loads(BINDING.read_text(encoding='utf-8'))
 rows=data.get('diagrams') or []
 need(data.get('release')==binding.get('contentRelease') and data.get('status')=='governed-instructional-diagrams','diagram release identity mismatch')
-need(len(rows)==18 and len({x['id'] for x in rows})==18,'diagram identity/count mismatch')
+need(len(rows)==21 and len({x['id'] for x in rows})==21,'diagram identity/count mismatch')
 for row in rows:
     path=ROOT/row['asset']
     need(path.is_file(),f"missing diagram asset: {row['asset']}")
@@ -33,4 +33,4 @@ need(boundary=={'productionUse':'advisory-only','machineSpecific':False,'scaleDr
 sme=json.loads(SME.read_text(encoding='utf-8'))
 need(sme.get('status')=='hold' and sme.get('reviews')==[],'diagram integration must not manufacture independent SME approval')
 need(sme.get('diagramIds')==[x['id'] for x in rows],'SME contract does not cover every governed diagram')
-print('MouldMaster Book diagram QA passed: 18 exact-byte instructional SVGs retain accessibility and non-design/non-scale boundaries.')
+print('MouldMaster Book diagram QA passed: 21 exact-byte instructional SVGs retain accessibility and non-design/non-scale boundaries.')
