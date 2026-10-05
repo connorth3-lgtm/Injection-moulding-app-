@@ -32,6 +32,7 @@ EXPECTED_CHAPTERS = {
     "worked-process-monitoring-alarm-v1": "process-monitoring",
     "worked-black-speck-source-map-v1": "black-specks",
     "worked-complex-diagnostics-v1": "complex-diagnostics",
+    "worked-filling-boundary-defect-v1": "flash",
 }
 
 
@@ -118,6 +119,11 @@ def main() -> None:
     black = cases["worked-black-speck-source-map-v1"]
     need("all cavities" in " ".join(black.get("observations", [])).lower() and "cavity 4" in black["setup"].lower(), "black-speck source-map pattern regression")
 
+    boundary_case = cases["worked-filling-boundary-defect-v1"]
+    need("cavity-specific" in boundary_case["interpretation"].lower() and "global clamp-force" in boundary_case["interpretation"].lower(), "r12 boundary-defect case lost local-vs-global discrimination")
+    need("repeatable recovery" in " ".join(boundary_case["boundaries"] + boundary_case["calculationSteps"]).lower(), "r12 boundary-defect case lost recovery requirement")
+    need("approved maintenance" in " ".join(boundary_case["boundaries"]).lower(), "r12 boundary-defect case lost maintenance authority boundary")
+
     capstone = cases["worked-complex-diagnostics-v1"]
     need(len(capstone.get("observations", [])) >= 5, "complex-diagnostics capstone lost evidence breadth")
     need("mixed-mechanism" in capstone["interpretation"].lower() and "preserve both" in capstone["interpretation"].lower(), "complex-diagnostics capstone lost multi-hypothesis uncertainty")
@@ -133,7 +139,7 @@ def main() -> None:
         },
         "worked-case production authority boundary weakened",
     )
-    print("MouldMaster worked-case calculation QA passed: 25 governed synthetic cases retain exact arithmetic/diagnostic boundaries and fail-closed production authority.")
+    print("MouldMaster worked-case calculation QA passed: 26 governed synthetic cases retain exact arithmetic/diagnostic boundaries and fail-closed production authority.")
 
 
 if __name__ == "__main__":
