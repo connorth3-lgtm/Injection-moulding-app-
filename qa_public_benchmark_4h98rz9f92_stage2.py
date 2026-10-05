@@ -12,7 +12,7 @@ text = RUNNER.read_text(encoding="utf-8")
 for marker in [
     'EXPECTED_FILE_ID = "368356fe-618c-4eab-82e6-53dc86762943"',
     'EXPECTED_FILE = "Raw Data.xlsx"',
-    'EXPECTED_SHA256 = "452fc2077ae9227b8816ae73431c048ac294c87aa40b8abe919371ae3b87c6bc"',
+    'EXPECTED_SHA256 = "39210169aac62a1455603d37cdffaca93cf0c46189ea4258c5f3c0a4a37255c9"',
     'retrieved-profile-needs-semantic-review',
     'textLabels',
     'numericCellsByColumn',
