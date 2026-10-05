@@ -298,7 +298,9 @@ for marker in (
     need(marker in pages, f"Pages deploy-time current-main recheck missing: {marker}")
 need("Require merged-PR provenance before publication" in pages, "Pages stable provenance gate label is missing")
 need("native protection mandatory" in pages, "Pages native-protection requirement is not explicit")
-need("if: github.event_name != 'pull_request'" in pages, "Pages publication guard must remain push/manual only")
+need("if: github.event_name == 'push'" in pages, "Pages publication authority must be limited to protected-main push events")
+need("Manual dispatch is contract-only" in pages and "Manual dispatch does not receive Pages mutation or publication authority." in pages,
+     "manual Pages dispatch must remain contract-only and non-publishing")
 
 # The administrator helper must transform the live ruleset rather than replace
 # it with a stale static payload. It must preserve existing security/review
