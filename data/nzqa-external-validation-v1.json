@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.06.8",
+  "release": "2026.10.06.9",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.06.8.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.06.9.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 379,
   "candidate": {
-    "release": "2026.10.06.8",
-    "sourceSha": "a66fea3ea7f0120416ee4f94b31130ce3ccda1dd",
-    "runtimeFingerprint": "sha256:6d8a5562955bc2a16176d1143af937b3b8dcd92455768fc1d9ffc8c61f933f08"
+    "release": "2026.10.06.9",
+    "sourceSha": "9bda6fb768791d4a51585289f1104898733a0e9f",
+    "runtimeFingerprint": "sha256:85f5d537fd397dceda979100370494e860ac69350302f418b391ec7a5229b688"
   },
   "boundary": "Repository readiness, mappings, templates and automated QA do not create NZQA approval, provider accreditation, consent to assess, moderation acceptance, learner competence, workplace competence or qualification award.",
   "requiredGates": [
