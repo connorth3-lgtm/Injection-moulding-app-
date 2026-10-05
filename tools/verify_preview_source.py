@@ -213,6 +213,7 @@ def self_test() -> None:
             {
                 "id": i + 1,
                 "name": name,
+                "path": REQUIRED_WORKFLOW_PATHS[name],
                 "status": "completed",
                 "conclusion": "success",
                 "created_at": f"2026-10-03T00:00:0{i}Z",
@@ -226,6 +227,7 @@ def self_test() -> None:
         "workflow_runs": [{
             "id": 99,
             "name": REQUIRED_WORKFLOWS[0],
+            "path": REQUIRED_WORKFLOW_PATHS[REQUIRED_WORKFLOWS[0]],
             "status": "completed",
             "conclusion": "success",
             "created_at": "2026-10-03T01:00:00Z",
