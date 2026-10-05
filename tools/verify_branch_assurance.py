@@ -8,6 +8,7 @@ import os
 import time
 import urllib.parse
 import urllib.request
+from urllib.error import HTTPError, URLError
 from pathlib import Path
 
 DEFAULT_REPO = os.environ.get("GITHUB_REPOSITORY", "connorth3-lgtm/Injection-moulding-app-")
