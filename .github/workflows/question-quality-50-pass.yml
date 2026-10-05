@@ -23,7 +23,7 @@ jobs:
           fetch-depth: 0
       - name: Classify question-quality impact
         id: impact
-        run: python3 tools/ci_impact.py
+        run: python3 tools/ci_impact.py --governed-candidate
       - name: Skip unrelated update
         if: steps.impact.outputs.question_quality != 'true'
         run: echo "Question Quality 50-Pass skipped: latest update does not affect assessment/question-quality contracts."
