@@ -35,6 +35,7 @@ ruleset_verifier = text("tools/verify_main_ruleset.py")
 main_policy = text("data/main-governance-policy-v1.json")
 production_verifier = text("tools/verify_production_source.py")
 preview_verifier = text("tools/verify_preview_source.py")
+premerge_public_candidate = text(".github/workflows/premerge-public-candidate.yml")
 external_live_verifier = text("tools/verify_external_validation_live_bindings.py")
 
 # Main provenance is a read-only post-push audit. Native ruleset prevention is
@@ -180,6 +181,12 @@ need(
     "retain-exact-candidate" not in preview_pages.split("Require exact-head preview quality gates", 1)[1].split("Validate preview build contracts", 1)[0],
     "preview push-SHA polling must not require the PR-only public-candidate job",
 )
+need("pull_request:\n    branches: [ main, preview ]" in premerge_public_candidate,
+     "public-candidate gate must run on every governed PR")
+need("\n    paths:\n" not in premerge_public_candidate.split("pull_request:", 1)[1].split("workflow_dispatch:", 1)[0],
+     "public-candidate gate must not use PR path filters; impact routing handles cheap skips")
+need("Skip redundant candidate rebuild" in premerge_public_candidate and "steps.impact.outputs.runtime != 'true'" in premerge_public_candidate,
+     "public-candidate gate must keep impact-based cheap skipping for non-runtime changes")
 
 # Preview and main must also converge after merge/push on one exact SHA. This
 # read-only meta-gate waits for the real branch-specific CI and deployment runs;
