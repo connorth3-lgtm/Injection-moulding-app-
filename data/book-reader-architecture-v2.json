@@ -2,7 +2,7 @@
   "schema": 1,
   "bookId": "mouldmaster-book",
   "version": "2026.10.06-reader-architecture-draft",
-  "status": "technical-review-draft",
+  "status": "governed-derived-reader-map",
   "purpose": "Reader-facing consolidation of the 46 governed content modules into substantial book chapters while preserving module IDs for claim, source, SME and runtime traceability.",
   "targetWordsPerReaderChapter": {
     "nominal": 1000,
@@ -10,9 +10,9 @@
       850,
       1400
     ],
-    "rule": "Longer only when governed evidence, worked cases or diagrams add real instructional value; never pad with unsupported process recipes or generic filler."
+    "rule": "Editorial target, not a publication gate. Longer only when governed module text, enrichment, worked cases or diagrams add real instructional value; never pad with unsupported settings or filler."
   },
-  "governanceBoundary": "This architecture does not replace, merge or delete the 46 governed module IDs. Publication authorization, claim review and independent SME review remain bound to those modules until governance is deliberately migrated and revalidated.",
+  "governanceBoundary": "Reader chapters are structural groupings only. They add no technical claims, do not replace or merge the 46 governed module IDs, and cannot promote module publication, SME, accreditation or production status. Claim/source review and independent SME review remain bound to the underlying modules.",
   "readerChapters": [
     {
       "id": "r01",
@@ -207,5 +207,6 @@
     "Does consolidation reduce repetition without hiding important applicability boundaries?",
     "Are worked cases and diagrams placed where they teach interpretation rather than decorate the text?",
     "Can a beginner read chapters 1–10 sequentially and an experienced technician enter at chapters 11–20 without losing critical safety context?"
-  ]
+  ],
+  "release": "2026.10.06.1"
 }
