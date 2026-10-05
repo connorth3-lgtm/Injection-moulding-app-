@@ -21,8 +21,8 @@
     "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.10.06.1.md",
     "candidate": {
       "release": "2026.10.06.1",
-      "sourceSha": "2200aca525121de10d54d8663af00535b39979f0",
-      "runtimeFingerprint": "sha256:366b6f3a458d58deee47b032163ec5e36ebded30655085dd15e0f8007d7aa948"
+      "sourceSha": "e6e79c05ff041bb0a9827c901ff545541c807629",
+      "runtimeFingerprint": "sha256:715e76bc586179d01ae7d658af8922c73938a3e6e515ad5603077321914ce303"
     },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix."
   },
@@ -32,14 +32,14 @@
     "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.10.06.1.md",
     "currentCandidate": {
       "release": "2026.10.06.1",
-      "sourceSha": "2200aca525121de10d54d8663af00535b39979f0",
-      "runtimeFingerprint": "sha256:366b6f3a458d58deee47b032163ec5e36ebded30655085dd15e0f8007d7aa948",
-      "candidateRunId": 37353639908,
+      "sourceSha": "e6e79c05ff041bb0a9827c901ff545541c807629",
+      "runtimeFingerprint": "sha256:715e76bc586179d01ae7d658af8922c73938a3e6e515ad5603077321914ce303",
+      "candidateRunId": 37356312223,
       "candidateWorkflow": "Pre-merge Public Candidate",
-      "artifactId": 11364245102,
-      "artifactName": "physical-pwa-candidate-2200aca525121de10d54d8663af00535b39979f0",
-      "artifactDigest": "sha256:8164ae1c30649f6f55934559304ba3b3d96d8a4bd50893b096b2cba048ba79ab",
-      "artifactExpiresAt": "2027-01-03T18:08:00Z"
+      "artifactId": 11364532613,
+      "artifactName": "physical-pwa-candidate-e6e79c05ff041bb0a9827c901ff545541c807629",
+      "artifactDigest": "sha256:26939303658220de1f8bf7faa965c9507658ff712589b461ed600f06bf58c9e8",
+      "artifactExpiresAt": "2027-01-03T18:29:19Z"
     },
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release."
   },
@@ -48,7 +48,7 @@
     "workflow": ".github/workflows/microsoft-store-msix.yml",
     "handoff": "certification/STORE_SUBMISSION_STATUS.md",
     "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.10.06.1.md",
-    "sourceSha": "2200aca525121de10d54d8663af00535b39979f0",
+    "sourceSha": "e6e79c05ff041bb0a9827c901ff545541c807629",
     "desktopRelease": "2026.09.29.1",
     "evidence": null,
     "required": [
@@ -100,20 +100,20 @@
     "required": "Genuine provider ownership, stakeholder need, provider-approved design, authorised assessment/internal moderation, consent-to-assess/CMR confirmation, applicable national moderation, workplace evidence and provider-controlled review/change evidence for the exact governed release.",
     "candidate": {
       "release": "2026.10.06.1",
-      "sourceSha": "2200aca525121de10d54d8663af00535b39979f0",
-      "runtimeFingerprint": "sha256:366b6f3a458d58deee47b032163ec5e36ebded30655085dd15e0f8007d7aa948"
+      "sourceSha": "e6e79c05ff041bb0a9827c901ff545541c807629",
+      "runtimeFingerprint": "sha256:715e76bc586179d01ae7d658af8922c73938a3e6e515ad5603077321914ce303"
     }
   },
   "webCandidate": {
     "release": "2026.10.06.1",
-    "sourceSha": "2200aca525121de10d54d8663af00535b39979f0",
-    "runtimeFingerprint": "sha256:366b6f3a458d58deee47b032163ec5e36ebded30655085dd15e0f8007d7aa948",
-    "candidateRunId": 37353639908,
+    "sourceSha": "e6e79c05ff041bb0a9827c901ff545541c807629",
+    "runtimeFingerprint": "sha256:715e76bc586179d01ae7d658af8922c73938a3e6e515ad5603077321914ce303",
+    "candidateRunId": 37356312223,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 11364245102,
-    "artifactName": "physical-pwa-candidate-2200aca525121de10d54d8663af00535b39979f0",
-    "artifactDigest": "sha256:8164ae1c30649f6f55934559304ba3b3d96d8a4bd50893b096b2cba048ba79ab",
-    "artifactExpiresAt": "2027-01-03T18:08:00Z"
+    "artifactId": 11364532613,
+    "artifactName": "physical-pwa-candidate-e6e79c05ff041bb0a9827c901ff545541c807629",
+    "artifactDigest": "sha256:26939303658220de1f8bf7faa965c9507658ff712589b461ed600f06bf58c9e8",
+    "artifactExpiresAt": "2027-01-03T18:29:19Z"
   },
   "candidatePolicy": {
     "previewBranchAuthoritative": false,
