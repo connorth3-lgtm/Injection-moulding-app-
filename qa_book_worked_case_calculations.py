@@ -100,7 +100,7 @@ def main() -> None:
     need(Decimal("50.02") - Decimal("50.03") == Decimal("-0.01"), "dimensional 24 h→72 h regression")
     need("appearance" in cases["worked-weld-line-diagnosis-v1"]["title"].lower(), "weld-line product-requirement teaching case drifted")
     need("material" in " ".join(cases["worked-splay-boundary-v1"]["observations"]).lower(), "splay boundary case lost material evidence")
-    need("trigger" in cases["worked-process-monitoring-alarm-v1"]["title"].lower(), "monitoring alarm decision-boundary case drifted")
+    need("alarm" in cases["worked-process-monitoring-alarm-v1"]["title"].lower(), "monitoring alarm teaching case identity drifted")
     need("cavity" in " ".join(cases["worked-black-speck-source-map-v1"]["observations"]).lower(), "black-speck source map lost cavity evidence")
 
     diagnosis = cases["worked-diagnostic-short-shot-v1"]
@@ -121,7 +121,7 @@ def main() -> None:
     need(Decimal("50.02") - Decimal("50.03") == Decimal("-0.01"), "dimensional conditioning late-change regression")
 
     monitoring = cases["worked-process-monitoring-alarm-v1"]
-    need("investigation" in monitoring["interpretation"].lower() and "root-cause" in monitoring["boundaries"][0].lower(), "monitoring alarm decision-boundary regression")
+    need("root-cause" in monitoring["interpretation"].lower() and "quality plan" in monitoring["interpretation"].lower() and "automated machine-control" in " ".join(monitoring["boundaries"]).lower(), "monitoring alarm decision-boundary regression")
 
     black = cases["worked-black-speck-source-map-v1"]
     need("all cavities" in " ".join(black.get("observations", [])).lower() and "cavity 4" in black["setup"].lower(), "black-speck source-map pattern regression")
