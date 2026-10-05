@@ -11,6 +11,9 @@ assert(src.includes('const entries=Object.entries(x.users);'));
 assert(src.includes("if(!entries.length||entries.length>500)throw new Error('Invalid learner count in backup')"));
 assert(!src.includes('Object.entries(x.users).slice(0,500)'));
 assert(src.includes('const sid=canonicalLearnerId(id)'));assert(src.includes('canonicalLearnerId(u.id)!==sid'));assert(src.includes('const active=canonicalLearnerId(x.activeUser)'));
+assert(src.includes('function pvNewLearnerId()'));
+assert(src.includes('Object.prototype.hasOwnProperty.call(users,id)'));
+assert(!src.includes('pvRequireLearnerId("learner-"+Date.now())'));
 assert(src.includes('hasOwnLearner(x.users,x.activeUser)'));assert(src.includes('Reset learner data'));assert(src.includes('Other local learner profiles and saved process-data evidence will be kept'));assert(src.includes("version:4,scope:'learner-registry'"));
 
 assert(src.includes("const IMPORT_META_KEYS=new Set(['__proto__','prototype','constructor'])"));
