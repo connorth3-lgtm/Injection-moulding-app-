@@ -30,7 +30,7 @@ The 2026.10.06.5 revision applies the final repository-controlled findings from 
 
 The 2026.10.06.5 revision closes defects found only after rereading the expanded .3 Book and tracing the fail-closed runtime path:
 
-- runtime and release QA now validate 26 worked cases and 21 diagrams instead of stale 24/18 inventories;
+- runtime and release QA now validate 27 worked cases and 21 diagrams instead of stale 24/18 inventories;
 - r12 Filling and Boundary Defects now owns a governed synthetic filling-boundary diagnostic case;
 - awkward automatic editorial substitutions were repaired without changing the underlying technical claims;
 - publication and peer-review narrative counts now agree with structured 21-diagram authorization;
