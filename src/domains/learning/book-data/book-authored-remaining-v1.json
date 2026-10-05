@@ -443,6 +443,18 @@
         {
           "title": "Verify recovery and guard against coincidence",
           "text": "A part improving after a change is useful evidence but does not automatically prove root cause. Confirm the effect is repeatable, that the predicted process signal or boundary also changed, and that the improvement survives normal process variation. If the evidence does not discriminate between plausible causes, retain the uncertainty."
+        },
+        {
+          "title": "Use chronology to reduce the search space",
+          "text": "Ask what changed before the symptom appeared: material lot, drying history, colour change, mould maintenance, machine change, start-up state, ambient condition, operator sequence or production interruption. Chronology does not prove causation, but it can identify boundaries that make one mechanism more plausible than another. A symptom that appears immediately after one controlled change deserves a different first test from a symptom that drifts gradually over many hours."
+        },
+        {
+          "title": "Prefer tests that can falsify a favourite explanation",
+          "text": "Troubleshooting becomes more reliable when a test is chosen because it could show the leading hypothesis is wrong. If the suspected cause predicts a cavity pattern, time trend or signal change, look for that pattern explicitly. A test that can only confirm what the investigator already expects has weak diagnostic value. Good engineering preserves the possibility of being wrong and updates the working model when observations fail the prediction."
+        },
+        {
+          "title": "Escalate when the evidence boundary is reached",
+          "text": "Some problems cannot be resolved from controller data and visual inspection alone. When competing mechanisms remain plausible, escalate to evidence capable of separating them: tooling inspection, material testing, cavity sensing, metrology, microscopy, maintenance history, supplier support or validated simulation. The correct outcome of a disciplined investigation can be 'not yet distinguished' rather than a falsely precise root-cause statement."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -476,6 +488,14 @@
         {
           "title": "Separate command limits from delivered process",
           "text": "Check whether the machine actually reached the commanded velocity, position and pressure behaviour and whether transfer or protection limits intervened. A short shot can occur even with apparently generous setpoints if the effective shot, flow path, material state or machine delivery differs from the assumption. Measured response is therefore more informative than the setting alone."
+        },
+        {
+          "title": "Separate repeatable shortage from intermittent loss",
+          "text": "A consistently unfilled region can indicate a stable restriction, thermal condition, shot-delivery limit or venting problem. An intermittent short shot can point toward inconsistent check-valve behaviour, material feed, transfer repeatability, air, machine delivery or changing mould conditions. Time-order the events rather than pooling good and bad cycles; intermittency itself is evidence about the mechanism."
+        },
+        {
+          "title": "Use cavity comparison in multi-cavity moulds",
+          "text": "When only one cavity shorts, compare that cavity's runner or gate path, venting, thermal condition and local filling evidence with the others. When every cavity degrades together, upstream material or machine effects become more plausible. A global setting change may temporarily fill the weak cavity while overdriving the others, so cavity-resolved evidence should precede permanent compensation."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -509,6 +529,14 @@
         {
           "title": "Treat process compensation as evidence, not proof",
           "text": "If a pressure or temperature change reduces flash, that shows the defect responds to the process state but does not prove the mould is healthy or identify the root cause. Verify whether the corrected condition remains inside the qualified process window and whether tooling inspection is warranted before institutionalising compensation."
+        },
+        {
+          "title": "Parting-line support and local pressure matter",
+          "text": "A mould can experience local opening or material escape even when the nominal machine clamp setting appears adequate. Local geometry, support, wear, contamination and pressure distribution influence what happens at a specific region. Because pressure falls through the flow path and varies with time, a machine pressure display cannot by itself establish the local force acting where flash appears."
+        },
+        {
+          "title": "Verify the fix does not create a new defect",
+          "text": "A change that removes flash can also alter fill balance, packing, dimensions, residual stress or mould protection margin. Re-check the product characteristics and process signals that matter after any corrective trial. A defensible fix should restore the intended boundary without merely moving the process to another edge of its operating window."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -645,6 +673,18 @@
         {
           "title": "What evidence should change the conclusion?",
           "text": "Revise the working explanation when the line location does not follow expected flow-front changes, when strength does not track appearance, or when cavity and vent patterns contradict the assumed mechanism. Escalate to design, tooling, material or simulation evidence where process observations cannot discriminate the cause."
+        },
+        {
+          "title": "Flow-front temperature is only part of the story",
+          "text": "The ability of two fronts to form a useful interface depends on local thermal and pressure history, material condition, contamination, venting and the way orientation develops as the fronts meet. Raising a nominal melt or mould setting can alter some of these factors, but it is not a universal weld-line cure. The actual material and product requirement determine whether appearance, strength, sealing or another response is the critical outcome."
+        },
+        {
+          "title": "Geometry can dominate where the line forms",
+          "text": "Holes, bosses, inserts, multiple gates and changes in wall section divide and redirect the melt, creating predictable meeting regions. When the weld-line location is structurally or cosmetically unacceptable, the solution space may include gate strategy, feature geometry or tooling changes in addition to process development. Process optimisation cannot always overcome a geometry that repeatedly forces an unfavourable meeting location."
+        },
+        {
+          "title": "Use testing that matches the real product risk",
+          "text": "A weld line that looks improved may still have inadequate mechanical performance, and a visible line may be acceptable where the part is not structurally limited. Select measurements that represent the actual requirement, such as relevant dimensional, leak, impact, tensile or functional testing where applicable. Avoid using appearance alone as a universal proxy for interface quality."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -748,6 +788,18 @@
         {
           "title": "Use the trace as evidence of sequence",
           "text": "The shape and timing of a cavity-pressure trace can help show filling arrival, transfer response, post-fill pressure transmission and decay, but the trace does not name root cause by itself. Combine it with machine signals, cavity identity, part measurements and controlled process changes. The most useful interpretation explains both the signal change and the product response."
+        },
+        {
+          "title": "Establish a reference trace before using limits",
+          "text": "A pressure limit is most meaningful when derived from a known, stable process state and a defined sensor location. Record the material, thermal and process conditions associated with that state and understand normal cycle-to-cycle variation. Arbitrary limits based on one apparently good cycle can create nuisance alarms or miss meaningful drift."
+        },
+        {
+          "title": "Compare features that have physical meaning",
+          "text": "Useful trace features can include arrival timing, pressure at a defined event, peak behaviour or decay characteristics where these are technically justified. Feature choice should correspond to a mechanism or product response, not simply to what the software can calculate. A mathematically convenient feature with no stable physical interpretation can create false confidence."
+        },
+        {
+          "title": "Sensor health belongs in the diagnosis",
+          "text": "Mounting condition, preload, contamination, cable faults, drift or replacement can change the measured signal. When a pressure pattern changes unexpectedly, verify the measurement chain before concluding the process changed. Sensor maintenance and calibration requirements come from the applicable sensor and equipment documentation."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -857,6 +909,14 @@
         {
           "title": "What evidence should change the conclusion?",
           "text": "Revisit monitoring logic when alarms do not correspond to meaningful process or product changes, significant defects occur without signal movement, sensor behavior changes, or a new process state shifts the normal population. Monitoring models require maintenance just as the physical process does."
+        },
+        {
+          "title": "Design monitoring around decisions",
+          "text": "Before collecting more signals, define the decision each signal is intended to support: detecting drift, protecting a process window, identifying a cavity deviation, prompting additional measurement or documenting production state. Monitoring that has no defined action can generate data without improving control. Conversely, an alarm should not trigger an automatic product conclusion unless that relationship has been separately validated."
+        },
+        {
+          "title": "Use multivariate context carefully",
+          "text": "Several signals can move together because they share a common thermal, material or machine cause. Correlated channels are not independent confirmations of the same root cause. Compare their timing and physical relationships and avoid counting multiple derived values from one underlying sensor as separate evidence. More channels improve diagnosis only when they add distinct information."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -895,6 +955,18 @@
         {
           "title": "What evidence should change the conclusion?",
           "text": "Change the working diagnosis when the dimensional trend follows conditioning rather than process settings, differs by cavity or direction, disappears with improved measurement control, or persists after the suspected process variable is stabilised. The appropriate conclusion may be material-, tooling-, measurement- or product-design related rather than process-only."
+        },
+        {
+          "title": "Build a dimensional time profile",
+          "text": "When a dimension evolves after moulding, measure it at defined intervals under controlled conditions rather than choosing one convenient time. The resulting profile can show rapid thermal contraction followed by slower material or moisture-related change. This helps distinguish a process change from a difference in when the part happened to be measured."
+        },
+        {
+          "title": "Define datum strategy before analysing small changes",
+          "text": "A component can appear to change dimension because the measurement datum or fixturing changes as the part distorts. Use a repeatable datum system that reflects the product requirement, and record whether the measurement is size, position, form or a derived relationship. For flexible parts, measurement force and support can be part of the observed variation."
+        },
+        {
+          "title": "Separate cavity bias from common drift",
+          "text": "If one cavity is consistently offset while all cavities move together over time, there may be both a cavity-specific effect and a shared thermal or material effect. Analyse those components separately. Pooling them into one average can hide a persistent tooling difference and exaggerate apparent random process variation."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -928,6 +1000,18 @@
         {
           "title": "Infer carefully and measure where it matters",
           "text": "Flow direction and geometry can suggest likely orientation, but they do not uniquely determine the final distribution. Dimensional vectors, mechanical testing, microscopy or validated simulation may be needed when orientation is critical. Treat orientation-based explanations as hypotheses until the evidence matches the required decision."
+        },
+        {
+          "title": "Skin-core structure can create competing directions",
+          "text": "Flow near the mould wall and flow in the core can develop different fibre orientations, particularly around changes in section or converging fronts. The final dimensional and mechanical behaviour reflects the combined local structure, not a single global flow arrow. This is one reason warpage in reinforced parts can be difficult to infer from surface flow marks alone."
+        },
+        {
+          "title": "Geometry changes can redirect orientation",
+          "text": "Gates, ribs, holes, thickness transitions and weld regions change the local flow field and therefore can change orientation patterns. When a dimensional or strength problem is tied to one feature, consider whether the geometry creates a local orientation mechanism rather than assuming the material behaves uniformly through the part."
+        },
+        {
+          "title": "Validate simulations against physical evidence",
+          "text": "Flow and orientation simulation can be valuable for comparing designs and forming hypotheses, but its prediction depends on material models, mesh, boundary conditions and process inputs. Where the decision is important, compare simulation trends with measurements, microscopy, mechanical tests or observed dimensional directionality. Simulation should strengthen an evidence chain, not replace it."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -1072,6 +1156,22 @@
         {
           "title": "What evidence should change the conclusion?",
           "text": "Reduce confidence when a prediction fails, the effect cannot be repeated, the symptom crosses the supposed boundary, or new evidence supports an alternative mechanism. When available evidence cannot discriminate among causes, document the unresolved set and hold the root-cause claim rather than inventing certainty."
+        },
+        {
+          "title": "Build a causal timeline",
+          "text": "For difficult problems, reconstruct the sequence from the last known-good state to the current symptom. Include material changes, mould maintenance, machine intervention, parameter revisions, environmental shifts, stoppages and quality measurements. A timeline can reveal whether the effect begins before or after a suspected event and whether recovery follows the reverse sequence."
+        },
+        {
+          "title": "Use population boundaries as experiments",
+          "text": "Compare what is affected and what is not: one cavity versus all cavities, one machine versus another, one material lot versus the next, one shift versus all shifts, or one insert versus its neighbour. An unaffected comparison group can be as informative as the failing group because it constrains where the mechanism can plausibly exist."
+        },
+        {
+          "title": "Beware compensating mechanisms",
+          "text": "Two problems can partly cancel each other. One change may reduce a dimensional bias while another increases it, producing an apparently stable result until either condition moves. When evidence does not fit a simple one-cause model, consider whether multiple mechanisms are interacting rather than assuming the remaining unexplained variation is random noise."
+        },
+        {
+          "title": "Define the stopping rule for investigation",
+          "text": "An investigation should stop when the evidence is sufficient for the decision being made, not when every conceivable uncertainty is removed. Define what must be demonstrated for containment, corrective action and verification. If the consequence of being wrong is high, require stronger evidence and independent review. If evidence remains inadequate, preserve the unresolved status instead of declaring certainty."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
