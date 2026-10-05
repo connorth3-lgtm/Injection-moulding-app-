@@ -55,7 +55,7 @@ jobs:
           cp data/public-benchmark-results/impure-pascoe-2022-v1.json qa-artifacts/profile-output/data/public-benchmark-results/
           cp data/public-benchmark-results/cross-process-chain-17240390-v1.json qa-artifacts/profile-output/data/public-benchmark-results/
       - name: Retain validated aggregate outputs
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v5.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: queued-zenodo-profile-${{ steps.source.outputs.sha }}
           path: qa-artifacts/profile-output
