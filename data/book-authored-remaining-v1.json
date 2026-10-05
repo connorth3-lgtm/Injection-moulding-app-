@@ -73,7 +73,7 @@
         },
         {
           "title": "Confirm transfer robustness, not only one ideal cycle",
-          "text": "A transfer strategy should remain defensible across normal variation in material condition, thermal state and delivery. Review repeated cycles and part response rather than selecting a point from one trace. If small upstream changes move the actual fill state substantially at transfer, the process may require better measurement, a different transfer signal or tighter control of the underlying source of variation."
+          "text": "A transfer strategy should remain defensible across normal variation in material condition, thermal state and delivery. Review repeated cycles and part response instead of selecting a point from one trace. If small upstream changes move the actual fill state substantially at transfer, the process may require better measurement, a different transfer signal or tighter control of the underlying source of variation."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -139,7 +139,7 @@
         },
         {
           "title": "Diagnose by location",
-          "text": "When a restriction is suspected, separate machine/nozzle, sprue, runner, gate and cavity contributions using measured or controlled comparisons rather than assuming the smallest feature is automatically the root cause."
+          "text": "When a restriction is suspected, separate machine/nozzle, sprue, runner, gate and cavity contributions using measured or controlled comparisons instead of assuming the smallest feature is automatically the root cause."
         },
         {
           "title": "Balance pressure loss against thermal and shear history",
@@ -250,7 +250,7 @@
         },
         {
           "title": "Do not cure tooling problems blindly",
-          "text": "Process changes can alter release forces, but persistent mechanical interference or inadequate draft should be evaluated as tooling/design conditions rather than hidden with unsafe or unstable settings."
+          "text": "Process changes can alter release forces, but persistent mechanical interference or inadequate draft should be evaluated as tooling/design conditions instead of hidden with unsafe or unstable settings."
         },
         {
           "title": "Release force carries information",
@@ -340,7 +340,7 @@
         },
         {
           "title": "Baseline before optimisation",
-          "text": "When a process is changing from cycle to cycle, optimisation results are difficult to interpret because the reference state is moving. Establish a repeatable baseline first, define what variation is normal, and then make controlled changes tied to measurable responses. This makes later troubleshooting faster because there is a credible comparison state rather than only operator memory."
+          "text": "When a process is changing from cycle to cycle, optimisation results are difficult to interpret because the reference state is moving. Establish a repeatable baseline first, define what variation is normal, and then make controlled changes tied to measurable responses. This makes later troubleshooting faster because there is a credible comparison state instead of only operator memory."
         },
         {
           "title": "Define the baseline as an evidence package",
@@ -452,7 +452,7 @@
       "sections": [
         {
           "title": "A setting is not a process window",
-          "text": "A robust process has a region in which normal input variation still produces acceptable outputs, rather than one preferred nominal point."
+          "text": "A robust process has a region in which normal input variation still produces acceptable outputs, instead of one preferred nominal point."
         },
         {
           "title": "Define outputs first",
@@ -509,7 +509,7 @@
         },
         {
           "title": "Record negative and inconclusive results",
-          "text": "A test that does not change the response can still eliminate a hypothesis. Keep negative and inconclusive evidence rather than documenting only successful adjustments. This reduces repeated experiments and helps future troubleshooting start from what is already known."
+          "text": "A test that does not change the response can still eliminate a hypothesis. Keep negative and inconclusive evidence instead of documenting only successful adjustments. This reduces repeated experiments and helps future troubleshooting start from what is already known."
         },
         {
           "title": "Make uncertainty visible",
@@ -582,7 +582,7 @@
         },
         {
           "title": "Confirm recovery and record uncertainty",
-          "text": "A single acceptable part is not enough to establish root cause or durable recovery. Confirm the result across a meaningful repeat run and check that the evidence still matches the proposed mechanism. If two explanations remain plausible, preserve both in the record and identify the next observation that would separate them rather than forcing a definitive conclusion."
+          "text": "A single acceptable part is not enough to establish root cause or durable recovery. Confirm the result across a meaningful repeat run and check that the evidence still matches the proposed mechanism. If two explanations remain plausible, preserve both in the record and identify the next observation that would separate them instead of forcing a definitive conclusion."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -868,7 +868,7 @@
         },
         {
           "title": "Evaluate both location and performance",
-          "text": "Moving or visually reducing a weld line is not automatically an improvement if structural performance matters. Record where the fronts meet, whether gas must escape there, what load direction the product experiences and how the relevant quality characteristic is measured. Process changes should be judged against that product requirement rather than appearance alone."
+          "text": "Moving or visually reducing a weld line is not automatically an improvement if structural performance matters. Record where the fronts meet, whether gas must escape there, what load direction the product experiences and how the relevant quality characteristic is measured. Process changes should be judged against that product requirement instead of appearance alone."
         },
         {
           "title": "When to reconsider the weld-line mechanism",
@@ -904,7 +904,7 @@
         },
         {
           "title": "Use discriminating evidence",
-          "text": "Compare line location, repeatability, filling pattern, vent condition, material state and controlled changes that alter front arrival conditions. A useful test should predict whether the interface moves, becomes more or less pronounced, or remains unchanged. If the observed behaviour contradicts the proposed mechanism, revise the diagnosis rather than adding more settings changes."
+          "text": "Compare line location, repeatability, filling pattern, vent condition, material state and controlled changes that alter front arrival conditions. A useful test should predict whether the interface moves, becomes more or less pronounced, or remains unchanged. If the observed behaviour contradicts the proposed mechanism, revise the diagnosis instead of adding more settings changes."
         },
         {
           "title": "Process windows matter more than one cosmetic optimum",
@@ -950,7 +950,7 @@
         },
         {
           "title": "Evidence that weakens the current warpage hypothesis",
-          "text": "Revise the diagnosis when measured deformation does not follow the predicted direction, cavity pattern, thermal trend or process response. If several mechanisms remain consistent with the observations, preserve the uncertainty and escalate to additional measurement, tooling inspection, material evidence or simulation rather than forcing a single root cause."
+          "text": "Revise the diagnosis when measured deformation does not follow the predicted direction, cavity pattern, thermal trend or process response. If several mechanisms remain consistent with the observations, preserve the uncertainty and escalate to additional measurement, tooling inspection, material evidence or simulation instead of forcing a single root cause."
         },
         {
           "title": "Restraint can hide or release distortion",
@@ -983,7 +983,7 @@
         },
         {
           "title": "Do not create a safety problem while diagnosing",
-          "text": "Hot purging, nozzle work and barrel intervention involve machine-specific hazards. Follow authorised procedures rather than improvised cleaning methods."
+          "text": "Hot purging, nozzle work and barrel intervention involve machine-specific hazards. Follow authorised procedures instead of improvised cleaning methods."
         },
         {
           "title": "Trace the contamination path",
@@ -1135,7 +1135,7 @@
         },
         {
           "title": "Examine the distribution instead of assuming it",
-          "text": "Histogram shape, subgroup behavior, time order, outliers, multiple cavities and bounded measurements can violate simple normal and independent assumptions. Where assumptions do not fit, use an appropriate method and state it rather than reporting Cp/Cpk mechanically."
+          "text": "Histogram shape, subgroup behavior, time order, outliers, multiple cavities and bounded measurements can violate simple normal and independent assumptions. Where assumptions do not fit, use an appropriate method and state it instead of reporting Cp/Cpk mechanically."
         },
         {
           "title": "Separate cavity and time effects",
@@ -1242,7 +1242,7 @@
         },
         {
           "title": "Evidence that points beyond a process-only explanation",
-          "text": "Change the working diagnosis when the dimensional trend follows conditioning rather than process settings, differs by cavity or direction, disappears with improved measurement control, or persists after the suspected process variable is stabilised. The appropriate conclusion may be material-, tooling-, measurement- or product-design related rather than process-only."
+          "text": "Change the working diagnosis when the dimensional trend follows conditioning rather than process settings, differs by cavity or direction, disappears with improved measurement control, or persists after the suspected process variable is stabilised. The appropriate conclusion may be material-, tooling-, measurement- or product-design related instead of process-only."
         },
         {
           "title": "Build a dimensional time profile",
@@ -1279,7 +1279,7 @@
         },
         {
           "title": "Process and design interact",
-          "text": "Gate location, flow path, wall transitions and filling conditions can alter orientation. Use grade data and, where needed, simulation or measurement rather than generic shrinkage factors."
+          "text": "Gate location, flow path, wall transitions and filling conditions can alter orientation. Use grade data and, where needed, simulation or measurement instead of generic shrinkage factors."
         },
         {
           "title": "Orientation connects flow history to directional properties",
@@ -1369,7 +1369,7 @@
         },
         {
           "title": "When a cavity-balance explanation no longer fits",
-          "text": "Reconsider a cavity-balance diagnosis when the bias changes sides with measurement order, disappears after thermal stabilisation or cleaning, follows a material or machine change, or is not repeatable across runs. Escalate unresolved imbalance with cavity-resolved evidence rather than masking it with a global setting change."
+          "text": "Reconsider a cavity-balance diagnosis when the bias changes sides with measurement order, disappears after thermal stabilisation or cleaning, follows a material or machine change, or is not repeatable across runs. Escalate unresolved imbalance with cavity-resolved evidence instead of masking it with a global setting change."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -1439,7 +1439,7 @@
         },
         {
           "title": "Preserve an evidence ledger",
-          "text": "Record the hypothesis, observation, test, predicted outcome, actual result and resulting confidence. This prevents repeated experiments, makes handover defensible and exposes when a conclusion rests on assumption rather than measurement."
+          "text": "Record the hypothesis, observation, test, predicted outcome, actual result and resulting confidence. This prevents repeated experiments, makes handover defensible and exposes when a conclusion rests on assumption instead of measurement."
         },
         {
           "title": "What should lower confidence in the leading hypothesis",
