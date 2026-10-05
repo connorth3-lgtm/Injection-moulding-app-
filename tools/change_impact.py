@@ -43,7 +43,9 @@ def changed_files(base:str,head:str="HEAD")->set[str]:
     return {x.strip() for x in out.splitlines() if x.strip()}
 
 def classify(files:set[str])->dict[str,bool]:
-    graph_areas=set(graph_impact(files)["directAreas"])
+    graph=graph_impact(files)
+    graph_areas=set(graph["directAreas"])
+    affected_graph_areas=set(graph["affectedAreas"])
     runtime=bool(graph_areas & {"shell","assessment","process-data","measured-learning","book","preview-release","production-health"}) or any(
         p in RUNTIME_ROOT_FILES
         or p.startswith("src/")
@@ -99,7 +101,7 @@ def classify(files:set[str])->dict[str,bool]:
         }
         for p in files
     )
-    measured_learning=("measured-learning" in graph_areas) or any(
+    measured_learning=("measured-learning" in affected_graph_areas) or any(
         p.startswith("data/measured-learning/")
         or p in {
             "measured-learning-library.js","measured-learning-library.css",
@@ -150,6 +152,7 @@ def classify(files:set[str])->dict[str,bool]:
         "metadata_only":bool(files) and release_metadata and not runtime,
         "tooling_only":bool(files) and tooling and not runtime and not release_metadata,
         "graph_areas":sorted(graph_areas),
+        "affected_graph_areas":sorted(affected_graph_areas),
     }
 
 def main()->int:
