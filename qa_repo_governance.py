@@ -151,6 +151,7 @@ for marker in (
     "run_matches_main_pr",
     '((pr.get("base") or {}).get("ref") == "main")',
     "successful_required_workflows(runs, pr_number)",
+    "full lowercase 40-character commit SHA",
 ):
     need(marker in production_verifier, f"production verifier missing exact originating-PR evidence binding: {marker}")
 for marker in (
@@ -178,6 +179,7 @@ for marker in (
 for marker in (
     "Require merged-PR preview provenance",
     "Recheck current merged preview provenance",
+    "Recheck current merged preview provenance after deployment",
     "mouldmaster-pages-site-publish",
     "xs.sort(key=lambda x:",
     "verify_preview_source.py",
@@ -277,6 +279,8 @@ need("--require-native-protection" in pages, "Pages publication does not require
 for marker in (
     "Checkout exact main source before deployment",
     "Recheck current protected-main provenance before deployment",
+    "Recheck current protected-main provenance after deployment",
+    "Reconfirm main is still on the deployed SHA after race window",
 ):
     need(marker in pages, f"Pages deploy-time current-main recheck missing: {marker}")
 need("Require merged-PR provenance before publication" in pages, "Pages stable provenance gate label is missing")
