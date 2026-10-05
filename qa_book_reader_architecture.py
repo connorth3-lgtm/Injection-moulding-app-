@@ -66,7 +66,7 @@ assert editorial.get("schemaVersion")==1 and editorial.get("bookId")=="mouldmast
 assert editorial.get("release")==version.get("web_release")
 assert editorial.get("status")=="repository-technical-review-complete"
 reviews=editorial.get("reviewedModules") or []
-assert len(reviews)==37 and len({x.get("moduleId") for x in reviews})==12
+assert len(reviews)==37 and len({x.get("moduleId") for x in reviews})==37
 for row in reviews:
     mid=row["moduleId"]
     assert mid in set(module_ids)
