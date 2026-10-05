@@ -183,6 +183,8 @@ need(
 for marker in (
     "name: Branch Release Assurance",
     "branches: [main, preview]",
+    "pull_request:",
+    "contract-self-test:",
     "exact-push-assurance:",
     "actions: read",
     "BRANCH_ASSURANCE_BRANCH",
