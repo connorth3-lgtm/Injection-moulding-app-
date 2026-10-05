@@ -21,6 +21,12 @@ REQUIRED_WORKFLOWS = (
     "Question Quality 50-Pass",
     "Pre-merge Public Candidate",
 )
+REQUIRED_WORKFLOW_PATHS = {
+    "MouldMaster Release QA": ".github/workflows/qa.yml",
+    "Mobile Browser QA": ".github/workflows/mobile-browser-qa.yml",
+    "Question Quality 50-Pass": ".github/workflows/question-quality-50-pass.yml",
+    "Pre-merge Public Candidate": ".github/workflows/premerge-public-candidate.yml",
+}
 
 
 def api_endpoint(url: str) -> str:
@@ -129,6 +135,7 @@ def latest_required_states(
         matches = [
             row for row in runs
             if row.get("name") == name
+            and row.get("path") == REQUIRED_WORKFLOW_PATHS[name]
             and (pr_number is None or run_matches_pr(row, pr_number, pr_head_ref, pr_head_repo_id))
         ]
         matches.sort(key=lambda row: (str(row.get("created_at") or ""), int(row.get("id") or 0)), reverse=True)
