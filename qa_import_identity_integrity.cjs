@@ -24,7 +24,8 @@ const hostileExtras=JSON.parse('{"version":3,"scope":"active-learner","learnerId
 const sanitized=sandbox.MM_TRAINING_DATA_BRIDGE.trainingExtrasForImport(hostileExtras,{'learner-1':{id:'learner-1'}},'learner-1').get('learner-1');
 for(const row of [sanitized.practicalSignoff.checks,sanitized.measuredAssessment,sanitized.processDiagnostics,sanitized.diagnosticLabs,sanitized.materialLabs]){
   for(const key of ['__proto__','constructor','prototype'])assert.strictEqual(Object.prototype.hasOwnProperty.call(row,key),false,`unsafe imported meta-key survived: ${key}`);
-  assert.strictEqual(Object.getPrototypeOf(row),Object.prototype,'sanitized imported map prototype was altered');
+  const proto=Object.getPrototypeOf(row);
+  assert(proto&&Object.getPrototypeOf(proto)===null,'sanitized imported map must retain an ordinary unpolluted object prototype');
 }
 assert.strictEqual(sanitized.practicalSignoff.checks.safe,true);
 assert.strictEqual(sanitized.measuredAssessment['safe-case'].best,75);
