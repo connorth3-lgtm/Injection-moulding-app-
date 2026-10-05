@@ -3,6 +3,7 @@ import re
 
 ROOT = Path(__file__).resolve().parent
 PAGES = ROOT / ".github" / "workflows" / "pages.yml"
+PREVIEW = ROOT / ".github" / "workflows" / "preview-pages.yml"
 DESKTOP = ROOT / ".github" / "workflows" / "publish-open-desktop.yml"
 DEPENDABOT = ROOT / ".github" / "dependabot.yml"
 
@@ -28,6 +29,7 @@ def assert_pinned_actions(label, workflow, expected):
 
 
 pages = PAGES.read_text(encoding="utf-8")
+preview = PREVIEW.read_text(encoding="utf-8")
 desktop = DESKTOP.read_text(encoding="utf-8")
 dependabot = DEPENDABOT.read_text(encoding="utf-8")
 
@@ -42,6 +44,17 @@ assert_pinned_actions(
         "actions/deploy-pages": "368f82528645a54fb793d4d04e342629a3f51346",
     },
 )
+assert_pinned_actions(
+    "preview candidate",
+    preview,
+    {
+        "actions/checkout": "3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "actions/setup-python": "5fda3b95a4ea91299a34e894583c3862153e4b97",
+        "actions/upload-artifact": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+    },
+)
+for forbidden in ("actions/deploy-pages@", "actions/upload-pages-artifact@", "pages: write", "id-token: write"):
+    need(forbidden not in preview, f"preview candidate must not have live Pages publication authority: {forbidden}")
 assert_pinned_actions(
     "desktop",
     desktop,
@@ -100,7 +113,7 @@ need(
 
 print(
     "MouldMaster release supply-chain QA passed "
-    "(critical Pages/desktop Actions SHA-pinned; Node-24-capable Pages releases; "
+    "(critical main Pages/preview-candidate/desktop Actions SHA-pinned; preview candidate is non-publishing; Node-24-capable Pages releases; "
     "desktop publication is gated by governed merged-main provenance before write authority; "
     "GitHub Actions plus root browser-QA, desktop runtime and isolated MSIX npm updates governed by Dependabot)"
 )
