@@ -45,7 +45,7 @@ need("name: MouldMaster Pages Release Readiness" in pages, "Pages workflow name 
 need("permissions: {}" in pages, "Pages workflow must deny token permissions by default")
 for marker in (
     "production-source:\n    permissions:\n      contents: read\n      pull-requests: read\n      actions: read",
-    "publisher-guard:\n    permissions:\n      contents: read\n      actions: write\n      pages: write",
+    "publisher-guard:\n    if: github.event_name == 'push'\n    permissions:\n      contents: read\n      actions: write\n      pages: write",
     "build:\n    permissions:\n      contents: read",
     "deploy:\n    permissions:\n      contents: read\n      pull-requests: read\n      actions: read\n      pages: write\n      id-token: write",
     "verify:\n    permissions:\n      contents: read\n      pull-requests: read\n      actions: read",
