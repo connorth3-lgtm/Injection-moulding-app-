@@ -172,7 +172,10 @@ for marker in (
 ):
     need(marker in hold_verifier, f"release-hold live verifier does not prove preview isolation, stale-content removal and helper isolation: {marker}")
 
-# Permanent promotion branches must never enter destructive branch pruning.\nneed('"$branch" == "preview"' in pruner, "branch pruner must never delete the permanent preview promotion branch")\n\n# Branch deletion must reconfirm the ref has not moved after safety evaluation.
+# Permanent promotion branches must never enter destructive branch pruning.
+need('"$branch" == "preview"' in pruner, "branch pruner must never delete the permanent preview promotion branch")
+
+# Branch deletion must reconfirm the ref has not moved after safety evaluation.
 for marker in (
     "live_sha=$(gh api \"repos/$GH_REPO/git/ref/heads/$branch\" --jq '.object.sha' 2>/dev/null || true)",
     '[[ -z "$live_sha" || "$live_sha" != "$sha" ]]',
