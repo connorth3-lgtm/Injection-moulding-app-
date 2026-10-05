@@ -75,7 +75,7 @@
   function restoreReadingPosition(snapshot){
     requestAnimationFrame(()=>requestAnimationFrame(()=>{
       const wanted=String(snapshot.anchorText||'').trim(),heading=wanted?[...ui.reader.querySelectorAll('h2,h3')].find(el=>String(el.textContent||'').trim()===wanted):null;
-      if(heading){heading.scrollIntoView({block:'start',behavior:'auto'});window.scrollBy({top:Number(snapshot.anchorOffset)||0,left:0,behavior:'auto'});}
+      if(heading){heading.scrollIntoView({block:'start',behavior:'auto'});window.scrollBy({top:-(Number(snapshot.anchorOffset)||0),left:0,behavior:'auto'});}
       else window.scrollTo({top:Math.max(0,Number(snapshot.scrollY)||0),behavior:'auto'});
       activeReadingPosition={...snapshot};
     }));
