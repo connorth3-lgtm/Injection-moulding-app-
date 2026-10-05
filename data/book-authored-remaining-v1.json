@@ -224,7 +224,7 @@
           "text": "Where appropriate and available, compare coolant supply/return behaviour, mould-surface measurements, cycle timing and part response. No single observation proves circuit performance, but agreement among several measurements can make a cooling hypothesis much stronger."
         },
         {
-          "title": "What evidence should change the conclusion?",
+          "title": "When cooling stops fitting the evidence",
           "text": "Reconsider cooling as the leading mechanism when the defect does not track thermal stabilisation, measured temperature patterns, cavity location or changes that should alter heat removal. Persistent local effects may instead point toward geometry, pressure transmission, material anisotropy or tooling condition."
         }
       ],
@@ -277,7 +277,7 @@
           "text": "Repeated evidence of mechanical interference, damaged shutoffs, rough surfaces, undercut or insufficient draft should be escalated as a tooling/design condition. The process should not be driven toward unstable or unsafe limits simply to make a mechanically constrained part leave the mould."
         },
         {
-          "title": "What evidence should change the conclusion?",
+          "title": "Signals that point away from a release-only explanation",
           "text": "Change the diagnosis when the mark does not follow the expected tooling feature, when extra cooling changes distortion but not drag, or when inspection identifies a physical interference. Treat symptom improvement as provisional until the mechanical and thermal evidence agree."
         }
       ],
@@ -642,7 +642,7 @@
           "text": "Increasing pressure, speed or temperature can sometimes extend fill, but it can also mask a blocked gate, poor venting, material-preparation problem or machine-delivery fault and may create new defects. Establish the mechanism first and keep all tests inside machine, mould, material and site limits."
         },
         {
-          "title": "Evidence that should change the diagnosis",
+          "title": "Evidence that should move the investigation elsewhere",
           "text": "Reconsider the leading hypothesis when the symptom does not follow its predicted boundary, when delivery measurements remain stable despite a delivery theory, when cleaning or thermal stabilisation changes only one cavity, or when the pressure/fill relationship does not behave as expected. The purpose of the investigation is to eliminate explanations as well as support them."
         }
       ],
@@ -703,7 +703,7 @@
           "text": "A lower-resistance melt can enter gaps that a more viscous condition did not, while contamination on a shutoff can create or enlarge the effective gap. These mechanisms can produce similar visual results but require different evidence and different corrective action."
         },
         {
-          "title": "Evidence that should change the diagnosis",
+          "title": "When the flash diagnosis should change",
           "text": "Revisit the conclusion if the flash stays fixed to a damaged location despite process changes, disappears after shutoff cleaning, moves with a change in cavity pressure history, or appears only after thermal growth. A credible diagnosis must explain both where the flash occurs and why its timing changes."
         }
       ],
@@ -871,7 +871,7 @@
           "text": "Moving or visually reducing a weld line is not automatically an improvement if structural performance matters. Record where the fronts meet, whether gas must escape there, what load direction the product experiences and how the relevant quality characteristic is measured. Process changes should be judged against that product requirement rather than appearance alone."
         },
         {
-          "title": "What evidence should change the conclusion?",
+          "title": "When to reconsider the weld-line mechanism",
           "text": "Revise the working explanation when the line location does not follow expected flow-front changes, when strength does not track appearance, or when cavity and vent patterns contradict the assumed mechanism. Escalate to design, tooling, material or simulation evidence where process observations cannot discriminate the cause."
         },
         {
@@ -949,7 +949,7 @@
           "text": "Use controlled comparisons that are capable of producing different predictions for competing hypotheses. Examples include comparing cavity-specific dimensional vectors, stable mould-temperature conditions, packing response, cooling balance or conditioning time while remaining inside approved equipment, material and product limits."
         },
         {
-          "title": "What evidence should change the conclusion?",
+          "title": "Evidence that weakens the current warpage hypothesis",
           "text": "Revise the diagnosis when measured deformation does not follow the predicted direction, cavity pattern, thermal trend or process response. If several mechanisms remain consistent with the observations, preserve the uncertainty and escalate to additional measurement, tooling inspection, material evidence or simulation rather than forcing a single root cause."
         },
         {
@@ -1062,7 +1062,7 @@
           "text": "Comparing machine-side signals with cavity-side response can help show whether a change is occurring upstream, in the mould flow path or locally near the sensor. The comparison is most useful when signal timing, units and acquisition behaviour are known and repeatable."
         },
         {
-          "title": "What evidence should change the conclusion?",
+          "title": "When the pressure interpretation should be revised",
           "text": "Revisit the interpretation if calibration or sensor condition changes, the quality relationship breaks in confirmation data, another cavity behaves differently, or the same part response occurs without the expected trace feature. Monitoring rules require maintained evidence, not permanent assumptions."
         }
       ],
@@ -1098,7 +1098,7 @@
           "text": "A detectable effect may be too small to matter to the product, while an important effect can be missed when measurement noise or sample size is inadequate. Report effect size, uncertainty, response variation and product relevance alongside significance tests."
         },
         {
-          "title": "What evidence should change the conclusion?",
+          "title": "When the experimental model should lose authority",
           "text": "Reconsider the model when residuals show structure, repeat runs disagree, the effect disappears under confirmation trials, factor changes produce physically implausible responses, or the tested range does not represent production. Confirmation runs and mechanism-consistent predictions are required before promoting an experimental result into a process rule."
         },
         {
@@ -1146,7 +1146,7 @@
           "text": "A useful capability report includes the characteristic, specification basis, sampling plan, measurement method, process state, subgrouping, data period, excluded data with justification, chosen calculation method and uncertainty or confidence information where appropriate."
         },
         {
-          "title": "What evidence should change the conclusion?",
+          "title": "Conditions that invalidate or qualify the capability claim",
           "text": "Withdraw or qualify a capability claim when the process becomes unstable, the measurement system changes, cavity populations separate, the distribution model is poor, specifications are revised, or new data materially shifts the estimated performance. Capability is a maintained evidence statement, not a permanent property of the mould."
         },
         {
@@ -1195,7 +1195,7 @@
           "text": "An alarm should lead to a defined response such as verification, segregation, additional measurement or authorised process investigation. Alarm presence alone does not establish root cause, product nonconformance or the correct corrective action."
         },
         {
-          "title": "What evidence should change the conclusion?",
+          "title": "When the monitoring rule needs revision",
           "text": "Revisit monitoring logic when alarms do not correspond to meaningful process or product changes, significant defects occur without signal movement, sensor behavior changes, or a new process state shifts the normal population. Monitoring models require maintenance just as the physical process does."
         },
         {
@@ -1241,7 +1241,7 @@
           "text": "Contact force, fixturing, datum repeatability, part temperature and operator technique can contribute meaningful variation, especially for flexible or thin parts. Confirm the measurement method is capable before attributing small dimensional shifts to the moulding process."
         },
         {
-          "title": "What evidence should change the conclusion?",
+          "title": "Evidence that points beyond a process-only explanation",
           "text": "Change the working diagnosis when the dimensional trend follows conditioning rather than process settings, differs by cavity or direction, disappears with improved measurement control, or persists after the suspected process variable is stabilised. The appropriate conclusion may be material-, tooling-, measurement- or product-design related rather than process-only."
         },
         {
@@ -1368,7 +1368,7 @@
           "text": "Changing a gate, runner or cavity feature can permanently alter the mould. Before modifying steel, demonstrate that the observed imbalance is repeatable, cavity-specific and not adequately explained by measurement, contamination, vent condition, thermal imbalance or process instability."
         },
         {
-          "title": "What evidence should change the conclusion?",
+          "title": "When a cavity-balance explanation no longer fits",
           "text": "Reconsider a cavity-balance diagnosis when the bias changes sides with measurement order, disappears after thermal stabilisation or cleaning, follows a material or machine change, or is not repeatable across runs. Escalate unresolved imbalance with cavity-resolved evidence rather than masking it with a global setting change."
         }
       ],
@@ -1442,7 +1442,7 @@
           "text": "Record the hypothesis, observation, test, predicted outcome, actual result and resulting confidence. This prevents repeated experiments, makes handover defensible and exposes when a conclusion rests on assumption rather than measurement."
         },
         {
-          "title": "What evidence should change the conclusion?",
+          "title": "What should lower confidence in the leading hypothesis",
           "text": "Reduce confidence when a prediction fails, the effect cannot be repeated, the symptom crosses the supposed boundary, or new evidence supports an alternative mechanism. When available evidence cannot discriminate among causes, document the unresolved set and hold the root-cause claim rather than inventing certainty."
         },
         {
