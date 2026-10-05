@@ -110,7 +110,7 @@ try:
     from verify_pwa_physical_evidence import runtime_fingerprint  # type: ignore
 
     actual_fp = runtime_fingerprint(PAGES)
-    need(actual_fp == candidate.get("runtimeFingerprint"), "physical PWA packet fingerprint is stale")
+    need(actual_fp == candidate.get("runtimeFingerprint"), f"physical PWA packet fingerprint is stale: actual {actual_fp}, retained {candidate.get('runtimeFingerprint')}")
     need(actual_fp == access.get("runtimeFingerprint"), "real-AT packet fingerprint is stale")
     need(actual_fp == nzqa_candidate.get("runtimeFingerprint"), "NZQA external-validation packet fingerprint is stale")
     need(source_sha == nzqa_candidate.get("sourceSha"), "NZQA external-validation candidate source SHA drifted from the retained public candidate")
