@@ -218,8 +218,11 @@ release_workflow = text(".github/workflows/qa.yml")
 need("python qa_app_remediation.py" in release_workflow, "release QA must execute the full-app remediation contract")
 risk_meta = text("tools/verify_ci_risk_coverage.py")
 risk_workflow = text(".github/workflows/ci-risk-coverage.yml")
+premerge = text(".github/workflows/premerge-public-candidate.yml")
 domain_workflow = text(".github/workflows/domain-foundation-qa.yml")
 need("Exact-head CI risk coverage meta-gate" not in mobile, "Mobile Browser QA must not collapse cross-workflow governance failures into browser evidence")
+need("pull_request:\n    branches: [ main, preview ]" in premerge, "Pre-merge Public Candidate must run on every main/preview PR")
+need("\n    paths:\n" not in premerge.split("pull_request:",1)[1].split("workflow_dispatch:",1)[0], "Pre-merge Public Candidate must not be path-filtered")
 for marker in ("name: Exact-head CI Risk Coverage","python tools/verify_ci_risk_coverage.py","CI_RISK_HEAD_SHA","CI_RISK_ATTEMPTS","actions: read"):
     need(marker in risk_workflow, f"dedicated CI risk-coverage workflow missing marker: {marker}")
 for marker in ("MouldMaster Release QA","MouldMaster Domain Foundation QA","Deep Audit Governance","Mobile Browser QA","CI_RISK_HEAD_SHA","head_sha","pull_request","conclusion"):
