@@ -230,8 +230,8 @@
 }
 
 /* Canonical Home hierarchy — 2026.10.06.5 */
-/* Home has one job: resume learning. Specialist tools remain available without
-   duplicating Learn, Materials, Practice, Saved lessons or Book navigation. */
+/* Home keeps one dominant lesson decision, one persistent Book/Keep Reading surface,
+   and two specialist shortcuts without duplicating Learn, Materials, Practice or Saved lessons. */
 #dashboard{
   width:min(100%,960px)!important;
   margin-inline:auto!important;
