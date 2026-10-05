@@ -287,7 +287,7 @@
     },
     {
       "id": "AT-10",
-      "instruction": "Confirm headings, landmarks, accessible names and focus order remain understandable at realistic zoom/text settings, including the Home page hierarchy where Today's focus precedes the secondary Workbench and the compact desktop More-tools navigation where applicable."
+      "instruction": "Confirm headings, landmarks, accessible names and focus order remain understandable at realistic zoom/text settings, including the Home hierarchy where Today's focus precedes the Book/Keep Reading surface and specialist tools. From Home, activate Keep Reading and confirm the resumed semantic heading/context is understandable with the named assistive technology rather than relying on scroll position alone."
     },
     {
       "id": "AT-11",
