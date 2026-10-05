@@ -8,6 +8,7 @@ import os
 import time
 import urllib.parse
 import urllib.request
+from pathlib import Path
 
 DEFAULT_REPO = os.environ.get("GITHUB_REPOSITORY", "connorth3-lgtm/Injection-moulding-app-")
 DEFAULT_SHA = os.environ.get("BRANCH_ASSURANCE_SHA", "").strip() or os.environ.get("GITHUB_SHA", "")
@@ -35,18 +36,64 @@ REQUIRED = {
 }
 
 
-def latest_states(payload: object, required: tuple[str, ...]) -> dict[str, tuple[str, str]]:
+def latest_runs(payload: object, required: tuple[str, ...]) -> dict[str, dict]:
     rows = (payload or {}).get("workflow_runs", []) if isinstance(payload, dict) else []
-    states: dict[str, tuple[str, str]] = {}
+    result: dict[str, dict] = {}
     for name in required:
         matches = [row for row in rows if row.get("name") == name]
         matches.sort(
             key=lambda row: (str(row.get("updated_at") or row.get("created_at") or ""), int(row.get("id") or 0)),
             reverse=True,
         )
-        latest = matches[0] if matches else {}
-        states[name] = (str(latest.get("status") or "missing"), str(latest.get("conclusion") or "missing"))
-    return states
+        result[name] = matches[0] if matches else {}
+    return result
+
+
+def latest_states(payload: object, required: tuple[str, ...]) -> dict[str, tuple[str, str]]:
+    return {
+        name: (str(run.get("status") or "missing"), str(run.get("conclusion") or "missing"))
+        for name, run in latest_runs(payload, required).items()
+    }
+
+
+def write_report(branch: str, sha: str, runs: dict[str, dict], verdict: str, reason: str) -> None:
+    out = Path("qa-artifacts")
+    out.mkdir(parents=True, exist_ok=True)
+    workflows = []
+    for name, run in runs.items():
+        workflows.append({
+            "name": name,
+            "status": str(run.get("status") or "missing"),
+            "conclusion": str(run.get("conclusion") or "missing"),
+            "run_id": run.get("id"),
+            "run_url": str(run.get("html_url") or ""),
+            "updated_at": str(run.get("updated_at") or run.get("created_at") or ""),
+        })
+    payload = {
+        "schema": 1,
+        "branch": branch,
+        "source_sha": sha,
+        "verdict": verdict,
+        "reason": reason,
+        "workflows": workflows,
+    }
+    (out / "branch-assurance-report.json").write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    lines = [
+        "# Branch Release Assurance",
+        "",
+        f"- Branch: `{branch}`",
+        f"- Exact SHA: `{sha}`",
+        f"- Verdict: **{verdict.upper()}**",
+        f"- Reason: {reason}",
+        "",
+        "| Workflow | Status | Conclusion | Run |",
+        "|---|---|---|---|",
+    ]
+    for row in workflows:
+        url = row["run_url"]
+        run_cell = f"[{row['run_id']}]({url})" if url and row["run_id"] else (str(row["run_id"]) if row["run_id"] else "—")
+        lines.append(f"| {row['name']} | {row['status']} | {row['conclusion']} | {run_cell} |")
+    (out / "branch-assurance-report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def api_runs(repository: str, sha: str, token: str) -> object:
@@ -76,26 +123,36 @@ def verify(repository: str, branch: str, sha: str, token: str) -> None:
     print(f"Branch assurance: branch={branch} sha={sha}")
     print("Required exact-push workflows:", ", ".join(required))
 
-    last: dict[str, tuple[str, str]] = {}
+    last_runs: dict[str, dict] = {}
     for attempt in range(1, ATTEMPTS + 1):
-        last = latest_states(api_runs(repository, sha, token), required)
+        last_runs = latest_runs(api_runs(repository, sha, token), required)
+        states = {
+            name: (str(run.get("status") or "missing"), str(run.get("conclusion") or "missing"))
+            for name, run in last_runs.items()
+        }
         failed = [
             f"{name}={status}/{conclusion}"
-            for name, (status, conclusion) in last.items()
+            for name, (status, conclusion) in states.items()
             if status == "completed" and conclusion not in {"success", "missing"}
         ]
         if failed:
+            reason = "first failing dependency: " + failed[0]
+            write_report(branch, sha, last_runs, "fail", reason)
             raise SystemExit("Exact-push branch assurance failed: " + ", ".join(failed))
 
         unresolved = [
             f"{name}={status}/{conclusion}"
-            for name, (status, conclusion) in last.items()
+            for name, (status, conclusion) in states.items()
             if (status, conclusion) != ("completed", "success")
         ]
         if not unresolved:
+            reason = f"all {len(required)} exact-push workflows succeeded"
+            write_report(branch, sha, last_runs, "pass", reason)
             print(f"Branch assurance passed: {len(required)} exact-push workflows succeeded on {branch}@{sha}.")
             return
         if attempt == ATTEMPTS:
+            reason = "first unresolved dependency: " + unresolved[0]
+            write_report(branch, sha, last_runs, "incomplete", reason)
             raise SystemExit("Exact-push branch assurance incomplete: " + ", ".join(unresolved))
         print(f"Waiting for exact-push assurance ({attempt}/{ATTEMPTS}): " + ", ".join(unresolved))
         time.sleep(SLEEP_SECONDS)
@@ -108,8 +165,10 @@ def self_test() -> None:
             for i, name in enumerate(REQUIRED["preview"])
         ]
     }
+    runs = latest_runs(payload, REQUIRED["preview"])
     states = latest_states(payload, REQUIRED["preview"])
     assert all(value == ("completed", "success") for value in states.values())
+    assert all(run.get("id") for run in runs.values())
     payload["workflow_runs"].append(
         {"id": 99, "name": "MouldMaster Release QA", "status": "completed", "conclusion": "failure", "updated_at": "2026-10-05T01:00:00Z"}
     )
