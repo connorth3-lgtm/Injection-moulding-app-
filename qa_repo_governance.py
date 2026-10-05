@@ -39,6 +39,9 @@ premerge_public_candidate = text(".github/workflows/premerge-public-candidate.ym
 external_live_verifier = text("tools/verify_external_validation_live_bindings.py")
 queued_profile = text(".github/workflows/profile-queued-zenodo-data.yml")
 lower_profile = text(".github/workflows/profile-cross-process-lower-workpiece.yml")
+queued_profiler_code = text("tools/profile_queued_zenodo_datasets.py")
+lower_profiler_code = text("tools/profile_cross_process_lower_workpiece.py")
+upper_profiler_code = text("tools/profile_cross_process_upper_workpiece.py")
 
 # Remote-data parsing must run without repository-write authority. Validated
 # aggregate outputs cross into a separate minimal publish job through a retained
@@ -66,6 +69,18 @@ for workflow_name, workflow in (
     ):
         need(marker in publish_block, f"{workflow_name} isolated publisher missing marker: {marker}")
     need("uses:" not in publish_block, f"{workflow_name} write-capable publish job must not execute third-party actions")
+
+for profiler_name, profiler in (
+    ("queued Zenodo profiler", queued_profiler_code),
+    ("cross-process lower profiler", lower_profiler_code),
+    ("cross-process upper profiler", upper_profiler_code),
+):
+    for marker in (
+        "MAX_PUBLISHER_FILE_BYTES",
+        "received > MAX_PUBLISHER_FILE_BYTES",
+        "received > expected_size",
+    ):
+        need(marker in profiler, f"{profiler_name} publisher download resource bound missing: {marker}")
 
 # Main provenance is a read-only post-push audit. Native ruleset prevention is
 # authoritative; audit automation must never rewrite main after the fact.
