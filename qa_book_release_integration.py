@@ -218,9 +218,9 @@ need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('sectionCo
 need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('independentSmeStatus') == 'hold', 'evidence-enrichment authorization must preserve SME HOLD')
 
 claim_auth=authorization.get('claimEvidenceReferenceAuthorization') or {}
-need(claim_auth.get('status')=='authorized-derived-evidence-index' and claim_auth.get('release')==claim_evidence.get('release') and claim_auth.get('ledger')=='data/book-claim-evidence-reference-v1.json' and claim_auth.get('chapterCount')==46 and claim_auth.get('sourceCount')==27 and claim_auth.get('noNewClaims') is True and claim_auth.get('independentSmeStatus')=='hold', 'claim-evidence reference authorization boundary drift')
+need(claim_auth.get('status')=='authorized-derived-evidence-index' and claim_auth.get('release')==claim_evidence.get('release') and claim_auth.get('ledger')=='data/book-claim-evidence-reference-v1.json' and claim_auth.get('chapterCount')==46 and claim_auth.get('sourceCount')==27 and claim_auth.get('claimCount')==137 and claim_auth.get('noNewClaims') is True and claim_auth.get('independentSmeStatus')=='hold', 'claim-evidence reference authorization boundary drift')
 need(claim_evidence.get('schemaVersion')==1 and claim_evidence.get('bookId')=='mouldmaster-book' and claim_evidence.get('status')=='governed-reader-claim-evidence-index', 'claim-evidence reference identity drift')
-need(claim_evidence.get('release')==book_sme.get('release') and claim_evidence.get('chapterCount')==46 and claim_evidence.get('sourceCount')==27, 'claim-evidence reference release/coverage drift')
+need(claim_evidence.get('release')==book_sme.get('release') and claim_evidence.get('chapterCount')==46 and claim_evidence.get('sourceCount')==27 and claim_evidence.get('claimCount')==137, 'claim-evidence reference release/coverage drift')
 claim_review_paths=[
     ROOT / 'data/book-claim-review-foundations-materials-machine-v1.json',
     ROOT / 'data/book-claim-review-process-tooling-v1.json',
@@ -238,6 +238,16 @@ for path in claim_review_paths:
                 if source_id not in row:
                     row.append(source_id)
 actual_claim_evidence={row.get('chapterId'):row.get('evidenceIds') for row in claim_evidence.get('chapters', [])}
+expected_claim_rows={}
+for path in claim_review_paths:
+    ledger=json.loads(path.read_text(encoding='utf-8'))
+    for chapter in ledger.get('chapters', []):
+        rows=expected_claim_rows.setdefault(chapter.get('chapterId'), [])
+        for claim in chapter.get('claims', []):
+            rows.append({'claimId':claim.get('id'),'evidenceIds':claim.get('evidence', [])})
+actual_claim_rows={row.get('chapterId'):row.get('claims') for row in claim_evidence.get('chapters', [])}
+need(sum(len(rows) for rows in expected_claim_rows.values())==137 and actual_claim_rows==expected_claim_rows, 'reader claim-level evidence trace drifted from governed claim-review ledgers')
+
 need(len(expected_claim_evidence)==46 and actual_claim_evidence==expected_claim_evidence, 'reader claim-evidence index drifted from governed claim-review ledgers')
 expected_source_ids={source_id for ids in expected_claim_evidence.values() for source_id in ids}
 actual_source_ids={source.get('id') for source in claim_evidence.get('sourceSeeds', [])}
