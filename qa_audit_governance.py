@@ -16,6 +16,7 @@ def need(ok, message):
 
 
 pages = text(".github/workflows/pages.yml")
+preview_pages = text(".github/workflows/preview-pages.yml")
 physical = text("tools/verify_pwa_physical_evidence.py")
 hold_builder = text("tools/build_pages_hold.py")
 hold_verifier = text("tools/verify_pages_hold.py")
@@ -54,8 +55,12 @@ need(pages.count("actions: write") == 1, "actions:write must be limited to the p
 need(pages.count("pages: write") == 2, "pages:write must be limited to publisher containment and deploy")
 need(pages.count("id-token: write") == 1, "OIDC write permission must be limited to deploy")
 for marker in (
+    "Recheck current merged preview provenance after deployment",
     "Verify preview deployment remains stable after race window",
     "Reconfirm preview is still on the deployed SHA after race window",
+):
+    need(marker in preview_pages, f"Preview Pages post-deploy race verification missing: {marker}")
+for marker in (
     "Checkout exact main source before deployment",
     "Recheck current protected-main provenance before deployment",
     "Recheck current protected-main provenance after deployment",
