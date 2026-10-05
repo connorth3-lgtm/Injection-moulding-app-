@@ -757,9 +757,12 @@ function pvSafeExternalUrl(raw){
   const url=String(raw||'').trim();
   return /^https:\/\/[^\s]+$/i.test(url)?url:'';
 }
+function pvSafeSourceLink(raw,label){
+  const url=pvSafeExternalUrl(raw);
+  return url?`<a class="standard-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)} ↗</a>`:'<span class="tiny muted">Official source URL unavailable</span>';
+}
 function pvStandardsLink(item,label){
-  const url=pvSafeExternalUrl(item?.url);
-  return url?`<a class="standard-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`:'<span class="tiny muted">Official source URL unavailable</span>';
+  return pvSafeSourceLink(item?.url,label);
 }
 function renderStandards(){
   const selected=user.region==="ALL"?["UK","US","NZ"]:[user.region];
@@ -1010,7 +1013,7 @@ gradeExam=function(level){
   activeExam.questions.forEach((x,i)=>{
     const r=document.querySelector(`input[name=ex${i}]:checked`),selected=r?+r.value:null,ok=selected===x.correct;
     if(ok)n++;
-    const src=x.sourceUrl?`<div class="ref">Reference: <a class="standard-link" href="${x.sourceUrl}" target="_blank" rel="noopener">${esc(x.reference)} ↗</a></div>`:`<div class="ref">Reference: ${esc(x.reference)}</div>`;
+    const src=x.sourceUrl?`<div class="ref">Reference: ${pvSafeSourceLink(x.sourceUrl,x.reference)}</div>`:`<div class="ref">Reference: ${esc(x.reference)}</div>`;
     review.push(`<div class="answer-row ${ok?"correct":"incorrect"}"><b>${i+1}. ${ok?"Correct ✓":"Review needed"}</b><br><span class="tiny">Your answer: ${selected==null?"No answer":esc(x.options[selected])}</span><br><span class="tiny">Correct answer: <b>${esc(x.options[x.correct])}</b></span><p class="muted" style="margin:7px 0 0">${esc(x.explanation)}</p>${src}</div>`);
   });
   const pct=Math.round(n/activeExam.questions.length*100),key=level+"-"+activeExam.region;
@@ -1068,7 +1071,7 @@ gradeExam=function(level){
   activeExam.questions.forEach((x,i)=>{
     const r=document.querySelector(`input[name=ex${i}]:checked`),selected=r?+r.value:null,ok=selected===x.correct;
     if(ok) totalCorrect++; if(x.critical && !ok) criticalWrong++;
-    const src=x.sourceUrl?`<div class="ref">Reference: <a class="standard-link" href="${x.sourceUrl}" target="_blank" rel="noopener">${esc(x.reference)} ↗</a></div>`:`<div class="ref">Reference: ${esc(x.reference)}</div>`;
+    const src=x.sourceUrl?`<div class="ref">Reference: ${pvSafeSourceLink(x.sourceUrl,x.reference)}</div>`:`<div class="ref">Reference: ${esc(x.reference)}</div>`;
     let feedback='';
     if(ok) feedback=x.explanation;
     else if(selected==null) feedback='No answer was selected. Review the correct rationale before the next attempt.';
