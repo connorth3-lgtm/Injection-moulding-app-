@@ -81,34 +81,50 @@ def run_matches_pr(run: dict) -> bool:
 
 
 def api_runs() -> dict[str, dict]:
-    query = urllib.parse.urlencode({"head_sha": SHA, "event": "pull_request", "per_page": 100})
-    req = urllib.request.Request(
-        f"https://api.github.com/repos/{REPO}/actions/runs?{query}",
-        headers={
-            "Accept": "application/vnd.github+json",
-            "Authorization": f"Bearer {TOKEN}",
-            "X-GitHub-Api-Version": "2022-11-28",
-            "User-Agent": "mouldmaster-ci-risk-coverage",
-        },
-    )
-    detail = "unknown API error"
-    payload: object = {}
-    for attempt in range(1, 5):
-        try:
-            with urllib.request.urlopen(req, timeout=20) as response:
-                payload = json.load(response)
+    rows: list[dict] = []
+    for page in range(1, 11):
+        query = urllib.parse.urlencode({
+            "head_sha": SHA,
+            "event": "pull_request",
+            "per_page": 100,
+            "page": page,
+        })
+        req = urllib.request.Request(
+            f"https://api.github.com/repos/{REPO}/actions/runs?{query}",
+            headers={
+                "Accept": "application/vnd.github+json",
+                "Authorization": f"Bearer {TOKEN}",
+                "X-GitHub-Api-Version": "2022-11-28",
+                "User-Agent": "mouldmaster-ci-risk-coverage",
+            },
+        )
+        detail = "unknown API error"
+        payload: object = {}
+        for attempt in range(1, 5):
+            try:
+                with urllib.request.urlopen(req, timeout=20) as response:
+                    payload = json.load(response)
+                break
+            except (HTTPError, URLError, TimeoutError, json.JSONDecodeError) as exc:
+                detail = str(exc)
+                if attempt < 4:
+                    time.sleep(attempt * 2)
+        else:
+            raise RuntimeError(f"GitHub CI risk-coverage query failed after 4 attempts: {detail}")
+        if not isinstance(payload, dict):
+            raise RuntimeError("GitHub CI risk-coverage query returned a non-object payload")
+        page_rows = payload.get("workflow_runs") or []
+        if not isinstance(page_rows, list):
+            raise RuntimeError("GitHub CI risk-coverage query returned invalid workflow_runs")
+        rows.extend(row for row in page_rows if isinstance(row, dict))
+        if len(page_rows) < 100:
             break
-        except (HTTPError, URLError, TimeoutError, json.JSONDecodeError) as exc:
-            detail = str(exc)
-            if attempt < 4:
-                time.sleep(attempt * 2)
     else:
-        raise RuntimeError(f"GitHub CI risk-coverage query failed after 4 attempts: {detail}")
+        raise RuntimeError("GitHub CI risk-coverage query exceeded the 1000-run pagination safety bound")
 
     latest: dict[str, dict] = {}
-    rows = payload.get("workflow_runs", []) if isinstance(payload, dict) else []
     for run in rows:
-        if not isinstance(run, dict) or not run_matches_pr(run):
+        if not run_matches_pr(run):
             continue
         name = str(run.get("name") or "")
         prior = latest.get(name)
