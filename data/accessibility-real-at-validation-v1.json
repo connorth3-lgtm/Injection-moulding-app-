@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.06.2",
-  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.06.2.md",
-  "sourceSha": "4258e28c770b848788385dc0d02398ba4cf7eb90",
-  "runtimeFingerprint": "sha256:5f6ca54448567b40da37cc54ccd227562f4d5721c38bd04b4ec26bc0d9bbba41",
+  "release": "2026.10.06.3",
+  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.06.3.md",
+  "sourceSha": "7ff52f5043a2072da75a6cad86133ab221779745",
+  "runtimeFingerprint": "sha256:d4d7f9de3117c95cd785c702c2003cd323ba86bf1ff7fc6bd7c382b64b02a7b3",
   "status": "pending-real-at-validation",
   "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.06.2 is bound to exact retained learner-runtime candidate 4258e28c770b848788385dc0d02398ba4cf7eb90; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
   "requiredMatrix": [
