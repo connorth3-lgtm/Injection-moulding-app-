@@ -281,7 +281,21 @@ for marker in [
 
 # Ensure all six governed contexts remain real PR jobs.
 need("jobs:\n  integrity:" in release_qa, "required status context 'integrity' is no longer the Release QA job")
-need("  mobile-browser:\n    if: always()\n    needs: [impact, browser-chromium, browser-webkit, browser-cross, app-500-reliability]" in mobile_qa, "required status context 'mobile-browser' must remain the fail-closed aggregate mobile QA job")
+mobile_block = mobile_qa.split("  mobile-browser:\n", 1)[1] if "  mobile-browser:\n" in mobile_qa else ""
+need(mobile_block, "required status context 'mobile-browser' is no longer the Mobile Browser aggregate job")
+need("    if: always()" in mobile_block, "mobile-browser aggregate must always evaluate upstream browser evidence")
+need("    needs: [browser-chromium, browser-webkit, browser-cross, app-500-reliability]" in mobile_block or
+     "    needs: [impact, browser-chromium, browser-webkit, browser-cross, app-500-reliability]" in mobile_block,
+     "mobile-browser aggregate must depend on every governed browser/reliability group")
+for marker in (
+    'test "$CHROMIUM" = "success"',
+    'test "$WEBKIT" = "success"',
+    'test "$CROSS_BROWSER" = "success"',
+    'test "$APP_500" = "success"',
+):
+    need(marker in mobile_block, f"mobile-browser aggregate missing fail-closed evidence check: {marker}")
+need('if [ "$CHROMIUM" = "skipped" ]' in mobile_block or 'BROWSER_IMPACT' in mobile_block,
+     "mobile-browser aggregate must distinguish an intentional impact skip from a failed/cancelled browser group")
 need("jobs:\n  build-windows:" in desktop_build, "required status context 'build-windows' is no longer the desktop build job")
 need(
     "jobs:\n  question-quality-50-pass:" in question_quality,
