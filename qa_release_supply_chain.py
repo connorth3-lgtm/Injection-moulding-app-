@@ -1,5 +1,6 @@
 from pathlib import Path
 import re
+import shlex
 
 ROOT = Path(__file__).resolve().parent
 PAGES = ROOT / ".github" / "workflows" / "pages.yml"
@@ -8,6 +9,55 @@ DESKTOP = ROOT / ".github" / "workflows" / "publish-open-desktop.yml"
 DEPENDABOT = ROOT / ".github" / "dependabot.yml"
 QUEUED_PROFILE = ROOT / ".github" / "workflows" / "profile-queued-zenodo-data.yml"
 LOWER_PROFILE = ROOT / ".github" / "workflows" / "profile-cross-process-lower-workpiece.yml"
+
+WORKFLOW_DIR = ROOT / ".github" / "workflows"
+
+
+def assert_pinned_workflow_python_dependencies() -> None:
+    """Reject bare PyPI package installs in workflow shell commands.
+
+    Exact versions keep benchmark/profile reruns reproducible. Options, local
+    paths, requirement/constraint files and explicit URL/VCS references are
+    handled separately and are not mistaken for package names.
+    """
+    value_options = {
+        "-r", "--requirement", "-c", "--constraint",
+        "--index-url", "--extra-index-url", "--find-links",
+    }
+    package_re = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*(?:\[[A-Za-z0-9_,.-]+\])?$")
+    for path in sorted(WORKFLOW_DIR.glob("*.y*ml")):
+        rel = path.relative_to(ROOT).as_posix()
+        for lineno, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            if "pip install" not in line:
+                continue
+            tail = line.split("pip install", 1)[1]
+            try:
+                tokens = shlex.split(tail)
+            except ValueError as exc:
+                raise AssertionError(f"cannot parse workflow pip install in {rel}:{lineno}: {exc}") from exc
+            skip_next = False
+            for token in tokens:
+                if skip_next:
+                    skip_next = False
+                    continue
+                if token in value_options:
+                    skip_next = True
+                    continue
+                if not token or token == "\\" or token.startswith("-"):
+                    continue
+                if (
+                    "://" in token
+                    or token.startswith((".", "/", "$", "git+"))
+                    or token.endswith((".txt", ".in", ".lock"))
+                ):
+                    continue
+                if package_re.fullmatch(token):
+                    need(
+                        "==" in token,
+                        f"unpinned workflow Python dependency in {rel}:{lineno}: {token}",
+                    )
+
+
 
 
 def need(ok, message):
@@ -36,6 +86,8 @@ desktop = DESKTOP.read_text(encoding="utf-8")
 dependabot = DEPENDABOT.read_text(encoding="utf-8")
 queued_profile = QUEUED_PROFILE.read_text(encoding="utf-8")
 lower_profile = LOWER_PROFILE.read_text(encoding="utf-8")
+
+assert_pinned_workflow_python_dependencies()
 
 assert_pinned_actions(
     "Pages",
@@ -159,5 +211,5 @@ print(
     "MouldMaster release supply-chain QA passed "
     "(critical main Pages/preview-candidate/desktop Actions SHA-pinned; preview candidate is non-publishing; Node-24-capable Pages releases; "
     "desktop build/package is read-only and publication uses an exact verified artifact handoff plus governed current-main provenance; "
-    "GitHub Actions plus root browser-QA, desktop runtime and isolated MSIX npm updates governed by Dependabot)"
+    "workflow Python benchmark dependencies exact-version pinned; GitHub Actions plus root browser-QA, desktop runtime and isolated MSIX npm updates governed by Dependabot)"
 )
