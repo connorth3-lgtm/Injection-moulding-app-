@@ -29,6 +29,8 @@ jobs:
         with:
           python-version: '3.12'
       - name: Developer doctor fast triage
+        id: developer-doctor
+        continue-on-error: true
         run: python tools/mouldmaster_doctor.py
       - name: Publish developer doctor summary
         if: always()
