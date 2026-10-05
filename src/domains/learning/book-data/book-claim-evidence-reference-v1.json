@@ -291,6 +291,24 @@
         "BASF-INJECTION-TROUBLESHOOTER",
         "BASF-ULTRAMID-PROCESSING",
         "ISO-20430-2020"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "BASF-INJECTION-TROUBLESHOOTER",
+            "BASF-ULTRAMID-PROCESSING"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-INJECTION-TROUBLESHOOTER"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ISO-20430-2020"
+          ]
+        }
       ]
     },
     {
@@ -298,6 +316,25 @@
       "evidenceIds": [
         "BASF-INJECTION-TROUBLESHOOTER",
         "BASF-ULTRAMID-PROCESSING"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "BASF-INJECTION-TROUBLESHOOTER",
+            "BASF-ULTRAMID-PROCESSING"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-INJECTION-TROUBLESHOOTER"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-INJECTION-TROUBLESHOOTER",
+            "BASF-ULTRAMID-PROCESSING"
+          ]
+        }
       ]
     },
     {
@@ -305,6 +342,24 @@
       "evidenceIds": [
         "NIST-SEMATECH-HANDBOOK",
         "NIST-MEASUREMENT-CHARACTERIZATION"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "NIST-SEMATECH-HANDBOOK",
+            "NIST-MEASUREMENT-CHARACTERIZATION"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "NIST-MEASUREMENT-CHARACTERIZATION"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "NIST-SEMATECH-HANDBOOK"
+          ]
+        }
       ]
     },
     {
@@ -314,12 +369,49 @@
         "PARIZS-2023-IN-MOLD-SENSORS",
         "KISTLER-CAVITY-PRESSURE-MONITORING",
         "NIST-SEMATECH-HANDBOOK"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "KISTLER-CAVITY-PRESSURE-MEDTECH",
+            "PARIZS-2023-IN-MOLD-SENSORS"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "KISTLER-CAVITY-PRESSURE-MONITORING",
+            "PARIZS-2023-IN-MOLD-SENSORS"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "KISTLER-CAVITY-PRESSURE-MEDTECH",
+            "NIST-SEMATECH-HANDBOOK"
+          ]
+        }
       ]
     },
     {
       "chapterId": "clamp",
       "evidenceIds": [
         "ISO-20430-2020"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "ISO-20430-2020"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ISO-20430-2020"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ISO-20430-2020"
+          ]
+        }
       ]
     },
     {
@@ -328,6 +420,24 @@
         "ISO-20457-2026",
         "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW",
         "NIST-SEMATECH-HANDBOOK"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "ISO-20457-2026",
+            "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "NIST-SEMATECH-HANDBOOK"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "NIST-SEMATECH-HANDBOOK"
+          ]
+        }
       ]
     },
     {
@@ -337,6 +447,26 @@
         "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW",
         "KUO-2022-COOLING-WARPAGE",
         "RJG-DECOUPLED-WORKSHOP"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "ASTM-D955-21",
+            "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW",
+            "KUO-2022-COOLING-WARPAGE"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "KUO-2022-COOLING-WARPAGE"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "RJG-DECOUPLED-WORKSHOP",
+            "KUO-2022-COOLING-WARPAGE"
+          ]
+        }
       ]
     },
     {
@@ -347,12 +477,60 @@
         "ISO-294-1-2017",
         "ASTM-D3641-24",
         "BASF-ULTRADUR-FAMILY"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "BASF-ULTRASON-INJECTION",
+            "BASF-ULTRAMID-PROCESSING"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ISO-294-1-2017",
+            "ASTM-D3641-24"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ISO-294-1-2017",
+            "ASTM-D3641-24"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-ULTRADUR-FAMILY"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-ULTRAMID-PROCESSING",
+            "ISO-294-1-2017"
+          ]
+        }
       ]
     },
     {
       "chapterId": "diagnostic-method",
       "evidenceIds": [
         "BASF-INJECTION-TROUBLESHOOTER"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "BASF-INJECTION-TROUBLESHOOTER"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-INJECTION-TROUBLESHOOTER"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-INJECTION-TROUBLESHOOTER"
+          ]
+        }
       ]
     },
     {
@@ -362,6 +540,27 @@
         "ASTM-D955-21",
         "ISO-20457-2026",
         "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "ISO-294-4-2018",
+            "ASTM-D955-21"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ISO-20457-2026",
+            "ISO-294-4-2018"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ISO-20457-2026",
+            "ASTM-D955-21",
+            "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW"
+          ]
+        }
       ]
     },
     {
@@ -369,6 +568,24 @@
       "evidenceIds": [
         "ASTM-D3641-24",
         "NIST-SEMATECH-HANDBOOK"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "ASTM-D3641-24",
+            "NIST-SEMATECH-HANDBOOK"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ASTM-D3641-24"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "NIST-SEMATECH-HANDBOOK"
+          ]
+        }
       ]
     },
     {
@@ -376,6 +593,24 @@
       "evidenceIds": [
         "NIST-SEMATECH-HANDBOOK",
         "NIST-MEASUREMENT-CHARACTERIZATION"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "NIST-SEMATECH-HANDBOOK"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "NIST-SEMATECH-HANDBOOK"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "NIST-SEMATECH-HANDBOOK",
+            "NIST-MEASUREMENT-CHARACTERIZATION"
+          ]
+        }
       ]
     },
     {
@@ -383,6 +618,24 @@
       "evidenceIds": [
         "BASF-INJECTION-PROBLEMS",
         "ISO-20457-2026"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "BASF-INJECTION-PROBLEMS",
+            "ISO-20457-2026"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-INJECTION-PROBLEMS"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-INJECTION-PROBLEMS"
+          ]
+        }
       ]
     },
     {
@@ -391,6 +644,25 @@
         "ISO-294-1-2017",
         "RJG-DECOUPLED-WORKSHOP",
         "BASF-INJECTION-PROBLEMS"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "ISO-294-1-2017",
+            "RJG-DECOUPLED-WORKSHOP"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ISO-294-1-2017",
+            "BASF-INJECTION-PROBLEMS"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "RJG-DECOUPLED-WORKSHOP"
+          ]
+        }
       ]
     },
     {
@@ -398,6 +670,24 @@
       "evidenceIds": [
         "OUBELLAOUCH-2024-FIBRE-ORIENTATION",
         "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "OUBELLAOUCH-2024-FIBRE-ORIENTATION"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "OUBELLAOUCH-2024-FIBRE-ORIENTATION",
+            "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "OUBELLAOUCH-2024-FIBRE-ORIENTATION"
+          ]
+        }
       ]
     },
     {
@@ -408,6 +698,25 @@
         "ASTM-D3641-24",
         "BIELENBERG-2025-SWITCHOVER-REVIEW",
         "ENGEL-IQ-PROCESS-CONTROL"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "RJG-DECOUPLED-WORKSHOP"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ISO-294-1-2017",
+            "ASTM-D3641-24"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BIELENBERG-2025-SWITCHOVER-REVIEW",
+            "ENGEL-IQ-PROCESS-CONTROL"
+          ]
+        }
       ]
     },
     {
@@ -416,12 +725,43 @@
         "BASF-ULTRADUR-FAMILY",
         "OUBELLAOUCH-2024-FIBRE-ORIENTATION",
         "ASTM-D3641-24"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "BASF-ULTRADUR-FAMILY",
+            "OUBELLAOUCH-2024-FIBRE-ORIENTATION"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ASTM-D3641-24",
+            "BASF-ULTRADUR-FAMILY"
+          ]
+        }
       ]
     },
     {
       "chapterId": "flash",
       "evidenceIds": [
         "BASF-INJECTION-TROUBLESHOOTER"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "BASF-INJECTION-TROUBLESHOOTER"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-INJECTION-TROUBLESHOOTER"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-INJECTION-TROUBLESHOOTER"
+          ]
+        }
       ]
     },
     {
@@ -430,6 +770,25 @@
         "ASTM-D955-21",
         "RJG-DECOUPLED-WORKSHOP",
         "ASTM-D3641-24"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "ASTM-D955-21",
+            "RJG-DECOUPLED-WORKSHOP"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "RJG-DECOUPLED-WORKSHOP"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ASTM-D3641-24",
+            "ASTM-D955-21"
+          ]
+        }
       ]
     },
     {
@@ -438,11 +797,42 @@
         "ASTM-D3641-24",
         "BASF-ULTRASON-INJECTION",
         "BASF-ULTRAMID-ADVANCED"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "ASTM-D3641-24",
+            "BASF-ULTRASON-INJECTION",
+            "BASF-ULTRAMID-ADVANCED"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ASTM-D3641-24",
+            "BASF-ULTRASON-INJECTION"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-ULTRASON-INJECTION"
+          ]
+        }
       ]
     },
     {
       "chapterId": "hot-runners",
-      "evidenceIds": []
+      "evidenceIds": [],
+      "claims": [
+        {
+          "evidenceIds": []
+        },
+        {
+          "evidenceIds": []
+        },
+        {
+          "evidenceIds": []
+        }
+      ]
     },
     {
       "chapterId": "machine-anatomy",
@@ -450,6 +840,29 @@
         "BASF-ULTRASON-INJECTION",
         "BASF-ELASTOLLAN-565",
         "ISO-20430-2020"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "BASF-ULTRASON-INJECTION",
+            "BASF-ELASTOLLAN-565"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ISO-20430-2020"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ISO-20430-2020"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ISO-20430-2020"
+          ]
+        }
       ]
     },
     {
@@ -459,6 +872,21 @@
         "BASF-ULTRADUR-FAMILY",
         "BASF-ULTRASON-INJECTION",
         "BASF-ELASTOLLAN-565"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "ASTM-D3641-24",
+            "BASF-ULTRADUR-FAMILY",
+            "BASF-ULTRASON-INJECTION"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ASTM-D3641-24",
+            "BASF-ELASTOLLAN-565"
+          ]
+        }
       ]
     },
     {
@@ -467,6 +895,24 @@
         "BASF-ULTRASON-INJECTION",
         "ASTM-D3641-24",
         "BASF-ULTRAMID-B3Z1-2026"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "BASF-ULTRASON-INJECTION"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ASTM-D3641-24",
+            "BASF-ULTRAMID-B3Z1-2026"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-ULTRAMID-B3Z1-2026"
+          ]
+        }
       ]
     },
     {
@@ -474,6 +920,29 @@
       "evidenceIds": [
         "ISO-12165-2019",
         "BASF-ULTRADUR-FAMILY"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "ISO-12165-2019"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ISO-12165-2019",
+            "BASF-ULTRADUR-FAMILY"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ISO-12165-2019"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-ULTRADUR-FAMILY"
+          ]
+        }
       ]
     },
     {
@@ -482,6 +951,26 @@
         "PARIZS-2023-IN-MOLD-SENSORS",
         "KISTLER-CAVITY-PRESSURE-MONITORING",
         "NIST-SEMATECH-HANDBOOK"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "PARIZS-2023-IN-MOLD-SENSORS",
+            "KISTLER-CAVITY-PRESSURE-MONITORING"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "PARIZS-2023-IN-MOLD-SENSORS",
+            "NIST-SEMATECH-HANDBOOK"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "PARIZS-2023-IN-MOLD-SENSORS",
+            "NIST-SEMATECH-HANDBOOK"
+          ]
+        }
       ]
     },
     {
@@ -489,6 +978,25 @@
       "evidenceIds": [
         "BASF-ULTRASON-INJECTION",
         "BASF-ELASTOLLAN-565"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "BASF-ULTRASON-INJECTION",
+            "BASF-ELASTOLLAN-565"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-ELASTOLLAN-565"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-ULTRASON-INJECTION",
+            "BASF-ELASTOLLAN-565"
+          ]
+        }
       ]
     },
     {
@@ -497,6 +1005,20 @@
         "BASF-ULTRADUR-FAMILY",
         "BASF-ULTRASON-INJECTION",
         "OUBELLAOUCH-2024-FIBRE-ORIENTATION"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "BASF-ULTRADUR-FAMILY",
+            "BASF-ULTRASON-INJECTION"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-ULTRADUR-FAMILY",
+            "OUBELLAOUCH-2024-FIBRE-ORIENTATION"
+          ]
+        }
       ]
     },
     {
@@ -506,6 +1028,25 @@
         "ISO-294-1-2017",
         "BIELENBERG-2025-SWITCHOVER-REVIEW",
         "ENGEL-IQ-PROCESS-CONTROL"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "RJG-DECOUPLED-WORKSHOP",
+            "ISO-294-1-2017"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "RJG-DECOUPLED-WORKSHOP"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BIELENBERG-2025-SWITCHOVER-REVIEW",
+            "ENGEL-IQ-PROCESS-CONTROL"
+          ]
+        }
       ]
     },
     {
@@ -514,6 +1055,24 @@
         "ASTM-D3641-24",
         "ISO-294-1-2017",
         "RJG-DECOUPLED-WORKSHOP"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "ASTM-D3641-24"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ISO-294-1-2017",
+            "ASTM-D3641-24"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "RJG-DECOUPLED-WORKSHOP"
+          ]
+        }
       ]
     },
     {
@@ -522,6 +1081,26 @@
         "KISTLER-CAVITY-PRESSURE-MONITORING",
         "NIST-SEMATECH-HANDBOOK",
         "NIST-MEASUREMENT-CHARACTERIZATION"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "KISTLER-CAVITY-PRESSURE-MONITORING",
+            "NIST-SEMATECH-HANDBOOK"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "NIST-SEMATECH-HANDBOOK",
+            "NIST-MEASUREMENT-CHARACTERIZATION"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "KISTLER-CAVITY-PRESSURE-MONITORING",
+            "NIST-SEMATECH-HANDBOOK"
+          ]
+        }
       ]
     },
     {
@@ -530,6 +1109,25 @@
         "NIST-SEMATECH-HANDBOOK",
         "ISO-20457-2026",
         "ASTM-D3641-24"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "NIST-SEMATECH-HANDBOOK"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "NIST-SEMATECH-HANDBOOK",
+            "ISO-20457-2026"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "NIST-SEMATECH-HANDBOOK",
+            "ASTM-D3641-24"
+          ]
+        }
       ]
     },
     {
@@ -538,18 +1136,65 @@
         "BASF-ULTRADUR-FAMILY",
         "BASF-ULTRASON-INJECTION",
         "ISO-294-1-2017"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "BASF-ULTRADUR-FAMILY",
+            "BASF-ULTRASON-INJECTION"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ISO-294-1-2017"
+          ]
+        }
       ]
     },
     {
       "chapterId": "safety-foundations",
       "evidenceIds": [
         "ISO-20430-2020"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "ISO-20430-2020"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ISO-20430-2020"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ISO-20430-2020"
+          ]
+        }
       ]
     },
     {
       "chapterId": "short-shot",
       "evidenceIds": [
         "BASF-INJECTION-TROUBLESHOOTER"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "BASF-INJECTION-TROUBLESHOOTER"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-INJECTION-TROUBLESHOOTER"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-INJECTION-TROUBLESHOOTER"
+          ]
+        }
       ]
     },
     {
@@ -558,6 +1203,19 @@
         "ASTM-D3641-24",
         "BASF-ULTRAMID-PROCESSING",
         "BASF-ELASTOLLAN-565"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "ASTM-D3641-24"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-ULTRAMID-PROCESSING",
+            "BASF-ELASTOLLAN-565"
+          ]
+        }
       ]
     },
     {
@@ -565,6 +1223,25 @@
       "evidenceIds": [
         "ASTM-D955-21",
         "BASF-INJECTION-TROUBLESHOOTER"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "ASTM-D955-21",
+            "BASF-INJECTION-TROUBLESHOOTER"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-INJECTION-TROUBLESHOOTER"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ASTM-D955-21",
+            "BASF-INJECTION-TROUBLESHOOTER"
+          ]
+        }
       ]
     },
     {
@@ -573,6 +1250,26 @@
         "BASF-INJECTION-TROUBLESHOOTER",
         "BASF-ULTRASON-INJECTION",
         "BASF-ULTRAMID-PROCESSING"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "BASF-INJECTION-TROUBLESHOOTER",
+            "BASF-ULTRASON-INJECTION"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-ULTRAMID-PROCESSING",
+            "BASF-ULTRASON-INJECTION"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-ULTRAMID-PROCESSING",
+            "BASF-ULTRASON-INJECTION"
+          ]
+        }
       ]
     },
     {
@@ -580,12 +1277,40 @@
       "evidenceIds": [
         "BASF-ULTRAMID-B3Z1-2026",
         "BASF-ULTRASON-INJECTION"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "BASF-ULTRAMID-B3Z1-2026",
+            "BASF-ULTRASON-INJECTION"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-ULTRASON-INJECTION"
+          ]
+        }
       ]
     },
     {
       "chapterId": "thin-wall",
       "evidenceIds": [
         "ASTM-D3641-24"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "ASTM-D3641-24"
+          ]
+        },
+        {
+          "evidenceIds": []
+        },
+        {
+          "evidenceIds": [
+            "ASTM-D3641-24"
+          ]
+        }
       ]
     },
     {
@@ -593,6 +1318,22 @@
       "evidenceIds": [
         "ASTM-D3641-24",
         "ISO-294-1-2017"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "ASTM-D3641-24"
+          ]
+        },
+        {
+          "evidenceIds": []
+        },
+        {
+          "evidenceIds": [
+            "ISO-294-1-2017",
+            "ASTM-D3641-24"
+          ]
+        }
       ]
     },
     {
@@ -602,12 +1343,47 @@
         "BASF-INJECTION-TROUBLESHOOTER",
         "BASF-ULTRASON-INJECTION",
         "ISO-12165-2019"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "BASF-INJECTION-PROBLEMS"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "BASF-INJECTION-TROUBLESHOOTER",
+            "BASF-ULTRASON-INJECTION"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ISO-12165-2019"
+          ]
+        }
       ]
     },
     {
       "chapterId": "vp-transfer",
       "evidenceIds": [
         "ASTM-D3641-24"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "ASTM-D3641-24"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ASTM-D3641-24"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ASTM-D3641-24"
+          ]
+        }
       ]
     },
     {
@@ -617,6 +1393,27 @@
         "ASTM-D955-21",
         "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW",
         "ISO-20457-2026"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "ISO-294-4-2018",
+            "ASTM-D955-21",
+            "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ASTM-D955-21",
+            "ISO-20457-2026",
+            "ISO-294-4-2018"
+          ]
+        }
       ]
     },
     {
@@ -624,6 +1421,24 @@
       "evidenceIds": [
         "LI-2024-WELD-LINE-REVIEW",
         "BASF-INJECTION-TROUBLESHOOTER"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "LI-2024-WELD-LINE-REVIEW"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "LI-2024-WELD-LINE-REVIEW"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "LI-2024-WELD-LINE-REVIEW",
+            "BASF-INJECTION-TROUBLESHOOTER"
+          ]
+        }
       ]
     },
     {
@@ -632,6 +1447,31 @@
         "ISO-294-1-2017",
         "ASTM-D3641-24",
         "ISO-20430-2020"
+      ],
+      "claims": [
+        {
+          "evidenceIds": [
+            "ISO-294-1-2017",
+            "ASTM-D3641-24"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ASTM-D3641-24",
+            "ISO-20430-2020"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ASTM-D3641-24",
+            "ISO-294-1-2017"
+          ]
+        },
+        {
+          "evidenceIds": [
+            "ISO-294-1-2017"
+          ]
+        }
       ]
     }
   ],
@@ -641,6 +1481,7 @@
     "noEvidenceUpgrades": true,
     "noProductionAuthority": true,
     "independentSmeStatus": "hold",
-    "purpose": "Expose the same governed claim-review evidence in learner-facing module and reader-chapter reference surfaces without changing claim conclusions or technical wording."
-  }
+    "purpose": "Expose the same governed claim-review evidence at claim, module and reader-chapter level without changing claim conclusions or technical wording."
+  },
+  "claimCount": 137
 }
