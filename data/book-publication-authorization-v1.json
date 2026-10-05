@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "bookId": "mouldmaster-book",
-  "version": "2026.10.06.2",
+  "version": "2026.10.06.3",
   "status": "authorized",
   "authorizationType": "governed-book-publication",
   "authorizedAt": "2026-10-06",
@@ -24,21 +24,21 @@
     "scope": "Exact served bytes for every payload that can influence Book publication promotion, reader composition, editorial expansion review or independent-SME status. Git object identity is checked in-browser before JSON parsing; any mismatch fails closed.",
     "gitBlobSha1ByFile": {
       "book-manifest-v1.json": "59efb8048451389ebb610566e13607d2d9c47cdd",
-      "book-sme-review-v1.json": "9efa32c5461c57ca4aafca40027bd71e4b563ec2",
+      "book-sme-review-v1.json": "302656f207eaf9c405cbc051482a1498b666a676",
       "book-qualification-resolution-all-v1.json": "c6da26d0c4ed3608b1a19b1551856c1d80c03a8f",
       "book-claim-resolution-high-risk-v1.json": "84d007a72c16b60e01ba392f9ca6e0f6d487cc85",
-      "book-authored-foundations-v1.json": "e8f4347a488c377c15a86ea640a014b462c38ef9",
+      "book-authored-foundations-v1.json": "2ad705739118492f60d717b09a0dff6c2feffd20",
       "book-evidence-registry-v1.json": "24cbe1b1777fa4e2377226a8789815b7321d66a9",
-      "book-chapters-materials-machine-v1.json": "1eb6d8ae71db922a579d4f69c0cffeee3408226c",
-      "book-authored-remaining-v1.json": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
-      "book-worked-engineering-cases-v1.json": "dc61606b8bd57be0c77560f75f9d27f077ceeac5",
-      "book-evidence-enrichment-v2.json": "3029cafc8d13bf6b33162b4ee562fa23cf001483",
-      "book-material-grade-atlas-v1.json": "514069b22cd50908046ac3f5ad6e3c2b038da5f2",
+      "book-chapters-materials-machine-v1.json": "2d8a8e95af5ea582361b9e8481e90bc1caabe9af",
+      "book-authored-remaining-v1.json": "3c414f8ebe39d46a8785d1888c168a831cf5ef4d",
+      "book-worked-engineering-cases-v1.json": "3aab9b6d8b5a2b6b4fb0284cab39d5d17a29d8dc",
+      "book-evidence-enrichment-v2.json": "73cb7b5ac7820c70cdc8df9d4e8501615a649b28",
+      "book-material-grade-atlas-v1.json": "3fa9a949726f2aaf24198ab6760f8d3e2f38fb24",
       "book-material-regional-evidence-v1.json": "4a42fa97f737b13271518d63672d3c4a01421e14",
       "material-catalog-v1.json": "88ac789aef21314cf2fbef194937ea3dca180471",
-      "book-engineering-diagrams-v1.json": "b86d06f7fec71f9c005495ebb45aa1a001b2506d",
-      "book-reader-architecture-v2.json": "fb4bccdb3589f28fa81d95f160393115230b907b",
-      "book-editorial-expansion-review-v1.json": "d4c78f8e95b97e31548c670781a48f312a15e7ff"
+      "book-engineering-diagrams-v1.json": "fc8714e24d0e7691f5a81231ccde414da2b337e2",
+      "book-reader-architecture-v2.json": "db1eaacfbce7510479c9a415ecd0078c9aba66b4",
+      "book-editorial-expansion-review-v1.json": "c575a8426c81092da4703db0c9b100be3806f934"
     }
   },
   "canonicalAcademicEvidenceUrls": {
@@ -126,7 +126,7 @@
     "The 2026-10-06 editorial expansion across 37 governed modules is bound to each module's existing governed claim IDs by data/book-editorial-expansion-review-v1.json; the completed depth pass adds mechanism, measurement, discriminating-evidence and falsification guidance without adding universal setpoints, machine-control authority or independent human SME approval.",
     "Reader-level depth bands, learning objectives, knowledge checks and application prompts are derived teaching scaffolds only; they cannot add claims, upgrade evidence status or create production authority.",
     "Packaging certification marks are interpreted only at their supported management-system scope: an ISO 9001/SAI Global marking does not certify resin properties, exact grade identity, processing conditions, lot acceptance or product conformity; current certificate validity and scope require separate verification.",
-    "The 2026-10-06.2 pre-read revision narrows cooling-recovery wording so hydraulic measurements are treated as evidence of measured-condition recovery or improvement rather than universal proof of complete circuit or product recovery."
+    "The 2026-10-06.3 100-pass editorial revision varies repetitive diagnostic/falsification phrasing without changing governed claim meaning, clarifies that depth bands describe chapter complexity rather than strict learner progression, adds one synthetic complex-diagnostics capstone and three conceptual non-scale diagrams, and keeps all independent-human-SME status on HOLD."
   ],
   "revocationRules": {
     "claimHoldOrConflict": "block-release",
@@ -146,11 +146,11 @@
   "workedCasesAuthorization": {
     "status": "authorized",
     "authorizedAt": "2026-10-03",
-    "release": "2026.10.06.2",
+    "release": "2026.10.06.3",
     "ledger": "data/book-worked-engineering-cases-v1.json",
-    "caseCount": 24,
-    "claimCount": 24,
-    "scope": "Twenty-four synthetic worked engineering teaching cases with explicit assumptions, measurements/reasoning, uncertainty boundaries, evidence anchors and non-universal applicability boundaries.",
+    "caseCount": 25,
+    "claimCount": 25,
+    "scope": "Twenty-five synthetic worked engineering teaching cases with explicit assumptions, measurements/reasoning, uncertainty boundaries, evidence anchors and non-universal applicability boundaries, including a complex-diagnostics capstone.",
     "independentSmeStatus": "hold",
     "independentSmeContract": "data/book-sme-review-v1.json",
     "authorityBoundary": "advisory-only; no validated recipe or automatic machine-control authority"
@@ -158,7 +158,7 @@
   "evidenceEnrichmentAuthorization": {
     "status": "authorized",
     "authorizedAt": "2026-09-18",
-    "release": "2026.10.06.2",
+    "release": "2026.10.06.3",
     "ledger": "data/book-evidence-enrichment-v2.json",
     "ledgerId": "book-evidence-enrichment-2026-09-18-v2",
     "chapterCount": 10,
@@ -207,17 +207,17 @@
   "diagramAuthorization": {
     "status": "authorized-instructional-diagrams",
     "authorizedAt": "2026-10-03",
-    "release": "2026.10.06.2",
+    "release": "2026.10.06.3",
     "ledger": "data/book-engineering-diagrams-v1.json",
-    "diagramCount": 18,
-    "scope": "Eighteen generic explanatory SVG diagrams bound to governed Book modules; each asset hash is recorded in the governed diagram ledger.",
+    "diagramCount": 21,
+    "scope": "Twenty-one generic explanatory SVG diagrams bound to governed Book modules; each asset hash is recorded in the governed diagram ledger.",
     "independentSmeStatus": "hold",
     "independentSmeContract": "data/book-sme-review-v1.json",
     "authorityBoundary": "instructional only; not scale drawings, simulation results, mould designs, safety drawings, production limits or machine-control authority"
   },
   "readerArchitectureAuthorization": {
     "status": "authorized-derived-structure",
-    "release": "2026.10.06.2",
+    "release": "2026.10.06.3",
     "ledger": "data/book-reader-architecture-v2.json",
     "readerChapterCount": 20,
     "governedModuleCount": 46,
@@ -227,7 +227,7 @@
   },
   "editorialExpansionAuthorization": {
     "status": "authorized-repository-technical-source-review",
-    "release": "2026.10.06.2",
+    "release": "2026.10.06.3",
     "ledger": "data/book-editorial-expansion-review-v1.json",
     "moduleCount": 37,
     "noNewClaimIds": true,
