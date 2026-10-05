@@ -240,6 +240,7 @@ def self_test() -> None:
             {
                 "id": i + 20,
                 "name": name,
+                "path": REQUIRED_WORKFLOW_PATHS[name],
                 "status": "completed",
                 "conclusion": "success",
                 "created_at": f"2026-10-03T02:00:0{i}Z",
@@ -255,6 +256,9 @@ def self_test() -> None:
         for v in latest_required_states(historical, 1, "feature/source", 123).values()
     )
     assert latest_required_states(historical, 1, "wrong/source", 123)[REQUIRED_WORKFLOWS[0]] == ("missing", "missing")
+    spoofed = json.loads(json.dumps(sample))
+    spoofed["workflow_runs"][0]["path"] = ".github/workflows/fake.yml"
+    assert latest_required_states(spoofed, 1)[REQUIRED_WORKFLOWS[0]] == ("missing", "missing")
     print("Preview-source verifier self-test passed")
 
 
