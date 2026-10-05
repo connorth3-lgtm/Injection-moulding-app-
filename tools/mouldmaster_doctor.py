@@ -9,6 +9,14 @@ from change_impact import classify
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/"qa-artifacts"
 PY=sys.executable
+FAILURE_PREFIX={
+    "syntax":"SYNTAX","generated-runtime":"BUILD","security-shell":"SECURITY",
+    "ci-routing":"CI","toolchain":"CI","ci-governance":"CI","preview-release":"PREVIEW",
+    "navigation-shell":"SHELL","learner-data":"STORAGE","observability":"HEALTH",
+    "release-integrity":"RELEASE","cross-domain":"AUDIT",
+}
+def failure_id(check,index):
+    return f"{FAILURE_PREFIX.get(check.category,'QA')}.{index:03d}"
 
 @dataclass(frozen=True)
 class Check:
@@ -152,7 +160,7 @@ def reports(files,base,head,results,fixed):
     failed=[r for r in results if r["status"]=="fail"]
     if not failed:lines+=["## Result","","No focused defects detected by Doctor.",""]
     for r in failed:
-        lines += ["## "+r["id"]+" ["+r["category"]+"]","",
+        lines += ["## "+r["failureId"]+" — "+r["id"]+" ["+r["category"]+"]","",
                   "Why: "+r["why"],"Command: "+r["command"],
                   "Likely owners: "+", ".join(r["owners"]),
                   "Repair: "+(r["repair"] or "Inspect the failing invariant and owning source."),
@@ -174,8 +182,9 @@ def main():
         for x in checks:print(f"{x.id:28} [{x.category}] {' '.join(x.cmd)}")
         return 0
     results=[];fixed=[]
-    for x in checks:
+    for idx,x in enumerate(checks,1):
         command=" ".join(shlex.quote(v) for v in x.cmd)
+        fid=failure_id(x,idx)
         print(f"\n==> {x.id} [{x.category}]\n    {command}",flush=True)
         code,out,secs=capture(x.cmd)
         if code and a.fix_safe and x.safe_fix:
@@ -191,7 +200,7 @@ def main():
         if code:
             print("    likely owners:",", ".join(x.owners))
             if x.repair:print("    repair:",x.repair)
-        results.append({"id":x.id,"category":x.category,"status":status,"seconds":round(secs,3),
+        results.append({"id":x.id,"failureId":fid,"category":x.category,"status":status,"seconds":round(secs,3),
           "command":command,"why":x.why,"owners":list(x.owners),"repair":x.repair,"output_tail":output_tail(out)})
     reports(files,base,a.head,results,fixed)
     failed=sum(r["status"]=="fail" for r in results)
