@@ -307,10 +307,10 @@ def validate_book_sme(section: dict, expected_release: str) -> None:
     enrichment_chapters = set(evidence.get("enrichmentChapterIds") or [])
     if not isinstance(chapter_ids, list) or len(chapter_ids) != 46 or len(set(chapter_ids)) != 46:
         fail("Book SME contract must contain exactly 46 unique governed chapter ids")
-    if len(worked_case_ids) != 18:
-        fail("Book SME contract must contain exactly 18 governed worked engineering cases")
-    if len(diagram_ids) != 8:
-        fail("Book SME contract must contain exactly 8 governed instructional diagrams")
+    if len(worked_case_ids) != 24:
+        fail("Book SME contract must contain exactly 24 governed worked engineering cases")
+    if len(diagram_ids) != 18:
+        fail("Book SME contract must contain exactly 18 governed instructional diagrams")
     if not isinstance(reviews, list):
         fail("Book SME reviews must be a list")
     if section["status"] == "hold":
@@ -353,9 +353,9 @@ def validate_book_sme(section: dict, expected_release: str) -> None:
             fail(f"validated Book SME enrichment chapter lacks explicit enrichment review evidence: {chapter_id}")
 
     if reviewed_worked != worked_case_ids:
-        fail("validated Book SME reviews must explicitly account for all 18 governed worked engineering cases")
+        fail("validated Book SME reviews must explicitly account for all 24 governed worked engineering cases")
     if reviewed_diagrams != diagram_ids:
-        fail("validated Book SME reviews must explicitly account for all 8 governed instructional diagrams")
+        fail("validated Book SME reviews must explicitly account for all 18 governed instructional diagrams")
 
 def validate_curriculum(section: dict, expected_release: str) -> None:
     packet = require_release_packet(
