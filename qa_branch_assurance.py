@@ -22,7 +22,10 @@ verifier = text("tools/verify_branch_assurance.py")
 for marker in (
     "name: Branch Release Assurance",
     "branches: [main, preview]",
+    "pull_request:",
     "actions: read",
+    "contract-self-test:",
+    "Exercise assurance verifier and governance contract",
     "exact-push-assurance:",
     "BRANCH_ASSURANCE_BRANCH",
     "BRANCH_ASSURANCE_SHA",
