@@ -69,6 +69,15 @@ assert.equal(
   'invalid-projected-area-value',
 );
 
+assert.equal(
+  clampSeparatingForce({
+    projectedArea: { value: 1e308, unit: 'm2' },
+    representativePressure: { value: 1e308, unit: 'Pa' },
+  }).reason,
+  'non-finite-engineering-result',
+  'finite inputs that overflow during engineering arithmetic must fail closed',
+);
+
 // Golden mass accounting: four 12.5 g parts plus a 5 g cold runner = 55 g/shot.
 const shot = aggregateShotMass({
   cavityCount: 4,
