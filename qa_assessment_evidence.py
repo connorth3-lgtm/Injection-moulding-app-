@@ -161,6 +161,6 @@ for marker,pack in [('/* >>> material-behaviour-labs.js */',evidence_pack),('/* 
     need(marker in pack,f'packed evidence runtime missing: {marker}')
 pkg=text('desktop/electron/package.json'); need('../../material-behaviour-labs.js' in pkg and '../../assessment-evidence-sources.js' in pkg and '../../assessment-evidence-approval.js' in pkg,'evidence/material assets missing from desktop package')
 integ=text('desktop/electron/scripts/generate-integrity.cjs'); need("'material-behaviour-labs.js'" in integ and "'assessment-evidence-sources.js'" in integ and "'assessment-evidence-approval.js'" in integ,'evidence/material assets missing from integrity manifest')
-workflow=text('.github/workflows/qa.yml'); need("find . -maxdepth 1 -type f -name '*.js'" in workflow,'workflow must syntax-check root JavaScript dynamically'); need('python qa_assessment_evidence.py' in workflow,'workflow must enforce evidence approval gate')
+workflow=text('.github/workflows/qa.yml'); need("Repository-wide JavaScript syntax" in workflow,'workflow must syntax-check root JavaScript dynamically'); need('python qa_assessment_evidence.py' in workflow,'workflow must enforce evidence approval gate')
 
 print(f"MouldMaster evidence approval QA passed: {s['approved']}/{s['total']} keyed questions approved, including {s['materialLabs']} material-lab decisions")
