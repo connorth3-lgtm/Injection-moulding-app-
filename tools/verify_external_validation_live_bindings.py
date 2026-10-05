@@ -88,6 +88,8 @@ def verify(repository: str, token: str) -> None:
         fail("live candidate workflow event is not pull_request")
     if run.get("head_sha") != source_sha:
         fail("live candidate workflow head SHA does not match canonical webCandidate")
+    if run.get("status") != "completed" or run.get("conclusion") != "success":
+        fail("live candidate workflow did not complete successfully")
 
     payload = request_json(token, f"repos/{repository}/actions/runs/{run_id}/artifacts?per_page=100")
     rows = payload.get("artifacts", []) if isinstance(payload, dict) else []
