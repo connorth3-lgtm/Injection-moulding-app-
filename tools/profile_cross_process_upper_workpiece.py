@@ -29,7 +29,9 @@ ROOT = Path(__file__).resolve().parents[1]
 RESULT = ROOT / "data" / "public-benchmark-results" / "cross-process-upper-workpiece-source-contract-v1.json"
 DICTIONARY = ROOT / "data" / "cross-process-upper-workpiece-dictionary-v1.json"
 RECORD_URL = "https://zenodo.org/api/records/17240390"
+EXPECTED_PUBLISHER_BYTES = 685541746
 EXPECTED_PUBLISHER_MD5 = "069e190338b2ca29f736b21fabf407ba"
+EXPECTED_PUBLISHER_SHA256 = "a0c7c07997e6c5a996823744aceb82bfc7b4efd371c7be0f4afc60d04771ec90"
 EXPECTED_UPPER_SERIAL_FILES = 10_697
 USER_AGENT = "MouldMaster-cross-process-upper-profiler/1.0 (aggregate research profiling)"
 
@@ -197,12 +199,18 @@ def profile_archive() -> dict:
     if len(files) != 1:
         raise AssertionError(f"expected one publisher archive, found {len(files)}")
     item = files[0]
+    if int(item.get("size") or -1) != EXPECTED_PUBLISHER_BYTES:
+        raise AssertionError(f"publisher size metadata drifted: {item.get('size')} != {EXPECTED_PUBLISHER_BYTES}")
+    if str(item.get("checksum") or "").lower() != f"md5:{EXPECTED_PUBLISHER_MD5}":
+        raise AssertionError(f"publisher checksum metadata drifted: {item.get('checksum')}")
 
     with tempfile.TemporaryDirectory(prefix="mouldmaster-cross-upper-") as temp:
         archive = Path(temp) / "publisher.zip"
-        md5, sha256 = download(item["links"]["self"], archive, item.get("size"))
+        md5, sha256 = download(item["links"]["self"], archive, EXPECTED_PUBLISHER_BYTES)
         if md5 != EXPECTED_PUBLISHER_MD5:
             raise AssertionError(f"publisher MD5 mismatch: {md5}")
+        if sha256 != EXPECTED_PUBLISHER_SHA256:
+            raise AssertionError(f"publisher SHA-256 mismatch: {sha256}")
         publisher_checksum = str(item.get("checksum") or "").lower()
         if publisher_checksum and publisher_checksum != f"md5:{EXPECTED_PUBLISHER_MD5}":
             raise AssertionError(f"publisher checksum metadata drifted: {publisher_checksum}")
