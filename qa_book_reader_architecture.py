@@ -18,6 +18,9 @@ def git_blob(path: Path) -> str:
     return hashlib.sha1(f"blob {len(data)}\0".encode()+data).hexdigest()
 
 version=load(ROOT/"version.json")
+binding=load(ROOT/"data/book-sme-release-binding-v1.json")
+book_release=binding.get("contentRelease")
+assert binding.get("boundWebRelease")==version.get("web_release")
 manifest=load(ROOT/"data/book-manifest-v1.json")
 reader=load(ROOT/"data/book-reader-architecture-v2.json")
 editorial=load(ROOT/"data/book-editorial-expansion-review-v1.json")
@@ -32,7 +35,7 @@ assert (ROOT/"data/book-editorial-expansion-review-v1.json").read_bytes()==(PACK
 module_ids=[c["id"] for part in manifest["parts"] for c in part["chapters"]]
 assert len(module_ids)==46 and len(set(module_ids))==46
 assert reader.get("schema")==1 and reader.get("bookId")=="mouldmaster-book"
-assert reader.get("release")==version.get("web_release")
+assert reader.get("release")==book_release
 assert reader.get("status")=="governed-derived-reader-map"
 readers=reader.get("readerChapters") or []
 assert len(readers)==20 and len({r.get("id") for r in readers})==20
@@ -63,7 +66,7 @@ for path in claim_paths:
         claims_by_chapter[chapter["chapterId"]]={c["claimId"] for c in chapter.get("claims",[])}
 
 assert editorial.get("schemaVersion")==1 and editorial.get("bookId")=="mouldmaster-book"
-assert editorial.get("release")==version.get("web_release")
+assert editorial.get("release")==book_release
 assert editorial.get("status")=="repository-technical-review-complete"
 reviews=editorial.get("reviewedModules") or []
 assert len(reviews)==37 and len({x.get("moduleId") for x in reviews})==37
@@ -81,11 +84,11 @@ assert editorial.get("readerArchitecture",{}).get("gitBlobSha1")==git_blob(ROOT/
 assert editorial.get("acceptanceRules",{}).get("independentSmeStatus")=="hold"
 
 permit=auth.get("readerArchitectureAuthorization") or {}
-assert permit.get("status")=="authorized-derived-structure" and permit.get("release")==version.get("web_release")
+assert permit.get("status")=="authorized-derived-structure" and permit.get("release")==book_release
 assert permit.get("readerChapterCount")==20 and permit.get("governedModuleCount")==46 and permit.get("noNewTechnicalClaims") is True
 edit_permit=auth.get("editorialExpansionAuthorization") or {}
 assert edit_permit.get("status")=="authorized-repository-technical-source-review"
-assert edit_permit.get("release")==version.get("web_release") and edit_permit.get("moduleCount")==37 and edit_permit.get("noNewClaimIds") is True
+assert edit_permit.get("release")==book_release and edit_permit.get("moduleCount")==37 and edit_permit.get("noNewClaimIds") is True
 hashes=auth.get("runtimeIntegrity",{}).get("gitBlobSha1ByFile",{})
 for name in ("book-reader-architecture-v2.json","book-editorial-expansion-review-v1.json"):
     assert hashes.get(name)==git_blob(PACKAGED/name), f"authorization hash drift for {name}"
