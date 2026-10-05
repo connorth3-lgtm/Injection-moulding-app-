@@ -1158,6 +1158,24 @@ assert.equal(
     ...amorphousCoolingContext,
     partThickness: { value: 3, unit: 'mm' },
     thermalDiffusivity: { value: 0.1, unit: 'mm2/s' },
+    meltTemperature: { value: -100, unit: '°C' },
+    mouldSurfaceTemperature: { value: -300, unit: '°C' },
+    ejectionTemperature: { value: -200, unit: '°C' },
+    materialMorphology: 'amorphous',
+    ejectionCriterionType: 'centerline-temperature',
+    thermalDiffusivityRef: 'grade-property-dataset/rev-4',
+    ejectionCriterionRef: 'validated-part-ejection-study/rev-2',
+    mouldSurfaceTemperatureBasisRef: 'instrumented-mould/trial-18',
+  }).reason,
+  'invalid-mould-surface-temperature-value',
+  'temperatures below absolute zero must fail before thermal arithmetic',
+);
+
+assert.equal(
+  amorphousSlabCoolingTimeEstimate({
+    ...amorphousCoolingContext,
+    partThickness: { value: 3, unit: 'mm' },
+    thermalDiffusivity: { value: 0.1, unit: 'mm2/s' },
     meltTemperature: { value: 230, unit: '°C' },
     mouldSurfaceTemperature: { value: 60, unit: '°C' },
     ejectionTemperature: { value: 90, unit: '°C' },
