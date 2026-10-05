@@ -55,7 +55,8 @@ jobs:
         run: python3 tools/ci_impact.py --governed-candidate
       - name: Skip unrelated update
         if: steps.impact.outputs.measured_learning != 'true'
-        run: echo "Measured Learning Production Gate skipped: latest update does not affect measured-learning contracts."
+        run: |
+          echo "Measured Learning Production Gate skipped: latest update does not affect measured-learning contracts."
       - name: Compile production-gate tooling
         if: steps.impact.outputs.measured_learning == 'true'
         run: |
