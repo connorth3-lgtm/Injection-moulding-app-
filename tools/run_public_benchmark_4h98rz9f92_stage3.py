@@ -16,7 +16,7 @@ VERSION = 3
 DOI = "10.17632/4h98rz9f92.3"
 EXPECTED_FILE_ID = "368356fe-618c-4eab-82e6-53dc86762943"
 EXPECTED_FILE = "Raw Data.xlsx"
-EXPECTED_SHA256 = "39210169aac62a1455603d37cdffaca93cf0c46189ea4258c5f3c0a4a37255c9"
+EXPECTED_SHA256 = "452fc2077ae9227b8816ae73431c048ac294c87aa40b8abe919371ae3b87c6bc"
 PUBLIC_FILES_ENDPOINT = f"https://data.mendeley.com/public-api/datasets/{DATASET_ID}/files?folder_id=root&version={VERSION}"
 API_ROOT = "https://api.data.mendeley.com"
 UA = "MouldMaster-Educational-Evidence-Profiler/1.0"
