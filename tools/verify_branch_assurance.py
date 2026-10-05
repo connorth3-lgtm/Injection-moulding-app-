@@ -68,6 +68,9 @@ def write_report(branch: str, sha: str, runs: dict[str, dict], verdict: str, rea
             "status": str(run.get("status") or "missing"),
             "conclusion": str(run.get("conclusion") or "missing"),
             "run_id": run.get("id"),
+            "run_attempt": run.get("run_attempt"),
+            "event": str(run.get("event") or ""),
+            "head_branch": str(run.get("head_branch") or ""),
             "run_url": str(run.get("html_url") or ""),
             "updated_at": str(run.get("updated_at") or run.get("created_at") or ""),
         })
@@ -88,13 +91,16 @@ def write_report(branch: str, sha: str, runs: dict[str, dict], verdict: str, rea
         f"- Verdict: **{verdict.upper()}**",
         f"- Reason: {reason}",
         "",
-        "| Workflow | Status | Conclusion | Run |",
-        "|---|---|---|---|",
+        "| Workflow | Status | Conclusion | Attempt | Event | Branch | Run |",
+        "|---|---|---|---:|---|---|---|",
     ]
     for row in workflows:
         url = row["run_url"]
         run_cell = f"[{row['run_id']}]({url})" if url and row["run_id"] else (str(row["run_id"]) if row["run_id"] else "—")
-        lines.append(f"| {row['name']} | {row['status']} | {row['conclusion']} | {run_cell} |")
+        lines.append(
+            f"| {row['name']} | {row['status']} | {row['conclusion']} | "
+            f"{row['run_attempt'] or '—'} | {row['event'] or '—'} | {row['head_branch'] or '—'} | {run_cell} |"
+        )
     markdown = "\n".join(lines) + "\n"
     (out / "branch-assurance-report.md").write_text(markdown, encoding="utf-8")
     summary = os.environ.get("GITHUB_STEP_SUMMARY", "").strip()
