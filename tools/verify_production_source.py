@@ -89,6 +89,27 @@ def request_json(token: str, url: str) -> object:
     )
 
 
+def request_workflow_runs(token: str, repository: str, head_sha: str) -> dict:
+    rows: list[dict] = []
+    for page in range(1, 11):
+        query = urlencode({
+            "head_sha": head_sha,
+            "event": "pull_request",
+            "per_page": 100,
+            "page": page,
+        })
+        payload = request_json(token, f"{API}/repos/{repository}/actions/runs?{query}")
+        if not isinstance(payload, dict):
+            raise SystemExit("GitHub production-source workflow query returned a non-object payload")
+        page_rows = payload.get("workflow_runs") or []
+        if not isinstance(page_rows, list):
+            raise SystemExit("GitHub production-source workflow query returned invalid workflow_runs")
+        rows.extend(row for row in page_rows if isinstance(row, dict))
+        if len(page_rows) < 100:
+            return {"workflow_runs": rows}
+    raise SystemExit("GitHub production-source workflow query exceeded the 1000-run pagination safety bound")
+
+
 def matching_merged_prs(payload: object, source_sha: str) -> list[dict]:
     rows = payload if isinstance(payload, list) else []
     return [
@@ -206,10 +227,9 @@ def verify(token: str, repository: str, source_sha: str, require_native_protecti
     if re.fullmatch(r"[0-9a-f]{40}", pr_head) is None:
         raise SystemExit(f"Merged PR #{pr_number} has no usable canonical exact head SHA")
 
-    query = urlencode({"head_sha": pr_head, "event": "pull_request", "per_page": 100})
     states: dict[str, tuple[str, str]] = {}
     for attempt in range(1, 11):
-        runs = request_json(token, f"{API}/repos/{repository}/actions/runs?{query}")
+        runs = request_workflow_runs(token, repository, pr_head)
         ok, states = successful_required_workflows(runs, pr_number, pr_head_ref, pr_head_repo_id)
         if ok:
             break
