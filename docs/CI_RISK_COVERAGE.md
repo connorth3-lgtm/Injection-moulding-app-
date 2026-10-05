@@ -42,3 +42,13 @@ A passing repository workflow is not physical-device, assistive-technology, SME,
 ## Runtime enforcement
 
 `MouldMaster Domain Foundation QA` and `Mobile Browser QA` run independently on pull requests to `main`. The dedicated `Exact-head CI Risk Coverage` workflow verifies the applicable workflow set above against the exact pull-request head SHA. This keeps assurance layers honest: browser QA reports browser evidence only, while cross-workflow coverage reports aggregate release/governance coverage. A failure in native governance must not relabel otherwise-passing browser evidence as a browser failure.
+
+## Post-push branch assurance
+
+Repository-controlled validation does not stop at the pull-request boundary.
+
+- **preview**: `Branch Release Assurance` waits for exact-push success of `MouldMaster Release QA`, `Mobile Browser QA`, `Question Quality 50-Pass`, and `MouldMaster Preview Pages` on the same preview SHA.
+- **main**: the same gate waits for exact-push success of `MouldMaster Release QA`, `Mobile Browser QA`, `Question Quality 50-Pass`, `Deep Audit Governance`, `Release External Validation Boundary`, `MouldMaster Pages Release Readiness`, and `Main PR Provenance Guard` on the same main SHA.
+- The gate is read-only and fail-closed. It does not publish, rewrite branches, approve reviews, or replace the underlying workflow evidence.
+- Main Pages still rebuilds from the exact protected-main SHA and verifies the deployed release-hold/preview artifact. Preview Pages still requires merged-PR provenance, exact-head quality checks, a governed build, and live deployment verification.
+- External physical-device, assistive-technology, SME, learner-outcome, provider, signing, Store, and production-site evidence remains outside automated CI authority.
