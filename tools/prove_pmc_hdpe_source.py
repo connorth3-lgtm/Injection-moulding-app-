@@ -32,6 +32,7 @@ EXPECTED_WORKBOOK_SHA = "6e376e0acdfc614b6c16e0fef99e0e74cace8bc4d931a08a729e05d
 HISTORICAL_WORKBOOK_NAME = "Tensile-Data.xlsx"
 USER_AGENT = "MouldMaster-measured-learning/2.4"
 MAX_MEMBER_BYTES = 64 * 1024 * 1024
+MAX_NETWORK_BYTES = 256 * 1024 * 1024
 NS = {
     "m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
     "r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
@@ -60,7 +61,17 @@ def fetch(url: str, timeout: int = 90) -> bytes:
             "pmc.ncbi.nlm.nih.gov",
         }:
             raise RuntimeError(f"PMC retrieval redirected outside fixed hosts: {response.geturl()}")
-        return response.read()
+        declared = response.headers.get("Content-Length")
+        if declared not in (None, ""):
+            try:
+                if int(declared) > MAX_NETWORK_BYTES:
+                    raise RuntimeError(f"PMC response exceeds {MAX_NETWORK_BYTES} byte network limit")
+            except ValueError as exc:
+                raise RuntimeError("PMC response Content-Length is invalid") from exc
+        payload = response.read(MAX_NETWORK_BYTES + 1)
+        if len(payload) > MAX_NETWORK_BYTES:
+            raise RuntimeError(f"PMC response exceeds {MAX_NETWORK_BYTES} byte network limit")
+        return payload
 
 
 def sha256(data: bytes) -> str:
