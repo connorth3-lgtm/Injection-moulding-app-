@@ -9,7 +9,7 @@ on:
 
 concurrency:
   group: mobile-browser-qa-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   contents: read
@@ -26,7 +26,7 @@ jobs:
           fetch-depth: 0
       - name: Classify browser impact
         id: classify
-        run: python3 tools/ci_impact.py --governed-candidate
+        run: python3 tools/ci_impact.py
 
   browser-chromium:
     needs: impact
