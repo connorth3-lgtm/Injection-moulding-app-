@@ -125,8 +125,25 @@ jobs:
       - name: Prove required Sustainability publisher supplement
         run: python tools/prove_sustainability_measured_source.py
       - name: Prove benchmark-pinned open Mendeley workbook schemas
-        run: python tools/prove_mendeley_open_sources.py
+        id: mendeley_source
+        shell: bash
+        run: |
+          set +e
+          python tools/prove_mendeley_open_sources.py
+          code=$?
+          set -e
+          if [ "$code" -eq 0 ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "$code" -eq 75 ]; then
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Pinned Mendeley source transport is unavailable; live authoring regeneration is held, while committed learner-facing evidence remains subject to deterministic QA."
+            exit 0
+          fi
+          exit "$code"
       - name: Revalidate rebound 4h98 workbook semantics
+        if: steps.mendeley_source.outputs.available == 'true'
         run: |
           python tools/run_public_benchmark_4h98rz9f92_stage3.py \
             --output measured-source-proof/4h98rz9f92-v3-live.json \
@@ -155,16 +172,22 @@ jobs:
           },separators=(',',':')))
           PY
       - name: Extract compact Mendeley source-derived candidates
+        if: steps.mendeley_source.outputs.available == 'true'
         run: python tools/extract_mendeley_learning_candidates.py
       - name: Validate core Mendeley candidate invariants
+        if: steps.mendeley_source.outputs.available == 'true'
         run: python qa_measured_learning_candidates.py
       - name: Extract direct 4h98 replicate candidate
+        if: steps.mendeley_source.outputs.available == 'true'
         run: python tools/extract_4h98_direct_candidate.py
       - name: Extract 6k8 pressure-response candidate
+        if: steps.mendeley_source.outputs.available == 'true'
         run: python tools/extract_6k8_pressure_candidate.py
       - name: Extract GTNB historical-production candidates
+        if: steps.mendeley_source.outputs.available == 'true'
         run: python tools/extract_gtnb_learning_candidates.py
       - name: Recover GTNB rejection numerator and denominator
+        if: steps.mendeley_source.outputs.available == 'true'
         run: python tools/extract_gtnb_rejection_candidate.py
       - name: Extract Sustainability DOE candidates
         run: python tools/extract_sustainability_learning_candidates.py
@@ -177,15 +200,39 @@ jobs:
       - name: Extract rights-safe rebalanced candidates
         run: python tools/extract_rebalanced_learning_candidates.py
       - name: Validate 70-case numeric authoring coverage separately from promotion
+        if: steps.mendeley_source.outputs.available == 'true'
         run: python qa_measured_learning_authoring_coverage.py
       - name: Build deterministic 70-case independent-review queue
+        if: steps.mendeley_source.outputs.available == 'true'
         run: python tools/build_measured_learning_review_queue.py
       - name: Validate independent-review queue remains unreviewed and non-promotional
+        if: steps.mendeley_source.outputs.available == 'true'
         run: python qa_measured_learning_review_queue.py
       - name: Build 70 case-specific engineering-review packets
+        if: steps.mendeley_source.outputs.available == 'true'
         run: python tools/build_measured_learning_review_packets.py
       - name: Validate review packets remain unreviewed and non-promotional
+        if: steps.mendeley_source.outputs.available == 'true'
         run: python qa_measured_learning_review_packets.py
+      - name: Enforce Mendeley outage boundary
+        if: steps.mendeley_source.outputs.available == 'false'
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('measured-source-proof/mendeley-live-status.json')
+          x=json.loads(p.read_text(encoding='utf-8'))
+          assert x['status']=='transport-unavailable'
+          assert x['promotionEligible'] is False
+          assert set(x['governedDatasetIds'])=={
+              'mendeley-gtnb4j7bfx-v1',
+              'mendeley-4h98rz9f92-v3',
+              'mendeley-6k8fpbrd9s-v1',
+              'mendeley-yxz2w7ctnh-v1',
+          }
+          assert 'No source identity' in x['boundary']
+          print(json.dumps({'status':'mendeley-live-authoring-held','promotionEligible':False},separators=(',',':')))
+          PY
       - name: Upload compact source proofs, authoring candidates, review queue and packets
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
