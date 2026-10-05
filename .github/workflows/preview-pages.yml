@@ -87,6 +87,15 @@ jobs:
           python3 -m http.server 8765 --bind 127.0.0.1 --directory .pages-hold >/tmp/mouldmaster-preview-http.log 2>&1 &
           server_pid=$!
           trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          ready=0
+          for attempt in {1..10}; do
+            if python3 -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8765/', timeout=2).read(1)" >/dev/null 2>&1; then
+              ready=1
+              break
+            fi
+            sleep 1
+          done
+          test "$ready" -eq 1
           python3 tools/verify_pages_hold.py \
             --base-url "http://127.0.0.1:8765/" \
             --expected-source-sha "${{ github.sha }}" \
