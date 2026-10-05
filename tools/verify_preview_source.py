@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 import time
@@ -74,11 +75,24 @@ def unique_matches(payloads: tuple[object, ...], source_sha: str) -> list[dict]:
     return list(by_number.values())
 
 
-def latest_required_states(payload: object) -> dict[str, tuple[str, str]]:
+def run_matches_pr(row: dict, pr_number: int) -> bool:
+    prs = row.get("pull_requests") or []
+    return any(
+        isinstance(pr, dict)
+        and int(pr.get("number") or 0) == pr_number
+        and ((pr.get("base") or {}).get("ref") == "preview")
+        for pr in prs
+    )
+
+
+def latest_required_states(payload: object, pr_number: int | None = None) -> dict[str, tuple[str, str]]:
     runs = (payload or {}).get("workflow_runs", []) if isinstance(payload, dict) else []
     result: dict[str, tuple[str, str]] = {}
     for name in REQUIRED_WORKFLOWS:
-        matches = [row for row in runs if row.get("name") == name]
+        matches = [
+            row for row in runs
+            if row.get("name") == name and (pr_number is None or run_matches_pr(row, pr_number))
+        ]
         matches.sort(key=lambda row: (str(row.get("created_at") or ""), int(row.get("id") or 0)), reverse=True)
         latest = matches[0] if matches else {}
         result[name] = (str(latest.get("status") or "missing"), str(latest.get("conclusion") or "missing"))
@@ -86,8 +100,8 @@ def latest_required_states(payload: object) -> dict[str, tuple[str, str]]:
 
 
 def verify(token: str, repository: str, source_sha: str) -> None:
-    if len(source_sha) != 40:
-        raise SystemExit("Preview source SHA must be a full 40-character commit SHA")
+    if re.fullmatch(r"[0-9a-f]{40}", source_sha) is None:
+        raise SystemExit("Preview source SHA must be a full lowercase 40-character commit SHA")
 
     branch = request_json(token, f"{API}/repos/{repository}/branches/preview")
     current = str(((branch or {}).get("commit") or {}).get("sha") or "") if isinstance(branch, dict) else ""
@@ -122,7 +136,7 @@ def verify(token: str, repository: str, source_sha: str) -> None:
     states: dict[str, tuple[str, str]] = {}
     for attempt in range(1, 11):
         runs = request_json(token, f"{API}/repos/{repository}/actions/runs?{runs_query}")
-        states = latest_required_states(runs)
+        states = latest_required_states(runs, pr_number)
         if all(state == ("completed", "success") for state in states.values()):
             break
         failed = [f"{name}={s}/{c}" for name, (s, c) in states.items() if s == "completed" and c not in {"success", "missing"}]
@@ -149,11 +163,29 @@ def self_test() -> None:
     assert len(unique_matches(([exact], [duplicate]), source)) == 1
     sample = {
         "workflow_runs": [
-            {"id": i + 1, "name": name, "status": "completed", "conclusion": "success", "created_at": f"2026-10-03T00:00:0{i}Z"}
+            {
+                "id": i + 1,
+                "name": name,
+                "status": "completed",
+                "conclusion": "success",
+                "created_at": f"2026-10-03T00:00:0{i}Z",
+                "pull_requests": [{"number": 1, "base": {"ref": "preview"}}],
+            }
             for i, name in enumerate(REQUIRED_WORKFLOWS)
         ]
     }
-    assert all(v == ("completed", "success") for v in latest_required_states(sample).values())
+    assert all(v == ("completed", "success") for v in latest_required_states(sample, 1).values())
+    wrong_pr = {
+        "workflow_runs": [{
+            "id": 99,
+            "name": REQUIRED_WORKFLOWS[0],
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-10-03T01:00:00Z",
+            "pull_requests": [{"number": 2, "base": {"ref": "main"}}],
+        }]
+    }
+    assert latest_required_states(wrong_pr, 1)[REQUIRED_WORKFLOWS[0]] == ("missing", "missing")
     print("Preview-source verifier self-test passed")
 
 
