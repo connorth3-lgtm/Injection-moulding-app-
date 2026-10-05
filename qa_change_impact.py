@@ -69,6 +69,12 @@ metadata_graph=graph_impact({"data/release-external-validation-v1.json"})
 need("shell" not in metadata_graph["directAreas"],"release metadata must not be directly owned by shell")
 need(classify({"data/release-external-validation-v1.json"})["runtime"] is False,"release metadata must remain non-runtime after graph expansion")
 
+candidate_workflow=(Path(__file__).resolve().parent/".github/workflows/premerge-public-candidate.yml").read_text(encoding="utf-8")
+need("data/release-external-validation-v1.json" in candidate_workflow and "webCandidate" in candidate_workflow,
+     "candidate workflow must derive impact from the currently bound retained candidate")
+need('tools/ci_impact.py --base "$BOUND_SOURCE"' in candidate_workflow,
+     "candidate workflow must compare runtime changes from the retained candidate source SHA")
+
 need(classify(set())["runtime"] is False,"empty diff must not classify runtime")
 need(classify(set())["candidate_binding"] is False,"empty diff must not classify candidate binding")
 print("Change impact classification QA passed")
