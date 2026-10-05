@@ -1,8 +1,8 @@
-/* MouldMaster Book complete claim/evidence trace — 2026.09.17.1 */
+/* MouldMaster Book complete claim/evidence trace — 2026.10.06.5 */
 (function(){
 'use strict';
 if(window.MM_BOOK_CLAIM_TRACE)return;
-const VERSION='2026.09.17.1';
+const VERSION='2026.10.06.5';
 const ROOT='./src/domains/learning/book-data/';
 const REVIEW_FILES=[
  'book-claim-review-foundations-materials-machine-v1.json',
@@ -46,6 +46,7 @@ function overlayResolution(resolution,label){
 }
 function buildTrace(reviews,resolutions){
  claims=new Map();sources=new Map();
+ for(const s of window.MMBook?.getManifest?.()?.sourceSeeds||[])addSource(s);
  const chapterIds=new Set();
  for(const ledger of reviews){
   if(ledger?.schema!==1||ledger?.bookId!=='mouldmaster-book'||!Array.isArray(ledger.chapters))throw new Error('Book claim-review ledger identity check failed');
