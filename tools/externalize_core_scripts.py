@@ -275,6 +275,27 @@ def runtime_transform(name: str, source: str) -> str:
             fail("certificate print runtime transform did not match exactly once")
         if "document.write(" in transformed or "document.writeln(" in transformed:
             fail("certificate print runtime transform left document.write active")
+        learner_id_expr = 'pvRequireLearnerId("learner-"+Date.now())'
+        learner_id_count = transformed.count(learner_id_expr)
+        if learner_id_count != 2:
+            fail(f"frozen learner creation identity source drifted: expected 2 occurrences, got {learner_id_count}")
+        learner_id_helper = r'''function pvNewLearnerId(){
+  const users=db&&db.users&&typeof db.users==='object'?db.users:{};
+  for(let attempt=0;attempt<8;attempt++){
+    let entropy='';
+    try{entropy=globalThis.crypto?.randomUUID?.()||''}catch(_){}
+    if(!entropy)entropy=`${Date.now().toString(36)}-${Math.random().toString(36).slice(2,12)}-${attempt}`;
+    const id=pvRequireLearnerId(`learner-${entropy}`);
+    if(!Object.prototype.hasOwnProperty.call(users,id))return id;
+  }
+  throw new Error('Unable to allocate a unique learner identifier');
+}
+'''
+        create_marker = "function createLearner(){"
+        if transformed.count(create_marker) < 1:
+            fail("frozen learner creation function missing")
+        transformed = transformed.replace(create_marker, learner_id_helper + create_marker, 1)
+        transformed = transformed.replace(learner_id_expr, "pvNewLearnerId()")
         standards_marker = "function renderStandards(){"
         if transformed.count(standards_marker) != 1:
             fail("frozen standards renderer source drifted; expected one renderStandards function")
@@ -596,6 +617,11 @@ def check_state() -> None:
     for marker in ("function pvSafeExternalUrl(raw)", "function pvStandardsLink(item,label)", 'rel="noopener noreferrer"', "Official source URL unavailable"):
         if marker not in hardened:
             fail(f"standards-link hardening marker missing: {marker}")
+    for marker in ("function pvNewLearnerId()", "crypto?.randomUUID", "Object.prototype.hasOwnProperty.call(users,id)", "Unable to allocate a unique learner identifier"):
+        if marker not in hardened:
+            fail(f"learner identity hardening marker missing: {marker}")
+    if 'learner-"+Date.now()' in hardened:
+        fail("active learner creation must not use timestamp-only profile IDs")
     if 'href="${item.url}"' in hardened:
         fail("active standards renderer must not interpolate raw governed URLs into href")
     final_slot = expected[expected_names[-1]]
