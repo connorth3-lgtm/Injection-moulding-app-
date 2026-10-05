@@ -235,19 +235,18 @@ jobs:
 
   mobile-browser:
     if: always()
-    needs: [impact, browser-chromium, browser-webkit, browser-cross, app-500-reliability]
+    needs: [browser-chromium, browser-webkit, browser-cross, app-500-reliability]
     runs-on: ubuntu-latest
     steps:
       - name: Enforce complete mobile browser evidence
         env:
-          BROWSER_IMPACT: ${{ needs.impact.outputs.browser }}
           CHROMIUM: ${{ needs.browser-chromium.result }}
           WEBKIT: ${{ needs.browser-webkit.result }}
           CROSS_BROWSER: ${{ needs.browser-cross.result }}
           APP_500: ${{ needs.app-500-reliability.result }}
         run: |
-          if [ "$BROWSER_IMPACT" != "true" ]; then
-            echo "Mobile Browser QA skipped expensive browser execution: latest update has no runtime/browser impact."
+          if [ "$CHROMIUM" = "skipped" ] && [ "$WEBKIT" = "skipped" ] && [ "$CROSS_BROWSER" = "skipped" ] && [ "$APP_500" = "skipped" ]; then
+            echo "Mobile Browser QA passed without expensive browser execution: the impact classifier skipped all browser groups."
             exit 0
           fi
           test "$CHROMIUM" = "success" || { echo "::error::Chromium QA did not pass: $CHROMIUM"; exit 1; }
