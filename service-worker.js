@@ -196,6 +196,10 @@ function criticalOfflineResponse(url){
   if(url.pathname.endsWith('.json'))return new Response(JSON.stringify({error:'mouldmaster-offline-asset-unavailable'}),{status:503,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}});
   return new Response('/* MouldMaster runtime asset is unavailable offline. Reconnect and reopen the app to cache this runtime feature pack. */\n',{status:503,headers:{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}})
 }
+function unlistedRuntimeResponse(url){
+  if(url.pathname.endsWith('.json'))return new Response(JSON.stringify({error:'mouldmaster-unlisted-runtime-asset'}),{status:503,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}});
+  return new Response('/* MouldMaster blocked an unlisted same-origin runtime asset to prevent mixed-version execution. */\n',{status:503,headers:{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}})
+}
 function offlineDocumentResponse(){
   return new Response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>MouldMaster offline</title><main style="font:16px system-ui;padding:24px;max-width:680px"><h1>MouldMaster is not fully installed offline yet</h1><p>Reconnect once and reopen the app. The complete offline release installs atomically before a new worker can replace the previous validated cache.</p></main>',{status:503,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});
 }
@@ -231,7 +235,7 @@ self.addEventListener('fetch',event=>{
 
   const runtimeCritical=url.pathname.endsWith('.js')||url.pathname.endsWith('.json');
   if(runtimeCritical){
-    event.respondWith((async()=>await fetchNetwork(event)||criticalOfflineResponse(url))());
+    event.respondWith(unlistedRuntimeResponse(url));
     return;
   }
 
