@@ -3,7 +3,6 @@ name: Exact-head CI Risk Coverage
 on:
   pull_request:
     branches: [main]
-  workflow_dispatch:
 
 permissions:
   contents: read
