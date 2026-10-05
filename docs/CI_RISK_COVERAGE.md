@@ -47,8 +47,10 @@ A passing repository workflow is not physical-device, assistive-technology, SME,
 
 Repository-controlled validation does not stop at the pull-request boundary.
 
-- **preview**: `Branch Release Assurance` waits for exact-push success of `MouldMaster Release QA`, `Mobile Browser QA`, `Question Quality 50-Pass`, and `MouldMaster Preview Pages` on the same preview SHA.
+- **preview**: `Branch Release Assurance` waits for exact-push success of `MouldMaster Release QA`, `Mobile Browser QA`, `Question Quality 50-Pass`, and `MouldMaster Preview Pages` on the same preview SHA. Preview publication itself additionally requires the merged preview PR's exact-head `Pre-merge Public Candidate` result.
 - **main**: the same gate waits for exact-push success of `MouldMaster Release QA`, `Mobile Browser QA`, `Question Quality 50-Pass`, `Deep Audit Governance`, `Release External Validation Boundary`, `MouldMaster Pages Release Readiness`, and `Main PR Provenance Guard` on the same main SHA.
 - The gate is read-only and fail-closed. It does not publish, rewrite branches, approve reviews, or replace the underlying workflow evidence.
-- Main Pages still rebuilds from the exact protected-main SHA and verifies the deployed release-hold/preview artifact. Preview Pages still requires merged-PR provenance, exact-head quality checks, a governed build, and live deployment verification.
+- Main Pages still rebuilds from the exact protected-main SHA and verifies the deployed release-hold/preview artifact. Preview Pages still requires merged-PR provenance, exact-head quality checks, the exact public-candidate gate, a governed build, and live deployment verification. Live verification checks source/release metadata plus SHA-256 and byte size for every offline-critical/precache asset against the governed Pages manifest.
 - External physical-device, assistive-technology, SME, learner-outcome, provider, signing, Store, and production-site evidence remains outside automated CI authority.
+
+- Branch assurance emits Markdown and JSON diagnostics with the first failed or unresolved dependency, exact workflow run identity, and exact source SHA. Transient GitHub workflow-state API reads are retried before being classified separately as an infrastructure/API error.
