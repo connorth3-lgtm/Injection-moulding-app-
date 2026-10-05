@@ -15,8 +15,15 @@ PINNED = {
     "setup-node": "820762786026740c76f36085b0efc47a31fe5020",
     "setup-python": "5fda3b95a4ea91299a34e894583c3862153e4b97",
     "upload-artifact": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+    "download-artifact": "3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c",
 }
-ANNOTATED_MAJOR = {"checkout": 7, "setup-node": 7, "setup-python": 7, "upload-artifact": 7}
+ANNOTATED_MAJOR = {
+    "checkout": 7,
+    "setup-node": 7,
+    "setup-python": 7,
+    "upload-artifact": 7,
+    "download-artifact": 8,
+}
 
 
 def need(ok, msg):
@@ -26,7 +33,7 @@ def need(ok, msg):
 
 def governed_refs(text, rel):
     refs = []
-    pattern = re.compile(r"actions/(checkout|setup-python|setup-node|upload-artifact)@([^\s#]+)(?:\s+#\s*v(\d+)(?:\.\d+(?:\.\d+)?)?)?")
+    pattern = re.compile(r"actions/(checkout|setup-python|setup-node|upload-artifact|download-artifact)@([^\s#]+)(?:\s+#\s*v(\d+)(?:\.\d+(?:\.\d+)?)?)?")
     for name, ref, annotated_major in pattern.findall(text):
         need(re.fullmatch(r"[0-9a-f]{40}", ref) is not None, f"mutable core Action reference is forbidden: actions/{name}@{ref} in {rel}")
         need(ref == PINNED[name], f"unreviewed core Action SHA for actions/{name} in {rel}: {ref}")
