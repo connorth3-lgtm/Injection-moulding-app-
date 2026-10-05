@@ -37,6 +37,21 @@ production_verifier = text("tools/verify_production_source.py")
 preview_verifier = text("tools/verify_preview_source.py")
 premerge_public_candidate = text(".github/workflows/premerge-public-candidate.yml")
 external_live_verifier = text("tools/verify_external_validation_live_bindings.py")
+queued_profile = text(".github/workflows/profile-queued-zenodo-data.yml")
+lower_profile = text(".github/workflows/profile-cross-process-lower-workpiece.yml")
+
+# Data-profiling jobs need write authority only for the final governed aggregate commit.
+# Checkout must not persist a write-capable Git credential across remote-data parsing.
+for workflow_name, workflow in (
+    ("queued Zenodo profiling", queued_profile),
+    ("cross-process lower profiling", lower_profile),
+):
+    need("permissions:\n  contents: write" in workflow, f"{workflow_name} publish workflow lost its explicit contents-write declaration")
+    need("persist-credentials: false" in workflow, f"{workflow_name} checkout must not persist write credentials")
+    need("GH_TOKEN: ${{ github.token }}" in workflow and "gh auth setup-git" in workflow,
+         f"{workflow_name} must expose write credentials only in the final publish step")
+    need(workflow.index("persist-credentials: false") < workflow.index("gh auth setup-git"),
+         f"{workflow_name} publish credential setup must occur after checkout credential isolation")
 
 # Main provenance is a read-only post-push audit. Native ruleset prevention is
 # authoritative; audit automation must never rewrite main after the fact.
