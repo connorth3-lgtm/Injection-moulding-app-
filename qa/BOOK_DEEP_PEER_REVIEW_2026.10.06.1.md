@@ -17,7 +17,7 @@ The Book remains **external HOLD**. The remaining HOLD is primarily human valida
 - Consolidated 46 governed modules into 20 reader-facing chapters.
 - Preserved every governed module ID exactly once for claim, evidence, SME and curriculum traceability.
 - Added substantial explanatory depth to process fundamentals, cycle logic, polymer structure, rheology, plasticising, warpage, DOE, capability, process monitoring, dimensional stability, multi-cavity processing and complex diagnostics.
-- Added an exact-byte editorial-expansion review binding the 12 changed modules to their complete existing governed claim inventories.
+- Added an exact-byte editorial-expansion review binding the 37 expanded governed modules to their complete existing governed claim inventories.
 - Kept independent human SME status at HOLD.
 - Kept reader grouping structural-only: it cannot promote publication, evidence, SME, accreditation or production status.
 - Rebound the current release to a fresh retained exact-head candidate while leaving accessibility, physical-device, curriculum-SME, Book-SME, learner-outcome, Windows and NZQA/provider evidence on HOLD.
