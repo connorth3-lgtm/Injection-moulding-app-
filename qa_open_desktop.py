@@ -219,7 +219,15 @@ require("npx --yes electron-builder" not in store, "Store package gate must not 
 
 publish = (ROOT / ".github" / "workflows" / "publish-open-desktop.yml").read_text(encoding="utf-8")
 for marker in [
+    "build-windows-release:",
+    "publish-release:",
+    "contents: read",
     "contents: write",
+    "Retain exact staged desktop release handoff",
+    "actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c",
+    "Verify staged release handoff identity and hashes",
+    "persist-credentials: false",
+    "Recheck governed current-main source before release write",
     "npm run dist:portable",
     "python qa_release.py",
     "python qa_open_desktop.py",
@@ -235,6 +243,12 @@ for marker in [
 ]:
     require(marker in publish, f"open desktop publish gate missing: {marker}")
 require("paths:\n      - 'version.json'" in publish, "desktop publishing must be driven by an explicit release-version change")
+builder_block = publish.split("  build-windows-release:", 1)[1].split("\n  publish-release:", 1)[0]
+publisher_block = publish.split("  publish-release:", 1)[1]
+require("contents: write" not in builder_block, "desktop build/package job must not receive repository write authority")
+require("contents: write" in publisher_block, "desktop release mutation must be isolated to the publication job")
+require("npm ci --no-audit --fund=false" not in publisher_block and "npm run dist:portable" not in publisher_block,
+        "desktop write-authority publication job must not run dependency installation or package build code")
 
 migration = (DESKTOP / "LEGACY_MIGRATION.md").read_text(encoding="utf-8")
 for marker in [
