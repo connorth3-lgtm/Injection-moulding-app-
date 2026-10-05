@@ -29,8 +29,8 @@
       "book-claim-resolution-high-risk-v1.json": "84d007a72c16b60e01ba392f9ca6e0f6d487cc85",
       "book-authored-foundations-v1.json": "e8f4347a488c377c15a86ea640a014b462c38ef9",
       "book-evidence-registry-v1.json": "24cbe1b1777fa4e2377226a8789815b7321d66a9",
-      "book-chapters-materials-machine-v1.json": "3bf3a804749b76ef58f6fd4e07731962947b4fdc",
-      "book-authored-remaining-v1.json": "0b59e024b617b0bcb3c9013435580edd183f8b33",
+      "book-chapters-materials-machine-v1.json": "1eb6d8ae71db922a579d4f69c0cffeee3408226c",
+      "book-authored-remaining-v1.json": "3689e85b4e14ef0dfdee9c3d3a9bf29072dc0e71",
       "book-worked-engineering-cases-v1.json": "05349fa9df9f0bb842c9847537c94e482fae166d",
       "book-evidence-enrichment-v2.json": "50814a93670e64318ab113b57fcf64e113eecc92",
       "book-material-grade-atlas-v1.json": "08eee66fc266a76806a4a9f85f06afde6427cd74",
@@ -38,7 +38,7 @@
       "material-catalog-v1.json": "88ac789aef21314cf2fbef194937ea3dca180471",
       "book-engineering-diagrams-v1.json": "c99d5310441b21c33749f27c8d731dca333b3648",
       "book-reader-architecture-v2.json": "db56f66558fd05cfed3bb05e07aaeedcd9f692d2",
-      "book-editorial-expansion-review-v1.json": "e4f1113dfa138d3a8a75cf296fc9aca779cf8d29"
+      "book-editorial-expansion-review-v1.json": "4734eb321ebb4d5fb58c8646f0b1f1f0591ca8b9"
     }
   },
   "canonicalAcademicEvidenceUrls": {
@@ -123,7 +123,7 @@
     "Instructional SVG diagrams are generic mechanism explanations with governed asset hashes and explicit non-scale boundaries; they are not CFD/FEA outputs, mould designs, machine-specific setup drawings, safety drawings or independent SME approval.",
     "Any later hold, conflicting evidence, stale controlling source, read/listen divergence, byte-integrity mismatch or claim-ledger regression must fail closed and block/revoke publication in release QA.",
     "The 20 reader-facing chapters are structural groupings of the 46 governed modules. Reader grouping adds no technical claim and cannot change a module's claim, publication, SME, accreditation or production status.",
-    "The 2026-10-06 editorial expansion across 37 governed modules is bound to each module's existing governed claim IDs by data/book-editorial-expansion-review-v1.json; the latest diagnostic/process-depth tranche remains within those existing claim boundaries and introduces no universal setpoint, machine-control authority or independent human SME approval."
+    "The 2026-10-06 editorial expansion across 37 governed modules is bound to each module's existing governed claim IDs by data/book-editorial-expansion-review-v1.json; the completed depth pass adds mechanism, measurement, discriminating-evidence and falsification guidance without adding universal setpoints, machine-control authority or independent human SME approval."
   ],
   "revocationRules": {
     "claimHoldOrConflict": "block-release",
