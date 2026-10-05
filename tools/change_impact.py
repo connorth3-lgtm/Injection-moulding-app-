@@ -8,6 +8,7 @@ breakage.
 from __future__ import annotations
 import argparse, json, subprocess
 from pathlib import Path
+from dependency_graph import impact as graph_impact
 
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -42,13 +43,14 @@ def changed_files(base:str,head:str="HEAD")->set[str]:
     return {x.strip() for x in out.splitlines() if x.strip()}
 
 def classify(files:set[str])->dict[str,bool]:
-    runtime=any(
+    graph_areas=set(graph_impact(files)["areas"])
+    runtime=bool(graph_areas & {"shell","assessment","process-data","measured-learning","book","preview-release"}) or any(
         p in RUNTIME_ROOT_FILES
         or p.startswith("src/")
         or ("/" not in p and p.endswith((".js",".css",".html")))
         for p in files
     )
-    release_metadata=any(p.startswith(RELEASE_METADATA_PREFIXES) for p in files)
+    release_metadata=("release-evidence" in graph_areas) or any(p.startswith(RELEASE_METADATA_PREFIXES) for p in files)
     browser=runtime or any(
         p in BROWSER_CONTRACT_FILES
         or (p.startswith("qa/") and p.endswith(".spec.js"))
@@ -66,21 +68,21 @@ def classify(files:set[str])->dict[str,bool]:
                  "qa_release_supply_chain.py"}
         for p in files
     )
-    assessment=any(
+    assessment=("assessment" in graph_areas) or any(
         p.startswith("assessment-") or p.startswith("qa_assessment_")
         or "/assessment/" in p or "learner-scope" in p
         for p in files
     )
-    process_data=any(
+    process_data=("process-data" in graph_areas) or any(
         "process-data" in p or "process_data" in p or "/process/" in p
         for p in files
     )
-    book=any(
+    book=("book" in graph_areas) or any(
         p.startswith("src/domains/learning/book-") or p.startswith("data/book-")
         or p.startswith("qa_book_") or p=="book-runtime.js"
         for p in files
     )
-    shell=any(
+    shell=("shell" in graph_areas) or any(
         p in {"index.html","service-worker.js","materials.html"}
         or p.startswith("src/domains/shell/")
         or p.startswith("src/domains/runtime-packs/shell-")
@@ -97,7 +99,7 @@ def classify(files:set[str])->dict[str,bool]:
         }
         for p in files
     )
-    measured_learning=any(
+    measured_learning=("measured-learning" in graph_areas) or any(
         p.startswith("data/measured-learning/")
         or p in {
             "measured-learning-library.js","measured-learning-library.css",
@@ -146,6 +148,7 @@ def classify(files:set[str])->dict[str,bool]:
         "candidate_binding":runtime or release_metadata,
         "metadata_only":bool(files) and release_metadata and not runtime,
         "tooling_only":bool(files) and tooling and not runtime and not release_metadata,
+        "graph_areas":sorted(graph_areas),
     }
 
 def main()->int:
@@ -161,11 +164,15 @@ def main()->int:
         print(json.dumps(payload,indent=2))
     elif a.format=="shell":
         for key,val in impact.items():
-            print(f"{key}={'true' if val else 'false'}")
+            if isinstance(val,bool):
+                print(f"{key}={'true' if val else 'false'}")
     else:
         print(f"{len(files)} changed file(s)")
         for key,val in impact.items():
-            print(f"{key}: {'yes' if val else 'no'}")
+            if isinstance(val,bool):
+                print(f"{key}: {'yes' if val else 'no'}")
+            else:
+                print(f"{key}: {val}")
     return 0
 
 if __name__=="__main__":
