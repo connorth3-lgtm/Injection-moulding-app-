@@ -103,8 +103,8 @@ def write_report(branch: str, sha: str, runs: dict[str, dict], verdict: str, rea
             handle.write(markdown)
 
 
-def api_runs(repository: str, sha: str, token: str) -> object:
-    query = urllib.parse.urlencode({"head_sha": sha, "event": "push", "per_page": 100})
+def api_runs(repository: str, branch: str, sha: str, token: str) -> object:
+    query = urllib.parse.urlencode({"branch": branch, "head_sha": sha, "event": "push", "per_page": 100})
     req = urllib.request.Request(
         f"https://api.github.com/repos/{repository}/actions/runs?{query}",
         headers={
@@ -141,7 +141,7 @@ def verify(repository: str, branch: str, sha: str, token: str) -> None:
     last_runs: dict[str, dict] = {}
     for attempt in range(1, ATTEMPTS + 1):
         try:
-            payload = api_runs(repository, sha, token)
+            payload = api_runs(repository, branch, sha, token)
         except RuntimeError as exc:
             reason = f"workflow-state API unavailable: {exc}"
             write_report(branch, sha, last_runs, "error", reason)
