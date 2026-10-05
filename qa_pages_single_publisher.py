@@ -233,7 +233,7 @@ for marker in (
     'data-mm-release-hold="true"',
     "No learner application runtime",
     "release-hold artifact boundary mismatch",
-    "Rebind the copied manifest's index.html integrity record",
+    'manifest_path = preview_target / "pages-manifest.json"',
     'assets["index.html"] = {',
 ):
     need(marker in hold_builder, f"release-hold builder safeguard missing: {marker}")
