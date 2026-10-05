@@ -24,15 +24,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Validate production-source guard and live API contract on PRs
+      - name: Validate production-source guard contract on PRs
         if: github.event_name == 'pull_request'
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
         run: |
+          # Do not retroactively require the existing main base to satisfy a policy
+          # introduced after it merged. Publication authorization is enforced only
+          # on the exact protected-main push that would actually publish.
           python3 tools/verify_production_source.py --self-test
-          python3 tools/verify_production_source.py \
-            --repository "${{ github.repository }}" \
-            --source-sha "${{ github.event.pull_request.base.sha }}"
+          python3 tools/verify_main_ruleset.py --self-test
       - name: Require merged-PR provenance before publication (native protection mandatory)
         if: github.event_name != 'pull_request'
         env:
