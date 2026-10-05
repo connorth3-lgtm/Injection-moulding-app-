@@ -113,8 +113,16 @@ def api_runs(repository: str, sha: str, token: str) -> object:
             "User-Agent": "mouldmaster-branch-assurance",
         },
     )
-    with urllib.request.urlopen(req, timeout=20) as response:
-        return json.load(response)
+    detail = "unknown API error"
+    for attempt in range(1, 5):
+        try:
+            with urllib.request.urlopen(req, timeout=20) as response:
+                return json.load(response)
+        except (HTTPError, URLError, TimeoutError, json.JSONDecodeError) as exc:
+            detail = str(exc)
+            if attempt < 4:
+                time.sleep(attempt * 2)
+    raise RuntimeError(f"GitHub workflow-state query failed after 4 attempts: {detail}")
 
 
 def verify(repository: str, branch: str, sha: str, token: str) -> None:
