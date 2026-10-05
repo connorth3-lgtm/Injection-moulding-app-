@@ -150,6 +150,6 @@ qa = text('.github/workflows/qa.yml')
 desktop = text('.github/workflows/open-desktop-build.yml')
 need('python qa_process_data_deep_dive_50.py' in qa, 'release QA must gate the 50-case data deep dive')
 need('python qa_process_data_deep_dive_50.py' in desktop, 'Windows build must gate the 50-case data deep dive')
-need("find . -maxdepth 1 -type f -name '*.js'" in qa, 'release JS syntax gate must discover root JavaScript dynamically')
+need("Repository-wide JavaScript syntax" in qa, 'release JS syntax gate must discover root JavaScript dynamically')
 
 print('MouldMaster 50-case process-data deep-dive QA passed (50 unique cases; 10 per domain; 4 signals each; 3,600 deterministic synthetic cycles; recovery invariants; evidence-first/local-only; offline + desktop packaged)')
