@@ -72,7 +72,6 @@ for marker in [
     "Independent trusted latest-head human approval verified",
     "all_required_success",
     "pulls/$PR_NUMBER/reviews",
-    "Independent latest-head human approval verified",
     '.user.type == "User"',
     "non-canonical exact head SHA",
     'any(.pull_requests[]?; (.number == $pr and .base.ref == "main"))',
