@@ -145,4 +145,19 @@ jobs:
           --expected-source-sha "${{ github.sha }}"
           --convergence-attempts 12
           --convergence-delay 2
+      - name: Verify preview deployment remains stable after race window
+        run: |
+          sleep 15
+          python3 tools/verify_pages_hold.py \
+            --base-url "${{ needs.deploy.outputs.page_url }}" \
+            --expected-source-sha "${{ github.sha }}" \
+            --convergence-attempts 6 \
+            --convergence-delay 2
+      - name: Reconfirm preview is still on the deployed SHA after race window
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          python3 tools/verify_preview_source.py
+          --repository "${{ github.repository }}"
+          --source-sha "${{ github.sha }}"
 
