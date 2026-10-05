@@ -110,26 +110,46 @@ def write_report(branch: str, sha: str, runs: dict[str, dict], verdict: str, rea
 
 
 def api_runs(repository: str, branch: str, sha: str, token: str) -> object:
-    query = urllib.parse.urlencode({"branch": branch, "head_sha": sha, "event": "push", "per_page": 100})
-    req = urllib.request.Request(
-        f"https://api.github.com/repos/{repository}/actions/runs?{query}",
-        headers={
-            "Accept": "application/vnd.github+json",
-            "Authorization": f"Bearer {token}",
-            "X-GitHub-Api-Version": "2022-11-28",
-            "User-Agent": "mouldmaster-branch-assurance",
-        },
-    )
-    detail = "unknown API error"
-    for attempt in range(1, 5):
-        try:
-            with urllib.request.urlopen(req, timeout=20) as response:
-                return json.load(response)
-        except (HTTPError, URLError, TimeoutError, json.JSONDecodeError) as exc:
-            detail = str(exc)
-            if attempt < 4:
-                time.sleep(attempt * 2)
-    raise RuntimeError(f"GitHub workflow-state query failed after 4 attempts: {detail}")
+    all_rows: list[dict] = []
+    for page in range(1, 11):
+        query = urllib.parse.urlencode({
+            "branch": branch,
+            "head_sha": sha,
+            "event": "push",
+            "per_page": 100,
+            "page": page,
+        })
+        req = urllib.request.Request(
+            f"https://api.github.com/repos/{repository}/actions/runs?{query}",
+            headers={
+                "Accept": "application/vnd.github+json",
+                "Authorization": f"Bearer {token}",
+                "X-GitHub-Api-Version": "2022-11-28",
+                "User-Agent": "mouldmaster-branch-assurance",
+            },
+        )
+        detail = "unknown API error"
+        payload: object = {}
+        for attempt in range(1, 5):
+            try:
+                with urllib.request.urlopen(req, timeout=20) as response:
+                    payload = json.load(response)
+                break
+            except (HTTPError, URLError, TimeoutError, json.JSONDecodeError) as exc:
+                detail = str(exc)
+                if attempt < 4:
+                    time.sleep(attempt * 2)
+        else:
+            raise RuntimeError(f"GitHub workflow-state query failed after 4 attempts: {detail}")
+        if not isinstance(payload, dict):
+            raise RuntimeError("GitHub workflow-state query returned a non-object payload")
+        page_rows = payload.get("workflow_runs") or []
+        if not isinstance(page_rows, list):
+            raise RuntimeError("GitHub workflow-state query returned invalid workflow_runs")
+        all_rows.extend(row for row in page_rows if isinstance(row, dict))
+        if len(page_rows) < 100:
+            return {"workflow_runs": all_rows}
+    raise RuntimeError("GitHub workflow-state query exceeded the 1000-run pagination safety bound")
 
 
 def verify(repository: str, branch: str, sha: str, token: str) -> None:
