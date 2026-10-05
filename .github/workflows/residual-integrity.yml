@@ -46,7 +46,7 @@ jobs:
           fetch-depth: 0
       - name: Classify residual-integrity impact
         id: impact
-        run: python3 tools/ci_impact.py
+        run: python3 tools/ci_impact.py --governed-candidate
       - name: Skip unrelated update
         if: steps.impact.outputs.residual_integrity != 'true'
         run: echo "Residual Data Integrity QA skipped: latest update does not affect residual-integrity contracts."
