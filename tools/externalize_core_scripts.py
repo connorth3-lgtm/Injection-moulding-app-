@@ -275,6 +275,27 @@ def runtime_transform(name: str, source: str) -> str:
             fail("certificate print runtime transform did not match exactly once")
         if "document.write(" in transformed or "document.writeln(" in transformed:
             fail("certificate print runtime transform left document.write active")
+        standards_marker = "function renderStandards(){"
+        if transformed.count(standards_marker) != 1:
+            fail("frozen standards renderer source drifted; expected one renderStandards function")
+        standards_helper = r'''function pvSafeExternalUrl(raw){
+  const url=String(raw||'').trim();
+  return /^https:\/\/[^\s]+$/i.test(url)?url:'';
+}
+function pvStandardsLink(item,label){
+  const url=pvSafeExternalUrl(item?.url);
+  return url?`<a class="standard-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`:'<span class="tiny muted">Official source URL unavailable</span>';
+}
+'''
+        transformed = transformed.replace(standards_marker, standards_helper + standards_marker, 1)
+        standards_links = {
+            '<a class="standard-link" href="${item.url}" target="_blank" rel="noopener">Open official/reference source ↗</a>': "${pvStandardsLink(item,'Open official/reference source ↗')}",
+            '<a class="standard-link" href="${item.url}" target="_blank" rel="noopener">Open source ↗</a>': "${pvStandardsLink(item,'Open source ↗')}",
+        }
+        for old, new in standards_links.items():
+            if transformed.count(old) != 1:
+                fail(f"frozen standards link source drifted for marker: {old}")
+            transformed = transformed.replace(old, new, 1)
         for old, new in SIMULATOR_SEMANTIC_REPLACEMENTS.items():
             if transformed.count(old) != 1:
                 fail(f"frozen simulator semantic source drifted for marker: {old}")
@@ -572,6 +593,11 @@ def check_state() -> None:
     for marker in ("w.opener=null", "d.createElement(\"style\")", "d.body.appendChild(box)", "w.print()"):
         if marker not in hardened:
             fail(f"certificate print runtime hardening marker missing: {marker}")
+    for marker in ("function pvSafeExternalUrl(raw)", "function pvStandardsLink(item,label)", 'rel="noopener noreferrer"', "Official source URL unavailable"):
+        if marker not in hardened:
+            fail(f"standards-link hardening marker missing: {marker}")
+    if 'href="${item.url}"' in hardened:
+        fail("active standards renderer must not interpolate raw governed URLs into href")
     final_slot = expected[expected_names[-1]]
     for marker in ("MM_INLINE_HANDLER_BRIDGE", "ALLOWED_CALLS", "executeHandler"):
         if marker not in final_slot:
