@@ -27,6 +27,8 @@ desktop_build = text(".github/workflows/open-desktop-build.yml")
 question_quality = text(".github/workflows/question-quality-50-pass.yml")
 external_validation = text(".github/workflows/release-external-validation.yml")
 risk_coverage = text(".github/workflows/ci-risk-coverage.yml")
+branch_assurance = text(".github/workflows/branch-release-assurance.yml")
+branch_assurance_verifier = text("tools/verify_branch_assurance.py")
 protection_helper = text(".github/scripts/apply-main-ruleset.sh")
 protection_doc = text(".github/MAIN_PROTECTION.md")
 ruleset_verifier = text("tools/verify_main_ruleset.py")
@@ -171,6 +173,45 @@ for marker in (
 need(
     "mouldmaster-pages-site-publish" in pages,
     "main Pages deploy must share one publication concurrency domain with preview Pages",
+)
+
+# Preview and main must also converge after merge/push on one exact SHA. This
+# read-only meta-gate waits for the real branch-specific CI and deployment runs;
+# it does not duplicate their work or grant mutation/publication permissions.
+for marker in (
+    "name: Branch Release Assurance",
+    "branches: [main, preview]",
+    "exact-push-assurance:",
+    "actions: read",
+    "BRANCH_ASSURANCE_BRANCH",
+    "BRANCH_ASSURANCE_SHA",
+    "tools/verify_branch_assurance.py",
+):
+    need(marker in branch_assurance, f"branch release assurance workflow missing marker: {marker}")
+for forbidden in ("contents: write", "pages: write", "pull-requests: write"):
+    need(forbidden not in branch_assurance, f"branch release assurance must remain read-only: {forbidden}")
+for marker in (
+    '"main": (',
+    '"preview": (',
+    '"MouldMaster Release QA"',
+    '"Mobile Browser QA"',
+    '"Question Quality 50-Pass"',
+    '"MouldMaster Pages Release Readiness"',
+    '"Main PR Provenance Guard"',
+    '"MouldMaster Preview Pages"',
+    '"event": "push"',
+    "head_sha",
+):
+    need(marker in branch_assurance_verifier, f"branch assurance verifier missing marker: {marker}")
+branch_assurance_self_test = subprocess.run(
+    [sys.executable, str(ROOT / "tools/verify_branch_assurance.py"), "--self-test"],
+    cwd=ROOT,
+    capture_output=True,
+    text=True,
+)
+need(
+    branch_assurance_self_test.returncode == 0,
+    f"branch-assurance verifier self-test failed: {(branch_assurance_self_test.stderr or branch_assurance_self_test.stdout).strip()}",
 )
 
 preview_self_test = subprocess.run(
@@ -402,5 +443,5 @@ print(
     "MouldMaster repository governance QA passed "
     "(main-only independent human-review native policy; six required contexts; live-preserving helper; "
     "post-push audit read-only; main/preview Pages publication provenance serialized and source-bound; Pages requires exact native protection; dual locked desktop toolchains; "
-    "guard-gated pruning; architecture debt gate)"
+    "guard-gated pruning; preview/main exact-push release assurance; architecture debt gate)"
 )
