@@ -11,6 +11,7 @@ capturing helper/unrelated pages, and non-public repository paths remain inacces
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import time
@@ -160,6 +161,31 @@ def verify_once(base_url: str, expected_source_sha: str | None = None) -> None:
     for required_asset in ("index.html","version.json","service-worker.js","deployment.json"):
         if required_asset not in assets:
             raise AssertionError(f"preview pages-manifest is missing governed asset: {required_asset}")
+
+    # Prove that the live offline-critical runtime bytes match the exact hashes
+    # recorded by the governed build, rather than trusting metadata/source SHA alone.
+    critical_assets = set(manifest.get("precache_assets") or ())
+    critical_assets.update({"index.html", "version.json", "service-worker.js", "deployment.json"})
+    for rel in sorted(critical_assets):
+        record = assets.get(rel)
+        if not isinstance(record, dict):
+            raise AssertionError(f"preview pages-manifest has no hash record for critical asset: {rel}")
+        expected_hash = str(record.get("sha256") or "")
+        expected_bytes = record.get("bytes")
+        if re.fullmatch(r"[0-9a-f]{64}", expected_hash) is None or not isinstance(expected_bytes, int):
+            raise AssertionError(f"preview pages-manifest has invalid integrity metadata for critical asset: {rel}")
+        live_status, live_body = fetch(urljoin(root, "preview/" + rel))
+        if live_status != 200:
+            raise AssertionError(f"critical preview asset unavailable: {rel} -> HTTP {live_status}")
+        if len(live_body) != expected_bytes:
+            raise AssertionError(
+                f"critical preview asset byte-size mismatch: {rel} live={len(live_body)} expected={expected_bytes}"
+            )
+        live_hash = hashlib.sha256(live_body).hexdigest()
+        if live_hash != expected_hash:
+            raise AssertionError(
+                f"critical preview asset SHA-256 mismatch: {rel} live={live_hash} expected={expected_hash}"
+            )
 
     html_source_sha = require_match(r'<meta\s+name="mm-preview-source-sha"\s+content="([0-9a-f]{40})"', preview_text, "preview HTML source SHA")
     html_web_release = require_match(r'<meta\s+name="mm-preview-web-release"\s+content="([^"]+)"', preview_text, "preview HTML web release")
