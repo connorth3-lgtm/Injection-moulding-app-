@@ -26,22 +26,7 @@ jobs:
           fetch-depth: 0
       - name: Classify browser impact
         id: classify
-        shell: bash
-        run: |
-          set -euo pipefail
-          BASE="${{ github.event.before || '' }}"
-          if [ -z "$BASE" ] || [[ "$BASE" =~ ^0+$ ]] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then
-            if [ -n "${{ github.base_ref || '' }}" ]; then
-              git fetch --no-tags origin "${{ github.base_ref }}":refs/remotes/origin/${{ github.base_ref }}
-              BASE="$(git merge-base "origin/${{ github.base_ref }}" HEAD)"
-            else
-              BASE="$(git rev-parse HEAD^ 2>/dev/null || git rev-parse HEAD)"
-            fi
-          fi
-          python3 tools/change_impact.py --base "$BASE" --head HEAD --format shell | tee /tmp/mm-browser-impact.env
-          browser="$(awk -F= '$1=="browser"{print $2}' /tmp/mm-browser-impact.env)"
-          echo "browser=$browser" >> "$GITHUB_OUTPUT"
-          echo "Browser-impact update: $browser" >> "$GITHUB_STEP_SUMMARY"
+        run: python3 tools/ci_impact.py
 
   browser-chromium:
     needs: impact
