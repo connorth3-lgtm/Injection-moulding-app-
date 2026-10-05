@@ -1239,12 +1239,59 @@
           ]
         }
       ]
+    },
+    {
+      "id": "worked-filling-boundary-defect-v1",
+      "chapterId": "flash",
+      "title": "Filling-boundary diagnosis: local flash without reflex clamp adjustment",
+      "synthetic": true,
+      "setup": "A synthetic four-cavity mould produces a thin flash at the same shutoff feature in cavity 2 while cavities 1, 3 and 4 remain clean. The flash appears after thermal stabilisation. Global machine actuals and part masses remain similar to the established baseline, and an authorised visual inspection later finds contamination at the cavity-2 shutoff.",
+      "observations": [
+        "The defect is repeatably cavity-specific and location-specific.",
+        "The other cavities remain free of flash under the same global machine cycle.",
+        "Global machine actuals and overall part-mass pattern remain close to the prior baseline.",
+        "The symptom appears at a defined shutoff feature after the mould reaches a stable thermal condition.",
+        "Authorised inspection identifies contamination at the affected local shutoff."
+      ],
+      "assumptions": [
+        "All observations are synthetic teaching data.",
+        "The example assumes no machine or mould limit is exceeded and creates no instruction to increase clamp force or reduce viscosity.",
+        "Any shutoff inspection or cleaning follows approved mould and site procedures."
+      ],
+      "calculationSteps": [
+        "Start with at least three plausible mechanisms: a local shutoff gap/contamination condition, a cavity-local pressure/thermal contribution, and a global clamp or pressure condition.",
+        "Use cavity distribution to weaken a purely global explanation: one cavity at one feature behaves differently while the other cavities share the same global machine cycle.",
+        "Use the authorised inspection result as supporting evidence for the local shutoff hypothesis, but require repeatable post-intervention recovery before promoting it as causal.",
+        "If the flash persists after the local condition is restored, reopen the pressure, thermal, alignment and tooling hypotheses instead of compensating blindly with a global setting."
+      ],
+      "interpretation": "The cavity-specific boundary and local shutoff evidence make a local tooling/contamination mechanism more plausible than a global clamp-force explanation. The evidence is not complete until the local condition is corrected under approved procedure and the flash response is shown to recover repeatably without creating a new defect.",
+      "boundaries": [
+        "Do not increase clamp force, pressure or temperature from this example; machine, mould, material and site limits remain controlling.",
+        "Containment or temporary symptom reduction is not automatic root-cause proof.",
+        "Physical inspection, cleaning or tooling work requires approved maintenance authority.",
+        "Product acceptance remains governed by the applicable quality plan."
+      ],
+      "sourceIds": [
+        "ISO-294-1-2017",
+        "ISO-20430-2020"
+      ],
+      "claims": [
+        {
+          "id": "worked-filling-boundary-defect-v1-claim-1",
+          "statement": "A repeatable cavity- and feature-specific flash pattern can be used to prioritise local tooling or shutoff hypotheses over purely global explanations, but repeatable recovery evidence is required before promoting the local mechanism as causal.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "ISO-294-1-2017",
+            "ISO-20430-2020"
+          ]
+        }
+      ]
     }
   ],
   "humanReviewScope": {
     "status": "hold",
     "contract": "data/book-sme-review-v1.json",
-    "required": "All 25 worked cases are attached to chapters inside the 46-chapter independent human SME scope; each case requires arithmetic/reasoning, assumptions, evidence fit, synthetic-data labelling and non-universal-boundary review."
+    "required": "All 26 worked cases are attached to chapters inside the 46-chapter independent human SME scope; each case requires arithmetic/reasoning, assumptions, evidence fit, synthetic-data labelling and non-universal-boundary review."
   },
   "authorityBoundary": {
     "productionUse": "advisory-only",
