@@ -101,7 +101,7 @@ The Material Data Atlas is correctly retained as a reference appendix rather tha
 
 ### 1. Visual teaching density
 
-The Book now has 18 governed engineering diagrams spanning cycle sequence, plasticising, pressure/transfer, feed path, cooling, fountain flow, gate-seal response, ejection, shrinkage/warpage, weld-line formation, fibre orientation, capability, DOE interaction, diagnostic reasoning, multi-cavity balance and dimensional conditioning. The visual layer is now proportionate to the 20-reader-chapter structure. Future figures should be added only when they teach a mechanism better than prose, not to increase illustration count.
+The Book now has 21 governed engineering diagrams spanning cycle sequence, plasticising, pressure/transfer, feed path, cooling, fountain flow, gate-seal response, ejection, shrinkage/warpage, weld-line formation, fibre orientation, capability, DOE interaction, diagnostic reasoning, multi-cavity balance and dimensional conditioning. The visual layer is now proportionate to the 20-reader-chapter structure. Future figures should be added only when they teach a mechanism better than prose, not to increase illustration count.
 
 ### 2. Runtime complexity
 
@@ -134,7 +134,7 @@ Internally, the Book now meets the current structural and instructional-depth ta
 - 46 governed traceability modules;
 - about 20,400 words of governed teaching content;
 - 25 worked engineering cases;
-- 18 governed engineering diagrams;
+- 21 governed engineering diagrams;
 - all reader chapters at or above the current ~850-word lower target;
 - expanded prose byte-bound to existing governed claims;
 - publication and external-validation boundaries fail closed.
