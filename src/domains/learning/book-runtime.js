@@ -168,7 +168,16 @@
   function validateWorkedCases(data,declared,sourceMap,manifestData,auth){
     if(data?.schemaVersion!==1||data?.bookId!=='mouldmaster-book'||data?.release!==VERSION||data?.status!=='authorized-synthetic-teaching'||!Array.isArray(data.cases)||!Array.isArray(data.sourceSeeds))throw new Error('Book worked-case ledger identity check failed');
     const permit=auth?.workedCasesAuthorization;if(permit?.status!=='authorized'||permit?.release!==VERSION||permit?.ledger!=='data/book-worked-engineering-cases-v1.json'||permit?.caseCount!==27||permit?.claimCount!==27||permit?.independentSmeStatus!=='hold')throw new Error('Book worked-case publication authorization missing');
-    for(const source of data.sourceSeeds){if(!source?.id||!source?.title||!source?.url||!source?.scope)throw new Error('Incomplete worked-case evidence source');if(sourceMap.has(source.id))throw new Error(`Duplicate worked-case source id: ${source.id}`);sourceMap.set(source.id,source);manifestData.sourceSeeds.push(source);}
+    for(const source of data.sourceSeeds){
+      if(!source?.id||!source?.title||!source?.url||!source?.scope)throw new Error('Incomplete worked-case evidence source');
+      const existing=sourceMap.get(source.id);
+      if(existing){
+        const fields=['type','issuer','title','url','checked','state','scope','canonicalUrl'];
+        if(fields.some(key=>String(existing[key]??'')!==String(source[key]??'')))throw new Error(`Conflicting worked-case source id: ${source.id}`);
+        continue;
+      }
+      sourceMap.set(source.id,source);manifestData.sourceSeeds.push(source);
+    }
     if(data.cases.length!==27)throw new Error('Book worked-case count mismatch');const caseIds=new Set(),claimIds=new Set();
     for(const item of data.cases){
       if(!item?.id||caseIds.has(item.id))throw new Error(`Duplicate or missing worked-case id: ${item?.id||'missing'}`);caseIds.add(item.id);

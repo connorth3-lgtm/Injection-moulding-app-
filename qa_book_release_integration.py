@@ -301,6 +301,13 @@ hot=actual_claim_evidence.get('hot-runners') or []
 need({'HUSKY-SCVG-HOT-SPRUE-SERVICE-2024','MOLD-MASTERS-HOT-RUNNER-USER-MANUAL-2020','BASF-ULTRAMID-PROCESSING'} <= set(hot), 'hot-runner final governed evidence disappeared from reader references')
 flash_case=next((case for case in worked_cases.get('cases', []) if case.get('id')=='worked-filling-boundary-defect-v1'), None)
 need(flash_case is not None and 'BASF-INJECTION-TROUBLESHOOTER' in flash_case.get('sourceIds', []) and 'BASF-INJECTION-TROUBLESHOOTER' in (flash_case.get('claims') or [{}])[0].get('sourceIds', []), 'r12 filling-boundary case must expose the direct BASF troubleshooting evidence anchor')
+claim_sources={source.get('id'):source for source in claim_evidence.get('sourceSeeds', [])}
+worked_sources={source.get('id'):source for source in worked_cases.get('sourceSeeds', [])}
+shared_worked=set(claim_sources) & set(worked_sources)
+need(shared_worked=={'BIELENBERG-2025-SWITCHOVER-REVIEW','RJG-DECOUPLED-WORKSHOP'}, 'worked-case/final-claim shared evidence identity set drift')
+for source_id in shared_worked:
+    need(worked_sources[source_id]==claim_sources[source_id], f'shared worked-case evidence metadata conflicts with final claim evidence: {source_id}')
+need('Conflicting worked-case source id' in book_runtime and "fields=['type','issuer','title','url','checked','state','scope','canonicalUrl']" in book_runtime, 'Book runtime must accept only metadata-identical shared worked-case evidence records')
 readers=reader_architecture.get('readerChapters', [])
 need(len(readers)==20, 'reader evidence transparency must cover 20 reader chapters')
 for reader in readers:
