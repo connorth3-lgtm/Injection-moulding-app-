@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#08101d">
 <title>MouldMaster Academy — Support</title>
-<style>body{max-width:850px;margin:40px auto;padding:0 20px;background:#08101d;color:#edf5ff;font:16px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}a{color:#69a8ff}h1,h2{line-height:1.2}.box{padding:14px;border:1px solid #355474;border-radius:12px;background:#101c2f}.muted{color:#a9bdd6}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}button,.action{display:inline-block;padding:9px 12px;border:1px solid #41658d;border-radius:9px;background:#182b45;color:#edf5ff;font:inherit;text-decoration:none;cursor:pointer}button:hover,.action:hover{background:#203a5d}.status{font-weight:700}</style>
+<style>body{max-width:850px;margin:40px auto;padding:0 20px;background:#08101d;color:#edf5ff;font:16px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}a{color:#69a8ff}h1,h2{line-height:1.2}.box{padding:14px;border:1px solid #355474;border-radius:12px;background:#101c2f}.muted{color:#a9bdd6}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}button,.action{display:inline-block;padding:9px 12px;border:1px solid #41658d;border-radius:9px;background:#182b45;color:#edf5ff;font:inherit;text-decoration:none;cursor:pointer}button:hover,.action:hover{background:#203a5d}.status{font-weight:700}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#091525;border:1px solid #294766;border-radius:9px;padding:12px;font-size:13px}summary{cursor:pointer;font-weight:700}</style>
 </head>
 <body>
 <h1>MouldMaster Academy — Support</h1>
@@ -31,6 +31,11 @@ Legacy Windows recovery content: <span id="mmRecovery">2026.08.21.1</span><br>
 <a class="action" href="https://github.com/connorth3-lgtm/Injection-moulding-app-/issues/new?template=learner-problem.yml" rel="noopener">Report a learner problem</a>
 </div>
 <p class="muted">If you copy diagnostics, review the JSON before posting it. Do not attach progress backups, analytics exports, assessment answers or process-data files to a public issue.</p>
+<details id="mmSelfDiagnostic">
+<summary>Preview self-diagnostic details</summary>
+<p class="muted">This view is generated locally from bounded runtime state. It does not include learner identity, answers, notes or raw process data.</p>
+<pre id="mmDiagnosticDetails">Diagnostics not loaded yet.</pre>
+</details>
 </div>
 <h2>App does not update</h2><p>For the installed PWA, connect to the internet, open MouldMaster, close it fully and reopen it. Offline content is refreshed through the service worker after a successful online check.</p>
 <h2>Windows update blocked safely</h2><p>The legacy recovery launcher and the open Electron desktop are separate release lanes. If the legacy Windows updater says an update was blocked, keep the current installed recovery copy. The updater is designed to reject content that fails validation rather than replace a known-good copy.</p>
@@ -50,10 +55,12 @@ Legacy Windows recovery content: <span id="mmRecovery">2026.08.21.1</span><br>
  }catch(_){const s=document.getElementById('mmVersionStatus');if(s)s.textContent='Showing the bundled release snapshot because version.json could not be refreshed.'}
  const status=document.getElementById('mmHealthStatus');
  const label=result=>result.status==='ok'?`Deployment health: current (${result.source_sha?.slice(0,12)||'verified'}, runtime ${result.assessment_runtime||'unknown'}).`:result.status==='offline'?'Deployment health: offline — using the local app copy.':result.status==='not-applicable'?'Deployment health: local desktop/development copy; public Pages check is not applicable.':result.status==='mismatch'?'Deployment health: mismatch detected. Reopen online and report this if it persists.':'Deployment health: current public metadata could not be reached.';
- async function runHealth(){if(!window.MM_PRODUCTION_HEALTH){status.textContent='Local production diagnostics are unavailable in this copy.';return}status.textContent='Checking this app copy…';const result=await window.MM_PRODUCTION_HEALTH.checkDeployment();status.textContent=label(result)}
+ function renderDetails(){const out=document.getElementById('mmDiagnosticDetails');if(!out||!window.MM_PRODUCTION_HEALTH)return;const s=window.MM_PRODUCTION_HEALTH.snapshot();out.textContent=JSON.stringify({deployment:s.deployment,environment:s.environment,runtime:s.runtime,event_counts:s.event_counts},null,2)}
+ async function runHealth(){if(!window.MM_PRODUCTION_HEALTH){status.textContent='Local production diagnostics are unavailable in this copy.';return}status.textContent='Checking this app copy…';const result=await window.MM_PRODUCTION_HEALTH.checkDeployment();status.textContent=label(result);renderDetails()}
  document.getElementById('mmHealthRun')?.addEventListener('click',runHealth);
  document.getElementById('mmHealthCopy')?.addEventListener('click',async()=>{if(!window.MM_PRODUCTION_HEALTH){status.textContent='Local production diagnostics are unavailable in this copy.';return}const ok=await window.MM_PRODUCTION_HEALTH.copySafeSnapshot();status.textContent=ok?'Safe diagnostics copied. Review them before posting.':'Could not copy diagnostics automatically on this device.'});
- document.getElementById('mmHealthClear')?.addEventListener('click',()=>{window.MM_PRODUCTION_HEALTH?.clear();status.textContent='Local production diagnostics cleared.'});
+ document.getElementById('mmHealthClear')?.addEventListener('click',()=>{window.MM_PRODUCTION_HEALTH?.clear();status.textContent='Local production diagnostics cleared.';renderDetails()});
+ document.getElementById('mmSelfDiagnostic')?.addEventListener('toggle',event=>{if(event.target.open)renderDetails()});
  runHealth();
 })();
 </script>
