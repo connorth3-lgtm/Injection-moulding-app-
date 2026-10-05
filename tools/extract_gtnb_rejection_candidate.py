@@ -24,7 +24,7 @@ def signal(sid,source_channel,semantic,unit,rows,key,formula_count):
     return {'id':sid,'label':sid.replace('-',' '),'sourceChannel':source_channel,'semantic':semantic,'unit':unit,'sourceValueMode':'delivered-direct-or-cached-formula-result','sourceInjectionFormulaCellCount':formula_count,'representation':rep,'representationFingerprint':sha(rep)}
 def main():
     source=next(s for s in SOURCES if s['datasetId']=='mendeley-gtnb4j7bfx-v1')
-    file_id,name,expected=source['files'][0]; _,meta=public_files(source['shortId'],source['version']); _,_,urls=resolve_file(meta,file_id,name,source['shortId'],source['version'])
+    file_id,name,expected=source['files'][0]; _,meta=public_files(source['shortId'],source['version']); _,_,urls=resolve_file(meta,file_id,name,source['shortId'],source['version'],expected)
     td=tempfile.TemporaryDirectory(); path=Path(td.name)/name
     try:
         download_first(urls,path); digest=hashlib.sha256(path.read_bytes()).hexdigest()
