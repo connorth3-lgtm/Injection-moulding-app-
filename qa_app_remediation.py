@@ -123,17 +123,24 @@ need("needs:" not in publisher_block, "legacy Pages publisher guard must start i
 run = subprocess.run(["python", "tools/verify_production_source.py", "--self-test"], cwd=ROOT, capture_output=True, text=True)
 need(run.returncode == 0, f"production-source verifier self-test failed: {run.stdout}\n{run.stderr}")
 
-# The exact Pages Actions token/request contract must be exercised before merge against
-# the current main base commit, not discovered for the first time after a squash merge.
+# PRs exercise the production-verifier contract without retroactively requiring the
+# existing main base to satisfy a policy introduced after it merged. Exact live
+# authorization remains mandatory only for the protected-main push that can publish.
 for marker in (
-    "Validate production-source guard and live API contract on PRs",
-    'GITHUB_TOKEN: ${{ github.token }}',
-    '--source-sha "${{ github.event.pull_request.base.sha }}"',
+    "Validate production-source guard contract on PRs",
+    "python3 tools/verify_production_source.py --self-test",
+    "python3 tools/verify_main_ruleset.py --self-test",
+    "Require merged-PR provenance before publication",
+    "--require-native-protection",
     "contents: read",
     "pull-requests: read",
     "actions: read",
 ):
-    need(marker in pages, f"Pages live provenance preflight missing: {marker}")
+    need(marker in pages, f"Pages publication/contract split missing: {marker}")
+need(
+    'github.event.pull_request.base.sha' not in pages,
+    "Pages PR validation must not retroactively apply current publication policy to the historical main base",
+)
 
 # Pages and the post-merge guard must use the same GitHub CLI API negotiation contract.
 # The verifier may not add a separate REST-version header or raw HTTP transport.
@@ -267,4 +274,4 @@ for key in ("web_release", "desktop_release", "android_release", "windows_recove
     need(str(version_meta[key]) in compatibility_matrix, f"client compatibility matrix stale for {key}")
 need("external HOLD" in compatibility_matrix, "client compatibility matrix must preserve external validation boundary")
 
-print("MouldMaster app-wide remediation QA passed: pre-merge live Pages provenance plus earliest-start legacy publisher guard, aligned gh api negotiation, cross-index fail-closed provenance, single authoritative owner-scoped engineering case store, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
+print("MouldMaster app-wide remediation QA passed: PR-safe Pages verifier contract plus protected-main publication authorization and earliest-start legacy publisher guard, aligned gh api negotiation, cross-index fail-closed provenance, single authoritative owner-scoped engineering case store, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
