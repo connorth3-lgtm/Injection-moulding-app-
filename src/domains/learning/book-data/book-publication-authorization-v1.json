@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "bookId": "mouldmaster-book",
-  "version": "2026.10.03.3",
+  "version": "2026.10.06.1",
   "status": "authorized",
   "authorizationType": "governed-book-publication",
-  "authorizedAt": "2026-09-14",
+  "authorizedAt": "2026-10-06",
   "publicationScope": "generic-evidence-governed-reference",
   "authorizationBasis": {
     "projectDirective": "Complete the full MouldMaster Book evidence, qualification, runtime-parity and publication-governance pass.",
@@ -15,26 +15,30 @@
     "sourceRevision": "7ef28bd8b02994223e320fda64e99808357d3219",
     "releaseQaRun": 34799571637,
     "releaseQaConclusion": "success",
-    "readListenParityQa": "qa_book_release_integration.py"
+    "readListenParityQa": "qa_book_release_integration.py",
+    "editorialExpansionReview": "data/book-editorial-expansion-review-v1.json",
+    "readerArchitecture": "data/book-reader-architecture-v2.json"
   },
   "runtimeIntegrity": {
     "algorithm": "git-blob-sha1",
-    "scope": "Exact served bytes for every payload that can influence Book publication promotion or its independent-SME status. Git object identity is checked in-browser before JSON parsing; any mismatch fails closed.",
+    "scope": "Exact served bytes for every payload that can influence Book publication promotion, reader composition, editorial expansion review or independent-SME status. Git object identity is checked in-browser before JSON parsing; any mismatch fails closed.",
     "gitBlobSha1ByFile": {
       "book-manifest-v1.json": "59efb8048451389ebb610566e13607d2d9c47cdd",
-      "book-sme-review-v1.json": "f4228ad49f799197c9d44ff2d3b70de394fbabc3",
+      "book-sme-review-v1.json": "86648d8f0b7dc998c0c640140d87438c8d52ada2",
       "book-qualification-resolution-all-v1.json": "c6da26d0c4ed3608b1a19b1551856c1d80c03a8f",
       "book-claim-resolution-high-risk-v1.json": "84d007a72c16b60e01ba392f9ca6e0f6d487cc85",
-      "book-authored-foundations-v1.json": "5d03416c4f857d41de9890546a6de5c649f86094",
+      "book-authored-foundations-v1.json": "3fcd5cdd976551fcc188562eff653033f5f4d4bf",
       "book-evidence-registry-v1.json": "24cbe1b1777fa4e2377226a8789815b7321d66a9",
-      "book-chapters-materials-machine-v1.json": "db728583dd832c1998c8b2ac32ce97b281929047",
-      "book-authored-remaining-v1.json": "ee0788e10630aaf6d0d8c64e2d69e40c14968f1f",
-      "book-worked-engineering-cases-v1.json": "01dc3fcf208456882e657ec85161240da4c893ab",
-      "book-evidence-enrichment-v2.json": "8cc61276c28455fe05c5d17fbdc33355b23d883a",
+      "book-chapters-materials-machine-v1.json": "36e603e4dd4dd32fd608b6e3518f900b0e9e8ac8",
+      "book-authored-remaining-v1.json": "b2e77eb98355ba04ce0cba07f30ebbd7d13118c6",
+      "book-worked-engineering-cases-v1.json": "05349fa9df9f0bb842c9847537c94e482fae166d",
+      "book-evidence-enrichment-v2.json": "50814a93670e64318ab113b57fcf64e113eecc92",
       "book-material-grade-atlas-v1.json": "08eee66fc266a76806a4a9f85f06afde6427cd74",
       "book-material-regional-evidence-v1.json": "4a42fa97f737b13271518d63672d3c4a01421e14",
       "material-catalog-v1.json": "88ac789aef21314cf2fbef194937ea3dca180471",
-      "book-engineering-diagrams-v1.json": "062233729e58d79295bbbaece8f1fe5f8551f1ac"
+      "book-engineering-diagrams-v1.json": "c99d5310441b21c33749f27c8d731dca333b3648",
+      "book-reader-architecture-v2.json": "db56f66558fd05cfed3bb05e07aaeedcd9f692d2",
+      "book-editorial-expansion-review-v1.json": "03b3251f35ac1b85c84bcac6fad48db6acc541fd"
     }
   },
   "canonicalAcademicEvidenceUrls": {
@@ -117,7 +121,9 @@
     "Evidence-enrichment sections are exact-byte authorized generic teaching content recovered from the previously validated editorial stack; source-specific values retain source context, synthetic examples remain labelled, and independent human SME review remains a separate HOLD.",
     "The Material Data Atlas is an exact-byte authorized technical-review appendix. It consumes all 260 validated canonical exact-grade records plus every one of the 284 governed Asia/Australia/New Zealand evidence rows; the 89-profile regional index is reconciliation-only. Catalogue and regional values retain manufacturer, grade, source, test-condition, lifecycle, process and value-status context; they are not independently SME-approved, universal settings, guaranteed specifications or production recipes. The technical-review appendix is excluded from the source-evidence-reviewed listen-all path.",
     "Instructional SVG diagrams are generic mechanism explanations with governed asset hashes and explicit non-scale boundaries; they are not CFD/FEA outputs, mould designs, machine-specific setup drawings, safety drawings or independent SME approval.",
-    "Any later hold, conflicting evidence, stale controlling source, read/listen divergence, byte-integrity mismatch or claim-ledger regression must fail closed and block/revoke publication in release QA."
+    "Any later hold, conflicting evidence, stale controlling source, read/listen divergence, byte-integrity mismatch or claim-ledger regression must fail closed and block/revoke publication in release QA.",
+    "The 20 reader-facing chapters are structural groupings of the 46 governed modules. Reader grouping adds no technical claim and cannot change a module's claim, publication, SME, accreditation or production status.",
+    "The 2026-10-06 editorial expansion is bound to existing governed claim IDs by data/book-editorial-expansion-review-v1.json; it adds instructional explanation but no new universal setpoint, machine-control authority or independent human SME approval."
   ],
   "revocationRules": {
     "claimHoldOrConflict": "block-release",
@@ -130,12 +136,14 @@
     "workedCaseLedgerOrEvidenceMismatch": "fail-closed-runtime",
     "evidenceEnrichmentLedgerOrEvidenceMismatch": "fail-closed-runtime",
     "materialAtlasLedgerOrEvidenceMismatch": "fail-closed-runtime",
-    "diagramLedgerOrAssetMismatch": "fail-closed-runtime"
+    "diagramLedgerOrAssetMismatch": "fail-closed-runtime",
+    "readerArchitectureOrCoverageMismatch": "fail-closed-runtime",
+    "editorialExpansionReviewOrByteMismatch": "fail-closed-runtime"
   },
   "workedCasesAuthorization": {
     "status": "authorized",
     "authorizedAt": "2026-10-03",
-    "release": "2026.10.01.3",
+    "release": "2026.10.06.1",
     "ledger": "data/book-worked-engineering-cases-v1.json",
     "caseCount": 18,
     "claimCount": 18,
@@ -147,7 +155,7 @@
   "evidenceEnrichmentAuthorization": {
     "status": "authorized",
     "authorizedAt": "2026-09-18",
-    "release": "2026.10.01.3",
+    "release": "2026.10.06.1",
     "ledger": "data/book-evidence-enrichment-v2.json",
     "ledgerId": "book-evidence-enrichment-2026-09-18-v2",
     "chapterCount": 10,
@@ -192,16 +200,35 @@
     "authorityBoundary": "technical-review appendix only; excluded from source-reviewed listen-all; no universal setpoints, guaranteed specifications, validated production recipe or automatic machine-control authority"
   },
   "learnerFacingPublicationLabel": "Source evidence reviewed",
-  "learnerFacingPublicationMeaning": "The governed chapter wording has passed MouldMaster claim/source and publication controls. This label is not independent human SME approval, accreditation, production validation or machine-control authority.",
+  "learnerFacingPublicationMeaning": "The governed module wording has passed MouldMaster claim/source and publication controls. The Book groups 46 governed modules into 20 reader chapters for readability; grouping does not change evidence status. This label is not independent human SME approval, accreditation, production validation or machine-control authority.",
   "diagramAuthorization": {
     "status": "authorized-instructional-diagrams",
     "authorizedAt": "2026-10-03",
-    "release": "2026.10.01.3",
+    "release": "2026.10.06.1",
     "ledger": "data/book-engineering-diagrams-v1.json",
     "diagramCount": 8,
     "scope": "Eight generic explanatory SVG diagrams bound to existing Book chapters; each asset hash is recorded in the governed diagram ledger.",
     "independentSmeStatus": "hold",
     "independentSmeContract": "data/book-sme-review-v1.json",
     "authorityBoundary": "instructional only; not scale drawings, simulation results, mould designs, safety drawings, production limits or machine-control authority"
+  },
+  "readerArchitectureAuthorization": {
+    "status": "authorized-derived-structure",
+    "release": "2026.10.06.1",
+    "ledger": "data/book-reader-architecture-v2.json",
+    "readerChapterCount": 20,
+    "governedModuleCount": 46,
+    "noNewTechnicalClaims": true,
+    "independentSmeStatus": "hold",
+    "authorityBoundary": "Reader chapters are editorial groupings only; underlying governed module state, claims, evidence and SME status remain authoritative."
+  },
+  "editorialExpansionAuthorization": {
+    "status": "authorized-repository-technical-source-review",
+    "release": "2026.10.06.1",
+    "ledger": "data/book-editorial-expansion-review-v1.json",
+    "moduleCount": 12,
+    "noNewClaimIds": true,
+    "independentSmeStatus": "hold",
+    "authorityBoundary": "Expanded prose is authorized only within the mapped existing governed claim scope; no independent human SME approval or production authority is implied."
   }
 }
