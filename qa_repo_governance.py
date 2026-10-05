@@ -459,12 +459,17 @@ for marker in [
 ]:
     need(marker in external_validation, f"external-validation boundary workflow missing marker: {marker}")
 
-# Release QA must discover executable JavaScript from the filesystem and keep
-# the architecture debt ceiling as a release gate.
+# Release QA must discover all first-party executable JavaScript/Python from
+# the filesystem and keep the architecture debt ceiling as a release gate.
 for marker in [
-    "find . -maxdepth 1 -type f -name '*.js'",
-    "find src/domains -type f -name '*.js'",
-    "find desktop/electron/src desktop/electron/scripts -type f -name '*.cjs'",
+    "Repository-wide JavaScript syntax",
+    "-name '*.js'",
+    "-name '*.cjs'",
+    "-name '*.mjs'",
+    "node --check",
+    "Repository-wide Python syntax",
+    "-name '*.py'",
+    "python -m py_compile",
     "run: python qa_architecture_debt.py",
 ]:
     need(marker in release_qa, f"release QA cleanup contract missing marker: {marker}")
