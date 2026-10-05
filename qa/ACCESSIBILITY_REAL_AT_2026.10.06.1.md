@@ -5,15 +5,15 @@ This packet governs **human** assistive-technology validation for web release `2
 ## Exact release boundary
 
 - web release: `2026.10.06.1`
-- retained pre-merge public candidate source commit: `303a9ef423ef483c0bf1e76b36fc1d7fad158ea7`
-- public-runtime fingerprint: `sha256:fc5ddd5901308fb6c6f3dcf1733b939f5de6403a2093c2595b97d514324d16bd`
-- retained physical candidate: `physical-pwa-candidate-303a9ef423ef483c0bf1e76b36fc1d7fad158ea7` (`11318068856`)
-- candidate build run: `37244511647` (`Pre-merge Public Candidate`)
-- artifact ZIP digest: `sha256:c1017bd9c576cc568a0461c45b8a08a52b76bb55b6751ec88b379b588357d693`
-- artifact retention expiry: `2027-01-02T23:38:54Z`
+- retained pre-merge public candidate source commit: `2200aca525121de10d54d8663af00535b39979f0`
+- public-runtime fingerprint: `sha256:366b6f3a458d58deee47b032163ec5e36ebded30655085dd15e0f8007d7aa948`
+- retained physical candidate: `physical-pwa-candidate-2200aca525121de10d54d8663af00535b39979f0` (`11364245102`)
+- candidate build run: `37353639908` (`Pre-merge Public Candidate`)
+- artifact ZIP digest: `sha256:8164ae1c30649f6f55934559304ba3b3d96d8a4bd50893b096b2cba048ba79ab`
+- artifact retention expiry: `2027-01-03T18:08:00Z`
 - evidence contract: `data/accessibility-real-at-validation-v1.json`
 
-This is a candidate **rebind**, not new AT evidence. Release `2026.10.06.1` is bound to exact pre-merge learner-runtime candidate `303a9ef423ef483c0bf1e76b36fc1d7fad158ea7` / `sha256:fc5ddd5901308fb6c6f3dcf1733b939f5de6403a2093c2595b97d514324d16bd`. No earlier human or device evidence is relabelled. If learner-facing runtime bytes change again, this packet must be rebound before new validation is recorded; the mutable `preview` branch tip is never validation identity.
+This is a candidate **rebind**, not new AT evidence. Release `2026.10.06.1` is bound to exact pre-merge learner-runtime candidate `2200aca525121de10d54d8663af00535b39979f0` / `sha256:366b6f3a458d58deee47b032163ec5e36ebded30655085dd15e0f8007d7aa948`. No earlier human or device evidence is relabelled. If learner-facing runtime bytes change again, this packet must be rebound before new validation is recorded; the mutable `preview` branch tip is never validation identity.
 
 ## Required matrix
 
@@ -33,13 +33,13 @@ Every row must be tested by a human reviewer using the named real assistive tech
 3. `AT-03` — Open sourced exact-grade details and understand property/process evidence boundaries.
 4. `AT-04` — Complete core learner assessment interactions and confirm state/errors are announced meaningfully.
 5. `AT-05` — Create or edit a Mould Master evidence case without losing semantic context.
-6. `AT-06` — Search for a Book topic from the global search, open a late Book chapter from deep in the contents, confirm focus/reading starts at the chapter heading, then return to contents without losing the reader's place.
+6. `AT-06` — Search for a Book topic from the global search, open a late reader chapter from deep in the 20-chapter contents, confirm focus/reading starts at the chapter heading, then return to contents without losing the reader's place.
 7. `AT-07` — Exercise the collapsed Book publication/review and accuracy/assurance disclosures; confirm their summaries, expanded content and independent-SME HOLD remain understandable without excessive verbosity.
 8. `AT-08` — Exercise dialogs, menus, tab-like controls, expandable regions and form validation with keyboard/AT navigation.
 9. `AT-09` — Confirm status changes that matter to task completion are announced without forcing excessive verbosity.
 10. `AT-10` — Confirm headings, landmarks, accessible names and focus order remain understandable at realistic zoom/text settings, including the Home page hierarchy where Today's focus precedes the secondary Workbench and the compact desktop More-tools navigation where applicable.
 11. `AT-11` — Open Standards & readiness and confirm ISO/NZQA boundaries, current-vs-expired standards, and external HOLD language remain understandable without implying certification, approval or competence.
-12. `AT-12` — In affected Book chapters, navigate the worked-example heading, data table/list content, calculation steps, boundaries and evidence anchors; confirm the synthetic-data and independent-SME-HOLD wording is understandable with the named real assistive technology.
+12. `AT-12` — Within affected reader chapters, navigate governed module headings and the worked-example heading, data table/list content, calculation steps, boundaries and evidence anchors; confirm the synthetic-data and independent-SME-HOLD wording is understandable with the named real assistive technology.
 
 ## Evidence rules
 
