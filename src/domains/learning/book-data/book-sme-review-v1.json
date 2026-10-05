@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "bookId": "mouldmaster-book",
-  "release": "2026.10.06.4",
+  "release": "2026.10.06.5",
   "manifestVersion": "2026.09.14.1",
   "status": "hold",
   "policy": "Human SME review is independent external evidence. Automated QA may verify coverage, fingerprints/identity and review-record shape, but must never create or infer an SME approval.",
@@ -104,7 +104,8 @@
     "worked-process-monitoring-alarm-v1",
     "worked-black-speck-source-map-v1",
     "worked-complex-diagnostics-v1",
-    "worked-filling-boundary-defect-v1"
+    "worked-filling-boundary-defect-v1",
+    "worked-process-baseline-record-v1"
   ],
   "workedCaseReviewRule": "Each workedCaseId must be reviewed inside its owning governed module across the same six requiredDimensions. Where a module has multiple cases, all of them are in scope. Automation must not create or infer approval.",
   "enrichmentChapterIds": [
