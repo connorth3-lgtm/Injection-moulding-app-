@@ -1,6 +1,6 @@
 # MouldMaster curriculum SME review — 2026.10.06.1
 
-This packet governs the **human** semantic review of all 120 canonical Academy lessons for web release `2026.10.06.1`. It is separate from the 46-chapter Book SME review.
+This packet governs the **human** semantic review of all 120 canonical Academy lessons for web release `2026.10.06.1`. It is separate from the Book SME review, which covers 46 governed modules presented through 20 reader-facing chapters.
 
 ## Governed contract
 
