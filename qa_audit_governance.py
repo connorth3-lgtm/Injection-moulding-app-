@@ -124,7 +124,7 @@ for marker in (
     "validate_helper(helper_payload)",
     "No learner application runtime",
     "release-hold artifact boundary mismatch",
-    "Rebind the copied manifest's index.html integrity record",
+    'manifest_path = preview_target / "pages-manifest.json"',
 ):
     need(marker in hold_builder, f"release-hold builder does not enforce the deployed public boundary: {marker}")
 for marker in (
