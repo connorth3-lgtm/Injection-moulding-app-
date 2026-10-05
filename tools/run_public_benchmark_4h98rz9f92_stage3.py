@@ -66,8 +66,9 @@ def fname(x): return str(x.get("filename") or x.get("name") or "").strip()
 
 
 def furl(x):
-    # Construct the explicit versioned route from the pinned dataset/file
-    # identity instead of trusting a metadata convenience URL.
+    d=x.get("content_details") or x.get("contentDetails") or {}
+    for u in (d.get("download_url"),d.get("downloadUrl"),x.get("download_url"),x.get("downloadUrl")):
+        if u: return str(u)
     return f"{API_ROOT}/datasets/{DATASET_ID}/files/{fid(x)}/file_downloaded?version={VERSION}"
 
 
