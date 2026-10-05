@@ -26,6 +26,18 @@ UNIVERSAL = {
     "MouldMaster Domain Foundation QA",
     "Deep Audit Governance",
 }
+WORKFLOW_PATHS = {
+    "MouldMaster Release QA": ".github/workflows/qa.yml",
+    "MouldMaster Domain Foundation QA": ".github/workflows/domain-foundation-qa.yml",
+    "Deep Audit Governance": ".github/workflows/deep-audit-governance.yml",
+    "Mobile Browser QA": ".github/workflows/mobile-browser-qa.yml",
+    "Premium UI QA": ".github/workflows/premium-ui-qa.yml",
+    "MouldMaster Physical PWA Contract QA": ".github/workflows/pwa-physical-device-contract.yml",
+    "Open Desktop Build": ".github/workflows/open-desktop-build.yml",
+    "MouldMaster Pages Release Readiness": ".github/workflows/pages.yml",
+    "Release External Validation Boundary": ".github/workflows/release-external-validation.yml",
+    "Question Quality 50-Pass": ".github/workflows/question-quality-50-pass.yml",
+}
 RISK_RULES = [
     (
         "browser/runtime",
@@ -158,6 +170,8 @@ def api_runs() -> dict[str, dict]:
         if not run_matches_pr(run):
             continue
         name = str(run.get("name") or "")
+        if name not in WORKFLOW_PATHS or run.get("path") != WORKFLOW_PATHS[name]:
+            continue
         prior = latest.get(name)
         key = (str(run.get("updated_at") or run.get("created_at") or ""), int(run.get("id") or 0))
         prior_key = (
