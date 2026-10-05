@@ -45,13 +45,16 @@ need("name: MouldMaster Pages Release Readiness" in pages, "Pages workflow name 
 need("permissions: {}" in pages, "Pages workflow must deny token permissions by default")
 for marker in (
     "production-source:\n    permissions:\n      contents: read\n      pull-requests: read\n      actions: read",
-    "publisher-guard:\n    if: github.event_name == 'push'\n    permissions:\n      contents: read\n      actions: write\n      pages: write",
+    "legacy-containment:\n    if: github.event_name == 'push'\n    permissions:\n      contents: read\n      actions: write",
+    "publisher-guard:\n    if: >-",
+    "needs: [production-source, legacy-containment]",
+    "pages: write",
     "build:\n    permissions:\n      contents: read",
     "deploy:\n    permissions:\n      contents: read\n      pull-requests: read\n      actions: read\n      pages: write\n      id-token: write",
     "verify:\n    permissions:\n      contents: read\n      pull-requests: read\n      actions: read",
 ):
     need(marker in pages, f"Pages job-scoped permission contract missing: {marker}")
-need(pages.count("actions: write") == 1, "actions:write must be limited to the publisher guard")
+need(pages.count("actions: write") == 2, "actions:write must be limited to early legacy containment and the post-provenance publisher guard")
 need(pages.count("pages: write") == 2, "pages:write must be limited to publisher containment and deploy")
 need(pages.count("id-token: write") == 1, "OIDC write permission must be limited to deploy")
 for marker in (
@@ -65,6 +68,10 @@ for forbidden in ("actions/deploy-pages@", "actions/upload-pages-artifact@", "pa
     need(forbidden not in preview_pages, f"Preview workflow must not publish the repository Pages site: {forbidden}")
 for marker in (
     "Manual dispatch is contract-only",
+    "legacy-containment:",
+    "--contain-only",
+    "needs.production-source.result == 'success'",
+    "Confirm workflow-mode Pages publisher after provenance",
     "Manual dispatch does not receive Pages mutation or publication authority.",
     "Checkout exact main source before deployment",
     "Recheck current protected-main provenance before deployment",
