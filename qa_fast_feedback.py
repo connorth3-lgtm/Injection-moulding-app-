@@ -72,6 +72,7 @@ def main() -> int:
             "qa_book_claim_coverage.py",
             "qa_book_derived_governance.py",
             "qa_book_release_integration.py",
+            "qa_book_reader_architecture.py",
         ]:
             if (ROOT / qa).exists():
                 commands.append([sys.executable, qa])
