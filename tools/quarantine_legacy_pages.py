@@ -80,9 +80,18 @@ def request_json(token: str, url: str) -> object:
 
 
 def legacy_runs(token: str, repository: str, source_sha: str) -> list[dict]:
-    query = urlencode({"head_sha": source_sha, "per_page": 100})
-    payload = request_json(token, f"https://api.github.com/repos/{repository}/actions/runs?{query}")
-    rows = payload.get("workflow_runs", []) if isinstance(payload, dict) else []
+    rows: list[dict] = []
+    for page in range(1, 11):
+        query = urlencode({"head_sha": source_sha, "per_page": 100, "page": page})
+        payload = request_json(token, f"https://api.github.com/repos/{repository}/actions/runs?{query}")
+        page_rows = payload.get("workflow_runs", []) if isinstance(payload, dict) else []
+        if not isinstance(page_rows, list):
+            raise SystemExit("GitHub Actions workflow_runs payload is invalid")
+        rows.extend(run for run in page_rows if isinstance(run, dict))
+        if len(page_rows) < 100:
+            break
+    else:
+        raise SystemExit("Legacy Pages run query exceeded the 1000-run pagination safety bound")
     return [
         run
         for run in rows
@@ -227,11 +236,21 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repository", required=True)
     parser.add_argument("--source-sha", required=True)
+    parser.add_argument(
+        "--contain-only",
+        action="store_true",
+        help="cancel/inspect same-SHA legacy Pages runs without mutating repository Pages settings",
+    )
     args = parser.parse_args()
 
     token = os.environ.get("GITHUB_TOKEN", "").strip()
     if not token:
         raise SystemExit("GITHUB_TOKEN is required")
+
+    if args.contain_only:
+        contain_same_sha_legacy_run(token, args.repository, args.source_sha)
+        print("Pages legacy containment passed without mutating repository Pages settings.")
+        return
 
     switched = try_switch_to_workflow_mode(token, args.repository)
     # Even after a successful settings switch, a legacy run may already have been

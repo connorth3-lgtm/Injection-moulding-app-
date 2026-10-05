@@ -142,6 +142,12 @@ test('Mould Master uses one owner-scoped IndexedDB store with one-time legacy im
   links=await page.evaluate(id=>window.MM_ENGINEERING_STORE.linksForCase(id),materialCase);
   expect(links.some(x=>x.kind==='process-dataset'&&x.targetId==='qa-process-dataset-001'&&x.meta?.label==='QA prepared dataset')).toBeTruthy();
 
+  const invalidLinkKind=await page.evaluate(async id=>{
+    try{await window.MM_ENGINEERING_STORE.linkCase(id,'constructor','bad-target',{});return null}
+    catch(error){return String(error.message||error)}
+  },materialCase);
+  expect(invalidLinkKind).toContain('Unknown engineering link kind');
+
   const context=await page.evaluate(id=>window.MM_MOULD_MASTER_WORKSPACE.engineeringContext(id),materialCase);
   expect(context.materialGradeId).toBe('mat-lotte-infino-nh-1033');
   expect(context.machineId).toBe('IMM-07');

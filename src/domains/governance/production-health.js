@@ -1,8 +1,8 @@
-/* MouldMaster local production health diagnostics — 2026.09.01.1 */
+/* MouldMaster local production health diagnostics — 2026.10.05.2 */
 (function(){
 'use strict';
 
-const VERSION='2026.09.01.1';
+const VERSION='2026.10.06.1';
 const STORE_KEY='mm_production_health_v1';
 const MAX_EVENTS=120;
 const ALLOWED_KINDS=new Set([
@@ -88,6 +88,21 @@ async function checkDeployment(){
 }
 
 function eventCounts(events){const counts={};for(const event of events||[])counts[event.kind]=(counts[event.kind]||0)+1;return counts}
+function runtimeState(){
+  const packs=[...document.scripts].map(s=>sameOriginAsset(s.src||'')).filter(x=>x.includes('runtime-pack')).sort();
+  const visible=[...document.querySelectorAll('.view:not(.hidden)')].map(v=>safeToken(v.id||'',64)).filter(Boolean).slice(0,4);
+  return {
+    shell_finalized:safeToken(window.MM_APP_SHELL_FINALIZED||'',64)||null,
+    runtime_asset_version:safeToken(window.MM_RUNTIME_ASSET_VERSION||'',80)||null,
+    app_shell_ready:!!window.MM_APP_SHELL,
+    book_ready:!!window.MMBook,
+    process_data_ready:!!window.MM_PROCESS_DATA_DIAGNOSTICS,
+    standards_readiness_ready:!!window.MM_STANDARDS_READINESS,
+    active_views:visible,
+    loaded_runtime_packs:[...new Set(packs)].slice(0,24),
+    service_worker_controller_asset:navigator.serviceWorker?.controller?sameOriginAsset(navigator.serviceWorker.controller.scriptURL):null
+  };
+}
 function snapshot(){
   const store=readStore();
   return {
@@ -96,6 +111,7 @@ function snapshot(){
     privacy:'Local-only diagnostic summary. No learner identity, notes, answers, free text, raw process data, full URLs, query strings or exact event timestamps.',
     environment:{mode:displayMode(),browser:browserFamily(),platform:platformFamily(),online:!!navigator.onLine,service_worker_controlled:!!navigator.serviceWorker?.controller},
     runtime_asset_version:safeToken(window.MM_RUNTIME_ASSET_VERSION||'',80)||null,
+    runtime:runtimeState(),
     deployment:store.lastDeployment||null,
     event_counts:eventCounts(store.events),
     recent_signals:(store.events||[]).slice(-20).map(event=>{const out={kind:event.kind};for(const key of ['asset','code','state','runtime','source'])if(event[key])out[key]=event[key];return out})
@@ -132,6 +148,6 @@ if('serviceWorker' in navigator){
   }).catch(()=>{});
 }
 
-window.MM_PRODUCTION_HEALTH=Object.freeze({version:VERSION,storageKey:STORE_KEY,checkDeployment,snapshot,copySafeSnapshot,clear});
+window.MM_PRODUCTION_HEALTH=Object.freeze({version:VERSION,storageKey:STORE_KEY,checkDeployment,snapshot,runtimeState,copySafeSnapshot,clear});
 setTimeout(()=>checkDeployment(),400);
 })();

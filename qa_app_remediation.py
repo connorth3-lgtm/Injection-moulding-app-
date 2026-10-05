@@ -107,33 +107,50 @@ schema = json.loads(text("data/materials/material-grade.schema.json"))
 need("identity" in schema["properties"], "material schema missing identity variant object")
 need("production" in schema["properties"], "material schema missing production provenance object")
 
-# Production artifact/build work must wait for both provenance verification and the
-# independently-started legacy Pages publisher guard. The guard itself must not wait
-# behind provenance because cancellation latency is release-safety critical.
+# Production artifact/build work must wait for provenance plus the post-provenance
+# Pages settings guard. Same-SHA legacy cancellation starts independently with actions
+# authority only; Pages settings mutation must not occur until provenance succeeds.
 for marker in (
     "production-source:",
+    "legacy-containment:",
     "publisher-guard:",
     "tools/verify_production_source.py",
     "Require merged-PR provenance before publication",
+    "--contain-only",
+    "needs: [production-source, legacy-containment]",
     "needs: [production-source, publisher-guard]",
 ):
     need(marker in pages, f"Pages pre-deploy provenance/publisher gate missing: {marker}")
+containment_block = pages.split("  legacy-containment:", 1)[1].split("\n  publisher-guard:", 1)[0]
 publisher_block = pages.split("  publisher-guard:", 1)[1].split("\n  build:", 1)[0]
-need("needs:" not in publisher_block, "legacy Pages publisher guard must start independently of production-source")
+need("needs:" not in containment_block, "legacy Pages containment must start independently of production-source")
+need("actions: write" in containment_block and "pages: write" not in containment_block,
+     "independent legacy Pages containment must be actions-only")
+need("needs: [production-source, legacy-containment]" in publisher_block,
+     "Pages settings mutation must wait for provenance and legacy containment")
+need("needs.production-source.result == 'success'" in publisher_block,
+     "Pages settings mutation must require successful exact main provenance")
 run = subprocess.run(["python", "tools/verify_production_source.py", "--self-test"], cwd=ROOT, capture_output=True, text=True)
 need(run.returncode == 0, f"production-source verifier self-test failed: {run.stdout}\n{run.stderr}")
 
-# The exact Pages Actions token/request contract must be exercised before merge against
-# the current main base commit, not discovered for the first time after a squash merge.
+# PRs exercise the production-verifier contract without retroactively requiring the
+# existing main base to satisfy a policy introduced after it merged. Exact live
+# authorization remains mandatory only for the protected-main push that can publish.
 for marker in (
-    "Validate production-source guard and live API contract on PRs",
-    'GITHUB_TOKEN: ${{ github.token }}',
-    '--source-sha "${{ github.event.pull_request.base.sha }}"',
+    "Validate production-source guard contract on PRs",
+    "python3 tools/verify_production_source.py --self-test",
+    "python3 tools/verify_main_ruleset.py --self-test",
+    "Require merged-PR provenance before publication",
+    "--require-native-protection",
     "contents: read",
     "pull-requests: read",
     "actions: read",
 ):
-    need(marker in pages, f"Pages live provenance preflight missing: {marker}")
+    need(marker in pages, f"Pages publication/contract split missing: {marker}")
+need(
+    'github.event.pull_request.base.sha' not in pages,
+    "Pages PR validation must not retroactively apply current publication policy to the historical main base",
+)
 
 # Pages and the post-merge guard must use the same GitHub CLI API negotiation contract.
 # The verifier may not add a separate REST-version header or raw HTTP transport.
@@ -212,17 +229,34 @@ need("new MutationObserver" not in materials, "Materials domain still uses docum
 need("mutationScope:'changed-subtrees'" in a11y, "accessibility safety net is not constrained to changed subtrees")
 
 ci_contract = text("docs/CI_RISK_COVERAGE.md")
-for marker in ("MouldMaster Release QA", "MouldMaster Domain Foundation QA", "Deep Audit Governance", "Mobile Browser QA", "Premium UI QA", "MouldMaster Physical PWA Contract QA", "Open Desktop Build", "MouldMaster Pages Release Readiness", "Release External Validation Boundary", "Question Quality 50-Pass"):
+for marker in ("MouldMaster Release QA", "MouldMaster Domain Foundation QA", "Deep Audit Governance", "Mobile Browser QA", "Premium UI QA", "MouldMaster Physical PWA Contract QA", "Open Desktop Build", "MouldMaster Pages Release Readiness", "Release External Validation Boundary", "Question Quality 50-Pass", "Branch Release Assurance"):
     need(marker in ci_contract, f"CI risk coverage contract missing workflow: {marker}")
 release_workflow = text(".github/workflows/qa.yml")
 need("python qa_app_remediation.py" in release_workflow, "release QA must execute the full-app remediation contract")
+for marker in (
+    "Repository-wide JavaScript syntax",
+    "-name '*.js'",
+    "-name '*.cjs'",
+    "-name '*.mjs'",
+    "node --check",
+    "Repository-wide Python syntax",
+    "-name '*.py'",
+    "python -m py_compile",
+    "Repository-wide JSON syntax",
+    "json.loads",
+    "Repository-wide JSON syntax passed",
+):
+    need(marker in release_workflow, f"release QA whole-code syntax coverage missing: {marker}")
 risk_meta = text("tools/verify_ci_risk_coverage.py")
 risk_workflow = text(".github/workflows/ci-risk-coverage.yml")
+premerge = text(".github/workflows/premerge-public-candidate.yml")
 domain_workflow = text(".github/workflows/domain-foundation-qa.yml")
 need("Exact-head CI risk coverage meta-gate" not in mobile, "Mobile Browser QA must not collapse cross-workflow governance failures into browser evidence")
-for marker in ("name: Exact-head CI Risk Coverage","python tools/verify_ci_risk_coverage.py","CI_RISK_HEAD_SHA","CI_RISK_ATTEMPTS","actions: read"):
+need("pull_request:\n    branches: [ main, preview ]" in premerge, "Pre-merge Public Candidate must run on every main/preview PR")
+need("\n    paths:\n" not in premerge.split("pull_request:",1)[1].split("workflow_dispatch:",1)[0], "Pre-merge Public Candidate must not be path-filtered")
+for marker in ("name: Exact-head CI Risk Coverage","python tools/verify_ci_risk_coverage.py","CI_RISK_HEAD_SHA","CI_RISK_PR_NUMBER",'ref: ${{ github.event.pull_request.head.sha }}',"CI_RISK_ATTEMPTS","actions: read"):
     need(marker in risk_workflow, f"dedicated CI risk-coverage workflow missing marker: {marker}")
-for marker in ("MouldMaster Release QA","MouldMaster Domain Foundation QA","Deep Audit Governance","Mobile Browser QA","CI_RISK_HEAD_SHA","head_sha","pull_request","conclusion"):
+for marker in ("MouldMaster Release QA","MouldMaster Domain Foundation QA","Deep Audit Governance","Mobile Browser QA","CI_RISK_HEAD_SHA","PR_NUMBER","run_matches_pr","head_sha","pull_request","conclusion","GitHub CI risk-coverage query failed after 4 attempts"):
     need(marker in risk_meta, f"CI risk meta-gate missing exact-head enforcement marker: {marker}")
 need("pull_request:\n    branches: [main]\n  workflow_dispatch:" in domain_workflow, "Domain Foundation QA must run on every pull request to main")
 
@@ -264,4 +298,4 @@ for key in ("web_release", "desktop_release", "android_release", "windows_recove
     need(str(version_meta[key]) in compatibility_matrix, f"client compatibility matrix stale for {key}")
 need("external HOLD" in compatibility_matrix, "client compatibility matrix must preserve external validation boundary")
 
-print("MouldMaster app-wide remediation QA passed: pre-merge live Pages provenance plus earliest-start legacy publisher guard, aligned gh api negotiation, cross-index fail-closed provenance, single authoritative owner-scoped engineering case store, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")
+print("MouldMaster app-wide remediation QA passed: PR-safe Pages verifier contract plus protected-main publication authorization and earliest-start actions-only legacy containment plus post-provenance Pages settings guard, aligned gh api negotiation, cross-index fail-closed provenance, single authoritative owner-scoped engineering case store, variant-safe materials, PWA lifecycle, legacy distribution separation, deterministic browser matrix and targeted observers")

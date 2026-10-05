@@ -26,8 +26,11 @@ ROOT = Path(__file__).resolve().parents[1]
 RESULT = ROOT / "data" / "public-benchmark-results" / "cross-process-lower-workpiece-source-contract-v1.json"
 DICTIONARY = ROOT / "data" / "cross-process-lower-workpiece-dictionary-v1.json"
 RECORD_URL = "https://zenodo.org/api/records/17240390"
+EXPECTED_PUBLISHER_BYTES = 685541746
 EXPECTED_PUBLISHER_MD5 = "069e190338b2ca29f736b21fabf407ba"
+EXPECTED_PUBLISHER_SHA256 = "a0c7c07997e6c5a996823744aceb82bfc7b4efd371c7be0f4afc60d04771ec90"
 USER_AGENT = "MouldMaster-cross-process-lower-profiler/1.0 (aggregate research profiling)"
+MAX_PUBLISHER_FILE_BYTES = 2 * 1024 * 1024 * 1024
 
 
 def fetch_json(url: str) -> dict:
@@ -44,16 +47,24 @@ def fetch_json(url: str) -> dict:
 
 
 def download(url: str, target: Path, expected_size: int | None = None) -> tuple[str, str]:
+    if expected_size is not None and (expected_size < 0 or expected_size > MAX_PUBLISHER_FILE_BYTES):
+        raise AssertionError(f"publisher file size is outside the local safety bound: {expected_size}")
     md5 = hashlib.md5(usedforsecurity=False)
     sha256 = hashlib.sha256()
     request = Request(url, headers={"User-Agent": USER_AGENT})
+    received = 0
     with urlopen(request, timeout=180) as response, target.open("wb") as output:
         while chunk := response.read(1024 * 1024):
+            received += len(chunk)
+            if received > MAX_PUBLISHER_FILE_BYTES:
+                raise AssertionError(f"download exceeded local file safety bound for {target.name}: {received}")
+            if expected_size is not None and received > expected_size:
+                raise AssertionError(f"download exceeded expected size for {target.name}: {received} > {expected_size}")
             output.write(chunk)
             md5.update(chunk)
             sha256.update(chunk)
-    if expected_size is not None and target.stat().st_size != expected_size:
-        raise AssertionError(f"archive size mismatch: {target.stat().st_size} != {expected_size}")
+    if expected_size is not None and received != expected_size:
+        raise AssertionError(f"archive size mismatch: {received} != {expected_size}")
     return md5.hexdigest(), sha256.hexdigest()
 
 
@@ -183,12 +194,18 @@ def profile_archive() -> dict:
     if len(files) != 1:
         raise AssertionError(f"expected one publisher archive, found {len(files)}")
     item = files[0]
+    if int(item.get("size") or -1) != EXPECTED_PUBLISHER_BYTES:
+        raise AssertionError(f"publisher size metadata drifted: {item.get('size')} != {EXPECTED_PUBLISHER_BYTES}")
+    if str(item.get("checksum") or "").lower() != f"md5:{EXPECTED_PUBLISHER_MD5}":
+        raise AssertionError(f"publisher checksum metadata drifted: {item.get('checksum')}")
 
     with tempfile.TemporaryDirectory(prefix="mouldmaster-cross-lower-") as temp:
         archive = Path(temp) / "publisher.zip"
-        md5, sha256 = download(item["links"]["self"], archive, item.get("size"))
+        md5, sha256 = download(item["links"]["self"], archive, EXPECTED_PUBLISHER_BYTES)
         if md5 != EXPECTED_PUBLISHER_MD5:
             raise AssertionError(f"publisher MD5 mismatch: {md5}")
+        if sha256 != EXPECTED_PUBLISHER_SHA256:
+            raise AssertionError(f"publisher SHA-256 mismatch: {sha256}")
         publisher_checksum = str(item.get("checksum") or "").lower()
         if publisher_checksum and publisher_checksum != f"md5:{EXPECTED_PUBLISHER_MD5}":
             raise AssertionError(f"publisher checksum metadata drifted: {publisher_checksum}")

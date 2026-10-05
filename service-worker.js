@@ -1,5 +1,5 @@
-const CACHE_VERSION='2026.10.04.4';
-const CACHE_REVISION='deep-review-r2-20261002';
+const CACHE_VERSION='2026.10.06.5';
+const CACHE_REVISION='deep-fix-r33-20261006';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both
@@ -33,19 +33,11 @@ const CORE=[
   './src/domains/runtime-packs/assessment-foundation-runtime-pack.js',
   './read-aloud.js',
   './src/domains/shared/runtime-v2.js',
-  './assessment-runtime-v2.js',
   './src/domains/shell/app-shell-registry.js',
   './src/domains/shell/pwa-shell.js',
-  './learning-experience.js',
   './lesson-simple-experience.js',
   './primary-learning-practice-hubs.js',
   './learner-ux-repair.js',
-  './process-data-diagnostics.js',
-  './process-data-local-intake.js',
-  './curriculum-integration.js',
-  './specialist-curriculum.js',
-  './src/domains/learning/specialist-evidence-gap-extension.js',
-  './mould-master-workspace.js',
   './src/domains/domain-bootstrap.js',
   './runtime-domain-manifest.json',
   './src/domains/shared/learner-scope.js',
@@ -62,7 +54,6 @@ const CORE=[
   './src/domains/learning/learning-analytics-loader.js',
   './src/domains/learning/activity-events-v2.js',
   './src/domains/learning/learner-model.js',
-  './src/domains/learning/backup-authority-notice.js',
   './src/domains/learning/delayed-transfer-reviews.js',
   './src/domains/learning/book-runtime.js',
   './src/domains/learning/book-claim-trace.js',
@@ -92,7 +83,19 @@ const CORE=[
   './assets/book-diagrams/gate-seal.svg',
   './assets/book-diagrams/multicavity-balance.svg',
   './assets/book-diagrams/ejection-draft.svg',
+  './assets/book-diagrams/cycle-timeline.svg',
+  './assets/book-diagrams/plasticising-sequence.svg',
+  './assets/book-diagrams/thermal-gradient-wall.svg',
+  './assets/book-diagrams/shrinkage-warpage.svg',
+  './assets/book-diagrams/weld-line-formation.svg',
+  './assets/book-diagrams/fibre-orientation-layers.svg',
+  './assets/book-diagrams/capability-limits.svg',
+  './assets/book-diagrams/doe-interaction.svg',
+  './assets/book-diagrams/diagnostic-hypothesis-tree.svg',
+  './assets/book-diagrams/dimensional-conditioning.svg',
   './src/domains/learning/book-data/book-evidence-enrichment-v2.json',
+  './src/domains/learning/book-data/book-reader-architecture-v2.json',
+  './src/domains/learning/book-data/book-editorial-expansion-review-v1.json',
   './src/domains/learning/book-data/book-material-grade-atlas-v1.json',
   './src/domains/learning/book-data/book-material-regional-evidence-v1.json',
   './src/domains/learning/book-data/book-material-search-index-v1.json',
@@ -128,16 +131,18 @@ const CORE=[
 const OPTIONAL=[
   './src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js',
   './src/domains/runtime-packs/evidence-runtime-pack.js',
+  './source-library.js',
+  './reference-data.js',
+  './reference-deep-dive.js',
+  './src/domains/research/reference-research-extension.js',
+  './src/domains/research/reference-20x-extension.js',
+  './reference-2026-expansion.js',
   './src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js',
   './src/domains/runtime-packs/assessment-multimodal-runtime-pack.js',
   './src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js',
   './src/domains/runtime-packs/curriculum-workspace-runtime-pack.js',
   './src/domains/runtime-packs/process-data-runtime-pack.js',
-  './assessment-ux.js',
   './assessment-ux.css',
-  './source-library.js',
-  './measured-evidence-integration.js',
-  './measured-evidence-decision.js',
   './measured-learning-library.js',
   './measured-learning-library.css',
   './data/measured-learning/promoted-v1.json',
@@ -145,39 +150,8 @@ const OPTIONAL=[
   './data/measured-learning/expansion-manifest-v2.json',
   './data/measured-learning/v2-policy.json',
   './data/measured-learning/source-readiness-v2.json',
-  './reference-data.js',
   './reference-data.html',
   './materials.html',
-  './reference-deep-dive.js',
-  './src/domains/research/reference-research-extension.js',
-  './src/domains/research/reference-20x-extension.js',
-  './reference-2026-expansion.js',
-  './reference-sources.js',
-  './reference-browser-ui.js',
-  './diagnostic-learning-labs.js',
-  './material-behaviour-labs.js',
-  './assessment-evidence-sources.js',
-  './evidence-maturity-deep-dive.js',
-  './evidence-maturity-formal-bridge.js',
-  './src/domains/assessment/assessment-psychometric-hardening.js',
-  './assessment-evidence-integrity-upgrade.js',
-  './lesson-evidence-depth.js',
-  './lesson-deep-authoring-v2.js',
-  './assessment-evidence-approval.js',
-  './assessment-psychometric-approval.js',
-  './assessment-multimodal.js',
-  './real-measured-data-assessment.js',
-  './process-data-deep-dive-machine.js',
-  './process-data-deep-dive-tooling.js',
-  './process-data-deep-dive-material.js',
-  './process-data-deep-dive-scientific.js',
-  './process-data-deep-dive-quality.js',
-  './process-data-deep-dive-50.js',
-  './process-data-20-pass-01-05.js',
-  './process-data-20-pass-06-10.js',
-  './process-data-20-pass-11-15.js',
-  './process-data-20-pass-16-20.js',
-  './process-data-20-pass-atlas.js'
 ];
 const RELEASE_ASSETS=[...new Set([...CORE,...OPTIONAL])];
 const RELEASE_PATHS=new Set(RELEASE_ASSETS.map(asset=>new URL(asset,self.registration.scope).pathname));
@@ -231,8 +205,20 @@ async function fetchNetwork(event){
   try{return await fetch(event.request,{cache:'no-store'})}catch(_){return null}
 }
 function criticalOfflineResponse(url){
-  if(url.pathname.endsWith('.json'))return new Response(JSON.stringify({error:'mouldmaster-offline-asset-unavailable'}),{status:503,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}});
-  return new Response('/* MouldMaster runtime asset is unavailable offline. Reconnect and reopen the app to cache this runtime feature pack. */\n',{status:503,headers:{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}})
+  const path=url.pathname.toLowerCase();
+  let type='text/plain; charset=utf-8',body='MouldMaster governed asset is unavailable offline. Reconnect and reopen the app to restore the validated release.\n';
+  if(path.endsWith('.json')){type='application/json; charset=utf-8';body=JSON.stringify({error:'mouldmaster-offline-asset-unavailable'})}
+  else if(path.endsWith('.js')){type='text/javascript; charset=utf-8';body='/* MouldMaster governed runtime asset is unavailable offline. Reconnect and reopen the app to restore the validated release. */\n'}
+  else if(path.endsWith('.css')){type='text/css; charset=utf-8';body='/* MouldMaster governed stylesheet is unavailable offline. Reconnect and reopen the app to restore the validated release. */\n'}
+  else if(path.endsWith('.html')){type='text/html; charset=utf-8';body='<!doctype html><meta charset="utf-8"><title>MouldMaster asset unavailable</title><p>MouldMaster governed content is unavailable offline. Reconnect and reopen the app to restore the validated release.</p>'}
+  else if(path.endsWith('.webmanifest')){type='application/manifest+json; charset=utf-8';body=JSON.stringify({error:'mouldmaster-offline-asset-unavailable'})}
+  else if(path.endsWith('.svg')){type='image/svg+xml; charset=utf-8';body='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><title>MouldMaster governed asset unavailable</title></svg>'}
+  else if(path.endsWith('.png')){type='image/png';body=''}
+  return new Response(body,{status:503,headers:{'Content-Type':type,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}})
+}
+function unlistedRuntimeResponse(url){
+  if(url.pathname.endsWith('.json'))return new Response(JSON.stringify({error:'mouldmaster-unlisted-runtime-asset'}),{status:503,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}});
+  return new Response('/* MouldMaster blocked an unlisted same-origin runtime asset to prevent mixed-version execution. */\n',{status:503,headers:{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}})
 }
 function offlineDocumentResponse(){
   return new Response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>MouldMaster offline</title><main style="font:16px system-ui;padding:24px;max-width:680px"><h1>MouldMaster is not fully installed offline yet</h1><p>Reconnect once and reopen the app. The complete offline release installs atomically before a new worker can replace the previous validated cache.</p></main>',{status:503,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});
@@ -269,7 +255,7 @@ self.addEventListener('fetch',event=>{
 
   const runtimeCritical=url.pathname.endsWith('.js')||url.pathname.endsWith('.json');
   if(runtimeCritical){
-    event.respondWith((async()=>await fetchNetwork(event)||criticalOfflineResponse(url))());
+    event.respondWith(unlistedRuntimeResponse(url));
     return;
   }
 

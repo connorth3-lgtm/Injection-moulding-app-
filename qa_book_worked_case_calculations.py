@@ -25,6 +25,12 @@ EXPECTED_CHAPTERS = {
     "worked-fill-study-v1": "fill-study",
     "worked-shot-utilisation-v1": "shot-utilisation",
     "worked-process-window-v1": "process-window",
+    "worked-warpage-discrimination-v1": "warpage",
+    "worked-weld-line-diagnosis-v1": "weld-lines",
+    "worked-splay-boundary-v1": "splay",
+    "worked-dimensional-conditioning-v1": "dimensional-stability",
+    "worked-process-monitoring-alarm-v1": "process-monitoring",
+    "worked-black-speck-source-map-v1": "black-specks",
 }
 
 
@@ -93,6 +99,24 @@ def main() -> None:
     joined = " ".join(diagnosis["boundaries"]).lower()
     need("safe and authorised" in joined and "repeatable recovery" in joined, "diagnostic case lost causal/safety boundary")
 
+    need(Decimal("1.8") - Decimal("1.2") == Decimal("0.6"), "warpage post-mould change regression")
+    need(Decimal("1.8") - Decimal("0.7") == Decimal("1.1"), "warpage cavity difference regression")
+
+    weld_case = cases["worked-weld-line-diagnosis-v1"]
+    need(len(weld_case.get("observations", [])) >= 3 and "appearance alone" not in weld_case["interpretation"].lower(), "weld-line diagnostic teaching regression")
+
+    splay_case = cases["worked-splay-boundary-v1"]
+    need("all cavities" in " ".join(splay_case.get("observations", [])).lower(), "splay boundary-pattern evidence regression")
+
+    need(Decimal("50.03") - Decimal("50.08") == Decimal("-0.05"), "dimensional conditioning early-change regression")
+    need(Decimal("50.02") - Decimal("50.03") == Decimal("-0.01"), "dimensional conditioning late-change regression")
+
+    monitoring = cases["worked-process-monitoring-alarm-v1"]
+    need("root-cause" in monitoring["interpretation"].lower() and "quality plan" in monitoring["interpretation"].lower() and "automated machine-control" in " ".join(monitoring["boundaries"]).lower(), "monitoring alarm decision-boundary regression")
+
+    black = cases["worked-black-speck-source-map-v1"]
+    need("all cavities" in " ".join(black.get("observations", [])).lower() and "cavity 4" in black["setup"].lower(), "black-speck source-map pattern regression")
+
     authority = ledger["authorityBoundary"]
     need(
         authority == {
@@ -103,7 +127,7 @@ def main() -> None:
         },
         "worked-case production authority boundary weakened",
     )
-    print("MouldMaster worked-case calculation QA passed: 18 governed synthetic cases retain exact arithmetic/diagnostic boundaries and fail-closed production authority.")
+    print("MouldMaster worked-case calculation QA passed: 24 governed synthetic cases retain exact arithmetic/diagnostic boundaries and fail-closed production authority.")
 
 
 if __name__ == "__main__":

@@ -83,7 +83,7 @@ test('invalid backup import leaves the learner database byte-for-byte unchanged'
   });
   await page.evaluate(()=>window.importData(new File(['{"activeUser":"missing","users":{}}'], 'invalid-backup.json',{type:'application/json'})));
   await expect.poll(()=>dialogs.map(x=>x.message).join(' | '),{timeout:10000}).toMatch(/not a valid MouldMaster backup|could not be stored safely/i);
-  expect(dialogs.some(x=>x.type==='confirm'&&/no cryptographic integrity checksum/i.test(x.message))).toBeTruthy();
+  expect(dialogs.some(x=>x.type==='confirm')).toBeFalsy();
   const after=await page.evaluate(()=>localStorage.getItem('mouldmasterProDB'));
   expect(after).toBe(before);
 });

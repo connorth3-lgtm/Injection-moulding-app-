@@ -5,6 +5,8 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
+  actions: read
 
 concurrency:
   group: microsoft-store-msix-${{ github.ref }}
@@ -21,6 +23,15 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+      - name: Require governed current-main source
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          python tools/verify_production_source.py
+          --repository "${{ github.repository }}"
+          --source-sha "${{ github.sha }}"
+          --require-native-protection
       - name: Require Partner Center identity
         shell: pwsh
         run: |

@@ -12,7 +12,7 @@ def js_const(source,name):
     return m.group(1)
 
 required=[
-    'process-data-diagnostics.js','evidence-maturity-deep-dive.js','index.html','service-worker.js',
+    'process-data-diagnostics.js','src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js','evidence-maturity-deep-dive.js','index.html','service-worker.js',
     'src/domains/process/process-statistics.js','qa_process_statistics_current.cjs','runtime-domain-manifest.json',
     'desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs'
 ]
@@ -20,6 +20,7 @@ for name in required:
     need((ROOT/name).exists(),f'guided data diagnostic dependency missing: {name}')
 
 js=text('process-data-diagnostics.js')
+learning_process_pack=text('src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js')
 p=subprocess.run(['node','--check',str(ROOT/'process-data-diagnostics.js')],capture_output=True,text=True)
 need(p.returncode==0,'process-data-diagnostics.js syntax error: '+(p.stderr or p.stdout))
 stat_js=text('src/domains/process/process-statistics.js')
@@ -28,7 +29,7 @@ need(p.returncode==0,'process-statistics.js syntax error: '+(p.stderr or p.stdou
 p=subprocess.run(['node',str(ROOT/'qa_process_statistics_current.cjs')],cwd=ROOT,capture_output=True,text=True)
 need(p.returncode==0,'current process statistics runtime QA failed: '+(p.stderr or p.stdout))
 
-need("const VERSION='2026.09.10.1'" in js,'guided data diagnostic version marker missing')
+need("const VERSION='2026.10.05.1'" in js,'guided data diagnostic version marker missing')
 need("const PACK=window.MM_PROCESS_EVIDENCE_DATASETS" in js,'guided UI must consume the canonical evidence dataset pack')
 need("DATASETS.length!==PACK.datasets.length" in js,'guided UI must fail closed if a canonical dataset has no guide')
 need("24 baseline, 24 fault and 24 recovery" in js,'learner UI must explain the canonical phase structure')
@@ -41,6 +42,8 @@ need("open:openHome,evaluateChoice" in js,'structured answer evaluator must be e
 need("without scraping rendered CSS or score text" in js,'structured answer API privacy/analytics boundary missing')
 need("outside the formal assessment bank" in js,'guided cases must remain explicitly outside formal assessment')
 need('fetch(' not in js,'guided process-data module must remain local-only')
+need("localStorage.getItem(k)===payload" in js and "Progress could not be saved on this device." in js and "progress not saved" in js,'guided process-data persistence must verify writes and surface unsaved progress')
+need("return id?String(id):null" in js and "requires an active learner before persistence" in js,'guided process-data progress must not create a shared anonymous learner bucket')
 for forbidden in ['MM_DATA.exams=', 'regionalQuestions=', 'MM_EVIDENCE_APPROVAL.records=', 'question_bank_version=', 'correctIndex=']:
     need(forbidden not in js,f'guided data diagnostics must not mutate formal assessment truth: {forbidden}')
 
@@ -78,7 +81,8 @@ need(re.fullmatch(r'\d{4}\.\d{2}\.\d{2}\.\d+',runtime_asset) is not None,'guided
 need(cache_version==runtime_asset,'guided data service-worker cache version must equal canonical web release')
 need(bool(cache_revision.strip()),'guided data cache revision must remain an explicit independent invalidation token')
 need(expected_cache==f'mouldmaster-static-{cache_version}-{cache_revision}','browser expected PWA cache must match the service-worker cache identity')
-need("'./process-data-diagnostics.js'" in sw,'guided data diagnostics missing from offline cache')
+need("'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'" in sw,'guided data diagnostics runtime pack missing from offline cache')
+need('/* >>> process-data-diagnostics.js */' in learning_process_pack,'guided data diagnostics missing from packed offline runtime')
 need("'./src/domains/process/process-statistics.js'" in sw,'current process statistics service missing from atomic offline cache')
 manifest=json.loads(text('runtime-domain-manifest.json'))
 assets=manifest.get('assets') or []

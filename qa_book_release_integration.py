@@ -73,6 +73,8 @@ book_data = [
     'book-authored-remaining-v1.json',
     'book-worked-engineering-cases-v1.json',
     'book-evidence-enrichment-v2.json',
+    'book-reader-architecture-v2.json',
+    'book-editorial-expansion-review-v1.json',
     'book-material-grade-atlas-v1.json',
     'book-material-regional-evidence-v1.json',
     'book-material-search-index-v1.json',
@@ -158,7 +160,7 @@ required_integrity = {
     'book-manifest-v1.json', 'book-sme-review-v1.json', 'book-qualification-resolution-all-v1.json',
     'book-claim-resolution-high-risk-v1.json', 'book-authored-foundations-v1.json',
     'book-evidence-registry-v1.json', 'book-chapters-materials-machine-v1.json', 'book-authored-remaining-v1.json',
-    'book-worked-engineering-cases-v1.json', 'book-engineering-diagrams-v1.json', 'book-evidence-enrichment-v2.json', 'book-material-grade-atlas-v1.json',
+    'book-worked-engineering-cases-v1.json', 'book-engineering-diagrams-v1.json', 'book-evidence-enrichment-v2.json', 'book-reader-architecture-v2.json', 'book-editorial-expansion-review-v1.json', 'book-material-grade-atlas-v1.json',
     'book-material-regional-evidence-v1.json', 'material-catalog-v1.json',
 }
 need(required_integrity <= set(sha_by_file), f'Book byte-integrity coverage incomplete: {sorted(required_integrity - set(sha_by_file))}')
@@ -167,7 +169,7 @@ for name in required_integrity:
     need(sha_by_file[name] == git_blob_sha(path), f'Book byte-integrity Git object mismatch: {name}')
 auth_blob = git_blob_sha(PACKAGED_ROOT / 'book-publication-authorization-v1.json')
 need(f"const AUTH_GIT_BLOB_SHA1='{auth_blob}'" in book_runtime, 'canonical runtime is not pinned to exact authorization bytes')
-for marker in ('gitBlobSha1', 'verifiedJson', 'validateIntegrityAuthorization', 'Book byte-integrity mismatch', 'WORKED_CASES_PATH', 'validateWorkedCases', 'workedCaseHtml', 'getWorkedCases', 'DIAGRAMS_PATH', 'validateEngineeringDiagrams', 'diagramHtml', 'getEngineeringDiagrams', 'ENRICHMENT_PATH', 'validateEvidenceEnrichment', 'getEvidenceEnrichment', 'MATERIAL_ATLAS_PATH', 'MATERIAL_REGIONAL_PATH', 'MATERIAL_CATALOG_PATH', 'MATERIAL_SEARCH_INDEX_PATH', 'MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1', 'validateMaterialAtlas', 'validateMaterialCatalog', 'validateMaterialRegionalEvidence', 'materialAtlasHtml', 'ensureManifest', 'ensureMaterialData', 'hydrateMaterialAtlas', 'coldMaterialSearchTerms', 'coldMaterialHit', 'MATERIAL_PAGE_SIZE=24', 'data-mm-book-material-more', 'getMaterialAtlas', 'getMaterialCatalog', 'getMaterialRegionalEvidence'):
+for marker in ('gitBlobSha1', 'verifiedJson', 'validateIntegrityAuthorization', 'Book byte-integrity mismatch', 'WORKED_CASES_PATH', 'validateWorkedCases', 'workedCaseHtml', 'getWorkedCases', 'DIAGRAMS_PATH', 'validateEngineeringDiagrams', 'diagramHtml', 'getEngineeringDiagrams', 'ENRICHMENT_PATH', 'validateEvidenceEnrichment', 'getEvidenceEnrichment', 'MATERIAL_ATLAS_PATH', 'MATERIAL_REGIONAL_PATH', 'MATERIAL_CATALOG_PATH', 'MATERIAL_SEARCH_INDEX_PATH', 'MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1', 'validateMaterialAtlas', 'validateMaterialCatalog', 'validateMaterialRegionalEvidence', 'materialAtlasHtml', 'ensureManifest', 'ensureMaterialData', 'hydrateMaterialAtlas', 'coldMaterialSearchTerms', 'coldMaterialHit', 'MATERIAL_PAGE_SIZE=24', 'data-mm-book-material-more', 'getMaterialAtlas', 'getMaterialCatalog', 'getMaterialRegionalEvidence', 'READER_PATH', 'EDITORIAL_REVIEW_PATH', 'validateReaderArchitecture', 'validateEditorialExpansionReview', 'readerChapterHtml', 'readerLearningHtml', 'readerReferencesHtml', 'showReaderChapter', 'getReaderArchitecture', 'getEditorialExpansionReview'):
     need(marker in book_runtime, f'Book runtime exact-byte/lazy-load safeguard missing: {marker}')
 load_manifest_block = book_runtime.split('async function loadManifest(){',1)[1].split('function failBook(',1)[0]
 for forbidden in ('MATERIAL_ATLAS_PATH', 'MATERIAL_CATALOG_PATH', 'MATERIAL_REGIONAL_PATH', 'MATERIAL_SEARCH_INDEX_PATH'):
@@ -195,17 +197,21 @@ need(book_sme.get('status') == 'hold' and book_sme.get('reviews') == [], 'indepe
 current_web_release=json.loads((ROOT / 'version.json').read_text(encoding='utf-8')).get('web_release')
 need(isinstance(book_sme.get('release'),str) and book_sme.get('release') <= current_web_release, 'Book SME evidence cannot target a future learner release')
 need(book_sme.get('release') == enrichment.get('release'), 'Book SME and evidence-enrichment review scope must remain bound to the same content release')
-need(len(book_sme.get('workedCaseIds', [])) == 18 and len(set(book_sme.get('workedCaseIds', []))) == 18, 'Book SME worked-case review scope is incomplete')
+need(len(book_sme.get('workedCaseIds', [])) == 24 and len(set(book_sme.get('workedCaseIds', []))) == 24, 'Book SME worked-case review scope is incomplete')
 need(len(book_sme.get('enrichmentChapterIds', [])) == 10 and len(set(book_sme.get('enrichmentChapterIds', []))) == 10, 'Book SME evidence-enrichment review scope is incomplete')
-need(len(book_sme.get('diagramIds', [])) == 8 and len(set(book_sme.get('diagramIds', []))) == 8, 'Book SME diagram review scope is incomplete')
+need(len(book_sme.get('diagramIds', [])) == 18 and len(set(book_sme.get('diagramIds', []))) == 18, 'Book SME diagram review scope is incomplete')
 need(len(book_sme.get('chapterIds', [])) == 46 and len(set(book_sme['chapterIds'])) == 46, 'Book SME chapter coverage drift')
 need(qualification['effectiveCountsAfterQualificationReview'] == {'chapters':46,'claims':137,'supported':116,'qualified':21,'hold':0,'conflicting':0}, 'qualification counts drift')
 need(authorization['status'] == 'authorized' and authorization['authorizationType'] == 'governed-book-publication', 'publication authorization identity drift')
 need(authorization.get('revocationRules', {}).get('runtimeByteIntegrityMismatch') == 'fail-closed-runtime', 'runtime byte mismatch must revoke publication at runtime')
 need(authorization.get('revocationRules', {}).get('evidenceEnrichmentLedgerOrEvidenceMismatch') == 'fail-closed-runtime', 'evidence-enrichment mismatch must fail closed at runtime')
 need(authorization.get('revocationRules', {}).get('diagramLedgerOrAssetMismatch') == 'fail-closed-runtime', 'diagram ledger/asset mismatch must fail closed at runtime')
+reader_auth=authorization.get('readerArchitectureAuthorization') or {}
+need(reader_auth.get('status')=='authorized-derived-structure' and reader_auth.get('readerChapterCount')==20 and reader_auth.get('governedModuleCount')==46 and reader_auth.get('noNewTechnicalClaims') is True and reader_auth.get('independentSmeStatus')=='hold', 'reader architecture authorization boundary drift')
+editorial_auth=authorization.get('editorialExpansionAuthorization') or {}
+need(editorial_auth.get('status')=='authorized-repository-technical-source-review' and editorial_auth.get('moduleCount')==37 and editorial_auth.get('noNewClaimIds') is True and editorial_auth.get('independentSmeStatus')=='hold', 'editorial expansion authorization boundary drift')
 need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('release') == enrichment.get('release'), 'evidence-enrichment authorization must remain bound to the reviewed content release')
-need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('sectionCount') == 13, 'evidence-enrichment authorization section count drifted')
+need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('sectionCount') == 14, 'evidence-enrichment authorization section count drifted')
 need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('independentSmeStatus') == 'hold', 'evidence-enrichment authorization must preserve SME HOLD')
 need(authorization['authorizationBasis']['sourceRevision'] == '7ef28bd8b02994223e320fda64e99808357d3219', 'authorization provenance revision drift')
 
@@ -228,4 +234,4 @@ need('STATIC_DATA_DIRS.flatMap(filesUnder)' in integrity_script, 'desktop static
 
 print('PASS: Book uses one canonical runtime with exact-byte publication binding and fail-closed authorization.')
 print('PASS: dynamic scripts are release-versioned before late loaders, Book is globally searchable, and learner-facing academic evidence uses canonical DOI links.')
-print('PASS: eighteen synthetic worked cases and eight governed engineering diagrams are integrated while independent SME/external validation remains HOLD.')
+print('PASS: twenty-four synthetic worked cases and eighteen governed engineering diagrams are integrated while independent SME/external validation remains HOLD.')

@@ -80,6 +80,9 @@ for forbidden in ['correctIndex=', 'question_bank_version=', 'MM_DATA.exams=', '
     need(forbidden not in shell,f'app shell contains forbidden assessment/network mutation: {forbidden}')
 
 idx=text('index.html')
+domain_bootstrap=text('src/domains/domain-bootstrap.js')
+need("Unsafe domain asset" in domain_bootstrap and "A-Za-z0-9._-" in domain_bootstrap and "includes('..')" in domain_bootstrap,
+     "domain bootstrap must reject path traversal/non-canonical manifest assets")
 need("['./src/domains/shell/app-shell-registry.js','<script src=\"./src/domains/shell/app-shell-registry.js\">']" in idx,'index missing src/domains/shell/app-shell-registry.js')
 need("['./src/domains/runtime-packs/shell-finalization-runtime-pack.js','<script src=\"./src/domains/runtime-packs/shell-finalization-runtime-pack.js\">']" in idx,'index missing packed shell finalizer')
 need("['./src/domains/shell/app-shell-finalize.js','<script" not in idx,'direct root shell finalizer must remain retired from browser bootstrap')
@@ -90,9 +93,12 @@ need(idx.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.j
 need(idx.index("'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'") < idx.index("'./src/domains/domain-bootstrap.js'"),'shell finalization pack must run before domain bootstrap')
 
 sw=text('service-worker.js')
-for asset in ['src/domains/shell/app-shell-registry.js','mould-master-workspace.js']:
-    need(f"'./{asset}'" in sw,f'offline cache missing {asset}')
+need("'./src/domains/shell/app-shell-registry.js'" in sw,'offline cache missing app-shell registry')
+need("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'" in sw,'offline cache missing packed mould-master workspace runtime')
+workspace_pack=text('src/domains/runtime-packs/curriculum-workspace-runtime-pack.js')
+need('/* >>> mould-master-workspace.js */' in workspace_pack,'packed workspace runtime is missing mould-master-workspace.js')
 need("'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'" in sw,'offline cache missing packed shell finalizer')
+need("bindCanonicalCoreNavigation" in shell and "event.stopImmediatePropagation()" in shell and "},true);" in shell,'core desktop navigation must route once through the canonical shell in capture phase')
 
 pkg=json.loads(text('desktop/electron/package.json'))
 froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}

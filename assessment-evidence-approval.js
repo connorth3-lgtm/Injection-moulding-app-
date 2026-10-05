@@ -1,7 +1,7 @@
-/* MouldMaster answer-evidence approval layer — 2026-09-10.1 */
+/* MouldMaster answer-evidence approval layer — 2026.10.05.1 */
 (function(){
 'use strict';
-const VERSION='2026.09.10.1',REVIEWED='2026-08-30',REVIEW_BY='2026-11-30';
+const VERSION='2026.10.05.1',REVIEWED='2026-10-05',REVIEW_BY='2026-11-30';
 const SCOPE='Internal educational content approval; external accreditation or independent third-party SME endorsement is not implied.';
 const HEADLESS_AUDIT=typeof navigator==='undefined'&&typeof document!=='undefined';
 const R=window.MM_RUNTIME_V2||(HEADLESS_AUDIT?Object.freeze({after:()=>()=>{},registerModule:()=>null}):null);
@@ -10,11 +10,11 @@ const APPROVED_INPUTS={
  'MouldMaster_Core_App.html':'c6b258ccd37d98b2f591f538b34eb33c7705dda6',
  'training-upgrade.js':'ea6ee84e69c4d5ed60776f2022f1bc9462425ea2',
  'assessment-deep-dive.js':'367d941afc67ad62125e1e1cb16ff1a1e48d0123',
- 'src/domains/assessment/assessment-answer-cue-fix.js':'9a6ef14f5eac1e127255afdd050a6f47f6009587',
- 'assessment-quality-suite.js':'40871d145ac71b6d8f3174a3e3860955f0147078',
- 'assessment-stable-review-bridge.js':'b91ac5b4712f96634ffd76a842ae75a417ed6a85',
- 'diagnostic-learning-labs.js':'582ac717d1e218c9144f9d3b69490933f01936da',
- 'material-behaviour-labs.js':'6b0f489c59ef7d5f1e6ebdd5a01d527d294f3f3b'
+ 'src/domains/assessment/assessment-answer-cue-fix.js':'14cdc9e7dde1aa1a3dcdae8d5fc8c924f8f60bc0',
+ 'assessment-quality-suite.js':'bec32a5b02de3eacd6f43db6ee4e57609478662d',
+ 'assessment-stable-review-bridge.js':'36f36be84184ae1fe3b623aaa8dc4ec602854a9b',
+ 'diagnostic-learning-labs.js':'f573088cddb9eb081eb9cf88d266af6c7b31831d',
+ 'material-behaviour-labs.js':'3ce6b1f36c618e0b591b2b5cbb3321a0080ffe6a'
 };
 function buildApproval(){
  const D=window.MM_DATA,E=window.MM_EVIDENCE_SOURCES;

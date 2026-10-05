@@ -5,6 +5,9 @@ const VERSION='2026.09.12.1';
 const BASE=window.MM_PROCESS_DATA_DIAGNOSTICS;
 if(!BASE)throw new Error('process-data-local-intake.js requires process-data-diagnostics.js');
 const MAX_ROWS=50000;
+const MAX_FILE_BYTES=50*1024*1024;
+const MAX_TEXT_CHARS=50*1024*1024;
+const MAX_COLUMNS=512;
 const DROP_RE=/(?:^|_)(?:name|email|phone|address|customer|supplier_contact|serial_number|asset_tag|user|username|operator|operator_id|employee|employee_id|personnel)(?:_|$)/i;
 const TIME_RE=/^(?:timestamp|date|datetime|time|created_at|updated_at|recorded_at|event_timestamp|shot_timestamp|cycle_timestamp)$/i;
 const ALIAS_RE=/(?:machine|cell|mould|mold|tool|cavity|material|grade|resin|lot|batch|job|work_?order|part_?(?:number|no)|intervention)/i;
@@ -23,7 +26,9 @@ function cleanHeader(v,index){let x=String(v||'').trim().toLowerCase().replace(/
 function enforceRowLimit(rows){if(rows.length>MAX_ROWS+1)throw new Error(`CSV exceeds the ${MAX_ROWS.toLocaleString()} data-row safety limit. No truncated subset was prepared; split or filter the controlled source export and try again.`)}
 function parseCsv(text){
   const rows=[];let row=[],field='',quoted=false,physicalLine=1,rowStartLine=1;
-  const s=String(text||'').replace(/^\uFEFF/,'');
+  const raw=String(text||'');
+  if(raw.length>MAX_TEXT_CHARS)throw new Error('CSV exceeds the in-memory text safety limit. No data was prepared.');
+  const s=raw.replace(/^\uFEFF/,'');
   for(let i=0;i<s.length;i++){
     const ch=s[i];
     if(quoted){
@@ -43,13 +48,14 @@ function parseCsv(text){
   while(rows.length&&rows[rows.length-1].every(x=>String(x).trim()===''))rows.pop();
   if(rows.length<2)return {headers:rows[0]?.map(cleanHeader)||[],rows:[],sourceRows:0,truncated:false};
   const headerWidth=rows[0].length;
+  if(headerWidth>MAX_COLUMNS)throw new Error(`CSV exceeds the ${MAX_COLUMNS.toLocaleString()}-column safety limit. No data was prepared.`);
   for(let i=1;i<rows.length;i++){
     const sourceRow=rows[i];
     if(sourceRow.every(x=>String(x).trim()===''))continue;
     if(sourceRow.length!==headerWidth){const cells=sourceRow.length;throw new Error(`CSV row ${i+1} has ${cells} cell${cells===1?'':'s'}; expected ${headerWidth} from the header. No data was prepared.`)}
   }
   const headers=rows[0].map(cleanHeader);
-  const seen={};for(let i=0;i<headers.length;i++){const base=headers[i];seen[base]=(seen[base]||0)+1;if(seen[base]>1)headers[i]=`${base}_${seen[base]}`}
+  const seen=Object.create(null);for(let i=0;i<headers.length;i++){const base=headers[i];seen[base]=(seen[base]||0)+1;if(seen[base]>1)headers[i]=`${base}_${seen[base]}`}
   const dataRows=rows.slice(1);
   if(dataRows.length>MAX_ROWS)throw new Error(`CSV exceeds the ${MAX_ROWS.toLocaleString()} data-row safety limit. No truncated subset was prepared; split or filter the controlled source export and try again.`);
   return {headers,rows:dataRows.map(r=>Object.fromEntries(headers.map((h,i)=>[h,String(r[i]??'').trim()]))),sourceRows:dataRows.length,truncated:false}
@@ -84,7 +90,7 @@ function aliasPrefix(key){return key.replace(/[^a-z0-9]+/gi,'-').replace(/^-+|-+
 function prepare(parsed){
   const headers=parsed?.headers||[],rows=parsed?.rows||[];
   if(rows.length>MAX_ROWS||Number(parsed?.sourceRows||rows.length)>MAX_ROWS)throw new Error(`CSV exceeds the ${MAX_ROWS.toLocaleString()} data-row safety limit. No truncated subset was prepared.`);
-  const sequence=sequenceAudit(headers,rows),rules=classify(headers,rows),maps={},invalidNumeric={};
+  const sequence=sequenceAudit(headers,rows),rules=classify(headers,rows),maps=Object.create(null),invalidNumeric=Object.create(null);
   for(const rule of rules)if(['alias','quality','category'].includes(rule.action))maps[rule.key]=new Map();
   const preserveShotIndex=sequence.sourceShotIndex==='preserved';
   const out=rows.map((raw,index)=>{
@@ -106,7 +112,7 @@ function prepare(parsed){
   if(new Set(outputHeaders).size!==outputHeaders.length)throw new Error('Prepared output contains duplicate headers; review the source column names.');
   const invalidNumericByColumn=Object.entries(invalidNumeric).map(([column,count])=>({column,count})),invalidNumericValues=invalidNumericByColumn.reduce((s,x)=>s+x.count,0);
   const validation={invalidNumericValues,invalidNumericByColumn,reviewRequired:invalidNumericValues>0,note:invalidNumericValues?'Malformed nonblank values in predominantly numeric columns were omitted from prepared output and are listed by column.':'No malformed nonblank numeric values were detected in retained numeric columns.'};
-  return {schema:3,version:VERSION,rows:out,headers:outputHeaders,rules,sequence,validation,summary:{sourceRows:Number(parsed?.sourceRows??rows.length),inputRows:rows.length,outputRows:out.length,truncated:false,invalidNumericValues,keptNumeric:rules.filter(r=>r.action==='keep').length,aliased:rules.filter(r=>r.action==='alias').length,quality:rules.filter(r=>r.action==='quality').length,categories:rules.filter(r=>r.action==='category').length,units:rules.filter(r=>r.action==='unit').length,dropped:rules.filter(r=>r.action==='drop').length},boundary:'Prepared locally in memory. Files over the row safety limit are rejected rather than silently truncated. Raw identifiers, person/operator fields and timestamps are not retained by this module. Timestamp and source shot-index values may be inspected in-session only to flag ordering problems before timestamp removal. Malformed nonblank values in retained numeric columns are omitted and reported by column rather than converted to NaN. Structurally malformed CSV rows and unterminated quoted fields are rejected before preparation. Unknown categorical quality/phase labels are aliased only within the current prepared file. Output is pseudonymised/prepared data, not proof of anonymity and not a production recipe.'}
+  return {schema:3,version:VERSION,rows:out,headers:outputHeaders,rules,sequence,validation,summary:{sourceRows:Number(parsed?.sourceRows??rows.length),inputRows:rows.length,outputRows:out.length,truncated:false,invalidNumericValues,keptNumeric:rules.filter(r=>r.action==='keep').length,aliased:rules.filter(r=>r.action==='alias').length,quality:rules.filter(r=>r.action==='quality').length,categories:rules.filter(r=>r.action==='category').length,units:rules.filter(r=>r.action==='unit').length,dropped:rules.filter(r=>r.action==='drop').length},boundary:'Prepared locally in memory. Files over the byte, text, row or column safety limits are rejected rather than silently truncated. Raw identifiers, person/operator fields and timestamps are not retained by this module. Timestamp and source shot-index values may be inspected in-session only to flag ordering problems before timestamp removal. Malformed nonblank values in retained numeric columns are omitted and reported by column rather than converted to NaN. Structurally malformed CSV rows and unterminated quoted fields are rejected before preparation. Unknown categorical quality/phase labels are aliased only within the current prepared file. Output is pseudonymised/prepared data, not proof of anonymity and not a production recipe.'}
 }
 function csvCell(v){const s=String(v??'');return /[",\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s}
 function toCsv(prepared){const lines=[prepared.headers.map(csvCell).join(',')];for(const row of prepared.rows)lines.push(prepared.headers.map(k=>csvCell(row[k])).join(','));return lines.join('\n')+'\n'}
@@ -122,7 +128,7 @@ function render(prepared=null,error=''){
   h.innerHTML=`<div data-pdi-root><div class="pdi-actions" style="margin-bottom:12px"><button class="ghost" data-pdi-back>← Guided data diagnosis</button><button class="ghost" data-pdi-template>Download CSV template</button></div><div class="card pdi-hero"><div class="eyebrow">Local real-data preparation</div><h2>Prepare shot data without uploading it</h2><p>Choose a CSV exported from your machine, cavity-sensing, quality or auxiliary system. MouldMaster processes it only in this browser/desktop session, checks available shot/timestamp order before dropping timestamps, removes direct/person identifiers, aliases operational identifiers and keeps numeric evidence signals.</p><div class="pdi-note"><b>Privacy & engineering boundary:</b> this is pseudonymisation and schema preparation, not guaranteed anonymisation. Review the prepared file before sharing it. Files above ${MAX_ROWS.toLocaleString()} data rows are rejected rather than silently truncated. Structurally malformed CSV is rejected before any data is prepared. No raw file is stored or uploaded by this module, and the output does not create production limits, validated setpoints or machine authorisation.</div></div><div class="pdi-grid"><section class="card pdi-panel"><h3>1 · Select local CSV</h3><p class="muted">Maximum ${MAX_ROWS.toLocaleString()} data rows per preparation run; oversized files are rejected rather than truncated.</p><input type="file" accept=".csv,text/csv" data-pdi-file>${error?`<p style="color:#ff9da8">${esc(error)}</p>`:''}<div class="pdi-actions" style="margin-top:12px"><button class="secondary" data-pdi-export ${prepared?'':'disabled'}>Export prepared CSV</button><button class="ghost" data-pdi-dictionary ${prepared?'':'disabled'}>Export data dictionary</button></div>${prepared?summaryHtml(prepared)+sequenceHtml(prepared)+validationHtml(prepared):'<div class="pdi-empty" style="margin-top:12px">No file processed yet. Raw file contents stay in memory only while this page is open.</div>'}</section><section class="card pdi-panel"><h3>2 · Column treatment</h3>${prepared?rulesHtml(prepared):'<div class="pdi-empty">After selecting a CSV, this panel shows exactly which columns were kept, aliased or dropped.</div>'}</section></div></div>`;
   h.querySelector('[data-pdi-back]')?.addEventListener('click',()=>BASE.open());
   h.querySelector('[data-pdi-template]')?.addEventListener('click',()=>download('mouldmaster-shot-data-template.csv',templateCsv(),'text/csv;charset=utf-8'));
-  h.querySelector('[data-pdi-file]')?.addEventListener('change',async e=>{try{const file=e.target.files?.[0];if(!file)return;const parsed=parseCsv(await file.text());if(!parsed.headers.length||!parsed.rows.length)throw new Error('CSV needs a header row and at least one data row.');render(prepare(parsed))}catch(err){render(null,err?.message||'Could not prepare this CSV.')}});
+  h.querySelector('[data-pdi-file]')?.addEventListener('change',async e=>{try{const file=e.target.files?.[0];if(!file)return;if(Number(file.size)>MAX_FILE_BYTES)throw new Error('CSV exceeds the 50 MiB file safety limit. No data was prepared.');const parsed=parseCsv(await file.text());if(!parsed.headers.length||!parsed.rows.length)throw new Error('CSV needs a header row and at least one data row.');render(prepare(parsed))}catch(err){render(null,err?.message||'Could not prepare this CSV.')}});
   h.querySelector('[data-pdi-export]')?.addEventListener('click',()=>{if(lastPrepared)download('mouldmaster-prepared-shot-data.csv',toCsv(lastPrepared),'text/csv;charset=utf-8')});
   h.querySelector('[data-pdi-dictionary]')?.addEventListener('click',()=>{if(lastPrepared)download('mouldmaster-prepared-data-dictionary.json',JSON.stringify({schema:lastPrepared.schema,version:lastPrepared.version,summary:lastPrepared.summary,sequence:lastPrepared.sequence,validation:lastPrepared.validation,rules:lastPrepared.rules,boundary:lastPrepared.boundary},null,2)+'\n','application/json;charset=utf-8')});
 }
@@ -131,5 +137,5 @@ function rulesHtml(p){return `<div class="pdi-rules">${p.rules.map(r=>`<div clas
 function open(){BASE.open();requestAnimationFrame(()=>render())}
 const originalOpen=BASE.open.bind(BASE);BASE.open=function(){const r=originalOpen();requestAnimationFrame(attachLauncher);return r};
 attachLauncher();
-window.MM_PROCESS_DATA_LOCAL_INTAKE={version:VERSION,maxRows:MAX_ROWS,parseCsv,prepare,toCsv,templateCsv,open,scope:'Local in-memory CSV preparation only; rejects oversized or structurally malformed CSV rather than truncating or silently repairing it, checks available sequence fields, strips direct/person identifiers and timestamps, aliases operational identifiers and unknown quality/phase categories per prepared file, omits/reports malformed numeric values, keeps evidence signals and structured units, performs no upload/storage/machine control and does not define production limits.'};
+window.MM_PROCESS_DATA_LOCAL_INTAKE={version:VERSION,maxRows:MAX_ROWS,maxFileBytes:MAX_FILE_BYTES,maxColumns:MAX_COLUMNS,parseCsv,prepare,toCsv,templateCsv,open,scope:'Local in-memory CSV preparation only; rejects oversized or structurally malformed CSV rather than truncating or silently repairing it, checks available sequence fields, strips direct/person identifiers and timestamps, aliases operational identifiers and unknown quality/phase categories per prepared file, omits/reports malformed numeric values, keeps evidence signals and structured units, performs no upload/storage/machine control and does not define production limits.'};
 })();

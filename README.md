@@ -17,14 +17,14 @@ The project maintainers do not intend to seek patent protection over implementat
 
 ## Current release lanes
 
-- PWA / browser shell: `2026.10.04.4`
+- PWA / browser shell: `2026.10.06.5`
 - Open Windows desktop: `2026.09.29.1`
 - Android lane: `2026.08.26.2`
 - Training content: `2026.08.26.1`
 - Audited assessment bank: `2026.08.30.1`
 - Assessment quality / analytics hardening: `2026.08.24.3`
 - Learner-scoped assessment storage: `2026.08.24.4`
-- Question evidence approval: `2026.08.25.2`
+- Question evidence approval: `2026.10.05.1`
 - Frozen legacy Windows recovery lane: `2026.08.21.1`
 
 `version.json` is the machine-readable release record and is the source of truth for release identifiers.
@@ -80,6 +80,8 @@ Specialist completion is device-local and separate from the core pathway. These 
 ## Learning validation analytics
 
 Learning Insights keeps bounded learner-scoped event logs locally. Cohort export is available only in the device-local instructor convenience view and contains aggregate metrics only. Cohort discovery is derived from the current learner registry: analytics buckets that no longer map to a current profile are excluded and cannot satisfy the minimum-five export threshold.
+
+Progress backups include learner-scoped spaced-review, practical-sign-off, measured-assessment, process-diagnostics, Diagnostic Learning Lab and Material Behaviour Lab progress. Assessment analytics, assessment exposure/membership histories and Learning Insights event logs remain derived local state and are deliberately excluded from backup restoration.
 
 Progress import and factory reset treat analytics deletion as a verified lifecycle boundary. Assessment and Learning Insights stores are deleted and re-enumerated before an imported/default learner registry becomes active. If cleanup cannot be verified, the operation fails closed and warns the learner rather than reporting a clean import/reset. Release QA fault-injects both thrown and silent local-storage deletion failures so this boundary is not tested only on the happy path.
 

@@ -10,14 +10,14 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
- 'web_release':'2026.10.04.4',
+ 'web_release':'2026.10.06.5',
  'android_release':'2026.08.26.2',
  'desktop_release':'2026.09.29.1',
  'content_version':'2026.08.26.1',
  'question_bank_version':'2026.08.30.1',
  'assessment_quality_version':'2026.08.24.3',
  'assessment_storage_scope_version':'2026.08.24.4',
- 'assessment_evidence_version':'2026.08.25.2',
+ 'assessment_evidence_version':'2026.10.05.1',
  'windows_recovery_release':'2026.08.21.1',
 }
 for k,v in expected.items(): need(V.get(k)==v,f'version.json {k} drift: {V.get(k)!r} != {v!r}')
@@ -144,21 +144,27 @@ for label,k in [('CURRENT LEGACY RECOVERY CONTENT','windows_recovery_release'),(
 need('must NOT be silently inserted into this legacy feed' in upload,'recovery/PWA lane separation warning missing')
 
 support=text('support.html')
+learner_ui=text('src/domains/shell/learner-ui-polish.js')
 for k,id_ in {'web_release':'mmPwa','desktop_release':'mmDesktop','content_version':'mmContent','question_bank_version':'mmBank','assessment_quality_version':'mmQuality','assessment_storage_scope_version':'mmScope','assessment_evidence_version':'mmEvidence','windows_recovery_release':'mmRecovery'}.items():
     need(f'id="{id_}">{V[k]}' in support,f'support fallback version stale: {k}')
     need(f"{k}:'{id_}'" in support,f'support dynamic version mapping missing: {k}')
 need("fetch('./version.json',{cache:'no-store'})" in support,'support page must synchronise from version.json')
 need('MouldMaster GitHub Issues' in support and 'Do not post learner names' in support,'support contact/privacy warning missing')
 need('Learning insights events' in support and 'resets both analytics histories' in support,'support import analytics lifecycle disclosure is stale')
+for marker in ('Data &amp; Reset','mouldmaster-process-data-v1','mouldmaster-engineering-v2','Delete all local process-data evidence','Full erasure is reserved','browser/OS site-data controls'):
+    need(marker in support,f'support Data & Reset ownership map missing marker: {marker}')
+for marker in ['measured-assessment','process-diagnostics','Diagnostic Learning Lab','Material Behaviour Lab']:
+    need(marker in support,f'support backup/reset scope disclosure missing: {marker}')
 
 privacy=text('privacy.html')
-for marker in ['assessment analytics','scoped to the active learner profile','first meaningful question exposure','does not currently upload','deliberately not included in the progress backup','successful progress-backup import resets local assessment analytics and Learning insights analytics','orphaned buckets','Reset local analytics','Reset learner data','other local learner profiles','all local learner profiles','replaces the local learner registry','10 MiB','Delete all local process-data evidence','mouldmaster-process-data-v1']:
+for marker in ['assessment analytics','scoped to the active learner profile','first meaningful question exposure','does not currently upload','deliberately not included in the progress backup','successful progress-backup import resets local assessment analytics and Learning insights analytics','orphaned buckets','Reset local analytics','Reset learner data','other local learner profiles','all local learner profiles','replaces the local learner registry','measured-assessment','process-diagnostics','Diagnostic Learning Lab','Material Behaviour Lab','10 MiB','Delete all local process-data evidence','mouldmaster-process-data-v1']:
     need(marker in privacy,f'privacy disclosure missing: {marker}')
 need('scoped cleanup or clean learner write cannot be verified' in privacy,'privacy notice must disclose fail-closed learner-reset cleanup/write behavior')
 need('replaces the local learner registry after confirmation' in support,'support must disclose destructive backup registry replacement before import')
+need("support.html#data-reset" in learner_ui and "Data & Reset" in learner_ui,'Profile must link to the canonical Data & Reset guide')
 
 sw=text('service-worker.js')
-for marker in ["'./privacy.html'","'./support.html'","'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'","'./assessment-evidence-sources.js'","'./assessment-evidence-approval.js'","'./curriculum-integration.js'","'./specialist-curriculum.js'","'./src/domains/learning/specialist-evidence-gap-extension.js'","'./src/domains/shell/app-shell-registry.js'","'./mould-master-workspace.js'","'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'"]:
+for marker in ["'./privacy.html'","'./support.html'","'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'","'./src/domains/runtime-packs/evidence-runtime-pack.js'","'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'","'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'","'./src/domains/shell/app-shell-registry.js'","'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'"]:
     need(marker in sw,f'offline compliance/runtime asset missing: {marker}')
 
 for name in ['README.md','ANDROID_INSTALL_README.txt','support.html','UPLOAD_README.txt']:

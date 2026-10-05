@@ -5,19 +5,19 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#08101d">
 <title>MouldMaster Academy — Support</title>
-<style>body{max-width:850px;margin:40px auto;padding:0 20px;background:#08101d;color:#edf5ff;font:16px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}a{color:#69a8ff}h1,h2{line-height:1.2}.box{padding:14px;border:1px solid #355474;border-radius:12px;background:#101c2f}.muted{color:#a9bdd6}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}button,.action{display:inline-block;padding:9px 12px;border:1px solid #41658d;border-radius:9px;background:#182b45;color:#edf5ff;font:inherit;text-decoration:none;cursor:pointer}button:hover,.action:hover{background:#203a5d}.status{font-weight:700}</style>
+<style>body{max-width:850px;margin:40px auto;padding:0 20px;background:#08101d;color:#edf5ff;font:16px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}a{color:#69a8ff}h1,h2{line-height:1.2}.box{padding:14px;border:1px solid #355474;border-radius:12px;background:#101c2f}.muted{color:#a9bdd6}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}button,.action{display:inline-block;padding:9px 12px;border:1px solid #41658d;border-radius:9px;background:#182b45;color:#edf5ff;font:inherit;text-decoration:none;cursor:pointer}button:hover,.action:hover{background:#203a5d}.status{font-weight:700}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#091525;border:1px solid #294766;border-radius:9px;padding:12px;font-size:13px}.table-wrap{overflow-x:auto}.table{width:100%;border-collapse:collapse}.table th,.table td{border:1px solid #355474;padding:10px;vertical-align:top;text-align:left}.table th{background:#15243a}summary{cursor:pointer;font-weight:700}</style>
 </head>
 <body>
 <h1>MouldMaster Academy — Support</h1>
 <div class="box"><b>Current release family</b><br>
-PWA shell: <span id="mmPwa">2026.10.04.4</span><br>
+PWA shell: <span id="mmPwa">2026.10.06.5</span><br>
 Open desktop: <span id="mmDesktop">2026.09.29.1</span><br>
 Training content: <span id="mmContent">2026.08.26.1</span><br>
 Audited question bank: <span id="mmBank">2026.08.30.1</span><br>
 Assessment quality layer: <span id="mmQuality">2026.08.24.3</span><br>
 Learner-scoped analytics storage: <span id="mmScope">2026.08.24.4</span><br>
-Question evidence approval: <span id="mmEvidence">2026.08.25.2</span><br>
-Production observability: <span id="mmObservability">2026.09.01.1</span><br>
+Question evidence approval: <span id="mmEvidence">2026.10.05.1</span><br>
+Production observability: <span id="mmObservability">2026.10.05.2</span><br>
 Legacy Windows recovery content: <span id="mmRecovery">2026.08.21.1</span><br>
 <span class="muted" id="mmVersionStatus">Release values are synchronised from version.json when available.</span></div>
 <h2>App health and learner problem report</h2>
@@ -31,10 +31,28 @@ Legacy Windows recovery content: <span id="mmRecovery">2026.08.21.1</span><br>
 <a class="action" href="https://github.com/connorth3-lgtm/Injection-moulding-app-/issues/new?template=learner-problem.yml" rel="noopener">Report a learner problem</a>
 </div>
 <p class="muted">If you copy diagnostics, review the JSON before posting it. Do not attach progress backups, analytics exports, assessment answers or process-data files to a public issue.</p>
+<details id="mmSelfDiagnostic">
+<summary>Preview self-diagnostic details</summary>
+<p class="muted">This view is generated locally from bounded runtime state. It does not include learner identity, answers, notes or raw process data.</p>
+<pre id="mmDiagnosticDetails">Diagnostics not loaded yet.</pre>
+</details>
 </div>
 <h2>App does not update</h2><p>For the installed PWA, connect to the internet, open MouldMaster, close it fully and reopen it. Offline content is refreshed through the service worker after a successful online check.</p>
 <h2>Windows update blocked safely</h2><p>The legacy recovery launcher and the open Electron desktop are separate release lanes. If the legacy Windows updater says an update was blocked, keep the current installed recovery copy. The updater is designed to reject content that fails validation rather than replace a known-good copy.</p>
-<h2>Progress, analytics and backups</h2><p>Use the app's progress export before changing browser profiles, clearing site data or moving devices. The current backup contains all local learner profiles plus each profile's scoped review/sign-off state. Import replaces the local learner registry after confirmation rather than merging profiles. Imported progress backups are validated and certificates are intentionally re-earned on the receiving device. Assessment analytics and Learning insights events are separate learner-scoped, device-local stores and are not part of the progress backup. A progress import resets both analytics histories and verifies that cleanup before the imported learner registry becomes active. If analytics cleanup cannot be verified, the import is blocked from becoming active and the app shows a warning rather than claiming a clean import; staged progress writes are rolled back where possible, although some old analytics may already have been removed. A confirmed <b>Reset learner data</b> clears only the active learner's progress, notes, certificates, analytics and review/sign-off state; other local learner profiles are kept. If that cleanup warning persists before another learner uses the same browser/app profile, clear MouldMaster site/app data using the browser or operating-system controls.</p>
+<h2>Progress, analytics and backups</h2><p>Use the app's progress export before changing browser profiles, clearing site data or moving devices. The current backup contains all local learner profiles plus each profile's scoped review/sign-off, measured-assessment, process-diagnostics, Diagnostic Learning Lab and Material Behaviour Lab progress. Import replaces the local learner registry after confirmation rather than merging profiles. Imported progress backups are validated and certificates are intentionally re-earned on the receiving device. Assessment analytics and Learning insights events are separate learner-scoped, device-local stores and are not part of the progress backup. A progress import resets both analytics histories and verifies that cleanup before the imported learner registry becomes active. If analytics cleanup cannot be verified, the import is blocked from becoming active and the app shows a warning rather than claiming a clean import; staged progress writes are rolled back where possible, although some old analytics may already have been removed. A confirmed <b>Reset learner data</b> clears only the active learner's progress, notes, certificates, analytics, review/sign-off, measured-assessment, process-diagnostics and lab-progress state; other local learner profiles are kept. If that cleanup warning persists before another learner uses the same browser/app profile, clear MouldMaster site/app data using the browser or operating-system controls.</p>
+<h2 id="data-reset">Data &amp; Reset</h2>
+<p>MouldMaster keeps several kinds of local data under different owners. Use the matching control below rather than assuming one reset clears everything.</p>
+<div class="table-wrap"><table class="table"><thead><tr><th>Local data</th><th>Owner / storage</th><th>Use this control</th><th>Separate data that remains</th></tr></thead><tbody>
+<tr><td><b>Learner progress</b></td><td>Active learner · learner-scoped browser storage</td><td><b>Reset learner data</b> in the learner/profile area. Cleanup is verified before the learner state is replaced.</td><td>Saved process-data evidence and archived engineering evidence.</td></tr>
+<tr><td><b>Assessment analytics</b></td><td>Active learner · local derived analytics</td><td><b>Reset local analytics</b> in Exams.</td><td>Lesson progress, notes, certificates and engineering/process evidence.</td></tr>
+<tr><td><b>Learning insights</b></td><td>Active learner · local event history</td><td><b>Clear my analytics</b> in Learning insights.</td><td>Learner progress and assessment records.</td></tr>
+<tr><td><b>Prepared process-data evidence</b></td><td>Device/site dataset · IndexedDB <code>mouldmaster-process-data-v1</code></td><td>Delete a dataset, or use <b>Delete all local process-data evidence</b> in Process Data.</td><td>Learner progress and separately governed engineering-case evidence.</td></tr>
+<tr><td><b>Engineering cases and structured evidence</b></td><td>Engineering workspace · IndexedDB <code>mouldmaster-engineering-v2</code></td><td>Normal case removal is an <b>archive</b> that keeps the structured evidence and audit history. Full erasure is reserved for explicit browser/app site-data clearing.</td><td>Archived evidence intentionally remains after normal case removal.</td></tr>
+<tr><td><b>Production-health diagnostics</b></td><td>Local bounded diagnostic log</td><td><b>Clear local diagnostics</b> above.</td><td>Learner, process and engineering evidence.</td></tr>
+<tr><td><b>Offline app/cache and all local app data</b></td><td>Browser/OS site storage</td><td>Use browser or operating-system site-data controls when you need a complete local removal.</td><td>A normal learner reset does not uninstall the PWA or clear separately managed site data.</td></tr>
+</tbody></table></div>
+<div class="box"><b>Before handing a device to another learner or site user:</b> if any reset reports that cleanup could not be verified, do not assume the profile is clean. Use the browser/OS site-data controls to clear MouldMaster data before reuse.</div>
+<p class="muted">See the <a href="./privacy.html">Privacy notice</a> for the full backup, retention and deletion boundaries.</p>
 <h2>Certificates</h2><p>Current certificates are MouldMaster learning-completion records. They are not yet NZQA-approved qualifications, IACET CEUs, statutory authorisation or proof of machine-specific workplace competence.</p>
 <h2>Safety or technical concern</h2><p>Do not use the app to override a machine safeguard, site isolation procedure, resin supplier instruction or applicable legal requirement. If you identify a potentially incorrect safety or technical item, stop relying on that item until it has been reviewed against the cited/current source.</p>
 <h2>Publisher support contact</h2><p>For non-sensitive technical reports, use the learner-problem form above or the public repository issue tracker: <a href="https://github.com/connorth3-lgtm/Injection-moulding-app-/issues" rel="noopener">MouldMaster GitHub Issues</a>. Do not post learner names, exported backups or other personal information in a public issue. A private publisher contact method must be supplied before any future service centrally collects learner personal information or where a distribution/accreditation process specifically requires one.</p>
@@ -50,10 +68,12 @@ Legacy Windows recovery content: <span id="mmRecovery">2026.08.21.1</span><br>
  }catch(_){const s=document.getElementById('mmVersionStatus');if(s)s.textContent='Showing the bundled release snapshot because version.json could not be refreshed.'}
  const status=document.getElementById('mmHealthStatus');
  const label=result=>result.status==='ok'?`Deployment health: current (${result.source_sha?.slice(0,12)||'verified'}, runtime ${result.assessment_runtime||'unknown'}).`:result.status==='offline'?'Deployment health: offline — using the local app copy.':result.status==='not-applicable'?'Deployment health: local desktop/development copy; public Pages check is not applicable.':result.status==='mismatch'?'Deployment health: mismatch detected. Reopen online and report this if it persists.':'Deployment health: current public metadata could not be reached.';
- async function runHealth(){if(!window.MM_PRODUCTION_HEALTH){status.textContent='Local production diagnostics are unavailable in this copy.';return}status.textContent='Checking this app copy…';const result=await window.MM_PRODUCTION_HEALTH.checkDeployment();status.textContent=label(result)}
+ function renderDetails(){const out=document.getElementById('mmDiagnosticDetails');if(!out||!window.MM_PRODUCTION_HEALTH)return;const s=window.MM_PRODUCTION_HEALTH.snapshot();out.textContent=JSON.stringify({deployment:s.deployment,environment:s.environment,runtime:s.runtime,event_counts:s.event_counts},null,2)}
+ async function runHealth(){if(!window.MM_PRODUCTION_HEALTH){status.textContent='Local production diagnostics are unavailable in this copy.';return}status.textContent='Checking this app copy…';const result=await window.MM_PRODUCTION_HEALTH.checkDeployment();status.textContent=label(result);renderDetails()}
  document.getElementById('mmHealthRun')?.addEventListener('click',runHealth);
  document.getElementById('mmHealthCopy')?.addEventListener('click',async()=>{if(!window.MM_PRODUCTION_HEALTH){status.textContent='Local production diagnostics are unavailable in this copy.';return}const ok=await window.MM_PRODUCTION_HEALTH.copySafeSnapshot();status.textContent=ok?'Safe diagnostics copied. Review them before posting.':'Could not copy diagnostics automatically on this device.'});
- document.getElementById('mmHealthClear')?.addEventListener('click',()=>{window.MM_PRODUCTION_HEALTH?.clear();status.textContent='Local production diagnostics cleared.'});
+ document.getElementById('mmHealthClear')?.addEventListener('click',()=>{window.MM_PRODUCTION_HEALTH?.clear();status.textContent='Local production diagnostics cleared.';renderDetails()});
+ document.getElementById('mmSelfDiagnostic')?.addEventListener('toggle',event=>{if(event.target.open)renderDetails()});
  runHealth();
 })();
 </script>

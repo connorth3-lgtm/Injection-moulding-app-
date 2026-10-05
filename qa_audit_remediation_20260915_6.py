@@ -60,9 +60,12 @@ for name in REVIEWS+RESOLUTIONS:
 
 manifest=load('runtime-domain-manifest.json')['assets']
 book_runtime='./src/domains/learning/book-runtime.js';claim_runtime='./src/domains/learning/book-claim-trace.js';backup_runtime='./src/domains/learning/backup-authority-notice.js'
-for asset in (book_runtime,claim_runtime,backup_runtime): need(asset in manifest,f'domain manifest missing {asset}')
+for asset in (book_runtime,claim_runtime): need(asset in manifest,f'domain manifest missing {asset}')
 need(manifest.index(book_runtime)<manifest.index(claim_runtime),'complete claim trace must load after Book runtime')
-need(manifest.index(backup_runtime)<manifest.index(book_runtime),'backup authority notice must load before Book UI')
+learning_pack=text('src/domains/runtime-packs/learning-foundation-runtime-pack.js')
+need('/* >>> backup-authority-notice.js */' in learning_pack,'backup authority notice missing from learning foundation runtime pack')
+index=text('index.html')
+need(index.index("'./src/domains/runtime-packs/learning-foundation-runtime-pack.js'")<index.index("'./src/domains/domain-bootstrap.js'"),'backup authority runtime pack must load before async Book domain bootstrap')
 
 trace=text('src/domains/learning/book-claim-trace.js')
 for marker in ["claims:137","supported:116","qualified:21","mm-book-complete-claim-trace","Complete claim evidence trace","MM_BOOK_CLAIM_TRACE","getChapterClaims:chapterClaims"]:
@@ -77,8 +80,9 @@ sw=text('service-worker.js')
 need(f"const CACHE_VERSION='{release}';" in sw,'service-worker release identity stale')
 core=ROOT/'MouldMaster_Core_App.html';payload=ROOT/'src/core-runtime/core-source.txt'
 need(payload.is_file() and payload.read_bytes()==core.read_bytes(),'non-executable core assembly payload must be byte-identical to frozen core')
-index=text('index.html');need('const CORE_URL="./src/core-runtime/core-source.txt";' in index,'supported bootstrap must assemble from non-executable core source')
-for asset in [claim_runtime,backup_runtime]+[f'./src/domains/learning/book-data/{x}' for x in REVIEWS+RESOLUTIONS]:
+need('const CORE_URL="./src/core-runtime/core-source.txt";' in index,'supported bootstrap must assemble from non-executable core source')
+need("'./src/domains/runtime-packs/learning-foundation-runtime-pack.js'" in sw,'offline cache missing learning foundation runtime pack containing backup authority notice')
+for asset in [claim_runtime]+[f'./src/domains/learning/book-data/{x}' for x in REVIEWS+RESOLUTIONS]:
  need(repr(asset) in sw or f"'{asset}'" in sw,f'offline cache missing audit-remediation asset: {asset}')
 for marker in ["const LEGACY_CORE_PATH=new URL('./MouldMaster_Core_App.html',self.registration.scope).pathname;","if(url.pathname===LEGACY_CORE_PATH)return index||offlineDocumentResponse();","not a supported learner-facing web entry point"]:
  need(marker in sw,f'legacy raw-core navigation containment missing: {marker}')

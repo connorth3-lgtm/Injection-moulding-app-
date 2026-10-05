@@ -145,9 +145,9 @@ for sid,doi in {
 idx=text('index.html'); sw=text('service-worker.js'); pkg=json.loads(text('desktop/electron/package.json')); integrity=text('desktop/electron/scripts/generate-integrity.cjs')
 resource_from={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
 runtime_pack=text('src/domains/runtime-packs/process-data-runtime-pack.js')
+need("'./src/domains/runtime-packs/process-data-runtime-pack.js'" in sw,'offline cache missing process-data runtime pack')
 for f in ALL:
     need(f in runtime_pack,f'process-data runtime pack missing {f}')
-    need(f"'./{f}'" in sw,f'offline cache missing {f}')
     need('../../'+f in resource_from,f'desktop package missing {f}')
     need("'"+f+"'" in integrity,f'desktop integrity manifest missing {f}')
 need("'./src/domains/runtime-packs/process-data-runtime-pack.js'" in idx,'browser shell missing process-data runtime pack')
@@ -158,7 +158,7 @@ for wf in ['.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml'
     body=text(wf)
     need('python qa_process_data_20_pass.py' in body,f'{wf} must gate the 20-pass atlas')
 qa=text('.github/workflows/qa.yml')
-need("find . -maxdepth 1 -type f -name '*.js'" in qa,'release syntax gate must discover root JavaScript dynamically')
+need("Repository-wide JavaScript syntax" in qa,'release syntax gate must discover root JavaScript dynamically')
 
 workspace=text('mould-master-workspace.js')
 need('MM_PROCESS_DATA_DEEP_DIVE_50' in workspace and 'MM_PROCESS_DATA_20_PASS_ATLAS' in workspace,'Mould Master casebook must search guided, 50-case and 20-pass data libraries')

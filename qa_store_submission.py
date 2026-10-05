@@ -32,6 +32,7 @@ submission = text(submission_path)
 assets = text(assets_path)
 roadmap = text(roadmap_path)
 workflow = text(store_workflow_path)
+require("pull-requests: read" in workflow and "actions: read" in workflow, "Store packaging requires read-only PR/workflow provenance access")
 desktop_pkg = json.loads(text(ROOT / 'desktop/electron/package.json'))
 desktop_lock = json.loads(text(ROOT / 'desktop/electron/package-lock.json'))
 msix_pkg = json.loads(text(ROOT / 'desktop/electron/msix-toolchain/package.json'))
@@ -73,6 +74,9 @@ for marker in [
     "10.0.19041.0",
     "SOURCE_COMMIT.txt",
     "SHA256SUMS-STORE.txt",
+    "Require governed current-main source",
+    "tools/verify_production_source.py",
+    "--require-native-protection",
 ]:
     require(marker in workflow, f"Store package workflow safeguard missing: {marker}")
 

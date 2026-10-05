@@ -106,6 +106,15 @@ need(
 )
 
 # document.write has been retired. The zero ceiling prevents it from returning.
+# The remaining core-document reconstruction is a single bounded compatibility bridge.
+# It may be retired or simplified, but must not grow additional parse/replace or
+# synthetic lifecycle stages while the legacy core is being converged.
+need(index.count("new DOMParser()") == 1, "core-document parser stage must remain singular until retired")
+need(index.count("document.replaceChild(prepared.root,document.documentElement)") == 1, "whole-document replacement stage must remain singular until retired")
+need(index.count('document.dispatchEvent(new Event("DOMContentLoaded"') == 1, "synthetic DOMContentLoaded redispatch stage must remain singular until retired")
+need(index.count('window.dispatchEvent(new Event("load"') == 1, "synthetic load redispatch stage must remain singular until retired")
+for marker in ("function prepareDocument(", "async function executePreparedScripts(", "async function installDocument("):
+    need(index.count(marker) == 1, f"bootstrap compatibility stage grew or drifted: {marker}")
 write_count = index.count("document.write(")
 need(write_count <= int(baseline["documentWriteCeiling"]), f"document.write bootstrap debt grew: {write_count}")
 need("document.writeln(" not in index, "document.writeln is not permitted in the runtime bootstrap")

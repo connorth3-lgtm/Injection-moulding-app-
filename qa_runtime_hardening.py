@@ -133,12 +133,12 @@ must(reference_page, ['<script src="./reference-data.js"></script>', '<script sr
 must(service_worker, [
     "${CACHE_VERSION}-${CACHE_REVISION}", "'./repair.html'", "runtimeCritical=url.pathname.endsWith('.js')||url.pathname.endsWith('.json')",
     "const RELEASE_PATHS=new Set(", "async function releaseCacheMatch(request)", "const cache=await caches.open(STATIC_CACHE)", "RELEASE_PATHS.has(url.pathname)",
-    "async function fetchNetwork(event)", "fetch(event.request,{cache:'no-store'})", "await fetchNetwork(event)||criticalOfflineResponse(url)", "'./reference-data.html'", "'./reference-2026-expansion.js'", "'./diagnostic-learning-labs.js'",
-    "'./material-behaviour-labs.js'", "'./assessment-evidence-sources.js'", "'./evidence-maturity-deep-dive.js'", "'./evidence-maturity-formal-bridge.js'",
-    "'./src/domains/assessment/assessment-psychometric-hardening.js'", "'./assessment-evidence-integrity-upgrade.js'", "'./lesson-evidence-depth.js'", "'./lesson-deep-authoring-v2.js'", "'./assessment-evidence-approval.js'", "'./assessment-psychometric-approval.js'",
-    "'./src/domains/shared/runtime-v2.js'", "'./assessment-runtime-v2.js'", "'./assessment-multimodal.js'", "'./src/domains/shell/accessibility-hardening.js'",
-    "'./process-data-diagnostics.js'", "'./real-measured-data-assessment.js'", "'./curriculum-integration.js'", "'./specialist-curriculum.js'", "'./learning-analytics.js'",
-    "Promise.allSettled", "if(failed.length)", "await caches.delete(STATIC_CACHE)", "keeping the previous worker", "mouldmaster-offline-asset-unavailable"
+    "async function fetchNetwork(event)", "fetch(event.request,{cache:'no-store'})", "function unlistedRuntimeResponse(url)", "mouldmaster-unlisted-runtime-asset", "event.respondWith(unlistedRuntimeResponse(url))", "'./reference-data.html'", "'./reference-2026-expansion.js'",
+    "'./src/domains/runtime-packs/evidence-runtime-pack.js'", "'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'",
+    "'./src/domains/shared/runtime-v2.js'", "'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'", "'./src/domains/runtime-packs/assessment-multimodal-runtime-pack.js'", "'./src/domains/shell/accessibility-hardening.js'",
+    "'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'", "'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'", "'./learning-analytics.js'",
+    "Promise.allSettled", "if(failed.length)", "await caches.delete(STATIC_CACHE)", "keeping the previous worker", "mouldmaster-offline-asset-unavailable",
+    "text/css; charset=utf-8", "text/html; charset=utf-8", "application/manifest+json; charset=utf-8", "image/svg+xml; charset=utf-8", "image/png"
 ], "PWA hardening")
 core = worker_assets(service_worker, "CORE")
 optional = worker_assets(service_worker, "OPTIONAL")
@@ -155,6 +155,9 @@ runtime_fetch = service_worker[service_worker.index("self.addEventListener('fetc
 require("caches.match(" not in runtime_fetch, "service-worker runtime must never search across release generations")
 require(".put(" not in runtime_fetch, "service-worker runtime fetches must never mutate the validated release cache")
 require("cacheAsset(" not in runtime_fetch, "service-worker install-only cache writer must not be reachable from runtime fetches")
+runtime_critical = runtime_fetch[runtime_fetch.index("const runtimeCritical="):runtime_fetch.index("event.respondWith((async()=>await fetchNetwork(event)||new Response")]
+require("fetchNetwork(event)" not in runtime_critical, "unlisted same-origin JS/JSON must fail closed instead of mixing live network bytes into an older runtime")
+require("unlistedRuntimeResponse(url)" in runtime_critical, "unlisted same-origin runtime assets must use the explicit fail-closed response")
 
 # Preserve the original assessment/evidence/security integrity assertions.
 must(approval, ["const coverageOk=!(summary.total!==157", "status:coverageOk?'approved':'update-required'", "function scheduleApproval()", "DOMContentLoaded',()=>setTimeout(buildApproval,0)", "Evidence metadata could not finish loading.", "showUpdateWarning"], "evidence approval hardening")
@@ -172,7 +175,9 @@ must(psychometric_approval, [
     "distractorCueEdits", "formClauseTrims", "technicalLengthRanks", "regionalLengthRanks", "scenarioLengthRanks", "diagnosticLengthRanks", "materialLengthRanks", "optionalLengthRanks", "verificationPolicy", "psychometricCoverageOk", "a.length===4"
 ], "psychometric approval hardening")
 require("_evaluate_balanced_length" in question_runtime and "hard.remove('correct-longest-or-tied')" in question_runtime, "final standard audit must remove the absolute longest-key prohibition while retaining salience checks")
-must(real_measured, ["evidenceType:'real-measured'", "decisionCount:CASES.reduce", "Pressure actual values excluded pending unit", "without assigning phase names until an authoritative mapping is found"], "real measured assessment")
+must(real_measured, ["evidenceType:'real-measured'", "decisionCount:CASES.reduce", "Pressure actual values excluded pending unit", "Preserve the codes without assigning unverified phase names"], "real measured assessment")
+process_diag=read('process-data-diagnostics.js')
+require("MM_LEARNER_SCOPE" in process_diag and "migrateStoragePrefix" in process_diag and "2166136261" not in process_diag, "guided process-data diagnostic progress must use collision-safe canonical learner scope")
 require("throw new Error('Evidence approval coverage failure" not in approval, "incomplete evidence coverage must not crash the learning app")
 require("document.addEventListener('DOMContentLoaded',init)" in training, "training scenario upgrade remains DOMContentLoaded-driven")
 require("MM_RUNTIME_V2?.storage" in training and "scopedStore()?.get?.(k,d)" in training and "scopedStore()?.set?.(k,v)" in training, "training review/sign-off persistence must use learner-scoped Runtime V2 storage")

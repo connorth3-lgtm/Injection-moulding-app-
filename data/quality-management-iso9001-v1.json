@@ -332,5 +332,44 @@
     "ISO 9001:2026 retains the familiar management-system framework while strengthening clarity around leadership, quality culture and accountability.",
     "Risk and opportunity treatment is presented more clearly in the 2026 edition; MouldMaster continues to separate evidence prompts from organisational approval authority.",
     "The support map remains paraphrased and intentionally non-normative; it does not reproduce ISO requirement text."
+  ],
+  "packagingExamples": [
+    {
+      "id": "marlex-polyethylene-sai-global-qms-marking-observation-v1",
+      "title": "Marlex polyethylene bag — SAI Global / ISO 9001 quality-system marking",
+      "evidenceType": "user-supplied-packaging-observation",
+      "observedMaterialIdentity": {
+        "brand": "Marlex",
+        "polymerFamily": "Polyethylene",
+        "exactGrade": null,
+        "exactGradeStatus": "unresolved-from-photo"
+      },
+      "observedMarking": {
+        "certificationBodyMark": "SAI Global Certified System",
+        "standardText": "ISO 9001",
+        "packagingMeaning": "The bag states that the product was manufactured in a plant whose quality management system was registered/certified to ISO 9001."
+      },
+      "interpretation": "Treat this as management-system evidence about the manufacturing organisation or plant, not as ISO 9001 certification of the polyethylene resin, grade properties, processing window or product conformity.",
+      "verificationState": "packaging-observation-only",
+      "currentCertificateStatus": "not-verified-from-packaging",
+      "historicalContext": "SAI Global Assurance now operates as Intertek; an older SAI Global mark on packaging may therefore be historical branding and does not by itself establish current certificate validity or scope.",
+      "boundaries": [
+        "Do not infer the exact Marlex grade from this image.",
+        "Do not infer resin-property conformity, lot acceptance or processing conditions from an ISO 9001 management-system mark.",
+        "Do not treat the bag mark alone as proof that the certificate is current, covers this exact plant, or covers this exact product; verify the certificate/scope where that matters."
+      ],
+      "externalReferences": [
+        {
+          "title": "Intertek — Use of Certificates and Certification and Accreditation Mark",
+          "url": "https://cdn.intertek.com/www-intertek-com/dms-legacy/F205%20Use%20of%20Certificates%20and%20Certification%20and%20Accreditation%20Mark_21JUL2023.pdf",
+          "role": "certification-mark interpretation"
+        },
+        {
+          "title": "Intertek Academy — SAI Global operates as Intertek",
+          "url": "https://learning.intertek.com/course/quality-management-training/online-auditing-a-quality-management-system-iso-90012026/",
+          "role": "current SAI Global / Intertek context"
+        }
+      ]
+    }
   ]
 }

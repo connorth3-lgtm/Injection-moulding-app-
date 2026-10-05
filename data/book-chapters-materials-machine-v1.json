@@ -10,93 +10,298 @@
       "id": "polymer-structure",
       "title": "Polymer structure: amorphous and semi-crystalline behaviour",
       "applicability": "General thermoplastic injection-moulding concepts; individual grades may behave differently because of molecular architecture, additives, reinforcement and processing history.",
-      "sourceIds": ["BASF-ULTRADUR-FAMILY"],
+      "sourceIds": [
+        "BASF-ULTRADUR-FAMILY"
+      ],
       "sections": [
-        {"title":"Structure changes processing behaviour","text":"Thermoplastics do not all solidify in the same way. Amorphous materials solidify primarily as molecular mobility falls through their glass-transition region, while semi-crystalline materials can additionally form ordered crystalline regions during cooling. This distinction affects shrinkage, dimensional response, cooling behaviour and the sensitivity of properties to mould temperature and cooling history."},
-        {"title":"Do not turn the categories into absolutes","text":"The labels amorphous and semi-crystalline are useful engineering starting points, not complete process specifications. Copolymers, fillers, fibres, nucleating agents, flame-retardant packages and other modifiers can materially change flow, crystallisation, shrinkage and warpage. Use the actual grade documentation and measured part behaviour when establishing a production process."}
+        {
+          "title": "Structure changes processing behaviour",
+          "text": "Thermoplastics do not all solidify in the same way. Amorphous materials solidify primarily as molecular mobility falls through their glass-transition region, while semi-crystalline materials can additionally form ordered crystalline regions during cooling. This distinction affects shrinkage, dimensional response, cooling behaviour and the sensitivity of properties to mould temperature and cooling history."
+        },
+        {
+          "title": "Do not turn the categories into absolutes",
+          "text": "The labels amorphous and semi-crystalline are useful engineering starting points, not complete process specifications. Copolymers, fillers, fibres, nucleating agents, flame-retardant packages and other modifiers can materially change flow, crystallisation, shrinkage and warpage. Use the actual grade documentation and measured part behaviour when establishing a production process."
+        },
+        {
+          "title": "Structure influences the way a moulding responds to heat and flow",
+          "text": "Thermoplastics do not all pass through the moulding cycle in the same way. Molecular architecture and the degree to which ordered crystalline regions can form influence softening, solidification, shrinkage and the way properties develop through the part. These concepts are useful for predicting tendencies, but the exact behaviour belongs to the specific grade, its additives, processing history and test condition."
+        },
+        {
+          "title": "Amorphous and semi-crystalline are useful categories, not complete recipes",
+          "text": "Amorphous materials are commonly described through glass-transition behaviour and usually do not form the same crystalline morphology as semi-crystalline materials. Semi-crystalline grades can continue developing ordered structure as thermal history changes. That difference helps explain why dimensional response, shrinkage and sensitivity to cooling history can differ between families. It does not justify substituting family averages for current grade documentation."
+        },
+        {
+          "title": "Morphology can vary within one part",
+          "text": "A moulded component experiences different flow, shear, pressure and cooling histories across its thickness and geometry. The skin near a cold mould wall may develop differently from the interior, and reinforced materials add orientation effects. This means a nominal material name alone cannot describe the final local structure or property state everywhere in a complex moulding."
+        }
       ]
     },
     {
       "id": "rheology",
       "title": "Viscosity, shear rate, temperature and flow behaviour",
       "applicability": "Conceptual polymer-flow guidance. Quantitative viscosity behaviour requires material-specific rheological data and the relevant temperature and shear-rate range.",
-      "sourceIds": ["BASF-INJECTION-TROUBLESHOOTER"],
+      "sourceIds": [
+        "BASF-INJECTION-TROUBLESHOOTER"
+      ],
       "sections": [
-        {"title":"Flow resistance is not a single material number","text":"The apparent viscosity of a polymer melt depends on conditions. Injection moulding commonly operates in shear-dependent flow, so changing filling rate, melt temperature, geometry or material condition can change the pressure required to produce a given flow. A viscosity value without temperature, shear-rate basis and material identity is therefore incomplete."},
-        {"title":"Pressure is evidence about the whole flow path","text":"Injection pressure reflects resistance through the machine nozzle, runner system, gates and cavity as well as the melt's behaviour. A pressure change does not by itself identify the cause. Troubleshooting should compare controlled conditions, process traces and physical evidence rather than assuming that a pressure symptom proves one mechanism."}
+        {
+          "title": "Flow resistance is not a single material number",
+          "text": "The apparent viscosity of a polymer melt depends on conditions. Injection moulding commonly operates in shear-dependent flow, so changing filling rate, melt temperature, geometry or material condition can change the pressure required to produce a given flow. A viscosity value without temperature, shear-rate basis and material identity is therefore incomplete."
+        },
+        {
+          "title": "Pressure is evidence about the whole flow path",
+          "text": "Injection pressure reflects resistance through the machine nozzle, runner system, gates and cavity as well as the melt's behaviour. A pressure change does not by itself identify the cause. Troubleshooting should compare controlled conditions, process traces and physical evidence rather than assuming that a pressure symptom proves one mechanism."
+        },
+        {
+          "title": "Viscosity is a process response, not a fixed material number",
+          "text": "The apparent resistance of a polymer melt to flow depends on temperature, deformation rate and material state. Many thermoplastic melts exhibit shear-thinning behaviour, so the apparent viscosity can decrease as shear rate increases. This is one reason that flow rate, geometry and temperature interact strongly during filling rather than acting as independent knobs."
+        },
+        {
+          "title": "Geometry converts rheology into pressure demand",
+          "text": "A polymer that flows acceptably through one runner and gate can demand much more pressure through a thinner, longer or colder path. Pressure loss therefore cannot be interpreted without considering the flow path, rate and thermal condition together. Machine pressure is an upstream response to the whole system, not a direct measurement of the cavity at every location."
+        },
+        {
+          "title": "Use rheology to form hypotheses, then test the actual system",
+          "text": "Rheological principles help predict how changes may influence filling, but they do not remove the need for controlled studies. A useful process investigation combines the expected mechanism with repeatable observations such as fill progression, pressure response, part mass or appropriate cavity measurements. If the observations disagree with the prediction, revise the model rather than forcing the data to fit it."
+        }
       ]
     },
     {
       "id": "moisture-drying",
       "title": "Moisture, drying and hydrolysis without universal drying numbers",
       "applicability": "Hygroscopic and moisture-sensitive thermoplastics. Exact allowable moisture, dryer type, temperature and time are grade-specific and must come from current supplier guidance.",
-      "sourceIds": ["BASF-ULTRAMID-PROCESSING","BASF-ULTRASON-INJECTION","BASF-ECOVIO-INJECTION"],
+      "sourceIds": [
+        "BASF-ULTRAMID-PROCESSING",
+        "BASF-ULTRASON-INJECTION",
+        "BASF-ECOVIO-INJECTION"
+      ],
       "sections": [
-        {"title":"Moisture can affect appearance, processing and polymer integrity","text":"Moisture effects depend on polymer chemistry. It can contribute to surface defects, foaming and unstable plasticising, and in hydrolysis-sensitive polymers moisture present at melt temperature can reduce molecular weight. Drying is therefore a material-control task, not merely a cosmetic adjustment."},
-        {"title":"There is no universal drying recipe","text":"Supplier documents demonstrate materially different drying requirements between polymer families and grades. A time-and-temperature pair copied from another resin can be ineffective or harmful. Confirm the exact material and grade, incoming or measured moisture condition, dryer capability and current supplier requirement before setting a drying process."},
-        {"title":"Keep the material dry after drying","text":"Drying performance can be lost if dried hygroscopic material is exposed to humid air during conveying, storage or machine feeding. The material path from dryer to feed throat is part of the controlled process and should be assessed when moisture-related evidence persists."}
+        {
+          "title": "Moisture can affect appearance, processing and polymer integrity",
+          "text": "Moisture effects depend on polymer chemistry. It can contribute to surface defects, foaming and unstable plasticising, and in hydrolysis-sensitive polymers moisture present at melt temperature can reduce molecular weight. Drying is therefore a material-control task, not merely a cosmetic adjustment."
+        },
+        {
+          "title": "There is no universal drying recipe",
+          "text": "Supplier documents demonstrate materially different drying requirements between polymer families and grades. A time-and-temperature pair copied from another resin can be ineffective or harmful. Confirm the exact material and grade, incoming or measured moisture condition, dryer capability and current supplier requirement before setting a drying process."
+        },
+        {
+          "title": "Keep the material dry after drying",
+          "text": "Drying performance can be lost if dried hygroscopic material is exposed to humid air during conveying, storage or machine feeding. The material path from dryer to feed throat is part of the controlled process and should be assessed when moisture-related evidence persists."
+        },
+        {
+          "title": "Moisture state is a condition to verify",
+          "text": "For moisture-sensitive materials, the important question is not whether a dryer was switched on but whether the material entering the process satisfies the current grade-specific requirement. Storage history, exposure, dryer performance, hopper residence and sampling method can all affect that conclusion. Use current supplier documentation and an appropriate measurement method where required rather than treating a generic time-and-temperature pair as universal proof of dryness."
+        },
+        {
+          "title": "Separate moisture evidence from similar-looking symptoms",
+          "text": "Surface streaks, bubbles, degradation or unstable processing can be consistent with moisture, but appearance alone does not prove it. Compare material history, measured moisture where appropriate, dryer condition, timing, affected lots and the response to controlled handling. If the symptom persists with verified material condition, widen the diagnosis to other volatile, thermal, contamination, machine or mould mechanisms instead of repeatedly increasing drying severity."
+        },
+        {
+          "title": "Dryer performance and material exposure are separate questions",
+          "text": "A dryer can operate normally while the material reaching the machine no longer represents the intended condition because of conveying, hopper exposure, leaks, residence distribution or sampling error. When moisture is suspected, separate equipment status from actual material condition. The strongest conclusion combines current supplier requirements, a credible measurement or handling record, and a symptom pattern that changes consistently when the moisture state changes."
+        }
       ]
     },
     {
       "id": "thermal-history",
       "title": "Residence time, thermal history and degradation",
       "applicability": "General thermoplastic processing mechanism; acceptable melt temperature and residence-time exposure are grade-specific.",
-      "sourceIds": ["BASF-ULTRAMID-PROCESSING","BASF-ELASTOLLAN-565"],
+      "sourceIds": [
+        "BASF-ULTRAMID-PROCESSING",
+        "BASF-ELASTOLLAN-565"
+      ],
       "sections": [
-        {"title":"Time at temperature matters","text":"A polymer's thermal history is determined by more than the barrel setpoints. Melt temperature, time in the plasticising unit, delays, shot utilisation, hot-runner residence and repeated heating all contribute to exposure. Manufacturer guidance for engineering polymers explicitly treats residence time as a quality factor."},
-        {"title":"Treat degradation as an evidence problem","text":"Discolouration, odour, gas, deposits, viscosity change or mechanical-property loss can be consistent with degradation, but none alone proves it. Check actual melt conditions, residence pathways, interruptions, contamination and grade-specific limits before changing the process."}
+        {
+          "title": "Time at temperature matters",
+          "text": "A polymer's thermal history is determined by more than the barrel setpoints. Melt temperature, time in the plasticising unit, delays, shot utilisation, hot-runner residence and repeated heating all contribute to exposure. Manufacturer guidance for engineering polymers explicitly treats residence time as a quality factor."
+        },
+        {
+          "title": "Treat degradation as an evidence problem",
+          "text": "Discolouration, odour, gas, deposits, viscosity change or mechanical-property loss can be consistent with degradation, but none alone proves it. Check actual melt conditions, residence pathways, interruptions, contamination and grade-specific limits before changing the process."
+        },
+        {
+          "title": "Time and temperature act together",
+          "text": "A polymer's thermal history accumulates through drying where applicable, barrel residence, shear heating, hot-runner residence and interruptions. A temperature that is acceptable for a short period may become damaging when residence increases, and a nominally moderate setpoint does not prove the material has avoided excessive thermal exposure. Current grade-specific supplier limits and actual process history therefore matter more than a generic barrel-temperature number."
+        },
+        {
+          "title": "Look for evidence of changing residence or degradation",
+          "text": "Colour shift, odour, deposits, black specks, viscosity change or unstable recovery can support a thermal-history hypothesis, but none is uniquely diagnostic. Compare start-up, steady running, stoppages, purge history, shot utilisation, hot-runner behaviour and material lot information. A strong diagnosis explains why the symptom appears at a particular time or process state and predicts what should change when the suspected residence mechanism is controlled."
+        },
+        {
+          "title": "Use interruptions as diagnostic evidence",
+          "text": "Start-up, extended residence, short stoppages and prolonged shutdowns create different thermal histories even when the displayed setpoints are unchanged. If discoloration, gas or contamination appears preferentially after a particular interruption pattern, that timing supports a residence or degradation hypothesis. Confirm the relationship rather than treating the first successful purge or temperature change as proof."
+        }
       ]
     },
     {
       "id": "material-families",
       "title": "Commodity, engineering and high-performance polymer families",
       "applicability": "Orientation only. Family names do not replace grade-level TDS, processing guides, SDS or application qualification.",
-      "sourceIds": ["BASF-ULTRADUR-FAMILY","BASF-ULTRASON-FAMILY"],
+      "sourceIds": [
+        "BASF-ULTRADUR-FAMILY",
+        "BASF-ULTRASON-FAMILY"
+      ],
       "sections": [
-        {"title":"Families are useful maps, not recipes","text":"Polymer families help engineers anticipate broad differences in thermal behaviour, moisture sensitivity, stiffness, toughness, chemical resistance and processing demands. They are useful for asking better questions, but they do not define a production window."},
-        {"title":"The grade is the actionable identity","text":"Two grades from the same polymer family may differ through molecular weight, reinforcement, flame retardants, impact modifiers, colour systems or processing aids. Production decisions should therefore resolve the full commercial grade and revision of its supplier information before relying on family-level guidance."}
+        {
+          "title": "Families are useful maps, not recipes",
+          "text": "Polymer families help engineers anticipate broad differences in thermal behaviour, moisture sensitivity, stiffness, toughness, chemical resistance and processing demands. They are useful for asking better questions, but they do not define a production window."
+        },
+        {
+          "title": "The grade is the actionable identity",
+          "text": "Two grades from the same polymer family may differ through molecular weight, reinforcement, flame retardants, impact modifiers, colour systems or processing aids. Production decisions should therefore resolve the full commercial grade and revision of its supplier information before relying on family-level guidance."
+        },
+        {
+          "title": "Family names describe tendencies, not production windows",
+          "text": "A polymer family can suggest broad behaviour such as crystallinity, moisture sensitivity, temperature capability or reinforcement response, but grades within one family can differ substantially through molecular design, fillers, additives, flame-retardant systems, impact modifiers and intended application. Family knowledge is useful for forming expectations; current grade documentation controls actual processing limits and property claims."
+        },
+        {
+          "title": "Use family knowledge to ask better questions",
+          "text": "When an unfamiliar material behaves differently from expectation, ask which property of the formulation could explain the observation: crystallisation behaviour, reinforcement, viscosity, moisture sensitivity, additive package, thermal stability or another grade-specific feature. This approach is safer than copying a familiar recipe from another grade simply because the polymer-family label is similar."
+        },
+        {
+          "title": "Compare materials by the behaviour relevant to the decision",
+          "text": "A useful material comparison starts with the product and process question: dimensional stability, toughness, temperature exposure, moisture response, flow length, surface requirement, chemical resistance or another defined need. Comparing only family names can hide the grade features that actually control the decision. Use family knowledge to narrow the search, then verify the exact grade data, test conditions and supplier guidance that apply to the intended use."
+        },
+        {
+          "title": "Do not infer interchangeability from similar labels",
+          "text": "Two grades in the same polymer family may differ enough in reinforcement, viscosity, additive package or thermal stability that a process transferred between them behaves differently. When substituting material, treat the change as a new evidence question: confirm grade identity, supplier constraints, drying or conditioning requirements where applicable, and the product characteristics that must be reverified."
+        },
+        {
+          "title": "Connect family behaviour to observable process evidence",
+          "text": "Family knowledge becomes useful when it predicts what to watch. A more moisture-sensitive grade should make material handling and verified moisture state more important; a semi-crystalline formulation may make thermal history and dimensional development especially relevant; a reinforced grade raises orientation and anisotropy questions. These are starting hypotheses, not permissions to copy another material's settings. Confirm the exact grade, its supplier limits and the measured response of the real process."
+        }
       ]
     },
     {
       "id": "fillers-additives",
       "title": "Glass fibre, mineral, flame retardants, colour and other modifiers",
       "applicability": "General modifier effects; actual property and processing consequences are formulation- and grade-specific.",
-      "sourceIds": ["BASF-ULTRAMID-ADVANCED","BASF-ULTRADUR-FAMILY"],
+      "sourceIds": [
+        "BASF-ULTRAMID-ADVANCED",
+        "BASF-ULTRADUR-FAMILY"
+      ],
       "sections": [
-        {"title":"Modifiers change the material system","text":"Reinforcement and additives can change stiffness, flow, shrinkage, anisotropy, thermal behaviour, appearance and degradation sensitivity. Fibre orientation can make properties and shrinkage direction-dependent, which means gate location, flow pattern and part geometry can become strongly linked to warpage and dimensional behaviour."},
-        {"title":"Do not transfer settings between modified grades by name alone","text":"A reinforced, flame-retarded or otherwise modified grade should be treated as its own processing material. Confirm the supplier's grade-specific processing guidance and qualification requirements rather than assuming that settings for an unfilled or differently modified resin are interchangeable."}
+        {
+          "title": "Modifiers change the material system",
+          "text": "Reinforcement and additives can change stiffness, flow, shrinkage, anisotropy, thermal behaviour, appearance and degradation sensitivity. Fibre orientation can make properties and shrinkage direction-dependent, which means gate location, flow pattern and part geometry can become strongly linked to warpage and dimensional behaviour."
+        },
+        {
+          "title": "Do not transfer settings between modified grades by name alone",
+          "text": "A reinforced, flame-retarded or otherwise modified grade should be treated as its own processing material. Confirm the supplier's grade-specific processing guidance and qualification requirements rather than assuming that settings for an unfilled or differently modified resin are interchangeable."
+        },
+        {
+          "title": "Modifiers change more than one property at a time",
+          "text": "Glass fibre, mineral filler, impact modifier, flame retardant, lubricant, colourant and other additives can affect flow, shrinkage, anisotropy, thermal response, wear and surface appearance simultaneously. A formulation change can therefore alter both processing behaviour and final-part response. Treat the exact commercial grade as the evidence unit rather than assuming a neat-resin family description remains quantitatively valid after modification."
+        },
+        {
+          "title": "Reinforcement introduces directional evidence",
+          "text": "Fibre-filled materials can develop direction-dependent behaviour because flow influences fibre orientation. That can affect shrinkage, stiffness, strength and warpage differently along and across local flow directions. Orientation is not directly known from one machine setting, so part geometry, flow path, cavity pattern, measurement direction and, where justified, simulation or destructive analysis may all contribute to the evidence."
+        },
+        {
+          "title": "Treat formulation changes as process changes",
+          "text": "A colour, reinforcement level, flame-retardant package or other modifier can change more than appearance. Flow resistance, shrinkage direction, thermal response, wear, surface quality and degradation sensitivity may all move together. When a formulation changes, compare the process and part evidence that matter to the product instead of assuming that a familiar base-polymer name makes the old process directly transferable."
+        }
       ]
     },
     {
       "id": "plasticising-unit",
       "title": "Screw, barrel, non-return valve and plasticising",
       "applicability": "Reciprocating-screw injection units. Screw geometry, non-return-valve design, allowable temperatures and wear limits are machine/material specific.",
-      "sourceIds": ["BASF-ULTRASON-INJECTION","BASF-ELASTOLLAN-565"],
+      "sourceIds": [
+        "BASF-ULTRASON-INJECTION",
+        "BASF-ELASTOLLAN-565"
+      ],
       "sections": [
-        {"title":"Plasticising prepares the next shot","text":"During screw recovery, pellets are conveyed, heated, compressed and mixed into a melt while the screw moves rearward to accumulate the next shot. Barrel heating contributes energy, but mechanical work and material behaviour also influence the resulting melt condition."},
-        {"title":"The non-return valve matters during injection","text":"A check-ring or other non-return-valve system is intended to restrict reverse flow during injection so forward screw movement can displace melt toward the mould. Wear, contamination or poor sealing can contribute to shot inconsistency, but diagnosis should use repeatability evidence rather than assuming every cushion or weight variation is a valve fault."},
-        {"title":"Hardware suitability is material dependent","text":"Manufacturer processing guides can specify suitable screw types, lengths, compression characteristics and nozzle arrangements for particular materials. Those requirements override generic descriptions in this Book."}
+        {
+          "title": "Plasticising prepares the next shot",
+          "text": "During screw recovery, pellets are conveyed, heated, compressed and mixed into a melt while the screw moves rearward to accumulate the next shot. Barrel heating contributes energy, but mechanical work and material behaviour also influence the resulting melt condition."
+        },
+        {
+          "title": "The non-return valve matters during injection",
+          "text": "A check-ring or other non-return-valve system is intended to restrict reverse flow during injection so forward screw movement can displace melt toward the mould. Wear, contamination or poor sealing can contribute to shot inconsistency, but diagnosis should use repeatability evidence rather than assuming every cushion or weight variation is a valve fault."
+        },
+        {
+          "title": "Hardware suitability is material dependent",
+          "text": "Manufacturer processing guides can specify suitable screw types, lengths, compression characteristics and nozzle arrangements for particular materials. Those requirements override generic descriptions in this Book."
+        },
+        {
+          "title": "Plasticising must deliver both quantity and condition",
+          "text": "The screw and barrel do more than meter a volume of material. Rotation, heater input, back pressure where used, residence distribution and the non-return valve all influence how consistently the shot is prepared and delivered. A repeatable screw recovery time or position can be useful evidence, but neither alone proves uniform melt temperature, mixing quality or absence of degradation."
+        },
+        {
+          "title": "The non-return valve is part of injection repeatability",
+          "text": "During injection the machine relies on the screw assembly to transfer force to the melt with limited backward leakage. Wear, contamination or inconsistent check-valve behaviour can alter delivered volume and pressure response. When cushion, part mass or transfer behaviour becomes unstable, the valve is one possible mechanism among several and should be evaluated using machine-specific procedures and repeatable evidence."
+        },
+        {
+          "title": "Residence history links plasticising to material risk",
+          "text": "Material can experience different time-at-temperature histories depending on shot utilisation, recovery pattern, interruptions and the volume of melt retained in the system. For heat- or moisture-sensitive grades, the correct limits must come from current supplier and equipment documentation. Generic advice to increase temperature, back pressure or residence time should never replace grade-specific evidence."
+        },
+        {
+          "title": "Recovery repeatability is a useful process signal",
+          "text": "Screw recovery time, final screw position and the pattern of recovery can reveal changes in feeding, material condition, drive response or plasticising load. Interpret them as trends rather than universal acceptance limits. A stable recovery signal supports repeatability, but it does not by itself prove uniform melt quality or correct material temperature."
+        },
+        {
+          "title": "Separate preparation problems from injection-delivery problems",
+          "text": "An inconsistent shot can originate while the material is being prepared, while the shot is being transferred forward, or elsewhere in the flow path. Compare recovery behaviour, cushion or screw-end position, part mass, pressure response and timing to locate the likely stage. This avoids treating every weight or fill variation as evidence of one favourite component such as the check valve."
+        }
       ]
     },
     {
       "id": "shot-utilisation",
       "title": "Shot size, cushion, screw position and machine suitability",
       "applicability": "General reciprocating-screw process reasoning. Machine manufacturer limits and material residence constraints control acceptable utilisation.",
-      "sourceIds": ["BASF-ULTRAMID-PROCESSING","BASF-ELASTOLLAN-565"],
+      "sourceIds": [
+        "BASF-ULTRAMID-PROCESSING",
+        "BASF-ELASTOLLAN-565"
+      ],
       "sections": [
-        {"title":"Screw position is process evidence","text":"The screw-position trace describes how the injection unit moves through dosing, filling, transfer and packing. Cushion is the remaining forward stroke position after the programmed injection/hold sequence, but its meaning depends on the machine's position convention and control architecture."},
-        {"title":"Avoid universal shot-utilisation percentages","text":"A machine can be too large or too small for a process for several reasons, including residence exposure, plasticising capacity, available injection pressure or rate, metering repeatability and clamp requirements. A single universal percentage cannot establish suitability. Evaluate the machine, material, mould and required process window together."}
+        {
+          "title": "Screw position is process evidence",
+          "text": "The screw-position trace describes how the injection unit moves through dosing, filling, transfer and packing. Cushion is the remaining forward stroke position after the programmed injection/hold sequence, but its meaning depends on the machine's position convention and control architecture."
+        },
+        {
+          "title": "Avoid universal shot-utilisation percentages",
+          "text": "A machine can be too large or too small for a process for several reasons, including residence exposure, plasticising capacity, available injection pressure or rate, metering repeatability and clamp requirements. A single universal percentage cannot establish suitability. Evaluate the machine, material, mould and required process window together."
+        },
+        {
+          "title": "Machine suitability is multi-dimensional",
+          "text": "Shot utilisation should be considered together with residence exposure, plasticising capacity, available injection rate and pressure, screw recovery consistency, metering repeatability and clamp requirements. A machine can appear acceptable by nominal shot volume while still being a poor process match in another dimension. Record which limitation is actually being evaluated rather than relying on a single utilisation percentage."
+        },
+        {
+          "title": "Use cushion and screw position as trends, not verdicts",
+          "text": "A stable position trend can support consistent delivery, while drift or unusual variation can justify investigation of metering, non-return behaviour or material feed. But the interpretation depends on the machine's position convention and the rest of the cycle. Compare position with part mass, pressure response, recovery behaviour and other relevant evidence before naming a cause."
+        }
       ]
     },
     {
       "id": "velocity-pressure",
       "title": "Injection velocity, pressure and machine control",
       "applicability": "General filling-control concepts. Controller terminology, limits and transfer behaviour are machine-specific.",
-      "sourceIds": ["BASF-INJECTION-TROUBLESHOOTER","ASTM-D3641-24"],
+      "sourceIds": [
+        "BASF-INJECTION-TROUBLESHOOTER",
+        "ASTM-D3641-24"
+      ],
       "sections": [
-        {"title":"Velocity command and pressure demand are different quantities","text":"During velocity-controlled filling, the machine attempts to move the screw according to the commanded velocity profile while pressure develops as required to overcome resistance, up to machine or programmed limits. If the available pressure is insufficient, the commanded velocity may not be achieved."},
-        {"title":"A process should distinguish control from limits","text":"A pressure limit that repeatedly constrains filling is not equivalent to a deliberately pressure-controlled filling strategy. Review actual velocity, pressure and position traces to determine what the machine achieved, not only what was entered as a setpoint."},
-        {"title":"Transfer changes the control objective","text":"The transition from filling to packing/holding changes what the process is trying to control. Transfer position or other transfer criteria must be interpreted with the mould filling state, machine response and process evidence. Generic transfer positions are not portable between moulds."}
+        {
+          "title": "Velocity command and pressure demand are different quantities",
+          "text": "During velocity-controlled filling, the machine attempts to move the screw according to the commanded velocity profile while pressure develops as required to overcome resistance, up to machine or programmed limits. If the available pressure is insufficient, the commanded velocity may not be achieved."
+        },
+        {
+          "title": "A process should distinguish control from limits",
+          "text": "A pressure limit that repeatedly constrains filling is not equivalent to a deliberately pressure-controlled filling strategy. Review actual velocity, pressure and position traces to determine what the machine achieved, not only what was entered as a setpoint."
+        },
+        {
+          "title": "Transfer changes the control objective",
+          "text": "The transition from filling to packing/holding changes what the process is trying to control. Transfer position or other transfer criteria must be interpreted with the mould filling state, machine response and process evidence. Generic transfer positions are not portable between moulds."
+        },
+        {
+          "title": "Compare commanded velocity with achieved motion",
+          "text": "When pressure demand approaches a programmed or machine limit, the actual screw motion may no longer follow the requested profile. That distinction matters because a process that is nominally velocity controlled can behave as though it is pressure constrained. Review the achieved velocity, position and pressure traces together when deciding whether the process is truly following the intended filling strategy."
+        },
+        {
+          "title": "Rate changes can alter several physical conditions at once",
+          "text": "Changing filling rate can change pressure demand, shear history, thermal loss, flow-front timing and the way gas is displaced. A part response that improves after a rate change therefore does not identify which mechanism caused the improvement. Use the change as evidence and test the competing explanations rather than turning the successful setting into a universal rule."
+        }
       ]
     }
   ]

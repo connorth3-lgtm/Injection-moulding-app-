@@ -27,13 +27,60 @@ desktop_build = text(".github/workflows/open-desktop-build.yml")
 question_quality = text(".github/workflows/question-quality-50-pass.yml")
 external_validation = text(".github/workflows/release-external-validation.yml")
 risk_coverage = text(".github/workflows/ci-risk-coverage.yml")
+branch_assurance = text(".github/workflows/branch-release-assurance.yml")
+branch_assurance_verifier = text("tools/verify_branch_assurance.py")
 protection_helper = text(".github/scripts/apply-main-ruleset.sh")
 protection_doc = text(".github/MAIN_PROTECTION.md")
 ruleset_verifier = text("tools/verify_main_ruleset.py")
 main_policy = text("data/main-governance-policy-v1.json")
 production_verifier = text("tools/verify_production_source.py")
 preview_verifier = text("tools/verify_preview_source.py")
+premerge_public_candidate = text(".github/workflows/premerge-public-candidate.yml")
 external_live_verifier = text("tools/verify_external_validation_live_bindings.py")
+queued_profile = text(".github/workflows/profile-queued-zenodo-data.yml")
+lower_profile = text(".github/workflows/profile-cross-process-lower-workpiece.yml")
+queued_profiler_code = text("tools/profile_queued_zenodo_datasets.py")
+lower_profiler_code = text("tools/profile_cross_process_lower_workpiece.py")
+upper_profiler_code = text("tools/profile_cross_process_upper_workpiece.py")
+
+# Remote-data parsing must run without repository-write authority. Validated
+# aggregate outputs cross into a separate minimal publish job through a retained
+# artifact; only that second job receives contents:write.
+for workflow_name, workflow in (
+    ("queued Zenodo profiling", queued_profile),
+    ("cross-process lower profiling", lower_profile),
+):
+    need("permissions:\n  contents: read" in workflow, f"{workflow_name} must default to read-only repository access")
+    need("persist-credentials: false" in workflow, f"{workflow_name} checkout must not persist credentials")
+    need("actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a" in workflow,
+         f"{workflow_name} must hand validated output to the publisher through the pinned artifact action")
+    need("\n  publish:\n" in workflow, f"{workflow_name} must isolate publication in a separate job")
+    profile_block = workflow.split("  profile:\n", 1)[1].split("\n  publish:\n", 1)[0]
+    publish_block = workflow.split("\n  publish:\n", 1)[1]
+    for forbidden in ("contents: write", "GH_TOKEN:", "gh auth setup-git", "git push"):
+        need(forbidden not in profile_block, f"{workflow_name} profiling job must remain write-token free: {forbidden}")
+    for marker in (
+        "permissions:\n      actions: read\n      contents: write",
+        "GH_TOKEN: ${{ github.token }}",
+        "gh auth setup-git",
+        "actions/runs/$GITHUB_RUN_ID/artifacts",
+        'test "$remote_head" = "$SOURCE_SHA"',
+        'git push origin "HEAD:$TARGET_BRANCH"',
+    ):
+        need(marker in publish_block, f"{workflow_name} isolated publisher missing marker: {marker}")
+    need("uses:" not in publish_block, f"{workflow_name} write-capable publish job must not execute third-party actions")
+
+for profiler_name, profiler in (
+    ("queued Zenodo profiler", queued_profiler_code),
+    ("cross-process lower profiler", lower_profiler_code),
+    ("cross-process upper profiler", upper_profiler_code),
+):
+    for marker in (
+        "MAX_PUBLISHER_FILE_BYTES",
+        "received > MAX_PUBLISHER_FILE_BYTES",
+        "received > expected_size",
+    ):
+        need(marker in profiler, f"{profiler_name} publisher download resource bound missing: {marker}")
 
 # Main provenance is a read-only post-push audit. Native ruleset prevention is
 # authoritative; audit automation must never rewrite main after the fact.
@@ -59,10 +106,22 @@ for marker in [
     "Open Desktop Build",
     "Question Quality 50-Pass",
     "Exact-head CI Risk Coverage",
+    "workflow_path_for",
+    ".github/workflows/ci-risk-coverage.yml",
+    ".path == $workflow_path",
     "actions/runs?head_sha=$PR_HEAD_SHA&event=pull_request",
+    "PR_HEAD_REF",
+    "PR_HEAD_REPO_ID",
+    ".head_repository.id",
+    '.user.type == "User"',
+    "collaborators/$reviewer/permission",
+    "write|maintain|admin",
+    "Independent trusted latest-head human approval verified",
     "all_required_success",
     "pulls/$PR_NUMBER/reviews",
-    "Independent latest-head human approval verified",
+    '.user.type == "User"',
+    "non-canonical exact head SHA",
+    'any(.pull_requests[]?; (.number == $pr and .base.ref == "main"))',
     "native protection is authoritative",
 ]:
     need(marker in guard, f"main provenance guard missing marker: {marker}")
@@ -145,15 +204,39 @@ need(
     "production verifier must reject historical/arbitrary manual-dispatch sources",
 )
 for marker in (
+    "run_matches_main_pr",
+    '((pr.get("base") or {}).get("ref") == "main")',
+    "successful_required_workflows(runs, pr_number, pr_head_ref, pr_head_repo_id)",
+    "REQUIRED_WORKFLOW_PATHS",
+    'r.get("path") == REQUIRED_WORKFLOW_PATHS[name]',
+    '"Exact-head CI Risk Coverage"',
+    "full lowercase 40-character commit SHA",
+    "no usable canonical exact head SHA",
+):
+    need(marker in production_verifier, f"production verifier missing exact originating-PR evidence binding: {marker}")
+for marker in (
     "branches/preview",
     "direct pushes and arbitrary workflow-dispatch refs are not deployable",
     "merge_commit_sha",
     "MouldMaster Release QA",
     "Mobile Browser QA",
     "Question Quality 50-Pass",
+    "Pre-merge Public Candidate",
+    "run_matches_pr",
+    '((pr.get("base") or {}).get("ref") == "preview")',
+    "latest_required_states(runs, pr_number, pr_head_ref, pr_head_repo_id)",
+    "REQUIRED_WORKFLOW_PATHS",
+    'row.get("path") == REQUIRED_WORKFLOW_PATHS[name]',
+    "full lowercase 40-character commit SHA",
 ):
     need(marker in preview_verifier, f"preview-source verifier missing marker: {marker}")
 for marker in (
+    "actions/runs/{run_id}",
+    '"Pre-merge Public Candidate"',
+    '".github/workflows/premerge-public-candidate.yml"',
+    'run.get("event") != "pull_request"',
+    'run.get("status") != "completed"',
+    'run.get("conclusion") != "success"',
     "actions/runs/{run_id}/artifacts",
     "artifact.get(\"expired\") is not False",
     "live artifact digest does not match canonical webCandidate",
@@ -162,15 +245,81 @@ for marker in (
 ):
     need(marker in external_live_verifier, f"external live-binding verifier missing marker: {marker}")
 for marker in (
+    "name: MouldMaster Preview Candidate",
     "Require merged-PR preview provenance",
-    "Recheck current merged preview provenance",
-    "mouldmaster-pages-site-publish",
-    "xs.sort(key=lambda x:",
+    "Require exact-head preview quality gates",
+    "Build governed preview candidate",
+    "Verify retained preview candidate locally",
+    "Retain exact preview candidate",
+    "verify_preview_source.py",
+    "main is the sole live Pages publisher",
 ):
-    need(marker in preview_pages, f"preview Pages governance missing marker: {marker}")
+    need(marker in preview_pages, f"preview candidate governance missing marker: {marker}")
+for forbidden in ("actions/deploy-pages@", "actions/upload-pages-artifact@", "pages: write", "id-token: write", "mouldmaster-pages-site-publish"):
+    need(forbidden not in preview_pages, f"preview candidate must not publish the repository Pages site: {forbidden}")
 need(
     "mouldmaster-pages-site-publish" in pages,
-    "main Pages deploy must share one publication concurrency domain with preview Pages",
+    "main Pages deploy must retain the sole site-wide publication concurrency domain",
+)
+need(
+    "retain-exact-candidate" not in preview_pages.split("Require exact-head preview quality gates", 1)[1].split("Validate preview build contracts", 1)[0],
+    "preview push-SHA polling must not require the PR-only public-candidate job",
+)
+for marker in (
+    "Live protected-main governance policy",
+    "github.base_ref == 'main'",
+    "github.ref == 'refs/heads/main'",
+    'python tools/verify_main_ruleset.py --repository "${{ github.repository }}"',
+):
+    need(marker in release_qa, f"release QA missing live protected-main fail-closed governance marker: {marker}")
+
+need("pull_request:\n    branches: [ main, preview ]" in premerge_public_candidate,
+     "public-candidate gate must run on every governed PR")
+need("\n    paths:\n" not in premerge_public_candidate.split("pull_request:", 1)[1].split("workflow_dispatch:", 1)[0],
+     "public-candidate gate must not use PR path filters; impact routing handles cheap skips")
+need("Skip redundant candidate rebuild" in premerge_public_candidate and "steps.impact.outputs.runtime != 'true'" in premerge_public_candidate,
+     "public-candidate gate must keep impact-based cheap skipping for non-runtime changes")
+
+# Preview and main must also converge after merge/push on one exact SHA. This
+# read-only meta-gate waits for the real branch-specific CI and deployment runs;
+# it does not duplicate their work or grant mutation/publication permissions.
+for marker in (
+    "name: Branch Release Assurance",
+    "branches: [main, preview]",
+    "pull_request:",
+    "contract-self-test:",
+    "exact-push-assurance:",
+    "actions: read",
+    "BRANCH_ASSURANCE_BRANCH",
+    "BRANCH_ASSURANCE_SHA",
+    "tools/verify_branch_assurance.py",
+):
+    need(marker in branch_assurance, f"branch release assurance workflow missing marker: {marker}")
+for forbidden in ("contents: write", "pages: write", "pull-requests: write"):
+    need(forbidden not in branch_assurance, f"branch release assurance must remain read-only: {forbidden}")
+for marker in (
+    '"main": (',
+    '"preview": (',
+    '"MouldMaster Release QA"',
+    '"Mobile Browser QA"',
+    '"Question Quality 50-Pass"',
+    '"MouldMaster Pages Release Readiness"',
+    '"Main PR Provenance Guard"',
+    '"MouldMaster Preview Candidate"',
+    '"branch": branch',
+    '"event": "push"',
+    "head_sha",
+):
+    need(marker in branch_assurance_verifier, f"branch assurance verifier missing marker: {marker}")
+branch_assurance_self_test = subprocess.run(
+    [sys.executable, str(ROOT / "tools/verify_branch_assurance.py"), "--self-test"],
+    cwd=ROOT,
+    capture_output=True,
+    text=True,
+)
+need(
+    branch_assurance_self_test.returncode == 0,
+    f"branch-assurance verifier self-test failed: {(branch_assurance_self_test.stderr or branch_assurance_self_test.stdout).strip()}",
 )
 
 preview_self_test = subprocess.run(
@@ -207,9 +356,29 @@ need(
 
 # Production publication must require GitHub's effective native protection.
 need("--require-native-protection" in pages, "Pages publication does not require native main protection")
+for marker in (
+    "legacy-containment:",
+    "--contain-only",
+    "needs: [production-source, legacy-containment]",
+    "needs.production-source.result == 'success'",
+    "Confirm workflow-mode Pages publisher after provenance",
+):
+    need(marker in pages, f"Pages containment/provenance privilege split missing: {marker}")
+containment_block = pages.split("  legacy-containment:", 1)[1].split("\n  publisher-guard:", 1)[0]
+need("actions: write" in containment_block and "pages: write" not in containment_block,
+     "early legacy Pages containment must not receive Pages settings mutation authority")
+for marker in (
+    "Checkout exact main source before deployment",
+    "Recheck current protected-main provenance before deployment",
+    "Recheck current protected-main provenance after deployment",
+    "Reconfirm main is still on the deployed SHA after race window",
+):
+    need(marker in pages, f"Pages deploy-time current-main recheck missing: {marker}")
 need("Require merged-PR provenance before publication" in pages, "Pages stable provenance gate label is missing")
 need("native protection mandatory" in pages, "Pages native-protection requirement is not explicit")
-need("if: github.event_name != 'pull_request'" in pages, "Pages publication guard must remain push/manual only")
+need("if: github.event_name == 'push'" in pages, "Pages publication authority must be limited to protected-main push events")
+need("Manual dispatch is contract-only" in pages and "Manual dispatch does not receive Pages mutation or publication authority." in pages,
+     "manual Pages dispatch must remain contract-only and non-publishing")
 
 # The administrator helper must transform the live ruleset rather than replace
 # it with a stale static payload. It must preserve existing security/review
@@ -246,6 +415,11 @@ for marker in [
     need(marker in protection_helper, f"native-protection helper missing marker: {marker}")
 
 need('if [[ "$MODE" == "--dry-run" ]]' in protection_helper, "native-protection helper must expose a non-mutating dry run")
+need(
+    protection_helper.index('write_capable="$(gh api "repos/$REPO/collaborators?affiliation=direct&per_page=100"')
+    < protection_helper.index('if [[ "$MODE" == "--dry-run" ]]; then'),
+    "collaborator feasibility check must run before dry-run exits",
+)
 need("gh auth token" not in protection_helper, "native-protection helper must not extract a GitHub token")
 need("GITHUB_TOKEN=" not in protection_helper, "native-protection helper must not embed or assign a repository token")
 need(
@@ -281,7 +455,21 @@ for marker in [
 
 # Ensure all six governed contexts remain real PR jobs.
 need("jobs:\n  integrity:" in release_qa, "required status context 'integrity' is no longer the Release QA job")
-need("  mobile-browser:\n    if: always()\n    needs: [browser-chromium, browser-webkit, browser-cross, app-500-reliability]" in mobile_qa, "required status context 'mobile-browser' must remain the fail-closed aggregate mobile QA job")
+mobile_block = mobile_qa.split("  mobile-browser:\n", 1)[1] if "  mobile-browser:\n" in mobile_qa else ""
+need(mobile_block, "required status context 'mobile-browser' is no longer the Mobile Browser aggregate job")
+need("    if: always()" in mobile_block, "mobile-browser aggregate must always evaluate upstream browser evidence")
+need("    needs: [browser-chromium, browser-webkit, browser-cross, app-500-reliability]" in mobile_block or
+     "    needs: [impact, browser-chromium, browser-webkit, browser-cross, app-500-reliability]" in mobile_block,
+     "mobile-browser aggregate must depend on every governed browser/reliability group")
+for marker in (
+    'test "$CHROMIUM" = "success"',
+    'test "$WEBKIT" = "success"',
+    'test "$CROSS_BROWSER" = "success"',
+    'test "$APP_500" = "success"',
+):
+    need(marker in mobile_block, f"mobile-browser aggregate missing fail-closed evidence check: {marker}")
+need('if [ "$CHROMIUM" = "skipped" ]' in mobile_block or 'BROWSER_IMPACT' in mobile_block,
+     "mobile-browser aggregate must distinguish an intentional impact skip from a failed/cancelled browser group")
 need("jobs:\n  build-windows:" in desktop_build, "required status context 'build-windows' is no longer the desktop build job")
 need(
     "jobs:\n  question-quality-50-pass:" in question_quality,
@@ -296,6 +484,20 @@ need(
     "required status context 'exact-head-risk-coverage' is no longer the aggregate CI risk job",
 )
 need("pull_request:\n    branches: [main]" in risk_coverage, "exact-head risk coverage required check must run on every PR to main")
+need("workflow_dispatch:" not in risk_coverage, "exact-head risk coverage must remain PR-only because non-PR execution cannot prove PR-head coverage")
+risk_verifier = text("tools/verify_ci_risk_coverage.py")
+need("WORKFLOW_PATHS" in risk_verifier and 'run.get("path") != WORKFLOW_PATHS[name]' in risk_verifier,
+     "exact-head risk coverage must bind evidence to canonical workflow paths")
+for marker in (
+    '".github/workflows/pages.yml"',
+    '".github/workflows/preview-pages.yml"',
+    '"tools/verify_production_source.py"',
+    '"tools/verify_main_ruleset.py"',
+    '"data/main-governance-policy-v1.json"',
+    '".github/workflows/publish-open-desktop.yml"',
+    '".github/workflows/microsoft-store-msix.yml"',
+):
+    need(marker in risk_verifier, f"exact-head release/provenance risk classifier missing control-plane path: {marker}")
 for workflow_name, workflow in [
     ("question-quality", question_quality),
     ("release-external-validation", external_validation),
@@ -314,12 +516,17 @@ for marker in [
 ]:
     need(marker in external_validation, f"external-validation boundary workflow missing marker: {marker}")
 
-# Release QA must discover executable JavaScript from the filesystem and keep
-# the architecture debt ceiling as a release gate.
+# Release QA must discover all first-party executable JavaScript/Python from
+# the filesystem and keep the architecture debt ceiling as a release gate.
 for marker in [
-    "find . -maxdepth 1 -type f -name '*.js'",
-    "find src/domains -type f -name '*.js'",
-    "find desktop/electron/src desktop/electron/scripts -type f -name '*.cjs'",
+    "Repository-wide JavaScript syntax",
+    "-name '*.js'",
+    "-name '*.cjs'",
+    "-name '*.mjs'",
+    "node --check",
+    "Repository-wide Python syntax",
+    "-name '*.py'",
+    "python -m py_compile",
     "run: python qa_architecture_debt.py",
 ]:
     need(marker in release_qa, f"release QA cleanup contract missing marker: {marker}")
@@ -357,16 +564,25 @@ for marker in [
     'workflows: ["Main PR Provenance Guard"]',
     "types: [completed]",
     "branches: [main]",
-    "github.event.workflow_run.conclusion == 'success'",
+    "permissions: {}",
+    "manual-preview:",
+    "Preview fully merged branches without deletion",
+    "Manual preview only:",
+    "github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'",
+    "contents: write",
     "group: prune-fully-merged-branches",
     "cancel-in-progress: false",
-    '[[ -z "$branch" || "$branch" == "main" ]] && continue',
+    '[[ -z "$branch" || "$branch" == "main" || "$branch" == "preview" ]] && continue',
     'compare/main...$sha',
     "merged_at != null",
     'git/refs/heads/$branch',
 ]:
     need(marker in pruner, f"merged-branch pruner missing marker: {marker}")
 need("\n  push:\n" not in pruner, "pruner must not race the provenance audit on raw main pushes")
+need('"$branch" == "preview"' in pruner, "permanent preview promotion branch must be excluded from automated pruning")
+manual_prune_block = pruner.split("  manual-preview:", 1)[1].split("\n  prune:", 1)[0]
+need("contents: write" not in manual_prune_block, "manual branch-prune preview must remain read-only")
+need("gh api --method DELETE" not in manual_prune_block, "manual branch-prune preview must never delete refs")
 need("superseded" not in pruner.lower(), "one-time superseded-branch deletion allowlist must not remain")
 for stale_branch in [
     "codex/source-freshness-coherence-20260826",
@@ -387,6 +603,6 @@ for marker in (
 print(
     "MouldMaster repository governance QA passed "
     "(main-only independent human-review native policy; six required contexts; live-preserving helper; "
-    "post-push audit read-only; main/preview Pages publication provenance serialized and source-bound; Pages requires exact native protection; dual locked desktop toolchains; "
-    "guard-gated pruning; architecture debt gate)"
+    "post-push audit read-only; main-only Pages publication source-bound; preview exact-SHA candidate retained without publish authority; Pages requires exact native protection; dual locked desktop toolchains; "
+    "guard-gated pruning; preview/main exact-push release assurance; architecture debt gate)"
 )

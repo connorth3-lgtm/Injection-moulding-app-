@@ -20,6 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
@@ -28,13 +29,66 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: '3.12'
+      - name: Developer doctor fast triage
+        id: developer-doctor
+        continue-on-error: true
+        run: python tools/mouldmaster_doctor.py
+      - name: Publish developer doctor summary
+        if: always()
+        shell: bash
+        run: |
+          if [ -f qa-artifacts/doctor-report.md ]; then
+            cat qa-artifacts/doctor-report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "### MouldMaster Doctor" >> "$GITHUB_STEP_SUMMARY"
+            echo "Doctor did not produce a report; inspect the Doctor step bootstrap failure." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload developer doctor report
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: mouldmaster-doctor
+          path: |
+            qa-artifacts/doctor-report.md
+            qa-artifacts/doctor-report.json
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Shared change-impact routing integrity
+        run: python qa_change_impact.py
       - name: Locked browser QA dependency graph
         run: python qa_browser_dependency_lock.py
-      - name: JavaScript syntax
+      - name: Repository-wide JavaScript syntax
         run: |
-          find . -maxdepth 1 -type f -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check
-          find src/domains -type f -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check
-          find desktop/electron/src desktop/electron/scripts -type f -name '*.cjs' -print0 | sort -z | xargs -0 -n1 node --check
+          find . -type f \( -name '*.js' -o -name '*.cjs' -o -name '*.mjs' \) \
+            -not -path './node_modules/*' \
+            -not -path './desktop/electron/node_modules/*' \
+            -not -path './desktop/electron/msix-toolchain/node_modules/*' \
+            -not -path './desktop/electron/dist/*' \
+            -print0 | sort -z | xargs -0 -n1 node --check
+      - name: Repository-wide Python syntax
+        run: |
+          find . -type f -name '*.py' \
+            -not -path './.venv/*' \
+            -not -path './venv/*' \
+            -print0 | sort -z | xargs -0 -n1 python -m py_compile
+      - name: Repository-wide JSON syntax
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          excluded = {'.git', 'node_modules', 'dist', '.venv', 'venv'}
+          paths = [
+              path for path in Path('.').rglob('*.json')
+              if not any(part in excluded for part in path.parts)
+          ]
+          for path in sorted(paths):
+              try:
+                  json.loads(path.read_text(encoding='utf-8'))
+              except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+                  raise SystemExit(f"{path}: invalid repository JSON: {exc}") from exc
+          print(f"Repository-wide JSON syntax passed: {len(paths)} files")
+          PY
       - name: Strict style CSP hash determinism
         run: node tools/generate_style_csp.cjs --check
       - name: Release and assessment integrity
@@ -50,10 +104,18 @@ jobs:
           python tools/verify_release_external_validation.py
           python qa_release_validation_packets.py
       - name: Repository governance integrity
-        run: |
-          python qa_repo_governance.py
-          python qa_pages_single_publisher.py
-          python qa_release_supply_chain.py
+        run: python qa_repo_governance.py
+      - name: Live protected-main governance policy
+        if: (github.event_name == 'pull_request' && github.base_ref == 'main') || github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python tools/verify_main_ruleset.py --repository "${{ github.repository }}"
+      - name: Pages publisher governance integrity
+        run: python qa_pages_single_publisher.py
+      - name: Release supply-chain governance integrity
+        run: python qa_release_supply_chain.py
+      - name: Preview/main exact-push assurance contract
+        run: python qa_branch_assurance.py
       - name: Audit remediation governance regression
         run: python qa_audit_governance.py
       - name: Full-app remediation contract
@@ -76,6 +138,7 @@ jobs:
           python qa_book_claim_coverage.py
           python qa_book_derived_governance.py
           python qa_book_release_integration.py
+          python qa_book_reader_architecture.py
           python qa_book_engineering_diagrams.py
           python qa_book_worked_cases_next_release.py
           python qa_book_worked_case_calculations.py
@@ -237,3 +300,22 @@ jobs:
           name: mouldmaster-evidence-maturity-audit
           path: evidence-maturity-report.json
           if-no-files-found: error
+      - name: Upload consolidated diagnostic bundle
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: mouldmaster-diagnostic-bundle
+          path: |
+            qa-artifacts/doctor-report.md
+            qa-artifacts/doctor-report.json
+            qa-artifacts/verify-report.md
+            qa-artifacts/verify-report.json
+            audit-consolidation-report.json
+            assessment-evidence-integrity-report.json
+            critical-actions-versions-report.json
+            evidence-maturity-report.json
+            measured-evidence-integration-report.json
+            measured-evidence-decision-workflow-report.json
+            real-site-feedback-contract-report.json
+          if-no-files-found: warn
+          retention-days: 14

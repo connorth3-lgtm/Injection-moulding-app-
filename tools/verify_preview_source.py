@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 import time
@@ -18,7 +19,14 @@ REQUIRED_WORKFLOWS = (
     "MouldMaster Release QA",
     "Mobile Browser QA",
     "Question Quality 50-Pass",
+    "Pre-merge Public Candidate",
 )
+REQUIRED_WORKFLOW_PATHS = {
+    "MouldMaster Release QA": ".github/workflows/qa.yml",
+    "Mobile Browser QA": ".github/workflows/mobile-browser-qa.yml",
+    "Question Quality 50-Pass": ".github/workflows/question-quality-50-pass.yml",
+    "Pre-merge Public Candidate": ".github/workflows/premerge-public-candidate.yml",
+}
 
 
 def api_endpoint(url: str) -> str:
@@ -49,6 +57,27 @@ def request_json(token: str, url: str) -> object:
     raise SystemExit(f"GitHub preview-source query failed after {REQUEST_ATTEMPTS} attempts: {detail}")
 
 
+def request_workflow_runs(token: str, repository: str, head_sha: str) -> dict:
+    rows: list[dict] = []
+    for page in range(1, 11):
+        query = urlencode({
+            "head_sha": head_sha,
+            "event": "pull_request",
+            "per_page": 100,
+            "page": page,
+        })
+        payload = request_json(token, f"{API}/repos/{repository}/actions/runs?{query}")
+        if not isinstance(payload, dict):
+            raise SystemExit("GitHub preview-source workflow query returned a non-object payload")
+        page_rows = payload.get("workflow_runs") or []
+        if not isinstance(page_rows, list):
+            raise SystemExit("GitHub preview-source workflow query returned invalid workflow_runs")
+        rows.extend(row for row in page_rows if isinstance(row, dict))
+        if len(page_rows) < 100:
+            return {"workflow_runs": rows}
+    raise SystemExit("GitHub preview-source workflow query exceeded the 1000-run pagination safety bound")
+
+
 def matching_preview_prs(payload: object, source_sha: str) -> list[dict]:
     rows = payload if isinstance(payload, list) else []
     return [
@@ -73,11 +102,42 @@ def unique_matches(payloads: tuple[object, ...], source_sha: str) -> list[dict]:
     return list(by_number.values())
 
 
-def latest_required_states(payload: object) -> dict[str, tuple[str, str]]:
+def run_matches_pr(
+    row: dict,
+    pr_number: int,
+    pr_head_ref: str = "",
+    pr_head_repo_id: int | None = None,
+) -> bool:
+    prs = row.get("pull_requests") or []
+    if prs:
+        return any(
+            isinstance(pr, dict)
+            and int(pr.get("number") or 0) == pr_number
+            and ((pr.get("base") or {}).get("ref") == "preview")
+            for pr in prs
+        )
+    if not pr_head_ref or row.get("head_branch") != pr_head_ref:
+        return False
+    if pr_head_repo_id is not None:
+        return int(((row.get("head_repository") or {}).get("id")) or 0) == pr_head_repo_id
+    return True
+
+
+def latest_required_states(
+    payload: object,
+    pr_number: int | None = None,
+    pr_head_ref: str = "",
+    pr_head_repo_id: int | None = None,
+) -> dict[str, tuple[str, str]]:
     runs = (payload or {}).get("workflow_runs", []) if isinstance(payload, dict) else []
     result: dict[str, tuple[str, str]] = {}
     for name in REQUIRED_WORKFLOWS:
-        matches = [row for row in runs if row.get("name") == name]
+        matches = [
+            row for row in runs
+            if row.get("name") == name
+            and row.get("path") == REQUIRED_WORKFLOW_PATHS[name]
+            and (pr_number is None or run_matches_pr(row, pr_number, pr_head_ref, pr_head_repo_id))
+        ]
         matches.sort(key=lambda row: (str(row.get("created_at") or ""), int(row.get("id") or 0)), reverse=True)
         latest = matches[0] if matches else {}
         result[name] = (str(latest.get("status") or "missing"), str(latest.get("conclusion") or "missing"))
@@ -85,8 +145,8 @@ def latest_required_states(payload: object) -> dict[str, tuple[str, str]]:
 
 
 def verify(token: str, repository: str, source_sha: str) -> None:
-    if len(source_sha) != 40:
-        raise SystemExit("Preview source SHA must be a full 40-character commit SHA")
+    if re.fullmatch(r"[0-9a-f]{40}", source_sha) is None:
+        raise SystemExit("Preview source SHA must be a full lowercase 40-character commit SHA")
 
     branch = request_json(token, f"{API}/repos/{repository}/branches/preview")
     current = str(((branch or {}).get("commit") or {}).get("sha") or "") if isinstance(branch, dict) else ""
@@ -113,15 +173,17 @@ def verify(token: str, repository: str, source_sha: str) -> None:
 
     pr = matches[0]
     pr_number = int(pr["number"])
-    pr_head = str((pr.get("head") or {}).get("sha") or "")
-    if len(pr_head) != 40:
-        raise SystemExit(f"Merged preview PR #{pr_number} has no usable exact head SHA")
+    pr_head_info = pr.get("head") or {}
+    pr_head = str(pr_head_info.get("sha") or "")
+    pr_head_ref = str(pr_head_info.get("ref") or "")
+    pr_head_repo_id = int(((pr_head_info.get("repo") or {}).get("id")) or 0) or None
+    if re.fullmatch(r"[0-9a-f]{40}", pr_head) is None:
+        raise SystemExit(f"Merged preview PR #{pr_number} has no usable canonical exact head SHA")
 
-    runs_query = urlencode({"head_sha": pr_head, "event": "pull_request", "per_page": 100})
     states: dict[str, tuple[str, str]] = {}
     for attempt in range(1, 11):
-        runs = request_json(token, f"{API}/repos/{repository}/actions/runs?{runs_query}")
-        states = latest_required_states(runs)
+        runs = request_workflow_runs(token, repository, pr_head)
+        states = latest_required_states(runs, pr_number, pr_head_ref, pr_head_repo_id)
         if all(state == ("completed", "success") for state in states.values()):
             break
         failed = [f"{name}={s}/{c}" for name, (s, c) in states.items() if s == "completed" and c not in {"success", "missing"}]
@@ -148,11 +210,55 @@ def self_test() -> None:
     assert len(unique_matches(([exact], [duplicate]), source)) == 1
     sample = {
         "workflow_runs": [
-            {"id": i + 1, "name": name, "status": "completed", "conclusion": "success", "created_at": f"2026-10-03T00:00:0{i}Z"}
+            {
+                "id": i + 1,
+                "name": name,
+                "path": REQUIRED_WORKFLOW_PATHS[name],
+                "status": "completed",
+                "conclusion": "success",
+                "created_at": f"2026-10-03T00:00:0{i}Z",
+                "pull_requests": [{"number": 1, "base": {"ref": "preview"}}],
+            }
             for i, name in enumerate(REQUIRED_WORKFLOWS)
         ]
     }
-    assert all(v == ("completed", "success") for v in latest_required_states(sample).values())
+    assert all(v == ("completed", "success") for v in latest_required_states(sample, 1).values())
+    wrong_pr = {
+        "workflow_runs": [{
+            "id": 99,
+            "name": REQUIRED_WORKFLOWS[0],
+            "path": REQUIRED_WORKFLOW_PATHS[REQUIRED_WORKFLOWS[0]],
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-10-03T01:00:00Z",
+            "pull_requests": [{"number": 2, "base": {"ref": "main"}}],
+        }]
+    }
+    assert latest_required_states(wrong_pr, 1)[REQUIRED_WORKFLOWS[0]] == ("missing", "missing")
+    historical = {
+        "workflow_runs": [
+            {
+                "id": i + 20,
+                "name": name,
+                "path": REQUIRED_WORKFLOW_PATHS[name],
+                "status": "completed",
+                "conclusion": "success",
+                "created_at": f"2026-10-03T02:00:0{i}Z",
+                "pull_requests": [],
+                "head_branch": "feature/source",
+                "head_repository": {"id": 123},
+            }
+            for i, name in enumerate(REQUIRED_WORKFLOWS)
+        ]
+    }
+    assert all(
+        v == ("completed", "success")
+        for v in latest_required_states(historical, 1, "feature/source", 123).values()
+    )
+    assert latest_required_states(historical, 1, "wrong/source", 123)[REQUIRED_WORKFLOWS[0]] == ("missing", "missing")
+    spoofed = json.loads(json.dumps(sample))
+    spoofed["workflow_runs"][0]["path"] = ".github/workflows/fake.yml"
+    assert latest_required_states(spoofed, 1)[REQUIRED_WORKFLOWS[0]] == ("missing", "missing")
     print("Preview-source verifier self-test passed")
 
 

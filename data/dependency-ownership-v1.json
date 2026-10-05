@@ -1,0 +1,258 @@
+{
+  "schema": 1,
+  "id": "mouldmaster-dependency-ownership-v1",
+  "purpose": "Canonical source-to-runtime-to-QA ownership graph used by developer triage and CI impact routing.",
+  "boundary": "Conservative engineering aid. Release QA and governed external validation remain authoritative.",
+  "areas": {
+    "shell": {
+      "failureIdPrefix": "SHELL",
+      "sources": [
+        "index.html",
+        "service-worker.js",
+        "materials.html",
+        "src/domains/shell/**"
+      ],
+      "generatedOutputs": [
+        "src/domains/runtime-packs/shell-finalization-runtime-pack.js"
+      ],
+      "runtimeSurfaces": [
+        "app-shell",
+        "navigation",
+        "startup-routing",
+        "preview"
+      ],
+      "checks": [
+        "qa_app_shell_registry.py",
+        "qa/feature-reachability.spec.js"
+      ],
+      "workflows": [
+        "MouldMaster Release QA",
+        "Mobile Browser QA",
+        "Pre-merge Public Candidate"
+      ],
+      "dependsOn": []
+    },
+    "assessment": {
+      "failureIdPrefix": "ASSESS",
+      "sources": [
+        "assessment-*.js",
+        "src/domains/assessment/**",
+        "src/domains/shared/learner-scope.js"
+      ],
+      "generatedOutputs": [
+        "src/domains/runtime-packs/assessment-foundation-runtime-pack.js"
+      ],
+      "runtimeSurfaces": [
+        "assessment",
+        "learner-scoped-storage",
+        "question-quality"
+      ],
+      "checks": [
+        "qa_assessment_storage_scope.py",
+        "qa_assessment_quality.py",
+        "qa_assessment_evidence.py"
+      ],
+      "workflows": [
+        "Question Quality 50-Pass",
+        "MouldMaster Release QA"
+      ],
+      "dependsOn": [
+        "shell"
+      ]
+    },
+    "process-data": {
+      "failureIdPrefix": "PROCESS",
+      "sources": [
+        "process-data-*.js",
+        "src/domains/process/**",
+        "data-integration-runtime.js",
+        "process-data-intelligence-ui.js"
+      ],
+      "generatedOutputs": [
+        "src/domains/runtime-packs/process-data-runtime-pack.js"
+      ],
+      "runtimeSurfaces": [
+        "process-data",
+        "diagnostics",
+        "local-intake"
+      ],
+      "checks": [
+        "qa_process_data_diagnostics.py",
+        "qa_process_data_local_intake.py",
+        "qa_data_integration.py"
+      ],
+      "workflows": [
+        "Residual Data Integrity QA",
+        "MouldMaster Release QA"
+      ],
+      "dependsOn": [
+        "shell"
+      ]
+    },
+    "measured-learning": {
+      "failureIdPrefix": "MEASURED",
+      "sources": [
+        "measured-learning-library.js",
+        "measured-learning-library.css",
+        "data/measured-learning/**",
+        "tools/measured_learning_core.py",
+        "tools/build_measured_learning_case.py",
+        "tools/promote_measured_learning_release.py"
+      ],
+      "generatedOutputs": [
+        "src/domains/runtime-packs/measured-evidence-runtime-pack.js"
+      ],
+      "runtimeSurfaces": [
+        "measured-learning",
+        "process-data",
+        "assessment"
+      ],
+      "checks": [
+        "qa_measured_learning_production_gate.py",
+        "qa_measured_learning_launch_gate.py",
+        "qa_measured_evidence_integration.py"
+      ],
+      "workflows": [
+        "MouldMaster Measured Learning Production Gate",
+        "MouldMaster Release QA"
+      ],
+      "dependsOn": [
+        "process-data",
+        "assessment",
+        "shell"
+      ]
+    },
+    "book": {
+      "failureIdPrefix": "BOOK",
+      "sources": [
+        "book-runtime.js",
+        "data/book-*",
+        "src/domains/learning/book-*",
+        "src/domains/learning/book-data/**"
+      ],
+      "generatedOutputs": [],
+      "runtimeSurfaces": [
+        "book",
+        "claim-trace",
+        "curriculum"
+      ],
+      "checks": [
+        "qa_book_manifest.py",
+        "qa_book_release_integration.py",
+        "qa_curriculum_integration.py"
+      ],
+      "workflows": [
+        "MouldMaster Release QA"
+      ],
+      "dependsOn": [
+        "shell"
+      ]
+    },
+    "preview-release": {
+      "failureIdPrefix": "PREVIEW",
+      "sources": [
+        ".github/workflows/pages.yml",
+        ".github/workflows/preview-pages.yml",
+        "tools/build_pages_artifact.py",
+        "tools/build_pages_hold.py",
+        "tools/verify_pages_hold.py",
+        "version.json"
+      ],
+      "generatedOutputs": [
+        ".pages-dist/**"
+      ],
+      "runtimeSurfaces": [
+        "preview",
+        "service-worker",
+        "deployment-provenance"
+      ],
+      "checks": [
+        "qa_pages_single_publisher.py",
+        "qa_release_supply_chain.py"
+      ],
+      "workflows": [
+        "Pre-merge Public Candidate",
+        "MouldMaster Release QA"
+      ],
+      "dependsOn": [
+        "shell"
+      ]
+    },
+    "release-evidence": {
+      "failureIdPrefix": "RELEASE",
+      "sources": [
+        "data/release-external-validation-v1.json",
+        "data/pwa-physical-device-validation-v1.json",
+        "data/accessibility-real-at-validation-v1.json",
+        "data/nzqa-external-validation-v1.json",
+        "tools/verify_release_external_validation.py"
+      ],
+      "generatedOutputs": [],
+      "runtimeSurfaces": [
+        "candidate-binding",
+        "external-hold"
+      ],
+      "checks": [
+        "tools/verify_release_external_validation.py",
+        "qa_release_validation_packets.py"
+      ],
+      "workflows": [
+        "Pre-merge Public Candidate",
+        "MouldMaster Release QA"
+      ],
+      "dependsOn": [
+        "preview-release"
+      ]
+    },
+    "ci-routing": {
+      "failureIdPrefix": "CI",
+      "sources": [
+        "tools/change_impact.py",
+        "tools/ci_impact.py",
+        "tools/mouldmaster_doctor.py",
+        "qa_change_impact.py",
+        ".github/workflows/**"
+      ],
+      "generatedOutputs": [],
+      "runtimeSurfaces": [
+        "doctor",
+        "fast-feedback",
+        "workflow-routing"
+      ],
+      "checks": [
+        "qa_change_impact.py",
+        "qa_critical_actions_versions.py"
+      ],
+      "workflows": [
+        "MouldMaster Release QA"
+      ],
+      "dependsOn": []
+    },
+    "production-health": {
+      "failureIdPrefix": "HEALTH",
+      "sources": [
+        "src/domains/governance/production-health.js",
+        "support.html",
+        "privacy.html",
+        "qa_production_observability.py"
+      ],
+      "generatedOutputs": [],
+      "runtimeSurfaces": [
+        "local-diagnostics",
+        "preview-self-diagnostics",
+        "deployment-health"
+      ],
+      "checks": [
+        "qa_production_observability.py"
+      ],
+      "workflows": [
+        "MouldMaster Release QA",
+        "Mobile Browser QA",
+        "Pre-merge Public Candidate"
+      ],
+      "dependsOn": [
+        "shell"
+      ]
+    }
+  }
+}

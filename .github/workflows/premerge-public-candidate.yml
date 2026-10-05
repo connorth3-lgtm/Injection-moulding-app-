@@ -1,19 +1,11 @@
 name: Pre-merge Public Candidate
 
 on:
+  # Always create the exact-head candidate gate for governed PRs. The workflow's
+  # impact classifier makes non-runtime changes cheap without leaving a missing
+  # required preview-provenance signal.
   pull_request:
     branches: [ main, preview ]
-    paths:
-      - 'latest.json'
-      - 'version.json'
-      - 'index.html'
-      - 'service-worker.js'
-      - 'src/domains/shell/pwa-shell.js'
-      - 'src/**'
-      - '*.js'
-      - '*.css'
-      - '*.html'
-      - 'manifest.webmanifest'
   workflow_dispatch:
 
 permissions:
@@ -32,14 +24,26 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 1
+          fetch-depth: 0
+
+      - name: Classify runtime impact since retained candidate
+        id: impact
+        run: python3 tools/ci_impact.py --governed-candidate
+
+      - name: Skip redundant candidate rebuild
+        if: steps.impact.outputs.runtime != 'true'
+        run: |
+          echo "No learner-runtime change since the currently bound retained candidate; reusing that exact runtime artifact."
+          echo "No new 90-day candidate artifact was generated." >> "$GITHUB_STEP_SUMMARY"
 
       - name: Set up Python
+        if: steps.impact.outputs.runtime == 'true'
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: '3.12'
 
       - name: Build production Pages candidate from exact PR head
+        if: steps.impact.outputs.runtime == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -58,6 +62,7 @@ jobs:
           PY
 
       - name: Report exact public-runtime fingerprint
+        if: steps.impact.outputs.runtime == 'true'
         id: fingerprint
         shell: bash
         run: |
@@ -76,6 +81,7 @@ jobs:
           echo "- runtime fingerprint: \`$value\`" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Retain exact candidate for external HOLD execution
+        if: steps.impact.outputs.runtime == 'true'
         id: artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
@@ -87,6 +93,7 @@ jobs:
           include-hidden-files: true
 
       - name: Record artifact provenance
+        if: steps.impact.outputs.runtime == 'true'
         run: |
           echo "- artifact id: \`${{ steps.artifact.outputs.artifact-id }}\`" >> "$GITHUB_STEP_SUMMARY"
           echo "- artifact digest: \`${{ steps.artifact.outputs.artifact-digest }}\`" >> "$GITHUB_STEP_SUMMARY"

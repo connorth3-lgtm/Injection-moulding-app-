@@ -14,8 +14,37 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  manual-verify-platform-immutability:
+    if: github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout selected source for version identity
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - name: Verify existing desktop release is platform-immutable
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          current="$(python3 -c "import json; print(json.load(open('version.json', encoding='utf-8')).get('desktop_release', ''))")"
+          [[ -n "$current" ]] || { echo "desktop_release is missing from version.json" >&2; exit 1; }
+          tag="desktop-v${current}"
+          release_json="$(gh api -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Api-Version: 2026-03-10' "repos/${REPOSITORY}/releases/tags/${tag}")"
+          immutable="$(python3 -c 'import json,sys; print("true" if json.load(sys.stdin).get("immutable") is True else "false")' <<<"$release_json")"
+          [[ "$immutable" == "true" ]] || {
+            echo "GitHub reports ${tag} as mutable. Manual verification is read-only; enable repository-level immutable releases before the next governed desktop release." >&2
+            exit 1
+          }
+          echo "GitHub reports immutable=true for ${tag}. Manual verification performed with read-only contents permission."
+
   verify-platform-immutability:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' }}
     permissions:
       contents: write
     runs-on: ubuntu-latest

@@ -11,6 +11,7 @@ capturing helper/unrelated pages, and non-public repository paths remain inacces
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import time
@@ -142,6 +143,56 @@ def verify_once(base_url: str, expected_source_sha: str | None = None) -> None:
         raise AssertionError(
             f"preview deployment source mismatch: deployed={deployed_source_sha} expected={expected_source_sha}"
         )
+    if str(deployment.get("web_release") or "") != web_release:
+        raise AssertionError("preview deployment.json web_release does not match version.json")
+
+    manifest_status, manifest_body = fetch(urljoin(root, "preview/pages-manifest.json"))
+    if manifest_status != 200:
+        raise AssertionError(f"non-production preview pages-manifest.json unavailable: HTTP {manifest_status}")
+    try:
+        manifest = json.loads(manifest_body.decode("utf-8"))
+    except json.JSONDecodeError as exc:
+        raise AssertionError("non-production preview pages-manifest.json is invalid JSON") from exc
+    if str(manifest.get("source_sha") or "") != deployed_source_sha:
+        raise AssertionError("preview pages-manifest source_sha does not match deployment.json")
+    if str(manifest.get("web_release") or "") != web_release:
+        raise AssertionError("preview pages-manifest web_release does not match version.json")
+    assets = manifest.get("assets") or {}
+    for required_asset in ("index.html","version.json","service-worker.js","deployment.json"):
+        if required_asset not in assets:
+            raise AssertionError(f"preview pages-manifest is missing governed asset: {required_asset}")
+
+    # Prove that the live offline-critical runtime bytes match the exact hashes
+    # recorded by the governed build, rather than trusting metadata/source SHA alone.
+    critical_assets = set(manifest.get("precache_assets") or ())
+    critical_assets.update({"index.html", "version.json", "service-worker.js", "deployment.json"})
+    for rel in sorted(critical_assets):
+        record = assets.get(rel)
+        if not isinstance(record, dict):
+            raise AssertionError(f"preview pages-manifest has no hash record for critical asset: {rel}")
+        expected_hash = str(record.get("sha256") or "")
+        expected_bytes = record.get("bytes")
+        if re.fullmatch(r"[0-9a-f]{64}", expected_hash) is None or not isinstance(expected_bytes, int):
+            raise AssertionError(f"preview pages-manifest has invalid integrity metadata for critical asset: {rel}")
+        live_status, live_body = fetch(urljoin(root, "preview/" + rel))
+        if live_status != 200:
+            raise AssertionError(f"critical preview asset unavailable: {rel} -> HTTP {live_status}")
+        if len(live_body) != expected_bytes:
+            raise AssertionError(
+                f"critical preview asset byte-size mismatch: {rel} live={len(live_body)} expected={expected_bytes}"
+            )
+        live_hash = hashlib.sha256(live_body).hexdigest()
+        if live_hash != expected_hash:
+            raise AssertionError(
+                f"critical preview asset SHA-256 mismatch: {rel} live={live_hash} expected={expected_hash}"
+            )
+
+    html_source_sha = require_match(r'<meta\s+name="mm-preview-source-sha"\s+content="([0-9a-f]{40})"', preview_text, "preview HTML source SHA")
+    html_web_release = require_match(r'<meta\s+name="mm-preview-web-release"\s+content="([^"]+)"', preview_text, "preview HTML web release")
+    if html_source_sha != deployed_source_sha:
+        raise AssertionError("preview HTML source SHA does not match deployment.json")
+    if html_web_release != web_release:
+        raise AssertionError("preview HTML web release does not match version.json")
 
     shell_release = require_match(r'const\s+SHELL_RELEASE="([^"]+)"', preview_text, "preview shell release")
     if shell_release != web_release:
@@ -203,7 +254,7 @@ def main() -> None:
             verify_once(args.base_url, args.expected_source_sha)
             print(
                 "Pages release-hold verification passed: production root remains held while normal root visits auto-forward to /preview/, migration is scoped to "
-                "approved MouldMaster entry paths, the preview release fingerprint is internally consistent, "
+                "approved MouldMaster entry paths, preview HTML/deployment/manifest/source provenance is exact and internally consistent, "
                 "the validated preview cache is immutable at runtime, the persistent preview warning is present, "
                 "the local-only device helper is live, and legacy/non-public probes return 404."
             )

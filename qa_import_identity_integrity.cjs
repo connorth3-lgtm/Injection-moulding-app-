@@ -11,7 +11,27 @@ assert(src.includes('const entries=Object.entries(x.users);'));
 assert(src.includes("if(!entries.length||entries.length>500)throw new Error('Invalid learner count in backup')"));
 assert(!src.includes('Object.entries(x.users).slice(0,500)'));
 assert(src.includes('const sid=canonicalLearnerId(id)'));assert(src.includes('canonicalLearnerId(u.id)!==sid'));assert(src.includes('const active=canonicalLearnerId(x.activeUser)'));
+const coreSrc=fs.readFileSync('src/core-runtime/core-inline-004.js','utf8');
+assert(coreSrc.includes('function pvNewLearnerId()'));
+assert(coreSrc.includes('Object.prototype.hasOwnProperty.call(users,id)'));
+assert(!coreSrc.includes('pvRequireLearnerId("learner-"+Date.now())'));
 assert(src.includes('hasOwnLearner(x.users,x.activeUser)'));assert(src.includes('Reset learner data'));assert(src.includes('Other local learner profiles and saved process-data evidence will be kept'));assert(src.includes("version:4,scope:'learner-registry'"));
+
+assert(src.includes("const IMPORT_META_KEYS=new Set(['__proto__','prototype','constructor'])"));
+assert(src.includes("function importKey(v,max=160)"));
+
+const hostileExtras=JSON.parse('{"version":3,"scope":"active-learner","learnerId":"learner-1","practicalSignoff":{"checks":{"__proto__":true,"constructor":true,"prototype":true,"safe":true}},"measuredAssessment":{"__proto__":{"best":99,"last":99},"constructor":{"best":88,"last":88},"prototype":{"best":77,"last":77},"safe-case":{"best":75,"last":50}},"processDiagnostics":{"__proto__":{"attempts":9,"completed":true,"bestScore":100},"safe-diag":{"attempts":2,"completed":true,"bestScore":80}},"diagnosticLabs":{"constructor":{"attempts":9,"completed":true,"bestScore":100},"safe-lab":{"attempts":1,"completed":true,"bestScore":90}},"materialLabs":{"prototype":{"attempts":9,"completed":true,"bestScore":100},"safe-material":{"attempts":1,"completed":true,"bestScore":95}}}');
+const sanitized=sandbox.MM_TRAINING_DATA_BRIDGE.trainingExtrasForImport(hostileExtras,{'learner-1':{id:'learner-1'}},'learner-1').get('learner-1');
+for(const row of [sanitized.practicalSignoff.checks,sanitized.measuredAssessment,sanitized.processDiagnostics,sanitized.diagnosticLabs,sanitized.materialLabs]){
+  for(const key of ['__proto__','constructor','prototype'])assert.strictEqual(Object.prototype.hasOwnProperty.call(row,key),false,`unsafe imported meta-key survived: ${key}`);
+  const proto=Object.getPrototypeOf(row);
+  assert(proto&&Object.getPrototypeOf(proto)===null,'sanitized imported map must retain an ordinary unpolluted object prototype');
+}
+assert.strictEqual(sanitized.practicalSignoff.checks.safe,true);
+assert.strictEqual(sanitized.measuredAssessment['safe-case'].best,75);
+assert.strictEqual(sanitized.processDiagnostics['safe-diag'].attempts,2);
+assert.strictEqual(sanitized.diagnosticLabs['safe-lab'].bestScore,90);
+assert.strictEqual(sanitized.materialLabs['safe-material'].bestScore,95);
 
 sandbox.importData=function(){};sandbox.window.importData=sandbox.importData;
 vm.runInContext(fs.readFileSync('src/domains/learning/learner-model.js','utf8'),sandbox);
@@ -24,4 +44,4 @@ assert.throws(()=>validate(JSON.stringify({activeUser:'toString',users:{}})),/Mi
 assert.throws(()=>validate(JSON.stringify({activeUser:'learner-1',users:{'learner-1':{id:'different'}}})),/mismatch/);
 const guardSrc=fs.readFileSync('src/domains/learning/learner-model.js','utf8');
 assert(guardSrc.includes('__mmImportIntegrityGuard'));assert(guardSrc.includes('Object.prototype.hasOwnProperty.call(x.users,x.activeUser)'));
-console.log('Import identity integrity QA passed: canonical IDs are aligned, oversized registries fail closed before mutation, own-property activation is required, embedded IDs must match, and the final learning-domain runtime guard prevents packed legacy code from reintroducing truncation.');
+console.log('Import identity integrity QA passed: canonical IDs are aligned, oversized registries fail closed before mutation, prototype meta-keys are rejected from nested training maps, own-property activation is required, embedded IDs must match, and the final learning-domain runtime guard prevents packed legacy code from reintroducing truncation.');

@@ -19,6 +19,31 @@ async function closeModal(page){const b=page.getByRole('button',{name:/^close$/i
 async function expectVisible(page,selector){await expect(page.locator(selector)).toBeVisible({timeout:10000})}
 async function expectNoHorizontalOverflow(page,label){const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth+1);expect(overflow,label+' must not introduce horizontal page overflow').toBeFalsy()}
 
+async function openDeepLink(page,view){
+ await page.addInitScript(()=>{
+  const id='deep-link-qa',user={id,name:'Deep Link QA',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
+  localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:id,users:{[id]:user}}));
+ });
+ await page.setViewportSize({width:768,height:900});
+ await page.goto(BASE+'index.html?view='+encodeURIComponent(view),{waitUntil:'domcontentloaded'});
+ await page.waitForFunction(()=>typeof window.MM_APP_SHELL_FINALIZED==='string'&&!document.getElementById('mmBootstrap'),{timeout:30000});
+ await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
+}
+test.describe('canonical startup deep links',()=>{
+ test('core and compatibility view routes open their requested learner surfaces',async({page})=>{
+  for(const [view,selector] of [['materials','#materials'],['assessment','#exams'],['standards','#standards']]){
+   await openDeepLink(page,view);
+   await expectVisible(page,selector);
+  }
+ });
+ test('custom governed routes open Book, process data and readiness surfaces',async({page})=>{
+  for(const [view,selector] of [['book','#mmBookView'],['processDataLabs','#processDataLabs'],['standards-readiness','#mmStandardsReadinessView']]){
+   await openDeepLink(page,view);
+   await expectVisible(page,selector);
+  }
+ });
+});
+
 for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name:'desktop',width:1440}]){
  test.describe('UI-only feature reachability '+viewport.name,()=>{
   test('dashboard never exposes obsolete three-certificate denominator',async({page})=>{
