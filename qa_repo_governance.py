@@ -151,6 +151,7 @@ for marker in (
     "run_matches_main_pr",
     '((pr.get("base") or {}).get("ref") == "main")',
     "successful_required_workflows(runs, pr_number)",
+    '"Exact-head CI Risk Coverage"',
     "full lowercase 40-character commit SHA",
     "no usable canonical exact head SHA",
 ):
