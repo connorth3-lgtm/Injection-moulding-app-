@@ -407,6 +407,11 @@ for marker in [
     need(marker in protection_helper, f"native-protection helper missing marker: {marker}")
 
 need('if [[ "$MODE" == "--dry-run" ]]' in protection_helper, "native-protection helper must expose a non-mutating dry run")
+need(
+    protection_helper.index('write_capable="$(gh api "repos/$REPO/collaborators?affiliation=direct&per_page=100"')
+    < protection_helper.index('if [[ "$MODE" == "--dry-run" ]]; then'),
+    "collaborator feasibility check must run before dry-run exits",
+)
 need("gh auth token" not in protection_helper, "native-protection helper must not extract a GitHub token")
 need("GITHUB_TOKEN=" not in protection_helper, "native-protection helper must not embed or assign a repository token")
 need(
