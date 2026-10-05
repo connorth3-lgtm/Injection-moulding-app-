@@ -49,7 +49,7 @@ function parseCsv(text){
     if(sourceRow.length!==headerWidth){const cells=sourceRow.length;throw new Error(`CSV row ${i+1} has ${cells} cell${cells===1?'':'s'}; expected ${headerWidth} from the header. No data was prepared.`)}
   }
   const headers=rows[0].map(cleanHeader);
-  const seen={};for(let i=0;i<headers.length;i++){const base=headers[i];seen[base]=(seen[base]||0)+1;if(seen[base]>1)headers[i]=`${base}_${seen[base]}`}
+  const seen=Object.create(null);for(let i=0;i<headers.length;i++){const base=headers[i];seen[base]=(seen[base]||0)+1;if(seen[base]>1)headers[i]=`${base}_${seen[base]}`}
   const dataRows=rows.slice(1);
   if(dataRows.length>MAX_ROWS)throw new Error(`CSV exceeds the ${MAX_ROWS.toLocaleString()} data-row safety limit. No truncated subset was prepared; split or filter the controlled source export and try again.`);
   return {headers,rows:dataRows.map(r=>Object.fromEntries(headers.map((h,i)=>[h,String(r[i]??'').trim()]))),sourceRows:dataRows.length,truncated:false}
@@ -84,7 +84,7 @@ function aliasPrefix(key){return key.replace(/[^a-z0-9]+/gi,'-').replace(/^-+|-+
 function prepare(parsed){
   const headers=parsed?.headers||[],rows=parsed?.rows||[];
   if(rows.length>MAX_ROWS||Number(parsed?.sourceRows||rows.length)>MAX_ROWS)throw new Error(`CSV exceeds the ${MAX_ROWS.toLocaleString()} data-row safety limit. No truncated subset was prepared.`);
-  const sequence=sequenceAudit(headers,rows),rules=classify(headers,rows),maps={},invalidNumeric={};
+  const sequence=sequenceAudit(headers,rows),rules=classify(headers,rows),maps=Object.create(null),invalidNumeric=Object.create(null);
   for(const rule of rules)if(['alias','quality','category'].includes(rule.action))maps[rule.key]=new Map();
   const preserveShotIndex=sequence.sourceShotIndex==='preserved';
   const out=rows.map((raw,index)=>{
