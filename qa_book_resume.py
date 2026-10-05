@@ -19,12 +19,15 @@ for marker in [
     "registerStoragePrefix?.(BOOK_RESUME_PREFIX)",
     "BOOK_RESUME_SCHEMA=1",
     "bookRelease:VERSION",
+    "anchorIndex",
     "anchorText",
     "anchorOffset",
     "flushReadingPosition({notify:true})",
     "window.addEventListener('pagehide'",
     "visibilityState==='hidden'",
     "clearResume()",
+    "querySelectorAll(\'h2,h3,h4\')",
+    "index>=0&&index<heads.length?heads[index]:null",
     "top:-(Number(snapshot.anchorOffset)||0)",
 ]:
     need(marker in book,f"Book resume hardening missing: {marker}")
