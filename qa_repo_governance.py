@@ -182,19 +182,21 @@ for marker in (
 ):
     need(marker in external_live_verifier, f"external live-binding verifier missing marker: {marker}")
 for marker in (
+    "name: MouldMaster Preview Candidate",
     "Require merged-PR preview provenance",
-    "Recheck current merged preview provenance",
-    "Recheck current merged preview provenance after deployment",
-    "Verify preview deployment remains stable after race window",
-    "Reconfirm preview is still on the deployed SHA after race window",
-    "mouldmaster-pages-site-publish",
-    "xs.sort(key=lambda x:",
+    "Require exact-head preview quality gates",
+    "Build governed preview candidate",
+    "Verify retained preview candidate locally",
+    "Retain exact preview candidate",
     "verify_preview_source.py",
+    "main is the sole live Pages publisher",
 ):
-    need(marker in preview_pages, f"preview Pages governance missing marker: {marker}")
+    need(marker in preview_pages, f"preview candidate governance missing marker: {marker}")
+for forbidden in ("actions/deploy-pages@", "actions/upload-pages-artifact@", "pages: write", "id-token: write", "mouldmaster-pages-site-publish"):
+    need(forbidden not in preview_pages, f"preview candidate must not publish the repository Pages site: {forbidden}")
 need(
     "mouldmaster-pages-site-publish" in pages,
-    "main Pages deploy must share one publication concurrency domain with preview Pages",
+    "main Pages deploy must retain the sole site-wide publication concurrency domain",
 )
 need(
     "retain-exact-candidate" not in preview_pages.split("Require exact-head preview quality gates", 1)[1].split("Validate preview build contracts", 1)[0],
@@ -484,6 +486,6 @@ for marker in (
 print(
     "MouldMaster repository governance QA passed "
     "(main-only independent human-review native policy; six required contexts; live-preserving helper; "
-    "post-push audit read-only; main/preview Pages publication provenance serialized and source-bound; Pages requires exact native protection; dual locked desktop toolchains; "
+    "post-push audit read-only; main-only Pages publication source-bound; preview exact-SHA candidate retained without publish authority; Pages requires exact native protection; dual locked desktop toolchains; "
     "guard-gated pruning; preview/main exact-push release assurance; architecture debt gate)"
 )
