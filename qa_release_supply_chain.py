@@ -93,6 +93,19 @@ need("contents: read" in detector, "desktop release detector requires read-only 
 need("contents: write" not in detector, "desktop release detector must not inherit publication authority")
 need("contents: write" in publisher, "desktop publication job must receive explicit contents write authority")
 need("permissions:" in publisher.split("needs:", 1)[0], "desktop publication permission must be job-scoped")
+need(
+    "Recheck governed current-main source before release write" in publisher,
+    "desktop publisher must recheck exact current-main provenance immediately before release mutation",
+)
+need(
+    publisher.index("Recheck governed current-main source before release write")
+    < publisher.index("Publish one-shot release without asset replacement"),
+    "desktop current-main provenance recheck must occur before release publication",
+)
+need(
+    publisher.count("tools/verify_production_source.py") >= 1 and "--require-native-protection" in publisher,
+    "desktop write-authority job must independently enforce native protected-main provenance",
+)
 
 for marker in (
     'package-ecosystem: "github-actions"',
