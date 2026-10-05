@@ -33,7 +33,7 @@ REQUIRED = {
         "MouldMaster Release QA",
         "Mobile Browser QA",
         "Question Quality 50-Pass",
-        "MouldMaster Preview Pages",
+        "MouldMaster Preview Candidate",
     ),
 }
 
