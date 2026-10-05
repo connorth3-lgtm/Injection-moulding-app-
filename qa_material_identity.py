@@ -116,3 +116,9 @@ subprocess.run(["node", str(ROOT / "qa_material_search_index.cjs")], cwd=ROOT, c
 registry = (ROOT / "src/domains/materials/material-registry.js").read_text(encoding="utf-8")
 need("'\"':'&quot;'" in registry, "material registry quote escaping must emit a complete HTML entity")
 need("'\"':'&quot'" not in registry.replace("'\"':'&quot;'", ""), "material registry contains malformed quote escaping")
+
+registry = (ROOT / "src/domains/materials/material-registry.js").read_text(encoding="utf-8")
+need("function renderSourceColumn" in registry, "material comparison source renderer missing")
+source_column = registry.split("function renderSourceColumn", 1)[1].split("function renderMaterialChangeReport", 1)[0]
+need("safeUrl(s.url)" in source_column, "material comparison source links must use the shared safe URL guard")
+need('href="${esc(s.url)}"' not in source_column, "material comparison source renderer must not interpolate raw source URLs")
