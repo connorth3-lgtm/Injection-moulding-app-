@@ -10,13 +10,14 @@ from __future__ import annotations
 import hashlib
 import io
 import json
+import re
 import shutil
 import subprocess
 import tempfile
 import urllib.parse
 import urllib.request
 import zipfile
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from xml.etree import ElementTree as ET
 
 PMCID = "PMC4753395"
@@ -66,17 +67,27 @@ def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def match_extracted_tree(root: Path) -> tuple[bytes, str, list[str]]:
-    names: list[str] = []
-    for path in sorted(p for p in root.rglob("*") if p.is_file()):
-        relative = path.relative_to(root).as_posix()
-        names.append(relative)
-        if path.stat().st_size > MAX_MEMBER_BYTES:
+def safe_archive_member(name: str) -> bool:
+    normalized = str(name or "").replace("\\", "/")
+    if not normalized or "\x00" in normalized or re.match(r"^[A-Za-z]:", normalized):
+        return False
+    path = PurePosixPath(normalized)
+    return not path.is_absolute() and ".." not in path.parts
+
+
+def parse_7z_listing(text: str) -> list[dict[str, str]]:
+    entries: list[dict[str, str]] = []
+    current: dict[str, str] = {}
+    for line in text.splitlines() + [""]:
+        if not line.strip():
+            if current.get("Path"):
+                entries.append(current)
+            current = {}
             continue
-        payload = path.read_bytes()
-        if sha256(payload) == EXPECTED_WORKBOOK_SHA:
-            return payload, relative, names
-    raise LookupError(f"nested archive did not contain benchmarked workbook SHA; extracted={names[:80]}")
+        if " = " in line:
+            key, value = line.split(" = ", 1)
+            current[key.strip()] = value.strip()
+    return entries
 
 
 def workbook_from_rar(rar_bytes: bytes, outer_member: str) -> tuple[bytes, str, list[str]]:
@@ -86,22 +97,53 @@ def workbook_from_rar(rar_bytes: bytes, outer_member: str) -> tuple[bytes, str, 
     with tempfile.TemporaryDirectory(prefix="mouldmaster-pmc-rar-") as temp:
         root = Path(temp)
         archive_path = root / "source.rar"
-        extract_dir = root / "extracted"
         archive_path.write_bytes(rar_bytes)
-        extract_dir.mkdir()
-        proc = subprocess.run(
-            [seven_zip, "x", "-y", f"-o{extract_dir}", str(archive_path)],
+
+        listing = subprocess.run(
+            [seven_zip, "l", "-slt", "-ba", str(archive_path)],
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True,
             timeout=120,
             check=False,
         )
-        if proc.returncode != 0:
-            tail = "\n".join(proc.stdout.splitlines()[-12:])
-            raise LookupError(f"7z could not extract {outer_member}: {tail}")
-        payload, member, names = match_extracted_tree(extract_dir)
-        return payload, f"{outer_member}!{member}", names
+        if listing.returncode != 0:
+            tail = "\n".join(listing.stdout.splitlines()[-12:])
+            raise LookupError(f"7z could not list {outer_member}: {tail}")
+
+        entries = parse_7z_listing(listing.stdout)
+        names: list[str] = []
+        for entry in entries:
+            name = entry.get("Path", "")
+            if entry.get("Folder") == "+":
+                continue
+            if not safe_archive_member(name):
+                raise LookupError(f"unsafe nested archive member: {name!r}")
+            names.append(name)
+            try:
+                size = int(entry.get("Size") or 0)
+            except ValueError as exc:
+                raise LookupError(f"invalid nested archive member size for {name!r}") from exc
+            if size < 0 or size > MAX_MEMBER_BYTES:
+                continue
+            extracted = subprocess.run(
+                [seven_zip, "x", "-so", str(archive_path), name],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                timeout=120,
+                check=False,
+            )
+            if extracted.returncode != 0:
+                continue
+            payload = extracted.stdout
+            if len(payload) > MAX_MEMBER_BYTES:
+                continue
+            if sha256(payload) == EXPECTED_WORKBOOK_SHA:
+                return payload, f"{outer_member}!{name}", names
+
+        raise LookupError(
+            f"nested archive did not contain benchmarked workbook SHA; members={names[:80]}"
+        )
 
 
 def workbook_from_object(data: bytes) -> tuple[bytes, str | None, list[str]]:
