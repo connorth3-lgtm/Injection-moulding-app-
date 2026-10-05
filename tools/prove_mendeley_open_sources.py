@@ -5,8 +5,8 @@ No numeric worksheet values are emitted. Every publisher file ID, filename and S
 stored locally. Remote metadata is version-pinned consistency evidence and supplies the exact public download URL only after file ID/name and publisher SHA checks. Redirects are checked before following them against an exact host allow-list.
 """
 from __future__ import annotations
-import hashlib, json, re, tempfile, time, urllib.parse, urllib.request, zipfile
-from http_retry import urlopen_with_retry
+import hashlib, json, re, socket, tempfile, time, urllib.error, urllib.parse, urllib.request, zipfile
+from http_retry import RETRYABLE_HTTP, urlopen_with_retry
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
@@ -52,7 +52,7 @@ DOWNLOAD_OPENER=urllib.request.build_opener(AllowlistedRedirect())
 def get_json(url):
     assert_https_host(url,{MENDELEY_HOST})
     req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-measured-learning/2.4'})
-    with urlopen_with_retry(req,timeout=60) as r:
+    with urlopen_with_retry(req,timeout=60,attempts=8,base_delay=1.5,max_delay=20.0) as r:
         assert_https_host(r.geturl(),{MENDELEY_HOST})
         return json.load(r)
 
@@ -143,21 +143,33 @@ def resolve_file(meta,file_id,name,short_id,version,expected_sha=None):
     )
 
 
+def _retryable_download_error(exc):
+    if isinstance(exc, urllib.error.HTTPError):
+        return exc.code in RETRYABLE_HTTP
+    return isinstance(exc, (urllib.error.URLError, TimeoutError, socket.timeout, ConnectionError))
+
+
 def download_first(urls,destination):
     errors=[]
     for url in urls:
-        try:
-            assert_https_host(url,{MENDELEY_HOST,MENDELEY_API_HOST,MENDELEY_FILE_HOST})
-            req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-measured-learning/2.4'})
-            with DOWNLOAD_OPENER.open(req,timeout=90) as r, open(destination,'wb') as out:
-                assert_https_host(r.geturl(),{MENDELEY_HOST,MENDELEY_API_HOST,MENDELEY_FILE_HOST})
-                while True:
-                    chunk=r.read(1024*1024)
-                    if not chunk: break
-                    out.write(chunk)
-            if Path(destination).stat().st_size>0: return url
-        except Exception as exc:
-            errors.append(f'{url}: {exc}')
+        assert_https_host(url,{MENDELEY_HOST,MENDELEY_API_HOST,MENDELEY_FILE_HOST})
+        for attempt in range(5):
+            try:
+                req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-measured-learning/2.4'})
+                with DOWNLOAD_OPENER.open(req,timeout=90) as r, open(destination,'wb') as out:
+                    assert_https_host(r.geturl(),{MENDELEY_HOST,MENDELEY_API_HOST,MENDELEY_FILE_HOST})
+                    while True:
+                        chunk=r.read(1024*1024)
+                        if not chunk: break
+                        out.write(chunk)
+                if Path(destination).stat().st_size>0:
+                    return url
+                raise RuntimeError('download returned zero bytes')
+            except Exception as exc:
+                errors.append(f'{url} attempt {attempt+1}/5: {exc}')
+                if not _retryable_download_error(exc) or attempt==4:
+                    break
+                time.sleep(min(12,1.5*(2**attempt)))
     raise RuntimeError('; '.join(errors))
 
 
