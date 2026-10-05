@@ -18,6 +18,9 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "data" / "public-benchmark-results"
 USER_AGENT = "MouldMaster-data-profiler/1.0 (aggregate research profiling)"
+CROSS_PROCESS_BYTES = 685541746
+CROSS_PROCESS_MD5 = "069e190338b2ca29f736b21fabf407ba"
+CROSS_PROCESS_SHA256 = "a0c7c07997e6c5a996823744aceb82bfc7b4efd371c7be0f4afc60d04771ec90"
 
 
 def fetch_json(url: str) -> dict:
@@ -154,12 +157,17 @@ def profile_cross_process() -> dict:
     if len(files) != 1:
         raise AssertionError(f"expected one cross-process archive, found {len(files)}")
     item = files[0]
+    if int(item.get("size") or -1) != CROSS_PROCESS_BYTES:
+        raise AssertionError(f"cross-process publisher size metadata drifted: {item.get('size')}")
+    if str(item.get("checksum") or "").lower() != f"md5:{CROSS_PROCESS_MD5}":
+        raise AssertionError(f"cross-process publisher checksum metadata drifted: {item.get('checksum')}")
     with tempfile.TemporaryDirectory(prefix="mouldmaster-cross-") as temp:
         archive = Path(temp) / "publisher.zip"
-        md5, sha256 = download(item["links"]["self"], archive, item.get("size"))
-        algorithm, expected = checksum_value(item.get("checksum"))
-        if algorithm == "md5" and md5 != expected:
+        md5, sha256 = download(item["links"]["self"], archive, CROSS_PROCESS_BYTES)
+        if md5 != CROSS_PROCESS_MD5:
             raise AssertionError("cross-process publisher MD5 mismatch")
+        if sha256 != CROSS_PROCESS_SHA256:
+            raise AssertionError("cross-process publisher SHA-256 mismatch")
         profiles = []
         members = []
         with zipfile.ZipFile(archive) as zf:
