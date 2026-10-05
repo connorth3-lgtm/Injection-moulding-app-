@@ -3,6 +3,8 @@ name: Branch Release Assurance
 on:
   push:
     branches: [main, preview]
+  pull_request:
+    branches: [main, preview]
   workflow_dispatch:
 
 permissions:
@@ -14,6 +16,17 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  contract-self-test:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout assurance contract
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Exercise assurance verifier and governance contract
+        run: |
+          python3 tools/verify_branch_assurance.py --self-test
+          python3 qa_branch_assurance.py
+
   exact-push-assurance:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
