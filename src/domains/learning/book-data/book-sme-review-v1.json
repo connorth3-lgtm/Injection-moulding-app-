@@ -96,9 +96,15 @@
     "worked-hot-runner-timing-v1",
     "worked-fill-study-v1",
     "worked-shot-utilisation-v1",
-    "worked-process-window-v1"
+    "worked-process-window-v1",
+    "worked-warpage-discrimination-v1",
+    "worked-weld-line-diagnosis-v1",
+    "worked-splay-boundary-v1",
+    "worked-dimensional-conditioning-v1",
+    "worked-process-monitoring-alarm-v1",
+    "worked-black-speck-source-map-v1"
   ],
-  "workedCaseReviewRule": "Each workedCaseId must be reviewed inside its owning chapter across the same six requiredDimensions. A chapter approval for this release must include the worked case where present; automation must not create or infer that approval.",
+  "workedCaseReviewRule": "Each workedCaseId must be reviewed inside its owning governed module across the same six requiredDimensions. Where a module has multiple cases, all of them are in scope. Automation must not create or infer approval.",
   "enrichmentChapterIds": [
     "mould-anatomy",
     "cooling",
@@ -120,7 +126,17 @@
     "diagram-fountain-flow-v1",
     "diagram-gate-seal-v1",
     "diagram-multicavity-balance-v1",
-    "diagram-ejection-draft-v1"
+    "diagram-ejection-draft-v1",
+    "diagram-cycle-timeline-v1",
+    "diagram-plasticising-sequence-v1",
+    "diagram-thermal-gradient-wall-v1",
+    "diagram-shrinkage-warpage-v1",
+    "diagram-weld-line-formation-v1",
+    "diagram-fibre-orientation-layers-v1",
+    "diagram-capability-limits-v1",
+    "diagram-doe-interaction-v1",
+    "diagram-diagnostic-hypothesis-tree-v1",
+    "diagram-dimensional-conditioning-v1"
   ],
-  "diagramReviewRequirement": "Review all governed instructional diagrams for mechanism accuracy, labels, accessibility text, scale/non-scale boundary and consistency with chapter evidence. Diagrams do not count as independently SME-approved until the chapter review is approved."
+  "diagramReviewRequirement": "Review all governed instructional diagrams for mechanism accuracy, labels, accessibility text, non-scale boundary and consistency with module evidence. Where a module has multiple diagrams, all are in scope. Diagrams do not count as independently SME-approved until the owning module review is approved."
 }
