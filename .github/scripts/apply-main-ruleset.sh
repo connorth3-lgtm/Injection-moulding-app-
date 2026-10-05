@@ -168,6 +168,15 @@ printf 'Ruleset id: %s\n' "$RULESET_ID"
 printf 'Mode: %s\n\n' "$MODE"
 jq . "$payload"
 
+write_capable="$(gh api "repos/$REPO/collaborators?affiliation=direct&per_page=100" --jq '[.[] | select(.permissions.admin == true or .permissions.maintain == true or .permissions.push == true)] | length')"
+if [[ "$MODE" == "--apply" && "$write_capable" -lt 2 ]]; then
+  echo "Independent review requires at least two trusted write-capable collaborators; found $write_capable. Refusing to apply an unsatisfiable review policy or weaken the requirement." >&2
+  exit 1
+fi
+if [[ "$MODE" == "--dry-run" && "$write_capable" -lt 2 ]]; then
+  echo "WARNING: only $write_capable trusted write-capable collaborator is visible; add an independent reviewer before --apply." >&2
+fi
+
 if [[ "$MODE" == "--dry-run" ]]; then
   cat <<'EOF'
 
@@ -177,15 +186,6 @@ protections are retained. Review it, then rerun with --apply from a trusted
 administrator shell.
 EOF
   exit 0
-fi
-
-write_capable="$(gh api "repos/$REPO/collaborators?affiliation=direct&per_page=100" --jq '[.[] | select(.permissions.admin == true or .permissions.maintain == true or .permissions.push == true)] | length')"
-if [[ "$MODE" == "--apply" && "$write_capable" -lt 2 ]]; then
-  echo "Independent review requires at least two trusted write-capable collaborators; found $write_capable. Refusing to apply an unsatisfiable review policy or weaken the requirement." >&2
-  exit 1
-fi
-if [[ "$MODE" == "--dry-run" && "$write_capable" -lt 2 ]]; then
-  echo "WARNING: only $write_capable trusted write-capable collaborator is visible; add an independent reviewer before --apply." >&2
 fi
 
 gh api --method PUT "repos/$REPO/rulesets/$RULESET_ID" --input "$payload" >/dev/null
