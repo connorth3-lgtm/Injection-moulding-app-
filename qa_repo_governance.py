@@ -180,6 +180,8 @@ for marker in (
     "Require merged-PR preview provenance",
     "Recheck current merged preview provenance",
     "Recheck current merged preview provenance after deployment",
+    "Verify preview deployment remains stable after race window",
+    "Reconfirm preview is still on the deployed SHA after race window",
     "mouldmaster-pages-site-publish",
     "xs.sort(key=lambda x:",
     "verify_preview_source.py",
