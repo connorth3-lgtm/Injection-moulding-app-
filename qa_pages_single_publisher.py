@@ -21,6 +21,8 @@ hold_verifier = (ROOT / "tools" / "verify_pages_hold.py").read_text(encoding="ut
 
 publisher_block = workflow.split("  publisher-guard:", 1)[1].split("\n  build:", 1)[0]
 need("needs:" not in publisher_block, "publisher guard must start independently so legacy cancellation is not delayed")
+need("if: github.event_name == 'push'" in publisher_block, "publisher guard write authority must be limited to protected-main push events")
+need("Manual dispatch is contract-only" in workflow, "manual Pages dispatch must be explicitly non-publishing")
 
 shared_publish_concurrency = "group: mouldmaster-pages-site-publish"
 need(shared_publish_concurrency in workflow, "main Pages deploy must use the site-wide publication concurrency group")
@@ -77,6 +79,7 @@ for marker in (
     "Recheck current protected-main provenance after deployment",
     "Reconfirm main is still on the deployed SHA after race window",
     '--require-native-protection',
+    "Manual dispatch does not receive Pages mutation or publication authority.",
     "Deploy selected Pages artifact",
     "Verify preview-only release-hold deployment",
     "Verify preview-only release-hold deployment",
