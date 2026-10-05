@@ -66,6 +66,12 @@ def plan(files,deep):
             c.append(Check("syntax:"+p,"syntax",(PY,"-m","py_compile",p),
               "Changed Python must compile before deeper QA is useful.",(p,)))
 
+    impact_logic=any(p in {"tools/change_impact.py","tools/ci_impact.py","qa_change_impact.py"} or p.startswith(".github/workflows/") for p in files)
+    add(c,impact_logic or deep,Check("change-impact-contract","ci-routing",(PY,"qa_change_impact.py"),
+      "Shared CI impact routing changed and must remain conservative.",
+      ("tools/change_impact.py","tools/ci_impact.py","qa_change_impact.py",".github/workflows/"),
+      "Fix the central classifier or its regression contract; do not special-case individual workflows around it."))
+
     toolchain=any(p in {"package.json","package-lock.json","qa_browser_dependency_lock.py"} or p.startswith(".github/workflows/") for p in files)
     add(c,toolchain or deep,Check("browser-toolchain","toolchain",(PY,"qa_browser_dependency_lock.py"),
       "Browser QA dependencies or CI workflow contracts changed.",
