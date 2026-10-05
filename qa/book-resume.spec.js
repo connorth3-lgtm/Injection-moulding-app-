@@ -1,0 +1,82 @@
+const {test,expect}=require('@playwright/test');
+const BASE='http://127.0.0.1:4173/index.html';
+
+function learner(id,name){
+  return {id,name,role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
+}
+async function boot(page,active='reader-a'){
+  await page.addInitScript(({active,a,b})=>{
+    localStorage.clear();
+    localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:active,users:{'reader-a':a,'reader-b':b}}));
+  },{active,a:learner('reader-a','Reader A'),b:learner('reader-b','Reader B')});
+  await page.goto(BASE,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED)&&Boolean(window.MMBook?.openReaderChapter)&&Boolean(window.MM_LEARNER_SCOPE)&&!document.getElementById('mmBootstrap'));
+}
+async function activate(page,id){
+  await page.evaluate(id=>{
+    const store=JSON.parse(localStorage.getItem('mouldmasterProDB'));
+    store.activeUser=id;
+    localStorage.setItem('mouldmasterProDB',JSON.stringify(store));
+  },id);
+  await page.reload({waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED)&&Boolean(window.MMBook?.getResume)&&!document.getElementById('mmBootstrap'));
+}
+
+test('Home Book opens on first load and Keep Reading is learner scoped',async({page})=>{
+  await boot(page);
+  const homeBook=page.locator('#dashboard [data-mm-home-book]');
+  await expect(homeBook).toBeVisible();
+  await expect(homeBook.getByRole('button',{name:'Open Book'})).toBeVisible();
+  await homeBook.getByRole('button',{name:'Open Book'}).click();
+  await expect(page.locator('#mmBookView')).toBeVisible();
+
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r01'));
+  await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
+  await page.evaluate(()=>window.scrollTo(0,Math.max(360,Math.floor(document.documentElement.scrollHeight*0.35))));
+  const aKey=await page.evaluate(()=>window.MMBook.resumeStorageKey());
+  await page.getByRole('button',{name:'Home'}).first().click();
+  await expect(page.locator('#dashboard [data-mm-home-book]')).toContainText('Keep reading');
+  const aResume=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),aKey);
+  expect(aResume.id).toBe('r01');
+  expect(aResume.scrollY).toBeGreaterThan(0);
+
+  await activate(page,'reader-b');
+  await expect(page.locator('#dashboard [data-mm-home-book]')).toContainText('Injection moulding reference');
+  expect(await page.evaluate(()=>window.MMBook.getResume())).toBeNull();
+  const bKey=await page.evaluate(()=>window.MMBook.resumeStorageKey());
+  expect(bKey).not.toBe(aKey);
+});
+
+test('Keep Reading restores, stale IDs fail to contents, and learner reset clears only active resume',async({page})=>{
+  await boot(page);
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r02'));
+  await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
+  await page.evaluate(()=>window.scrollTo(0,420));
+  const aKey=await page.evaluate(()=>window.MMBook.resumeStorageKey());
+  await page.getByRole('button',{name:'Home'}).first().click();
+
+  await page.locator('#dashboard [data-mm-home-book]').getByRole('button',{name:'Keep Reading'}).click();
+  await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
+  expect(await page.evaluate(()=>window.MMBook.getResume().id)).toBe('r02');
+
+  await activate(page,'reader-b');
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r03'));
+  const bKey=await page.evaluate(()=>window.MMBook.resumeStorageKey());
+  await page.getByRole('button',{name:'Home'}).first().click();
+  page.once('dialog',d=>d.accept());
+  await page.evaluate(()=>window.resetData());
+  expect(await page.evaluate(key=>localStorage.getItem(key),bKey)).toBeNull();
+  expect(await page.evaluate(key=>localStorage.getItem(key),aKey)).not.toBeNull();
+
+  await activate(page,'reader-a');
+  await page.evaluate(()=>{
+    const key=window.MMBook.resumeStorageKey();
+    const value=JSON.parse(localStorage.getItem(key));
+    value.id='removed-reader-id';
+    localStorage.setItem(key,JSON.stringify(value));
+  });
+  const result=await page.evaluate(()=>window.MMBook.openResume());
+  expect(result).toBeFalsy();
+  await expect(page.locator('[data-mm-book-contents]')).toBeVisible();
+  expect(await page.evaluate(()=>window.MMBook.getResume())).toBeNull();
+});
