@@ -38,6 +38,31 @@ WORKFLOW_PATHS = {
     "Release External Validation Boundary": ".github/workflows/release-external-validation.yml",
     "Question Quality 50-Pass": ".github/workflows/question-quality-50-pass.yml",
 }
+EXACT_HEAD_REF = "ref: ${{ github.event.pull_request.head.sha || github.sha }}"
+
+def verify_workflow_checkout_contract(workflows: set[str]) -> None:
+    for name in sorted(workflows):
+        path = WORKFLOW_PATHS.get(name)
+        if not path:
+            raise SystemExit(f"CI risk coverage has no workflow path for {name}")
+        try:
+            text = open(path, encoding="utf-8").read()
+        except OSError as exc:
+            raise SystemExit(f"CI risk coverage cannot read {path}: {exc}") from exc
+        lines = text.splitlines()
+        checkout_indexes = [i for i, line in enumerate(lines) if "uses: actions/checkout@" in line]
+        if not checkout_indexes:
+            continue
+        for index in checkout_indexes:
+            block = "\n".join(lines[index:index+8])
+            exact = (
+                EXACT_HEAD_REF in block
+                or "ref: ${{ github.event.pull_request.head.sha }}" in block
+                or "ref: ${{ github.sha }}" in block
+            )
+            if not exact:
+                raise SystemExit(f"{name} is not exact-head safe: checkout in {path} lacks an explicit ref")
+
 RISK_RULES = [
     (
         "browser/runtime",
@@ -190,6 +215,7 @@ def main() -> None:
         raise SystemExit("Canonical exact PR head SHA, PR number and GITHUB_TOKEN required for CI risk-coverage verification")
     paths = changed_paths()
     expected, classes = expected_for(paths)
+    verify_workflow_checkout_contract(expected)
     print("Changed paths:", json.dumps(paths))
     print("Risk classes:", ", ".join(classes) if classes else "universal-only")
     print("Expected workflows:", ", ".join(sorted(expected)))
