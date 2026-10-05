@@ -11,7 +11,7 @@ import hashlib, json, math, re, tempfile
 from itertools import zip_longest
 from pathlib import Path
 from openpyxl import load_workbook
-from prove_mendeley_open_sources import SOURCES, public_files, resolve_file, download_first
+from prove_mendeley_open_sources import SOURCES, materialize_verified_file
 
 OUT=Path('measured-source-proof/gtnb-rejection-unreviewed-learning-candidate.json')
 def sha(v): return 'sha256:'+hashlib.sha256(json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()).hexdigest()
@@ -24,11 +24,10 @@ def signal(sid,source_channel,semantic,unit,rows,key,formula_count):
     return {'id':sid,'label':sid.replace('-',' '),'sourceChannel':source_channel,'semantic':semantic,'unit':unit,'sourceValueMode':'delivered-direct-or-cached-formula-result','sourceInjectionFormulaCellCount':formula_count,'representation':rep,'representationFingerprint':sha(rep)}
 def main():
     source=next(s for s in SOURCES if s['datasetId']=='mendeley-gtnb4j7bfx-v1')
-    file_id,name,expected=source['files'][0]; _,meta=public_files(source['shortId'],source['version']); _,_,urls=resolve_file(meta,file_id,name,source['shortId'],source['version'],expected)
-    td=tempfile.TemporaryDirectory(); path=Path(td.name)/name
+    file_id,name,expected=source['files'][0]
+    path,digest_uri=materialize_verified_file(source,name)
+    digest=digest_uri.split(':',1)[1]
     try:
-        download_first(urls,path); digest=hashlib.sha256(path.read_bytes()).hexdigest()
-        if digest!=expected: raise RuntimeError(f'GTNB SHA mismatch: {digest}')
         formula_wb=load_workbook(path,read_only=True,data_only=False); value_wb=load_workbook(path,read_only=True,data_only=True)
         if 'nicky' not in formula_wb.sheetnames or 'nicky' not in value_wb.sheetnames: raise RuntimeError('GTNB rejection worksheet missing')
         formula_iter=formula_wb['nicky'].iter_rows(); value_iter=value_wb['nicky'].iter_rows(values_only=True)
@@ -79,6 +78,6 @@ def main():
         result={'schemaVersion':1,'status':'unreviewed-source-derived-candidates','promotionEligible':False,'candidateCount':1,'candidates':[candidate],'boundary':'Numeric source evidence, count-channel governance and a versioned feature recipe are available. This remains authoring evidence only: case-specific wording, novelty review and independent engineering review are still required before learner promotion.'}
         OUT.parent.mkdir(parents=True,exist_ok=True); OUT.write_text(json.dumps(result,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
         print(json.dumps({'status':result['status'],'candidateId':candidate['candidateId'],'validInjectionRecords':len(valid),'formulaCounts':formula_counts,'recommendedFeatureMethods':[f['method'] for f in recommended_features],'bindingBlockers':candidate['bindingBlockers']},separators=(',',':')))
-    finally: td.cleanup()
+    finally: pass
     return 0
 if __name__=='__main__': raise SystemExit(main())
