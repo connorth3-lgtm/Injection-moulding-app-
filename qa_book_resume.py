@@ -19,6 +19,7 @@ for marker in [
     "registerStoragePrefix?.(BOOK_RESUME_PREFIX)",
     "BOOK_RESUME_SCHEMA=1",
     "bookRelease:VERSION",
+    "anchorId",
     "anchorIndex",
     "anchorText",
     "anchorOffset",
@@ -26,8 +27,10 @@ for marker in [
     "window.addEventListener('pagehide'",
     "visibilityState==='hidden'",
     "clearResume()",
-    "querySelectorAll(\'h2,h3,h4\')",
+    "h2[data-mm-book-anchor],h3[data-mm-book-anchor],h4[data-mm-book-anchor]",
+    "el.dataset.mmBookAnchor===anchorId",
     "index>=0&&index<heads.length?heads[index]:null",
+    "module:material-families:atlas",
     "top:-(Number(snapshot.anchorOffset)||0)",
 ]:
     need(marker in book,f"Book resume hardening missing: {marker}")
