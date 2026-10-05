@@ -85,7 +85,8 @@ jobs:
           fi
           echo "Main commit is merged PR #$PR_NUMBER with source head $PR_HEAD_SHA."
 
-          reviews_json=$(gh api "repos/$GH_REPO/pulls/$PR_NUMBER/reviews?per_page=100")
+          reviews_pages=$(gh api --paginate --slurp "repos/$GH_REPO/pulls/$PR_NUMBER/reviews?per_page=100")
+          reviews_json=$(jq 'add' <<<"$reviews_pages")
           latest_head_independent_approvals=$(jq -r --arg head "$PR_HEAD_SHA" --arg author "$PR_AUTHOR" \
             '[.[] | select(.state == "APPROVED" and .commit_id == $head and .user.login != $author and .user.type == "User")] | length' \
             <<<"$reviews_json")
@@ -105,7 +106,8 @@ jobs:
 
           all_required_success=false
           for attempt in {1..60}; do
-            runs_json=$(gh api "repos/$GH_REPO/actions/runs?head_sha=$PR_HEAD_SHA&event=pull_request&per_page=100")
+            runs_pages=$(gh api --paginate --slurp "repos/$GH_REPO/actions/runs?head_sha=$PR_HEAD_SHA&event=pull_request&per_page=100")
+            runs_json=$(jq '{workflow_runs: [.[].workflow_runs[]]}' <<<"$runs_pages")
             all_seen=true
 
             for workflow in "${required_workflows[@]}"; do
