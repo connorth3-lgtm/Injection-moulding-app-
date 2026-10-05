@@ -9,7 +9,7 @@ let readyPromise=null;
 
 function clean(v){return String(v??'').trim()}
 function norm(v){return clean(v).toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()}
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]))}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function safeUrl(v){try{const u=new URL(clean(v),location.href);return u.protocol==='https:'?u.href:''}catch(_){return''}}
 function humanKind(v){return clean(v).replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase())}
 async function load(){
