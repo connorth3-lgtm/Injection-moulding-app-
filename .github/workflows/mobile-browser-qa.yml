@@ -16,7 +16,36 @@ permissions:
   actions: read
 
 jobs:
+  impact:
+    runs-on: ubuntu-latest
+    outputs:
+      browser: ${{ steps.classify.outputs.browser }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Classify browser impact
+        id: classify
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="${{ github.event.before || '' }}"
+          if [ -z "$BASE" ] || [[ "$BASE" =~ ^0+$ ]] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then
+            if [ -n "${{ github.base_ref || '' }}" ]; then
+              git fetch --no-tags origin "${{ github.base_ref }}":refs/remotes/origin/${{ github.base_ref }}
+              BASE="$(git merge-base "origin/${{ github.base_ref }}" HEAD)"
+            else
+              BASE="$(git rev-parse HEAD^ 2>/dev/null || git rev-parse HEAD)"
+            fi
+          fi
+          python3 tools/change_impact.py --base "$BASE" --head HEAD --format shell | tee /tmp/mm-browser-impact.env
+          browser="$(awk -F= '$1=="browser"{print $2}' /tmp/mm-browser-impact.env)"
+          echo "browser=$browser" >> "$GITHUB_OUTPUT"
+          echo "Browser-impact update: $browser" >> "$GITHUB_STEP_SUMMARY"
+
   browser-chromium:
+    needs: impact
+    if: needs.impact.outputs.browser == 'true'
     strategy:
       fail-fast: false
       matrix:
@@ -112,6 +141,8 @@ jobs:
           retention-days: 14
 
   browser-webkit:
+    needs: impact
+    if: needs.impact.outputs.browser == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
@@ -146,6 +177,8 @@ jobs:
           retention-days: 14
 
   browser-cross:
+    needs: impact
+    if: needs.impact.outputs.browser == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -178,6 +211,8 @@ jobs:
           retention-days: 14
 
   app-500-reliability:
+    needs: impact
+    if: needs.impact.outputs.browser == 'true'
     strategy:
       fail-fast: false
       matrix:
@@ -215,16 +250,21 @@ jobs:
 
   mobile-browser:
     if: always()
-    needs: [browser-chromium, browser-webkit, browser-cross, app-500-reliability]
+    needs: [impact, browser-chromium, browser-webkit, browser-cross, app-500-reliability]
     runs-on: ubuntu-latest
     steps:
       - name: Enforce complete mobile browser evidence
         env:
+          BROWSER_IMPACT: ${{ needs.impact.outputs.browser }}
           CHROMIUM: ${{ needs.browser-chromium.result }}
           WEBKIT: ${{ needs.browser-webkit.result }}
           CROSS_BROWSER: ${{ needs.browser-cross.result }}
           APP_500: ${{ needs.app-500-reliability.result }}
         run: |
+          if [ "$BROWSER_IMPACT" != "true" ]; then
+            echo "Mobile Browser QA skipped expensive browser execution: latest update has no runtime/browser impact."
+            exit 0
+          fi
           test "$CHROMIUM" = "success" || { echo "::error::Chromium QA did not pass: $CHROMIUM"; exit 1; }
           test "$WEBKIT" = "success" || { echo "::error::WebKit QA did not pass: $WEBKIT"; exit 1; }
           test "$CROSS_BROWSER" = "success" || { echo "::error::Cross-browser QA did not pass: $CROSS_BROWSER"; exit 1; }
