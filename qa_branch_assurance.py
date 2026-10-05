@@ -49,6 +49,12 @@ for marker in (
     "success",
     "Exact-push branch assurance failed",
     "Exact-push branch assurance incomplete",
+    "branch-assurance-report.json",
+    "branch-assurance-report.md",
+    "first failing dependency",
+    "first unresolved dependency",
+    "GITHUB_STEP_SUMMARY",
+    "run_url",
 ):
     need(marker in verifier, f"verifier missing marker: {marker}")
 
