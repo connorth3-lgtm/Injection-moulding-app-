@@ -191,6 +191,43 @@ def profile_cross_process() -> dict:
                 if scoped and info.filename.lower().endswith((".csv", ".txt")):
                     with zf.open(info) as source:
                         profiles.append(csv_profile(source, info.filename))
+    extension_counts = {}
+    total_member_bytes = 0
+    total_compressed_bytes = 0
+    injection_scope_bytes = 0
+    injection_scope_compressed_bytes = 0
+    for member in members:
+        suffix = Path(member["name"]).suffix.lower().lstrip(".") or "<none>"
+        extension_counts[suffix] = extension_counts.get(suffix, 0) + 1
+        total_member_bytes += member["sizeBytes"]
+        total_compressed_bytes += member["compressedBytes"]
+        if member["injectionScope"]:
+            injection_scope_bytes += member["sizeBytes"]
+            injection_scope_compressed_bytes += member["compressedBytes"]
+
+    family_map = {}
+    for profile in profiles:
+        key = (profile["columns"], tuple(profile["headers"]), profile["delimiter"])
+        family = family_map.setdefault(key, {
+            "columns": profile["columns"],
+            "headers": profile["headers"],
+            "delimiter": profile["delimiter"],
+            "files": 0,
+            "rows": 0,
+            "nonEmptyValues": 0,
+            "numericValues": 0,
+            "widthMismatchRows": 0,
+        })
+        family["files"] += 1
+        family["rows"] += profile["rows"]
+        family["nonEmptyValues"] += profile["nonEmptyValues"]
+        family["numericValues"] += profile["numericValues"]
+        family["widthMismatchRows"] += profile["widthMismatchRows"]
+    schema_families = sorted(
+        family_map.values(),
+        key=lambda item: (-item["files"], item["columns"], item["delimiter"], json.dumps(item["headers"])),
+    )
+
     return {
         "schema_version": 1,
         "status": "completed-public-measured-benchmark-scope-limited",
@@ -206,8 +243,16 @@ def profile_cross_process() -> dict:
             "acceptedMeasuredTimeSeriesSamples": 0,
             "rawRowsOrCellValuesEmitted": False,
         },
-        "members": members,
-        "schemas": profiles,
+        "structureSummary": {
+            "archiveMemberExtensions": dict(sorted(extension_counts.items())),
+            "archiveBytes": {
+                "uncompressed": total_member_bytes,
+                "compressed": total_compressed_bytes,
+                "injectionScopeUncompressed": injection_scope_bytes,
+                "injectionScopeCompressed": injection_scope_compressed_bytes,
+            },
+            "schemaFamilies": schema_families,
+        },
         "retrieval": {"rawPublisherFilesCommitted": False, "rawRowsUploadedAsArtifact": False},
         "limitations": ["Screw-driving members are excluded from injection-moulding counts.", "Measured-value acceptance remains zero until source units and actual-versus-target semantics are mapped from the delivered schema."],
     }
