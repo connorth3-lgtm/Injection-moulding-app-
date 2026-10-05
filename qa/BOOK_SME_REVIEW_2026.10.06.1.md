@@ -65,6 +65,10 @@ For safety content, confirm that generic teaching never authorizes bypassing gua
 
 The Book SME status may become `validated` only when all 46 governed module IDs have one current human review, all required dimensions pass or have a documented resolution, and there is no unresolved safety or accuracy objection. Validation of the Book does **not** automatically validate the separate 120-lesson curriculum contract.
 
+## Editorial expansion scope
+
+For the 12 modules expanded in this release, confirm the new prose remains inside the claim IDs and exact reviewed bytes recorded in `data/book-editorial-expansion-review-v1.json`. Also review the 20-chapter composition in `data/book-reader-architecture-v2.json` for misleading transitions or scope bleed between adjacent governed modules.
+
 ## 2026.10.06.1 deep-review emphasis
 
 Independently challenge the revised clamp-force pressure-distribution explanation, pressure-loss baseline/delta language, repeated-shot gate-seal interpretation, DOE significance boundary, capability variation-estimator boundary, and heat-load enthalpy limitations. Also confirm the learner-facing phrase **Source evidence reviewed** cannot reasonably be mistaken for independent human SME approval.
