@@ -135,7 +135,7 @@ jobs:
           from pathlib import Path
           x=json.loads(Path('measured-source-proof/4h98rz9f92-v3-live.json').read_text(encoding='utf-8'))
           p=x['profile']
-          assert x['source']['sha256']=='452fc2077ae9227b8816ae73431c048ac294c87aa40b8abe919371ae3b87c6bc'
+          assert x['source']['sha256']=='39210169aac62a1455603d37cdffaca93cf0c46189ea4258c5f3c0a4a37255c9'
           assert x['source']['publisherSha256Matched'] is True
           assert p['experimentalRows']==35
           assert p['numericColumns']==22
