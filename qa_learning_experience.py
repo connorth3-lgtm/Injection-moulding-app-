@@ -19,6 +19,8 @@ for name in required:
     need((ROOT/name).exists(),f'learning experience dependency missing: {name}')
 
 js=text('learning-experience.js')
+for marker in ["const durable=persist()", "status.textContent=durable?'Saved':'Session only'", "status.dataset.state=durable?'saved':'session-only'", "return durable"]:
+    need(marker in js,f'lesson note autosave durability marker missing: {marker}')
 learning_pack=text('src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js')
 p=subprocess.run(['node','--check',str(ROOT/'learning-experience.js')],capture_output=True,text=True)
 need(p.returncode==0,'learning-experience.js syntax error: '+(p.stderr or p.stdout))
