@@ -41,7 +41,7 @@ def make_signal(sid,source_channel,semantic,x,y,source_pair_count):
 
 def main():
     source=next(s for s in SOURCES if s['datasetId']=='mendeley-6k8fpbrd9s-v1')
-    file_id,name,expected=source['files'][0]; _,meta=public_files(source['shortId'],source['version']); _,_,urls=resolve_file(meta,file_id,name,source['shortId'],source['version'])
+    file_id,name,expected=source['files'][0]; _,meta=public_files(source['shortId'],source['version']); _,_,urls=resolve_file(meta,file_id,name,source['shortId'],source['version'],expected)
     td=tempfile.TemporaryDirectory(); path=Path(td.name)/name
     try:
         download_first(urls,path); digest=hashlib.sha256(path.read_bytes()).hexdigest()
