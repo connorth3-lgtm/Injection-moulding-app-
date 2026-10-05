@@ -414,6 +414,7 @@ need(
     "required status context 'exact-head-risk-coverage' is no longer the aggregate CI risk job",
 )
 need("pull_request:\n    branches: [main]" in risk_coverage, "exact-head risk coverage required check must run on every PR to main")
+need("workflow_dispatch:" not in risk_coverage, "exact-head risk coverage must remain PR-only because non-PR execution cannot prove PR-head coverage")
 for workflow_name, workflow in [
     ("question-quality", question_quality),
     ("release-external-validation", external_validation),
