@@ -122,6 +122,14 @@
         {
           "title": "Use the machine documentation",
           "text": "For setup, maintenance, guarding, isolation, limits and permitted operation, the specific machine manufacturer's instructions and the site's approved procedures control. A generic Book chapter cannot replace them."
+        },
+        {
+          "title": "Read the machine as interacting subsystems",
+          "text": "The injection unit, clamp, drive system, controller, guards and mould interface work as one operating system. A displayed value belongs to a particular subsystem and measurement point, so interpretation should begin by asking what physical quantity is commanded or measured, where it is measured and which components lie between that signal and the polymer in the cavity. This prevents a machine label from being mistaken for direct knowledge of cavity conditions or part quality."
+        },
+        {
+          "title": "Machine-specific documentation remains controlling",
+          "text": "Generic anatomy supports communication, but actual limits, modes, calibration methods, interlocks and service procedures depend on the machine and controller. Before using a signal diagnostically, verify its units, scaling, sensor location and control mode in current equipment documentation. Transferable understanding should focus on physical function and evidence rather than memorised screen positions or assumptions that the same label means the same implementation on every machine."
         }
       ]
     },
@@ -148,6 +156,14 @@
         {
           "title": "Temperature-control system",
           "text": "Cooling or temperature-control circuits remove or supply heat so the mould reaches a useful thermal condition. Circuit layout, flow condition and local heat load can create different surface temperatures across the tool, which is why a single controller setpoint does not describe the whole mould."
+        },
+        {
+          "title": "Follow the complete path through the mould",
+          "text": "A useful mould mental model follows material from the inlet through runners and gates into each cavity while also tracking venting, cooling, guidance, parting surfaces, inserts, slides and ejection. Defects often reflect interactions between these features rather than one isolated component. Mapping symptom location to nearby mould features is therefore a stronger starting point than assuming every defect is primarily a machine-setting problem."
+        },
+        {
+          "title": "Precise terminology improves diagnostic handover",
+          "text": "Troubleshooting often crosses shifts and disciplines, so records should identify the exact cavity, insert, gate, vent, cooling circuit, parting feature or ejection element involved. That makes observations repeatable and reduces ambiguous instructions. Standard terminology supports communication, while the actual mould drawing, maintenance record and approved site controls remain authoritative for a specific tool."
         }
       ]
     },
@@ -174,6 +190,14 @@
         {
           "title": "When this Book must stop",
           "text": "If a task involves access to a danger zone, isolation, stored energy, maintenance, abnormal machine condition or uncertainty about a safeguard, this Book does not provide the procedure. Use the machine manufacturer's instructions, the site's authorised safety system and competent supervision."
+        },
+        {
+          "title": "Stored energy persists when motion stops",
+          "text": "An idle machine can still contain thermal, hydraulic, pneumatic, electrical, spring, gravity or polymer-pressure hazards. A stopped cycle therefore does not by itself establish a safe intervention state. Troubleshooting must preserve guards and interlocks and follow the applicable machine, mould and workplace isolation procedures whenever work crosses the normal guarded operating boundary. Generic process knowledge never authorises defeating a protective function."
+        },
+        {
+          "title": "Separate observation from intervention",
+          "text": "Many useful diagnostic observations can be made without entering a hazard zone: controller traces, cycle timing, part inspection, external measurements and recorded process trends. Prefer those methods first. When a diagnosis genuinely requires physical access, maintenance, purging or tooling work, the task moves from generic troubleshooting into controlled site procedure. The Book can explain the evidence needed but cannot replace authorised risk assessment or equipment-specific instructions."
         }
       ]
     }
