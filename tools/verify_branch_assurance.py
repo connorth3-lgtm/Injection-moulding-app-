@@ -93,7 +93,12 @@ def write_report(branch: str, sha: str, runs: dict[str, dict], verdict: str, rea
         url = row["run_url"]
         run_cell = f"[{row['run_id']}]({url})" if url and row["run_id"] else (str(row["run_id"]) if row["run_id"] else "—")
         lines.append(f"| {row['name']} | {row['status']} | {row['conclusion']} | {run_cell} |")
-    (out / "branch-assurance-report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    markdown = "\n".join(lines) + "\n"
+    (out / "branch-assurance-report.md").write_text(markdown, encoding="utf-8")
+    summary = os.environ.get("GITHUB_STEP_SUMMARY", "").strip()
+    if summary:
+        with open(summary, "a", encoding="utf-8") as handle:
+            handle.write(markdown)
 
 
 def api_runs(repository: str, sha: str, token: str) -> object:
