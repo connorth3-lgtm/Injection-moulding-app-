@@ -70,6 +70,10 @@
         {
           "title": "Judge transfer by repeatability and downstream response",
           "text": "A useful transfer method should produce a repeatable transition under the actual material, machine and mould conditions. Compare the trigger, cavity or machine pressure response, part mass and key dimensions across repeated cycles and normal operating variation. A transfer point that looks acceptable in one trace but shifts product response from cycle to cycle is not yet a robust basis for production."
+        },
+        {
+          "title": "Confirm transfer robustness, not only one ideal cycle",
+          "text": "A transfer strategy should remain defensible across normal variation in material condition, thermal state and delivery. Review repeated cycles and part response rather than selecting a point from one trace. If small upstream changes move the actual fill state substantially at transfer, the process may require better measurement, a different transfer signal or tighter control of the underlying source of variation."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -107,6 +111,10 @@
         {
           "title": "Projected area is a model input, not the whole decision",
           "text": "Clamp-force estimation depends on what projected area and pressure assumptions are included, whether runners contribute, how pressure is distributed and what margin is appropriate for the machine and mould. Make those assumptions visible. A calculation is most useful when it exposes uncertainty and prompts verification rather than when it produces a precise-looking tonnage with hidden inputs."
+        },
+        {
+          "title": "Use clamp evidence with mould condition evidence",
+          "text": "Clamp demand cannot be separated completely from the mould's mechanical condition. Parting-line damage, support, contamination, thermal growth and local shutoff geometry can alter where opening or flash occurs. A useful investigation combines the pressure/projected-area estimate with inspection and location evidence so that a tooling problem is not mislabelled as insufficient machine tonnage."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -132,6 +140,10 @@
         {
           "title": "Diagnose by location",
           "text": "When a restriction is suspected, separate machine/nozzle, sprue, runner, gate and cavity contributions using measured or controlled comparisons rather than assuming the smallest feature is automatically the root cause."
+        },
+        {
+          "title": "Balance pressure loss against thermal and shear history",
+          "text": "A restriction changes more than the pressure required to fill. It can also alter shear, local heating, residence and the sensitivity of downstream filling to small changes in material condition. When comparing feed-system sections, record the pressure change together with fill behaviour and part response so that a high pressure drop is interpreted in its physical context rather than treated as a defect by itself."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -157,6 +169,10 @@
         {
           "title": "Test before changing steel",
           "text": "Use defect location, fill progression, vent condition and controlled process changes to test the hypothesis. Permanent vent changes require tooling authority and mould-specific limits."
+        },
+        {
+          "title": "Use the defect location to test the gas hypothesis",
+          "text": "A gas-related mechanism should make predictions about where air is trapped or forced to escape. Compare end-of-fill locations, converging flow fronts, ribs, blind pockets and vent condition with the mark or fill disturbance. If the defect moves independently of those boundaries, broaden the investigation to degradation, contamination or other mechanisms instead of assuming venting is always responsible."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -288,6 +304,10 @@
         {
           "title": "Supplier instructions control",
           "text": "Start-up, shutdown, purge, heater limits, valve-gate operation and maintenance are hardware- and material-dependent. Generic Book guidance cannot safely replace the hot-runner supplier's procedure."
+        },
+        {
+          "title": "Treat each heated zone as part of the material history",
+          "text": "A hot-runner system can create different residence and thermal conditions across manifolds, drops and valve-gate regions. A common controller setpoint does not prove identical melt history at every location. Cavity-specific defects, colour change, pressure imbalance or restart behaviour can therefore provide clues about where the heated feed system deserves inspection or supplier-guided diagnosis."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -726,6 +746,14 @@
         {
           "title": "Internal evidence can contradict surface appearance",
           "text": "A part with an acceptable outer surface can still contain an internal void, while visible sink does not automatically establish the internal structure. When the product risk justifies it, sectioning, imaging, mass comparison or other appropriate inspection can distinguish internal porosity from surface-only deformation. Choose the method that answers the actual quality question."
+        },
+        {
+          "title": "Separate feed effectiveness from local geometry",
+          "text": "If a thick region continues to contract after the gate or feed path no longer transmits useful pressure, extending hold time may not change the outcome. Conversely, if the region is still pressure-responsive, packing evidence may matter. Compare part mass, local dimensions, gate-response studies and defect location so that the diagnosis distinguishes inadequate pressure transmission from a geometry or cooling limitation."
+        },
+        {
+          "title": "Use sectioning or suitable inspection when the product risk justifies it",
+          "text": "Surface appearance cannot always distinguish an internal void from acceptable internal structure. Where the product requirement makes hidden porosity important, use an appropriate inspection method and define the acceptance criterion. The Book can explain the mechanism, but product-specific disposition remains controlled by the applicable quality requirement."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -763,6 +791,10 @@
         {
           "title": "Use material handling as a traceable variable",
           "text": "If a volatile or moisture mechanism is suspected, record when the material was opened, dried, transferred, exposed and returned to the hopper, together with any verified moisture result where appropriate. A traceable material-handling history allows the symptom to be compared with real state changes instead of relying on memory or the assumption that dryer settings always represent material condition."
+        },
+        {
+          "title": "Follow the symptom through material and machine boundaries",
+          "text": "Ask whether the streak follows a material container, dryer, machine, cavity, restart or process state. A symptom that moves with the material supports a different hypothesis from one that remains with one mould or appears only after decompression or residence changes. This boundary analysis helps prevent repeated drying changes when the dominant mechanism lies elsewhere."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -800,6 +832,10 @@
         {
           "title": "End-of-fill location is a clue, not proof",
           "text": "A recurring mark at the last region to fill can support a trapped-gas hypothesis, especially when vent condition or fill sequence changes the outcome. But degraded material can also collect in difficult regions. Confirm the pattern across cavities, cycles and interventions before converting location into a root-cause claim."
+        },
+        {
+          "title": "Use chronology to distinguish trapped gas from degraded material",
+          "text": "A repeatable mark at the same end-of-fill location from the first stable cycles supports a different investigation from dark material that appears after a pause and then diminishes. Record where the mark occurs, when it begins and whether it follows material residence or cavity geometry. The chronology should fit the proposed mechanism before corrective action is treated as confirmed."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -873,6 +909,10 @@
         {
           "title": "Process windows matter more than one cosmetic optimum",
           "text": "A change that improves weld-line appearance at one operating point may reduce robustness elsewhere. Evaluate the response over a defensible process range and against the real product requirement. The preferred condition is one that maintains acceptable interface performance while preserving other quality characteristics, not simply the setting that makes one sample look best."
+        },
+        {
+          "title": "Verify the interface against the real product requirement",
+          "text": "The engineering question is not simply whether a weld line can be seen. Define whether the requirement is cosmetic, dimensional, pressure-tight, fatigue-related or structural, then use an appropriate measurement or test. A process change that makes the line visually weaker or stronger may not produce the same change in the property that matters to the product."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -956,6 +996,10 @@
         {
           "title": "Separate continuous contamination from event-driven contamination",
           "text": "Specks that appear continuously from start-up suggest a different source from specks that increase after a long residence event, material change or shutdown. Count and time the events where practical, and note whether one cavity or all cavities are affected. This chronology helps distinguish upstream material handling, barrel or screw regions, hot-runner dead spots and mould-local mechanisms."
+        },
+        {
+          "title": "Create a source map before repeated purging",
+          "text": "List every plausible point where foreign or degraded material could enter the melt path: material handling, feed throat, screw/barrel, nozzle, manifold, drops and cavity-specific regions. Then use the cavity and time pattern to remove unlikely locations. This makes cleaning or inspection targeted and reduces the risk of repeatedly purging without learning where the contamination originates."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -1064,6 +1108,10 @@
         {
           "title": "Factor ranges define the scope of the conclusion",
           "text": "A DOE estimates behaviour over the levels actually studied. Extrapolating beyond those levels can be unsafe or technically wrong, especially when polymer flow, thermal response or machine limits are nonlinear. State the tested range with the conclusion and require new evidence before applying the result to a materially different process window."
+        },
+        {
+          "title": "Use confirmation runs before turning effects into process rules",
+          "text": "After selecting a preferred factor combination or model, repeat the condition independently and compare the observed response with the prediction. Confirmation helps reveal time drift, hidden interactions or overfitting to the original data. A model that cannot predict a fresh run should be treated as incomplete evidence rather than promoted into a permanent process rule."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -1108,6 +1156,10 @@
         {
           "title": "Capability cannot rescue an unsuitable specification or measurement",
           "text": "A high capability index is not meaningful if the specification basis is wrong, the characteristic is measured inconsistently or the data population combines incompatible conditions. Before optimising the number, verify the requirement, measurement system, sampling and process population. The statistical summary comes after those engineering decisions, not before them."
+        },
+        {
+          "title": "Capability belongs to a defined population",
+          "text": "Always state what population the index represents: which cavity or cavities, what time period, material condition, machine state and measurement method. Combining unlike populations can produce a mathematically valid number that answers the wrong engineering question. The population definition is therefore part of the capability claim, not an optional note."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -1420,6 +1472,18 @@
         {
           "title": "Independent review is valuable when the evidence is ambiguous",
           "text": "Complex investigations are vulnerable to confirmation bias, especially after significant time has been invested in one explanation. A second engineer or specialist can challenge assumptions, inspect the evidence chain and identify missing alternatives. Independent review is particularly valuable before irreversible tooling changes, broad process-window revisions or high-consequence product dispositions."
+        },
+        {
+          "title": "Rank hypotheses by evidence, consequence and testability",
+          "text": "Not every plausible mechanism deserves equal attention. Give priority to explanations that fit the observed boundaries, have a credible physical pathway and can be tested safely with discriminating evidence. Also consider consequence: a low-probability safety or tooling-damage mechanism may deserve earlier exclusion than a more likely cosmetic mechanism."
+        },
+        {
+          "title": "Distinguish containment, correction and root-cause evidence",
+          "text": "Containment protects product or production while the cause is uncertain. A corrective action changes a condition believed to contribute to the problem. Root-cause evidence shows that the proposed mechanism explains the symptom and survives attempts to falsify it. Keeping these levels separate prevents a successful containment action from being mislabeled as a proven cause."
+        },
+        {
+          "title": "Use contradictions as valuable data",
+          "text": "The most useful observation may be the one that the preferred hypothesis cannot explain. When a cavity expected to fail remains good, a predicted pressure feature is absent or a material change has no effect, record that contradiction prominently. Strong diagnostic practice rewards evidence that narrows the hypothesis set, even when it overturns the team's first explanation."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
