@@ -227,11 +227,21 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repository", required=True)
     parser.add_argument("--source-sha", required=True)
+    parser.add_argument(
+        "--contain-only",
+        action="store_true",
+        help="cancel/inspect same-SHA legacy Pages runs without mutating repository Pages settings",
+    )
     args = parser.parse_args()
 
     token = os.environ.get("GITHUB_TOKEN", "").strip()
     if not token:
         raise SystemExit("GITHUB_TOKEN is required")
+
+    if args.contain_only:
+        contain_same_sha_legacy_run(token, args.repository, args.source_sha)
+        print("Pages legacy containment passed without mutating repository Pages settings.")
+        return
 
     switched = try_switch_to_workflow_mode(token, args.repository)
     # Even after a successful settings switch, a legacy run may already have been
