@@ -23,6 +23,7 @@ transmit data, or persist captured values.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import shutil
@@ -231,6 +232,28 @@ def stage_preview(preview_source: Path, preview_target: Path) -> None:
         if marker not in payload:
             payload = payload.replace("<head>", "<head>\n  " + marker, 1)
     index_path.write_text(payload, encoding="utf-8")
+
+    # The staging layer intentionally adds preview-only provenance markers to
+    # index.html after the production candidate manifest was built. Rebind the
+    # copied manifest's index.html integrity record to the exact staged bytes so
+    # live verification remains byte-accurate rather than comparing against the
+    # pre-staging candidate.
+    manifest_path = preview_target / "pages-manifest.json"
+    if not manifest_path.is_file():
+        raise SystemExit("preview source is missing pages-manifest.json integrity metadata")
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise SystemExit("preview pages-manifest.json is invalid") from exc
+    assets = manifest.get("assets")
+    if not isinstance(assets, dict) or "index.html" not in assets:
+        raise SystemExit("preview pages-manifest.json is missing index.html integrity metadata")
+    staged_bytes = index_path.read_bytes()
+    assets["index.html"] = {
+        "sha256": hashlib.sha256(staged_bytes).hexdigest(),
+        "bytes": len(staged_bytes),
+    }
+    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def build(target: Path, preview_source: Path | None = None) -> set[str]:
