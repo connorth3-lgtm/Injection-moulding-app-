@@ -40,6 +40,8 @@ EXPECTED = {
     "worked-dimensional-conditioning-v1": "dimensional-stability",
     "worked-process-monitoring-alarm-v1": "process-monitoring",
     "worked-black-speck-source-map-v1": "black-specks",
+    "worked-complex-diagnostics-v1": "complex-diagnostics",
+    "worked-filling-boundary-defect-v1": "flash",
 }
 
 
