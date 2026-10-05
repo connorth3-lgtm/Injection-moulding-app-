@@ -51,6 +51,9 @@ for row in readers:
     assert set(mids)<=set(module_ids)
     assert not any(k in row for k in ("claims","sourceIds","state","publicationStatus","smeStatus")), "reader grouping must not become a second claim/status authority"
     covered.extend(mids)
+for reader_id in ("r07","r10","r19"):
+    row=next(x for x in readers if x["id"]==reader_id)
+    assert row.get("sequencePrompt"), f"reader chapter continuity prompt missing: {reader_id}"
 assert len(covered)==46 and len(set(covered))==46 and set(covered)==set(module_ids)
 target=reader.get("targetWordsPerReaderChapter") or {}
 assert target.get("nominal")==1000 and target.get("range")==[850,1400]
