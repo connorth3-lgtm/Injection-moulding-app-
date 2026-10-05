@@ -24,7 +24,7 @@ def assert_pinned_workflow_python_dependencies() -> None:
         "-r", "--requirement", "-c", "--constraint",
         "--index-url", "--extra-index-url", "--find-links",
     }
-    package_re = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*(?:\[[A-Za-z0-9_,.-]+\])?$")
+    requirement_re = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*(?:\[[A-Za-z0-9_,.-]+\])?(?:(?:==|>=|<=|~=|!=|>|<).+)?$")
     for path in sorted(WORKFLOW_DIR.glob("*.y*ml")):
         rel = path.relative_to(ROOT).as_posix()
         for lineno, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
@@ -51,10 +51,12 @@ def assert_pinned_workflow_python_dependencies() -> None:
                     or token.endswith((".txt", ".in", ".lock"))
                 ):
                     continue
-                if package_re.fullmatch(token):
+                if requirement_re.fullmatch(token):
+                    name_and_version = token.split(";", 1)[0]
                     need(
-                        "==" in token,
-                        f"unpinned workflow Python dependency in {rel}:{lineno}: {token}",
+                        "==" in name_and_version
+                        and not any(op in name_and_version for op in (">=", "<=", "~=", "!=", ">", "<")),
+                        f"non-exact workflow Python dependency in {rel}:{lineno}: {token}",
                     )
 
 
