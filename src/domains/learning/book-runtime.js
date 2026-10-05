@@ -97,12 +97,12 @@
   function validateQualificationReview(data){if(data?.schema!==1||data?.bookId!=='mouldmaster-book'||!Array.isArray(data.resolutions)||!Array.isArray(data.remainingQualifiedClaims))throw new Error('Book qualification-resolution identity check failed');const c=data.effectiveCountsAfterQualificationReview||{};if(c.chapters!==46||c.claims!==137||c.supported!==116||c.qualified!==21||c.hold!==0||c.conflicting!==0)throw new Error('Book qualification-resolution counts mismatch');return data;}
   function validateWorkedCases(data,declared,sourceMap,manifestData,auth){
     if(data?.schemaVersion!==1||data?.bookId!=='mouldmaster-book'||data?.release!==VERSION||data?.status!=='authorized-synthetic-teaching'||!Array.isArray(data.cases)||!Array.isArray(data.sourceSeeds))throw new Error('Book worked-case ledger identity check failed');
-    const permit=auth?.workedCasesAuthorization;if(permit?.status!=='authorized'||permit?.release!==VERSION||permit?.ledger!=='data/book-worked-engineering-cases-v1.json'||permit?.caseCount!==18||permit?.claimCount!==18||permit?.independentSmeStatus!=='hold')throw new Error('Book worked-case publication authorization missing');
+    const permit=auth?.workedCasesAuthorization;if(permit?.status!=='authorized'||permit?.release!==VERSION||permit?.ledger!=='data/book-worked-engineering-cases-v1.json'||permit?.caseCount!==24||permit?.claimCount!==24||permit?.independentSmeStatus!=='hold')throw new Error('Book worked-case publication authorization missing');
     for(const source of data.sourceSeeds){if(!source?.id||!source?.title||!source?.url||!source?.scope)throw new Error('Incomplete worked-case evidence source');if(sourceMap.has(source.id))throw new Error(`Duplicate worked-case source id: ${source.id}`);sourceMap.set(source.id,source);manifestData.sourceSeeds.push(source);}
-    if(data.cases.length!==18)throw new Error('Book worked-case count mismatch');const caseIds=new Set(),chapterIds=new Set(),claimIds=new Set();
+    if(data.cases.length!==24)throw new Error('Book worked-case count mismatch');const caseIds=new Set(),claimIds=new Set();
     for(const item of data.cases){
       if(!item?.id||caseIds.has(item.id))throw new Error(`Duplicate or missing worked-case id: ${item?.id||'missing'}`);caseIds.add(item.id);
-      if(!item?.chapterId||chapterIds.has(item.chapterId)||!declared.has(item.chapterId))throw new Error(`Invalid worked-case chapter binding: ${item?.chapterId||'missing'}`);chapterIds.add(item.chapterId);
+      if(!item?.chapterId||!declared.has(item.chapterId))throw new Error(`Invalid worked-case chapter binding: ${item?.chapterId||'missing'}`);
       if(item.synthetic!==true||!item.title||!item.setup||!item.interpretation||!Array.isArray(item.calculationSteps)||!item.calculationSteps.length||!Array.isArray(item.boundaries)||!item.boundaries.length)throw new Error(`Incomplete worked-case teaching contract: ${item.id}`);
       if(!Array.isArray(item.sourceIds)||!item.sourceIds.length)throw new Error(`Worked case lacks evidence anchors: ${item.id}`);for(const id of item.sourceIds)if(!sourceMap.has(id))throw new Error(`Unknown worked-case source ${id} in ${item.id}`);
       if(!Array.isArray(item.claims)||item.claims.length!==1)throw new Error(`Worked case must have one governed case claim: ${item.id}`);
@@ -113,12 +113,12 @@
   }
   function validateEngineeringDiagrams(data,declared,auth){
     if(data?.schemaVersion!==1||data?.bookId!=='mouldmaster-book'||data?.release!==VERSION||data?.status!=='governed-instructional-diagrams'||!Array.isArray(data.diagrams))throw new Error('Book engineering-diagram ledger identity check failed');
-    const permit=auth?.diagramAuthorization;if(permit?.status!=='authorized-instructional-diagrams'||permit?.release!==VERSION||permit?.ledger!=='data/book-engineering-diagrams-v1.json'||permit?.diagramCount!==8||permit?.independentSmeStatus!=='hold')throw new Error('Book engineering-diagram publication authorization missing');
-    if(data.diagrams.length!==8)throw new Error('Book engineering-diagram count mismatch');
-    const ids=new Set(),chapters=new Set();
+    const permit=auth?.diagramAuthorization;if(permit?.status!=='authorized-instructional-diagrams'||permit?.release!==VERSION||permit?.ledger!=='data/book-engineering-diagrams-v1.json'||permit?.diagramCount!==18||permit?.independentSmeStatus!=='hold')throw new Error('Book engineering-diagram publication authorization missing');
+    if(data.diagrams.length!==18)throw new Error('Book engineering-diagram count mismatch');
+    const ids=new Set();
     for(const item of data.diagrams){
-      if(!item?.id||ids.has(item.id)||!item?.chapterId||chapters.has(item.chapterId)||!declared.has(item.chapterId))throw new Error('Invalid or duplicate Book engineering diagram');
-      ids.add(item.id);chapters.add(item.chapterId);
+      if(!item?.id||ids.has(item.id)||!item?.chapterId||!declared.has(item.chapterId))throw new Error('Invalid or duplicate Book engineering diagram');
+      ids.add(item.id);
       if(!item?.title||!item?.asset||!item?.alt||!item?.caption||!/^[0-9a-f]{40}$/.test(String(item.gitBlobSha1||'')))throw new Error(`Incomplete Book engineering diagram: ${item.id}`);
       if(!/^assets\/book-diagrams\/[a-z0-9-]+\.svg$/.test(item.asset))throw new Error(`Unsafe Book diagram asset path: ${item.asset}`);
     }
