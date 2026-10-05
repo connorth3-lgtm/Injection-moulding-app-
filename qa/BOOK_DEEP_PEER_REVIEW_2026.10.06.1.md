@@ -81,7 +81,7 @@ The Material Data Atlas is correctly retained as a reference appendix rather tha
 
 ### 1. Visual teaching density
 
-The text and worked-case depth now meet the current reader-chapter target, but the Book still has only eight governed engineering diagrams. Several concepts remain easier to learn visually than verbally. Additional diagrams should be treated as a future quality improvement, not as permission to create ungoverned or decorative illustrations.
+The Book now has 18 governed engineering diagrams spanning cycle sequence, plasticising, pressure/transfer, feed path, cooling, fountain flow, gate-seal response, ejection, shrinkage/warpage, weld-line formation, fibre orientation, capability, DOE interaction, diagnostic reasoning, multi-cavity balance and dimensional conditioning. The visual layer is now proportionate to the 20-reader-chapter structure. Future figures should be added only when they teach a mechanism better than prose, not to increase illustration count.
 
 ### 2. Runtime complexity
 
@@ -113,10 +113,17 @@ Internally, the Book now meets the current structural and instructional-depth ta
 - 20 coherent reader chapters;
 - 46 governed traceability modules;
 - about 20,400 words of governed teaching content;
-- 18 worked engineering cases;
-- 8 governed engineering diagrams;
+- 24 worked engineering cases;
+- 18 governed engineering diagrams;
 - all reader chapters at or above the current ~850-word lower target;
 - expanded prose byte-bound to existing governed claims;
 - publication and external-validation boundaries fail closed.
 
-The main remaining quality opportunity is additional visual instruction and independent human evaluation. Do not remove the HOLD until the external evidence above exists for the exact governed release.
+The main remaining quality opportunity is independent human evaluation and real learner/usability evidence. Reader chapters now also include depth bands, learning objectives, knowledge checks, application prompts and conventional chapter-reference views. Do not remove the HOLD until the external evidence above exists for the exact governed release.
+
+
+## Plugin-assisted literature cross-check
+
+A 2026-10-06 research-plugin pass used SciSpace to compare key Book themes with peer-reviewed injection-moulding literature. The external search supported the Book's treatment of cavity-pressure monitoring, multi-factor warpage/shrinkage, weld-line mechanism/design interaction, moisture/hydrolysis boundaries and data-driven process development. Consensus search quota was exhausted for the connected account; Scite and Elicit MCP access were unavailable under their connected plan levels, so those services were not represented as completed evidence checks.
+
+This plugin-assisted review does not replace the governed source ledgers or independent human SME review. It is corroborative peer-review evidence only.
