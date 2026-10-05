@@ -259,6 +259,7 @@ for marker in (
     'fetch(urljoin(root, "device-validation.html"))',
     "device metadata helper violates local-only boundary",
     "critical_assets",
+    'critical_assets = set(manifest.get("precache_assets") or ())',
     "preview pages-manifest has no hash record for critical asset",
     "critical preview asset byte-size mismatch",
     "critical preview asset SHA-256 mismatch",
