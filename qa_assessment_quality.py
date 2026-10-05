@@ -148,7 +148,7 @@ for asset in ['assessment-storage-scope.js','assessment-quality-suite.js','asses
 integrity=text('desktop/electron/scripts/generate-integrity.cjs')
 for asset in ['assessment-storage-scope.js','src/domains/assessment/assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:need(f"'{asset}'" in integrity,f'{asset} missing from integrity hashes')
 qy=text('.github/workflows/qa.yml')
-need("find . -maxdepth 1 -type f -name '*.js'" in qy,'release workflow must syntax-check root JavaScript dynamically')
+need("Repository-wide JavaScript syntax" in qy,'release workflow must syntax-check root JavaScript dynamically')
 need('python qa_assessment_quality.py' in qy and 'python qa_source_freshness.py' in qy,'release workflow missing assessment quality gates')
 ow=text('.github/workflows/open-desktop-build.yml')
 for asset in ['assessment-storage-scope.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:need(f"- '{asset}'" in ow,f'desktop workflow trigger missing {asset}')
