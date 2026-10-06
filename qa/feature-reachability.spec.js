@@ -23,8 +23,8 @@ async function openAssessmentsFromQuestionCentre(page,width){
  else{const practice=page.locator('#nav button[data-view="scenarios"]');await expect(practice).toBeVisible();await practice.click()}
  await expectVisible(page,'#scenarios .mm-practice-hub');
  const centre=page.locator('#scenarios [data-mm-hub-action="question-centre"]');await expect(centre).toBeVisible();await centre.click();
- const modal=page.locator('#modal:not(.hidden)');await expect(modal).toBeVisible();
- const assessments=modal.locator('[data-mm-hub-action="assessments"]');await expect(assessments).toBeVisible();await assessments.click();
+ await expectVisible(page,'#scenarios .mm-question-centre');
+ const assessments=page.locator('#scenarios .mm-question-centre [data-mm-hub-action="assessments"]');await expect(assessments).toBeVisible();await assessments.click();
  await expectVisible(page,'#exams');
 }
 
