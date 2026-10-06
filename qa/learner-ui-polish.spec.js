@@ -19,12 +19,15 @@ async function openApp(page){
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
 
-test('Home is one primary lesson decision plus two non-duplicate specialist tools',async({page})=>{
+test('Home is one primary lesson decision plus Book and two non-duplicate specialist tools',async({page})=>{
   await page.setViewportSize({width:810,height:1080});
   await openApp(page);
   const focus=page.locator('#dashboard .mm-today-focus');
+  const book=page.locator('#dashboard [data-mm-home-book]');
   const tools=page.locator('#dashboard .mm-home-balance');
   await expect(focus).toBeVisible();
+  await expect(book).toBeVisible();
+  await expect(book.getByRole('button',{name:'Open Book'})).toBeVisible();
   await expect(tools).toBeVisible();
   await expect(page.locator('#dashboard .mm-home-task-hub,#dashboard .mm-home-utility')).toHaveCount(0);
   await expect(tools.locator('[data-mm-home-action]')).toHaveCount(2);
@@ -37,29 +40,36 @@ test('Home is one primary lesson decision plus two non-duplicate specialist tool
     dashboardWidth:document.getElementById('dashboard').getBoundingClientRect().width,
     outer:getComputedStyle(document.querySelector('#dashboard .mm-home-balance')).gridTemplateColumns.split(/\s+/).filter(Boolean).length,
     actions:getComputedStyle(document.querySelector('#dashboard .mm-home-balance-grid')).gridTemplateColumns.split(/\s+/).filter(Boolean).length,
-    order:Boolean(document.querySelector('#dashboard .mm-today-focus')?.compareDocumentPosition(document.querySelector('#dashboard .mm-home-balance'))&Node.DOCUMENT_POSITION_FOLLOWING)
+    lessonBeforeBook:Boolean(document.querySelector('#dashboard .mm-today-focus')?.compareDocumentPosition(document.querySelector('#dashboard [data-mm-home-book]'))&Node.DOCUMENT_POSITION_FOLLOWING),
+    bookBeforeTools:Boolean(document.querySelector('#dashboard [data-mm-home-book]')?.compareDocumentPosition(document.querySelector('#dashboard .mm-home-balance'))&Node.DOCUMENT_POSITION_FOLLOWING)
   }));
   expect(tablet.dashboardWidth).toBeLessThanOrEqual(960.5);
   expect(tablet.outer).toBe(1);
   expect(tablet.actions).toBe(2);
-  expect(tablet.order).toBeTruthy();
+  expect(tablet.lessonBeforeBook).toBeTruthy();
+  expect(tablet.bookBeforeTools).toBeTruthy();
 
   const troubleshoot=tools.getByRole('button',{name:/Troubleshoot/i});
   await troubleshoot.evaluate(el=>el.dataset.mmQaStableNode='1');
   await troubleshoot.focus();
   await page.setViewportSize({width:412,height:915});
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
-  const phone=await page.evaluate(()=>({
-    actions:getComputedStyle(document.querySelector('#dashboard .mm-home-balance-grid')).gridTemplateColumns.split(/\s+/).filter(Boolean).length,
-    focused:document.activeElement?.dataset?.mmHomeAction||'',
-    stable:document.querySelector('[data-mm-home-action="mould-master"]')?.dataset?.mmQaStableNode||'',
-    toolsBottom:document.querySelector('#dashboard .mm-home-balance').getBoundingClientRect().bottom,
-    navTop:document.querySelector('.mobile-nav').getBoundingClientRect().top
-  }));
+  const phone=await page.evaluate(()=>{
+    const focus=document.querySelector('#dashboard .mm-today-focus').getBoundingClientRect();
+    const book=document.querySelector('#dashboard [data-mm-home-book]').getBoundingClientRect();
+    const tools=document.querySelector('#dashboard .mm-home-balance').getBoundingClientRect();
+    return {
+      actions:getComputedStyle(document.querySelector('#dashboard .mm-home-balance-grid')).gridTemplateColumns.split(/\s+/).filter(Boolean).length,
+      focused:document.activeElement?.dataset?.mmHomeAction||'',
+      stable:document.querySelector('[data-mm-home-action="mould-master"]')?.dataset?.mmQaStableNode||'',
+      focusBottom:focus.bottom,bookTop:book.top,bookBottom:book.bottom,toolsTop:tools.top
+    };
+  });
   expect(phone.actions).toBe(2);
   expect(phone.focused).toBe('mould-master');
   expect(phone.stable).toBe('1');
-  expect(phone.toolsBottom).toBeLessThanOrEqual(phone.navTop+1);
+  expect(phone.bookTop).toBeGreaterThanOrEqual(phone.focusBottom-1);
+  expect(phone.toolsTop).toBeGreaterThanOrEqual(phone.bookBottom-1);
 
   await page.setViewportSize({width:1440,height:900});
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
