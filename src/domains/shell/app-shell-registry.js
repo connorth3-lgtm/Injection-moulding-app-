@@ -359,7 +359,8 @@ function openMobileMenuCanonical(){
   if(grid){
     [...grid.querySelectorAll(':scope > .quick-action')].forEach(button=>{
       const handler=button.getAttribute('data-mm-onclick')||button.getAttribute('onclick')||'';
-      if(/switchView\('(simulator|defects|coach)'\)/.test(handler))button.remove()
+      if(/switchView\('(simulator|defects|coach)'\)/.test(handler)){button.remove();return}
+      if(/switchView\('exams'\)/.test(handler)){const label=button.querySelector('b'),copy=button.querySelector('small');if(label)label.textContent='Question Centre';if(copy)copy.textContent='Assessments, review and question practice.';button.setAttribute('aria-label','Question Centre')}
     });
     grid.dataset.mmMoreReduced='1'
   }
