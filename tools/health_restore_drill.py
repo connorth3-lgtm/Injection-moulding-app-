@@ -192,7 +192,7 @@ def verify_runtime_contracts() -> None:
         "checksum is not a digital signature",
         "window.MM_LEARNER_BACKUP_INTEGRITY",
         "bridge.buildTrainingExtras(payload.users)",
-        "learner-scoped review/sign-off data",
+        "learner-scoped review/sign-off",
     ]:
         require(token in backup, f"learner backup integrity runtime contract missing: {token}")
     require(

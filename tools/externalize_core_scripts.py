@@ -696,7 +696,7 @@ def check_state() -> None:
     integrity = DESKTOP_INTEGRITY.read_text(encoding="utf-8")
     if "'MouldMaster_Core_App.html'" in integrity:
         fail("desktop integrity base files must not publish the executable raw core HTML")
-    if "STATIC_RUNTIME_DIRS=['src/core-runtime']" not in integrity or "...staticRuntimeFiles" not in integrity:
+    if "STATIC_RUNTIME_DIRS" not in integrity or "'src/core-runtime'" not in integrity or "STATIC_RUNTIME_DIRS.flatMap(filesUnder)" not in integrity or "...staticRuntimeFiles" not in integrity:
         fail("desktop integrity does not derive generated core runtime files")
     print(
         f"Core CSP migration check passed: {len(expected_names)} deterministic core runtime slots; bridge folded into final slot; "

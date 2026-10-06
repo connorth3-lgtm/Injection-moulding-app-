@@ -25,7 +25,7 @@ for marker in [
     'Repository-level GitHub immutable releases should be enabled before the next release',
 ]: need(marker in wf,f'desktop release immutability/version-gate safeguard missing: {marker}')
 need("get('desktop_release', '')" in wf,'desktop publication gate must compare desktop_release rather than any version.json change')
-need(wf.find('detect-desktop-release-change:') < wf.find('publish-windows:'),'desktop identity detection must run before the Windows publication job')
+need(wf.find('detect-desktop-release-change:') < wf.find('build-windows-release:') < wf.find('publish-release:'),'desktop identity detection must run before build and publication jobs')
 need(wf.find('gh release create $env:MM_RELEASE_TAG --draft') < wf.find('gh release upload $env:MM_RELEASE_TAG @paths') < wf.find('gh release edit $env:MM_RELEASE_TAG --draft=false'),'immutable release flow must be draft -> asset upload -> publish')
 
 guard_path=ROOT/'.github'/'workflows'/'desktop-release-immutability-guard.yml'
