@@ -193,7 +193,13 @@ function populateMobileMore(){
     const grid=mobileGrid();if(!grid)return;
     grid.querySelectorAll('[data-mm-registry-menu],[data-mm-diagnostic-menu],[data-mm-process-data-menu],[data-mm-material-menu],[data-mm-learning-insights-menu],[data-mm-reference-data-menu]').forEach(x=>x.remove());
     const items=[...navigationItems.values()].filter(x=>x.mobileMore!==false).sort((a,b)=>(a.order||50)-(b.order||50));
-    for(const item of items)grid.appendChild(makeMobileMoreButton(item))
+    let supportLabelAdded=false;
+    for(const item of items){
+      if(item.mobileSection==='support'&&!supportLabelAdded){
+        const label=document.createElement('div');label.className='mm-more-section-label';label.textContent='Support & app maintenance';label.setAttribute('role','heading');label.setAttribute('aria-level','3');grid.appendChild(label);supportLabelAdded=true
+      }
+      grid.appendChild(makeMobileMoreButton(item))
+    }
   })
 }
 function visibleCoreView(){
@@ -317,7 +323,7 @@ function installDefaultNavigation(){
   registerNavigation({id:'material-labs',mobileMore:false,label:'Material labs',icon:'◈',description:'Compare resin-specific behaviour and evidence.',order:40,group:'practice',legacyDataset:'mmMaterialLabs',mobileGroup:'practice',action:()=>window.MM_MATERIAL_BEHAVIOUR_LABS?.open?.()});
   registerNavigation({id:'reference-data',label:'Reference data',icon:'▤',description:'Materials, defects, signals and troubleshooting data.',order:50,group:'progress',desktop:false,mobileGroup:'more',action:()=>location.assign('./reference-data.html')});
   registerNavigation({id:'learning-insights',label:'Learning insights',icon:'◫',description:'See local learning progress and retry trends.',order:60,group:'progress',legacyDataset:'mmLearningInsights',mobileGroup:'more',action:()=>window.MM_LEARNING_ANALYTICS?.open?.()});
-  registerNavigation({id:'repair-app-files',label:'Repair app files',icon:'↻',description:'Refresh installed files without deleting learner progress.',order:70,group:'progress',desktop:false,mobileGroup:'more',action:()=>location.hostname==='127.0.0.1'&&/\bElectron\//.test(navigator.userAgent||'')?location.reload():location.assign('./repair.html')})
+  registerNavigation({id:'repair-app-files',label:'App repair',icon:'↻',description:'Support tool: refresh installed files without deleting learner progress.',order:70,group:'progress',desktop:false,mobileGroup:'more',mobileSection:'support',action:()=>location.hostname==='127.0.0.1'&&/\bElectron\//.test(navigator.userAgent||'')?location.reload():location.assign('./repair.html')})
 }
 
 function renderDashboardCanonical(){
