@@ -6,7 +6,7 @@
   "legacyFieldMeaning": "Governed Book content release reviewed by the SME contract; this is not the learner-facing web release.",
   "contentRelease": "2026.10.06.5",
   "boundWebReleaseSource": "version.json:web_release",
-  "boundWebRelease": "2026.10.06.13",
+  "boundWebRelease": "2026.10.06.14",
   "status": "hold",
   "rule": "contentRelease must equal the Book SME legacy release and the governed worked-case/evidence-enrichment content release; boundWebRelease must equal the current learner web release. Human review remains a separate external HOLD."
 }
