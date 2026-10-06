@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07101c">
+<title>Injection Moulding Machine Library · MouldMaster</title>
+<style>
+:root{color-scheme:dark;--bg:#07101c;--panel:#101d30;--line:#2b4462;--text:#eef7ff;--muted:#a8bdd5;--accent:#72e6cd;--warn:#ffd479;--bad:#ff9a9a}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+body{padding:0 0 48px}.top{position:sticky;top:0;z-index:10;background:rgba(7,16,28,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topin{width:min(1180px,94vw);margin:auto;display:flex;gap:14px;align-items:center;padding:14px 0}.top a,.card a{color:var(--accent);text-decoration:none;font-weight:800}.top a:hover,.card a:hover{text-decoration:underline}
+.wrap{width:min(1180px,94vw);margin:26px auto}.hero{border:1px solid var(--line);background:linear-gradient(145deg,#0e1b2f,#13233a);border-radius:20px;padding:26px}
+h1{margin:0 0 8px;font-size:clamp(28px,5vw,48px)}h2{margin:0 0 12px}h4{margin-bottom:8px}p{line-height:1.6}.muted{color:var(--muted)}
+.controls{display:grid;grid-template-columns:1fr auto;gap:12px;margin:18px 0}.controls input,.controls select{width:100%;background:#0d192a;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font:inherit}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.chip,.badge{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800}.verified{color:var(--accent)}.strong_match{color:#8dc7ff}.reference_only{color:var(--warn)}.missing{color:var(--bad)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:16px;margin-top:18px}.card{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:18px}.card h3{margin:0 0 4px;font-size:22px}.section{margin-top:28px}.section-head{display:flex;gap:10px;align-items:end;justify-content:space-between;flex-wrap:wrap}.section-head p{margin:0}
+.specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px}.spec{border:1px solid #243b57;background:#0b1727;border-radius:10px;padding:10px}.spec b{display:block;font-size:13px}.spec span{color:var(--muted);font-size:13px}
+ul{padding-left:20px}.manual,.source-row{border-top:1px solid #243b57;padding:12px 0}.manual:first-child,.source-row:first-child{border-top:0}.notice{border-left:4px solid var(--warn);background:#1c2230;padding:12px 14px;border-radius:8px;margin:14px 0}
+.empty{padding:32px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}.maker-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:16px}.maker{border:1px solid var(--line);background:#0c1829;border-radius:14px;padding:16px}.maker h3{margin:0 0 3px}.maker .source-row p{margin:4px 0}
+footer{width:min(1180px,94vw);margin:34px auto;color:var(--muted);font-size:13px}
+@media(max-width:650px){.controls{grid-template-columns:1fr}.hero{padding:20px}.grid,.maker-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top"><div class="topin"><a href="./index.html">← MouldMaster</a><strong>Machine Library</strong></div></header>
+<main class="wrap">
+<section class="hero">
+<h1>Injection Moulding Machine Library</h1>
+<p class="muted">A manufacturer-wide, source-tracked catalogue for injection moulding machines, controllers, manuals, specifications and unresolved service-document gaps. It is designed for all makes and models, with exact machine records promoted only after their evidence is checked.</p>
+<div class="controls"><input id="q" type="search" placeholder="Search manufacturer, model, series, portal or manual…" aria-label="Search machine library"><select id="status" aria-label="Filter model research status"><option value="">All model states</option><option value="active">Active model research</option></select></div>
+<div class="stats" id="stats"></div>
+</section>
+
+<section class="section">
+<div class="section-head"><div><h2>Manufacturer source index</h2><p class="muted">Official technical-data, service and document portals already verified as starting points for model-level research.</p></div></div>
+<div id="makers" class="maker-grid" aria-live="polite"></div>
+</section>
+
+<section class="section">
+<div class="section-head"><div><h2>Exact machine research records</h2><p class="muted">Machine-level records include evidence confidence, exact/manual status and unresolved document gaps.</p></div></div>
+<div id="results" class="grid" aria-live="polite"></div>
+</section>
+</main>
+<footer>Source-tracked research registry. Verify the exact machine revision and OEM safety/service documentation before maintenance or adjustment.</footer>
+<script>
+(async function(){
+  const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const human=k=>String(k).replaceAll('_',' ').replace(/\b\w/g,c=>c.toUpperCase());
+  const r=await fetch('./machine-library-v1.json',{cache:'no-store'});
+  if(!r.ok)throw new Error('Machine library data unavailable');
+  const data=await r.json(),manufacturers=data.manufacturers||[],machines=[];
+  for(const maker of manufacturers)for(const model of maker.models||[])machines.push({...model,manufacturer:maker.name,aliases:maker.aliases||[]});
+  const q=document.getElementById('q'),status=document.getElementById('status'),out=document.getElementById('results'),makers=document.getElementById('makers'),stats=document.getElementById('stats');
+  const indexedSources=manufacturers.reduce((n,m)=>n+(m.official_sources||[]).length,0);
+  stats.innerHTML='<span class="chip">'+machines.length+' exact model record'+(machines.length===1?'':'s')+'</span><span class="chip">'+manufacturers.length+' manufacturer'+(manufacturers.length===1?'':'s')+'</span><span class="chip">'+indexedSources+' official manufacturer source'+(indexedSources===1?'':'s')+'</span><span class="chip">Updated '+esc(data.last_updated)+'</span>';
+  const badge=s=>'<span class="badge '+esc(s)+'">'+esc(human(s))+'</span>';
+  function sourceRows(list){
+    return (list||[]).map(x=>'<div class="source-row"><div>'+badge(x.status||'verified')+' <strong>'+esc(x.title)+'</strong></div><p class="muted">'+esc(x.notes||'')+'</p><a href="'+esc(x.url)+'" target="_blank" rel="noopener">Open official source ↗</a></div>').join('');
+  }
+  function render(){
+    const term=q.value.trim().toLowerCase(),st=status.value;
+    const makerRows=manufacturers.filter(m=>!term||JSON.stringify(m).toLowerCase().includes(term));
+    makers.innerHTML=makerRows.length?makerRows.map(m=>'<article class="maker"><p class="muted">'+esc((m.aliases||[]).join(' · '))+'</p><h3>'+esc(m.name)+'</h3>'+(m.models?.length?'<p>'+m.models.length+' exact model record'+(m.models.length===1?'':'s')+'</p>':'<p class="muted">Manufacturer sources indexed; exact model records to be added as verified.</p>')+sourceRows(m.official_sources)+'</article>').join(''):'<div class="empty">No matching manufacturer sources.</div>';
+    const rows=machines.filter(m=>(!st||m.research_status===st)&&(!term||JSON.stringify(m).toLowerCase().includes(term)));
+    if(!rows.length){out.innerHTML='<div class="empty">No matching exact machine records yet.</div>';return}
+    out.innerHTML=rows.map(m=>{
+      const specs=Object.entries(m.common_verified_specs||{}).map(([k,v])=>'<div class="spec"><b>'+esc(human(k))+'</b><span>'+esc(v)+'</span></div>').join('');
+      const manuals=(m.manuals||[]).map(x=>'<div class="manual"><div>'+badge(x.status)+' <strong>'+esc(x.title)+'</strong></div><p class="muted">'+esc(x.notes||'')+'</p><a href="'+esc(x.url)+'" target="_blank" rel="noopener">Open source ↗</a></div>').join('');
+      const wanted=(m.wanted_documents||[]).map(x=>'<li>'+badge(x.status)+' '+esc(x.title)+'</li>').join('');
+      return '<article class="card"><p class="muted">'+esc(m.manufacturer)+' · '+esc(m.series||'')+'</p><h3>'+esc(m.model)+'</h3><div>'+badge(m.research_status==='active'?'strong_match':m.research_status)+'</div><p>'+esc(m.generation_note||'')+'</p><div class="notice"><strong>Year:</strong> '+esc(m.manufacture_year?.value||'Unknown')+' — '+esc(m.manufacture_year?.evidence_note||'')+'</div><h4>Verified/common machine data</h4><div class="specs">'+specs+'</div><h4>Controller</h4><p>'+esc(m.controller?.family||'Unknown')+' · '+badge(m.controller?.confidence||'missing')+'</p><p class="muted">'+esc(m.controller?.host_note||'')+'</p><h4>Manuals and references</h4>'+manuals+'<h4>Still wanted</h4><ul>'+wanted+'</ul></article>';
+    }).join('');
+  }
+  q.addEventListener('input',render);status.addEventListener('change',render);render();
+})().catch(err=>{
+  const message='<div class="empty">Could not load the machine registry: '+String(err.message||err)+'</div>';
+  document.getElementById('results').innerHTML=message;document.getElementById('makers').innerHTML=message;
+});
+</script>
+</body>
+</html>
