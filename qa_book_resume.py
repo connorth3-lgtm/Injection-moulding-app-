@@ -31,7 +31,11 @@ for marker in [
     "el.dataset.mmBookAnchor===anchorId",
     "index>=0&&index<heads.length?heads[index]:null",
     "module:material-families:atlas",
-    "top:-(Number(snapshot.anchorOffset)||0)",
+    "function bookScrollRoot()",
+    "function bookViewportTop()",
+    "bindBookScrollRoot()",
+    "scrollBookBy(heading.getBoundingClientRect().top-desired)",
+    "else scrollBookTo(snapshot.scrollY)",
 ]:
     need(marker in book,f"Book resume hardening missing: {marker}")
 
