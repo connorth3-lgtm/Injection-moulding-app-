@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 430" role="img" aria-labelledby="title desc">
+<title id="title">Polymer family evidence map</title>
+<desc id="desc">Conceptual sequence from polymer-family tendency to exact-grade documentation and then observed process evidence, with a reminder that a family label is not a processing recipe.</desc>
+<g fill="none" stroke="currentColor" stroke-width="3">
+<rect x="70" y="105" width="220" height="120" rx="14"/>
+<rect x="370" y="105" width="220" height="120" rx="14"/>
+<rect x="670" y="105" width="220" height="120" rx="14"/>
+<path d="M290 165h70M590 165h70"/>
+<path d="M344 153l16 12-16 12M644 153l16 12-16 12"/>
+<rect x="245" y="285" width="470" height="70" rx="14"/>
+</g>
+<g font-family="system-ui,sans-serif" font-size="24" text-anchor="middle">
+<text x="180" y="145">Family tendency</text><text x="180" y="180">Useful starting model</text>
+<text x="480" y="145">Exact grade documents</text><text x="480" y="180">TDS · guide · SDS</text>
+<text x="780" y="145">Observed evidence</text><text x="780" y="180">Actual system response</text>
+<text x="480" y="328">Family name ≠ exact-grade recipe</text>
+</g>
+</svg>
