@@ -1,367 +1,574 @@
 {
   "schemaVersion": 1,
   "policy": "Human SME review contract for technical assessment outcome mapping. Only mappings with reviewStatus='approved', current reviewedItemRevision, approved referenced outcomes, independenceReviewed=true, an independenceRationale, reviewedBy and reviewedAt are counted. Pending/proposed mappings never count toward breadth. This repository is public; reviewers should use only attribution they intend to publish.",
-  "outcomes": [],
+  "proposalBasis": "2026-10-07 internal remediation: populate explicit proposed mappings from locked competency metadata to the existing governed LO1–LO10 NZQA-readiness outcome model. All definitions and mappings remain pending; no human approval is inferred.",
+  "outcomes": [
+    {
+      "outcomeId": "lo1",
+      "title": "Explain the injection-moulding cycle, production purpose, hazards and safe operating boundaries.",
+      "important": null,
+      "reviewStatus": "pending",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Existing governed NZQA-readiness learning outcome proposed for technical assessment mapping; independent SME review is still required before this outcome or any item mapping can count toward assessment breadth."
+    },
+    {
+      "outcomeId": "lo2",
+      "title": "Explain major machine functions and distinguish setpoints, actual process signals and machine limitations.",
+      "important": null,
+      "reviewStatus": "pending",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Existing governed NZQA-readiness learning outcome proposed for technical assessment mapping; independent SME review is still required before this outcome or any item mapping can count toward assessment breadth."
+    },
+    {
+      "outcomeId": "lo3",
+      "title": "Explain how polymer structure, rheology, moisture, additives and thermal history affect process behaviour using grade-specific evidence where required.",
+      "important": null,
+      "reviewStatus": "pending",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Existing governed NZQA-readiness learning outcome proposed for technical assessment mapping; independent SME review is still required before this outcome or any item mapping can count toward assessment breadth."
+    },
+    {
+      "outcomeId": "lo4",
+      "title": "Explain mould, feed, cooling, venting, ejection and hot-runner functions and identify tooling evidence needed before intervention.",
+      "important": null,
+      "reviewStatus": "pending",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Existing governed NZQA-readiness learning outcome proposed for technical assessment mapping; independent SME review is still required before this outcome or any item mapping can count toward assessment breadth."
+    },
+    {
+      "outcomeId": "lo5",
+      "title": "Explain routine service and maintenance evidence, including pre-condition, intervention, post-condition and recovery verification.",
+      "important": null,
+      "reviewStatus": "pending",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Existing governed NZQA-readiness learning outcome proposed for technical assessment mapping; independent SME review is still required before this outcome or any item mapping can count toward assessment breadth."
+    },
+    {
+      "outcomeId": "lo6",
+      "title": "Plan and interpret controlled process studies and process-window evidence without converting generic examples into production recipes.",
+      "important": null,
+      "reviewStatus": "pending",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Existing governed NZQA-readiness learning outcome proposed for technical assessment mapping; independent SME review is still required before this outcome or any item mapping can count toward assessment breadth."
+    },
+    {
+      "outcomeId": "lo7",
+      "title": "Diagnose moulding defects using competing mechanisms, controlled evidence and safe escalation decisions.",
+      "important": null,
+      "reviewStatus": "pending",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Existing governed NZQA-readiness learning outcome proposed for technical assessment mapping; independent SME review is still required before this outcome or any item mapping can count toward assessment breadth."
+    },
+    {
+      "outcomeId": "lo8",
+      "title": "Interpret basic measurement, capability, monitoring and quality-record evidence and document a defensible decision trail.",
+      "important": null,
+      "reviewStatus": "pending",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Existing governed NZQA-readiness learning outcome proposed for technical assessment mapping; independent SME review is still required before this outcome or any item mapping can count toward assessment breadth."
+    },
+    {
+      "outcomeId": "lo9",
+      "title": "Explain advanced mould setup, verification and multi-cavity considerations while preserving machine-, mould- and site-specific authority boundaries.",
+      "important": null,
+      "reviewStatus": "pending",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Existing governed NZQA-readiness learning outcome proposed for technical assessment mapping; independent SME review is still required before this outcome or any item mapping can count toward assessment breadth."
+    },
+    {
+      "outcomeId": "lo10",
+      "title": "Demonstrate, under authorised provider/workplace control, the ability to gather practical evidence and escalate conditions outside personal authority.",
+      "important": null,
+      "reviewStatus": "pending",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Existing governed NZQA-readiness learning outcome proposed for technical assessment mapping; independent SME review is still required before this outcome or any item mapping can count toward assessment breadth."
+    }
+  ],
   "mappings": [
-    {
-      "stableId": "tech:Beginner:0",
-      "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
-      "outcomeIds": [],
-      "reviewedItemRevision": null,
-      "independenceReviewed": false,
-      "independenceRationale": null,
-      "reviewedBy": null,
-      "reviewedAt": null,
-      "notes": null
-    },
-    {
-      "stableId": "tech:Beginner:1",
-      "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
-      "outcomeIds": [],
-      "reviewedItemRevision": null,
-      "independenceReviewed": false,
-      "independenceRationale": null,
-      "reviewedBy": null,
-      "reviewedAt": null,
-      "notes": null
-    },
-    {
-      "stableId": "tech:Beginner:2",
-      "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
-      "outcomeIds": [],
-      "reviewedItemRevision": null,
-      "independenceReviewed": false,
-      "independenceRationale": null,
-      "reviewedBy": null,
-      "reviewedAt": null,
-      "notes": null
-    },
-    {
-      "stableId": "tech:Beginner:3",
-      "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
-      "outcomeIds": [],
-      "reviewedItemRevision": null,
-      "independenceReviewed": false,
-      "independenceRationale": null,
-      "reviewedBy": null,
-      "reviewedAt": null,
-      "notes": null
-    },
-    {
-      "stableId": "tech:Beginner:4",
-      "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
-      "outcomeIds": [],
-      "reviewedItemRevision": null,
-      "independenceReviewed": false,
-      "independenceRationale": null,
-      "reviewedBy": null,
-      "reviewedAt": null,
-      "notes": null
-    },
-    {
-      "stableId": "tech:Beginner:5",
-      "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
-      "outcomeIds": [],
-      "reviewedItemRevision": null,
-      "independenceReviewed": false,
-      "independenceRationale": null,
-      "reviewedBy": null,
-      "reviewedAt": null,
-      "notes": null
-    },
-    {
-      "stableId": "tech:Beginner:6",
-      "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
-      "outcomeIds": [],
-      "reviewedItemRevision": null,
-      "independenceReviewed": false,
-      "independenceRationale": null,
-      "reviewedBy": null,
-      "reviewedAt": null,
-      "notes": null
-    },
-    {
-      "stableId": "tech:Beginner:7",
-      "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
-      "outcomeIds": [],
-      "reviewedItemRevision": null,
-      "independenceReviewed": false,
-      "independenceRationale": null,
-      "reviewedBy": null,
-      "reviewedAt": null,
-      "notes": null
-    },
-    {
-      "stableId": "tech:Beginner:8",
-      "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
-      "outcomeIds": [],
-      "reviewedItemRevision": null,
-      "independenceReviewed": false,
-      "independenceRationale": null,
-      "reviewedBy": null,
-      "reviewedAt": null,
-      "notes": null
-    },
-    {
-      "stableId": "tech:Beginner:9",
-      "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
-      "outcomeIds": [],
-      "reviewedItemRevision": null,
-      "independenceReviewed": false,
-      "independenceRationale": null,
-      "reviewedBy": null,
-      "reviewedAt": null,
-      "notes": null
-    },
-    {
-      "stableId": "tech:Intermediate:0",
-      "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
-      "outcomeIds": [],
-      "reviewedItemRevision": null,
-      "independenceReviewed": false,
-      "independenceRationale": null,
-      "reviewedBy": null,
-      "reviewedAt": null,
-      "notes": null
-    },
-    {
-      "stableId": "tech:Intermediate:1",
-      "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
-      "outcomeIds": [],
-      "reviewedItemRevision": null,
-      "independenceReviewed": false,
-      "independenceRationale": null,
-      "reviewedBy": null,
-      "reviewedAt": null,
-      "notes": null
-    },
-    {
-      "stableId": "tech:Intermediate:2",
-      "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
-      "outcomeIds": [],
-      "reviewedItemRevision": null,
-      "independenceReviewed": false,
-      "independenceRationale": null,
-      "reviewedBy": null,
-      "reviewedAt": null,
-      "notes": null
-    },
-    {
-      "stableId": "tech:Intermediate:3",
-      "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
-      "outcomeIds": [],
-      "reviewedItemRevision": null,
-      "independenceReviewed": false,
-      "independenceRationale": null,
-      "reviewedBy": null,
-      "reviewedAt": null,
-      "notes": null
-    },
-    {
-      "stableId": "tech:Intermediate:4",
-      "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
-      "outcomeIds": [],
-      "reviewedItemRevision": null,
-      "independenceReviewed": false,
-      "independenceRationale": null,
-      "reviewedBy": null,
-      "reviewedAt": null,
-      "notes": null
-    },
-    {
-      "stableId": "tech:Intermediate:5",
-      "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
-      "outcomeIds": [],
-      "reviewedItemRevision": null,
-      "independenceReviewed": false,
-      "independenceRationale": null,
-      "reviewedBy": null,
-      "reviewedAt": null,
-      "notes": null
-    },
-    {
-      "stableId": "tech:Intermediate:6",
-      "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
-      "outcomeIds": [],
-      "reviewedItemRevision": null,
-      "independenceReviewed": false,
-      "independenceRationale": null,
-      "reviewedBy": null,
-      "reviewedAt": null,
-      "notes": null
-    },
-    {
-      "stableId": "tech:Intermediate:7",
-      "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
-      "outcomeIds": [],
-      "reviewedItemRevision": null,
-      "independenceReviewed": false,
-      "independenceRationale": null,
-      "reviewedBy": null,
-      "reviewedAt": null,
-      "notes": null
-    },
-    {
-      "stableId": "tech:Intermediate:8",
-      "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
-      "outcomeIds": [],
-      "reviewedItemRevision": null,
-      "independenceReviewed": false,
-      "independenceRationale": null,
-      "reviewedBy": null,
-      "reviewedAt": null,
-      "notes": null
-    },
-    {
-      "stableId": "tech:Intermediate:9",
-      "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
-      "outcomeIds": [],
-      "reviewedItemRevision": null,
-      "independenceReviewed": false,
-      "independenceRationale": null,
-      "reviewedBy": null,
-      "reviewedAt": null,
-      "notes": null
-    },
     {
       "stableId": "tech:Advanced:0",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "lo8",
+        "lo7"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
     },
     {
       "stableId": "tech:Advanced:1",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "lo4",
+        "lo8",
+        "lo7"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
     },
     {
       "stableId": "tech:Advanced:2",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "lo4",
+        "lo6",
+        "lo8",
+        "lo7"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
     },
     {
       "stableId": "tech:Advanced:3",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "lo8"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
     },
     {
       "stableId": "tech:Advanced:4",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "lo2",
+        "lo4",
+        "lo6",
+        "lo7"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
     },
     {
       "stableId": "tech:Advanced:5",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "lo3",
+        "lo6"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
     },
     {
       "stableId": "tech:Advanced:6",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "lo8",
+        "lo7"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
     },
     {
       "stableId": "tech:Advanced:7",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "lo2",
+        "lo4",
+        "lo6",
+        "lo7"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
     },
     {
       "stableId": "tech:Advanced:8",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "lo3",
+        "lo4",
+        "lo6",
+        "lo7"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
     },
     {
       "stableId": "tech:Advanced:9",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "lo2",
+        "lo4",
+        "lo6",
+        "lo7"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
+    },
+    {
+      "stableId": "tech:Beginner:0",
+      "reviewStatus": "pending",
+      "proposedOutcomeIds": [
+        "lo6",
+        "lo8"
+      ],
+      "outcomeIds": [],
+      "reviewedItemRevision": null,
+      "independenceReviewed": false,
+      "independenceRationale": null,
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
+    },
+    {
+      "stableId": "tech:Beginner:1",
+      "reviewStatus": "pending",
+      "proposedOutcomeIds": [
+        "lo2",
+        "lo6",
+        "lo7"
+      ],
+      "outcomeIds": [],
+      "reviewedItemRevision": null,
+      "independenceReviewed": false,
+      "independenceRationale": null,
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
+    },
+    {
+      "stableId": "tech:Beginner:2",
+      "reviewStatus": "pending",
+      "proposedOutcomeIds": [
+        "lo2",
+        "lo6",
+        "lo8",
+        "lo7"
+      ],
+      "outcomeIds": [],
+      "reviewedItemRevision": null,
+      "independenceReviewed": false,
+      "independenceRationale": null,
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
+    },
+    {
+      "stableId": "tech:Beginner:3",
+      "reviewStatus": "pending",
+      "proposedOutcomeIds": [
+        "lo3",
+        "lo2"
+      ],
+      "outcomeIds": [],
+      "reviewedItemRevision": null,
+      "independenceReviewed": false,
+      "independenceRationale": null,
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
+    },
+    {
+      "stableId": "tech:Beginner:4",
+      "reviewStatus": "pending",
+      "proposedOutcomeIds": [
+        "lo3",
+        "lo2",
+        "lo7"
+      ],
+      "outcomeIds": [],
+      "reviewedItemRevision": null,
+      "independenceReviewed": false,
+      "independenceRationale": null,
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
+    },
+    {
+      "stableId": "tech:Beginner:5",
+      "reviewStatus": "pending",
+      "proposedOutcomeIds": [
+        "lo4",
+        "lo6",
+        "lo7"
+      ],
+      "outcomeIds": [],
+      "reviewedItemRevision": null,
+      "independenceReviewed": false,
+      "independenceRationale": null,
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
+    },
+    {
+      "stableId": "tech:Beginner:6",
+      "reviewStatus": "pending",
+      "proposedOutcomeIds": [
+        "lo2",
+        "lo4",
+        "lo7"
+      ],
+      "outcomeIds": [],
+      "reviewedItemRevision": null,
+      "independenceReviewed": false,
+      "independenceRationale": null,
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
+    },
+    {
+      "stableId": "tech:Beginner:7",
+      "reviewStatus": "pending",
+      "proposedOutcomeIds": [
+        "lo2",
+        "lo4",
+        "lo6"
+      ],
+      "outcomeIds": [],
+      "reviewedItemRevision": null,
+      "independenceReviewed": false,
+      "independenceRationale": null,
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
+    },
+    {
+      "stableId": "tech:Beginner:8",
+      "reviewStatus": "pending",
+      "proposedOutcomeIds": [
+        "lo4",
+        "lo6",
+        "lo7"
+      ],
+      "outcomeIds": [],
+      "reviewedItemRevision": null,
+      "independenceReviewed": false,
+      "independenceRationale": null,
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
+    },
+    {
+      "stableId": "tech:Beginner:9",
+      "reviewStatus": "pending",
+      "proposedOutcomeIds": [
+        "lo8",
+        "lo7"
+      ],
+      "outcomeIds": [],
+      "reviewedItemRevision": null,
+      "independenceReviewed": false,
+      "independenceRationale": null,
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
+    },
+    {
+      "stableId": "tech:Intermediate:0",
+      "reviewStatus": "pending",
+      "proposedOutcomeIds": [
+        "lo4",
+        "lo6"
+      ],
+      "outcomeIds": [],
+      "reviewedItemRevision": null,
+      "independenceReviewed": false,
+      "independenceRationale": null,
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
+    },
+    {
+      "stableId": "tech:Intermediate:1",
+      "reviewStatus": "pending",
+      "proposedOutcomeIds": [
+        "lo6",
+        "lo7"
+      ],
+      "outcomeIds": [],
+      "reviewedItemRevision": null,
+      "independenceReviewed": false,
+      "independenceRationale": null,
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
+    },
+    {
+      "stableId": "tech:Intermediate:2",
+      "reviewStatus": "pending",
+      "proposedOutcomeIds": [
+        "lo3",
+        "lo6",
+        "lo7"
+      ],
+      "outcomeIds": [],
+      "reviewedItemRevision": null,
+      "independenceReviewed": false,
+      "independenceRationale": null,
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
+    },
+    {
+      "stableId": "tech:Intermediate:3",
+      "reviewStatus": "pending",
+      "proposedOutcomeIds": [
+        "lo2",
+        "lo4",
+        "lo6",
+        "lo7"
+      ],
+      "outcomeIds": [],
+      "reviewedItemRevision": null,
+      "independenceReviewed": false,
+      "independenceRationale": null,
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
+    },
+    {
+      "stableId": "tech:Intermediate:4",
+      "reviewStatus": "pending",
+      "proposedOutcomeIds": [
+        "lo3",
+        "lo4",
+        "lo6"
+      ],
+      "outcomeIds": [],
+      "reviewedItemRevision": null,
+      "independenceReviewed": false,
+      "independenceRationale": null,
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
+    },
+    {
+      "stableId": "tech:Intermediate:5",
+      "reviewStatus": "pending",
+      "proposedOutcomeIds": [
+        "lo2",
+        "lo6",
+        "lo7"
+      ],
+      "outcomeIds": [],
+      "reviewedItemRevision": null,
+      "independenceReviewed": false,
+      "independenceRationale": null,
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
+    },
+    {
+      "stableId": "tech:Intermediate:6",
+      "reviewStatus": "pending",
+      "proposedOutcomeIds": [
+        "lo3",
+        "lo2",
+        "lo4",
+        "lo6"
+      ],
+      "outcomeIds": [],
+      "reviewedItemRevision": null,
+      "independenceReviewed": false,
+      "independenceRationale": null,
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
+    },
+    {
+      "stableId": "tech:Intermediate:7",
+      "reviewStatus": "pending",
+      "proposedOutcomeIds": [
+        "lo4",
+        "lo7"
+      ],
+      "outcomeIds": [],
+      "reviewedItemRevision": null,
+      "independenceReviewed": false,
+      "independenceRationale": null,
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
+    },
+    {
+      "stableId": "tech:Intermediate:8",
+      "reviewStatus": "pending",
+      "proposedOutcomeIds": [
+        "lo4",
+        "lo6",
+        "lo7"
+      ],
+      "outcomeIds": [],
+      "reviewedItemRevision": null,
+      "independenceReviewed": false,
+      "independenceRationale": null,
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
+    },
+    {
+      "stableId": "tech:Intermediate:9",
+      "reviewStatus": "pending",
+      "proposedOutcomeIds": [
+        "lo8"
+      ],
+      "outcomeIds": [],
+      "reviewedItemRevision": null,
+      "independenceReviewed": false,
+      "independenceRationale": null,
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Proposed from the locked question competency metadata and the existing governed LO1–LO10 readiness model. This is a machine-readable review queue only and is not SME approval."
     }
   ]
 }
