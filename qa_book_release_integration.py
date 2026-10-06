@@ -370,6 +370,12 @@ need("'black-specks':Object.freeze(['Separate continuous contamination from even
 need('function proseHtml(value)' in book_runtime and 'words.length<=90' in book_runtime, 'Book reader must split only unusually long governed prose for readability')
 need('const metaList=' in book_runtime and 'No separate assumptions list is declared' in book_runtime and 'No separate units list is declared' in book_runtime, 'Book reader worked examples must present consistent assumptions/units metadata')
 need('Reasoning scenario:' in book_runtime and 'Chapter depth:' in book_runtime and 'Depth labels:' in book_runtime, 'Book reader pedagogy/depth clarification missing')
+need('readerKeyTermsHtml' in book_runtime and 'readerTermGuideHtml' in book_runtime and 'Chapter thread:' in book_runtime and 'Key-term guide' in book_runtime, 'Book first-read chapter-thread/key-term navigation missing')
+need('mm-book-reader-scope' in book_runtime and 'Applicability and scope' in book_runtime, 'Book first-read applicability progressive disclosure missing')
+need('mm-book-reader-worked-case' in book_runtime and 'Worked example:' in book_runtime and 'synthetic teaching data' in book_runtime, 'Book first-read worked-example progressive disclosure missing')
+need(reader_architecture.get('firstReadPolicy') and 'progressive disclosure' in reader_architecture.get('firstReadPolicy'), 'Book first-read policy missing from governed reader architecture')
+need(all(row.get('readingThread') and 3 <= len(row.get('keyTerms') or []) <= 8 for row in readers), 'Book first-read chapter threads/key terms incomplete')
+need(authorization.get('readerArchitectureAuthorization',{}).get('firstReadPresentation',{}).get('workedExamplesOptionalExpand') is True, 'Book first-read presentation authorization missing')
 for asset in ('polymer-family-evidence-map.svg','process-baseline-evidence-package.svg','filling-boundary-pattern-map.svg','surface-defect-source-map.svg'):
     need(asset in sw, f'new Book instructional diagram missing from atomic cache: {asset}')
 
