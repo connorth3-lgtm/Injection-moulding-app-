@@ -413,6 +413,7 @@ window.MM_ASSESSMENT_STORAGE_SCOPE={
  boundary:'Assessment persistence is explicit: callers use this API for learner-scoped analytics and assessment metadata. Native browser storage methods are never replaced. Single-owner legacy values are copied and verified before removal; ambiguous or conflicting legacy data remains untouched and is never inherited automatically.'
 };
 })();
+/* <<< assessment-storage-scope.js */
 
 /* >>> assessment-quality-suite.js */
 /* MouldMaster assessment quality suite — 2026-08-24.2 */
@@ -652,6 +653,7 @@ D.assessmentQA.questionRevisionHistory=[
 window.MM_ASSESSMENT_ANALYTICS={version:VERSION,summary:analyticsSummary,export:()=>analytics(),reset:()=>{ASSESSMENT_STORAGE.removeItem(ANALYTICS_KEY);try{window.renderExams?.()}catch(_){}}};
 window.MM_ASSESSMENT_QUALITY={version:VERSION,identityLockVersion:IDENTITY_LOCK_VERSION,identityCount:LOCKED_IDENTITIES.length,blueprint:BLUEPRINT.slice(),labels:{...LABELS},scenarioCount:D.scenarios.length,questionCount:57,blueprintHistoryKey:BLUEPRINT_HISTORY_KEY,nearDuplicates:nearDuplicates(),answerLeakRisks:leakRisks(),coverage:(level)=>blueprintCoverage(selectBlueprint(level)),resolveIdentity:(q,kind,level,region,index)=>identityFor(q,kind,level,region,index),sourceReview:{reviewed:SOURCE_REVIEWED,reviewBy:SOURCE_REVIEW_BY}};
 })();
+/* <<< assessment-quality-suite.js */
 
 /* >>> assessment-stable-review-bridge.js */
 /* MouldMaster stable spaced-review ID + blueprint guard — reviewed answer validation 2026-09-10 */
