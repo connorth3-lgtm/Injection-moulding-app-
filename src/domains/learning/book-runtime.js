@@ -420,7 +420,14 @@
   async function hydrateMaterialAtlas(){
     const shell=ui?.reader?.querySelector?.('[data-mm-book-material-atlas]');if(!shell)return;
     if(materialAtlas&&materialCatalog&&materialRegionalEvidence&&!shell.querySelector('[data-mm-book-material-status]')){bindMaterialPagination(ui.reader);return}
-    try{await ensureMaterialData();if(!shell.isConnected)return;const chapter=allChapters().find(ch=>ch.id==='material-families');shell.outerHTML=materialAtlasHtml(chapter);bindMaterialPagination(ui.reader);emitBookRender('material-atlas','material-families');if(open&&activeReadingPosition?.anchorId)restoreReadingPosition({...activeReadingPosition});}
+    try{
+      await ensureMaterialData();if(!shell.isConnected)return;
+      const preserve=open&&activeReadingPosition?{scrollY:bookScrollTop(),anchor:readerAnchor()}:null;
+      if(preserve){activeReadingPosition={...activeReadingPosition,scrollY:preserve.scrollY,anchorId:preserve.anchor.anchorId,anchorIndex:preserve.anchor.anchorIndex,anchorText:preserve.anchor.anchorText,anchorOffset:preserve.anchor.anchorOffset,anchorOffsetId:preserve.anchor.anchorOffsetId,updatedAt:new Date().toISOString()};writeResume(activeReadingPosition);}
+      const chapter=allChapters().find(ch=>ch.id==='material-families');shell.outerHTML=materialAtlasHtml(chapter);bindMaterialPagination(ui.reader);
+      if(preserve)scrollBookTo(preserve.scrollY);
+      emitBookRender('material-atlas','material-families');
+    }
     catch(error){if(shell.isConnected)shell.innerHTML='<span class="eyebrow">Technical-review material reference</span><h3>Material Data Atlas unavailable</h3><p>The governed material files could not be verified, so the appendix failed closed.</p>';console.error('MouldMaster Book material atlas:',error);}
   }
   const allChapters=()=> (manifest?.parts||[]).flatMap(part=>part.chapters||[]),allReaderChapters=()=>readerArchitecture?.readerChapters||[],verifiedChapters=()=>allChapters().filter(ch=>ch.state==='verified');

@@ -44,6 +44,9 @@ for marker in [
 need("localStorage.getItem(BOOK_RESUME_KEY)" not in book,"Book resume must not use a device-global live storage key")
 need("LEGACY_BOOK_RESUME_KEY='mouldmasterBookResume:v1'" in book,"experimental legacy Book resume cleanup marker missing")
 need("if(!exists){clearResume();showContents();return false}" in book,"stale Book resume must fail safely to contents")
+need("restoreReadingPosition({...activeReadingPosition})" not in book,"Material Atlas hydration must not replay a stale reader snapshot after asynchronous evidence loading")
+need("const preserve=open&&activeReadingPosition?{scrollY:bookScrollTop(),anchor:readerAnchor()}:null" in book,"Material Atlas hydration must snapshot the live reading position immediately before DOM replacement")
+need("if(preserve)scrollBookTo(preserve.scrollY)" in book,"Material Atlas hydration must preserve the live scroll offset synchronously across DOM replacement")
 
 for marker in [
     "function bookDashboardState()",
