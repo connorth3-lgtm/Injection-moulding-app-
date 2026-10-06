@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.10.06.20';
+const CACHE_VERSION='2026.10.06.21';
 const CACHE_REVISION='deep-fix-r58-20261006';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
