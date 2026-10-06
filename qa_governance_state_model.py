@@ -16,6 +16,14 @@ def load(path: str) -> dict:
     return value
 
 
+def release_key(value):
+    try:
+        parts = tuple(int(part) for part in str(value).split("."))
+    except (TypeError, ValueError):
+        return ()
+    return parts if len(parts) == 4 else ()
+
+
 def state_allowed(model: dict, namespace: str, state: str) -> None:
     allowed = model["namespaces"][namespace]["states"]
     if state not in allowed:
@@ -113,7 +121,7 @@ def main() -> None:
     }
     for label, evidence_release in evidence_releases.items():
         assert isinstance(evidence_release, str) and evidence_release, f"{label} contract must identify the exact release its evidence belongs to"
-        assert evidence_release <= current_release, f"{label} contract cannot target a future learner release"
+        assert release_key(evidence_release) and release_key(current_release) and release_key(evidence_release) <= release_key(current_release), f"{label} contract cannot target a future learner release"
     assert external.get("release") == current_release, "external-validation boundary must be rebound to the current learner release"
 
     state_allowed(model, "technicalAutomation", external["technicalAutomation"]["status"])
