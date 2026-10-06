@@ -132,14 +132,15 @@
   function readerAnchor(){
     if(!ui?.reader||ui.reader.hidden)return {anchorId:'',anchorIndex:-1,anchorText:'',anchorOffset:0};
     const top=bookViewportTop(),activationTop=top+24,heads=[...ui.reader.querySelectorAll('h2[data-mm-book-anchor],h3[data-mm-book-anchor],h4[data-mm-book-anchor]')];
-    const regions=[...ui.reader.querySelectorAll('[data-mm-book-reading-region]')].map(region=>({region,rect:region.getBoundingClientRect(),heading:region.querySelector('h2[data-mm-book-anchor],h3[data-mm-book-anchor],h4[data-mm-book-anchor]')})).filter(x=>x.heading&&x.rect.top<=activationTop+96&&x.rect.bottom>activationTop);
-    const activeRegion=regions.length?regions[regions.length-1]:null;
-    if(activeRegion){
-      const index=heads.indexOf(activeRegion.heading),rect=activeRegion.heading.getBoundingClientRect();
-      return {anchorId:String(activeRegion.heading.dataset.mmBookAnchor||''),anchorIndex:index,anchorText:String(activeRegion.heading.textContent||'').trim().slice(0,240),anchorOffset:Math.round(rect.top),anchorOffsetId:String(activeRegion.heading.dataset.mmBookAnchor||'')};
+    const rows=heads.map((el,index)=>({el,index,rect:el.getBoundingClientRect()}));
+    const visualTarget=Math.max(80,Math.min(144,activationTop+48));
+    const visibleNear=rows.filter(x=>x.rect.top>=0&&x.rect.top<=192).sort((a,b)=>Math.abs(a.rect.top-visualTarget)-Math.abs(b.rect.top-visualTarget)||a.index-b.index);
+    const visiblePicked=visibleNear[0]||null;
+    if(visiblePicked){
+      return {anchorId:String(visiblePicked.el.dataset.mmBookAnchor||''),anchorIndex:visiblePicked.index,anchorText:String(visiblePicked.el.textContent||'').trim().slice(0,240),anchorOffset:Math.round(visiblePicked.rect.top),anchorOffsetId:String(visiblePicked.el.dataset.mmBookAnchor||'')};
     }
-    const eligible=heads.map((el,index)=>({el,index,rect:el.getBoundingClientRect()})).filter(x=>x.rect.top<=activationTop);
-    const picked=(eligible.length?eligible[eligible.length-1]:heads[0]?{el:heads[0],index:0,rect:heads[0].getBoundingClientRect()}:null);
+    const eligible=rows.filter(x=>x.rect.top<=activationTop);
+    const picked=(eligible.length?eligible[eligible.length-1]:rows[0]||null);
     return picked?{anchorId:String(picked.el.dataset.mmBookAnchor||''),anchorIndex:picked.index,anchorText:String(picked.el.textContent||'').trim().slice(0,240),anchorOffset:Math.round(picked.rect.top),anchorOffsetId:String(picked.el.dataset.mmBookAnchor||'')}:{anchorId:'',anchorIndex:-1,anchorText:'',anchorOffset:0,anchorOffsetId:''};
   }
   function rememberReadingPosition(kind,id,title,scrollY=0){
