@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "bookId": "mouldmaster-book",
-  "release": "2026.10.01.3",
+  "release": "2026.10.06.5",
   "status": "authorized-synthetic-teaching",
   "policy": "Worked engineering cases are synthetic teaching examples. They are source-governed and internally publication-authorized, but they are not independent human SME approval, measured production evidence, universal process recipes, validated production limits or machine-control authority.",
   "sourceSeeds": [
@@ -59,6 +59,16 @@
       "checked": "2026-09-14",
       "state": "peer-reviewed-fetched",
       "scope": "Review of filling-to-holding switchover methods; supports early/late switchover consequences and sensitivity to material, machine and environmental conditions without defining a universal transfer point."
+    },
+    {
+      "id": "RJG-DECOUPLED-WORKSHOP",
+      "type": "manufacturer-training-method-outline",
+      "issuer": "RJG, Inc.",
+      "title": "DECOUPLED MOLDING® Workshop",
+      "url": "https://rjginc.com/training/registration/decoupled-molding-workshop/",
+      "scope": "Public RJG training outline naming pressure-loss testing, gate-seal study, mould temperature mapping and machine/mould capability validation as controlled process-development exercises; not a universal production procedure.",
+      "checked": "2026-09-14",
+      "currentState": "current-public-training-outline"
     }
   ],
   "cases": [
@@ -259,7 +269,8 @@
       ],
       "sourceIds": [
         "ISO-294-1-2017",
-        "PARIZS-2023-IN-MOLD-SENSORS-WORKED"
+        "PARIZS-2023-IN-MOLD-SENSORS-WORKED",
+        "PARIZS-2023-IN-MOLD-SENSORS"
       ],
       "claims": [
         {
@@ -268,7 +279,8 @@
           "conclusion": "supported-with-explicit-synthetic-scope",
           "sourceIds": [
             "PARIZS-2023-IN-MOLD-SENSORS-WORKED",
-            "ISO-294-1-2017"
+            "ISO-294-1-2017",
+            "PARIZS-2023-IN-MOLD-SENSORS"
           ]
         }
       ]
@@ -319,7 +331,8 @@
       ],
       "sourceIds": [
         "NIST-SEMATECH-DOE",
-        "ISO-20457-2026"
+        "ISO-20457-2026",
+        "NIST-SEMATECH-HANDBOOK"
       ],
       "claims": [
         {
@@ -328,7 +341,8 @@
           "conclusion": "supported-with-explicit-synthetic-scope",
           "sourceIds": [
             "NIST-SEMATECH-DOE",
-            "ISO-20457-2026"
+            "ISO-20457-2026",
+            "NIST-SEMATECH-HANDBOOK"
           ]
         }
       ]
@@ -380,7 +394,8 @@
       "sourceIds": [
         "ISO-20457-2026",
         "ISO-294-1-2017",
-        "NIST-SEMATECH-CAPABILITY"
+        "NIST-SEMATECH-CAPABILITY",
+        "NIST-SEMATECH-HANDBOOK"
       ],
       "claims": [
         {
@@ -390,7 +405,8 @@
           "sourceIds": [
             "ISO-20457-2026",
             "ISO-294-1-2017",
-            "NIST-SEMATECH-CAPABILITY"
+            "NIST-SEMATECH-CAPABILITY",
+            "NIST-SEMATECH-HANDBOOK"
           ]
         }
       ]
@@ -412,7 +428,9 @@
         "No customer/site acceptance threshold is inferred."
       ],
       "sourceIds": [
-        "NIST-SEMATECH-CAPABILITY"
+        "NIST-SEMATECH-CAPABILITY",
+        "NIST-SEMATECH-HANDBOOK",
+        "NIST-MEASUREMENT-CHARACTERIZATION"
       ],
       "claims": [
         {
@@ -420,7 +438,9 @@
           "statement": "Cp describes specification width relative to process spread while Cpk also reflects centring; meaningful capability interpretation requires the method's assumptions and process context.",
           "conclusion": "supported-with-explicit-synthetic-scope",
           "sourceIds": [
-            "NIST-SEMATECH-CAPABILITY"
+            "NIST-SEMATECH-CAPABILITY",
+            "NIST-SEMATECH-HANDBOOK",
+            "NIST-MEASUREMENT-CHARACTERIZATION"
           ]
         }
       ]
@@ -574,7 +594,8 @@
       ],
       "sourceIds": [
         "ISO-294-1-2017",
-        "BIELENBERG-2025-SWITCHOVER-REVIEW"
+        "BIELENBERG-2025-SWITCHOVER-REVIEW",
+        "ASTM-D3641-24"
       ],
       "claims": [
         {
@@ -583,7 +604,8 @@
           "conclusion": "supported-with-explicit-synthetic-scope",
           "sourceIds": [
             "ISO-294-1-2017",
-            "BIELENBERG-2025-SWITCHOVER-REVIEW"
+            "BIELENBERG-2025-SWITCHOVER-REVIEW",
+            "ASTM-D3641-24"
           ]
         }
       ]
@@ -874,7 +896,8 @@
         "Use the actual machine manufacturer specification and material/mould/process evidence for capacity and residence decisions."
       ],
       "sourceIds": [
-        "ISO-294-1-2017"
+        "ISO-294-1-2017",
+        "ASTM-D3641-24"
       ],
       "claims": [
         {
@@ -882,7 +905,8 @@
           "statement": "A simple shot-mass ratio can be calculated when its basis is explicit, but it is not by itself a safe machine-capacity or residence-time criterion.",
           "conclusion": "supported-with-explicit-synthetic-scope",
           "sourceIds": [
-            "ISO-294-1-2017"
+            "ISO-294-1-2017",
+            "ASTM-D3641-24"
           ]
         }
       ]
@@ -932,7 +956,9 @@
       ],
       "sourceIds": [
         "ISO-294-1-2017",
-        "NIST-SEMATECH-DOE"
+        "NIST-SEMATECH-DOE",
+        "NIST-SEMATECH-HANDBOOK",
+        "ASTM-D3641-24"
       ],
       "claims": [
         {
@@ -941,7 +967,448 @@
           "conclusion": "supported-with-explicit-synthetic-scope",
           "sourceIds": [
             "ISO-294-1-2017",
+            "NIST-SEMATECH-DOE",
+            "NIST-SEMATECH-HANDBOOK",
+            "ASTM-D3641-24"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-warpage-discrimination-v1",
+      "chapterId": "warpage",
+      "title": "Warpage diagnosis: use direction, cavity and time to discriminate",
+      "synthetic": true,
+      "setup": "A synthetic flat moulding shows 1.2 mm bow immediately after ejection. After 24 h at the defined conditioning state, bow is 1.8 mm. Cavity 1 averages 1.8 mm while cavity 2 averages 0.7 mm.",
+      "observations": [
+        "Warpage increases after ejection rather than remaining constant.",
+        "The two cavities show a persistent offset under the same nominal machine cycle.",
+        "The direction of bow is repeatable relative to part geometry."
+      ],
+      "assumptions": [
+        "Measurement datum, fixture and conditioning state are held constant.",
+        "The values are synthetic and illustrate diagnostic reasoning only."
+      ],
+      "calculationSteps": [
+        "Post-mould change = 1.8 - 1.2 = 0.6 mm.",
+        "Cavity mean difference = 1.8 - 0.7 = 1.1 mm."
+      ],
+      "interpretation": "The time trend supports a post-mould dimensional-development contribution, while the cavity offset supports a local mould/thermal/flow contribution. Neither observation alone proves one root cause; the next tests should discriminate thermal balance, orientation/packing and measurement effects.",
+      "boundaries": [
+        "Do not convert these synthetic magnitudes into acceptance limits.",
+        "Tooling or process changes require product, material, mould and site authority."
+      ],
+      "sourceIds": [
+        "ISO-20457-2026",
+        "ASTM-D955-21",
+        "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW",
+        "KUO-2022-COOLING-WARPAGE"
+      ],
+      "claims": [
+        {
+          "id": "worked-warpage-discrimination-v1-claim-1",
+          "statement": "Warpage diagnosis can use controlled time trends, direction and cavity pattern as discriminating evidence while preserving multiple plausible mechanisms.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "ISO-20457-2026",
+            "ASTM-D955-21",
+            "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW",
+            "KUO-2022-COOLING-WARPAGE"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-weld-line-diagnosis-v1",
+      "chapterId": "weld-lines",
+      "title": "Weld-line diagnosis: appearance is not the same as structural performance",
+      "synthetic": true,
+      "setup": "A synthetic moulding has a visible line downstream of a hole. The line is present in both accepted and rejected samples, while a product-specific strength test differs.",
+      "observations": [
+        "The interface location follows the split-and-rejoin flow path around the hole.",
+        "Visual severity and measured strength do not rank samples in exactly the same order.",
+        "Vent condition and local front-arrival state remain candidate contributors."
+      ],
+      "assumptions": [
+        "The product-specific test is defined by the controlling quality requirement.",
+        "No generic temperature or speed change is treated as an approved remedy."
+      ],
+      "calculationSteps": [
+        "Classify the evidence into geometry-fixed observations, process-sensitive observations and product-performance measurements.",
+        "Select a test whose predicted result differs between gas/venting, thermal/front-condition and material-history hypotheses."
+      ],
+      "interpretation": "The visible line establishes the interface location but not the product consequence or root cause. Geometry, local flow-front condition, gas evacuation and material state must be considered together.",
+      "boundaries": [
+        "The case does not define an allowable weld-line strength.",
+        "Process and tooling changes remain within supplier, mould and site limits."
+      ],
+      "sourceIds": [
+        "BASF-INJECTION-TROUBLESHOOTER",
+        "ISO-20457-2026"
+      ],
+      "claims": [
+        {
+          "id": "worked-weld-line-diagnosis-v1-claim-1",
+          "statement": "A visible weld line should be evaluated against the actual product requirement and competing flow, gas, material and geometry mechanisms rather than by appearance alone.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "BASF-INJECTION-TROUBLESHOOTER",
+            "ISO-20457-2026"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-splay-boundary-v1",
+      "chapterId": "splay",
+      "title": "Splay investigation: follow the defect across material and machine boundaries",
+      "synthetic": true,
+      "setup": "Silver streaking appears after a material container change. It is present in all cavities on Machine A, disappears when a verified-dry sample is introduced, and does not reproduce with the original suspect material after a later handling correction.",
+      "observations": [
+        "The symptom initially follows a material-handling event rather than one cavity.",
+        "All cavities respond together.",
+        "A controlled material-condition change alters the symptom."
+      ],
+      "assumptions": [
+        "The material identity is confirmed and drying/handling follows current supplier documentation.",
+        "The example does not claim that all silver streaks are moisture-related."
+      ],
+      "calculationSteps": [
+        "Use the boundary pattern to rank common upstream mechanisms ahead of cavity-local mechanisms.",
+        "Repeat the comparison to test whether the symptom follows measured material condition rather than the first successful adjustment."
+      ],
+      "interpretation": "The evidence strengthens a material-condition hypothesis but still requires credible moisture/handling records and exclusion of other volatile or air-entrainment mechanisms.",
+      "boundaries": [
+        "Supplier grade instructions control drying conditions.",
+        "A successful drying-related change is evidence, not universal proof that every future splay event has the same cause."
+      ],
+      "sourceIds": [
+        "BASF-ULTRAMID-B3Z1-2026",
+        "BASF-INJECTION-TROUBLESHOOTER"
+      ],
+      "claims": [
+        {
+          "id": "worked-splay-boundary-v1-claim-1",
+          "statement": "Material-, cavity- and machine-boundary patterns can help discriminate splay mechanisms, but moisture must be confirmed with material-specific evidence rather than assumed from appearance.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "BASF-ULTRAMID-B3Z1-2026",
+            "BASF-INJECTION-TROUBLESHOOTER"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-dimensional-conditioning-v1",
+      "chapterId": "dimensional-stability",
+      "title": "Dimensional conditioning: define when the measurement exists",
+      "synthetic": true,
+      "setup": "A synthetic critical dimension measures 50.08 mm at 30 min after moulding, 50.03 mm at 24 h and 50.02 mm at 72 h under a defined conditioning environment.",
+      "observations": [
+        "The measured dimension changes with elapsed conditioning time.",
+        "The largest change occurs before the final observation interval."
+      ],
+      "assumptions": [
+        "The same measurement method, datum and environment are used.",
+        "The synthetic values are not a product tolerance."
+      ],
+      "calculationSteps": [
+        "30 min → 24 h change = -0.05 mm.",
+        "24 h → 72 h change = -0.01 mm."
+      ],
+      "interpretation": "A process comparison made at inconsistent measurement times could confuse conditioning response with process change. The measurement reference condition must be part of the engineering result.",
+      "boundaries": [
+        "Actual conditioning requirements follow the applicable material/product standard and quality plan.",
+        "The plateau-like trend does not prove that every material has stabilised by 72 h."
+      ],
+      "sourceIds": [
+        "ISO-20457-2026",
+        "ISO-294-4-2018",
+        "ASTM-D955-21"
+      ],
+      "claims": [
+        {
+          "id": "worked-dimensional-conditioning-v1-claim-1",
+          "statement": "Dimensional comparisons require a defined measurement and conditioning reference because post-mould dimensions can change with time and environment.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "ISO-20457-2026",
+            "ISO-294-4-2018",
+            "ASTM-D955-21"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-process-monitoring-alarm-v1",
+      "chapterId": "process-monitoring",
+      "title": "Monitoring alarm: a signal excursion is a trigger, not a root cause",
+      "synthetic": true,
+      "setup": "A synthetic cavity-pressure feature has a stable baseline of 42–46 MPa over the studied window. One cycle records 51 MPa while the measured part characteristic remains within specification.",
+      "observations": [
+        "The monitored feature is outside the established study window for one cycle.",
+        "The product measurement remains acceptable for that sampled part.",
+        "The next three cycles return to the prior signal range."
+      ],
+      "assumptions": [
+        "Sensor identity, calibration and sampling configuration are unchanged.",
+        "The alarm threshold is a study-specific monitoring rule, not a universal production limit."
+      ],
+      "calculationSteps": [
+        "Flag the excursion for investigation rather than automatically declaring product failure or root cause.",
+        "Compare the event with other process signals, cavity identity and subsequent recurrence before escalating the hypothesis."
+      ],
+      "interpretation": "A process alarm is evidence that the process differed from its monitored baseline. Product disposition and root-cause conclusions require the quality plan and corroborating evidence.",
+      "boundaries": [
+        "Real alarm actions must be predefined by the site's quality/control plan.",
+        "This example does not authorize automated machine-control changes."
+      ],
+      "sourceIds": [
+        "PARIZS-2023-IN-MOLD-SENSORS-WORKED",
+        "ISO-294-1-2017",
+        "KISTLER-CAVITY-PRESSURE-MONITORING",
+        "NIST-SEMATECH-HANDBOOK"
+      ],
+      "claims": [
+        {
+          "id": "worked-process-monitoring-alarm-v1-claim-1",
+          "statement": "A monitored process excursion can justify investigation without itself proving product nonconformance or root cause.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "PARIZS-2023-IN-MOLD-SENSORS-WORKED",
+            "ISO-294-1-2017",
+            "KISTLER-CAVITY-PRESSURE-MONITORING",
+            "NIST-SEMATECH-HANDBOOK"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-black-speck-source-map-v1",
+      "chapterId": "black-specks",
+      "title": "Black-speck source map: use cavity and chronology before repeated purging",
+      "synthetic": true,
+      "setup": "Synthetic black specks occur in all cavities immediately after a long interruption, diminish over ten cycles, then disappear. On another run they occur only in cavity 4 and persist.",
+      "observations": [
+        "The first pattern is time-linked and common to all cavities.",
+        "The second pattern is cavity-specific and persistent.",
+        "Both symptoms look visually similar."
+      ],
+      "assumptions": [
+        "Approved machine/material procedures govern any purge, inspection or disassembly.",
+        "No intervention is performed solely from this conceptual example."
+      ],
+      "calculationSteps": [
+        "Pattern A prioritises common upstream residence/degradation or contamination mechanisms.",
+        "Pattern B prioritises a local downstream/hot-runner/cavity-path mechanism before assuming the same upstream cause."
+      ],
+      "interpretation": "Chronology and cavity distribution can make the source search more efficient and reduce repeated corrective actions that do not test the suspected location.",
+      "boundaries": [
+        "Appearance alone cannot distinguish contamination from degradation.",
+        "Hot polymer, nozzle, barrel and hot-runner work requires approved supplier/site safety procedures."
+      ],
+      "sourceIds": [
+        "BASF-INJECTION-TROUBLESHOOTER",
+        "ISO-20430-2020"
+      ],
+      "claims": [
+        {
+          "id": "worked-black-speck-source-map-v1-claim-1",
+          "statement": "Time and cavity patterns can help localise plausible black-speck sources while preserving uncertainty between contamination and degradation mechanisms.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "BASF-INJECTION-TROUBLESHOOTER",
+            "ISO-20430-2020"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-complex-diagnostics-v1",
+      "chapterId": "complex-diagnostics",
+      "title": "Capstone investigation: competing causes after a maintenance change",
+      "synthetic": true,
+      "setup": "A synthetic four-cavity part develops a 0.20–0.28 mm dimensional shift after planned mould maintenance and a material-lot change on the same shift. Cavity 3 moves most; the other cavities move less. Machine setpoints are unchanged.",
+      "observations": [
+        "The dimensional shift begins on the first production run after maintenance and the material-lot change.",
+        "Cavity 3 shows the largest offset, while all cavities show a smaller common shift.",
+        "The measurement system repeats within the established study tolerance when the same conditioned parts are remeasured.",
+        "Coolant flow on the circuit nearest cavity 3 is lower than its previous documented baseline, while common machine-side pressure traces remain close to the prior baseline.",
+        "A retained sample from the previous material lot, processed after thermal stabilisation, reduces the common shift but does not remove the cavity-3 offset."
+      ],
+      "assumptions": [
+        "All observations and values are synthetic teaching data.",
+        "Any cooling-circuit inspection or maintenance follows approved mould/site procedures.",
+        "The example does not establish product disposition, a universal tolerance, or a production setpoint."
+      ],
+      "calculationSteps": [
+        "Separate the pattern into a common shift affecting all cavities and an additional cavity-3-specific offset.",
+        "Retain at least three live hypotheses: material-condition/lot contribution to the common shift, local cooling or tooling contribution near cavity 3, and a measurement/conditioning explanation.",
+        "Use the repeat measurement and retained-lot comparison to reduce confidence in a measurement-only explanation while preserving uncertainty about material versus thermal/tooling contribution.",
+        "Treat the low local coolant-flow evidence as support for a cavity-local thermal hypothesis, not proof; require recovery of the hydraulic/thermal evidence and part response before claiming correction."
+      ],
+      "interpretation": "The evidence supports a mixed-mechanism model more strongly than any single-cause story: the retained-lot comparison suggests a material-related contribution to the common shift, while the persistent cavity-3 offset and local cooling evidence support an additional cavity-local mechanism. The investigation should preserve both until controlled recovery evidence separates them.",
+      "boundaries": [
+        "A successful process adjustment that masks the dimensional shift would be containment evidence, not automatic root-cause proof.",
+        "Tooling or cooling intervention requires approved maintenance authority and post-intervention verification.",
+        "Product acceptance and disposition remain governed by the applicable quality plan and measurement requirements.",
+        "No automated machine-control or universal process recipe authority is created."
+      ],
+      "sourceIds": [
+        "ISO-294-1-2017",
+        "ISO-20457-2026",
+        "NIST-SEMATECH-DOE"
+      ],
+      "claims": [
+        {
+          "id": "worked-complex-diagnostics-v1-claim-1",
+          "statement": "A complex moulding problem can require more than one active mechanism; cavity, chronology, retained-material, measurement and system-response evidence can be combined to update competing hypotheses without forcing premature single-cause certainty.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "ISO-294-1-2017",
+            "ISO-20457-2026",
             "NIST-SEMATECH-DOE"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-filling-boundary-defect-v1",
+      "chapterId": "flash",
+      "title": "Filling-boundary diagnosis: local flash without reflex clamp adjustment",
+      "synthetic": true,
+      "setup": "A synthetic four-cavity mould produces a thin flash at the same shutoff feature in cavity 2 while cavities 1, 3 and 4 remain clean. The flash appears after thermal stabilisation. Global machine actuals and part masses remain similar to the established baseline, and an authorised visual inspection later finds contamination at the cavity-2 shutoff.",
+      "observations": [
+        "The defect is repeatably cavity-specific and location-specific.",
+        "The other cavities remain free of flash under the same global machine cycle.",
+        "Global machine actuals and overall part-mass pattern remain close to the prior baseline.",
+        "The symptom appears at a defined shutoff feature after the mould reaches a stable thermal condition.",
+        "Authorised inspection identifies contamination at the affected local shutoff."
+      ],
+      "assumptions": [
+        "All observations are synthetic teaching data.",
+        "The example assumes no machine or mould limit is exceeded and creates no instruction to increase clamp force or reduce viscosity.",
+        "Any shutoff inspection or cleaning follows approved mould and site procedures."
+      ],
+      "calculationSteps": [
+        "Start with at least three plausible mechanisms: a local shutoff gap/contamination condition, a cavity-local pressure/thermal contribution, and a global clamp or pressure condition.",
+        "Use cavity distribution to weaken a purely global explanation: one cavity at one feature behaves differently while the other cavities share the same global machine cycle.",
+        "Use the authorised inspection result as supporting evidence for the local shutoff hypothesis, but require repeatable post-intervention recovery before promoting it as causal.",
+        "If the flash persists after the local condition is restored, reopen the pressure, thermal, alignment and tooling hypotheses instead of compensating blindly with a global setting."
+      ],
+      "interpretation": "The cavity-specific boundary and local shutoff evidence make a local tooling/contamination mechanism more plausible than a global clamp-force explanation. The evidence is not complete until the local condition is corrected under approved procedure and the flash response is shown to recover repeatably without creating a new defect.",
+      "boundaries": [
+        "Do not increase clamp force, pressure or temperature from this example; machine, mould, material and site limits remain controlling.",
+        "Containment or temporary symptom reduction is not automatic root-cause proof.",
+        "Physical inspection, cleaning or tooling work requires approved maintenance authority.",
+        "Product acceptance remains governed by the applicable quality plan."
+      ],
+      "sourceIds": [
+        "ISO-294-1-2017",
+        "ISO-20430-2020",
+        "BASF-INJECTION-TROUBLESHOOTER"
+      ],
+      "claims": [
+        {
+          "id": "worked-filling-boundary-defect-v1-claim-1",
+          "statement": "A repeatable cavity- and feature-specific flash pattern can be used to prioritise local tooling or shutoff hypotheses over purely global explanations, but repeatable recovery evidence is required before promoting the local mechanism as causal.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "ISO-294-1-2017",
+            "ISO-20430-2020",
+            "BASF-INJECTION-TROUBLESHOOTER"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worked-process-baseline-record-v1",
+      "chapterId": "process-baseline",
+      "title": "Defensible baseline record: preserve state, evidence and unknowns",
+      "synthetic": true,
+      "setup": "A synthetic four-cavity production process is stable before planned maintenance. The task is to create a baseline record that another competent technician can audit after the mould returns, without treating a screenshot of setpoints as proof that the same physical process state has been restored.",
+      "table": {
+        "columns": [
+          "Record element",
+          "Synthetic entry",
+          "Why it matters"
+        ],
+        "rows": [
+          [
+            "Material identity",
+            "Exact grade and lot recorded; values are synthetic",
+            "Separates material change from machine or mould change."
+          ],
+          [
+            "Machine and mould identity",
+            "Machine, mould revision and cavity map recorded",
+            "Prevents comparing unlike equipment/tool states."
+          ],
+          [
+            "Commands",
+            "Controlled process-sheet revision referenced; numeric settings intentionally omitted here",
+            "Preserves commanded state without turning the teaching case into a recipe."
+          ],
+          [
+            "Actual process signals",
+            "Cycle time, recovery/cushion trend and pressure/position traces recorded over a stable sample",
+            "Shows what the machine actually did, not only what was commanded."
+          ],
+          [
+            "Mould thermal state",
+            "Stabilisation condition and relevant temperature/cooling observations recorded",
+            "Makes thermal starting state visible."
+          ],
+          [
+            "Part outputs",
+            "Cavity identity, measurement timing and required quality results recorded",
+            "Connects process evidence to the product result."
+          ],
+          [
+            "Unknowns / missing evidence",
+            "Any unavailable value is marked missing, not reconstructed",
+            "Prevents later confidence from being built on invented history."
+          ]
+        ]
+      },
+      "observations": [
+        "The record separates material, machine, mould, process-signal and part-output evidence.",
+        "Cavity identity and measurement timing are preserved instead of pooling results.",
+        "Negative or inconclusive observations are retained rather than removed from the history.",
+        "The baseline defines the events that would invalidate comparison, including material, maintenance, tooling, measurement or control changes."
+      ],
+      "assumptions": [
+        "All entries are synthetic teaching data and intentionally omit production setpoints.",
+        "The example assumes the process was already authorised and stable under the site's quality and safety controls.",
+        "The baseline does not replace the machine record, mould record, approved process sheet or product-control plan."
+      ],
+      "calculationSteps": [
+        "Separate commanded conditions from measured process signals and measured part outputs.",
+        "Record identity and context before interpreting trends: material lot, machine, mould revision, cavity, time and measurement condition.",
+        "Mark unavailable evidence as missing rather than estimating it after the event.",
+        "Define which future changes invalidate direct comparison with this baseline and therefore require re-establishing evidence."
+      ],
+      "interpretation": "A defensible baseline is an auditable evidence package, not a single settings screenshot. Its value comes from preserving identity, context, actual process response, product response and uncertainty well enough that later changes can be compared without inventing missing history.",
+      "boundaries": [
+        "No value in this synthetic record is a machine setting, process recipe or acceptance limit.",
+        "Product disposition remains controlled by the applicable quality plan and measurement requirements.",
+        "Maintenance, setup and safety actions remain controlled by machine, mould and site procedures.",
+        "A baseline supports comparison; it does not by itself prove future capability or root cause."
+      ],
+      "sourceIds": [
+        "ISO-294-1-2017",
+        "ASTM-D3641-24",
+        "RJG-DECOUPLED-WORKSHOP"
+      ],
+      "claims": [
+        {
+          "id": "worked-process-baseline-record-v1-claim-1",
+          "statement": "A defensible moulding-process baseline should preserve process identity, commanded conditions, relevant measured response, product response and known uncertainty so later changes can be compared without treating setpoints alone as proof of equivalent process state.",
+          "conclusion": "supported-with-explicit-synthetic-scope",
+          "sourceIds": [
+            "ISO-294-1-2017",
+            "ASTM-D3641-24",
+            "RJG-DECOUPLED-WORKSHOP"
           ]
         }
       ]
@@ -950,7 +1417,7 @@
   "humanReviewScope": {
     "status": "hold",
     "contract": "data/book-sme-review-v1.json",
-    "required": "All eighteen worked cases are attached to chapters inside the 46-chapter independent human SME scope; each case requires arithmetic/reasoning, assumptions, evidence fit, synthetic-data labelling and non-universal-boundary review."
+    "required": "All 27 worked cases are attached to chapters inside the 46-chapter independent human SME scope; each case requires arithmetic/reasoning, assumptions, evidence fit, synthetic-data labelling and non-universal-boundary review."
   },
   "authorityBoundary": {
     "productionUse": "advisory-only",

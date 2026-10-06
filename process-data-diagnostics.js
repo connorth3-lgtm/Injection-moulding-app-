@@ -1,8 +1,8 @@
-/* MouldMaster guided process-data diagnostics — 2026.08.26.1 */
+/* MouldMaster guided process-data diagnostics — 2026.10.05.1 */
 (function(){
 'use strict';
 
-const VERSION='2026.09.10.1';
+const VERSION='2026.10.05.1';
 const PACK=window.MM_PROCESS_EVIDENCE_DATASETS;
 const SOURCES=window.MM_EVIDENCE_SOURCES?.sources||{};
 if(!PACK||!Array.isArray(PACK.datasets))throw new Error('process-data-diagnostics.js requires MM_PROCESS_EVIDENCE_DATASETS');
@@ -85,15 +85,22 @@ const DATASETS=PACK.datasets.map(ds=>({...ds,guide:GUIDES[ds.id]})).filter(ds=>d
 if(DATASETS.length!==PACK.datasets.length)throw new Error('Every process evidence dataset must have a guided diagnostic case');
 
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function learnerToken(){
-  let raw='anonymous';try{raw=String(window.db?.activeUser||window.user?.id||'anonymous')}catch(_){}
-  let h=2166136261;for(let i=0;i<raw.length;i++){h^=raw.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(36)
+function learnerId(){try{const id=window.db?.activeUser||window.user?.id||'';return id?String(id):null}catch(_){return null}}
+function learnerScope(){
+  const scope=window.MM_LEARNER_SCOPE;
+  if(!scope||typeof scope.tokenFor!=='function'||typeof scope.storageKey!=='function'||typeof scope.migrateStoragePrefix!=='function')throw new Error('process-data-diagnostics.js requires MM_LEARNER_SCOPE');
+  return scope
 }
-function storageKey(){return `${STORAGE_BASE}::${learnerToken()}`}
-function readState(){try{const s=JSON.parse(localStorage.getItem(storageKey())||'{}');return s&&typeof s==='object'?s:{}}catch(_){return {}}}
-function writeState(s){try{localStorage.setItem(storageKey(),JSON.stringify(s))}catch(_){}}
+function storageKey(){
+  const scope=learnerScope(),id=learnerId(),prefix=`${STORAGE_BASE}::`;
+  if(!id)throw new Error('process-data-diagnostics.js requires an active learner before persistence');
+  scope.registerStoragePrefix?.(prefix);scope.migrateStoragePrefix(prefix,id);
+  return scope.storageKey(prefix,scope.tokenFor(id))
+}
+function readState(){try{const s=JSON.parse(localStorage.getItem(storageKey())||'{}');return s&&typeof s==='object'&&!Array.isArray(s)?s:{}}catch(_){return {}}}
+function writeState(s){try{const k=storageKey(),payload=JSON.stringify(s);localStorage.setItem(k,payload);return localStorage.getItem(k)===payload}catch(_){return false}}
 function caseState(id){return readState()[id]||{attempts:0,completed:false,bestScore:0}}
-function saveCase(id,patch){const all=readState();all[id]={...(all[id]||{}),...patch};writeState(all)}
+function saveCase(id,patch){const all=readState();all[id]={...(all[id]||{}),...patch};const saved=writeState(all);if(!saved)window.toast?.('Progress could not be saved on this device.');return saved}
 
 function mean(rows,key){const vals=rows.map(r=>Number(r[key])).filter(Number.isFinite);return vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:0}
 function decimals(key){return /(_pct|Score|_g|_mm|_s|_MPa|_C|_Lmin|_kWh|_kN|_ms|_mm_s|_MPas)/.test(key)?2:2}
@@ -207,7 +214,7 @@ function renderCase(stepIndex){
 function choiceHtml(c,i,selected){const chosen=selected===i,cls=chosen?(c.correct?' correct':' wrong'):'';return `<button class="pd-choice${cls}" data-pd-choice="${i}" ${selected===null?'':'disabled'}>${esc(c.text)}</button>`}
 function feedbackHtml(choice,step){return `<div class="pd-feedback ${choice.correct?'':'bad'}"><b>${choice.correct?'Good evidence use':'Re-check the pattern'}</b><br>${esc(choice.correct?step.feedback:'Choose the answer that is most directly supported by the linked signals and preserves a controlled diagnostic sequence.')}</div>`}
 function exportCsv(){const ds=DATASETS.find(x=>x.id===activeId);if(!ds)return;const blob=new Blob([PACK.toCsv(ds.id)],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`mouldmaster-${ds.id}-synthetic-training.csv`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)}
-function finishCase(){const ds=DATASETS.find(x=>x.id===activeId);if(!ds)return;const steps=buildSteps(ds);let correct=0;for(let i=0;i<steps.length;i++){const choices=deterministicChoices(steps[i],ds.id,i);if(choices[answers[i]]?.correct)correct++}const score=Math.round(correct/steps.length*100),prior=caseState(ds.id);saveCase(ds.id,{...prior,completed:true,bestScore:Math.max(Number(prior.bestScore||0),score)});const host=ensureSection();host.innerHTML=`<div class="pd-summary card"><div class="eyebrow">Data case complete</div><strong>${score}% · ${correct}/4 decisions</strong><h2>${esc(ds.title)}</h2><p class="muted">${score===100?'You used the baseline, fault and recovery evidence as one reasoning chain.':'Review the missed step and try again. The goal is to explain why a signal pattern supports one mechanism more strongly than another.'}</p><div class="pd-actions"><button class="primary" data-pd-home>Choose another dataset</button><button class="secondary" data-pd-restart>Practise this case again</button><button class="ghost" data-pd-back>Back to diagnostic practice</button></div></div>`}
+function finishCase(){const ds=DATASETS.find(x=>x.id===activeId);if(!ds)return;const steps=buildSteps(ds);let correct=0;for(let i=0;i<steps.length;i++){const choices=deterministicChoices(steps[i],ds.id,i);if(choices[answers[i]]?.correct)correct++}const score=Math.round(correct/steps.length*100),prior=caseState(ds.id),saved=saveCase(ds.id,{...prior,completed:true,bestScore:Math.max(Number(prior.bestScore||0),score)});const host=ensureSection();host.innerHTML=`<div class="pd-summary card"><div class="eyebrow">Data case complete${saved?'':' · progress not saved'}</div><strong>${score}% · ${correct}/4 decisions</strong><h2>${esc(ds.title)}</h2><p class="muted">${score===100?'You used the baseline, fault and recovery evidence as one reasoning chain.':'Review the missed step and try again. The goal is to explain why a signal pattern supports one mechanism more strongly than another.'}</p><div class="pd-actions"><button class="primary" data-pd-home>Choose another dataset</button><button class="secondary" data-pd-restart>Practise this case again</button><button class="ghost" data-pd-back>Back to diagnostic practice</button></div></div>`}
 function handleClick(e){
   const t=e.target.closest('[data-pd-start],[data-pd-home],[data-pd-back],[data-pd-choice],[data-pd-next],[data-pd-finish],[data-pd-retry],[data-pd-restart],[data-pd-csv]');if(!t)return;
   if(t.dataset.pdStart)return openCase(t.dataset.pdStart);if(t.hasAttribute('data-pd-home'))return renderHome();if(t.hasAttribute('data-pd-back'))return backToPractice();if(t.hasAttribute('data-pd-restart'))return openCase(activeId);if(t.hasAttribute('data-pd-csv'))return exportCsv();
@@ -219,5 +226,5 @@ function handleClick(e){
 function install(){ensureStyle();const host=ensureSection();ensureNav();patchMobileMore();if(host&&!host.__mmPdClick){host.addEventListener('click',handleClick);host.__mmPdClick=true}}
 let queued=false;function schedule(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(()=>{queued=false;install()},0)}
 const observer=new MutationObserver(schedule);if(document.documentElement)observer.observe(document.documentElement,{childList:true,subtree:true});install();window.addEventListener('load',schedule);
-window.MM_PROCESS_DATA_DIAGNOSTICS={version:VERSION,cases:DATASETS.map(d=>({id:d.id,title:d.title,kind:d.kind,signals:Object.keys(d.signals),sourceIds:d.sourceIds})),open:openHome,evaluateChoice,scope:'Guided use of deterministic synthetic training data; outside the formal assessment bank and not a production recipe. evaluateChoice exposes structured practice correctness for local analytics without scraping rendered CSS or score text.'};
+window.MM_PROCESS_DATA_DIAGNOSTICS={version:VERSION,cases:DATASETS.map(d=>({id:d.id,title:d.title,kind:d.kind,signals:Object.keys(d.signals),sourceIds:d.sourceIds})),open:openHome,evaluateChoice,storage:'MM_LEARNER_SCOPE 128-bit collision-safe learner progress',storagePrefix:`${STORAGE_BASE}::`,scope:'Guided use of deterministic synthetic training data; outside the formal assessment bank and not a production recipe. evaluateChoice exposes structured practice correctness for local analytics without scraping rendered CSS or score text.'};
 })();

@@ -30,6 +30,10 @@ on:
       - '.github/workflows/residual-integrity.yml'
   workflow_dispatch:
 
+concurrency:
+  group: residual-integrity-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -38,14 +42,26 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - name: Classify residual-integrity impact
+        id: impact
+        run: python3 tools/ci_impact.py --governed-candidate
+      - name: Skip unrelated update
+        if: steps.impact.outputs.residual_integrity != 'true'
+        run: |
+          echo "Residual Data Integrity QA skipped: latest update does not affect residual-integrity contracts."
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        if: steps.impact.outputs.residual_integrity == 'true'
         with:
           node-version: '22.12.0'
           package-manager-cache: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        if: steps.impact.outputs.residual_integrity == 'true'
         with:
           python-version: '3.12'
       - name: Statistical, identity and retention regression contracts
+        if: steps.impact.outputs.residual_integrity == 'true'
         run: |
           node qa_process_statistics_integrity.cjs
           node qa_import_identity_integrity.cjs

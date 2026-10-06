@@ -86,5 +86,10 @@
     "read and listen surfaces use exactly the same verified governed text"
   ],
   "currentBookDisposition": "technical-review-only",
-  "verifiedChapterCountAuthorizedByThisGate": 0
+  "verifiedChapterCountAuthorizedByThisGate": 0,
+  "recordLifecycle": {
+    "status": "historical-prepublication-gate",
+    "supersededForCurrentPublicationStatusBy": "data/book-publication-authorization-v1.json",
+    "explanation": "This record preserves the earlier fail-closed accuracy-gate state before later claim resolution, qualification review, editorial integration and exact-byte publication authorization. Its historical technical-review-only disposition must not be read as the current Book publication status."
+  }
 }

@@ -251,6 +251,7 @@ def main() -> None:
     if cache_version != web_release:
         raise SystemExit(f"Service-worker cache version {cache_version} does not match web_release {web_release}")
     source_sha = os.environ.get("GITHUB_SHA", "local")
+    release_files = set(core_files) | set(optional_files)
     deployment = {
         "schema": 3,
         "web_release": web_release,
@@ -259,9 +260,10 @@ def main() -> None:
         "assessment_runtime": runtime_version,
         "service_worker_cache_version": cache_version,
         "service_worker_cache_revision": cache_revision,
-        "artifact_policy": "service-worker-core-plus-on-demand-runtime-plus-minimal-public-metadata",
-        "precache_asset_count": len(core_files),
-        "on_demand_asset_count": len(optional_files),
+        "artifact_policy": "service-worker-atomic-complete-release-precache-plus-minimal-public-metadata",
+        "precache_asset_count": len(release_files),
+        "on_demand_asset_count": 0,
+        "optional_feature_asset_count": len(optional_files),
         "measured_learning_public_governance_count": len(MEASURED_LEARNING_PUBLIC_GOVERNANCE),
         "measured_learning_promoted_case_count": len(allowed_data_files - MEASURED_LEARNING_PUBLIC_GOVERNANCE),
     }
@@ -276,8 +278,10 @@ def main() -> None:
         "web_release": web_release,
         "source_sha": source_sha,
         "asset_count": len(manifest_files),
-        "precache_assets": sorted(core_files),
-        "on_demand_assets": sorted(optional_files),
+        "precache_assets": sorted(release_files),
+        "on_demand_assets": [],
+        "core_assets": sorted(core_files),
+        "optional_feature_assets": sorted(optional_files),
         "assets": {
             rel: {
                 "sha256": sha256(OUT / rel),
@@ -293,7 +297,7 @@ def main() -> None:
 
     print(
         f"Pages artifact ready: {len(manifest_files)} public assets "
-        f"({len(core_files)} pre-cached, {len(optional_files)} on demand; "
+        f"({len(release_files)} atomically pre-cached, {len(optional_files)} optional-feature assets; "
         f"web release {web_release}, assessment runtime {runtime_version}, source {source_sha[:12]})."
     )
     print("Excluded repository areas remain fail-closed; measured-learning exposes only governed runtime JSON and promoted learner cases.")

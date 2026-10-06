@@ -16,12 +16,31 @@ def need(ok, message):
 
 
 pages = text(".github/workflows/pages.yml")
+preview_pages = text(".github/workflows/preview-pages.yml")
 physical = text("tools/verify_pwa_physical_evidence.py")
 hold_builder = text("tools/build_pages_hold.py")
 hold_verifier = text("tools/verify_pages_hold.py")
 pruner = text(".github/workflows/prune-merged-branches.yml")
 ruleset = text("tools/verify_main_ruleset.py")
 attestation = json.loads(text(".github/main-ruleset-attestation.json"))
+
+cross_process_result_path = ROOT / "data/public-benchmark-results/cross-process-chain-17240390-v1.json"
+cross_process_result = json.loads(cross_process_result_path.read_text(encoding="utf-8"))
+cross_profile = cross_process_result.get("profile") or {}
+cross_structure = cross_process_result.get("structureSummary") or {}
+cross_families = cross_structure.get("schemaFamilies") or []
+need("members" not in cross_process_result and "schemas" not in cross_process_result,
+     "cross-process review evidence must remain compact aggregate-only")
+need(cross_process_result_path.stat().st_size < 100_000,
+     "cross-process aggregate review evidence unexpectedly expanded above 100 KB")
+need(len(cross_families) == 4, "cross-process compact schema-family count drifted")
+need(sum(int(x.get("files") or 0) for x in cross_families) == int(cross_profile.get("injectionTabularFiles") or -1),
+     "cross-process compact schema-family file totals drifted")
+need(sum(int(x.get("rows") or 0) for x in cross_families) == int(cross_profile.get("injectionRows") or -1),
+     "cross-process compact schema-family row totals drifted")
+need(sum(int(x.get("numericValues") or 0) for x in cross_families) == int(cross_profile.get("injectionNumericValuesProfiled") or -1),
+     "cross-process compact schema-family numeric totals drifted")
+
 
 # The question-evidence approval gate may need to read an older approved Git blob so
 # unrelated core-shell edits can be distinguished from assessment-bearing changes.
@@ -44,15 +63,42 @@ need("name: MouldMaster Pages Release Readiness" in pages, "Pages workflow name 
 need("permissions: {}" in pages, "Pages workflow must deny token permissions by default")
 for marker in (
     "production-source:\n    permissions:\n      contents: read\n      pull-requests: read\n      actions: read",
-    "publisher-guard:\n    permissions:\n      contents: read\n      actions: write\n      pages: write",
+    "legacy-containment:\n    if: github.event_name == 'push'\n    permissions:\n      contents: read\n      actions: write",
+    "publisher-guard:\n    if: >-",
+    "needs: [production-source, legacy-containment]",
+    "pages: write",
     "build:\n    permissions:\n      contents: read",
-    "deploy:\n    permissions:\n      pages: write\n      id-token: write",
-    "verify:\n    permissions:\n      contents: read",
+    "deploy:\n    permissions:\n      contents: read\n      pull-requests: read\n      actions: read\n      pages: write\n      id-token: write",
+    "verify:\n    permissions:\n      contents: read\n      pull-requests: read\n      actions: read",
 ):
     need(marker in pages, f"Pages job-scoped permission contract missing: {marker}")
-need(pages.count("actions: write") == 1, "actions:write must be limited to the publisher guard")
+need(pages.count("actions: write") == 2, "actions:write must be limited to early legacy containment and the post-provenance publisher guard")
 need(pages.count("pages: write") == 2, "pages:write must be limited to publisher containment and deploy")
 need(pages.count("id-token: write") == 1, "OIDC write permission must be limited to deploy")
+for marker in (
+    "name: MouldMaster Preview Candidate",
+    "Verify retained preview candidate locally",
+    "Retain exact preview candidate",
+    "main is the sole live Pages publisher",
+):
+    need(marker in preview_pages, f"Preview candidate non-publishing contract missing: {marker}")
+for forbidden in ("actions/deploy-pages@", "actions/upload-pages-artifact@", "pages: write", "id-token: write"):
+    need(forbidden not in preview_pages, f"Preview workflow must not publish the repository Pages site: {forbidden}")
+for marker in (
+    "Manual dispatch is contract-only",
+    "legacy-containment:",
+    "--contain-only",
+    "needs.production-source.result == 'success'",
+    "Confirm workflow-mode Pages publisher after provenance",
+    "Manual dispatch does not receive Pages mutation or publication authority.",
+    "Checkout exact main source before deployment",
+    "Recheck current protected-main provenance before deployment",
+    "Recheck current protected-main provenance after deployment",
+    "Reconfirm main is still on the deployed SHA after race window",
+    '--source-sha "${{ github.sha }}"',
+    "--require-native-protection",
+):
+    need(marker in pages, f"Pages deploy-time current-main provenance recheck missing: {marker}")
 
 # PRs may validate a pending evidence contract. On main, pending valid evidence never
 # selects the learner artifact as the production-root publication. Instead the root
@@ -81,7 +127,7 @@ for marker in (
     "Upload preview-only release-hold Pages artifact",
     "github.event_name != 'pull_request'",
     "path: .pages-hold",
-    "if: github.event_name != 'pull_request'\n    needs: build",
+    "if: github.event_name == 'push'\n    needs: build",
     "Verify preview-only release-hold deployment",
     "Verify preview-only release-hold deployment",
     "python3 tools/verify_pages_hold.py",
@@ -124,6 +170,7 @@ for marker in (
     "validate_helper(helper_payload)",
     "No learner application runtime",
     "release-hold artifact boundary mismatch",
+    'manifest_path = preview_target / "pages-manifest.json"',
 ):
     need(marker in hold_builder, f"release-hold builder does not enforce the deployed public boundary: {marker}")
 for marker in (
@@ -138,8 +185,13 @@ for marker in (
     '"location.replace(preview.href)"',
     "non-production preview runtime asset unavailable",
     "device metadata helper violates local-only boundary",
+    "critical_assets",
+    "critical preview asset SHA-256 mismatch",
 ):
     need(marker in hold_verifier, f"release-hold live verifier does not prove preview isolation, stale-content removal and helper isolation: {marker}")
+
+# Permanent promotion branches must never enter destructive branch pruning.
+need('"$branch" == "preview"' in pruner, "branch pruner must never delete the permanent preview promotion branch")
 
 # Branch deletion must reconfirm the ref has not moved after safety evaluation.
 for marker in (
@@ -189,7 +241,7 @@ self_test = subprocess.run(
 need(self_test.returncode == 0, f"ruleset verifier self-test failed: {self_test.stderr or self_test.stdout}")
 
 print(
-    "Audit governance QA passed: assessment-evidence workflows retain full Git history, least-privilege Pages permissions, "
-    "physical-test runtime fingerprint reporting, preview-only protected-main publication with root-to-preview Home forwarding and a separated non-production learner runtime "
+    "Audit governance QA passed: assessment-evidence workflows retain full Git history, main-only live Pages publication, retained exact-SHA preview candidates, least-privilege Pages permissions, "
+    "physical-test runtime fingerprint reporting, live critical-byte SHA-256 deployment verification, preview-only protected-main publication with root-to-preview Home forwarding and a separated non-production learner runtime "
     "and local-only device metadata helper, live branch-prune SHA recheck and fail-closed ruleset bypass verification are enforced."
 )

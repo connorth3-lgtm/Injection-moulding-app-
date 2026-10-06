@@ -19,30 +19,59 @@ hold_builder_path = ROOT / "tools" / "build_pages_hold.py"
 hold_builder = hold_builder_path.read_text(encoding="utf-8")
 hold_verifier = (ROOT / "tools" / "verify_pages_hold.py").read_text(encoding="utf-8")
 
+containment_block = workflow.split("  legacy-containment:", 1)[1].split("\n  publisher-guard:", 1)[0]
 publisher_block = workflow.split("  publisher-guard:", 1)[1].split("\n  build:", 1)[0]
-need("needs:" not in publisher_block, "publisher guard must start independently so legacy cancellation is not delayed")
+need("needs:" not in containment_block, "legacy containment must start independently for earliest cancellation")
+need("actions: write" in containment_block and "pages: write" not in containment_block, "early legacy containment must be actions-only")
+need("--contain-only" in containment_block, "early legacy containment must not mutate Pages settings")
+need("needs: [production-source, legacy-containment]" in publisher_block, "Pages settings mutation must wait for provenance and containment")
+need("needs.production-source.result == 'success'" in publisher_block, "Pages settings mutation must require successful main provenance")
+need("pages: write" in publisher_block, "post-provenance publisher guard must own Pages settings mutation authority")
+need("Manual dispatch is contract-only" in workflow, "manual Pages dispatch must be explicitly non-publishing")
 
 shared_publish_concurrency = "group: mouldmaster-pages-site-publish"
-need(shared_publish_concurrency in workflow, "main Pages deploy must use the shared site-wide publication concurrency group")
-need(shared_publish_concurrency in preview_workflow, "preview Pages deploy must use the shared site-wide publication concurrency group")
+need(shared_publish_concurrency in workflow, "main Pages deploy must use the site-wide publication concurrency group")
 need("cancel-in-progress: false" in workflow, "main Pages publication must not be cancelled mid-deploy by a later run")
-need("cancel-in-progress: false" in preview_workflow, "preview Pages publication must not be cancelled mid-deploy by a later run")
-need(preview_workflow.count("pull-requests: read") >= 2, "preview build and deploy provenance checks require pull-request read permission")
+
+# GitHub Pages exposes one repository site. Preview therefore validates and retains
+# an exact-SHA candidate but must never become a second live publisher.
 for required in (
+    "name: MouldMaster Preview Candidate",
     "Require merged-PR preview provenance",
     "tools/verify_preview_source.py --self-test",
     '--source-sha "${{ github.sha }}"',
-    "Recheck current merged preview provenance",
-    "xs.sort(key=lambda x:",
+    "Require exact-head preview quality gates",
+    "Validate preview build contracts",
+    "Build governed preview candidate",
+    "Build release-hold shell with preview candidate",
+    "Verify retained preview candidate locally",
+    "python3 -m http.server 8765",
+    "tools/verify_pages_hold.py",
     '--expected-source-sha "${{ github.sha }}"',
+    "Retain exact preview candidate",
+    "actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+    "main is the sole live Pages publisher",
 ):
-    need(required in preview_workflow, f"preview Pages provenance/serialization safeguard missing: {required}")
+    need(required in preview_workflow, f"preview candidate safeguard missing: {required}")
+for forbidden in (
+    "actions/deploy-pages@",
+    "actions/upload-pages-artifact@",
+    "pages: write",
+    "id-token: write",
+    "mouldmaster-pages-site-publish",
+    "environment:\n      name: github-pages",
+):
+    need(forbidden not in preview_workflow, f"preview workflow must not publish the repository Pages site: {forbidden}")
+need(preview_workflow.count("pull-requests: read") >= 1, "preview provenance verification requires pull-request read permission")
+need("retain-exact-candidate" not in preview_workflow.split("Require exact-head preview quality gates", 1)[1].split("Validate preview build contracts", 1)[0],
+     "preview merge-SHA polling must not wait for the PR-only public-candidate job")
 need('--expected-source-sha "${{ github.sha }}"' in workflow, "main Pages live verification must bind to the exact deployed source SHA")
 
 for marker in (
     "actions: write",
     "publisher-guard:",
-    "Block competing legacy branch Pages publisher",
+    "Contain competing legacy branch Pages publisher",
+    "Confirm workflow-mode Pages publisher after provenance",
     "python3 tools/quarantine_legacy_pages.py",
     "needs: [production-source, publisher-guard]",
     "Build release-hold Pages artifact",
@@ -51,6 +80,12 @@ for marker in (
     "path: .pages-dist",
     "Upload preview-only release-hold Pages artifact",
     "path: .pages-hold",
+    "Checkout exact main source before deployment",
+    "Recheck current protected-main provenance before deployment",
+    "Recheck current protected-main provenance after deployment",
+    "Reconfirm main is still on the deployed SHA after race window",
+    '--require-native-protection',
+    "Manual dispatch does not receive Pages mutation or publication authority.",
     "Deploy selected Pages artifact",
     "Verify preview-only release-hold deployment",
     "Verify preview-only release-hold deployment",
@@ -70,8 +105,8 @@ need(
     "direct learner artifact upload must be limited to PR validation and never selected for main publication",
 )
 need(
-    "if: github.event_name != 'pull_request'\n    needs: build" in workflow,
-    "main Pages deploy must publish the preview-only release-hold artifact",
+    "if: github.event_name == 'push'\n    needs: build" in workflow,
+    "main Pages deploy must be limited to protected-main pushes and publish the release-hold artifact",
 )
 need("production_ready == 'true'" not in workflow.split("      - name: Build release-hold Pages artifact",1)[1], "production readiness must not switch main publication away from preview-only mode")
 
@@ -91,6 +126,8 @@ for marker in (
     '"api",',
     '"Accept: application/vnd.github+json"',
     "api_endpoint",
+    "--contain-only",
+    "1000-run pagination safety bound",
 ):
     need(marker in guard, f"legacy Pages fail-closed safeguard missing: {marker}")
 
@@ -173,7 +210,16 @@ with tempfile.TemporaryDirectory() as tmp:
     (preview / "index.html").write_text("<!doctype html><html><head></head><body>preview</body></html>", encoding="utf-8")
     (preview / "manifest.webmanifest").write_text("{}", encoding="utf-8")
     (preview / "service-worker.js").write_text("self.addEventListener('fetch',()=>{});", encoding="utf-8")
-    (preview / "version.json").write_text("{}", encoding="utf-8")
+    (preview / "version.json").write_text('{"web_release":"2026.10.05.1"}', encoding="utf-8")
+    source_sha = "0123456789abcdef0123456789abcdef01234567"
+    (preview / "deployment.json").write_text(
+        '{"schema":3,"web_release":"2026.10.05.1","source_sha":"'+source_sha+'"}',
+        encoding="utf-8",
+    )
+    (preview / "pages-manifest.json").write_text(
+        '{"schema":3,"web_release":"2026.10.05.1","source_sha":"'+source_sha+'","assets":{"index.html":{},"version.json":{},"service-worker.js":{},"deployment.json":{}}}',
+        encoding="utf-8",
+    )
     target = root / "hold"
     files = hold_module.build(target, preview_source=preview)
     root_files = {path.name for path in target.iterdir() if path.is_file()}
@@ -182,6 +228,15 @@ with tempfile.TemporaryDirectory() as tmp:
         "preview release-hold root must add only the migration worker to the three safe hold files",
     )
     need("preview/index.html" in files and "preview/service-worker.js" in files, "preview runtime was not staged under /preview/")
+    preview_index_path = target / "preview" / "index.html"
+    preview_index = preview_index_path.read_text(encoding="utf-8")
+    staged_manifest = __import__("json").loads((target / "preview" / "pages-manifest.json").read_text(encoding="utf-8"))
+    staged_index_record = staged_manifest["assets"]["index.html"]
+    staged_index_bytes = preview_index_path.read_bytes()
+    need(staged_index_record["bytes"] == len(staged_index_bytes), "staged preview manifest index byte count was not rebound")
+    need(staged_index_record["sha256"] == __import__("hashlib").sha256(staged_index_bytes).hexdigest(), "staged preview manifest index SHA-256 was not rebound")
+    need(f'<meta name="mm-preview-source-sha" content="{source_sha}">' in preview_index, "staged preview HTML missing exact source SHA provenance")
+    need('<meta name="mm-preview-web-release" content="2026.10.05.1">' in preview_index, "staged preview HTML missing release provenance")
     index = (target / "index.html").read_text(encoding="utf-8")
     worker = (target / "service-worker.js").read_text(encoding="utf-8")
     need('data-mm-release-hold-migration="true"' in index, "release-hold root must register the migration worker")
@@ -212,6 +267,8 @@ for marker in (
     'data-mm-release-hold="true"',
     "No learner application runtime",
     "release-hold artifact boundary mismatch",
+    'manifest_path = preview_target / "pages-manifest.json"',
+    'assets["index.html"] = {',
 ):
     need(marker in hold_builder, f"release-hold builder safeguard missing: {marker}")
 for marker in (
@@ -227,6 +284,11 @@ for marker in (
     "release-hold migration worker mismatch",
     'fetch(urljoin(root, "device-validation.html"))',
     "device metadata helper violates local-only boundary",
+    "critical_assets",
+    'critical_assets = set(manifest.get("precache_assets") or ())',
+    "preview pages-manifest has no hash record for critical asset",
+    "critical preview asset byte-size mismatch",
+    "critical preview asset SHA-256 mismatch",
 ):
     need(marker in hold_verifier, f"release-hold live verifier safeguard missing: {marker}")
 
@@ -234,7 +296,7 @@ for marker in ("--convergence-attempts", "--convergence-delay", "FORBIDDEN_PROBE
     need(marker in verifier, f"live production deployment verifier safeguard missing: {marker}")
 
 print(
-    "MouldMaster Pages publisher-governance QA passed (serialized main/preview deployers, merged-PR preview provenance, exact deployed-source verification, workflow-only source, successful legacy-deploy detection, "
+    "MouldMaster Pages publisher-governance QA passed (main-only live publisher, retained exact-SHA preview candidate, merged-PR provenance, exact deployed-source verification, workflow-only source, successful legacy-deploy detection, "
     "earliest-start guard, preview-only main publication, minimal base hold plus stale-root-PWA migration with /preview/ staged, "
-    "root-to-preview Home forwarding, local-only metadata helper, and live 404 verification)"
+    "root-to-preview Home forwarding, local-only metadata helper, live critical-byte SHA-256 verification, and live 404 verification)"
 )

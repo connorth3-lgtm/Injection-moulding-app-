@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "bookId": "mouldmaster-book",
   "atlasVersion": "2026.10.01.2",
-  "bookRuntimeCompatibility": "2026.10.01.3",
+  "bookRuntimeCompatibility": "2026.10.06.5",
   "status": "technical-review-material-atlas",
   "title": "Complete Material Data Atlas",
   "boundary": "Book material reference data remains technical-review evidence. Canonical catalogue values and regional evidence retain manufacturer, grade, source, test-condition, lifecycle, value-status and process context. Typical or manufacturer-measured values are not guaranteed specifications, universal settings or production setpoints. Current supplier TDS/SDS/processing guidance, machine/mould limits and site controls remain authoritative.",

@@ -23,6 +23,9 @@ transmit data, or persist captured values.
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
+import re
 import shutil
 from pathlib import Path
 
@@ -202,14 +205,55 @@ def stage_preview(preview_source: Path, preview_target: Path) -> None:
     if missing:
         raise SystemExit("preview source is missing required public runtime files: " + ", ".join(missing))
     shutil.copytree(preview_source, preview_target)
+    deployment_path = preview_target / "deployment.json"
+    if not deployment_path.is_file():
+        raise SystemExit("preview source is missing deployment.json provenance")
+    try:
+        deployment = json.loads(deployment_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise SystemExit("preview deployment.json is invalid") from exc
+    source_sha = str(deployment.get("source_sha") or "")
+    web_release = str(deployment.get("web_release") or "")
+    if not re.fullmatch(r"[0-9a-f]{40}", source_sha):
+        raise SystemExit("preview deployment.json source_sha must be the exact 40-character commit SHA")
+    if not re.fullmatch(r"\d{4}\.\d{2}\.\d{2}\.\d+", web_release):
+        raise SystemExit("preview deployment.json web_release is missing or invalid")
+
     index_path = preview_target / "index.html"
     payload = index_path.read_text(encoding="utf-8")
-    marker = '<meta name="mm-publication-boundary" content="non-production-preview">'
-    if PREVIEW_MARKER not in payload:
-        if "<head>" not in payload:
-            raise SystemExit("preview index.html does not contain a head element")
-        payload = payload.replace("<head>", "<head>\n  " + marker, 1)
-        index_path.write_text(payload, encoding="utf-8")
+    markers = [
+        '<meta name="mm-publication-boundary" content="non-production-preview">',
+        f'<meta name="mm-preview-source-sha" content="{source_sha}">',
+        f'<meta name="mm-preview-web-release" content="{web_release}">',
+    ]
+    if "<head>" not in payload:
+        raise SystemExit("preview index.html does not contain a head element")
+    for marker in reversed(markers):
+        if marker not in payload:
+            payload = payload.replace("<head>", "<head>\n  " + marker, 1)
+    index_path.write_text(payload, encoding="utf-8")
+
+    # The staging layer intentionally adds preview-only provenance markers to
+    # index.html after the production candidate manifest was built. Rebind the
+    # copied manifest's index.html integrity record to the exact staged bytes so
+    # live verification remains byte-accurate rather than comparing against the
+    # pre-staging candidate.
+    manifest_path = preview_target / "pages-manifest.json"
+    if not manifest_path.is_file():
+        raise SystemExit("preview source is missing pages-manifest.json integrity metadata")
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise SystemExit("preview pages-manifest.json is invalid") from exc
+    assets = manifest.get("assets")
+    if not isinstance(assets, dict) or "index.html" not in assets:
+        raise SystemExit("preview pages-manifest.json is missing index.html integrity metadata")
+    staged_bytes = index_path.read_bytes()
+    assets["index.html"] = {
+        "sha256": hashlib.sha256(staged_bytes).hexdigest(),
+        "bytes": len(staged_bytes),
+    }
+    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def build(target: Path, preview_source: Path | None = None) -> set[str]:

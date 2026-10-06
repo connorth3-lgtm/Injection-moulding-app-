@@ -26,6 +26,14 @@ def require(ok: bool, message: str) -> None:
         raise SystemExit(f"EXTERNAL WAVE QA FAILED: {message}")
 
 
+def release_key(value):
+    try:
+        parts = tuple(int(part) for part in str(value).split("."))
+    except (TypeError, ValueError):
+        return ()
+    return parts if len(parts) == 4 else ()
+
+
 version = load("version.json")
 current_release = version["web_release"]
 wave = load("data/external-validation-wave1-v1.json")
@@ -40,7 +48,7 @@ require(wave.get("schemaVersion") == 1, "Wave schemaVersion must be 1")
 require(re.fullmatch(r"\d{4}\.\d{2}\.\d{2}\.\d+", wave_release) is not None, "historical Wave release id is invalid")
 external_release = str(external.get("release") or "")
 require(re.fullmatch(r"\d{4}\.\d{2}\.\d{2}\.\d+", external_release) is not None, "external-validation evidence release id is invalid")
-require(external_release <= current_release, "external-validation evidence cannot target a future release")
+require(release_key(external_release) and release_key(current_release) and release_key(external_release) <= release_key(current_release), "external-validation evidence cannot target a future release")
 require(re.fullmatch(r"[0-9a-f]{40}", str(wave.get("releaseSourceSha") or "")) is not None, "Wave releaseSourceSha must be a full commit SHA")
 
 live = wave.get("livePages") or {}

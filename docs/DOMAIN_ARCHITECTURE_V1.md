@@ -115,6 +115,20 @@ Pilot progress as of 2026-09-03:
 
 No glass-fibre percentage, lifecycle state, approval, property condition or processing value is inferred when the primary source does not establish it.
 
+## Bootstrap convergence target
+
+The remaining browser bootstrap still contains one compatibility bridge that parses the canonical core document, retires inline handler/style attributes, replaces the document, recreates scripts in order and re-dispatches lifecycle events. That bridge is now a **bounded retirement target**, not an extensibility point.
+
+Until it is removed:
+
+- there must remain exactly one DOMParser core-document stage;
+- there must remain exactly one whole-document replacement;
+- there must remain exactly one synthetic DOMContentLoaded and one synthetic load redispatch;
+- new product behavior must not add another document-transform stage;
+- removal or simplification is always allowed if browser/PWA/Desktop parity and release integrity stay green.
+
+The target end state is: **canonical source → generated runtime assets → ordinary browser load → invariant verifier**. The migration should externalize/retire the compatibility bridge only after its current ordering, CSP, PWA and recovery semantics have dedicated parity tests.
+
 ## Runtime migration
 
 New modules are grouped under `src/domains/`. The current HTML bootstrap remains compatible during migration. A generated public runtime asset manifest becomes the source for new domain assets and is audited against the Pages/offline/desktop packages. Internal schemas/staging are not runtime assets.

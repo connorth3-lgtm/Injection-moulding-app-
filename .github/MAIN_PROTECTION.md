@@ -110,3 +110,17 @@ Do not treat configuration text as proof. Open a harmless test PR and verify:
 Human AT testing, physical-device PWA testing, real Windows signed-package validation, curriculum SME review, longitudinal learner evidence and controlled production-site validation are not converted into CI claims. The `release-external-validation` gate verifies that these boundaries remain truthfully represented as HOLD until their release-specific evidence exists.
 
 Issue #43 is the source-of-truth tracker for native protection. If the live server-side ruleset does not match this document, the issue must be treated as open even when repository code is green.
+
+## Migration-train PR containment
+
+PR #456 is an exceptional migration train, not a target review shape for future work. It accumulated a large historical commit/file surface while consolidating the legacy app, Book governance, release controls and evidence systems.
+
+For the final merge:
+
+- keep the pull request in draft until exact-head automated gates and required external release evidence are resolved;
+- require the native ruleset's **squash-only** merge method so the long migration history does not become the permanent main-branch history;
+- do not force-rewrite the validated head merely to reduce the PR's displayed commit count;
+- after this migration, prefer small domain-scoped PRs with one coherent risk/evidence boundary each;
+- treat any future PR that grows beyond a normal human-reviewable surface as an architecture/process warning, not as precedent.
+
+The repository's native main ruleset, latest-head human approval, resolved-thread requirement and exact-head CI remain authoritative. Squashing is history hygiene; it does not replace independent review or release evidence.

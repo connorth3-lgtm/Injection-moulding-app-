@@ -24,17 +24,24 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Validate production-source guard and live API contract on PRs
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Validate production-source guard contract on PRs
         if: github.event_name == 'pull_request'
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          # Do not retroactively require the existing main base to satisfy a policy
+          # introduced after it merged. Publication authorization is enforced only
+          # on the exact protected-main push that would actually publish.
+          python3 tools/verify_production_source.py --self-test
+          python3 tools/verify_main_ruleset.py --self-test
+      - name: Manual dispatch is contract-only
+        if: github.event_name == 'workflow_dispatch'
         run: |
           python3 tools/verify_production_source.py --self-test
-          python3 tools/verify_production_source.py \
-            --repository "${{ github.repository }}" \
-            --source-sha "${{ github.event.pull_request.base.sha }}"
+          python3 tools/verify_main_ruleset.py --self-test
+          echo "Manual dispatch does not receive Pages mutation or publication authority."
       - name: Require merged-PR provenance before publication (native protection mandatory)
-        if: github.event_name != 'pull_request'
+        if: github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: >-
@@ -43,10 +50,35 @@ jobs:
           --source-sha "${{ github.sha }}"
           --require-native-protection
 
-  # Start independently of production-source so a competing GitHub-managed legacy
-  # Pages run gets the earliest possible cancellation attempt. This remains damage
-  # limitation only: if workflow mode cannot be confirmed, the guard fails closed.
+  # Start actions-only containment immediately so a competing GitHub-managed
+  # legacy Pages run can be cancelled before it deploys. This job cannot change
+  # repository Pages settings; mutation authority is granted only after provenance passes.
+  legacy-containment:
+    if: github.event_name == 'push'
+    permissions:
+      contents: read
+      actions: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Contain competing legacy branch Pages publisher
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          python3 tools/quarantine_legacy_pages.py
+          --repository "${{ github.repository }}"
+          --source-sha "${{ github.sha }}"
+          --contain-only
+
   publisher-guard:
+    if: >-
+      github.event_name == 'push' &&
+      needs.production-source.result == 'success' &&
+      needs.legacy-containment.result == 'success'
+    needs: [production-source, legacy-containment]
     permissions:
       contents: read
       actions: write
@@ -55,31 +87,37 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Block competing legacy branch Pages publisher
-        if: github.event_name != 'pull_request'
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Confirm workflow-mode Pages publisher after provenance
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: >-
           python3 tools/quarantine_legacy_pages.py
           --repository "${{ github.repository }}"
           --source-sha "${{ github.sha }}"
-      - name: PRs validate release readiness but never publish
-        if: github.event_name == 'pull_request'
-        run: echo "PR validation checks production provenance, the physical-device contract and exact build behavior without claiming device evidence, mutating Pages settings or publishing."
       - name: Confirm protected-main preview-only publication path
-        if: github.event_name == 'push'
         run: echo "Protected main pushes always publish the release-hold artifact with the complete governed learner candidate under /preview/. Production-root publication is disabled in this workflow."
 
   build:
     permissions:
       contents: read
     needs: [production-source, publisher-guard]
+    if: >-
+      always() &&
+      needs.production-source.result == 'success' &&
+      (
+        github.event_name == 'pull_request' ||
+        (github.event_name == 'push' && needs.publisher-guard.result == 'success')
+      )
     runs-on: ubuntu-latest
     outputs:
       production_ready: ${{ steps.physical-readiness.outputs.production_ready }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Pages single-publisher QA
         run: |
           python3 qa_pages_single_publisher.py
@@ -175,9 +213,12 @@ jobs:
 
   deploy:
     permissions:
+      contents: read
+      pull-requests: read
+      actions: read
       pages: write
       id-token: write
-    if: github.event_name != 'pull_request'
+    if: github.event_name == 'push'
     needs: build
     concurrency:
       group: mouldmaster-pages-site-publish
@@ -189,6 +230,19 @@ jobs:
     outputs:
       page_url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Checkout exact main source before deployment
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - name: Recheck current protected-main provenance before deployment
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          python3 tools/verify_production_source.py
+          --repository "${{ github.repository }}"
+          --source-sha "${{ github.sha }}"
+          --require-native-protection
       - name: Configure Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
       - name: Deploy selected Pages artifact
@@ -198,12 +252,25 @@ jobs:
   verify:
     permissions:
       contents: read
-    if: github.event_name != 'pull_request'
+      pull-requests: read
+      actions: read
+    if: github.event_name == 'push'
     needs: [build, deploy]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - name: Recheck current protected-main provenance after deployment
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          python3 tools/verify_production_source.py
+          --repository "${{ github.repository }}"
+          --source-sha "${{ github.sha }}"
+          --require-native-protection
       - name: Verify preview-only release-hold deployment
         run: >-
           python3 tools/verify_pages_hold.py
@@ -219,3 +286,11 @@ jobs:
             --expected-source-sha "${{ github.sha }}" \
             --convergence-attempts 6 \
             --convergence-delay 2
+      - name: Reconfirm main is still on the deployed SHA after race window
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          python3 tools/verify_production_source.py
+          --repository "${{ github.repository }}"
+          --source-sha "${{ github.sha }}"
+          --require-native-protection

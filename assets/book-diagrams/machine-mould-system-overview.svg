@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" role="img" aria-labelledby="title desc">
+<title id="title">Machine, mould and safety system overview</title>
+<desc id="desc">Conceptual flow from material feed through injection unit, mould feed path, cavity, cooling and ejection, with a separate safety boundary around guarded intervention.</desc>
+<rect x="30" y="30" width="900" height="460" rx="24" fill="none" stroke="currentColor" stroke-width="3"/>
+<g fill="none" stroke="currentColor" stroke-width="3">
+<rect x="70" y="170" width="140" height="90" rx="12"/><rect x="250" y="145" width="180" height="140" rx="12"/>
+<rect x="500" y="120" width="180" height="190" rx="12"/><rect x="735" y="155" width="150" height="120" rx="12"/>
+<path d="M210 215h40M430 215h70M680 215h55"/><path d="M590 310v70M590 380h150"/>
+<path d="M90 390h790" stroke-dasharray="12 10"/>
+</g>
+<g font-family="system-ui,sans-serif" font-size="24" text-anchor="middle">
+<text x="140" y="210">Material feed</text><text x="340" y="205">Injection unit</text><text x="590" y="195">Mould / cavity</text><text x="810" y="205">Part / ejection</text>
+<text x="665" y="420">Cooling / temperature control</text><text x="480" y="455">Guarded operating boundary — intervention follows machine and site procedures</text>
+</g>
+</svg>

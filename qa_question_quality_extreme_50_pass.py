@@ -4,6 +4,8 @@ import json
 import math
 import random
 import re
+import subprocess
+import tempfile
 from collections import Counter, defaultdict
 from urllib.parse import urlparse
 
@@ -13,7 +15,7 @@ import qa_question_quality_50_pass_runtime as runtime
 ROOT=Path(__file__).resolve().parent
 REPORT=ROOT/'question-quality-extreme-50-pass-report.json'
 PASS_COUNT=50
-EXPECTED_TOTAL=197
+EXPECTED_TOTAL=209
 STOP={
  'a','an','and','are','as','at','be','because','before','but','by','can','do','does','for','from','has','have','if','in','into','is','it','its','of','on','or','so','than','that','the','their','then','this','to','under','use','when','which','while','with','without','what','why','your'
 }
@@ -73,12 +75,47 @@ def max_run(seq):
     return best
 
 
+def load_measured_runtime():
+    source=base.text('real-measured-data-assessment.js')
+    match=re.search(r"const CASES=(\[[\s\S]*?\]);\nconst esc=",source)
+    need(match is not None,'real measured CASES block missing')
+    node="const CASES="+match.group(1)+r''';
+const out=[];
+for(const c of CASES)for(let i=0;i<(c.questions||[]).length;i++){
+ const q=c.questions[i],options=q[1]||[],correct=Number(q[2]);
+ const rows=options.map((text,j)=>({text,correct:j===correct}));
+ const caseIndex=Math.max(0,CASES.findIndex(x=>x.id===c.id)),target=(caseIndex*3+i)%4,keyIndex=rows.findIndex(x=>x.correct);
+ if(keyIndex>=0&&keyIndex!==target){const keyed=rows.splice(keyIndex,1)[0];rows.splice(target,0,keyed)}
+ out.push({id:'real-measured:'+c.id+':'+i,kind:'real-measured-decision',scope:'measured',level:c.level||'',stem:q[0]||'',options:rows.map(x=>x.text),correct:rows.findIndex(x=>x.correct),rationale:q[3]||'',feedback:[],critical:false});
+}
+process.stdout.write(JSON.stringify(out));
+'''
+    with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False,encoding='utf-8',dir=ROOT) as h:
+        h.write(node);pth=Path(h.name)
+    try:
+        p=subprocess.run(['node',str(pth)],cwd=ROOT,capture_output=True,text=True,encoding='utf-8',errors='replace')
+    finally:
+        pth.unlink(missing_ok=True)
+    need(p.returncode==0,'real measured assessment parse failed: '+(p.stderr or p.stdout)[:5000])
+    rows=json.loads(p.stdout)
+    need(len(rows)==12,'real measured assessment must contribute exactly 12 decisions')
+    positions=[sum(1 for row in rows if row['correct']==i) for i in range(4)]
+    need(positions==[3,3,3,3],f'real measured key positions are not balanced: {positions}')
+    for row in rows:
+        keyed=len(norm(row['options'][row['correct']]))
+        wrong=sorted(len(norm(x)) for i,x in enumerate(row['options']) if i!=row['correct'])
+        need(keyed<=wrong[-1],f"real measured keyed answer remains uniquely longest: {row['id']}")
+        need(keyed<=wrong[1]*1.40+12,f"real measured keyed answer remains length-salient: {row['id']}")
+    return rows
+
+
 def load_all():
     items=[]
     items.extend(runtime.apply_formal_runtime_overlay())
     items.extend(base.load_lab_file('diagnostic-learning-labs.js','MM_DIAGNOSTIC_LABS','diagnostic-lab','lab:'))
     items.extend(base.load_lab_file('material-behaviour-labs.js','MM_MATERIAL_BEHAVIOUR_LABS','material-lab','material:'))
     items.extend(runtime.load_optional_runtime())
+    items.extend(load_measured_runtime())
     need(len(items)==EXPECTED_TOTAL,f'expected {EXPECTED_TOTAL} learner-visible decisions, got {len(items)}')
     ids=[x['id'] for x in items]
     need(len(ids)==len(set(ids)),'global question IDs must be unique')
@@ -239,6 +276,12 @@ def option_features(option,stem):
     return feats
 
 
+def expected_tie_hit(scores,correct):
+    best=max(scores)
+    tied=[i for i,score in enumerate(scores) if math.isclose(score,best,rel_tol=0.0,abs_tol=1e-12)]
+    return (1.0/len(tied)) if correct in tied else 0.0
+
+
 def cue_model(items,passes=50):
     # Grouped cross-validation: the model never trains on another option from the held-out question.
     acc=[];by_kind=defaultdict(list)
@@ -264,14 +307,17 @@ def cue_model(items,passes=50):
                     for f in fs&vocab:
                         score+=math.log((pos[f]+1)/(pos_n+2))-math.log((neg[f]+1)/(neg_n+2))
                     scores.append(score)
-                pred=max(range(4),key=lambda i:scores[i]);hit=(pred==x['correct'])
+                hit=expected_tie_hit(scores,x['correct'])
                 hits+=hit;total+=1;kind_hits[x['kind']]+=hit;kind_total[x['kind']]+=1
         acc.append(hits/total)
         for kind in kind_total:by_kind[kind].append(kind_hits[kind]/kind_total[kind])
-    return {
+    result={
         'passes':passes,'chance':0.25,'mean_accuracy':round(sum(acc)/len(acc),3),'min_accuracy':round(min(acc),3),'max_accuracy':round(max(acc),3),
         'by_kind':{k:round(sum(v)/len(v),3) for k,v in sorted(by_kind.items())},
     }
+    result['promotionThreshold']=0.50
+    result['promotionReady']=result['mean_accuracy']<=result['promotionThreshold']
+    return result
 
 
 def evidence_checks(items):
@@ -416,8 +462,8 @@ def main():
             need(acc<=0.58,f'lexical cue model too predictive for {kind}: {acc}')
     need(not high_repeat,'memorisation cue: distractor repeated >=8 times and never correct: '+json.dumps(high_repeat[:8],ensure_ascii=False))
     need(not hard,'extreme question-quality audit hard findings: '+json.dumps({'count':len(hard),'sample':list(hard.items())[:12]},ensure_ascii=False))
-    need(len(pass_rows)==50 and all(x['items']==197 for x in pass_rows),'extreme 50-pass execution incomplete')
-    print(f"MouldMaster EXTREME question audit passed: 197 decisions x 50 option permutations = {197*50:,}; cue-model={cue['mean_accuracy']:.3f}; warnings={sum(warning_types.values())}")
+    need(len(pass_rows)==50 and all(x['items']==209 for x in pass_rows),'extreme 50-pass execution incomplete')
+    print(f"MouldMaster EXTREME question audit passed: 209 decisions x 50 option permutations = {209*50:,}; cue-model={cue['mean_accuracy']:.3f}; warnings={sum(warning_types.values())}")
 
 
 if __name__=='__main__':

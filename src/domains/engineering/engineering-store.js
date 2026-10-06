@@ -118,11 +118,42 @@ async function archiveCase(id,reason='Archived from Mould Master workspace',toke
 }
 async function deleteCase(id,token=learnerToken()){return archiveCase(id,'Archived through legacy delete API',token)}
 
+function normalizedLinkRecord(caseId,kind,targetId,meta={},owner=learnerToken(),updatedAt=now()){
+  const cleanCaseId=String(caseId||'').trim(),cleanKind=String(kind||''),cleanTarget=String(targetId||'').trim();
+  if(!cleanCaseId||!cleanKind||!cleanTarget)throw new Error('caseId, kind and targetId are required');
+  if(!LINK_KINDS.includes(cleanKind))throw new Error(`Unknown engineering link kind: ${cleanKind}`);
+  if(cleanTarget.length>500)throw new Error('Engineering link target is too large');
+  if(!meta||typeof meta!=='object'||Array.isArray(meta))throw new Error('Engineering link metadata must be an object');
+  const encoded=JSON.stringify(meta);
+  if(encoded.length>10000)throw new Error('Engineering link metadata is too large');
+  const cleanMeta=JSON.parse(encoded);
+  return {
+    id:`${cleanCaseId}::${cleanKind}::${cleanTarget}`,
+    caseId:cleanCaseId,
+    learnerToken:String(owner),
+    kind:cleanKind,
+    targetId:cleanTarget,
+    meta:cleanMeta,
+    updatedAt:String(updatedAt),
+  }
+}
+async function saveCaseAndLinks(caseRecord,linkInputs=[],token=learnerToken()){
+  const owner=tokenValue(token),record=normalizeCase({...caseRecord,learnerToken:owner});
+  const prior=await getRaw('cases',record.id);
+  if(!prior||String(prior.learnerToken)!==owner)throw new Error(`Unknown engineering case ${record.id}`);
+  if(prior.archivedAt)throw new Error('Archived engineering cases are immutable; restore by importing a new case bundle');
+  record.createdAt=String(prior.createdAt||record.createdAt||now());
+  record.updatedAt=now();
+  const links=linkInputs.map(row=>normalizedLinkRecord(record.id,row.kind,row.targetId,row.meta||{},owner,record.updatedAt));
+  const db=await openDb(),tx=db.transaction(['cases','caseLinks'],'readwrite');
+  tx.objectStore('cases').put(record);
+  for(const link of links)tx.objectStore('caseLinks').put(link);
+  await txDone(tx);db.close();
+  return {case:record,links}
+}
 async function linkCase(caseId,kind,targetId,meta={},token=learnerToken()){
-  if(!caseId||!kind||!targetId)throw new Error('caseId, kind and targetId are required');
   const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)throw new Error(`Unknown engineering case for active learner: ${caseId}`);
-  const id=`${caseId}::${kind}::${targetId}`;
-  const record={id,caseId:String(caseId),learnerToken:owner,kind:String(kind),targetId:String(targetId),meta:{...meta},updatedAt:now()};
+  const record=normalizedLinkRecord(caseId,kind,targetId,meta,owner);
   await put('caseLinks',record);return record
 }
 async function linksForCase(caseId,token=learnerToken()){
@@ -132,27 +163,32 @@ async function linksForCase(caseId,token=learnerToken()){
 async function linkCaseMaterial(caseId,materialGradeId,displayName='',token=learnerToken()){
   const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)throw new Error(`Unknown engineering case ${caseId}`);
   c.materialGradeId=String(materialGradeId);if(displayName)c.material=String(displayName);
-  await saveCase(c,{token:owner});return linkCase(caseId,'material-grade',materialGradeId,{displayName:String(displayName||'')},owner)
+  const result=await saveCaseAndLinks(c,[{kind:'material-grade',targetId:materialGradeId,meta:{displayName:String(displayName||'')}}],owner);
+  return result.links[0]
 }
 async function linkCaseMachine(caseId,machineId,displayName='',token=learnerToken()){
   const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)throw new Error(`Unknown engineering case ${caseId}`);
   c.machineId=String(machineId);if(displayName)c.machine=String(displayName);
-  await saveCase(c,{token:owner});return linkCase(caseId,'machine',machineId,{displayName:String(displayName||'')},owner)
+  const result=await saveCaseAndLinks(c,[{kind:'machine',targetId:machineId,meta:{displayName:String(displayName||'')}}],owner);
+  return result.links[0]
 }
 async function linkCaseMould(caseId,mouldId,displayName='',token=learnerToken()){
   const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)throw new Error(`Unknown engineering case ${caseId}`);
   c.mouldId=String(mouldId);if(displayName)c.mould=String(displayName);
-  await saveCase(c,{token:owner});return linkCase(caseId,'mould',mouldId,{displayName:String(displayName||'')},owner)
+  const result=await saveCaseAndLinks(c,[{kind:'mould',targetId:mouldId,meta:{displayName:String(displayName||'')}}],owner);
+  return result.links[0]
 }
 async function linkCaseProduct(caseId,productId,displayName='',token=learnerToken()){
   const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)throw new Error(`Unknown engineering case ${caseId}`);
   c.productId=String(productId);if(displayName)c.product=String(displayName);
-  await saveCase(c,{token:owner});return linkCase(caseId,'product',productId,{displayName:String(displayName||'')},owner)
+  const result=await saveCaseAndLinks(c,[{kind:'product',targetId:productId,meta:{displayName:String(displayName||'')}}],owner);
+  return result.links[0]
 }
 async function linkCasePart(caseId,partId,displayName='',token=learnerToken()){
   const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)throw new Error(`Unknown engineering case ${caseId}`);
   c.partId=String(partId);if(displayName)c.part=String(displayName);
-  await saveCase(c,{token:owner});return linkCase(caseId,'part',partId,{displayName:String(displayName||'')},owner)
+  const result=await saveCaseAndLinks(c,[{kind:'part',targetId:partId,meta:{displayName:String(displayName||'')}}],owner);
+  return result.links[0]
 }
 async function linkCaseContext(caseId,context={},token=learnerToken()){
   const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)throw new Error(`Unknown engineering case ${caseId}`);
@@ -162,15 +198,15 @@ async function linkCaseContext(caseId,context={},token=learnerToken()){
     ['mould','mouldId','mould'],
     ['product','productId','product'],
     ['part','partId','part']
-  ],links=[];
+  ],linkInputs=[];
   for(const [kind,idKey,nameKey] of specs){
     const targetId=context[idKey]??c[idKey],displayName=context[nameKey]??c[nameKey];
     if(!targetId)continue;
     c[idKey]=String(targetId);if(displayName)c[nameKey]=String(displayName);
-    links.push(await linkCase(caseId,kind,targetId,{displayName:String(displayName||'')},owner));
+    linkInputs.push({kind,targetId,meta:{displayName:String(displayName||'')}})
   }
-  await saveCase(c,{token:owner});
-  return {caseId:String(caseId),links}
+  const result=await saveCaseAndLinks(c,linkInputs,owner);
+  return {caseId:String(caseId),links:result.links}
 }
 async function linkCaseDataset(caseId,datasetId,label='',token=learnerToken()){return linkCase(caseId,'process-dataset',datasetId,{label:String(label||'')},token)}
 

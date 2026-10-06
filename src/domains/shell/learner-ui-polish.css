@@ -1,4 +1,4 @@
-/* MouldMaster learner UI polish — 2026.10.04.4 */
+/* MouldMaster learner UI polish — 2026.10.06.11 */
 
 /* Book: the evidence contract stays visible and accessible, but it no longer
    competes with the learner's chapter choice above the fold. */
@@ -205,9 +205,33 @@
   }
 }
 
-/* Canonical Home hierarchy — 2026.10.04.4 */
-/* Home has one job: resume learning. Specialist tools remain available without
-   duplicating Learn, Materials, Practice, Saved lessons or Book navigation. */
+/* Home Book / Keep Reading card */
+#dashboard .mm-home-book{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:18px!important;
+  margin:0 0 18px!important;
+  padding:18px 20px!important;
+  border:1px solid rgba(126,169,204,.18)!important;
+  border-radius:18px!important;
+  background:rgba(9,24,39,.78)!important;
+}
+#dashboard .mm-home-book-copy{min-width:0!important}
+#dashboard .mm-home-book-copy .eyebrow{color:#8fe8d6!important}
+#dashboard .mm-home-book-copy h2{margin:4px 0 5px!important;font-size:20px!important;line-height:1.2!important}
+#dashboard .mm-home-book-copy p{margin:0!important;color:#9fb3c6!important;font-size:12px!important;line-height:1.45!important}
+#dashboard .mm-home-book-actions{display:flex!important;align-items:center!important;gap:8px!important;flex:0 0 auto!important}
+#dashboard .mm-home-book-actions button{min-height:44px!important}
+@media(max-width:700px){
+  #dashboard .mm-home-book{align-items:stretch!important;flex-direction:column!important;gap:13px!important;padding:16px!important}
+  #dashboard .mm-home-book-actions{width:100%!important}
+  #dashboard .mm-home-book-actions button{flex:1 1 0!important}
+}
+
+/* Canonical Home hierarchy — 2026.10.06.11 */
+/* Home keeps one dominant lesson decision, one persistent Book/Keep Reading surface,
+   and two specialist shortcuts without duplicating Learn, Materials, Practice or Saved lessons. */
 #dashboard{
   width:min(100%,960px)!important;
   margin-inline:auto!important;

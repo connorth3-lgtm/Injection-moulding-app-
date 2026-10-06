@@ -422,9 +422,20 @@ function renderInstructor(){
 function newLearner(){
  openModal(`<span class="eyebrow">Instructor</span><h2>Add learner</h2><label>Learner name<input id="newLearnerName" placeholder="e.g. Sam Taylor"></label><button class="primary" style="margin-top:12px" data-mm-onclick="createLearner()">Create profile</button>`);
 }
+function pvNewLearnerId(){
+  const users=db&&db.users&&typeof db.users==='object'?db.users:{};
+  for(let attempt=0;attempt<8;attempt++){
+    let entropy='';
+    try{entropy=globalThis.crypto?.randomUUID?.()||''}catch(_){}
+    if(!entropy)entropy=`${Date.now().toString(36)}-${Math.random().toString(36).slice(2,12)}-${attempt}`;
+    const id=pvRequireLearnerId(`learner-${entropy}`);
+    if(!Object.prototype.hasOwnProperty.call(users,id))return id;
+  }
+  throw new Error('Unable to allocate a unique learner identifier');
+}
 function createLearner(){
  const name=$("#newLearnerName").value.trim();if(!name)return;
- const id=pvRequireLearnerId("learner-"+Date.now());db.users[id]={id,name,role:"learner",completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString()};db.activeUser=id;user=db.users[id];const durable=persist();closeModal();updateGlobalProgress();renderInstructor();toast(durable?"Learner created":"Learner created for this session only — browser storage is unavailable.");
+ const id=pvNewLearnerId();db.users[id]={id,name,role:"learner",completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString()};db.activeUser=id;user=db.users[id];const durable=persist();closeModal();updateGlobalProgress();renderInstructor();toast(durable?"Learner created":"Learner created for this session only — browser storage is unavailable.");
 }
 function switchUser(id){const sid=pvCanonicalLearnerId(id);if(!sid||!pvHasOwnLearner(db.users,sid)){toast("Learner profile unavailable");return}persist();db.activeUser=sid;user=db.users[sid];persist();updateGlobalProgress();renderInstructor();toast("Switched learner")}
 
@@ -742,15 +753,26 @@ function regionButtons(){
     ${["ALL","UK","US","NZ"].map(r=>`<button class="${user.region===r?"active":""}" data-mm-onclick="setRegion('${r}')">${r==="ALL"?"Compare all":r}</button>`).join("")}
   </div>`;
 }
+function pvSafeExternalUrl(raw){
+  const url=String(raw||'').trim();
+  return /^https:\/\/[^\s]+$/i.test(url)?url:'';
+}
+function pvSafeSourceLink(raw,label){
+  const url=pvSafeExternalUrl(raw);
+  return url?`<a class="standard-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)} ↗</a>`:'<span class="tiny muted">Official source URL unavailable</span>';
+}
+function pvStandardsLink(item,label){
+  return pvSafeSourceLink(item?.url,label);
+}
 function renderStandards(){
   const selected=user.region==="ALL"?["UK","US","NZ"]:[user.region];
   const cards = [];
   for(const item of D.standards.common){
-    cards.push(`<div class="card standard-card"><span class="eyebrow">International</span><h3>${esc(item.name)}</h3><p>${esc(item.scope)}</p><a class="standard-link" href="${item.url}" target="_blank" rel="noopener">Open official/reference source ↗</a></div>`);
+    cards.push(`<div class="card standard-card"><span class="eyebrow">International</span><h3>${esc(item.name)}</h3><p>${esc(item.scope)}</p>${pvStandardsLink(item,'Open official/reference source ↗')}</div>`);
   }
   for(const r of selected){
     for(const item of D.standards[r]){
-      cards.push(`<div class="card standard-card"><span class="eyebrow">${esc(regionName(r))}</span><h3>${esc(item.name)}</h3><p>${esc(item.scope)}</p><a class="standard-link" href="${item.url}" target="_blank" rel="noopener">Open source ↗</a></div>`);
+      cards.push(`<div class="card standard-card"><span class="eyebrow">${esc(regionName(r))}</span><h3>${esc(item.name)}</h3><p>${esc(item.scope)}</p>${pvStandardsLink(item,'Open source ↗')}</div>`);
     }
   }
   $("#standards").innerHTML=`
@@ -991,7 +1013,7 @@ gradeExam=function(level){
   activeExam.questions.forEach((x,i)=>{
     const r=document.querySelector(`input[name=ex${i}]:checked`),selected=r?+r.value:null,ok=selected===x.correct;
     if(ok)n++;
-    const src=x.sourceUrl?`<div class="ref">Reference: <a class="standard-link" href="${x.sourceUrl}" target="_blank" rel="noopener">${esc(x.reference)} ↗</a></div>`:`<div class="ref">Reference: ${esc(x.reference)}</div>`;
+    const src=x.sourceUrl?`<div class="ref">Reference: ${pvSafeSourceLink(x.sourceUrl,x.reference)}</div>`:`<div class="ref">Reference: ${esc(x.reference)}</div>`;
     review.push(`<div class="answer-row ${ok?"correct":"incorrect"}"><b>${i+1}. ${ok?"Correct ✓":"Review needed"}</b><br><span class="tiny">Your answer: ${selected==null?"No answer":esc(x.options[selected])}</span><br><span class="tiny">Correct answer: <b>${esc(x.options[x.correct])}</b></span><p class="muted" style="margin:7px 0 0">${esc(x.explanation)}</p>${src}</div>`);
   });
   const pct=Math.round(n/activeExam.questions.length*100),key=level+"-"+activeExam.region;
@@ -1049,7 +1071,7 @@ gradeExam=function(level){
   activeExam.questions.forEach((x,i)=>{
     const r=document.querySelector(`input[name=ex${i}]:checked`),selected=r?+r.value:null,ok=selected===x.correct;
     if(ok) totalCorrect++; if(x.critical && !ok) criticalWrong++;
-    const src=x.sourceUrl?`<div class="ref">Reference: <a class="standard-link" href="${x.sourceUrl}" target="_blank" rel="noopener">${esc(x.reference)} ↗</a></div>`:`<div class="ref">Reference: ${esc(x.reference)}</div>`;
+    const src=x.sourceUrl?`<div class="ref">Reference: ${pvSafeSourceLink(x.sourceUrl,x.reference)}</div>`:`<div class="ref">Reference: ${esc(x.reference)}</div>`;
     let feedback='';
     if(ok) feedback=x.explanation;
     else if(selected==null) feedback='No answer was selected. Review the correct rationale before the next attempt.';
@@ -1754,7 +1776,7 @@ function openMobileMenu(){openModal(`<span class="eyebrow">More</span><h2>Tools 
 const fineCreateLearner=createLearner;
 createLearner=function(){
   const name=$("#newLearnerName")?.value.trim();if(!name)return;
-  const id=pvRequireLearnerId("learner-"+Date.now());db.users[id]={id,name,role:"learner",completed:[],bookmarks:[],notes:{},examScores:{},examPassStatus:{},certificates:[],certificateMeta:{},currentLesson:1,lastSeen:new Date().toISOString(),region:user.region||"ALL",experience:"Beginner",goal:"Learn the full process",dailyMinutes:15,onboardingDone:true};db.activeUser=id;user=db.users[id];const durable=persist();closeModal();updateGlobalProgress();renderInstructor();toast(durable?"Learner created":"Learner created for this session only — browser storage is unavailable.");
+  const id=pvNewLearnerId();db.users[id]={id,name,role:"learner",completed:[],bookmarks:[],notes:{},examScores:{},examPassStatus:{},certificates:[],certificateMeta:{},currentLesson:1,lastSeen:new Date().toISOString(),region:user.region||"ALL",experience:"Beginner",goal:"Learn the full process",dailyMinutes:15,onboardingDone:true};db.activeUser=id;user=db.users[id];const durable=persist();closeModal();updateGlobalProgress();renderInstructor();toast(durable?"Learner created":"Learner created for this session only — browser storage is unavailable.");
 };
 
 /* Final home refresh after hardening overrides. */

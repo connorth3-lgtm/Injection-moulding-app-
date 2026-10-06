@@ -11,7 +11,7 @@ from __future__ import annotations
 import hashlib, json, math, tempfile
 from pathlib import Path
 from openpyxl import load_workbook
-from prove_mendeley_open_sources import SOURCES, public_files, resolve_file, download_first
+from prove_mendeley_open_sources import SOURCES, materialize_verified_file
 
 OUT=Path('measured-source-proof/6k8-pressure-unreviewed-learning-candidate.json')
 TEMPERATURE_MIN_C=80.0
@@ -41,11 +41,10 @@ def make_signal(sid,source_channel,semantic,x,y,source_pair_count):
 
 def main():
     source=next(s for s in SOURCES if s['datasetId']=='mendeley-6k8fpbrd9s-v1')
-    file_id,name,expected=source['files'][0]; _,meta=public_files(source['shortId'],source['version']); _,_,urls=resolve_file(meta,file_id,name,source['shortId'],source['version'])
-    td=tempfile.TemporaryDirectory(); path=Path(td.name)/name
+    file_id,name,expected=source['files'][0]
+    path,digest_uri=materialize_verified_file(source,name)
+    digest=digest_uri.split(':',1)[1]
     try:
-        download_first(urls,path); digest=hashlib.sha256(path.read_bytes()).hexdigest()
-        if digest!=expected: raise RuntimeError(f'6k8 SHA mismatch: {digest}')
         wb=load_workbook(path,read_only=False,data_only=False); ws=wb['Figure2']
         specs=[
             ('200bar','A','B','Figure2!B','specific-volume-200bar-isobaric-cooling'),
@@ -67,6 +66,6 @@ def main():
         result={'schemaVersion':1,'status':'unreviewed-source-derived-candidates','promotionEligible':False,'candidateCount':1,'candidates':[candidate],'boundary':'Authoring evidence only; independent engineering review and a case-specific governed binding are required before promotion.'}
         OUT.parent.mkdir(exist_ok=True); OUT.write_text(json.dumps(result,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
         print(json.dumps({'status':result['status'],'candidateId':candidate['candidateId'],'selection':selection},separators=(',',':')))
-    finally: td.cleanup()
+    finally: pass
     return 0
 if __name__=='__main__': raise SystemExit(main())

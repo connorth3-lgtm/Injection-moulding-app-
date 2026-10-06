@@ -146,7 +146,7 @@ async function deleteAllProcessData(){
 
 function knownDefinition(column){
   const defs=semanticRegistry?.channels||{};
-  if(defs[column])return {...defs[column]};
+  if(Object.prototype.hasOwnProperty.call(defs,column))return {...defs[column]};
   const lower=String(column||'').toLowerCase();
   let role='unresolved',unit=null,meaning='',sampling_basis='unknown',confidence='low';
   if(/(?:^|_)(?:setpoint|set_point|target|command|cmd)(?:_|$)/.test(lower)){role='command';confidence='medium'}
@@ -197,7 +197,8 @@ function enrichPrepared(prepared,overrides={},datasetMeta={}){
   const semantics={};
   const issues=[];
   for(const key of numeric){
-    const sem=semanticFor(key,overrides[key]||{});
+    const override=Object.prototype.hasOwnProperty.call(overrides,key)?overrides[key]:{};
+    const sem=semanticFor(key,override&&typeof override==='object'&&!Array.isArray(override)?override:{});
     semantics[key]=sem;
     const vals=rows.map(r=>r[key]),present=vals.filter(v=>v!==''&&v!=null),finite=present.map(Number).filter(Number.isFinite),s=stats(finite);
     const missing=rows.length-present.length,invalid=present.length-finite.length,missingRate=rows.length?missing/rows.length:1;

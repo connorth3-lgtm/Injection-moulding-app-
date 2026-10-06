@@ -17,7 +17,7 @@ from pathlib import Path
 
 from openpyxl import load_workbook
 
-from prove_mendeley_open_sources import SOURCES, public_files, resolve_file, download_first
+from prove_mendeley_open_sources import SOURCES, materialize_verified_file
 
 OUT = Path("measured-source-proof/mendeley-unreviewed-learning-candidates.json")
 
@@ -35,18 +35,9 @@ def norm(v) -> str:
     return "".join(str(v or "").strip().lower().split())
 
 
-def download_verified(source: dict, expected_name: str) -> tuple[Path, tempfile.TemporaryDirectory, str]:
-    file_spec=next(x for x in source["files"] if x[1]==expected_name)
-    file_id,name,expected_sha=file_spec
-    _,meta=public_files(source["shortId"],source["version"])
-    _chosen,_resolved,urls=resolve_file(meta,file_id,name,source["shortId"],source["version"])
-    td=tempfile.TemporaryDirectory()
-    path=Path(td.name)/name
-    download_first(urls,path)
-    digest=hashlib.sha256(path.read_bytes()).hexdigest()
-    if digest!=expected_sha:
-        td.cleanup(); raise RuntimeError(f"{source['datasetId']}/{name}: SHA mismatch {digest}")
-    return path,td,"sha256:"+digest
+def download_verified(source: dict, expected_name: str):
+    path,digest_uri=materialize_verified_file(source,expected_name)
+    return path,None,digest_uri
 
 
 def numeric_column(ws, col: str, start: int, end: int) -> list[float]:
@@ -120,7 +111,8 @@ def four_h98(source):
             series.append(signal(f"{ident}-median",f"Sheet1!{cols[0]}:{cols[-1]}",semantic+"-median",unit,"experiment-index","index",x,median,"per-experiment-median-of-five-direct-replicates",175,"increasing"))
             series.append(signal(f"{ident}-spread",f"Sheet1!{cols[0]}:{cols[-1]}",semantic+"-range",unit,"experiment-index","index",x,spread,"per-experiment-max-minus-min-of-five-direct-replicates",175,"increasing"))
         return {"candidateId":"MEND-4H98-REPLICATE-SUMMARY-01","datasetId":source["datasetId"],"sourceArtifact":"Raw Data.xlsx","sourceFingerprint":fp,"sourceScope":{"sheet":"Sheet1","rows":"4:38","excludedDerivedColumns":["J","P","V"]},"signals":series,"candidateFingerprint":sha256_json(series),"suggestedCatalogueCases":["MLM-030","MLM-049","MLM-056"],"evidenceBoundary":"Per-experiment summaries of direct replicate measurements. Derived publisher average columns are excluded; these data do not establish production root cause."}
-    finally: td.cleanup()
+    finally:
+        if td is not None: td.cleanup()
 
 
 def six_k8(source):
@@ -159,7 +151,8 @@ def six_k8(source):
             series.append(signal(ident,f"Figure2!{ycol}",semantic,"mm3/g","temperature","degC",rx,ry,"source-order-maximal-decreasing-branch-then-deterministic-index-reduction",len(xs),"decreasing"))
         candidates.append({"candidateId":"MEND-6K8-FIGURE2-01","datasetId":source["datasetId"],"sourceArtifact":"Data.xlsx","sourceFingerprint":fp,"sourceScope":{"sheet":"Figure2","pressureSeriesBar":[200,400,800],"branchSelection":branch_selection},"signals":series,"candidateFingerprint":sha256_json(series),"suggestedCatalogueCases":["MLM-051"],"evidenceBoundary":"Specific-volume response is limited to the source-ordered decreasing-temperature branch for each source-labelled isobaric series. One terminal temperature-reversal pair per series is explicitly excluded from this cooling-branch candidate; no causal interpretation is assigned to that reversal."})
         return candidates
-    finally: td.cleanup()
+    finally:
+        if td is not None: td.cleanup()
 
 
 def _copy_signal_with_artifact(candidate: dict, source_channel: str) -> dict:
@@ -185,7 +178,8 @@ def yxz(source):
                 if not vals: raise RuntimeError(f"yxz no direct values in {sheet}!{col}")
                 sigs.append(signal(col,f"{sheet}!{col}",semantic,unit,"observation-index","index",x,vals,"direct-injection-block-values-no-interpolation",len(vals),"increasing"))
             results.append({"candidateId":f"MEND-YXZ-{sheet.upper()}-01","datasetId":source["datasetId"],"sourceArtifact":name,"sourceFingerprint":fp,"sourceScope":{"sheet":sheet,"marker":marker_text,"columns":cols,"rows":list(rows)},"signals":sigs,"candidateFingerprint":sha256_json(sigs),"suggestedCatalogueCases":cases,"evidenceBoundary":"Only the explicitly labelled injection-moulded block is included; FDM, energy, impact and formula-derived content remain excluded."})
-        finally: td.cleanup()
+        finally:
+            if td is not None: td.cleanup()
 
     tensile,bending=results
     combined_signals=[

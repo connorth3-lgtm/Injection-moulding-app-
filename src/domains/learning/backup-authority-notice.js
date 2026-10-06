@@ -124,7 +124,7 @@ window.exportData=async function(){
  try{
   const envelope=await buildEnvelope();
   downloadJson(envelope);
-  window.toast?.('Backup exported with SHA-256 integrity checksum and learner-scoped review/sign-off data');
+  window.toast?.('Backup exported with SHA-256 integrity checksum and learner-scoped review/sign-off, measured-assessment, process-diagnostics and lab progress');
  }catch(error){
   console.error('[MouldMaster backup] export failed:',error);
   alert('Backup could not be created with a verifiable SHA-256 integrity checksum on this device. No backup file was exported.');
@@ -162,7 +162,7 @@ function annotate(root=document){
   if(String(heading.textContent||'').trim()!=='Backup & reset')continue;
   const card=heading.closest('.card');if(!card||card.querySelector('[data-mm-backup-authority-note]'))continue;
   const note=document.createElement('div');note.className='callout';note.dataset.mmBackupAuthorityNote='1';
-  note.innerHTML='<b>Transfer boundary:</b> Current backups include all local learner profiles plus each profile\'s scoped review/sign-off state, protected by a SHA-256 integrity checksum so corruption or file changes are detected before restore. Import replaces the local learner registry after confirmation. The checksum is not a digital signature and does not prove who created the backup. Certificates, pass authority and local analytics do not transfer as trusted evidence; certificates must be re-earned and analytics are reset after import.';
+  note.innerHTML='<b>Transfer boundary:</b> Current backups include all local learner profiles plus each profile\'s scoped review/sign-off, measured-assessment, process-diagnostics, Diagnostic Learning Lab and Material Behaviour Lab progress, protected by a SHA-256 integrity checksum so corruption or file changes are detected before restore. Import replaces the local learner registry after confirmation. The checksum is not a digital signature and does not prove who created the backup. Certificates, pass authority and local analytics do not transfer as trusted evidence; certificates must be re-earned and analytics are reset after import.';
   const controls=card.querySelector('.hero-buttons');card.insertBefore(note,controls||null);
  }
 }

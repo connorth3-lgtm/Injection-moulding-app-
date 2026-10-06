@@ -72,6 +72,7 @@ function quarantineLegacyBucket(prefix,legacyToken,reason){
     if(localStorage.getItem(target)==null)localStorage.setItem(target,payload);
     if(localStorage.getItem(target)!==payload)return {status:'quarantine-write-failed'};
     localStorage.removeItem(source);
+    if(localStorage.getItem(source)!=null)return {status:'quarantine-delete-failed',reason,target};
     return {status:'quarantined',reason,target};
   }catch(_){return {status:'quarantine-failed',reason}}
 }
@@ -84,14 +85,27 @@ function quarantineUnsafeLegacyBuckets(prefix){
 }
 function migrateStoragePrefix(prefix,raw=activeId()){
   const plan=migrationPlan(raw);if(!plan.registryAvailable)return {...plan,status:'registry-unavailable',migrated:false};
-  if(!plan.uniqueOwner){if(plan.ambiguous)quarantineLegacyBucket(prefix,plan.legacyToken,'ambiguous-known-owners');return {...plan,status:plan.ambiguous?'ambiguous-quarantined':'ownership-unproven',migrated:false}}
+  if(!plan.uniqueOwner){
+    if(plan.ambiguous){
+      const quarantine=quarantineLegacyBucket(prefix,plan.legacyToken,'ambiguous-known-owners');
+      return {...plan,status:quarantine.status==='quarantined'?'ambiguous-quarantined':`ambiguous-${quarantine.status}`,migrated:false}
+    }
+    return {...plan,status:'ownership-unproven',migrated:false}
+  }
   try{
     const currentKey=rawStorageKey(prefix,plan.currentToken),legacyKey=rawStorageKey(prefix,plan.legacyToken),current=localStorage.getItem(currentKey),legacy=localStorage.getItem(legacyKey);
-    if(current!=null){if(legacy!=null&&legacy===current)localStorage.removeItem(legacyKey);return {...plan,status:legacy!=null&&legacy!==current?'parallel-stores':'current',migrated:false}}
+    if(current!=null){
+      if(legacy!=null&&legacy===current){
+        localStorage.removeItem(legacyKey);
+        if(localStorage.getItem(legacyKey)!=null)return {...plan,status:'legacy-delete-failed',migrated:false}
+      }
+      return {...plan,status:legacy!=null&&legacy!==current?'parallel-stores':'current',migrated:false}
+    }
     if(legacy==null)return {...plan,status:'no-legacy',migrated:false};
     localStorage.setItem(currentKey,legacy);
     if(localStorage.getItem(currentKey)!==legacy)return {...plan,status:'copy-verification-failed',migrated:false};
     localStorage.removeItem(legacyKey);
+    if(localStorage.getItem(legacyKey)!=null)return {...plan,status:'legacy-delete-failed',migrated:false};
     return {...plan,status:'migrated',migrated:true};
   }catch(_){return {...plan,status:'migration-failed',migrated:false}}
 }

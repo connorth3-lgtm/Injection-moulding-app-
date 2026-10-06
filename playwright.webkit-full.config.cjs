@@ -15,6 +15,7 @@ module.exports=defineConfig({
     /inline-handler-bridge\.spec\.js/,
     /inline-style-csp\.spec\.js/,
     /book-assurance\.spec\.js/,
+    /book-resume\.spec\.js/,
     /performance-budget\.spec\.js/,
     /internal-adversarial-validation\.spec\.js/
   ],

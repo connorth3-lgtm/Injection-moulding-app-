@@ -1,0 +1,457 @@
+{
+  "schema": 1,
+  "bookId": "mouldmaster-book",
+  "version": "2026.10.06-reader-architecture-draft",
+  "status": "governed-derived-reader-map",
+  "purpose": "Reader-facing consolidation of the 46 governed content modules into substantial book chapters while preserving module IDs for claim, source, SME and runtime traceability.",
+  "targetWordsPerReaderChapter": {
+    "nominal": 1000,
+    "range": [
+      850,
+      1400
+    ],
+    "rule": "Editorial target, not a publication gate. Longer only when governed module text, enrichment, worked cases or diagrams add real instructional value; never pad with unsupported settings or filler."
+  },
+  "governanceBoundary": "Reader chapters are structural groupings only. They add no technical claims, do not replace or merge the 46 governed module IDs, and cannot promote module publication, SME, accreditation or production status. Claim/source review and independent SME review remain bound to the underlying modules.",
+  "readerChapters": [
+    {
+      "id": "r01",
+      "title": "How Injection Moulding Works",
+      "moduleIds": [
+        "what-injection-moulding-is",
+        "cycle"
+      ],
+      "goal": "Build a mental model of the complete cycle before introducing machine settings.",
+      "depthBand": "Foundation",
+      "learningObjectives": [
+        "Explain the linked stages of the moulding cycle.",
+        "Separate commands, process signals and part outputs."
+      ],
+      "checkQuestions": [
+        "Why can a defect appear in one stage even when its cause began earlier?",
+        "Why is one acceptable cycle not enough to prove a robust process?",
+        "Which observations describe what the process actually did rather than what was commanded?"
+      ],
+      "applyPrompt": "Take a familiar moulding cycle and identify one input, one process signal and one part output for each major stage.",
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+    },
+    {
+      "id": "r02",
+      "title": "Machine, Mould and Safety Foundations",
+      "moduleIds": [
+        "machine-anatomy",
+        "mould-anatomy",
+        "safety-foundations"
+      ],
+      "goal": "Give learners the physical vocabulary and safety boundaries needed for every later chapter.",
+      "depthBand": "Foundation",
+      "learningObjectives": [
+        "Identify the main machine and mould subsystems.",
+        "Recognise safety boundaries that override generic process advice."
+      ],
+      "checkQuestions": [
+        "Which hazards remain controlled by machine/site procedures rather than this Book?",
+        "How can mould terminology reduce diagnostic ambiguity?",
+        "Why can tooling condition change the interpretation of a process symptom?"
+      ],
+      "applyPrompt": "Trace the physical path from material feed to ejection and mark where machine-, mould- and site-specific procedures control access or intervention.",
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+    },
+    {
+      "id": "r03",
+      "title": "Polymer Structure and Material Families",
+      "moduleIds": [
+        "polymer-structure",
+        "material-families",
+        "fillers-additives"
+      ],
+      "goal": "Connect structure, family and modifiers to observable moulding behaviour without turning family descriptions into grade recipes.",
+      "depthBand": "Foundation",
+      "learningObjectives": [
+        "Relate polymer structure and modifiers to observable tendencies.",
+        "Avoid replacing exact-grade evidence with family averages."
+      ],
+      "checkQuestions": [
+        "Why can two grades in the same family mould differently?",
+        "How can reinforcement create directional behaviour?",
+        "When must supplier grade documentation override generic family guidance?"
+      ],
+      "applyPrompt": "Choose one material family and list which process observations you would verify before transferring a process from another grade.",
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+    },
+    {
+      "id": "r04",
+      "title": "Rheology, Moisture and Thermal History",
+      "moduleIds": [
+        "rheology",
+        "moisture-drying",
+        "thermal-history"
+      ],
+      "goal": "Explain why flow and degradation depend on temperature, shear, moisture and time.",
+      "depthBand": "Technician",
+      "learningObjectives": [
+        "Explain how viscosity, moisture and thermal history interact with processing.",
+        "Use material-condition evidence instead of defect appearance alone."
+      ],
+      "checkQuestions": [
+        "Why is viscosity not a fixed material number?",
+        "How can a dryer operate normally while material condition is still wrong?",
+        "What timing pattern could support a residence/degradation hypothesis?"
+      ],
+      "applyPrompt": "Build two competing explanations for a silver-streak symptom and state what observation would distinguish them.",
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+    },
+    {
+      "id": "r05",
+      "title": "Plasticising and Machine Delivery",
+      "moduleIds": [
+        "plasticising-unit",
+        "shot-utilisation",
+        "velocity-pressure"
+      ],
+      "goal": "Explain how the machine prepares and delivers melt and which signals describe that delivery.",
+      "depthBand": "Technician",
+      "learningObjectives": [
+        "Explain how the plasticising unit prepares and delivers a shot.",
+        "Distinguish commanded motion from achieved machine response."
+      ],
+      "checkQuestions": [
+        "What does a stable cushion trend support—and what does it not prove?",
+        "Why can nominal shot capacity be an incomplete machine-suitability check?",
+        "How can a pressure limit change achieved filling velocity?"
+      ],
+      "applyPrompt": "Review a hypothetical shot-delivery problem and identify which screw, recovery, pressure and part measurements would be most useful.",
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+    },
+    {
+      "id": "r06",
+      "title": "Transfer, Packing and Clamp Behaviour",
+      "moduleIds": [
+        "vp-transfer",
+        "clamp"
+      ],
+      "goal": "Connect filling/packing transition, pressure development and mould-closing requirements.",
+      "depthBand": "Technician",
+      "learningObjectives": [
+        "Explain V/P transfer as a process transition.",
+        "Relate pressure development and projected area to clamp demand without using universal settings."
+      ],
+      "checkQuestions": [
+        "Why is a transfer position not universally portable?",
+        "Why is machine injection pressure not automatically cavity pressure?",
+        "When should flash evidence trigger tooling inspection rather than more clamp?"
+      ],
+      "applyPrompt": "Compare two cycles with the same commanded transfer point but different achieved pressure histories and state what else you would measure.",
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+    },
+    {
+      "id": "r07",
+      "title": "Feed Systems, Venting and Hot Runners",
+      "moduleIds": [
+        "feed-system",
+        "venting",
+        "hot-runners"
+      ],
+      "goal": "Treat the complete flow path and gas/thermal management as one mould-system problem.",
+      "depthBand": "Technician",
+      "learningObjectives": [
+        "Treat runner, gate, vent and hot-runner behaviour as one flow system.",
+        "Use location and timing to separate restriction, gas and thermal hypotheses."
+      ],
+      "checkQuestions": [
+        "Why can a gate affect both filling and post-fill behaviour?",
+        "What defect pattern would strengthen a trapped-gas hypothesis?",
+        "Why does a hot-runner setpoint not prove identical material history at every drop?"
+      ],
+      "applyPrompt": "Map a multi-cavity flow path and mark where pressure loss, gas evacuation and thermal history could diverge.",
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "sequencePrompt": "Read this chapter as one connected melt-delivery path: feed system and gate behaviour set pressure/flow conditions, venting governs displaced-gas escape, and hot-runner zones add local thermal/residence history. Keep location and timing attached to every observation so a symptom is not reduced to a generic setting change."
+    },
+    {
+      "id": "r08",
+      "title": "Cooling, Release and Cycle Stability",
+      "moduleIds": [
+        "cooling",
+        "ejection-draft"
+      ],
+      "goal": "Explain heat removal, release forces and their effect on cycle repeatability and part condition.",
+      "depthBand": "Technician",
+      "learningObjectives": [
+        "Explain cooling as heat transfer rather than only elapsed time.",
+        "Separate release-load evidence from deformation created earlier in the cycle."
+      ],
+      "checkQuestions": [
+        "Why can two nominally identical cycles start from different mould thermal states?",
+        "What measurements strengthen a cooling-imbalance hypothesis?",
+        "How can ejection marks distinguish local tooling interaction from general part softness?"
+      ],
+      "applyPrompt": "For a warped part that sticks on one core, list the thermal and mechanical observations you would collect before changing the process.",
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+    },
+    {
+      "id": "r09",
+      "title": "Establishing a Defensible Process Baseline",
+      "moduleIds": [
+        "process-baseline",
+        "documentation"
+      ],
+      "goal": "Show how to create a reproducible, auditable process state before optimisation.",
+      "depthBand": "Technician",
+      "learningObjectives": [
+        "Define a reproducible process baseline.",
+        "Document settings, observed response, context and uncertainty separately."
+      ],
+      "checkQuestions": [
+        "Why is a screenshot of settings not a complete baseline?",
+        "Which events should invalidate an old baseline?",
+        "Why should negative experimental results be preserved?"
+      ],
+      "applyPrompt": "Draft a baseline record for one moulding process that another competent technician could reproduce and audit.",
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+    },
+    {
+      "id": "r10",
+      "title": "Scientific Process Development",
+      "moduleIds": [
+        "fill-study",
+        "pressure-loss",
+        "gate-seal",
+        "process-window"
+      ],
+      "goal": "Teach staged experiments that separate filling, restriction, post-fill response and robustness.",
+      "depthBand": "Engineer",
+      "learningObjectives": [
+        "Use staged experiments to separate filling, restriction, packing and robustness.",
+        "Interpret response plateaus and process windows without creating universal recipes."
+      ],
+      "checkQuestions": [
+        "What does a fill study try to isolate?",
+        "Why is a gate-seal plateau system-specific?",
+        "How can a pressure-loss study guide investigation without proving root cause?"
+      ],
+      "applyPrompt": "Design a staged development sequence for a new mould, naming the question answered by each study.",
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "sequencePrompt": "Use this chapter as a staged development sequence rather than four independent studies: establish the baseline, isolate filling, map pressure demand, determine whether the feed path still transmits useful packing pressure, then test robustness across the intended operating region and document what would invalidate the conclusion."
+    },
+    {
+      "id": "r11",
+      "title": "A Diagnostic Method for Moulding Problems",
+      "moduleIds": [
+        "diagnostic-method"
+      ],
+      "goal": "Teach hypothesis-driven troubleshooting as a reusable method before defect-specific chapters.",
+      "depthBand": "Technician",
+      "learningObjectives": [
+        "Use competing hypotheses and predicted evidence to troubleshoot.",
+        "Choose discriminating tests and preserve unresolved uncertainty."
+      ],
+      "checkQuestions": [
+        "What makes a problem statement neutral rather than cause-biased?",
+        "Why can a successful adjustment still leave root cause unproven?",
+        "What observation would force you to reject your preferred hypothesis?"
+      ],
+      "applyPrompt": "Take one defect and write three competing mechanisms, one prediction for each, and one discriminating test.",
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+    },
+    {
+      "id": "r12",
+      "title": "Filling and Boundary Defects",
+      "moduleIds": [
+        "short-shot",
+        "flash"
+      ],
+      "goal": "Contrast insufficient effective filling with material escaping intended boundaries.",
+      "depthBand": "Technician",
+      "learningObjectives": [
+        "Differentiate delivery/restriction short shots from boundary-loss flash mechanisms.",
+        "Use cavity and time patterns before changing settings."
+      ],
+      "checkQuestions": [
+        "What does one consistently short cavity suggest compared with all cavities short together?",
+        "Why is more pressure not automatically the right response to a short shot?",
+        "Why can local flash persist even when total clamp capacity appears sufficient?"
+      ],
+      "applyPrompt": "Create a two-column evidence table for a short-shot event: observations supporting a common upstream cause versus a cavity-local cause.",
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+    },
+    {
+      "id": "r13",
+      "title": "Shrinkage, Voids and Warpage",
+      "moduleIds": [
+        "sink-voids",
+        "warpage"
+      ],
+      "goal": "Connect volumetric contraction, pressure transmission, anisotropy and differential cooling.",
+      "depthBand": "Engineer",
+      "learningObjectives": [
+        "Connect shrinkage, pressure transmission, cooling, orientation and warpage.",
+        "Use time, direction and cavity identity as discriminating evidence."
+      ],
+      "checkQuestions": [
+        "Why can longer hold time fail to improve a sink mark?",
+        "How can post-ejection dimensional change alter a warpage diagnosis?",
+        "What would make you reconsider cooling as the dominant mechanism?"
+      ],
+      "applyPrompt": "For a bowed reinforced part, write a mechanism map covering packing, cooling, orientation, geometry and conditioning.",
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+    },
+    {
+      "id": "r14",
+      "title": "Surface Defects, Gas and Degradation",
+      "moduleIds": [
+        "splay",
+        "burns",
+        "black-specks"
+      ],
+      "goal": "Separate visually similar symptoms caused by volatiles, trapped gas, contamination and thermal history.",
+      "depthBand": "Technician",
+      "learningObjectives": [
+        "Separate visually similar gas, volatile, contamination and degradation defects.",
+        "Use chronology and process boundaries to localise likely sources."
+      ],
+      "checkQuestions": [
+        "Why should silver streaks not automatically be labelled moisture?",
+        "What timing pattern distinguishes a residence-linked burn from a fixed gas trap?",
+        "How can cavity distribution help localise black-speck sources?"
+      ],
+      "applyPrompt": "Build a source map for a dark-speck complaint and rank likely locations for an all-cavity versus one-cavity pattern.",
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+    },
+    {
+      "id": "r15",
+      "title": "Weld Lines and Flow-Front Interaction",
+      "moduleIds": [
+        "weld-lines"
+      ],
+      "goal": "Give weld-line formation, evidence and design/process interactions enough depth to stand alone.",
+      "depthBand": "Engineer",
+      "learningObjectives": [
+        "Explain weld-line formation as a flow-front interaction.",
+        "Separate appearance, mechanical consequence and root-cause evidence."
+      ],
+      "checkQuestions": [
+        "Why can a visible weld line be acceptable in one product but critical in another?",
+        "How do geometry and gate location constrain weld-line position?",
+        "Why is increasing melt temperature not a complete diagnosis?"
+      ],
+      "applyPrompt": "For a weld line downstream of a hole, identify geometry-fixed evidence, process-sensitive evidence and product-performance evidence.",
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+    },
+    {
+      "id": "r16",
+      "title": "Cavity Pressure and Process Monitoring",
+      "moduleIds": [
+        "cavity-pressure",
+        "process-monitoring"
+      ],
+      "goal": "Explain measurement location, signal meaning, baselines, alarms and limits of inference.",
+      "depthBand": "Engineer",
+      "learningObjectives": [
+        "Interpret cavity-pressure traces in sensor/location context.",
+        "Design monitoring rules that trigger investigation without pretending to prove root cause."
+      ],
+      "checkQuestions": [
+        "Which parts of a cavity-pressure trace can carry information beyond peak pressure?",
+        "Why must sensor position remain part of the interpretation?",
+        "What is the difference between a process alarm and a product disposition decision?"
+      ],
+      "applyPrompt": "Choose one monitored signal and define its origin, units, baseline, alarm meaning and required follow-up.",
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+    },
+    {
+      "id": "r17",
+      "title": "DOE, Measurement and Capability",
+      "moduleIds": [
+        "doe",
+        "capability"
+      ],
+      "goal": "Connect experimental design, measurement credibility, stability and capability rather than teaching them as isolated statistical topics.",
+      "depthBand": "Engineer",
+      "learningObjectives": [
+        "Interpret DOE effects and interactions with engineering context.",
+        "Evaluate capability only for stable, defined populations with credible measurement."
+      ],
+      "checkQuestions": [
+        "Why can a main effect reverse across another factor level?",
+        "What is the purpose of a confirmation run?",
+        "Why can pooled multi-cavity capability answer the wrong question?"
+      ],
+      "applyPrompt": "Sketch a two-factor experiment and state the nuisance variables, confirmation step and population definition needed before a capability claim.",
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+    },
+    {
+      "id": "r18",
+      "title": "Dimensional Stability and Reinforced Materials",
+      "moduleIds": [
+        "dimensional-stability",
+        "fibre-orientation"
+      ],
+      "goal": "Explain time-dependent dimensions, directional behaviour and anisotropy with explicit measurement conditions.",
+      "depthBand": "Engineer",
+      "learningObjectives": [
+        "Control dimensional reference conditions.",
+        "Explain how reinforcement and orientation create directional response."
+      ],
+      "checkQuestions": [
+        "Why must measurement timing be part of a dimensional result?",
+        "How can cavity pattern and directionality distinguish competing dimensional mechanisms?",
+        "Why should reinforced grades not use generic isotropic shrinkage assumptions?"
+      ],
+      "applyPrompt": "Plan a dimensional study that separates conditioning time, cavity identity and measurement direction.",
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+    },
+    {
+      "id": "r19",
+      "title": "Thin-Wall, Multi-Cavity and High-Performance Processing",
+      "moduleIds": [
+        "thin-wall",
+        "multi-cavity",
+        "high-performance-polymers"
+      ],
+      "goal": "Cover advanced situations where machine, mould, material and supplier limits become especially important.",
+      "depthBand": "Advanced",
+      "learningObjectives": [
+        "Recognise advanced cases where equipment, flow path and grade limits dominate.",
+        "Preserve cavity identity and supplier-specific boundaries."
+      ],
+      "checkQuestions": [
+        "Why can thin-wall capability not be judged from pressure rating alone?",
+        "How can pooling cavities hide a systematic imbalance?",
+        "Why must high-performance polymer processing remain supplier-led?"
+      ],
+      "applyPrompt": "For a four-cavity thin-wall part, list which machine, mould, material and cavity-specific evidence you would preserve.",
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "sequencePrompt": "Treat these advanced topics as boundary-heavy applications of the earlier method: preserve cavity identity, equipment capability, material-grade limits and measured response. Thin-wall, multi-cavity and high-performance processing become unsafe teaching topics when exact machine, mould or supplier constraints are replaced by generic recipes."
+    },
+    {
+      "id": "r20",
+      "title": "Complex Diagnostics and Engineering Judgment",
+      "moduleIds": [
+        "complex-diagnostics"
+      ],
+      "goal": "Finish with competing hypotheses, uncertainty, evidence ledgers and escalation rather than false certainty.",
+      "depthBand": "Advanced",
+      "learningObjectives": [
+        "Rank competing hypotheses by evidence, consequence and testability.",
+        "Separate containment, corrective action and root-cause proof."
+      ],
+      "checkQuestions": [
+        "Why should contradictory evidence be highlighted rather than explained away?",
+        "When can a successful containment action still leave root cause unresolved?",
+        "How should safety consequence affect hypothesis priority?"
+      ],
+      "applyPrompt": "Write an evidence ledger for a complex defect with at least three hypotheses, predicted observations, contradictions and a next test.",
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+    }
+  ],
+  "reviewQuestions": [
+    "Does each reader chapter have one coherent learner decision or mental model?",
+    "Can every technical claim still be traced to a governed module and evidence record?",
+    "Does consolidation reduce repetition without hiding important applicability boundaries?",
+    "Are worked cases and diagrams placed where they teach interpretation rather than decorate the text?",
+    "Can a beginner read chapters 1–10 sequentially and an experienced technician enter at chapters 11–20 without losing critical safety context?"
+  ],
+  "release": "2026.10.06.5",
+  "pedagogyPolicy": "Reader-level objectives, checks and application prompts are derived learning scaffolds only. They add no technical claims, do not alter governed module evidence status and cannot create production authority. Sequence prompts are reader-orientation scaffolds derived from existing governed module order; they add no independent technical authority.",
+  "depthBandMeaning": "Depth bands describe the technical complexity of each reader chapter, not a strictly monotonic learner progression. Adjacent chapters can move between Technician and Engineer depth where the subject demands it."
+}

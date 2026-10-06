@@ -11,13 +11,14 @@ scope=ROOT/'assessment-storage-scope.js'
 need(scope.exists(),'assessment-storage-scope.js missing')
 js=text('assessment-storage-scope.js')
 for marker in [
-    "VERSION='2026.09.11.1'",
+    "VERSION='2026.10.05.2'",
     "ANALYTICS_BASE='mm_assessment_analytics_v1'",
     "TIMING_BASE='mm_assessment_exposure_timing_v1'",
     "ROTATION_BASE='mm_assessment_opening_history_v1'",
+    "UX_ROTATION_BASE='mm_assessment_opening_history_v2'",
     "QUESTION_HISTORY_BASE='mm-assessment-question-history-v4'",
     "RESULT_META_BASE='mm-assessment-result-meta-v1'",
-    "BASES=[ANALYTICS_BASE,TIMING_BASE,ROTATION_BASE,QUESTION_HISTORY_BASE,RESULT_META_BASE]",
+    "BASES=[ANALYTICS_BASE,TIMING_BASE,ROTATION_BASE,UX_ROTATION_BASE,QUESTION_HISTORY_BASE,RESULT_META_BASE]",
     'function getItem(base)', 'function setItem(base,value)', 'function removeItem(base)',
     'function read(base,fallback=null)', 'function write(base,value)',
     'prototypeInterception:false', 'learnerScoped:true', 'MM_LEARNER_SCOPE',
@@ -61,36 +62,41 @@ if(api.prototypeInterception!==false)throw new Error('explicit persistence metad
 if(native.get.call(x.localStorage,'mm_assessment_analytics_v1')!==null)throw new Error('verified single-owner legacy key was not retired');
 if(api.read('mm_assessment_analytics_v1',{}).owner!=='legacy-a')throw new Error('single-owner legacy analytics not migrated into learner scope');
 if(api.read('mm-assessment-result-meta-v1',[])[0].formFingerprint!=='legacy-form')throw new Error('single-owner result metadata not migrated');
-api.write('mm_assessment_analytics_v1',{owner:'A'});api.write('mm_assessment_opening_history_v1',{'Beginner::NZ':['a1','a2']});api.write('mm-assessment-question-history-v4',{'Beginner|ALL':[['a1']]});api.write('mm-assessment-result-meta-v1',[{formFingerprint:'form-a'}]);
-const aKeys=[api.analyticsKey(),api.rotationKey(),api.questionHistoryKey(),api.resultMetaKey()];
+api.write('mm_assessment_analytics_v1',{owner:'A'});api.write('mm_assessment_opening_history_v1',{'Beginner::NZ':['a1','a2']});api.write('mm_assessment_opening_history_v2',{'Beginner::NZ':['a2','a3']});api.write('mm-assessment-question-history-v4',{'Beginner|ALL':[['a1']]});api.write('mm-assessment-result-meta-v1',[{formFingerprint:'form-a'}]);
+const aKeys=[api.analyticsKey(),api.rotationKey(),api.uxRotationKey(),api.questionHistoryKey(),api.resultMetaKey()];
 let attempt={level:'Beginner'};x.sandbox.activeExam=attempt;x.window.activeExam=attempt;x.window.switchUser('learner-a');if(x.sandbox.activeExam!==attempt||x.window.activeExam!==attempt)throw new Error('same-profile switch cancelled active exam');
 x.db.users['learner-b']={id:'learner-b'};x.window.switchUser('learner-b');if(x.sandbox.activeExam!==null||x.window.activeExam!==null)throw new Error('profile switch did not cancel active exam');
 if(api.getItem('mm_assessment_analytics_v1')!==null||api.getItem('mm-assessment-result-meta-v1')!==null)throw new Error('learner B inherited learner A assessment state');
-api.write('mm_assessment_analytics_v1',{owner:'B'});api.write('mm_assessment_opening_history_v1',{'Beginner::NZ':['b1']});api.write('mm-assessment-question-history-v4',{'Beginner|ALL':[['b1']]});api.write('mm-assessment-result-meta-v1',[{formFingerprint:'form-b'}]);
-const bKeys=[api.analyticsKey(),api.rotationKey(),api.questionHistoryKey(),api.resultMetaKey()];if(aKeys.some((k,i)=>k===bKeys[i]))throw new Error('learner scope key collision');
+api.write('mm_assessment_analytics_v1',{owner:'B'});api.write('mm_assessment_opening_history_v1',{'Beginner::NZ':['b1']});api.write('mm_assessment_opening_history_v2',{'Beginner::NZ':['b2']});api.write('mm-assessment-question-history-v4',{'Beginner|ALL':[['b1']]});api.write('mm-assessment-result-meta-v1',[{formFingerprint:'form-b'}]);
+const bKeys=[api.analyticsKey(),api.rotationKey(),api.uxRotationKey(),api.questionHistoryKey(),api.resultMetaKey()];if(aKeys.some((k,i)=>k===bKeys[i]))throw new Error('learner scope key collision');
 let createAttempt={level:'Intermediate'};x.sandbox.activeExam=createAttempt;x.window.activeExam=createAttempt;x.window.createLearner();if(x.sandbox.activeExam!==null||x.window.activeExam!==null||x.db.activeUser!=='learner-c')throw new Error('create learner did not cancel active exam');
 
 x.window.MM_LEARNER_SCOPE={tokenFor:id=>'strong-'+String(id)};if(typeof x.listeners['mm:domains-ready']!=='function')throw new Error('shared learner-scope migration listener missing');x.listeners['mm:domains-ready']();
 if(api.scopeProvider()!=='MM_LEARNER_SCOPE')throw new Error('assessment storage did not switch to shared learner scope');
 x.db.activeUser='learner-a';if(api.read('mm_assessment_analytics_v1',{}).owner!=='A')throw new Error('learner A analytics lost in shared-scope migration');if(!api.analyticsKey().endsWith('strong-learner-a'))throw new Error('shared token not used for learner A');
 x.db.activeUser='learner-b';if(api.read('mm_assessment_analytics_v1',{}).owner!=='B')throw new Error('learner B analytics lost in shared-scope migration');if(api.read('mm-assessment-result-meta-v1',[])[0].formFingerprint!=='form-b')throw new Error('learner B result metadata lost in shared-scope migration');
-if(api.sharedMigration.conflicts!==0||api.sharedMigration.ambiguous!==0||api.sharedMigration.migrated<8)throw new Error('normal shared-scope migration did not complete cleanly');
+if(api.sharedMigration.conflicts!==0||api.sharedMigration.ambiguous!==0||api.sharedMigration.migrated<10)throw new Error('normal shared-scope migration did not complete cleanly');
 
 let keepAttempt={level:'Advanced'};x.sandbox.activeExam=keepAttempt;x.window.activeExam=keepAttempt;x.window.__doReset=false;x.window.resetData();if(x.sandbox.activeExam!==keepAttempt||x.window.activeExam!==keepAttempt)throw new Error('no-op reset cancelled active exam');
 x.window.__doReset=true;x.window.resetData();if(x.sandbox.activeExam!==null||x.window.activeExam!==null)throw new Error('confirmed reset did not cancel active exam');
-for(const base of ['mm_assessment_analytics_v1','mm_assessment_opening_history_v1','mm-assessment-question-history-v4','mm-assessment-result-meta-v1']){x.db.activeUser='learner-a';if(api.getItem(base)===null)throw new Error('learner B reset incorrectly cleared learner A '+base);x.db.activeUser='learner-b';if(api.getItem(base)!==null)throw new Error('reset did not clear active learner B '+base)}
+for(const base of ['mm_assessment_analytics_v1','mm_assessment_opening_history_v1','mm_assessment_opening_history_v2','mm-assessment-question-history-v4','mm-assessment-result-meta-v1']){x.db.activeUser='learner-a';if(api.getItem(base)===null)throw new Error('learner B reset incorrectly cleared learner A '+base);x.db.activeUser='learner-b';if(api.getItem(base)!==null)throw new Error('reset did not clear active learner B '+base)}
 native.set.call(x.localStorage,'unrelated','keep');api.clearAll();if(native.get.call(x.localStorage,'unrelated')!=='keep')throw new Error('clearAll removed unrelated storage');
 
 const y=make(['learner-a','learner-b'],'learner-a',{'mm_assessment_analytics_v1':JSON.stringify({owner:'ambiguous-legacy'})});
 if(y.api.legacyMigration.ambiguous<1)throw new Error('multi-profile unsuffixed legacy value was not marked ambiguous');
 if(native.get.call(y.localStorage,'mm_assessment_analytics_v1')===null)throw new Error('ambiguous legacy value was deleted');
 if(y.api.getItem('mm_assessment_analytics_v1')!==null)throw new Error('ambiguous legacy value was inherited by active learner');
+
+const z=make([],'',{});
+if(z.api.analyticsKey()!==null)throw new Error('missing learner identity produced an assessment analytics storage key');
+if(z.api.write('mm_assessment_analytics_v1',{owner:'anonymous'})!==false)throw new Error('missing learner identity accepted an assessment analytics write');
+if([...z.localStorage.m.keys()].some(k=>String(k).startsWith('mm_assessment_analytics_v1::')))throw new Error('missing learner identity created a durable anonymous assessment bucket');
 process.stdout.write(JSON.stringify({version:api.version,learnerScoped:api.learnerScoped,prototypeInterception:api.prototypeInterception,sharedMigration:api.sharedMigration,ambiguous:y.api.legacyMigration.ambiguous}));
 '''%json.dumps(str(scope))
 p=subprocess.run(['node','-e',node],capture_output=True,text=True)
 need(p.returncode==0,f'assessment storage scope runtime QA failed: {p.stderr or p.stdout}')
 r=json.loads(p.stdout)
-need(r['version']=='2026.09.11.1' and r['learnerScoped'] is True and r['prototypeInterception'] is False,'assessment storage runtime metadata mismatch')
+need(r['version']=='2026.10.05.2' and r['learnerScoped'] is True and r['prototypeInterception'] is False,'assessment storage runtime metadata mismatch')
 need(r['sharedMigration']['conflicts']==0 and r['sharedMigration']['ambiguous']==0,'normal shared-scope migration unexpectedly failed closed')
 need(r['ambiguous']>=1,'ambiguous legacy fail-closed case was not exercised')
 
@@ -117,12 +123,12 @@ for forbidden in ["localStorage.getItem(ASSESSMENT_HISTORY_KEY)", "localStorage.
     need(forbidden not in ux,f'learner UX assessment persistence bypasses scoped storage: {forbidden}')
 
 bridge=text('src/domains/learning/training-qa-fix.js')
-for marker in ['clearAssessmentAnalyticsStores','clearLearningAnalyticsStores','clearAllAnalyticsStores','clearTrainingExtrasStores','clearLearnerAnalyticsStores','clearLearnerTrainingExtras','learnerOwnedKeys','cancelActiveExam','mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1','mm-assessment-question-history-v4','mm-assessment-result-meta-v1','mm_learning_analytics_v1::','ANALYTICS_CLEANUP_CODE','remaining key(s):','restoreSnapshot(before)','clearLearnerAnalyticsStores(active);clearLearnerTrainingExtras(active)','proposed.users[active]=cleanResetLearner(prior,active)']:
+for marker in ['clearAssessmentAnalyticsStores','clearLearningAnalyticsStores','clearAllAnalyticsStores','clearTrainingExtrasStores','clearLearnerAnalyticsStores','clearLearnerTrainingExtras','learnerOwnedKeys','cancelActiveExam','mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1','mm_assessment_opening_history_v2','mm-assessment-question-history-v4','mm-assessment-result-meta-v1','mm_assessment_membership_history_v2','learnerRuntimeAssessmentKeys','mm_learning_analytics_v1::','ANALYTICS_CLEANUP_CODE','remaining key(s):','restoreSnapshot(before)','clearLearnerAnalyticsStores(active);clearLearnerTrainingExtras(active)','proposed.users[active]=cleanResetLearner(prior,active)']:
     need(marker in bridge,f'training reset/import verified analytics cleanup missing: {marker}')
 
 V=json.loads(text('version.json'))
 need(V.get('assessment_storage_scope_version')=='2026.08.24.4','published assessment storage release lane drifted during migration-only hardening')
-need(V.get('assessment_storage_migration_version')=='2026.09.11.1','assessment storage migration/ownership version missing')
+need(V.get('assessment_storage_migration_version')=='2026.10.05.2','assessment storage migration/ownership version missing')
 for wf in ['.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml','.github/workflows/microsoft-store-msix.yml']:
     w=text(wf);need('python qa_assessment_storage_scope.py' in w,f'{wf} missing learner-scoped analytics QA')
-print('MouldMaster learner-scoped assessment storage QA passed: explicit persistence, native Storage preservation, learner isolation, fail-closed legacy migration, shared scope migration, and active-learner-only reset cleanup.')
+print('MouldMaster learner-scoped assessment storage QA passed: explicit persistence, native Storage preservation, learner isolation, fail-closed legacy migration, shared scope migration, and active-learner-only reset cleanup including membership/exposure history.')

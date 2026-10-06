@@ -8,7 +8,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-VERSION = "2026.09.01.1"
+VERSION = "2026.10.06.1"
 
 
 def text(path: str) -> str:
@@ -47,7 +47,7 @@ require("window.addEventListener('error'" in health, "Runtime error capture miss
 require("unhandledrejection" in health, "Unhandled-promise capture missing")
 require("resource_error" in health, "Resource-load failure capture missing")
 require("sw_update_found" in health and "sw_controller_change" in health, "Service-worker update signals missing")
-require("copySafeSnapshot" in health and "recent_signals" in health, "Safe diagnostic snapshot API missing")
+require("copySafeSnapshot" in health and "recent_signals" in health and "runtimeState" in health and "loaded_runtime_packs" in health, "Safe diagnostic snapshot API missing")
 require("No learner identity" in health and "raw process data" in health and "query strings" in health,
         "Safe snapshot privacy boundary is not explicit")
 
@@ -89,7 +89,7 @@ require("../../src/domains/governance/production-health.js" not in domain_froms,
 require("src/domains/governance/production-health.js" in integrity, "Desktop integrity manifest does not hash production health diagnostics")
 require(versions.get("production_observability_version") == VERSION, "version.json observability version mismatch")
 
-for marker in ("mmHealthStatus", "mmHealthRun", "mmHealthCopy", "mmHealthClear", "learner-problem.yml", "src/domains/governance/production-health.js"):
+for marker in ("mmHealthStatus", "mmHealthRun", "mmHealthCopy", "mmHealthClear", "mmSelfDiagnostic", "mmDiagnosticDetails", "learner-problem.yml", "src/domains/governance/production-health.js"):
     require(marker in support, f"Support diagnostic/reporting control missing: {marker}")
 require("Production health diagnostics" in privacy, "Privacy notice lacks production-health section")
 require("does not automatically upload" in privacy, "Privacy notice must state diagnostics are not automatically uploaded")

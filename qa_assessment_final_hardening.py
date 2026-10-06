@@ -109,7 +109,7 @@ need("'assessment-storage-scope.js'" in text('desktop/electron/scripts/generate-
 need("'src/domains/assessment/assessment-final-hardening.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'final hardening missing from integrity set')
 
 qy=text('.github/workflows/qa.yml')
-need("find . -maxdepth 1 -type f -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check" in qy,'release workflow missing filesystem JavaScript syntax gate')
+need("Repository-wide JavaScript syntax" in qy,'release workflow missing filesystem JavaScript syntax gate')
 need('python qa_assessment_final_hardening.py' in qy,'release workflow missing final hardening QA')
 need('python qa_research_source_freshness.py' in qy,'release workflow missing research-source freshness QA')
 ow=text('.github/workflows/open-desktop-build.yml')

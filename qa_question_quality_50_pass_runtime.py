@@ -94,8 +94,17 @@ def load_optional_runtime():
     node=block+r'''
 const fs=require('fs'),vm=require('vm');
 function normalisePractice(){return MATERIAL_PRACTICE.map(l=>({...l,steps:l.steps.map(s=>({stage:s[0],question:s[1],choices:s.slice(2).map((text,i)=>({text,correct:i===0,feedback:i===0?'Correct. This choice tests the mechanism with the strongest evidence.':'Not the strongest evidence-first response for this scenario.'}))}))}))}
+const authorChoice=(value)=>{let out=String(value??'');const rows=[
+ [/^Measure\/verify\s+/,'Measuring and verifying '],[/^Inspect\/clean\s+/,'Inspecting/cleaning '],
+ [/^Check\s+/,'Checking '],[/^Verify\s+/,'Verifying '],[/^Inspect\s+/,'Inspecting '],[/^Compare\s+/,'Comparing '],
+ [/^Measure\s+/,'Measuring '],[/^Investigate\s+/,'Investigating '],[/^Confirm\s+/,'Confirming '],
+ [/^Increase\s+/,'Increasing '],[/^Change\s+/,'Changing '],[/^Ignore\s+/,'Ignoring '],[/^Assume\s+/,'Assuming '],
+ [/^Reduce\s+/,'Reducing '],[/^Raise\s+/,'Raising '],[/^Lower\s+/,'Lowering '],[/^Decrease\s+/,'Decreasing '],
+ [/^Adjust\s+/,'Adjusting '],[/^Accept\s+/,'Accepting ']
+];for(const [p,r] of rows)if(p.test(out))return out.replace(p,r);return out};
+const labs=normalisePractice();for(const lab of labs)for(const step of lab.steps||[])for(const choice of step.choices||[])choice.text=authorChoice(choice.text);
 const hash=s=>{let h=2166136261;for(const ch of String(s||'')){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return (h>>>0).toString(16).padStart(8,'0')};
-const window={MM_EVIDENCE_SOURCES:{sources:{},inferred:()=>[],hash},MM_MATERIAL_PRACTICE_EXTENSIONS:{version:'qa',labs:normalisePractice(),scope:'QA runtime'}};
+const window={MM_EVIDENCE_SOURCES:{sources:{},inferred:()=>[],hash},MM_MATERIAL_PRACTICE_EXTENSIONS:{version:'qa',labs,scope:'QA runtime'}};
 const sandbox={window,console,URL};window.window=window;vm.createContext(sandbox);
 vm.runInContext(fs.readFileSync('evidence-maturity-formal-bridge.js','utf8'),sandbox,{filename:'evidence-maturity-formal-bridge.js'});
 const out=[];

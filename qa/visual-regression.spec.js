@@ -118,7 +118,28 @@ async function prepareSurface(page,surface){
     await expect(page.locator('#modal .modal-card')).toBeVisible();
     await expect(page.getByRole('heading',{name:'More'})).toBeVisible();
   }else if(surface==='assessment'){
-    await page.evaluate(()=>{switchView('exams');startExam('Beginner')});
+    await page.evaluate(()=>{
+      switchView('exams');
+      const fixture=Array.from({length:16},(_,i)=>({
+        q:`Visual regression question ${String(i+1).padStart(2,'0')}: which response best demonstrates a controlled evidence-based decision?`,
+        options:[
+          'Compare the relevant actuals with the known-good baseline',
+          'Change several settings together and judge appearance only',
+          'Treat one isolated signal as proof of the root cause',
+          'Ignore the measured response because the recipe is unchanged'
+        ],
+        correct:0,
+        explanation:'Visual fixture only: preserve deterministic assessment layout while membership-selection policy is tested elsewhere.',
+        reference:'Visual regression fixture',
+        stableId:`visual-regression:${String(i+1).padStart(2,'0')}`,
+        mmStableId:`visual-regression:${String(i+1).padStart(2,'0')}`,
+        difficulty:'Foundation',
+        competency:'General'
+      }));
+      const original=window.getExamQuestions;
+      window.getExamQuestions=()=>fixture.map(q=>({...q,options:q.options.slice()}));
+      try{startExam('Beginner')}finally{window.getExamQuestions=original}
+    });
     await page.waitForFunction(()=>Array.isArray(window.activeExam?.questions)&&window.activeExam.questions.length===16&&document.querySelectorAll('#examQuestions .question').length===16);
     await expect(page.locator('#examQuestions')).toBeVisible();
   }else if(surface==='book-contents'){

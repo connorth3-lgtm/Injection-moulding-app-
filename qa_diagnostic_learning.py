@@ -23,12 +23,14 @@ def option_len(value):
 
 
 need("MM_DIAGNOSTIC_LABS" in JS, 'diagnostic lab public metadata missing')
-need("learner-scoped local progress only" in JS, 'diagnostic progress must remain local/learner scoped')
+need("const scope=window.MM_LEARNER_SCOPE" in JS and "MM_LEARNER_SCOPE collision-safe local progress; included in learner backup/reset" in JS, 'diagnostic progress must remain collision-safe, local and learner scoped')
 need("Training boundary:" in JS, 'educational/production boundary missing')
 need("not universal production recipes" in JS, 'universal-recipe warning missing')
 need("Verify the exact resin grade" in JS, 'grade/machine/mould verification warning missing')
 need("Diagnostic Learning Labs" in JS and "Evidence-first practice" in JS, 'diagnostic learning UI missing')
 need("Observe" in JS and "Best next test" in JS and "Controlled response" in JS and "Explain" in JS, 'learning-loop stages incomplete')
+need("localStorage.getItem(k)===payload" in JS and "Progress could not be saved on this device." in JS and "progress not saved" in JS, 'diagnostic lab persistence must verify writes and surface unsaved progress')
+need("return id?String(id):null" in JS and "if(!id||!scope" in JS and "||'anonymous'" not in JS, 'diagnostic progress must not persist to a shared anonymous learner bucket')
 
 ids = re.findall(r"\n\s*id:'([a-z0-9-]+)'", JS)
 need(len(ids) == 9, f'expected exactly 9 diagnostic labs, found {len(ids)}')
@@ -134,7 +136,7 @@ asset = './diagnostic-learning-labs.js'
 EVIDENCE_PACK=(ROOT / 'src' / 'domains' / 'runtime-packs' / 'evidence-runtime-pack.js').read_text(encoding='utf-8')
 need('./src/domains/runtime-packs/evidence-runtime-pack.js' in INDEX, 'browser shell does not load evidence runtime pack')
 need('/* >>> diagnostic-learning-labs.js */' in EVIDENCE_PACK, 'diagnostic learning labs missing from evidence runtime pack')
-need(asset in SW, 'diagnostic learning labs missing from offline cache')
+need("'./src/domains/runtime-packs/evidence-runtime-pack.js'" in SW, 'evidence runtime pack containing diagnostic learning labs missing from offline cache')
 need('../../diagnostic-learning-labs.js' in PKG, 'desktop package does not include diagnostic learning labs')
 need("'diagnostic-learning-labs.js'" in INTEGRITY, 'desktop integrity manifest generator does not cover diagnostic learning labs')
 

@@ -1,0 +1,68 @@
+name: Branch Release Assurance
+
+on:
+  push:
+    branches: [main, preview]
+  pull_request:
+    branches: [main, preview]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: branch-release-assurance-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contract-self-test:
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout assurance contract
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Exercise assurance verifier and governance contract
+        run: |
+          python3 tools/verify_branch_assurance.py --self-test
+          python3 qa_branch_assurance.py
+
+  exact-push-assurance:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact pushed source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - name: Self-test branch assurance verifier
+        run: python3 tools/verify_branch_assurance.py --self-test
+      - name: Require complete exact-push release assurance
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          BRANCH_ASSURANCE_BRANCH: ${{ github.ref_name }}
+          BRANCH_ASSURANCE_SHA: ${{ github.sha }}
+          BRANCH_ASSURANCE_ATTEMPTS: '90'
+          BRANCH_ASSURANCE_SLEEP_SECONDS: '20'
+        run: >-
+          python3 tools/verify_branch_assurance.py
+          --repository "${{ github.repository }}"
+          --branch "${{ github.ref_name }}"
+          --sha "${{ github.sha }}"
+      - name: Upload branch assurance diagnostics
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: branch-release-assurance-${{ github.ref_name }}-${{ github.sha }}
+          path: |
+            qa-artifacts/branch-assurance-report.md
+            qa-artifacts/branch-assurance-report.json
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Explain assurance boundary
+        if: always()
+        run: |
+          echo "This gate proves repository-controlled CI/deployment evidence converged successfully on one exact pushed SHA."
+          echo "It does not manufacture physical-device, assistive-technology, SME, learner-outcome, provider, signing, Store, or production-site evidence."

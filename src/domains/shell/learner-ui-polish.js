@@ -1,11 +1,11 @@
-/* MouldMaster learner UI polish — 2026.10.04.4
+/* MouldMaster learner UI polish — 2026.10.06.11
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.10.04.4';
+const VERSION='2026.10.06.11';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -231,6 +231,21 @@ function syncProductStates(){
   document.querySelectorAll('.empty-friendly,.mm-exact-empty,.mm-material-no-match').forEach(el=>el.dataset.mmProductState='empty');
   const failure=document.getElementById('mmStartupFailure');if(failure)failure.dataset.mmProductState='error';
 }
+function syncDataResetLink(){
+  const profile=document.getElementById('profile');if(!profile)return;
+  let card=profile.querySelector('[data-mm-data-reset-link]');
+  if(!card){
+    card=document.createElement('section');
+    card.className='card form-card';
+    card.dataset.mmDataResetLink='1';
+    const eyebrow=document.createElement('span');eyebrow.className='eyebrow';eyebrow.textContent='Local data';
+    const title=document.createElement('h2');title.textContent='Data & Reset';
+    const copy=document.createElement('p');copy.className='muted';copy.textContent='Learner progress, analytics, process-data evidence, engineering evidence, diagnostics and offline app data use different local stores and controls.';
+    const link=document.createElement('a');link.className='ghost';link.href='./support.html#data-reset';link.textContent='Open Data & Reset guide';
+    card.append(eyebrow,title,copy,link);
+    profile.appendChild(card);
+  }
+}
 function syncReadAloudLabel(){
   const host=document.querySelector('.mm-read-aloud details:not([open]) summary');
   if(host&&!host.getAttribute('aria-label'))host.setAttribute('aria-label','Read aloud');
@@ -241,6 +256,7 @@ function run(){
   syncBookDisclosure();
   syncDesktopNavigation();
   syncTopbarContext();
+  syncDataResetLink();
   syncReadAloudLabel();
   syncProductStates();
 }

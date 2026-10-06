@@ -300,6 +300,17 @@ function renderLessonCanonical(){
 function switchViewCanonical(id){
   activeCustomId='';const r=captured.switchView.apply(this,arguments);syncActiveState();requestAnimationFrame(syncActiveState);emitView(id);return r
 }
+function bindCanonicalCoreNavigation(){
+  const nav=document.getElementById('nav');if(!nav||nav.dataset.mmCanonicalCoreNav==='1')return;
+  nav.dataset.mmCanonicalCoreNav='1';
+  nav.addEventListener('click',event=>{
+    const button=event.target?.closest?.('button[data-view]');
+    if(!button||button.closest('#nav')!==nav||button.disabled)return;
+    const view=button.dataset.view;if(!view)return;
+    event.preventDefault();event.stopImmediatePropagation();
+    switchViewCanonical(view);
+  },true);
+}
 function openMobileMenuCanonical(){
   const r=captured.openMobileMenu.apply(this,arguments);
   const modal=document.getElementById('modal'),card=modal?.querySelector('.modal-card'),heading=card?.querySelector('h2');
@@ -320,7 +331,7 @@ function setCustomActive(id,mobileGroup){activeCustomId=id||'';if(mobileGroup&&n
 
 function finalize(){
   if(finalized)return;
-  installGeometry();installDefaultDashboardSections();installDefaultNavigation();bindExternalTools();
+  installGeometry();installDefaultDashboardSections();installDefaultNavigation();bindExternalTools();bindCanonicalCoreNavigation();
   renderDashboard=renderDashboardCanonical;window.renderDashboard=renderDashboardCanonical;
   renderLesson=renderLessonCanonical;window.renderLesson=renderLessonCanonical;
   switchView=switchViewCanonical;window.switchView=switchViewCanonical;

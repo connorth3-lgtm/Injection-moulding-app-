@@ -20,7 +20,7 @@ from pathlib import Path
 
 from openpyxl import load_workbook
 
-from prove_mendeley_open_sources import SOURCES, public_files, resolve_file, download_first
+from prove_mendeley_open_sources import SOURCES, materialize_verified_file
 
 OUT=Path('measured-source-proof/gtnb-unreviewed-learning-candidates.json')
 EXPECTED_ROWS=4502
@@ -64,12 +64,10 @@ def header_text(v): return str(v or '').strip()
 def source_spec(): return next(s for s in SOURCES if s['datasetId']=='mendeley-gtnb4j7bfx-v1')
 
 def download_verified():
-    source=source_spec(); file_id,name,expected_sha=source['files'][0]
-    _,meta=public_files(source['shortId'],source['version']); _,_,urls=resolve_file(meta,file_id,name,source['shortId'],source['version'])
-    td=tempfile.TemporaryDirectory(); path=Path(td.name)/name; download_first(urls,path)
-    digest=hashlib.sha256(path.read_bytes()).hexdigest()
-    if digest!=expected_sha: td.cleanup(); raise RuntimeError(f'GTNB SHA mismatch: {digest}')
-    return path,td,'sha256:'+digest
+    source=source_spec()
+    _file_id,name,_expected_sha=source['files'][0]
+    path,digest_uri=materialize_verified_file(source,name)
+    return path,None,digest_uri
 
 def numeric_counts(rows, channels):
     return {ch:sum(1 for r in rows if finite(r.get(ch))) for ch in channels}
@@ -165,6 +163,7 @@ def main():
         result={'schemaVersion':1,'status':'unreviewed-source-derived-candidates','promotionEligible':False,'candidateCount':len(candidates),'numericEvidenceFloorPerRequiredChannel':MIN_NUMERIC_PER_REQUIRED_CHANNEL,'sourceInjectionFormulaCellCountsByCanonicalChannel':formula_counts,'candidates':candidates,'boundary':'Authoring evidence only. Numeric values follow the existing benchmark policy and may include publisher-stored cached formula results; formula-backed quality metrics remain source-derived records. Product and machine identifiers are not emitted. Candidate selection is based on bounded numeric evidence coverage, not outcome magnitude. Independent engineering review and case-specific binding remain mandatory.'}
         OUT.parent.mkdir(parents=True,exist_ok=True); OUT.write_text(json.dumps(result,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
         print(json.dumps({'status':result['status'],'candidateCount':len(candidates),'candidateIds':[c['candidateId'] for c in candidates],'selectedGroupNumericCounts':group_counts,'qualityWindowNumericCounts':quality_counts,'processWindowNumericCounts':process_counts,'formulaCountsForQualityChannels':formula_subset(formula_counts,QUALITY_CHANNELS)},separators=(',',':')))
-    finally: td.cleanup()
+    finally:
+        if td is not None: td.cleanup()
     return 0
 if __name__=='__main__': raise SystemExit(main())

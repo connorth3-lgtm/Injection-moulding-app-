@@ -25,6 +25,15 @@ EXPECTED_CHAPTERS = {
     "worked-fill-study-v1": "fill-study",
     "worked-shot-utilisation-v1": "shot-utilisation",
     "worked-process-window-v1": "process-window",
+    "worked-warpage-discrimination-v1": "warpage",
+    "worked-weld-line-diagnosis-v1": "weld-lines",
+    "worked-splay-boundary-v1": "splay",
+    "worked-dimensional-conditioning-v1": "dimensional-stability",
+    "worked-process-monitoring-alarm-v1": "process-monitoring",
+    "worked-black-speck-source-map-v1": "black-specks",
+    "worked-complex-diagnostics-v1": "complex-diagnostics",
+    "worked-filling-boundary-defect-v1": "flash",
+    "worked-process-baseline-record-v1": "process-baseline",
 }
 
 
@@ -93,6 +102,42 @@ def main() -> None:
     joined = " ".join(diagnosis["boundaries"]).lower()
     need("safe and authorised" in joined and "repeatable recovery" in joined, "diagnostic case lost causal/safety boundary")
 
+    need(Decimal("1.8") - Decimal("1.2") == Decimal("0.6"), "warpage post-mould change regression")
+    need(Decimal("1.8") - Decimal("0.7") == Decimal("1.1"), "warpage cavity difference regression")
+
+    weld_case = cases["worked-weld-line-diagnosis-v1"]
+    need(len(weld_case.get("observations", [])) >= 3 and "appearance alone" not in weld_case["interpretation"].lower(), "weld-line diagnostic teaching regression")
+
+    splay_case = cases["worked-splay-boundary-v1"]
+    need("all cavities" in " ".join(splay_case.get("observations", [])).lower(), "splay boundary-pattern evidence regression")
+
+    need(Decimal("50.03") - Decimal("50.08") == Decimal("-0.05"), "dimensional conditioning early-change regression")
+    need(Decimal("50.02") - Decimal("50.03") == Decimal("-0.01"), "dimensional conditioning late-change regression")
+
+    monitoring = cases["worked-process-monitoring-alarm-v1"]
+    need("root-cause" in monitoring["interpretation"].lower() and "quality plan" in monitoring["interpretation"].lower() and "automated machine-control" in " ".join(monitoring["boundaries"]).lower(), "monitoring alarm decision-boundary regression")
+
+    black = cases["worked-black-speck-source-map-v1"]
+    need("all cavities" in " ".join(black.get("observations", [])).lower() and "cavity 4" in black["setup"].lower(), "black-speck source-map pattern regression")
+
+    baseline = cases["worked-process-baseline-record-v1"]
+    need("auditable evidence package" in baseline["interpretation"].lower(), "r09 baseline case lost evidence-package interpretation")
+    need("settings screenshot" in baseline["interpretation"].lower(), "r09 baseline case lost setpoint-vs-state boundary")
+    baseline_steps = " ".join(baseline["calculationSteps"]).lower()
+    need("missing" in baseline_steps and ("unavailable" in baseline_steps or "unknown" in baseline_steps), "r09 baseline case lost missing-evidence rule")
+    need("no value" in " ".join(baseline["boundaries"]).lower() and "process recipe" in " ".join(baseline["boundaries"]).lower(), "r09 baseline case lost non-recipe boundary")
+
+    boundary_case = cases["worked-filling-boundary-defect-v1"]
+    need("cavity-specific" in boundary_case["interpretation"].lower() and "global clamp-force" in boundary_case["interpretation"].lower(), "r12 boundary-defect case lost local-vs-global discrimination")
+    recovery_text = " ".join(boundary_case["boundaries"] + boundary_case["calculationSteps"]).lower()
+    need("repeatable" in recovery_text and "recovery" in recovery_text, "r12 boundary-defect case lost recovery requirement")
+    need("approved maintenance" in " ".join(boundary_case["boundaries"]).lower(), "r12 boundary-defect case lost maintenance authority boundary")
+
+    capstone = cases["worked-complex-diagnostics-v1"]
+    need(len(capstone.get("observations", [])) >= 5, "complex-diagnostics capstone lost evidence breadth")
+    need("mixed-mechanism" in capstone["interpretation"].lower() and "preserve both" in capstone["interpretation"].lower(), "complex-diagnostics capstone lost multi-hypothesis uncertainty")
+    need("containment evidence" in " ".join(capstone["boundaries"]).lower() and "approved maintenance" in " ".join(capstone["boundaries"]).lower(), "complex-diagnostics capstone lost safety/causal boundary")
+
     authority = ledger["authorityBoundary"]
     need(
         authority == {
@@ -103,7 +148,7 @@ def main() -> None:
         },
         "worked-case production authority boundary weakened",
     )
-    print("MouldMaster worked-case calculation QA passed: 18 governed synthetic cases retain exact arithmetic/diagnostic boundaries and fail-closed production authority.")
+    print("MouldMaster worked-case calculation QA passed: 27 governed synthetic cases retain exact arithmetic/diagnostic boundaries and fail-closed production authority.")
 
 
 if __name__ == "__main__":

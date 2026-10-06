@@ -10,6 +10,7 @@ from http_retry import urlopen_with_retry
 from pathlib import Path
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
+from prove_mendeley_open_sources import SOURCES, materialize_verified_file
 
 DATASET_ID = "4h98rz9f92"
 VERSION = 3
@@ -79,26 +80,22 @@ def psha(x):
 
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument("--output",required=True); ap.add_argument("--retrieved-date",required=True); args=ap.parse_args()
-    raw,_=get(PUBLIC_FILES_ENDPOINT,"application/json"); files=flatten_files(json.loads(raw.decode("utf-8")))
-    matches=[x for x in files if fid(x)==EXPECTED_FILE_ID and fname(x)==EXPECTED_FILE]
-    if len(matches)!=1: raise RuntimeError("exact HDPE/GNP raw workbook identity drifted")
-    item=matches[0]
-    if psha(item)!=EXPECTED_SHA256: raise RuntimeError("publisher HDPE/GNP SHA drifted")
-    data,final_url=get(furl(item)); digest=hashlib.sha256(data).hexdigest()
+    source=next(s for s in SOURCES if s['datasetId']=='mendeley-4h98rz9f92-v3')
+    p,digest_uri=materialize_verified_file(source,EXPECTED_FILE)
+    data=p.read_bytes(); digest=digest_uri.split(':',1)[1]; final_url='job-local-sha-verified-cache'
     if digest!=EXPECTED_SHA256: raise RuntimeError(f"retrieved HDPE/GNP SHA drifted: {digest}")
-    with tempfile.TemporaryDirectory() as td:
-        p=Path(td)/EXPECTED_FILE; p.write_bytes(data); wb=load_workbook(p,read_only=True,data_only=False)
-        if wb.sheetnames != ["Sheet1"]: raise RuntimeError(f"HDPE/GNP sheet set drifted: {wb.sheetnames}")
-        ws=wb["Sheet1"]
-        for coord,label in EXPECTED_LABELS.items():
-            if str(ws[coord].value or "").strip()!=label: raise RuntimeError(f"HDPE/GNP label drift at {coord}: {ws[coord].value!r}")
-        counts={}; formulas=0
-        for row in ws.iter_rows():
-            for cell in row:
-                v=cell.value
-                if isinstance(v,str) and v.startswith("="): formulas+=1
-                elif isinstance(v,(int,float)) and not isinstance(v,bool):
-                    c=get_column_letter(cell.column); counts[c]=counts.get(c,0)+1
+    wb=load_workbook(p,read_only=True,data_only=False)
+    if wb.sheetnames != ["Sheet1"]: raise RuntimeError(f"HDPE/GNP sheet set drifted: {wb.sheetnames}")
+    ws=wb["Sheet1"]
+    for coord,label in EXPECTED_LABELS.items():
+        if str(ws[coord].value or "").strip()!=label: raise RuntimeError(f"HDPE/GNP label drift at {coord}: {ws[coord].value!r}")
+    counts={}; formulas=0
+    for row in ws.iter_rows():
+        for cell in row:
+            v=cell.value
+            if isinstance(v,str) and v.startswith("="): formulas+=1
+            elif isinstance(v,(int,float)) and not isinstance(v,bool):
+                c=get_column_letter(cell.column); counts[c]=counts.get(c,0)+1
     if set(counts)!=set("ABCDEFGHIJKLMNOPQRSTUV"): raise RuntimeError(f"HDPE/GNP numeric column set drifted: {sorted(counts)}")
     if any(counts[c]!=EXPECTED_ROWS_PER_COLUMN for c in counts): raise RuntimeError(f"HDPE/GNP row counts drifted: {counts}")
     role_counts={role:sum(counts[c] for c in cols) for role,cols in ROLE_COLUMNS.items()}

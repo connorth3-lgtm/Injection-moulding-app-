@@ -23,6 +23,10 @@ for source_id in ['exxon-pp-processing','covestro-drying','basf-pa66-gf30','basf
 need('formaldehyde' in js.lower() and 'pvc' in js.lower(),'POM safety case must cover thermal decomposition and incompatible contamination')
 need('safeguards and approved procedures must not be bypassed' in js.lower(),'material safety distractor must explicitly reject safeguard bypass')
 need('universal production recipes' in js.lower(),'material labs must reject universal recipes')
+need("localStorage.getItem(k)===payload" in js and "Progress could not be saved on this device." in js and "progress not saved" in js,'material lab persistence must verify writes and surface unsaved progress')
+need("return id?String(id):null" in js and "if(!id||!scope" in js,'material lab progress must fail closed until a real active learner exists')
+need("return localStorage.getItem(source)==null" in js,'material legacy quarantine must verify source deletion')
+need("if(localStorage.getItem(next)!==payload)return false" in js and "if(migrated===false)return null" in js,'material legacy migration must verify copy/delete and fail closed')
 
 node=r'''
 const fs=require('fs'),vm=require('vm');
@@ -64,13 +68,15 @@ for lab in data['labs']:
             length_flags.append({'id':f"material:{lab['id']}:{step_index}",'lab':lab['id'],'stage':step['stage'],'correct_index':key,'correct_length':lengths[key],'longest_distractor_length':longest_distractor,'lengths':lengths,'options':texts})
 need(not length_flags,'correct answer is longest/tied-longest in material labs: '+json.dumps(length_flags,ensure_ascii=False))
 
-idx=text('index.html'); sw=text('service-worker.js'); pkg=text('desktop/electron/package.json'); integ=text('desktop/electron/scripts/generate-integrity.cjs')
+idx=text('index.html'); sw=text('service-worker.js')
+evidence_pack=text('src/domains/runtime-packs/evidence-runtime-pack.js'); pkg=text('desktop/electron/package.json'); integ=text('desktop/electron/scripts/generate-integrity.cjs')
 pack_builder=text('tools/build_runtime_packs.py'); evidence_pack=text('src/domains/runtime-packs/evidence-runtime-pack.js')
 need("['./src/domains/runtime-packs/evidence-runtime-pack.js'" in idx,'browser shell does not load evidence runtime pack')
 need('"material-behaviour-labs.js"' in pack_builder,'material labs missing from deterministic evidence pack definition')
 need('/* >>> material-behaviour-labs.js */' in evidence_pack,'material labs missing from generated evidence pack')
 need(evidence_pack.index('/* >>> material-behaviour-labs.js */')<evidence_pack.index('/* >>> assessment-evidence-sources.js */'),'material labs must execute before evidence approval within the evidence pack')
-need("'./material-behaviour-labs.js'" in sw,'material labs missing from offline cache')
+need("'./src/domains/runtime-packs/evidence-runtime-pack.js'" in sw,'material/evidence runtime pack missing from offline cache')
+need('/* >>> material-behaviour-labs.js */' in evidence_pack,'material labs missing from packed offline runtime')
 need('../../material-behaviour-labs.js' in pkg,'material labs missing from desktop package')
 need("'material-behaviour-labs.js'" in integ,'material labs missing from desktop integrity manifest')
 source_map=text('assessment-evidence-sources.js')

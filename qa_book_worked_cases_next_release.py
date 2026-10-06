@@ -34,6 +34,15 @@ EXPECTED = {
     "worked-fill-study-v1": "fill-study",
     "worked-shot-utilisation-v1": "shot-utilisation",
     "worked-process-window-v1": "process-window",
+    "worked-warpage-discrimination-v1": "warpage",
+    "worked-weld-line-diagnosis-v1": "weld-lines",
+    "worked-splay-boundary-v1": "splay",
+    "worked-dimensional-conditioning-v1": "dimensional-stability",
+    "worked-process-monitoring-alarm-v1": "process-monitoring",
+    "worked-black-speck-source-map-v1": "black-specks",
+    "worked-complex-diagnostics-v1": "complex-diagnostics",
+    "worked-filling-boundary-defect-v1": "flash",
+    "worked-process-baseline-record-v1": "process-baseline",
 }
 
 
@@ -45,6 +54,14 @@ def git_blob_sha(path: Path) -> str:
 def need(ok: bool, message: str) -> None:
     if not ok:
         raise AssertionError(message)
+
+
+def release_key(value):
+    try:
+        parts = tuple(int(part) for part in str(value).split("."))
+    except (TypeError, ValueError):
+        return ()
+    return parts if len(parts) == 4 else ()
 
 
 def main() -> None:
@@ -61,12 +78,12 @@ def main() -> None:
     current_release = version.get("web_release")
     content_release = ledger.get("release")
     need(isinstance(current_release, str) and current_release, "current learner web release is missing")
-    need(content_release == "2026.10.01.3", "worked-case governed content provenance release mismatch")
-    need(content_release <= current_release, "worked-case content cannot target a future learner release")
+    need(content_release == sme.get("release"), "worked-case and SME governed content release mismatch")
+    need(release_key(content_release) and release_key(current_release) and release_key(content_release) <= release_key(current_release), "worked-case content cannot target a future learner release")
     need(LEDGER.read_bytes() == RUNTIME_LEDGER.read_bytes(), "authoritative/runtime worked-case ledgers differ")
 
     cases = ledger.get("cases") or []
-    need(len(cases) == 18, f"expected eighteen governed worked cases, found {len(cases)}")
+    need(len(cases) == 27, f"expected twenty-seven governed worked cases, found {len(cases)}")
     by_id = {item.get("id"): item for item in cases}
     need(set(by_id) == set(EXPECTED), "worked-case identity set drifted")
     need(len(by_id) == len(cases), "duplicate worked-case IDs")
@@ -97,14 +114,14 @@ def main() -> None:
         need(authority.get(key) is False, f"worked-case authority unexpectedly enabled: {key}")
 
     expected_ids = list(EXPECTED)
-    need(sme.get("release") == "2026.10.01.3", "Book SME contract was not advanced with the worked cases")
+    need(sme.get("release") == content_release, "Book SME contract was not advanced with the worked cases")
     need(sme.get("status") == "hold" and sme.get("reviews") == [], "worked-case integration must not manufacture human SME approval")
     need(sme.get("workedCaseIds") == expected_ids, "Book SME contract does not enumerate all worked-case IDs")
 
     worked_auth = auth.get("workedCasesAuthorization") or {}
     need(worked_auth.get("status") == "authorized", "worked-case publication authorization missing")
-    need(worked_auth.get("release") == "2026.10.01.3", "worked-case authorization release mismatch")
-    need(worked_auth.get("caseCount") == 18 and worked_auth.get("claimCount") == 18, "worked-case authorization counts drifted")
+    need(worked_auth.get("release") == content_release, "worked-case authorization release mismatch")
+    need(worked_auth.get("caseCount") == 27 and worked_auth.get("claimCount") == 27, "worked-case authorization counts drifted")
     need(worked_auth.get("independentSmeStatus") == "hold", "worked-case authorization falsely promotes SME status")
     hashes = (auth.get("runtimeIntegrity") or {}).get("gitBlobSha1ByFile") or {}
     need(hashes.get(LEDGER.name) == git_blob_sha(RUNTIME_LEDGER), "worked-case ledger is not exact-byte authorized")
@@ -116,7 +133,7 @@ def main() -> None:
     need("worked_release > web_release" in live_verifier and 'worked_auth.get("release") != worked_release' in live_verifier, "live Book verifier must bind worked-case authorization to governed content release, not every shell release")
     need("enrichment_release > web_release" in live_verifier and 'enrichment_auth.get("release") != enrichment_release' in live_verifier, "live Book verifier must bind enrichment authorization to governed content release, not every shell release")
 
-    need("integrated into governed" in lower and "2026.10.01.3" in lower and "learner runtime" in lower, "source pack integration status is stale")
+    need("integrated into governed" in lower and "learner runtime" in lower, "source pack integration status is stale")
     headings = re.findall(r"^## (\d+)\. ", text, flags=re.M)
     need(headings == [str(i) for i in range(1, 11)], f"expected ten ordered source cases, found {headings}")
     need(text.count("SYNTHETIC") >= 10, "worked values must remain visibly synthetic")
@@ -137,7 +154,7 @@ def main() -> None:
     for pattern in unsafe_patterns:
         need(not re.search(pattern, lower), f"unsafe worked-case claim detected: {pattern}")
 
-    print("MouldMaster governed worked-case integration QA passed: 18 learner-facing synthetic cases, 18 case claims, exact-byte authorization, explicit SME HOLD and no production-control authority.")
+    print("MouldMaster governed worked-case integration QA passed: 27 learner-facing synthetic cases, 27 case claims, exact-byte authorization, explicit SME HOLD and no production-control authority.")
 
 
 if __name__ == "__main__":

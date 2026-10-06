@@ -9,7 +9,7 @@ let readyPromise=null;
 
 function clean(v){return String(v??'').trim()}
 function norm(v){return clean(v).toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()}
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]))}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function safeUrl(v){try{const u=new URL(clean(v),location.href);return u.protocol==='https:'?u.href:''}catch(_){return''}}
 function humanKind(v){return clean(v).replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase())}
 async function load(){
@@ -259,7 +259,7 @@ function renderDeltaRows(rows){
   return `<div class="mm-exact-table-wrap"><table class="mm-exact-table mm-material-delta-table"><thead><tr><th>Evidence</th><th>Old grade</th><th>New grade</th><th>Status / condition</th></tr></thead><tbody>${rows.map(row=>`<tr data-mm-delta-status="${esc(row.status)}"><th scope="row">${esc(row.label)}</th><td>${esc(row.before)}</td><td>${esc(row.after)}</td><td><b>${esc(statusText(row.status))}</b>${row.condition?`<small>${esc(row.condition)}</small>`:''}</td></tr>`).join('')}</tbody></table></div>`;
 }
 function renderSourceColumn(title,grade,sources){
-  return `<div class="mm-material-change-sources"><h4>${esc(title)} · ${esc(grade.name)}</h4>${sources.length?`<ul>${sources.map(s=>`<li><b>${esc(s.title||s.id)}</b><span>${esc([s.publisher,s.documentDate?`document ${s.documentDate}`:'',s.retrievedAt?`retrieved ${s.retrievedAt}`:''].filter(Boolean).join(' · '))}</span>${s.url?`<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">Open primary source</a>`:''}</li>`).join('')}</ul>`:'<p>No primary source metadata is published in this exact-grade record.</p>'}</div>`;
+  return `<div class="mm-material-change-sources"><h4>${esc(title)} · ${esc(grade.name)}</h4>${sources.length?`<ul>${sources.map(s=>{const url=safeUrl(s.url);return `<li><b>${esc(s.title||s.id)}</b><span>${esc([s.publisher,s.documentDate?`document ${s.documentDate}`:'',s.retrievedAt?`retrieved ${s.retrievedAt}`:''].filter(Boolean).join(' · '))}</span>${url?`<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">Open primary source</a>`:''}</li>`}).join('')}</ul>`:'<p>No primary source metadata is published in this exact-grade record.</p>'}</div>`;
 }
 function renderMaterialChangeReport(report){
   if(!report.ready)return `<p class="mm-exact-empty">${esc(report.boundary)}</p>`;

@@ -137,9 +137,9 @@ pkg = json.loads(text('desktop/electron/package.json'))
 integrity = text('desktop/electron/scripts/generate-integrity.cjs')
 resource_from = {x.get('from') for x in pkg['build']['extraResources'] if isinstance(x, dict)}
 runtime_pack = text('src/domains/runtime-packs/process-data-runtime-pack.js')
+need("'./src/domains/runtime-packs/process-data-runtime-pack.js'" in sw, 'offline cache missing process-data runtime pack')
 for filename in ALL:
     need(filename in runtime_pack, f'process-data runtime pack missing {filename}')
-    need(f"'./{filename}'" in sw, f'offline cache missing {filename}')
     need('../../' + filename in resource_from, f'desktop package missing {filename}')
     need("'" + filename + "'" in integrity, f'desktop integrity manifest missing {filename}')
 need("'./src/domains/runtime-packs/process-data-runtime-pack.js'" in idx, 'browser shell missing process-data runtime pack')
@@ -150,6 +150,6 @@ qa = text('.github/workflows/qa.yml')
 desktop = text('.github/workflows/open-desktop-build.yml')
 need('python qa_process_data_deep_dive_50.py' in qa, 'release QA must gate the 50-case data deep dive')
 need('python qa_process_data_deep_dive_50.py' in desktop, 'Windows build must gate the 50-case data deep dive')
-need("find . -maxdepth 1 -type f -name '*.js'" in qa, 'release JS syntax gate must discover root JavaScript dynamically')
+need("Repository-wide JavaScript syntax" in qa, 'release JS syntax gate must discover root JavaScript dynamically')
 
 print('MouldMaster 50-case process-data deep-dive QA passed (50 unique cases; 10 per domain; 4 signals each; 3,600 deterministic synthetic cycles; recovery invariants; evidence-first/local-only; offline + desktop packaged)')

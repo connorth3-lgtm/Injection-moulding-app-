@@ -10,7 +10,7 @@ Current product baselines are recorded in `../version.json`. As of 2026-09-05:
 - Assessment quality / analytics hardening: `2026.08.24.3`
 - Learner-scoped assessment storage: `2026.08.24.4`
 - Assessment storage migration hardening: `2026.09.05.1`
-- Question evidence approval: `2026.08.25.2`
+- Question evidence approval: `2026.10.05.1`
 - Legacy Windows recovery feed: `2026.08.21.1`
 
 ## 1. Software trust — Microsoft Store route

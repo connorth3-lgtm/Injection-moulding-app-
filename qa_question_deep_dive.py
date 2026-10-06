@@ -99,7 +99,7 @@ need("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'" in te
 pkg=json.loads(text('desktop/electron/package.json'));froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
 need('../../assessment-deep-dive.js' in froms and '../../src/domains' in froms and '../../assessment-answer-cue-fix.js' not in froms,'assessment patches must use the canonical recursive domain package without a duplicate root compatibility copy')
 integ=text('desktop/electron/scripts/generate-integrity.cjs');need("'assessment-deep-dive.js'" in integ and "'src/domains/assessment/assessment-answer-cue-fix.js'" in integ,'assessment patches missing from integrity set')
-qy=text('.github/workflows/qa.yml');need("find . -maxdepth 1 -type f -name '*.js'" in qy and 'python qa_question_deep_dive.py' in qy,'release workflow missing question QA')
+qy=text('.github/workflows/qa.yml');need("Repository-wide JavaScript syntax" in qy and 'python qa_question_deep_dive.py' in qy,'release workflow missing question QA')
 need('python qa_question_deep_dive.py' in text('.github/workflows/open-desktop-build.yml'),'desktop workflow missing question QA')
 need('python qa_question_deep_dive.py' in text('.github/workflows/microsoft-store-msix.yml'),'Store workflow missing question QA')
 

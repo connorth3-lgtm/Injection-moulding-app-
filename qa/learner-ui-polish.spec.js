@@ -19,12 +19,15 @@ async function openApp(page){
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
 
-test('Home is one primary lesson decision plus two non-duplicate specialist tools',async({page})=>{
+test('Home is one primary lesson decision plus Book resume and two non-duplicate specialist tools',async({page})=>{
   await page.setViewportSize({width:810,height:1080});
   await openApp(page);
   const focus=page.locator('#dashboard .mm-today-focus');
   const tools=page.locator('#dashboard .mm-home-balance');
+  const book=page.locator('#dashboard [data-mm-home-book]');
   await expect(focus).toBeVisible();
+  await expect(book).toBeVisible();
+  await expect(book.getByRole('button',{name:'Open Book'})).toBeVisible();
   await expect(tools).toBeVisible();
   await expect(page.locator('#dashboard .mm-home-task-hub,#dashboard .mm-home-utility')).toHaveCount(0);
   await expect(tools.locator('[data-mm-home-action]')).toHaveCount(2);
