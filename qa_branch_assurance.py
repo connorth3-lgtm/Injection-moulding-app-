@@ -28,6 +28,11 @@ for marker in (
     "actions: read",
     "contract-self-test:",
     "Exercise assurance verifier and governance contract",
+    "pr-head-assurance:",
+    "Require complete exact PR-head release assurance",
+    "required=(integrity mobile-browser question-quality-50-pass retain-exact-candidate)",
+    "SOURCE_SHA",
+    "retain-exact-candidate",
     "exact-push-assurance:",
     "BRANCH_ASSURANCE_BRANCH",
     "BRANCH_ASSURANCE_SHA",
@@ -90,4 +95,4 @@ run = subprocess.run(
 )
 need(run.returncode == 0, f"verifier self-test failed: {(run.stderr or run.stdout).strip()}")
 
-print("MouldMaster branch assurance QA passed (preview/main exact-push convergence is fail-closed and read-only)")
+print("MouldMaster branch assurance QA passed (PR exact-head and preview/main exact-push convergence are fail-closed and read-only)")
