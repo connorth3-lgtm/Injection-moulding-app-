@@ -721,7 +721,8 @@ need("./data/" not in registry, "runtime material registry must not fetch privat
 areas = (ROOT / "src/domains/shell/product-areas.js").read_text(encoding="utf-8")
 for name in ["Learn", "Materials", "Diagnose", "Analyse", "Evidence"]:
     need(re.search(rf"['\"]{name}['\"]", areas) is not None, f"canonical product area missing: {name}")
-need("What do you need to do?" in areas, "task-first product-area UI missing")
+need("canonical Home registry owns learner-facing composition" in areas, "product-area routing must defer learner-facing Home composition to the canonical registry")
+need("MM_PRODUCT_AREAS=Object.freeze({version:VERSION,areas:AREAS,open,install})" in areas, "canonical product-area routing API missing")
 
 print(
     "MouldMaster domain/material foundation QA passed: "
