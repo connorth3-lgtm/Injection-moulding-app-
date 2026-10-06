@@ -9,7 +9,8 @@ const ROTATION_BASE='mm_assessment_opening_history_v1';
 const UX_ROTATION_BASE='mm_assessment_opening_history_v2';
 const QUESTION_HISTORY_BASE='mm-assessment-question-history-v4';
 const RESULT_META_BASE='mm-assessment-result-meta-v1';
-const BASES=[ANALYTICS_BASE,TIMING_BASE,ROTATION_BASE,UX_ROTATION_BASE,QUESTION_HISTORY_BASE,RESULT_META_BASE];
+const BLUEPRINT_HISTORY_BASE='mm_assessment_blueprint_history_v1';
+const BASES=[ANALYTICS_BASE,TIMING_BASE,ROTATION_BASE,UX_ROTATION_BASE,QUESTION_HISTORY_BASE,RESULT_META_BASE,BLUEPRINT_HISTORY_BASE];
 if(window.MM_ASSESSMENT_STORAGE_SCOPE?.version===VERSION)return;
 const rawGet=localStorage.getItem.bind(localStorage);
 const rawSet=localStorage.setItem.bind(localStorage);
@@ -148,6 +149,7 @@ window.MM_ASSESSMENT_STORAGE_SCOPE={
  uxRotationKey:()=>scopedKey(UX_ROTATION_BASE),
  questionHistoryKey:()=>scopedKey(QUESTION_HISTORY_BASE),
  resultMetaKey:()=>scopedKey(RESULT_META_BASE),
+ blueprintHistoryKey:()=>scopedKey(BLUEPRINT_HISTORY_BASE),
  keysForLearner,
  clearLearner,
  clearAll,
