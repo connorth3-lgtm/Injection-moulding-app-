@@ -1,4 +1,4 @@
-/* MouldMaster learner UI polish — 2026.10.07.7 */
+/* MouldMaster learner UI polish — 2026.10.07.8 */
 
 /* Book: the evidence contract stays visible and accessible, but it no longer
    competes with the learner's chapter choice above the fold. */
@@ -263,7 +263,7 @@
   #dashboard .mm-home-book-actions button{width:100%!important;min-width:0!important;min-height:44px!important;padding:8px 9px!important;font-size:11.5px!important;white-space:nowrap!important}
 }
 
-/* Canonical Home hierarchy — 2026.10.07.7 */
+/* Canonical Home hierarchy — 2026.10.07.8 */
 /* Home keeps one dominant lesson decision, one persistent Book/Keep Reading surface,
    and two specialist shortcuts without duplicating Learn, Materials, Practice or Saved lessons. */
 #dashboard{
@@ -423,18 +423,25 @@
 @media(max-width:700px){
   #dashboard{width:100%!important}
   #mmNonProductionPreviewWarning{
-    margin:0 0 6px!important;
-    padding:5px 8px!important;
-    border-radius:9px!important;
+    display:block!important;
+    width:auto!important;
+    min-width:0!important;
+    min-height:0!important;
+    height:auto!important;
+    max-height:none!important;
+    margin:0 0 5px!important;
+    padding:4px 7px!important;
+    border-radius:8px!important;
     box-shadow:none!important;
-    font-size:10px!important;
-    line-height:1.2!important;
+    font-size:9.5px!important;
+    line-height:1.12!important;
+    overflow-wrap:anywhere!important;
   }
   #mmNonProductionPreviewWarning strong{
     display:inline!important;
     margin-right:3px!important;
-    font-size:10px!important;
-    line-height:inherit!important;
+    font-size:9.5px!important;
+    line-height:1.12!important;
   }
   #mmNonProductionPreviewWarning br{display:none!important}
   body.mm-home-visible .topbar,
