@@ -40,11 +40,11 @@ need('if(!ids.length)' not in sources,'generic evidence fallback is forbidden; u
 need('approveExplicit' in approval and 'forMaterialLab' in approval,'material lab explicit approval API missing')
 need("function scheduleApproval()" in approval and "DOMContentLoaded',()=>setTimeout(buildApproval,0)" in approval,'evidence snapshot must wait until earlier DOMContentLoaded content upgrades finish')
 need("'assessment-stable-review-bridge.js'" in approval,'strict answer-balance bridge must be approval-pinned')
+approved_inputs=dict(re.findall(r"'([^']+\.(?:html|js))':'([0-9a-f]{40})'",approval))
 need('Selection-only rebind: learner-scoped blueprint exposure rotation changed; locked question identities/content/keys/evidence did not.' in approval,'assessment-quality-suite approval rebind must retain explicit non-content provenance')
 need(approved_inputs.get('assessment-quality-suite.js')=='42a17fc48f38807494e13249fc952caf8b1bb03b','assessment-quality-suite approval pin must match the reviewed selection-only runtime')
 need("R.after('gradeExam'" in approval and "R.registerModule('assessment-evidence-review'" in approval,'evidence review must integrate through Runtime V2')
 
-approved_inputs=dict(re.findall(r"'([^']+\.(?:html|js))':'([0-9a-f]{40})'",approval))
 need(len(approved_inputs)==8,f'expected 8 approval-pinned content inputs, got {len(approved_inputs)}')
 semantic_approval=json.loads(text('data/assessment-semantic-approval-v1.json'))
 need(semantic_approval.get('schemaVersion')==1,'assessment semantic approval schema mismatch')
