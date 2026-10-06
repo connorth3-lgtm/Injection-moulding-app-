@@ -58,6 +58,13 @@ if "suggested==='guided-retrieval-and-feedback'||rec?.actionType==='stabilize-re
 if "suggested==='different-practice-format'||rec?.actionType==='evidence-confirmation'" not in hub:
     failures.append("Practice hub no longer maps evidence-confirmation recommendations to varied labs")
 
+# The canonical shell is the sole dashboard composition owner. Practice may rewrite
+# legacy action routing, but it must never hide/remove registry slots.
+if "mm-dashboard-slot" in hub or "mmDashboardRegistryBefore" in hub or "mmDashboardRegistryAfter" in hub:
+    failures.append("Practice hub must not inspect, hide or delete canonical dashboard registry slots")
+if "normalizeHomeActions" not in hub:
+    failures.append("Practice hub non-destructive Home action normalizer missing")
+
 # Practice rotation is learner-scoped. If Runtime V2 is unavailable, leave the
 # preference transient rather than sharing one browser-global key across learners.
 if "localStorage.getItem(PRACTICE_ROTATION_KEY)" in hub or "localStorage.setItem(PRACTICE_ROTATION_KEY" in hub:

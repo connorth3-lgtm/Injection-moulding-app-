@@ -331,15 +331,14 @@ window.mmHubOpenLesson=openCurrentLesson;
 window.mmHubOpenLearningPath=openLearningPathDetail;
 window.mmHubOpenScenarios=openScenarioDetail;
 
-function simplifyHome(){
+function normalizeHomeActions(){
   const root=document.getElementById('dashboard');if(!root)return;
-  root.querySelectorAll('#mmDashboardRegistryBefore .mm-dashboard-slot:not([data-mm-dashboard-section="today-focus"]),#mmDashboardRegistryAfter .mm-dashboard-slot').forEach(el=>el.remove());
   root.querySelectorAll('button[data-mm-onclick]').forEach(button=>{
     const action=button.getAttribute('data-mm-onclick')||'';
     if(/switchView\((['"])lesson\1\)/.test(action))button.setAttribute('data-mm-onclick','mmHubOpenLesson()');
   });
 }
-window.MM_APP_SHELL?.events?.onRender?.('dashboard',()=>requestAnimationFrame(simplifyHome));
+window.MM_APP_SHELL?.events?.onRender?.('dashboard',()=>requestAnimationFrame(normalizeHomeActions));
 
 function configureMore(){
   const items=window.MM_APP_SHELL?.navigation?.items;
@@ -360,7 +359,7 @@ function refreshPracticePersonalisation(){
 }
 window.addEventListener('mm:domains-ready',()=>requestAnimationFrame(refreshPracticePersonalisation));
 
-simplifyHome();
+normalizeHomeActions();
 if(typeof currentView==='string'){
   if(currentView==='path')renderLearnHub();
   if(currentView==='scenarios')renderPracticeHub();

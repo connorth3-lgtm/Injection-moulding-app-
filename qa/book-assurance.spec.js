@@ -50,17 +50,20 @@ test('Book defers governed payloads and heavy material evidence until requested'
   await openApp(page);
   const initial=await page.evaluate(()=>({
     manifest:window.MMBook?.getManifest?.()||null,
+    claimTraceReady:window.MM_BOOK_CLAIM_TRACE?.isReady?.()||false,
     catalog:window.MMBook?.getMaterialCatalog?.()||null,
     regional:window.MMBook?.getMaterialRegionalEvidence?.()||null,
     resources:performance.getEntriesByType('resource').map(entry=>entry.name)
   }));
   expect(initial.manifest).toBeNull();
+  expect(initial.claimTraceReady).toBe(false);
   expect(initial.catalog).toBeNull();
   expect(initial.regional).toBeNull();
   expect(initial.resources.some(url=>url.includes('book-material-regional-evidence-v1.json'))).toBeFalsy();
 
   await page.evaluate(()=>window.MMBook.open());
   await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length===8);
+  await page.waitForFunction(()=>window.MM_BOOK_CLAIM_TRACE?.isReady?.()===true);
   expect(await page.evaluate(()=>window.MMBook.getMaterialCatalog())).toBeNull();
   expect(await page.evaluate(()=>window.MMBook.getMaterialRegionalEvidence())).toBeNull();
 

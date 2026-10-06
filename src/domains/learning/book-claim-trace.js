@@ -18,7 +18,7 @@ const RESOLUTION_FILES=[
  'book-qualification-resolution-all-v1.json'
 ];
 const EXPECTED={chapters:46,claims:137,supported:116,qualified:21,hold:0,conflicting:0};
-let ready=false,claims=new Map(),sources=new Map(),error=null,queued=false;
+let ready=false,claims=new Map(),sources=new Map(),error=null,queued=false,loading=null;
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const hex=buffer=>Array.from(new Uint8Array(buffer),b=>b.toString(16).padStart(2,'0')).join('');
 async function gitBlobSha1(bytes){
@@ -100,17 +100,31 @@ function traceHtml(chapterId){
 function renderArticle(article){if(!ready||!article)return;const id=article.dataset.mmBookVerifiedChapter;if(!id)return;const old=article.querySelector('.mm-book-claim-trace');const holder=document.createElement('div');holder.innerHTML=traceHtml(id);const next=holder.firstElementChild;if(!next)return;if(old)old.replaceWith(next);else article.appendChild(next)}
 function renderAll(){queued=false;if(!ready)return;document.querySelectorAll('[data-mm-book-verified-chapter]').forEach(renderArticle);const status=document.querySelector('[data-mm-book-claim-trace-status]');if(status)status.textContent=`Complete claim trace reconciled: ${claims.size}/137 governed claims.`}
 function queue(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(renderAll,0)}
-function installStatus(){const accuracy=document.querySelector('[data-mm-book-accuracy]');if(!accuracy||accuracy.querySelector('[data-mm-book-claim-trace-status]'))return;const p=document.createElement('p');p.className='muted';p.dataset.mmBookClaimTraceStatus='1';p.textContent=error?'Complete claim trace unavailable — do not infer claim-level provenance from chapter anchors alone.':'Loading complete 137-claim evidence trace…';accuracy.appendChild(p)}
-async function init(){
- try{
-  await window.MMBook?.ready;
-  await window.MMBook?.load?.();
-  const [reviews,resolutions]=await Promise.all([Promise.all(REVIEW_FILES.map(json)),Promise.all(RESOLUTION_FILES.map(json))]);
-  buildTrace(reviews,resolutions);ready=true;window.dispatchEvent(new CustomEvent('mm:book-claim-trace-ready',{detail:{version:VERSION,claims:claims.size}}));
- }catch(e){error=e;console.error('[MouldMaster Book complete claim trace]',e);window.dispatchEvent(new CustomEvent('mm:book-claim-trace-failed',{detail:{version:VERSION,message:String(e?.message||e)}}));}
- installStatus();queue();
+function statusText(){
+ if(error)return 'Complete claim trace unavailable — do not infer claim-level provenance from chapter anchors alone.';
+ if(ready)return `Complete claim trace reconciled: ${claims.size}/137 governed claims.`;
+ if(window.MMBook?.getManifest?.())return 'Loading complete 137-claim evidence trace…';
+ return 'Complete 137-claim evidence trace loads on demand with governed Book content.';
 }
-window.addEventListener('mm:book-render',()=>{installStatus();queue()});
+function installStatus(){const accuracy=document.querySelector('[data-mm-book-accuracy]');if(!accuracy)return;let p=accuracy.querySelector('[data-mm-book-claim-trace-status]');if(!p){p=document.createElement('p');p.className='muted';p.dataset.mmBookClaimTraceStatus='1';accuracy.appendChild(p)}p.textContent=statusText()}
+async function initTrace(){
+ if(ready)return true;
+ if(error)return false;
+ if(loading)return loading;
+ if(!window.MMBook?.getManifest?.())return false;
+ loading=(async()=>{
+  try{
+   const [reviews,resolutions]=await Promise.all([Promise.all(REVIEW_FILES.map(json)),Promise.all(RESOLUTION_FILES.map(json))]);
+   buildTrace(reviews,resolutions);ready=true;window.dispatchEvent(new CustomEvent('mm:book-claim-trace-ready',{detail:{version:VERSION,claims:claims.size}}));return true;
+  }catch(e){error=e;console.error('[MouldMaster Book complete claim trace]',e);window.dispatchEvent(new CustomEvent('mm:book-claim-trace-failed',{detail:{version:VERSION,message:String(e?.message||e)}}));return false}
+  finally{loading=null;installStatus();queue()}
+ })();
+ return loading;
+}
+function onManifestReady(){installStatus();void initTrace()}
+window.addEventListener('mm:book-manifest-ready',onManifestReady);
+window.addEventListener('mm:book-render',()=>{installStatus();if(window.MMBook?.getManifest?.()&&!ready&&!error)void initTrace();queue()});
 window.MM_BOOK_CLAIM_TRACE=Object.freeze({version:VERSION,expected:{...EXPECTED},isReady:()=>ready,getError:()=>error?String(error?.message||error):null,getClaim:id=>claims.get(String(id))||null,getChapterClaims:chapterClaims,renderAll});
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+function arm(){installStatus();if(window.MMBook?.getManifest?.())void initTrace()}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',arm,{once:true});else arm();
 })();

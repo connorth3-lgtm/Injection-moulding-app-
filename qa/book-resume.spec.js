@@ -65,7 +65,7 @@ test('Keep Reading prioritises stable anchor ID over text/index fallback',async(
   await page.waitForTimeout(250);
   await page.getByRole('button',{name:'Home'}).first().click();
   const key=await page.evaluate(()=>window.MMBook.resumeStorageKey());
-  await page.evaluate(({key,misleadingText})=>{
+  await page.evaluate(({key,misleadingText,targetAnchor})=>{
     const saved=JSON.parse(localStorage.getItem(key));
     saved.anchorId=targetAnchor;
     saved.anchorIndex=1;

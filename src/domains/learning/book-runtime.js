@@ -372,7 +372,7 @@
   }
   async function ensureManifest(){
     if(manifest)return manifest;
-    if(!manifestPromise)manifestPromise=loadManifest().then(data=>{manifest=data;renderOverview();return data}).catch(error=>{manifestPromise=null;failBook(error);throw error});
+    if(!manifestPromise)manifestPromise=loadManifest().then(data=>{manifest=data;renderOverview();window.dispatchEvent(new CustomEvent('mm:book-manifest-ready',{detail:{version:VERSION,contentRelease:publicationAuthorization?.version||''}}));return data}).catch(error=>{manifestPromise=null;failBook(error);throw error});
     return manifestPromise;
   }
   async function ensureMaterialData(){
