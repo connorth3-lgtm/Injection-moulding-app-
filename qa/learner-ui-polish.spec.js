@@ -206,7 +206,7 @@ test('primary IA keeps Materials singular and every major destination reachable'
   await expect(page.locator('#modal .modal-card')).toBeVisible();
   await expect(page.locator('#modal .modal-card h2')).toHaveText('More');
   await expect(page.locator('#modal .quick-action').filter({hasText:/^Materials$/i})).toHaveCount(0);
-  for(const label of ['Process simulator','Defect finder','Troubleshooting coach','Knowledge checks','Standards & safety','Profile & data','Mould Master','Data diagnosis']){
+  for(const label of ['Process simulator','Defect finder','Troubleshooting coach','Question Centre','Standards & safety','Profile & data','Mould Master','Data diagnosis']){
     await expect(page.locator('#modal').getByRole('button',{name:new RegExp(label,'i')})).toBeVisible();
   }
 
