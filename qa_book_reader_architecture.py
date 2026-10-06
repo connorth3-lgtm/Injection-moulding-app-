@@ -42,6 +42,10 @@ assert len(readers)==20 and len({r.get("id") for r in readers})==20
 covered=[]
 for row in readers:
     assert row.get("id") and row.get("title") and row.get("goal")
+    assert row.get("readingThread"), f"reader chapter thread missing: {row.get('id')}"
+    key_terms=row.get("keyTerms") or []
+    assert 3 <= len(key_terms) <= 8 and len(set(key_terms))==len(key_terms), f"reader key-term navigation invalid: {row.get('id')}"
+    assert all(isinstance(term,str) and term.strip() for term in key_terms)
     assert row.get("depthBand") in {"Foundation","Technician","Engineer","Advanced"}
     assert len(row.get("learningObjectives") or []) >= 2
     assert len(row.get("checkQuestions") or []) >= 3
@@ -60,6 +64,8 @@ for reader_id in ("r03","r11","r19"):
 assert any(len(row.get("learningObjectives") or []) > 2 for row in readers), "reader objectives remain mechanically uniform"
 assert any(len(row.get("checkQuestions") or []) > 3 for row in readers), "reader knowledge checks remain mechanically uniform"
 assert "not a strictly monotonic learner progression" in reader.get("depthBandMeaning",""), "reader depth-band meaning must prevent ladder interpretation"
+assert "progressive disclosure" in reader.get("firstReadPolicy",""), "reader first-read policy must preserve progressive disclosure"
+assert "navigation labels" in reader.get("firstReadPolicy",""), "reader key terms must remain non-authoritative navigation labels"
 assert len(covered)==46 and len(set(covered))==46 and set(covered)==set(module_ids)
 target=reader.get("targetWordsPerReaderChapter") or {}
 assert target.get("nominal")==1000 and target.get("range")==[850,1400]
@@ -94,11 +100,22 @@ for row in reviews:
     assert row.get("conclusion")=="compatible-with-existing-governed-claim-scope"
     assert any("Independent human SME status remains HOLD" in x for x in row.get("restrictions",[]))
 assert editorial.get("readerArchitecture",{}).get("gitBlobSha1")==git_blob(ROOT/"data/book-reader-architecture-v2.json")
+presentation_review=editorial.get("readerPresentationReview") or {}
+assert presentation_review.get("conclusion")=="derived-presentation-only-no-new-technical-claims"
+assert presentation_review.get("independentSmeStatus")=="hold"
+assert editorial.get("acceptanceRules",{}).get("firstReadPresentationIsDerivedOnly") is True
 assert editorial.get("acceptanceRules",{}).get("independentSmeStatus")=="hold"
 
 permit=auth.get("readerArchitectureAuthorization") or {}
 assert permit.get("status")=="authorized-derived-structure" and permit.get("release")==book_release
 assert permit.get("readerChapterCount")==20 and permit.get("governedModuleCount")==46 and permit.get("noNewTechnicalClaims") is True
+first_read=permit.get("firstReadPresentation") or {}
+assert first_read.get("status")=="authorized-derived-presentation"
+assert first_read.get("coreProseFirst") is True
+assert first_read.get("applicabilityAndEvidenceProgressiveDisclosure") is True
+assert first_read.get("workedExamplesOptionalExpand") is True
+assert first_read.get("keyTermsAreNavigationLabelsOnly") is True
+assert first_read.get("readingThreadsAreOrientationOnly") is True
 edit_permit=auth.get("editorialExpansionAuthorization") or {}
 assert edit_permit.get("status")=="authorized-repository-technical-source-review"
 assert edit_permit.get("release")==book_release and edit_permit.get("moduleCount")==37 and edit_permit.get("noNewClaimIds") is True
@@ -107,7 +124,7 @@ for name in ("book-reader-architecture-v2.json","book-editorial-expansion-review
     assert hashes.get(name)==git_blob(PACKAGED/name), f"authorization hash drift for {name}"
 
 assert sme.get("status")=="hold" and sme.get("reviews")==[] and len(sme.get("chapterIds",[]))==46
-for marker in ("READER_PATH","EDITORIAL_REVIEW_PATH","validateReaderArchitecture","validateEditorialExpansionReview","showReaderChapter","readerChapterHtml","readerLearningHtml","readerReferencesHtml","20 substantial chapters","46 governed modules","getReaderArchitecture","getEditorialExpansionReview","Reasoning scenario:","Depth labels:","Chapter depth:"):
+for marker in ("READER_PATH","EDITORIAL_REVIEW_PATH","validateReaderArchitecture","validateEditorialExpansionReview","showReaderChapter","readerChapterHtml","readerLearningHtml","readerReferencesHtml","readerKeyTermsHtml","readerTermGuideHtml","mm-book-reader-scope","mm-book-reader-worked-case","Chapter thread:","Key-term guide","First-read path:","20 substantial chapters","46 governed modules","getReaderArchitecture","getEditorialExpansionReview","Reasoning scenario:","Depth labels:","Chapter depth:"):
     assert marker in runtime, f"reader runtime marker missing: {marker}"
 for asset in ("./src/domains/learning/book-data/book-reader-architecture-v2.json","./src/domains/learning/book-data/book-editorial-expansion-review-v1.json"):
     assert asset in sw, f"reader governance asset missing from atomic cache: {asset}"

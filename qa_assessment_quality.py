@@ -12,7 +12,7 @@ for p in ['certification/QUALITY_AND_ASSESSMENT_MANUAL.md','sources/ASSESSMENT_S
     need((ROOT/p).exists(),f'missing assessment quality file: {p}')
 
 suite=text('assessment-quality-suite.js')
-for marker in ["const VERSION='2026.08.24.2'","mm_assessment_analytics_v1","tech:${level}:${index}","reg:${region}:${level}:${index}","const BLUEPRINT=['materials','machine','tooling','process','quality','troubleshooting']","Evidence, difficulty & revision","Device-local learning analytics","nearDuplicates","answerLeakRisks","migrateStableReviewIds","scenarioDrills:D.scenarios.length","sourceFreshnessReviewBy","BLUEPRINT_HISTORY_KEY","chooseLeastExposed","recordBlueprintExposure","technicalReachability"]:
+for marker in ["const VERSION='2026.08.24.2'","mm_assessment_analytics_v1","tech:${level}:${index}","reg:${region}:${level}:${index}","const BLUEPRINT=['materials','machine','tooling','process','quality','troubleshooting']","Evidence, difficulty & revision","Device-local learning analytics","nearDuplicates","answerLeakRisks","migrateStableReviewIds","scenarioDrills:D.scenarios.length","sourceFreshnessReviewBy","BLUEPRINT_HISTORY_KEY","chooseLeastExposed","preferUnusedConcepts","ensureMinimumConceptDiversity","recordBlueprintExposure","technicalReachability"]:
     need(marker in suite,f'assessment quality marker missing: {marker}')
 need(suite.count("['")>=24,'scenario expansion unexpectedly small')
 need('http://' not in suite,'assessment quality source links must use HTTPS')
@@ -72,7 +72,19 @@ for(const region of ['UK','US','NZ'])for(const level of ['Beginner','Intermediat
 const scenarios=D.scenarios.map(s=>({id:s.mmStableId,title:s.title,options:s.choices,choices:s.choices.length,correct:s.correct,feedback:Array.isArray(s.feedback)?s.feedback.length:0,category:s.category,difficulty:s.difficulty,reference:s.reference||null,sourceUrl:s.sourceUrl||null}));
 const reviewA=JSON.parse(store['mm_spaced_review_v2::strong-learner-a']);
 const reviewB=JSON.parse(store['mm_spaced_review_v2::strong-learner-b']);
-process.stdout.write(JSON.stringify({scenarioCount:D.scenarios.length,definitions,exams,quality:Q,scenarios,qa:D.assessmentQA.qualitySuite,history:D.assessmentQA.questionRevisionHistory,bridge:sandbox.window.MM_STABLE_REVIEW_BRIDGE,reviewA,reviewB,reviewBare:Object.prototype.hasOwnProperty.call(store,'mm_spaced_review_v2')}));
+const stress={};
+for(const level of ['Beginner','Intermediate','Advanced']){
+ stress[level]={};
+ for(const region of ['UK','US','NZ','ALL']){
+  let minConcepts=99;
+  for(let pass=0;pass<50;pass++){
+   const technical=sandbox.window.getExamQuestions(level,region).filter(q=>q.stableId.startsWith('tech:'));
+   minConcepts=Math.min(minConcepts,new Set(technical.map(q=>q.concept)).size);
+  }
+  stress[level][region]=minConcepts;
+ }
+}
+process.stdout.write(JSON.stringify({scenarioCount:D.scenarios.length,definitions,exams,stress,quality:Q,scenarios,qa:D.assessmentQA.qualitySuite,history:D.assessmentQA.questionRevisionHistory,bridge:sandbox.window.MM_STABLE_REVIEW_BRIDGE,reviewA,reviewB,reviewBare:Object.prototype.hasOwnProperty.call(store,'mm_spaced_review_v2')}));
 '''%(json.dumps(base),json.dumps(str(ROOT/'assessment-deep-dive.js')),json.dumps(str(ROOT/'src/domains/assessment/assessment-answer-cue-fix.js')),json.dumps(str(ROOT/'assessment-storage-scope.js')),json.dumps(str(ROOT/'assessment-quality-suite.js')),json.dumps(str(ROOT/'assessment-stable-review-bridge.js')))
 cue_source=(ROOT/'src/domains/assessment/assessment-answer-cue-fix.js').read_text(encoding='utf-8')
 need("Review shot-delivery/NRV and injection actuals" in cue_source,'scenario:01 correct option must stay concise enough to avoid answer-length salience')
@@ -95,6 +107,11 @@ for level,regions in runtime['exams'].items():
         for x in tech: live_technical[x['id']]=x
 
 need(len(live_technical)==30,f"all 30 approved technical items must become reachable across repeated blueprint-balanced forms; reached {len(live_technical)}")
+
+# Exercise repeated forms so concept diversity cannot depend on one lucky Math.random tie.
+for level,regions in runtime['stress'].items():
+    for region,min_concepts in regions.items():
+        need(min_concepts>=5,f'{level}/{region} repeated blueprint diversity fell below 5 concepts: {min_concepts}')
 
 definitions=runtime['definitions'];need(len(definitions)==57,f"expected 57 canonical live definitions, got {len(definitions)}");need(len({x['id'] for x in definitions})==57,'canonical live definition IDs must be unique')
 sc=runtime['scenarios'];need(len({x['id'] for x in sc})==40,'scenario stable IDs must be unique');need(len({x['title'].strip().lower() for x in sc})==40,'scenario titles must be unique');need(all(x['choices']==4 and 0<=x['correct']<4 and x['feedback']==4 for x in sc),'scenario choice/key/feedback integrity');need(all(x['category'] and x['difficulty'] for x in sc),'scenario category/difficulty metadata missing')

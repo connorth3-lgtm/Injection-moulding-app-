@@ -443,8 +443,8 @@ const APPROVED_INPUTS={
  'training-upgrade.js':'ea6ee84e69c4d5ed60776f2022f1bc9462425ea2',
  'assessment-deep-dive.js':'367d941afc67ad62125e1e1cb16ff1a1e48d0123',
  'src/domains/assessment/assessment-answer-cue-fix.js':'14cdc9e7dde1aa1a3dcdae8d5fc8c924f8f60bc0',
- /* Selection-only rebind: learner-scoped blueprint exposure rotation changed; locked question identities/content/keys/evidence did not. */
- 'assessment-quality-suite.js':'42a17fc48f38807494e13249fc952caf8b1bb03b',
+ /* Selection-only rebind: learner-scoped blueprint exposure rotation and minimum concept-diversity enforcement changed; locked question identities/content/keys/evidence did not. */
+ 'assessment-quality-suite.js':'0c70c89e4310b88e81bc361b84990cb8493a87a5',
  'assessment-stable-review-bridge.js':'36f36be84184ae1fe3b623aaa8dc4ec602854a9b',
  'diagnostic-learning-labs.js':'f573088cddb9eb081eb9cf88d266af6c7b31831d',
  'material-behaviour-labs.js':'3ce6b1f36c618e0b591b2b5cbb3321a0080ffe6a'
