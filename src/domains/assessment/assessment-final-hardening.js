@@ -162,6 +162,7 @@ function questionCentreMarkup(){
 }
 function enhanceQuestionCentre(){
  const host=document.getElementById('exams');if(!host||host.querySelector('.mm-question-centre'))return false;
+ const title=document.getElementById('pageTitle'),subtitle=document.getElementById('pageSubtitle');if(title)title.textContent='Question Centre';if(subtitle)subtitle.textContent='Formal knowledge checks, weak-area review and question-based practice in one place.';
  const mode=questionCentreMode(),head=host.querySelector('.section-head');
  if(head){
   const title=head.querySelector('h2'),copy=head.querySelector('p');
