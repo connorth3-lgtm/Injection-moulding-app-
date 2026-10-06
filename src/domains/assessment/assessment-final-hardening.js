@@ -144,9 +144,38 @@ function addStyles(){return true}
 installAnalyticsExportPatch();addStyles();
 const baseStart=window.startExam;window.startExam=function(){const r=baseStart.apply(this,arguments);setTimeout(initExposureTiming,0);return r};
 const baseGrade=window.gradeExam;window.gradeExam=function(){persistExposureTiming();const r=baseGrade.apply(this,arguments);setTimeout(()=>{enhanceRevisionDetails();rewriteTimingPanel()},20);return r};
-const baseRender=typeof window.renderExams==='function'?window.renderExams:null;if(baseRender)window.renderExams=function(){const r=baseRender.apply(this,arguments);setTimeout(rewriteTimingPanel,20);return r};
+function questionCentreMode(){
+ let region='ALL';try{region=typeof user!=='undefined'&&user?.region?user.region:'ALL'}catch(_){}
+ const compareAll=region==='ALL',regionalCount=compareAll?9:3,total=7+regionalCount;
+ let label=region;try{label=typeof regionName==='function'?regionName(region):region}catch(_){}
+ return {region,label,regionalCount,total};
+}
+function questionCentreMarkup(){
+ const scenarioCount=Array.isArray(D.scenarios)?D.scenarios.length:0;
+ return `<section class="mm-question-centre" aria-label="Question Centre"><div class="mm-question-centre-head"><span class="eyebrow">Question Centre</span><h2>Questions, review and decision practice</h2><p>Most question-based learning now starts here. Formal scores remain separate from low-stakes practice.</p></div><div class="mm-question-centre-grid">
+ <button type="button" data-mm-onclick="mmOpenReview()"><b>Review weak areas</b><small>Retry missed and low-confidence questions using spaced review.</small></button>
+ <button type="button" data-mm-onclick="mmHubOpenScenarios()"><b>Scenario questions</b><small>Work evidence-first shop-floor decisions${scenarioCount?` across ${scenarioCount} scenarios`:''}.</small></button>
+ <button type="button" data-mm-onclick="MM_DIAGNOSTIC_LABS.open()"><b>Diagnostic lab questions</b><small>Practise fault isolation with competing mechanisms and discriminating checks.</small></button>
+ <button type="button" data-mm-onclick="MM_MATERIAL_BEHAVIOUR_LABS.open()"><b>Material lab questions</b><small>Apply grade, moisture, rheology and thermal-history reasoning.</small></button>
+ <button type="button" data-mm-onclick="MM_PROCESS_DATA_DIAGNOSTICS.open()"><b>Measured-data decisions</b><small>Interpret process evidence and choose the next defensible check.</small></button>
+ </div></section>`;
+}
+function enhanceQuestionCentre(){
+ const host=document.getElementById('exams');if(!host||host.querySelector('.mm-question-centre'))return false;
+ const mode=questionCentreMode(),head=host.querySelector('.section-head');
+ if(head){
+  const title=head.querySelector('h2'),copy=head.querySelector('p');
+  if(title)title.textContent='Formal knowledge checks';
+  if(copy)copy.textContent=`Each ${mode.label} assessment uses 7 technical questions plus ${mode.regionalCount} regional safety/compliance questions. Pass requires at least 80% overall and every safety-critical regional item correct.`;
+ }
+ host.querySelectorAll('.exam-card .muted').forEach(row=>{row.textContent=`${mode.total} questions · 7 technical + ${mode.regionalCount} regional safety · 80% overall + all safety-critical correct · ${mode.label}`});
+ host.insertAdjacentHTML('afterbegin',questionCentreMarkup());
+ return true;
+}
+const baseRender=typeof window.renderExams==='function'?window.renderExams:null;if(baseRender)window.renderExams=function(){const r=baseRender.apply(this,arguments);enhanceQuestionCentre();setTimeout(rewriteTimingPanel,20);return r};
 
-D.assessmentQA=D.assessmentQA||{};D.assessmentQA.finalHardening={version:VERSION,bankVersion:BANK_VERSION,stableIds:allStableIds().length,revision2Items:Object.keys(REVISION2).length,revision3Items:Object.keys(REVISION3).length,responseTiming:'first meaningful question exposure; hidden-tab time excluded',researchFreshness:'separate DOI resolver QA'};
+D.assessmentQA=D.assessmentQA||{};D.assessmentQA.finalHardening={version:VERSION,bankVersion:BANK_VERSION,stableIds:allStableIds().length,revision2Items:Object.keys(REVISION2).length,revision3Items:Object.keys(REVISION3).length,responseTiming:'first meaningful question exposure; hidden-tab time excluded',researchFreshness:'separate DOI resolver QA',questionCentre:'formal checks + weak-area review + scenario/lab/data question launchers',compareAllQuestionCount:16,singleRegionQuestionCount:10};
 window.MM_QUESTION_REVISIONS={version:VERSION,bankVersion:BANK_VERSION,stableIds:allStableIds(),baseline:{...BASELINE},revision2:{...REVISION2},revision3:{...REVISION3},forId:revisionFor};
-window.MM_ASSESSMENT_FINAL_HARDENING={version:VERSION,responseTimingKey:TIMING_KEY,rewriteTimingPanel,enhanceRevisionDetails};
+window.MM_QUESTION_CENTRE={version:VERSION,render:enhanceQuestionCentre,mode:questionCentreMode};
+window.MM_ASSESSMENT_FINAL_HARDENING={version:VERSION,responseTimingKey:TIMING_KEY,rewriteTimingPanel,enhanceRevisionDetails,enhanceQuestionCentre};
 })();
