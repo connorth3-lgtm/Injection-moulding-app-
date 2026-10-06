@@ -316,6 +316,7 @@ function installDefaultNavigation(){
   registerNavigation({id:'process-data',mobileMore:false,label:'Data diagnosis',icon:'⌁',description:'Read process trends and choose the next evidence check.',order:30,group:'practice',legacyDataset:'mmProcessData',mobileGroup:'practice',action:()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.()});
   registerNavigation({id:'material-labs',mobileMore:false,label:'Material labs',icon:'◈',description:'Compare resin-specific behaviour and evidence.',order:40,group:'practice',legacyDataset:'mmMaterialLabs',mobileGroup:'practice',action:()=>window.MM_MATERIAL_BEHAVIOUR_LABS?.open?.()});
   registerNavigation({id:'reference-data',label:'Reference data',icon:'▤',description:'Materials, defects, signals and troubleshooting data.',order:50,group:'progress',desktop:false,mobileGroup:'more',action:()=>location.assign('./reference-data.html')});
+  registerNavigation({id:'question-centre',label:'Question Centre',icon:'✓',description:'Open formal checks, scenarios and guided question modes in one place.',order:45,group:'practice',desktop:false,mobileGroup:'practice',action:()=>window.MM_QUESTION_CENTRE?.open?.()});
   registerNavigation({id:'learning-insights',label:'Learning insights',icon:'◫',description:'See local learning progress and retry trends.',order:60,group:'progress',legacyDataset:'mmLearningInsights',mobileGroup:'more',action:()=>window.MM_LEARNING_ANALYTICS?.open?.()});
   registerNavigation({id:'repair-app-files',label:'Support & app maintenance',icon:'?',description:'Help, offline/update guidance and repair options.',order:70,group:'progress',desktop:false,mobileGroup:'more',action:()=>location.assign('./support.html')})
 }
@@ -348,12 +349,12 @@ function openMobileMenuCanonical(){
   const r=captured.openMobileMenu.apply(this,arguments);
   const modal=document.getElementById('modal'),card=modal?.querySelector('.modal-card'),heading=card?.querySelector('h2');
   if(heading)heading.textContent='More';
-  const eyebrow=card?.querySelector('.eyebrow');if(eyebrow)eyebrow.textContent='Progress, reference & settings';
+  const eyebrow=card?.querySelector('.eyebrow');if(eyebrow)eyebrow.textContent='Progress, reference & support';
   const grid=card?.querySelector('.grid2');
   if(grid){
     [...grid.querySelectorAll(':scope > .quick-action')].forEach(button=>{
       const handler=button.getAttribute('data-mm-onclick')||button.getAttribute('onclick')||'';
-      if(/switchView\('(simulator|defects|coach)'\)/.test(handler))button.remove()
+      if(/switchView\('(simulator|defects|coach|exams)'\)/.test(handler))button.remove()
     });
     grid.dataset.mmMoreReduced='1'
   }
