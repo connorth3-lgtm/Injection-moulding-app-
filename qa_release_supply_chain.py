@@ -5,6 +5,7 @@ import shlex
 ROOT = Path(__file__).resolve().parent
 PAGES = ROOT / ".github" / "workflows" / "pages.yml"
 PREVIEW = ROOT / ".github" / "workflows" / "preview-pages.yml"
+PREMERGE = ROOT / ".github" / "workflows" / "premerge-public-candidate.yml"
 DESKTOP = ROOT / ".github" / "workflows" / "publish-open-desktop.yml"
 DEPENDABOT = ROOT / ".github" / "dependabot.yml"
 QUEUED_PROFILE = ROOT / ".github" / "workflows" / "profile-queued-zenodo-data.yml"
@@ -84,6 +85,7 @@ def assert_pinned_actions(label, workflow, expected):
 
 pages = PAGES.read_text(encoding="utf-8")
 preview = PREVIEW.read_text(encoding="utf-8")
+premerge = PREMERGE.read_text(encoding="utf-8")
 desktop = DESKTOP.read_text(encoding="utf-8")
 dependabot = DEPENDABOT.read_text(encoding="utf-8")
 queued_profile = QUEUED_PROFILE.read_text(encoding="utf-8")
@@ -113,6 +115,17 @@ assert_pinned_actions(
 )
 for forbidden in ("actions/deploy-pages@", "actions/upload-pages-artifact@", "pages: write", "id-token: write"):
     need(forbidden not in preview, f"preview candidate must not have live Pages publication authority: {forbidden}")
+need("actions: read" in premerge, "pre-merge public candidate must be able to read exact-head check evidence")
+need("timeout-minutes: 45" in premerge, "pre-merge public candidate must allow substantive browser gates to finish")
+for marker in (
+    "Require exact PR-head quality gates before retaining candidate",
+    "required=(integrity mobile-browser question-quality-50-pass)",
+    "commits/${SOURCE_SHA}/check-runs?per_page=100",
+    "Exact PR-head quality gates passed for $SOURCE_SHA",
+    "Timed out waiting for exact PR-head quality gates.",
+):
+    need(marker in premerge, f"pre-merge public candidate aggregate gate missing: {marker}")
+need(premerge.index("Require exact PR-head quality gates before retaining candidate") < premerge.index("Retain exact candidate for external HOLD execution"), "pre-merge candidate must not retain an artifact before exact-head quality gates pass")
 assert_pinned_actions(
     "desktop",
     desktop,

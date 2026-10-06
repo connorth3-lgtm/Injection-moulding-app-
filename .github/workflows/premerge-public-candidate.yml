@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: premerge-public-candidate-${{ github.event.pull_request.number || github.ref }}
@@ -18,7 +19,7 @@ concurrency:
 jobs:
   retain-exact-candidate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 45
     steps:
       - name: Checkout exact PR head
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -79,6 +80,37 @@ jobs:
           echo "### Pre-merge exact candidate" >> "$GITHUB_STEP_SUMMARY"
           echo "- source SHA: \`${{ github.event.pull_request.head.sha || github.sha }}\`" >> "$GITHUB_STEP_SUMMARY"
           echo "- runtime fingerprint: \`$value\`" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Require exact PR-head quality gates before retaining candidate
+        if: github.event_name == 'pull_request' && steps.impact.outputs.runtime == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          required=(integrity mobile-browser question-quality-50-pass)
+          for attempt in {1..120}; do
+            checks="$(gh api -H "Accept: application/vnd.github+json"               "/repos/${GITHUB_REPOSITORY}/commits/${SOURCE_SHA}/check-runs?per_page=100")"
+            pending=0
+            failed=0
+            for name in "${required[@]}"; do
+              state="$(printf '%s' "$checks" | python3 -c 'import json,sys; d=json.load(sys.stdin); n=sys.argv[1]; xs=[x for x in d.get("check_runs",[]) if x.get("name")==n]; xs.sort(key=lambda x: (x.get("completed_at") or x.get("started_at") or x.get("created_at") or "", int(x.get("id") or 0)), reverse=True); print("missing" if not xs else (xs[0].get("conclusion") or xs[0].get("status") or "unknown"))' "$name")"
+              case "$state" in
+                success) echo "$name: success" ;;
+                queued|in_progress|pending|requested|waiting|missing) echo "$name: $state"; pending=1 ;;
+                *) echo "::error::$name failed or was not successful: $state"; failed=1 ;;
+              esac
+            done
+            if [ "$failed" -ne 0 ]; then exit 1; fi
+            if [ "$pending" -eq 0 ]; then
+              echo "Exact PR-head quality gates passed for $SOURCE_SHA"
+              exit 0
+            fi
+            sleep 20
+          done
+          echo "::error::Timed out waiting for exact PR-head quality gates."
+          exit 1
 
       - name: Retain exact candidate for external HOLD execution
         if: steps.impact.outputs.runtime == 'true'
