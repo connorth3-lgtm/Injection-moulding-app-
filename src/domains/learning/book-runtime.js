@@ -94,7 +94,7 @@
   }
   function bookScrollRoot(){
     const start=ui?.reader||ui?.view||document.querySelector('#mainContent,.main,main');
-    for(let node=start?.parentElement;node&&node!==document.body;node=node.parentElement){
+    for(let node=start;node&&node!==document.body;node=node.parentElement){
       const style=getComputedStyle(node),overflow=String(style.overflowY||'').toLowerCase(),hasScrollRange=(Number(node.scrollHeight)||0)>(Number(node.clientHeight)||0)+1;
       if(/^(auto|scroll|overlay)$/.test(overflow)&&hasScrollRange)return node;
     }
