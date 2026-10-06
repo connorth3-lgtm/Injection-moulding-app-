@@ -220,7 +220,7 @@ need(re.search(r"<[^>]*\\sstyle\\s*=",prepared_core,flags=re.I|re.S) is None,"pr
 need(len(re.findall(r'src=[\"\\\']\\./src/core-runtime/core-inline-\\d{3}\\.js[\"\\\']',prepared_core))==len(core_runtime_scripts),"prepared core payload must reference every generated core runtime slot exactly once")
 need("./src/core-runtime/inline-style-bridge.js" in index, "strict inline-style bridge is not loaded before core replay")
 for path in core_runtime_scripts:
-    need(f"'./src/core-runtime/{path.name}'" in index, f"runtime core script missing from bootstrap registry: {path.name}")
+    need(f'src="./src/core-runtime/{path.name}"' in prepared_core, f"prepared core payload missing generated runtime slot: {path.name}")
 
 # CSP may become stricter, but it may not add unsafe-eval, remote script origins,
 # inline script attributes, or external runtime connections.
