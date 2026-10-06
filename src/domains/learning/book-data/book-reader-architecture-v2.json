@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "bookId": "mouldmaster-book",
-  "version": "2026.10.06-reader-architecture-draft",
+  "version": "2026.10.07-reader-first-read-deep",
   "status": "governed-derived-reader-map",
   "purpose": "Reader-facing consolidation of the 46 governed content modules into substantial book chapters while preserving module IDs for claim, source, SME and runtime traceability.",
   "targetWordsPerReaderChapter": {
@@ -33,7 +33,14 @@
         "Which observations describe what the process actually did rather than what was commanded?"
       ],
       "applyPrompt": "Take a familiar moulding cycle and identify one input, one process signal and one part output for each major stage.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readingThread": "Read the two modules as one story: first build the process model, then follow that model through one complete cycle.",
+      "keyTerms": [
+        "cycle",
+        "inputs",
+        "process signals",
+        "outputs"
+      ]
     },
     {
       "id": "r02",
@@ -55,7 +62,15 @@
         "Why can tooling condition change the interpretation of a process symptom?"
       ],
       "applyPrompt": "Trace the physical path from material feed to ejection and mark where machine-, mould- and site-specific procedures control access or intervention.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readingThread": "Use the machine and mould maps to establish vocabulary, then finish with the safety boundary that governs every later intervention.",
+      "keyTerms": [
+        "plasticising unit",
+        "clamping unit",
+        "mould",
+        "guarding",
+        "interlocks"
+      ]
     },
     {
       "id": "r03",
@@ -78,7 +93,15 @@
       ],
       "applyPrompt": "Choose one material family and list which process observations you would verify before transferring a process from another grade.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
-      "scenarioPrompt": "Two exact grades from the same material family are proposed for the same mould. Without assuming interchangeability, list the grade documents and observed process/part evidence you would compare before deciding whether a transfer is defensible."
+      "scenarioPrompt": "Two exact grades from the same material family are proposed for the same mould. Without assuming interchangeability, list the grade documents and observed process/part evidence you would compare before deciding whether a transfer is defensible.",
+      "readingThread": "Move from polymer structure to material families and then to modifiers, keeping exact-grade evidence separate from broad family labels.",
+      "keyTerms": [
+        "amorphous",
+        "semi-crystalline",
+        "reinforcement",
+        "additives",
+        "grade"
+      ]
     },
     {
       "id": "r04",
@@ -100,7 +123,16 @@
         "What timing pattern could support a residence/degradation hypothesis?"
       ],
       "applyPrompt": "Build two competing explanations for a silver-streak symptom and state what observation would distinguish them.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readingThread": "Read rheology, material condition and thermal history together so a visible defect is not mistaken for a unique material diagnosis.",
+      "keyTerms": [
+        "viscosity",
+        "shear rate",
+        "moisture",
+        "hydrolysis",
+        "residence time",
+        "thermal history"
+      ]
     },
     {
       "id": "r05",
@@ -122,7 +154,16 @@
         "How can a pressure limit change achieved filling velocity?"
       ],
       "applyPrompt": "Review a hypothetical shot-delivery problem and identify which screw, recovery, pressure and part measurements would be most useful.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readingThread": "Follow the shot from preparation to delivery: first how melt is prepared, then how much is used, then how commanded motion and pressure limits shape delivery.",
+      "keyTerms": [
+        "screw recovery",
+        "non-return valve",
+        "cushion",
+        "shot utilisation",
+        "injection velocity",
+        "pressure limit"
+      ]
     },
     {
       "id": "r06",
@@ -143,7 +184,15 @@
         "When should flash evidence trigger tooling inspection rather than more clamp?"
       ],
       "applyPrompt": "Compare two cycles with the same commanded transfer point but different achieved pressure histories and state what else you would measure.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readingThread": "Connect the control transition to what the mould must contain: read transfer and packing first, then relate pressure development to clamp demand.",
+      "keyTerms": [
+        "V/P transfer",
+        "packing",
+        "projected area",
+        "clamp force",
+        "cavity pressure"
+      ]
     },
     {
       "id": "r07",
@@ -166,7 +215,16 @@
       ],
       "applyPrompt": "Map a multi-cavity flow path and mark where pressure loss, gas evacuation and thermal history could diverge.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
-      "sequencePrompt": "Read this chapter as one connected melt-delivery path: feed system and gate behaviour set pressure/flow conditions, venting governs displaced-gas escape, and hot-runner zones add local thermal/residence history. Keep location and timing attached to every observation so a symptom is not reduced to a generic setting change."
+      "sequencePrompt": "Read this chapter as one connected melt-delivery path: feed system and gate behaviour set pressure/flow conditions, venting governs displaced-gas escape, and hot-runner zones add local thermal/residence history. Keep location and timing attached to every observation so a symptom is not reduced to a generic setting change.",
+      "readingThread": "Treat runner, gate, vents and hot-runner zones as one connected delivery path rather than separate troubleshooting topics.",
+      "keyTerms": [
+        "sprue",
+        "runner",
+        "gate",
+        "venting",
+        "hot runner",
+        "residence history"
+      ]
     },
     {
       "id": "r08",
@@ -187,7 +245,15 @@
         "How can ejection marks distinguish local tooling interaction from general part softness?"
       ],
       "applyPrompt": "For a warped part that sticks on one core, list the thermal and mechanical observations you would collect before changing the process.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readingThread": "Read heat removal and part release as one stability problem: the state reached during cooling changes what ejection has to handle.",
+      "keyTerms": [
+        "cooling balance",
+        "mould temperature",
+        "draft",
+        "ejection",
+        "cycle stability"
+      ]
     },
     {
       "id": "r09",
@@ -208,7 +274,16 @@
         "Why should negative experimental results be preserved?"
       ],
       "applyPrompt": "Draft a baseline record for one moulding process that another competent technician could reproduce and audit.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readingThread": "Use the baseline module to define a repeatable state, then use documentation to preserve enough context for another competent person to reproduce and audit it.",
+      "keyTerms": [
+        "baseline",
+        "setpoint",
+        "process signal",
+        "traceability",
+        "change record",
+        "uncertainty"
+      ]
     },
     {
       "id": "r10",
@@ -233,7 +308,15 @@
       ],
       "applyPrompt": "Design a staged development sequence for a new mould, naming the question answered by each study.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
-      "sequencePrompt": "Use this chapter as a staged development sequence rather than four independent studies: establish the baseline, isolate filling, map pressure demand, determine whether the feed path still transmits useful packing pressure, then test robustness across the intended operating region and document what would invalidate the conclusion."
+      "sequencePrompt": "Use the studies as one connected sequence: observe filling first, map where pressure demand accumulates, test whether the feed path still transmits useful post-fill influence, then combine the evidence into a documented operating region and define what would invalidate the conclusion.",
+      "readingThread": "Treat the four studies as a development chain. Each module asks a different engineering question, and the sequence below shows how those questions connect.",
+      "keyTerms": [
+        "fill study",
+        "pressure loss",
+        "gate seal",
+        "process window",
+        "robustness"
+      ]
     },
     {
       "id": "r11",
@@ -254,7 +337,15 @@
       ],
       "applyPrompt": "Take one defect and write three competing mechanisms, one prediction for each, and one discriminating test.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
-      "scenarioPrompt": "A defect improves after one controlled change. Build two alternative mechanisms that could also explain the improvement, then name one observation that would distinguish symptom containment from repeatable causal recovery."
+      "scenarioPrompt": "A defect improves after one controlled change. Build two alternative mechanisms that could also explain the improvement, then name one observation that would distinguish symptom containment from repeatable causal recovery.",
+      "readingThread": "Read this chapter as the troubleshooting method that the later defect chapters reuse: define the symptom, compare mechanisms, predict evidence and test what separates them.",
+      "keyTerms": [
+        "symptom boundary",
+        "hypothesis",
+        "prediction",
+        "discriminating test",
+        "verification"
+      ]
     },
     {
       "id": "r12",
@@ -275,7 +366,15 @@
         "Why can local flash persist even when total clamp capacity appears sufficient?"
       ],
       "applyPrompt": "Create a two-column evidence table for a short-shot event: observations supporting a common upstream cause versus a cavity-local cause.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readingThread": "Contrast two opposite boundary problems side by side: insufficient effective filling versus material escaping the intended mould boundary.",
+      "keyTerms": [
+        "short shot",
+        "flash",
+        "flow restriction",
+        "boundary loss",
+        "cavity pattern"
+      ]
     },
     {
       "id": "r13",
@@ -296,7 +395,16 @@
         "What would make you reconsider cooling as the dominant mechanism?"
       ],
       "applyPrompt": "For a bowed reinforced part, write a mechanism map covering packing, cooling, orientation, geometry and conditioning.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readingThread": "Link contraction to the final shape by following pressure transmission, cooling, orientation and post-mould dimensional change together.",
+      "keyTerms": [
+        "shrinkage",
+        "sink",
+        "void",
+        "warpage",
+        "anisotropy",
+        "conditioning"
+      ]
     },
     {
       "id": "r14",
@@ -318,7 +426,16 @@
         "How can cavity distribution help localise black-speck sources?"
       ],
       "applyPrompt": "Build a source map for a dark-speck complaint and rank likely locations for an all-cavity versus one-cavity pattern.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readingThread": "Use appearance only as the starting observation. The three modules then separate volatile, gas, contamination and degradation mechanisms by location and timing.",
+      "keyTerms": [
+        "splay",
+        "burn",
+        "black speck",
+        "volatile",
+        "trapped gas",
+        "degradation"
+      ]
     },
     {
       "id": "r15",
@@ -338,7 +455,15 @@
         "Why is increasing melt temperature not a complete diagnosis?"
       ],
       "applyPrompt": "For a weld line downstream of a hole, identify geometry-fixed evidence, process-sensitive evidence and product-performance evidence.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readingThread": "Keep formation, location and product performance separate as you read; the visible interface is only one part of the engineering question.",
+      "keyTerms": [
+        "weld line",
+        "flow front",
+        "venting",
+        "interface",
+        "product requirement"
+      ]
     },
     {
       "id": "r16",
@@ -359,7 +484,15 @@
         "What is the difference between a process alarm and a product disposition decision?"
       ],
       "applyPrompt": "Choose one monitored signal and define its origin, units, baseline, alarm meaning and required follow-up.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readingThread": "Start with what a cavity-pressure signal represents, then move to how repeated signals can support monitoring without becoming automatic proof of cause.",
+      "keyTerms": [
+        "cavity pressure",
+        "sensor location",
+        "pressure trace",
+        "process monitoring",
+        "signal"
+      ]
     },
     {
       "id": "r17",
@@ -381,7 +514,16 @@
         "What evidence would make a statistically significant result practically unhelpful for the moulding decision?"
       ],
       "applyPrompt": "Sketch a two-factor experiment and state the nuisance variables, confirmation step and population definition needed before a capability claim.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readingThread": "Use DOE to structure comparisons, measurement to judge the observations, and capability to describe performance relative to requirements.",
+      "keyTerms": [
+        "DOE",
+        "interaction",
+        "measurement",
+        "capability",
+        "centring",
+        "variation"
+      ]
     },
     {
       "id": "r18",
@@ -402,7 +544,15 @@
         "Why should reinforced grades not use generic isotropic shrinkage assumptions?"
       ],
       "applyPrompt": "Plan a dimensional study that separates conditioning time, cavity identity and measurement direction.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readingThread": "Read dimensional state and fibre orientation together because both make measurement direction, timing and conditioning part of the interpretation.",
+      "keyTerms": [
+        "dimensional stability",
+        "conditioning",
+        "fibre orientation",
+        "anisotropy",
+        "measurement timing"
+      ]
     },
     {
       "id": "r19",
@@ -426,7 +576,15 @@
       "applyPrompt": "For a four-cavity thin-wall part, list which machine, mould, material and cavity-specific evidence you would preserve.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
       "sequencePrompt": "Treat these advanced topics as boundary-heavy applications of the earlier method: preserve cavity identity, equipment capability, material-grade limits and measured response. Thin-wall, multi-cavity and high-performance processing become unsafe teaching topics when exact machine, mould or supplier constraints are replaced by generic recipes.",
-      "scenarioPrompt": "For a proposed high-performance grade, build a verification checklist covering the exact-grade documents, machine/mould/hot-runner interfaces and evidence you would need before treating the material as compatible with the existing system."
+      "scenarioPrompt": "For a proposed high-performance grade, build a verification checklist covering the exact-grade documents, machine/mould/hot-runner interfaces and evidence you would need before treating the material as compatible with the existing system.",
+      "readingThread": "Use these advanced topics as examples of tighter process constraints, then compare which evidence becomes more important as geometry, balance and material demands increase.",
+      "keyTerms": [
+        "thin wall",
+        "multi-cavity balance",
+        "high-performance polymer",
+        "pressure demand",
+        "thermal history"
+      ]
     },
     {
       "id": "r20",
@@ -448,7 +606,16 @@
         "What evidence would justify stopping an investigation rather than continuing to tune the process?"
       ],
       "applyPrompt": "Write an evidence ledger for a complex defect with at least three hypotheses, predicted observations, contradictions and a next test.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readingThread": "Read this capstone as a decision method rather than a defect list: the goal is to update confidence as evidence, contradictions and consequence change.",
+      "keyTerms": [
+        "causal timeline",
+        "population boundary",
+        "containment",
+        "corrective action",
+        "root cause",
+        "independent review"
+      ]
     }
   ],
   "reviewQuestions": [
@@ -459,6 +626,7 @@
     "Can a beginner read chapters 1–10 sequentially and an experienced technician enter at chapters 11–20 without losing critical safety context?"
   ],
   "release": "2026.10.06.5",
-  "pedagogyPolicy": "Reader-level objectives, checks, application prompts and optional reasoning scenarios are derived learning scaffolds only. They add no technical claims, do not alter governed module evidence status and cannot create production authority. Sequence prompts are reader-orientation scaffolds derived from existing governed module order; they add no independent technical authority.",
-  "depthBandMeaning": "Depth bands describe the technical complexity of each reader chapter, not a strictly monotonic learner progression. Adjacent chapters can move between Technician and Engineer depth where the subject demands it."
+  "pedagogyPolicy": "Reader-level objectives, checks, application prompts, reading threads, key-term labels and optional reasoning scenarios are derived learning scaffolds only. They add no technical claims, do not alter governed module evidence status and cannot create production authority. Sequence prompts are reader-orientation scaffolds derived from existing governed module order; they add no independent technical authority. Key terms identify vocabulary to notice and do not act as standalone definitions.",
+  "depthBandMeaning": "Depth bands describe the technical complexity of each reader chapter, not a strictly monotonic learner progression. Adjacent chapters can move between Technician and Engineer depth where the subject demands it.",
+  "firstReadPolicy": "The default reader path prioritises core chapter prose. Applicability, evidence traces and worked examples stay available through progressive disclosure; reader key terms are navigation labels only, not independent definitions or technical claims."
 }
