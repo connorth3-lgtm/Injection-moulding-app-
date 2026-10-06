@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.04.2",
-  "commit": "5dea1e13274468e2ddc1c6a35a165c70bba11b63",
+  "release": "2026.10.07.9",
+  "commit": "e1310bd8e6abe5b08087dabf7447a0725ffbf448",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,6 +41,6 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "2026.10.04.2 is the governed visual reference for the app/Book deep-review remediation. It preserves the existing learner IA while intentionally correcting the Listening speech-service/privacy disclosure, demand-loading governed Book content, and progressively rendering the 260-grade plus 284-row material appendix in 24-row batches. Complete governed Book/material coverage, source-review versus independent-SME boundaries, assessment semantics, fixed-navigation clearance and accessibility structure remain separately enforced by structural/browser QA. Pixel tolerance remains locked at maxDiffPixels 12 and supplements—rather than substitutes for—semantic, geometry, reachability and exact-data assertions. Physical-device, real-AT, SME, learner-outcome, NZQA/provider, Windows-distribution and production evidence remain separate HOLDs.",
-  "ref": "visual-baseline/2026.10.04.2"
+  "policy": "2026.10.07.9 is the reviewed learner UI reference for the intentional Home hierarchy change. Across phone, tablet and desktop, Today's Focus remains the dominant lesson action; the MouldMaster Book is now a persistent second surface immediately below it; Troubleshoot and Analyse data remain the two specialist shortcuts below the Book; the existing learning-loop and specialist-extension content follows without duplicating primary navigation. The captured candidate was reviewed from the exact e1310bd8e6abe5b08087dabf7447a0725ffbf448 render after WebKit, cross-browser, substantive Chromium, reachability and all five 500-run reliability shards passed. Pixel tolerance remains locked at maxDiffPixels 12; this promotion changes the retained reference bytes rather than relaxing the visual gate. Physical-device, real-AT, SME, learner-outcome, NZQA/provider, Windows-distribution and production evidence remain separate HOLDs.",
+  "ref": "visual-baseline/2026.10.07.9"
 }
