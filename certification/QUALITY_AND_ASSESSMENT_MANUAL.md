@@ -19,6 +19,8 @@ Current audited question-bank version: `2026.08.30.1`.
 Knowledge assessment rules:
 - UK/US/NZ mode: 10 questions (7 technical + 3 regional safety questions).
 - Compare All: 16 questions (7 technical + all 9 regional safety questions).
+- Technical selection remains competency-balanced across materials, machine, tooling, process, quality/statistics and troubleshooting, but the eligible technical pool is shuffled before blueprint assignment so all 30 reviewed technical items are reachable across attempts.
+- The learner-facing Question Centre is the primary entry point for formal checks, weak-area review, scenarios and question-led labs; practice activity does not inherit formal assessment scores.
 - These are governed formative/learning-completion assessments. Seven sampled technical items cannot by themselves establish broad injection-moulding competence.
 - Pass requirement for the current learning-completion certificate: at least 80% overall **and zero incorrect safety-critical regional questions**.
 - The 80% threshold is a programme policy threshold, not an empirically validated professional competence cut-score.
