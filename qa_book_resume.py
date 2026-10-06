@@ -26,6 +26,7 @@ for marker in [
     "anchorText",
     "anchorOffset",
     "flushReadingPosition({notify:true})",
+    "window.addEventListener('click'",
     "window.addEventListener('pagehide'",
     "visibilityState==='hidden'",
     "clearResume()",
@@ -34,11 +35,15 @@ for marker in [
     "index>=0&&index<heads.length?heads[index]:null",
     "module:material-families:atlas",
     "bookViewportTop()",
+    "for(let node=start;node&&node!==document.body;node=node.parentElement)",
     "bindBookScrollRoot()",
     "bindMaterialPagination(ui.reader);bindBookScrollRoot();",
     "ui.reader.hidden=false;bindBack();bindMaterialPagination(ui.reader);bindBookScrollRoot();rememberReadingPosition('reader-chapter'",
     "ui.reader.hidden=false;bindBack();bindBookScrollRoot();rememberReadingPosition('chapter'",
     "scrollBookBy(delta)",
+    "const atEnd=scrollHeight>0&&scrollTop+clientHeight>=scrollHeight-3",
+    "const bottomClamped=rows.filter(x=>x.rect.top>activationTop&&x.rect.top<=viewportBottom-24&&x.rect.bottom>=top)",
+    "if(bottomClamped.length)picked=bottomClamped[0]",
     "mm:book-resume-restored",
     "scrollBookTo(snapshot.scrollY)",
 ]:
@@ -83,3 +88,7 @@ for marker in [
     need(marker in storage,f"storage ownership matrix missing Book resume contract: {marker}")
 
 print("Book Keep Reading QA passed: learner-scoped persistence, reliable flush/restore, stale-record containment, Home lifecycle safety and learner reset ownership.")
+
+need("start?.parentElement" not in book.split("function bookScrollRoot(){",1)[1].split("function isDocumentScrollRoot",1)[0],"Book scroll-root discovery must consider the reader element itself before its ancestors")
+
+need("document.addEventListener('click',event=>{const target=event.target?.closest?.('nav button,[data-view],[data-page]')" not in book,"Book navigation flush must run at window capture before downstream document handlers can hide the reader")
