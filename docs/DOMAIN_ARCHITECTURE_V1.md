@@ -123,13 +123,14 @@ This is intentionally **not** concurrent execution. It reduces cold-start networ
 
 ## Bootstrap convergence target
 
-The remaining browser bootstrap still contains one compatibility bridge that parses the canonical core document, retires inline handler/style attributes, replaces the document, recreates scripts in order and re-dispatches lifecycle events. That bridge is now a **bounded retirement target**, not an extensibility point.
+The remaining browser bootstrap contains one compatibility bridge that parses a **build-prepared, non-executable core shell**, replaces the document, recreates governed scripts in order and re-dispatches lifecycle events. Static core-script externalization plus inline handler/style retirement now happen deterministically in `tools/externalize_core_scripts.py`; they are no longer repeated by every browser at startup. The remaining document-install bridge is a **bounded retirement target**, not an extensibility point.
 
 Until it is removed:
 
 - there must remain exactly one DOMParser core-document stage;
 - there must remain exactly one whole-document replacement;
 - there must remain exactly one synthetic DOMContentLoaded and one synthetic load redispatch;
+- static core script/handler/style hardening must remain build-time and fail closed if the prepared payload drifts;
 - new product behavior must not add another document-transform stage;
 - removal or simplification is always allowed if browser/PWA/Desktop parity and release integrity stay green.
 
