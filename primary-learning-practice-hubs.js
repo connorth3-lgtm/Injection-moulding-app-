@@ -301,8 +301,8 @@ function questionCentreCounts(){
 }
 function questionCentreMarkup(){
  const q=questionCentreCounts();
- return `<span class="eyebrow">Question Centre</span><h2>Choose how you want to be questioned</h2><p class="muted">Most governed question-based learning is collected here. Formal checks and low-stakes practice keep their existing scoring and evidence boundaries.</p><div class="mm-hub-picker-grid">
- <button type="button" data-mm-hub-action="assessments"><b>Formal knowledge checks</b><small>${q.formal} approved technical and regional-safety bank items.</small></button>
+ return `<span class="eyebrow">${q.total} governed prompts</span><h2>Choose how you want to be questioned</h2><p class="muted">Most governed question-based learning is collected here. Formal checks and low-stakes practice keep their existing scoring and evidence boundaries.</p><div class="mm-hub-picker-grid">
+ <button type="button" data-mm-hub-action="assessments"><b>Formal knowledge checks</b><small>30 approved technical + 27 regional-safety bank items. Each attempt uses the governed level/region blueprint.</small></button>
  <button type="button" data-mm-hub-action="scenario-detail"><b>Shop-floor scenarios</b><small>${q.scenarios} evidence-first decisions with immediate feedback.</small></button>
  <button type="button" data-mm-hub-action="diagnostic-labs"><b>Diagnostic questions</b><small>${q.diagnostic} guided fault-isolation decisions across the diagnostic labs.</small></button>
  <button type="button" data-mm-hub-action="material-labs"><b>Material questions</b><small>${q.materials} resin/evidence decisions across the material labs.</small></button>
@@ -376,7 +376,7 @@ window.MM_APP_SHELL?.events?.onRender?.('dashboard',()=>requestAnimationFrame(no
 
 function configureMore(){
   const items=window.MM_APP_SHELL?.navigation?.items;
-  const practiceOwned=new Set(['mould-master','diagnostic-labs','process-data','material-labs']);
+  const practiceOwned=new Set(['mould-master','diagnostic-labs','process-data','material-labs','question-centre']);
   if(items?.forEach)items.forEach((item,id)=>{item.mobileMore=id!=='materials-page'&&!practiceOwned.has(id)});
 }
 function pruneMore(){
