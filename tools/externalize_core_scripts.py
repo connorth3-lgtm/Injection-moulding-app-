@@ -31,8 +31,10 @@ STYLE_BRIDGE_PATH = OUT_DIR / "inline-style-bridge.js"
 
 INLINE_SCRIPT_RE = re.compile(r"<script(?P<attrs>[^>]*)>(?P<body>.*?)</script\s*>", re.I | re.S)
 SRC_ATTR_RE = re.compile(r"\bsrc\s*=", re.I)
-INDEX_RUNTIME_REF_RE = re.compile(r"['\"]\./src/core-runtime/(core-inline-\d{3}\.js)['\"]")
+PAYLOAD_RUNTIME_REF_RE = re.compile(r'src=["\']\./src/core-runtime/(core-inline-\d{3}\.js)["\']')
+TAG_RE = re.compile(r"<[^>]+>", re.S)
 HANDLER_ATTR_RE = re.compile(r"(?P<prefix>[\s<])on(?P<event>click|change|input|keydown)\s*=", re.I)
+STYLE_ATTR_RE = re.compile(r"(?P<prefix>\s)style\s*=", re.I)
 PRINT_CERTIFICATE_RE = re.compile(
     r"function printCertificate\(level,region\)\{.*?\n\}\n\n/\* Instructor dashboard understands regional score keys\. \*/",
     re.S,
@@ -244,6 +246,41 @@ def retire_handler_attrs(source: str) -> str:
         lambda match: f"{match.group('prefix')}data-mm-on{match.group('event').lower()}=",
         source,
     )
+
+
+def retire_static_tag_attrs(tag: str) -> str:
+    hardened = HANDLER_ATTR_RE.sub(
+        lambda match: f"{match.group('prefix')}data-mm-on{match.group('event').lower()}=",
+        tag,
+    )
+    return STYLE_ATTR_RE.sub(lambda match: f"{match.group('prefix')}data-mm-style=", hardened)
+
+
+def prepared_assembly_payload(core: str, expected_names: list[str]) -> str:
+    cursor = 0
+
+    def externalize(match: re.Match[str]) -> str:
+        nonlocal cursor
+        attrs = match.group("attrs") or ""
+        if SRC_ATTR_RE.search(attrs):
+            return match.group(0)
+        if cursor >= len(expected_names):
+            fail("frozen core contains more inline scripts than generated runtime slots")
+        name = expected_names[cursor]
+        cursor += 1
+        return f'<script{attrs} src="./src/core-runtime/{name}"></script>'
+
+    prepared = INLINE_SCRIPT_RE.sub(externalize, core)
+    if cursor != len(expected_names):
+        fail(f"prepared core externalized {cursor} scripts; expected {len(expected_names)}")
+    prepared = TAG_RE.sub(lambda match: retire_static_tag_attrs(match.group(0)), prepared)
+    if re.search(r"<script\b(?![^>]*\bsrc\s*=)[^>]*>", prepared, flags=re.I):
+        fail("prepared core payload still contains inline script tags")
+    if HANDLER_ATTR_RE.search(prepared):
+        fail("prepared core payload still contains executable handler attributes")
+    if re.search(r"<[^>]*\sstyle\s*=", prepared, flags=re.I | re.S):
+        fail("prepared core payload still contains inline style attributes")
+    return prepared
 
 
 def runtime_transform(name: str, source: str) -> str:
@@ -505,16 +542,6 @@ def bump_cache(index: str, worker: str) -> tuple[str, str]:
     return index, worker
 
 
-def ensure_static_handler_retirement(index: str) -> str:
-    if "function retireInlineHandlerAttrs(parsed)" in index:
-        return index
-    old = '    function prepareDocument(html){const parsed=new DOMParser().parseFromString(html,"text/html");if(!parsed.documentElement||!parsed.head||!parsed.body)throw new Error("Core training document could not be parsed");const scripts=[];'
-    new = '    function retireInlineHandlerAttrs(parsed){for(const eventName of ["click","change","input","keydown"]){const attr="on"+eventName;for(const element of Array.from(parsed.querySelectorAll(`[${attr}]`))){element.setAttribute(`data-mm-on${eventName}`,element.getAttribute(attr)||"");element.removeAttribute(attr)}}return parsed}\n    function prepareDocument(html){const parsed=new DOMParser().parseFromString(html,"text/html");if(!parsed.documentElement||!parsed.head||!parsed.body)throw new Error("Core training document could not be parsed");retireInlineHandlerAttrs(parsed);const scripts=[];'
-    if old not in index:
-        fail("index prepareDocument insertion point drifted")
-    return index.replace(old, new, 1)
-
-
 def insert_worker_assets(worker: str, names: list[str]) -> str:
     marker = "  './src/core-runtime/core-source.txt',\n"
     if marker not in worker:
@@ -565,20 +592,21 @@ def enable_integrity_directory(integrity: str) -> str:
 def check_state() -> None:
     core = CORE.read_text(encoding="utf-8")
     index = INDEX.read_text(encoding="utf-8")
-    if not ASSEMBLY_PAYLOAD.is_file() or ASSEMBLY_PAYLOAD.read_bytes() != CORE.read_bytes():
-        fail("non-executable core assembly payload is missing or differs from the frozen core")
     if 'const CORE_URL="./src/core-runtime/core-source.txt";' not in index:
-        fail("browser bootstrap must assemble from the non-executable core-source.txt payload")
+        fail("browser bootstrap must assemble from the non-executable prepared core-source.txt payload")
     expected = expected_assets(core)
-    refs = list(dict.fromkeys(INDEX_RUNTIME_REF_RE.findall(index)))
     expected_names = list(expected)
+    prepared = prepared_assembly_payload(core, expected_names)
+    if not ASSEMBLY_PAYLOAD.is_file() or ASSEMBLY_PAYLOAD.read_text(encoding="utf-8") != prepared:
+        fail("prepared non-executable core assembly payload is missing or stale")
+    refs = list(dict.fromkeys(PAYLOAD_RUNTIME_REF_RE.findall(prepared)))
     if refs != expected_names:
-        fail(f"index CORE_INLINE_SCRIPTS drifted: {refs} != {expected_names}")
-    if "function externalizeCoreScripts(out)" not in index or "out=externalizeCoreScripts(out)" not in index:
-        fail("browser bootstrap does not externalize frozen core scripts during assembly")
-    if "function retireInlineHandlerAttrs(parsed)" not in index or "retireInlineHandlerAttrs(parsed);retireInlineStyleAttrs(parsed);const scripts=[]" not in index:
-        fail("browser bootstrap does not retire static frozen-core handler attributes before installation")
-    if "function retireInlineStyleAttrs(parsed)" not in index or "./src/core-runtime/inline-style-bridge.js" not in index:
+        fail(f"prepared core runtime refs drifted: {refs} != {expected_names}")
+    if "function versionPreparedCore(out)" not in index or "out=versionPreparedCore(out)" not in index:
+        fail("browser bootstrap does not version prepared core runtime assets")
+    if "function externalizeCoreScripts(out)" in index or "retireInlineHandlerAttrs" in index or "retireInlineStyleAttrs" in index:
+        fail("browser bootstrap must not repeat build-time core externalization or static attribute hardening")
+    if "./src/core-runtime/inline-style-bridge.js" not in index:
         fail("browser bootstrap strict style bridge is missing")
     body_scripts = re.findall(r"\['(\./[^']+\.js)'\s*,\s*'<script", index)
     if len(body_scripts) > 39:
@@ -670,7 +698,7 @@ def check_state() -> None:
         fail("desktop integrity does not derive generated core runtime files")
     print(
         f"Core CSP migration check passed: {len(expected_names)} deterministic core runtime slots; bridge folded into final slot; "
-        "document.write and generated handler attributes transformed out; 39 BODY_SCRIPTS; script-src-attr none."
+        "document.write and generated handler attributes transformed out; prepared core static attrs externalized at build time; script-src-attr none."
     )
 
 
@@ -678,7 +706,7 @@ def apply() -> None:
     core = CORE.read_text(encoding="utf-8")
     expected = expected_assets(core)
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    ASSEMBLY_PAYLOAD.write_bytes(CORE.read_bytes())
+    ASSEMBLY_PAYLOAD.write_text(prepared_assembly_payload(core, list(expected)), encoding="utf-8")
     for old in OUT_DIR.glob("core-inline-*.js"):
         if old.name not in expected:
             old.unlink()
@@ -686,7 +714,6 @@ def apply() -> None:
         (OUT_DIR / name).write_text(body, encoding="utf-8")
 
     index = tighten_script_csp(INDEX.read_text(encoding="utf-8"))
-    index = ensure_static_handler_retirement(index)
     worker = SERVICE_WORKER.read_text(encoding="utf-8")
     index, worker = bump_cache(index, worker)
     worker = insert_worker_assets(worker, list(expected) + [STYLE_BRIDGE_PATH.name])
