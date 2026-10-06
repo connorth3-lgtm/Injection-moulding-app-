@@ -78,8 +78,8 @@ function syncHomeBalance(){
   }
   panel.dataset.mmHomeBalance=VERSION;
   syncHomeBalanceContent(panel);
-  const focus=root.querySelector('.mm-today-focus');
-  const focusSlot=focus?.closest?.('.mm-dashboard-slot'),anchor=focusSlot||focus;
+  const book=root.querySelector('[data-mm-home-book]'),focus=root.querySelector('.mm-today-focus');
+  const bookSlot=book?.closest?.('.mm-dashboard-slot'),focusSlot=focus?.closest?.('.mm-dashboard-slot'),anchor=bookSlot||book||focusSlot||focus;
   if(anchor&&panel.previousElementSibling!==anchor)anchor.insertAdjacentElement('afterend',panel);
   else if(!anchor&&!panel.isConnected)root.prepend(panel);
 }
