@@ -14,8 +14,16 @@ async function boot(page,active='reader-a'){
 }
 async function scrollAnchor(page,locator,top=96){
   await locator.evaluate((el,targetTop)=>{
+    const documentRoot=document.scrollingElement||document.documentElement;
+    let root=documentRoot;
+    for(let node=el.parentElement;node&&node!==document.body;node=node.parentElement){
+      const style=getComputedStyle(node),overflow=String(style.overflowY||'').toLowerCase();
+      if(/^(auto|scroll|overlay)$/.test(overflow)&&(Number(node.scrollHeight)||0)>(Number(node.clientHeight)||0)+1){root=node;break;}
+    }
+    el.scrollIntoView({block:'start',behavior:'auto'});
     const delta=el.getBoundingClientRect().top-targetTop;
-    window.scrollBy(0,delta);
+    if(root===documentRoot||root===document.documentElement||root===document.body)window.scrollBy(0,delta);
+    else root.scrollTop=(Number(root.scrollTop)||0)+delta;
   },top);
   await page.waitForTimeout(250);
 }
