@@ -9,7 +9,7 @@
   "candidate": {
     "release": "2026.10.06.21",
     "sourceSha": "ea7a9fc46d3f7b95119c76606d9157457284d31f",
-    "runtimeFingerprint": "sha256:b210eea89068c9d43b4c7cf8fcdd4a902e591dacad8ba9016575360f140511ce"
+    "runtimeFingerprint": "sha256:e099b657b214f49d2514c3d23cc7b4cb8ebcb4d8b0ca4030304064c4ab30edd5"
   },
   "boundary": "Repository readiness, mappings, templates and automated QA do not create NZQA approval, provider accreditation, consent to assess, moderation acceptance, learner competence, workplace competence or qualification award.",
   "requiredGates": [
