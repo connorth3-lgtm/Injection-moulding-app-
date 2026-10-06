@@ -41,6 +41,9 @@ for marker in [
     "ui.reader.hidden=false;bindBack();bindMaterialPagination(ui.reader);bindBookScrollRoot();rememberReadingPosition('reader-chapter'",
     "ui.reader.hidden=false;bindBack();bindBookScrollRoot();rememberReadingPosition('chapter'",
     "scrollBookBy(delta)",
+    "const atEnd=scrollHeight>0&&scrollTop+clientHeight>=scrollHeight-3",
+    "const bottomClamped=rows.filter(x=>x.rect.top>activationTop&&x.rect.top<=viewportBottom-24&&x.rect.bottom>=top)",
+    "if(bottomClamped.length)picked=bottomClamped[0]",
     "mm:book-resume-restored",
     "scrollBookTo(snapshot.scrollY)",
 ]:
