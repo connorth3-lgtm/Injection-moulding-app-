@@ -47,3 +47,16 @@
 }
 @media(prefers-reduced-motion:reduce){.mm-option-card{transition:none!important}}
 
+
+
+/* Unified Question Centre — formal scores stay separate from low-stakes practice. */
+.mm-question-centre{margin:0 0 18px;padding:20px;border:1px solid #31506e;border-radius:18px;background:linear-gradient(145deg,#12243a,#0b1728)}
+.mm-question-centre-head h2{margin:4px 0 7px;font-size:clamp(24px,3.4vw,32px);line-height:1.15}
+.mm-question-centre-head p{margin:0;color:#aebfd4;line-height:1.5;max-width:760px}
+.mm-question-centre-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:15px}
+.mm-question-centre-grid button{min-width:0;min-height:112px;padding:15px;border:1px solid #35516f;border-radius:14px;background:#10223a;color:#edf5ff;text-align:left;white-space:normal}
+.mm-question-centre-grid button:hover,.mm-question-centre-grid button:focus-visible{border-color:#5a7fa1;background:#142b45}
+.mm-question-centre-grid button b{display:block;font-size:15px;line-height:1.25}
+.mm-question-centre-grid button small{display:block;margin-top:6px;color:#a9bdd4;font-size:12px;line-height:1.45}
+@media(max-width:900px){.mm-question-centre-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.mm-question-centre{padding:15px}.mm-question-centre-grid{grid-template-columns:1fr}.mm-question-centre-grid button{min-height:0}}
