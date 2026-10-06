@@ -12,7 +12,7 @@ for p in ['certification/QUALITY_AND_ASSESSMENT_MANUAL.md','sources/ASSESSMENT_S
     need((ROOT/p).exists(),f'missing assessment quality file: {p}')
 
 suite=text('assessment-quality-suite.js')
-for marker in ["const VERSION='2026.08.24.2'","mm_assessment_analytics_v1","tech:${level}:${index}","reg:${region}:${level}:${index}","const BLUEPRINT=['materials','machine','tooling','process','quality','troubleshooting']","Evidence, difficulty & revision","Device-local learning analytics","nearDuplicates","answerLeakRisks","migrateStableReviewIds","scenarioDrills:D.scenarios.length","sourceFreshnessReviewBy","BLUEPRINT_HISTORY_KEY","chooseLeastExposed","preferUnusedConcepts","recordBlueprintExposure","technicalReachability"]:
+for marker in ["const VERSION='2026.08.24.2'","mm_assessment_analytics_v1","tech:${level}:${index}","reg:${region}:${level}:${index}","const BLUEPRINT=['materials','machine','tooling','process','quality','troubleshooting']","Evidence, difficulty & revision","Device-local learning analytics","nearDuplicates","answerLeakRisks","migrateStableReviewIds","scenarioDrills:D.scenarios.length","sourceFreshnessReviewBy","BLUEPRINT_HISTORY_KEY","chooseLeastExposed","preferUnusedConcepts","ensureMinimumConceptDiversity","recordBlueprintExposure","technicalReachability"]:
     need(marker in suite,f'assessment quality marker missing: {marker}')
 need(suite.count("['")>=24,'scenario expansion unexpectedly small')
 need('http://' not in suite,'assessment quality source links must use HTTPS')
