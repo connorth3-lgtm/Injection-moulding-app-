@@ -13,7 +13,7 @@ async function boot(page,active='reader-a'){
   await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED)&&Boolean(window.MMBook?.openReaderChapter)&&Boolean(window.MM_LEARNER_SCOPE)&&!document.getElementById('mmBootstrap'));
 }
 async function scrollAnchor(page,locator,top=96){
-  await locator.evaluate((el,documentTargetTop)=>{
+  await locator.evaluate(async(el,documentTargetTop)=>{
     const documentRoot=document.scrollingElement||document.documentElement;
     let root=documentRoot;
     for(let node=el.parentElement;node&&node!==document.body;node=node.parentElement){
@@ -25,11 +25,8 @@ async function scrollAnchor(page,locator,top=96){
     const delta=el.getBoundingClientRect().top-targetTop;
     if(documentScroll)window.scrollTo(0,(Number(documentRoot.scrollTop)||Number(window.scrollY)||0)+delta);
     else root.scrollTop=(Number(root.scrollTop)||0)+delta;
+    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
   },top);
-  await page.waitForFunction(({selector,targetTop})=>{
-    const el=document.querySelector(selector);if(!el)return false;
-    return Math.abs(el.getBoundingClientRect().top-targetTop)<=3;
-  },{selector:'[data-mm-book-anchor="module:material-families:atlas"]',targetTop:top},{timeout:2000}).catch(()=>{});
   await page.waitForTimeout(220);
 }
 
