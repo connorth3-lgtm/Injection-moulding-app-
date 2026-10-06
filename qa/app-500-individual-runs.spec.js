@@ -68,7 +68,7 @@ for(let run=1;run<=500;run++){
       await expect(page.locator('#mmBookView')).toBeVisible();
       await page.evaluate(()=>window.MMBook.load());
       await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
-      const readerChapters=page.locator('[data-mm-book-reader-chapter-open]');
+      const readerChapters=page.locator('#mmBookView section.card > div > button[data-mm-book-reader-chapter-open]');
       expect(await readerChapters.count()).toBe(20);
       await readerChapters.nth(variant%20).click();
       await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
