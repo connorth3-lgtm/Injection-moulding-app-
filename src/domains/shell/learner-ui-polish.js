@@ -1,11 +1,11 @@
-/* MouldMaster learner UI polish — 2026.10.06.11
+/* MouldMaster learner UI polish — 2026.10.06.14
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.10.06.11';
+const VERSION='2026.10.06.14';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -78,8 +78,8 @@ function syncHomeBalance(){
   }
   panel.dataset.mmHomeBalance=VERSION;
   syncHomeBalanceContent(panel);
-  const focus=root.querySelector('.mm-today-focus');
-  const focusSlot=focus?.closest?.('.mm-dashboard-slot'),anchor=focusSlot||focus;
+  const book=root.querySelector('[data-mm-home-book]'),focus=root.querySelector('.mm-today-focus');
+  const bookSlot=book?.closest?.('.mm-dashboard-slot'),focusSlot=focus?.closest?.('.mm-dashboard-slot'),anchor=bookSlot||book||focusSlot||focus;
   if(anchor&&panel.previousElementSibling!==anchor)anchor.insertAdjacentElement('afterend',panel);
   else if(!anchor&&!panel.isConnected)root.prepend(panel);
 }
@@ -179,10 +179,10 @@ function syncDesktopNavigation(){
   const labels={dashboard:'Home',path:'Learn',materials:'Materials',scenarios:'Practice'};
   [...nav.querySelectorAll(':scope > button')].forEach(button=>{
     if(button.dataset.mmDesktopMoreTools)return;
-    const view=button.dataset.view||'';
-    const keep=PRIMARY_DESKTOP_VIEWS.has(view);
+    const view=button.dataset.view||'',registryId=button.dataset.mmRegistryNav||'';
+    const keep=PRIMARY_DESKTOP_VIEWS.has(view)||registryId==='book';
     hideNavButton(button,isDesktop&&!keep);
-    if(keep&&button.querySelector('span'))button.querySelector('span').textContent=labels[view];
+    if(keep&&labels[view]&&button.querySelector('span'))button.querySelector('span').textContent=labels[view];
   });
   nav.querySelectorAll(':scope > .nav-group-label,:scope > details.more-nav').forEach(node=>{node.hidden=isDesktop});
   let more=nav.querySelector('[data-mm-desktop-more-tools]');
@@ -194,6 +194,7 @@ function syncDesktopNavigation(){
   if(more)more.hidden=!isDesktop;
 }
 function visibleViewId(){
+  const book=document.getElementById('mmBookView');if(book&&!book.classList.contains('hidden'))return 'book';
   for(const id of ['dashboard','path','materials','lesson','scenarios','simulator','defects','coach','exams','certificates','glossary','profile','standards','visuals','instructor']){
     const el=document.getElementById(id);if(el&&!el.classList.contains('hidden'))return id
   }
@@ -206,7 +207,8 @@ function syncTopbarContext(){
     dashboard:['Home','Continue learning or jump straight into the moulding task you need.'],
     path:['Learn','Your current lesson first, with the full pathway and resources behind it.'],
     materials:['Materials','Exact-grade catalogue, source evidence, comparisons and material learning.'],
-    scenarios:['Practice','Recommended practice first; specialist tools stay one level deeper.']
+    scenarios:['Practice','Recommended practice first; specialist tools stay one level deeper.'],
+    book:['Book','Evidence-governed injection moulding reference.']
   };
   if(primary[view]){
     if(title)title.textContent=primary[view][0];

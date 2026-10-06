@@ -40,12 +40,14 @@ test('Home is one primary lesson decision plus Book resume and two non-duplicate
     dashboardWidth:document.getElementById('dashboard').getBoundingClientRect().width,
     outer:getComputedStyle(document.querySelector('#dashboard .mm-home-balance')).gridTemplateColumns.split(/\s+/).filter(Boolean).length,
     actions:getComputedStyle(document.querySelector('#dashboard .mm-home-balance-grid')).gridTemplateColumns.split(/\s+/).filter(Boolean).length,
-    order:Boolean(document.querySelector('#dashboard .mm-today-focus')?.compareDocumentPosition(document.querySelector('#dashboard .mm-home-balance'))&Node.DOCUMENT_POSITION_FOLLOWING)
+    lessonBeforeBook:Boolean(document.querySelector('#dashboard .mm-today-focus')?.compareDocumentPosition(document.querySelector('#dashboard [data-mm-home-book]'))&Node.DOCUMENT_POSITION_FOLLOWING),
+    bookBeforeTools:Boolean(document.querySelector('#dashboard [data-mm-home-book]')?.compareDocumentPosition(document.querySelector('#dashboard .mm-home-balance'))&Node.DOCUMENT_POSITION_FOLLOWING)
   }));
   expect(tablet.dashboardWidth).toBeLessThanOrEqual(960.5);
   expect(tablet.outer).toBe(1);
   expect(tablet.actions).toBe(2);
-  expect(tablet.order).toBeTruthy();
+  expect(tablet.lessonBeforeBook).toBeTruthy();
+  expect(tablet.bookBeforeTools).toBeTruthy();
 
   const troubleshoot=tools.getByRole('button',{name:/Troubleshoot/i});
   await troubleshoot.evaluate(el=>el.dataset.mmQaStableNode='1');
@@ -56,13 +58,15 @@ test('Home is one primary lesson decision plus Book resume and two non-duplicate
     actions:getComputedStyle(document.querySelector('#dashboard .mm-home-balance-grid')).gridTemplateColumns.split(/\s+/).filter(Boolean).length,
     focused:document.activeElement?.dataset?.mmHomeAction||'',
     stable:document.querySelector('[data-mm-home-action="mould-master"]')?.dataset?.mmQaStableNode||'',
-    toolsBottom:document.querySelector('#dashboard .mm-home-balance').getBoundingClientRect().bottom,
+    bookBottom:document.querySelector('#dashboard [data-mm-home-book]').getBoundingClientRect().bottom,
+    toolsTop:document.querySelector('#dashboard .mm-home-balance').getBoundingClientRect().top,
     navTop:document.querySelector('.mobile-nav').getBoundingClientRect().top
   }));
   expect(phone.actions).toBe(2);
   expect(phone.focused).toBe('mould-master');
   expect(phone.stable).toBe('1');
-  expect(phone.toolsBottom).toBeLessThanOrEqual(phone.navTop+1);
+  expect(phone.bookBottom).toBeLessThanOrEqual(phone.navTop+2);
+  expect(phone.toolsTop).toBeGreaterThanOrEqual(phone.bookBottom-1);
 
   await page.setViewportSize({width:1440,height:900});
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
@@ -109,7 +113,12 @@ test('desktop navigation stays focused while specialist capabilities remain reac
   await expect(nav.getByRole('button',{name:'Materials'})).toBeVisible();
   await expect(nav.getByRole('button',{name:'Practice'})).toBeVisible();
   await expect(nav.getByRole('button',{name:'More'})).toBeVisible();
-  await expect(nav.getByRole('button',{name:/Book/i})).toBeHidden();
+  const bookNav=nav.locator('[data-mm-registry-nav="book"]');
+  await expect(bookNav).toBeVisible();
+  await bookNav.click();
+  await expect(page.locator('#mmBookView')).toBeVisible();
+  await expect(bookNav).toHaveAttribute('aria-current','page');
+  await nav.getByRole('button',{name:'Home'}).click();
   await expect(nav.getByRole('button',{name:/Data diagnosis/i})).toBeHidden();
   await expect(nav.getByRole('button',{name:/Mould Master/i})).toBeHidden();
 
@@ -168,7 +177,7 @@ test('primary IA keeps Materials singular and every major destination reachable'
   await openApp(page);
   const nav=page.locator('#nav');
   const visibleLabels=await nav.locator(':scope > button').evaluateAll(nodes=>nodes.filter(n=>getComputedStyle(n).display!=='none'&&!n.hidden).map(n=>(n.textContent||'').replace(/\s+/g,' ').trim()));
-  expect(visibleLabels).toEqual(['⌂ Home','▦ Learn','⬡ Materials','⚠ Practice','More']);
+  expect(visibleLabels).toEqual(['⌂ Home','▦ Learn','⬡ Materials','⚠ Practice','▣ Book','More']);
 
   await nav.getByRole('button',{name:'Home'}).click();
   await expect(page.locator('#dashboard')).toBeVisible();

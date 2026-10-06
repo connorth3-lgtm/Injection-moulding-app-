@@ -132,35 +132,6 @@ function removeHomeSecondaryBlocks(root){
     if(block&&block!==root)block.remove();
   }
 }
-function renderHomeBookCard(root){
-  if(!root)return;
-  let host=root.querySelector('[data-mm-home-book]');
-  if(!host){
-    host=document.createElement('section');
-    host.className='card mm-home-book';
-    host.dataset.mmHomeBook='1';
-    const focus=root.querySelector('.mm-today-focus');
-    if(focus?.nextSibling)root.insertBefore(host,focus.nextSibling);else root.prepend(host);
-  }
-  const saved=window.MMBook?.getResume?.()||null;
-  const savedTitle=String(saved?.title||'').trim();
-  const safe=value=>String(value??'').replace(/[&<>\"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[ch]));
-  const hasResume=!!saved?.id;
-  host.innerHTML=`
-    <div class="mm-home-book-copy">
-      <span class="eyebrow">MouldMaster Book</span>
-      <h2>${hasResume?'Keep reading':'Injection moulding reference'}</h2>
-      <p>${hasResume?('Continue from '+safe(savedTitle||'your last chapter')+'.'):'Open the evidence-governed Book directly from Home.'}</p>
-    </div>
-    <div class="mm-home-book-actions">
-      <button type="button" class="primary" data-mm-home-book-primary>${hasResume?'Keep Reading':'Open Book'}</button>
-      ${hasResume?'<button type="button" class="ghost" data-mm-home-book-contents>Book contents</button>':''}
-    </div>`;
-  host.querySelector('[data-mm-home-book-primary]')?.addEventListener('click',()=>{const book=window.MMBook;if(hasResume&&typeof book?.openResume==='function')void book.openResume();else book?.open?.()});
-  host.querySelector('[data-mm-home-book-contents]')?.addEventListener('click',()=>window.MMBook?.open?.());
-}
-window.addEventListener('mm:book-resume-change',()=>renderHomeBookCard(document.getElementById('dashboard')));
-window.addEventListener('mm:domains-ready',()=>renderHomeBookCard(document.getElementById('dashboard')));
 function simplifyHomeScreen(){
   const root=document.getElementById('dashboard');
   if(!root)return;
@@ -181,7 +152,6 @@ function simplifyHomeScreen(){
   const oldQuickGrid=root.querySelector('.quick-grid');
   if(oldQuickGrid)oldQuickGrid.remove();
   root.querySelectorAll('.how-grid,.achievement-grid').forEach(el=>el.remove());
-  renderHomeBookCard(root);
 
 }
 function stabilizeRetiredChrome(){
