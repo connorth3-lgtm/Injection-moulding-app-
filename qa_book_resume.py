@@ -34,6 +34,7 @@ for marker in [
     "index>=0&&index<heads.length?heads[index]:null",
     "module:material-families:atlas",
     "bookViewportTop()",
+    "for(let node=start;node&&node!==document.body;node=node.parentElement)",
     "bindBookScrollRoot()",
     "bindMaterialPagination(ui.reader);bindBookScrollRoot();",
     "ui.reader.hidden=false;bindBack();bindMaterialPagination(ui.reader);bindBookScrollRoot();rememberReadingPosition('reader-chapter'",
@@ -83,3 +84,5 @@ for marker in [
     need(marker in storage,f"storage ownership matrix missing Book resume contract: {marker}")
 
 print("Book Keep Reading QA passed: learner-scoped persistence, reliable flush/restore, stale-record containment, Home lifecycle safety and learner reset ownership.")
+
+need("start?.parentElement" not in book.split("function bookScrollRoot(){",1)[1].split("function isDocumentScrollRoot",1)[0],"Book scroll-root discovery must consider the reader element itself before its ancestors")
