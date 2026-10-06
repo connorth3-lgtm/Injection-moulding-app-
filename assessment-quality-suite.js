@@ -100,6 +100,11 @@ function recordBlueprintExposure(level,selected){
  state.levels[level]=row;
  if(!ASSESSMENT_STORAGE.write(BLUEPRINT_HISTORY_KEY,state))throw new Error('Learner-scoped assessment blueprint history could not be saved');
 }
+function preferUnusedConcepts(indices,pool,selected){
+ const usedConcepts=new Set(selected.map(x=>x.concept));
+ const distinct=indices.filter(i=>!usedConcepts.has(pool[i].concept));
+ return distinct.length?distinct:indices;
+}
 function selectBlueprint(level){
  const pool=(D.exams[level]||[]).map((q,i)=>normaliseTech(q,i,level));
  const history=blueprintHistory(),counts=obj(history.levels[level]?.counts)?history.levels[level].counts:{};
@@ -107,14 +112,13 @@ function selectBlueprint(level){
  for(const want of BLUEPRINT){
   let candidates=[...unused].filter(i=>pool[i].competencies.includes(want));
   if(!candidates.length)candidates=[...unused].filter(i=>pool[i].competency===want);
+  candidates=preferUnusedConcepts(candidates,pool,selected);
   const idx=chooseLeastExposed(candidates,pool,counts);
   if(idx==null)continue;
   selected.push(pool[idx]);unused.delete(idx);
  }
  while(selected.length<7&&unused.size){
-  const usedConcepts=new Set(selected.map(x=>x.concept));
-  let candidates=[...unused].filter(i=>!usedConcepts.has(pool[i].concept));
-  if(!candidates.length)candidates=[...unused];
+  const candidates=preferUnusedConcepts([...unused],pool,selected);
   const idx=chooseLeastExposed(candidates,pool,counts);
   if(idx==null)break;
   selected.push(pool[idx]);unused.delete(idx);
