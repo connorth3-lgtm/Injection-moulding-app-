@@ -8,7 +8,8 @@ def need(ok,msg):
     if not ok: raise AssertionError(msg)
 
 book=text("src/domains/learning/book-runtime.js")
-shell=text("src/domains/shell/app-shell-finalize.js")
+finalizer=text("src/domains/shell/app-shell-finalize.js")
+registry=text("src/domains/shell/app-shell-registry.js")
 training=text("src/domains/learning/training-qa-fix.js")
 storage=text("docs/STORAGE_OWNERSHIP_MATRIX.md")
 
@@ -31,7 +32,10 @@ for marker in [
     "el.dataset.mmBookAnchor===anchorId",
     "index>=0&&index<heads.length?heads[index]:null",
     "module:material-families:atlas",
-    "top:-(Number(snapshot.anchorOffset)||0)",
+    "bookViewportTop()",
+    "bindBookScrollRoot()",
+    "scrollBookBy(heading.getBoundingClientRect().top-desired)",
+    "scrollBookTo(snapshot.scrollY)",
 ]:
     need(marker in book,f"Book resume hardening missing: {marker}")
 
@@ -40,13 +44,16 @@ need("LEGACY_BOOK_RESUME_KEY='mouldmasterBookResume:v1'" in book,"experimental l
 need("if(!exists){clearResume();showContents();return false}" in book,"stale Book resume must fail safely to contents")
 
 for marker in [
-    "const saved=window.MMBook?.getResume?.()||null",
-    "const book=window.MMBook;",
-    "window.MMBook?.open?.()",
-    "window.addEventListener('mm:domains-ready'",
+    "function bookDashboardState()",
+    "api.getResume?.()||null",
+    "data-mm-home-book",
+    "data-mm-home-book-action",
+    "function openBookFromShell",
+    "window.addEventListener('mm:book-resume-change',queueDashboardCompose)",
+    "window.addEventListener('mm:domains-ready',queueDashboardCompose)",
 ]:
-    need(marker in shell,f"Home Book lifecycle hardening missing: {marker}")
-need("const book=window.MMBook;\n  const saved=book?.getResume?.()||null" not in shell,"Home Book card must not capture an unloaded runtime during render")
+    need(marker in registry,f"Home Book lifecycle hardening missing from canonical registry: {marker}")
+need("renderHomeBookCard" not in finalizer,"Home Book must have one canonical UI owner; finalizer renderer must remain retired")
 
 for marker in [
     "BOOK_RESUME_PREFIX='mm_book_resume_v1::'",
