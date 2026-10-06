@@ -44,13 +44,13 @@
   "release": "2026.10.07.1",
   "candidate": {
     "release": "2026.10.07.1",
-    "sourceSha": "5026e199bcfacb4d18dadb03e29559e7f813c9b0",
-    "runtimeFingerprint": "sha256:7bf930021da33d3310749e7fa917284bc557bdd9c447909592a653d9fea445ca",
-    "candidateRunId": 37519659290,
+    "sourceSha": "e3d2ab3901863f6478816eb616d37ec37fa5de66",
+    "runtimeFingerprint": "sha256:a3c078a87cd8bef3c897cc4f0850b52a6f8da7d2f64ca7e2cc22c745632f883d",
+    "candidateRunId": 37524988041,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 11438378700,
-    "artifactName": "physical-pwa-candidate-5026e199bcfacb4d18dadb03e29559e7f813c9b0",
-    "artifactDigest": "sha256:4d33ddadbdc1c16c139c9a865a456eb2cebb7a159aa050df381c5cca86728a2c",
-    "artifactExpiresAt": "2027-01-04T19:31:51Z"
+    "artifactId": 11442385666,
+    "artifactName": "physical-pwa-candidate-e3d2ab3901863f6478816eb616d37ec37fa5de66",
+    "artifactDigest": "sha256:045a7507e8914209a76e2cfcc32850c3dbdf8019cc7757d56e131e8cf819ad86",
+    "artifactExpiresAt": "2027-01-04T20:14:51Z"
   }
 }
