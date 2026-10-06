@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.10.06.19';
-const CACHE_REVISION='deep-fix-r57-20261006';
+const CACHE_REVISION='deep-fix-r58-20261006';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both
@@ -96,6 +96,10 @@ const CORE=[
   './assets/book-diagrams/complex-diagnostics-evidence-ledger.svg',
   './assets/book-diagrams/rheology-shear-temperature.svg',
   './assets/book-diagrams/machine-mould-system-overview.svg',
+  './assets/book-diagrams/polymer-family-evidence-map.svg',
+  './assets/book-diagrams/process-baseline-evidence-package.svg',
+  './assets/book-diagrams/filling-boundary-pattern-map.svg',
+  './assets/book-diagrams/surface-defect-source-map.svg',
   './src/domains/learning/book-data/book-evidence-enrichment-v2.json',
   './src/domains/learning/book-data/book-claim-evidence-reference-v1.json',
   './src/domains/learning/book-data/book-reader-architecture-v2.json',
