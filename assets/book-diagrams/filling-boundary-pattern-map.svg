@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1020 470" role="img" aria-labelledby="title desc">
+<title id="title">Filling and boundary pattern comparison</title>
+<desc id="desc">Three conceptual cavity-pattern panels comparing a common filling shortage, a cavity-local filling shortage and a local boundary-loss or flash pattern, emphasizing cavity and location evidence.</desc>
+<g fill="none" stroke="currentColor" stroke-width="3">
+<rect x="45" y="70" width="280" height="270" rx="16"/><rect x="370" y="70" width="280" height="270" rx="16"/><rect x="695" y="70" width="280" height="270" rx="16"/>
+<rect x="105" y="135" width="160" height="120" rx="30"/><rect x="430" y="135" width="160" height="120" rx="30"/><rect x="755" y="135" width="160" height="120" rx="30"/>
+<path d="M105 195h115" stroke-dasharray="10 8"/><path d="M430 195h80" stroke-dasharray="10 8"/>
+<path d="M915 180h28M915 210h36M915 240h24"/>
+</g>
+<g font-family="system-ui,sans-serif" font-size="22" text-anchor="middle">
+<text x="185" y="105">Common shortage</text><text x="185" y="300">Look upstream / common path</text>
+<text x="510" y="105">Cavity-local shortage</text><text x="510" y="300">Compare local path + cavity</text>
+<text x="835" y="105">Local boundary loss</text><text x="835" y="300">Map exact flash location</text>
+<text x="510" y="405">Pattern is evidence—not automatic root-cause proof</text>
+</g>
+</svg>
