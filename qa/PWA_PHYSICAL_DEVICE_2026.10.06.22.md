@@ -5,15 +5,15 @@ This packet governs hands-on physical-device validation of the exact MouldMaster
 ## Exact candidate
 
 - web release: `2026.10.06.22`
-- retained pre-merge public candidate source commit: `ea7a9fc46d3f7b95119c76606d9157457284d31f`
-- public-runtime fingerprint: `sha256:e099b657b214f49d2514c3d23cc7b4cb8ebcb4d8b0ca4030304064c4ab30edd5`
-- exact candidate build run: `37417105826` (`Pre-merge Public Candidate`)
-- retained candidate artifact: `physical-pwa-candidate-ea7a9fc46d3f7b95119c76606d9157457284d31f`
-- artifact id: `11391857007`
-- artifact ZIP digest: `sha256:371a44f43a0e268296effc5117f4531622b79638534efdfb47e72e145c00df11`
-- artifact retention expiry: `2027-01-04T05:09:05Z`
+- retained pre-merge public candidate source commit: `b62c55733aac492a9495d0864987a987d21b19dc`
+- public-runtime fingerprint: `sha256:e411c2aa6e2152df46312e55af84dcdaab9b5385f8fbf99218269f2fbb6138dc`
+- exact candidate build run: `37420308454` (`Pre-merge Public Candidate`)
+- retained candidate artifact: `physical-pwa-candidate-b62c55733aac492a9495d0864987a987d21b19dc`
+- artifact id: `11392607667`
+- artifact ZIP digest: `sha256:194f0fd06721d0dadff4c72a14b6dec493bb7c463148fff490225da092328052`
+- artifact retention expiry: `2027-01-04T05:47:38Z`
 
-The retained candidate was built from exact pre-merge source commit `ea7a9fc46d3f7b95119c76606d9157457284d31f` by the governed Pages artifact builder and public-runtime fingerprint verifier. This is a **candidate rebind**, not physical-device evidence. Release `2026.10.06.22` incorporates the current navigation/mobile polish and governance hardening while preserving the existing physical-device evidence boundary. The prior release risk waiver is not carried forward; both physical platform rows are pending for this runtime. External evidence binds to this retained exact-head artifact, never to the mutable `preview` branch tip.
+The retained candidate was built from exact pre-merge source commit `b62c55733aac492a9495d0864987a987d21b19dc` by the governed Pages artifact builder and public-runtime fingerprint verifier. This is a **candidate rebind**, not physical-device evidence. Release `2026.10.06.22` incorporates the current navigation/mobile polish and governance hardening while preserving the existing physical-device evidence boundary. The prior release risk waiver is not carried forward; both physical platform rows are pending for this runtime. External evidence binds to this retained exact-head artifact, never to the mutable `preview` branch tip.
 
 ## Required iOS / iPadOS execution
 
