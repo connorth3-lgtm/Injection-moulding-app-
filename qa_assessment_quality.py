@@ -78,7 +78,7 @@ for(const level of ['Beginner','Intermediate','Advanced']){
  for(const region of ['UK','US','NZ','ALL']){
   let minConcepts=99;
   for(let pass=0;pass<50;pass++){
-   const technical=window.getExamQuestions(level,region).filter(q=>q.stableId.startsWith('tech:'));
+   const technical=sandbox.window.getExamQuestions(level,region).filter(q=>q.stableId.startsWith('tech:'));
    minConcepts=Math.min(minConcepts,new Set(technical.map(q=>q.concept)).size);
   }
   stress[level][region]=minConcepts;
