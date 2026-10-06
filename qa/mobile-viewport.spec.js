@@ -78,8 +78,11 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
         const book=document.querySelector('#dashboard [data-mm-home-book]').getBoundingClientRect();
         const tools=document.querySelector('#dashboard .mm-home-balance').getBoundingClientRect();
         const nav=document.querySelector('.mobile-nav').getBoundingClientRect();
-        return {focusBottom:focus.bottom,bookTop:book.top,bookBottom:book.bottom,toolsTop:tools.top,navTop:nav.top};
+        const preview=document.getElementById('mmNonProductionPreviewWarning')?.getBoundingClientRect();
+        return {focusBottom:focus.bottom,bookTop:book.top,bookBottom:book.bottom,toolsTop:tools.top,navTop:nav.top,previewHeight:preview?.height||0};
       });
+      expect(firstViewport.previewHeight).toBeGreaterThan(0);
+      expect(firstViewport.previewHeight).toBeLessThanOrEqual(96);
       expect(firstViewport.bookTop).toBeGreaterThanOrEqual(firstViewport.focusBottom-1);
       expect(firstViewport.bookBottom).toBeLessThanOrEqual(firstViewport.navTop+2);
       expect(firstViewport.toolsTop).toBeGreaterThanOrEqual(firstViewport.bookBottom-1);
