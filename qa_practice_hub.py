@@ -20,6 +20,7 @@ required_hub = {
     "question centre": "Question Centre",
     "question centre launcher": 'data-mm-hub-action="question-centre"',
     "formal question lane": "Formal knowledge checks",
+    "formal attempt contract": "10 questions in one jurisdiction or 16 in Compare All.",
     "scenario question lane": "Shop-floor scenarios",
     "diagnostic question lane": "Diagnostic questions",
     "material question lane": "Material questions",

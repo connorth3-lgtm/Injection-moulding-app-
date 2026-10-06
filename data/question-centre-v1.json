@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "2026.10.07.2",
+  "version": "2026.10.07.3",
   "status": "governed-launcher-index",
   "purpose": "One learner-facing inventory for the main question and decision activities without duplicating or re-authoring their governed source content.",
   "primaryPromptCount": 169,
@@ -15,7 +15,18 @@
       },
       "source": "assessment-quality-suite.js",
       "launcherAction": "assessments",
-      "scoring": "formal assessment; 80% overall plus every safety-critical regional item correct"
+      "scoring": "formal assessment; 80% overall plus every safety-critical regional item correct",
+      "attemptPatterns": {
+        "singleJurisdiction": "10 questions: 7 technical + 3 regional safety/compliance",
+        "compareAll": "16 questions: 7 technical + 9 regional safety/compliance"
+      },
+      "technicalReachability": "30/30 approved technical items are reachable across repeated learner-scoped least-exposed blueprint-balanced forms.",
+      "outcomeMapping": {
+        "proposedTechnicalMappings": "30/30",
+        "approvedTechnicalMappings": "0/30",
+        "status": "pending-independent-sme-review",
+        "source": "qa/assessment-outcome-review.json"
+      }
     },
     {
       "id": "scenarios",
