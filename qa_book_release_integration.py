@@ -359,6 +359,12 @@ need("if(chapter.state==='verified')ui.reader.innerHTML=`${back}${verifiedChapte
 need("verified.map(chapter=>verifiedChapterHtml(chapter,{includeTechnicalMaterial:false})).join('')" in book_runtime, 'Book listen surface must exclude technical-review material appendix')
 need("ui.listen.addEventListener('click',startVerifiedListening)" in book_runtime, 'Book listening control is not bound')
 need('style="' not in book_runtime and "style='" not in book_runtime, 'Book runtime reintroduced inline HTML style attributes')
+for marker in ('READER_SECTION_OMISSIONS','READER_SUPPLEMENT_SECTIONS','readerSections','readerSupplementHtml','readerModuleEvidenceHtml','mm-book-reader-governance','mm-book-inline-evidence'):
+    need(marker in book_runtime, f'Book reader editorial consolidation safeguard missing: {marker}')
+need("'diagnostic-method':Object.freeze(['Start with the symptom','Build competing mechanisms','Change to learn'" in book_runtime, 'Book reader must consolidate the repeated diagnostic-method opening')
+need("'documentation':Object.freeze(['Reading ISO 9001 marks on material packaging'])" in book_runtime, 'Book reader must move the packaging/certification example into optional context')
+need("workedCaseHtml(chapter,{readerMode:true})" in book_runtime and "diagramHtml(chapter,{readerMode:true})" in book_runtime, 'Book reader must keep cases/diagrams while reducing repeated governance text')
+need('Module evidence' in book_runtime and 'Worked-example evidence' in book_runtime and 'Chapter references' in book_runtime, 'Book reader evidence must remain available behind progressive disclosure')
 
 # Desktop packaging must continue to carry the same canonical domain/data tree.
 extra = desktop['build']['extraResources']

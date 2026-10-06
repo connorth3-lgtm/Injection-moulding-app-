@@ -48,6 +48,14 @@
 .mm-book-governance-body p,.mm-book-assurance-body p{line-height:1.5}
 .mm-book-governance-body [data-mm-book-summary]{margin:11px 0 5px;font-size:12px;color:#d3dfeb}
 .mm-book-governance-body [data-mm-book-sme-status]{margin:5px 0;font-size:12px}
+.mm-book-reader-governance,.mm-book-inline-evidence,.mm-book-reader-references,.mm-book-reader-supplement{margin:12px 0;border:1px solid rgba(125,169,205,.16);border-radius:12px;background:rgba(8,21,35,.46);overflow:hidden}
+.mm-book-reader-governance>summary,.mm-book-inline-evidence>summary,.mm-book-reader-references>summary,.mm-book-reader-supplement>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:42px;padding:9px 12px;cursor:pointer;color:#dce8f6}
+.mm-book-reader-governance>summary::-webkit-details-marker,.mm-book-inline-evidence>summary::-webkit-details-marker,.mm-book-reader-references>summary::-webkit-details-marker,.mm-book-reader-supplement>summary::-webkit-details-marker{display:none}
+.mm-book-reader-governance>summary::after,.mm-book-inline-evidence>summary::after,.mm-book-reader-references>summary::after,.mm-book-reader-supplement>summary::after{content:"+";font-size:17px;color:var(--mm-accent,#5fe0c6)}
+.mm-book-reader-governance[open]>summary::after,.mm-book-inline-evidence[open]>summary::after,.mm-book-reader-references[open]>summary::after,.mm-book-reader-supplement[open]>summary::after{content:"−"}
+.mm-book-reader-governance>p,.mm-book-inline-evidence>div,.mm-book-reader-references>div,.mm-book-reader-supplement>div{margin:0;padding:10px 12px 12px;border-top:1px solid rgba(125,169,205,.12)}
+.mm-book-reader-module>.eyebrow{opacity:.82}
+.mm-book-reader-module .mm-book-claim-trace{margin-top:10px}
 .mm-book-hero-actions{display:flex;align-items:center;gap:8px;margin-top:4px}
 .mm-book-hero-actions [data-mm-book-mode="listen"]{min-height:38px!important;padding:7px 11px!important;font-size:12px!important}
 #mmBookView [data-mm-book-accuracy]{padding:0!important;background:transparent!important;border-color:transparent!important;box-shadow:none!important}
