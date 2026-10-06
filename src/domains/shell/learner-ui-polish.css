@@ -54,9 +54,6 @@
 .mm-book-reader-governance>summary::after,.mm-book-inline-evidence>summary::after,.mm-book-reader-references>summary::after,.mm-book-reader-supplement>summary::after{content:"+";font-size:17px;color:var(--mm-accent,#5fe0c6)}
 .mm-book-reader-governance[open]>summary::after,.mm-book-inline-evidence[open]>summary::after,.mm-book-reader-references[open]>summary::after,.mm-book-reader-supplement[open]>summary::after{content:"−"}
 .mm-book-reader-governance>p,.mm-book-inline-evidence>div,.mm-book-reader-references>div,.mm-book-reader-supplement>div{margin:0;padding:10px 12px 12px;border-top:1px solid rgba(125,169,205,.12)}
-.mm-book-reader-derived{margin:14px 0;padding:12px 14px;border-left:3px solid rgba(95,224,198,.55);background:rgba(12,31,48,.5)}
-.mm-book-reader-derived h4{margin:0 0 7px}
-.mm-book-reader-derived ul{margin:0;padding-left:20px}
 .mm-book-reader-module>.eyebrow{opacity:.82}
 .mm-book-reader-module .mm-book-claim-trace{margin-top:10px}
 .mm-book-hero-actions{display:flex;align-items:center;gap:8px;margin-top:4px}
