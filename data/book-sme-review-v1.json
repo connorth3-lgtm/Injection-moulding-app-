@@ -142,7 +142,11 @@
     "diagram-dimensional-conditioning-v1",
     "diagram-machine-mould-system-overview-v1",
     "diagram-rheology-shear-temperature-v1",
-    "diagram-complex-diagnostics-evidence-ledger-v1"
+    "diagram-complex-diagnostics-evidence-ledger-v1",
+    "diagram-polymer-family-evidence-map-v1",
+    "diagram-process-baseline-evidence-package-v1",
+    "diagram-filling-boundary-pattern-map-v1",
+    "diagram-surface-defect-source-map-v1"
   ],
   "diagramReviewRequirement": "Review all governed instructional diagrams for mechanism accuracy, labels, accessibility text, non-scale boundary and consistency with module evidence. Where a module has multiple diagrams, all are in scope. Diagrams do not count as independently SME-approved until the owning module review is approved."
 }
