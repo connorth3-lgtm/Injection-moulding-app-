@@ -41,5 +41,16 @@
     }
   },
   "privacyBoundary": "Public contract metadata must not include learner names, customer/site identifiers, email addresses, private screenshots, raw process data, backup content, filesystem/user paths or other personal/proprietary evidence. Keep detailed device evidence outside the public repository and reference it only with a non-sensitive review identifier.",
-  "release": "2026.10.07.10"
+  "release": "2026.10.07.10",
+  "candidate": {
+    "release": "2026.10.07.10",
+    "sourceSha": "f1a1a85fd98d593f5a01f3e0812b69f24f515838",
+    "runtimeFingerprint": "sha256:8cef2ed43e7127868f90427956ba9370ecd74f8b39e7fb8fc3b6cfe7c4bfc3f9",
+    "candidateRunId": 37542863980,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 11449367318,
+    "artifactName": "physical-pwa-candidate-f1a1a85fd98d593f5a01f3e0812b69f24f515838",
+    "artifactDigest": "sha256:75d57b3ffc2409f5bf355a95eec7038f1ad12cfd00486e7c5a4d102386c195c7",
+    "artifactExpiresAt": "2026-11-05T22:48:28Z"
+  }
 }
