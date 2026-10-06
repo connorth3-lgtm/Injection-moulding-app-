@@ -273,7 +273,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
         raise AssertionError("live Book worked-case ledger identity/release mismatch")
     if worked_release > web_release or worked_auth.get("release") != worked_release:
         raise AssertionError("live Book worked-case authorization is not bound to its governed content release")
-    if not isinstance(cases, list) or len(cases) != 18 or len({str(x.get("id")) for x in cases if isinstance(x, dict)}) != 18:
+    if not isinstance(cases, list) or len(cases) != 27 or len({str(x.get("id")) for x in cases if isinstance(x, dict)}) != 27:
         raise AssertionError("live Book worked-case ledger must contain exactly 27 unique cases")
     worked_ids = [str(x.get("id")) for x in cases]
     diagrams = fetch_json(candidate, DIAGRAMS)
