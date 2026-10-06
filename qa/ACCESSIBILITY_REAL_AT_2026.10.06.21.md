@@ -6,14 +6,14 @@ This packet governs **human** assistive-technology validation for web release `2
 
 - web release: `2026.10.06.21`
 - retained pre-merge public candidate source commit: `ea7a9fc46d3f7b95119c76606d9157457284d31f`
-- public-runtime fingerprint: `sha256:b210eea89068c9d43b4c7cf8fcdd4a902e591dacad8ba9016575360f140511ce`
+- public-runtime fingerprint: `sha256:e099b657b214f49d2514c3d23cc7b4cb8ebcb4d8b0ca4030304064c4ab30edd5`
 - retained physical candidate: `physical-pwa-candidate-ea7a9fc46d3f7b95119c76606d9157457284d31f` (`11391857007`)
 - candidate build run: `37417105826` (`Pre-merge Public Candidate`)
 - artifact ZIP digest: `sha256:371a44f43a0e268296effc5117f4531622b79638534efdfb47e72e145c00df11`
 - artifact retention expiry: `2027-01-04T05:09:05Z`
 - evidence contract: `data/accessibility-real-at-validation-v1.json`
 
-This is a candidate **rebind**, not new AT evidence. Release `2026.10.06.21` is bound to exact pre-merge learner-runtime candidate `ea7a9fc46d3f7b95119c76606d9157457284d31f` / `sha256:b210eea89068c9d43b4c7cf8fcdd4a902e591dacad8ba9016575360f140511ce`. No earlier human or device evidence is relabelled. If learner-facing runtime bytes change again, this packet must be rebound before new validation is recorded; the mutable `preview` branch tip is never validation identity.
+This is a candidate **rebind**, not new AT evidence. Release `2026.10.06.21` is bound to exact pre-merge learner-runtime candidate `ea7a9fc46d3f7b95119c76606d9157457284d31f` / `sha256:e099b657b214f49d2514c3d23cc7b4cb8ebcb4d8b0ca4030304064c4ab30edd5`. No earlier human or device evidence is relabelled. If learner-facing runtime bytes change again, this packet must be rebound before new validation is recorded; the mutable `preview` branch tip is never validation identity.
 
 ## Required matrix
 
