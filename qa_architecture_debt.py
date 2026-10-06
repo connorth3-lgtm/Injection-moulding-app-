@@ -221,6 +221,13 @@ need("./src/core-runtime/inline-style-bridge.js" in index, "strict inline-style 
 for path in core_runtime_scripts:
     need(f'src="./src/core-runtime/{path.name}"' in prepared_core, f"prepared core payload missing generated runtime slot: {path.name}")
 
+need("const CORE_RUNTIME_PRELOADS=Object.freeze(Array.from({length:10}" in index,'bootstrap must declare the ten governed generated core script preloads')
+need("function preloadStartupScript(src)" in index and "link.rel='preload'" in index and "link.as='script'" in index,'bootstrap must overlap startup script transfers using non-executing preload links')
+need("function preloadStartupScripts()" in index and "...BODY_SCRIPTS.map(row=>row[0])" in index,'startup preloading must include governed body scripts without introducing a second execution registry')
+need(index.index("preloadStartupScripts();") < index.index("assemble(await getCore())"),'startup preloads must begin before the prepared core payload is fetched and assembled')
+need("preloadStartupScript(src)" in index and "document.head.appendChild(link)" in index,'startup preload links must be attached to the document head')
+need("link.dataset.mmStartupPreload='1'" in index,'startup preloads must be identifiable for browser QA and duplicate suppression')
+
 # CSP may become stricter, but it may not add unsafe-eval, remote script origins,
 # inline script attributes, or external runtime connections.
 csp_match = re.search(r'const\s+CSP="([^"]+)"', index)
