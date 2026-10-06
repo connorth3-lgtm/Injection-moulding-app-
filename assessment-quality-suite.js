@@ -97,7 +97,7 @@ function orderedTechnicalPool(level,preferredStableIds=[]){
  const pool=(D.exams[level]||[]).map((q,i)=>normaliseTech(q,i,level));
  if(Array.isArray(preferredStableIds)&&preferredStableIds.length){
   const rank=new Map(preferredStableIds.map((id,index)=>[String(id),index]));
-  return pool.slice().sort((a,b)=>(rank.has(a.stableId)?rank.get(a.stableId):-1)-(rank.has(b.stableId)?rank.get(b.stableId):-1));
+  return pool.slice().sort((a,b)=>(rank.has(a.stableId)?rank.get(a.stableId):Number.MAX_SAFE_INTEGER)-(rank.has(b.stableId)?rank.get(b.stableId):Number.MAX_SAFE_INTEGER));
  }
  return shuffle(pool);
 }
