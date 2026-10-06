@@ -81,7 +81,26 @@ jobs:
           echo "- source SHA: \`${{ github.event.pull_request.head.sha || github.sha }}\`" >> "$GITHUB_STEP_SUMMARY"
           echo "- runtime fingerprint: \`$value\`" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Require exact PR-head quality gates before retaining candidate
+      - name: Retain exact candidate for external HOLD execution
+        if: steps.impact.outputs.runtime == 'true'
+        id: artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: physical-pwa-candidate-${{ github.event.pull_request.head.sha || github.sha }}
+          path: .pages-dist
+          if-no-files-found: error
+          retention-days: 90
+          compression-level: 9
+          include-hidden-files: true
+
+      - name: Record artifact provenance
+        if: steps.impact.outputs.runtime == 'true'
+        run: |
+          echo "- artifact id: \`${{ steps.artifact.outputs.artifact-id }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- artifact digest: \`${{ steps.artifact.outputs.artifact-digest }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "This artifact is a validation candidate only. It does not create physical-device, assistive-technology, SME, learner-outcome, signing, Store, accreditation or production authority." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Require exact PR-head quality gates before candidate approval
         if: github.event_name == 'pull_request' && steps.impact.outputs.runtime == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
@@ -111,22 +130,3 @@ jobs:
           done
           echo "::error::Timed out waiting for exact PR-head quality gates."
           exit 1
-
-      - name: Retain exact candidate for external HOLD execution
-        if: steps.impact.outputs.runtime == 'true'
-        id: artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: physical-pwa-candidate-${{ github.event.pull_request.head.sha || github.sha }}
-          path: .pages-dist
-          if-no-files-found: error
-          retention-days: 90
-          compression-level: 9
-          include-hidden-files: true
-
-      - name: Record artifact provenance
-        if: steps.impact.outputs.runtime == 'true'
-        run: |
-          echo "- artifact id: \`${{ steps.artifact.outputs.artifact-id }}\`" >> "$GITHUB_STEP_SUMMARY"
-          echo "- artifact digest: \`${{ steps.artifact.outputs.artifact-digest }}\`" >> "$GITHUB_STEP_SUMMARY"
-          echo "This artifact is a validation candidate only. It does not create physical-device, assistive-technology, SME, learner-outcome, signing, Store, accreditation or production authority." >> "$GITHUB_STEP_SUMMARY"

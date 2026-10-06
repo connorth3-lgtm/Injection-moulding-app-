@@ -118,14 +118,15 @@ for forbidden in ("actions/deploy-pages@", "actions/upload-pages-artifact@", "pa
 need("actions: read" in premerge, "pre-merge public candidate must be able to read exact-head check evidence")
 need("timeout-minutes: 45" in premerge, "pre-merge public candidate must allow substantive browser gates to finish")
 for marker in (
-    "Require exact PR-head quality gates before retaining candidate",
+    "Require exact PR-head quality gates before candidate approval",
     "required=(integrity mobile-browser question-quality-50-pass)",
     "commits/${SOURCE_SHA}/check-runs?per_page=100",
     "Exact PR-head quality gates passed for $SOURCE_SHA",
     "Timed out waiting for exact PR-head quality gates.",
 ):
     need(marker in premerge, f"pre-merge public candidate aggregate gate missing: {marker}")
-need(premerge.index("Require exact PR-head quality gates before retaining candidate") < premerge.index("Retain exact candidate for external HOLD execution"), "pre-merge candidate must not retain an artifact before exact-head quality gates pass")
+need(premerge.index("Retain exact candidate for external HOLD execution") < premerge.index("Require exact PR-head quality gates before candidate approval"), "pre-merge workflow must retain the exact candidate needed by Release QA before waiting on aggregate approval")
+need(premerge.index("Record artifact provenance") < premerge.index("Require exact PR-head quality gates before candidate approval"), "pre-merge aggregate approval must remain the final gate after candidate provenance is recorded")
 assert_pinned_actions(
     "desktop",
     desktop,
