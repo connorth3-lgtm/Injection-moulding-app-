@@ -65,16 +65,6 @@
   const READER_SUPPLEMENT_SECTIONS=Object.freeze({
     'documentation':Object.freeze(['Reading ISO 9001 marks on material packaging'])
   });
-  const READER_DERIVED_SUMMARIES=Object.freeze({
-    'high-performance-polymers':Object.freeze({
-      title:'Compatibility review before processing a new grade',
-      items:Object.freeze([
-        'Use the current TDS, processing guide and SDS for the exact grade.',
-        'Verify machine, screw, barrel, nozzle, mould, hot-runner and ancillary-equipment compatibility for the required conditions.',
-        'Check residence sensitivity, corrosion, wear, shear and purge/changeover requirements before treating the material change as only a recipe change.'
-      ])
-    })
-  });
   let manifest=null,manifestPromise=null,materialPromise=null,coldMaterialSearchPromise=null,publicationAuthorization=null,bookSmeReview=null,qualificationReview=null,highRiskReview=null,workedCaseLedger=null,workedCasesByChapter=new Map(),diagramLedger=null,diagramsByChapter=new Map(),evidenceEnrichmentLedger=null,claimEvidenceReference=null,claimEvidenceByChapter=new Map(),claimEvidenceClaimsByChapter=new Map(),readerArchitecture=null,editorialExpansionReview=null,materialAtlas=null,materialCatalog=null,materialRegionalEvidence=null,materialSearchIndex={catalog:[],regional:[]},integrityMap=null,ui=null,previousView=null,open=false,contentsScrollY=0;
   const BOOK_RESUME_PREFIX='mm_book_resume_v1::',LEGACY_BOOK_RESUME_KEY='mouldmasterBookResume:v1',BOOK_RESUME_SCHEMA=1;
   let activeReadingPosition=null,resumeScrollTimer=0,boundBookScrollRoot=null;
@@ -483,10 +473,6 @@
     if(!rows.length)return '';
     return `<details class="mm-book-reader-supplement"><summary><b>Additional context</b> — optional quality/evidence sidebar</summary><div>${rows.map((section,index)=>`<section><h4 data-mm-book-anchor="module:${esc(chapter.id)}:supplement:${index}">${esc(section.title)}</h4><p>${esc(section.text)}</p></section>`).join('')}</div></details>`;
   }
-  function readerDerivedSummaryHtml(chapter){
-    const summary=READER_DERIVED_SUMMARIES[chapter.id];if(!summary)return '';
-    return `<section class="mm-book-reader-derived"><h4>${esc(summary.title)}</h4><ul>${summary.items.map(item=>`<li>${esc(item)}</li>`).join('')}</ul></section>`;
-  }
   function diagramHtml(chapter,options={}){const readerMode=options.readerMode===true,items=diagramsByChapter.get(chapter.id)||[];return items.map(item=>`<figure class="mm-book-engineering-diagram" data-mm-book-diagram="${esc(item.id)}"><img src="./${esc(item.asset)}" alt="${esc(item.alt)}" loading="lazy" decoding="async"><figcaption><b>${esc(item.title)}</b><br><span>${esc(item.caption)}</span><br><small>${readerMode?'Instructional diagram · not to scale':'Governed instructional diagram · not to scale · independent human SME review remains pending.'}</small></figcaption></figure>`).join('');}
   function workedCaseHtml(chapter,options={}){
     const readerMode=options.readerMode===true,items=workedCasesByChapter.get(chapter.id)||[];
@@ -518,7 +504,7 @@
     const sections=readerSections(chapter),verified=chapter.state==='verified';
     const status=verified?'Source evidence reviewed':stateLabel(chapter.state);
     const boundary=!verified&&chapter.reviewBoundary?`<div class="callout"><b>Review boundary:</b> ${esc(chapter.reviewBoundary)}</div>`:'';
-    return `<section class="mm-book-reader-module" data-mm-book-reader-module="${esc(chapter.id)}"><span class="eyebrow">${esc(status)} · governed module</span><h3 data-mm-book-anchor="module:${esc(chapter.id)}">${esc(chapter.title)}</h3><p><b>Applicability:</b> ${esc(chapter.applicability||'See governed module scope.')}</p>${boundary}${sections.map((s,index)=>`<section><h4 data-mm-book-anchor="module:${esc(chapter.id)}:section:${index}">${esc(s.title||'')}</h4><p>${esc(s.text||'')}</p></section>`).join('')}${readerDerivedSummaryHtml(chapter)}${readerSupplementHtml(chapter)}${diagramHtml(chapter,{readerMode:true})}${workedCaseHtml(chapter,{readerMode:true})}${chapter.id==='material-families'?materialAtlasHtml(chapter):''}${readerModuleEvidenceHtml(chapter)}</section>`;
+    return `<section class="mm-book-reader-module" data-mm-book-reader-module="${esc(chapter.id)}"><span class="eyebrow">${esc(status)} · governed module</span><h3 data-mm-book-anchor="module:${esc(chapter.id)}">${esc(chapter.title)}</h3><p><b>Applicability:</b> ${esc(chapter.applicability||'See governed module scope.')}</p>${boundary}${sections.map((s,index)=>`<section><h4 data-mm-book-anchor="module:${esc(chapter.id)}:section:${index}">${esc(s.title||'')}</h4><p>${esc(s.text||'')}</p></section>`).join('')}${readerSupplementHtml(chapter)}${diagramHtml(chapter,{readerMode:true})}${workedCaseHtml(chapter,{readerMode:true})}${chapter.id==='material-families'?materialAtlasHtml(chapter):''}${readerModuleEvidenceHtml(chapter)}</section>`;
   }
   function readerChapterHtml(reader){
     const modules=reader.moduleIds.map(id=>allChapters().find(ch=>ch.id===id));if(modules.some(x=>!x))throw new Error(`Reader chapter contains unavailable governed module: ${reader.id}`);
