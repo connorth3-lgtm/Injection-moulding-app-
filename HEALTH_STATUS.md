@@ -2,7 +2,7 @@
 
 Historical health-control review: **2026-09-18**  
 Historical source commit: `3e020626205ebdb3c62a155105b6bfb91b8e70df`  
-Current governed web candidate: **2026.10.06.15**
+Current governed web candidate: **2026.10.06.16**
 
 This file is generated from `data/health-program-v1.json`. It reports engineering/operations health separately from deliberate external-validation HOLDs.
 
@@ -27,7 +27,7 @@ Current block reason: Release promotion is blocked until GitHub's live main rule
 
 ## Current release contract
 
-- Current governed web candidate: **2026.10.06.15**.
+- Current governed web candidate: **2026.10.06.16**.
 - Current release promotion is governed by the declared fast/deep CI tiers and exact-head protected workflows; the historical PR count above is not presented as current-release evidence.
 - Native main governance: **pending-native-ruleset-apply**. Promotion remains blocked until the live ruleset satisfies the canonical policy.
 - Current external-validation boundary: **HOLD** until genuine release-bound human/device/platform evidence satisfies the governed exit conditions.
