@@ -309,8 +309,8 @@ def validate_book_sme(section: dict, expected_release: str) -> None:
         fail("Book SME contract must contain exactly 46 unique governed chapter ids")
     if len(worked_case_ids) != 27:
         fail("Book SME contract must contain exactly 27 governed worked engineering cases")
-    if len(diagram_ids) != 21:
-        fail("Book SME contract must contain exactly 21 governed instructional diagrams")
+    if len(diagram_ids) != 25:
+        fail("Book SME contract must contain exactly 25 governed instructional diagrams")
     if not isinstance(reviews, list):
         fail("Book SME reviews must be a list")
     if section["status"] == "hold":
@@ -355,7 +355,7 @@ def validate_book_sme(section: dict, expected_release: str) -> None:
     if reviewed_worked != worked_case_ids:
         fail("validated Book SME reviews must explicitly account for all 27 governed worked engineering cases")
     if reviewed_diagrams != diagram_ids:
-        fail("validated Book SME reviews must explicitly account for all 21 governed instructional diagrams")
+        fail("validated Book SME reviews must explicitly account for all 25 governed instructional diagrams")
 
 def validate_curriculum(section: dict, expected_release: str) -> None:
     packet = require_release_packet(

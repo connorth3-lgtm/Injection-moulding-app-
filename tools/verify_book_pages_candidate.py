@@ -222,7 +222,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     worked_auth = auth.get("workedCasesAuthorization")
     if not isinstance(worked_auth, dict) or worked_auth.get("status") != "authorized":
         raise AssertionError("live Book worked-case authorization is missing")
-    if worked_auth.get("caseCount") != 18 or worked_auth.get("claimCount") != 18:
+    if worked_auth.get("caseCount") != 27 or worked_auth.get("claimCount") != 27:
         raise AssertionError("live Book worked-case authorization counts drifted")
     if worked_auth.get("independentSmeStatus") != "hold":
         raise AssertionError("live Book worked-case authorization must preserve independent SME HOLD")
@@ -230,7 +230,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     enrichment_auth = auth.get("evidenceEnrichmentAuthorization")
     if not isinstance(enrichment_auth, dict) or enrichment_auth.get("status") != "authorized":
         raise AssertionError("live Book evidence-enrichment authorization is missing")
-    if enrichment_auth.get("chapterCount") != 10 or enrichment_auth.get("sectionCount") != 13:
+    if enrichment_auth.get("chapterCount") != 10 or enrichment_auth.get("sectionCount") != 14:
         raise AssertionError("live Book evidence-enrichment authorization counts drifted")
     if enrichment_auth.get("independentSmeStatus") != "hold":
         raise AssertionError("live Book evidence-enrichment authorization must preserve independent SME HOLD")
@@ -273,15 +273,15 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
         raise AssertionError("live Book worked-case ledger identity/release mismatch")
     if worked_release > web_release or worked_auth.get("release") != worked_release:
         raise AssertionError("live Book worked-case authorization is not bound to its governed content release")
-    if not isinstance(cases, list) or len(cases) != 18 or len({str(x.get("id")) for x in cases if isinstance(x, dict)}) != 18:
-        raise AssertionError("live Book worked-case ledger must contain exactly 18 unique cases")
+    if not isinstance(cases, list) or len(cases) != 27 or len({str(x.get("id")) for x in cases if isinstance(x, dict)}) != 27:
+        raise AssertionError("live Book worked-case ledger must contain exactly 27 unique cases")
     worked_ids = [str(x.get("id")) for x in cases]
     diagrams = fetch_json(candidate, DIAGRAMS)
     diagram_rows = diagrams.get("diagrams")
     diagram_auth = auth.get("diagramAuthorization")
-    if not isinstance(diagram_auth, dict) or diagram_auth.get("status") != "authorized-instructional-diagrams" or diagram_auth.get("diagramCount") != 8 or diagram_auth.get("independentSmeStatus") != "hold":
+    if not isinstance(diagram_auth, dict) or diagram_auth.get("status") != "authorized-instructional-diagrams" or diagram_auth.get("diagramCount") != 25 or diagram_auth.get("independentSmeStatus") != "hold":
         raise AssertionError("live Book engineering-diagram authorization is missing or weakened")
-    if diagrams.get("schemaVersion") != 1 or diagrams.get("bookId") != "mouldmaster-book" or diagrams.get("release") != worked_release or not isinstance(diagram_rows, list) or len(diagram_rows) != 8:
+    if diagrams.get("schemaVersion") != 1 or diagrams.get("bookId") != "mouldmaster-book" or diagrams.get("release") != worked_release or not isinstance(diagram_rows, list) or len(diagram_rows) != 25:
         raise AssertionError("live Book engineering-diagram ledger identity/count mismatch")
     diagram_ids=[]
     for item in diagram_rows:
@@ -292,7 +292,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
         if git_blob_sha(fetch_bytes(candidate, asset)) != expected:
             raise AssertionError(f"live Book engineering-diagram byte mismatch: {asset}")
         diagram_ids.append(str(item.get("id") or ""))
-    if len(set(diagram_ids)) != 8 or sme.get("diagramIds") != diagram_ids:
+    if len(set(diagram_ids)) != 25 or sme.get("diagramIds") != diagram_ids:
         raise AssertionError("live Book SME contract does not cover the governed engineering diagrams")
     if sme.get("release") != worked_release or sme.get("workedCaseIds") != worked_ids:
         raise AssertionError("live Book SME contract does not cover the governed worked-case release")
@@ -306,7 +306,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     if not isinstance(patches, list) or len(patches) != 10 or len({str(x.get("chapterId")) for x in patches if isinstance(x, dict)}) != 10:
         raise AssertionError("live Book evidence-enrichment ledger must contain exactly 10 unique chapter patches")
     if sum(len(x.get("sections") or []) for x in patches if isinstance(x, dict)) != 13:
-        raise AssertionError("live Book evidence-enrichment ledger must contain exactly 13 governed sections")
+        raise AssertionError("live Book evidence-enrichment ledger must contain exactly 14 governed sections")
     enrichment_ids = [str(x.get("chapterId")) for x in patches]
     sme_enrichment_ids = sme.get("enrichmentChapterIds")
     if sme.get("release") != enrichment_release:
@@ -347,7 +347,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
         f"Live MouldMaster Book candidate verified at {candidate}: release {web_release}; "
         "8 parts / 46 chapters; authorization 116 supported / 21 scoped-qualified / 0 hold / 0 conflict; "
         f"Book content release {worked_release}; independent SME contract status={sme_status!r}, approved={sme_approved}/{sme_total}; "
-        "18 byte-authorized worked cases, 8 governed engineering diagrams and 13 enrichment sections are covered by the SME HOLD; "
+        "27 byte-authorized worked cases, 25 governed engineering diagrams and 14 enrichment sections are covered by the SME HOLD; "
         "the technical-review material reference exposes 260 canonical grades plus all 284 regional evidence rows and is excluded from listen-all; "
         "authored drafts remain non-self-promoting; Read/Listen shared-runtime markers are present."
     )

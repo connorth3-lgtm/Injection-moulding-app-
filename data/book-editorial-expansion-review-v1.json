@@ -8,7 +8,7 @@
   "reviewBoundary": "Repository-controlled technical/source review only. It confirms that added explanatory prose remains within existing governed claim scope; it is not independent human SME validation and cannot create machine-, mould-, grade-, product- or site-specific production authority.",
   "readerArchitecture": {
     "path": "data/book-reader-architecture-v2.json",
-    "gitBlobSha1": "65708fe61a510bb8424ba3878d85b22409059b72",
+    "gitBlobSha1": "e07737c52a05658cdfc0432dc4997604d95d9cdb",
     "conclusion": "structural-only-no-new-technical-claims"
   },
   "reviewedModules": [

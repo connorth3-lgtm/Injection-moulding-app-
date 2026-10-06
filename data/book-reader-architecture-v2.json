@@ -77,7 +77,8 @@
         "When must supplier grade documentation override generic family guidance?"
       ],
       "applyPrompt": "Choose one material family and list which process observations you would verify before transferring a process from another grade.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "scenarioPrompt": "Two exact grades from the same material family are proposed for the same mould. Without assuming interchangeability, list the grade documents and observed process/part evidence you would compare before deciding whether a transfer is defensible."
     },
     {
       "id": "r04",
@@ -222,7 +223,8 @@
       "depthBand": "Engineer",
       "learningObjectives": [
         "Use staged experiments to separate filling, restriction, packing and robustness.",
-        "Interpret response plateaus and process windows without creating universal recipes."
+        "Interpret response plateaus and process windows without creating universal recipes.",
+        "Sequence development studies so each test answers a defined engineering question."
       ],
       "checkQuestions": [
         "What does a fill study try to isolate?",
@@ -251,7 +253,8 @@
         "What observation would force you to reject your preferred hypothesis?"
       ],
       "applyPrompt": "Take one defect and write three competing mechanisms, one prediction for each, and one discriminating test.",
-      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "scenarioPrompt": "A defect improves after one controlled change. Build two alternative mechanisms that could also explain the improvement, then name one observation that would distinguish symptom containment from repeatable causal recovery."
     },
     {
       "id": "r12",
@@ -374,7 +377,8 @@
       "checkQuestions": [
         "Why can a main effect reverse across another factor level?",
         "What is the purpose of a confirmation run?",
-        "Why can pooled multi-cavity capability answer the wrong question?"
+        "Why can pooled multi-cavity capability answer the wrong question?",
+        "What evidence would make a statistically significant result practically unhelpful for the moulding decision?"
       ],
       "applyPrompt": "Sketch a two-factor experiment and state the nuisance variables, confirmation step and population definition needed before a capability claim.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
@@ -421,7 +425,8 @@
       ],
       "applyPrompt": "For a four-cavity thin-wall part, list which machine, mould, material and cavity-specific evidence you would preserve.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
-      "sequencePrompt": "Treat these advanced topics as boundary-heavy applications of the earlier method: preserve cavity identity, equipment capability, material-grade limits and measured response. Thin-wall, multi-cavity and high-performance processing become unsafe teaching topics when exact machine, mould or supplier constraints are replaced by generic recipes."
+      "sequencePrompt": "Treat these advanced topics as boundary-heavy applications of the earlier method: preserve cavity identity, equipment capability, material-grade limits and measured response. Thin-wall, multi-cavity and high-performance processing become unsafe teaching topics when exact machine, mould or supplier constraints are replaced by generic recipes.",
+      "scenarioPrompt": "For a proposed high-performance grade, build a verification checklist covering the exact-grade documents, machine/mould/hot-runner interfaces and evidence you would need before treating the material as compatible with the existing system."
     },
     {
       "id": "r20",
@@ -433,12 +438,14 @@
       "depthBand": "Advanced",
       "learningObjectives": [
         "Rank competing hypotheses by evidence, consequence and testability.",
-        "Separate containment, corrective action and root-cause proof."
+        "Separate containment, corrective action and root-cause proof.",
+        "Use contradictions and stopping rules to recognise when confidence is insufficient and escalation is appropriate."
       ],
       "checkQuestions": [
         "Why should contradictory evidence be highlighted rather than explained away?",
         "When can a successful containment action still leave root cause unresolved?",
-        "How should safety consequence affect hypothesis priority?"
+        "How should safety consequence affect hypothesis priority?",
+        "What evidence would justify stopping an investigation rather than continuing to tune the process?"
       ],
       "applyPrompt": "Write an evidence ledger for a complex defect with at least three hypotheses, predicted observations, contradictions and a next test.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation."
@@ -452,6 +459,6 @@
     "Can a beginner read chapters 1–10 sequentially and an experienced technician enter at chapters 11–20 without losing critical safety context?"
   ],
   "release": "2026.10.06.5",
-  "pedagogyPolicy": "Reader-level objectives, checks and application prompts are derived learning scaffolds only. They add no technical claims, do not alter governed module evidence status and cannot create production authority. Sequence prompts are reader-orientation scaffolds derived from existing governed module order; they add no independent technical authority.",
+  "pedagogyPolicy": "Reader-level objectives, checks, application prompts and optional reasoning scenarios are derived learning scaffolds only. They add no technical claims, do not alter governed module evidence status and cannot create production authority. Sequence prompts are reader-orientation scaffolds derived from existing governed module order; they add no independent technical authority.",
   "depthBandMeaning": "Depth bands describe the technical complexity of each reader chapter, not a strictly monotonic learner progression. Adjacent chapters can move between Technician and Engineer depth where the subject demands it."
 }

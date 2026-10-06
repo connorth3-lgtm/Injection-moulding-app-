@@ -1,4 +1,4 @@
-/* MouldMaster learner UI polish — 2026.10.06.19 */
+/* MouldMaster learner UI polish — 2026.10.06.22 */
 
 /* Book: the evidence contract stays visible and accessible, but it no longer
    competes with the learner's chapter choice above the fold. */
@@ -237,7 +237,7 @@
   #dashboard .mm-home-book-actions button{flex:1 1 0!important}
 }
 
-/* Canonical Home hierarchy — 2026.10.06.19 */
+/* Canonical Home hierarchy — 2026.10.06.22 */
 /* Home keeps one dominant lesson decision, one persistent Book/Keep Reading surface,
    and two specialist shortcuts without duplicating Learn, Materials, Practice or Saved lessons. */
 #dashboard{

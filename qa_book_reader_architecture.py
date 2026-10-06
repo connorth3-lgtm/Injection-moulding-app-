@@ -54,6 +54,12 @@ for row in readers:
 for reader_id in ("r07","r10","r19"):
     row=next(x for x in readers if x["id"]==reader_id)
     assert row.get("sequencePrompt"), f"reader chapter continuity prompt missing: {reader_id}"
+for reader_id in ("r03","r11","r19"):
+    row=next(x for x in readers if x["id"]==reader_id)
+    assert row.get("scenarioPrompt"), f"reader reasoning scenario missing: {reader_id}"
+assert any(len(row.get("learningObjectives") or []) > 2 for row in readers), "reader objectives remain mechanically uniform"
+assert any(len(row.get("checkQuestions") or []) > 3 for row in readers), "reader knowledge checks remain mechanically uniform"
+assert "not a strictly monotonic learner progression" in reader.get("depthBandMeaning",""), "reader depth-band meaning must prevent ladder interpretation"
 assert len(covered)==46 and len(set(covered))==46 and set(covered)==set(module_ids)
 target=reader.get("targetWordsPerReaderChapter") or {}
 assert target.get("nominal")==1000 and target.get("range")==[850,1400]
@@ -101,7 +107,7 @@ for name in ("book-reader-architecture-v2.json","book-editorial-expansion-review
     assert hashes.get(name)==git_blob(PACKAGED/name), f"authorization hash drift for {name}"
 
 assert sme.get("status")=="hold" and sme.get("reviews")==[] and len(sme.get("chapterIds",[]))==46
-for marker in ("READER_PATH","EDITORIAL_REVIEW_PATH","validateReaderArchitecture","validateEditorialExpansionReview","showReaderChapter","readerChapterHtml","readerLearningHtml","readerReferencesHtml","20 substantial chapters","46 governed modules","getReaderArchitecture","getEditorialExpansionReview"):
+for marker in ("READER_PATH","EDITORIAL_REVIEW_PATH","validateReaderArchitecture","validateEditorialExpansionReview","showReaderChapter","readerChapterHtml","readerLearningHtml","readerReferencesHtml","20 substantial chapters","46 governed modules","getReaderArchitecture","getEditorialExpansionReview","Reasoning scenario:","Depth labels:","Chapter depth:"):
     assert marker in runtime, f"reader runtime marker missing: {marker}"
 for asset in ("./src/domains/learning/book-data/book-reader-architecture-v2.json","./src/domains/learning/book-data/book-editorial-expansion-review-v1.json"):
     assert asset in sw, f"reader governance asset missing from atomic cache: {asset}"

@@ -193,6 +193,42 @@
       "gitBlobSha1": "1d15e96cc178520fb730865d6a51f6f6e799a525",
       "alt": "Conceptual evidence ledger linking one observed symptom to three competing hypotheses, predictions, discriminating tests, contradictions and updated confidence.",
       "caption": "The ledger supports disciplined reasoning and visible uncertainty; it does not authorize unsafe tests or turn correlation into root-cause proof."
+    },
+    {
+      "id": "diagram-polymer-family-evidence-map-v1",
+      "chapterId": "material-families",
+      "title": "Polymer family evidence map",
+      "asset": "assets/book-diagrams/polymer-family-evidence-map.svg",
+      "gitBlobSha1": "4daebeff2e413c4d9e44b50cc60be0b601035df2",
+      "alt": "Conceptual sequence from polymer-family tendency to exact-grade documentation and then observed process evidence, emphasizing that a family label is not an exact-grade recipe.",
+      "caption": "Use family knowledge to frame questions, then verify the exact grade and the actual system response before treating material knowledge as transferable."
+    },
+    {
+      "id": "diagram-process-baseline-evidence-package-v1",
+      "chapterId": "process-baseline",
+      "title": "Defensible process baseline evidence package",
+      "asset": "assets/book-diagrams/process-baseline-evidence-package.svg",
+      "gitBlobSha1": "c8c65e17383e728a8b3bac19dbad80aa413047e4",
+      "alt": "Conceptual baseline package combining identity and context, commands, actual process signals, part outputs and visible unknowns before a later comparison.",
+      "caption": "A baseline is an evidence package for comparison, not a settings screenshot or proof that a future process state is equivalent."
+    },
+    {
+      "id": "diagram-filling-boundary-pattern-map-v1",
+      "chapterId": "short-shot",
+      "title": "Filling and boundary pattern comparison",
+      "asset": "assets/book-diagrams/filling-boundary-pattern-map.svg",
+      "gitBlobSha1": "08e7902c763da981d2598650aa2d8a65c0330ed2",
+      "alt": "Conceptual comparison of a common filling shortage, a cavity-local shortage and a local boundary-loss pattern using cavity and location evidence.",
+      "caption": "Use cavity and location patterns to rank common versus local mechanisms; the pattern is evidence, not automatic root-cause proof."
+    },
+    {
+      "id": "diagram-surface-defect-source-map-v1",
+      "chapterId": "black-specks",
+      "title": "Surface-defect source and evidence map",
+      "asset": "assets/book-diagrams/surface-defect-source-map.svg",
+      "gitBlobSha1": "3ca47b380fef52d03eaf766e2c044004dcdffce4",
+      "alt": "Conceptual source map linking material handling, melt-path and mould or cavity regions with time, cavity and location patterns before ranking competing surface-defect sources.",
+      "caption": "Map where and when the symptom appears before choosing a source hypothesis; cleaning success alone does not prove the original source."
     }
   ],
   "authorityBoundary": {
