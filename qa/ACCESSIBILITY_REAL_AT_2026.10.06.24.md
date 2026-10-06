@@ -5,15 +5,15 @@ This packet governs **human** assistive-technology validation for web release `2
 ## Exact release boundary
 
 - web release: `2026.10.06.24`
-- retained pre-merge public candidate source commit: `45439332b84535e507819327ced7dc220f1425c1`
-- public-runtime fingerprint: `sha256:3ae68451e729a4d51a94c4fbb900d1d1bc78c817f2585b594a3c8bdd8c5e89c7`
-- retained physical candidate: `physical-pwa-candidate-45439332b84535e507819327ced7dc220f1425c1` (`11421798692`)
-- candidate build run: `37484179465` (`Pre-merge Public Candidate`)
-- artifact ZIP digest: `sha256:138098982081aee7a93e67e77675e0b34e26045042b6d6bce42182f5914f314b`
-- artifact retention expiry: `2027-01-04T15:03:38Z`
+- retained pre-merge public candidate source commit: `44d5cc63e1f6d2e513bb508099ff97d6cfc22c6c`
+- public-runtime fingerprint: `sha256:64ea805f6e21b8814e0c1497a6ab01840f144c42dab8323970475a0b2c25fdb6`
+- retained physical candidate: `physical-pwa-candidate-44d5cc63e1f6d2e513bb508099ff97d6cfc22c6c` (`11435991760`)
+- candidate build run: `37514003463` (`Pre-merge Public Candidate`)
+- artifact ZIP digest: `sha256:e4e0ab72368af1a66a8eefcb6e6831523f82ca1966605bce67227fe9e38a8b0e`
+- artifact retention expiry: `2027-01-04T18:47:28Z`
 - evidence contract: `data/accessibility-real-at-validation-v1.json`
 
-This is a candidate **rebind**, not new AT evidence. Release `2026.10.06.24` is bound to exact pre-merge learner-runtime candidate `45439332b84535e507819327ced7dc220f1425c1` / `sha256:3ae68451e729a4d51a94c4fbb900d1d1bc78c817f2585b594a3c8bdd8c5e89c7`. No earlier human or device evidence is relabelled. If learner-facing runtime bytes change again, this packet must be rebound before new validation is recorded; the mutable `preview` branch tip is never validation identity.
+This is a candidate **rebind**, not new AT evidence. Release `2026.10.06.24` is bound to exact pre-merge learner-runtime candidate `44d5cc63e1f6d2e513bb508099ff97d6cfc22c6c` / `sha256:64ea805f6e21b8814e0c1497a6ab01840f144c42dab8323970475a0b2c25fdb6`. No earlier human or device evidence is relabelled. If learner-facing runtime bytes change again, this packet must be rebound before new validation is recorded; the mutable `preview` branch tip is never validation identity.
 
 ## Required matrix
 
