@@ -119,6 +119,7 @@ need("actions: read" in premerge, "pre-merge public candidate must be able to re
 need("timeout-minutes: 45" in premerge, "pre-merge public candidate must allow substantive browser gates to finish")
 for marker in (
     "Require exact PR-head quality gates before candidate approval",
+    "if: github.event_name == 'pull_request'",
     "required=(integrity mobile-browser question-quality-50-pass)",
     "commits/${SOURCE_SHA}/check-runs?per_page=100",
     "Exact PR-head quality gates passed for $SOURCE_SHA",

@@ -101,7 +101,7 @@ jobs:
           echo "This artifact is a validation candidate only. It does not create physical-device, assistive-technology, SME, learner-outcome, signing, Store, accreditation or production authority." >> "$GITHUB_STEP_SUMMARY"
 
       - name: Require exact PR-head quality gates before candidate approval
-        if: github.event_name == 'pull_request' && steps.impact.outputs.runtime == 'true'
+        if: github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
           SOURCE_SHA: ${{ github.event.pull_request.head.sha }}
