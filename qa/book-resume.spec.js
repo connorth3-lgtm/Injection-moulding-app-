@@ -20,15 +20,17 @@ async function scrollAnchor(page,locator,top=96){
       const style=getComputedStyle(node),overflow=String(style.overflowY||'').toLowerCase();
       if(/^(auto|scroll|overlay)$/.test(overflow)&&(Number(node.scrollHeight)||0)>(Number(node.clientHeight)||0)+1){root=node;break;}
     }
-    el.scrollIntoView({block:'start',behavior:'auto'});
-    const targetTop=(root===documentRoot||root===document.documentElement||root===document.body)
-      ?documentTargetTop
-      :Math.max(0,Math.round(root.getBoundingClientRect().top))+16;
+    const documentScroll=root===documentRoot||root===document.documentElement||root===document.body;
+    const targetTop=documentScroll?documentTargetTop:Math.max(0,Math.round(root.getBoundingClientRect().top))+16;
     const delta=el.getBoundingClientRect().top-targetTop;
-    if(root===documentRoot||root===document.documentElement||root===document.body)window.scrollBy(0,delta);
+    if(documentScroll)window.scrollTo(0,(Number(documentRoot.scrollTop)||Number(window.scrollY)||0)+delta);
     else root.scrollTop=(Number(root.scrollTop)||0)+delta;
   },top);
-  await page.waitForTimeout(250);
+  await page.waitForFunction(({selector,targetTop})=>{
+    const el=document.querySelector(selector);if(!el)return false;
+    return Math.abs(el.getBoundingClientRect().top-targetTop)<=3;
+  },{selector:'[data-mm-book-anchor="module:material-families:atlas"]',targetTop:top},{timeout:2000}).catch(()=>{});
+  await page.waitForTimeout(220);
 }
 
 async function activate(page,id){
