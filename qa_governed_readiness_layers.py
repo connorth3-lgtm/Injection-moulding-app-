@@ -9,6 +9,12 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parent
 def need(ok,msg):
     if not ok: raise AssertionError(msg)
+def release_key(value):
+    try:
+        parts=tuple(int(part) for part in str(value).split("."))
+    except (TypeError,ValueError):
+        return ()
+    return parts if len(parts)==4 else ()
 def load(p): return json.loads(Path(p).read_text(encoding="utf-8"))
 def text(p): return Path(p).read_text(encoding="utf-8")
 
@@ -55,7 +61,7 @@ need(n.get("schema")==1 and n.get("id")=="mouldmaster-nzqa-education-readiness",
 need(n.get("checked")=="2026-09-18","NZQA source check must be current")
 current_release=load(ROOT/"version.json").get("web_release")
 readiness_release=n.get("releaseTarget")
-need(isinstance(readiness_release,str) and readiness_release and readiness_release<=current_release,"NZQA readiness release target is missing or future-dated")
+need(release_key(readiness_release) and release_key(current_release) and release_key(readiness_release)<=release_key(current_release),"NZQA readiness release target is missing or future-dated")
 need(n.get("publicationEffect")=="read-only-readiness-surface","NZQA publication effect must stay read-only")
 current={x["id"] for x in n.get("currentInjectionMouldingStandards",[])}
 expired=set(n.get("expiredStandardsNotForCurrentAssessmentMapping",[]))
@@ -129,7 +135,7 @@ for asset in [
 auth=load(ROOT/"data/book-publication-authorization-v1.json")
 permit=auth.get("evidenceEnrichmentAuthorization",{})
 need(permit.get("status")=="authorized" and permit.get("release")==e.get("release"),"Book enrichment authorization must bind the governed enrichment content release")
-need(permit.get("release")<=version.get("web_release"),"Book enrichment authorization cannot target a future learner release")
+need(release_key(permit.get("release")) and release_key(version.get("web_release")) and release_key(permit.get("release"))<=release_key(version.get("web_release")),"Book enrichment authorization cannot target a future learner release")
 need(permit.get("ledger")=="data/book-evidence-enrichment-v2.json","Book enrichment authorization ledger mismatch")
 need(permit.get("sectionCount")==14 and permit.get("chapterCount")==10,"Book enrichment authorization counts mismatch")
 need(permit.get("independentSmeStatus")=="hold","Book enrichment must preserve independent SME HOLD")
@@ -137,7 +143,7 @@ need("book-evidence-enrichment-v2.json" in auth.get("runtimeIntegrity",{}).get("
 
 sme=load(ROOT/"data/book-sme-review-v1.json")
 need(sme.get("release")==e.get("release"),"Book SME contract must remain bound to the governed enrichment content release")
-need(sme.get("release")<=version.get("web_release"),"Book SME evidence cannot target a future learner release")
+need(release_key(sme.get("release")) and release_key(version.get("web_release")) and release_key(sme.get("release"))<=release_key(version.get("web_release")),"Book SME evidence cannot target a future learner release")
 need(set(sme.get("enrichmentChapterIds",[]))=={x["chapterId"] for x in patches},"Book SME contract does not cover enrichment chapters")
 need(sme.get("status")=="hold","Book SME must remain HOLD")
 
