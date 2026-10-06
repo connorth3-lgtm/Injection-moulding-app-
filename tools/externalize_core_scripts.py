@@ -2,13 +2,15 @@
 """Generate hardened runtime copies of the frozen core's inline script blocks.
 
 `MouldMaster_Core_App.html` is also the immutable legacy Windows recovery payload,
-so its bytes are intentionally not rewritten. The browser bootstrap replaces those
-inline blocks with same-origin generated assets during runtime assembly.
+so its bytes are intentionally not rewritten. This generator creates a non-executable,
+build-prepared core shell whose inline scripts are replaced with same-origin generated
+assets and whose static handler/style attributes are retired before publication.
 
-Runtime-only transforms remove the recovery core's historical certificate-print
+Generated script transforms remove the recovery core's historical certificate-print
 `document.write` call and rewrite generated inline event-handler markup to inert
 `data-mm-on*` attributes. A strict delegated bridge is concatenated into the final
-generated core slot so this hardening does not increase BODY_SCRIPTS above 39.
+generated core slot. The browser therefore only installs the prepared shell and
+replays governed scripts in order; it no longer repeats static hardening on startup.
 """
 
 from __future__ import annotations
@@ -500,7 +502,7 @@ function pvStandardsLink(item,label){
 def expected_assets(core: str) -> dict[str, str]:
     blocks = inline_blocks(core)
     if not blocks:
-        fail("frozen core has no inline script blocks to externalize at runtime")
+        fail("frozen core has no inline script blocks to externalize at build time")
     if not HANDLER_BRIDGE_PATH.is_file():
         fail("strict handler bridge source is missing")
     if not STYLE_BRIDGE_PATH.is_file():
