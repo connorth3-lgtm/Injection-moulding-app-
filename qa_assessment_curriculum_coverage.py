@@ -141,7 +141,27 @@ def assessment_report() -> dict:
             by_level[level].append(row)
 
     outcome_keys = ("outcome", "outcomes", "learningOutcome", "learningOutcomes")
-    tagged = [row for row in technical if outcome_values(row, outcome_keys)]
+    review_contract = json.loads(text("qa/assessment-outcome-review.json"))
+    contract_mappings = {
+        clean(row.get("stableId")): row
+        for row in review_contract.get("mappings", [])
+        if isinstance(row, dict) and clean(row.get("stableId"))
+    }
+    def explicit_outcomes(row: dict) -> list[str]:
+        direct = outcome_values(row, outcome_keys)
+        if direct:
+            return direct
+        mapping = contract_mappings.get(clean(row.get("stableId")), {})
+        if clean(mapping.get("reviewStatus")) == "approved":
+            return sorted(set(clean(x) for x in mapping.get("outcomeIds", []) if clean(x)))
+        return sorted(set(clean(x) for x in mapping.get("proposedOutcomeIds", []) if clean(x)))
+    def approved_outcomes(row: dict) -> list[str]:
+        mapping = contract_mappings.get(clean(row.get("stableId")), {})
+        if clean(mapping.get("reviewStatus")) != "approved":
+            return []
+        return sorted(set(clean(x) for x in mapping.get("outcomeIds", []) if clean(x)))
+
+    tagged = [row for row in technical if explicit_outcomes(row)]
     concept_counts = Counter(clean(row.get("concept")) or "<missing>" for row in technical)
     competency_counts = Counter()
     for row in technical:
@@ -166,21 +186,26 @@ def assessment_report() -> dict:
     proxy_target = {name: count for name, count in sorted(concept_counts.items()) if TARGET_MIN <= count <= TARGET_MAX}
 
     outcome_ready = len(tagged) == len(technical)
-    status = "MEASURABLE" if outcome_ready else "HOLD_OUTCOME_MAP_REQUIRED"
-    if outcome_ready:
-        outcome_counts = Counter()
+    approved_ready = all(approved_outcomes(row) for row in technical)
+    outcome_counts = Counter()
+    if approved_ready:
         for row in technical:
-            for value in outcome_values(row, outcome_keys):
+            for value in approved_outcomes(row):
                 outcome_counts[value] += 1
-        if any(count < TARGET_MIN for count in outcome_counts.values()):
-            status = "HOLD_BREADTH_BELOW_TARGET"
+    if not outcome_ready:
+        status = "HOLD_OUTCOME_MAP_REQUIRED"
+    elif not approved_ready:
+        status = "HOLD_OUTCOME_REVIEW_REQUIRED"
+    elif any(count < TARGET_MIN for count in outcome_counts.values()):
+        status = "HOLD_BREADTH_BELOW_TARGET"
     else:
-        outcome_counts = Counter()
+        status = "MEASURABLE_HUMAN_REVIEWED_MINIMUM_MET"
 
     level_order = {level: index for index, level in enumerate(LEVELS)}
     mapping_queue = []
     for row in sorted(technical, key=lambda item: (level_order.get(item.get("level"), 99), clean(item.get("stableId")))):
-        outcomes = outcome_values(row, outcome_keys)
+        outcomes = explicit_outcomes(row)
+        approved = approved_outcomes(row)
         competencies = sorted(
             {clean(value) for value in (row.get("competencies") or [row.get("competency")]) if clean(value)}
         )
@@ -193,7 +218,8 @@ def assessment_report() -> dict:
                 "competencies": competencies,
                 "reviewedRevision": row.get("reviewedRevision"),
                 "currentOutcomeIds": outcomes,
-                "mappingStatus": "mapped-pending-sme-review" if outcomes else "pending-sme-mapping",
+                "approvedOutcomeIds": approved,
+                "mappingStatus": "human-approved-current-revision" if approved else ("proposed-pending-sme-review" if outcomes else "pending-sme-mapping"),
             }
         )
 
@@ -201,7 +227,7 @@ def assessment_report() -> dict:
         "status": status,
         "governanceNote": (
             "The 3–5 independent-item target applies to important learning outcomes. Concept labels are reported only as a proxy; "
-            "they must not be treated as outcome coverage until explicit outcome metadata exists and has been reviewed."
+            "proposed mappings establish explicit traceability, but they must not be counted as outcome coverage until independent SME review approves the outcome definitions and current-revision item mappings."
         ),
         "targetIndependentItemsPerImportantOutcome": {"minimum": TARGET_MIN, "maximum": TARGET_MAX},
         "lockedIdentityCount": len(identities),
@@ -209,6 +235,7 @@ def assessment_report() -> dict:
         "regionalSafetyItemCount": len(regional),
         "technicalItemsWithExplicitOutcomeMetadata": len(tagged),
         "technicalItemsMissingExplicitOutcomeMetadata": len(technical) - len(tagged),
+        "technicalItemsWithHumanApprovedOutcomeMetadata": sum(1 for row in technical if approved_outcomes(row)),
         "levels": levels,
         "competencyMembershipCounts": dict(sorted(competency_counts.items())),
         "conceptProxy": {
@@ -217,7 +244,7 @@ def assessment_report() -> dict:
             "labelsAtThreeToFiveItems": proxy_target,
         },
         "explicitOutcomeCounts": dict(sorted(outcome_counts.items())),
-        "outcomeMappingQueuePendingCount": sum(row["mappingStatus"] == "pending-sme-mapping" for row in mapping_queue),
+        "outcomeMappingQueuePendingCount": sum(row["mappingStatus"] != "human-approved-current-revision" for row in mapping_queue),
         "outcomeMappingQueue": mapping_queue,
     }
 
