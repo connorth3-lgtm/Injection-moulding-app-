@@ -109,6 +109,20 @@ test('Keep Reading survives Material Atlas hydration without anchor drift',async
   await expect(atlasHeading).toHaveAttribute('data-mm-book-anchor','module:material-families:atlas');
   await scrollAnchor(page,atlasHeading);
   const beforeTop=await atlasHeading.evaluate(el=>Math.round(el.getBoundingClientRect().top));
+  const readingBand=await atlasHeading.evaluate(el=>{
+    const documentRoot=document.scrollingElement||document.documentElement;
+    const reader=document.querySelector('[data-mm-book-reader]');
+    let root=reader||document.querySelector('#mmBookView')||document.querySelector('#mainContent,.main,main');
+    for(let node=root;node&&node!==document.body;node=node.parentElement){
+      const style=getComputedStyle(node),overflow=String(style.overflowY||'').toLowerCase(),hasScrollRange=(Number(node.scrollHeight)||0)>(Number(node.clientHeight)||0)+1;
+      if(/^(auto|scroll|overlay)$/.test(overflow)&&hasScrollRange){root=node;break;}
+      if(node.parentElement===document.body)root=documentRoot;
+    }
+    const documentScroll=root===documentRoot||root===document.documentElement||root===document.body;
+    const viewportTop=documentScroll?80:Math.max(0,Math.round(root.getBoundingClientRect().top))+8;
+    return {headingTop:Math.round(el.getBoundingClientRect().top),activationTop:viewportTop+24};
+  });
+  expect(readingBand.headingTop).toBeLessThanOrEqual(readingBand.activationTop+2);
   await page.getByRole('button',{name:'Home'}).first().click();
   const saved=await page.evaluate(()=>window.MMBook.getResume());
   expect(saved.anchorId).toBe('module:material-families:atlas');
