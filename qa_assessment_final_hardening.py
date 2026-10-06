@@ -17,6 +17,10 @@ for p in required: need((ROOT/p).exists(),f'final hardening file missing: {p}')
 
 js=text('src/domains/assessment/assessment-final-hardening.js')
 need('function syncExamContractCopy()' in js,'assessment final hardening must align live modal copy with the selected standards contract')
+need('function syncExamListingContractCopy()' in js,'assessment final hardening must align the assessment listing/cards with the selected standards contract')
+need('16 questions · 7 technical + 9 regional safety' in js,'Compare All assessment cards must disclose the 16-question 7+9 contract')
+need('10 questions · 7 technical + 3 regional safety' in js,'single-region assessment cards must disclose the 10-question 7+3 contract')
+need('syncExamListingContractCopy();rewriteTimingPanel()' in js,'renderExams wrapper must refresh learner-facing attempt counts after region changes')
 need('16 questions: 7 technical plus all 9 safety/compliance items' in js,'Compare All learner copy must disclose the 16-question 7+9 contract')
 need('10 questions: 7 technical plus 3 safety/compliance items' in js,'single-region learner copy must disclose the 10-question 7+3 contract')
 for marker in [
