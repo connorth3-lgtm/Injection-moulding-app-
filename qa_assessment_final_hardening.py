@@ -23,7 +23,9 @@ for marker in [
  "intersectionRatio>=0.55","document.hidden","hiddenAccum","first meaningful question exposure",
  "legacyExamElapsedTotalMs","legacyExamElapsedLastMs","Slowest by question exposure",
  "Revision provenance remains available through MM_QUESTION_REVISIONS","Do not duplicate governance metadata inside learner-facing answer remediation","MM_QUESTION_REVISIONS","MM_ASSESSMENT_FINAL_HARDENING",
- "S.removeItem(TIMING_KEY)","__mmOriginalReset"
+ "S.removeItem(TIMING_KEY)","__mmOriginalReset",
+ "mm-question-centre","Questions, review and decision practice","compareAllQuestionCount:16","singleRegionQuestionCount:10",
+ "Formal knowledge checks","MM_QUESTION_CENTRE"
 ]: need(marker in js,f'final assessment hardening marker missing: {marker}')
 need('localStorage.removeItem(TIMING_KEY)' not in js,'final hardening must not bypass learner-scoped timing storage')
 need('mm-revision-detail' not in js and 'Research DOI resolver set reviewed' not in js,'learner answer review must not duplicate revision/source-governance metadata')
@@ -87,6 +89,7 @@ for qid in regional_ids:
     need('applied decision' in str(r2[qid].get('change','')).lower() and 'answer key' in str(r2[qid].get('change','')).lower(),f'runtime regional revision note is too weak for {qid}')
     need(rev2[qid].get('revision')==2 and rev2[qid].get('date')=='2026-08-30',f'governance regional revision metadata differs for {qid}')
 need(runtime['qa']['stableIds']==57 and runtime['qa']['revision2Items']==39 and runtime['qa']['revision3Items']==18,'runtime final-hardening revision counts mismatch')
+need(runtime['qa'].get('compareAllQuestionCount')==16 and runtime['qa'].get('singleRegionQuestionCount')==10,'Question Centre assessment count contract mismatch')
 need(runtime['version']=='2026.08.24.3','runtime final-hardening version mismatch')
 need(runtime['timingCleared'] is True,'Reset local analytics must remove active learner exposure-timing data')
 need(runtime['originalResetCalled']==1,'final hardening reset wrapper must preserve the original analytics reset')
