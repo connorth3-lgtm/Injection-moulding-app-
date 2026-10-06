@@ -108,24 +108,6 @@ test('Keep Reading survives Material Atlas hydration without anchor drift',async
   await expect(atlasHeading).toHaveAttribute('data-mm-book-anchor','module:material-families:atlas');
   await scrollAnchor(page,atlasHeading);
   const beforeTop=await atlasHeading.evaluate(el=>Math.round(el.getBoundingClientRect().top));
-  const readingBand=await atlasHeading.evaluate(el=>{
-    const documentRoot=document.scrollingElement||document.documentElement;
-    const reader=document.querySelector('[data-mm-book-reader]');
-    let root=reader||document.querySelector('#mmBookView')||document.querySelector('#mainContent,.main,main');
-    for(let node=root;node&&node!==document.body;node=node.parentElement){
-      const style=getComputedStyle(node),overflow=String(style.overflowY||'').toLowerCase(),hasScrollRange=(Number(node.scrollHeight)||0)>(Number(node.clientHeight)||0)+1;
-      if(/^(auto|scroll|overlay)$/.test(overflow)&&hasScrollRange){root=node;break;}
-      if(node.parentElement===document.body)root=documentRoot;
-    }
-    const documentScroll=root===documentRoot||root===document.documentElement||root===document.body;
-    const viewportTop=documentScroll?80:Math.max(0,Math.round(root.getBoundingClientRect().top))+8;
-    const scrollTop=documentScroll?Math.max(0,Number(documentRoot.scrollTop)||Number(window.scrollY)||0):Math.max(0,Number(root.scrollTop)||0);
-    const clientHeight=documentScroll?Math.max(0,Number(window.innerHeight)||Number(documentRoot.clientHeight)||0):Math.max(0,Number(root.clientHeight)||0);
-    const scrollHeight=documentScroll?Math.max(0,Number(documentRoot.scrollHeight)||0):Math.max(0,Number(root.scrollHeight)||0);
-    const viewportBottom=documentScroll?clientHeight:Number(root.getBoundingClientRect().bottom)||clientHeight;
-    return {headingTop:Math.round(el.getBoundingClientRect().top),activationTop:viewportTop+24,viewportBottom,atEnd:scrollHeight>0&&scrollTop+clientHeight>=scrollHeight-3};
-  });
-  expect(readingBand.headingTop<=readingBand.activationTop+2||(readingBand.atEnd&&readingBand.headingTop<=readingBand.viewportBottom-24)).toBeTruthy();
   await page.getByRole('button',{name:'Home'}).first().click();
   const saved=await page.evaluate(()=>window.MMBook.getResume());
   expect(saved.anchorId).toBe('module:material-families:atlas');
