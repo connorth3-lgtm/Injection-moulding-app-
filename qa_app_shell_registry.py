@@ -114,6 +114,12 @@ for dep in ['MM_APP_SHELL','MM_LEARNING_EXPERIENCE','MM_CURRICULUM_INTEGRATION',
     need(dep in finalizer,f'finalizer dependency guard missing: {dep}')
 need('MM_APP_SHELL.finalize()' in finalizer,'finalizer does not activate canonical shell')
 need('window.MM_APP_SHELL_FINALIZED=VERSION' in finalizer,'finalizer marker must derive from the finalizer version')
+need("id:'book',zone:'before',order:20,render:renderBookDashboard" in shell,'Book must be a canonical Home dashboard section between current learning and specialist tools')
+need("data-mm-home-book-action" in shell and "openBookFromShell" in shell,'Home Book actions must route through the canonical shell')
+need("window.addEventListener('mm:book-resume-change',queueDashboardCompose)" in shell,'Home Book card must refresh when learner-scoped resume state changes')
+need("visibleBookId()" in shell and "registryId===customId" in shell,'Book must participate in canonical active-navigation state')
+book_nav=shell.split("id:'book',label:'Book'",1)[1].split("});",1)[0]
+need("desktop:false" not in book_nav,'Book must remain visible in canonical desktop navigation')
 need("id:'task-hub'" not in shell,'retired Home task-hub must not be registered by the canonical shell')
 need('.mm-home-task-hub' not in finalizer,'shell finalizer must not retain retired Home task-hub cleanup coupling')
 need('data-mm-role="explore-learning"' not in finalizer,'shell finalizer must not rewrite retired Home task actions')

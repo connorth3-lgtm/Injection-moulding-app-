@@ -69,10 +69,12 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await expect(page.locator('#dashboard .mm-home-balance [data-mm-home-action]')).toHaveCount(2);
       await expect(page.locator('#dashboard .mm-home-balance')).not.toContainText(/Materials|Practice|Saved lessons|Browse learning|Reference book/i);
       const firstViewport=await page.evaluate(()=>({
-        toolsBottom:document.querySelector('#dashboard .mm-home-balance').getBoundingClientRect().bottom,
+        bookBottom:document.querySelector('#dashboard [data-mm-home-book]').getBoundingClientRect().bottom,
+        toolsTop:document.querySelector('#dashboard .mm-home-balance').getBoundingClientRect().top,
         navTop:document.querySelector('.mobile-nav').getBoundingClientRect().top
       }));
-      expect(firstViewport.toolsBottom).toBeLessThanOrEqual(firstViewport.navTop+2);
+      expect(firstViewport.bookBottom).toBeLessThanOrEqual(firstViewport.navTop+2);
+      expect(firstViewport.toolsTop).toBeGreaterThanOrEqual(firstViewport.bookBottom-1);
       await expect(page.locator('#continueBtn')).toBeHidden();
       await expect(page.locator('#dashboard .mm-home-core-hero')).toBeHidden();
       await expect(page.locator('#dashboard .mm-home-kpis')).toBeHidden();

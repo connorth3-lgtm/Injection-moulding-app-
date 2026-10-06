@@ -203,22 +203,27 @@ function visibleCoreView(){
   }
   return ''
 }
-function canonicalMobileGroup(view){
-  const item=navigationItems.get(activeCustomId);if(item)return item.mobileGroup||'more';
+function canonicalMobileGroup(view,customId=activeCustomId){
+  const item=navigationItems.get(customId);if(item)return item.mobileGroup||'more';
   const core=CORE_NAV.find(x=>x.view===view);return core?.mobile||'more'
+}
+function visibleBookId(){
+  const view=document.getElementById('mmBookView');
+  return view&&!view.classList.contains('hidden')&&getComputedStyle(view).display!=='none'?'book':''
 }
 function syncActiveState(){
   normalizeMobilePrimaryNav();
   const visible=visibleCoreView();
   const view=visible||(typeof currentView==='string'?currentView:'dashboard');
-  document.body.dataset.mmView=activeCustomId||view;
-  document.body.dataset.mmNavGroup=canonicalMobileGroup(view);
+  const customId=visibleBookId()||activeCustomId;
+  document.body.dataset.mmView=customId||view;
+  document.body.dataset.mmNavGroup=canonicalMobileGroup(view,customId);
   document.querySelectorAll('#nav button').forEach(b=>{
     const registryId=b.dataset.mmRegistryNav;
-    const active=registryId?registryId===activeCustomId:!activeCustomId&&b.dataset.view===view;
+    const active=registryId?registryId===customId:!customId&&b.dataset.view===view;
     b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')
   });
-  const group=canonicalMobileGroup(view);
+  const group=canonicalMobileGroup(view,customId);
   const primary=[...document.querySelectorAll('.mobile-nav > button')];
   primary.forEach(b=>{
     const v=b.dataset.view;let match=false;
@@ -270,14 +275,42 @@ function specialistDashboardHtml(){
   const api=window.MM_SPECIALIST_CURRICULUM;if(!api?.lessons?.length)return '';
   return `<section class="mm-specialist-strip" id="mmSpecialistDashboard" aria-label="Specialist curriculum extensions"><span class="mm-specialist-eyebrow">Go deeper where the core stops</span><h3>Specialist extensions</h3><p>The 120-lesson core remains the complete main pathway. These ${api.lessons.length} optional extensions add depth in safety, machine health, materials, measurement, tooling and sustainability.</p><div class="mm-specialist-meta"><span>${api.lessons.length} optional lessons</span><span>Local optional progress</span><span>No certificate requirement</span></div><button class="secondary" type="button" data-mm-specialist-open>Explore specialist extensions →</button></section>`
 }
+function bookDashboardState(){
+  const api=window.MMBook;
+  if(!api?.open)return {ready:false,resume:null};
+  let resume=null;
+  try{resume=api.getResume?.()||null}catch(_){}
+  return {ready:true,resume}
+}
+function bookDashboardHtml(){
+  const state=bookDashboardState(),resume=state.resume,title=resume?.title?String(resume.title):'Injection moulding reference';
+  const heading=resume?`Keep reading: ${title}`:'Injection moulding reference';
+  const copy=resume?'Continue from your learner-scoped saved place, or return to the full contents.':'20 reader chapters backed by 46 governed modules, worked examples and evidence boundaries.';
+  const disabled=state.ready?'':' disabled aria-disabled="true"';
+  return `<section class="card mm-home-book" data-mm-home-book aria-label="MouldMaster Book"><div class="mm-home-book-copy"><span class="eyebrow">Book</span><h2>${esc(heading)}</h2><p>${esc(copy)}</p></div><div class="mm-home-book-actions"><button type="button" class="primary" data-mm-home-book-action="${resume?'resume':'contents'}"${disabled}>${resume?'Keep Reading':'Open Book'}</button>${resume?'<button type="button" class="ghost" data-mm-home-book-action="contents">Book contents</button>':''}</div></section>`
+}
+function openBookFromShell(mode='contents'){
+  const api=window.MMBook;if(!api?.open)return false;
+  activeCustomId='book';
+  const result=mode==='resume'&&api.getResume?.()?api.openResume?.():api.open?.();
+  syncActiveState();requestAnimationFrame(syncActiveState);emitView('book');
+  return result??true
+}
+function renderBookDashboard(slot){
+  slot.innerHTML=bookDashboardHtml();
+  slot.querySelectorAll('[data-mm-home-book-action]').forEach(button=>button.addEventListener('click',()=>openBookFromShell(button.dataset.mmHomeBookAction||'contents')))
+}
 
 function installDefaultDashboardSections(){
   registerDashboard({id:'today-focus',zone:'before',order:10,adopt:'.mm-today-focus'});
+  registerDashboard({id:'book',zone:'before',order:20,render:renderBookDashboard});
   registerDashboard({id:'curriculum-focus',zone:'before',order:30,render:slot=>{slot.innerHTML=curriculumDashboardHtml();slot.querySelector('[data-mm-curriculum-dashboard-open]')?.addEventListener('click',()=>{const lesson=currentLesson(),rec=window.MM_CURRICULUM_INTEGRATION?.recommendations?.(lesson.id)?.[0];if(rec)window.MM_CURRICULUM_INTEGRATION.open?.(rec.type,rec.id,lesson.id)})}});
-  registerDashboard({id:'specialist',zone:'after',order:90,render:slot=>{slot.innerHTML=specialistDashboardHtml();slot.querySelector('[data-mm-specialist-open]')?.addEventListener('click',()=>window.MM_SPECIALIST_CURRICULUM?.open?.())}})
+  registerDashboard({id:'specialist',zone:'after',order:90,render:slot=>{slot.innerHTML=specialistDashboardHtml();slot.querySelector('[data-mm-specialist-open]')?.addEventListener('click',()=>window.MM_SPECIALIST_CURRICULUM?.open?.())}});
+  window.addEventListener('mm:book-resume-change',queueDashboardCompose);
+  window.addEventListener('mm:domains-ready',queueDashboardCompose);
 }
 function installDefaultNavigation(){
-  registerNavigation({id:'book',label:'Book',icon:'▣',description:'Open the governed injection moulding reference.',order:5,group:'progress',desktop:false,mobileGroup:'more',action:()=>window.MMBook?.open?.()});
+  registerNavigation({id:'book',label:'Book',icon:'▣',description:'Open the governed injection moulding reference.',order:5,group:'progress',mobileGroup:'more',action:()=>openBookFromShell('contents')});
   registerNavigation({id:'mould-master',mobileMore:false,label:'Mould Master',icon:'◆',description:'Build an evidence-led troubleshooting case.',order:10,group:'practice',legacyDataset:'mmMouldMaster',mobileGroup:'practice',action:()=>window.MM_MOULD_MASTER_WORKSPACE?.open?.()});
   registerNavigation({id:'diagnostic-labs',mobileMore:false,label:'Diagnostic labs',icon:'⌁',description:'Practise evidence-first troubleshooting.',order:20,group:'practice',legacyDataset:'mmDiagnosticLabs',mobileGroup:'practice',action:()=>window.MM_DIAGNOSTIC_LABS?.open?.()});
   registerNavigation({id:'process-data',mobileMore:false,label:'Data diagnosis',icon:'⌁',description:'Read process trends and choose the next evidence check.',order:30,group:'practice',legacyDataset:'mmProcessData',mobileGroup:'practice',action:()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.()});
