@@ -146,6 +146,13 @@ for number, (source, path) in enumerate(zip(inline_core_scripts, core_runtime_sc
             need(marker in generated, f"handler bridge marker missing from final generated core slot: {marker}")
     else:
         need(generated == expected_handler_free, f"handler-free externalized core runtime is stale at slot {number}: {path.name}")
+domain_bootstrap=read('src/domains/domain-bootstrap.js')
+need("function preloadScript(src)" in domain_bootstrap and "link.rel='preload'" in domain_bootstrap and "link.as='script'" in domain_bootstrap,'domain bootstrap must overlap same-origin asset transfers before ordered execution')
+need("assets.forEach(preloadScript)" in domain_bootstrap,'domain bootstrap must schedule all validated domain assets for preload before execution')
+need("for(const src of assets){await loadScript(src);loaded.push(src)}" in domain_bootstrap,'domain bootstrap must preserve deterministic sequential script execution')
+need(domain_bootstrap.index("assets.forEach(preloadScript)") < domain_bootstrap.index("for(const src of assets){await loadScript(src);loaded.push(src)}"),'domain preloading must occur before ordered execution begins')
+need("Promise.all(assets.map(loadScript" not in domain_bootstrap,'domain scripts must not execute concurrently; only network transfer may overlap')
+
 # Runtime modules loaded by the domain manifest must not hot-poll for shell availability.
 # Product Areas now exposes routing only; canonical Home composition belongs solely
 # to the app-shell registry, so it must not defer or register a dashboard surface.
