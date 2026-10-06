@@ -13,7 +13,7 @@ async function boot(page,active='reader-a'){
   await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED)&&Boolean(window.MMBook?.openReaderChapter)&&Boolean(window.MM_LEARNER_SCOPE)&&!document.getElementById('mmBootstrap'));
 }
 async function scrollAnchor(page,locator,top=96){
-  await locator.evaluate((el,targetTop)=>{
+  await locator.evaluate((el,documentTargetTop)=>{
     const documentRoot=document.scrollingElement||document.documentElement;
     let root=documentRoot;
     for(let node=el.parentElement;node&&node!==document.body;node=node.parentElement){
@@ -21,6 +21,9 @@ async function scrollAnchor(page,locator,top=96){
       if(/^(auto|scroll|overlay)$/.test(overflow)&&(Number(node.scrollHeight)||0)>(Number(node.clientHeight)||0)+1){root=node;break;}
     }
     el.scrollIntoView({block:'start',behavior:'auto'});
+    const targetTop=(root===documentRoot||root===document.documentElement||root===document.body)
+      ?documentTargetTop
+      :Math.max(0,Math.round(root.getBoundingClientRect().top))+16;
     const delta=el.getBoundingClientRect().top-targetTop;
     if(root===documentRoot||root===document.documentElement||root===document.body)window.scrollBy(0,delta);
     else root.scrollTop=(Number(root.scrollTop)||0)+delta;
