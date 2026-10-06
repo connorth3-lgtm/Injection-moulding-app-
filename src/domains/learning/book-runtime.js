@@ -42,7 +42,7 @@
   });
   let manifest=null,manifestPromise=null,materialPromise=null,coldMaterialSearchPromise=null,publicationAuthorization=null,bookSmeReview=null,qualificationReview=null,highRiskReview=null,workedCaseLedger=null,workedCasesByChapter=new Map(),diagramLedger=null,diagramsByChapter=new Map(),evidenceEnrichmentLedger=null,claimEvidenceReference=null,claimEvidenceByChapter=new Map(),claimEvidenceClaimsByChapter=new Map(),readerArchitecture=null,editorialExpansionReview=null,materialAtlas=null,materialCatalog=null,materialRegionalEvidence=null,materialSearchIndex={catalog:[],regional:[]},integrityMap=null,ui=null,previousView=null,open=false,contentsScrollY=0;
   const BOOK_RESUME_PREFIX='mm_book_resume_v1::',LEGACY_BOOK_RESUME_KEY='mouldmasterBookResume:v1',BOOK_RESUME_SCHEMA=1;
-  let activeReadingPosition=null,resumeScrollTimer=0,boundBookScrollRoot=null,bookScrollStyleRestore=null;
+  let activeReadingPosition=null,resumeScrollTimer=0,boundBookScrollRoot=null;
   function resumeStorageKey(){
     const scope=window.MM_LEARNER_SCOPE;
     if(!scope?.storageKey||!scope?.token)return null;
@@ -82,18 +82,8 @@
     return Math.max(0,Math.round(rect.top))+8;
   }
   function setBookInstantScroll(active){
-    const html=document.documentElement,body=document.body;
-    if(active){
-      if(bookScrollStyleRestore)return;
-      bookScrollStyleRestore={html:html?.style?.scrollBehavior||'',body:body?.style?.scrollBehavior||''};
-      if(html)html.style.scrollBehavior='auto';
-      if(body)body.style.scrollBehavior='auto';
-      return;
-    }
-    if(!bookScrollStyleRestore)return;
-    if(html)html.style.scrollBehavior=bookScrollStyleRestore.html;
-    if(body)body.style.scrollBehavior=bookScrollStyleRestore.body;
-    bookScrollStyleRestore=null;
+    document.documentElement?.classList.toggle('mm-book-instant-scroll',!!active);
+    document.body?.classList.toggle('mm-book-instant-scroll',!!active);
   }
   function scrollBookBy(delta){
     const root=bookScrollRoot(),amount=Number(delta)||0;

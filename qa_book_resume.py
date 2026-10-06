@@ -12,6 +12,7 @@ finalizer=text("src/domains/shell/app-shell-finalize.js")
 registry=text("src/domains/shell/app-shell-registry.js")
 training=text("src/domains/learning/training-qa-fix.js")
 storage=text("docs/STORAGE_OWNERSHIP_MATRIX.md")
+ui_shell=text("ui-shell.css")
 
 for marker in [
     "BOOK_RESUME_PREFIX='mm_book_resume_v1::'",
@@ -54,6 +55,8 @@ for marker in [
 ]:
     need(marker in registry,f"Home Book lifecycle hardening missing from canonical registry: {marker}")
 need("renderHomeBookCard" not in finalizer,"Home Book must have one canonical UI owner; finalizer renderer must remain retired")
+need("mm-book-instant-scroll" in book,"Book open/leave lifecycle must toggle the instant-scroll class")
+need("html.mm-book-instant-scroll" in ui_shell and "scroll-behavior:auto!important" in ui_shell,"Book instant-scroll class must override legacy smooth scrolling in WebKit and other browsers")
 
 for marker in [
     "BOOK_RESUME_PREFIX='mm_book_resume_v1::'",

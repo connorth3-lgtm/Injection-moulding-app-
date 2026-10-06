@@ -20,6 +20,7 @@ body[data-mm-view="lesson"] .topbar{justify-content:flex-end!important}
 #dashboard .region-banner{display:none!important}
 .card{border-radius:14px!important;border-color:#263b58!important;box-shadow:var(--shadow)!important;background:linear-gradient(180deg,rgba(18,32,52,.96),rgba(13,25,42,.96))!important}
 .main{padding-top:20px}
+html.mm-book-instant-scroll,html.mm-book-instant-scroll body,html.mm-book-instant-scroll #mainContent,html.mm-book-instant-scroll .main,html.mm-book-instant-scroll #mmBookView{scroll-behavior:auto!important}
 .topbar{margin-bottom:16px!important}
 .topbar h1{line-height:1.12}
 .hero{gap:12px!important}
