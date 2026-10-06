@@ -331,6 +331,8 @@ for marker in ('EVIDENCE_IDENTITIES','BASF-INJECTION-PROBLEMS','NIST-SEMATECH-DO
 need('getEvidenceIdentity' in claim_trace_runtime and 'Evidence family:' in claim_trace_runtime, 'complete claim trace must explain evidence-family relationships')
 need('data.sourceSeeds.length!==52' in book_runtime, 'Book runtime must require all 52 final governed claim-evidence source records')
 need('await window.MMBook?.load?.()' in claim_trace_runtime, 'complete claim trace must load exact-byte Book authorization before fetching governed ledgers')
+need('function bookScrollRoot()' in book_runtime and 'function bookViewportTop()' in book_runtime and 'bindBookScrollRoot()' in book_runtime, 'Book resume must track the actual app scroll root rather than assuming window scrolling')
+need('scrollBookBy(heading.getBoundingClientRect().top-desired)' in book_runtime and 'else scrollBookTo(snapshot.scrollY)' in book_runtime, 'Book resume restoration must restore anchors and fallback scroll positions through the active scroll root')
 need('getClaimEvidenceReference' in book_runtime and 'getClaimEvidenceReference' in claim_trace_runtime, 'complete claim trace must reconcile against the governed final claim-evidence index')
 need('Complete claim trace final evidence mismatch' in claim_trace_runtime and 'source metadata missing' in claim_trace_runtime, 'complete claim trace must fail closed on final-evidence or source-metadata divergence')
 need("getIntegrityMap" in claim_trace_runtime and "gitBlobSha1" in claim_trace_runtime and "byte-integrity mismatch" in claim_trace_runtime, 'complete claim trace must verify exact governed ledger bytes before rendering')

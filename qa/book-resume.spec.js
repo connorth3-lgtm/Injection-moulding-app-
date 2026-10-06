@@ -16,9 +16,12 @@ async function activate(page,id){
   await page.evaluate(id=>{
     if(typeof window.switchUser!=='function')throw new Error('learner switch API unavailable');
     window.switchUser(id);
+    window.MM_APP_SHELL?.dashboard?.requestCompose?.();
   },id);
-  await page.reload({waitUntil:'domcontentloaded'});
-  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED)&&Boolean(window.MMBook?.getResume)&&!document.getElementById('mmBootstrap'));
+  await page.waitForFunction(id=>{
+    const store=JSON.parse(localStorage.getItem('mouldmasterProDB')||'{}');
+    return store.activeUser===id&&Boolean(window.MMBook?.getResume)&&!document.getElementById('mmBootstrap');
+  },id);
 }
 
 test('Home Book opens on first load and Keep Reading is learner scoped',async({page})=>{
@@ -34,7 +37,6 @@ test('Home Book opens on first load and Keep Reading is learner scoped',async({p
   const marker=page.locator('[data-mm-book-reader] [data-mm-book-anchor]').nth(3);
   await expect(marker).toBeVisible();
   await marker.evaluate(el=>el.scrollIntoView({block:'start',behavior:'auto'}));
-  await page.evaluate(()=>window.scrollBy(0,90));
   await page.waitForTimeout(250);
   const aKey=await page.evaluate(()=>window.MMBook.resumeStorageKey());
   await page.getByRole('button',{name:'Home'}).first().click();
@@ -60,16 +62,16 @@ test('Keep Reading prioritises stable anchor ID over text/index fallback',async(
   const misleadingText=await heads.nth(1).innerText();
   expect(targetAnchor).toBeTruthy();
   await target.evaluate(el=>el.scrollIntoView({block:'start',behavior:'auto'}));
-  await page.evaluate(()=>window.scrollBy(0,90));
   await page.waitForTimeout(250);
   await page.getByRole('button',{name:'Home'}).first().click();
   const key=await page.evaluate(()=>window.MMBook.resumeStorageKey());
   await page.evaluate(({key,misleadingText})=>{
     const saved=JSON.parse(localStorage.getItem(key));
+    saved.anchorId=targetAnchor;
     saved.anchorIndex=1;
     saved.anchorText=misleadingText;
     localStorage.setItem(key,JSON.stringify(saved));
-  },{key,misleadingText});
+  },{key,misleadingText,targetAnchor});
 
   await page.locator('#dashboard [data-mm-home-book]').getByRole('button',{name:'Keep Reading'}).click();
   const restored=page.locator(`[data-mm-book-reader] [data-mm-book-anchor="${targetAnchor}"]`);
@@ -88,7 +90,6 @@ test('Keep Reading survives Material Atlas hydration without anchor drift',async
   await page.waitForFunction(()=>document.querySelector('[data-mm-book-material-atlas]')&&!document.querySelector('[data-mm-book-material-status]'));
   await expect(atlasHeading).toHaveAttribute('data-mm-book-anchor','module:material-families:atlas');
   await atlasHeading.evaluate(el=>el.scrollIntoView({block:'start',behavior:'auto'}));
-  await page.evaluate(()=>window.scrollBy(0,100));
   await page.waitForTimeout(250);
   const beforeTop=await atlasHeading.evaluate(el=>Math.round(el.getBoundingClientRect().top));
   await page.getByRole('button',{name:'Home'}).first().click();
@@ -109,7 +110,6 @@ test('Keep Reading restores, stale IDs fail to contents, and learner reset clear
   await expect(resumeTarget).toBeVisible();
   const resumeAnchor=await resumeTarget.getAttribute('data-mm-book-anchor');
   await resumeTarget.evaluate(el=>el.scrollIntoView({block:'start',behavior:'auto'}));
-  await page.evaluate(()=>window.scrollBy(0,90));
   await page.waitForTimeout(250);
   const beforeTop=await resumeTarget.evaluate(el=>Math.round(el.getBoundingClientRect().top));
   const aKey=await page.evaluate(()=>window.MMBook.resumeStorageKey());

@@ -28,11 +28,13 @@ test('Book distinguishes source evidence review from independent human validatio
   });
   expect(contract,'governed Book SME review contract should be available in the installed release').not.toBeNull();
   const expectedState=contract.status==='validated'&&contract.approved===contract.total?'validated':'pending';
-  await expect(view.locator('[data-mm-book-sme-status]')).toHaveText(`Independent human SME review: ${expectedState} — ${contract.approved}/${contract.total} chapters approved.`);
+  await expect(view.locator('[data-mm-book-sme-status]')).toHaveText(`Independent human SME review: ${expectedState} — ${contract.approved}/${contract.total} governed modules approved. Reader chapters are derived groupings, not separate SME approvals.`);
 
-  const chapterButtons=view.locator('.mm-book-chapter-button');
-  await expect(chapterButtons).toHaveCount(46);
-  await expect(chapterButtons.first()).toContainText('Source evidence reviewed');
+  const readerButtons=view.locator('[data-mm-book-reader-chapter-open]');
+  const moduleButtons=view.locator('[data-mm-book-chapter]');
+  await expect(readerButtons).toHaveCount(20);
+  await expect(moduleButtons).toHaveCount(46);
+  await expect(moduleButtons.first()).toContainText('Source evidence reviewed');
   await expect(view).not.toContainText(/\bEvidence verified\b/i);
 
   const boundary=view.locator('[data-mm-book-accuracy]');
