@@ -285,7 +285,8 @@ function bookDashboardState(){
 function bookDashboardHtml(){
   const state=bookDashboardState(),resume=state.resume,title=resume?.title?String(resume.title):'Injection moulding reference';
   const heading=resume?`Keep reading: ${title}`:'Injection moulding reference';
-  const copy=resume?'Continue from your learner-scoped saved place, or return to the full contents.':'20 reader chapters backed by 46 governed modules, worked examples and evidence boundaries.';
+  const ordinal=/^r(\d{2})$/i.exec(String(resume?.id||'')),chapter=ordinal?Math.min(20,Math.max(1,Number(ordinal[1])||1)):null;
+  const copy=resume?(chapter?`Chapter ${chapter} of 20 · saved reading position. Continue where you left off, or return to the full contents.`:'Continue from your learner-scoped saved place, or return to the full contents.'):'20 reader chapters backed by 46 governed modules, worked examples and evidence boundaries.';
   const disabled=state.ready?'':' disabled aria-disabled="true"';
   return `<section class="card mm-home-book" data-mm-home-book aria-label="MouldMaster Book"><div class="mm-home-book-copy"><span class="eyebrow">Book</span><h2>${esc(heading)}</h2><p>${esc(copy)}</p></div><div class="mm-home-book-actions"><button type="button" class="primary" data-mm-home-book-action="${resume?'resume':'contents'}"${disabled}>${resume?'Keep Reading':'Open Book'}</button>${resume?'<button type="button" class="ghost" data-mm-home-book-action="contents">Book contents</button>':''}</div></section>`
 }

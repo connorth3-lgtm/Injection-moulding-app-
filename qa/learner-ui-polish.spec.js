@@ -27,7 +27,7 @@ test('Home is one primary lesson decision plus Book resume and two non-duplicate
   const book=page.locator('#dashboard [data-mm-home-book]');
   await expect(focus).toBeVisible();
   await expect(book).toBeVisible();
-  await expect(book.getByRole('button',{name:'Open Book'})).toBeVisible();
+  await expect(book.getByRole('button',{name:/Open Book|Keep Reading/})).toBeVisible();
   await expect(tools).toBeVisible();
   await expect(page.locator('#dashboard .mm-home-task-hub,#dashboard .mm-home-utility')).toHaveCount(0);
   await expect(tools.locator('[data-mm-home-action]')).toHaveCount(2);
@@ -54,17 +54,22 @@ test('Home is one primary lesson decision plus Book resume and two non-duplicate
   await troubleshoot.focus();
   await page.setViewportSize({width:412,height:915});
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
-  const phone=await page.evaluate(()=>({
-    actions:getComputedStyle(document.querySelector('#dashboard .mm-home-balance-grid')).gridTemplateColumns.split(/\s+/).filter(Boolean).length,
-    focused:document.activeElement?.dataset?.mmHomeAction||'',
-    stable:document.querySelector('[data-mm-home-action="mould-master"]')?.dataset?.mmQaStableNode||'',
-    bookBottom:document.querySelector('#dashboard [data-mm-home-book]').getBoundingClientRect().bottom,
-    toolsTop:document.querySelector('#dashboard .mm-home-balance').getBoundingClientRect().top,
-    navTop:document.querySelector('.mobile-nav').getBoundingClientRect().top
-  }));
+  const phone=await page.evaluate(()=>{
+    const focus=document.querySelector('#dashboard .mm-today-focus').getBoundingClientRect();
+    const book=document.querySelector('#dashboard [data-mm-home-book]').getBoundingClientRect();
+    const tools=document.querySelector('#dashboard .mm-home-balance').getBoundingClientRect();
+    const nav=document.querySelector('.mobile-nav').getBoundingClientRect();
+    return {
+      actions:getComputedStyle(document.querySelector('#dashboard .mm-home-balance-grid')).gridTemplateColumns.split(/\s+/).filter(Boolean).length,
+      focused:document.activeElement?.dataset?.mmHomeAction||'',
+      stable:document.querySelector('[data-mm-home-action="mould-master"]')?.dataset?.mmQaStableNode||'',
+      focusBottom:focus.bottom,bookTop:book.top,bookBottom:book.bottom,toolsTop:tools.top,navTop:nav.top
+    };
+  });
   expect(phone.actions).toBe(2);
   expect(phone.focused).toBe('mould-master');
   expect(phone.stable).toBe('1');
+  expect(phone.bookTop).toBeGreaterThanOrEqual(phone.focusBottom-1);
   expect(phone.bookBottom).toBeLessThanOrEqual(phone.navTop+2);
   expect(phone.toolsTop).toBeGreaterThanOrEqual(phone.bookBottom-1);
 
@@ -72,6 +77,28 @@ test('Home is one primary lesson decision plus Book resume and two non-duplicate
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
   expect(await page.locator('#dashboard .mm-home-balance-grid').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(/\s+/).filter(Boolean).length)).toBe(2);
 });
+
+test('Home Book card switches from start to learner-scoped Keep Reading state',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>window.MMBook?.getReaderArchitecture?.()||window.MMBook?.load);
+  await page.evaluate(async()=>{
+    await window.MMBook.load();
+    await window.MMBook.openReaderChapter('r04');
+    window.MM_LEARNER_UI_POLISH.refresh();
+  });
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  const book=page.locator('#dashboard [data-mm-home-book]');
+  await page.evaluate(()=>switchView('dashboard'));
+  await page.evaluate(()=>window.MM_LEARNER_UI_POLISH.refresh());
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  await expect(book).toHaveCount(1);
+  await expect(book).toContainText(/Keep reading:/i);
+  await expect(book).toContainText('Chapter 4 of 20');
+  await expect(book.getByRole('button',{name:'Keep Reading'})).toBeVisible();
+  await expect(book.getByRole('button',{name:'Book contents'})).toBeVisible();
+});
+
 test('Book keeps governed status intact but progressively discloses assurance detail without a mutation loop',async({page})=>{
   await page.setViewportSize({width:412,height:915});
   await openApp(page);

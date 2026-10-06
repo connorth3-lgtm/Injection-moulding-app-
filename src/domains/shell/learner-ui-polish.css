@@ -1,4 +1,4 @@
-/* MouldMaster learner UI polish — 2026.10.07.4 */
+/* MouldMaster learner UI polish — 2026.10.07.9 */
 
 /* Book: the evidence contract stays visible and accessible, but it no longer
    competes with the learner's chapter choice above the fold. */
@@ -225,19 +225,45 @@
   border-radius:18px!important;
   background:rgba(9,24,39,.78)!important;
 }
-#dashboard .mm-home-book-copy{min-width:0!important}
+#dashboard .mm-home-book-copy{min-width:0!important;flex:1 1 auto!important}
 #dashboard .mm-home-book-copy .eyebrow{color:#8fe8d6!important}
 #dashboard .mm-home-book-copy h2{margin:4px 0 5px!important;font-size:20px!important;line-height:1.2!important}
 #dashboard .mm-home-book-copy p{margin:0!important;color:#9fb3c6!important;font-size:12px!important;line-height:1.45!important}
+#dashboard .mm-home-book-progress{display:grid!important;grid-template-columns:minmax(80px,180px) auto!important;align-items:center!important;gap:8px!important;margin:8px 0 5px!important}
+#dashboard .mm-home-book-progress[hidden]{display:none!important}
+#dashboard .mm-home-book-progress-track{height:5px!important;border-radius:999px!important;background:rgba(126,169,204,.16)!important;overflow:hidden!important}
+#dashboard .mm-home-book-progress-track>span{display:block!important;height:100%!important;border-radius:inherit!important;background:#5fe0c6!important}
+#dashboard .mm-home-book-progress small{color:#91a8bb!important;font-size:10px!important;white-space:nowrap!important}
 #dashboard .mm-home-book-actions{display:flex!important;align-items:center!important;gap:8px!important;flex:0 0 auto!important}
 #dashboard .mm-home-book-actions button{min-height:44px!important}
 @media(max-width:700px){
-  #dashboard .mm-home-book{align-items:stretch!important;flex-direction:column!important;gap:13px!important;padding:16px!important}
-  #dashboard .mm-home-book-actions{width:100%!important}
-  #dashboard .mm-home-book-actions button{flex:1 1 0!important}
+  #dashboard .mm-home-book{
+    align-items:stretch!important;
+    flex-direction:column!important;
+    gap:9px!important;
+    margin-bottom:11px!important;
+    padding:12px 13px!important;
+    border-radius:15px!important;
+    box-shadow:none!important;
+  }
+  #dashboard .mm-home-book-copy .eyebrow{font-size:9px!important;letter-spacing:.11em!important}
+  #dashboard .mm-home-book-copy h2{
+    margin:2px 0 4px!important;
+    font-size:16px!important;
+    line-height:1.22!important;
+    display:-webkit-box!important;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden!important;
+  }
+  #dashboard .mm-home-book-copy p{font-size:10.5px!important;line-height:1.3!important}
+  #dashboard .mm-home-book-progress{grid-template-columns:minmax(72px,1fr) auto!important;margin:6px 0 4px!important}
+  #dashboard .mm-home-book-progress small{font-size:9.5px!important}
+  #dashboard .mm-home-book-actions{width:100%!important;display:grid!important;grid-template-columns:minmax(0,1.18fr) minmax(0,.82fr)!important;gap:7px!important}
+  #dashboard .mm-home-book-actions button{width:100%!important;min-width:0!important;min-height:44px!important;padding:8px 9px!important;font-size:11.5px!important;white-space:nowrap!important}
 }
 
-/* Canonical Home hierarchy — 2026.10.07.4 */
+/* Canonical Home hierarchy — 2026.10.07.9 */
 /* Home keeps one dominant lesson decision, one persistent Book/Keep Reading surface,
    and two specialist shortcuts without duplicating Learn, Materials, Practice or Saved lessons. */
 #dashboard{
@@ -396,19 +422,69 @@
 
 @media(max-width:700px){
   #dashboard{width:100%!important}
+  #mmNonProductionPreviewWarning{
+    display:block!important;
+    width:auto!important;
+    min-width:0!important;
+    min-height:0!important;
+    height:auto!important;
+    max-height:none!important;
+    margin:0 0 5px!important;
+    padding:4px 7px!important;
+    border-radius:8px!important;
+    box-shadow:none!important;
+    font-size:9.5px!important;
+    line-height:1.12!important;
+    overflow-wrap:anywhere!important;
+  }
+  #mmNonProductionPreviewWarning strong{
+    display:inline!important;
+    margin-right:3px!important;
+    font-size:9.5px!important;
+    line-height:1.12!important;
+  }
+  #mmNonProductionPreviewWarning br{display:none!important}
+  body.mm-home-visible .topbar,
+  body[data-mm-view="dashboard"] .topbar{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto!important;
+    align-items:start!important;
+    column-gap:9px!important;
+    row-gap:0!important;
+    margin-bottom:7px!important;
+  }
+  body.mm-home-visible .topbar>div:first-child,
+  body[data-mm-view="dashboard"] .topbar>div:first-child{min-width:0!important}
+  body.mm-home-visible .topbar .top-actions,
+  body[data-mm-view="dashboard"] .topbar .top-actions{
+    grid-column:2!important;
+    grid-row:1!important;
+    margin-left:0!important;
+    align-self:start!important;
+  }
+  body.mm-home-visible .topbar h1,
+  body[data-mm-view="dashboard"] .topbar h1{font-size:24px!important}
+  body.mm-home-visible .topbar p,
+  body[data-mm-view="dashboard"] .topbar p{
+    max-width:360px!important;
+    margin-top:2px!important;
+    font-size:11.5px!important;
+    line-height:1.33!important;
+  }
   #dashboard .mm-today-focus{
-    padding:18px!important;
-    gap:14px!important;
-    margin-bottom:15px!important;
-    border-radius:18px!important;
+    padding:14px!important;
+    gap:9px!important;
+    margin-bottom:10px!important;
+    border-radius:16px!important;
     box-shadow:none!important;
   }
-  #dashboard .mm-today-focus h2{font-size:25px!important}
-  #dashboard .mm-today-focus p{font-size:13px!important;line-height:1.45!important}
+  #dashboard .mm-today-focus h2{margin:3px 0 4px!important;font-size:22px!important;line-height:1.1!important}
+  #dashboard .mm-today-focus p{font-size:12px!important;line-height:1.38!important}
   #dashboard .mm-today-meta{
     display:grid!important;
     grid-template-columns:repeat(3,minmax(0,1fr))!important;
     gap:5px!important;
+    margin-top:8px!important;
   }
   #dashboard .mm-today-meta .pill{
     min-width:0!important;
@@ -422,7 +498,9 @@
   #dashboard .mm-today-focus>button{
     width:100%!important;
     min-width:0!important;
-    min-height:48px!important;
+    min-height:44px!important;
+    padding:8px 12px!important;
+    font-size:12.5px!important;
   }
   #dashboard .mm-home-balance{gap:8px!important}
   #dashboard .mm-home-balance-copy{
@@ -453,8 +531,8 @@
   #dashboard .mm-home-recent b{margin:0!important;font-size:12px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;max-width:70vw!important}
 }
 @media(max-width:360px){
-  #dashboard .mm-today-focus{padding:16px!important}
-  #dashboard .mm-today-focus h2{font-size:23px!important}
+  #dashboard .mm-today-focus{padding:13px!important}
+  #dashboard .mm-today-focus h2{font-size:21px!important}
   #dashboard .mm-today-meta .pill:nth-child(2){display:none!important}
   #dashboard .mm-today-meta{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 }

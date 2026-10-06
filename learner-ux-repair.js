@@ -3,6 +3,7 @@
 'use strict';
 if(window.MM_LEARNER_UX_REPAIR)return;
 const VERSION='2026.09.24.1';
+const STYLE_VERSION='2026.10.07.1';
 const ASSESSMENT_BANK_VERSION='assessment-2026.08.30.1';
 const ASSESSMENT_HISTORY_KEY='mm-assessment-question-history-v4';
 const ASSESSMENT_RESULT_META_KEY='mm-assessment-result-meta-v1';
@@ -17,8 +18,8 @@ function ensureStyles(){
   if(document.querySelector('link[data-mm-learner-ux-repair]'))return;
   const link=document.createElement('link');
   link.rel='stylesheet';
-  link.href=`./learner-ux-repair.css?v=${encodeURIComponent(VERSION)}`;
-  link.dataset.mmLearnerUxRepair=VERSION;
+  link.href=`./learner-ux-repair.css?v=${encodeURIComponent(STYLE_VERSION)}`;
+  link.dataset.mmLearnerUxRepair=STYLE_VERSION;
   document.head.appendChild(link);
 }
 function mobile(){return !!window.matchMedia?.('(max-width:760px)').matches}
@@ -118,10 +119,10 @@ function ensurePreviewWarning(){
   if(!host)return;
   banner=document.createElement('div');
   banner.id='mmNonProductionPreviewWarning';
-  banner.className='callout';
+  banner.className='mm-preview-boundary';
   banner.setAttribute('role','status');
   banner.setAttribute('aria-live','polite');
-  banner.innerHTML='<strong>Non-production preview</strong><br>This preview is for learner review and validation only. It is not the production release and does not bypass the physical-device release gate.';
+  banner.innerHTML='<strong>Non-production preview.</strong> This preview is for learner review and validation only; it is not production, and the physical-device release gate still applies.';
   host.prepend(banner);
 }
 function runRepair(reset){

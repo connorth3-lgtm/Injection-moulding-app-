@@ -61,18 +61,23 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await openApp(page);
       await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
       const homeBook=page.locator('#dashboard [data-mm-home-book]');
+      await expect(homeBook).toHaveCount(1);
       await expect(homeBook).toBeVisible();
-      await expect(homeBook.getByRole('button',{name:'Open Book'})).toBeVisible();
+      await expect(homeBook).toHaveAttribute('aria-label','MouldMaster Book');
+      await expect(homeBook.getByRole('button',{name:/Open Book|Keep Reading/})).toBeVisible();
       await expect(page.locator('#dashboard .mm-home-task-hub')).toHaveCount(0);
       await expect(page.locator('#dashboard .mm-home-utility')).toHaveCount(0);
       await expect(page.locator('#dashboard .mm-home-balance')).toBeVisible();
       await expect(page.locator('#dashboard .mm-home-balance [data-mm-home-action]')).toHaveCount(2);
       await expect(page.locator('#dashboard .mm-home-balance')).not.toContainText(/Materials|Practice|Saved lessons|Browse learning|Reference book/i);
-      const firstViewport=await page.evaluate(()=>({
-        bookBottom:document.querySelector('#dashboard [data-mm-home-book]').getBoundingClientRect().bottom,
-        toolsTop:document.querySelector('#dashboard .mm-home-balance').getBoundingClientRect().top,
-        navTop:document.querySelector('.mobile-nav').getBoundingClientRect().top
-      }));
+      const firstViewport=await page.evaluate(()=>{
+        const focus=document.querySelector('#dashboard .mm-today-focus').getBoundingClientRect();
+        const book=document.querySelector('#dashboard [data-mm-home-book]').getBoundingClientRect();
+        const tools=document.querySelector('#dashboard .mm-home-balance').getBoundingClientRect();
+        const nav=document.querySelector('.mobile-nav').getBoundingClientRect();
+        return {focusBottom:focus.bottom,bookTop:book.top,bookBottom:book.bottom,toolsTop:tools.top,navTop:nav.top};
+      });
+      expect(firstViewport.bookTop).toBeGreaterThanOrEqual(firstViewport.focusBottom-1);
       expect(firstViewport.bookBottom).toBeLessThanOrEqual(firstViewport.navTop+2);
       expect(firstViewport.toolsTop).toBeGreaterThanOrEqual(firstViewport.bookBottom-1);
       await expect(page.locator('#continueBtn')).toBeHidden();
