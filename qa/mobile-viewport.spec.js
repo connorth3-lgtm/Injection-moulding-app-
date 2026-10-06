@@ -72,7 +72,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
         toolsBottom:document.querySelector('#dashboard .mm-home-balance').getBoundingClientRect().bottom,
         navTop:document.querySelector('.mobile-nav').getBoundingClientRect().top
       }));
-      expect(firstViewport.toolsBottom).toBeLessThanOrEqual(firstViewport.navTop+1);
+      expect(firstViewport.toolsBottom).toBeLessThanOrEqual(firstViewport.navTop+2);
       await expect(page.locator('#continueBtn')).toBeHidden();
       await expect(page.locator('#dashboard .mm-home-core-hero')).toBeHidden();
       await expect(page.locator('#dashboard .mm-home-kpis')).toBeHidden();

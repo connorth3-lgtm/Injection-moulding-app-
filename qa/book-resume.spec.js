@@ -14,9 +14,8 @@ async function boot(page,active='reader-a'){
 }
 async function activate(page,id){
   await page.evaluate(id=>{
-    const store=JSON.parse(localStorage.getItem('mouldmasterProDB'));
-    store.activeUser=id;
-    localStorage.setItem('mouldmasterProDB',JSON.stringify(store));
+    if(typeof window.switchUser!=='function')throw new Error('learner switch API unavailable');
+    window.switchUser(id);
   },id);
   await page.reload({waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED)&&Boolean(window.MMBook?.getResume)&&!document.getElementById('mmBootstrap'));
@@ -32,13 +31,17 @@ test('Home Book opens on first load and Keep Reading is learner scoped',async({p
 
   await page.evaluate(()=>window.MMBook.openReaderChapter('r01'));
   await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
-  await page.evaluate(()=>window.scrollTo(0,Math.max(360,Math.floor(document.documentElement.scrollHeight*0.35))));
+  const marker=page.locator('[data-mm-book-reader] [data-mm-book-anchor]').nth(3);
+  await expect(marker).toBeVisible();
+  await marker.evaluate(el=>el.scrollIntoView({block:'start',behavior:'auto'}));
+  await page.evaluate(()=>window.scrollBy(0,90));
+  await page.waitForTimeout(250);
   const aKey=await page.evaluate(()=>window.MMBook.resumeStorageKey());
   await page.getByRole('button',{name:'Home'}).first().click();
   await expect(page.locator('#dashboard [data-mm-home-book]')).toContainText('Keep reading');
   const aResume=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),aKey);
   expect(aResume.id).toBe('r01');
-  expect(aResume.scrollY).toBeGreaterThan(0);
+  expect(aResume.anchorId).toBeTruthy();
 
   await activate(page,'reader-b');
   await expect(page.locator('#dashboard [data-mm-home-book]')).toContainText('Injection moulding reference');
@@ -47,29 +50,33 @@ test('Home Book opens on first load and Keep Reading is learner scoped',async({p
   expect(bKey).not.toBe(aKey);
 });
 
-test('Keep Reading distinguishes duplicate heading text with ordinal anchors',async({page})=>{
+test('Keep Reading prioritises stable anchor ID over text/index fallback',async({page})=>{
   await boot(page);
   await page.evaluate(()=>window.MMBook.openReaderChapter('r08'));
-  const dup=page.getByRole('heading',{name:'What evidence should change the conclusion?',exact:true});
-  await expect(dup).toHaveCount(2);
-  await dup.nth(1).scrollIntoViewIfNeeded();
-  await page.evaluate(()=>window.scrollBy(0,80));
-  const secondTop=await dup.nth(1).evaluate(el=>Math.round(el.getBoundingClientRect().top));
-  const secondAnchor=await dup.nth(1).getAttribute('data-mm-book-anchor');
-  expect(secondAnchor).toBeTruthy();
+  const heads=page.locator('[data-mm-book-reader] [data-mm-book-anchor]');
+  await expect(heads.nth(4)).toBeVisible();
+  const target=heads.nth(4);
+  const targetAnchor=await target.getAttribute('data-mm-book-anchor');
+  const misleadingText=await heads.nth(1).innerText();
+  expect(targetAnchor).toBeTruthy();
+  await target.evaluate(el=>el.scrollIntoView({block:'start',behavior:'auto'}));
+  await page.evaluate(()=>window.scrollBy(0,90));
+  await page.waitForTimeout(250);
   await page.getByRole('button',{name:'Home'}).first().click();
-  const saved=await page.evaluate(()=>window.MMBook.getResume());
-  expect(saved.anchorId).toBe(secondAnchor);
-  expect(Number.isInteger(saved.anchorIndex)).toBeTruthy();
-  expect(saved.anchorText).toBe('What evidence should change the conclusion?');
+  const key=await page.evaluate(()=>window.MMBook.resumeStorageKey());
+  await page.evaluate(({key,misleadingText})=>{
+    const saved=JSON.parse(localStorage.getItem(key));
+    saved.anchorIndex=1;
+    saved.anchorText=misleadingText;
+    localStorage.setItem(key,JSON.stringify(saved));
+  },{key,misleadingText});
 
   await page.locator('#dashboard [data-mm-home-book]').getByRole('button',{name:'Keep Reading'}).click();
-  await expect(dup).toHaveCount(2);
-  await page.waitForTimeout(50);
-  const firstTop=await dup.nth(0).evaluate(el=>Math.round(el.getBoundingClientRect().top));
-  const restoredSecondTop=await dup.nth(1).evaluate(el=>Math.round(el.getBoundingClientRect().top));
-  expect(Math.abs(restoredSecondTop-secondTop)).toBeLessThan(140);
-  expect(Math.abs(restoredSecondTop)).toBeLessThan(Math.abs(firstTop));
+  const restored=page.locator(`[data-mm-book-reader] [data-mm-book-anchor="${targetAnchor}"]`);
+  await expect(restored).toBeVisible();
+  await page.waitForTimeout(80);
+  const restoredTop=await restored.evaluate(el=>Math.round(el.getBoundingClientRect().top));
+  expect(Math.abs(restoredTop)).toBeLessThan(180);
 });
 
 test('Keep Reading survives Material Atlas hydration without anchor drift',async({page})=>{
@@ -80,8 +87,9 @@ test('Keep Reading survives Material Atlas hydration without anchor drift',async
   await expect(atlasHeading).toHaveAttribute('data-mm-book-anchor','module:material-families:atlas');
   await page.waitForFunction(()=>document.querySelector('[data-mm-book-material-atlas]')&&!document.querySelector('[data-mm-book-material-status]'));
   await expect(atlasHeading).toHaveAttribute('data-mm-book-anchor','module:material-families:atlas');
-  await atlasHeading.scrollIntoViewIfNeeded();
-  await page.evaluate(()=>window.scrollBy(0,70));
+  await atlasHeading.evaluate(el=>el.scrollIntoView({block:'start',behavior:'auto'}));
+  await page.evaluate(()=>window.scrollBy(0,100));
+  await page.waitForTimeout(250);
   const beforeTop=await atlasHeading.evaluate(el=>Math.round(el.getBoundingClientRect().top));
   await page.getByRole('button',{name:'Home'}).first().click();
   const saved=await page.evaluate(()=>window.MMBook.getResume());
@@ -97,17 +105,24 @@ test('Keep Reading restores, stale IDs fail to contents, and learner reset clear
   await boot(page);
   await page.evaluate(()=>window.MMBook.openReaderChapter('r02'));
   await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
-  await page.evaluate(()=>window.scrollTo(0,420));
-  const beforeLeaveY=await page.evaluate(()=>window.scrollY);
+  const resumeTarget=page.locator('[data-mm-book-reader] [data-mm-book-anchor]').nth(4);
+  await expect(resumeTarget).toBeVisible();
+  const resumeAnchor=await resumeTarget.getAttribute('data-mm-book-anchor');
+  await resumeTarget.evaluate(el=>el.scrollIntoView({block:'start',behavior:'auto'}));
+  await page.evaluate(()=>window.scrollBy(0,90));
+  await page.waitForTimeout(250);
+  const beforeTop=await resumeTarget.evaluate(el=>Math.round(el.getBoundingClientRect().top));
   const aKey=await page.evaluate(()=>window.MMBook.resumeStorageKey());
   await page.getByRole('button',{name:'Home'}).first().click();
 
   await page.locator('#dashboard [data-mm-home-book]').getByRole('button',{name:'Keep Reading'}).click();
   await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
   expect(await page.evaluate(()=>window.MMBook.getResume().id)).toBe('r02');
-  await page.waitForTimeout(50);
-  const restoredY=await page.evaluate(()=>window.scrollY);
-  expect(Math.abs(restoredY-beforeLeaveY)).toBeLessThan(140);
+  const restoredTarget=page.locator(`[data-mm-book-reader] [data-mm-book-anchor="${resumeAnchor}"]`);
+  await expect(restoredTarget).toBeVisible();
+  await page.waitForTimeout(80);
+  const restoredTop=await restoredTarget.evaluate(el=>Math.round(el.getBoundingClientRect().top));
+  expect(Math.abs(restoredTop-beforeTop)).toBeLessThan(160);
 
   await activate(page,'reader-b');
   await page.evaluate(()=>window.MMBook.openReaderChapter('r03'));

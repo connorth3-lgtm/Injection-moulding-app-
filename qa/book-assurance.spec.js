@@ -18,7 +18,7 @@ test('Book distinguishes source evidence review from independent human validatio
 
   const view=page.locator('#mmBookView');
   await expect(view).toBeVisible();
-  await expect(view.locator('[data-mm-book-summary]')).toContainText('46 governed chapters');
+  await expect(view.locator('[data-mm-book-summary]')).toContainText('46 governed modules');
 
   const contract=await page.evaluate(()=>{
     const data=window.MMBook?.getSmeReview?.();
