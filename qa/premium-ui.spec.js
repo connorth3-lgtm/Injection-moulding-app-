@@ -250,6 +250,14 @@ test('mobile Materials keeps search controls sticky and touch sized',async({page
   await page.evaluate(()=>window.MM_MATERIAL_REGISTRY.openPage({replaceUrl:false}));
   const filters=page.locator('#mmExactMaterialCatalog .mm-exact-search');
   await expect(filters).toBeVisible();
+  await page.waitForFunction(()=>{
+    const filters=document.querySelector('#mmExactMaterialCatalog .mm-exact-search');
+    const query=document.querySelector('[data-mm-exact-query]');
+    const manufacturer=document.querySelector('[data-mm-exact-manufacturer]');
+    if(!filters||!query||!manufacturer)return false;
+    const style=getComputedStyle(filters),q=query.getBoundingClientRect(),m=manufacturer.getBoundingClientRect();
+    return style.position==='sticky'&&Number.parseFloat(style.top)>=0&&q.height>=44&&m.height>=44;
+  });
   const style=await filters.evaluate(el=>({position:getComputedStyle(el).position,top:getComputedStyle(el).top}));
   expect(style.position).toBe('sticky');
   expect(parseFloat(style.top)).toBeGreaterThanOrEqual(0);

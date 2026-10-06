@@ -72,19 +72,20 @@ for(const region of ['UK','US','NZ'])for(const level of ['Beginner','Intermediat
 const scenarios=D.scenarios.map(s=>({id:s.mmStableId,title:s.title,options:s.choices,choices:s.choices.length,correct:s.correct,feedback:Array.isArray(s.feedback)?s.feedback.length:0,category:s.category,difficulty:s.difficulty,reference:s.reference||null,sourceUrl:s.sourceUrl||null}));
 const reviewA=JSON.parse(store['mm_spaced_review_v2::strong-learner-a']);
 const reviewB=JSON.parse(store['mm_spaced_review_v2::strong-learner-b']);
-const stress={};
+const stress={},reachableTechnical={};
 for(const level of ['Beginner','Intermediate','Advanced']){
  stress[level]={};
  for(const region of ['UK','US','NZ','ALL']){
   let minConcepts=99;
   for(let pass=0;pass<50;pass++){
    const technical=sandbox.window.getExamQuestions(level,region).filter(q=>q.stableId.startsWith('tech:'));
+   for(const q of technical)reachableTechnical[q.stableId]={id:q.stableId,mmId:q.mmId,difficulty:q.difficulty,competency:q.competency,competencies:q.competencies||[q.competency],concept:q.concept,critical:q.critical,region:q.region||null,options:q.options,correct:q.correct,stem:q.q};
    minConcepts=Math.min(minConcepts,new Set(technical.map(q=>q.concept)).size);
   }
   stress[level][region]=minConcepts;
  }
 }
-process.stdout.write(JSON.stringify({scenarioCount:D.scenarios.length,definitions,exams,stress,quality:Q,scenarios,qa:D.assessmentQA.qualitySuite,history:D.assessmentQA.questionRevisionHistory,bridge:sandbox.window.MM_STABLE_REVIEW_BRIDGE,reviewA,reviewB,reviewBare:Object.prototype.hasOwnProperty.call(store,'mm_spaced_review_v2')}));
+process.stdout.write(JSON.stringify({scenarioCount:D.scenarios.length,definitions,exams,stress,reachableTechnical:Object.values(reachableTechnical),quality:Q,scenarios,qa:D.assessmentQA.qualitySuite,history:D.assessmentQA.questionRevisionHistory,bridge:sandbox.window.MM_STABLE_REVIEW_BRIDGE,reviewA,reviewB,reviewBare:Object.prototype.hasOwnProperty.call(store,'mm_spaced_review_v2')}));
 '''%(json.dumps(base),json.dumps(str(ROOT/'assessment-deep-dive.js')),json.dumps(str(ROOT/'src/domains/assessment/assessment-answer-cue-fix.js')),json.dumps(str(ROOT/'assessment-storage-scope.js')),json.dumps(str(ROOT/'assessment-quality-suite.js')),json.dumps(str(ROOT/'assessment-stable-review-bridge.js')))
 cue_source=(ROOT/'src/domains/assessment/assessment-answer-cue-fix.js').read_text(encoding='utf-8')
 need("Review shot-delivery/NRV and injection actuals" in cue_source,'scenario:01 correct option must stay concise enough to avoid answer-length salience')
@@ -106,9 +107,12 @@ for level,regions in runtime['exams'].items():
         coverage=set(c for x in tech for c in x.get('competencies',[]) if c);need(len(coverage)>=5,f'{level}/{region} blueprint covers fewer than 5 technical competency groups: {sorted(coverage)}');need(all(x['difficulty'] for x in items),f'{level}/{region} difficulty metadata missing');concepts=[x['concept'] for x in tech];need(len(set(concepts))>=5,f'{level}/{region} has excessive repeated technical concepts')
         for x in tech: live_technical[x['id']]=x
 
-need(len(live_technical)==30,f"all 30 approved technical items must become reachable across repeated blueprint-balanced forms; reached {len(live_technical)}")
+for x in runtime.get('reachableTechnical',[]): live_technical[x['id']]=x
+expected_technical={x['id'] for x in runtime['definitions'] if x['kind']=='technical-exam'}
+reached_technical=set(live_technical)
+need(reached_technical==expected_technical,f"all 30 approved technical items must become reachable across repeated blueprint-balanced forms; reached {len(reached_technical)}; missing {sorted(expected_technical-reached_technical)}")
 
-# Exercise repeated forms so concept diversity cannot depend on one lucky Math.random tie.
+# Exercise repeated forms so concept diversity and reachability cannot depend on one lucky Math.random tie.
 for level,regions in runtime['stress'].items():
     for region,min_concepts in regions.items():
         need(min_concepts>=5,f'{level}/{region} repeated blueprint diversity fell below 5 concepts: {min_concepts}')
