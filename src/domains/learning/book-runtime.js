@@ -70,7 +70,8 @@
     const main=document.querySelector('#mainContent,.main,main');
     if(main){
       const overflow=String(getComputedStyle(main).overflowY||'').toLowerCase();
-      if(/^(auto|scroll|overlay)$/.test(overflow))return main;
+      const hasScrollRange=(Number(main.scrollHeight)||0)>(Number(main.clientHeight)||0)+1;
+      if(/^(auto|scroll|overlay)$/.test(overflow)&&hasScrollRange)return main;
     }
     return document.scrollingElement||document.documentElement;
   }
