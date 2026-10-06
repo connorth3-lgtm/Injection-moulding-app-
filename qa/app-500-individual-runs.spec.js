@@ -68,10 +68,11 @@ for(let run=1;run<=500;run++){
       await expect(page.locator('#mmBookView')).toBeVisible();
       await page.evaluate(()=>window.MMBook.load());
       await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
-      const chapters=page.locator('[data-mm-book-chapter]');
-      expect(await chapters.count()).toBeGreaterThanOrEqual(46);
-      await chapters.nth(variant%Math.min(46,await chapters.count())).click();
+      const readerChapters=page.locator('[data-mm-book-reader-chapter-open]');
+      expect(await readerChapters.count()).toBe(20);
+      await readerChapters.nth(variant%20).click();
       await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
+      expect(await page.evaluate(()=>window.MMBook.getManifest().parts.flatMap(part=>part.chapters||[]).length)).toBe(46);
     }else if(family==='materials'){
       await page.evaluate(()=>switchView('materials'));
       await expect(page.locator('#mmExactMaterialCatalog')).toHaveCount(1);

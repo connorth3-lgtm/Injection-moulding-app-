@@ -95,6 +95,7 @@ test('Keep Reading survives Material Atlas hydration without anchor drift',async
   await page.getByRole('button',{name:'Home'}).first().click();
   const saved=await page.evaluate(()=>window.MMBook.getResume());
   expect(saved.anchorId).toBe('module:material-families:atlas');
+  expect(saved.anchorOffsetId).toBe(saved.anchorId);
   await page.locator('#dashboard [data-mm-home-book]').getByRole('button',{name:'Keep Reading'}).click();
   await page.waitForFunction(()=>document.querySelector('[data-mm-book-material-atlas]')&&!document.querySelector('[data-mm-book-material-status]'));
   await expect(atlasHeading).toHaveAttribute('data-mm-book-anchor','module:material-families:atlas');

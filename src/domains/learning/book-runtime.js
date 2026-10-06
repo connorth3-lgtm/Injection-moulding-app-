@@ -42,7 +42,7 @@
   });
   let manifest=null,manifestPromise=null,materialPromise=null,coldMaterialSearchPromise=null,publicationAuthorization=null,bookSmeReview=null,qualificationReview=null,highRiskReview=null,workedCaseLedger=null,workedCasesByChapter=new Map(),diagramLedger=null,diagramsByChapter=new Map(),evidenceEnrichmentLedger=null,claimEvidenceReference=null,claimEvidenceByChapter=new Map(),claimEvidenceClaimsByChapter=new Map(),readerArchitecture=null,editorialExpansionReview=null,materialAtlas=null,materialCatalog=null,materialRegionalEvidence=null,materialSearchIndex={catalog:[],regional:[]},integrityMap=null,ui=null,previousView=null,open=false,contentsScrollY=0;
   const BOOK_RESUME_PREFIX='mm_book_resume_v1::',LEGACY_BOOK_RESUME_KEY='mouldmasterBookResume:v1',BOOK_RESUME_SCHEMA=1;
-  let activeReadingPosition=null,resumeScrollTimer=0,boundBookScrollRoot=null;
+  let activeReadingPosition=null,resumeScrollTimer=0,boundBookScrollRoot=null,bookScrollStyleRestore=null;
   function resumeStorageKey(){
     const scope=window.MM_LEARNER_SCOPE;
     if(!scope?.storageKey||!scope?.token)return null;
@@ -81,18 +81,30 @@
     const rect=root.getBoundingClientRect();
     return Math.max(0,Math.round(rect.top))+8;
   }
+  function setBookInstantScroll(active){
+    const html=document.documentElement,body=document.body;
+    if(active){
+      if(bookScrollStyleRestore)return;
+      bookScrollStyleRestore={html:html?.style?.scrollBehavior||'',body:body?.style?.scrollBehavior||''};
+      if(html)html.style.scrollBehavior='auto';
+      if(body)body.style.scrollBehavior='auto';
+      return;
+    }
+    if(!bookScrollStyleRestore)return;
+    if(html)html.style.scrollBehavior=bookScrollStyleRestore.html;
+    if(body)body.style.scrollBehavior=bookScrollStyleRestore.body;
+    bookScrollStyleRestore=null;
+  }
   function scrollBookBy(delta){
     const root=bookScrollRoot(),amount=Number(delta)||0;
     if(!amount)return;
-    if(isDocumentScrollRoot(root))window.scrollBy({top:amount,left:0,behavior:'auto'});
-    else if(typeof root.scrollBy==='function')root.scrollBy({top:amount,left:0,behavior:'auto'});
-    else root.scrollTop+=amount;
+    const target=isDocumentScrollRoot(root)?(document.scrollingElement||document.documentElement):root;
+    target.scrollTop=(Number(target.scrollTop)||0)+amount;
   }
   function scrollBookTo(top){
     const root=bookScrollRoot(),value=Math.max(0,Number(top)||0);
-    if(isDocumentScrollRoot(root))window.scrollTo({top:value,left:0,behavior:'auto'});
-    else if(typeof root.scrollTo==='function')root.scrollTo({top:value,left:0,behavior:'auto'});
-    else root.scrollTop=value;
+    const target=isDocumentScrollRoot(root)?(document.scrollingElement||document.documentElement):root;
+    target.scrollTop=value;
   }
   function bindBookScrollRoot(){
     const root=bookScrollRoot();
@@ -105,29 +117,31 @@
     if(!ui?.reader||ui.reader.hidden)return {anchorId:'',anchorIndex:-1,anchorText:'',anchorOffset:0};
     const top=bookViewportTop(),heads=[...ui.reader.querySelectorAll('h2[data-mm-book-anchor],h3[data-mm-book-anchor],h4[data-mm-book-anchor]')],eligible=heads.map((el,index)=>({el,index,rect:el.getBoundingClientRect()})).filter(x=>x.rect.top<=top);
     const picked=(eligible.length?eligible[eligible.length-1]:heads[0]?{el:heads[0],index:0,rect:heads[0].getBoundingClientRect()}:null);
-    return picked?{anchorId:String(picked.el.dataset.mmBookAnchor||''),anchorIndex:picked.index,anchorText:String(picked.el.textContent||'').trim().slice(0,240),anchorOffset:Math.round(picked.rect.top)}:{anchorId:'',anchorIndex:-1,anchorText:'',anchorOffset:0};
+    return picked?{anchorId:String(picked.el.dataset.mmBookAnchor||''),anchorIndex:picked.index,anchorText:String(picked.el.textContent||'').trim().slice(0,240),anchorOffset:Math.round(picked.rect.top),anchorOffsetId:String(picked.el.dataset.mmBookAnchor||'')}:{anchorId:'',anchorIndex:-1,anchorText:'',anchorOffset:0,anchorOffsetId:''};
   }
   function rememberReadingPosition(kind,id,title,scrollY=0){
-    const anchor=readerAnchor(),position={schema:BOOK_RESUME_SCHEMA,bookRelease:VERSION,kind,id,title:String(title||'Book'),scrollY:Math.max(0,Math.round(Number(scrollY)||0)),anchorId:anchor.anchorId,anchorIndex:anchor.anchorIndex,anchorText:anchor.anchorText,anchorOffset:anchor.anchorOffset,updatedAt:new Date().toISOString()};
+    const anchor=readerAnchor(),position={schema:BOOK_RESUME_SCHEMA,bookRelease:VERSION,kind,id,title:String(title||'Book'),scrollY:Math.max(0,Math.round(Number(scrollY)||0)),anchorId:anchor.anchorId,anchorIndex:anchor.anchorIndex,anchorText:anchor.anchorText,anchorOffset:anchor.anchorOffset,anchorOffsetId:anchor.anchorOffsetId,updatedAt:new Date().toISOString()};
     activeReadingPosition=position;writeResume(position,{notify:true});return position
   }
   function updateReadingScroll({notify=false}={}){
     if(!open||!activeReadingPosition||ui?.reader?.hidden)return false;
-    const anchor=readerAnchor(),next={...activeReadingPosition,scrollY:bookScrollTop(),anchorId:anchor.anchorId,anchorIndex:anchor.anchorIndex,anchorText:anchor.anchorText,anchorOffset:anchor.anchorOffset,updatedAt:new Date().toISOString()};
+    const anchor=readerAnchor(),next={...activeReadingPosition,scrollY:bookScrollTop(),anchorId:anchor.anchorId,anchorIndex:anchor.anchorIndex,anchorText:anchor.anchorText,anchorOffset:anchor.anchorOffset,anchorOffsetId:anchor.anchorOffsetId,updatedAt:new Date().toISOString()};
     activeReadingPosition=next;return writeResume(next,{notify})
   }
   function flushReadingPosition({notify=false}={}){clearTimeout(resumeScrollTimer);resumeScrollTimer=0;return updateReadingScroll({notify})}
   function queueReadingScrollSave(){if(!open||!activeReadingPosition)return;clearTimeout(resumeScrollTimer);resumeScrollTimer=setTimeout(()=>updateReadingScroll(),180)}
   function restoreReadingPosition(snapshot){
+    clearTimeout(resumeScrollTimer);resumeScrollTimer=0;activeReadingPosition={...snapshot};
     requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      if(!ui?.reader||ui.reader.hidden)return;
       const heads=[...ui.reader.querySelectorAll('h2[data-mm-book-anchor],h3[data-mm-book-anchor],h4[data-mm-book-anchor]')],anchorId=String(snapshot.anchorId||''),index=Number.isInteger(snapshot.anchorIndex)?snapshot.anchorIndex:-1,wanted=String(snapshot.anchorText||'').trim();
-      const heading=(anchorId?heads.find(el=>el.dataset.mmBookAnchor===anchorId):null)||(index>=0&&index<heads.length?heads[index]:null)||(wanted?heads.find(el=>String(el.textContent||'').trim()===wanted):null);
+      const byId=anchorId?heads.find(el=>el.dataset.mmBookAnchor===anchorId):null;
+      const heading=byId||(index>=0&&index<heads.length?heads[index]:null)||(wanted?heads.find(el=>String(el.textContent||'').trim()===wanted):null);
       if(heading){
-        heading.scrollIntoView({block:'start',behavior:'auto'});
-        const desired=Number(snapshot.anchorOffset);
-        if(Number.isFinite(desired))scrollBookBy(heading.getBoundingClientRect().top-desired);
+        const savedOffset=Number(snapshot.anchorOffset),offsetIdentity=String(snapshot.anchorOffsetId||'');
+        const desired=byId&&offsetIdentity===anchorId&&Number.isFinite(savedOffset)?savedOffset:bookViewportTop();
+        scrollBookBy(heading.getBoundingClientRect().top-desired);
       }else scrollBookTo(snapshot.scrollY);
-      activeReadingPosition={...snapshot};
     }));
   }
   function clearResume(){
@@ -451,10 +465,10 @@
     ui.reader.innerHTML=`${back}${readerChapterHtml(reader)}`;ui.contents.hidden=true;ui.reader.hidden=false;bindBack();bindMaterialPagination(ui.reader);rememberReadingPosition('reader-chapter',id,reader.title,0);scrollBookReaderToTop();emitBookRender('reader-chapter',id);
     if(reader.moduleIds.includes('material-families'))void hydrateMaterialAtlas();
   }
-  function restoreBookChrome(){if(!ui)return;ui.hero.hidden=false;ui.accuracy.hidden=false;}function stopBookSpeech(){try{window.MMReadAloud?.stop?.();}catch(_){}}function bookScrollTop(){const root=bookScrollRoot();return Math.max(0,isDocumentScrollRoot(root)?window.scrollY||document.documentElement.scrollTop||0:root.scrollTop||0);}function scrollBookReaderToTop(){requestAnimationFrame(()=>{if(!ui?.reader)return;ui.reader.scrollIntoView({block:'start',behavior:'auto'});const heading=ui.reader.querySelector('h2');if(heading){heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}});}function showContents(){if(!ui)return;stopBookSpeech();const active=document.activeElement;if(active&&ui.reader?.contains(active)&&typeof active.blur==='function')active.blur();restoreBookChrome();ui.reader.hidden=true;ui.contents.hidden=false;void ui.contents.offsetHeight;const restore=()=>scrollBookTo(contentsScrollY);restore();requestAnimationFrame(()=>requestAnimationFrame(restore));}function bindBack(){ui?.reader?.querySelector('[data-mm-book-back]')?.addEventListener('click',showContents);}
+  function restoreBookChrome(){if(!ui)return;ui.hero.hidden=false;ui.accuracy.hidden=false;}function stopBookSpeech(){try{window.MMReadAloud?.stop?.();}catch(_){}}function bookScrollTop(){const root=bookScrollRoot();return Math.max(0,isDocumentScrollRoot(root)?document.scrollingElement?.scrollTop||0:root.scrollTop||0);}function scrollBookReaderToTop(){requestAnimationFrame(()=>{if(!ui?.reader)return;scrollBookBy(ui.reader.getBoundingClientRect().top-bookViewportTop());const heading=ui.reader.querySelector('h2');if(heading){heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}});}function showContents({restoreScroll=true}={}){if(!ui)return;stopBookSpeech();const active=document.activeElement;if(active&&ui.reader?.contains(active)&&typeof active.blur==='function')active.blur();restoreBookChrome();ui.reader.hidden=true;ui.contents.hidden=false;void ui.contents.offsetHeight;if(restoreScroll)scrollBookTo(contentsScrollY);}function bindBack(){ui?.reader?.querySelector('[data-mm-book-back]')?.addEventListener('click',()=>showContents());}
   function emitBookRender(kind,id=''){window.dispatchEvent(new CustomEvent('mm:book-render',{detail:{kind,id}}));}function showChapter(id){const chapter=allChapters().find(ch=>ch.id===id);if(!chapter||!ui)return;contentsScrollY=bookScrollTop();const sections=Array.isArray(chapter.sections)?chapter.sections:[];restoreBookChrome();const back='<button type="button" class="ghost" data-mm-book-back>← Book contents</button>';if(chapter.state==='verified')ui.reader.innerHTML=`${back}${verifiedChapterHtml(chapter)}`;else if(chapter.state==='technical-review'&&sections.length)ui.reader.innerHTML=`${back}<span class="eyebrow">Technical review draft — source evidence review incomplete</span><h2>${esc(chapter.title)}</h2><p><b>Applicability:</b> ${esc(chapter.applicability||'Under review.')}</p><div class="callout"><b>Review boundary:</b> ${esc(chapter.reviewBoundary||'This draft is visible for technical review. Do not treat it as a machine setting, safety procedure or source-reviewed production instruction.')}</div>${sections.map((s,index)=>`<section><h3 data-mm-book-anchor="chapter:${esc(chapter.id)}:section:${index}">${esc(s.title||'')}</h3><p>${esc(s.text||'')}</p></section>`).join('')}${sourceHtml(chapter)}`;else ui.reader.innerHTML=`${back}<span class="eyebrow">${esc(stateLabel(chapter.state))}</span><h2>${esc(chapter.title)}</h2><p><b>This chapter is not being published as technical teaching content yet.</b></p><p>MouldMaster is reviewing the claims, applicability and sources first.</p>${sourceHtml(chapter)}`;ui.contents.hidden=true;ui.reader.hidden=false;bindBack();rememberReadingPosition('chapter',id,chapter.title,0);scrollBookReaderToTop();emitBookRender('chapter',id);if(id==='material-families')void hydrateMaterialAtlas();}
   function startVerifiedListening(){if(!ui)return;const verified=verifiedChapters();if(!verified.length)return;const reader=window.MMReadAloud,details=document.querySelector('.mm-read-aloud details'),play=document.querySelector('.mm-read-aloud [data-mm-read="play"]');if(!reader?.supported||!details||!play){ui.summary.textContent='Source-reviewed Book text is available to read, but device speech synthesis is unavailable.';return;}reader.stop?.();const back='<button type="button" class="ghost" data-mm-book-back>← Book contents</button>';ui.reader.innerHTML=`${back}${verified.map(chapter=>verifiedChapterHtml(chapter,{includeTechnicalMaterial:false})).join('')}`;ui.contents.hidden=true;ui.hero.hidden=true;ui.accuracy.hidden=true;ui.reader.hidden=false;bindBack();scrollBookReaderToTop();requestAnimationFrame(()=>{reader.refresh?.();details.open=true;play.click();});emitBookRender('listening');}
-  function openBook(){if(!ui)return;previousView=[...document.querySelectorAll('.view')].find(v=>!v.classList.contains('hidden')&&v!==ui.view)||previousView;document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));ui.view.classList.remove('hidden');restoreBookChrome();open=true;document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('active'));ui.nav.classList.add('active');const title=document.getElementById('pageTitle'),subtitle=document.getElementById('pageSubtitle');if(title)title.textContent='Book';if(subtitle)subtitle.textContent='Evidence-governed injection moulding reference — 20 reader chapters preserve 46 module-level claim and source boundaries.';contentsScrollY=0;showContents();emitBookRender('contents');if(!manifest){ui.summary.textContent='Loading governed Book content on demand…';ui.smeStatus.textContent='Independent human SME review status loads with the Book content.';void ensureManifest().catch(()=>{});}}
+  function openBook(){if(!ui)return;previousView=[...document.querySelectorAll('.view')].find(v=>!v.classList.contains('hidden')&&v!==ui.view)||previousView;document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));ui.view.classList.remove('hidden');restoreBookChrome();open=true;setBookInstantScroll(true);document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('active'));ui.nav.classList.add('active');const title=document.getElementById('pageTitle'),subtitle=document.getElementById('pageSubtitle');if(title)title.textContent='Book';if(subtitle)subtitle.textContent='Evidence-governed injection moulding reference — 20 reader chapters preserve 46 module-level claim and source boundaries.';contentsScrollY=0;showContents({restoreScroll:false});scrollBookTo(0);emitBookRender('contents');if(!manifest){ui.summary.textContent='Loading governed Book content on demand…';ui.smeStatus.textContent='Independent human SME review status loads with the Book content.';void ensureManifest().catch(()=>{});}}
   async function openChapter(id){openBook();try{await ensureManifest();showChapter(id);}catch(_){}}
   async function openResume(){
     const saved=readResume();if(!saved){openBook();return false}
@@ -468,7 +482,7 @@
     }catch(_){return false}
   }
   function getResume(){const saved=readResume();return saved?{...saved}:null}
-  function leaveBook(){if(!open)return;flushReadingPosition({notify:true});stopBookSpeech();open=false;ui?.view?.classList.add('hidden');ui?.nav?.classList.remove('active');}
+  function leaveBook(){if(!open)return;flushReadingPosition({notify:true});stopBookSpeech();open=false;ui?.view?.classList.add('hidden');ui?.nav?.classList.remove('active');setBookInstantScroll(false);}
   function searchBook(query){const q=String(query||'').trim().toLowerCase();if(q.length<2||!manifest)return[];const matches=allChapters().filter(ch=>[ch.title,ch.applicability,...(ch.sections||[]).flatMap(s=>[s.title,s.text])].join(' ').toLowerCase().includes(q));const materialHit=materialSearchIndex.catalog.some(text=>text.includes(q))||materialSearchIndex.regional.some(text=>text.includes(q));if(materialHit){const chapter=allChapters().find(ch=>ch.id==='material-families');if(chapter&&!matches.includes(chapter))matches.unshift(chapter);}return matches.slice(0,6);}
   const normalizeMaterialSearch=value=>String(value??'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
   async function coldMaterialSearchTerms(){if(materialSearchIndex.catalog.length||materialSearchIndex.regional.length)return [...materialSearchIndex.catalog,...materialSearchIndex.regional];if(!coldMaterialSearchPromise)coldMaterialSearchPromise=verifiedJson(MATERIAL_SEARCH_INDEX_PATH,MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1).then(data=>{const counts=data?.sourceCounts||{},entries=Array.isArray(data?.entries)?data.entries:[];if(data?.schemaVersion!==1||data?.release!=='2026.10.04.3'||counts.canonicalExactGrades!==260||counts.regionalEvidenceRows!==284||counts.total!==544||entries.length!==544)throw new Error('Book material search index identity check failed');const terms=entries.map(item=>String(item?.search||'').trim()).filter(Boolean);if(terms.length!==544)throw new Error('Book material search index coverage mismatch');return terms;}).catch(error=>{coldMaterialSearchPromise=null;throw error});return coldMaterialSearchPromise;}
