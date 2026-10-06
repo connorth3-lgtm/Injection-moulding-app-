@@ -523,6 +523,29 @@ function preferUnusedConcepts(indices,pool,selected){
  const distinct=indices.filter(i=>!usedConcepts.has(pool[i].concept));
  return distinct.length?distinct:indices;
 }
+function ensureMinimumConceptDiversity(selected,pool,counts,minConcepts=5){
+ const result=selected.slice(0,7),selectedIds=new Set(result.map(x=>x.stableId));
+ const coversBlueprint=items=>BLUEPRINT.every(want=>items.some(item=>(item.competencies||[item.competency]).includes(want)));
+ while(new Set(result.map(x=>x.concept)).size<minConcepts){
+  const usedConcepts=new Set(result.map(x=>x.concept)),conceptCounts={};
+  result.forEach(item=>{conceptCounts[item.concept]=Number(conceptCounts[item.concept]||0)+1});
+  const incoming=pool.map((item,i)=>({item,i})).filter(x=>!selectedIds.has(x.item.stableId)&&!usedConcepts.has(x.item.concept));
+  incoming.sort((a,b)=>Number(counts[a.item.stableId]||0)-Number(counts[b.item.stableId]||0)||a.i-b.i);
+  let swapped=false;
+  for(const candidate of incoming){
+   for(let i=0;i<result.length;i++){
+    if(Number(conceptCounts[result[i].concept]||0)<2)continue;
+    const trial=result.slice();trial[i]=candidate.item;
+    if(!coversBlueprint(trial))continue;
+    selectedIds.delete(result[i].stableId);result[i]=candidate.item;selectedIds.add(candidate.item.stableId);swapped=true;break;
+   }
+   if(swapped)break;
+  }
+  if(!swapped)break;
+ }
+ if(new Set(result.map(x=>x.concept)).size<minConcepts)throw new Error(`Assessment blueprint cannot satisfy ${minConcepts}-concept diversity for ${result[0]?.level||'level'}`);
+ return result;
+}
 function selectBlueprint(level){
  const pool=(D.exams[level]||[]).map((q,i)=>normaliseTech(q,i,level));
  const history=blueprintHistory(),counts=obj(history.levels[level]?.counts)?history.levels[level].counts:{};
@@ -541,7 +564,7 @@ function selectBlueprint(level){
   if(idx==null)break;
   selected.push(pool[idx]);unused.delete(idx);
  }
- const result=selected.slice(0,7);recordBlueprintExposure(level,result);return shuffle(result);
+ const result=ensureMinimumConceptDiversity(selected,pool,counts,5);recordBlueprintExposure(level,result);return shuffle(result);
 }
 function blueprintCoverage(items){const c=new Set();items.forEach(x=>(x.competencies||[x.competency]).forEach(k=>c.add(k)));return [...c]}
 
