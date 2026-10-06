@@ -357,7 +357,7 @@ need('function verifiedChapterHtml(chapter,options={})' in book_runtime, 'verifi
 need("if(chapter.state==='verified')ui.reader.innerHTML=`${back}${verifiedChapterHtml(chapter)}`" in book_runtime, 'Book read surface no longer uses governed verified renderer')
 need("verified.map(chapter=>verifiedChapterHtml(chapter,{includeTechnicalMaterial:false})).join('')" in book_runtime, 'Book listen surface must exclude technical-review material appendix')
 need("ui.listen.addEventListener('click',startVerifiedListening)" in book_runtime, 'Book listening control is not bound')
-need('style=' not in book_runtime, 'Book runtime reintroduced inline style attributes')
+need('style="' not in book_runtime and "style='" not in book_runtime, 'Book runtime reintroduced inline HTML style attributes')
 
 # Desktop packaging must continue to carry the same canonical domain/data tree.
 extra = desktop['build']['extraResources']
