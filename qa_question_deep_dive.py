@@ -94,9 +94,11 @@ need([row.get('id') for row in lanes]==['formal','scenarios','diagnostic','mater
 need([row.get('count') for row in lanes]==[57,40,36,24,12],'Question Centre lane counts drift')
 need(sum(int(row.get('count') or 0) for row in lanes)==169,'Question Centre lane counts must sum to 169')
 hub=text('primary-learning-practice-hubs.js')
-for marker in ['window.MM_QUESTION_CENTRE=Object.freeze','Formal knowledge checks','Shop-floor scenarios','Diagnostic questions','Material questions','Measured-evidence decisions','169 governed question/decision prompts']:
+for marker in ['window.MM_QUESTION_CENTRE=Object.freeze','function openQuestionCentreDetail()','mm-question-centre','Formal knowledge checks','Shop-floor scenarios','Diagnostic questions','Material questions','Measured-evidence decisions','169 governed question/decision prompts']:
     need(marker in hub,f'Question Centre learner launcher missing: {marker}')
 need('Book chapter self-checks and lesson exercises stay with the teaching they belong to.' in hub,'Question Centre must preserve teaching-context questions outside the consolidated launcher')
+need("case 'question-centre': return openQuestionCentreDetail();" in hub,'Question Centre action must open the dedicated Practice surface rather than a transient modal')
+need("scope:'Learner-facing consolidated launcher only" in hub,'Question Centre governance boundary must state discovery-only consolidation')
 
 reg=text(REGISTER)
 for marker in ['all 57 live exam questions','All 30 technical questions','27 regional','five evidence-reasoning modes','Insufficient evidence is a valid expert answer','ISO 20430:2020','OSHA 29 CFR 1910.147','WorkSafe New Zealand']:
