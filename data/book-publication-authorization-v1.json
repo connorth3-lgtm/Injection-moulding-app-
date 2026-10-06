@@ -216,7 +216,7 @@
   "learnerFacingPublicationMeaning": "The governed module wording has passed MouldMaster claim/source and publication controls. The Book groups 46 governed modules into 20 reader chapters for readability; grouping does not change evidence status. This label is not independent human SME approval, accreditation, production validation or machine-control authority.",
   "diagramAuthorization": {
     "status": "authorized-instructional-diagrams",
-    "authorizedAt": "2026-10-03",
+    "authorizedAt": "2026-10-06",
     "release": "2026.10.06.5",
     "ledger": "data/book-engineering-diagrams-v1.json",
     "diagramCount": 25,
@@ -233,7 +233,7 @@
     "governedModuleCount": 46,
     "noNewTechnicalClaims": true,
     "independentSmeStatus": "hold",
-    "authorityBoundary": "Reader chapters are editorial groupings with derived depth labels, objectives, knowledge checks, application prompts and selected sequence prompts for continuity. These scaffolds add no technical claims; underlying governed module state, claims, evidence and SME status remain authoritative."
+    "authorityBoundary": "Reader chapters are editorial groupings with derived depth labels, objectives, knowledge checks, application prompts, optional reasoning scenarios and selected sequence prompts for continuity. These scaffolds add no technical claims; underlying governed module state, claims, evidence and SME status remain authoritative."
   },
   "editorialExpansionAuthorization": {
     "status": "authorized-repository-technical-source-review",
