@@ -122,3 +122,21 @@ test('assessment modal closes on Escape, restores focus and hides non-current co
   await expect(page.locator('#modal')).toHaveClass(/hidden/);
   await expect(trigger).toBeFocused();
 });
+
+
+test('assessment listing states the 16-question Compare All contract and 10-question single-region contract',async({page})=>{
+  await page.setViewportSize({width:412,height:915});
+  await page.addInitScript(()=>{
+    const user={id:'contract-copy-qa',name:'Contract Copy QA',role:'learner',completed:[1,2,3],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:4,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
+    localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:'contract-copy-qa',users:{'contract-copy-qa':user}}));
+  });
+  await page.goto(BASE,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>typeof window.switchView==='function'&&typeof window.renderExams==='function'&&window.MM_ASSESSMENT_FINAL_HARDENING?.syncExamListingContractCopy);
+  await page.evaluate(()=>switchView('exams'));
+  await expect(page.locator('#exams .exam-card .muted').first()).toContainText('16 questions · 7 technical + 9 regional safety');
+  await expect(page.locator('#exams .section-head p')).toContainText('all 9 UK/US/NZ safety-compliance items');
+
+  await page.evaluate(()=>setRegion('NZ'));
+  await expect(page.locator('#exams .exam-card .muted').first()).toContainText('10 questions · 7 technical + 3 regional safety');
+  await expect(page.locator('#exams .section-head p')).toContainText('7 technical questions plus 3 safety/compliance questions');
+});
