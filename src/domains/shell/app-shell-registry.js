@@ -270,9 +270,24 @@ function specialistDashboardHtml(){
   const api=window.MM_SPECIALIST_CURRICULUM;if(!api?.lessons?.length)return '';
   return `<section class="mm-specialist-strip" id="mmSpecialistDashboard" aria-label="Specialist curriculum extensions"><span class="mm-specialist-eyebrow">Go deeper where the core stops</span><h3>Specialist extensions</h3><p>The 120-lesson core remains the complete main pathway. These ${api.lessons.length} optional extensions add depth in safety, machine health, materials, measurement, tooling and sustainability.</p><div class="mm-specialist-meta"><span>${api.lessons.length} optional lessons</span><span>Local optional progress</span><span>No certificate requirement</span></div><button class="secondary" type="button" data-mm-specialist-open>Explore specialist extensions →</button></section>`
 }
+function bookDashboardHtml(){
+  return `<section class="card mm-home-book" data-mm-home-book aria-label="MouldMaster Book"><div class="mm-home-book-copy"><span class="eyebrow">Book</span><h2>Injection moulding reference</h2><p>Open the governed Book for process, materials, defects, worked examples and evidence-led troubleshooting.</p></div><div class="mm-home-book-actions"><button type="button" class="primary" data-mm-home-book-action>Open Book</button></div></section>`
+}
+function openBookFromShell(){
+  const api=window.MMBook;if(!api?.open)return false;
+  activeCustomId='book';
+  const result=api.open();
+  syncActiveState();requestAnimationFrame(syncActiveState);emitView('book');
+  return result??true
+}
+function renderBookDashboard(slot){
+  slot.innerHTML=bookDashboardHtml();
+  slot.querySelector('[data-mm-home-book-action]')?.addEventListener('click',openBookFromShell)
+}
 
 function installDefaultDashboardSections(){
   registerDashboard({id:'today-focus',zone:'before',order:10,adopt:'.mm-today-focus'});
+  registerDashboard({id:'book',zone:'before',order:20,render:renderBookDashboard});
   registerDashboard({id:'curriculum-focus',zone:'before',order:30,render:slot=>{slot.innerHTML=curriculumDashboardHtml();slot.querySelector('[data-mm-curriculum-dashboard-open]')?.addEventListener('click',()=>{const lesson=currentLesson(),rec=window.MM_CURRICULUM_INTEGRATION?.recommendations?.(lesson.id)?.[0];if(rec)window.MM_CURRICULUM_INTEGRATION.open?.(rec.type,rec.id,lesson.id)})}});
   registerDashboard({id:'specialist',zone:'after',order:90,render:slot=>{slot.innerHTML=specialistDashboardHtml();slot.querySelector('[data-mm-specialist-open]')?.addEventListener('click',()=>window.MM_SPECIALIST_CURRICULUM?.open?.())}})
 }
