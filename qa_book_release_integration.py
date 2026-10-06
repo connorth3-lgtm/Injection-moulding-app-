@@ -225,7 +225,7 @@ need(release_key(book_sme.get('release')) and release_key(current_web_release) a
 need(book_sme.get('release') == enrichment.get('release'), 'Book SME and evidence-enrichment review scope must remain bound to the same content release')
 need(len(book_sme.get('workedCaseIds', [])) == 27 and len(set(book_sme.get('workedCaseIds', []))) == 27, 'Book SME worked-case review scope is incomplete')
 need(len(book_sme.get('enrichmentChapterIds', [])) == 10 and len(set(book_sme.get('enrichmentChapterIds', []))) == 10, 'Book SME evidence-enrichment review scope is incomplete')
-need(len(book_sme.get('diagramIds', [])) == 21 and len(set(book_sme.get('diagramIds', []))) == 21, 'Book SME diagram review scope is incomplete')
+need(len(book_sme.get('diagramIds', [])) == 25 and len(set(book_sme.get('diagramIds', []))) == 25, 'Book SME diagram review scope is incomplete')
 need(len(book_sme.get('chapterIds', [])) == 46 and len(set(book_sme['chapterIds'])) == 46, 'Book SME chapter coverage drift')
 need(qualification['effectiveCountsAfterQualificationReview'] == {'chapters':46,'claims':137,'supported':116,'qualified':21,'hold':0,'conflicting':0}, 'qualification counts drift')
 need(authorization['status'] == 'authorized' and authorization['authorizationType'] == 'governed-book-publication', 'publication authorization identity drift')
@@ -356,7 +356,7 @@ need("window.addEventListener('mm:domains-ready',installBookSearch,{once:true})"
 need("window.__MM_BOOK_SEARCH_BOUND__===VERSION" in book_runtime, 'Book search binding must be idempotent for the current Book runtime')
 need('function verifiedChapterHtml(chapter,options={})' in book_runtime, 'verified chapter renderer missing')
 need("if(chapter.state==='verified')ui.reader.innerHTML=`${back}${verifiedChapterHtml(chapter)}`" in book_runtime, 'Book read surface no longer uses governed verified renderer')
-need("verified.map(chapter=>verifiedChapterHtml(chapter,{includeTechnicalMaterial:false})).join('')" in book_runtime, 'Book listen surface must exclude technical-review material appendix')
+need('function readerListeningModuleHtml(chapter)' in book_runtime and 'function readerListeningChapterHtml(reader)' in book_runtime and 'allReaderChapters().map(readerListeningChapterHtml)' in book_runtime, 'Book listen surface must follow condensed reader sections while excluding technical-review modules')
 need("ui.listen.addEventListener('click',startVerifiedListening)" in book_runtime, 'Book listening control is not bound')
 need('style="' not in book_runtime and "style='" not in book_runtime, 'Book runtime reintroduced inline HTML style attributes')
 for marker in ('READER_SECTION_OMISSIONS','READER_SUPPLEMENT_SECTIONS','readerSections','readerSupplementHtml','readerModuleEvidenceHtml','mm-book-reader-governance','mm-book-inline-evidence'):
@@ -365,6 +365,12 @@ need("'diagnostic-method':Object.freeze(['Start with the symptom','Build competi
 need("'documentation':Object.freeze(['Reading ISO 9001 marks on material packaging'])" in book_runtime, 'Book reader must move the packaging/certification example into optional context')
 need("workedCaseHtml(chapter,{readerMode:true})" in book_runtime and "diagramHtml(chapter,{readerMode:true})" in book_runtime, 'Book reader must keep cases/diagrams while reducing repeated governance text')
 need('Module evidence' in book_runtime and 'Worked-example evidence' in book_runtime and 'Chapter references' in book_runtime, 'Book reader evidence must remain available behind progressive disclosure')
+need("'black-specks':Object.freeze(['Separate continuous contamination from event-driven contamination'])" in book_runtime, 'Book reader must consolidate the remaining black-speck chronology repetition')
+need('function proseHtml(value)' in book_runtime and 'words.length<=90' in book_runtime, 'Book reader must split only unusually long governed prose for readability')
+need('const metaList=' in book_runtime and 'No separate assumptions list is declared' in book_runtime and 'No separate units list is declared' in book_runtime, 'Book reader worked examples must present consistent assumptions/units metadata')
+need('Reasoning scenario:' in book_runtime and 'Chapter depth:' in book_runtime and 'Depth labels:' in book_runtime, 'Book reader pedagogy/depth clarification missing')
+for asset in ('polymer-family-evidence-map.svg','process-baseline-evidence-package.svg','filling-boundary-pattern-map.svg','surface-defect-source-map.svg'):
+    need(asset in service_worker, f'new Book instructional diagram missing from atomic cache: {asset}')
 
 # Desktop packaging must continue to carry the same canonical domain/data tree.
 extra = desktop['build']['extraResources']
@@ -374,4 +380,4 @@ need('STATIC_DATA_DIRS.flatMap(filesUnder)' in integrity_script, 'desktop static
 
 print('PASS: Book uses one canonical runtime with exact-byte publication binding and fail-closed authorization.')
 print('PASS: dynamic scripts are release-versioned before late loaders, Book is globally searchable, and learner-facing academic evidence uses canonical DOI links.')
-print('PASS: twenty-seven synthetic worked cases, twenty-one governed engineering diagrams and complete governed claim-evidence references are integrated while independent SME/external validation remains HOLD.')
+print('PASS: twenty-seven synthetic worked cases, twenty-five governed engineering diagrams and complete governed claim-evidence references are integrated while independent SME/external validation remains HOLD.')
