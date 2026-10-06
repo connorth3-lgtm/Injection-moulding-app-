@@ -994,14 +994,23 @@ function enhanceRevisionDetails(){
  return true;
 }
 function addStyles(){return true}
+function syncExamContractCopy(){
+ const region=(typeof user!=='undefined'&&user?.region)||'ALL',modal=document.getElementById('modal');
+ if(!modal||modal.classList.contains('hidden'))return;
+ const heading=[...modal.querySelectorAll('h2')].find(x=>/knowledge check/i.test(x.textContent||''));if(!heading)return;
+ const intro=heading.nextElementSibling;if(!intro||!intro.classList.contains('muted'))return;
+ intro.textContent=region==='ALL'
+  ?'Compare All uses 16 questions: 7 technical plus all 9 safety/compliance items — three each for UK, US and New Zealand. Pass requires at least 80% overall and every safety-critical regional item correct.'
+  :'This knowledge check uses 10 questions: 7 technical plus 3 safety/compliance items for the selected jurisdiction. Pass requires at least 80% overall and every safety-critical regional item correct.';
+}
 
 installAnalyticsExportPatch();addStyles();
-const baseStart=window.startExam;window.startExam=function(){const r=baseStart.apply(this,arguments);setTimeout(initExposureTiming,0);return r};
+const baseStart=window.startExam;window.startExam=function(){const r=baseStart.apply(this,arguments);setTimeout(()=>{initExposureTiming();syncExamContractCopy()},0);return r};
 const baseGrade=window.gradeExam;window.gradeExam=function(){persistExposureTiming();const r=baseGrade.apply(this,arguments);setTimeout(()=>{enhanceRevisionDetails();rewriteTimingPanel()},20);return r};
 const baseRender=typeof window.renderExams==='function'?window.renderExams:null;if(baseRender)window.renderExams=function(){const r=baseRender.apply(this,arguments);setTimeout(rewriteTimingPanel,20);return r};
 
 D.assessmentQA=D.assessmentQA||{};D.assessmentQA.finalHardening={version:VERSION,bankVersion:BANK_VERSION,stableIds:allStableIds().length,revision2Items:Object.keys(REVISION2).length,revision3Items:Object.keys(REVISION3).length,responseTiming:'first meaningful question exposure; hidden-tab time excluded',researchFreshness:'separate DOI resolver QA'};
 window.MM_QUESTION_REVISIONS={version:VERSION,bankVersion:BANK_VERSION,stableIds:allStableIds(),baseline:{...BASELINE},revision2:{...REVISION2},revision3:{...REVISION3},forId:revisionFor};
-window.MM_ASSESSMENT_FINAL_HARDENING={version:VERSION,responseTimingKey:TIMING_KEY,rewriteTimingPanel,enhanceRevisionDetails};
+window.MM_ASSESSMENT_FINAL_HARDENING={version:VERSION,responseTimingKey:TIMING_KEY,rewriteTimingPanel,enhanceRevisionDetails,syncExamContractCopy};
 })();
 /* <<< assessment-final-hardening.js */
