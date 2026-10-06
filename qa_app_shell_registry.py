@@ -42,7 +42,7 @@ for marker in [
     "id:'learning-insights'", "id:'repair-app-files'", "./repair.html", "location.reload()", "Electron",
     'aria-current',
     'visibleCoreView',
-    "navigationItems.get(activeCustomId)",
+    "navigationItems.get(customId)",
     'captured.renderDashboard',
     'captured.renderLesson',
     'captured.switchView',
