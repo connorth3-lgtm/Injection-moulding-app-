@@ -63,6 +63,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       const homeBook=page.locator('#dashboard [data-mm-home-book]');
       await expect(homeBook).toHaveCount(1);
       await expect(homeBook).toBeVisible();
+      await expect(homeBook).toHaveAttribute('aria-label','MouldMaster Book');
       await expect(homeBook.getByRole('button',{name:/Open Book|Keep Reading/})).toBeVisible();
       await expect(page.locator('#dashboard .mm-home-task-hub')).toHaveCount(0);
       await expect(page.locator('#dashboard .mm-home-utility')).toHaveCount(0);
