@@ -133,8 +133,18 @@
   }
   function readerAnchor(){
     if(!ui?.reader||ui.reader.hidden)return {anchorId:'',anchorIndex:-1,anchorText:'',anchorOffset:0};
-    const top=bookViewportTop(),activationTop=top+24,heads=[...ui.reader.querySelectorAll('h2[data-mm-book-anchor],h3[data-mm-book-anchor],h4[data-mm-book-anchor]')],eligible=heads.map((el,index)=>({el,index,rect:el.getBoundingClientRect()})).filter(x=>x.rect.top<=activationTop);
-    const picked=(eligible.length?eligible[eligible.length-1]:heads[0]?{el:heads[0],index:0,rect:heads[0].getBoundingClientRect()}:null);
+    const top=bookViewportTop(),activationTop=top+24,heads=[...ui.reader.querySelectorAll('h2[data-mm-book-anchor],h3[data-mm-book-anchor],h4[data-mm-book-anchor]')],rows=heads.map((el,index)=>({el,index,rect:el.getBoundingClientRect()})),eligible=rows.filter(x=>x.rect.top<=activationTop);
+    let picked=(eligible.length?eligible[eligible.length-1]:rows[0]||null);
+    const root=bookScrollRoot(),documentRoot=document.scrollingElement||document.documentElement,isDocument=isDocumentScrollRoot(root);
+    const scrollTop=isDocument?Math.max(0,Number(documentRoot?.scrollTop)||Number(window.scrollY)||0):Math.max(0,Number(root?.scrollTop)||0);
+    const clientHeight=isDocument?Math.max(0,Number(window.innerHeight)||Number(documentRoot?.clientHeight)||0):Math.max(0,Number(root?.clientHeight)||0);
+    const scrollHeight=isDocument?Math.max(0,Number(documentRoot?.scrollHeight)||0):Math.max(0,Number(root?.scrollHeight)||0);
+    const viewportBottom=isDocument?clientHeight:Number(root?.getBoundingClientRect?.().bottom)||clientHeight;
+    const atEnd=scrollHeight>0&&scrollTop+clientHeight>=scrollHeight-3;
+    if(atEnd){
+      const bottomClamped=rows.filter(x=>x.rect.top>activationTop&&x.rect.top<=viewportBottom-24&&x.rect.bottom>=top);
+      if(bottomClamped.length)picked=bottomClamped[0];
+    }
     return picked?{anchorId:String(picked.el.dataset.mmBookAnchor||''),anchorIndex:picked.index,anchorText:String(picked.el.textContent||'').trim().slice(0,240),anchorOffset:Math.round(picked.rect.top),anchorOffsetId:String(picked.el.dataset.mmBookAnchor||'')}:{anchorId:'',anchorIndex:-1,anchorText:'',anchorOffset:0,anchorOffsetId:''};
   }
   function rememberReadingPosition(kind,id,title,scrollY=0){
