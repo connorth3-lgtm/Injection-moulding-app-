@@ -16,6 +16,9 @@ required=[
 for p in required: need((ROOT/p).exists(),f'final hardening file missing: {p}')
 
 js=text('src/domains/assessment/assessment-final-hardening.js')
+need('function syncExamContractCopy()' in js,'assessment final hardening must align live modal copy with the selected standards contract')
+need('16 questions: 7 technical plus all 9 safety/compliance items' in js,'Compare All learner copy must disclose the 16-question 7+9 contract')
+need('10 questions: 7 technical plus 3 safety/compliance items' in js,'single-region learner copy must disclose the 10-question 7+3 contract')
 for marker in [
  "const VERSION='2026.08.24.3'","const BANK_VERSION='2026.08.30.1'","mm_assessment_exposure_timing_v1",
  "const S=window.MM_ASSESSMENT_STORAGE_SCOPE","const REVISION3=","const REGIONAL_REVISION_CHANGE=","REVISION3[id]||REVISION2[id]||BASELINE",

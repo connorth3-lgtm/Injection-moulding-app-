@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "2026.10.07.1",
+  "version": "2026.10.07.2",
   "status": "governed-launcher-index",
   "purpose": "One learner-facing inventory for the main question and decision activities without duplicating or re-authoring their governed source content.",
   "primaryPromptCount": 169,
@@ -65,5 +65,19 @@
       "reason": "Optional material practice remains inside its specialist material-learning surface rather than competing with the five primary Question Centre lanes."
     }
   ],
-  "governanceBoundary": "This manifest centralises discovery only. Question text, answer keys, feedback, evidence, scoring, human-review status and release authority remain owned by their canonical subsystems. It does not create SME approval or assessment validity evidence."
+  "governanceBoundary": "This manifest centralises discovery only. Question text, answer keys, feedback, evidence, scoring, human-review status and release authority remain owned by their canonical subsystems. It does not create SME approval or assessment validity evidence.",
+  "canonicalEntryPoint": {
+    "area": "Practice",
+    "label": "Question Centre",
+    "presentation": "dedicated learner surface inside the Practice view",
+    "mobile": "Practice > Question Centre",
+    "desktop": "Practice > Question Centre or Knowledge Checks for direct formal-assessment access"
+  },
+  "policy": {
+    "centralisesDiscovery": true,
+    "duplicatesQuestionText": false,
+    "preservesCanonicalScoring": true,
+    "preservesEvidenceOwnership": true,
+    "preservesHumanReviewState": true
+  }
 }
