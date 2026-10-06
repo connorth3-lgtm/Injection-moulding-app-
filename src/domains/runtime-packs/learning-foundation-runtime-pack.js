@@ -524,6 +524,7 @@ labelLearnerReset();
 // Historical device-global review/sign-off ownership is ambiguous. Never adopt it into a learner scope.
 window.MM_TRAINING_DATA_BRIDGE={version:'2026.10.04.1',cleanupFailureCode:ANALYTICS_CLEANUP_CODE,canonicalLearnerId,buildTrainingExtras,trainingExtrasForImport,learnerOwnedKeys,clearLearnerAnalyticsStores,clearLearnerTrainingExtras,clearAssessmentAnalyticsStores,clearLearningAnalyticsStores,clearAllAnalyticsStores,clearTrainingExtrasStores,cancelActiveExam};
 })();
+/* <<< training-qa-fix.js */
 
 /* >>> backup-authority-notice.js */
 /* MouldMaster backup authority + integrity UX — 2026.10.04.1 */
