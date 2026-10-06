@@ -56,6 +56,14 @@ def need(ok: bool, message: str) -> None:
         raise AssertionError(message)
 
 
+def release_key(value):
+    try:
+        parts = tuple(int(part) for part in str(value).split("."))
+    except (TypeError, ValueError):
+        return ()
+    return parts if len(parts) == 4 else ()
+
+
 def main() -> None:
     text = SOURCE.read_text(encoding="utf-8")
     lower = text.lower()
@@ -71,7 +79,7 @@ def main() -> None:
     content_release = ledger.get("release")
     need(isinstance(current_release, str) and current_release, "current learner web release is missing")
     need(content_release == sme.get("release"), "worked-case and SME governed content release mismatch")
-    need(content_release <= current_release, "worked-case content cannot target a future learner release")
+    need(release_key(content_release) and release_key(current_release) and release_key(content_release) <= release_key(current_release), "worked-case content cannot target a future learner release")
     need(LEDGER.read_bytes() == RUNTIME_LEDGER.read_bytes(), "authoritative/runtime worked-case ledgers differ")
 
     cases = ledger.get("cases") or []
