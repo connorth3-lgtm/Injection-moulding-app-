@@ -67,11 +67,10 @@
     try{localStorage.setItem(key,JSON.stringify(position));if(notify)window.dispatchEvent(new CustomEvent('mm:book-resume-change',{detail:{...position}}));return true}catch(_){return false}
   }
   function bookScrollRoot(){
-    const main=document.querySelector('#mainContent,.main,main');
-    if(main){
-      const overflow=String(getComputedStyle(main).overflowY||'').toLowerCase();
-      const hasScrollRange=(Number(main.scrollHeight)||0)>(Number(main.clientHeight)||0)+1;
-      if(/^(auto|scroll|overlay)$/.test(overflow)&&hasScrollRange)return main;
+    const start=ui?.reader||ui?.view||document.querySelector('#mainContent,.main,main');
+    for(let node=start?.parentElement;node&&node!==document.body;node=node.parentElement){
+      const style=getComputedStyle(node),overflow=String(style.overflowY||'').toLowerCase(),hasScrollRange=(Number(node.scrollHeight)||0)>(Number(node.clientHeight)||0)+1;
+      if(/^(auto|scroll|overlay)$/.test(overflow)&&hasScrollRange)return node;
     }
     return document.scrollingElement||document.documentElement;
   }
@@ -99,13 +98,13 @@
   function scrollBookBy(delta){
     const root=bookScrollRoot(),amount=Number(delta)||0;
     if(!amount)return;
-    const target=isDocumentScrollRoot(root)?(document.scrollingElement||document.documentElement):root;
-    target.scrollTop=(Number(target.scrollTop)||0)+amount;
+    if(isDocumentScrollRoot(root)){window.scrollBy(0,amount);return}
+    root.scrollTop=(Number(root.scrollTop)||0)+amount;
   }
   function scrollBookTo(top){
     const root=bookScrollRoot(),value=Math.max(0,Number(top)||0);
-    const target=isDocumentScrollRoot(root)?(document.scrollingElement||document.documentElement):root;
-    target.scrollTop=value;
+    if(isDocumentScrollRoot(root)){window.scrollTo(0,value);return}
+    root.scrollTop=value;
   }
   function bindBookScrollRoot(){
     const root=bookScrollRoot();
@@ -131,17 +130,28 @@
   }
   function flushReadingPosition({notify=false}={}){clearTimeout(resumeScrollTimer);resumeScrollTimer=0;return updateReadingScroll({notify})}
   function queueReadingScrollSave(){if(!open||!activeReadingPosition)return;clearTimeout(resumeScrollTimer);resumeScrollTimer=setTimeout(()=>updateReadingScroll(),180)}
+  function alignReadingAnchor(heading,desired,passes=4){
+    if(!heading?.isConnected)return;
+    heading.scrollIntoView({block:'start',inline:'nearest',behavior:'auto'});
+    const settle=remaining=>requestAnimationFrame(()=>{
+      if(!open||!heading.isConnected||ui?.reader?.hidden)return;
+      scrollBookBy(heading.getBoundingClientRect().top-desired);
+      if(remaining>0)settle(remaining-1);
+    });
+    settle(passes);
+  }
   function restoreReadingPosition(snapshot){
     clearTimeout(resumeScrollTimer);resumeScrollTimer=0;activeReadingPosition={...snapshot};
     requestAnimationFrame(()=>requestAnimationFrame(()=>{
       if(!ui?.reader||ui.reader.hidden)return;
+      bindBookScrollRoot();
       const heads=[...ui.reader.querySelectorAll('h2[data-mm-book-anchor],h3[data-mm-book-anchor],h4[data-mm-book-anchor]')],anchorId=String(snapshot.anchorId||''),index=Number.isInteger(snapshot.anchorIndex)?snapshot.anchorIndex:-1,wanted=String(snapshot.anchorText||'').trim();
       const byId=anchorId?heads.find(el=>el.dataset.mmBookAnchor===anchorId):null;
       const heading=byId||(index>=0&&index<heads.length?heads[index]:null)||(wanted?heads.find(el=>String(el.textContent||'').trim()===wanted):null);
       if(heading){
         const savedOffset=Number(snapshot.anchorOffset),offsetIdentity=String(snapshot.anchorOffsetId||'');
         const desired=byId&&offsetIdentity===anchorId&&Number.isFinite(savedOffset)?savedOffset:bookViewportTop();
-        scrollBookBy(heading.getBoundingClientRect().top-desired);
+        alignReadingAnchor(heading,desired);
       }else scrollBookTo(snapshot.scrollY);
     }));
   }
@@ -408,7 +418,8 @@
   }
   async function hydrateMaterialAtlas(){
     const shell=ui?.reader?.querySelector?.('[data-mm-book-material-atlas]');if(!shell)return;
-    try{await ensureMaterialData();if(!shell.isConnected)return;const chapter=allChapters().find(ch=>ch.id==='material-families');shell.outerHTML=materialAtlasHtml(chapter);bindMaterialPagination(ui.reader);emitBookRender('material-atlas','material-families');}
+    if(materialAtlas&&materialCatalog&&materialRegionalEvidence&&!shell.querySelector('[data-mm-book-material-status]')){bindMaterialPagination(ui.reader);return}
+    try{await ensureMaterialData();if(!shell.isConnected)return;const chapter=allChapters().find(ch=>ch.id==='material-families');shell.outerHTML=materialAtlasHtml(chapter);bindMaterialPagination(ui.reader);emitBookRender('material-atlas','material-families');if(open&&activeReadingPosition?.anchorId)restoreReadingPosition({...activeReadingPosition});}
     catch(error){if(shell.isConnected)shell.innerHTML='<span class="eyebrow">Technical-review material reference</span><h3>Material Data Atlas unavailable</h3><p>The governed material files could not be verified, so the appendix failed closed.</p>';console.error('MouldMaster Book material atlas:',error);}
   }
   const allChapters=()=> (manifest?.parts||[]).flatMap(part=>part.chapters||[]),allReaderChapters=()=>readerArchitecture?.readerChapters||[],verifiedChapters=()=>allChapters().filter(ch=>ch.state==='verified');
