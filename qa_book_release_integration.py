@@ -370,7 +370,7 @@ need('function proseHtml(value)' in book_runtime and 'words.length<=90' in book_
 need('const metaList=' in book_runtime and 'No separate assumptions list is declared' in book_runtime and 'No separate units list is declared' in book_runtime, 'Book reader worked examples must present consistent assumptions/units metadata')
 need('Reasoning scenario:' in book_runtime and 'Chapter depth:' in book_runtime and 'Depth labels:' in book_runtime, 'Book reader pedagogy/depth clarification missing')
 for asset in ('polymer-family-evidence-map.svg','process-baseline-evidence-package.svg','filling-boundary-pattern-map.svg','surface-defect-source-map.svg'):
-    need(asset in service_worker, f'new Book instructional diagram missing from atomic cache: {asset}')
+    need(asset in sw, f'new Book instructional diagram missing from atomic cache: {asset}')
 
 # Desktop packaging must continue to carry the same canonical domain/data tree.
 extra = desktop['build']['extraResources']
