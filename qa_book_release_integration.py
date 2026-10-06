@@ -39,6 +39,14 @@ def need(ok, message):
         raise AssertionError(message)
 
 
+def release_key(value):
+    try:
+        parts = tuple(int(part) for part in str(value).split('.'))
+    except (TypeError, ValueError):
+        return ()
+    return parts if len(parts) == 4 else ()
+
+
 def normalize_search(value):
     import re
     return re.sub(r'\s+', ' ', re.sub(r'[^a-z0-9]+', ' ', str(value or '').lower())).strip()
@@ -213,7 +221,7 @@ need("auth?.authorizationBasis?.sourceRevision!=='7ef28bd8b02994223e320fda64e998
 # Publication/SME/qualification boundaries remain fail-closed and unchanged in meaning.
 need(book_sme.get('status') == 'hold' and book_sme.get('reviews') == [], 'independent Book SME HOLD must not be manufactured by hardening')
 current_web_release=json.loads((ROOT / 'version.json').read_text(encoding='utf-8')).get('web_release')
-need(isinstance(book_sme.get('release'),str) and book_sme.get('release') <= current_web_release, 'Book SME evidence cannot target a future learner release')
+need(release_key(book_sme.get('release')) and release_key(current_web_release) and release_key(book_sme.get('release')) <= release_key(current_web_release), 'Book SME evidence cannot target a future learner release')
 need(book_sme.get('release') == enrichment.get('release'), 'Book SME and evidence-enrichment review scope must remain bound to the same content release')
 need(len(book_sme.get('workedCaseIds', [])) == 27 and len(set(book_sme.get('workedCaseIds', []))) == 27, 'Book SME worked-case review scope is incomplete')
 need(len(book_sme.get('enrichmentChapterIds', [])) == 10 and len(set(book_sme.get('enrichmentChapterIds', []))) == 10, 'Book SME evidence-enrichment review scope is incomplete')
