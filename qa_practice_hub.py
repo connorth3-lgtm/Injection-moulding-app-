@@ -16,7 +16,7 @@ required_hub = {
     "learner summary API": "model.summary()",
     "recommended practice region": 'aria-label="Recommended practice"',
     "task-led chooser": "Choose by the job you want to practise",
-    "assessment separation": "Practice is for learning; assessments stay separate.",
+    "question-centre separation": "the Question Centre groups question-based practice and formal checks without mixing their scores.",
     "scenario rotation": "nextScenarioIndex",
     "process-data practice": 'data-mm-hub-action="process-data"',
     "troubleshooting practice": 'data-mm-hub-action="troubleshooting"',
@@ -104,5 +104,5 @@ print(" - learner-guided recommendation wiring present")
 print(" - recommender activity type and CTA stay aligned")
 print(" - task/time-oriented Practice choices present")
 print(" - mobile explanations and CTAs remain visible")
-print(" - assessments remain a separate lane")
+print(" - Question Centre consolidates question-based work without mixing formal scores")
 print("NOTE: this is automated regression evidence, not human accessibility or SME instructional validation.")
