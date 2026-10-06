@@ -41,16 +41,16 @@
     }
   },
   "privacyBoundary": "Public contract metadata must not include learner names, customer/site identifiers, email addresses, private screenshots, raw process data, backup content, filesystem/user paths or other personal/proprietary evidence. Keep detailed device evidence outside the public repository and reference it only with a non-sensitive review identifier.",
-  "release": "2026.10.06.10",
+  "release": "2026.10.06.11",
   "candidate": {
-    "release": "2026.10.06.10",
-    "sourceSha": "8db3cae6b5121abf34327f92c638232991bea9d0",
-    "runtimeFingerprint": "sha256:e560e06b8f1fdbfa7416545433ff72de358293572d267b94829c8eda8262a718",
-    "candidateRunId": 37391468631,
+    "release": "2026.10.06.11",
+    "sourceSha": "3dfe37921ed2d29ae6d44e168f6553d7d25b4279",
+    "runtimeFingerprint": "sha256:ca241f210b64f4c3cabc1a433af57d6758805e03ece7c040cf228a08ee60d471",
+    "candidateRunId": 37394548580,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 11381805036,
-    "artifactName": "physical-pwa-candidate-8db3cae6b5121abf34327f92c638232991bea9d0",
-    "artifactDigest": "sha256:bb2e526ef73b12eb4a8bfe4c737dafb365799370799f7fb18cce2022f04f9255",
-    "artifactExpiresAt": "2027-01-03T23:58:44Z"
+    "artifactId": 11382144706,
+    "artifactName": "physical-pwa-candidate-3dfe37921ed2d29ae6d44e168f6553d7d25b4279",
+    "artifactDigest": "sha256:8a24dc426285dd47e7691fe7bad669f70a387713e5d050ef7470ce6a69140073",
+    "artifactExpiresAt": "2027-01-04T00:32:31Z"
   }
 }
