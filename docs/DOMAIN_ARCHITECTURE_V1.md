@@ -115,15 +115,22 @@ Pilot progress as of 2026-09-03:
 
 No glass-fibre percentage, lifecycle state, approval, property condition or processing value is inferred when the primary source does not establish it.
 
+## Domain bootstrap transfer scheduling
+
+The generated domain manifest remains execution-order governed, but the browser no longer waits to begin each network transfer until the previous domain script has executed. The bootstrap validates the complete manifest first, starts same-origin `preload` transfers for every approved domain asset, then inserts and executes the scripts one-by-one in the original manifest order.
+
+This is intentionally **not** concurrent execution. It reduces cold-start network waterfall without changing global initialization order, module ownership, CSP, service-worker authority or runtime semantics. A future demand-loading tranche may reduce the total startup asset set, but must prove feature reachability and lifecycle parity before any domain is removed from the eager execution contract.
+
 ## Bootstrap convergence target
 
-The remaining browser bootstrap still contains one compatibility bridge that parses the canonical core document, retires inline handler/style attributes, replaces the document, recreates scripts in order and re-dispatches lifecycle events. That bridge is now a **bounded retirement target**, not an extensibility point.
+The remaining browser bootstrap contains one compatibility bridge that parses a **build-prepared, non-executable core shell**, replaces the document, recreates governed scripts in order and re-dispatches lifecycle events. Static core-script externalization plus inline handler/style retirement now happen deterministically in `tools/externalize_core_scripts.py`; they are no longer repeated by every browser at startup. The remaining document-install bridge is a **bounded retirement target**, not an extensibility point.
 
 Until it is removed:
 
 - there must remain exactly one DOMParser core-document stage;
 - there must remain exactly one whole-document replacement;
 - there must remain exactly one synthetic DOMContentLoaded and one synthetic load redispatch;
+- static core script/handler/style hardening must remain build-time and fail closed if the prepared payload drifts;
 - new product behavior must not add another document-transform stage;
 - removal or simplification is always allowed if browser/PWA/Desktop parity and release integrity stay green.
 

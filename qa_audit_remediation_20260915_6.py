@@ -79,8 +79,13 @@ for marker in ['Certificates and pass authority must be re-earned','local analyt
 sw=text('service-worker.js')
 need(f"const CACHE_VERSION='{release}';" in sw,'service-worker release identity stale')
 core=ROOT/'MouldMaster_Core_App.html';payload=ROOT/'src/core-runtime/core-source.txt'
-need(payload.is_file() and payload.read_bytes()==core.read_bytes(),'non-executable core assembly payload must be byte-identical to frozen core')
-need('const CORE_URL="./src/core-runtime/core-source.txt";' in index,'supported bootstrap must assemble from non-executable core source')
+payload_text=payload.read_text(encoding='utf-8') if payload.is_file() else ''
+need(payload.is_file() and len(payload_text)<core.stat().st_size,'build-prepared non-executable core assembly payload is missing or unexpectedly large')
+need(payload_text.count('src="./src/core-runtime/core-inline-')==10,'prepared core payload must reference all ten generated core runtime slots')
+need(__import__('re').search(r'<script\b(?![^>]*\bsrc\s*=)[^>]*>',payload_text,__import__('re').I) is None,'prepared core payload must not retain inline scripts')
+need(__import__('re').search(r'<[^>]*\son(?:click|change|input|keydown)\s*=',payload_text,__import__('re').I|__import__('re').S) is None,'prepared core payload must not retain executable static handlers')
+need(__import__('re').search(r'<[^>]*\sstyle\s*=',payload_text,__import__('re').I|__import__('re').S) is None,'prepared core payload must not retain inline style attributes')
+need('const CORE_URL="./src/core-runtime/core-source.txt";' in index,'supported bootstrap must assemble from build-prepared non-executable core source')
 need("'./src/domains/runtime-packs/learning-foundation-runtime-pack.js'" in sw,'offline cache missing learning foundation runtime pack containing backup authority notice')
 for asset in [claim_runtime]+[f'./src/domains/learning/book-data/{x}' for x in REVIEWS+RESOLUTIONS]:
  need(repr(asset) in sw or f"'{asset}'" in sw,f'offline cache missing audit-remediation asset: {asset}')
