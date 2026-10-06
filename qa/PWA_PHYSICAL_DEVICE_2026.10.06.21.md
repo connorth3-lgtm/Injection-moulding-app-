@@ -6,7 +6,7 @@ This packet governs hands-on physical-device validation of the exact MouldMaster
 
 - web release: `2026.10.06.21`
 - retained pre-merge public candidate source commit: `ea7a9fc46d3f7b95119c76606d9157457284d31f`
-- public-runtime fingerprint: `sha256:b210eea89068c9d43b4c7cf8fcdd4a902e591dacad8ba9016575360f140511ce`
+- public-runtime fingerprint: `sha256:e099b657b214f49d2514c3d23cc7b4cb8ebcb4d8b0ca4030304064c4ab30edd5`
 - exact candidate build run: `37417105826` (`Pre-merge Public Candidate`)
 - retained candidate artifact: `physical-pwa-candidate-ea7a9fc46d3f7b95119c76606d9157457284d31f`
 - artifact id: `11391857007`
