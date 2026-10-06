@@ -21,8 +21,8 @@
     "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.10.06.26.md",
     "candidate": {
       "release": "2026.10.06.26",
-      "sourceSha": "d2168e5f79a96fd1fb136d3110bfa5a4b572a2e1",
-      "runtimeFingerprint": "sha256:640b85fe46027b236d5905aa69a6430144aaf3a1625be91e93ea0fd91b9f5e46"
+      "sourceSha": "5026e199bcfacb4d18dadb03e29559e7f813c9b0",
+      "runtimeFingerprint": "sha256:7bf930021da33d3310749e7fa917284bc557bdd9c447909592a653d9fea445ca"
     },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix."
   },
@@ -32,14 +32,14 @@
     "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.10.06.26.md",
     "currentCandidate": {
       "release": "2026.10.06.26",
-      "sourceSha": "d2168e5f79a96fd1fb136d3110bfa5a4b572a2e1",
-      "runtimeFingerprint": "sha256:640b85fe46027b236d5905aa69a6430144aaf3a1625be91e93ea0fd91b9f5e46",
-      "candidateRunId": 37515397285,
+      "sourceSha": "5026e199bcfacb4d18dadb03e29559e7f813c9b0",
+      "runtimeFingerprint": "sha256:7bf930021da33d3310749e7fa917284bc557bdd9c447909592a653d9fea445ca",
+      "candidateRunId": 37519659290,
       "candidateWorkflow": "Pre-merge Public Candidate",
-      "artifactId": 11436058604,
-      "artifactName": "physical-pwa-candidate-d2168e5f79a96fd1fb136d3110bfa5a4b572a2e1",
-      "artifactDigest": "sha256:0deef259e02f34b9040bdaf3463de7aa32370bd4c679e46217293dcb2ef5d4b5",
-      "artifactExpiresAt": "2027-01-04T18:58:19Z"
+      "artifactId": 11438378700,
+      "artifactName": "physical-pwa-candidate-5026e199bcfacb4d18dadb03e29559e7f813c9b0",
+      "artifactDigest": "sha256:4d33ddadbdc1c16c139c9a865a456eb2cebb7a159aa050df381c5cca86728a2c",
+      "artifactExpiresAt": "2027-01-04T19:31:51Z"
     },
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release."
   },
@@ -48,7 +48,7 @@
     "workflow": ".github/workflows/microsoft-store-msix.yml",
     "handoff": "certification/STORE_SUBMISSION_STATUS.md",
     "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.10.06.26.md",
-    "sourceSha": "d2168e5f79a96fd1fb136d3110bfa5a4b572a2e1",
+    "sourceSha": "5026e199bcfacb4d18dadb03e29559e7f813c9b0",
     "desktopRelease": "2026.09.29.1",
     "evidence": null,
     "required": [
@@ -101,20 +101,20 @@
     "required": "Genuine provider ownership, stakeholder need, provider-approved design, authorised assessment/internal moderation, consent-to-assess/CMR confirmation, applicable national moderation, workplace evidence and provider-controlled review/change evidence for the exact governed release.",
     "candidate": {
       "release": "2026.10.06.26",
-      "sourceSha": "d2168e5f79a96fd1fb136d3110bfa5a4b572a2e1",
-      "runtimeFingerprint": "sha256:640b85fe46027b236d5905aa69a6430144aaf3a1625be91e93ea0fd91b9f5e46"
+      "sourceSha": "5026e199bcfacb4d18dadb03e29559e7f813c9b0",
+      "runtimeFingerprint": "sha256:7bf930021da33d3310749e7fa917284bc557bdd9c447909592a653d9fea445ca"
     }
   },
   "webCandidate": {
     "release": "2026.10.06.26",
-    "sourceSha": "d2168e5f79a96fd1fb136d3110bfa5a4b572a2e1",
-    "runtimeFingerprint": "sha256:640b85fe46027b236d5905aa69a6430144aaf3a1625be91e93ea0fd91b9f5e46",
-    "candidateRunId": 37515397285,
+    "sourceSha": "5026e199bcfacb4d18dadb03e29559e7f813c9b0",
+    "runtimeFingerprint": "sha256:7bf930021da33d3310749e7fa917284bc557bdd9c447909592a653d9fea445ca",
+    "candidateRunId": 37519659290,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 11436058604,
-    "artifactName": "physical-pwa-candidate-d2168e5f79a96fd1fb136d3110bfa5a4b572a2e1",
-    "artifactDigest": "sha256:0deef259e02f34b9040bdaf3463de7aa32370bd4c679e46217293dcb2ef5d4b5",
-    "artifactExpiresAt": "2027-01-04T18:58:19Z"
+    "artifactId": 11438378700,
+    "artifactName": "physical-pwa-candidate-5026e199bcfacb4d18dadb03e29559e7f813c9b0",
+    "artifactDigest": "sha256:4d33ddadbdc1c16c139c9a865a456eb2cebb7a159aa050df381c5cca86728a2c",
+    "artifactExpiresAt": "2027-01-04T19:31:51Z"
   },
   "candidatePolicy": {
     "previewBranchAuthoritative": false,
