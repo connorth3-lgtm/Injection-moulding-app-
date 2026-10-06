@@ -72,7 +72,19 @@ for(const region of ['UK','US','NZ'])for(const level of ['Beginner','Intermediat
 const scenarios=D.scenarios.map(s=>({id:s.mmStableId,title:s.title,options:s.choices,choices:s.choices.length,correct:s.correct,feedback:Array.isArray(s.feedback)?s.feedback.length:0,category:s.category,difficulty:s.difficulty,reference:s.reference||null,sourceUrl:s.sourceUrl||null}));
 const reviewA=JSON.parse(store['mm_spaced_review_v2::strong-learner-a']);
 const reviewB=JSON.parse(store['mm_spaced_review_v2::strong-learner-b']);
-process.stdout.write(JSON.stringify({scenarioCount:D.scenarios.length,definitions,exams,quality:Q,scenarios,qa:D.assessmentQA.qualitySuite,history:D.assessmentQA.questionRevisionHistory,bridge:sandbox.window.MM_STABLE_REVIEW_BRIDGE,reviewA,reviewB,reviewBare:Object.prototype.hasOwnProperty.call(store,'mm_spaced_review_v2')}));
+const stress={};
+for(const level of ['Beginner','Intermediate','Advanced']){
+ stress[level]={};
+ for(const region of ['UK','US','NZ','ALL']){
+  let minConcepts=99;
+  for(let pass=0;pass<50;pass++){
+   const technical=window.getExamQuestions(level,region).filter(q=>q.stableId.startsWith('tech:'));
+   minConcepts=Math.min(minConcepts,new Set(technical.map(q=>q.concept)).size);
+  }
+  stress[level][region]=minConcepts;
+ }
+}
+process.stdout.write(JSON.stringify({scenarioCount:D.scenarios.length,definitions,exams,stress,quality:Q,scenarios,qa:D.assessmentQA.qualitySuite,history:D.assessmentQA.questionRevisionHistory,bridge:sandbox.window.MM_STABLE_REVIEW_BRIDGE,reviewA,reviewB,reviewBare:Object.prototype.hasOwnProperty.call(store,'mm_spaced_review_v2')}));
 '''%(json.dumps(base),json.dumps(str(ROOT/'assessment-deep-dive.js')),json.dumps(str(ROOT/'src/domains/assessment/assessment-answer-cue-fix.js')),json.dumps(str(ROOT/'assessment-storage-scope.js')),json.dumps(str(ROOT/'assessment-quality-suite.js')),json.dumps(str(ROOT/'assessment-stable-review-bridge.js')))
 cue_source=(ROOT/'src/domains/assessment/assessment-answer-cue-fix.js').read_text(encoding='utf-8')
 need("Review shot-delivery/NRV and injection actuals" in cue_source,'scenario:01 correct option must stay concise enough to avoid answer-length salience')
@@ -97,16 +109,7 @@ for level,regions in runtime['exams'].items():
 need(len(live_technical)==30,f"all 30 approved technical items must become reachable across repeated blueprint-balanced forms; reached {len(live_technical)}")
 
 # Exercise repeated forms so concept diversity cannot depend on one lucky Math.random tie.
-stress_node=node.replace(
-"process.stdout.write(JSON.stringify({scenarioCount:D.scenarios.length,definitions,exams,quality:Q,scenarios,qa:D.assessmentQA.qualitySuite,history:D.assessmentQA.questionRevisionHistory,bridge:sandbox.window.MM_STABLE_REVIEW_BRIDGE,reviewA,reviewB,reviewBare:Object.prototype.hasOwnProperty.call(store,'mm_spaced_review_v2')}));",
-`const stress={};for(const level of ['Beginner','Intermediate','Advanced']){stress[level]={};for(const region of ['UK','US','NZ','ALL']){let minConcepts=99;for(let pass=0;pass<50;pass++){const technical=window.getExamQuestions(level,region).filter(q=>q.stableId.startsWith('tech:'));minConcepts=Math.min(minConcepts,new Set(technical.map(q=>q.concept)).size)}stress[level][region]=minConcepts}}process.stdout.write(JSON.stringify({stress}));`
-)
-with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False,encoding='utf-8') as handle: handle.write(stress_node);stress_path=Path(handle.name)
-try: stress_run=subprocess.run(['node',str(stress_path)],capture_output=True,text=True,encoding='utf-8',errors='replace')
-finally: stress_path.unlink(missing_ok=True)
-need(stress_run.returncode==0,f'assessment blueprint diversity stress QA failed: {stress_run.stderr or stress_run.stdout}')
-stress=json.loads(stress_run.stdout)['stress']
-for level,regions in stress.items():
+for level,regions in runtime['stress'].items():
     for region,min_concepts in regions.items():
         need(min_concepts>=5,f'{level}/{region} repeated blueprint diversity fell below 5 concepts: {min_concepts}')
 
