@@ -91,7 +91,6 @@ test('Home Book card switches from start to learner-scoped Keep Reading state',a
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
   const book=page.locator('#dashboard [data-mm-home-book]');
   await page.evaluate(()=>switchView('dashboard'));
-  window;
   await page.evaluate(()=>window.MM_LEARNER_UI_POLISH.refresh());
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
   await expect(book).toContainText('Keep reading · Book');
