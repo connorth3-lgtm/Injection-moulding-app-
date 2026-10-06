@@ -60,6 +60,10 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
     test('Home is lean, XP-free, includes the Book resume surface, and Practice owns troubleshooting',async({page})=>{
       await openApp(page);
       await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
+      const previewWarning=page.locator('#mmNonProductionPreviewWarning');
+      await expect(previewWarning).toBeVisible();
+      const warningHeight=await previewWarning.evaluate(el=>el.getBoundingClientRect().height);
+      expect(warningHeight).toBeLessThanOrEqual(72);
       const homeBook=page.locator('#dashboard [data-mm-home-book]');
       await expect(homeBook).toBeVisible();
       await expect(homeBook.getByRole('button',{name:/Start reading|Continue reading/})).toBeVisible();
