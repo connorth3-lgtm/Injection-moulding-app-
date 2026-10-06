@@ -9,6 +9,7 @@ if(!ASSESSMENT_STORAGE||typeof ASSESSMENT_STORAGE.read!=='function'||typeof ASSE
 const VERSION='2026.08.24.2';
 const ANALYTICS_KEY='mm_assessment_analytics_v1';
 const REVIEW_KEY='mm_spaced_review_v2';
+const BLUEPRINT_HISTORY_KEY='mm_assessment_blueprint_history_v1';
 const SOURCE_REVIEWED='2026-08-26';
 const SOURCE_REVIEW_BY='2026-11-26';
 const LEVELS=['Beginner','Intermediate','Advanced'];
@@ -79,20 +80,46 @@ function normaliseTech(q,i,level){const m=identityFor(q,'technical',level,null,i
 function normaliseReg(q,i,region,level){const m=identityFor(q,'regional',level,region,i);return {q:q[0],options:q[1],correct:q[2],explanation:q[3],reference:q[4],sourceUrl:q[5]||null,optionFeedback:q[6]||[],critical:q[7]!==false,kind:'regional',region,...m}}
 function shuffleOptions(item){const mapped=item.options.map((text,oldIndex)=>({text,correct:oldIndex===item.correct,feedback:item.optionFeedback?.[oldIndex]||null}));const mixed=shuffle(mapped);return {...item,options:mixed.map(x=>x.text),optionFeedback:mixed.map(x=>x.feedback),correct:mixed.findIndex(x=>x.correct)}}
 
+function blueprintHistory(){
+ const raw=ASSESSMENT_STORAGE.read(BLUEPRINT_HISTORY_KEY,{levels:{}});
+ return obj(raw)&&obj(raw.levels)?raw:{levels:{}};
+}
+function chooseLeastExposed(indices,pool,counts){
+ const rows=indices.map(i=>({i,count:Number(counts[pool[i].stableId]||0),tie:Math.random()}));
+ rows.sort((a,b)=>a.count-b.count||a.tie-b.tie);
+ return rows[0]?.i;
+}
+function recordBlueprintExposure(level,selected){
+ const state=blueprintHistory(),row=obj(state.levels[level])?state.levels[level]:{counts:{},attempts:0};
+ row.counts=obj(row.counts)?row.counts:{};
+ selected.forEach(item=>{row.counts[item.stableId]=Number(row.counts[item.stableId]||0)+1});
+ row.attempts=Number(row.attempts||0)+1;
+ const values=Object.values(row.counts).map(Number).filter(Number.isFinite),floor=values.length?Math.min(...values):0;
+ if(floor>25)for(const id of Object.keys(row.counts))row.counts[id]=Math.max(0,Number(row.counts[id]||0)-floor+1);
+ row.last=selected.map(item=>item.stableId);
+ state.levels[level]=row;
+ if(!ASSESSMENT_STORAGE.write(BLUEPRINT_HISTORY_KEY,state))throw new Error('Learner-scoped assessment blueprint history could not be saved');
+}
 function selectBlueprint(level){
  const pool=(D.exams[level]||[]).map((q,i)=>normaliseTech(q,i,level));
+ const history=blueprintHistory(),counts=obj(history.levels[level]?.counts)?history.levels[level].counts:{};
  const unused=new Set(pool.map((_,i)=>i)),selected=[];
  for(const want of BLUEPRINT){
-  let idx=[...unused].find(i=>pool[i].competencies.includes(want));
-  if(idx==null)idx=[...unused].find(i=>pool[i].competency===want);
+  let candidates=[...unused].filter(i=>pool[i].competencies.includes(want));
+  if(!candidates.length)candidates=[...unused].filter(i=>pool[i].competency===want);
+  const idx=chooseLeastExposed(candidates,pool,counts);
   if(idx==null)continue;
   selected.push(pool[idx]);unused.delete(idx);
  }
  while(selected.length<7&&unused.size){
   const usedConcepts=new Set(selected.map(x=>x.concept));
-  let idx=[...unused].find(i=>!usedConcepts.has(pool[i].concept));if(idx==null)idx=[...unused][0];selected.push(pool[idx]);unused.delete(idx);
+  let candidates=[...unused].filter(i=>!usedConcepts.has(pool[i].concept));
+  if(!candidates.length)candidates=[...unused];
+  const idx=chooseLeastExposed(candidates,pool,counts);
+  if(idx==null)break;
+  selected.push(pool[idx]);unused.delete(idx);
  }
- return shuffle(selected.slice(0,7));
+ const result=selected.slice(0,7);recordBlueprintExposure(level,result);return shuffle(result);
 }
 function blueprintCoverage(items){const c=new Set();items.forEach(x=>(x.competencies||[x.competency]).forEach(k=>c.add(k)));return [...c]}
 
@@ -196,7 +223,7 @@ function leakRisks(){const out=[];for(const level of LEVELS)(D.exams[level]||[])
 
 addScenarios();rebuildMeta();addStyles();
 D.assessmentQA=D.assessmentQA||{};
-D.assessmentQA.qualitySuite={version:VERSION,reviewed:'26 August 2026',questionBankRevision:VERSION,stableQuestionIds:true,identityLockVersion:IDENTITY_LOCK_VERSION,identityLockedQuestions:LOCKED_IDENTITIES.length,analytics:'device-local only',examBlueprint:['Materials & rheology','Machine & controls','Tooling & thermal','Process development','Quality & statistics','Troubleshooting','Safety & compliance'],technicalExamItems:30,regionalExamItems:27,totalExamItems:57,scenarioDrills:D.scenarios.length,sourceFreshnessReviewed:SOURCE_REVIEWED,sourceFreshnessReviewBy:SOURCE_REVIEW_BY,migratedLegacyReviewRecords:0,reviewMigrationStatus:'deferred'};
+D.assessmentQA.qualitySuite={version:VERSION,reviewed:'26 August 2026',questionBankRevision:VERSION,stableQuestionIds:true,identityLockVersion:IDENTITY_LOCK_VERSION,identityLockedQuestions:LOCKED_IDENTITIES.length,analytics:'device-local only',examBlueprint:['Materials & rheology','Machine & controls','Tooling & thermal','Process development','Quality & statistics','Troubleshooting','Safety & compliance'],technicalExamItems:30,regionalExamItems:27,totalExamItems:57,scenarioDrills:D.scenarios.length,technicalReachability:'learner-scoped least-exposed rotation within competency blueprint',sourceFreshnessReviewed:SOURCE_REVIEWED,sourceFreshnessReviewBy:SOURCE_REVIEW_BY,migratedLegacyReviewRecords:0,reviewMigrationStatus:'deferred'};
 function runStableReviewMigration(){const result=migrateStableReviewIds();D.assessmentQA.qualitySuite.migratedLegacyReviewRecords=result.moved;D.assessmentQA.qualitySuite.reviewMigrationStatus=result.status;return result}
 if(reviewScope())runStableReviewMigration();else window.addEventListener?.('mm:domains-ready',()=>runStableReviewMigration(),{once:true});
 if(D.assessmentQA.deepAudit)D.assessmentQA.deepAudit.scenarioDrills=D.scenarios.length;
@@ -206,5 +233,5 @@ D.assessmentQA.questionRevisionHistory=[
  {version:VERSION,date:'24 August 2026',change:'Stable IDs, competency blueprint, local analytics, per-question evidence, difficulty calibration, scenario expansion, duplicate/leak checks and freshness monitoring.'}
 ];
 window.MM_ASSESSMENT_ANALYTICS={version:VERSION,summary:analyticsSummary,export:()=>analytics(),reset:()=>{ASSESSMENT_STORAGE.removeItem(ANALYTICS_KEY);try{window.renderExams?.()}catch(_){}}};
-window.MM_ASSESSMENT_QUALITY={version:VERSION,identityLockVersion:IDENTITY_LOCK_VERSION,identityCount:LOCKED_IDENTITIES.length,blueprint:BLUEPRINT.slice(),labels:{...LABELS},scenarioCount:D.scenarios.length,questionCount:57,nearDuplicates:nearDuplicates(),answerLeakRisks:leakRisks(),coverage:(level)=>blueprintCoverage(selectBlueprint(level)),resolveIdentity:(q,kind,level,region,index)=>identityFor(q,kind,level,region,index),sourceReview:{reviewed:SOURCE_REVIEWED,reviewBy:SOURCE_REVIEW_BY}};
+window.MM_ASSESSMENT_QUALITY={version:VERSION,identityLockVersion:IDENTITY_LOCK_VERSION,identityCount:LOCKED_IDENTITIES.length,blueprint:BLUEPRINT.slice(),labels:{...LABELS},scenarioCount:D.scenarios.length,questionCount:57,blueprintHistoryKey:BLUEPRINT_HISTORY_KEY,nearDuplicates:nearDuplicates(),answerLeakRisks:leakRisks(),coverage:(level)=>blueprintCoverage(selectBlueprint(level)),resolveIdentity:(q,kind,level,region,index)=>identityFor(q,kind,level,region,index),sourceReview:{reviewed:SOURCE_REVIEWED,reviewBy:SOURCE_REVIEW_BY}};
 })();

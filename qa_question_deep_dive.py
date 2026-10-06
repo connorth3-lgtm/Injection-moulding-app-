@@ -11,7 +11,7 @@ def text(p): return (ROOT/p).read_text(encoding='utf-8')
 def need(ok,msg):
     if not ok: raise AssertionError(msg)
 
-for p in [PATCH,REGIONAL,REGISTER,'index.html','service-worker.js','desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs','.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml','.github/workflows/microsoft-store-msix.yml']:
+for p in [PATCH,REGIONAL,REGISTER,'data/question-centre-v1.json','primary-learning-practice-hubs.js','index.html','service-worker.js','desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs','.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml','.github/workflows/microsoft-store-msix.yml']:
     need((ROOT/p).exists(),f'missing assessment deep-dive file: {p}')
 
 tech=text(PATCH); regional=text(REGIONAL)
@@ -85,6 +85,18 @@ console.log('runtime all-live-question deep dive passed');
 '''%(json.dumps(scenario_titles),json.dumps(regional_keys),json.dumps(str(ROOT/PATCH)),json.dumps(PATCH),json.dumps(str(ROOT/REGIONAL)),json.dumps(REGIONAL))
 p=subprocess.run(['node','-e',node_test],capture_output=True,text=True)
 need(p.returncode==0,f'all-question runtime QA failed: {p.stderr or p.stdout}')
+
+centre=json.loads(text('data/question-centre-v1.json'))
+need(centre.get('status')=='governed-launcher-index','Question Centre manifest status drift')
+need(centre.get('primaryPromptCount')==169,'Question Centre primary prompt count must remain 169')
+lanes=centre.get('lanes') or []
+need([row.get('id') for row in lanes]==['formal','scenarios','diagnostic','materials','measured'],'Question Centre lane order/identity drift')
+need([row.get('count') for row in lanes]==[57,40,36,24,12],'Question Centre lane counts drift')
+need(sum(int(row.get('count') or 0) for row in lanes)==169,'Question Centre lane counts must sum to 169')
+hub=text('primary-learning-practice-hubs.js')
+for marker in ['window.MM_QUESTION_CENTRE=Object.freeze','Formal knowledge checks','Shop-floor scenarios','Diagnostic questions','Material questions','Measured-evidence decisions','169 governed question/decision prompts']:
+    need(marker in hub,f'Question Centre learner launcher missing: {marker}')
+need('Book chapter self-checks and lesson exercises stay with the teaching they belong to.' in hub,'Question Centre must preserve teaching-context questions outside the consolidated launcher')
 
 reg=text(REGISTER)
 for marker in ['all 57 live exam questions','All 30 technical questions','27 regional','five evidence-reasoning modes','Insufficient evidence is a valid expert answer','ISO 20430:2020','OSHA 29 CFR 1910.147','WorkSafe New Zealand']:

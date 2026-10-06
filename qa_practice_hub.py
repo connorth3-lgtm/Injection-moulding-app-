@@ -17,6 +17,14 @@ required_hub = {
     "recommended practice region": 'aria-label="Recommended practice"',
     "task-led chooser": "Choose by the job you want to practise",
     "assessment separation": "Practice is for learning; assessments stay separate.",
+    "question centre": "Question Centre",
+    "question centre launcher": 'data-mm-hub-action="question-centre"',
+    "formal question lane": "Formal knowledge checks",
+    "scenario question lane": "Shop-floor scenarios",
+    "diagnostic question lane": "Diagnostic questions",
+    "material question lane": "Material questions",
+    "measured question lane": "Measured-evidence decisions",
+    "question centre registry": "window.MM_QUESTION_CENTRE=Object.freeze",
     "scenario rotation": "nextScenarioIndex",
     "process-data practice": 'data-mm-hub-action="process-data"',
     "troubleshooting practice": 'data-mm-hub-action="troubleshooting"',
@@ -104,5 +112,5 @@ print(" - learner-guided recommendation wiring present")
 print(" - recommender activity type and CTA stay aligned")
 print(" - task/time-oriented Practice choices present")
 print(" - mobile explanations and CTAs remain visible")
-print(" - assessments remain a separate lane")
+print(" - assessments remain a separate scoring lane inside the consolidated Question Centre")
 print("NOTE: this is automated regression evidence, not human accessibility or SME instructional validation.")

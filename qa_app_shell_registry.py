@@ -39,7 +39,7 @@ for marker in [
     "id:'diagnostic-labs'",
     "id:'process-data'",
     "id:'material-labs'",
-    "id:'learning-insights'", "id:'repair-app-files'", "./repair.html", "location.reload()", "Electron",
+    "id:'learning-insights'", "id:'repair-app-files'", "Support & app maintenance", "./support.html",
     'aria-current',
     'visibleCoreView',
     "navigationItems.get(customId)",
@@ -68,6 +68,10 @@ need('aria-hidden="true"' in shell,'decorative registry navigation icons must be
 need("button.getAttribute('data-mm-onclick')" in shell,'canonical More-button detection must retain retired inline-handler compatibility')
 need("document.createElement('style')" not in shell,'canonical app-shell registry must not inject presentation styles at runtime')
 need('mm-app-shell-registry-style' not in shell,'retired app-shell runtime style element must not return')
+support=text('support.html')
+need('./repair.html' in support and 'Repair app files' in support,'Support must retain the direct repair route behind maintenance guidance')
+need("location.assign('./repair.html')" not in shell,'canonical More menu must route repair through Support rather than exposing repair as a peer learner action')
+
 product_areas=text('src/domains/shell/product-areas.js')
 need("document.createElement('style')" not in product_areas,'product-area shell module must not inject presentation styles at runtime')
 need('mm-product-areas-style' not in product_areas,'retired product-area runtime style element must not return')

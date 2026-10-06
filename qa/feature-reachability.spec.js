@@ -18,6 +18,15 @@ async function mobileMore(page){await page.locator('.mobile-nav > button').filte
 async function closeModal(page){const b=page.getByRole('button',{name:/^close$/i}).first();if(await b.isVisible().catch(()=>false))await b.click();await expect(page.locator('#modal')).toHaveClass(/hidden/)}
 async function expectVisible(page,selector){await expect(page.locator(selector)).toBeVisible({timeout:10000})}
 async function expectNoHorizontalOverflow(page,label){const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth+1);expect(overflow,label+' must not introduce horizontal page overflow').toBeFalsy()}
+async function openAssessmentsFromQuestionCentre(page,width){
+ if(width<=900)await mobileHub(page,'Practice');
+ else{const practice=page.locator('#nav button[data-view="scenarios"]');await expect(practice).toBeVisible();await practice.click()}
+ await expectVisible(page,'#scenarios .mm-practice-hub');
+ const centre=page.locator('#scenarios [data-mm-hub-action="question-centre"]');await expect(centre).toBeVisible();await centre.click();
+ const modal=page.locator('#modal:not(.hidden)');await expect(modal).toBeVisible();
+ const assessments=modal.locator('[data-mm-hub-action="assessments"]');await expect(assessments).toBeVisible();await assessments.click();
+ await expectVisible(page,'#exams');
+}
 
 async function openDeepLink(page,view){
  await page.addInitScript(()=>{
@@ -77,8 +86,7 @@ for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name
    if(viewport.width<=900){
     await mobileHub(page,'Learn');await expectVisible(page,'#path .mm-learn-hub');
     await mobileHub(page,'Materials');await expectVisible(page,'#materials');
-    await mobileHub(page,'Practice');await expectVisible(page,'#scenarios .mm-practice-hub');
-    await page.locator('#scenarios [data-mm-hub-action="assessments"]').click();await expectVisible(page,'#exams');
+    await openAssessmentsFromQuestionCentre(page,viewport.width);
     await mobileHub(page,'Practice');await page.locator('#scenarios [data-mm-hub-action="labs"]').click();await page.locator('#modal [data-mm-hub-action="simulator"]').click();await expectVisible(page,'#simulator');
    }else{
     for(const [view,selector] of [['path','#path'],['scenarios','#scenarios'],['materials','#materials']]){
@@ -92,8 +100,7 @@ for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name
    if(viewport.width<=900){await mobileMore(page);const trigger=page.locator('.mobile-nav > button').filter({hasText:'More'});await closeModal(page);await expect(trigger).toBeFocused();await mobileMore(page);const book=page.locator('[data-mm-registry-menu="book"]');await expect(book).toBeVisible();await book.click()}
    else {const more=page.locator('#nav [data-mm-desktop-more-tools]');await expect(more).toBeVisible();await more.click();const book=page.locator('[data-mm-registry-menu="book"]');await expect(book).toBeVisible();await book.click()}
    await expectVisible(page,'#mmBookView');await expectNoHorizontalOverflow(page,'Book at 200% text scaling');
-   if(viewport.width<=900){await mobileHub(page,'Practice');await page.locator('#scenarios [data-mm-hub-action="assessments"]').click()}else{const practice=page.locator('#nav button[data-view="scenarios"]');await practice.click();const assessments=page.locator('#scenarios [data-mm-hub-action="assessments"]');if(await assessments.isVisible().catch(()=>false))await assessments.click()}
-   await expectVisible(page,'#exams');await expectNoHorizontalOverflow(page,'Assessments at 200% text scaling');
+   await openAssessmentsFromQuestionCentre(page,viewport.width);await expectNoHorizontalOverflow(page,'Assessments at 200% text scaling');
   });
   test('reference UI exposes one canonical launcher without duplicate desktop controls',async({page})=>{
    await openApp(page,viewport.width);

@@ -46,6 +46,7 @@ async function expectReadableTiles(page,rootSelector,expectedCount=4){
       actionDisplay:action.display,
       helperDisplay:helper?getComputedStyle(helper).display:null,
       minHeight:Math.min(...boxes.map(x=>x.height)),
+      maxHeight:Math.max(...boxes.map(x=>x.height)),
       maxWidth:Math.max(...boxes.map(x=>x.width)),
       minWidth:Math.min(...boxes.map(x=>x.width)),
       overlap:boxes.some((a,i)=>boxes.some((b,j)=>j>i&&a.top<b.bottom&&a.bottom>b.top&&a.left<b.right&&a.right>b.left))
@@ -59,13 +60,15 @@ async function expectReadableTiles(page,rootSelector,expectedCount=4){
   expect(result.textAlign).toBe('left');
   expect(result.whiteSpace).toBe('normal');
   expect(result.background).not.toBe('rgb(128, 128, 128)');
-  // 412px phones keep the deliberately dense two-column presentation.
+  // Common phone widths keep two columns, but retain two lines of explanatory
+  // copy so similarly named learning/practice destinations remain distinguishable.
   expect(result.eyebrowDisplay).toBe('none');
   expect(result.titleDisplay).toBe('block');
-  expect(result.copyDisplay).toBe('none');
+  expect(result.copyDisplay).not.toBe('none');
   expect(result.actionDisplay).toBe('none');
   expect(result.helperDisplay).toBe('none');
-  expect(result.minHeight).toBeGreaterThanOrEqual(94);
+  expect(result.minHeight).toBeGreaterThanOrEqual(118);
+  expect(result.maxHeight).toBeLessThanOrEqual(170);
   expect(result.maxWidth-result.minWidth).toBeLessThan(2);
   expect(result.overlap).toBe(false);
 }

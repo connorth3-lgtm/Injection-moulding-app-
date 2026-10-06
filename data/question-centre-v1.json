@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "version": "2026.10.07.1",
+  "status": "governed-launcher-index",
+  "purpose": "One learner-facing inventory for the main question and decision activities without duplicating or re-authoring their governed source content.",
+  "primaryPromptCount": 169,
+  "lanes": [
+    {
+      "id": "formal",
+      "label": "Formal knowledge checks",
+      "count": 57,
+      "breakdown": {
+        "technical": 30,
+        "regionalSafety": 27
+      },
+      "source": "assessment-quality-suite.js",
+      "launcherAction": "assessments",
+      "scoring": "formal assessment; 80% overall plus every safety-critical regional item correct"
+    },
+    {
+      "id": "scenarios",
+      "label": "Shop-floor scenarios",
+      "count": 40,
+      "source": "MM_DATA.scenarios + governed assessment expansions",
+      "launcherAction": "scenario-detail",
+      "scoring": "low-stakes immediate feedback"
+    },
+    {
+      "id": "diagnostic",
+      "label": "Diagnostic questions",
+      "count": 36,
+      "source": "diagnostic-learning-labs.js",
+      "launcherAction": "diagnostic-labs",
+      "scoring": "guided lab practice"
+    },
+    {
+      "id": "materials",
+      "label": "Material questions",
+      "count": 24,
+      "source": "material-behaviour-labs.js",
+      "launcherAction": "material-labs",
+      "scoring": "guided lab practice"
+    },
+    {
+      "id": "measured",
+      "label": "Measured-evidence decisions",
+      "count": 12,
+      "source": "real-measured-data-assessment.js",
+      "launcherAction": "measured-decisions",
+      "scoring": "low-stakes measured-evidence practice"
+    }
+  ],
+  "intentionallyNotMerged": [
+    {
+      "id": "book-self-checks",
+      "reason": "Book chapter checks remain attached to the governed teaching context they assess."
+    },
+    {
+      "id": "lesson-exercises",
+      "reason": "Lesson exercises remain attached to their Academy lesson context."
+    },
+    {
+      "id": "optional-material-practice",
+      "count": 40,
+      "reason": "Optional material practice remains inside its specialist material-learning surface rather than competing with the five primary Question Centre lanes."
+    }
+  ],
+  "governanceBoundary": "This manifest centralises discovery only. Question text, answer keys, feedback, evidence, scoring, human-review status and release authority remain owned by their canonical subsystems. It does not create SME approval or assessment validity evidence."
+}
