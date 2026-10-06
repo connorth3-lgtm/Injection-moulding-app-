@@ -94,8 +94,9 @@ need([row.get('id') for row in lanes]==['formal','scenarios','diagnostic','mater
 need([row.get('count') for row in lanes]==[57,40,36,24,12],'Question Centre lane counts drift')
 need(sum(int(row.get('count') or 0) for row in lanes)==169,'Question Centre lane counts must sum to 169')
 hub=text('primary-learning-practice-hubs.js')
-for marker in ['window.MM_QUESTION_CENTRE=Object.freeze','Formal knowledge checks','Shop-floor scenarios','Diagnostic questions','Material questions','Measured-evidence decisions','169 governed question/decision prompts']:
+for marker in ['window.MM_QUESTION_CENTRE=Object.freeze','Formal knowledge checks','Shop-floor scenarios','Diagnostic questions','Material questions','Measured-evidence decisions','${q.total} governed question/decision prompts']:
     need(marker in hub,f'Question Centre learner launcher missing: {marker}')
+need(centre.get('primaryPromptCount')==169 and sum(int(row.get('count') or 0) for row in lanes)==169,'Question Centre dynamic learner total must remain governed by the 169-prompt manifest')
 need('Book chapter self-checks and lesson exercises stay with the teaching they belong to.' in hub,'Question Centre must preserve teaching-context questions outside the consolidated launcher')
 
 reg=text(REGISTER)
