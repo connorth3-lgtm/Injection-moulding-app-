@@ -1,3 +1,13 @@
+
+## 2026-10-07 — Question Centre and technical-bank reachability remediation
+
+- Kept the reviewed 30 technical exam stems, answer keys, distractors and rationales unchanged.
+- Fixed competency-balanced selection so the technical pool is shuffled before blueprint assignment; all 30 approved technical items can now enter a valid 7-item formal exam across attempts instead of only 21 being practically reachable.
+- Added deterministic reachability QA that proves every technical stable ID can be selected without weakening the six-domain blueprint.
+- Consolidated formal checks, spaced weak-area review, scenario questions, diagnostic-lab questions, material-lab questions and measured-data decisions behind one learner-facing **Question Centre** while preserving their separate scoring/evidence rules.
+- Corrected learner copy for **Compare All**: 16 questions (7 technical + all 9 regional safety items), versus 10 questions (7 technical + 3 regional) in a single-region mode.
+- Added explicit proposed LO1–LO10 mappings for all 30 technical questions in the human review contract. These mappings remain pending and do not count as SME approval or psychometric validation.
+
 # MouldMaster question-bank revision history
 
 ## 2026.10.05.1 — scenario psychometric wording re-review
