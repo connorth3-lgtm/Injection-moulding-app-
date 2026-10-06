@@ -5,7 +5,7 @@ Release `2026.10.06.21` is technically automated; native main governance remains
 ## Exact current candidate
 
 - pre-merge candidate source: `ea7a9fc46d3f7b95119c76606d9157457284d31f`
-- exact public-runtime fingerprint: `sha256:b210eea89068c9d43b4c7cf8fcdd4a902e591dacad8ba9016575360f140511ce`
+- exact public-runtime fingerprint: `sha256:e099b657b214f49d2514c3d23cc7b4cb8ebcb4d8b0ca4030304064c4ab30edd5`
 - candidate build run: `37417105826` (**Pre-merge Public Candidate**)
 - retained physical candidate: `physical-pwa-candidate-ea7a9fc46d3f7b95119c76606d9157457284d31f`
 - artifact id: `11391857007`
