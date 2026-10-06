@@ -121,7 +121,7 @@ function ensurePreviewWarning(){
   banner.className='callout';
   banner.setAttribute('role','status');
   banner.setAttribute('aria-live','polite');
-  banner.innerHTML='<strong>Non-production preview</strong><br>This preview is for learner review and validation only. It is not the production release and does not bypass the physical-device release gate.';
+  banner.innerHTML='<strong>Non-production preview.</strong> This preview is for learner review and validation only; it is not production, and the physical-device release gate still applies.';
   host.prepend(banner);
 }
 function runRepair(reset){

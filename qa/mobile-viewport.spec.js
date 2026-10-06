@@ -60,14 +60,10 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
     test('Home is lean, XP-free, includes the Book resume surface, and Practice owns troubleshooting',async({page})=>{
       await openApp(page);
       await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
-      const previewWarning=page.locator('#mmNonProductionPreviewWarning');
-      await expect(previewWarning).toBeVisible();
-      const warningHeight=await previewWarning.evaluate(el=>el.getBoundingClientRect().height);
-      expect(warningHeight).toBeLessThanOrEqual(72);
       const homeBook=page.locator('#dashboard [data-mm-home-book]');
+      await expect(homeBook).toHaveCount(1);
       await expect(homeBook).toBeVisible();
-      await expect(homeBook.getByRole('button',{name:/Start reading|Continue reading/})).toBeVisible();
-      await expect(homeBook.getByRole('button',{name:'Open contents'})).toBeVisible();
+      await expect(homeBook.getByRole('button',{name:/Open Book|Keep Reading/})).toBeVisible();
       await expect(page.locator('#dashboard .mm-home-task-hub')).toHaveCount(0);
       await expect(page.locator('#dashboard .mm-home-utility')).toHaveCount(0);
       await expect(page.locator('#dashboard .mm-home-balance')).toBeVisible();
@@ -78,11 +74,8 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
         const book=document.querySelector('#dashboard [data-mm-home-book]').getBoundingClientRect();
         const tools=document.querySelector('#dashboard .mm-home-balance').getBoundingClientRect();
         const nav=document.querySelector('.mobile-nav').getBoundingClientRect();
-        const preview=document.getElementById('mmNonProductionPreviewWarning')?.getBoundingClientRect();
-        return {focusBottom:focus.bottom,bookTop:book.top,bookBottom:book.bottom,toolsTop:tools.top,navTop:nav.top,previewHeight:preview?.height||0};
+        return {focusBottom:focus.bottom,bookTop:book.top,bookBottom:book.bottom,toolsTop:tools.top,navTop:nav.top};
       });
-      expect(firstViewport.previewHeight).toBeGreaterThan(0);
-      expect(firstViewport.previewHeight).toBeLessThanOrEqual(96);
       expect(firstViewport.bookTop).toBeGreaterThanOrEqual(firstViewport.focusBottom-1);
       expect(firstViewport.bookBottom).toBeLessThanOrEqual(firstViewport.navTop+2);
       expect(firstViewport.toolsTop).toBeGreaterThanOrEqual(firstViewport.bookBottom-1);

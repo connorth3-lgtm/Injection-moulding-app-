@@ -228,7 +228,7 @@ test('390px Home keeps lesson, Book and specialist tools in canonical order',asy
   await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
   const book=page.locator('#dashboard [data-mm-home-book]');
   await expect(book).toBeVisible();
-  await expect(book.getByRole('button',{name:/Start reading|Continue reading/})).toBeVisible();
+  await expect(book.getByRole('button',{name:/Open Book|Keep Reading/})).toBeVisible();
   const geometry=await page.evaluate(()=>{
     const focus=document.querySelector('#dashboard .mm-today-focus').getBoundingClientRect();
     const book=document.querySelector('#dashboard [data-mm-home-book]').getBoundingClientRect();

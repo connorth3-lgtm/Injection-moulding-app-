@@ -27,8 +27,7 @@ test('Home is one primary lesson decision plus Book resume and two non-duplicate
   const book=page.locator('#dashboard [data-mm-home-book]');
   await expect(focus).toBeVisible();
   await expect(book).toBeVisible();
-  await expect(book.getByRole('button',{name:/Start reading|Continue reading/})).toBeVisible();
-  await expect(book.getByRole('button',{name:'Open contents'})).toBeVisible();
+  await expect(book.getByRole('button',{name:/Open Book|Keep Reading/})).toBeVisible();
   await expect(tools).toBeVisible();
   await expect(page.locator('#dashboard .mm-home-task-hub,#dashboard .mm-home-utility')).toHaveCount(0);
   await expect(tools.locator('[data-mm-home-action]')).toHaveCount(2);
@@ -93,10 +92,11 @@ test('Home Book card switches from start to learner-scoped Keep Reading state',a
   await page.evaluate(()=>switchView('dashboard'));
   await page.evaluate(()=>window.MM_LEARNER_UI_POLISH.refresh());
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
-  await expect(book).toContainText('Keep reading · Book');
+  await expect(book).toHaveCount(1);
+  await expect(book).toContainText(/Keep reading:/i);
   await expect(book).toContainText('Chapter 4 of 20');
-  await expect(book.getByRole('button',{name:'Continue reading →'})).toBeVisible();
-  await expect(book.getByRole('button',{name:'Open contents'})).toBeVisible();
+  await expect(book.getByRole('button',{name:'Keep Reading'})).toBeVisible();
+  await expect(book.getByRole('button',{name:'Book contents'})).toBeVisible();
 });
 
 test('Book keeps governed status intact but progressively discloses assurance detail without a mutation loop',async({page})=>{

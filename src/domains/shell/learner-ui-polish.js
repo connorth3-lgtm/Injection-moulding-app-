@@ -36,58 +36,6 @@ function homeActivity(){
   const cases=window.MM_MOULD_MASTER_WORKSPACE?.cases?.()||[];
   return {recent:cases[0]||null}
 }
-function bookHomeOrdinal(resume){
-  if(resume?.kind!=='reader-chapter')return null;
-  const match=/^r(\d{2})$/i.exec(String(resume.id||''));
-  if(!match)return null;
-  const current=Math.min(20,Math.max(1,Number(match[1])||1));
-  return {current,total:20,pct:Math.round(current/20*100)}
-}
-function syncHomeBook(){
-  const root=document.getElementById('dashboard');if(!root)return;
-  let card=root.querySelector('[data-mm-home-book]');
-  if(!card){
-    card=document.createElement('section');
-    card.className='card mm-home-book';
-    card.dataset.mmHomeBook=VERSION;
-    card.setAttribute('aria-label','Keep reading the MouldMaster Book');
-  }
-  card.classList.add('mm-home-book');
-  card.dataset.mmHomeBook=VERSION;
-  if(!card.querySelector('[data-mm-home-book-title]')){
-    card.innerHTML='<div class="mm-home-book-copy"><span class="eyebrow" data-mm-home-book-eyebrow>Book</span><h2 data-mm-home-book-title>Injection moulding reference</h2><div class="mm-home-book-progress" data-mm-home-book-progress hidden><div class="mm-home-book-progress-track" aria-hidden="true"><span data-mm-home-book-progress-bar></span></div><small data-mm-home-book-progress-label></small></div><p data-mm-home-book-meta>20 reader chapters · 46 governed modules</p></div><div class="mm-home-book-actions"><button type="button" class="secondary" data-mm-home-book-action="resume">Start reading →</button><button type="button" class="ghost" data-mm-home-book-action="contents">Open contents</button></div>';
-  }
-  if(card.dataset.mmHomeBookBound!=='1'){
-    card.dataset.mmHomeBookBound='1';
-    card.addEventListener('click',event=>{
-      const button=event.target?.closest?.('[data-mm-home-book-action]');if(!button)return;
-      if(button.dataset.mmHomeBookAction==='contents')return safe(()=>window.MMBook?.open?.());
-      const resume=safe(()=>window.MMBook?.getResume?.());
-      return resume?safe(()=>window.MMBook?.openResume?.()):safe(()=>window.MMBook?.open?.());
-    });
-  }
-  const resume=safe(()=>window.MMBook?.getResume?.())||null;
-  const ordinal=bookHomeOrdinal(resume);
-  const eyebrow=card.querySelector('[data-mm-home-book-eyebrow]');
-  const title=card.querySelector('[data-mm-home-book-title]');
-  const meta=card.querySelector('[data-mm-home-book-meta]');
-  const progress=card.querySelector('[data-mm-home-book-progress]');
-  const progressBar=card.querySelector('[data-mm-home-book-progress-bar]');
-  const progressLabel=card.querySelector('[data-mm-home-book-progress-label]');
-  const primary=card.querySelector('[data-mm-home-book-action="resume"]');
-  if(eyebrow)eyebrow.textContent=resume?'Keep reading · Book':'Book';
-  if(title)title.textContent=String(resume?.title||'Injection moulding: foundations to advanced troubleshooting');
-  if(meta)meta.textContent=resume?(ordinal?('Chapter '+ordinal.current+' of '+ordinal.total+' · saved reading position'):'Saved reading position'):'20 reader chapters · 46 governed modules';
-  if(primary)primary.textContent=resume?'Continue reading →':'Start reading →';
-  if(progress){
-    progress.hidden=!ordinal;
-    if(progressBar&&ordinal)progressBar.style.width=ordinal.pct+'%';
-    if(progressLabel&&ordinal)progressLabel.textContent='Reader position · '+ordinal.pct+'%';
-  }
-  const focus=root.querySelector('.mm-today-focus'),focusSlot=focus?.closest?.('.mm-dashboard-slot'),positionAnchor=focusSlot||focus;
-  if(positionAnchor&&card.previousElementSibling!==positionAnchor)positionAnchor.insertAdjacentElement('afterend',card);
-  else if(!positionAnchor&&!card.isConnected)root.prepend(card);
-}
 function homeBalanceMarkup(){
   return `<div class="mm-home-balance-copy"><span class="eyebrow">Moulding tools</span><h2>Diagnose or analyse</h2><p>Use specialist tools when the next step is evidence, not another lesson.</p></div><div class="mm-home-balance-grid"><button type="button" data-mm-home-action="mould-master"><span class="mm-home-balance-icon" aria-hidden="true">◆</span><span><b>Troubleshoot</b><small>Build an evidence-led Mould Master case.</small></span><span class="mm-home-action-arrow" aria-hidden="true">→</span></button><button type="button" data-mm-home-action="process-data"><span class="mm-home-balance-icon" aria-hidden="true">⌁</span><span><b>Analyse data</b><small>Read measured trends and recovery evidence.</small></span><span class="mm-home-action-arrow" aria-hidden="true">→</span></button></div><div data-mm-home-recent-slot hidden></div>`;
 }
@@ -305,7 +253,6 @@ function syncReadAloudLabel(){
   if(host&&!host.getAttribute('aria-label'))host.setAttribute('aria-label','Read aloud');
 }
 function run(){
-  syncHomeBook();
   syncHomeBalance();
   syncCertificateCounter();
   syncBookDisclosure();
@@ -329,7 +276,6 @@ function install(){
   // which previously scheduled a full polish pass for every text mutation in the application.
   window.addEventListener('resize',schedule,{passive:true});
   window.addEventListener?.('mm:domains-ready',schedule);
-  window.addEventListener?.('mm:book-resume-change',schedule);
   window.MM_APP_SHELL?.events?.onRender?.('dashboard',schedule);
   window.MM_APP_SHELL?.events?.onViewChange?.(schedule);
   document.addEventListener('click',event=>{
