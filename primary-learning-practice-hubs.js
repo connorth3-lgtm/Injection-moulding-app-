@@ -173,6 +173,8 @@ function openPicker(kind){
     openModal(`<span class="eyebrow">Practice</span><h2>Troubleshooting</h2><p class="muted">Choose how you want to work the problem.</p><div class="mm-hub-picker-grid"><button type="button" data-mm-hub-action="mould-master"><b>Mould Master</b><small>Build an evidence-led troubleshooting case from a real defect.</small></button><button type="button" data-mm-hub-action="defects"><b>Defect finder</b><small>Start from the symptom and review mechanisms and checks.</small></button><button type="button" data-mm-hub-action="coach"><b>Troubleshooting coach</b><small>Work through a problem with structured offline guidance.</small></button><button type="button" data-mm-hub-action="diagnostic-labs"><b>Diagnostic labs</b><small>Practise evidence-first fault isolation.</small></button></div>`);
   }else if(kind==='labs'){
     openModal(`<span class="eyebrow">Practice</span><h2>Labs & simulators</h2><p class="muted">Choose a controlled learning tool.</p><div class="mm-hub-picker-grid"><button type="button" data-mm-hub-action="simulator"><b>Process simulator</b><small>Explore relative process changes in the training model.</small></button><button type="button" data-mm-hub-action="material-labs"><b>Material labs</b><small>Compare resin behaviour and evidence.</small></button></div>`);
+  }else if(kind==='questions'){
+    openModal(questionCentreMarkup());
   }
   requestAnimationFrame(()=>bind(document.getElementById('modal')));
 }
@@ -194,11 +196,13 @@ function runAction(action){
     case 'coach': closePicker(); return switchView('coach');
     case 'diagnostic-labs': closePicker(); return safeOpen('MM_DIAGNOSTIC_LABS',()=>switchView('scenarios'));
     case 'process-data': return safeOpen('MM_PROCESS_DATA_DIAGNOSTICS');
-    case 'scenario-detail': return openScenarioDetail(nextScenarioIndex());
+    case 'scenario-detail': closePicker(); return openScenarioDetail(nextScenarioIndex());
     case 'labs': return openPicker('labs');
     case 'simulator': closePicker(); return switchView('simulator');
     case 'material-labs': closePicker(); return safeOpen('MM_MATERIAL_BEHAVIOUR_LABS',()=>switchView('materials'));
-    case 'assessments': return switchView('exams');
+    case 'measured-decisions': closePicker(); return safeOpen('MM_REAL_MEASURED_ASSESSMENT');
+    case 'question-centre': return openPicker('questions');
+    case 'assessments': closePicker(); return switchView('exams');
   }
 }
 
@@ -287,6 +291,24 @@ function practicePlanRows(plan){
   if(!rows.length)return '';
   return `<section class="mm-hub-section" aria-label="More recommended practice"><div class="mm-hub-section-head"><h2>Next after that</h2><p>Optional follow-up based on your learning evidence.</p></div><div class="mm-hub-grid">${rows.map(rec=>{const action=practiceActionFor(rec);return `<button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="${esc(action)}"><span class="eyebrow">${esc(practiceRecommendationLabel(rec))}</span><b>${esc(practiceTopicLabel(rec.topic))}</b><small>${esc(rec.reason||'Use another practice format to strengthen transfer.')}</small><span class="mm-hub-tile-action">${esc(practiceRecommendationCta(action,rec))}</span></button>`}).join('')}</div></section>`;
 }
+function questionCentreCounts(){
+ const formal=(D?.exams?Object.values(D.exams).reduce((n,rows)=>n+(rows?.length||0),0):0)+(D?.regionalQuestions?Object.values(D.regionalQuestions).reduce((n,levels)=>n+Object.values(levels||{}).reduce((m,rows)=>m+(rows?.length||0),0),0):0);
+ const scenarios=D?.scenarios?.length||0;
+ const diagnostic=window.MM_DIAGNOSTIC_LABS?.labs?.reduce?.((n,lab)=>n+(lab?.steps?.length||0),0)||36;
+ const materials=window.MM_MATERIAL_BEHAVIOUR_LABS?.labs?.reduce?.((n,lab)=>n+(lab?.steps?.length||0),0)||24;
+ const measured=window.MM_REAL_MEASURED_ASSESSMENT?.decisionCount||12;
+ return {formal,scenarios,diagnostic,materials,measured,total:formal+scenarios+diagnostic+materials+measured};
+}
+function questionCentreMarkup(){
+ const q=questionCentreCounts();
+ return `<span class="eyebrow">Question Centre</span><h2>Choose how you want to be questioned</h2><p class="muted">Most governed question-based learning is collected here. Formal checks and low-stakes practice keep their existing scoring and evidence boundaries.</p><div class="mm-hub-picker-grid">
+ <button type="button" data-mm-hub-action="assessments"><b>Formal knowledge checks</b><small>${q.formal} approved technical and regional-safety bank items.</small></button>
+ <button type="button" data-mm-hub-action="scenario-detail"><b>Shop-floor scenarios</b><small>${q.scenarios} evidence-first decisions with immediate feedback.</small></button>
+ <button type="button" data-mm-hub-action="diagnostic-labs"><b>Diagnostic questions</b><small>${q.diagnostic} guided fault-isolation decisions across the diagnostic labs.</small></button>
+ <button type="button" data-mm-hub-action="material-labs"><b>Material questions</b><small>${q.materials} resin/evidence decisions across the material labs.</small></button>
+ <button type="button" data-mm-hub-action="measured-decisions"><b>Measured-evidence decisions</b><small>${q.measured} decisions grounded in audited measured-data contracts.</small></button>
+ </div><p class="tiny muted" style="margin-top:12px">${q.total} governed question/decision prompts across these five modes. Book chapter self-checks and lesson exercises stay with the teaching they belong to.</p>`;
+}
 function practiceHubMarkup(){
   let done=false;try{done=typeof dailyDone==='function'&&dailyDone()}catch(_){}
   const scenarioCount=D?.scenarios?.length||0;
@@ -302,7 +324,7 @@ function practiceHubMarkup(){
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="process-data"><span class="eyebrow">Read evidence · 10–20 min</span><b>Analyse process data</b><small>Prepare local data, verify signal meaning and compare a fault or recovery against a valid baseline.</small><span class="mm-hub-tile-action">Open data diagnosis →</span></button>
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="labs"><span class="eyebrow">Explore behaviour · 5–15 min</span><b>Use labs & simulators</b><small>Test process and material reasoning in a controlled training environment without changing a real machine.</small><span class="mm-hub-tile-action">Choose a lab or simulator →</span></button>
     </div></section>
-    <section class="mm-hub-assessment"><div class="mm-hub-assessment-copy"><b>Want to check what you can demonstrate?</b><small>${examCount?`${examCount} assessment levels`:'Assessments'} are kept separate so practice remains low-stakes and useful for learning.</small></div><button class="secondary" type="button" data-mm-hub-action="assessments">Open assessments →</button></section>
+    <section class="mm-hub-assessment"><div class="mm-hub-assessment-copy"><b>Question Centre</b><small>Formal checks, scenarios, diagnostic questions, material questions and measured-evidence decisions are gathered in one place.</small></div><button class="secondary" type="button" data-mm-hub-action="question-centre">Open Question Centre →</button></section>
   </div>`;
 }
 function renderLearnHub(){const root=document.getElementById('path');if(!root)return;root.dataset.mmHubMode='hub';root.innerHTML=learnHubMarkup();bind(root)}
@@ -365,5 +387,6 @@ if(typeof currentView==='string'){
   if(currentView==='scenarios')renderPracticeHub();
 }
 window.MM_APP_SHELL?.navigation?.sync?.();
+window.MM_QUESTION_CENTRE=Object.freeze({version:VERSION,open:()=>openPicker('questions'),counts:questionCentreCounts,scope:'Learner-facing launcher registry only; governed question sources, scoring and evidence remain in their canonical subsystems.'});
 window.MM_PRIMARY_HUBS={version:VERSION,renderLearnHub,renderPracticeHub,openCurrentLesson,openLearningPathDetail,openScenarioDetail,nextScenarioIndex,learnerPracticePlan};
 })();
