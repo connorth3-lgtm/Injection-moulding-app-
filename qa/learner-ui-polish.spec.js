@@ -338,3 +338,26 @@ test('Home with a real recent troubleshooting case remains clear of the fixed na
   expect(geometry.recentBottom).toBeLessThanOrEqual(geometry.navTop+1);
   expect(geometry.overflow).toBeLessThanOrEqual(1);
 });
+
+
+test('Question Centre consolidates question routes and tells learners the real exam size',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.evaluate(()=>switchView('exams'));
+  await expect(page.locator('#pageTitle')).toHaveText('Question Centre');
+  await expect(page.locator('#exams .mm-question-centre')).toBeVisible();
+  for(const label of ['Review weak areas','Scenario questions','Diagnostic lab questions','Material lab questions','Measured-data decisions']){
+    await expect(page.locator('#exams .mm-question-centre').getByRole('button',{name:new RegExp(label,'i')})).toBeVisible();
+  }
+  await expect(page.locator('#exams .section-head p')).toContainText('7 technical questions plus 9 regional');
+  await expect(page.locator('#exams .exam-card').first().locator('.muted')).toContainText('16 questions');
+
+  await page.evaluate(()=>{user.region='NZ';persist();renderExams()});
+  await expect(page.locator('#exams .section-head p')).toContainText('7 technical questions plus 3 regional');
+  await expect(page.locator('#exams .exam-card').first().locator('.muted')).toContainText('10 questions');
+
+  await page.locator('.mobile-nav').getByRole('button',{name:'More'}).click();
+  await expect(page.locator('#modal .mm-more-section-label')).toHaveText('Support & app maintenance');
+  await expect(page.locator('#modal').getByRole('button',{name:'App repair'})).toBeVisible();
+  await expect(page.locator('#modal').getByRole('button',{name:'Question Centre'})).toBeVisible();
+});
