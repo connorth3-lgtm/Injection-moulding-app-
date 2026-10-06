@@ -93,6 +93,13 @@ lanes=centre.get('lanes') or []
 need([row.get('id') for row in lanes]==['formal','scenarios','diagnostic','materials','measured'],'Question Centre lane order/identity drift')
 need([row.get('count') for row in lanes]==[57,40,36,24,12],'Question Centre lane counts drift')
 need(sum(int(row.get('count') or 0) for row in lanes)==169,'Question Centre lane counts must sum to 169')
+formal_lane=lanes[0]
+patterns=formal_lane.get('attemptPatterns') or {}
+need(patterns.get('singleJurisdiction')=='10 questions: 7 technical + 3 regional safety/compliance','Question Centre single-jurisdiction attempt contract drift')
+need(patterns.get('compareAll')=='16 questions: 7 technical + 9 regional safety/compliance','Question Centre Compare All attempt contract drift')
+need(str(formal_lane.get('technicalReachability','')).startswith('30/30 approved technical items are reachable'),'Question Centre must preserve 30/30 technical reachability')
+outcomes=formal_lane.get('outcomeMapping') or {}
+need(outcomes.get('proposedTechnicalMappings')=='30/30' and outcomes.get('approvedTechnicalMappings')=='0/30' and outcomes.get('status')=='pending-independent-sme-review','Question Centre must distinguish proposed outcome coverage from independent approval')
 entry=centre.get('canonicalEntryPoint') or {}
 need(entry.get('area')=='Practice' and entry.get('label')=='Question Centre','Question Centre canonical entry point must remain Practice > Question Centre')
 policy=centre.get('policy') or {}
