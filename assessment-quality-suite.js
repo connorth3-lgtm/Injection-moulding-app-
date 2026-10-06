@@ -79,8 +79,7 @@ function normaliseTech(q,i,level){const m=identityFor(q,'technical',level,null,i
 function normaliseReg(q,i,region,level){const m=identityFor(q,'regional',level,region,i);return {q:q[0],options:q[1],correct:q[2],explanation:q[3],reference:q[4],sourceUrl:q[5]||null,optionFeedback:q[6]||[],critical:q[7]!==false,kind:'regional',region,...m}}
 function shuffleOptions(item){const mapped=item.options.map((text,oldIndex)=>({text,correct:oldIndex===item.correct,feedback:item.optionFeedback?.[oldIndex]||null}));const mixed=shuffle(mapped);return {...item,options:mixed.map(x=>x.text),optionFeedback:mixed.map(x=>x.feedback),correct:mixed.findIndex(x=>x.correct)}}
 
-function selectBlueprint(level){
- const pool=(D.exams[level]||[]).map((q,i)=>normaliseTech(q,i,level));
+function selectBlueprintFromOrderedPool(pool){
  const unused=new Set(pool.map((_,i)=>i)),selected=[];
  for(const want of BLUEPRINT){
   let idx=[...unused].find(i=>pool[i].competencies.includes(want));
@@ -92,7 +91,18 @@ function selectBlueprint(level){
   const usedConcepts=new Set(selected.map(x=>x.concept));
   let idx=[...unused].find(i=>!usedConcepts.has(pool[i].concept));if(idx==null)idx=[...unused][0];selected.push(pool[idx]);unused.delete(idx);
  }
- return shuffle(selected.slice(0,7));
+ return selected.slice(0,7);
+}
+function orderedTechnicalPool(level,preferredStableIds=[]){
+ const pool=(D.exams[level]||[]).map((q,i)=>normaliseTech(q,i,level));
+ if(Array.isArray(preferredStableIds)&&preferredStableIds.length){
+  const rank=new Map(preferredStableIds.map((id,index)=>[String(id),index]));
+  return pool.slice().sort((a,b)=>(rank.has(a.stableId)?rank.get(a.stableId):-1)-(rank.has(b.stableId)?rank.get(b.stableId):-1));
+ }
+ return shuffle(pool);
+}
+function selectBlueprint(level,preferredStableIds=[]){
+ return shuffle(selectBlueprintFromOrderedPool(orderedTechnicalPool(level,preferredStableIds)));
 }
 function blueprintCoverage(items){const c=new Set();items.forEach(x=>(x.competencies||[x.competency]).forEach(k=>c.add(k)));return [...c]}
 
@@ -206,5 +216,5 @@ D.assessmentQA.questionRevisionHistory=[
  {version:VERSION,date:'24 August 2026',change:'Stable IDs, competency blueprint, local analytics, per-question evidence, difficulty calibration, scenario expansion, duplicate/leak checks and freshness monitoring.'}
 ];
 window.MM_ASSESSMENT_ANALYTICS={version:VERSION,summary:analyticsSummary,export:()=>analytics(),reset:()=>{ASSESSMENT_STORAGE.removeItem(ANALYTICS_KEY);try{window.renderExams?.()}catch(_){}}};
-window.MM_ASSESSMENT_QUALITY={version:VERSION,identityLockVersion:IDENTITY_LOCK_VERSION,identityCount:LOCKED_IDENTITIES.length,blueprint:BLUEPRINT.slice(),labels:{...LABELS},scenarioCount:D.scenarios.length,questionCount:57,nearDuplicates:nearDuplicates(),answerLeakRisks:leakRisks(),coverage:(level)=>blueprintCoverage(selectBlueprint(level)),resolveIdentity:(q,kind,level,region,index)=>identityFor(q,kind,level,region,index),sourceReview:{reviewed:SOURCE_REVIEWED,reviewBy:SOURCE_REVIEW_BY}};
+window.MM_ASSESSMENT_QUALITY={version:VERSION,identityLockVersion:IDENTITY_LOCK_VERSION,identityCount:LOCKED_IDENTITIES.length,blueprint:BLUEPRINT.slice(),labels:{...LABELS},scenarioCount:D.scenarios.length,questionCount:57,nearDuplicates:nearDuplicates(),answerLeakRisks:leakRisks(),coverage:(level)=>blueprintCoverage(selectBlueprint(level)),selectTechnicalBlueprint:(level,preferredStableIds=[])=>selectBlueprint(level,preferredStableIds).map(q=>q.stableId),resolveIdentity:(q,kind,level,region,index)=>identityFor(q,kind,level,region,index),sourceReview:{reviewed:SOURCE_REVIEWED,reviewBy:SOURCE_REVIEW_BY}};
 })();
