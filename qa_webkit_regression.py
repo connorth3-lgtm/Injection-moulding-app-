@@ -47,6 +47,10 @@ need('npx playwright test --config=playwright.webkit-full.config.cjs' in workflo
 need('npx playwright test --config=playwright.cross-browser.config.cjs' in workflow,'cross-browser smoke suite missing')
 need('npx playwright test --config=playwright.reachability.config.cjs' in workflow,'feature reachability suite missing')
 need('npx playwright test qa/visual-regression.spec.js --config=playwright.config.cjs' in workflow,'approved visual regression gate missing')
+need("id: visual" in workflow,'visual regression step must expose its exact outcome')
+need("continue-on-error: ${{ github.base_ref == 'preview' || github.ref_name == 'preview' }}" in workflow,'preview visual drift must remain a non-blocking human HOLD while main remains fail-closed')
+need("Record preview visual-baseline HOLD" in workflow and "human visual-baseline approval remains HOLD" in workflow,'preview visual-baseline HOLD must be explicit')
+need("protected-main release" in workflow,'visual baseline must remain blocking before protected main release')
 need('needs: [browser-chromium, browser-webkit, browser-cross, app-500-reliability]' in workflow,'mobile-browser aggregator must depend on all browser jobs and all reliability shards')
 need('name: Enforce complete mobile browser evidence' in workflow,'mobile-browser aggregator must fail closed across all browser evidence')
 for expression in (
@@ -58,4 +62,4 @@ for expression in (
     need(expression in workflow,f'mobile-browser aggregator is not wired to {expression}')
 need('All five reliability shards did not pass' in workflow,'reliability shard failures must fail the aggregate gate')
 
-print(f'MouldMaster WebKit regression contract passed ({len(webkit_specs)} substantive specs + tablet smoke; Chromium-only service-worker PWA lifecycle/transition and approved visual baseline explicit; browser evidence remains complete before final fail-closed approval)')
+print(f'MouldMaster WebKit regression contract passed ({len(webkit_specs)} substantive specs + tablet smoke; Chromium-only service-worker PWA lifecycle/transition explicit; preview visual drift remains a human HOLD while protected-main approval stays fail-closed; substantive browser evidence remains complete before automated preview approval)')

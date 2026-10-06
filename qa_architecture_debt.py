@@ -146,11 +146,15 @@ for number, (source, path) in enumerate(zip(inline_core_scripts, core_runtime_sc
             need(marker in generated, f"handler bridge marker missing from final generated core slot: {marker}")
     else:
         need(generated == expected_handler_free, f"handler-free externalized core runtime is stale at slot {number}: {path.name}")
-# Runtime modules loaded by the domain manifest must use the explicit domain-ready lifecycle rather than hot polling for shell availability.
-for rel in ['src/domains/shell/product-areas.js','src/domains/governance/standards-readiness.js']:
-    source=read(rel)
-    need('setInterval(' not in source and 'setTimeout(installWhenReady,50)' not in source,f'{rel} reintroduced startup polling')
-    need("mm:domains-ready" in source,f'{rel} must bind deferred installation to domain readiness')
+# Runtime modules loaded by the domain manifest must not hot-poll for shell availability.
+# Product Areas now exposes routing only; canonical Home composition belongs solely
+# to the app-shell registry, so it must not defer or register a dashboard surface.
+product_areas=read('src/domains/shell/product-areas.js')
+need('setInterval(' not in product_areas and 'setTimeout(installWhenReady,50)' not in product_areas,'product-areas reintroduced startup polling')
+need('dashboard.register' not in product_areas and 'product-areas-v1' not in product_areas,'retired Product Areas router reintroduced competing Home ownership')
+standards_readiness=read('src/domains/governance/standards-readiness.js')
+need('setInterval(' not in standards_readiness and 'setTimeout(installWhenReady,50)' not in standards_readiness,'standards-readiness reintroduced startup polling')
+need("mm:domains-ready" in standards_readiness,'standards-readiness must bind deferred installation to domain readiness')
 
 reading_patch=read('reading-patch.js')
 need('new MutationObserver' not in reading_patch,'reading patch reintroduced a whole-document mutation observer')

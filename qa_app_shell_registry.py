@@ -71,9 +71,16 @@ need('mm-app-shell-registry-style' not in shell,'retired app-shell runtime style
 product_areas=text('src/domains/shell/product-areas.js')
 need("document.createElement('style')" not in product_areas,'product-area shell module must not inject presentation styles at runtime')
 need('mm-product-areas-style' not in product_areas,'retired product-area runtime style element must not return')
+need("dashboard.register" not in product_areas and "product-areas-v1" not in product_areas,'retired Product Areas router must not register a competing canonical Home section')
+need("function install(){\n  // Product-area routing remains available through MM_PRODUCT_AREAS.open()" in product_areas,'Product Areas install must preserve routing API without learner-facing Home ownership')
 ui_shell=text('ui-shell.css')
 for marker in ['.mm-product-area-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr))','--mm-mobile-nav-height:calc(70px + env(safe-area-inset-bottom))','--mm-mobile-content-clearance:calc(var(--mm-mobile-nav-height) + 26px)','.mm-dashboard-registry{display:grid;gap:14px}','body[data-mm-view="dashboard"] #continueBtn{display:none!important}','.mm-mobile-actions{bottom:var(--mm-mobile-nav-height)!important']:
     need(marker in ui_shell,f'canonical app-shell presentation missing from ui-shell.css: {marker}')
+need('.mm-dashboard-slot:not([data-mm-dashboard-section="today-focus"])' not in ui_shell,'legacy first-paint CSS must not blanket-hide canonical dashboard registry slots')
+need('#dashboard .mm-dashboard-registry>.mm-dashboard-slot:empty{display:none!important}' in ui_shell,'empty canonical dashboard slots should collapse without hiding populated registered surfaces')
+primary_hubs=text('primary-learning-practice-hubs.js')
+need("querySelectorAll('#mmDashboardRegistryBefore .mm-dashboard-slot" not in primary_hubs,'Practice hub must not delete canonical dashboard registry slots')
+need('normalizeHomeActions' in primary_hubs,'Practice hub Home integration must be limited to non-destructive action normalization')
 
 # Registry/finalizer must consolidate presentation composition only.
 for forbidden in ['correctIndex=', 'question_bank_version=', 'MM_DATA.exams=', 'regionalQuestions=', 'certificates.push(', 'fetch(', 'XMLHttpRequest', 'WebSocket', 'sendBeacon']:

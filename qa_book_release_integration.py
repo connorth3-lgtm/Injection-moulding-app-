@@ -330,9 +330,17 @@ for marker in ('EVIDENCE_IDENTITIES','BASF-INJECTION-PROBLEMS','NIST-SEMATECH-DO
     need(marker in book_runtime, f'evidence alias/family normalization missing from Book runtime: {marker}')
 need('getEvidenceIdentity' in claim_trace_runtime and 'Evidence family:' in claim_trace_runtime, 'complete claim trace must explain evidence-family relationships')
 need('data.sourceSeeds.length!==52' in book_runtime, 'Book runtime must require all 52 final governed claim-evidence source records')
-need('await window.MMBook?.load?.()' in claim_trace_runtime, 'complete claim trace must load exact-byte Book authorization before fetching governed ledgers')
+need("window.addEventListener('mm:book-manifest-ready',onManifestReady)" in claim_trace_runtime, 'complete claim trace must wait for the governed Book manifest-ready event')
+need('await window.MMBook?.load?.()' not in claim_trace_runtime, 'complete claim trace must not eagerly demand-load the governed Book at startup')
+need("window.dispatchEvent(new CustomEvent('mm:book-manifest-ready'" in book_runtime, 'Book runtime must announce exact governed manifest readiness after genuine demand')
 need('function bookScrollRoot()' in book_runtime and 'function bookViewportTop()' in book_runtime and 'bindBookScrollRoot()' in book_runtime, 'Book resume must track the actual app scroll root rather than assuming window scrolling')
-need('scrollBookBy(heading.getBoundingClientRect().top-desired)' in book_runtime and 'else scrollBookTo(snapshot.scrollY)' in book_runtime, 'Book resume restoration must restore anchors and fallback scroll positions through the active scroll root')
+need("for(let node=start?.parentElement;node&&node!==document.body;node=node.parentElement)" in book_runtime and "hasScrollRange=(Number(node.scrollHeight)||0)>(Number(node.clientHeight)||0)+1" in book_runtime and "&&hasScrollRange)return node" in book_runtime, 'Book scroll-root detection must walk to the nearest genuinely scrollable ancestor and reject overflow:auto containers without real scrolling range, including WebKit')
+need("if(isDocumentScrollRoot(root)){window.scrollBy(0,amount);return}" in book_runtime and "if(isDocumentScrollRoot(root)){window.scrollTo(0,value);return}" in book_runtime and "root.scrollTop=(Number(root.scrollTop)||0)+amount" in book_runtime and "root.scrollTop=value" in book_runtime, 'Book resume scrolling must use browser-native document scrolling and direct nested-root scrolling so restoration is instant and independent of global smooth-scroll CSS')
+need("anchorOffsetId:anchor.anchorOffsetId" in book_runtime and "offsetIdentity===anchorId" in book_runtime, 'Book resume pixel offsets must remain bound to the stable anchor identity that produced them')
+need("activationTop=top+24" in book_runtime and "x.rect.top<=activationTop" in book_runtime, 'Book resume anchor selection must treat headings in the near-top reading band as current so a visually active heading is not saved as the previous section')
+need("scrollBookBy(delta)" in book_runtime and "await alignReadingAnchor(heading,desired)" in book_runtime and "else scrollBookTo(snapshot.scrollY)" in book_runtime, 'Book resume restoration must deterministically align anchors and fallback scroll positions through the active scroll root')
+need("setBookInstantScroll(true)" in book_runtime and "setBookInstantScroll(false)" in book_runtime, 'Book open/leave lifecycle must isolate Book scrolling from legacy global smooth-scroll CSS')
+need("showContents({restoreScroll:false});scrollBookTo(0)" in book_runtime, 'Book open must not race a delayed contents-scroll restore against Keep Reading')
 need('getClaimEvidenceReference' in book_runtime and 'getClaimEvidenceReference' in claim_trace_runtime, 'complete claim trace must reconcile against the governed final claim-evidence index')
 need('Complete claim trace final evidence mismatch' in claim_trace_runtime and 'source metadata missing' in claim_trace_runtime, 'complete claim trace must fail closed on final-evidence or source-metadata divergence')
 need("getIntegrityMap" in claim_trace_runtime and "gitBlobSha1" in claim_trace_runtime and "byte-integrity mismatch" in claim_trace_runtime, 'complete claim trace must verify exact governed ledger bytes before rendering')
@@ -350,7 +358,7 @@ need('function verifiedChapterHtml(chapter,options={})' in book_runtime, 'verifi
 need("if(chapter.state==='verified')ui.reader.innerHTML=`${back}${verifiedChapterHtml(chapter)}`" in book_runtime, 'Book read surface no longer uses governed verified renderer')
 need("verified.map(chapter=>verifiedChapterHtml(chapter,{includeTechnicalMaterial:false})).join('')" in book_runtime, 'Book listen surface must exclude technical-review material appendix')
 need("ui.listen.addEventListener('click',startVerifiedListening)" in book_runtime, 'Book listening control is not bound')
-need('style=' not in book_runtime, 'Book runtime reintroduced inline style attributes')
+need('style="' not in book_runtime and "style='" not in book_runtime, 'Book runtime reintroduced inline HTML style attributes')
 
 # Desktop packaging must continue to carry the same canonical domain/data tree.
 extra = desktop['build']['extraResources']

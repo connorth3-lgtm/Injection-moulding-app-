@@ -20,6 +20,7 @@ body[data-mm-view="lesson"] .topbar{justify-content:flex-end!important}
 #dashboard .region-banner{display:none!important}
 .card{border-radius:14px!important;border-color:#263b58!important;box-shadow:var(--shadow)!important;background:linear-gradient(180deg,rgba(18,32,52,.96),rgba(13,25,42,.96))!important}
 .main{padding-top:20px}
+html.mm-book-instant-scroll,html.mm-book-instant-scroll body,html.mm-book-instant-scroll #mainContent,html.mm-book-instant-scroll .main,html.mm-book-instant-scroll #mmBookView{scroll-behavior:auto!important}
 .topbar{margin-bottom:16px!important}
 .topbar h1{line-height:1.12}
 .hero{gap:12px!important}
@@ -75,7 +76,7 @@ body[data-mm-view="lesson"] .topbar{justify-content:flex-end!important}
 .mm-hub-picker-grid button{min-height:100px!important;padding:15px!important;border:1px solid #35516f!important;border-radius:14px!important;background:#11243a!important;color:#edf5ff!important;text-align:left!important;white-space:normal!important}
 .mm-hub-picker-grid button b{display:block!important;font-size:15px!important;margin-bottom:5px!important}
 .mm-hub-picker-grid button small{display:block!important;color:#a9bdd4!important;line-height:1.45!important}
-#dashboard #mmDashboardRegistryBefore .mm-dashboard-slot:not([data-mm-dashboard-section="today-focus"]),#dashboard #mmDashboardRegistryAfter .mm-dashboard-slot{display:none!important}
+#dashboard .mm-dashboard-registry>.mm-dashboard-slot:empty{display:none!important}
 
 @media(max-width:700px){
   :root{--mm-mobile-nav-clearance:104px}

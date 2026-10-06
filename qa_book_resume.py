@@ -12,6 +12,7 @@ finalizer=text("src/domains/shell/app-shell-finalize.js")
 registry=text("src/domains/shell/app-shell-registry.js")
 training=text("src/domains/learning/training-qa-fix.js")
 storage=text("docs/STORAGE_OWNERSHIP_MATRIX.md")
+ui_shell=text("ui-shell.css")
 
 for marker in [
     "BOOK_RESUME_PREFIX='mm_book_resume_v1::'",
@@ -34,7 +35,8 @@ for marker in [
     "module:material-families:atlas",
     "bookViewportTop()",
     "bindBookScrollRoot()",
-    "scrollBookBy(heading.getBoundingClientRect().top-desired)",
+    "scrollBookBy(delta)",
+    "mm:book-resume-restored",
     "scrollBookTo(snapshot.scrollY)",
 ]:
     need(marker in book,f"Book resume hardening missing: {marker}")
@@ -42,6 +44,9 @@ for marker in [
 need("localStorage.getItem(BOOK_RESUME_KEY)" not in book,"Book resume must not use a device-global live storage key")
 need("LEGACY_BOOK_RESUME_KEY='mouldmasterBookResume:v1'" in book,"experimental legacy Book resume cleanup marker missing")
 need("if(!exists){clearResume();showContents();return false}" in book,"stale Book resume must fail safely to contents")
+need("restoreReadingPosition({...activeReadingPosition})" not in book,"Material Atlas hydration must not replay a stale reader snapshot after asynchronous evidence loading")
+need("const preserve=open&&activeReadingPosition?{scrollY:bookScrollTop(),anchor:readerAnchor()}:null" in book,"Material Atlas hydration must snapshot the live reading position immediately before DOM replacement")
+need("if(preserve)scrollBookTo(preserve.scrollY)" in book,"Material Atlas hydration must preserve the live scroll offset synchronously across DOM replacement")
 
 for marker in [
     "function bookDashboardState()",
@@ -54,6 +59,8 @@ for marker in [
 ]:
     need(marker in registry,f"Home Book lifecycle hardening missing from canonical registry: {marker}")
 need("renderHomeBookCard" not in finalizer,"Home Book must have one canonical UI owner; finalizer renderer must remain retired")
+need("mm-book-instant-scroll" in book,"Book open/leave lifecycle must toggle the instant-scroll class")
+need("html.mm-book-instant-scroll" in ui_shell and "scroll-behavior:auto!important" in ui_shell,"Book instant-scroll class must override legacy smooth scrolling in WebKit and other browsers")
 
 for marker in [
     "BOOK_RESUME_PREFIX='mm_book_resume_v1::'",
