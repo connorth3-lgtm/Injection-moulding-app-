@@ -9,6 +9,7 @@ if(!ASSESSMENT_STORAGE||typeof ASSESSMENT_STORAGE.read!=='function'||typeof ASSE
 const VERSION='2026.08.24.2';
 const ANALYTICS_KEY='mm_assessment_analytics_v1';
 const REVIEW_KEY='mm_spaced_review_v2';
+const BLUEPRINT_ROTATION_KEY='mm_exam_blueprint_rotation_v1';
 const SOURCE_REVIEWED='2026-08-26';
 const SOURCE_REVIEW_BY='2026-11-26';
 const LEVELS=['Beginner','Intermediate','Advanced'];
@@ -79,27 +80,46 @@ function normaliseTech(q,i,level){const m=identityFor(q,'technical',level,null,i
 function normaliseReg(q,i,region,level){const m=identityFor(q,'regional',level,region,i);return {q:q[0],options:q[1],correct:q[2],explanation:q[3],reference:q[4],sourceUrl:q[5]||null,optionFeedback:q[6]||[],critical:q[7]!==false,kind:'regional',region,...m}}
 function shuffleOptions(item){const mapped=item.options.map((text,oldIndex)=>({text,correct:oldIndex===item.correct,feedback:item.optionFeedback?.[oldIndex]||null}));const mixed=shuffle(mapped);return {...item,options:mixed.map(x=>x.text),optionFeedback:mixed.map(x=>x.feedback),correct:mixed.findIndex(x=>x.correct)}}
 
-function selectBlueprint(level){
+function blueprintRotation(){
+ const state=ASSESSMENT_STORAGE.read(BLUEPRINT_ROTATION_KEY,{schema:1,levels:{}});
+ state.schema=1;state.levels=obj(state.levels)?state.levels:{};return state
+}
+function saveBlueprintRotation(state){ASSESSMENT_STORAGE.write(BLUEPRINT_ROTATION_KEY,state)}
+function selectBlueprint(level,{commit=false}={}){
  const pool=(D.exams[level]||[]).map((q,i)=>normaliseTech(q,i,level));
+ const state=blueprintRotation(),usage=obj(state.levels[level])?state.levels[level]:{};
  const unused=new Set(pool.map((_,i)=>i)),selected=[];
+ const pick=indices=>{
+  if(!indices.length)return null;
+  const minimum=Math.min(...indices.map(i=>Number(usage[pool[i].stableId]||0)));
+  return shuffle(indices.filter(i=>Number(usage[pool[i].stableId]||0)===minimum))[0];
+ };
  for(const want of BLUEPRINT){
-  let idx=[...unused].find(i=>pool[i].competencies.includes(want));
-  if(idx==null)idx=[...unused].find(i=>pool[i].competency===want);
-  if(idx==null)continue;
+  let candidates=[...unused].filter(i=>pool[i].competencies.includes(want));
+  if(!candidates.length)candidates=[...unused].filter(i=>pool[i].competency===want);
+  const idx=pick(candidates);if(idx==null)continue;
   selected.push(pool[idx]);unused.delete(idx);
  }
  while(selected.length<7&&unused.size){
   const usedConcepts=new Set(selected.map(x=>x.concept));
-  let idx=[...unused].find(i=>!usedConcepts.has(pool[i].concept));if(idx==null)idx=[...unused][0];selected.push(pool[idx]);unused.delete(idx);
+  let candidates=[...unused].filter(i=>!usedConcepts.has(pool[i].concept));
+  if(!candidates.length)candidates=[...unused];
+  const idx=pick(candidates);if(idx==null)break;
+  selected.push(pool[idx]);unused.delete(idx);
  }
- return shuffle(selected.slice(0,7));
+ const result=shuffle(selected.slice(0,7));
+ if(commit){
+  result.forEach(q=>{usage[q.stableId]=Number(usage[q.stableId]||0)+1});
+  state.levels[level]=usage;saveBlueprintRotation(state);
+ }
+ return result;
 }
 function blueprintCoverage(items){const c=new Set();items.forEach(x=>(x.competencies||[x.competency]).forEach(k=>c.add(k)));return [...c]}
 
 /* Replace random technical sampling with a competency-balanced blueprint while preserving the regional safety rules. */
 window.getExamQuestions=function(level,region){
  rebuildMeta();
- const technical=selectBlueprint(level);let regs=[];
+ const technical=selectBlueprint(level,{commit:true});let regs=[];
  if(region==='ALL')REGIONS.forEach(r=>regs.push(...(D.regionalQuestions[r]?.[level]||[]).map((q,i)=>normaliseReg(q,i,r,level))));
  else regs=shuffle((D.regionalQuestions[region]?.[level]||[]).map((q,i)=>normaliseReg(q,i,region,level))).slice(0,3);
  return shuffle(technical.concat(regs)).map(shuffleOptions);
@@ -177,10 +197,29 @@ function sourceFreshness(q){if(!q?.sourceUrl)return 'No external URL on this ite
 function enhanceReview(){
  if(typeof activeExam==='undefined'||!activeExam?.questions)return;const rows=[...document.querySelectorAll('#answerReview .answer-row')];rows.forEach((row,i)=>{if(row.querySelector('.mm-evidence')||!activeExam.questions[i])return;const q=activeExam.questions[i],url=q.sourceUrl?`<a class="standard-link" href="${esc(q.sourceUrl)}" target="_blank" rel="noopener">Open exact source ↗</a>`:'No external URL is assigned to this engineering-principle item.';row.insertAdjacentHTML('beforeend',`<details class="mm-evidence"><summary>Evidence, difficulty & revision</summary><div><b>${esc(LABELS[q.competency]||q.competency||'General')}</b> · ${esc(q.difficulty||'Applied')} · <code>${esc(q.stableId||q.mmStableId||q.mmId||'')}</code></div><p>${esc(q.reference||'Engineering principle')}</p><p>${url}</p><small>${esc(sourceFreshness(q))} · Question revision ${esc(q.revision||VERSION)}</small></details>`)});
 }
+function currentAssessmentRegion(){try{return String((typeof user!=='undefined'&&user?.region)||window.user?.region||'ALL')}catch(_){return 'ALL'}}
+function assessmentModeCopy(region=currentAssessmentRegion()){
+ const all=region==='ALL',regional=all?9:3,total=7+regional;
+ const regionLabel=typeof regionName==='function'?regionName(region):(all?'UK + US + New Zealand':region);
+ return {all,regional,total,regionLabel,
+  intro:all?'Compare all includes all nine reviewed regional safety questions: three UK, three US and three New Zealand.':'This mode includes three reviewed safety/compliance questions for the selected jurisdiction.',
+  section:all?'Compare all uses 7 technical questions plus all 9 regional safety questions.':'Each assessment uses 7 technical questions plus 3 regional safety/compliance questions for the selected standards mode.'};
+}
+function patchAssessmentModeCopy(){
+ const host=document.getElementById('exams');if(!host)return;
+ const mode=assessmentModeCopy(),head=host.querySelector('.section-head p');
+ if(head)head.textContent=mode.section;
+ host.querySelectorAll('.exam-card p.muted').forEach(p=>{p.textContent=`${mode.total} questions · 7 technical + ${mode.regional} regional safety · 80% pass + every safety item · ${mode.regionLabel}`});
+}
+function patchActiveExamModeCopy(){
+ const host=document.getElementById('examQuestions'),intro=host?.previousElementSibling;
+ if(!host||!intro?.matches?.('p.muted'))return;
+ intro.textContent=assessmentModeCopy(typeof activeExam!=='undefined'&&activeExam?.region?activeExam.region:currentAssessmentRegion()).intro;
+}
 function addStyles(){if(document.getElementById('mm-assessment-quality-style'))return;const s=document.createElement('style');s.id='mm-assessment-quality-style';s.textContent=`.mm-qmeta{display:flex;gap:5px;flex-wrap:wrap;margin:6px 0 8px}.mm-qmeta span{font-size:9.5px;border:1px solid #36506e;border-radius:999px;padding:3px 6px;color:#a9bdd6;background:#0b192a}.mm-evidence{margin-top:9px;padding-top:8px;border-top:1px solid #2a425e}.mm-evidence summary{cursor:pointer;color:#72e6cd;font-size:12px;font-weight:700}.mm-evidence p{margin:6px 0;font-size:11.5px}.mm-evidence code{font-size:10px;color:#a9bdd6}.mm-analytics{padding:16px;margin-top:14px}.mm-analytics-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.mm-analytics-grid>div{padding:10px;border:1px solid #2b405b;border-radius:9px;background:#0d1c30}.mm-analytics-grid b{display:block;font-size:20px}.mm-analytics ul{margin:8px 0 0;padding-left:18px;color:#b8c9dc;font-size:12px}@media(max-width:680px){.mm-analytics-grid{grid-template-columns:1fr}.mm-qmeta span{font-size:9px}}`;document.head.appendChild(s)}
 
 const baseStart=typeof window.startExam==='function'?window.startExam:(typeof startExam==='function'?startExam:null);
-if(baseStart)window.startExam=function(){const r=baseStart.apply(this,arguments);setTimeout(()=>{applyQuestionBadges();startTiming()},0);return r};
+if(baseStart)window.startExam=function(){const r=baseStart.apply(this,arguments);setTimeout(()=>{patchActiveExamModeCopy();applyQuestionBadges();startTiming()},0);return r};
 const baseGrade=typeof window.gradeExam==='function'?window.gradeExam:(typeof gradeExam==='function'?gradeExam:null);
 if(baseGrade)window.gradeExam=function(level){
  if(typeof activeExam!=='undefined'&&activeExam?.level===level&&examSession&&!examSession.graded){let correct=0,criticalWrong=0;activeExam.questions.forEach((q,i)=>{const el=document.querySelector(`input[name=ex${i}]:checked`),selected=el?+el.value:null,ok=selected===q.correct;if(ok)correct++;if(q.critical&&!ok)criticalWrong++;updateQuestionAnalytics(q,selected,ok,examSession.firstResponse[i]??(performance.now()-examSession.started))});const pct=Math.round(correct/activeExam.questions.length*100),passed=pct>=80&&criticalWrong===0;updateExamAnalytics(level,activeExam.region,pct,passed);examSession.graded=true}
@@ -189,7 +228,7 @@ if(baseGrade)window.gradeExam=function(level){
 const baseAnswer=typeof window.answerScenario==='function'?window.answerScenario:(typeof answerScenario==='function'?answerScenario:null);
 if(baseAnswer)window.answerScenario=function(i,ci,el){const s=D.scenarios[i],ok=!!s&&ci===s.correct;if(s)updateScenarioAnalytics(s,ci,ok);const r=baseAnswer.apply(this,arguments);if(s){const f=document.getElementById('sf'+i);if(f){const fb=s.feedback?.[ci]||s.why,src=s.sourceUrl?`<div class="ref"><a class="standard-link" href="${esc(s.sourceUrl)}" target="_blank" rel="noopener">${esc(s.reference||'Evidence source')} ↗</a></div>`:`<div class="ref">Reference: ${esc(s.reference||'Evidence-based injection-moulding principle')}</div>`;f.innerHTML=`<b>${ok?'Strong choice ✓':'Not the strongest first move'}</b><br>${esc(fb)}${src}<div class="tiny muted">${esc(s.difficulty||'Applied')} · ${esc(LABELS[s.category]||s.category||'General')} · ${esc(s.mmStableId||'')}</div>`}}return r};
 const baseRenderExams=typeof window.renderExams==='function'?window.renderExams:(typeof renderExams==='function'?renderExams:null);
-if(baseRenderExams)window.renderExams=function(){const r=baseRenderExams.apply(this,arguments);const host=document.getElementById('exams');if(host&&!host.querySelector('.mm-analytics')){const s=analyticsSummary(),hard=s.hard.map(x=>`<li>${esc(x.stem||x.stableId)} — ${Math.round(x.correct/x.attempts*100)}% correct</li>`).join('')||'<li>No graded question data yet.</li>',slow=s.slow.map(x=>`<li>${esc(x.stem||x.stableId)} — ${Math.round(x.totalResponseMs/x.attempts/1000)}s average</li>`).join('')||'<li>No response-time data yet.</li>';host.insertAdjacentHTML('beforeend',`<section class="card mm-analytics"><span class="eyebrow">Device-local learning analytics</span><h3>Question performance</h3><p class="muted">Stored only in this browser/device. It is not uploaded by MouldMaster.</p><div class="mm-analytics-grid"><div><span class="muted tiny">Question attempts</span><b>${s.attempts}</b></div><div><span class="muted tiny">Answer accuracy</span><b>${s.accuracy==null?'—':s.accuracy+'%'}</b></div><div><span class="muted tiny">Exam attempts</span><b>${s.examAttempts}</b></div></div><div class="grid2" style="margin-top:10px"><div><b>Hardest so far</b><ul>${hard}</ul></div><div><b>Slowest so far</b><ul>${slow}</ul></div></div><button class="ghost" type="button" style="margin-top:10px" data-mm-onclick="MM_ASSESSMENT_ANALYTICS.reset()">Reset local analytics</button></section>`)}return r};
+if(baseRenderExams)window.renderExams=function(){const r=baseRenderExams.apply(this,arguments);patchAssessmentModeCopy();const host=document.getElementById('exams');if(host&&!host.querySelector('.mm-analytics')){const s=analyticsSummary(),hard=s.hard.map(x=>`<li>${esc(x.stem||x.stableId)} — ${Math.round(x.correct/x.attempts*100)}% correct</li>`).join('')||'<li>No graded question data yet.</li>',slow=s.slow.map(x=>`<li>${esc(x.stem||x.stableId)} — ${Math.round(x.totalResponseMs/x.attempts/1000)}s average</li>`).join('')||'<li>No response-time data yet.</li>';host.insertAdjacentHTML('beforeend',`<section class="card mm-analytics"><span class="eyebrow">Device-local learning analytics</span><h3>Question performance</h3><p class="muted">Stored only in this browser/device. It is not uploaded by MouldMaster.</p><div class="mm-analytics-grid"><div><span class="muted tiny">Question attempts</span><b>${s.attempts}</b></div><div><span class="muted tiny">Answer accuracy</span><b>${s.accuracy==null?'—':s.accuracy+'%'}</b></div><div><span class="muted tiny">Exam attempts</span><b>${s.examAttempts}</b></div></div><div class="grid2" style="margin-top:10px"><div><b>Hardest so far</b><ul>${hard}</ul></div><div><b>Slowest so far</b><ul>${slow}</ul></div></div><button class="ghost" type="button" style="margin-top:10px" data-mm-onclick="MM_ASSESSMENT_ANALYTICS.reset()">Reset local analytics</button></section>`)}return r};
 
 function nearDuplicates(){const rows=[];for(const level of LEVELS)for(const q of D.exams[level]||[])rows.push({id:META_BY_TEXT.get(norm(q[0]))?.stableId||'',text:q[0],level});const pairs=[];const tok=s=>new Set(norm(s).split(/[^a-z0-9]+/).filter(x=>x.length>3&&!['which','what','strongest','first','most','when','does','with','from','that','this'].includes(x)));for(let i=0;i<rows.length;i++)for(let j=i+1;j<rows.length;j++){if(rows[i].level!==rows[j].level)continue;const a=tok(rows[i].text),b=tok(rows[j].text),inter=[...a].filter(x=>b.has(x)).length,uni=new Set([...a,...b]).size,score=uni?inter/uni:0;if(score>=.72)pairs.push({...rows[i],other:rows[j].id,score:+score.toFixed(2)})}return pairs}
 function leakRisks(){const out=[];for(const level of LEVELS)(D.exams[level]||[]).forEach((q,i)=>{const lens=q[1].map(x=>String(x).length),c=lens[q[2]],others=lens.filter((_,j)=>j!==q[2]),med=others.sort((a,b)=>a-b)[1];if(c>med*1.85&&c-med>28)out.push({id:identityFor(q,'technical',level,null,i).stableId,type:'correct-option-length',correctLength:c,peerMedian:med})});return out}
@@ -206,5 +245,5 @@ D.assessmentQA.questionRevisionHistory=[
  {version:VERSION,date:'24 August 2026',change:'Stable IDs, competency blueprint, local analytics, per-question evidence, difficulty calibration, scenario expansion, duplicate/leak checks and freshness monitoring.'}
 ];
 window.MM_ASSESSMENT_ANALYTICS={version:VERSION,summary:analyticsSummary,export:()=>analytics(),reset:()=>{ASSESSMENT_STORAGE.removeItem(ANALYTICS_KEY);try{window.renderExams?.()}catch(_){}}};
-window.MM_ASSESSMENT_QUALITY={version:VERSION,identityLockVersion:IDENTITY_LOCK_VERSION,identityCount:LOCKED_IDENTITIES.length,blueprint:BLUEPRINT.slice(),labels:{...LABELS},scenarioCount:D.scenarios.length,questionCount:57,nearDuplicates:nearDuplicates(),answerLeakRisks:leakRisks(),coverage:(level)=>blueprintCoverage(selectBlueprint(level)),resolveIdentity:(q,kind,level,region,index)=>identityFor(q,kind,level,region,index),sourceReview:{reviewed:SOURCE_REVIEWED,reviewBy:SOURCE_REVIEW_BY}};
+window.MM_ASSESSMENT_QUALITY={version:VERSION,identityLockVersion:IDENTITY_LOCK_VERSION,identityCount:LOCKED_IDENTITIES.length,blueprint:BLUEPRINT.slice(),labels:{...LABELS},scenarioCount:D.scenarios.length,questionCount:57,nearDuplicates:nearDuplicates(),answerLeakRisks:leakRisks(),coverage:(level)=>blueprintCoverage(selectBlueprint(level)),sampleTechnical:(level)=>selectBlueprint(level).map(q=>q.stableId),rotation:{storageKey:BLUEPRINT_ROTATION_KEY,policy:'least-used reviewed item within each competency slot; learner-scoped; all 10 technical items per level remain reachable across attempts'},resolveIdentity:(q,kind,level,region,index)=>identityFor(q,kind,level,region,index),sourceReview:{reviewed:SOURCE_REVIEWED,reviewBy:SOURCE_REVIEW_BY}};
 })();
