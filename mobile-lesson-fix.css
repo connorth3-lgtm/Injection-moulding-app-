@@ -38,7 +38,7 @@
   .mm-practice-hub .mm-hub-assessment-copy small{display:block!important}
 }
 
-@media(max-width:380px){
+@media(max-width:430px){
   .mm-practice-hub .mm-hub-section-head{align-items:flex-start!important}
   .mm-practice-hub .mm-hub-section-head p{
     display:block!important;
