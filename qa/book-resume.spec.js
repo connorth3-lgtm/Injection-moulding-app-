@@ -15,17 +15,21 @@ async function boot(page,active='reader-a'){
 async function scrollAnchor(page,locator,top=96){
   await locator.evaluate(async(el,documentTargetTop)=>{
     const documentRoot=document.scrollingElement||document.documentElement;
-    let root=documentRoot;
-    for(let node=el.parentElement;node&&node!==document.body;node=node.parentElement){
-      const style=getComputedStyle(node),overflow=String(style.overflowY||'').toLowerCase();
-      if(/^(auto|scroll|overlay)$/.test(overflow)&&(Number(node.scrollHeight)||0)>(Number(node.clientHeight)||0)+1){root=node;break;}
+    const settle=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+    for(let pass=0;pass<8;pass++){
+      let root=documentRoot;
+      for(let node=el.parentElement;node&&node!==document.body;node=node.parentElement){
+        const style=getComputedStyle(node),overflow=String(style.overflowY||'').toLowerCase();
+        if(/^(auto|scroll|overlay)$/.test(overflow)&&(Number(node.scrollHeight)||0)>(Number(node.clientHeight)||0)+1){root=node;break;}
+      }
+      const documentScroll=root===documentRoot||root===document.documentElement||root===document.body;
+      const targetTop=documentScroll?documentTargetTop:Math.max(0,Math.round(root.getBoundingClientRect().top))+16;
+      const delta=el.getBoundingClientRect().top-targetTop;
+      if(Math.abs(delta)<=2)break;
+      if(documentScroll)window.scrollBy(0,delta);
+      else root.scrollTop=(Number(root.scrollTop)||0)+delta;
+      await settle();
     }
-    const documentScroll=root===documentRoot||root===document.documentElement||root===document.body;
-    const targetTop=documentScroll?documentTargetTop:Math.max(0,Math.round(root.getBoundingClientRect().top))+16;
-    const delta=el.getBoundingClientRect().top-targetTop;
-    if(documentScroll)window.scrollTo(0,(Number(documentRoot.scrollTop)||Number(window.scrollY)||0)+delta);
-    else root.scrollTop=(Number(root.scrollTop)||0)+delta;
-    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
   },top);
   await page.waitForTimeout(220);
 }
