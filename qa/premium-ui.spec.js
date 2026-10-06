@@ -220,16 +220,24 @@ test('Materials comparison guides valid choices before running evidence work',as
 });
 
 
-test('390px Home keeps the primary lesson and two specialist tools above the nav',async({page})=>{
+test('390px Home keeps lesson, Book and specialist tools in canonical order',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   const actions=page.locator('#dashboard .mm-home-balance-grid button');
   await expect(actions).toHaveCount(2);
   await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
-  const geometry=await page.evaluate(()=>({
-    toolsBottom:document.querySelector('#dashboard .mm-home-balance').getBoundingClientRect().bottom,
-    navTop:document.querySelector('.mobile-nav').getBoundingClientRect().top
-  }));
+  const book=page.locator('#dashboard [data-mm-home-book]');
+  await expect(book).toBeVisible();
+  await expect(book.getByRole('button',{name:/Start reading|Continue reading/})).toBeVisible();
+  const geometry=await page.evaluate(()=>{
+    const focus=document.querySelector('#dashboard .mm-today-focus').getBoundingClientRect();
+    const book=document.querySelector('#dashboard [data-mm-home-book]').getBoundingClientRect();
+    const tools=document.querySelector('#dashboard .mm-home-balance').getBoundingClientRect();
+    const nav=document.querySelector('.mobile-nav').getBoundingClientRect();
+    return {focusBottom:focus.bottom,bookTop:book.top,bookBottom:book.bottom,toolsTop:tools.top,toolsBottom:tools.bottom,navTop:nav.top};
+  });
+  expect(geometry.bookTop).toBeGreaterThanOrEqual(geometry.focusBottom-1);
+  expect(geometry.toolsTop).toBeGreaterThanOrEqual(geometry.bookBottom-1);
   expect(geometry.toolsBottom).toBeLessThanOrEqual(geometry.navTop+1);
   await expect(page.locator('#dashboard .mm-home-balance')).not.toContainText(/Materials|Practice|Saved lessons|Reference book/i);
   await assertNoHorizontalOverflow(page,'home-390-primary-actions');
