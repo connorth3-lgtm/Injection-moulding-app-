@@ -120,20 +120,29 @@
   }
   function flushReadingPosition({notify=false}={}){clearTimeout(resumeScrollTimer);resumeScrollTimer=0;return updateReadingScroll({notify})}
   function queueReadingScrollSave(){if(!open||!activeReadingPosition)return;clearTimeout(resumeScrollTimer);resumeScrollTimer=setTimeout(()=>updateReadingScroll(),180)}
-  function alignReadingAnchor(heading,desired,passes=4){
-    if(!heading?.isConnected)return;
-    heading.scrollIntoView({block:'start',inline:'nearest',behavior:'auto'});
-    const settle=remaining=>requestAnimationFrame(()=>{
-      if(!open||!heading.isConnected||ui?.reader?.hidden)return;
-      scrollBookBy(heading.getBoundingClientRect().top-desired);
-      if(remaining>0)settle(remaining-1);
+  function alignReadingAnchor(heading,desired,passes=5){
+    if(!heading?.isConnected)return Promise.resolve(false);
+    const targetTop=Number.isFinite(Number(desired))?Number(desired):bookViewportTop();
+    const adjust=()=>{
+      if(!open||!heading.isConnected||ui?.reader?.hidden)return false;
+      const delta=heading.getBoundingClientRect().top-targetTop;
+      if(Math.abs(delta)<=1)return true;
+      scrollBookBy(delta);return false;
+    };
+    adjust();
+    return new Promise(resolve=>{
+      const settle=remaining=>requestAnimationFrame(()=>{
+        const aligned=adjust();
+        if(aligned||remaining<=0){resolve(aligned);return}
+        settle(remaining-1);
+      });
+      settle(passes);
     });
-    settle(passes);
   }
   function restoreReadingPosition(snapshot){
     clearTimeout(resumeScrollTimer);resumeScrollTimer=0;activeReadingPosition={...snapshot};
-    requestAnimationFrame(()=>requestAnimationFrame(()=>{
-      if(!ui?.reader||ui.reader.hidden)return;
+    return new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(async()=>{
+      if(!ui?.reader||ui.reader.hidden){resolve(false);return}
       bindBookScrollRoot();
       const heads=[...ui.reader.querySelectorAll('h2[data-mm-book-anchor],h3[data-mm-book-anchor],h4[data-mm-book-anchor]')],anchorId=String(snapshot.anchorId||''),index=Number.isInteger(snapshot.anchorIndex)?snapshot.anchorIndex:-1,wanted=String(snapshot.anchorText||'').trim();
       const byId=anchorId?heads.find(el=>el.dataset.mmBookAnchor===anchorId):null;
@@ -141,9 +150,11 @@
       if(heading){
         const savedOffset=Number(snapshot.anchorOffset),offsetIdentity=String(snapshot.anchorOffsetId||'');
         const desired=byId&&offsetIdentity===anchorId&&Number.isFinite(savedOffset)?savedOffset:bookViewportTop();
-        alignReadingAnchor(heading,desired);
+        await alignReadingAnchor(heading,desired);
       }else scrollBookTo(snapshot.scrollY);
-    }));
+      window.dispatchEvent(new CustomEvent('mm:book-resume-restored',{detail:{id:snapshot.id,anchorId:heading?.dataset?.mmBookAnchor||''}}));
+      resolve(true);
+    })));
   }
   function clearResume(){
     const key=resumeStorageKey();activeReadingPosition=null;clearTimeout(resumeScrollTimer);resumeScrollTimer=0;
@@ -480,7 +491,7 @@
       const exists=snapshot.kind==='reader-chapter'?allReaderChapters().some(x=>x.id===snapshot.id):allChapters().some(x=>x.id===snapshot.id);
       if(!exists){clearResume();showContents();return false}
       if(snapshot.kind==='reader-chapter')showReaderChapter(snapshot.id);else showChapter(snapshot.id);
-      restoreReadingPosition(snapshot);return true
+      await restoreReadingPosition(snapshot);return true
     }catch(_){return false}
   }
   function getResume(){const saved=readResume();return saved?{...saved}:null}

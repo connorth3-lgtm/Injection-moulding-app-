@@ -35,7 +35,8 @@ for marker in [
     "module:material-families:atlas",
     "bookViewportTop()",
     "bindBookScrollRoot()",
-    "scrollBookBy(heading.getBoundingClientRect().top-desired)",
+    "scrollBookBy(delta)",
+    "mm:book-resume-restored",
     "scrollBookTo(snapshot.scrollY)",
 ]:
     need(marker in book,f"Book resume hardening missing: {marker}")
