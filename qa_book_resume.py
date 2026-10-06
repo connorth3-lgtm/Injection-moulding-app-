@@ -26,6 +26,7 @@ for marker in [
     "anchorText",
     "anchorOffset",
     "flushReadingPosition({notify:true})",
+    "window.addEventListener('click'",
     "window.addEventListener('pagehide'",
     "visibilityState==='hidden'",
     "clearResume()",
@@ -86,3 +87,5 @@ for marker in [
 print("Book Keep Reading QA passed: learner-scoped persistence, reliable flush/restore, stale-record containment, Home lifecycle safety and learner reset ownership.")
 
 need("start?.parentElement" not in book.split("function bookScrollRoot(){",1)[1].split("function isDocumentScrollRoot",1)[0],"Book scroll-root discovery must consider the reader element itself before its ancestors")
+
+need("document.addEventListener('click',event=>{const target=event.target?.closest?.('nav button,[data-view],[data-page]')" not in book,"Book navigation flush must run at window capture before downstream document handlers can hide the reader")
