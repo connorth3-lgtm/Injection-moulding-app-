@@ -1,6 +1,35 @@
 /* MouldMaster learner UX repair — 2026.09.06.13
    Mobile lessons keep one overview, one content flow and one completion path. */
 @media (max-width:760px){
+  #mmNonProductionPreviewWarning.mm-preview-boundary{
+    display:block!important;
+    width:auto!important;
+    min-width:0!important;
+    min-height:0!important;
+    height:auto!important;
+    max-height:none!important;
+    margin:0 0 5px!important;
+    padding:4px 7px!important;
+    border:1px solid rgba(246,196,83,.34)!important;
+    border-radius:8px!important;
+    background:rgba(63,46,13,.58)!important;
+    box-shadow:none!important;
+    color:#e8edf4!important;
+    font-size:9.5px!important;
+    font-weight:500!important;
+    line-height:1.12!important;
+    overflow-wrap:anywhere!important;
+  }
+  #mmNonProductionPreviewWarning.mm-preview-boundary strong{
+    display:inline!important;
+    margin:0 3px 0 0!important;
+    color:#fff3c4!important;
+    font-size:9.5px!important;
+    font-weight:800!important;
+    line-height:inherit!important;
+  }
+  #mmNonProductionPreviewWarning.mm-preview-boundary br{display:none!important}
+
   body[data-mm-view="lesson"] .main{
     padding-top:max(16px,env(safe-area-inset-top))!important;
     scroll-padding-top:max(16px,env(safe-area-inset-top))!important;
