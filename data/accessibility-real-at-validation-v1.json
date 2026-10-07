@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "release": "2026.10.07.9",
   "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.07.9.md",
-  "sourceSha": "a8b97341c1905906f45cf1c506dbac9c7911fcac",
-  "runtimeFingerprint": "sha256:554de8153cac8ae7c8a4b6b5b213faf796b5abd46e1e14b74d1172eadb7debb0",
+  "sourceSha": "de7001ecca4d1d27c0c8656669d493a60542f4e0",
+  "runtimeFingerprint": "sha256:cd7bd9673210a6feaf5cf6bc56e06b6adbcade25b18ac6cf389afc1c660e8db7",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.07.9 is bound to exact retained learner-runtime candidate a8b97341c1905906f45cf1c506dbac9c7911fcac; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.07.9 is bound to exact retained learner-runtime candidate de7001ecca4d1d27c0c8656669d493a60542f4e0; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
