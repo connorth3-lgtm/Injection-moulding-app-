@@ -137,7 +137,7 @@ button:active{transform:translateY(0)!important}
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--mm-accent)!important;outline-offset:2px!important}
 
 /* Surfaces */
-.card,.lesson-body,.lesson-side,.form-card,.output-panel,.exam-card,.scenario,.chat,.cert,.visual-wrap{
+.card:not(.mm-home-balance),.lesson-body,.lesson-side,.form-card,.output-panel,.exam-card,.scenario,.chat,.cert,.visual-wrap{
   border-color:var(--mm-border)!important;
   background:linear-gradient(180deg,rgba(16,32,50,.96),rgba(10,23,37,.975))!important;
   box-shadow:var(--mm-shadow-sm),inset 0 1px 0 rgba(255,255,255,.026)!important;
@@ -280,9 +280,6 @@ input:focus,select:focus,textarea:focus{border-color:#61d9c3!important;box-shado
 .mm-read-aloud,.mm-listening-shell,.mm-today-focus,.mm-specialist-strip{
   --mm-local-border:rgba(126,170,205,.18);
 }
-/* Home utility actions must remain visually subordinate even before the later
-   learner-polish stylesheet finishes loading in slower engines such as WebKit. */
-#dashboard .mm-home-balance{box-shadow:none!important}
 details>summary{border-radius:10px}
 
 /* Tablet */
