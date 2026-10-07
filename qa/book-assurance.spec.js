@@ -73,19 +73,31 @@ test('Book defers governed payloads and heavy material evidence until requested'
   await expect(page.locator('[data-mm-book-regional-row]')).toHaveCount(24);
 });
 
-test('Book open consumes governed-load rejection while remaining fail-closed',async({page})=>{
+test('Book open fails closed and governed retry can recover from a transient manifest error',async({page})=>{
   await page.addInitScript(()=>{
     window.__mmBookUnhandled=[];
     window.addEventListener('unhandledrejection',event=>window.__mmBookUnhandled.push(String(event.reason?.message||event.reason||'unknown')));
   });
-  await page.route('**/src/domains/learning/book-data/book-manifest-v1.json',route=>route.fulfill({status:503,contentType:'application/json',body:'{}'}));
+  let manifestAttempts=0;
+  await page.route('**/src/domains/learning/book-data/book-manifest-v1.json',async route=>{
+    manifestAttempts++;
+    if(manifestAttempts===1)return route.fulfill({status:503,contentType:'application/json',body:'{}'});
+    return route.continue();
+  });
   await openApp(page);
   await page.evaluate(()=>window.MMBook.open());
   await expect(page.locator('[data-mm-book-summary]')).toContainText('could not be verified');
-  await expect(page.locator('#mmBookView')).toContainText('Book unavailable');
+  await expect(page.locator('[data-mm-book-failure]')).toContainText('Book unavailable');
+  expect(await page.evaluate(()=>window.MMBook.getManifest())).toBeNull();
+  const retry=page.locator('[data-mm-book-retry]');
+  await expect(retry).toHaveText('Retry governed Book load');
+  await retry.click();
+  await page.waitForFunction(()=>Boolean(window.MMBook.getManifest()?.parts?.length));
+  await expect(page.locator('[data-mm-book-failure]')).toHaveCount(0);
+  await expect(page.locator('[data-mm-book-summary]')).toContainText('20 reader chapters');
+  expect(manifestAttempts).toBeGreaterThanOrEqual(2);
   await page.waitForTimeout(100);
   expect(await page.evaluate(()=>window.__mmBookUnhandled)).toEqual([]);
-  expect(await page.evaluate(()=>window.MMBook.getManifest())).toBeNull();
 });
 
 test('Cold global search finds exact-grade Book material chapter without loading regional Book evidence',async({page})=>{

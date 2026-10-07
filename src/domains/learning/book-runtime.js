@@ -440,7 +440,22 @@
     applyPublicationAuthorization(data,declared,auth);return data;
   }
   function failBook(error){
-    if(ui){ui.summary.textContent='Book manifest, governed content or publication authorization could not be verified. Technical content remains unavailable.';if(ui.smeStatus)ui.smeStatus.textContent='Independent human SME review: status unavailable — do not infer approval.';ui.parts.innerHTML='<section class="card"><h3>Book unavailable</h3><p>The governed Book release failed its runtime identity or exact-byte checks, so MouldMaster has failed closed.</p></section>';}
+    if(ui){
+      ui.summary.textContent='Book manifest, governed content or publication authorization could not be verified. Technical content remains unavailable.';
+      if(ui.smeStatus)ui.smeStatus.textContent='Independent human SME review: status unavailable — do not infer approval.';
+      ui.parts.replaceChildren();
+      const card=document.createElement('section');card.className='card';card.dataset.mmBookFailure='1';
+      const title=document.createElement('h3');title.textContent='Book unavailable';
+      const copy=document.createElement('p');copy.textContent='The governed Book release failed its runtime identity or exact-byte checks, so MouldMaster has failed closed.';
+      const retry=document.createElement('button');retry.type='button';retry.className='ghost';retry.dataset.mmBookRetry='1';retry.textContent='Retry governed Book load';
+      retry.addEventListener('click',()=>{
+        retry.disabled=true;retry.textContent='Retrying governed Book load…';
+        void ensureManifest().catch(()=>{}).finally(()=>{
+          if(retry.isConnected){retry.disabled=false;retry.textContent='Retry governed Book load';}
+        });
+      });
+      card.append(title,copy,retry);ui.parts.appendChild(card);
+    }
     console.error('MouldMaster Book:',error);
   }
   async function ensureManifest(){

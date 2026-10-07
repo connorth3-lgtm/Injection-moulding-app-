@@ -113,15 +113,18 @@ for name in book_data:
 need((ROOT / 'data/asian-aus-nz-material-grade-extraction-wave2-v1.json').read_bytes() == (PACKAGED_ROOT / 'book-material-regional-evidence-v1.json').read_bytes(), 'packaged regional Book material evidence drifted from governed source wave')
 
 # One canonical Book implementation: the legacy root path is now only a stable compatibility loader.
-need("script.src='./src/domains/learning/book-runtime.js'" in compat_loader, 'root Book compatibility loader must delegate to canonical packaged runtime')
+need("script.src=runtimeScriptUrl('./src/domains/learning/book-runtime.js')" in compat_loader, 'root Book compatibility loader must delegate to canonical packaged runtime through explicit release versioning')
 for forbidden in ("const AUTH_PATH='./data/", 'function showChapter(', 'function verifiedChapterHtml('):
     need(forbidden not in compat_loader, f'root Book path still contains a second implementation: {forbidden}')
-need("script.src='./book-runtime.js'" in learning_pack, 'learning foundation must still reach the compatibility loader')
-need(index.index('learning-foundation-runtime-pack.js') < index.index('shell-finalization-runtime-pack.js'), 'release script versioner must install before packed app-shell dynamic loaders execute')
-
-# Every dynamically created same-origin script after the compatibility loader gets the current shell release query.
-for marker in ('__MM_RELEASE_SCRIPT_VERSIONER__', 'HTMLScriptElement', 'versionScriptUrl', "url.searchParams.set('v',release)"):
-    need(marker in compat_loader, f'dynamic release-versioning safeguard missing: {marker}')
+need("window.MM_RUNTIME_SCRIPT_URL?.('./book-runtime.js')||'./book-runtime.js'" in learning_pack, 'learning foundation must reach the compatibility loader through the explicit release-version helper')
+# Bootstrap-owned explicit release versioning replaces the former global
+# HTMLScriptElement prototype interception.
+for marker in ('function runtimeScriptUrl(value)', 'window.MM_RUNTIME_SCRIPT_URL=runtimeScriptUrl', "url.searchParams.set('v',version)"):
+    need(marker in index, f'explicit runtime script release-version helper missing: {marker}')
+need(index.index('window.MM_RUNTIME_SCRIPT_URL=runtimeScriptUrl') < index.index('await installDocument(html)'), 'runtime script release-version helper must exist before governed runtime execution')
+need("window.MM_RUNTIME_SCRIPT_URL" in compat_loader and "runtimeScriptUrl('./src/domains/learning/book-runtime.js')" in compat_loader, 'Book compatibility loader must use explicit runtime script versioning')
+for forbidden in ('__MM_RELEASE_SCRIPT_VERSIONER__', 'HTMLScriptElement', "Object.defineProperty(proto,'src'"):
+    need(forbidden not in compat_loader, f'Book compatibility loader must not globally intercept script loading: {forbidden}')
 
 # Canonical DOI/publisher links replace intermediary academic-discovery links in learner-facing Book surfaces.
 canonical_links = {
@@ -207,6 +210,7 @@ search_block = book_runtime.split('function searchBook(query){',1)[1].split('asy
 need("JSON.stringify(row)" not in search_block, 'Book material search must not re-serialize all regional evidence rows on every query')
 need("materialSearchIndex.regional.some" in search_block, 'Book material search must query the precomputed regional evidence index')
 need("void ensureManifest().catch(()=>{})" in book_runtime, 'Book open must consume the controlled fail-closed manifest rejection')
+need("retry.dataset.mmBookRetry='1'" in book_runtime and "Retry governed Book load" in book_runtime and "void ensureManifest().catch(()=>{}).finally" in book_runtime, 'Book fail-closed state must offer a governed retry that re-runs exact manifest/authorization verification')
 need("async function coldMaterialSearchTerms()" in book_runtime and "verifiedJson(MATERIAL_SEARCH_INDEX_PATH,MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1)" in book_runtime, 'Book cold material discovery must use the exact-byte-pinned lightweight search index')
 need("async function coldMaterialHit(query)" in book_runtime, 'Book global search must support cold canonical and regional material discovery')
 need("counts.canonicalExactGrades!==260" in book_runtime and "counts.regionalEvidenceRows!==284" in book_runtime and "counts.total!==544" in book_runtime, 'Book cold search index must fail closed on coverage drift')
