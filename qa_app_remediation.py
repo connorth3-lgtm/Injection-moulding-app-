@@ -212,7 +212,13 @@ for marker in (
 # Browser matrix and lifecycle regression coverage.
 for marker in ("chromium firefox webkit", "playwright.cross-browser.config.cjs"):
     need(marker in mobile, f"browser-matrix QA coverage missing: {marker}")
-need("npx playwright test --config=playwright.config.cjs" in mobile, "full Chromium regression suite is not executed")
+need("npx playwright test --config=playwright.substantive.config.cjs" in mobile, "full substantive Chromium regression suite is not executed")
+chromium_substantive=text("playwright.substantive.config.cjs")
+chromium_config=text("playwright.config.cjs")
+need("require('./playwright.config.cjs')" in chromium_substantive, "Chromium substantive suite must inherit the full regression configuration")
+need(r"testIgnore:/visual-regression\.spec\.js/" in chromium_substantive, "Chromium substantive suite must exclude only the separate immutable visual lock")
+need("engineering-case-store\\.spec\\.js" in chromium_config and "book-resume\\.spec\\.js" in chromium_config, "substantive Chromium regression coverage must retain engineering-store and Book-resume specs")
+need("npx playwright test qa/visual-regression.spec.js --config=playwright.config.cjs" in mobile, "separately hosted immutable visual suite must remain enforced")
 for spec in ("qa/pwa-lifecycle.spec.js", "qa/cross-browser-smoke.spec.js"):
     need((ROOT / spec).exists(), f"browser-matrix QA spec missing: {spec}")
 cross = text("playwright.cross-browser.config.cjs")
