@@ -59,6 +59,15 @@
     ];    const CORE_RUNTIME_PRELOADS=Object.freeze(Array.from({length:10},(_v,index)=>`./src/core-runtime/core-inline-${String(index+1).padStart(3,'0')}.js`));
     const DOMAIN_DELEGATED_ASSETS=['./learning-analytics.js','./src/domains/shell/accessibility-hardening.js'];
     const closeScript='</scr'+'ipt>';
+    function runtimeScriptUrl(value){
+      const raw=String(value||'');if(!raw)return raw;
+      const version=String(window.MM_RUNTIME_ASSET_VERSION||RUNTIME_ASSET_VERSION||'').trim();if(!version)return raw;
+      let url;try{url=new URL(raw,location.href)}catch(_){return raw}
+      if(url.origin!==location.origin||!url.pathname.endsWith('.js'))return raw;
+      if(!url.searchParams.has('v'))url.searchParams.set('v',version);
+      return url.href;
+    }
+    window.MM_RUNTIME_SCRIPT_URL=runtimeScriptUrl;
     function versionMarkup(markup){return String(markup).replace(/(src|href)="(\.\/[^"?]+)(?:\?[^" ]*)?"/g,(_m,attr,url)=>`${attr}="${url}?v=${RUNTIME_ASSET_VERSION}"`)}
     function preloadStartupScript(src){const href=`${src}?v=${RUNTIME_ASSET_VERSION}`;if(document.querySelector(`link[data-mm-startup-preload][href="${href}"]`))return;const link=document.createElement('link');link.rel='preload';link.as='script';link.href=href;link.dataset.mmStartupPreload='1';document.head.appendChild(link)}
     function preloadStartupScripts(){const seen=new Set();for(const src of [...CORE_RUNTIME_PRELOADS,...BODY_SCRIPTS.map(row=>row[0])]){if(seen.has(src))continue;seen.add(src);preloadStartupScript(src)}}
