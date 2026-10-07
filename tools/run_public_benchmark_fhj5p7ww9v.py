@@ -9,11 +9,13 @@ import urllib.request
 from pathlib import Path
 import pandas as pd
 from openpyxl import load_workbook
+from prove_mendeley_open_sources import materialize_exact_file
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT = ROOT / "data/public-benchmark-contracts/fhj5p7ww9v-v1.json"
 DATASET_ID = "fhj5p7ww9v"
 VERSION = 1
+EXPECTED_FILE_ID = "4bc98915-bc6b-415c-bc4a-dfb34c75a7f1"
 PUBLIC_FILES_ENDPOINT = f"https://data.mendeley.com/public-api/datasets/{DATASET_ID}/files?folder_id=root&version={VERSION}"
 API_ROOT = "https://api.data.mendeley.com"
 UA = "MouldMaster-Educational-Evidence-Profiler/1.0"
@@ -132,18 +134,16 @@ def main():
     args = ap.parse_args()
     contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
 
-    raw, _ = get(PUBLIC_FILES_ENDPOINT, "application/json")
-    files = flatten_files(json.loads(raw.decode("utf-8")))
     expected = contract["source"]["expectedPublisherFile"]
-    matches = [x for x in files if file_name(x) == expected]
-    if len(matches) != 1:
-        raise RuntimeError(f"expected exactly one {expected!r}; found {[file_name(x) for x in files]}")
-    item = matches[0]
-    url = file_url(item)
-    if not url:
-        raise RuntimeError("publisher file has no download route")
-    data, final_url = get(url)
-    digest = hashlib.sha256(data).hexdigest()
+    expected_sha = str(contract["source"]["acceptedPublisherSha256"]).lower()
+    source_path,digest_uri=materialize_exact_file(
+        DATASET_ID,VERSION,EXPECTED_FILE_ID,expected,expected_sha
+    )
+    data=source_path.read_bytes()
+    digest=digest_uri.split(":",1)[1]
+    final_url="job-local-sha-verified-cache"
+    if digest != expected_sha:
+        raise RuntimeError(f"restricted publisher file SHA-256 drifted: {digest}")
 
     with tempfile.TemporaryDirectory() as td:
         path = Path(td) / "source.xlsx"
@@ -165,8 +165,7 @@ def main():
             total_columns += int(len(df.columns))
             profiles.append({"sheet": ws.title, "rows": int(len(df)), "columns": int(len(df.columns)), "layout": layout})
 
-    details = item.get("content_details") or item.get("contentDetails") or {}
-    publisher_sha = details.get("sha256_hash") or details.get("sha256Hash")
+    publisher_sha = expected_sha
     recognized = recognized_sheets == 3 and total_direct == 96
     status = "completed-restricted-noncommercial-measured-benchmark" if recognized else "retrieved-profile-needs-semantic-review"
     result = {
@@ -178,9 +177,9 @@ def main():
             "datasetDoi": contract["source"]["datasetDoi"],
             "version": VERSION,
             "license": contract["source"]["license"],
-            "publisherFileId": file_id(item),
+            "publisherFileId": EXPECTED_FILE_ID,
             "publisherFileName": expected,
-            "publisherReportedSizeBytes": details.get("size") if details.get("size") is not None else item.get("size"),
+            "publisherReportedSizeBytes": None,
             "publisherSha256": publisher_sha,
             "retrievedSizeBytes": len(data),
             "sha256": digest,
