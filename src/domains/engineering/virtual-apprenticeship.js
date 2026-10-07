@@ -261,14 +261,6 @@ function renderResult(){
   for(const key of STEP_KEYS){const el=byId(`mmVaFeedback-${key}`);if(el)el.textContent=result.dimensions[key].feedback}
 }
 function resetCase(){state.answers={};state.checked=false;renderCase()}
-function openCase(index){
-  state.caseIndex=Math.max(0,Math.min(CASES.length-1,Number(index)||0));
-  state.answers={};state.checked=false;
-  if(typeof window.switchView==='function')window.switchView('simulator');
-  install();renderCase();
-  requestAnimationFrame(()=>{try{byId('mmVirtualApprenticeship')?.scrollIntoView?.({block:'start',behavior:'smooth'})}catch(_){}});
-  return true;
-}
 function openCase(index=0){
   state.caseIndex=Math.max(0,Math.min(CASES.length-1,Number(index)||0));state.answers={};state.checked=false;
   try{window.MM_SPATIAL_TWIN?.close?.()}catch(_){}
