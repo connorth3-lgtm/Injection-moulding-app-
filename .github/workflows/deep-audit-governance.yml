@@ -89,6 +89,7 @@ jobs:
         run: |
           node qa_engineering_domain.mjs
           node qa_engineer_simulator_units.cjs
+          node qa_virtual_apprenticeship.cjs
 
       - name: Boundary
         if: always()

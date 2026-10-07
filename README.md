@@ -17,7 +17,7 @@ The project maintainers do not intend to seek patent protection over implementat
 
 ## Current release lanes
 
-- PWA / browser shell: `2026.10.08.1`
+- PWA / browser shell: `2026.10.08.2`
 - Open Windows desktop: `2026.09.29.1`
 - Android lane: `2026.08.26.2`
 - Training content: `2026.08.26.1`
@@ -50,6 +50,10 @@ All 30 technical exam items now use evidence-based reasoning rather than pure de
 Assessment quality controls include stable question IDs, a competency-balanced formative blueprint, difficulty labels, duplicate/answer-cue QA, per-question evidence/revision information and device-local analytics. A future high-stakes or externally recognised summative assessment requires a separate adequately sampled blueprint, real-response psychometric analysis, cut-score justification, independent moderation and practical/workplace evidence where competence is claimed. Analytics are scoped to the active learner profile. Question-performance analytics and response-timing analytics are not uploaded by MouldMaster; they can be reset locally and are deliberately excluded from progress backups.
 
 All 157 keyed learner questions across exams, scenarios, Diagnostic Learning Labs and Material Behaviour Labs are covered by the evidence-approval gate in this feature revision. Unmatched technical topics fail closed rather than inheriting a generic source; mapped evidence must support the actual mechanism or method being assessed. The 24 Material Behaviour Lab decisions use explicit source IDs and question/choice fingerprints rather than generic topic fallback.
+
+## Virtual apprenticeship
+
+The `2026.10.08.2` browser candidate adds an evidence-first **Virtual Apprenticeship** inside the process simulator. Six authored shop-floor investigations span fill drift, cavity imbalance, cooling-intervention dimensional change, gate-seal reasoning, end-of-fill burn evidence and conflicting pressure-signal semantics. Learners work through **observation → mechanism → discriminating next evidence → controlled response → verification** with Beginner, Developing and Advanced coaching modes. Progress is learner-scoped through the canonical Runtime V2 storage boundary. Authored case directions can be loaded into the existing relative simulator, but they are explicitly training states rather than validated machine physics, production recipes or machine-control authority.
 
 ## Material Behaviour Labs
 
