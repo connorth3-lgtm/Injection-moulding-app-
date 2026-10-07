@@ -152,6 +152,10 @@ test('product hierarchy keeps Home focused and Materials catalogue dense',async(
   const utilities=page.locator('#dashboard .mm-home-balance');
   await expect(focus).toBeVisible();
   await expect(utilities).toBeVisible();
+  await expect.poll(
+    async()=>utilities.evaluate(el=>getComputedStyle(el).boxShadow),
+    {timeout:10000,message:'Home utility card must settle to the governed subordinate no-shadow hierarchy'}
+  ).toBe('none');
   const hierarchy=await page.evaluate(()=>({
     focusShadow:getComputedStyle(document.querySelector('#dashboard .mm-today-focus')).boxShadow,
     utilityShadow:getComputedStyle(document.querySelector('#dashboard .mm-home-balance')).boxShadow
