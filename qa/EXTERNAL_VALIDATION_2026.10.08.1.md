@@ -3,13 +3,13 @@
 Release `2026.10.08.1` is technically automated; native main governance is **enforced** under the verified solo-maintainer ruleset, and all external workstreams remain explicit **HOLD**. This index does not create external evidence.
 
 ## Exact current candidate
-- pre-merge candidate source: `5fc6e2e17f682efc4697f183ffbc2c32071e1caa`
-- exact public-runtime fingerprint: `sha256:21780f8a2aa978862e7860b28ae2d6d32d2d7a1513310489f35834d6e71663a9`
-- candidate build run: `37673035621` (**Pre-merge Public Candidate**)
-- retained physical candidate: `physical-pwa-candidate-5fc6e2e17f682efc4697f183ffbc2c32071e1caa`
-- artifact id: `11504704568`
-- artifact ZIP digest: `sha256:003ad8d0f81f98b0c7d82fd8a45487e6db2133e73be9cabacd04c23825a7dbdc`
-- artifact retention expiry: `2027-01-05T19:14:59Z`
+- pre-merge candidate source: `641a28f3d8ddbdd71e87327e49472a0a53d3df23`
+- exact public-runtime fingerprint: `sha256:8c5e089a799d91c8d586ec845860539a55a2dba25030589c647c0df5a6b783f2`
+- candidate build run: `37691208537` (**Pre-merge Public Candidate**)
+- retained physical candidate: `physical-pwa-candidate-641a28f3d8ddbdd71e87327e49472a0a53d3df23`
+- artifact id: `11513846018`
+- artifact ZIP digest: `sha256:60bde32574999428572cca2d98e82520b02337f52e43db51d8a5c74c45b7117b`
+- artifact retention expiry: `2027-01-05T21:41:46Z`
 
 This is a release-boundary **rebind**, not external evidence. Mutable `preview` is not evidence authority.
 
