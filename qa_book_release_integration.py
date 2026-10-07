@@ -113,10 +113,10 @@ for name in book_data:
 need((ROOT / 'data/asian-aus-nz-material-grade-extraction-wave2-v1.json').read_bytes() == (PACKAGED_ROOT / 'book-material-regional-evidence-v1.json').read_bytes(), 'packaged regional Book material evidence drifted from governed source wave')
 
 # One canonical Book implementation: the legacy root path is now only a stable compatibility loader.
-need("script.src='./src/domains/learning/book-runtime.js'" in compat_loader, 'root Book compatibility loader must delegate to canonical packaged runtime')
+need("script.src=runtimeScriptUrl('./src/domains/learning/book-runtime.js')" in compat_loader, 'root Book compatibility loader must delegate to canonical packaged runtime through explicit release versioning')
 for forbidden in ("const AUTH_PATH='./data/", 'function showChapter(', 'function verifiedChapterHtml('):
     need(forbidden not in compat_loader, f'root Book path still contains a second implementation: {forbidden}')
-need("script.src='./book-runtime.js'" in learning_pack, 'learning foundation must still reach the compatibility loader')
+need("window.MM_RUNTIME_SCRIPT_URL?.('./book-runtime.js')||'./book-runtime.js'" in learning_pack, 'learning foundation must reach the compatibility loader through the explicit release-version helper')
 # Bootstrap-owned explicit release versioning replaces the former global
 # HTMLScriptElement prototype interception.
 for marker in ('function runtimeScriptUrl(value)', 'window.MM_RUNTIME_SCRIPT_URL=runtimeScriptUrl', "url.searchParams.set('v',version)"):
