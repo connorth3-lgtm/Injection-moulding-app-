@@ -2,9 +2,9 @@
 
 Release `2026.10.08.2` has a repository-controlled readiness layer, but external provider/NZQA validation remains **HOLD**.
 
-- retained source: `98fc14d7e52d602fd01ea7f72b05c567fa0655eb`
-- runtime fingerprint: `sha256:0943b9b963b290276f9d74b8d5b6bf3ab45cbe158996bf6e1278267a30af6800`
-- candidate authority: retained exact-head artifact from run `37697344352`
+- retained source: `a98e3d3ed4f7e75a340549267c722105727b7dce`
+- runtime fingerprint: `sha256:ed5dbb6a7b96c313074d4f9ecef55c77ec073dbb24d9d8b9e16b0790c2488892`
+- candidate authority: retained exact-head artifact from run `37700070989`
 - readiness contract: `data/nzqa-education-readiness-v1.json`
 - provider templates: `data/nzqa-provider-evidence-templates-v1.json`
 
