@@ -51,6 +51,10 @@ Assessment quality controls include stable question IDs, a competency-balanced f
 
 All 157 keyed learner questions across exams, scenarios, Diagnostic Learning Labs and Material Behaviour Labs are covered by the evidence-approval gate in this feature revision. Unmatched technical topics fail closed rather than inheriting a generic source; mapped evidence must support the actual mechanism or method being assessed. The 24 Material Behaviour Lab decisions use explicit source IDs and question/choice fingerprints rather than generic topic fallback.
 
+## Virtual apprenticeship
+
+The `2026.10.08.2` browser candidate adds an evidence-first **Virtual Apprenticeship** inside the process simulator. Six authored shop-floor investigations span fill drift, cavity imbalance, cooling-intervention dimensional change, gate-seal reasoning, end-of-fill burn evidence and conflicting pressure-signal semantics. Learners work through **observation → mechanism → discriminating next evidence → controlled response → verification** with Beginner, Developing and Advanced coaching modes. Progress is learner-scoped through the canonical Runtime V2 storage boundary. Authored case directions can be loaded into the existing relative simulator, but they are explicitly training states rather than validated machine physics, production recipes or machine-control authority.
+
 ## Material Behaviour Labs
 
 Six material-specific practice labs turn resin/reference knowledge into evidence-first decisions: PP versus PC handling, wet versus verified-dry PC, PA66-GF30 drying/conditioning and anisotropy, ABS thermal history, POM degradation/contamination safety, and recycled-PP lot/rheology variability. Each lab uses Observe → Best next test → Controlled response → Explain and is explicitly scenario-specific education rather than a universal production recipe.
