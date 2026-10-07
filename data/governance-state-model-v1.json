@@ -321,7 +321,7 @@
     "nzqaProviderValidation": "hold",
     "productionAuthority": "advisory-only",
     "desktopReleaseImmutability": "hold",
-    "repositoryGovernance": "pending-native-ruleset-apply"
+    "repositoryGovernance": "enforced"
   },
   "userFacingLabels": {
     "evidenceMaturity": {
