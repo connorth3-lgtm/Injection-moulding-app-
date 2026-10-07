@@ -346,7 +346,14 @@ function defectCard(d,i){return `<div class="card defect-card" data-defect="${es
 function filterDefects(){const q=$("#defectSearch").value.toLowerCase();$$("[data-defect]").forEach(x=>x.classList.toggle("hidden",!x.dataset.defect.includes(q)))}
 function openDefect(i){
  const d=D.defects[i];
- openModal(`<span class="eyebrow">Defect lab</span><h2>${esc(d.name)}</h2><p class="muted">${esc(d.symptom)}</p><div class="grid2"><div><h3>Likely mechanisms</h3><div class="cause-list">${d.mechanisms.map(x=>`<div class="cause">${esc(x)}</div>`).join("")}</div></div><div><h3>Evidence / checks</h3><div class="cause-list">${d.checks.map(x=>`<div class="cause">${esc(x)}</div>`).join("")}</div></div></div><div class="callout"><b>Best practice:</b> rank mechanisms by evidence, then run the smallest controlled test that distinguishes between them.</div><button class="primary" data-mm-onclick="closeModal();switchView('coach');setCoachPrompt('${esc(d.name).replace(/'/g,"\\'")}')">Ask coach about ${esc(d.name)}</button>`);
+ openModal(`<span class="eyebrow">Defect lab</span><h2>${esc(d.name)}</h2><p class="muted">${esc(d.symptom)}</p><div class="grid2"><div><h3>Likely mechanisms</h3><div class="cause-list">${d.mechanisms.map(x=>`<div class="cause">${esc(x)}</div>`).join("")}</div></div><div><h3>Evidence / checks</h3><div class="cause-list">${d.checks.map(x=>`<div class="cause">${esc(x)}</div>`).join("")}</div></div></div><div class="callout"><b>Best practice:</b> rank mechanisms by evidence, then run the smallest controlled test that distinguishes between them.</div><button class="primary" data-mm-onclick="askCoachForDefect(${i})">Ask coach about ${esc(d.name)}</button>`);
+}
+function askCoachForDefect(i){
+ const d=D.defects[i];
+ if(!d)return;
+ closeModal();
+ switchView("coach");
+ setCoachPrompt(String(d.name||""));
 }
 
 function renderScenarios(){
