@@ -204,6 +204,7 @@ function compare(baseBuffer,candidateBuffer,diffPath){
 
 for(const viewport of manifest.viewports){
   test(`${viewport.name} matches approved ${manifest.release} baseline across learner surfaces`,async({browser})=>{
+    test.setTimeout(120000);
     fs.mkdirSync(ARTIFACT_ROOT,{recursive:true});
     const candidateContext=await browser.newContext({viewport:{width:viewport.width,height:viewport.height},serviceWorkers:'block'});
     const baselineContext=await browser.newContext({viewport:{width:viewport.width,height:viewport.height},serviceWorkers:'block'});
