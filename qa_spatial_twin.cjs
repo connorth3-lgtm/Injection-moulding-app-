@@ -34,7 +34,7 @@ for(const id of ['VA-01','VA-02','VA-03','VA-04','VA-05','VA-06']){
 }
 assert.match(api.boundary,/no validated machine-physics/i);
 assert.match(api.boundary,/production-setting/i);
-assert.match(api.boundary,/machine-control/i);
+assert.match(api.boundary,/control authority over production equipment/i);
 
 const source=fs.readFileSync(path.join(__dirname,'src/domains/engineering/spatial-twin.js'),'utf8');
 for(const marker of [
