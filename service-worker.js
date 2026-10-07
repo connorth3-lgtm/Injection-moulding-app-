@@ -53,8 +53,6 @@ const CORE=[
   './src/domains/engineering/engineer-simulator-ui.js',
   './src/domains/engineering/virtual-apprenticeship.js',
   './src/domains/engineering/spatial-twin.js',
-  './src/domains/engineering/spatial-twin.css',
-  './src/domains/engineering/spatial-twin.js',
   './src/domains/governance/standards-readiness.js',
   './src/domains/learning/learning-analytics-loader.js',
   './src/domains/learning/activity-events-v2.js',
