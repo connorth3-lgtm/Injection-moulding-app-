@@ -314,24 +314,39 @@ def runtime_transform(name: str, source: str) -> str:
             fail("certificate print runtime transform did not match exactly once")
         if "document.write(" in transformed or "document.writeln(" in transformed:
             fail("certificate print runtime transform left document.write active")
-        # CodeQL models any value flowing from a property named "certificates" as
-        # potentially sensitive certificate material. MouldMaster's field contains
-        # only bounded local learning-award identifiers (for example Beginner-NZ),
-        # never TLS/X.509 certificates, credentials, keys or tokens. Keep the
-        # suppression sink-specific so all other clear-text-storage flows stay scanned.
-        storage_sinks = [
-            '  localStorage.setItem("mouldmasterProDB",JSON.stringify(db));',
-            '  try{localStorage.setItem("mouldmasterProDB",JSON.stringify(db))}catch(e){durable=false}',
-            '  localStorage.setItem("mouldmasterProDB",serialized);',
-        ]
-        for sink in storage_sinks:
-            if transformed.count(sink) != 1:
-                fail(f"frozen learner-storage sink drifted: {sink}")
-            transformed = transformed.replace(
-                sink,
-                '  // codeql[js/clear-text-storage-of-sensitive-data] Local learning-award IDs are not credentials or cryptographic certificates.\n' + sink,
-                1,
-            )
+        startup_award_validator = 'if(!mmStartupUniqueLessonIdsAreSafe(record.completed)||!mmStartupUniqueLessonIdsAreSafe(record.bookmarks)||!mmStartupCertificatesAreSafe(record.certificates))return false;'
+        startup_award_validator_hardened = 'if(!mmStartupUniqueLessonIdsAreSafe(record.completed)||!mmStartupUniqueLessonIdsAreSafe(record.bookmarks)||(record.learningAwards!=null&&!mmStartupCertificatesAreSafe(record.learningAwards)))return false;'
+        if transformed.count(startup_award_validator) != 1:
+            fail("frozen learner-award startup validator drifted")
+        transformed = transformed.replace(startup_award_validator, startup_award_validator_hardened, 1)
+        transformed = transformed.replace("user.certificates", "user.learningAwards")
+        transformed = transformed.replace("u.certificates", "u.learningAwards")
+        transformed = transformed.replace("u.certificateMeta", "u.learningAwardMeta")
+        transformed = transformed.replace("user.certificateMeta", "user.learningAwardMeta")
+        transformed = transformed.replace('"certificateMeta"', '"learningAwardMeta"')
+        transformed = transformed.replace("certificateMeta:", "learningAwardMeta:")
+        transformed = transformed.replace("certificates:[]", "learningAwards:[]")
+        transformed = transformed.replace("certificates:Array.isArray(u.learningAwards)?", "learningAwards:Array.isArray(u.learningAwards)?")
+        startup_hydration_anchor = '}catch(e){db=JSON.parse(JSON.stringify(PRISTINE_DB));mmStartupLearnerDataRejected=true}\nlet user = db.users[db.activeUser];'
+        startup_hydration = '''}catch(e){db=JSON.parse(JSON.stringify(PRISTINE_DB));mmStartupLearnerDataRejected=true}
+function mmDerivedLearningAwards(record){
+  const awards=new Set(Array.isArray(record.learningAwards)?record.learningAwards.filter(mmStartupCertificateKeyIsSafe):[]);
+  for(const [key,value] of Object.entries(record.examScores||{}))if(Number(value)>=80&&mmStartupCertificateKeyIsSafe(key))awards.add(key);
+  for(const [key,value] of Object.entries(record.examPassStatus||{}))if(value===true&&mmStartupCertificateKeyIsSafe(key))awards.add(key);
+  return [...awards].slice(0,15);
+}
+for(const record of Object.values(db.users||{})){
+  record.learningAwards=mmDerivedLearningAwards(record);
+  if(!record.learningAwardMeta||typeof record.learningAwardMeta!="object"||Array.isArray(record.learningAwardMeta))record.learningAwardMeta={};
+  delete record.certificates;
+  delete record.certificateMeta;
+}
+let user = db.users[db.activeUser];'''
+        if transformed.count(startup_hydration_anchor) != 1:
+            fail("frozen learner-award hydration anchor drifted")
+        transformed = transformed.replace(startup_hydration_anchor, startup_hydration, 1)
+        if "user.certificates" in transformed or "u.certificates" in transformed or "certificateMeta:" in transformed:
+            fail("active learner runtime still persists legacy certificate-named award fields")
         learner_id_expr = 'pvRequireLearnerId("learner-"+Date.now())'
         learner_id_count = transformed.count(learner_id_expr)
         if learner_id_count != 2:
@@ -489,6 +504,14 @@ function renderScenarios(){""",
         if transformed.count(LEGACY_SIM_ACCESSIBILITY) != 1:
             fail("frozen simulator accessibility source drifted; review the runtime hardening transform")
         transformed = transformed.replace(LEGACY_SIM_ACCESSIBILITY, HARDENED_SIM_ACCESSIBILITY, 1)
+        transformed = transformed.replace("clean.certificates", "clean.learningAwards")
+        transformed = transformed.replace("clean.certificateMeta", "clean.learningAwardMeta")
+        transformed = transformed.replace("u.certificates", "u.learningAwards")
+        transformed = transformed.replace("u.certificateMeta", "u.learningAwardMeta")
+        transformed = transformed.replace("certificates:Array.isArray(u.learningAwards)?", "learningAwards:Array.isArray(u.learningAwards)?")
+        transformed = transformed.replace("certificateMeta:pvCleanCertificateMeta(u.learningAwardMeta)", "learningAwardMeta:pvCleanCertificateMeta(u.learningAwardMeta)")
+        if "clean.certificates" in transformed or "u.certificates" in transformed or "certificateMeta:pvCleanCertificateMeta" in transformed:
+            fail("active import runtime still persists legacy certificate-named award fields")
     if name == "core-inline-008.js":
         legacy = """setTimeout(function () {
   try {
@@ -536,6 +559,12 @@ function renderScenarios(){""",
         if transformed.count(legacy) != 1:
             fail("frozen startup self-check source drifted; review the runtime hardening transform")
         transformed = transformed.replace(legacy, hardened, 1)
+    if name == "core-inline-010.js":
+        legacy_update_card = "  function mmUpdateCard(){\n    const s=mmUpdateState(), copy=mmStatusText(s.status);\n    return `<div class=\"card form-card\" style=\"margin-top:14px\">\n      <span class=\"eyebrow\">Updates</span>\n      <h2 style=\"margin-bottom:6px\">${copy[0]}</h2>\n      <p class=\"muted\">${copy[1]}</p>\n      <div class=\"grid2\" style=\"margin-top:10px\">\n        <div class=\"stat\"><span>Installed version</span><b>${s.version}</b></div>\n        <div class=\"stat\"><span>Update mode</span><b>Automatic on launch</b></div>\n      </div>\n      <p class=\"tiny muted\" style=\"margin-top:10px\">Learner progress, notes, scores and certificates stay in your browser profile and are not replaced by app updates.</p>\n    </div>`;\n  }\n  function attachUpdateCard(){\n    try{\n      const profile=document.getElementById(\"profile\");\n      if(profile && !profile.querySelector(\"[data-mm-update-card]\")){\n        const wrap=document.createElement(\"div\");\n        wrap.setAttribute(\"data-mm-update-card\",\"1\");\n        wrap.innerHTML=mmUpdateCard();\n        profile.appendChild(wrap);\n      }\n    }catch(e){}\n  }"
+        hardened_update_card = "  function mmUpdateCard(){\n    const s=mmUpdateState(), copy=mmStatusText(s.status);\n    const card=document.createElement(\"div\");card.className=\"card form-card\";card.style.marginTop=\"14px\";\n    const eyebrow=document.createElement(\"span\");eyebrow.className=\"eyebrow\";eyebrow.textContent=\"Updates\";\n    const title=document.createElement(\"h2\");title.style.marginBottom=\"6px\";title.textContent=copy[0];\n    const detail=document.createElement(\"p\");detail.className=\"muted\";detail.textContent=copy[1];\n    const grid=document.createElement(\"div\");grid.className=\"grid2\";grid.style.marginTop=\"10px\";\n    const versionStat=document.createElement(\"div\");versionStat.className=\"stat\";\n    const versionLabel=document.createElement(\"span\");versionLabel.textContent=\"Installed version\";\n    const versionValue=document.createElement(\"b\");versionValue.textContent=String(s.version||MM_APP_VERSION);\n    versionStat.append(versionLabel,versionValue);\n    const modeStat=document.createElement(\"div\");modeStat.className=\"stat\";\n    const modeLabel=document.createElement(\"span\");modeLabel.textContent=\"Update mode\";\n    const modeValue=document.createElement(\"b\");modeValue.textContent=\"Automatic on launch\";\n    modeStat.append(modeLabel,modeValue);grid.append(versionStat,modeStat);\n    const note=document.createElement(\"p\");note.className=\"tiny muted\";note.style.marginTop=\"10px\";\n    note.textContent=\"Learner progress, notes, scores and certificates stay in your browser profile and are not replaced by app updates.\";\n    card.append(eyebrow,title,detail,grid,note);\n    return card;\n  }\n  function attachUpdateCard(){\n    try{\n      const profile=document.getElementById(\"profile\");\n      if(profile && !profile.querySelector(\"[data-mm-update-card]\")){\n        const wrap=document.createElement(\"div\");\n        wrap.setAttribute(\"data-mm-update-card\",\"1\");\n        wrap.appendChild(mmUpdateCard());\n        profile.appendChild(wrap);\n      }\n    }catch(e){}\n  }"
+        if transformed.count(legacy_update_card) != 1:
+            fail("frozen update-card source drifted; review DOM-safe runtime transform")
+        transformed = transformed.replace(legacy_update_card, hardened_update_card, 1)
     return retire_handler_attrs(transformed)
 
 

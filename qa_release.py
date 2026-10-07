@@ -226,8 +226,8 @@ bridge = text("src/domains/learning/training-qa-fix.js")
 for marker in [
     "file.size>10*1024*1024",
     "clean.id=sid",
-    "clean.certificates=[]",
-    "clean.certificateMeta={}",
+    "clean.learningAwards=[]",
+    "clean.learningAwardMeta={}",
     "clean.examPassStatus={}",
     "restoreSnapshot(before)",
     "function trainingDestinationKey(base,learnerId)",

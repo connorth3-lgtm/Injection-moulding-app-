@@ -211,7 +211,7 @@ window.importData=function(file){
     const sid=canonicalLearnerId(id),clean=normaliseImportedUser(u,sid);
     if(hasOwnLearner(users,sid))throw new Error('Invalid or duplicate learner identifier');
     if(u?.id!=null&&canonicalLearnerId(u.id)!==sid)throw new Error('Learner identifier mismatch');
-    clean.id=sid;clean.certificates=[];clean.certificateMeta={};clean.examPassStatus={};users[sid]=clean
+    clean.id=sid;clean.learningAwards=[];clean.learningAwardMeta={};clean.examPassStatus={};users[sid]=clean
    }
    const active=canonicalLearnerId(x.activeUser);if(!hasOwnLearner(users,active))throw new Error('Missing active learner');
    const extras=trainingExtrasForImport(x.trainingExtras,users,active),proposed={activeUser:active,users};
@@ -263,7 +263,7 @@ const baseRenderProfile=window.renderProfile;if(typeof baseRenderProfile==='func
 function cleanResetLearner(prior,id){
  const template=JSON.parse(JSON.stringify(defaultDB?.users?.[defaultDB.activeUser]||{})),clean={...template,id,name:String(prior?.name||'Learner'),role:prior?.role==='instructor'?'instructor':'learner'};
  for(const key of ['region','experience','goal','dailyMinutes','onboardingDone'])if(prior&&Object.prototype.hasOwnProperty.call(prior,key))clean[key]=prior[key];
- clean.completed=[];clean.bookmarks=[];clean.notes={};clean.examScores={};clean.examPassStatus={};clean.certificates=[];clean.certificateMeta={};clean.currentLesson=1;clean.lastSeen=new Date().toISOString();
+ clean.completed=[];clean.bookmarks=[];clean.notes={};clean.examScores={};clean.examPassStatus={};clean.learningAwards=[];clean.learningAwardMeta={};clean.currentLesson=1;clean.lastSeen=new Date().toISOString();
  if(obj(prior?.fun))clean.fun={sound:prior.fun.sound===true,celebrations:prior.fun.celebrations!==false};
  return clean
 }

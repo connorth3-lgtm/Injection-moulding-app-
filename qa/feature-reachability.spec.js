@@ -1,12 +1,11 @@
 const {test,expect}=require('@playwright/test');
 const BASE='http://127.0.0.1:4173/';
 
-async function openApp(page,width,certificates=[]){
-  await page.addInitScript(({certificates})=>{
-    const id='reachability-qa',user={id,name:'Reachability QA',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates,currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
-    // codeql[js/clear-text-storage-of-sensitive-data] Test fixture stores local learning-award labels, not credentials or cryptographic certificates.
-    localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:id,users:{[id]:user}}));
-  },{certificates});
+async function openApp(page,width,learningAwards=[]){
+  await page.addInitScript(({learningAwards})=>{
+    const id='reachability-qa',user={id,name:'Reachability QA',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},learningAwards,currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
+      localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:id,users:{[id]:user}}));
+  },{learningAwards});
   await page.setViewportSize({width,height:900});
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>typeof window.MM_APP_SHELL_FINALIZED==='string'&&!document.getElementById('mmBootstrap')&&!!window.MMBook,{timeout:30000});
@@ -31,7 +30,7 @@ async function openAssessmentsFromQuestionCentre(page,width){
 
 async function openDeepLink(page,view){
  await page.addInitScript(()=>{
-  const id='deep-link-qa',user={id,name:'Deep Link QA',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
+  const id='deep-link-qa',user={id,name:'Deep Link QA',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},learningAwards:[],currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
   localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:id,users:{[id]:user}}));
  });
  await page.setViewportSize({width:768,height:900});

@@ -18,16 +18,23 @@
   }
   function mmUpdateCard(){
     const s=mmUpdateState(), copy=mmStatusText(s.status);
-    return `<div class="card form-card" style="margin-top:14px">
-      <span class="eyebrow">Updates</span>
-      <h2 style="margin-bottom:6px">${copy[0]}</h2>
-      <p class="muted">${copy[1]}</p>
-      <div class="grid2" style="margin-top:10px">
-        <div class="stat"><span>Installed version</span><b>${s.version}</b></div>
-        <div class="stat"><span>Update mode</span><b>Automatic on launch</b></div>
-      </div>
-      <p class="tiny muted" style="margin-top:10px">Learner progress, notes, scores and certificates stay in your browser profile and are not replaced by app updates.</p>
-    </div>`;
+    const card=document.createElement("div");card.className="card form-card";card.style.marginTop="14px";
+    const eyebrow=document.createElement("span");eyebrow.className="eyebrow";eyebrow.textContent="Updates";
+    const title=document.createElement("h2");title.style.marginBottom="6px";title.textContent=copy[0];
+    const detail=document.createElement("p");detail.className="muted";detail.textContent=copy[1];
+    const grid=document.createElement("div");grid.className="grid2";grid.style.marginTop="10px";
+    const versionStat=document.createElement("div");versionStat.className="stat";
+    const versionLabel=document.createElement("span");versionLabel.textContent="Installed version";
+    const versionValue=document.createElement("b");versionValue.textContent=String(s.version||MM_APP_VERSION);
+    versionStat.append(versionLabel,versionValue);
+    const modeStat=document.createElement("div");modeStat.className="stat";
+    const modeLabel=document.createElement("span");modeLabel.textContent="Update mode";
+    const modeValue=document.createElement("b");modeValue.textContent="Automatic on launch";
+    modeStat.append(modeLabel,modeValue);grid.append(versionStat,modeStat);
+    const note=document.createElement("p");note.className="tiny muted";note.style.marginTop="10px";
+    note.textContent="Learner progress, notes, scores and certificates stay in your browser profile and are not replaced by app updates.";
+    card.append(eyebrow,title,detail,grid,note);
+    return card;
   }
   function attachUpdateCard(){
     try{
@@ -35,7 +42,7 @@
       if(profile && !profile.querySelector("[data-mm-update-card]")){
         const wrap=document.createElement("div");
         wrap.setAttribute("data-mm-update-card","1");
-        wrap.innerHTML=mmUpdateCard();
+        wrap.appendChild(mmUpdateCard());
         profile.appendChild(wrap);
       }
     }catch(e){}

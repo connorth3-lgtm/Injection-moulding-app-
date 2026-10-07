@@ -34,8 +34,8 @@ function pvBuildImportedUsers(x){
     if(pvHasOwnLearner(users,sid))throw new Error("Duplicate learner identifier");
     const clean=normaliseImportedUser(u,sid);
     if(clean.id!==sid)throw new Error("Learner identifier mismatch");
-    clean.certificates=[];
-    clean.certificateMeta={};
+    clean.learningAwards=[];
+    clean.learningAwardMeta={};
     clean.examPassStatus={};
     users[sid]=clean;
   }
@@ -138,8 +138,8 @@ normaliseImportedUser=function(u,id){
     notes,
     examScores:pvCleanScores(u.examScores),
     examPassStatus:pvCleanPassStatus(u.examPassStatus),
-    certificates:Array.isArray(u.certificates)?[...new Set(u.certificates.map(x=>pvCleanString(x,120)))].slice(0,100):[],
-    certificateMeta:pvCleanCertificateMeta(u.certificateMeta),
+    learningAwards:Array.isArray(u.learningAwards)?[...new Set(u.learningAwards.map(x=>pvCleanString(x,120)))].slice(0,100):[],
+    learningAwardMeta:pvCleanCertificateMeta(u.learningAwardMeta),
     currentLesson:Number.isInteger(u.currentLesson)&&u.currentLesson>=1&&u.currentLesson<=D.lessons.length?u.currentLesson:1,
     region:["ALL","UK","US","NZ"].includes(u.region)?u.region:"ALL",
     experience:["Beginner","Intermediate","Advanced"].includes(u.experience)?u.experience:"Beginner",

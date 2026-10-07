@@ -8,7 +8,7 @@ const $$ = s => [...document.querySelectorAll(s)];
 const defaultDB = {
   activeUser: "learner-1",
   users: {
-    "learner-1": {id:"learner-1",name:"Learner 1",role:"learner",completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString()}
+    "learner-1": {id:"learner-1",name:"Learner 1",role:"learner",completed:[],bookmarks:[],notes:{},examScores:{},learningAwards:[],currentLesson:1,lastSeen:new Date().toISOString()}
   }
 };
 const PRISTINE_DB = JSON.parse(JSON.stringify(defaultDB));
@@ -33,8 +33,8 @@ function mmStartupLearnerRecordIsSafe(record,id){
   if(typeof record.name!=="string")return false;
   if(record.currentLesson!=null&&(!Number.isInteger(record.currentLesson)||record.currentLesson<1||record.currentLesson>D.lessons.length))return false;
   if(record.region!=null&&record.region!==""&&!["ALL","UK","US","NZ"].includes(record.region))return false;
-  if(!mmStartupUniqueLessonIdsAreSafe(record.completed)||!mmStartupUniqueLessonIdsAreSafe(record.bookmarks)||!mmStartupCertificatesAreSafe(record.certificates))return false;
-  for(const key of ["notes","examScores","examPassStatus","certificateMeta"]){
+  if(!mmStartupUniqueLessonIdsAreSafe(record.completed)||!mmStartupUniqueLessonIdsAreSafe(record.bookmarks)||(record.learningAwards!=null&&!mmStartupCertificatesAreSafe(record.learningAwards)))return false;
+  for(const key of ["notes","examScores","examPassStatus","learningAwardMeta"]){
     const value=record[key];
     if(value!=null&&(typeof value!=="object"||Array.isArray(value)))return false;
   }
@@ -90,6 +90,18 @@ try{
   const selected=mmSelectStartupDb(parsed,PRISTINE_DB);
   db=selected.db;mmStartupLearnerDataRejected=selected.rejected;
 }catch(e){db=JSON.parse(JSON.stringify(PRISTINE_DB));mmStartupLearnerDataRejected=true}
+function mmDerivedLearningAwards(record){
+  const awards=new Set(Array.isArray(record.learningAwards)?record.learningAwards.filter(mmStartupCertificateKeyIsSafe):[]);
+  for(const [key,value] of Object.entries(record.examScores||{}))if(Number(value)>=80&&mmStartupCertificateKeyIsSafe(key))awards.add(key);
+  for(const [key,value] of Object.entries(record.examPassStatus||{}))if(value===true&&mmStartupCertificateKeyIsSafe(key))awards.add(key);
+  return [...awards].slice(0,15);
+}
+for(const record of Object.values(db.users||{})){
+  record.learningAwards=mmDerivedLearningAwards(record);
+  if(!record.learningAwardMeta||typeof record.learningAwardMeta!=="object"||Array.isArray(record.learningAwardMeta))record.learningAwardMeta={};
+  delete record.certificates;
+  delete record.certificateMeta;
+}
 let user = db.users[db.activeUser];
 if(user.onboardingDone === undefined) user.onboardingDone = false;
 if(user.currentLesson == null) user.currentLesson = 1;
@@ -103,7 +115,6 @@ let simulatorState = {speed:55,transfer:96,hold:55,holdTime:5,melt:235,mould:55,
 function persist(){
   user.lastSeen = new Date().toISOString();
   db.users[db.activeUser]=user;
-  // codeql[js/clear-text-storage-of-sensitive-data] Local learning-award IDs are not credentials or cryptographic certificates.
   localStorage.setItem("mouldmasterProDB",JSON.stringify(db));
   updateGlobalProgress();
 }
@@ -173,7 +184,7 @@ function renderView(id){
 }
 function renderDashboard(){
   const pct=completedPct(), c=currentLesson();
-  const certs=user.certificates?.length||0;
+  const certs=user.learningAwards?.length||0;
   $("#dashboard").innerHTML=`
   <div class="hero">
     <div class="card hero-main">
@@ -408,13 +419,13 @@ function startExam(level){
 function gradeExam(level){
  const q=D.exams[level];let n=0;q.forEach((x,i)=>{const r=document.querySelector(`input[name=ex${i}]:checked`);if(r&&+r.value===x[2])n++});
  const pct=Math.round(n/q.length*100);user.examScores=user.examScores||{};user.examScores[level]=Math.max(user.examScores[level]||0,pct);
- let earned=false;if(pct>=80 && !user.certificates.includes(level)){user.certificates.push(level);earned=true}
+ let earned=false;if(pct>=80 && !user.learningAwards.includes(level)){user.learningAwards.push(level);earned=true}
  persist();
  const r=$("#examResult");r.classList.remove("hidden");r.innerHTML=`<b>${n}/${q.length} correct — ${pct}%</b><br>${pct>=80?"Pass ✓"+(earned?" Certificate earned.":""):"Review the relevant learning tracks and try again."}`;
 }
 function renderCertificates(){
  const levels=["Beginner","Intermediate","Advanced"];
- $("#certificates").innerHTML=`<div class="section-head"><div><h2>Your certificates</h2><p>Certificates are local learning records, not third-party accredited qualifications.</p></div></div><div class="grid">${levels.map(l=>user.certificates.includes(l)?certificateCard(l):`<div class="card cert"><div class="seal">MM</div><h2>${l}</h2><p class="muted">Not yet earned</p><button class="secondary no-print" data-mm-onclick="switchView('exams')">Take exam</button></div>`).join("")}</div>`;
+ $("#certificates").innerHTML=`<div class="section-head"><div><h2>Your certificates</h2><p>Certificates are local learning records, not third-party accredited qualifications.</p></div></div><div class="grid">${levels.map(l=>user.learningAwards.includes(l)?certificateCard(l):`<div class="card cert"><div class="seal">MM</div><h2>${l}</h2><p class="muted">Not yet earned</p><button class="secondary no-print" data-mm-onclick="switchView('exams')">Take exam</button></div>`).join("")}</div>`;
 }
 function certificateCard(l){
  return `<div class="card cert"><div class="seal">MM</div><span class="eyebrow">Certificate of completion</span><h2>${l} Injection Moulding</h2><p>This certifies that <b>${esc(user.name)}</b> passed the MouldMaster Academy ${l} knowledge assessment.</p><p class="muted">Local learning record · ${new Date().toLocaleDateString()}</p><button class="secondary no-print" data-mm-onclick="window.print()">Print / Save as PDF</button></div>`;
@@ -422,7 +433,7 @@ function certificateCard(l){
 
 function renderInstructor(){
  const users=Object.values(db.users);
- $("#instructor").innerHTML=`<div class="kpis"><div class="card kpi"><span>Local learners</span><b>${users.length}</b></div><div class="card kpi"><span>Total completions</span><b>${users.reduce((n,u)=>n+(u.completed?.length||0),0)}</b></div><div class="card kpi"><span>Certificates</span><b>${users.reduce((n,u)=>n+(u.certificates?.length||0),0)}</b></div><div class="card kpi"><span>Course size</span><b>120</b></div></div>
+ $("#instructor").innerHTML=`<div class="kpis"><div class="card kpi"><span>Local learners</span><b>${users.length}</b></div><div class="card kpi"><span>Total completions</span><b>${users.reduce((n,u)=>n+(u.completed?.length||0),0)}</b></div><div class="card kpi"><span>Certificates</span><b>${users.reduce((n,u)=>n+(u.learningAwards?.length||0),0)}</b></div><div class="card kpi"><span>Course size</span><b>120</b></div></div>
  <div class="section-head"><div><h2>Learner overview</h2><p>This offline version manages profiles stored on this device.</p></div><button class="primary" data-mm-onclick="newLearner()">Add learner</button></div>
  <div class="card table-wrap"><table class="table"><thead><tr><th>Learner</th><th>Progress</th><th>Beginner</th><th>Intermediate</th><th>Advanced</th><th>Last activity</th><th></th></tr></thead><tbody>${users.map((u,userIndex)=>`<tr><td><b>${esc(u.name)}</b></td><td>${Math.round((u.completed?.length||0)/D.lessons.length*100)}%</td><td>${u.examScores?.Beginner??"—"}</td><td>${u.examScores?.Intermediate??"—"}</td><td>${u.examScores?.Advanced??"—"}</td><td>${new Date(u.lastSeen||Date.now()).toLocaleDateString()}</td><td><button class="ghost" data-mm-switch-user="${userIndex}">${u.id===db.activeUser?"Active":"Open"}</button></td></tr>`).join("")}</tbody></table></div>`;
  pvWireInstructorSwitches(users);
@@ -443,7 +454,7 @@ function pvNewLearnerId(){
 }
 function createLearner(){
  const name=$("#newLearnerName").value.trim();if(!name)return;
- const id=pvNewLearnerId();db.users[id]={id,name,role:"learner",completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString()};db.activeUser=id;user=db.users[id];const durable=persist();closeModal();updateGlobalProgress();renderInstructor();toast(durable?"Learner created":"Learner created for this session only — browser storage is unavailable.");
+ const id=pvNewLearnerId();db.users[id]={id,name,role:"learner",completed:[],bookmarks:[],notes:{},examScores:{},learningAwards:[],currentLesson:1,lastSeen:new Date().toISOString()};db.activeUser=id;user=db.users[id];const durable=persist();closeModal();updateGlobalProgress();renderInstructor();toast(durable?"Learner created":"Learner created for this session only — browser storage is unavailable.");
 }
 function switchUser(id){const sid=pvCanonicalLearnerId(id);if(!sid||!pvHasOwnLearner(db.users,sid)){toast("Learner profile unavailable");return}persist();db.activeUser=sid;user=db.users[sid];persist();updateGlobalProgress();renderInstructor();toast("Switched learner")}
 
@@ -506,7 +517,7 @@ function updateGlobalProgress(){
   const admin=$("#instructorNav"); if(admin) admin.style.display=user.role==="instructor"?"flex":"none";
 }
 function renderDashboard(){
-  const pct=completedPct(), l=currentLesson(), certs=user.certificates?.length||0;
+  const pct=completedPct(), l=currentLesson(), certs=user.learningAwards?.length||0;
   const course=D.courses.find(c=>c.id===l.course);
   const cp=courseProgress(course);
   const firstName=(user.name||"Learner").split(" ")[0];
@@ -706,7 +717,7 @@ function renderProfile(){
       </div>
       <div class="card form-card">
         <span class="eyebrow">Your progress</span><h2>${completedPct()}% complete</h2>
-        <p class="muted">${user.completed.length} lessons completed · ${user.certificates.length} certificates earned</p>
+        <p class="muted">${user.completed.length} lessons completed · ${user.learningAwards.length} certificates earned</p>
         <div class="mini-bar"><span style="width:${completedPct()}%"></span></div>
         <div class="hero-buttons"><button class="secondary" data-mm-onclick="exportData()">Export backup</button><label class="ghost" style="display:inline-block">Import backup<input type="file" accept=".json" data-mm-onchange="importData(this.files[0])" style="display:none"></label></div>
         <details style="margin-top:18px"><summary class="muted tiny" style="cursor:pointer">Advanced data options</summary><button class="danger" style="margin-top:10px" data-mm-onclick="resetData()">Reset all local data</button></details>
@@ -854,7 +865,7 @@ function gradeExam(level){
   user.examScores[key]=Math.max(user.examScores[key]||0,pct);
   const certKey=level+"-"+activeExam.region;
   let earned=false;
-  if(pct>=80 && !user.certificates.includes(certKey)){user.certificates.push(certKey);earned=true}
+  if(pct>=80 && !user.learningAwards.includes(certKey)){user.learningAwards.push(certKey);earned=true}
   persist();
   const result=$("#examResult");result.classList.remove("hidden");
   result.innerHTML=`<b>${n}/${q.length} correct — ${pct}%</b><br>${pct>=80?"Pass ✓"+(earned?" Regional learning certificate earned.":""):"Review the explanations below, then revisit the relevant lesson or standards page."}`;
@@ -865,7 +876,7 @@ function renderCertificates(){
   const levels=["Beginner","Intermediate","Advanced"], region=user.region||"ALL";
   $("#certificates").innerHTML=`${standardsBanner()}<div class="section-head"><div><h2>Your certificates</h2><p>Local learning records only — not accredited legal-compliance qualifications.</p></div></div><div class="grid">${levels.map(l=>{
     const key=l+"-"+region;
-    return user.certificates.includes(key)?certificateCard(l,region):`<div class="card cert"><div class="seal">MM</div><h2>${l}</h2><p class="muted">${esc(regionName(region))}<br>Not yet earned in this standards mode</p><button class="secondary no-print" data-mm-onclick="switchView('exams')">Take knowledge check</button></div>`;
+    return user.learningAwards.includes(key)?certificateCard(l,region):`<div class="card cert"><div class="seal">MM</div><h2>${l}</h2><p class="muted">${esc(regionName(region))}<br>Not yet earned in this standards mode</p><button class="secondary no-print" data-mm-onclick="switchView('exams')">Take knowledge check</button></div>`;
   }).join("")}</div>`;
 }
 function certificateCard(level,region){
@@ -1027,7 +1038,7 @@ gradeExam=function(level){
   const pct=Math.round(n/activeExam.questions.length*100),key=level+"-"+activeExam.region;
   user.examScores=user.examScores||{};user.examScores[key]=Math.max(user.examScores[key]||0,pct);
   const certKey=key;let earned=false;
-  if(pct>=80&&!user.certificates.includes(certKey)){user.certificates.push(certKey);earned=true}
+  if(pct>=80&&!user.learningAwards.includes(certKey)){user.learningAwards.push(certKey);earned=true}
   persist();
   const result=$("#examResult");result.classList.remove("hidden");
   result.innerHTML=`<b>${n}/${activeExam.questions.length} correct — ${pct}%</b><br>${pct>=80?"Pass ✓"+(earned?" Regional learning certificate earned.":""):"Review each rationale and official regional source below before trying another randomised assessment."}`;
@@ -1089,7 +1100,7 @@ gradeExam=function(level){
   });
   const pct=Math.round(totalCorrect/activeExam.questions.length*100),passed=pct>=80&&criticalWrong===0,key=level+"-"+activeExam.region;
   user.examScores=user.examScores||{}; user.examScores[key]=Math.max(user.examScores[key]||0,pct);
-  let earned=false; if(passed&&!user.certificates.includes(key)){user.certificates.push(key);earned=true}
+  let earned=false; if(passed&&!user.learningAwards.includes(key)){user.learningAwards.push(key);earned=true}
   persist();
   const result=$("#examResult"); result.classList.remove("hidden");
   result.innerHTML=`<b>${totalCorrect}/${activeExam.questions.length} correct — ${pct}%</b><br>${passed?`Pass ✓${earned?" Regional learning certificate earned.":""}`:`Not passed yet. ${criticalWrong?criticalWrong+" safety-critical regional answer(s) need correction. ":""}Review the rationales before another attempt.`}`;
@@ -1126,7 +1137,7 @@ function dayDiff(a,b){
 function funEnsure(){
   user.fun=user.fun||{};
   const f=user.fun;
-  if(f.xp==null) f.xp=(user.completed?.length||0)*25+(user.certificates?.length||0)*200;
+  if(f.xp==null) f.xp=(user.completed?.length||0)*25+(user.learningAwards?.length||0)*200;
   if(!f.rewarded) f.rewarded={};
   if(!f.achievements) f.achievements=[];
   if(f.sound==null) f.sound=false;
@@ -1218,7 +1229,7 @@ const FUN_ACHIEVEMENTS=[
   {id:"scenario-one",icon:"🕵️",name:"Process Detective",desc:"Solve a troubleshooting scenario.",test:()=>funEnsure().scenarioCorrect>=1},
   {id:"scenario-five",icon:"🧠",name:"Evidence Hunter",desc:"Solve 5 different scenarios.",test:()=>funEnsure().scenarioCorrect>=5},
   {id:"boss-one",icon:"👑",name:"Arena Winner",desc:"Win a troubleshooting boss round.",test:()=>funEnsure().bossWins>=1},
-  {id:"cert-one",icon:"🛡️",name:"Safety Gate",desc:"Earn a regional knowledge certificate.",test:()=>user.certificates.length>=1}
+  {id:"cert-one",icon:"🛡️",name:"Safety Gate",desc:"Earn a regional knowledge certificate.",test:()=>user.learningAwards.length>=1}
 ];
 function checkAchievements(){
   const f=funEnsure();
@@ -1501,7 +1512,6 @@ function mmPersistCurrentState(){
   user.lastSeen=new Date().toISOString();
   db.users[db.activeUser]=user;
   let durable=true;
-  // codeql[js/clear-text-storage-of-sensitive-data] Local learning-award IDs are not credentials or cryptographic certificates.
   try{localStorage.setItem("mouldmasterProDB",JSON.stringify(db))}catch(e){durable=false}
   updateGlobalProgress();
   mmSetStorageDurability(durable);
@@ -1518,7 +1528,6 @@ function pvCommitPristineReset(){
   nextUser.lastSeen=new Date().toISOString();
   proposed.users[proposed.activeUser]=nextUser;
   const serialized=JSON.stringify(proposed);
-  // codeql[js/clear-text-storage-of-sensitive-data] Local learning-award IDs are not credentials or cryptographic certificates.
   localStorage.setItem("mouldmasterProDB",serialized);
   db=proposed;user=nextUser;
   try{mmSetStorageDurability(true)}catch(_){}
@@ -1538,12 +1547,12 @@ function normaliseImportedUser(u,id){
     bookmarks:Array.isArray(u.bookmarks)?u.bookmarks.filter(x=>Number.isInteger(x)&&x>=1&&x<=D.lessons.length):[],
     notes:(u.notes&&typeof u.notes==="object"&&!Array.isArray(u.notes))?u.notes:{},
     examScores:(u.examScores&&typeof u.examScores==="object"&&!Array.isArray(u.examScores))?u.examScores:{},
-    certificates:Array.isArray(u.certificates)?u.certificates.map(String):[],
+    learningAwards:Array.isArray(u.learningAwards)?u.learningAwards.map(String):[],
     currentLesson:Number.isInteger(u.currentLesson)&&u.currentLesson>=1&&u.currentLesson<=D.lessons.length?u.currentLesson:1,
     region:["ALL","UK","US","NZ"].includes(u.region)?u.region:"ALL",
     experience:["Beginner","Intermediate","Advanced"].includes(u.experience)?u.experience:"Beginner",
     goal:String(u.goal||"Learn the full process"),dailyMinutes:[10,15,30].includes(+u.dailyMinutes)?+u.dailyMinutes:15,
-    certificateMeta:(u.certificateMeta&&typeof u.certificateMeta==="object"&&!Array.isArray(u.certificateMeta))?u.certificateMeta:{},
+    learningAwardMeta:(u.learningAwardMeta&&typeof u.learningAwardMeta==="object"&&!Array.isArray(u.learningAwardMeta))?u.learningAwardMeta:{},
     examPassStatus:(u.examPassStatus&&typeof u.examPassStatus==="object"&&!Array.isArray(u.examPassStatus))?u.examPassStatus:{}
   };
 }
@@ -1597,7 +1606,7 @@ renderExams=function(){
     <div class="section-head"><div><h2>Knowledge checks</h2><p>Each assessment uses 7 audited process questions plus ${rCount} safety/compliance question${rCount===1?"":"s"}. ${region==="ALL"?"Compare All tests every UK, US and NZ regional item at that level.":"All regional items at that level are tested."}</p></div></div>
     <div class="exam-integrity">🔒 <b>Competence gate:</b> pass requires at least 80% overall <b>and every safety-critical regional item correct</b>. XP and achievements cannot change this rule.</div>
     <div class="grid">${Object.keys(D.exams).map(level=>{
-      const key=level+"-"+region,score=user.examScores?.[key],passed=!!user.examPassStatus[key]||user.certificates.includes(key);
+      const key=level+"-"+region,score=user.examScores?.[key],passed=!!user.examPassStatus[key]||user.learningAwards.includes(key);
       const status=score==null?"Not attempted":passed?`Passed · best ${score}%`:`Not passed · best ${score}%`;
       return `<div class="card exam-card"><span class="eyebrow">${level}</span><h3>${level} ${region==="US"?"Injection Molding":"Injection Moulding"} Knowledge Check</h3><p class="muted">${qCount} questions · ${rCount} safety-critical · ${esc(regionName(region))}</p><div class="course-bottom"><span class="pill">${esc(status)}</span><button class="secondary" data-mm-onclick="startExam('${level}')">Start</button></div></div>`;
     }).join("")}</div>`;
@@ -1610,11 +1619,11 @@ gradeExam=function(level){
   let correct=0,criticalWrong=0;
   activeExam.questions.forEach((x,i)=>{const r=document.querySelector(`input[name=ex${i}]:checked`),ok=!!r&&+r.value===x.correct;if(ok)correct++;if(x.critical&&!ok)criticalWrong++;});
   const pct=Math.round(correct/activeExam.questions.length*100),passed=pct>=80&&criticalWrong===0,key=level+"-"+activeExam.region;
-  const had=user.certificates.includes(key);
+  const had=user.learningAwards.includes(key);
   fineGradeExam(level);
   user.examPassStatus=user.examPassStatus||{}; if(passed)user.examPassStatus[key]=true; else if(user.examPassStatus[key]!==true)user.examPassStatus[key]=false;
-  user.certificateMeta=user.certificateMeta||{};
-  if(passed&&!had&&!user.certificateMeta[key]) user.certificateMeta[key]={earnedAt:new Date().toISOString(),score:pct,region:activeExam.region,level};
+  user.learningAwardMeta=user.learningAwardMeta||{};
+  if(passed&&!had&&!user.learningAwardMeta[key]) user.learningAwardMeta[key]={earnedAt:new Date().toISOString(),score:pct,region:activeExam.region,level};
   const durable=persist();
   if(!durable){
     const result=$("#examResult");
@@ -1626,7 +1635,7 @@ gradeExam=function(level){
   }
 };
 function certificateDateText(key){
-  const iso=user.certificateMeta?.[key]?.earnedAt;
+  const iso=user.learningAwardMeta?.[key]?.earnedAt;
   return iso?new Date(iso).toLocaleDateString():"Previously earned — original date not stored";
 }
 certificateCard=function(level,region){
@@ -1654,9 +1663,9 @@ function bestRegionalScore(u,level){
 renderInstructor=function(){
   if(user.role!=="instructor"){$("#instructor").innerHTML=`<div class="card empty-friendly"><div class="big-icon">🔒</div><b>Instructor view is hidden for learner profiles</b><p class="muted">Change the local profile role only if this device is being used for instructor administration.</p></div>`;return}
   const users=Object.values(db.users);
-  $("#instructor").innerHTML=`<div class="kpis"><div class="card kpi"><span>Local learners</span><b>${users.length}</b></div><div class="card kpi"><span>Total lesson completions</span><b>${users.reduce((n,u)=>n+(u.completed?.length||0),0)}</b></div><div class="card kpi"><span>Certificates</span><b>${users.reduce((n,u)=>n+(u.certificates?.length||0),0)}</b></div><div class="card kpi"><span>Course size</span><b>${D.lessons.length}</b></div></div>
+  $("#instructor").innerHTML=`<div class="kpis"><div class="card kpi"><span>Local learners</span><b>${users.length}</b></div><div class="card kpi"><span>Total lesson completions</span><b>${users.reduce((n,u)=>n+(u.completed?.length||0),0)}</b></div><div class="card kpi"><span>Certificates</span><b>${users.reduce((n,u)=>n+(u.learningAwards?.length||0),0)}</b></div><div class="card kpi"><span>Course size</span><b>${D.lessons.length}</b></div></div>
   <div class="section-head"><div><h2>Learner overview</h2><p>Local device profiles only; this is not a secure LMS identity system.</p></div><button class="primary" data-mm-onclick="newLearner()">Add learner</button></div>
-  <div class="card table-wrap"><table class="table"><thead><tr><th>Learner</th><th>Progress</th><th>Beginner best</th><th>Intermediate best</th><th>Advanced best</th><th>Certificates</th><th>Last activity</th><th></th></tr></thead><tbody>${users.map((u,userIndex)=>`<tr><td><b>${esc(u.name)}</b></td><td>${Math.round((u.completed?.length||0)/D.lessons.length*100)}%</td><td>${bestRegionalScore(u,"Beginner")??"—"}</td><td>${bestRegionalScore(u,"Intermediate")??"—"}</td><td>${bestRegionalScore(u,"Advanced")??"—"}</td><td>${u.certificates?.length||0}</td><td>${new Date(u.lastSeen||Date.now()).toLocaleDateString()}</td><td><button class="ghost" data-mm-switch-user="${userIndex}">${u.id===db.activeUser?"Active":"Open"}</button></td></tr>`).join("")}</tbody></table></div>`;
+  <div class="card table-wrap"><table class="table"><thead><tr><th>Learner</th><th>Progress</th><th>Beginner best</th><th>Intermediate best</th><th>Advanced best</th><th>Certificates</th><th>Last activity</th><th></th></tr></thead><tbody>${users.map((u,userIndex)=>`<tr><td><b>${esc(u.name)}</b></td><td>${Math.round((u.completed?.length||0)/D.lessons.length*100)}%</td><td>${bestRegionalScore(u,"Beginner")??"—"}</td><td>${bestRegionalScore(u,"Intermediate")??"—"}</td><td>${bestRegionalScore(u,"Advanced")??"—"}</td><td>${u.learningAwards?.length||0}</td><td>${new Date(u.lastSeen||Date.now()).toLocaleDateString()}</td><td><button class="ghost" data-mm-switch-user="${userIndex}">${u.id===db.activeUser?"Active":"Open"}</button></td></tr>`).join("")}</tbody></table></div>`;
  pvWireInstructorSwitches(users);
 };
 
@@ -1786,7 +1795,7 @@ function openMobileMenu(){openModal(`<span class="eyebrow">More</span><h2>Tools 
 const fineCreateLearner=createLearner;
 createLearner=function(){
   const name=$("#newLearnerName")?.value.trim();if(!name)return;
-  const id=pvNewLearnerId();db.users[id]={id,name,role:"learner",completed:[],bookmarks:[],notes:{},examScores:{},examPassStatus:{},certificates:[],certificateMeta:{},currentLesson:1,lastSeen:new Date().toISOString(),region:user.region||"ALL",experience:"Beginner",goal:"Learn the full process",dailyMinutes:15,onboardingDone:true};db.activeUser=id;user=db.users[id];const durable=persist();closeModal();updateGlobalProgress();renderInstructor();toast(durable?"Learner created":"Learner created for this session only — browser storage is unavailable.");
+  const id=pvNewLearnerId();db.users[id]={id,name,role:"learner",completed:[],bookmarks:[],notes:{},examScores:{},examPassStatus:{},learningAwards:[],learningAwardMeta:{},currentLesson:1,lastSeen:new Date().toISOString(),region:user.region||"ALL",experience:"Beginner",goal:"Learn the full process",dailyMinutes:15,onboardingDone:true};db.activeUser=id;user=db.users[id];const durable=persist();closeModal();updateGlobalProgress();renderInstructor();toast(durable?"Learner created":"Learner created for this session only — browser storage is unavailable.");
 };
 
 /* Final home refresh after hardening overrides. */
