@@ -19,6 +19,7 @@ a11y = text("src/domains/shell/accessibility-loader.js")
 analytics = text("src/domains/learning/learning-analytics-loader.js")
 learning_pack = text("src/domains/runtime-packs/learning-foundation-runtime-pack.js")
 shell_pack = text("src/domains/runtime-packs/shell-finalization-runtime-pack.js")
+style_csp = text("tools/generate_style_csp.cjs")
 
 for marker in (
     "function runtimeScriptUrl(value)",
@@ -76,5 +77,6 @@ need("MM_RUNTIME_SCRIPT_URL==='function'" in a11y, "accessibility loader must pr
 need("MM_RUNTIME_SCRIPT_URL==='function'" in analytics, "learning analytics loader must prefer shared runtime-script helper")
 need("MM_RUNTIME_SCRIPT_URL?.('./book-runtime.js')" in learning_pack, "generated learning pack is stale")
 need("runtimeScriptUrl('./data-integration-runtime.js')" in shell_pack, "generated shell finalization pack is stale")
+need("versionedHelper" in style_csp and "MM_RUNTIME_SCRIPT_URL" in style_csp, "style CSP dependency discovery must follow explicit release-version helper calls")
 
 print("PASS: dynamic same-origin scripts use explicit release-version URLs without global HTMLScriptElement interception.")
