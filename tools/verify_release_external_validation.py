@@ -392,13 +392,19 @@ def main() -> None:
     if policy.get("schemaVersion") != 1:
         fail("canonical main governance policy schemaVersion must be 1")
     pr_policy = policy.get("pullRequest") or {}
-    if pr_policy.get("minimumApprovals", 0) < 1:
-        fail("canonical governance policy requires at least one independent approval")
-    if pr_policy.get("independentReviewerRequired") is not True:
-        fail("canonical governance policy must require an independent reviewer")
-    for key in ("latestHeadApproval", "reviewThreadResolution", "dismissStaleReviews", "extraApprovalForUnattributedChanges"):
-        if pr_policy.get(key) is not True:
-            fail(f"canonical governance pullRequest.{key} must be true")
+    if policy.get("maintainerMode") != "solo" or (policy.get("soloMaintainer") or {}).get("ownerLogin") != "connorth3-lgtm":
+        fail("canonical governance policy must explicitly bind solo-maintainer release authority to repository owner")
+    if pr_policy.get("minimumApprovals") != 0 or pr_policy.get("independentReviewerRequired") is not False:
+        fail("solo-maintainer governance cannot claim independent GitHub approval")
+    for key in ("latestHeadApproval", "dismissStaleReviews", "extraApprovalForUnattributedChanges"):
+        if pr_policy.get(key) is not False:
+            fail(f"solo-maintainer governance pullRequest.{key} must be false")
+    if pr_policy.get("reviewThreadResolution") is not True or pr_policy.get("allowedMergeMethods") != ["squash"]:
+        fail("solo-maintainer governance must retain resolved conversations and squash-only history")
+    checks = policy.get("requiredStatusChecks") or {}
+    required = {"integrity", "mobile-browser", "build-windows", "question-quality-50-pass", "release-external-validation", "exact-head-risk-coverage"}
+    if not checks.get("strict") or not checks.get("enforceOnCreate") or not required.issubset(set(checks.get("contexts") or [])):
+        fail("solo-maintainer policy must retain all six exact-head and external-boundary CI checks")
     if policy.get("bypassActors") != []:
         fail("canonical governance policy must prohibit bypass actors")
     if governance.get("status") == "enforced":

@@ -188,12 +188,12 @@
       {
         "from": "pending-native-ruleset-apply",
         "to": "enforced",
-        "requires": "An administrator verifies that the live GitHub main ruleset exactly matches the canonical independent-review policy and an independent reviewer can approve the latest head."
+        "requires": "A repository administrator verifies the active live main ruleset exactly matches the canonical solo-maintainer policy: owner-authorized manual squash merging, no independent GitHub approval requirement, all six required exact-head CI contexts, security controls and no bypass."
       },
       {
         "from": "enforced",
         "to": "failed",
-        "requires": "The live ruleset drifts, bypass becomes possible, required review/status/security controls are weakened, or post-merge provenance fails."
+        "requires": "Live ruleset drift, unexpected merger identity, bypass actor, weakened CI/security controls, unresolved review conversations or failed post-merge provenance."
       },
       {
         "from": "failed",
@@ -297,7 +297,7 @@
     },
     {
       "id": "live-governance-must-match-canonical-policy",
-      "rule": "repositoryGovernance=enforced is permitted only when the exact live GitHub main ruleset matches the one canonical policy and post-merge provenance verifies an independent latest-head approval."
+      "rule": "repositoryGovernance=enforced is permitted only when GitHub's exact active main ruleset matches the canonical solo-maintainer owner-merge policy and post-merge provenance verifies the real owner's manual merge decision, unique merged PR and all required exact-head checks."
     }
   ],
   "userFacingPrecedence": [

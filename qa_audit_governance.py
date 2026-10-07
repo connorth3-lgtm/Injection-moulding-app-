@@ -166,9 +166,9 @@ for marker in (
     'assert valid_main_ruleset(missing_bypass, matching_attestation, "example/project")[0]',
     'stale = dict(matching_attestation, ruleset_updated_at=',
     'assert not valid_main_ruleset(missing_bypass, stale, "example/project")[0]',
-    'required_approving_review_count must be 1 for independent human review',
-    'require_last_push_approval must be true so the latest head is independently reviewed',
-    'require_extra_approval_for_unattributed_changes must be true',
+    'required_approving_review_count must be 0 for owner-authorized solo releases',
+    'require_last_push_approval must be false for a sole maintainer',
+    'require_extra_approval_for_unattributed_changes must be false when no second maintainer exists',
 ):
     need(marker in ruleset, f"ruleset bypass fail-closed contract missing: {marker}")
 need(attestation.get("schema") == 1, "ruleset attestation schema must be 1")
