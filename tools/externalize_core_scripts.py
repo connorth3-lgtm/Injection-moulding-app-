@@ -367,6 +367,28 @@ function pvStandardsLink(item,label){
             assessment_source_link,
             "${pvSafeSourceLink(x.sourceUrl,x.reference)}",
         )
+        unsafe_defect_prompt = "closeModal();switchView('coach');setCoachPrompt('${esc(d.name).replace(/'/g,\"\\\\'\")}')"
+        if transformed.count(unsafe_defect_prompt) != 1:
+            fail("frozen defect-coach handler source drifted; review bounded handler transform")
+        transformed = transformed.replace(unsafe_defect_prompt, "askCoachForDefect(${i})", 1)
+        defect_helper_marker = "\n}\n\nfunction renderScenarios(){"
+        if transformed.count(defect_helper_marker) != 1:
+            fail("frozen defect renderer boundary drifted; expected one helper insertion point")
+        transformed = transformed.replace(
+            defect_helper_marker,
+            """
+}
+function askCoachForDefect(i){
+ const d=D.defects[i];
+ if(!d)return;
+ closeModal();
+ switchView("coach");
+ setCoachPrompt(String(d.name||""));
+}
+
+function renderScenarios(){""",
+            1,
+        )
         for old, new in SIMULATOR_SEMANTIC_REPLACEMENTS.items():
             if transformed.count(old) != 1:
                 fail(f"frozen simulator semantic source drifted for marker: {old}")
