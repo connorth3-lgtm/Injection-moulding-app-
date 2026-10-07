@@ -137,7 +137,7 @@ button:active{transform:translateY(0)!important}
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--mm-accent)!important;outline-offset:2px!important}
 
 /* Surfaces */
-.card:not(.mm-home-balance),.lesson-body,.lesson-side,.form-card,.output-panel,.exam-card,.scenario,.chat,.cert,.visual-wrap{
+.card,.lesson-body,.lesson-side,.form-card,.output-panel,.exam-card,.scenario,.chat,.cert,.visual-wrap{
   border-color:var(--mm-border)!important;
   background:linear-gradient(180deg,rgba(16,32,50,.96),rgba(10,23,37,.975))!important;
   box-shadow:var(--mm-shadow-sm),inset 0 1px 0 rgba(255,255,255,.026)!important;
