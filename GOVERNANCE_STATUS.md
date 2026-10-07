@@ -39,6 +39,7 @@ This section resolves the Book current learner-facing publication state from the
 | Independent human SME review | **hold** · **0/46 governed modules approved** |
 
 Publication authorization and independent validation are separate namespaces. The Book can be authorized as a source-evidence-reviewed reference while independent human SME, device, learner-outcome and provider/accreditation evidence remains on HOLD.
+
 ## Assurance evidence layers
 
 These layers are reported separately. Passing static/contract or automated browser QA does not convert the external human/device layer into a pass.
