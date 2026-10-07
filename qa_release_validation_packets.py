@@ -36,6 +36,18 @@ evidence_release = ledger.get("release")
 need(isinstance(evidence_release, str) and evidence_release, "external-validation ledger release is missing")
 need(evidence_release == release, "external-validation ledger must be rebound to the current web release")
 
+candidate_workflow_text = (ROOT / ".github" / "workflows" / "premerge-public-candidate.yml").read_text(encoding="utf-8")
+candidate_reuse_guard = (ROOT / "tools" / "verify_retained_candidate_reuse.py").read_text(encoding="utf-8")
+for marker in (
+    "Verify retained candidate producer can be reused",
+    "tools/verify_retained_candidate_reuse.py",
+    "steps.impact.outputs.runtime != 'true' && steps.reuse.outputs.reusable == 'true'",
+    "steps.impact.outputs.runtime == 'true' || steps.reuse.outputs.reusable != 'true'",
+):
+    need(marker in candidate_workflow_text, f"pre-merge candidate reuse guard missing: {marker}")
+for marker in ("conclusion", "success", "artifactDigest", "artifactExpiresAt", "workflow/source provenance"):
+    need(marker in candidate_reuse_guard, f"retained-candidate live provenance guard missing: {marker}")
+
 index_rel = ledger.get("validationIndex")
 need(index_rel == f"qa/EXTERNAL_VALIDATION_{evidence_release}.md", "release validation index path is stale")
 index_path = ROOT / index_rel

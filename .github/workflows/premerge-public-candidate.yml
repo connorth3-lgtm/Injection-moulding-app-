@@ -31,20 +31,35 @@ jobs:
         id: impact
         run: python3 tools/ci_impact.py --governed-candidate
 
-      - name: Skip redundant candidate rebuild
+      - name: Verify retained candidate producer can be reused
+        id: reuse
         if: steps.impact.outputs.runtime != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
         run: |
-          echo "No learner-runtime change since the currently bound retained candidate; reusing that exact runtime artifact."
+          set -euo pipefail
+          if python3 tools/verify_retained_candidate_reuse.py --repository "$GITHUB_REPOSITORY"; then
+            echo "reusable=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "reusable=false" >> "$GITHUB_OUTPUT"
+            echo "Retained candidate producer/artifact is not reusable; rebuilding an exact artifact on this run." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Skip redundant candidate rebuild
+        if: steps.impact.outputs.runtime != 'true' && steps.reuse.outputs.reusable == 'true'
+        run: |
+          echo "No learner-runtime change and the currently bound producer/artifact is live and successful; reusing that exact runtime artifact."
           echo "No new 90-day candidate artifact was generated." >> "$GITHUB_STEP_SUMMARY"
 
       - name: Set up Python
-        if: steps.impact.outputs.runtime == 'true'
+        if: steps.impact.outputs.runtime == 'true' || steps.reuse.outputs.reusable != 'true'
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: '3.12'
 
       - name: Build production Pages candidate from exact PR head
-        if: steps.impact.outputs.runtime == 'true'
+        if: steps.impact.outputs.runtime == 'true' || steps.reuse.outputs.reusable != 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -63,7 +78,7 @@ jobs:
           PY
 
       - name: Report exact public-runtime fingerprint
-        if: steps.impact.outputs.runtime == 'true'
+        if: steps.impact.outputs.runtime == 'true' || steps.reuse.outputs.reusable != 'true'
         id: fingerprint
         shell: bash
         run: |
@@ -82,7 +97,7 @@ jobs:
           echo "- runtime fingerprint: \`$value\`" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Retain exact candidate for external HOLD execution
-        if: steps.impact.outputs.runtime == 'true'
+        if: steps.impact.outputs.runtime == 'true' || steps.reuse.outputs.reusable != 'true'
         id: artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
@@ -94,7 +109,7 @@ jobs:
           include-hidden-files: true
 
       - name: Record artifact provenance
-        if: steps.impact.outputs.runtime == 'true'
+        if: steps.impact.outputs.runtime == 'true' || steps.reuse.outputs.reusable != 'true'
         run: |
           echo "- artifact id: \`${{ steps.artifact.outputs.artifact-id }}\`" >> "$GITHUB_STEP_SUMMARY"
           echo "- artifact digest: \`${{ steps.artifact.outputs.artifact-digest }}\`" >> "$GITHUB_STEP_SUMMARY"
