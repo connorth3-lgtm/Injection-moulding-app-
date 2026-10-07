@@ -58,8 +58,8 @@ for marker in [
     "Exact-head CI Risk Coverage",
     "actions/runs?head_sha=$PR_HEAD_SHA&event=pull_request",
     "all_required_success",
-    "pulls/$PR_NUMBER/reviews",
-    "Independent latest-head human approval verified",
+    "repos/$GH_REPO/pulls/$PR_NUMBER",
+    "Solo-maintainer manual merge decision verified",
     "native protection is authoritative",
 ]:
     need(marker in guard, f"main provenance guard missing marker: {marker}")
@@ -78,9 +78,8 @@ for forbidden in [
 need('"$conclusion" != "success"' in guard, "required PR workflows must still fail audit when completed unsuccessfully")
 need("for attempt in {1..60}" in guard, "read-only workflow audit must tolerate long-running required checks")
 
-# Effective ruleset verification must enforce the explicit independent-review
-# review settings as well as the six governed automated contexts and existing
-# server-side protections.
+# Effective ruleset verification must enforce the solo-maintainer owner
+# merge policy and all six automated/security controls, with no bypass.
 for marker in [
     'POLICY_PATH = ROOT / "data" / "main-governance-policy-v1.json"',
     'MAIN_REF = str(POLICY["targetRef"])',
@@ -93,11 +92,11 @@ for marker in [
     '"code_scanning"',
     '"code_quality"',
     '"copilot_code_review"',
-    "required_approving_review_count must be 1 for independent human review",
+    "required_approving_review_count must be 0 for owner-authorized solo releases",
     "required_review_thread_resolution must be true",
-    "dismiss_stale_reviews_on_push must be true",
-    "require_last_push_approval must be true so the latest head is independently reviewed",
-    "require_extra_approval_for_unattributed_changes must be true",
+    "dismiss_stale_reviews_on_push must be false when no approval is required",
+    "require_last_push_approval must be false for a sole maintainer",
+    "require_extra_approval_for_unattributed_changes must be false when no second maintainer exists",
     "strict_required_status_checks_policy",
     "do_not_enforce_on_create",
     '"~ALL"',
@@ -108,12 +107,14 @@ for marker in [
 
 for marker in [
     '"targetRef": "refs/heads/main"',
-    '"minimumApprovals": 1',
-    '"independentReviewerRequired": true',
-    '"latestHeadApproval": true',
+    '"maintainerMode": "solo"',
+    '"ownerLogin": "connorth3-lgtm"',
+    '"minimumApprovals": 0',
+    '"independentReviewerRequired": false',
+    '"latestHeadApproval": false',
     '"reviewThreadResolution": true',
-    '"dismissStaleReviews": true',
-    '"extraApprovalForUnattributedChanges": true',
+    '"dismissStaleReviews": false',
+    '"extraApprovalForUnattributedChanges": false',
     '"squash"',
     '"bypassActors": []',
     '"strict": true',
@@ -156,7 +157,7 @@ need("if: github.event_name != 'pull_request'" in pages, "Pages publication guar
 
 # The administrator helper must transform the live ruleset rather than replace
 # it with a stale static payload. It must preserve existing security/review
-# rules while applying independent human-review semantics and the aggregate exact-head release gate.
+# rules while applying solo-maintainer owner-merger semantics and the aggregate exact-head release gate.
 for marker in [
     'MODE="${1:---dry-run}"',
     "--dry-run|--apply",
@@ -168,11 +169,11 @@ for marker in [
     '"release-external-validation"',
     '"exact-head-risk-coverage"',
     'gh api "repos/$REPO/rulesets/$RULESET_ID" >"$live"',
-    '.parameters.required_approving_review_count = 1',
+    '.parameters.required_approving_review_count = 0',
     ".parameters.required_review_thread_resolution = true",
-    ".parameters.dismiss_stale_reviews_on_push = true",
-    ".parameters.require_last_push_approval = true",
-    ".parameters.require_extra_approval_for_unattributed_changes = true",
+    ".parameters.dismiss_stale_reviews_on_push = false",
+    ".parameters.require_last_push_approval = false",
+    ".parameters.require_extra_approval_for_unattributed_changes = false",
     ".parameters.strict_required_status_checks_policy = true",
     ".parameters.do_not_enforce_on_create = false",
     'index("code_scanning")',
@@ -182,7 +183,7 @@ for marker in [
     'gh api --method PUT "repos/$REPO/rulesets/$RULESET_ID" --input "$payload"',
     'gh api "repos/$REPO/branches/main" --jq',
     'protected',
-    "at least two trusted write-capable collaborators",
+    "authenticated_login",
     "resolved review threads",
 ]:
     need(marker in protection_helper, f"native-protection helper missing marker: {marker}")
@@ -196,11 +197,11 @@ need(
 )
 
 for marker in [
-    "independent human review plus automated evidence",
-    "one required approving review",
-    "approval of the **latest pushed head**",
+    "solo-maintainer manual owner approval plus automated evidence",
+    "zero required second-person approving reviews",
+    "manual owner merger recorded by GitHub",
     "all review conversations resolved",
-    "stale approvals dismissed after new pushes",
+    "release decisions bound to the exact PR head",
     "`integrity`",
     "`mobile-browser`",
     "`build-windows`",
@@ -215,8 +216,8 @@ for marker in [
     "--dry-run",
     "--apply",
     "transforms that exact",
-    "latest-head human approval, all six required checks are green",
-    "Automated checks are necessary but are not equivalent to independent human review",
+    "owner-authorized merge decision, all six required checks are green",
+    "Automated checks do not establish external device, SME or safety validation",
     "Issue #43",
 ]:
     need(marker in protection_doc, f"native-protection documentation missing marker: {marker}")
@@ -322,7 +323,7 @@ need("run: python qa_repo_governance.py" in release_qa, "release QA must run rep
 
 print(
     "MouldMaster repository governance QA passed "
-    "(main-only independent human-review native policy; six required contexts; live-preserving helper; "
+    "(main-only solo-maintainer owner-merge native policy; six required contexts; live-preserving helper; "
     "post-push audit read-only; Pages requires exact native protection; dual locked desktop toolchains; "
     "guard-gated pruning; architecture debt gate)"
 )

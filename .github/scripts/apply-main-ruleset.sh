@@ -24,10 +24,10 @@ Both modes read the live main ruleset first. The script transforms that exact
 ruleset instead of replacing it with a stale static copy, preserving unrelated
 server-side protections such as CodeQL, code-quality and Copilot review rules.
 
-The governed policy requires at least one independent human approval on the
-latest pull-request head in addition to all automated/security controls. If the
-repository has fewer than two trusted write-capable collaborators, --apply
-fails closed rather than weakening the review requirement.
+The governed solo-maintainer policy requires the authenticated repository owner
+to make the manual squash-merge decision. No independent GitHub approval is
+claimed. Every governed status/security check remains required, no bypass actors
+are allowed, and external validation HOLDs remain unchanged.
 
 --dry-run prints the exact transformed payload without changing GitHub.
 --apply requires a local GitHub CLI identity with repository Administration
@@ -105,11 +105,14 @@ jq '
   rules: [
     .rules[]
     | if .type == "pull_request" then
-        .parameters.required_approving_review_count = 1
+        .parameters.required_approving_review_count = 0
         | .parameters.required_review_thread_resolution = true
-        | .parameters.dismiss_stale_reviews_on_push = true
-        | .parameters.require_last_push_approval = true
-        | .parameters.require_extra_approval_for_unattributed_changes = true
+        | .parameters.dismiss_stale_reviews_on_push = false
+        | .parameters.require_last_push_approval = false
+        | .parameters.require_extra_approval_for_unattributed_changes = false
+      elif .type == "copilot_code_review" then
+        .parameters.review_on_push = true
+        | .parameters.review_draft_pull_requests = true
       elif .type == "required_status_checks" then
         .parameters.strict_required_status_checks_policy = true
         | .parameters.do_not_enforce_on_create = false
@@ -138,12 +141,14 @@ jq -e --argjson app "$GITHUB_ACTIONS_APP_ID" '
   ([.rules[].type] | index("code_scanning")) != null and
   ([.rules[].type] | index("code_quality")) != null and
   ([.rules[].type] | index("copilot_code_review")) != null and
+  ([.rules[] | select(.type == "copilot_code_review") | .parameters.review_on_push] | .[0]) == true and
+  ([.rules[] | select(.type == "copilot_code_review") | .parameters.review_draft_pull_requests] | .[0]) == true and
   ([.rules[] | select(.type == "pull_request") | .parameters.allowed_merge_methods] | .[0]) == ["squash"] and
-  ([.rules[] | select(.type == "pull_request") | .parameters.required_approving_review_count] | .[0]) == 1 and
+  ([.rules[] | select(.type == "pull_request") | .parameters.required_approving_review_count] | .[0]) == 0 and
   ([.rules[] | select(.type == "pull_request") | .parameters.required_review_thread_resolution] | .[0]) == true and
-  ([.rules[] | select(.type == "pull_request") | .parameters.dismiss_stale_reviews_on_push] | .[0]) == true and
-  ([.rules[] | select(.type == "pull_request") | .parameters.require_last_push_approval] | .[0]) == true and
-  ([.rules[] | select(.type == "pull_request") | .parameters.require_extra_approval_for_unattributed_changes] | .[0]) == true and
+  ([.rules[] | select(.type == "pull_request") | .parameters.dismiss_stale_reviews_on_push] | .[0]) == false and
+  ([.rules[] | select(.type == "pull_request") | .parameters.require_last_push_approval] | .[0]) == false and
+  ([.rules[] | select(.type == "pull_request") | .parameters.require_extra_approval_for_unattributed_changes] | .[0]) == false and
   ([.rules[] | select(.type == "required_status_checks") | .parameters.strict_required_status_checks_policy] | .[0]) == true and
   ([.rules[] | select(.type == "required_status_checks") | .parameters.do_not_enforce_on_create] | .[0]) == false and
   (
@@ -163,6 +168,14 @@ printf 'Ruleset id: %s\n' "$RULESET_ID"
 printf 'Mode: %s\n\n' "$MODE"
 jq . "$payload"
 
+# Only the named repository owner can apply this deliberate governance transition.
+authenticated_login="$(gh api user --jq '.login')"
+owner_login="${REPO%%/*}"
+if [[ "$authenticated_login" != "$owner_login" ]]; then
+  echo "Solo-maintainer ruleset requires repository owner $owner_login (authenticated: $authenticated_login)." >&2
+  exit 1
+fi
+
 if [[ "$MODE" == "--dry-run" ]]; then
   cat <<'EOF'
 
@@ -174,17 +187,8 @@ EOF
   exit 0
 fi
 
-write_capable="$(gh api "repos/$REPO/collaborators?affiliation=direct&per_page=100" --jq '[.[] | select(.permissions.admin == true or .permissions.maintain == true or .permissions.push == true)] | length')"
-if [[ "$MODE" == "--apply" && "$write_capable" -lt 2 ]]; then
-  echo "Independent review requires at least two trusted write-capable collaborators; found $write_capable. Refusing to apply an unsatisfiable review policy or weaken the requirement." >&2
-  exit 1
-fi
-if [[ "$MODE" == "--dry-run" && "$write_capable" -lt 2 ]]; then
-  echo "WARNING: only $write_capable trusted write-capable collaborator is visible; add an independent reviewer before --apply." >&2
-fi
-
 gh api --method PUT "repos/$REPO/rulesets/$RULESET_ID" --input "$payload" >/dev/null
-echo "Applied independent-review ruleset. Verifying effective configuration..."
+echo "Applied owner-authorized solo-maintainer ruleset. Verifying effective configuration..."
 
 effective="$(gh api "repos/$REPO/rulesets/$RULESET_ID")"
 printf '%s\n' "$effective" | jq '{id,name,target,enforcement,conditions,rules,bypass_actors,updated_at}'
@@ -198,11 +202,13 @@ printf '%s\n' "$effective" | jq -e --argjson app "$GITHUB_ACTIONS_APP_ID" '
   ([.rules[].type] | index("code_scanning")) != null and
   ([.rules[].type] | index("code_quality")) != null and
   ([.rules[].type] | index("copilot_code_review")) != null and
-  ([.rules[] | select(.type == "pull_request") | .parameters.required_approving_review_count] | .[0]) == 1 and
+  ([.rules[] | select(.type == "copilot_code_review") | .parameters.review_on_push] | .[0]) == true and
+  ([.rules[] | select(.type == "copilot_code_review") | .parameters.review_draft_pull_requests] | .[0]) == true and
+  ([.rules[] | select(.type == "pull_request") | .parameters.required_approving_review_count] | .[0]) == 0 and
   ([.rules[] | select(.type == "pull_request") | .parameters.required_review_thread_resolution] | .[0]) == true and
-  ([.rules[] | select(.type == "pull_request") | .parameters.dismiss_stale_reviews_on_push] | .[0]) == true and
-  ([.rules[] | select(.type == "pull_request") | .parameters.require_last_push_approval] | .[0]) == true and
-  ([.rules[] | select(.type == "pull_request") | .parameters.require_extra_approval_for_unattributed_changes] | .[0]) == true and
+  ([.rules[] | select(.type == "pull_request") | .parameters.dismiss_stale_reviews_on_push] | .[0]) == false and
+  ([.rules[] | select(.type == "pull_request") | .parameters.require_last_push_approval] | .[0]) == false and
+  ([.rules[] | select(.type == "pull_request") | .parameters.require_extra_approval_for_unattributed_changes] | .[0]) == false and
   (
     [.rules[] | select(.type == "required_status_checks") | .parameters.required_status_checks[].context]
     | contains(["integrity","mobile-browser","build-windows","question-quality-50-pass","release-external-validation","exact-head-risk-coverage"])
@@ -214,7 +220,7 @@ printf '%s\n' "$effective" | jq -e --argjson app "$GITHUB_ACTIONS_APP_ID" '
     | all(. == $app)
   )
 ' >/dev/null || {
-  echo "Effective ruleset does not satisfy the MouldMaster independent-review main policy." >&2
+  echo "Effective ruleset does not satisfy the MouldMaster solo-maintainer main policy." >&2
   exit 1
 }
 
@@ -233,9 +239,10 @@ fi
 
 updated_at="$(printf '%s\n' "$effective" | jq -r '.updated_at')"
 cat <<EOF
-Verified: main requires pull requests, at least one independent approval of the
-latest head, resolved review threads, all governed automated gates, squash-only
-history, and retains the live security/review controls.
+Verified: main requires pull requests, owner-authorized manual squash merging,
+resolved review threads, all six governed automated gates, up-to-date exact
+heads, no bypass actors, and the existing security/code-review controls.
+No independent human approval or external validation is claimed.
 
 IMPORTANT: refresh .github/main-ruleset-attestation.json with:
   ruleset_id: $RULESET_ID

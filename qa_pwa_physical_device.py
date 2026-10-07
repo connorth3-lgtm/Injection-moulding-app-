@@ -28,35 +28,28 @@ module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 
 base = json.loads(CONTRACT.read_text(encoding="utf-8"))
+version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
 module.validate_contract(base)
-need(base["status"] == "released-with-accepted-ios-risk", "repository contract must record the explicit iOS risk-accepted release state")
-need(base["runtimeFingerprint"].startswith("sha256:"), "risk-accepted release must bind to an exact runtime fingerprint")
+need(base["status"] == "pending-physical-device-validation", "current repository contract must remain pending until genuine physical-device validation exists")
+need(base["release"] == version["web_release"], "physical-device contract must be bound to the current web release")
+need(base["runtimeFingerprint"] is None, "pending physical-device contract must not claim a validated runtime fingerprint")
+need(base["testedAt"] is None and base["testerReference"] is None and base["evidenceReference"] is None, "pending physical-device contract must not carry pseudo-validation metadata")
+need(base.get("candidate", {}).get("release") == version["web_release"], "pending contract must retain the exact current candidate release binding")
 need("physical iOS/iPadOS and Android devices" in base["boundary"], "physical-device boundary must remain explicit")
 need("accessibility-real-at-validation-v1.json" in base["boundary"], "screen-reader evidence must remain separately governed")
 
-attestation = json.loads(ATTESTATION.read_text(encoding="utf-8"))
-need(attestation.get("schemaVersion") == 1, "physical-device attestation schemaVersion must be 1")
-need(attestation.get("status") == "android-pass-ios-untested-risk-accepted", "attestation must state Android pass and iOS untested")
-need(attestation.get("productionValidationEligible") is False, "metadata-incomplete attestation must never be production-validation eligible")
-attested_fingerprint = str(attestation.get("runtimeFingerprint") or "")
-need(attested_fingerprint.startswith("sha256:") and len(attested_fingerprint) == 71, "attestation runtime fingerprint format is invalid")
-need(set(attestation.get("platforms", {})) == {"ios", "android"}, "attestation must cover exactly iOS/iPadOS and Android")
-ios_attestation = attestation["platforms"]["ios"]
-need(ios_attestation.get("result") == "untested", "iOS/iPadOS must not claim a physical pass")
-need(ios_attestation.get("deviceMetadataStatus") == "not-provided", "iOS/iPadOS metadata must remain explicitly pending")
-
-android_attestation = attestation["platforms"]["android"]
-need(android_attestation.get("result") == "pass-attested", "Android attestation must record the owner's pass statement")
-need(android_attestation.get("deviceMetadataStatus") == "provided", "Android metadata progress must be explicitly recorded")
-for key in ("deviceModel", "osVersion", "browserVersion", "metadataCapturedAt", "metadataSource"):
-    need(str(android_attestation.get(key) or "").strip(), f"Android attestation metadata is missing {key}")
-need(android_attestation.get("metadataSource") == "mouldmaster-on-device-metadata-helper", "Android metadata source must remain the local-only helper")
-need(android_attestation.get("helperInstalledMode") == "browser", "helper installed mode must record the helper session, not claim learner standalone mode")
-need("known accepted release risk" in str(attestation.get("remainingProductionRequirement", "")), "attestation must state the accepted iOS/iPadOS risk")
-need(
-    "pwa-physical-device-attestation-v1.json" not in TOOL.read_text(encoding="utf-8"),
-    "human attestation file must remain separate from the production validation verifier",
+contract_only = subprocess.run(
+    [sys.executable, str(TOOL), "--contract", str(CONTRACT), "--contract-only"],
+    capture_output=True,
+    text=True,
 )
+need(contract_only.returncode == 0, f"current pending contract must pass structural verification: {contract_only.stderr or contract_only.stdout}")
+unauthorized = subprocess.run(
+    [sys.executable, str(TOOL), "--contract", str(CONTRACT), "--contract-only", "--require-release-authorized"],
+    capture_output=True,
+    text=True,
+)
+need(unauthorized.returncode != 0, "pending physical-device evidence must fail closed when release authorization is requested")
 
 # The standalone workflow is a contract-health gate, not a second production
 # publisher. It must fail malformed/stale evidence, but a valid authorization for
@@ -76,13 +69,6 @@ need(
     "run: python tools/verify_pwa_physical_evidence.py --artifact .pages-dist --require-release-authorized" not in workflow,
     "standalone physical PWA workflow must not unconditionally fail main when valid evidence belongs to older bytes",
 )
-
-risk_release = subprocess.run(
-    [sys.executable, str(TOOL), "--contract", str(CONTRACT), "--contract-only", "--require-release-authorized"],
-    capture_output=True,
-    text=True,
-)
-need(risk_release.returncode == 0, "explicit governed risk acceptance did not authorize its recorded release contract")
 
 with tempfile.TemporaryDirectory() as td:
     artifact = Path(td) / "pages"
@@ -144,4 +130,4 @@ except SystemExit as exc:
 else:
     raise AssertionError("public physical-device contract accepted a forbidden personal-data field")
 
-print("MouldMaster physical PWA device contract QA passed: the recorded Android/iOS-risk contract remains structurally governed, exact-runtime production authorization still fails closed, and the standalone workflow treats valid older-byte evidence as an explicit HOLD rather than relabelling it.")
+print("MouldMaster physical PWA device contract QA passed: the current release remains truthfully pending/HOLD, generic contract verification passes, and production authorization fails closed until genuine device evidence exists.")

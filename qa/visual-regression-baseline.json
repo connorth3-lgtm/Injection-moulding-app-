@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.02.1",
-  "commit": "6fc1e04721281f53f2ee6db45af1850cf2d237f4",
+  "release": "2026.10.07.10",
+  "commit": "49c0737a716c65f9b672d36d4d8221515e86f67e",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,6 +41,6 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "2026.10.02.1 is the reviewed learner UI reference after the deep-review semantic changes pass structural and browser checks: learner-facing Book assurance says 'Source evidence reviewed' rather than implying independent verification; independent human SME status remains visibly separate; material exact-grade views distinguish evidence/provenance status from commercial/source currentness; Today's focus remains the single dominant Home action; Home duplicates none of Learn/Materials/Practice/Saved/Book navigation; Troubleshoot and Analyse data remain the two specialist shortcuts; a real recent troubleshooting case stays clear of fixed phone navigation; the Book Materials chapter exposes all 260 canonical exact grades plus all 284 governed Asia/Australia/New Zealand evidence rows; and the technical-review material appendix remains excluded from source-reviewed listen-all. Pixel tolerance remains locked at maxDiffPixels 12 and supplements—rather than substitutes for—structural, coverage, semantic and geometry assertions. Physical-device, real-AT and other human/external evidence remain separate HOLD/freshness gates.",
-  "ref": "visual-baseline/2026.10.02.1"
+  "policy": "2026.10.07.10 is the internal visual-regression reference for the intentional Home Book-card reachability change. The Book card is visible directly below Today's Focus across governed phone, tablet and desktop viewports while the existing Learn, Materials, Practice, assessment, listening and Book surfaces remain pixel-locked to this exact reference. Pixel tolerance remains maxDiffPixels 12 and supplements—rather than substitutes for—structural, coverage, semantic and geometry assertions. Physical-device, real-AT, SME, learner-outcome, provider/accreditation and production-site evidence remain separate HOLD/freshness gates.",
+  "ref": "visual-baseline/2026.10.07.10"
 }

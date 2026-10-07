@@ -48,7 +48,7 @@ def render() -> str:
         "",
         f"- Current learner-facing web release: **{data['currentWebRelease']}**.",
         "- Current release promotion is governed by the declared fast/deep CI tiers and exact-head protected workflows; the historical PR count above is not presented as current-release evidence.",
-        f"- Native main governance: **{current['governance']}**. Promotion remains blocked until the live ruleset satisfies the canonical policy.",
+        f"- Native main governance: **{current['governance']}**. " + ("Live main ruleset matches the canonical solo-maintainer policy; promotion still requires exact-head protected checks." if current['governance'] == "enforced" else "Promotion remains blocked until the live ruleset satisfies the canonical policy."),
         f"- Current external-validation boundary: **{review['externalValidation'].upper()}** until genuine release-bound human/device/platform evidence satisfies the governed exit conditions.",
         "",
         "## Indicators",

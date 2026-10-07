@@ -77,17 +77,29 @@ jobs:
 
           PR_NUMBER=$(jq -r '.number' <<<"$merged_pr_json")
           PR_HEAD_SHA=$(jq -r '.head.sha' <<<"$merged_pr_json")
+          PR_HEAD_REF=$(jq -r '.head.ref' <<<"$merged_pr_json")
+          PR_HEAD_REPO_ID=$(jq -r '.head.repo.id' <<<"$merged_pr_json")
           PR_AUTHOR=$(jq -r '.user.login' <<<"$merged_pr_json")
+          if [[ ! "$PR_HEAD_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            fail_audit "Merged PR #$PR_NUMBER returned a non-canonical exact head SHA."
+          fi
           echo "Main commit is merged PR #$PR_NUMBER with source head $PR_HEAD_SHA."
 
-          reviews_json=$(gh api "repos/$GH_REPO/pulls/$PR_NUMBER/reviews?per_page=100")
-          latest_head_independent_approvals=$(jq -r --arg head "$PR_HEAD_SHA" --arg author "$PR_AUTHOR" \
-            '[.[] | select(.state == "APPROVED" and .commit_id == $head and .user.login != $author)] | length' \
-            <<<"$reviews_json")
-          if [[ "$latest_head_independent_approvals" -lt 1 ]]; then
-            fail_audit "Merged PR #$PR_NUMBER lacks an independent APPROVED review bound to exact latest head $PR_HEAD_SHA."
+          # Solo-maintainer authority is a genuine manual GitHub merge by the
+          # named repository owner. No second-human APPROVED review is claimed.
+          policy_owner=$(jq -r '.soloMaintainer.ownerLogin // empty' data/main-governance-policy-v1.json)
+          if [[ -z "$policy_owner" || "$policy_owner" != "${GH_REPO%%/*}" ]]; then
+            fail_audit "Solo-maintainer policy must name the repository owner."
           fi
-          echo "Independent latest-head human approval verified for merged PR #$PR_NUMBER."
+          merged_detail=$(gh api -H "Accept: application/vnd.github+json" "repos/$GH_REPO/pulls/$PR_NUMBER")
+          merged_by=$(jq -r '.merged_by.login // empty' <<<"$merged_detail")
+          merged_type=$(jq -r '.merged_by.type // empty' <<<"$merged_detail")
+          merged_sha=$(jq -r '.merge_commit_sha // empty' <<<"$merged_detail")
+          merged_at=$(jq -r '.merged_at // empty' <<<"$merged_detail")
+          if [[ "$merged_by" != "$policy_owner" || "$merged_type" != "User" || "$merged_sha" != "$HEAD_SHA" || -z "$merged_at" ]]; then
+            fail_audit "Merged PR #$PR_NUMBER lacks the repository owner's explicit GitHub squash-merge decision bound to exact main head $HEAD_SHA."
+          fi
+          echo "Solo-maintainer manual merge decision verified: owner=$merged_by PR #$PR_NUMBER head=$PR_HEAD_SHA."
 
           required_workflows=(
             "MouldMaster Release QA"
@@ -97,18 +109,31 @@ jobs:
             "Release External Validation Boundary"
             "Exact-head CI Risk Coverage"
           )
+          workflow_path_for() {
+            case "$1" in
+              "MouldMaster Release QA") echo ".github/workflows/qa.yml" ;;
+              "Mobile Browser QA") echo ".github/workflows/mobile-browser-qa.yml" ;;
+              "Open Desktop Build") echo ".github/workflows/open-desktop-build.yml" ;;
+              "Question Quality 50-Pass") echo ".github/workflows/question-quality-50-pass.yml" ;;
+              "Release External Validation Boundary") echo ".github/workflows/release-external-validation.yml" ;;
+              "Exact-head CI Risk Coverage") echo ".github/workflows/ci-risk-coverage.yml" ;;
+              *) fail_audit "No canonical workflow path registered for '$1'." ;;
+            esac
+          }
 
           all_required_success=false
           for attempt in {1..60}; do
-            runs_json=$(gh api "repos/$GH_REPO/actions/runs?head_sha=$PR_HEAD_SHA&event=pull_request&per_page=100")
+            runs_pages=$(gh api --paginate --slurp "repos/$GH_REPO/actions/runs?head_sha=$PR_HEAD_SHA&event=pull_request&per_page=100")
+            runs_json=$(jq '{workflow_runs: [.[].workflow_runs[]]}' <<<"$runs_pages")
             all_seen=true
 
             for workflow in "${required_workflows[@]}"; do
-              status=$(jq -r --arg workflow "$workflow" \
-                '[.workflow_runs[] | select(.name == $workflow)] | sort_by(.updated_at) | reverse | (.[0].status // "missing")' \
+              workflow_path="$(workflow_path_for "$workflow")"
+              status=$(jq -r --arg workflow "$workflow" --arg workflow_path "$workflow_path" --argjson pr "$PR_NUMBER" --arg head_ref "$PR_HEAD_REF" --argjson head_repo "$PR_HEAD_REPO_ID" \
+                '[.workflow_runs[] | select(.name == $workflow and .path == $workflow_path and ((any(.pull_requests[]?; (.number == $pr and .base.ref == "main"))) or (((.pull_requests // []) | length) == 0 and .head_branch == $head_ref and (.head_repository.id // 0) == $head_repo)))] | sort_by([(.updated_at // .created_at // ""), (.id // 0)]) | reverse | (.[0].status // "missing")' \
                 <<<"$runs_json")
-              conclusion=$(jq -r --arg workflow "$workflow" \
-                '[.workflow_runs[] | select(.name == $workflow)] | sort_by(.updated_at) | reverse | (.[0].conclusion // "missing")' \
+              conclusion=$(jq -r --arg workflow "$workflow" --arg workflow_path "$workflow_path" --argjson pr "$PR_NUMBER" --arg head_ref "$PR_HEAD_REF" --argjson head_repo "$PR_HEAD_REPO_ID" \
+                '[.workflow_runs[] | select(.name == $workflow and .path == $workflow_path and ((any(.pull_requests[]?; (.number == $pr and .base.ref == "main"))) or (((.pull_requests // []) | length) == 0 and .head_branch == $head_ref and (.head_repository.id // 0) == $head_repo)))] | sort_by([(.updated_at // .created_at // ""), (.id // 0)]) | reverse | (.[0].conclusion // "missing")' \
                 <<<"$runs_json")
 
               echo "$workflow: status=$status conclusion=$conclusion"

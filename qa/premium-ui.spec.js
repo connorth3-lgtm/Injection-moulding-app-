@@ -157,7 +157,9 @@ test('product hierarchy keeps Home focused and Materials catalogue dense',async(
     utilityShadow:getComputedStyle(document.querySelector('#dashboard .mm-home-balance')).boxShadow
   }));
   expect(hierarchy.focusShadow).not.toBe('none');
-  expect(hierarchy.utilityShadow).toBe('none');
+  // The helper panel's entry animation can briefly expose a fractional
+  // shadow. Wait for the final unshadowed utility state.
+  await expect.poll(async()=>utilities.evaluate(el=>getComputedStyle(el).boxShadow)).toBe('none');
 
   await page.waitForFunction(()=>Boolean(window.MM_MATERIAL_REGISTRY?.openPage));
   await page.evaluate(()=>window.MM_MATERIAL_REGISTRY.openPage({replaceUrl:false}));
@@ -235,6 +237,24 @@ test('390px Home keeps the primary lesson and two specialist tools above the nav
   await assertNoHorizontalOverflow(page,'home-390-primary-actions');
 });
 
+test('Home Book card opens the governed Book and returns to Home on phone and desktop',async({page})=>{
+  test.setTimeout(90000);
+  for(const width of [390,1440]){
+    await page.setViewportSize({width,height:900});
+    await openApp(page);
+    await page.waitForFunction(()=>typeof window.MMBook?.open==='function');
+    // Reloads can restore the last route; assert the Home card from Home.
+    await page.evaluate(()=>switchView('dashboard'));
+    const book=page.locator('#dashboard [data-mm-home-book]');
+    await expect(book).toBeVisible();
+    await book.getByRole('button',{name:'Open Book'}).click();
+    await expect(page.locator('#mmBookView')).toBeVisible();
+    await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
+    await expect(page.locator('#mmBookView [data-mm-book-chapter]')).toHaveCount(46);
+    await page.evaluate(()=>switchView('dashboard'));
+    await expect(page.locator('#dashboard [data-mm-home-book]')).toBeVisible();
+  }
+});
 test('mobile Materials keeps search controls sticky and touch sized',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);

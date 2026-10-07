@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import datetime
 import json
 import subprocess
 import sys
@@ -166,16 +167,24 @@ for marker in (
     'assert valid_main_ruleset(missing_bypass, matching_attestation, "example/project")[0]',
     'stale = dict(matching_attestation, ruleset_updated_at=',
     'assert not valid_main_ruleset(missing_bypass, stale, "example/project")[0]',
-    'required_approving_review_count must be 1 for independent human review',
-    'require_last_push_approval must be true so the latest head is independently reviewed',
-    'require_extra_approval_for_unattributed_changes must be true',
+    'required_approving_review_count must be 0 for owner-authorized solo releases',
+    'require_last_push_approval must be false for a sole maintainer',
+    'require_extra_approval_for_unattributed_changes must be false when no second maintainer exists',
 ):
     need(marker in ruleset, f"ruleset bypass fail-closed contract missing: {marker}")
 need(attestation.get("schema") == 1, "ruleset attestation schema must be 1")
 need(attestation.get("source") == "admin-verified-ruleset-detail", "ruleset attestation must identify administrator-readable source")
 need(attestation.get("repository") == "connorth3-lgtm/Injection-moulding-app-", "ruleset attestation repository mismatch")
 need(attestation.get("ruleset_id") == 22155472, "ruleset attestation must identify the verified live ruleset")
-need(attestation.get("ruleset_updated_at") == "2026-09-12T19:43:17.140+12:00", "ruleset attestation must be bound to the verified live ruleset version")
+# Static QA verifies the timestamp's shape; the live verifier independently
+# compares this exact instant to GitHub's actual updated_at, rejecting stale attestations.
+attested_at = attestation.get("ruleset_updated_at")
+try:
+    parsed_attested_at = datetime.fromisoformat(str(attested_at).replace("Z", "+00:00"))
+except (TypeError, ValueError):
+    parsed_attested_at = None
+need(parsed_attested_at is not None and parsed_attested_at.tzinfo is not None,
+     "ruleset attestation must contain a timezone-aware GitHub updated_at instant")
 need(attestation.get("bypass_actors") == [], "ruleset attestation must explicitly record no bypass actors")
 need(attestation.get("current_user_can_bypass") == "never", "ruleset attestation must record no current-user bypass")
 

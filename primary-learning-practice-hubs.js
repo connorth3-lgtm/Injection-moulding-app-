@@ -333,7 +333,7 @@ window.mmHubOpenScenarios=openScenarioDetail;
 
 function simplifyHome(){
   const root=document.getElementById('dashboard');if(!root)return;
-  root.querySelectorAll('#mmDashboardRegistryBefore .mm-dashboard-slot:not([data-mm-dashboard-section="today-focus"]),#mmDashboardRegistryAfter .mm-dashboard-slot').forEach(el=>el.remove());
+  root.querySelectorAll('#mmDashboardRegistryBefore .mm-dashboard-slot:not([data-mm-dashboard-section="today-focus"]):not([data-mm-dashboard-section="book"]),#mmDashboardRegistryAfter .mm-dashboard-slot').forEach(el=>el.remove());
   root.querySelectorAll('button[data-mm-onclick]').forEach(button=>{
     const action=button.getAttribute('data-mm-onclick')||'';
     if(/switchView\((['"])lesson\1\)/.test(action))button.setAttribute('data-mm-onclick','mmHubOpenLesson()');

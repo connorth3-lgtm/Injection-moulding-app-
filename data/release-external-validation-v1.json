@@ -1,45 +1,48 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.03.2",
-  "validationIndex": "qa/EXTERNAL_VALIDATION_2026.10.03.2.md",
+  "release": "2026.10.07.10",
+  "validationIndex": "qa/EXTERNAL_VALIDATION_2026.10.07.10.md",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
     "status": "pass",
     "claim": "Strongly automated and technically governed; no external-validation claim is implied."
   },
   "governance": {
-    "status": "pending-native-ruleset-apply",
+    "status": "enforced",
     "policyFile": "data/main-governance-policy-v1.json",
     "repositoryPolicy": ".github/MAIN_PROTECTION.md",
     "verifier": "tools/verify_main_ruleset.py",
     "liveRulesetIssue": "#43",
-    "required": "Add or confirm an independent trusted reviewer, apply the canonical main governance policy to GitHub's live main ruleset, verify the exact live ruleset, then change this status to enforced."
+    "required": "Apply and verify the canonical no-bypass solo-maintainer main ruleset with all six protected status contexts. The repository owner alone must deliberately squash-merge after the exact-head checks succeed; do not claim an independent GitHub reviewer.",
+    "liveRulesetId": 22155472,
+    "liveRulesetVerifiedAt": "2026-10-07T05:46:55.135Z",
+    "liveRulesetUpdatedAt": "2026-10-07T18:22:41.578+13:00"
   },
   "accessibility": {
     "status": "hold",
     "evidenceContract": "data/accessibility-real-at-validation-v1.json",
-    "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.10.03.2.md",
+    "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.10.07.10.md",
     "candidate": {
-      "release": "2026.10.03.2",
-      "sourceSha": "a2d0efeceab465ca834a0b0e433aa791dc89ca81",
-      "runtimeFingerprint": "sha256:7158ec361e08425fb04958048d91c761a7201def735364eff8f93ba687f86d50"
+      "release": "2026.10.07.10",
+      "sourceSha": "2b0ebb5ebefbc567b168c72e5c706a3b7a5265d8",
+      "runtimeFingerprint": "sha256:4de2af13aae6c22a972c42fc450642090a45964404ca712b621702a5790cedfb"
     },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix."
   },
   "pwaPhysicalDevices": {
     "status": "hold",
     "evidenceContract": "data/pwa-physical-device-validation-v1.json",
-    "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.10.03.2.md",
+    "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.10.07.10.md",
     "currentCandidate": {
-      "release": "2026.10.03.2",
-      "sourceSha": "a2d0efeceab465ca834a0b0e433aa791dc89ca81",
-      "runtimeFingerprint": "sha256:7158ec361e08425fb04958048d91c761a7201def735364eff8f93ba687f86d50",
-      "candidateRunId": 37078747245,
+      "release": "2026.10.07.10",
+      "sourceSha": "2b0ebb5ebefbc567b168c72e5c706a3b7a5265d8",
+      "runtimeFingerprint": "sha256:4de2af13aae6c22a972c42fc450642090a45964404ca712b621702a5790cedfb",
+      "candidateRunId": 37576165131,
       "candidateWorkflow": "Pre-merge Public Candidate",
-      "artifactId": 11257687067,
-      "artifactName": "physical-pwa-candidate-a2d0efeceab465ca834a0b0e433aa791dc89ca81",
-      "artifactDigest": "sha256:13f19033ab0de4e453859253c6950c1a121c497569b329a9222572f3f8c10491",
-      "artifactExpiresAt": "2026-11-01T23:41:36Z"
+      "artifactId": 11463071985,
+      "artifactName": "physical-pwa-candidate-2b0ebb5ebefbc567b168c72e5c706a3b7a5265d8",
+      "artifactDigest": "sha256:cfe22c21277e540276ffb0a7b0ea3109aefb298532713411f8faf43157c22a71",
+      "artifactExpiresAt": "2026-11-06T05:24:54Z"
     },
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release."
   },
@@ -47,7 +50,7 @@
     "status": "hold",
     "workflow": ".github/workflows/microsoft-store-msix.yml",
     "handoff": "certification/STORE_SUBMISSION_STATUS.md",
-    "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.10.03.2.md",
+    "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.10.07.10.md",
     "sourceSha": "aa5e0b89c193532b3294c360301f7251c562ed10",
     "desktopRelease": "2026.09.29.1",
     "evidence": null,
@@ -61,19 +64,19 @@
   "bookSme": {
     "status": "hold",
     "evidenceContract": "data/book-sme-review-v1.json",
-    "reviewPacket": "qa/BOOK_SME_REVIEW_2026.10.03.2.md",
+    "reviewPacket": "qa/BOOK_SME_REVIEW_2026.10.07.10.md",
     "required": "Independent human SME approval of all 46 governed Book chapters across the six required review dimensions."
   },
   "curriculumSme": {
     "status": "hold",
     "evidenceContract": "qa/curriculum-semantic-review.json",
-    "reviewPacket": "qa/CURRICULUM_SME_REVIEW_2026.10.03.2.md",
+    "reviewPacket": "qa/CURRICULUM_SME_REVIEW_2026.10.07.10.md",
     "required": "Traceable human SME semantic approval of all 120 canonical lessons."
   },
   "learnerOutcomes": {
     "status": "hold",
     "pilotContract": "data/learner-pilot-v1.json",
-    "pilotPacket": "qa/LEARNER_PILOT_2026.10.03.2.md",
+    "pilotPacket": "qa/LEARNER_PILOT_2026.10.07.10.md",
     "evidence": null,
     "required": "Longitudinal real-learner outcome evidence before efficacy or genuine psychometric-validity claims."
   },
@@ -83,8 +86,8 @@
     "requiredForExpansion": "Formal controlled-site validation, safety/governance review and explicit authorization before any machine-control or validated-recipe authority."
   },
   "visualGovernance": {
-    "status": "pending-native-ruleset-apply",
-    "required": "Apply and verify the canonical independent-review main ruleset with at least one genuine latest-head human approval; automated checks and self-review do not substitute for that approval."
+    "status": "enforced",
+    "required": "Apply and verify the canonical solo-maintainer main ruleset, keep all six automated status/security contexts and record the real owner's manual merge decision; human visual/device/SME validation remains an independent HOLD where required."
   },
   "claims": {
     "fullyExternallyValidated": false,
@@ -96,11 +99,22 @@
   "nzqaProvider": {
     "status": "hold",
     "evidenceContract": "data/nzqa-external-validation-v1.json",
-    "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.03.2.md",
+    "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.07.10.md",
     "required": "Genuine provider ownership, stakeholder need, provider-approved design, authorised assessment/internal moderation, consent-to-assess/CMR confirmation, applicable national moderation, workplace evidence and provider-controlled review/change evidence for the exact governed release.",
     "candidate": {
-      "sourceSha": "a2d0efeceab465ca834a0b0e433aa791dc89ca81",
-      "runtimeFingerprint": "sha256:7158ec361e08425fb04958048d91c761a7201def735364eff8f93ba687f86d50"
+      "sourceSha": "2b0ebb5ebefbc567b168c72e5c706a3b7a5265d8",
+      "runtimeFingerprint": "sha256:4de2af13aae6c22a972c42fc450642090a45964404ca712b621702a5790cedfb"
     }
+  },
+  "webCandidate": {
+    "release": "2026.10.07.10",
+    "sourceSha": "2b0ebb5ebefbc567b168c72e5c706a3b7a5265d8",
+    "runtimeFingerprint": "sha256:4de2af13aae6c22a972c42fc450642090a45964404ca712b621702a5790cedfb",
+    "candidateRunId": 37576165131,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 11463071985,
+    "artifactName": "physical-pwa-candidate-2b0ebb5ebefbc567b168c72e5c706a3b7a5265d8",
+    "artifactDigest": "sha256:cfe22c21277e540276ffb0a7b0ea3109aefb298532713411f8faf43157c22a71",
+    "artifactExpiresAt": "2026-11-06T05:24:54Z"
   }
 }
