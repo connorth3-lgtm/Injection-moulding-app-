@@ -10,6 +10,7 @@ DESKTOP = ROOT / ".github" / "workflows" / "publish-open-desktop.yml"
 DEPENDABOT = ROOT / ".github" / "dependabot.yml"
 QUEUED_PROFILE = ROOT / ".github" / "workflows" / "profile-queued-zenodo-data.yml"
 LOWER_PROFILE = ROOT / ".github" / "workflows" / "profile-cross-process-lower-workpiece.yml"
+MAIN_RULESET_HELPER = ROOT / ".github" / "scripts" / "apply-main-ruleset.sh"
 
 WORKFLOW_DIR = ROOT / ".github" / "workflows"
 
@@ -90,6 +91,7 @@ desktop = DESKTOP.read_text(encoding="utf-8")
 dependabot = DEPENDABOT.read_text(encoding="utf-8")
 queued_profile = QUEUED_PROFILE.read_text(encoding="utf-8")
 lower_profile = LOWER_PROFILE.read_text(encoding="utf-8")
+main_ruleset_helper = MAIN_RULESET_HELPER.read_text(encoding="utf-8")
 
 assert_pinned_workflow_python_dependencies()
 
@@ -120,12 +122,14 @@ need("timeout-minutes: 45" in premerge, "pre-merge public candidate must allow s
 for marker in (
     "Require exact PR-head quality gates before candidate approval",
     "if: github.event_name == 'pull_request'",
-    "required=(integrity mobile-browser question-quality-50-pass)",
+    "required=(mobile-browser question-quality-50-pass)",
     "commits/${SOURCE_SHA}/check-runs?per_page=100",
     "Exact PR-head quality gates passed for $SOURCE_SHA",
     "Timed out waiting for exact PR-head quality gates.",
 ):
     need(marker in premerge, f"pre-merge public candidate aggregate gate missing: {marker}")
+need("required=(integrity mobile-browser question-quality-50-pass)" not in premerge, "pre-merge candidate producer must not wait on integrity and recreate the retained-candidate binding cycle")
+need("REQUIRED_CONTEXTS=(" in main_ruleset_helper and '"integrity"' in main_ruleset_helper, "protected main ruleset helper must continue to require integrity before merge")
 need(premerge.index("Retain exact candidate for external HOLD execution") < premerge.index("Require exact PR-head quality gates before candidate approval"), "pre-merge workflow must retain the exact candidate needed by Release QA before waiting on aggregate approval")
 need(premerge.index("Record artifact provenance") < premerge.index("Require exact PR-head quality gates before candidate approval"), "pre-merge aggregate approval must remain the final gate after candidate provenance is recorded")
 assert_pinned_actions(
