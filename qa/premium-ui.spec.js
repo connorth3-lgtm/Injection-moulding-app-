@@ -235,6 +235,22 @@ test('390px Home keeps the primary lesson and two specialist tools above the nav
   await assertNoHorizontalOverflow(page,'home-390-primary-actions');
 });
 
+test('Home Book card opens the governed Book and returns to Home on phone and desktop',async({page})=>{
+  test.setTimeout(90000);
+  for(const width of [390,1440]){
+    await page.setViewportSize({width,height:900});
+    await openApp(page);
+    await page.waitForFunction(()=>typeof window.MMBook?.open==='function');
+    const book=page.locator('#dashboard [data-mm-home-book]');
+    await expect(book).toBeVisible();
+    await book.getByRole('button',{name:'Open Book'}).click();
+    await expect(page.locator('#mmBookView')).toBeVisible();
+    await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
+    await expect(page.locator('#mmBookView [data-mm-book-chapter]')).toHaveCount(46);
+    await page.evaluate(()=>switchView('dashboard'));
+    await expect(page.locator('#dashboard [data-mm-home-book]')).toBeVisible();
+  }
+});
 test('mobile Materials keeps search controls sticky and touch sized',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
