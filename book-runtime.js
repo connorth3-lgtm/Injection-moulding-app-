@@ -2,24 +2,15 @@
 (function(){
   'use strict';
   const release=(document.querySelector('meta[name="mm-shell-release"]')?.content||'').trim();
-  function versionScriptUrl(value){
-    const raw=String(value||'');
-    if(!raw||!release)return raw;
+  function releaseAssetUrl(value){
+    const shared=window.MM_RELEASE_ASSET_URL;
+    if(typeof shared==='function')return shared(value);
+    const raw=String(value||''),version=release||String(window.MM_RUNTIME_ASSET_VERSION||'').trim();
+    if(!raw||!version)return raw;
     let url;try{url=new URL(raw,location.href)}catch(_){return raw}
     if(url.origin!==location.origin||!url.pathname.endsWith('.js'))return raw;
-    if(!url.searchParams.has('v'))url.searchParams.set('v',release);
+    if(!url.searchParams.has('v'))url.searchParams.set('v',version);
     return url.href;
-  }
-  if(!window.__MM_RELEASE_SCRIPT_VERSIONER__){
-    const proto=window.HTMLScriptElement?.prototype,descriptor=proto&&Object.getOwnPropertyDescriptor(proto,'src');
-    if(descriptor?.get&&descriptor?.set&&descriptor.configurable!==false){
-      Object.defineProperty(proto,'src',{configurable:descriptor.configurable,enumerable:descriptor.enumerable,get(){return descriptor.get.call(this)},set(value){return descriptor.set.call(this,versionScriptUrl(value))}});
-    }
-    if(proto){
-      const baseSetAttribute=proto.setAttribute;
-      proto.setAttribute=function(name,value){return baseSetAttribute.call(this,name,String(name).toLowerCase()==='src'?versionScriptUrl(value):value)};
-    }
-    window.__MM_RELEASE_SCRIPT_VERSIONER__=Object.freeze({release,versionScriptUrl});
   }
   const canonicalEvidenceLinks=Object.freeze({
     '24f22c3f6f355c0497be3aea21e1a1cc':'https://doi.org/10.3390/polym17081096',
@@ -42,7 +33,7 @@
   if(window.MMBook?.version===release)return;
   if(document.querySelector('script[data-mm-book-canonical-runtime]'))return;
   const script=document.createElement('script');
-  script.src='./src/domains/learning/book-runtime.js';
+  script.src=releaseAssetUrl('./src/domains/learning/book-runtime.js');
   script.async=false;
   script.dataset.mmBookCanonicalRuntime='1';
   script.addEventListener('error',()=>console.error('[MouldMaster Book] canonical Book runtime could not be loaded'));

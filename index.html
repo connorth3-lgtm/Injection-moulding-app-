@@ -60,6 +60,15 @@
     const DOMAIN_DELEGATED_ASSETS=['./learning-analytics.js','./src/domains/shell/accessibility-hardening.js'];
     const closeScript='</scr'+'ipt>';
     function versionMarkup(markup){return String(markup).replace(/(src|href)="(\.\/[^"?]+)(?:\?[^" ]*)?"/g,(_m,attr,url)=>`${attr}="${url}?v=${RUNTIME_ASSET_VERSION}"`)}
+    function releaseAssetUrl(value){
+      const raw=String(value||'');
+      const version=String(window.MM_RUNTIME_ASSET_VERSION||RUNTIME_ASSET_VERSION||'').trim();
+      if(!raw||!version)return raw;
+      let url;try{url=new URL(raw,location.href)}catch(_){return raw}
+      if(url.origin!==location.origin)return raw;
+      if(!url.searchParams.has('v'))url.searchParams.set('v',version);
+      return url.href;
+    }
     function preloadStartupScript(src){const href=`${src}?v=${RUNTIME_ASSET_VERSION}`;if(document.querySelector(`link[data-mm-startup-preload][href="${href}"]`))return;const link=document.createElement('link');link.rel='preload';link.as='script';link.href=href;link.dataset.mmStartupPreload='1';document.head.appendChild(link)}
     function preloadStartupScripts(){const seen=new Set();for(const src of [...CORE_RUNTIME_PRELOADS,...BODY_SCRIPTS.map(row=>row[0])]){if(seen.has(src))continue;seen.add(src);preloadStartupScript(src)}}
     function ensureViewportFit(out){let found=false;out=out.replace(/<meta\b[^>]*\bname=["']viewport["'][^>]*>/i,tag=>{found=true;if(/viewport-fit\s*=\s*cover/i.test(tag))return tag;if(/\bcontent=["']/i.test(tag))return tag.replace(/\bcontent=(["'])(.*?)\1/i,(_m,q,value)=>`content=${q}${value},viewport-fit=cover${q}`);return tag.replace(/>$/, ' content="width=device-width,initial-scale=1,viewport-fit=cover">')});if(!found)out=out.replace(/<\/head>/i,'<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n</head>');return out}
@@ -70,7 +79,7 @@
     async function executePreparedScripts(scripts){for(let index=0;index<scripts.length;index++){const slot=document.querySelector(`template[data-mm-script-slot="${index}"]`);if(!slot)throw new Error(`Runtime script slot ${index} is missing`);const descriptor=scripts[index];const script=document.createElement("script");for(const [name,value] of descriptor.attrs)script.setAttribute(name,value);const external=script.hasAttribute("src");const module=(script.getAttribute("type")||"").trim().toLowerCase()==="module";if(external)script.async=false;let settled=null;if(external||module)settled=new Promise((resolve,reject)=>{script.addEventListener("load",resolve,{once:true});script.addEventListener("error",()=>reject(new Error(`Runtime script failed to load: ${script.getAttribute("src")||"inline module"}`)),{once:true})});if(!external)script.textContent=descriptor.text;slot.replaceWith(script);if(settled)await settled}}
     async function installDocument(html){const prepared=prepareDocument(html);document.replaceChild(prepared.root,document.documentElement);const readiness=document.createElement("div");readiness.id="mmBootstrap";readiness.hidden=true;readiness.setAttribute("aria-hidden","true");readiness.dataset.mmBootstrapReadiness="installing";document.body.prepend(readiness);await executePreparedScripts(prepared.scripts);document.dispatchEvent(new Event("DOMContentLoaded",{bubbles:true}));window.dispatchEvent(new Event("load"));await new Promise(resolve=>setTimeout(resolve,0));readiness.remove()}
     function showBootstrapFailure(err){let box=document.getElementById("mmBootstrap");if(!box){box=document.createElement("main");box.id="mmBootstrap";box.className="boot";if(document.body)document.body.replaceChildren(box)}if(box){box.innerHTML='<b>MouldMaster could not finish loading</b><p>Connect to the internet and reopen MouldMaster so the current training bundle can load.</p>';const retry=document.createElement("button");retry.textContent="Try again";retry.style.padding="10px 14px";retry.style.borderRadius="10px";retry.style.border="1px solid #41658d";retry.style.background="#1a2b45";retry.style.color="#fff";retry.addEventListener("click",()=>location.reload());box.appendChild(retry)}console.error("MouldMaster bootstrap failed",err)}
-    try{preloadStartupScripts();const html=assemble(await getCore());window.MM_RUNTIME_ASSET_VERSION=RUNTIME_ASSET_VERSION;window.MM_DOMAIN_DELEGATED_ASSETS=Object.freeze(DOMAIN_DELEGATED_ASSETS.slice());await installDocument(html)}catch(err){showBootstrapFailure(err)}
+    try{preloadStartupScripts();const html=assemble(await getCore());window.MM_RUNTIME_ASSET_VERSION=RUNTIME_ASSET_VERSION;window.MM_RELEASE_ASSET_URL=releaseAssetUrl;window.MM_DOMAIN_DELEGATED_ASSETS=Object.freeze(DOMAIN_DELEGATED_ASSETS.slice());await installDocument(html)}catch(err){showBootstrapFailure(err)}
   })();
   </script>
 </body>

@@ -66,7 +66,7 @@ must(index, [
     "viewport-fit=cover", "HEAD_ASSETS", "BODY_SCRIPTS",
     "for(const [needle,markup] of HEAD_ASSETS)", "for(const [src,tag] of BODY_SCRIPTS)",
     'throw new Error("Core training content is incomplete")', "versionMarkup", "?v=${RUNTIME_ASSET_VERSION}",
-    "fetch(`${CORE_URL}?v=${RUNTIME_ASSET_VERSION}`", "window.MM_RUNTIME_ASSET_VERSION=RUNTIME_ASSET_VERSION",
+    "fetch(`${CORE_URL}?v=${RUNTIME_ASSET_VERSION}`", "window.MM_RUNTIME_ASSET_VERSION=RUNTIME_ASSET_VERSION", "window.MM_RELEASE_ASSET_URL=releaseAssetUrl", "url.searchParams.set('v',version)",
     "Content-Security-Policy", "default-src 'self'", "object-src 'none'", "frame-src 'none'", "connect-src 'self'", "worker-src 'self'",
     "'./src/domains/shared/runtime-v2.js'", "'./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'", "'./src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js'", "'./src/domains/shell/accessibility-hardening.js'",
     "'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'", "'./src/domains/runtime-packs/evidence-runtime-pack.js'",

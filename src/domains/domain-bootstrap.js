@@ -5,20 +5,32 @@ if(window.MM_DOMAIN_BOOTSTRAP)return;
 const VERSION='2026.09.06.4';
 const MANIFEST='./runtime-domain-manifest.json';
 
+function releaseAssetUrl(value){
+  const shared=window.MM_RELEASE_ASSET_URL;
+  if(typeof shared==='function')return shared(value);
+  const raw=String(value||''),version=String(window.MM_RUNTIME_ASSET_VERSION||'').trim();
+  if(!raw||!version)return raw;
+  let url;try{url=new URL(raw,location.href)}catch(_){return raw}
+  if(url.origin!==location.origin)return raw;
+  if(!url.searchParams.has('v'))url.searchParams.set('v',version);
+  return url.href;
+}
+
 function preloadScript(src){
-  if(document.querySelector(`link[data-mm-domain-preload][href="${src}"]`))return;
+  if([...document.querySelectorAll('link[data-mm-domain-preload]')].some(link=>link.dataset.mmDomainSrc===src))return;
   const link=document.createElement('link');
   link.rel='preload';
   link.as='script';
-  link.href=src;
+  link.href=releaseAssetUrl(src);
   link.dataset.mmDomainPreload='1';
+  link.dataset.mmDomainSrc=src;
   document.head.appendChild(link);
 }
-function loadScript(src){return new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.async=false;s.dataset.mmDomainAsset='1';s.onload=()=>resolve(src);s.onerror=()=>reject(new Error(`Domain asset failed: ${src}`));document.body.appendChild(s)})}
+function loadScript(src){return new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=releaseAssetUrl(src);s.async=false;s.dataset.mmDomainAsset='1';s.onload=()=>resolve(src);s.onerror=()=>reject(new Error(`Domain asset failed: ${src}`));document.body.appendChild(s)})}
 function loadPrimaryHubs(){
   if(window.MM_PRIMARY_HUBS||document.querySelector('script[data-mm-primary-hubs]'))return;
   const s=document.createElement('script');
-  s.src='./primary-learning-practice-hubs.js';
+  s.src=releaseAssetUrl('./primary-learning-practice-hubs.js');
   s.async=true;
   s.dataset.mmPrimaryHubs='1';
   s.addEventListener('error',()=>console.warn('[MouldMaster] Condensed Learn / Practice hubs could not be loaded; standard views remain available.'));
@@ -27,7 +39,7 @@ function loadPrimaryHubs(){
 function loadLearnerUxRepair(){
   if(window.MM_LEARNER_UX_REPAIR||document.querySelector('script[data-mm-learner-ux-repair]'))return;
   const s=document.createElement('script');
-  s.src='./learner-ux-repair.js';
+  s.src=releaseAssetUrl('./learner-ux-repair.js');
   s.async=true;
   s.dataset.mmLearnerUxRepair='1';
   s.addEventListener('error',()=>console.warn('[MouldMaster] Learner UX repair runtime could not be loaded; standard lesson and assessment views remain available.'));

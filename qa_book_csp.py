@@ -11,6 +11,6 @@ assert 'style=' not in COMPAT.lower(), 'Book compatibility loader must not emit 
 assert 'mm-book-chapter-button' in RUNTIME, 'Book chapter button class missing from canonical runtime'
 assert '.mm-book-chapter-button{' in CSS, 'Book chapter button styling missing from external stylesheet'
 assert 'width:100%' in CSS and 'text-align:left' in CSS, 'Book chapter button layout rule incomplete'
-assert "script.src='./src/domains/learning/book-runtime.js'" in COMPAT, 'Book compatibility loader must delegate to canonical runtime'
+assert "script.src=releaseAssetUrl('./src/domains/learning/book-runtime.js')" in COMPAT, 'Book compatibility loader must delegate to canonical runtime'
 
 print('PASS: canonical Book runtime and compatibility loader emit no inline style attributes and use CSP-safe external styling')

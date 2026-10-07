@@ -8,6 +8,16 @@
 /* MouldMaster lesson-reading enhancement — 2026.09.14.1 */
 (function(){
   'use strict';
+  function releaseAssetUrl(value){
+    const shared=window.MM_RELEASE_ASSET_URL;
+    if(typeof shared==='function')return shared(value);
+    const raw=String(value||''),version=String(window.MM_RUNTIME_ASSET_VERSION||'').trim();
+    if(!raw||!version)return raw;
+    let url;try{url=new URL(raw,location.href)}catch(_){return raw}
+    if(url.origin!==location.origin)return raw;
+    if(!url.searchParams.has('v'))url.searchParams.set('v',version);
+    return url.href;
+  }
   function norm(s){return String(s||'').replace(/\s+/g,' ').trim().toLowerCase();}
   function marker(el,step,label,primary){
     if(!el)return;
@@ -56,7 +66,7 @@
   function loadReadAloud(){
     if(window.MMReadAloud||document.querySelector('script[data-mm-read-aloud-runtime]'))return;
     const script=document.createElement('script');
-    script.src='./read-aloud.js';
+    script.src=releaseAssetUrl('./read-aloud.js');
     script.dataset.mmReadAloudRuntime='1';
     script.async=false;
     document.head.appendChild(script);
@@ -64,7 +74,7 @@
   function loadBook(){
     if(window.MMBook||document.querySelector('script[data-mm-book-runtime]'))return;
     const script=document.createElement('script');
-    script.src='./book-runtime.js';
+    script.src=releaseAssetUrl('./book-runtime.js');
     script.dataset.mmBookRuntime='1';
     script.async=false;
     document.head.appendChild(script);

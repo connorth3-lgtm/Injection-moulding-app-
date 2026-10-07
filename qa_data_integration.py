@@ -88,8 +88,8 @@ def main() -> None:
         require(token in integrity, f"process-data integrity hardening missing invariant: {token}")
     require((ROOT / "qa_process_data_integrity.cjs").exists(), "behavioral process-data integrity regression test missing")
 
-    require("script.src='./data-integration-runtime.js'" in shell, "app shell must load connected data runtime")
-    require("ui.src='./process-data-intelligence-ui.js'" in shell, "app shell must load process intelligence UI")
+    require("script.src=releaseAssetUrl('./data-integration-runtime.js')" in shell, "app shell must load connected data runtime through explicit release versioning")
+    require("ui.src=releaseAssetUrl('./process-data-intelligence-ui.js')" in shell, "app shell must load process intelligence UI through explicit release versioning")
     require('window.MM_APP_SHELL_FINALIZED=VERSION' in shell, "connected data must preserve canonical app-shell finalization through VERSION")
     require("'./data-integration-runtime.js'" in worker, "connected runtime must be a published worker asset")
     require("'./process-data-intelligence-ui.js'" in worker, "process intelligence UI must be a published worker asset")
