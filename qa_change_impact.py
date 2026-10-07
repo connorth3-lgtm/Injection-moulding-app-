@@ -106,6 +106,13 @@ need("tools/ci_impact.py --governed-candidate" in candidate_workflow,
      "candidate workflow must use the canonical governed-candidate impact mode")
 need("data/release-external-validation-v1.json" in ci_impact_source and "webCandidate" in ci_impact_source,
      "governed-candidate impact mode must derive its baseline from the retained candidate ledger")
+need("pull_request_base_sha()" in ci_impact_source and "oldest_ancestor()" in ci_impact_source,
+     "governed-candidate impact must fail conservative when a retained source SHA is not locally reachable")
+need("Never fall back" in ci_impact_source and "HEAD^" in ci_impact_source,
+     "governed-candidate impact must document the squash-history fail-open it prevents")
+reuse_source=(Path(__file__).resolve().parent/"tools/verify_retained_candidate_reuse.py").read_text(encoding="utf-8")
+need('candidate_release != current_release' in reuse_source and 'version.json' in reuse_source,
+     "retained candidate reuse must reject a producer bound to a different web release")
 
 need(classify(set())["runtime"] is False,"empty diff must not classify runtime")
 need(classify(set())["candidate_binding"] is False,"empty diff must not classify candidate binding")
