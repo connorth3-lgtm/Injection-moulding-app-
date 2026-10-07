@@ -76,7 +76,9 @@ RUNTIME_MARKERS = (
     "validateMaterialRegionalEvidence",
     "getMaterialCatalog",
     "getMaterialRegionalEvidence",
-    "includeTechnicalMaterial:false",
+    "readerListeningModuleHtml",
+    "readerListeningChapterHtml",
+    "allReaderChapters().map(readerListeningChapterHtml)",
 )
 
 
@@ -182,6 +184,21 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     missing_runtime = [marker for marker in RUNTIME_MARKERS if marker not in runtime]
     if missing_runtime:
         raise AssertionError("live Book runtime is missing governed markers: " + ", ".join(missing_runtime))
+
+    listening_module = re.search(
+        r"function readerListeningModuleHtml\(chapter\)\{(.*?)\}\s*function readerListeningChapterHtml\(reader\)",
+        runtime,
+        re.S,
+    )
+    if not listening_module:
+        raise AssertionError("live Book runtime is missing the governed listen-module renderer")
+    listening_body = listening_module.group(1)
+    if "chapter?.state!=='verified'" not in listening_body:
+        raise AssertionError("live Book listen surface no longer fails closed to verified modules")
+    if "materialAtlasHtml" in listening_body:
+        raise AssertionError("live Book listen surface must exclude the technical-review material appendix")
+    if "readerSections(chapter)" not in listening_body:
+        raise AssertionError("live Book listen surface no longer uses the governed condensed reader sections")
 
     manifest = fetch_json(candidate, MANIFEST)
     if manifest.get("schema") != 1 or manifest.get("bookId") != "mouldmaster-book":
