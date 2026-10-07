@@ -1,8 +1,8 @@
-/* MouldMaster Virtual Apprenticeship — evidence-first simulator practice 2026.10.08.1 */
+/* MouldMaster Virtual Apprenticeship — evidence-first simulator practice 2026.10.08.2 */
 (function(){
 'use strict';
 if(window.MM_VIRTUAL_APPRENTICESHIP)return;
-const VERSION='2026.10.08.1';
+const VERSION='2026.10.08.2';
 const STORAGE_KEY='mm_virtual_apprenticeship_v1';
 const LEVELS=Object.freeze({
   beginner:{label:'Beginner · guided',feedback:'immediate'},
