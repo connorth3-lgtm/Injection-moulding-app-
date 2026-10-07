@@ -337,7 +337,7 @@ function mmDerivedLearningAwards(record){
 }
 for(const record of Object.values(db.users||{})){
   record.learningAwards=mmDerivedLearningAwards(record);
-  if(!record.learningAwardMeta||typeof record.learningAwardMeta!="object"||Array.isArray(record.learningAwardMeta))record.learningAwardMeta={};
+  if(!record.learningAwardMeta||typeof record.learningAwardMeta!=="object"||Array.isArray(record.learningAwardMeta))record.learningAwardMeta={};
   delete record.certificates;
   delete record.certificateMeta;
 }
