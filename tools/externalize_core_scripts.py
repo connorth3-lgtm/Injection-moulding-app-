@@ -31,7 +31,7 @@ DESKTOP_INTEGRITY = ROOT / "desktop/electron/scripts/generate-integrity.cjs"
 HANDLER_BRIDGE_PATH = OUT_DIR / "inline-handler-bridge.js"
 STYLE_BRIDGE_PATH = OUT_DIR / "inline-style-bridge.js"
 
-INLINE_SCRIPT_RE = re.compile(r"<script(?P<attrs>[^>]*)>(?P<body>.*?)</script\s*>", re.I | re.S)
+INLINE_SCRIPT_RE = re.compile(r"<script(?P<attrs>[^>]*)>(?P<body>.*?)</script\b[^>]*>", re.I | re.S)
 SRC_ATTR_RE = re.compile(r"\bsrc\s*=", re.I)
 PAYLOAD_RUNTIME_REF_RE = re.compile(r'src=["\']\./src/core-runtime/(core-inline-\d{3}\.js)["\']')
 TAG_RE = re.compile(r"<[^>]+>", re.S)
