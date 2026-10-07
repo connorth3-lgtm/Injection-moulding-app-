@@ -238,6 +238,9 @@ editorial_auth=authorization.get('editorialExpansionAuthorization') or {}
 need(editorial_auth.get('status')=='authorized-repository-technical-source-review' and editorial_auth.get('moduleCount')==37 and editorial_auth.get('noNewClaimIds') is True and editorial_auth.get('independentSmeStatus')=='hold', 'editorial expansion authorization boundary drift')
 need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('release') == enrichment.get('release'), 'evidence-enrichment authorization must remain bound to the reviewed content release')
 need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('sectionCount') == 14, 'evidence-enrichment authorization section count drifted')
+need(sum(len(x.get('sections') or []) for x in enrichment.get('chapterPatches', []) if isinstance(x, dict)) == 14, 'evidence-enrichment ledger section count drifted')
+live_pages_verifier=(ROOT/'tools/verify_book_pages_candidate.py').read_text(encoding='utf-8')
+need('sum(len(x.get("sections") or []) for x in patches if isinstance(x, dict)) != 14' in live_pages_verifier, 'live Book Pages verifier enrichment count drifted from governed 14-section contract')
 need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('independentSmeStatus') == 'hold', 'evidence-enrichment authorization must preserve SME HOLD')
 
 claim_auth=authorization.get('claimEvidenceReferenceAuthorization') or {}
