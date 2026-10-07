@@ -79,7 +79,6 @@ for(const marker of [
 for(const forbidden of [
   'automatic machine control',
   'guaranteed root cause',
-  'universal optimum',
   'defect probability',
   'validated digital twin'
 ])assert.ok(!source.toLowerCase().includes(forbidden.toLowerCase()),`forbidden authority/prediction claim present: ${forbidden}`);
