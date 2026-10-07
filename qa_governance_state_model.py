@@ -101,6 +101,10 @@ def main() -> None:
     external = load("data/release-external-validation-v1.json")
     book_auth = load("data/book-publication-authorization-v1.json")
     book_sme = load("data/book-sme-review-v1.json")
+    book_manifest = load("data/book-manifest-v1.json")
+    book_accuracy = load("data/book-accuracy-gate-v1.json")
+    book_audit = load("data/book-verification-audit-all-v1.json")
+    book_reader = load("data/book-reader-architecture-v2.json")
     curriculum_sme = load("qa/curriculum-semantic-review.json")
     nzqa_external = load("data/nzqa-external-validation-v1.json")
     desktop_release = load("data/desktop-release-platform-v1.json")
@@ -152,6 +156,30 @@ def main() -> None:
     assert external["governance"]["status"] in {"pending-native-ruleset-apply", "enforced"}
 
     assert book_auth["status"] == "authorized", "current Book publication authorization changed unexpectedly"
+    module_ids = [
+        str(chapter.get("id") or "")
+        for part in book_manifest.get("parts", [])
+        for chapter in part.get("chapters", [])
+        if isinstance(chapter, dict)
+    ]
+    assert len(module_ids) == 46 and len(set(module_ids)) == 46, "Book manifest must expose 46 unique governed modules"
+    authorized_ids = [str(value) for value in book_auth.get("authorizedChapterIds", [])]
+    assert len(authorized_ids) == 46 and set(authorized_ids) == set(module_ids), "Book publication authorization must cover all 46 governed modules exactly once"
+    reader_rows = book_reader.get("readerChapters") or []
+    reader_module_ids = [
+        str(value)
+        for row in reader_rows
+        if isinstance(row, dict)
+        for value in row.get("moduleIds", [])
+    ]
+    assert len(reader_rows) == 20, "Book reader architecture must expose 20 reader-facing chapters"
+    assert len(reader_module_ids) == 46 and len(set(reader_module_ids)) == 46 and set(reader_module_ids) == set(module_ids), "Book reader architecture must cover every governed module exactly once"
+    lifecycle = book_accuracy.get("recordLifecycle") or {}
+    assert lifecycle.get("status") == "historical-prepublication-gate", "Book accuracy gate must remain explicitly historical"
+    assert lifecycle.get("supersededForCurrentPublicationStatusBy") == "data/book-publication-authorization-v1.json", "historical Book accuracy gate must identify the current publication authority"
+    disposition = book_audit.get("effectiveClaimDisposition") or {}
+    assert disposition.get("supported") == 116 and disposition.get("qualified") == 21 and disposition.get("hold") == 0 and disposition.get("conflicting") == 0, "Book effective claim-disposition summary drifted"
+    assert book_auth.get("learnerFacingPublicationLabel") == "Source evidence reviewed", "Book current learner-facing publication label drifted"
     assert book_sme["status"] == "hold", "independent Book SME status must remain HOLD until real 46/46 human review exists"
     assert book_sme.get("reviews") == [], "current independent Book SME ledger must not contain manufactured approvals"
     assert external["bookSme"]["status"] == book_sme["status"]
