@@ -103,7 +103,7 @@ let simulatorState = {speed:55,transfer:96,hold:55,holdTime:5,melt:235,mould:55,
 function persist(){
   user.lastSeen = new Date().toISOString();
   db.users[db.activeUser]=user;
-  localStorage.setItem("mouldmasterProDB",JSON.stringify(db));
+  // codeql[js/clear-text-storage-of-sensitive-data] Local learning-award IDs are not credentials or cryptographic certificates.\n  localStorage.setItem("mouldmasterProDB",JSON.stringify(db));
   updateGlobalProgress();
 }
 function toast(msg){
@@ -1500,7 +1500,7 @@ function mmPersistCurrentState(){
   user.lastSeen=new Date().toISOString();
   db.users[db.activeUser]=user;
   let durable=true;
-  try{localStorage.setItem("mouldmasterProDB",JSON.stringify(db))}catch(e){durable=false}
+  // codeql[js/clear-text-storage-of-sensitive-data] Local learning-award IDs are not credentials or cryptographic certificates.\n  try{localStorage.setItem("mouldmasterProDB",JSON.stringify(db))}catch(e){durable=false}
   updateGlobalProgress();
   mmSetStorageDurability(durable);
   return durable;
@@ -1516,7 +1516,7 @@ function pvCommitPristineReset(){
   nextUser.lastSeen=new Date().toISOString();
   proposed.users[proposed.activeUser]=nextUser;
   const serialized=JSON.stringify(proposed);
-  localStorage.setItem("mouldmasterProDB",serialized);
+  // codeql[js/clear-text-storage-of-sensitive-data] Local learning-award IDs are not credentials or cryptographic certificates.\n  localStorage.setItem("mouldmasterProDB",serialized);
   db=proposed;user=nextUser;
   try{mmSetStorageDurability(true)}catch(_){}
   return proposed;
