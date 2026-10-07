@@ -322,7 +322,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
         raise AssertionError("live Book evidence-enrichment authorization is not bound to its governed content release")
     if not isinstance(patches, list) or len(patches) != 10 or len({str(x.get("chapterId")) for x in patches if isinstance(x, dict)}) != 10:
         raise AssertionError("live Book evidence-enrichment ledger must contain exactly 10 unique chapter patches")
-    if sum(len(x.get("sections") or []) for x in patches if isinstance(x, dict)) != 13:
+    if sum(len(x.get("sections") or []) for x in patches if isinstance(x, dict)) != 14:
         raise AssertionError("live Book evidence-enrichment ledger must contain exactly 14 governed sections")
     enrichment_ids = [str(x.get("chapterId")) for x in patches]
     sme_enrichment_ids = sme.get("enrichmentChapterIds")
