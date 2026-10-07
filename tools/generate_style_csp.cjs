@@ -57,6 +57,8 @@ function staticRuntimeScriptDependencies(source){
   const rels=[];
   const assignment=/\b[A-Za-z_$][\w$]*\s*\.\s*src\s*=\s*(['"])(\.\/[^'"?]+\.js)(?:\?[^'"]*)?\1/g;
   for(const match of source.matchAll(assignment))rels.push(match[2].replace(/^\.\//,''));
+  const versionedAssignment=/\b[A-Za-z_$][\w$]*\s*\.\s*src\s*=\s*releaseAssetUrl\(\s*(['"])(\.\/[^'"?]+\.js)(?:\?[^'"]*)?\1\s*\)/g;
+  for(const match of source.matchAll(versionedAssignment))rels.push(match[2].replace(/^\.\//,''));
   const setter=/\b[A-Za-z_$][\w$]*\s*\.\s*setAttribute\(\s*(['"])src\1\s*,\s*(['"])(\.\/[^'"?]+\.js)(?:\?[^'"]*)?\2\s*\)/g;
   for(const match of source.matchAll(setter))rels.push(match[3].replace(/^\.\//,''));
   return rels;
