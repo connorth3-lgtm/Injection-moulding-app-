@@ -30,6 +30,8 @@ PRIORITY_ASSETS = [
     "./src/domains/learning/content-intelligence.js",
     "./src/domains/process/engineering-core-browser.js",
     "./src/domains/engineering/engineer-simulator-ui.js",
+    "./src/domains/engineering/virtual-apprenticeship.js",
+    "./src/domains/engineering/spatial-twin.js",
 ]
 # Presentation repair must run after every other domain has had a chance to add
 # learner-facing shell/navigation chrome. Keeping this in the generator makes the
