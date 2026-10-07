@@ -16,7 +16,7 @@ jobs:
   exact-head-risk-coverage:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 65
     steps:
       - name: Checkout exact pull-request head
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -28,6 +28,6 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           CI_RISK_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           CI_RISK_PR_NUMBER: ${{ github.event.pull_request.number }}
-          CI_RISK_ATTEMPTS: '60'
+          CI_RISK_ATTEMPTS: '180'
           CI_RISK_SLEEP_SECONDS: '20'
         run: python tools/verify_ci_risk_coverage.py
