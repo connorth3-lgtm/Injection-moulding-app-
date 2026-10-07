@@ -1,5 +1,5 @@
-const CACHE_VERSION='2026.10.08.2';
-const CACHE_REVISION='virtual-apprenticeship-r66-20261008';
+const CACHE_VERSION='2026.10.08.3';
+const CACHE_REVISION='spatial-twin-r67-20261008';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both
@@ -29,6 +29,7 @@ const CORE=[
   './premium-dynamic.css',
   './mobile-lesson-fix.css',
   './learner-ux-repair.css',
+  './src/domains/engineering/spatial-twin.css',
   './src/domains/runtime-packs/learning-foundation-runtime-pack.js',
   './src/domains/runtime-packs/assessment-foundation-runtime-pack.js',
   './read-aloud.js',
@@ -51,6 +52,7 @@ const CORE=[
   './src/domains/process/engineering-core-browser.js',
   './src/domains/engineering/engineer-simulator-ui.js',
   './src/domains/engineering/virtual-apprenticeship.js',
+  './src/domains/engineering/spatial-twin.js',
   './src/domains/governance/standards-readiness.js',
   './src/domains/learning/learning-analytics-loader.js',
   './src/domains/learning/activity-events-v2.js',
