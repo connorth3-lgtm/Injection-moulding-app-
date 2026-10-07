@@ -117,11 +117,14 @@ need("script.src='./src/domains/learning/book-runtime.js'" in compat_loader, 'ro
 for forbidden in ("const AUTH_PATH='./data/", 'function showChapter(', 'function verifiedChapterHtml('):
     need(forbidden not in compat_loader, f'root Book path still contains a second implementation: {forbidden}')
 need("script.src='./book-runtime.js'" in learning_pack, 'learning foundation must still reach the compatibility loader')
-need(index.index('learning-foundation-runtime-pack.js') < index.index('shell-finalization-runtime-pack.js'), 'release script versioner must install before packed app-shell dynamic loaders execute')
-
-# Every dynamically created same-origin script after the compatibility loader gets the current shell release query.
-for marker in ('__MM_RELEASE_SCRIPT_VERSIONER__', 'HTMLScriptElement', 'versionScriptUrl', "url.searchParams.set('v',release)"):
-    need(marker in compat_loader, f'dynamic release-versioning safeguard missing: {marker}')
+# Bootstrap-owned explicit release versioning replaces the former global
+# HTMLScriptElement prototype interception.
+for marker in ('function runtimeScriptUrl(value)', 'window.MM_RUNTIME_SCRIPT_URL=runtimeScriptUrl', "url.searchParams.set('v',version)"):
+    need(marker in index, f'explicit runtime script release-version helper missing: {marker}')
+need(index.index('window.MM_RUNTIME_SCRIPT_URL=runtimeScriptUrl') < index.index('await installDocument(html)'), 'runtime script release-version helper must exist before governed runtime execution')
+need("window.MM_RUNTIME_SCRIPT_URL" in compat_loader and "runtimeScriptUrl('./src/domains/learning/book-runtime.js')" in compat_loader, 'Book compatibility loader must use explicit runtime script versioning')
+for forbidden in ('__MM_RELEASE_SCRIPT_VERSIONER__', 'HTMLScriptElement', "Object.defineProperty(proto,'src'"):
+    need(forbidden not in compat_loader, f'Book compatibility loader must not globally intercept script loading: {forbidden}')
 
 # Canonical DOI/publisher links replace intermediary academic-discovery links in learner-facing Book surfaces.
 canonical_links = {
