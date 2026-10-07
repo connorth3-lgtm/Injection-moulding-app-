@@ -1,6 +1,5 @@
 const fs=require('fs');
 const path=require('path');
-const pixelmatch=require('pixelmatch');
 const {PNG}=require('pngjs');
 const {test,expect}=require('@playwright/test');
 
@@ -205,13 +204,14 @@ async function capture(page,file,surface){
   return page.screenshot({path:file,fullPage:false,animations:'disabled',caret:'hide'});
 }
 
-function compare(baseBuffer,candidateBuffer,diffPath){
+async function compare(baseBuffer,candidateBuffer,diffPath){
+  const {default:pixelmatch}=await import('pixelmatch');
   const base=PNG.sync.read(baseBuffer);
   const candidate=PNG.sync.read(candidateBuffer);
   expect(candidate.width).toBe(base.width);
   expect(candidate.height).toBe(base.height);
   const diff=new PNG({width:base.width,height:base.height});
-  const diffPixels=pixelmatch(base.data,candidate.data,diff.data,base.width,base.height,{threshold:0.05,includeAA:false});
+  const diffPixels=pixelmatch(base.data,candidate.data,diff.data,base.width,base.height,{threshold:0.05,includeAA:false,checkerboard:false});
   if(diffPixels>manifest.maxDiffPixels)fs.writeFileSync(diffPath,PNG.sync.write(diff));
   return diffPixels;
 }
@@ -240,7 +240,7 @@ for(const viewport of manifest.viewports){
         const diffPath=path.join(ARTIFACT_ROOT,`${stem}-diff.png`);
         const candidateBuffer=await capture(candidate,candidatePath,surface);
         const baselineBuffer=await capture(baseline,baselinePath,surface);
-        const diffPixels=compare(baselineBuffer,candidateBuffer,diffPath);
+        const diffPixels=await compare(baselineBuffer,candidateBuffer,diffPath);
         expect(diffPixels,`${stem} drifted by ${diffPixels} pixels from ${manifest.release} @ ${manifest.commit}`).toBeLessThanOrEqual(manifest.maxDiffPixels);
       }
     }finally{
