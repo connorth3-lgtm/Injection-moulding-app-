@@ -5,7 +5,7 @@ if(window.MM_LEARNING_ANALYTICS||window.MM_LEARNING_ANALYTICS_LOADING)return;
 if(!window.MM_LEARNER_SCOPE)throw new Error('MM_LEARNER_SCOPE must load before Learning Analytics');
 const base='./learning-analytics.js';
 const version=String(window.MM_RUNTIME_ASSET_VERSION||'').trim();
-const src=version?`${base}?v=${encodeURIComponent(version)}`:base;
+const src=typeof window.MM_RUNTIME_SCRIPT_URL==='function'?window.MM_RUNTIME_SCRIPT_URL(base):(version?`${base}?v=${encodeURIComponent(version)}`:base);
 const STORAGE_PREFIX='mm_learning_analytics_v1::';
 const MIN_EXPORT_PROFILES=5;
 const scope=window.MM_LEARNER_SCOPE;
