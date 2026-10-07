@@ -3,12 +3,12 @@
 This packet governs **human** assistive-technology validation for web release `2026.10.07.11`. Automated checks do not satisfy this boundary.
 
 ## Exact release boundary
-- retained source: `a8b97341c1905906f45cf1c506dbac9c7911fcac`
-- public-runtime fingerprint: `sha256:554de8153cac8ae7c8a4b6b5b213faf796b5abd46e1e14b74d1172eadb7debb0`
-- retained candidate: `physical-pwa-candidate-a8b97341c1905906f45cf1c506dbac9c7911fcac` (`11459268599`)
-- candidate run: `37568110636`
-- artifact digest: `sha256:04d60ceac3fcc2114fc1caad24ef308dadf062260ecc680d70554d084e284860`
-- expiry: `2027-01-05T03:43:55Z`
+- retained source: `82068125f52689ba4cc64ec1088f1ec5b8cc0ba0`
+- public-runtime fingerprint: `sha256:4e1c24d6503f64cf738aa277ee86ead4e6087f3a0668c886cbd2d3007118856c`
+- retained candidate: `physical-pwa-candidate-82068125f52689ba4cc64ec1088f1ec5b8cc0ba0` (`11501119496`)
+- candidate run: `37664374604`
+- artifact digest: `sha256:e20d9650e4fbaae35c5bfacc0b267aec2398922d46665f200592ead478da6f94`
+- expiry: `2027-01-05T18:07:20Z`
 
 The four governed matrix rows remain pending.
 

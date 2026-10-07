@@ -1,15 +1,15 @@
 # External validation boundary — 2026.10.07.11
 
-Release `2026.10.07.11` is technically automated; native main governance remains **pending-native-ruleset-apply**, and all external workstreams remain explicit **HOLD**. This index does not create external evidence.
+Release `2026.10.07.11` is technically automated; native main governance is **enforced** under the verified solo-maintainer ruleset, and all external workstreams remain explicit **HOLD**. This index does not create external evidence.
 
 ## Exact current candidate
-- pre-merge candidate source: `a8b97341c1905906f45cf1c506dbac9c7911fcac`
-- exact public-runtime fingerprint: `sha256:554de8153cac8ae7c8a4b6b5b213faf796b5abd46e1e14b74d1172eadb7debb0`
-- candidate build run: `37568110636` (**Pre-merge Public Candidate**)
-- retained physical candidate: `physical-pwa-candidate-a8b97341c1905906f45cf1c506dbac9c7911fcac`
-- artifact id: `11459268599`
-- artifact ZIP digest: `sha256:04d60ceac3fcc2114fc1caad24ef308dadf062260ecc680d70554d084e284860`
-- artifact retention expiry: `2027-01-05T03:43:55Z`
+- pre-merge candidate source: `82068125f52689ba4cc64ec1088f1ec5b8cc0ba0`
+- exact public-runtime fingerprint: `sha256:4e1c24d6503f64cf738aa277ee86ead4e6087f3a0668c886cbd2d3007118856c`
+- candidate build run: `37664374604` (**Pre-merge Public Candidate**)
+- retained physical candidate: `physical-pwa-candidate-82068125f52689ba4cc64ec1088f1ec5b8cc0ba0`
+- artifact id: `11501119496`
+- artifact ZIP digest: `sha256:e20d9650e4fbaae35c5bfacc0b267aec2398922d46665f200592ead478da6f94`
+- artifact retention expiry: `2027-01-05T18:07:20Z`
 
 This is a release-boundary **rebind**, not external evidence. Mutable `preview` is not evidence authority.
 
