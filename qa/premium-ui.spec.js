@@ -157,7 +157,9 @@ test('product hierarchy keeps Home focused and Materials catalogue dense',async(
     utilityShadow:getComputedStyle(document.querySelector('#dashboard .mm-home-balance')).boxShadow
   }));
   expect(hierarchy.focusShadow).not.toBe('none');
-  expect(hierarchy.utilityShadow).toBe('none');
+  // The helper panel's entry animation can briefly expose a fractional
+  // shadow. Wait for the final unshadowed utility state.
+  await expect.poll(async()=>utilities.evaluate(el=>getComputedStyle(el).boxShadow)).toBe('none');
 
   await page.waitForFunction(()=>Boolean(window.MM_MATERIAL_REGISTRY?.openPage));
   await page.evaluate(()=>window.MM_MATERIAL_REGISTRY.openPage({replaceUrl:false}));
@@ -241,6 +243,8 @@ test('Home Book card opens the governed Book and returns to Home on phone and de
     await page.setViewportSize({width,height:900});
     await openApp(page);
     await page.waitForFunction(()=>typeof window.MMBook?.open==='function');
+    // Reloads can restore the last route; assert the Home card from Home.
+    await page.evaluate(()=>switchView('dashboard'));
     const book=page.locator('#dashboard [data-mm-home-book]');
     await expect(book).toBeVisible();
     await book.getByRole('button',{name:'Open Book'}).click();
