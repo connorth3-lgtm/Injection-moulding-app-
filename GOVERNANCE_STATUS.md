@@ -25,6 +25,20 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 The Book may therefore be publication-authorized while independent Book SME review remains on HOLD. Those states are intentionally different and must not be collapsed into a single 'validated' label.
 
+## Book current publication state
+
+This section resolves the Book current learner-facing publication state from the governed authorization/evidence overlays. Historical manifest workflow fields and the pre-publication accuracy gate remain audit inputs; they do not override the current publication authorization.
+
+| Signal | Current meaning |
+| --- | --- |
+| Governed modules | **46/46 publication-authorized** as **Source evidence reviewed** |
+| Reader structure | **20 reader chapters** derived from **46 governed modules**; reader grouping adds no technical claim or SME approval. |
+| Claim evidence | **116 supported · 21 qualified · 0 hold · 0 conflicting** |
+| Manifest workflow metadata | **46 source-review**; this is evidence/workflow metadata, not the learner-facing publication status. |
+| Historical accuracy gate | **technical-review-only** · lifecycle **historical-prepublication-gate** · superseded for current publication status by `data/book-publication-authorization-v1.json`. |
+| Independent human SME review | **hold** · **0/46 governed modules approved** |
+
+Publication authorization and independent validation are separate namespaces. The Book can be authorized as a source-evidence-reviewed reference while independent human SME, device, learner-outcome and provider/accreditation evidence remains on HOLD.
 ## Assurance evidence layers
 
 These layers are reported separately. Passing static/contract or automated browser QA does not convert the external human/device layer into a pass.
