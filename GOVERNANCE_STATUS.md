@@ -7,7 +7,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 | Boundary | Current state |
 | --- | --- |
 | Technical automation | **pass** |
-| Native main governance | **pending-native-ruleset-apply** |
+| Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
 | Independent Academy SME review | **hold** |
