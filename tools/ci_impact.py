@@ -18,16 +18,33 @@ def valid_commit(ref:str)->bool:
         stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,
     ).returncode==0
 
-def resolve_base()->str:
+def event_payload()->dict:
     event_path=os.environ.get("GITHUB_EVENT_PATH","")
     if event_path and Path(event_path).is_file():
         try:
-            event=json.loads(Path(event_path).read_text(encoding="utf-8"))
+            payload=json.loads(Path(event_path).read_text(encoding="utf-8"))
+            return payload if isinstance(payload,dict) else {}
         except Exception:
-            event={}
-        before=str(event.get("before") or "").strip()
-        if valid_commit(before):
-            return before
+            return {}
+    return {}
+
+def pull_request_base_sha()->str:
+    event=event_payload()
+    value=str((((event.get("pull_request") or {}).get("base") or {}).get("sha") or "")).strip()
+    return value if valid_commit(value) else ""
+
+def oldest_ancestor()->str:
+    rows=git("rev-list","--max-parents=0","HEAD").splitlines()
+    return rows[0] if rows else git("rev-parse","HEAD")
+
+def resolve_base()->str:
+    event=event_payload()
+    before=str(event.get("before") or "").strip()
+    if valid_commit(before):
+        return before
+    pr_base=pull_request_base_sha()
+    if pr_base:
+        return pr_base
     base_ref=os.environ.get("GITHUB_BASE_REF","").strip()
     if base_ref:
         for candidate in (f"origin/{base_ref}",base_ref):
@@ -44,8 +61,17 @@ def governed_candidate_base()->str:
         try:
             data=json.loads(path.read_text(encoding="utf-8"))
             ref=str((data.get("webCandidate") or {}).get("sourceSha") or "").strip()
-            if valid_commit(ref):
-                return ref
+            if ref:
+                if valid_commit(ref):
+                    return ref
+                # A retained candidate can live on a prior PR branch that is not
+                # present in this checkout after a squash merge. Never fall back
+                # to HEAD^ in that case: doing so can misclassify a large runtime
+                # change as a final QA-only change. The exact PR base is a
+                # conservative local comparison point; if it is unavailable,
+                # compare from the oldest reachable ancestor.
+                pr_base=pull_request_base_sha()
+                return pr_base if pr_base else oldest_ancestor()
         except Exception:
             pass
     return resolve_base()
