@@ -60,4 +60,23 @@ assert.ok(!/data-mm-st-hotspot="\$\{id\}" style=/.test(source),'hotspot placemen
 for(const forbidden of ['automatic machine control','guaranteed root cause','validated digital twin','production recipe authority']){
   assert.ok(!source.toLowerCase().includes(forbidden),`forbidden authority claim present: ${forbidden}`);
 }
-console.log('Spatial Twin structure, case mapping and authority-boundary QA passed');
+const css=fs.readFileSync(path.join(__dirname,'src/domains/engineering/spatial-twin.css'),'utf8');
+for(const marker of [
+  '.mm-st-shell','.mm-st-layout','.mm-st-stage','.mm-st-hotspot','.mm-st-timeline','.mm-st-mentor',
+  '.mm-st-layer-flow','.mm-st-layer-pressure','.mm-st-layer-thermal','.mm-st-layer-cooling',
+  '.mm-st-layer-quality','.mm-st-layer-evidence','@media(max-width:820px)','@media(max-width:520px)',
+  '@media(prefers-reduced-motion:reduce)'
+])assert.ok(css.includes(marker),`missing Spatial Twin stylesheet contract: ${marker}`);
+
+const manifest=JSON.parse(fs.readFileSync(path.join(__dirname,'runtime-domain-manifest.json'),'utf8'));
+const assets=manifest.assets||[];
+const va=assets.indexOf('./src/domains/engineering/virtual-apprenticeship.js');
+const spatial=assets.indexOf('./src/domains/engineering/spatial-twin.js');
+assert.ok(va>=0&&spatial>va,'Spatial Twin must load after Virtual Apprenticeship');
+
+const sw=fs.readFileSync(path.join(__dirname,'service-worker.js'),'utf8');
+assert.ok(sw.includes("'./src/domains/engineering/spatial-twin.js'"),'Spatial Twin JS must be atomically cached');
+assert.ok(sw.includes("'./src/domains/engineering/spatial-twin.css'"),'Spatial Twin CSS must be atomically cached');
+const index=fs.readFileSync(path.join(__dirname,'index.html'),'utf8');
+assert.ok(index.includes('spatial-twin.css'),'Spatial Twin CSS must load from the governed shell');
+console.log('Spatial Twin runtime, integration, CSP and authority-boundary QA passed');
