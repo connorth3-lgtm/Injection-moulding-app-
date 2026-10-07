@@ -56,7 +56,7 @@
   function loadReadAloud(){
     if(window.MMReadAloud||document.querySelector('script[data-mm-read-aloud-runtime]'))return;
     const script=document.createElement('script');
-    script.src='./read-aloud.js';
+    script.src=window.MM_RUNTIME_SCRIPT_URL?.('./read-aloud.js')||'./read-aloud.js';
     script.dataset.mmReadAloudRuntime='1';
     script.async=false;
     document.head.appendChild(script);
@@ -64,7 +64,7 @@
   function loadBook(){
     if(window.MMBook||document.querySelector('script[data-mm-book-runtime]'))return;
     const script=document.createElement('script');
-    script.src='./book-runtime.js';
+    script.src=window.MM_RUNTIME_SCRIPT_URL?.('./book-runtime.js')||'./book-runtime.js';
     script.dataset.mmBookRuntime='1';
     script.async=false;
     document.head.appendChild(script);
