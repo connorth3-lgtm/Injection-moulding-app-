@@ -123,7 +123,7 @@ need("document.writeln(" not in index, "document.writeln is not permitted in the
 # runtime uses deterministic generated copies with handler attributes rewritten to
 # inert data attributes. The final generated slot also embeds the strict delegated
 # bridge, avoiding a 40th BODY_SCRIPTS entry.
-inline_core_script_re = re.compile(r"<script\b(?![^>]*\bsrc\s*=)[^>]*>(.*?)</script\s*>", re.I | re.S)
+inline_core_script_re = re.compile(r"<script\b(?![^>]*\bsrc\s*=)[^>]*>(.*?)</script\b[^>]*>", re.I | re.S)
 inline_core_scripts = inline_core_script_re.findall(core)
 core_runtime_scripts = sorted(CORE_RUNTIME_DIR.glob("core-inline-*.js"))
 need(inline_core_scripts, "frozen recovery core unexpectedly has no inline scripts")
