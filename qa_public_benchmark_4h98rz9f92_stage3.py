@@ -29,11 +29,14 @@ for marker in [
 need('if digest!=EXPECTED_SHA256' in text, "retrieved SHA gate missing")
 need('materialize_verified_file(source,EXPECTED_FILE)' in text, "shared publisher SHA verification gate missing")
 for marker in [
-  "resolve_file(meta,file_id,name,source['shortId'],source['version'],expected_sha)",
+  "def pinned_download_urls(short_id,version,file_id):",
+  "matching=[obj for obj in walk_files(current_meta)",
+  "metadata_download_url(item,file_id,name,short_id,expected_sha)",
+  "_,_,urls=resolve_file(meta,file_id,name,short_id,version,expected_sha)",
   "if digest==expected_sha:",
   "raise MendeleyTransportUnavailable",
 ]:
-    need(marker in shared, f"shared version-pinned publisher SHA gate missing: {marker}")
+    need(marker in shared, f"shared pinned-identity/SHA gate missing: {marker}")
 need('any(counts[c]!=EXPECTED_ROWS_PER_COLUMN' in text, "exact 35-row-per-column gate missing")
 need('formulas!=0' in text, "formula exclusion gate missing")
 print("MouldMaster HDPE/GNP semantic acceptance QA passed")
