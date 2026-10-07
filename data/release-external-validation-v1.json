@@ -8,12 +8,15 @@
     "claim": "Strongly automated and technically governed; no external-validation claim is implied."
   },
   "governance": {
-    "status": "pending-native-ruleset-apply",
+    "status": "enforced",
     "policyFile": "data/main-governance-policy-v1.json",
     "repositoryPolicy": ".github/MAIN_PROTECTION.md",
     "verifier": "tools/verify_main_ruleset.py",
     "liveRulesetIssue": "#43",
-    "required": "Apply and verify the canonical no-bypass solo-maintainer main ruleset with all six protected status contexts. The repository owner alone must deliberately squash-merge after the exact-head checks succeed; do not claim an independent GitHub reviewer."
+    "required": "Apply and verify the canonical no-bypass solo-maintainer main ruleset with all six protected status contexts. The repository owner alone must deliberately squash-merge after the exact-head checks succeed; do not claim an independent GitHub reviewer.",
+    "liveRulesetId": 22155472,
+    "liveRulesetVerifiedAt": "2026-10-07T06:28:13.983Z",
+    "liveRulesetUpdatedAt": "2026-10-07T18:22:41.578+13:00"
   },
   "accessibility": {
     "status": "hold",
@@ -84,7 +87,7 @@
     "requiredForExpansion": "Formal controlled-site validation, safety/governance review and explicit authorization before any machine-control or validated-recipe authority."
   },
   "visualGovernance": {
-    "status": "pending-native-ruleset-apply",
+    "status": "enforced",
     "required": "Apply and verify the canonical solo-maintainer main ruleset, keep all six automated status/security contexts and record the real owner's manual merge decision; human visual/device/SME validation remains an independent HOLD where required."
   },
   "claims": {
