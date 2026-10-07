@@ -4,6 +4,7 @@ const BASE='http://127.0.0.1:4173/';
 async function openApp(page,width,certificates=[]){
   await page.addInitScript(({certificates})=>{
     const id='reachability-qa',user={id,name:'Reachability QA',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates,currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
+    // codeql[js/clear-text-storage-of-sensitive-data] Test fixture stores local learning-award labels, not credentials or cryptographic certificates.
     localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:id,users:{[id]:user}}));
   },{certificates});
   await page.setViewportSize({width,height:900});
