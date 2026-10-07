@@ -48,6 +48,10 @@ for marker in (
 for marker in ("conclusion", "success", "artifactDigest", "artifactExpiresAt", "workflow/source provenance"):
     need(marker in candidate_reuse_guard, f"retained-candidate live provenance guard missing: {marker}")
 
+candidate_quality_block = candidate_workflow_text.split("Require exact PR-head quality gates before candidate approval", 1)[1]
+need("required=(mobile-browser question-quality-50-pass)" in candidate_quality_block, "candidate producer must wait for browser/question quality gates")
+need("required=(integrity mobile-browser question-quality-50-pass)" not in candidate_quality_block, "candidate producer must not deadlock on integrity; protected integrity still gates merge")
+
 index_rel = ledger.get("validationIndex")
 need(index_rel == f"qa/EXTERNAL_VALIDATION_{evidence_release}.md", "release validation index path is stale")
 index_path = ROOT / index_rel

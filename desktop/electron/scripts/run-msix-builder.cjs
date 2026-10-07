@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 
-const EXPECTED_VERSION = '27.0.0-alpha.7';
+const EXPECTED_VERSION = '27.0.0-alpha.9';
 const toolchainRoot = path.resolve(__dirname, '..', 'msix-toolchain');
 const packageJsonPath = path.join(toolchainRoot, 'node_modules', 'electron-builder', 'package.json');
 

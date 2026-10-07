@@ -123,7 +123,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          required=(integrity mobile-browser question-quality-50-pass)
+          # Do not wait on protected `integrity` here: integrity includes the exact external-candidate binding,
+          # which cannot pass until this workflow has first produced a successful retained candidate.
+          # The repository ruleset still requires integrity before merge.
+          required=(mobile-browser question-quality-50-pass)
           for attempt in {1..120}; do
             checks="$(gh api -H "Accept: application/vnd.github+json"               "/repos/${GITHUB_REPOSITORY}/commits/${SOURCE_SHA}/check-runs?per_page=100")"
             pending=0
