@@ -44,13 +44,13 @@
   "release": "2026.10.07.9",
   "candidate": {
     "release": "2026.10.07.9",
-    "sourceSha": "7cfcf8285239411221fe05d5c356e29d39ade36c",
+    "sourceSha": "f00bbfa6cf3bc7ddd2884a79d67cb49f09d4370f",
     "runtimeFingerprint": "sha256:15ce96280e71d864ef2fbf59d91878ab3f6afb7de523508b0d071af0106cb11e",
-    "candidateRunId": 37539676252,
+    "candidateRunId": 37550985214,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 11447648160,
-    "artifactName": "physical-pwa-candidate-7cfcf8285239411221fe05d5c356e29d39ade36c",
-    "artifactDigest": "sha256:fde3bd0aa4fdb85fb476c9f70313d377be3fd95b017e1e411ffe2aa01acf9fe2",
-    "artifactExpiresAt": "2027-01-04T22:17:53Z"
+    "artifactId": 11451983735,
+    "artifactName": "physical-pwa-candidate-f00bbfa6cf3bc7ddd2884a79d67cb49f09d4370f",
+    "artifactDigest": "sha256:1289863f0372a36a276c2e35ae11ad86a583537fe6b04c5ac5b9037322c7e7e1",
+    "artifactExpiresAt": "2027-01-05T00:15:18Z"
   }
 }
