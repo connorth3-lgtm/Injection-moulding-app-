@@ -210,7 +210,7 @@ search_block = book_runtime.split('function searchBook(query){',1)[1].split('asy
 need("JSON.stringify(row)" not in search_block, 'Book material search must not re-serialize all regional evidence rows on every query')
 need("materialSearchIndex.regional.some" in search_block, 'Book material search must query the precomputed regional evidence index')
 need("void ensureManifest().catch(()=>{})" in book_runtime, 'Book open must consume the controlled fail-closed manifest rejection')
-need("data.mmBookRetry='1'" in book_runtime and "Retry governed Book load" in book_runtime and "void ensureManifest().catch(()=>{}).finally" in book_runtime, 'Book fail-closed state must offer a governed retry that re-runs exact manifest/authorization verification')
+need("retry.dataset.mmBookRetry='1'" in book_runtime and "Retry governed Book load" in book_runtime and "void ensureManifest().catch(()=>{}).finally" in book_runtime, 'Book fail-closed state must offer a governed retry that re-runs exact manifest/authorization verification')
 need("async function coldMaterialSearchTerms()" in book_runtime and "verifiedJson(MATERIAL_SEARCH_INDEX_PATH,MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1)" in book_runtime, 'Book cold material discovery must use the exact-byte-pinned lightweight search index')
 need("async function coldMaterialHit(query)" in book_runtime, 'Book global search must support cold canonical and regional material discovery')
 need("counts.canonicalExactGrades!==260" in book_runtime and "counts.regionalEvidenceRows!==284" in book_runtime and "counts.total!==544" in book_runtime, 'Book cold search index must fail closed on coverage drift')
