@@ -132,7 +132,7 @@ jobs:
         run: npx playwright test qa/learn-practice-mobile-style.spec.js --config=playwright.config.cjs
       - name: Chromium substantive regression suite
         if: matrix.task == 'substantive'
-        run: npx playwright test --config=playwright.config.cjs --grep-invert "matches approved .* baseline across learner surfaces"
+        run: npx playwright test --config=playwright.substantive.config.cjs
       - name: Upload Chromium QA artifacts
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
