@@ -208,7 +208,7 @@ function svgMarkup(){
   </svg>`;
 }
 function hotspotMarkup(){
-  return Object.entries(HOTSPOTS).map(([id,h])=>`<button type="button" class="mm-st-hotspot" data-mm-st-hotspot="${id}" style="--x:${h.x}%;--y:${h.y}%" aria-label="Inspect ${esc(h.label)}"><span aria-hidden="true"></span><b>${esc(h.short)}</b></button>`).join('');
+  return Object.entries(HOTSPOTS).map(([id,h])=>`<button type="button" class="mm-st-hotspot" data-mm-st-hotspot="${id}" aria-label="Inspect ${esc(h.label)}"><span aria-hidden="true"></span><b>${esc(h.short)}</b></button>`).join('');
 }
 function modeMarkup(){
   return MODES.map(([id,label,desc])=>`<button type="button" data-mm-st-mode="${id}" aria-pressed="${id===state.mode?'true':'false'}" title="${esc(desc)}">${esc(label)}</button>`).join('');
