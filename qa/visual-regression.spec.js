@@ -96,7 +96,7 @@ async function normalizeCaptureState(page,surface){
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
 
-async function openBookContents(page){
+async function openBookContents(page,{expandIndex=false}={}){
   await page.evaluate(async()=>{window.MMBook.open();await window.MMBook.load();});
   await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
   const contents=page.locator('[data-mm-book-contents]');
@@ -106,7 +106,12 @@ async function openBookContents(page){
     await back.click();
   }
   await expect(contents).toBeVisible();
-  await expect(contents.locator('[data-mm-book-chapter]').first()).toBeVisible();
+  if(expandIndex){
+    const index=contents.locator('details.mm-book-governed-index');
+    await expect(index.locator('summary')).toBeVisible();
+    if(!(await index.evaluate(el=>el.open)))await index.locator('summary').click();
+    await expect(contents.locator('[data-mm-book-chapter]').first()).toBeVisible();
+  }
 }
 
 async function prepareSurface(page,surface){
@@ -159,7 +164,7 @@ async function prepareSurface(page,surface){
     await openBookContents(page);
     await expect(page.locator('[data-mm-book-chapter]')).toHaveCount(46);
   }else if(surface==='book-materials'){
-    await openBookContents(page);
+    await openBookContents(page,{expandIndex:true});
     await page.locator('[data-mm-book-chapter="material-families"]').click();
     await expect(page.locator('[data-mm-book-material-atlas]')).toBeVisible();
     const canonical=page.locator('[data-mm-book-canonical-catalog]');
@@ -168,11 +173,11 @@ async function prepareSurface(page,surface){
     await first.locator(':scope > summary').click();
     await expect(first).toBeVisible();
   }else if(surface==='book-late'){
-    await openBookContents(page);
+    await openBookContents(page,{expandIndex:true});
     await page.locator('[data-mm-book-chapter]').nth(41).click();
     await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
   }else if(surface==='book-trace'){
-    await openBookContents(page);
+    await openBookContents(page,{expandIndex:true});
     await page.locator('[data-mm-book-chapter]').first().click();
     const trace=page.locator('.mm-book-claim-trace').first();if(await trace.count())await trace.evaluate(el=>{el.open=true});
     await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
