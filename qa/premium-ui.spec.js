@@ -152,6 +152,13 @@ test('product hierarchy keeps Home focused and Materials catalogue dense',async(
   const utilities=page.locator('#dashboard .mm-home-balance');
   await expect(focus).toBeVisible();
   await expect(utilities).toBeVisible();
+  // learner-ui-polish.css is attached by its domain module. WebKit can expose the
+  // adopted Home nodes before that stylesheet has finished attaching, so wait for
+  // the canonical style owner rather than sampling the transient legacy card style.
+  await page.waitForFunction(()=>{
+    const link=document.querySelector('link[data-mm-learner-ui-polish]');
+    return Boolean(window.MM_LEARNER_UI_POLISH && link?.sheet);
+  });
   const hierarchy=await page.evaluate(()=>({
     focusShadow:getComputedStyle(document.querySelector('#dashboard .mm-today-focus')).boxShadow,
     utilityShadow:getComputedStyle(document.querySelector('#dashboard .mm-home-balance')).boxShadow
