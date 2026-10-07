@@ -13,6 +13,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent / 'tools'))
+from change_impact import classify
+
 ROOT = Path(__file__).resolve().parent
 
 
@@ -37,6 +40,7 @@ def main() -> int:
     args = parser.parse_args()
 
     files = changed_files(args.base, args.head)
+    impact = classify(files)
     print(f"FAST FEEDBACK: {len(files)} changed file(s)")
     for path in sorted(files):
         print(f" - {path}")
@@ -53,20 +57,11 @@ def main() -> int:
     if files & {"primary-learning-practice-hubs.js", "mobile-lesson-fix.css", "qa_practice_hub.py"}:
         commands.append([sys.executable, "qa_practice_hub.py"])
 
-    book_changed = any(
-        p == "book-runtime.js"
-        or p == "reading-patch.css"
-        or p.startswith("data/book-")
-        or p.startswith("src/domains/learning/book-")
-        or p.startswith("qa_book_")
-        or p in {
-            "runtime-domain-manifest.json",
-            "tools/generate_runtime_manifest.py",
-            "desktop/electron/scripts/generate-integrity.cjs",
-            "service-worker.js",
-        }
-        for p in files
-    )
+    book_changed = impact["book"] or bool(files & {
+        "reading-patch.css","runtime-domain-manifest.json",
+        "tools/generate_runtime_manifest.py","desktop/electron/scripts/generate-integrity.cjs",
+        "service-worker.js",
+    })
     if book_changed:
         for qa in [
             "qa_book_manifest.py",
@@ -77,22 +72,16 @@ def main() -> int:
             "qa_book_claim_coverage.py",
             "qa_book_derived_governance.py",
             "qa_book_release_integration.py",
+            "qa_book_reader_architecture.py",
+            "qa_book_resume.py",
         ]:
             if (ROOT / qa).exists():
                 commands.append([sys.executable, qa])
 
-    process_integrity_changed = any(
-        "process-data" in p
-        or p in {
-            "data-integration-runtime.js",
-            "process-data-intelligence-ui.js",
-            "current-data-manifest.json",
-            "qa_data_integration.py",
-            "qa_process_statistics_integrity.cjs",
-            "qa_process_data_integrity.cjs",
-        }
-        for p in files
-    )
+    process_integrity_changed = impact["process_data"] or bool(files & {
+        "data-integration-runtime.js","process-data-intelligence-ui.js","current-data-manifest.json",
+        "qa_data_integration.py","qa_process_statistics_integrity.cjs","qa_process_data_integrity.cjs",
+    })
     if process_integrity_changed:
         for qa in ["qa_process_statistics_integrity.cjs", "qa_process_data_integrity.cjs"]:
             if (ROOT / qa).exists():
@@ -112,17 +101,10 @@ def main() -> int:
             if (ROOT / qa).exists():
                 commands.append(["node", qa])
 
-    assessment_changed = any(
-        p.startswith("assessment-")
-        or p.startswith("qa_assessment_")
-        or p == "qa_evidence_maturity.py"
-        or "/assessment/" in p
-        or p in {
-            "tools/generate_assessment_decision_manifest.py",
-            "data/assessment-decision-manifest-v1.json",
-        }
-        for p in files
-    )
+    assessment_changed = impact["assessment"] or bool(files & {
+        "qa_evidence_maturity.py","tools/generate_assessment_decision_manifest.py",
+        "data/assessment-decision-manifest-v1.json",
+    })
     if assessment_changed:
         for qa in [
             "qa_assessment_storage_scope.py",
@@ -160,14 +142,8 @@ def main() -> int:
     if simulator_accessibility_changed and (ROOT / "qa_simulator_accessibility.py").exists():
         commands.append([sys.executable, "qa_simulator_accessibility.py"])
 
-    release_docs_changed = bool(files & {
-        "README.md",
-        "support.html",
-        "version.json",
-        "index.html",
-        "src/domains/shell/pwa-shell.js",
-        "service-worker.js",
-        "qa_release_docs.py",
+    release_docs_changed = impact["runtime"] or impact["release_metadata"] or bool(files & {
+        "README.md","support.html","qa_release_docs.py",
     })
     if release_docs_changed and (ROOT / "qa_release_docs.py").exists():
         commands.append([sys.executable, "qa_release_docs.py"])
@@ -180,21 +156,11 @@ def main() -> int:
     if recovery_contract_changed and (ROOT / "tools/verify_frozen_recovery.py").exists():
         commands.append([sys.executable, "tools/verify_frozen_recovery.py"])
 
-    browser_contract_changed = any(
-        p in {
-            ".github/workflows/mobile-browser-qa.yml",
-            "qa_webkit_regression.py",
-            "playwright.config.cjs",
-            "playwright.webkit-full.config.cjs",
-            "playwright.cross-browser.config.cjs",
-        }
-        or (p.startswith("qa/") and p.endswith(".spec.js"))
-        for p in files
-    )
+    browser_contract_changed = impact["browser"]
     if browser_contract_changed and (ROOT / "qa_webkit_regression.py").exists():
         commands.append([sys.executable, "qa_webkit_regression.py"])
 
-    if any(p.startswith("src/domains/") or p in {"src/domains/shared/runtime-v2.js", "runtime-domain-manifest.json"} for p in files):
+    if impact["runtime"] or "runtime-domain-manifest.json" in files:
         if (ROOT / "qa_audit_consolidation.py").exists():
             commands.append([sys.executable, "qa_audit_consolidation.py"])
 

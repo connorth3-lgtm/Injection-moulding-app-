@@ -1,8 +1,8 @@
-/* MouldMaster Book complete claim/evidence trace — 2026.09.17.1 */
+/* MouldMaster Book complete claim/evidence trace — 2026.10.06.5 */
 (function(){
 'use strict';
 if(window.MM_BOOK_CLAIM_TRACE)return;
-const VERSION='2026.09.17.1';
+const VERSION='2026.10.06.5';
 const ROOT='./src/domains/learning/book-data/';
 const REVIEW_FILES=[
  'book-claim-review-foundations-materials-machine-v1.json',
@@ -18,12 +18,26 @@ const RESOLUTION_FILES=[
  'book-qualification-resolution-all-v1.json'
 ];
 const EXPECTED={chapters:46,claims:137,supported:116,qualified:21,hold:0,conflicting:0};
-let ready=false,claims=new Map(),sources=new Map(),error=null,queued=false;
+let ready=false,claims=new Map(),sources=new Map(),error=null,queued=false,loading=null;
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-async function json(name){const r=await fetch(ROOT+name,{cache:'no-store',credentials:'same-origin'});if(!r.ok)throw new Error(`${name} unavailable (${r.status})`);return r.json()}
+const hex=buffer=>Array.from(new Uint8Array(buffer),b=>b.toString(16).padStart(2,'0')).join('');
+async function gitBlobSha1(bytes){
+ if(!globalThis.crypto?.subtle)throw new Error('Complete claim trace byte-integrity verification is unavailable in this browser');
+ const body=new Uint8Array(bytes),header=new TextEncoder().encode(`blob ${body.byteLength}\0`),payload=new Uint8Array(header.byteLength+body.byteLength);
+ payload.set(header,0);payload.set(body,header.byteLength);
+ return hex(await crypto.subtle.digest('SHA-1',payload));
+}
+async function json(name){
+ const expected=window.MMBook?.getIntegrityMap?.()?.[name];
+ if(!/^[0-9a-f]{40}$/.test(String(expected||'')))throw new Error(`Complete claim trace integrity identity missing for ${name}`);
+ const r=await fetch(ROOT+name,{cache:'no-store',credentials:'same-origin'});if(!r.ok)throw new Error(`${name} unavailable (${r.status})`);
+ const bytes=await r.arrayBuffer(),actual=await gitBlobSha1(bytes);
+ if(actual!==expected)throw new Error(`Complete claim trace byte-integrity mismatch for ${name}`);
+ return JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));
+}
 function canonicalUrl(source){const map=window.MMBook?.getPublicationAuthorization?.()?.canonicalAcademicEvidenceUrls||{};return String(map[source?.id]||source?.canonicalUrl||source?.url||'')}
 function addSource(s){if(!s?.id)return;if(!sources.has(s.id))sources.set(s.id,s)}
-function evidenceHtml(ids){const unique=[...new Set(ids||[])];if(!unique.length)return '<li>No evidence identifier recorded.</li>';return unique.map(id=>{const s=sources.get(id);if(!s)return `<li><code>${esc(id)}</code> — source metadata unavailable</li>`;const meta=esc([s.issuer,s.scope].filter(Boolean).join(' — ')),url=canonicalUrl(s);const label=esc(s.title||s.id);return /^https:\/\//i.test(url)?`<li><a href="${esc(url)}" target="_blank" rel="noopener noreferrer"><b>${label}</b></a>${meta?`<br><small>${meta}</small>`:''}</li>`:`<li><b>${label}</b>${meta?`<br><small>${meta}</small>`:''}</li>`}).join('')}
+function evidenceHtml(ids){const unique=[...new Set(ids||[])];if(!unique.length)return '<li>No evidence identifier recorded.</li>';return unique.map(id=>{const s=sources.get(id);if(!s)return `<li><code>${esc(id)}</code> — source metadata unavailable</li>`;const meta=esc([s.issuer,s.scope].filter(Boolean).join(' — ')),identity=window.MMBook?.getEvidenceIdentity?.(id)||null,identityMeta=esc([`Evidence record: ${id}`,identity?.family?`Evidence family: ${identity.family}`:'',identity?.sameAs&&identity.sameAs!==id?`Same underlying record as: ${identity.sameAs}`:''].filter(Boolean).join(' · ')),url=canonicalUrl(s);const label=esc(s.title||s.id);return /^https:\/\//i.test(url)?`<li><a href="${esc(url)}" target="_blank" rel="noopener noreferrer"><b>${label}</b></a>${meta?`<br><small>${meta}</small>`:''}${identityMeta?`<br><small>${identityMeta}</small>`:''}</li>`:`<li><b>${label}</b>${meta?`<br><small>${meta}</small>`:''}${identityMeta?`<br><small>${identityMeta}</small>`:''}</li>`}).join('')}
 function overlayResolution(resolution,label){
  const id=String(resolution?.claimId||'');const claim=claims.get(id);if(!claim)throw new Error(`Resolution references unknown claim ${id||'<missing>'}`);
  if(resolution.newConclusion)claim.conclusion=resolution.newConclusion;
@@ -32,6 +46,10 @@ function overlayResolution(resolution,label){
 }
 function buildTrace(reviews,resolutions){
  claims=new Map();sources=new Map();
+ for(const s of window.MMBook?.getManifest?.()?.sourceSeeds||[])addSource(s);
+ const finalIndex=window.MMBook?.getClaimEvidenceReference?.();
+ if(finalIndex?.status!=='governed-reader-claim-evidence-index'||finalIndex?.chapterCount!==46||finalIndex?.claimCount!==137||finalIndex?.sourceCount!==52)throw new Error('Complete claim trace final evidence index is unavailable or invalid');
+ for(const s of finalIndex.sourceSeeds||[])addSource(s);
  const chapterIds=new Set();
  for(const ledger of reviews){
   if(ledger?.schema!==1||ledger?.bookId!=='mouldmaster-book'||!Array.isArray(ledger.chapters))throw new Error('Book claim-review ledger identity check failed');
@@ -60,6 +78,18 @@ function buildTrace(reviews,resolutions){
  const counts={chapters:chapterIds.size,claims:claims.size,supported:0,qualified:0,hold:0,conflicting:0};
  for(const claim of claims.values()){const key=claim.conclusion;if(Object.prototype.hasOwnProperty.call(counts,key))counts[key]++}
  for(const [key,value] of Object.entries(EXPECTED))if(counts[key]!==value)throw new Error(`Book complete claim trace mismatch: ${key}=${counts[key]} expected ${value}`);
+ const indexedClaims=new Map();
+ for(const chapter of finalIndex.chapters||[])for(const row of chapter.claims||[]){
+  if(!row?.claimId||indexedClaims.has(row.claimId))throw new Error(`Complete claim trace final index contains duplicate/missing claim id: ${row?.claimId||'<missing>'}`);
+  indexedClaims.set(row.claimId,{chapterId:chapter.chapterId,evidence:[...(row.evidenceIds||[])]});
+ }
+ if(indexedClaims.size!==EXPECTED.claims)throw new Error(`Complete claim trace final index claim coverage mismatch: ${indexedClaims.size}/${EXPECTED.claims}`);
+ for(const [claimId,claim] of claims){
+  const indexed=indexedClaims.get(claimId);if(!indexed||indexed.chapterId!==claim.chapterId)throw new Error(`Complete claim trace final index chapter mismatch for ${claimId}`);
+  const actual=[...new Set(claim.evidence||[])],expected=[...new Set(indexed.evidence||[])];
+  if(actual.length!==expected.length||actual.some((id,i)=>id!==expected[i]))throw new Error(`Complete claim trace final evidence mismatch for ${claimId}`);
+  for(const id of actual)if(!sources.has(id))throw new Error(`Complete claim trace source metadata missing for ${id}`);
+ }
  return counts;
 }
 function chapterClaims(id){return [...claims.values()].filter(x=>x.chapterId===id).sort((a,b)=>String(a.claimId).localeCompare(String(b.claimId),undefined,{numeric:true}))}
@@ -70,16 +100,31 @@ function traceHtml(chapterId){
 function renderArticle(article){if(!ready||!article)return;const id=article.dataset.mmBookVerifiedChapter;if(!id)return;const old=article.querySelector('.mm-book-claim-trace');const holder=document.createElement('div');holder.innerHTML=traceHtml(id);const next=holder.firstElementChild;if(!next)return;if(old)old.replaceWith(next);else article.appendChild(next)}
 function renderAll(){queued=false;if(!ready)return;document.querySelectorAll('[data-mm-book-verified-chapter]').forEach(renderArticle);const status=document.querySelector('[data-mm-book-claim-trace-status]');if(status)status.textContent=`Complete claim trace reconciled: ${claims.size}/137 governed claims.`}
 function queue(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(renderAll,0)}
-function installStatus(){const accuracy=document.querySelector('[data-mm-book-accuracy]');if(!accuracy||accuracy.querySelector('[data-mm-book-claim-trace-status]'))return;const p=document.createElement('p');p.className='muted';p.dataset.mmBookClaimTraceStatus='1';p.textContent=error?'Complete claim trace unavailable — do not infer claim-level provenance from chapter anchors alone.':'Loading complete 137-claim evidence trace…';accuracy.appendChild(p)}
-async function init(){
- try{
-  await window.MMBook?.ready;
-  const [reviews,resolutions]=await Promise.all([Promise.all(REVIEW_FILES.map(json)),Promise.all(RESOLUTION_FILES.map(json))]);
-  buildTrace(reviews,resolutions);ready=true;window.dispatchEvent(new CustomEvent('mm:book-claim-trace-ready',{detail:{version:VERSION,claims:claims.size}}));
- }catch(e){error=e;console.error('[MouldMaster Book complete claim trace]',e);window.dispatchEvent(new CustomEvent('mm:book-claim-trace-failed',{detail:{version:VERSION,message:String(e?.message||e)}}));}
- installStatus();queue();
+function statusText(){
+ if(error)return 'Complete claim trace unavailable — do not infer claim-level provenance from chapter anchors alone.';
+ if(ready)return `Complete claim trace reconciled: ${claims.size}/137 governed claims.`;
+ if(window.MMBook?.getManifest?.())return 'Loading complete 137-claim evidence trace…';
+ return 'Complete 137-claim evidence trace loads on demand with governed Book content.';
 }
-window.addEventListener('mm:book-render',()=>{installStatus();queue()});
+function installStatus(){const accuracy=document.querySelector('[data-mm-book-accuracy]');if(!accuracy)return;let p=accuracy.querySelector('[data-mm-book-claim-trace-status]');if(!p){p=document.createElement('p');p.className='muted';p.dataset.mmBookClaimTraceStatus='1';accuracy.appendChild(p)}p.textContent=statusText()}
+async function initTrace(){
+ if(ready)return true;
+ if(error)return false;
+ if(loading)return loading;
+ if(!window.MMBook?.getManifest?.())return false;
+ loading=(async()=>{
+  try{
+   const [reviews,resolutions]=await Promise.all([Promise.all(REVIEW_FILES.map(json)),Promise.all(RESOLUTION_FILES.map(json))]);
+   buildTrace(reviews,resolutions);ready=true;window.dispatchEvent(new CustomEvent('mm:book-claim-trace-ready',{detail:{version:VERSION,claims:claims.size}}));return true;
+  }catch(e){error=e;console.error('[MouldMaster Book complete claim trace]',e);window.dispatchEvent(new CustomEvent('mm:book-claim-trace-failed',{detail:{version:VERSION,message:String(e?.message||e)}}));return false}
+  finally{loading=null;installStatus();queue()}
+ })();
+ return loading;
+}
+function onManifestReady(){installStatus();void initTrace()}
+window.addEventListener('mm:book-manifest-ready',onManifestReady);
+window.addEventListener('mm:book-render',()=>{installStatus();if(window.MMBook?.getManifest?.()&&!ready&&!error)void initTrace();queue()});
 window.MM_BOOK_CLAIM_TRACE=Object.freeze({version:VERSION,expected:{...EXPECTED},isReady:()=>ready,getError:()=>error?String(error?.message||error):null,getClaim:id=>claims.get(String(id))||null,getChapterClaims:chapterClaims,renderAll});
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+function arm(){installStatus();if(window.MMBook?.getManifest?.())void initTrace()}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',arm,{once:true});else arm();
 })();

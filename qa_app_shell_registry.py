@@ -39,10 +39,11 @@ for marker in [
     "id:'diagnostic-labs'",
     "id:'process-data'",
     "id:'material-labs'",
-    "id:'learning-insights'", "id:'repair-app-files'", "./repair.html", "location.reload()", "Electron",
+    "id:'question-centre'", "Question Centre", "MM_QUESTION_CENTRE?.open?.()",
+    "id:'learning-insights'", "id:'repair-app-files'", "Support & app maintenance", "./support.html",
     'aria-current',
     'visibleCoreView',
-    "navigationItems.get(activeCustomId)",
+    "navigationItems.get(customId)",
     'captured.renderDashboard',
     'captured.renderLesson',
     'captured.switchView',
@@ -68,18 +69,33 @@ need('aria-hidden="true"' in shell,'decorative registry navigation icons must be
 need("button.getAttribute('data-mm-onclick')" in shell,'canonical More-button detection must retain retired inline-handler compatibility')
 need("document.createElement('style')" not in shell,'canonical app-shell registry must not inject presentation styles at runtime')
 need('mm-app-shell-registry-style' not in shell,'retired app-shell runtime style element must not return')
+support=text('support.html')
+need('./repair.html' in support and 'Repair app files' in support,'Support must retain the direct repair route behind maintenance guidance')
+need("location.assign('./repair.html')" not in shell,'canonical More menu must route repair through Support rather than exposing repair as a peer learner action')
+need("switchView\\('(simulator|defects|coach|exams)'\\)" in shell,'mobile More must remove the legacy Knowledge Checks duplicate in favour of Question Centre')
+
 product_areas=text('src/domains/shell/product-areas.js')
 need("document.createElement('style')" not in product_areas,'product-area shell module must not inject presentation styles at runtime')
 need('mm-product-areas-style' not in product_areas,'retired product-area runtime style element must not return')
+need("dashboard.register" not in product_areas and "product-areas-v1" not in product_areas,'retired Product Areas router must not register a competing canonical Home section')
+need("function install(){\n  // Product-area routing remains available through MM_PRODUCT_AREAS.open()" in product_areas,'Product Areas install must preserve routing API without learner-facing Home ownership')
 ui_shell=text('ui-shell.css')
 for marker in ['.mm-product-area-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr))','--mm-mobile-nav-height:calc(70px + env(safe-area-inset-bottom))','--mm-mobile-content-clearance:calc(var(--mm-mobile-nav-height) + 26px)','.mm-dashboard-registry{display:grid;gap:14px}','body[data-mm-view="dashboard"] #continueBtn{display:none!important}','.mm-mobile-actions{bottom:var(--mm-mobile-nav-height)!important']:
     need(marker in ui_shell,f'canonical app-shell presentation missing from ui-shell.css: {marker}')
+need('.mm-dashboard-slot:not([data-mm-dashboard-section="today-focus"])' not in ui_shell,'legacy first-paint CSS must not blanket-hide canonical dashboard registry slots')
+need('#dashboard .mm-dashboard-registry>.mm-dashboard-slot:empty{display:none!important}' in ui_shell,'empty canonical dashboard slots should collapse without hiding populated registered surfaces')
+primary_hubs=text('primary-learning-practice-hubs.js')
+need("querySelectorAll('#mmDashboardRegistryBefore .mm-dashboard-slot" not in primary_hubs,'Practice hub must not delete canonical dashboard registry slots')
+need('normalizeHomeActions' in primary_hubs,'Practice hub Home integration must be limited to non-destructive action normalization')
 
 # Registry/finalizer must consolidate presentation composition only.
 for forbidden in ['correctIndex=', 'question_bank_version=', 'MM_DATA.exams=', 'regionalQuestions=', 'certificates.push(', 'fetch(', 'XMLHttpRequest', 'WebSocket', 'sendBeacon']:
     need(forbidden not in shell,f'app shell contains forbidden assessment/network mutation: {forbidden}')
 
 idx=text('index.html')
+domain_bootstrap=text('src/domains/domain-bootstrap.js')
+need("Unsafe domain asset" in domain_bootstrap and "A-Za-z0-9._-" in domain_bootstrap and "includes('..')" in domain_bootstrap,
+     "domain bootstrap must reject path traversal/non-canonical manifest assets")
 need("['./src/domains/shell/app-shell-registry.js','<script src=\"./src/domains/shell/app-shell-registry.js\">']" in idx,'index missing src/domains/shell/app-shell-registry.js')
 need("['./src/domains/runtime-packs/shell-finalization-runtime-pack.js','<script src=\"./src/domains/runtime-packs/shell-finalization-runtime-pack.js\">']" in idx,'index missing packed shell finalizer')
 need("['./src/domains/shell/app-shell-finalize.js','<script" not in idx,'direct root shell finalizer must remain retired from browser bootstrap')
@@ -90,9 +106,12 @@ need(idx.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.j
 need(idx.index("'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'") < idx.index("'./src/domains/domain-bootstrap.js'"),'shell finalization pack must run before domain bootstrap')
 
 sw=text('service-worker.js')
-for asset in ['src/domains/shell/app-shell-registry.js','mould-master-workspace.js']:
-    need(f"'./{asset}'" in sw,f'offline cache missing {asset}')
+need("'./src/domains/shell/app-shell-registry.js'" in sw,'offline cache missing app-shell registry')
+need("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'" in sw,'offline cache missing packed mould-master workspace runtime')
+workspace_pack=text('src/domains/runtime-packs/curriculum-workspace-runtime-pack.js')
+need('/* >>> mould-master-workspace.js */' in workspace_pack,'packed workspace runtime is missing mould-master-workspace.js')
 need("'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'" in sw,'offline cache missing packed shell finalizer')
+need("bindCanonicalCoreNavigation" in shell and "event.stopImmediatePropagation()" in shell and "},true);" in shell,'core desktop navigation must route once through the canonical shell in capture phase')
 
 pkg=json.loads(text('desktop/electron/package.json'))
 froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
@@ -108,6 +127,12 @@ for dep in ['MM_APP_SHELL','MM_LEARNING_EXPERIENCE','MM_CURRICULUM_INTEGRATION',
     need(dep in finalizer,f'finalizer dependency guard missing: {dep}')
 need('MM_APP_SHELL.finalize()' in finalizer,'finalizer does not activate canonical shell')
 need('window.MM_APP_SHELL_FINALIZED=VERSION' in finalizer,'finalizer marker must derive from the finalizer version')
+need("id:'book',zone:'before',order:20,render:renderBookDashboard" in shell,'Book must be a canonical Home dashboard section between current learning and specialist tools')
+need("data-mm-home-book-action" in shell and "openBookFromShell" in shell,'Home Book actions must route through the canonical shell')
+need("window.addEventListener('mm:book-resume-change',queueDashboardCompose)" in shell,'Home Book card must refresh when learner-scoped resume state changes')
+need("visibleBookId()" in shell and "registryId===customId" in shell,'Book must participate in canonical active-navigation state')
+book_nav=shell.split("id:'book',label:'Book'",1)[1].split("});",1)[0]
+need("desktop:false" not in book_nav,'Book must remain visible in canonical desktop navigation')
 need("id:'task-hub'" not in shell,'retired Home task-hub must not be registered by the canonical shell')
 need('.mm-home-task-hub' not in finalizer,'shell finalizer must not retain retired Home task-hub cleanup coupling')
 need('data-mm-role="explore-learning"' not in finalizer,'shell finalizer must not rewrite retired Home task actions')
@@ -124,7 +149,7 @@ for marker in [
     "typeof window.MM_APP_SHELL_FINALIZED==='string'",
     'window.MM_APP_SHELL_FINALIZED.length>0',
     "!document.getElementById('mmBootstrap')",
-    "Home is lean, XP-free, clear of duplicate reference launchers, and Practice owns troubleshooting",
+    "Home is lean, XP-free, includes the Book resume surface, and Practice owns troubleshooting",
     "Primary mobile navigation and the reduced More tools are keyboard reachable",
     "data-mm-registry-menu=\"learning-insights\"", "data-mm-registry-menu=\"repair-app-files\"",
     "late dashboard modules recompose idempotently",

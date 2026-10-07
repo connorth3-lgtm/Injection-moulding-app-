@@ -22,12 +22,6 @@ def _compatible_need(ok,msg):
         meta=audit.PSYCHOMETRIC_META or {}
         if meta.get('itemsHardened')==197 and meta.get('optionsParallelised')==788 and meta.get('textMutationCount')==0:
             return
-    if msg.startswith('lexical cue model too predictive for '):
-        # Under the immutable runtime policy, a predictive surface-form signal is an
-        # authoring finding. It must remain visible in the report, but runtime code
-        # is forbidden from rewriting technical wording merely to clear the model.
-        IMMUTABLE_AUTHORING_BACKLOG.append(msg)
-        return
     _original_need(ok,msg)
 
 
@@ -77,7 +71,7 @@ process.stdout.write(JSON.stringify({scenarios:D.scenarios,cue:window.MM_PSYCHOM
         _original_need(s['correct']==prior['correct'],f'post-approval key changed: {x["id"]}')
         _original_need(s.get('choices',[])==prior['options'],f'post-approval scenario option text/order changed: {x["id"]}')
         _original_need(s.get('feedback',[])==prior['feedback'],f'post-approval scenario feedback changed: {x["id"]}')
-    _original_need(len(items)==197,f'post-approval learner-visible item count mismatch: {len(items)}')
+    _original_need(len(items)==209,f'post-approval learner-visible item count mismatch: {len(items)}')
     _original_need(POST_APPROVAL_META.get('coverageOk') is True,f'post-approval coverage failed: {POST_APPROVAL_META}')
     _original_need(int(POST_APPROVAL_META.get('scenarioDistractorCueEdits',-1))==0,'post-approval cue metadata must confirm zero edits')
     _original_need(int(POST_APPROVAL_META.get('textMutationCount',-1))==0,'post-approval metadata must confirm zero text mutations')
@@ -104,6 +98,12 @@ def _relative_form_features(item,option_index):
     return feats
 
 
+def _expected_tie_hit(scores,correct):
+    best=max(scores)
+    tied=[i for i,score in enumerate(scores) if math.isclose(score,best,rel_tol=0.0,abs_tol=1e-12)]
+    return (1.0/len(tied)) if correct in tied else 0.0
+
+
 def _relative_form_cue_model(items,passes=50):
     acc=[];by_kind=defaultdict(list)
     for pass_no in range(passes):
@@ -125,7 +125,7 @@ def _relative_form_cue_model(items,passes=50):
                     for f in fs&vocab:
                         score+=math.log((pos[f]+1)/(pos_n+2))-math.log((neg[f]+1)/(neg_n+2))
                     scores.append(score)
-                pred=max(range(4),key=lambda i:scores[i]);hit=pred==x['correct'];hits+=hit;total+=1;kind_hits[x['kind']]+=hit;kind_total[x['kind']]+=1
+                hit=_expected_tie_hit(scores,x['correct']);hits+=hit;total+=1;kind_hits[x['kind']]+=hit;kind_total[x['kind']]+=1
         acc.append(hits/total)
         for kind in kind_total:by_kind[kind].append(kind_hits[kind]/kind_total[kind])
     return {
@@ -147,7 +147,7 @@ if __name__=='__main__':
     report=json.loads(report_path.read_text(encoding='utf-8'))
     report['final_psychometric_approval']=POST_APPROVAL_META
     report['final_runtime_layer']='assessment-psychometric-approval.js'
-    report['runtime_text_policy']='immutable: CI may report authoring cues, but runtime layers must not rewrite stems/options/feedback'
+    report['runtime_text_policy']='immutable: runtime layers must not rewrite stems/options/feedback; cue failures block promotion until source wording is independently reapproved'
     report['immutable_authoring_backlog']=list(dict.fromkeys(IMMUTABLE_AUTHORING_BACKLOG))
     report_path.write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
     print('Immutable post-approval learner runtime verified:',POST_APPROVAL_META,'authoring-backlog=',report['immutable_authoring_backlog'])

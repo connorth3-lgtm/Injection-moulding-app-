@@ -1,6 +1,6 @@
 # Assessment semantic review contract
 
-This contract complements deterministic assessment QA with a human semantic-review checklist for all 197 learner-visible keyed decisions. It does not alter answer keys or claim external validation.
+This contract complements deterministic assessment QA with a human semantic-review checklist for all 209 learner-visible keyed decisions. It does not alter answer keys or claim external validation.
 
 Every reviewed item must satisfy all of the following:
 
@@ -17,19 +17,20 @@ Every reviewed item must satisfy all of the following:
 
 ## Coverage
 
-The governed review population is 197 keyed decisions:
+The governed review population is 209 keyed decisions:
 
 - 57 live exam questions: 30 technical and 27 regional safety/compliance.
 - 40 shop-floor scenario drills.
 - 36 Diagnostic Learning Lab decisions.
 - 24 Material Behaviour Lab decisions.
 - 40 optional Material Practice decisions.
+- 12 Measured-Data Evidence Challenge decisions based on governed real-measured dataset contracts.
 
 Release automation continues to enforce structural, key, cue, evidence and source gates. This semantic contract records the additional pedagogical standard that automated heuristics cannot prove by themselves. Question wording or answer-key changes still require the repository's normal content review and version-control process.
 
 ## Completion and independence boundary
 
-A deterministic pass does not constitute semantic approval. A complete semantic review must record an item-level disposition for all 197 learner-visible keyed decisions and explicitly cover the stem, keyed answer, every distractor, explanation/feedback, evidence fit, Book consistency and safety/applicability boundary.
+A deterministic pass does not constitute semantic approval. A complete semantic review must record an item-level disposition for all 209 learner-visible keyed decisions and explicitly cover the stem, keyed answer, every distractor, explanation/feedback, evidence fit, Book consistency and safety/applicability boundary.
 
 Where a keyed proposition is taught in the governed Book, the reviewer must confirm that the assessment does not contradict, overstate or silently generalise the Book's current authorized wording. Where the Book deliberately leaves a mechanism qualified or context-dependent, the assessment must preserve that uncertainty rather than force an unjustified universal answer.
 

@@ -26,3 +26,18 @@ The learner-facing support layer reflects only public, high-level revision theme
 - QA: `qa_governed_readiness_layers.py`
 
 Any future ISO edition/amendment requires a fresh source-status check and deliberate governed update.
+
+
+## Marlex packaging observation
+
+A user-supplied Marlex polyethylene bag shows a **SAI Global Certified System** mark and wording that the product was manufactured in a plant whose quality-management system was registered to ISO 9001.
+
+Governed interpretation:
+
+- this is packaging evidence about the manufacturing organisation/plant QMS;
+- it is **not** ISO 9001 certification of the polyethylene resin, grade properties, processing window, lot acceptance or moulding suitability;
+- the exact Marlex grade is obscured in the image and remains **unresolved**;
+- packaging alone does not establish that the certificate is current or that its scope covers the exact current site/product;
+- SAI Global Assurance was acquired by Intertek in 2021, so historic SAI Global branding should be treated as historical certification-mark context and current validity should be verified with current certificate/scope evidence when required.
+
+Primary certification-mark guidance: Intertek F205, *Use of Certificates and Certification and Accreditation Marks* (2023). Current SAI Global/Intertek corporate context: Intertek acquisition completion announcement (7 September 2021).

@@ -1,0 +1,115 @@
+name: MouldMaster Preview Candidate
+
+on:
+  push:
+    branches: [preview]
+  workflow_dispatch:
+
+# Preview is deliberately non-publishing. GitHub Pages exposes one repository site;
+# main is the sole live publisher. Preview proves and retains an exact-SHA candidate.
+permissions: {}
+
+concurrency:
+  group: preview-candidate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  preview-candidate:
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact preview source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: Require merged-PR preview provenance
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python3 tools/verify_preview_source.py --self-test
+          python3 tools/verify_preview_source.py \
+            --repository "${{ github.repository }}" \
+            --source-sha "${{ github.sha }}"
+      - name: Require exact-head preview quality gates
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Push-SHA checks only. The PR-only public-candidate gate is verified
+          # against the originating PR head by verify_preview_source.py.
+          required=(integrity mobile-browser question-quality-50-pass)
+          for attempt in {1..90}; do
+            checks="$(gh api -H "Accept: application/vnd.github+json" \
+              "/repos/${GITHUB_REPOSITORY}/commits/${SOURCE_SHA}/check-runs?per_page=100")"
+            pending=0
+            failed=0
+            for name in "${required[@]}"; do
+              state="$(printf '%s' "$checks" | python3 -c 'import json,sys; d=json.load(sys.stdin); n=sys.argv[1]; xs=[x for x in d.get("check_runs",[]) if x.get("name")==n]; xs.sort(key=lambda x: (x.get("completed_at") or x.get("started_at") or x.get("created_at") or "", int(x.get("id") or 0)), reverse=True); print("missing" if not xs else (xs[0].get("conclusion") or xs[0].get("status") or "unknown"))' "$name")"
+              case "$state" in
+                success) echo "$name: success" ;;
+                queued|in_progress|pending|requested|waiting|missing) echo "$name: $state"; pending=1 ;;
+                *) echo "::error::$name failed or was not successful: $state"; failed=1 ;;
+              esac
+            done
+            if [ "$failed" -ne 0 ]; then exit 1; fi
+            if [ "$pending" -eq 0 ]; then
+              echo "Exact-head preview gates passed for $SOURCE_SHA"
+              exit 0
+            fi
+            sleep 20
+          done
+          echo "::error::Timed out waiting for exact-head preview quality gates."
+          exit 1
+      - name: Validate preview build contracts
+        run: |
+          python3 qa_pages_single_publisher.py
+          python3 qa_pages_candidate_handoff.py
+          python3 qa_release_supply_chain.py
+          python3 tools/verify_pwa_physical_evidence.py --contract-only
+      - name: Build governed preview candidate
+        run: python3 tools/build_pages_artifact.py
+      - name: Build release-hold shell with preview candidate
+        run: python3 tools/build_pages_hold.py --preview-source .pages-dist
+      - name: Verify retained preview candidate locally
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8765 --bind 127.0.0.1 --directory .pages-hold >/tmp/mouldmaster-preview-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          ready=0
+          for attempt in {1..10}; do
+            if python3 -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8765/', timeout=2).read(1)" >/dev/null 2>&1; then
+              ready=1
+              break
+            fi
+            sleep 1
+          done
+          test "$ready" -eq 1
+          python3 tools/verify_pages_hold.py \
+            --base-url "http://127.0.0.1:8765/" \
+            --expected-source-sha "${{ github.sha }}" \
+            --convergence-attempts 4 \
+            --convergence-delay 1
+      - name: Retain exact preview candidate
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: mouldmaster-preview-candidate-${{ github.sha }}
+          path: .pages-hold
+          if-no-files-found: error
+          retention-days: 14
+          include-hidden-files: false
+      - name: Explain preview publication boundary
+        run: |
+          echo "Preview exact-SHA candidate verified and retained."
+          echo "This workflow never publishes GitHub Pages; main is the sole live Pages publisher."

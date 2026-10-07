@@ -6,6 +6,7 @@ const {webcrypto}=require('crypto');
 const {TextEncoder}=require('util');
 
 const source=fs.readFileSync('src/domains/learning/backup-authority-notice.js','utf8');
+const learningPack=fs.readFileSync('src/domains/runtime-packs/learning-foundation-runtime-pack.js','utf8');
 
 async function waitFor(predicate,message,timeoutMs=2000){
   const started=Date.now();
@@ -47,7 +48,17 @@ function sandbox(){
     alert(message){alerts.push(String(message))},
     confirm(message){confirms.push(String(message));return true},
     toast(message){toasts.push(String(message))},
-    db:{activeUser:'learner-a',users:{'learner-a':{id:'learner-a',name:'Learner A',role:'learner',completed:[1,2],bookmarks:[2],notes:{'1':'note'},examScores:{final:88},certificates:['old-cert']}}},
+    db:{activeUser:'learner-a',users:{
+      'learner-a':{id:'learner-a',name:'Learner A',role:'learner',completed:[1,2],bookmarks:[2],notes:{'1':'note'},examScores:{final:88},certificates:['old-cert']},
+      'learner-b':{id:'learner-b',name:'Learner B',role:'learner',completed:[3],bookmarks:[],notes:{},examScores:{},certificates:[]}
+    }},
+    MM_TRAINING_DATA_BRIDGE:{buildTrainingExtras(users){
+      assert.deepStrictEqual(Object.keys(users).sort(),['learner-a','learner-b']);
+      return {version:4,scope:'learner-registry',learners:{
+        'learner-a':{spacedReview:{items:{'tech:q1':{id:'tech:q1',stage:2}}},practicalSignoff:{checks:{safe:true},supervisor:'Reviewer',date:'2026-09-18',notes:'Synthetic QA'}},
+        'learner-b':{spacedReview:{items:{'tech:q2':{id:'tech:q2',stage:1}}},practicalSignoff:{checks:{peer:true},supervisor:'Reviewer B',date:'2026-09-19',notes:'Second learner QA'}}
+      }}
+    }},
     importData(file){baseImports.push(file)},
   };
   context.window=context;
@@ -71,6 +82,9 @@ function sandbox(){
   assert.strictEqual(envelope.backupFormat,'mouldmaster-backup-v3');
   assert(/^[0-9a-f]{64}$/.test(envelope.integrity.digest),'export did not produce a SHA-256 digest');
   assert.strictEqual(envelope.payload.backupFormat,'mouldmaster-backup-v2','v3 envelope payload lost legacy importer compatibility');
+  assert.strictEqual(envelope.payload.trainingExtras.version,4,'integrity wrapper regressed scoped training extras to legacy v2');
+  assert.strictEqual(envelope.payload.trainingExtras.scope,'learner-registry');
+  assert.deepStrictEqual(Object.keys(envelope.payload.trainingExtras.learners).sort(),['learner-a','learner-b'],'v3 envelope did not carry every local learner training scope');
   assert.strictEqual((await api.verifyEnvelope(envelope)).activeUser,'learner-a','valid envelope did not verify');
 
   const tampered=JSON.parse(JSON.stringify(envelope));
@@ -92,6 +106,9 @@ function sandbox(){
   assert.strictEqual(unwrapped.backupFormat,'mouldmaster-backup-v2');
   assert.strictEqual(unwrapped.activeUser,'learner-a');
   assert.strictEqual(unwrapped.users['learner-a'].name,'Learner A');
+  assert.strictEqual(unwrapped.users['learner-b'].name,'Learner B');
+  assert.strictEqual(unwrapped.trainingExtras.version,4);
+  assert(unwrapped.trainingExtras.learners['learner-b'],'verified envelope dropped non-active learner training extras');
 
   const legacy={activeUser:'legacy',users:{legacy:{id:'legacy',name:'Legacy learner'}},backupFormat:'mouldmaster-backup-v2'};
   const legacyFile={size:JSON.stringify(legacy).length,text:async()=>JSON.stringify(legacy)};
@@ -110,5 +127,13 @@ function sandbox(){
   await api.verifyEnvelope(exported);
   assert(t.toasts.some(message=>/SHA-256 integrity checksum/i.test(message)),'v3 export did not disclose integrity protection');
 
-  console.log('Learner backup integrity QA passed: v3 SHA-256 envelope verifies before restore, tampering/unsupported metadata/oversize fail closed, legacy v2 is explicitly disclosed, and export round-trips.');
+  assert(source.includes('bridge.buildTrainingExtras(payload.users)'),'integrity wrapper must delegate scoped extras to the governed training bridge');
+  const trainingSource=fs.readFileSync('src/domains/learning/training-qa-fix.js','utf8');
+  assert(trainingSource.includes('readTrainingForBackup')&&trainingSource.includes('readMaterialLabsForBackup'),'backup builder does not use strict learner-state readers');
+  assert(!/buildTrainingExtras[\s\S]{0,2500}readTraining\(/.test(trainingSource),'backup builder regressed to tolerant runtime training reads');
+  for(const marker of ['measured-assessment','process-diagnostics','Diagnostic Learning Lab','Material Behaviour Lab']) assert(source.includes(marker),`backup authority disclosure missing ${marker}`);
+  assert(!source.includes('payload.trainingExtras={\n  version:2'),'integrity wrapper reintroduced legacy unscoped training extras');
+  assert(learningPack.includes('/* >>> backup-authority-notice.js */')&&learningPack.includes('MM_LEARNER_BACKUP_INTEGRITY'),'learner-facing runtime pack does not include backup integrity wrapper');
+  assert(learningPack.indexOf('/* >>> training-qa-fix.js */')<learningPack.indexOf('/* >>> backup-authority-notice.js */'),'backup integrity wrapper loads before its base import/export bridge');
+  console.log('Learner backup integrity QA passed: v3 SHA-256 envelope preserves multi-profile scoped training extras, verifies before restore, and tampering/unsupported metadata/oversize fail closed.');
 })().catch(error=>{console.error(error);process.exitCode=1});

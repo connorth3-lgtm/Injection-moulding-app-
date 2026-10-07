@@ -203,22 +203,27 @@ function visibleCoreView(){
   }
   return ''
 }
-function canonicalMobileGroup(view){
-  const item=navigationItems.get(activeCustomId);if(item)return item.mobileGroup||'more';
+function canonicalMobileGroup(view,customId=activeCustomId){
+  const item=navigationItems.get(customId);if(item)return item.mobileGroup||'more';
   const core=CORE_NAV.find(x=>x.view===view);return core?.mobile||'more'
+}
+function visibleBookId(){
+  const view=document.getElementById('mmBookView');
+  return view&&!view.classList.contains('hidden')&&getComputedStyle(view).display!=='none'?'book':''
 }
 function syncActiveState(){
   normalizeMobilePrimaryNav();
   const visible=visibleCoreView();
   const view=visible||(typeof currentView==='string'?currentView:'dashboard');
-  document.body.dataset.mmView=activeCustomId||view;
-  document.body.dataset.mmNavGroup=canonicalMobileGroup(view);
+  const customId=visibleBookId()||activeCustomId;
+  document.body.dataset.mmView=customId||view;
+  document.body.dataset.mmNavGroup=canonicalMobileGroup(view,customId);
   document.querySelectorAll('#nav button').forEach(b=>{
     const registryId=b.dataset.mmRegistryNav;
-    const active=registryId?registryId===activeCustomId:!activeCustomId&&b.dataset.view===view;
+    const active=registryId?registryId===customId:!customId&&b.dataset.view===view;
     b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')
   });
-  const group=canonicalMobileGroup(view);
+  const group=canonicalMobileGroup(view,customId);
   const primary=[...document.querySelectorAll('.mobile-nav > button')];
   primary.forEach(b=>{
     const v=b.dataset.view;let match=false;
@@ -270,36 +275,51 @@ function specialistDashboardHtml(){
   const api=window.MM_SPECIALIST_CURRICULUM;if(!api?.lessons?.length)return '';
   return `<section class="mm-specialist-strip" id="mmSpecialistDashboard" aria-label="Specialist curriculum extensions"><span class="mm-specialist-eyebrow">Go deeper where the core stops</span><h3>Specialist extensions</h3><p>The 120-lesson core remains the complete main pathway. These ${api.lessons.length} optional extensions add depth in safety, machine health, materials, measurement, tooling and sustainability.</p><div class="mm-specialist-meta"><span>${api.lessons.length} optional lessons</span><span>Local optional progress</span><span>No certificate requirement</span></div><button class="secondary" type="button" data-mm-specialist-open>Explore specialist extensions →</button></section>`
 }
-function bookDashboardHtml(){
-  return `<section class="card mm-home-book" data-mm-home-book aria-label="MouldMaster Book"><div class="mm-home-book-copy"><span class="eyebrow">Book</span><h2>Injection moulding reference</h2><p>Open the governed Book for process, materials, defects, worked examples and evidence-led troubleshooting.</p></div><div class="mm-home-book-actions"><button type="button" class="primary" data-mm-home-book-action>Open Book</button></div></section>`
+function bookDashboardState(){
+  const api=window.MMBook;
+  if(!api?.open)return {ready:false,resume:null};
+  let resume=null;
+  try{resume=api.getResume?.()||null}catch(_){}
+  return {ready:true,resume}
 }
-function openBookFromShell(){
+function bookDashboardHtml(){
+  const state=bookDashboardState(),resume=state.resume,title=resume?.title?String(resume.title):'Injection moulding reference';
+  const heading=resume?`Keep reading: ${title}`:'Injection moulding reference';
+  const ordinal=/^r(\d{2})$/i.exec(String(resume?.id||'')),chapter=ordinal?Math.min(20,Math.max(1,Number(ordinal[1])||1)):null;
+  const copy=resume?(chapter?`Chapter ${chapter} of 20 · saved reading position. Continue where you left off, or return to the full contents.`:'Continue from your learner-scoped saved place, or return to the full contents.'):'20 reader chapters backed by 46 governed modules, worked examples and evidence boundaries.';
+  const disabled=state.ready?'':' disabled aria-disabled="true"';
+  return `<section class="card mm-home-book" data-mm-home-book aria-label="MouldMaster Book"><div class="mm-home-book-copy"><span class="eyebrow">Book</span><h2>${esc(heading)}</h2><p>${esc(copy)}</p></div><div class="mm-home-book-actions"><button type="button" class="primary" data-mm-home-book-action="${resume?'resume':'contents'}"${disabled}>${resume?'Keep Reading':'Open Book'}</button>${resume?'<button type="button" class="ghost" data-mm-home-book-action="contents">Book contents</button>':''}</div></section>`
+}
+function openBookFromShell(mode='contents'){
   const api=window.MMBook;if(!api?.open)return false;
   activeCustomId='book';
-  const result=api.open();
+  const result=mode==='resume'&&api.getResume?.()?api.openResume?.():api.open?.();
   syncActiveState();requestAnimationFrame(syncActiveState);emitView('book');
   return result??true
 }
 function renderBookDashboard(slot){
   slot.innerHTML=bookDashboardHtml();
-  slot.querySelector('[data-mm-home-book-action]')?.addEventListener('click',openBookFromShell)
+  slot.querySelectorAll('[data-mm-home-book-action]').forEach(button=>button.addEventListener('click',()=>openBookFromShell(button.dataset.mmHomeBookAction||'contents')))
 }
 
 function installDefaultDashboardSections(){
   registerDashboard({id:'today-focus',zone:'before',order:10,adopt:'.mm-today-focus'});
   registerDashboard({id:'book',zone:'before',order:20,render:renderBookDashboard});
   registerDashboard({id:'curriculum-focus',zone:'before',order:30,render:slot=>{slot.innerHTML=curriculumDashboardHtml();slot.querySelector('[data-mm-curriculum-dashboard-open]')?.addEventListener('click',()=>{const lesson=currentLesson(),rec=window.MM_CURRICULUM_INTEGRATION?.recommendations?.(lesson.id)?.[0];if(rec)window.MM_CURRICULUM_INTEGRATION.open?.(rec.type,rec.id,lesson.id)})}});
-  registerDashboard({id:'specialist',zone:'after',order:90,render:slot=>{slot.innerHTML=specialistDashboardHtml();slot.querySelector('[data-mm-specialist-open]')?.addEventListener('click',()=>window.MM_SPECIALIST_CURRICULUM?.open?.())}})
+  registerDashboard({id:'specialist',zone:'after',order:90,render:slot=>{slot.innerHTML=specialistDashboardHtml();slot.querySelector('[data-mm-specialist-open]')?.addEventListener('click',()=>window.MM_SPECIALIST_CURRICULUM?.open?.())}});
+  window.addEventListener('mm:book-resume-change',queueDashboardCompose);
+  window.addEventListener('mm:domains-ready',queueDashboardCompose);
 }
 function installDefaultNavigation(){
-  registerNavigation({id:'book',label:'Book',icon:'▣',description:'Open the governed injection moulding reference.',order:5,group:'progress',desktop:false,mobileGroup:'more',action:()=>window.MMBook?.open?.()});
+  registerNavigation({id:'book',label:'Book',icon:'▣',description:'Open the governed injection moulding reference.',order:5,group:'progress',mobileGroup:'more',action:()=>openBookFromShell('contents')});
   registerNavigation({id:'mould-master',mobileMore:false,label:'Mould Master',icon:'◆',description:'Build an evidence-led troubleshooting case.',order:10,group:'practice',legacyDataset:'mmMouldMaster',mobileGroup:'practice',action:()=>window.MM_MOULD_MASTER_WORKSPACE?.open?.()});
   registerNavigation({id:'diagnostic-labs',mobileMore:false,label:'Diagnostic labs',icon:'⌁',description:'Practise evidence-first troubleshooting.',order:20,group:'practice',legacyDataset:'mmDiagnosticLabs',mobileGroup:'practice',action:()=>window.MM_DIAGNOSTIC_LABS?.open?.()});
   registerNavigation({id:'process-data',mobileMore:false,label:'Data diagnosis',icon:'⌁',description:'Read process trends and choose the next evidence check.',order:30,group:'practice',legacyDataset:'mmProcessData',mobileGroup:'practice',action:()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.()});
   registerNavigation({id:'material-labs',mobileMore:false,label:'Material labs',icon:'◈',description:'Compare resin-specific behaviour and evidence.',order:40,group:'practice',legacyDataset:'mmMaterialLabs',mobileGroup:'practice',action:()=>window.MM_MATERIAL_BEHAVIOUR_LABS?.open?.()});
   registerNavigation({id:'reference-data',label:'Reference data',icon:'▤',description:'Materials, defects, signals and troubleshooting data.',order:50,group:'progress',desktop:false,mobileGroup:'more',action:()=>location.assign('./reference-data.html')});
+  registerNavigation({id:'question-centre',mobileMore:false,label:'Question Centre',icon:'✓',description:'Open formal checks, scenarios and guided question modes in one place.',order:45,group:'practice',desktop:false,mobileGroup:'practice',action:()=>window.MM_QUESTION_CENTRE?.open?.()});
   registerNavigation({id:'learning-insights',label:'Learning insights',icon:'◫',description:'See local learning progress and retry trends.',order:60,group:'progress',legacyDataset:'mmLearningInsights',mobileGroup:'more',action:()=>window.MM_LEARNING_ANALYTICS?.open?.()});
-  registerNavigation({id:'repair-app-files',label:'Repair app files',icon:'↻',description:'Refresh installed files without deleting learner progress.',order:70,group:'progress',desktop:false,mobileGroup:'more',action:()=>location.hostname==='127.0.0.1'&&/\bElectron\//.test(navigator.userAgent||'')?location.reload():location.assign('./repair.html')})
+  registerNavigation({id:'repair-app-files',label:'Support & app maintenance',icon:'?',description:'Help, offline/update guidance and repair options.',order:70,group:'progress',desktop:false,mobileGroup:'more',action:()=>location.assign('./support.html')})
 }
 
 function renderDashboardCanonical(){
@@ -315,16 +335,27 @@ function renderLessonCanonical(){
 function switchViewCanonical(id){
   activeCustomId='';const r=captured.switchView.apply(this,arguments);syncActiveState();requestAnimationFrame(syncActiveState);emitView(id);return r
 }
+function bindCanonicalCoreNavigation(){
+  const nav=document.getElementById('nav');if(!nav||nav.dataset.mmCanonicalCoreNav==='1')return;
+  nav.dataset.mmCanonicalCoreNav='1';
+  nav.addEventListener('click',event=>{
+    const button=event.target?.closest?.('button[data-view]');
+    if(!button||button.closest('#nav')!==nav||button.disabled)return;
+    const view=button.dataset.view;if(!view)return;
+    event.preventDefault();event.stopImmediatePropagation();
+    switchViewCanonical(view);
+  },true);
+}
 function openMobileMenuCanonical(){
   const r=captured.openMobileMenu.apply(this,arguments);
   const modal=document.getElementById('modal'),card=modal?.querySelector('.modal-card'),heading=card?.querySelector('h2');
   if(heading)heading.textContent='More';
-  const eyebrow=card?.querySelector('.eyebrow');if(eyebrow)eyebrow.textContent='Progress, reference & settings';
+  const eyebrow=card?.querySelector('.eyebrow');if(eyebrow)eyebrow.textContent='Progress, reference & support';
   const grid=card?.querySelector('.grid2');
   if(grid){
     [...grid.querySelectorAll(':scope > .quick-action')].forEach(button=>{
       const handler=button.getAttribute('data-mm-onclick')||button.getAttribute('onclick')||'';
-      if(/switchView\('(simulator|defects|coach)'\)/.test(handler))button.remove()
+      if(/switchView\('(simulator|defects|coach|exams)'\)/.test(handler))button.remove()
     });
     grid.dataset.mmMoreReduced='1'
   }
@@ -335,7 +366,7 @@ function setCustomActive(id,mobileGroup){activeCustomId=id||'';if(mobileGroup&&n
 
 function finalize(){
   if(finalized)return;
-  installGeometry();installDefaultDashboardSections();installDefaultNavigation();bindExternalTools();
+  installGeometry();installDefaultDashboardSections();installDefaultNavigation();bindExternalTools();bindCanonicalCoreNavigation();
   renderDashboard=renderDashboardCanonical;window.renderDashboard=renderDashboardCanonical;
   renderLesson=renderLessonCanonical;window.renderLesson=renderLessonCanonical;
   switchView=switchViewCanonical;window.switchView=switchViewCanonical;

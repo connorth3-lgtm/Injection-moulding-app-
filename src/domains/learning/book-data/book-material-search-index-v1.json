@@ -1,0 +1,2732 @@
+{
+  "schemaVersion": 1,
+  "release": "2026.10.04.3",
+  "purpose": "lightweight Book material search routing only; technical values remain in governed catalogue/regional evidence",
+  "sourceCounts": {
+    "canonicalExactGrades": 260,
+    "regionalEvidenceRows": 284,
+    "total": 544
+  },
+  "entries": [
+    {
+      "id": "mat-arkema-rilsan-bmno",
+      "search": "arkema rilsan bmno pa11",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-basf-elastollan-wy1140",
+      "search": "basf elastollan wy1140 tpu",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-basf-ultradur-b4300-g6",
+      "search": "basf ultradur b 4300 g6 b4300 g6 pbt",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-basf-ultramid-a3wg10",
+      "search": "basf ultramid a3wg10 pa66",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-basf-ultramid-a3wg6-lt-bk",
+      "search": "basf ultramid a3wg6 lt bk pa66",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-basf-ultramid-a3wg7",
+      "search": "basf ultramid a3wg7 pa66",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-celanese-fortron-fx32t4",
+      "search": "celanese fortron fx32t4 pps",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-celanese-fortron-fx72t6",
+      "search": "celanese fortron fx72t6 pps",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-celanese-santoprene-121-60m200",
+      "search": "celanese santoprene 121 60m200 tpv",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-celanese-santoprene-121-70m350",
+      "search": "celanese santoprene 121 70m350 tpv",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-celanese-santoprene-291-75b150",
+      "search": "celanese santoprene 291 75b150 tpv",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-celanese-santoprene-8211-55b100",
+      "search": "celanese santoprene 8211 55b100 tpv",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-celanese-santoprene-8211-75",
+      "search": "celanese santoprene 8211 75 tpv",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-celanese-vectra-a115",
+      "search": "celanese vectra a115 lcp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-celanese-vectra-a130",
+      "search": "celanese vectra a130 lcp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-celanese-vectra-e130i",
+      "search": "celanese vectra e130i lcp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-celanese-vectra-e150i",
+      "search": "celanese vectra e150i lcp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-covestro-bayblend-fr3000",
+      "search": "covestro bayblend fr3000 pc abs",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-covestro-bayblend-fr3008",
+      "search": "covestro bayblend fr3008 pc abs",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-covestro-bayblend-fr3010-hi",
+      "search": "covestro bayblend fr3010 hi pc abs",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-covestro-bayblend-fr3013",
+      "search": "covestro bayblend fr3013 pc abs",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-covestro-bayblend-fr3020-r35",
+      "search": "covestro bayblend fr3020 r35 pc abs",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-covestro-bayblend-fr3040-r35",
+      "search": "covestro bayblend fr3040 r35 pc abs",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-covestro-bayblend-fr630-gr",
+      "search": "covestro bayblend fr630 gr pc abs",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-covestro-bayblend-t40-lg",
+      "search": "covestro bayblend t40 lg pc abs",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-covestro-bayblend-t85-hg",
+      "search": "covestro bayblend t85 hg pc abs",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-covestro-bayblend-t85-xf",
+      "search": "covestro bayblend t85 xf pc abs",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-covestro-makrolon-2405",
+      "search": "covestro makrolon 2405 pc",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-covestro-makrolon-2605",
+      "search": "covestro makrolon 2605 pc",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-covestro-makrolon-2805",
+      "search": "covestro makrolon 2805 pc",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-covestro-makrolon-3105",
+      "search": "covestro makrolon 3105 pc",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-envalior-arnite-av2-370-b",
+      "search": "envalior arnite av2 370 b pet",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-envalior-arnite-av2-372",
+      "search": "envalior arnite av2 372 pet",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-envalior-arnite-av2-373-crc",
+      "search": "envalior arnite av2 373 crc pet",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-envalior-arnite-av2-390",
+      "search": "envalior arnite av2 390 pet",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-envalior-arnite-care-a1u",
+      "search": "envalior arnite care a1u pet",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-envalior-durethan-bkv130-dus008",
+      "search": "envalior durethan bkv130 dus008 pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-envalior-durethan-bkv30fn01-dus062",
+      "search": "envalior durethan bkv30fn01 dus062 pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-envalior-durethan-bkv30fn04",
+      "search": "envalior durethan bkv30fn04 pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-envalior-durethan-bkv30gh2-0",
+      "search": "envalior durethan bkv30gh2 0 pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-envalior-durethan-bkv30gw1-dus037",
+      "search": "envalior durethan bkv30gw1 dus037 pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-envalior-durethan-bkv30h2-0ef-dus029",
+      "search": "envalior durethan bkv30h2 0ef dus029 pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-envalior-durethan-bkv30h2-0ef-dus074",
+      "search": "envalior durethan bkv30h2 0ef dus074 pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-envalior-durethan-bkv30h3-0",
+      "search": "envalior durethan bkv30h3 0 pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-envalior-durethan-bkv30xts1",
+      "search": "envalior durethan bkv30xts1 pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-envalior-durethan-bkv50h2-0ef-dus001",
+      "search": "envalior durethan bkv50h2 0ef dus001 pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-envalior-pocan-b4235",
+      "search": "envalior pocan b4235 pbt",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-envalior-pocan-b4235z",
+      "search": "envalior pocan b4235z pbt",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-envalior-pocan-b3234hr-s2-m30r1",
+      "search": "envalior pocan b3234hr s2 m30r1 pbt",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-exxonmobil-pp9074med",
+      "search": "exxonmobil exceed pp9074med pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-exxonmobil-pp9544med",
+      "search": "exxonmobil exceed pp9544med pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-exxonmobil-pp9574e6",
+      "search": "exxonmobil exceed pp9574e6 pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-exxonmobil-pp1013h1",
+      "search": "exxonmobil exxonmobil pp1013h1 pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-exxonmobil-pp1572",
+      "search": "exxonmobil exxonmobil pp1572 pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-exxonmobil-pp5262",
+      "search": "exxonmobil exxonmobil pp5262 pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-exxonmobil-pp7555kne2",
+      "search": "exxonmobil exxonmobil pp7555kne2 pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-exxonmobil-pp7654kne2",
+      "search": "exxonmobil exxonmobil pp7654kne2 pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-exxonmobil-vistamaxx-3000",
+      "search": "exxonmobil vistamaxx 3000 performance polyolefin elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-exxonmobil-vistamaxx-3020fl",
+      "search": "exxonmobil vistamaxx 3020fl performance polyolefin elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-exxonmobil-vistamaxx-3588fl",
+      "search": "exxonmobil vistamaxx 3588fl performance polyolefin elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-exxonmobil-vistamaxx-3980fl",
+      "search": "exxonmobil vistamaxx 3980fl performance polyolefin elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-exxonmobil-vistamaxx-6102",
+      "search": "exxonmobil vistamaxx 6102 performance polyolefin elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-exxonmobil-vistamaxx-6202",
+      "search": "exxonmobil vistamaxx 6202 performance polyolefin elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-exxonmobil-vistamaxx-6502",
+      "search": "exxonmobil vistamaxx 6502 performance polyolefin elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-pp-hj801r",
+      "search": "hyosung chemical hyosung polypropylene hj801r pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-pp-hj801rl",
+      "search": "hyosung chemical hyosung polypropylene hj801rl pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-pp-pb840-ba",
+      "search": "hyosung chemical hyosung polypropylene pb840 ba pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-b200n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene b200n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-b240pn",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene b240pn pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-b300n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene b300n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-b302n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene b302n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-f300f",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene f300f pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-f300fn",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene f300fn pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-f501n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene f501n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-f600f",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene f600f pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-f600fn",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene f600fn pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-f600fs",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene f600fs pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-f801c",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene f801c pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-hj340n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene hj340n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-hj8280n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene hj8280n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-hj9280n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene hj9280n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j1105t",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j1105t pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j1145t",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j1145t pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j1202t",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j1202t pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j340n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j340n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j440n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j440n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j446h",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j446h pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j446hk",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j446hk pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j446mh",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j446mh pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j640n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j640n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j642an",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j642an pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j642n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j642n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j646an",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j646an pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j646h",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j646h pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j700an",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j700an pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j700n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j700n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j740gn",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j740gn pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j740n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j740n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j740nu",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j740nu pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j742n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j742n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j746h",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j746h pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j746mh",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j746mh pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j746n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j746n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j800n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j800n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j801n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j801n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j842gn",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j842gn pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j842n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j842n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j846n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j846n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j900n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j900n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j945n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j945n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j945t",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j945t pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-j946n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene j946n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-l6000n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene l6000n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-m6000n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene m6000n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-m6000nr",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene m6000nr pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-r1001n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene r1001n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-r1101n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene r1101n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-r1201n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene r1201n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-r430cn",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene r430cn pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-r500f",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene r500f pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-r500fs",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene r500fs pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-r530cn",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene r530cn pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-r601n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene r601n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-r701c",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene r701c pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-r701n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene r701n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-r801c",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene r801c pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-r801n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene r801n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-r805c",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene r805c pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-r901n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene r901n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-s805s",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene s805s pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-tp7600n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene tp7600n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-tp8600n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene tp8600n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-vina-tp9600n",
+      "search": "hyosung vina chemicals co ltd hyosung polypropylene tp9600n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-indianoil-propel-080m55",
+      "search": "indianoil propel 080m55 hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-indianoil-propel-p1110mas",
+      "search": "indianoil propel p1110mas 1110mas pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-ineos-luran-s-757g",
+      "search": "ineos styrolution luran s 757g asa",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-ineos-luran-s-777k",
+      "search": "ineos styrolution luran s 777k asa",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-ineos-luran-388s",
+      "search": "ineos styrolution luran 388s san",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-ineos-terluran-gp35",
+      "search": "ineos styrolution terluran gp 35 abs",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-kepital-f1003h",
+      "search": "korea polyacetal kpac kepital f10 03h pom",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-kepital-f2003",
+      "search": "korea polyacetal kpac kepital f20 03 pom",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-kepital-f3003",
+      "search": "korea polyacetal kpac kepital f30 03 pom",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-kepital-fg2025",
+      "search": "korea polyacetal kpac kepital fg2025 pom",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-kuraray-genestar-g1300a",
+      "search": "kuraray genestar g1300a pa9t",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-kuraray-genestar-g1500a",
+      "search": "kuraray genestar g1500a pa9t",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-kuraray-genestar-n1000a",
+      "search": "kuraray genestar n1000a pa9t",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lgchem-lupoy-gp1000l",
+      "search": "lg chem lupoy gp1000l pc",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lgchem-lupoy-gp1000ml",
+      "search": "lg chem lupoy gp1000ml pc",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lgchem-lupoy-gp5206f",
+      "search": "lg chem lupoy gp5206f pc abs",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lotte-titanpro-sh611",
+      "search": "lotte chemical titan titanpro sh611 pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lotte-infino-ae-3060-h",
+      "search": "lotte chemical infino ae 3060 h ae 3060 h ae 3060 h pc pbt",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lotte-infino-nh-1033",
+      "search": "lotte chemical infino nh 1033 pc abs",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lotte-infino-nh-1034r",
+      "search": "lotte chemical infino nh 1034r pc abs",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lotte-infino-asf-9860",
+      "search": "lotte chemical infino asf 9860 pbt",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lotte-infino-gp-5000",
+      "search": "lotte chemical infino gp 5000 pbt",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lotte-infino-xp-2140c",
+      "search": "lotte chemical infino xp 2140c pps gf",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lyb-moplen-hp400k",
+      "search": "lyondellbasell moplen hp400k pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lyb-moplen-hp400l",
+      "search": "lyondellbasell moplen hp400l plasve hp400l pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-a-1085s",
+      "search": "mitsui elastomers singapore tafmer a 1085s aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-a-20085s",
+      "search": "mitsui elastomers singapore tafmer a 20085s aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-a-20090s",
+      "search": "mitsui elastomers singapore tafmer a 20090s aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-a-4070s",
+      "search": "mitsui elastomers singapore tafmer a 4070s aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-a-4085s",
+      "search": "mitsui elastomers singapore tafmer a 4085s aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-a-4090s",
+      "search": "mitsui elastomers singapore tafmer a 4090s aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-bl2481m",
+      "search": "mitsui elastomers singapore tafmer bl2481m aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-bl2491m",
+      "search": "mitsui elastomers singapore tafmer bl2491m aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-df110",
+      "search": "mitsui elastomers singapore tafmer df110 aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-df605",
+      "search": "mitsui elastomers singapore tafmer df605 aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-df610",
+      "search": "mitsui elastomers singapore tafmer df610 aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-df640",
+      "search": "mitsui elastomers singapore tafmer df640 aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-df710",
+      "search": "mitsui elastomers singapore tafmer df710 aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-df7350",
+      "search": "mitsui elastomers singapore tafmer df7350 aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-df740",
+      "search": "mitsui elastomers singapore tafmer df740 aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-df810",
+      "search": "mitsui elastomers singapore tafmer df810 aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-df8200",
+      "search": "mitsui elastomers singapore tafmer df8200 aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-df840",
+      "search": "mitsui elastomers singapore tafmer df840 aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-df940",
+      "search": "mitsui elastomers singapore tafmer df940 aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-ma8510",
+      "search": "mitsui elastomers singapore tafmer ma8510 aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-ma9015",
+      "search": "mitsui elastomers singapore tafmer ma9015 aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-mh5020c",
+      "search": "mitsui elastomers singapore tafmer mh5020c aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-mh7010",
+      "search": "mitsui elastomers singapore tafmer mh7010 aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-mh7020",
+      "search": "mitsui elastomers singapore tafmer mh7020 aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-pn-20300",
+      "search": "mitsui elastomers singapore tafmer pn 20300 aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-pn-2060",
+      "search": "mitsui elastomers singapore tafmer pn 2060 aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-pn-2070",
+      "search": "mitsui elastomers singapore tafmer pn 2070 aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-pn-3560",
+      "search": "mitsui elastomers singapore tafmer pn 3560 aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-xm-7070s",
+      "search": "mitsui elastomers singapore tafmer xm 7070s aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-xm-7080s",
+      "search": "mitsui elastomers singapore tafmer xm 7080s aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-mels-tafmer-xm-7090",
+      "search": "mitsui elastomers singapore tafmer xm 7090 aoc elastomer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-momentive-silopren-lsr-2030",
+      "search": "momentive performance materials silopren lsr 2030 lsr",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-momentive-silopren-lsr-2040",
+      "search": "momentive performance materials silopren lsr 2040 lsr",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-momentive-silopren-lsr-2050",
+      "search": "momentive performance materials silopren lsr 2050 lsr",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-momentive-silopren-lsr-2070",
+      "search": "momentive performance materials silopren lsr 2070 lsr",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-momentive-silopren-lsr-2670",
+      "search": "momentive performance materials silopren lsr 2670 lsr",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-petronas-propelinas-h500ng",
+      "search": "petronas chemicals propelinas h500ng pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-petronas-propelinas-h648tt",
+      "search": "petronas chemicals propelinas h648tt pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-polyplastics-duracon-gb-25r",
+      "search": "polyplastics co ltd duracon gb 25r pom",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-polyplastics-duracon-m25lv",
+      "search": "polyplastics co ltd duracon m25lv pom",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-roehm-plexiglas-higloss-8n-9v022",
+      "search": "r hm plexiglas hi gloss 8n black 9v022 hi gloss 8n black 9v022 pmma",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-extem-rh1017ucl",
+      "search": "sabic extem rh1017ucl tpi",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-extem-xh1015ucl",
+      "search": "sabic extem xh1015ucl tpi",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-hdpe-cc027c",
+      "search": "sabic sabic hdpe cc027c hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-hdpe-cc027sl",
+      "search": "sabic sabic hdpe cc027sl hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-hdpe-cc2056",
+      "search": "sabic sabic hdpe cc2056 hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-hdpe-cc3054",
+      "search": "sabic sabic hdpe cc3054 hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-hdpe-cc453",
+      "search": "sabic sabic hdpe cc453 hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-hdpe-cc453g",
+      "search": "sabic sabic hdpe cc453g hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-hdpe-cc860v",
+      "search": "sabic sabic hdpe cc860v hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-hdpe-m1053",
+      "search": "sabic sabic hdpe m1053 hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-hdpe-m200050",
+      "search": "sabic sabic hdpe m200050 hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-hdpe-m200054f",
+      "search": "sabic sabic hdpe m200054f hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-hdpe-m200056",
+      "search": "sabic sabic hdpe m200056 hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-hdpe-m300054",
+      "search": "sabic sabic hdpe m300054 hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-hdpe-m40053s",
+      "search": "sabic sabic hdpe m40053s hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-hdpe-m40055s",
+      "search": "sabic sabic hdpe m40055s hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-hdpe-m40060",
+      "search": "sabic sabic hdpe m40060 hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-hdpe-m80064",
+      "search": "sabic sabic hdpe m80064 hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-hdpe-m80064s",
+      "search": "sabic sabic hdpe m80064s hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-hdpe-m864eg",
+      "search": "sabic sabic hdpe m864eg hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-hdpe-m864se",
+      "search": "sabic sabic hdpe m864se hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-pp-5702p",
+      "search": "sabic sabic pp 5702p pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-pp-5703p",
+      "search": "sabic sabic pp 5703p pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-pp-5704pr",
+      "search": "sabic sabic pp 5704pr pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-pp-5705p",
+      "search": "sabic sabic pp 5705p pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-pp-5705pr",
+      "search": "sabic sabic pp 5705pr pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-pp-5707n",
+      "search": "sabic sabic pp 5707n pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-pp-570p",
+      "search": "sabic sabic pp 570p pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-pp-575p",
+      "search": "sabic sabic pp 575p pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-pp-5760nf",
+      "search": "sabic sabic pp 5760nf pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-pp-579s",
+      "search": "sabic sabic pp 579s pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-ultem-2100",
+      "search": "sabic ultem 2100 pei",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-ultem-2210gcr3",
+      "search": "sabic ultem 2210gcr3 pei",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sabic-ultem-2210r",
+      "search": "sabic ultem 2210r pei",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-samyang-triloy-210",
+      "search": "samyang corporation triloy 210 pc abs",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-samyang-triloy-410",
+      "search": "samyang corporation triloy 410 pc pet",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-samyang-trirex-3020u",
+      "search": "samyang corporation trirex 3020u pc",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-samyang-trirex-3025g10",
+      "search": "samyang corporation trirex 3025g10 pc",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-samyang-trirex-3025g20",
+      "search": "samyang corporation trirex 3025g20 pc",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-samyang-trirex-3025u",
+      "search": "samyang corporation trirex 3025u pc",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-samyang-trirex-fb3025g10",
+      "search": "samyang corporation trirex fb3025g10 pc",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-samyang-trirex-hv3022g30",
+      "search": "samyang corporation trirex hv3022g30 pc",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-samyang-trirex-m3020pn",
+      "search": "samyang corporation trirex m3020pn pc",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-samyang-trirex-sc4-3022pn1",
+      "search": "samyang corporation trirex sc4 3022pn1 pc siloxane",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-samyang-trirex-so1-3025ld",
+      "search": "samyang corporation trirex so1 3025ld pc",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-samyang-trirex-vb3025g10",
+      "search": "samyang corporation trirex vb3025g10 pc",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-p840j",
+      "search": "scgc scgc pp p840j pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-p901j",
+      "search": "scgc scgc pp p901j pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sh-energy-anypol-se-1600hf",
+      "search": "sh energy chemical co ltd anypol se 1600hf eps",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sh-energy-anypol-se-2000hf",
+      "search": "sh energy chemical co ltd anypol se 2000hf eps",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sh-energy-anypol-se-2500hf",
+      "search": "sh energy chemical co ltd anypol se 2500hf eps",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sh-energy-anypol-se-3000hf",
+      "search": "sh energy chemical co ltd anypol se 3000hf eps",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-supreme-sc206",
+      "search": "supreme petrochem supreme sc206 gpps",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-supreme-sc206ht",
+      "search": "supreme petrochem supreme sc206ht gpps",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-supreme-sh400e",
+      "search": "supreme petrochem supreme sh400e hips",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-ube-1013b",
+      "search": "ube ube nylon 1013b pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-ube-1015gc6",
+      "search": "ube ube nylon 1015gc6 pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-victrex-peek-450fe20",
+      "search": "victrex victrex peek 450fe20 peek",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-victrex-peek-450g",
+      "search": "victrex victrex peek 450g peek",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-victrex-peek-450gl20",
+      "search": "victrex victrex peek 450gl20 peek",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-victrex-peek-450gl30",
+      "search": "victrex victrex peek 450gl30 peek",
+      "kind": "canonical"
+    },
+    {
+      "id": "regional-001",
+      "search": "qenos ldpe australia australia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-002",
+      "search": "qenos alkatuff ll820 lldpe australia australia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-003",
+      "search": "scgc p700j pp homopolymer thailand asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-004",
+      "search": "scgc p840j pp impact copolymer thailand asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-005",
+      "search": "scgc p901j pp homopolymer thailand asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-006",
+      "search": "kuraray n1000a pa9t japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-007",
+      "search": "kuraray g1300a pa9t japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-008",
+      "search": "unitika e2000 pa66 japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-009",
+      "search": "polyplastics duracon m90 44 pom japan asia conditional",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-010",
+      "search": "lyondellbasell australia moplen hp400l plasve hp400l pp homopolymer australia australia new zealand availability candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-011",
+      "search": "discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-012",
+      "search": "discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-013",
+      "search": "indianoil hdpe india asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-014",
+      "search": "indianoil p1110mas pp homopolymer india asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-015",
+      "search": "lotte chemical asf 9860 pbt south korea asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-016",
+      "search": "lotte chemical gp 5000 pbt south korea asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-017",
+      "search": "kingfa pa6 pa66 china asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-018",
+      "search": "polyplastics duranex 3306 pbt pet japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-019",
+      "search": "teijin panlite sh 1126z pc japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-020",
+      "search": "formosa chemicals fibre tairilac ag15a1 h abs taiwan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-021",
+      "search": "chimei pc alloy taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-022",
+      "search": "scgc p901j pp homopolymer thailand asia conditional",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-023",
+      "search": "petronas chemicals pp homopolymer malaysia asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-024",
+      "search": "lotte chemical titan sh611 pp impact copolymer malaysia asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-025",
+      "search": "lotte chemical titan pp impact copolymer malaysia asia candidate partial",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-026",
+      "search": "qenos polyethylene australia australia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-027",
+      "search": "lyondellbasell australia plasve moplen hp400l pp homopolymer australia australia new zealand availability candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-028",
+      "search": "kuraray g1500a pa9t japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-029",
+      "search": "ube 1015gc6 pa6 japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-030",
+      "search": "ube 1013b pa6 japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-031",
+      "search": "supreme petrochem sh400hv hips india asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-032",
+      "search": "formosa chemicals fibre af3500 abs taiwan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-033",
+      "search": "sumitomo chemical sumikaexcel 3600g pesu japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-034",
+      "search": "sumitomo chemical pesu japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-035",
+      "search": "petronas chemicals pp homopolymer malaysia asia candidate partial",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-036",
+      "search": "supreme petrochem hips india asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-037",
+      "search": "lyondellbasell plasve hp741t pp homopolymer australia new zealand availability candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-038",
+      "search": "lyondellbasell plasve hp548s pp homopolymer australia new zealand availability candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-039",
+      "search": "lyondellbasell moplen ep332k pp impact copolymer australia new zealand availability candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-040",
+      "search": "lyondellbasell moplen ep336j pp impact copolymer australia new zealand availability candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-041",
+      "search": "lyondellbasell moplen rp348nk pp random copolymer australia new zealand availability candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-042",
+      "search": "lyondellbasell moplen ep641p pp impact copolymer australia new zealand availability candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-043",
+      "search": "lyondellbasell australia moplen he649t pp homopolymer australia australia new zealand availability candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-044",
+      "search": "martogg australia australia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-045",
+      "search": "candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-046",
+      "search": "candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-047",
+      "search": "lotte chemical gp 5400g pbt gf south korea asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-048",
+      "search": "lg chem pbt south korea asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-049",
+      "search": "lg chem pc and pc alloys south korea asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-050",
+      "search": "chimei abs taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-051",
+      "search": "chimei pmma taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-052",
+      "search": "polyplastics durafide 1140a66 pps japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-053",
+      "search": "asahi kasei tenac c 4520 pom copolymer japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-054",
+      "search": "unitika fun 8520s polyarylate alloy japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-055",
+      "search": "unitika ug 100 20 polyarylate composite japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-056",
+      "search": "unitika ug 100 30 polyarylate composite japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-057",
+      "search": "polyplastics lcp japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-058",
+      "search": "kingfa pbt china asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-059",
+      "search": "kingfa pa6 pa66 high temperature nylon china asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-060",
+      "search": "kingfa vicryst r832 lcp china asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-061",
+      "search": "kingfa pom china asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-062",
+      "search": "sinochem group businesses china asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-063",
+      "search": "exxonmobil chemical pp asia singapore discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-064",
+      "search": "exxonmobil chemical polyolefins asia singapore discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-065",
+      "search": "sabic asia singapore discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-066",
+      "search": "basf asia singapore discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-067",
+      "search": "mitsui chemicals asia singapore discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-068",
+      "search": "exxonmobil chemical achieve advanced pp7123kne1 pp asia singapore supply and manufacturing context candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-069",
+      "search": "asahi kasei japan asia singapore availability evidence candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-070",
+      "search": "polyplastics duracon cp15x pom japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-071",
+      "search": "polyplastics duracon m25lv pom japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-072",
+      "search": "polyplastics duracon tf 30 pom japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-073",
+      "search": "polyplastics duracon aw 01 pom pe japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-074",
+      "search": "polyplastics duracon wr 01 pom japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-075",
+      "search": "polyplastics duracon m140 44 pom japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-076",
+      "search": "polyplastics duracon m450 44 pom japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-077",
+      "search": "polyplastics duracon gm 20 pom gf20 japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-078",
+      "search": "polyplastics duracon lu 02 pom japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-079",
+      "search": "kuraray g1352a pa9t japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-080",
+      "search": "kuraray gl1350a pa9t japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-081",
+      "search": "kuraray g1350a m47wf pa9t japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-082",
+      "search": "ube 3030b pa12 japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-083",
+      "search": "polyplastics pbt japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-084",
+      "search": "polyplastics lcp japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-085",
+      "search": "exxonmobil chemical 7123kne1 pp impact copolymer asia pacific singapore context conditional",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-086",
+      "search": "scgc pp impact copolymer thailand asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-087",
+      "search": "petronas chemicals pp malaysia asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-088",
+      "search": "exxonmobil chemical pp asia singapore candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-089",
+      "search": "exxonmobil chemical exceed pp7123kne1 pp impact copolymer asia pacific singapore context candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-090",
+      "search": "indianoil pp india asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-091",
+      "search": "lotte chemical lw 5300m pbt south korea asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-092",
+      "search": "lotte chemical gp 2306fc pbt south korea asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-093",
+      "search": "toyobo pa6 pa66 high melting nylon japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-094",
+      "search": "kuraray tpe japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-095",
+      "search": "prime polymer pp japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-096",
+      "search": "chandra asri pp indonesia asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-097",
+      "search": "irpc pp thailand asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-098",
+      "search": "scgc p700j pp homopolymer thailand asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-099",
+      "search": "scgc p740j pp impact copolymer thailand asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-100",
+      "search": "scgc p744j pp impact copolymer thailand asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-101",
+      "search": "scgc p842j pp impact copolymer thailand asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-102",
+      "search": "indianoil 180m50 hdpe india asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-103",
+      "search": "indianoil 080m60u hdpe india asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-104",
+      "search": "teijin panlite gv 3430r pc japan asia candidate partial",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-105",
+      "search": "teijin panlite b 8130r pc japan asia candidate partial",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-106",
+      "search": "asahi kasei pom japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-107",
+      "search": "lg chem pa6 south korea asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-108",
+      "search": "kingfa pbt g30 hr pbt gf30 china asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-109",
+      "search": "kingfa pa66 g35 hp pa66 gf35 china asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-110",
+      "search": "kingfa vicnyl 42g35hs pa6t 66 gf35 china asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-111",
+      "search": "kingfa vicnyl 72g35hs pa10t gf35 china asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-112",
+      "search": "kingfa vicryst r832 lcp china asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-113",
+      "search": "kingfa ultron c090e pom china asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-114",
+      "search": "kingfa ultron it30 pom china asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-115",
+      "search": "kingfa ultron gt pom gf china asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-116",
+      "search": "lotte chemical titan sh611 pp impact copolymer malaysia asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-117",
+      "search": "lotte chemical titan jm 370k pp impact copolymer malaysia asia candidate partial",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-118",
+      "search": "lotte chemical titan epc40r pp impact copolymer malaysia asia candidate partial",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-119",
+      "search": "lotte chemical titan 7523 pp impact copolymer malaysia asia candidate partial",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-120",
+      "search": "petronas chemicals h500ng pp homopolymer malaysia asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-121",
+      "search": "petronas chemicals h648tt pp homopolymer malaysia asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-122",
+      "search": "chandra asri pp indonesia asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-123",
+      "search": "irpc pp thailand asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-124",
+      "search": "formosa chemicals fibre ag15a1 h abs taiwan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-125",
+      "search": "formosa chemicals fibre af3500 abs taiwan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-126",
+      "search": "chimei polylac pa 737 abs taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-127",
+      "search": "chimei polylac pa 746 abs taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-128",
+      "search": "chimei wonderloy pc 385 pc alloy taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-129",
+      "search": "chimei wonderloy pc 992 pc asa taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-130",
+      "search": "chimei acryrex cm 211 pmma taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-131",
+      "search": "martogg pp compound australia australia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-132",
+      "search": "martogg styrenic compounds australia australia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-133",
+      "search": "qenos ldpe australia australia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-134",
+      "search": "qenos alkatuff ll820 lldpe australia australia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-135",
+      "search": "new zealand candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-136",
+      "search": "polyplastics pbt japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-137",
+      "search": "polyplastics pom japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-138",
+      "search": "polyplastics pps japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-139",
+      "search": "polyplastics lcp japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-140",
+      "search": "kuraray pa9t japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-141",
+      "search": "ube polyamide japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-142",
+      "search": "unitika engineering thermoplastics japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-143",
+      "search": "teijin pc japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-144",
+      "search": "lotte chemical engineering thermoplastics south korea asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-145",
+      "search": "lg chem engineering thermoplastics south korea asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-146",
+      "search": "chimei engineering thermoplastics taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-147",
+      "search": "formosa chemicals fibre abs engineering styrenics taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-148",
+      "search": "polyplastics duracon m90 44 pom japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-149",
+      "search": "polyplastics duranex 3306 pbt pet japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-150",
+      "search": "teijin panlite sh 1126z pc japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-151",
+      "search": "unitika e2000 pa66 japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-152",
+      "search": "lotte chemical asf 9860 pbt south korea asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-153",
+      "search": "lotte chemical gp 5000 pbt south korea asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-154",
+      "search": "kuraray n1000a pa9t japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-155",
+      "search": "kuraray g1300a pa9t japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-156",
+      "search": "kuraray g1500a pa9t japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-157",
+      "search": "polyplastics durafide 1140a66 pps japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-158",
+      "search": "sumitomo chemical sumikaexcel 3600g pesu japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-159",
+      "search": "unitika fun 8520s polyarylate alloy japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-160",
+      "search": "lyondellbasell plasve hp400l pp homopolymer australia new zealand availability candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-161",
+      "search": "lyondellbasell plasve hp741t pp homopolymer australia new zealand availability candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-162",
+      "search": "lyondellbasell moplen ep332k pp impact copolymer australia new zealand availability candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-163",
+      "search": "lyondellbasell moplen rp348nk pp random copolymer australia new zealand availability candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-164",
+      "search": "lyondellbasell australia moplen he649t pp homopolymer australia australia new zealand availability candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-165",
+      "search": "qenos ldn248 ldpe australia australia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-166",
+      "search": "qenos wrm124 ldpe australia australia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-167",
+      "search": "qenos wsm168 ldpe australia australia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-168",
+      "search": "lotte chemical gp 5400g pbt gf south korea asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-169",
+      "search": "lotte chemical lw 5300m pbt south korea asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-170",
+      "search": "lotte chemical gp 2306fc pbt south korea asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-171",
+      "search": "formosa chemicals fibre ag15a1 h abs taiwan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-172",
+      "search": "formosa chemicals fibre af3500 abs taiwan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-173",
+      "search": "chimei polylac pa 757h abs taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-174",
+      "search": "chimei polylac pa 746h abs taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-175",
+      "search": "chimei wonderloy pc 345 pc taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-176",
+      "search": "chimei wonderloy pc 365 pc taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-177",
+      "search": "chimei wonderloy pc 545 pc taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-178",
+      "search": "scgc p722jo pp impact copolymer thailand asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-179",
+      "search": "scgc p841j pp impact copolymer thailand asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-180",
+      "search": "lyondellbasell moplen ep336j pp impact copolymer australia new zealand availability candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-181",
+      "search": "lyondellbasell moplen ep641p pp impact copolymer australia new zealand availability candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-182",
+      "search": "lyondellbasell plasve hp548s pp homopolymer australia new zealand availability candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-183",
+      "search": "indianoil 080m60 hdpe india asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-184",
+      "search": "indianoil 080m55 hdpe india asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-185",
+      "search": "indianoil p1110mas pp homopolymer india asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-186",
+      "search": "unitika ug 100 20 polyarylate composite japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-187",
+      "search": "unitika ug 100 30 polyarylate composite japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-188",
+      "search": "asahi kasei tenac c 4520 pom copolymer japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-189",
+      "search": "ube 1015gc6 pa6 gf30 japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-190",
+      "search": "ube 1013b pa6 japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-191",
+      "search": "kuraray g1352a pa9t japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-192",
+      "search": "kuraray gl1350a pa9t japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-193",
+      "search": "kuraray g1350a m47wf pa9t japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-194",
+      "search": "scgc p901j pp homopolymer thailand asia conditional",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-195",
+      "search": "scgc p700j pp homopolymer thailand asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-196",
+      "search": "scgc p740j pp impact copolymer thailand asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-197",
+      "search": "scgc p744j pp impact copolymer thailand asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-198",
+      "search": "scgc p842j pp impact copolymer thailand asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-199",
+      "search": "petronas chemicals propelinas h500ng pp homopolymer malaysia asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-200",
+      "search": "petronas chemicals propelinas h648tt pp homopolymer malaysia asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-201",
+      "search": "lotte chemical titan sh611 pp impact copolymer malaysia asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-202",
+      "search": "polyplastics duracon cp15x pom japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-203",
+      "search": "polyplastics duracon m25lv pom japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-204",
+      "search": "polyplastics duracon tf 30 pom japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-205",
+      "search": "polyplastics duracon aw 01 pom pe japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-206",
+      "search": "polyplastics duracon wr 01 pom japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-207",
+      "search": "polyplastics duracon m140 44 pom japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-208",
+      "search": "polyplastics duracon m450 44 pom japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-209",
+      "search": "polyplastics duracon gm 20 pom gf20 japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-210",
+      "search": "polyplastics duracon lu 02 pom japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-211",
+      "search": "polyplastics duranex 3306 pbt pet gf30 japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-212",
+      "search": "polyplastics durafide 1140a66 pps gf40 japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-213",
+      "search": "sumitomo chemical sumikaexcel 4100g pesu japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-214",
+      "search": "sumitomo chemical sumikaexcel 4800g pesu japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-215",
+      "search": "sumitomo chemical sumikaexcel 3601gl20 pesu gf20 japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-216",
+      "search": "sumitomo chemical sumikaexcel 3601gl30 pesu gf30 japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-217",
+      "search": "sumitomo chemical sumikaexcel 4101gl20 pesu gf20 japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-218",
+      "search": "sumitomo chemical sumikaexcel 4101gl30 pesu gf30 japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-219",
+      "search": "toyobo glamide t 802 pa6 japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-220",
+      "search": "toyobo glamide t662 pa66 japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-221",
+      "search": "toyobo glamide ty 502nz high melting polyamide japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-222",
+      "search": "chimei polylac pa 757 a01 abs taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-223",
+      "search": "chimei polylac pa 757 j01 abs taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-224",
+      "search": "chimei polylac pa 757g j08 abs taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-225",
+      "search": "chimei polylac pa 747s a01 abs taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-226",
+      "search": "chimei wonderloy pc 860 pc taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-227",
+      "search": "chimei acryrex cm 207 pmma taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-228",
+      "search": "lg chem lumid gp1100aw pa6 south korea asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-229",
+      "search": "lg chem lumid gp2300aw pa6 south korea asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-230",
+      "search": "lg chem lumid hm2604aw pa6 south korea asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-231",
+      "search": "lg chem pbt south korea asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-232",
+      "search": "lg chem pc alloys south korea asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-233",
+      "search": "indianoil 080m60u hdpe india asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-234",
+      "search": "indianoil 180m50 hdpe india asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-235",
+      "search": "supreme petrochem sh400hv hips india asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-236",
+      "search": "supreme petrochem sh03 hips india asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-237",
+      "search": "supreme petrochem sh300 hips india asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-238",
+      "search": "supreme petrochem sh400hf hips india asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-239",
+      "search": "supreme petrochem sh400m hips india asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-240",
+      "search": "supreme petrochem sh450 hips india asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-241",
+      "search": "indianoil p1030rg pp india asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-242",
+      "search": "indianoil p1040fs pp india asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-243",
+      "search": "indianoil p1020mg pp india asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-244",
+      "search": "sumitomo chemical sumikaexcel 4100g pesu japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-245",
+      "search": "sumitomo chemical sumikaexcel 4800g pesu japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-246",
+      "search": "sumitomo chemical sumikaexcel 3601gl20 pesu gf20 japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-247",
+      "search": "sumitomo chemical sumikaexcel 4101gl20 pesu gf20 japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-248",
+      "search": "sumitomo chemical sumikaexcel 4101gl30 pesu gf30 japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-249",
+      "search": "sumitomo chemical sumikaexcel 3601gl30 pesu gf30 japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-250",
+      "search": "sumitomo chemical sumikaexcel es5340 pesu gf20 japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-251",
+      "search": "sumitomo chemical sumikaexcel 4101gl20 pesu gf20 japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-252",
+      "search": "sumitomo chemical sumikaexcel 4101gl30 pesu gf30 japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-253",
+      "search": "sumitomo chemical sumikaexcel 3601gl30 pesu gf30 japan asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-254",
+      "search": "teijin panlite gv 3430r pc gf30 japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-255",
+      "search": "teijin panlite b 8130r pc cf30 japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-256",
+      "search": "polyplastics laperos a130 lcp japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-257",
+      "search": "polyplastics laperos a150 lcp japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-258",
+      "search": "polyplastics laperos a230 lcp japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-259",
+      "search": "polyplastics laperos a410 lcp japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-260",
+      "search": "polyplastics laperos e471i lcp japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-261",
+      "search": "polyplastics laperos e473i lcp japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-262",
+      "search": "polyplastics laperos s475 lcp japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-263",
+      "search": "sumitomo chemical sumikaexcel es5340 pesu gf20 japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-264",
+      "search": "teijin panlite gv 3430r pc gf30 japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-265",
+      "search": "teijin panlite b 8130r pc cf30 japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-266",
+      "search": "polyplastics lcp japan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-267",
+      "search": "lg chem lumid gp1100aw pa6 south korea asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-268",
+      "search": "lg chem lumid gp2300aw pa6 gf south korea asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-269",
+      "search": "lg chem lumid hm2604aw pa6 gf south korea asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-270",
+      "search": "chimei polylac pa 746m abs taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-271",
+      "search": "chimei polylac pa 756 abs taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-272",
+      "search": "chimei polylac pa 756h abs taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-273",
+      "search": "chimei polylac pa 756s abs taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-274",
+      "search": "chimei wonderloy pc 385 pc alloy taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-275",
+      "search": "chimei wonderloy pc 860 pc alloy taiwan asia discovery only",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-276",
+      "search": "lg chem lumid gp2100aw pa6 gf south korea asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-277",
+      "search": "lg chem lumid gp2200aw pa6 gf south korea asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-278",
+      "search": "lg chem lumid gp2400aw pa6 gf south korea asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-279",
+      "search": "lg chem lumid gp2500aw pa6 gf south korea asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-280",
+      "search": "lg chem lumid gp3100aw pa6 gf south korea asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-281",
+      "search": "lg chem lumid gp3200aw pa6 gf south korea asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-282",
+      "search": "lg chem lumid gp3300aw pa6 gf south korea asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-283",
+      "search": "lg chem lumid gp3400aw pa6 gf south korea asia candidate complete",
+      "kind": "regional"
+    },
+    {
+      "id": "regional-284",
+      "search": "lg chem lumid gp3500aw pa6 gf south korea asia candidate complete",
+      "kind": "regional"
+    }
+  ]
+}

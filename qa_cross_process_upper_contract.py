@@ -11,6 +11,7 @@ from tools.profile_cross_process_upper_workpiece import parse_upper_csv
 
 ROOT = Path(__file__).resolve().parent
 DICTIONARY = ROOT / "data" / "cross-process-upper-workpiece-dictionary-v1.json"
+RUNNER = ROOT / "tools/profile_cross_process_upper_workpiece.py"
 
 
 def need(condition, message):
@@ -140,5 +141,15 @@ except ValueError:
     pass
 else:
     raise AssertionError("non-integer upper state code must fail closed")
+
+runner_text = RUNNER.read_text(encoding="utf-8")
+for marker in (
+    "EXPECTED_PUBLISHER_BYTES = 685541746",
+    "EXPECTED_PUBLISHER_MD5",
+    "EXPECTED_PUBLISHER_SHA256",
+    "publisher size metadata drifted",
+    "publisher SHA-256 mismatch",
+):
+    need(marker in runner_text, f"publisher archive identity guard missing: {marker}")
 
 print("Cross-process upper-workpiece specialist parser QA passed")

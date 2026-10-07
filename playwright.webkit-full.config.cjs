@@ -15,13 +15,15 @@ module.exports=defineConfig({
     /inline-handler-bridge\.spec\.js/,
     /inline-style-csp\.spec\.js/,
     /book-assurance\.spec\.js/,
+    /book-resume\.spec\.js/,
     /performance-budget\.spec\.js/,
     /internal-adversarial-validation\.spec\.js/
   ],
   timeout:60000,
   expect:{timeout:15000},
   retries:1,
-  workers:1,
+  fullyParallel:true,
+  workers:2,
   reporter:[['line'],['html',{outputFolder:'qa-artifacts/webkit-full-report',open:'never'}]],
   use:{
     ...devices['Desktop Safari'],

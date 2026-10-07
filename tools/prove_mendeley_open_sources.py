@@ -2,12 +2,11 @@
 """Retrieve benchmark-pinned open Mendeley workbooks and emit text/schema-only proof.
 
 No numeric worksheet values are emitted. Every publisher file ID, filename and SHA-256 is
-stored locally. Remote metadata is consistency evidence only. Downloads start from a fixed
-Mendeley URL and redirects are checked before following them against an exact host allow-list.
+stored locally. Remote metadata is version-pinned consistency evidence when available; an empty/incomplete listing cannot override the repository-pinned file UUID/name/SHA. Downloads use fixed Mendeley dataset/file routes and redirects are checked before following them against an exact host allow-list.
 """
 from __future__ import annotations
-import hashlib, json, re, tempfile, urllib.parse, urllib.request, zipfile
-from http_retry import urlopen_with_retry
+import hashlib, html, json, re, socket, tempfile, time, urllib.error, urllib.parse, urllib.request, zipfile
+from http_retry import RETRYABLE_HTTP, urlopen_with_retry
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
@@ -27,9 +26,16 @@ RELNS='{http://schemas.openxmlformats.org/package/2006/relationships}'
 MENDELEY_API='https://data.mendeley.com/public-api/datasets/'
 MENDELEY_DOWNLOAD='https://data.mendeley.com/public-files/datasets/'
 MENDELEY_HOST='data.mendeley.com'
+MENDELEY_API_HOST='api.data.mendeley.com'
 MENDELEY_FILE_HOST='prod-dcd-datasets-public-files-eu-west-1.s3.eu-west-1.amazonaws.com'
 FILE_ID_RE=re.compile(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$')
 SHORT_ID_RE=re.compile(r'^[a-z0-9]{10}$')
+METADATA_IDENTITY_ATTEMPTS=5
+CACHE_DIR=Path('.mouldmaster-mendeley-cache')
+
+class MendeleyTransportUnavailable(RuntimeError):
+    """Pinned Mendeley source could not be reached after bounded transport retries."""
+
 
 
 def assert_https_host(url,allowed_hosts):
@@ -41,7 +47,7 @@ def assert_https_host(url,allowed_hosts):
 
 class AllowlistedRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self,req,fp,code,msg,headers,newurl):
-        assert_https_host(newurl,{MENDELEY_HOST,MENDELEY_FILE_HOST})
+        assert_https_host(newurl,{MENDELEY_HOST,MENDELEY_API_HOST,MENDELEY_FILE_HOST})
         return super().redirect_request(req,fp,code,msg,headers,newurl)
 
 
@@ -51,9 +57,14 @@ DOWNLOAD_OPENER=urllib.request.build_opener(AllowlistedRedirect())
 def get_json(url):
     assert_https_host(url,{MENDELEY_HOST})
     req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-measured-learning/2.4'})
-    with urlopen_with_retry(req,timeout=60) as r:
-        assert_https_host(r.geturl(),{MENDELEY_HOST})
-        return json.load(r)
+    try:
+        with urlopen_with_retry(req,timeout=60,attempts=8,base_delay=1.5,max_delay=20.0) as r:
+            assert_https_host(r.geturl(),{MENDELEY_HOST})
+            return json.load(r)
+    except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, socket.timeout, ConnectionError) as exc:
+        if isinstance(exc, urllib.error.HTTPError) and exc.code not in RETRYABLE_HTTP:
+            raise
+        raise MendeleyTransportUnavailable(f'Mendeley metadata unavailable after bounded retries: {exc}') from exc
 
 
 def walk_files(value):
@@ -73,6 +84,46 @@ def public_files(short_id,version):
     return endpoint,get_json(endpoint)
 
 
+def pinned_download_urls(short_id,version,file_id):
+    if not SHORT_ID_RE.fullmatch(short_id) or not isinstance(version,int) or version<1:
+        raise RuntimeError('invalid locally governed Mendeley dataset identity')
+    if not FILE_ID_RE.fullmatch(file_id):
+        raise RuntimeError('invalid locally pinned Mendeley file id')
+    encoded_id=urllib.parse.quote(file_id,safe='')
+    return [
+        assert_https_host(f'{MENDELEY_DOWNLOAD}{short_id}/files/{encoded_id}/file_downloaded',{MENDELEY_HOST}),
+        assert_https_host(f'{MENDELEY_DOWNLOAD}{short_id}/versions/{version}/files/{encoded_id}/file_downloaded',{MENDELEY_HOST}),
+    ]
+
+
+def public_page_exact_file(short_id,version,file_id,name):
+    """Resolve one exact file from the version-pinned public dataset page."""
+    if not SHORT_ID_RE.fullmatch(short_id) or not isinstance(version,int) or version<1:
+        raise RuntimeError('invalid locally governed Mendeley dataset identity')
+    validate_pinned_identity(file_id,name)
+    endpoint=f'https://data.mendeley.com/datasets/{short_id}/{version}'
+    assert_https_host(endpoint,{MENDELEY_HOST})
+    req=urllib.request.Request(
+        endpoint,
+        headers={'Accept':'text/html,application/xhtml+xml','User-Agent':'MouldMaster-measured-learning/2.5'},
+    )
+    try:
+        with urlopen_with_retry(req,timeout=60,attempts=5,base_delay=1.5,max_delay=12.0) as r:
+            assert_https_host(r.geturl(),{MENDELEY_HOST})
+            raw=r.read().decode('utf-8','replace')
+    except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, socket.timeout, ConnectionError) as exc:
+        if isinstance(exc, urllib.error.HTTPError) and exc.code not in RETRYABLE_HTTP:
+            raise
+        raise MendeleyTransportUnavailable(f'Mendeley dataset page unavailable after bounded retries: {exc}') from exc
+    page=html.unescape(raw).replace('\\u002F','/').replace('\\/','/')
+    url=f'{MENDELEY_DOWNLOAD}{short_id}/files/{file_id}/file_downloaded'
+    if url not in page:
+        raise RuntimeError(f'pinned Mendeley file UUID missing from version-pinned dataset page: {short_id}/{file_id}')
+    if name not in page:
+        raise RuntimeError(f'pinned Mendeley filename missing from version-pinned dataset page: {short_id}/{name}')
+    return {'id':file_id,'filename':name,'download_url':url,'identitySource':'version-pinned-public-dataset-page'},endpoint
+
+
 def validate_pinned_identity(file_id,name):
     if not FILE_ID_RE.fullmatch(file_id):
         raise RuntimeError(f'invalid locally pinned Mendeley file id: {file_id!r}')
@@ -88,45 +139,96 @@ def verify_metadata_identity(meta,file_id,name,short_id):
         if obj_id==file_id:
             if obj_name!=name:
                 raise RuntimeError(f'Mendeley filename drift for {short_id}/{name}: {obj_name!r}')
-            return
+            return obj
     raise RuntimeError(f'pinned Mendeley file id/name missing from metadata: {short_id}/{name}')
 
 
-def pinned_download_urls(short_id,version,file_id):
-    if not SHORT_ID_RE.fullmatch(short_id) or not isinstance(version,int) or version<1:
-        raise RuntimeError('invalid locally governed Mendeley dataset identity')
-    if not FILE_ID_RE.fullmatch(file_id):
-        raise RuntimeError('invalid locally pinned Mendeley file id')
-    encoded_id=urllib.parse.quote(file_id,safe='')
-    return [
-        assert_https_host(f'{MENDELEY_DOWNLOAD}{short_id}/files/{encoded_id}/file_downloaded',{MENDELEY_HOST}),
-        assert_https_host(f'{MENDELEY_DOWNLOAD}{short_id}/versions/{version}/files/{encoded_id}/file_downloaded',{MENDELEY_HOST}),
-    ]
-
-
-def resolve_file(_meta,file_id,name,short_id,version):
-    """Legacy call shape; resolution is intentionally local-only and metadata-independent."""
+def metadata_download_url(item,file_id,name,short_id,expected_sha):
     validate_pinned_identity(file_id,name)
+    details=item.get('content_details') or item.get('contentDetails') or {}
+    publisher_sha=str(
+        details.get('sha256_hash') or details.get('sha256Hash')
+        or item.get('sha256') or item.get('sha256_hash') or ''
+    ).lower()
+    if publisher_sha and publisher_sha!=expected_sha:
+        raise RuntimeError(f'Mendeley publisher SHA drift for {short_id}/{name}: {publisher_sha}')
+    url=(
+        details.get('download_url') or details.get('downloadUrl')
+        or item.get('download_url') or item.get('downloadUrl')
+    )
+    if not url:
+        raise RuntimeError(f'Mendeley version-pinned metadata has no download URL: {short_id}/{name}')
+    return assert_https_host(str(url),{MENDELEY_HOST,MENDELEY_API_HOST,MENDELEY_FILE_HOST})
+
+
+def resolve_file(meta,file_id,name,short_id,version,expected_sha=None):
+    """Resolve a governed file without letting incomplete remote metadata redefine identity.
+
+    The repository-pinned dataset/version/file UUID/name/SHA is authoritative. If the
+    exact UUID appears in remote metadata, its filename/SHA must agree; otherwise an
+    empty or incomplete metadata listing is treated as non-authoritative transport noise.
+    """
+    if expected_sha is None:
+        raise RuntimeError('expected source SHA is required for Mendeley resolution')
+    validate_pinned_identity(file_id,name)
+    expected_sha=str(expected_sha or '').lower()
+    if not re.fullmatch(r'[0-9a-f]{64}',expected_sha):
+        raise RuntimeError('invalid governed Mendeley SHA-256')
     urls=pinned_download_urls(short_id,version,file_id)
-    local_identity={'id':file_id,'filename':name,'identitySource':'repository-pinned'}
-    return local_identity,file_id,urls
+    current_meta=meta
+    for attempt in range(1,METADATA_IDENTITY_ATTEMPTS+1):
+        matching=[obj for obj in walk_files(current_meta) if str(obj.get('id') or obj.get('file_id') or '')==file_id] if current_meta is not None else []
+        if matching:
+            item=verify_metadata_identity(current_meta,file_id,name,short_id)
+            metadata_url=metadata_download_url(item,file_id,name,short_id,expected_sha)
+            if metadata_url not in urls:
+                urls.append(metadata_url)
+            return {'id':file_id,'filename':name,'identitySource':'repository-pinned+version-pinned-metadata'},file_id,urls
+        if attempt>=METADATA_IDENTITY_ATTEMPTS:
+            break
+        try:
+            _,current_meta=public_files(short_id,version)
+        except MendeleyTransportUnavailable:
+            current_meta=None
+            break
+        time.sleep(min(attempt*2,6))
+    return {'id':file_id,'filename':name,'identitySource':'repository-pinned-metadata-incomplete'},file_id,urls
+
+
+def _retryable_download_error(exc):
+    if isinstance(exc, urllib.error.HTTPError):
+        return exc.code in RETRYABLE_HTTP
+    return isinstance(exc, (urllib.error.URLError, TimeoutError, socket.timeout, ConnectionError))
 
 
 def download_first(urls,destination):
     errors=[]
+    transport_only=True
     for url in urls:
-        try:
-            assert_https_host(url,{MENDELEY_HOST})
-            req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-measured-learning/2.4'})
-            with DOWNLOAD_OPENER.open(req,timeout=90) as r, open(destination,'wb') as out:
-                assert_https_host(r.geturl(),{MENDELEY_HOST,MENDELEY_FILE_HOST})
-                while True:
-                    chunk=r.read(1024*1024)
-                    if not chunk: break
-                    out.write(chunk)
-            if Path(destination).stat().st_size>0: return url
-        except Exception as exc:
-            errors.append(f'{url}: {exc}')
+        assert_https_host(url,{MENDELEY_HOST,MENDELEY_API_HOST,MENDELEY_FILE_HOST})
+        for attempt in range(5):
+            try:
+                req=urllib.request.Request(url,headers={'User-Agent':'MouldMaster-measured-learning/2.4'})
+                with DOWNLOAD_OPENER.open(req,timeout=90) as r, open(destination,'wb') as out:
+                    assert_https_host(r.geturl(),{MENDELEY_HOST,MENDELEY_API_HOST,MENDELEY_FILE_HOST})
+                    while True:
+                        chunk=r.read(1024*1024)
+                        if not chunk: break
+                        out.write(chunk)
+                if Path(destination).stat().st_size>0:
+                    return url
+                transport_only=False
+                errors.append(f'{url} attempt {attempt+1}/5: download returned zero bytes')
+                break
+            except Exception as exc:
+                retryable=_retryable_download_error(exc)
+                transport_only=transport_only and retryable
+                errors.append(f'{url} attempt {attempt+1}/5: {exc}')
+                if not retryable or attempt==4:
+                    break
+                time.sleep(min(12,1.5*(2**attempt)))
+    if transport_only:
+        raise MendeleyTransportUnavailable('; '.join(errors))
     raise RuntimeError('; '.join(errors))
 
 
@@ -169,23 +271,82 @@ def workbook_text_schema(path):
         return sheets
 
 
+
+def materialize_exact_file(short_id,version,file_id,name,expected_sha):
+    """Return exact governed bytes only after the repository-pinned SHA-256 matches."""
+    validate_pinned_identity(file_id,name)
+    expected_sha=str(expected_sha or '').lower()
+    if not re.fullmatch(r'[0-9a-f]{64}',expected_sha):
+        raise RuntimeError('invalid governed Mendeley SHA-256')
+    CACHE_DIR.mkdir(exist_ok=True)
+    suffix=Path(name).suffix or '.bin'
+    cached=CACHE_DIR/f'{expected_sha}{suffix}'
+    if cached.is_file():
+        digest=hashlib.sha256(cached.read_bytes()).hexdigest()
+        if digest==expected_sha:
+            return cached,'sha256:'+digest
+        cached.unlink()
+    try:
+        _,meta=public_files(short_id,version)
+    except MendeleyTransportUnavailable:
+        meta=None
+    _,_,urls=resolve_file(meta,file_id,name,short_id,version,expected_sha)
+    tmp=CACHE_DIR/f'.{expected_sha}.tmp'
+    observed=[]
+    for attempt in range(3):
+        if tmp.exists():
+            tmp.unlink()
+        try:
+            download_first(urls,tmp)
+            digest=hashlib.sha256(tmp.read_bytes()).hexdigest()
+            if digest==expected_sha:
+                tmp.replace(cached)
+                return cached,'sha256:'+expected_sha
+            observed.append(digest)
+        finally:
+            if tmp.exists():
+                tmp.unlink()
+        if attempt < 2:
+            time.sleep(2 ** attempt)
+    raise MendeleyTransportUnavailable(
+        f"{short_id}/{name} expected {expected_sha}, but delivered bodies failed SHA verification "
+        f"after 3 attempts: {observed}"
+    )
+
+
+def materialize_verified_file(source, expected_name):
+    """Resolve a governed source entry through the exact-file verifier."""
+    file_id,name,expected_sha=next(x for x in source['files'] if x[1]==expected_name)
+    return materialize_exact_file(source['shortId'],source['version'],file_id,name,expected_sha)
+
 def main():
-    out=Path('measured-source-proof'); out.mkdir(exist_ok=True); proofs=[]
-    for source in SOURCES:
-        endpoint,meta=public_files(source['shortId'],source['version'])
-        source_proof={'datasetId':source['datasetId'],'metadataEndpoint':endpoint,'files':[]}
-        for file_id,name,expected_sha in source['files']:
-            verify_metadata_identity(meta,file_id,name,source['shortId'])
-            _identity,resolved_id,urls=resolve_file(None,file_id,name,source['shortId'],source['version'])
-            with tempfile.NamedTemporaryFile(suffix='.xlsx') as tmp:
-                used=download_first(urls,tmp.name)
-                digest=hashlib.sha256(Path(tmp.name).read_bytes()).hexdigest()
-                if digest!=expected_sha: raise SystemExit(f'{source["datasetId"]}/{name} SHA mismatch: {digest}')
-                schema=workbook_text_schema(tmp.name)
-            source_proof['files'].append({'name':name,'resolvedFileId':resolved_id,'sha256':'sha256:'+digest,'downloadRoute':used,'sheets':schema})
-        source_proof['status']='source-proof-passed'; source_proof['rawNumericValuesEmitted']=False; proofs.append(source_proof)
-        print(json.dumps({'status':'source-proof-passed','datasetId':source['datasetId'],'files':[f['name'] for f in source_proof['files']]},separators=(',',':')))
-    result={'schemaVersion':2,'status':'source-proofs-passed','sources':proofs,'boundary':'Workbook IDs, names, exact hashes, sheet names and bounded text/header labels only. Remote metadata is checked separately and cannot influence URL construction. Download redirects are checked before following and restricted to Mendeley plus its exact public-file S3 host. Numeric worksheet values are not emitted.'}
-    (out/'mendeley-open-workbook-source-proofs.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
-    return 0
+    try:
+        out=Path('measured-source-proof'); out.mkdir(exist_ok=True); proofs=[]
+        for source in SOURCES:
+            endpoint,meta=public_files(source['shortId'],source['version'])
+            source_proof={'datasetId':source['datasetId'],'metadataEndpoint':endpoint,'files':[]}
+            for file_id,name,expected_sha in source['files']:
+                path,digest_uri=materialize_verified_file(source,name)
+                digest=digest_uri.split(':',1)[1]
+                schema=workbook_text_schema(path)
+                source_proof['files'].append({'name':name,'resolvedFileId':file_id,'sha256':digest_uri,'downloadRoute':'job-local-sha-verified-cache','sheets':schema})
+            source_proof['status']='source-proof-passed'; source_proof['rawNumericValuesEmitted']=False; proofs.append(source_proof)
+            print(json.dumps({'status':'source-proof-passed','datasetId':source['datasetId'],'files':[f['name'] for f in source_proof['files']]},separators=(',',':')))
+        result={'schemaVersion':2,'status':'source-proofs-passed','sources':proofs,'boundary':'Workbook IDs, names, exact hashes, sheet names and bounded text/header labels only. Repository-pinned dataset/version/file UUID/name/SHA governs retrieval. When the exact UUID appears in version-pinned remote metadata, its filename/SHA must match; incomplete metadata cannot redefine the pinned identity. Download redirects are checked before following and restricted to Mendeley plus its exact public-file S3 host. Numeric worksheet values are not emitted.'}
+        (out/'mendeley-open-workbook-source-proofs.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
+        return 0
+    except MendeleyTransportUnavailable as exc:
+        out=Path('measured-source-proof'); out.mkdir(exist_ok=True)
+        status={
+            'schemaVersion':1,
+            'status':'transport-unavailable',
+            'promotionEligible':False,
+            'governedDatasetIds':[source['datasetId'] for source in SOURCES],
+            'reason':str(exc),
+            'boundary':'Transport-only outage. No source identity, filename, version, SHA, schema, semantic or promotion requirement is relaxed.'
+        }
+        (out/'mendeley-live-status.json').write_text(json.dumps(status,indent=2)+'\n',encoding='utf-8')
+        print(json.dumps({'status':'mendeley-transport-unavailable','promotionEligible':False},separators=(',',':')))
+        return 75
+
 if __name__=='__main__': raise SystemExit(main())

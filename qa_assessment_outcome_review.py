@@ -152,6 +152,8 @@ def validate_contract(contract: dict, technical: list[dict]) -> dict:
 
     approved_mappings: list[dict] = []
     pending_mappings: list[dict] = []
+    proposed_counts: Counter[str] = Counter()
+    proposed_items: dict[str, list[str]] = {}
     for row in mappings:
         stable_id = clean(row.get("stableId"))
         state = clean(row.get("reviewStatus"))
@@ -178,6 +180,9 @@ def validate_contract(contract: dict, technical: list[dict]) -> dict:
             if clean(row.get("reviewedBy")) or clean(row.get("reviewedAt")):
                 raise AssertionError(f"{stable_id}: pending mapping cannot claim reviewer approval metadata")
             pending_mappings.append(row)
+            if proposed_ids:
+                proposed_items[stable_id] = proposed_ids
+                proposed_counts.update(proposed_ids)
             continue
 
         if proposed_ids:
@@ -243,6 +248,20 @@ def validate_contract(contract: dict, technical: list[dict]) -> dict:
     else:
         status = "MEASURABLE_HUMAN_REVIEWED_MINIMUM_MET"
 
+    proposed_coverage = {}
+    for outcome_id, count in sorted(proposed_counts.items()):
+        if count < TARGET_MIN:
+            range_status = "below-recommended-minimum"
+        elif count <= TARGET_MAX:
+            range_status = "within-recommended-range"
+        else:
+            range_status = "above-recommended-maximum"
+        proposed_coverage[outcome_id] = {
+            "title": clean(outcome_by_id[outcome_id].get("title")) if outcome_id in outcome_by_id else "",
+            "proposedItemCount": int(count),
+            "rangeStatus": range_status,
+        }
+
     return {
         "status": status,
         "technicalItemCount": len(technical),
@@ -251,6 +270,10 @@ def validate_contract(contract: dict, technical: list[dict]) -> dict:
         "approvedImportantOutcomeDefinitionCount": len(approved_important),
         "approvedItemMappingCount": len(approved_mappings),
         "pendingItemMappingCount": len(pending_mappings),
+        "pendingOutcomeDefinitionCount": sum(1 for row in outcomes if clean(row.get("reviewStatus")) == "pending"),
+        "proposedItemMappingCount": len(proposed_items),
+        "allTechnicalItemsHaveProposedOutcome": len(proposed_items) == len(technical),
+        "proposedOutcomeCoverage": proposed_coverage,
         "importantOutcomeCoverage": coverage,
         "importantOutcomesBelowMinimum": below_min,
         "importantOutcomesWithinRecommendedRange": within_target,
@@ -402,6 +425,7 @@ def main() -> None:
         "Assessment outcome review:",
         f"{result['approvedItemMappingCount']}/{result['technicalItemCount']} approved current-revision mappings;",
         f"{result['approvedImportantOutcomeDefinitionCount']} approved important outcomes;",
+        f"{result['proposedItemMappingCount']}/{result['technicalItemCount']} proposed mappings ready for review;",
         f"status={result['status']}",
     )
     print(f"Outcome review report written: {REPORT.name}")

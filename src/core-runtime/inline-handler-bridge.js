@@ -8,7 +8,7 @@
   const ALLOWED_CALLS=new Set([
     'MM_ASSESSMENT_ANALYTICS.reset',
     'MM_ASSESSMENT_ANALYTICS_REVIEW.exportJSON',
-    'answerBoss','answerDailyChallenge','answerScenario',
+    'answerBoss','answerDailyChallenge','answerScenario','askCoachForDefect',
     'checkRescueChallenge','closeModal','coachBuild','coachSend','completeAndNext','completeLesson','completeMaterialLesson','createLearner',
     'doSearch','exportData','filterDefects','filterGlossary','filterMaterialExplorer','finishOnboarding',
     'goLesson','gradeExam','gradeMaterialQuiz','importData',

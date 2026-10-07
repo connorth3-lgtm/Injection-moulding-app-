@@ -211,6 +211,22 @@ function adoptShellRuntime(){
   R.registerModule('app-shell-runtime-adoption',{version:VERSION,type:'runtime-v2-core-owner',owned:['renderDashboard','renderLesson','switchView']});
 }
 function resyncGovernedEvidence(){syncEvidenceExports();patchEvidenceUi()}
+const STARTUP_CORE_VIEWS=new Set(['dashboard','path','materials','lesson','visuals','simulator','defects','scenarios','coach','exams','certificates','instructor','glossary','profile','standards']);
+let startupRouteApplied=false;
+function requestedStartupView(){
+  try{return String(new URLSearchParams(location.search).get('view')||'').trim()}catch(_){return ''}
+}
+function applyStartupRoute(){
+  if(startupRouteApplied)return true;
+  const requested=requestedStartupView();if(!requested)return false;
+  if(STARTUP_CORE_VIEWS.has(requested)&&typeof window.switchView==='function'){window.switchView(requested);startupRouteApplied=true;return true}
+  if(requested==='assessment'&&typeof window.switchView==='function'){window.switchView('exams');startupRouteApplied=true;return true}
+  if(requested==='book'&&typeof window.MMBook?.open==='function'){window.MMBook.open();startupRouteApplied=true;return true}
+  if((requested==='processDataLabs'||requested==='process-data')&&typeof window.MM_PROCESS_DATA_DIAGNOSTICS?.open==='function'){window.MM_PROCESS_DATA_DIAGNOSTICS.open();startupRouteApplied=true;return true}
+  if(requested==='standards-readiness'&&typeof window.MM_STANDARDS_READINESS?.open==='function'){window.MM_STANDARDS_READINESS.open();startupRouteApplied=true;return true}
+  if(requested==='reference'||requested==='reference-data'){startupRouteApplied=true;location.replace('./reference-data.html');return true}
+  return false
+}
 
 syncEvidenceExports();
 window.MM_SPECIALIST_EVIDENCE_STATUS=EVIDENCE_EXPORT;
@@ -230,7 +246,8 @@ loadSimpleLessonRuntime();
 window.MM_APP_SHELL.navigation?.sync?.();
 window.addEventListener('popstate',()=>window.MM_APP_SHELL.navigation?.sync?.());
 window.addEventListener('mm:domains-ready',resyncGovernedEvidence);
-requestAnimationFrame(()=>{window.MM_APP_SHELL.geometry?.sync?.();patchEvidenceUi();simplifyHomeScreen();stabilizeRetiredChrome();window.MM_APP_SHELL.navigation?.sync?.()});
+window.addEventListener('mm:domains-ready',applyStartupRoute);
+requestAnimationFrame(()=>{window.MM_APP_SHELL.geometry?.sync?.();patchEvidenceUi();simplifyHomeScreen();stabilizeRetiredChrome();window.MM_APP_SHELL.navigation?.sync?.();applyStartupRoute()});
 window.MM_APP_SHELL_FINALIZED=VERSION;
 })();
 /* <<< app-shell-finalize.js */

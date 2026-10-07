@@ -24,7 +24,7 @@ for marker in [
 ]:
     need(marker in text, f"HDPE/GNP stage-two guard missing: {marker}")
 need("if digest != EXPECTED_SHA256" in text, "retrieved workbook SHA gate missing")
-need("if psha != EXPECTED_SHA256" in text, "publisher manifest SHA gate missing")
+need("materialize_exact_file(" in text and "EXPECTED_FILE_ID,EXPECTED_FILE,EXPECTED_SHA256" in text, "exact version/UUID/SHA source gate missing")
 need("RFR_" not in text, "stage two must not retrieve Random-Forest workbooks")
 need("Code1.txt" not in text and "Rules DT.xlsx" not in text, "stage two must not retrieve derived/supporting files")
 print("MouldMaster HDPE/GNP stage-two aggregate QA passed")

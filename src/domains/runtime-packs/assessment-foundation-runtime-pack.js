@@ -60,11 +60,11 @@ const T={
  Beginner:[
   row('A stable process is being checked during pack/hold. As hold time is increased in controlled steps, part mass initially rises and then reaches a repeatable plateau while fill behaviour and shot delivery remain stable. What does the plateau most strongly support?',['Part-mass plateau supports gate seal for this condition','The non-return valve has failed because part mass stopped increasing','The mould is fully cooled as soon as the mass reaches a plateau','The clamp force is exactly correct because the part mass is stable'],0,'A repeatable part-mass plateau during a controlled hold-time study supports effective gate seal for that tested condition. It does not by itself diagnose the check valve, cooling completion or exact clamp requirement.','Jansen, Pantani & Titomanlio — holding time and gate freeze effects','https://doi.org/10.1002/pen.10186'),
   row('Cushion moves from its normal value on one cycle, but part mass, fill time, transfer position and the next several cycles remain normal. What is the strongest conclusion?',['Treat the single cushion change as sufficient evidence of non-return-valve leakage','Treat the unchanged fill time as proof the resin moisture level has increased','Insufficient evidence; trend repeated shot-delivery actuals first','Restore the historical cushion with hold pressure before collecting more evidence'],2,'One isolated cushion change is a signal to review, not proof of a specific mechanism. Root-cause confidence increases when cushion changes repeat and align with delivered mass, transfer, injection actuals, recovery or other shot-delivery evidence.','Shot-delivery evidence principle; measured process actuals should be interpreted as a linked pattern',null),
-  row('The injection-speed setpoint is unchanged, but actual fill time becomes longer and the pressure response also changes. What does this evidence show?',['The saved recipe proves the physical filling process is unchanged','The actual fill response changed; compare it with the known-good baseline','The quality gauge must be responsible because the speed command did not change','Hold pressure should be changed first because it controls velocity-controlled fill time'],1,'A setpoint is a command, not proof of the achieved physical response. Measured fill time and pressure actuals show that the machine/material response changed even though the command did not.','AVAPS/scatimdata measured injection-pressure and flow evidence','https://doi.org/10.3390/polym15040978'),
+  row('The injection-speed setpoint is unchanged, but actual fill time becomes longer and the pressure response also changes. What does this evidence show?',['The saved recipe indicates the commanded fill settings are unchanged','The actual fill response changed; compare it with the known-good baseline','The quality-gauge trend should be checked first because the speed command did not change','Hold pressure should be changed first because it controls velocity-controlled fill time'],1,'A setpoint is a command, not proof of the achieved physical response. Measured fill time and pressure actuals show that the machine/material response changed even though the command did not.','AVAPS/scatimdata measured injection-pressure and flow evidence','https://doi.org/10.3390/polym15040978'),
   row('All barrel-zone actual temperatures are at their setpoints, but a correctly performed melt-temperature check is higher than expected. Which explanation is most technically sound?',['The melt-temperature check must be wrong whenever all barrel zones are on setpoint','Shear, screw work, residence and throughput also affect actual melt temperature','Mould-surface temperature directly determines the polymer temperature inside the barrel','Clamp force is the main reason melt temperature can differ from barrel-zone temperatures'],1,'Barrel-zone control describes heater-zone conditions, not the complete thermal history of the polymer. Screw work, shear, residence time, throughput and heat transfer can move actual melt temperature away from displayed zone values.','Injection-moulding thermal-process principle',null),
   row('A hygroscopic resin is being prepared for production after its material container was open longer than normal. What is the strongest general action before compensating with machine settings?',['Use the same drying time used for any resin in the same polymer family','Verify the exact grade’s approved moisture and drying requirement','Increase barrel temperature so any remaining moisture is driven off during plasticising','Extend drying time indefinitely until the surface appearance improves'],1,'Moisture limits, drying conditions and allowable exposure are grade-specific. Verify the applicable material requirement and the actual material condition rather than using a generic family recipe or machine-setting workaround.','Material-specific processing requirements should be verified against current resin-supplier or validated site data',null),
-  row('During a process comparison, V/P transfer occurs earlier than the known-good cycle and the cavity-pressure rise changes at the same point. What is the most useful interpretation?',['V/P transfer is only a screen setting, so the pressure response is unrelated','Compare the physical fill-to-pack transition and pressure response first','The change proves the mould cooling circuit is blocked','Increase screw recovery speed because V/P transfer occurs during plasticising'],1,'V/P transfer is the transition from velocity-controlled filling to pressure-controlled packing. A changed transfer event together with a changed pressure response is linked evidence that the fill-to-pack boundary changed.','AVAPS/scatimdata measured filling-pressure evidence','https://doi.org/10.3390/polym15040978'),
-  row('Flash appears at one local corner after mould service, while machine clamp behaviour and the other cavities remain stable. What is the strongest first conclusion about clamp force?',['Increase global clamp force because any flash proves clamp force is too low','Inspect the serviced local shutoff before changing global clamp force','Reduce clamp force because the other cavities are stable','Projected area no longer matters when only one cavity flashes'],1,'A new one-location flash after local service is stronger evidence for a local tooling/seating issue than for a global clamp deficit. Check the changed system before global process compensation.','Injection-moulding clamp/projected-area and local-tooling troubleshooting principles',null),
+  row('During a process comparison, V/P transfer occurs earlier than the known-good cycle and the cavity-pressure rise changes at the same point. What is the most useful interpretation?',['The saved V/P transfer value should be reviewed first because the pressure response changed','Compare the physical fill-to-pack transition and pressure response first','The earlier transfer suggests the mould cooling circuit should be checked first','Increase screw recovery speed because V/P transfer occurs during plasticising'],1,'V/P transfer is the transition from velocity-controlled filling to pressure-controlled packing. A changed transfer event together with a changed pressure response is linked evidence that the fill-to-pack boundary changed.','AVAPS/scatimdata measured filling-pressure evidence','https://doi.org/10.3390/polym15040978'),
+  row('Flash appears at one local corner after mould service, while machine clamp behaviour and the other cavities remain stable. What is the strongest first conclusion about clamp force?',['Increase global clamp force because flash can indicate insufficient clamp force','Inspect the serviced local shutoff before changing global clamp force','Reduce clamp force because the other cavities are stable','Projected area is less useful when only one cavity flashes'],1,'A new one-location flash after local service is stronger evidence for a local tooling/seating issue than for a global clamp deficit. Check the changed system before global process compensation.','Injection-moulding clamp/projected-area and local-tooling troubleshooting principles',null),
   row('A family mould shows one branch filling later after a gate/runner repair, while the other branches remain close to baseline and machine peak pressure rises. What should be checked next?',['Check the repaired runner/gate branch with cavity-specific fill evidence','Cooling time for every cavity because the machine pressure rose','Robot take-out timing because one branch fills later','Part inspection only, because the gate is just an opening and does not influence pressure loss'],0,'The gate and runner form a restricted flow path. A new branch-specific fill delay plus higher pressure after repair points directly to the repaired flow path, so preserve branch/cavity identity and test that restriction hypothesis.','Cavity-pressure and flow-path evidence in injection moulding','https://doi.org/10.1007/s00170-023-11100-1'),
   row('After a mould-water connection problem, one side of the tool runs warmer and the part begins to warp in the same direction while fill time and part mass stay near baseline. Which check is strongest?',['Verify cooling flow, routing and local mould temperatures','Increase packing pressure until warpage disappears','Change injection speed because fill time is already stable','Ignore the thermal evidence because part mass is unchanged'],0,'The changed cooling system, local thermal imbalance and directional warpage form a coherent evidence chain. Verify the affected circuit and thermal condition before unrelated process compensation.','Zhao et al. — shrinkage/warpage and interacting moulding parameters','https://pubmed.ncbi.nlm.nih.gov/35194289/'),
   row('A previously stable part starts failing a critical dimension even though the saved recipe still matches the approved setup sheet. What is the strongest first troubleshooting approach?',['Adjust hold pressure because it directly influences many moulded dimensions','Reload the saved recipe and treat matching setpoints as proof the process is restored','Compare current process actuals and material condition with the known-good baseline','Replace the measuring device before checking whether the measurement system actually changed'],2,'Matching setpoints do not prove that the material, machine, mould thermal state or measurement system is behaving as before. First define what changed by comparing current evidence with the known-good condition.','Injection-moulding troubleshooting principle',null)
@@ -77,7 +77,7 @@ const T={
   row('During a short-shot cavity-balance study, seven cavities reach a similar fill fraction but one branch consistently lags. What evidence would best separate a local branch restriction from a global material-viscosity shift?',['Compare cavity-specific fill evidence with the lagging runner/gate branch','Increase melt temperature globally and accept the first condition that balances the mould','Use only the average shot weight across all cavities','Increase hold time because packing will reveal the original fill balance'],0,'A global viscosity shift should tend to affect the shared flow system, whereas a repeatable single-branch lag points toward local resistance or thermal/gate differences. Preserve cavity identity and inspect the lagging path.','In-cavity pressure and failure-diagnosis evidence','https://doi.org/10.1007/s00170-023-11100-1'),
   row('Cushion and part mass begin varying together on a process that was previously stable. Which investigation is most diagnostic before changing packing pressure?',['Run a longer cooling-time study to see whether part mass stabilises','Check shot delivery, non-return-valve behaviour, feed consistency, transfer and injection actuals','Increase hold time until the average part mass returns to target','Re-zero the dimensional gauge because measurement variation is the most likely cause of cushion variation'],1,'Simultaneous cushion and part-mass variation points first toward delivered-shot consistency. Investigate the feed/plasticising/shot-delivery path and actuals before using packing pressure to compensate.','Machine/process troubleshooting principle',null),
   row('After an unusually long hot shutdown, black specks appear during restart. Fill pressure and mould cooling are otherwise close to baseline. What recovery evidence would most strongly support degraded/stagnant material as the mechanism?',['Specks clear through the approved purge/start-up sequence','The specks disappear after increasing clamp force','The average part mass remains unchanged','Cooling time is increased without changing the material in the barrel'],0,'A symptom that follows excessive hot residence and clears as the material path is safely purged and returned to its validated thermal history supports degradation or stagnant hold-up. Use the approved material-specific purge/start-up procedure.','Material thermal-history and residence-time principle',null),
-  row('Cooling time is being reduced in controlled steps on a stable moulding process. Which evidence set is strongest for choosing the lower acceptable limit?',['Total cycle time and robot take-out time only','Part mass and peak injection pressure only','Ejection, dimensions, warpage and function','Screw recovery time and cushion only'],2,'Cooling should be reduced to a validated quality/stability boundary, not merely to the fastest ejection. The evidence is whether the part can be ejected and subsequently meets dimensional, warpage, appearance and functional requirements.','Zhao et al. — shrinkage/warpage and interacting moulding parameters','https://pubmed.ncbi.nlm.nih.gov/35194289/'),
+  row('Cooling time is being reduced in controlled steps on a stable moulding process. Which evidence set is strongest for choosing the lower acceptable limit?',['Total cycle time and robot take-out timing together','Part mass and peak injection pressure','Ejection, dimensions, warpage and function','Screw recovery time and cushion'],2,'Cooling should be reduced to a validated quality/stability boundary, not merely to the fastest ejection. The evidence is whether the part can be ejected and subsequently meets dimensional, warpage, appearance and functional requirements.','Zhao et al. — shrinkage/warpage and interacting moulding parameters','https://pubmed.ncbi.nlm.nih.gov/35194289/'),
   row('Warpage drifts gradually while cavity fill time, transfer and part mass remain stable. One mould-water return temperature separates from the known-good pattern and local surface temperature follows it. Which test is most discriminating?',['Check affected-circuit flow and local mould temperatures','Increase injection speed because the part is warped','Change shot size because part mass is stable','Adjust the dimensional gauge until the historical mean is restored'],0,'Stable filling/shot evidence makes a filling-volume explanation weaker, while the cooling-circuit and local-temperature changes align with differential cooling and shrinkage. Verify the thermal circuit before compensation.','Zhao et al. — shrinkage/warpage and interacting moulding parameters','https://pubmed.ncbi.nlm.nih.gov/35194289/'),
   row('When is changing one factor at a time most defensible as an engineering experiment?',['When screening many factors and interactions with the fewest informative runs','For a focused confirmation where interactions are not central','Whenever the process has automatic data logging, because logging removes confounding','When the experiment cannot be randomised, because one-factor-at-a-time eliminates time drift'],1,'A one-factor-at-a-time change is useful for focused mechanism confirmation when interactions are not central. When several factors or interactions matter, a suitably designed experiment is usually more informative and efficient.','NIST/SEMATECH e-Handbook — experimental design principles','https://www.itl.nist.gov/div898/handbook/pri/section1/pri13.htm')
  ],
@@ -86,11 +86,11 @@ const T={
   row('A four-cavity mould has an acceptable pooled Cpk, but the cavity-specific means are visibly separated. What is the strongest engineering interpretation?',['The pooled Cpk proves every cavity is capable because all cavities share the same process settings','Check cavity-specific or rational-subgroup capability, not only pooled Cpk','Increase the sample size until the pooled Cpk becomes insensitive to cavity identity','Use Cp instead of Cpk because Cp automatically removes cavity-to-cavity mean differences'],1,'Capability analysis should reflect actual process structure. Pooling distinct cavity populations can hide shifts or variation, so stability, measurement adequacy and cavity-specific or rational-subgroup behaviour should be evaluated before relying on one pooled index.','NIST/SEMATECH e-Handbook — process capability and process stability','https://www.itl.nist.gov/div898/handbook/pmc/section1/pmc16.htm'),
   row('A two-factor moulding study shows that increasing mould temperature improves a dimension at low packing pressure but worsens it at high packing pressure. What is the strongest interpretation?',['The factors interact; mould-temperature effect depends on packing pressure','The mould-temperature main effect alone is sufficient and packing pressure can be ignored','One-factor-at-a-time testing would necessarily reveal the same relationship with fewer runs','The result proves one globally optimal mould temperature for every packing pressure'],0,'When the response to one factor changes with the level of another factor, the factors interact. A suitable factorial/DOE structure can reveal this relationship; main effects alone can hide it.','NIST/SEMATECH e-Handbook — design of experiments','https://www.itl.nist.gov/div898/handbook/pri/section1/pri13.htm'),
   row('In a DOE, every high setting of one factor was run late in the shift and every low setting was run early. The factor appears significant. What is the main interpretation risk?',['Run order may confound the factor with time drift; randomise or block','The factor is more credible because the run order was consistent','Replication is unnecessary because the factor produced a monotonic response with time','A normal response distribution would prove that time drift did not bias the factor estimate'],0,'When factor level and run time move together, the estimated factor effect can contain warm-up, material, environmental, tooling or other time-related change. Randomisation or suitable blocking is needed to separate nuisance effects.','NIST/SEMATECH e-Handbook — experimental design principles','https://www.itl.nist.gov/div898/handbook/pri/section1/pri13.htm'),
-  row('Machine peak injection pressure is stable, but an in-cavity pressure trace changes near end of fill and the affected part feature also changes. Which conclusion is strongest?',['The cavity sensor must be faulty because machine pressure did not move','Treat machine/nozzle and cavity pressure as different-location signals','The in-cavity value should be copied directly into the machine pressure setpoint','Stable machine peak pressure proves the polymer experienced the same pressure history everywhere in the cavity'],1,'Pressure is lost and redistributed through the nozzle, runner, gate and cavity, and a cavity sensor observes one local location. Stable machine pressure does not prove a stable local cavity-pressure history; investigate the process event and sensor condition.','Tsou et al. — oil/nozzle/cavity pressure correlation in injection moulding','https://doi.org/10.1515/ipp-2022-4281'),
+  row('Machine peak injection pressure is stable, but an in-cavity pressure trace changes near end of fill and the affected part feature also changes. Which conclusion is strongest?',['The cavity sensor may be suspect because machine pressure did not move','Treat machine/nozzle and cavity pressure as different-location signals','The in-cavity value should be copied directly into the machine pressure setpoint','Stable machine peak pressure suggests the polymer experienced a similar pressure history throughout the cavity'],1,'Pressure is lost and redistributed through the nozzle, runner, gate and cavity, and a cavity sensor observes one local location. Stable machine pressure does not prove a stable local cavity-pressure history; investigate the process event and sensor condition.','Tsou et al. — oil/nozzle/cavity pressure correlation in injection moulding','https://doi.org/10.1515/ipp-2022-4281'),
   row('A proposed process window was mapped in sequence from low to high settings, but the material lot changed halfway through and viscosity-related fill pressure shifted at the same time. Can the boundary be treated as a validated factor window?',['Yes; one completed run at each setting is enough even though the material lot changed','No; lot and factor are confounded, so repeat or redesign to separate their effects','Yes; pool all in-specification parts and treat the lot change as normal process noise','Yes; settings define the process window even if viscosity-related response changed'],1,'A useful process window must connect controlled factors to acceptable response boundaries. If factor progression and material lot change together, their effects cannot be separated from this evidence alone.','NIST/SEMATECH e-Handbook — experimental design and confounding','https://www.itl.nist.gov/div898/handbook/pri/section1/pri13.htm'),
   row('A DOE model predicts an acceptable dimension at the selected condition, but independent confirmation runs are consistently shifted from the prediction while the measurement system remains adequate. What is the strongest response?',['Accept the model because the original DOE was statistically significant','Treat the failed confirmation as evidence the model does not yet generalise','Change the specification to include the confirmation mean','Average the DOE and confirmation data without preserving which runs were confirmatory'],1,'Confirmation runs test whether the selected condition reproduces the predicted response outside the runs used to estimate the model. A repeatable mismatch is evidence to investigate the model, nuisance changes or omitted mechanisms.','NIST/SEMATECH e-Handbook — confirmation runs','https://www.itl.nist.gov/div898/handbook/pri/section4/pri46.htm'),
   row('A validated mould is moved to a receiving machine with a different screw diameter and different injection-control dynamics. Which transfer strategy provides the strongest evidence of process equivalence?',['Copy the original screw positions, speeds and pressure settings numerically','Match the same percentages of each machine’s rated speed and pressure','Reproduce the relevant material/process outputs—such as fill behaviour, pressure response, transfer condition, melt/thermal state and part quality—on a receiving machine proven capable of doing so','Match total cycle time first and treat the remaining settings as equivalent if the parts look acceptable'],2,'Different screw geometry, pressure definitions and control dynamics can produce different physical material conditions from similar-looking settings. Transfer should demonstrate that the receiving machine reproduces the relevant process outputs and product requirements.','Injection-moulding process-transfer principle',null),
-  row('Two polypropylene grades have similar published MFR values but show different fill-pressure and flow-length behaviour in the same mould. What is the strongest conclusion?',['The pressure difference proves one MFR certificate is incorrect','MFR does not fully describe moulding rheology or mouldability','Equal MFR values mean the two grades should use the same injection-speed profile if mould temperature is unchanged','Flow-length differences can only be caused by gate wear when MFR values are similar'],1,'MFR is useful for a specified test condition, but injection moulding subjects material to different shear rates, pressure, thermal history and geometry. Similar MFR does not guarantee identical mould filling or pressure response.','Hamdi — polypropylene MFR versus injection-moulding flow length','https://doi.org/10.1007/s13367-023-00081-y'),
+  row('Two polypropylene grades have similar published MFR values but show different fill-pressure and flow-length behaviour in the same mould. What is the strongest conclusion?',['The pressure difference suggests one MFR certificate may not represent the current material condition','MFR does not fully describe moulding rheology or mouldability','Equal MFR values suggest the two grades should use the same injection-speed profile if mould temperature is unchanged','Flow-length differences may point first to gate wear when MFR values are similar'],1,'MFR is useful for a specified test condition, but injection moulding subjects material to different shear rates, pressure, thermal history and geometry. Similar MFR does not guarantee identical mould filling or pressure response.','Hamdi — polypropylene MFR versus injection-moulding flow length','https://doi.org/10.1007/s13367-023-00081-y'),
   row('A pressure-loss review has an upstream machine-pressure channel and a cavity-pressure channel, but the upstream export unit/reference definition has not been authoritatively confirmed. What is the strongest engineering conclusion?',['Subtract the two numeric columns because both are labelled pressure','Assume the upstream channel uses the same unit as another machine dataset','Insufficient evidence until location, units and timing are verified','Convert both columns to bar using their average values'],2,'Pressure-loss calculations require semantically compatible measurements. Similar names or plausible magnitudes are not enough: location, units/reference, signal definition and timing must be established before numeric subtraction is treated as physical evidence.','Tsou et al. — pressure measurements at different moulding-system locations','https://doi.org/10.1515/ipp-2022-4281')
  ]
 };
@@ -125,16 +125,26 @@ window.MM_QUESTION_DEEP_DIVE={version:'2026-08-30',technicalRewrites:30,scenario
 (function(){
 'use strict';
 const D=window.MM_DATA;
+const STARTER_AUTHORING=/^(Measure\/verify|Inspect\/clean|Check|Verify|Inspect|Compare|Measure|Investigate|Confirm|Increase|Change|Ignore|Assume|Reduce|Raise|Lower|Decrease|Adjust|Accept)\s+/;
+function authorChoice(value){
+ const out=String(value??'');
+ return out.replace(STARTER_AUTHORING,(_match,verb)=>`The response is to ${String(verb).toLowerCase()} `);
+}
+function authorChoices(options){return Array.isArray(options)?options.map(authorChoice):options}
+window.MM_ASSESSMENT_AUTHOR_CHOICE=authorChoice;
 const transfer=D?.exams?.Advanced?.[7];
 if(!Array.isArray(transfer)||!Array.isArray(transfer[1])||transfer[1].length!==4||transfer[2]!==2)throw new Error('Advanced process-transfer question shape changed');
 transfer[1][2]='Match validated physical process outputs on a capable receiving machine';
 
 if(!D?.regionalQuestions)throw new Error('Regional assessment data must load before regional hardening');
-const regionalRow=(question,options,correct,why,reference,url)=>[
- question,options,correct,why,reference,url,
- options.map((option,i)=>i===correct?`Correct. ${why}`:`Not the best answer. “${option}” does not satisfy the cited requirement for this case. ${why}`),
- true
-];
+const regionalRow=(question,options,correct,why,reference,url)=>{
+ const authored=authorChoices(options);
+ return [
+  question,authored,correct,why,reference,url,
+  authored.map((option,i)=>i===correct?`Correct. ${why}`:`Not the best answer. “${option}” does not satisfy the cited requirement for this case. ${why}`),
+  true
+ ];
+};
 function regionalSet(region,level,index,item){
  const current=D.regionalQuestions?.[region]?.[level]?.[index];
  if(!current)throw new Error(`Missing regional question ${region}/${level}/${index}`);
@@ -195,24 +205,62 @@ const R={
  }
 };
 for(const [region,levels] of Object.entries(R))for(const [level,items] of Object.entries(levels))items.forEach((item,i)=>regionalSet(region,level,i,item));
+let authoredChoiceCount=0;
+const conciseKeyedWording={
+ 'tech:Beginner:9':'Baseline comparison of current process actuals and material condition',
+ 'tech:Intermediate:5':'Shot-delivery, NRV, feed, transfer and injection-actual checks',
+ 'reg:NZ:Intermediate:2':'Safeguard verification before authorised return to service',
+};
+for(const [id,text] of Object.entries(conciseKeyedWording)){
+ if(id.startsWith('tech:')){
+  const [,level,index]=id.split(':'),q=D?.exams?.[level]?.[Number(index)],options=q?.options??q?.[1],key=Number(q?.correct??q?.[2]);
+  if(!Array.isArray(options)||key<0||key>=options.length)throw new Error(`Concise keyed wording target changed: ${id}`);
+  options[key]=text;authoredChoiceCount++;
+ }else if(id.startsWith('reg:')){
+  const [,region,level,index]=id.split(':'),q=D?.regionalQuestions?.[region]?.[level]?.[Number(index)],options=q?.[1],key=Number(q?.[2]);
+  if(!Array.isArray(options)||key<0||key>=options.length)throw new Error(`Concise keyed wording target changed: ${id}`);
+  options[key]=text;authoredChoiceCount++;
+ }else{
+  const index=Number(id.split(':')[1])-1,s=D?.scenarios?.[index],options=s?.choices,key=Number(s?.correct);
+  if(!Array.isArray(options)||key<0||key>=options.length)throw new Error(`Concise keyed wording target changed: ${id}`);
+  options[key]=text;authoredChoiceCount++;
+ }
+}
+const cushionVariationScenario=D?.scenarios?.[0];
+if(!cushionVariationScenario||!Array.isArray(cushionVariationScenario.choices)||cushionVariationScenario.choices.length!==4||Number(cushionVariationScenario.correct)!==1)throw new Error('Cushion-variation scenario shape changed');
+if(cushionVariationScenario.choices[1]!=='Review shot-delivery/NRV and injection actuals'){
+ cushionVariationScenario.choices[1]='Review shot-delivery/NRV and injection actuals';
+ authoredChoiceCount++;
+}
+for(const level of ['Beginner','Intermediate','Advanced'])for(const q of D?.exams?.[level]||[]){
+ const options=q?.options??q?.[1];if(!Array.isArray(options))continue;
+ for(let i=0;i<options.length;i++){const next=authorChoice(options[i]);if(next!==options[i]){options[i]=next;authoredChoiceCount++}}
+}
+for(const scenario of D?.scenarios||[]){
+ if(!Array.isArray(scenario?.choices))continue;
+ for(let i=0;i<scenario.choices.length;i++){const next=authorChoice(scenario.choices[i]);if(next!==scenario.choices[i]){scenario.choices[i]=next;authoredChoiceCount++}}
+}
 D.assessmentQA=D.assessmentQA||{};
 D.assessmentQA.regionalDeepDive={reviewed:'30 August 2026',regionalItemsRewritten:27,regionalAnswerChanges:0,appliedSafety:true,officialSources:true};
-window.MM_REGIONAL_QUESTION_DEEP_DIVE={version:'2026-08-30',regionalRewrites:27,regionalAnswerChanges:0,appliedSafety:true};
+D.assessmentQA.answerStarterAuthoring={version:'2026.10.05.1',coreChoicesReauthored:authoredChoiceCount,policy:'A shared neutral response frame is applied to high-risk evidence and parameter-action starters so option grammar does not reveal answer keys; technical propositions and keys are unchanged.'};
+window.MM_REGIONAL_QUESTION_DEEP_DIVE={version:'2026-08-30',regionalRewrites:27,regionalAnswerChanges:0,appliedSafety:true,answerStarterAuthoring:true};
 })();
 /* <<< assessment-answer-cue-fix.js */
 
 /* >>> assessment-storage-scope.js */
-/* MouldMaster learner-scoped assessment storage — 2026-09-11.1 */
+/* MouldMaster learner-scoped assessment storage — 2026-10-05.2 */
 (function(){
 'use strict';
 if(typeof window==='undefined'||typeof localStorage==='undefined')return;
-const VERSION='2026.09.11.1';
+const VERSION='2026.10.05.2';
 const ANALYTICS_BASE='mm_assessment_analytics_v1';
 const TIMING_BASE='mm_assessment_exposure_timing_v1';
 const ROTATION_BASE='mm_assessment_opening_history_v1';
+const UX_ROTATION_BASE='mm_assessment_opening_history_v2';
 const QUESTION_HISTORY_BASE='mm-assessment-question-history-v4';
 const RESULT_META_BASE='mm-assessment-result-meta-v1';
-const BASES=[ANALYTICS_BASE,TIMING_BASE,ROTATION_BASE,QUESTION_HISTORY_BASE,RESULT_META_BASE];
+const BLUEPRINT_HISTORY_BASE='mm_assessment_blueprint_history_v1';
+const BASES=[ANALYTICS_BASE,TIMING_BASE,ROTATION_BASE,UX_ROTATION_BASE,QUESTION_HISTORY_BASE,RESULT_META_BASE,BLUEPRINT_HISTORY_BASE];
 if(window.MM_ASSESSMENT_STORAGE_SCOPE?.version===VERSION)return;
 const rawGet=localStorage.getItem.bind(localStorage);
 const rawSet=localStorage.setItem.bind(localStorage);
@@ -225,7 +273,7 @@ function learnerId(){
   if(typeof db!=='undefined'&&db&&db.activeUser)return String(db.activeUser).slice(0,160);
   if(typeof user!=='undefined'&&user&&user.id)return String(user.id).slice(0,160);
  }catch(_){}
- return 'anonymous';
+ return null;
 }
 function hashScope(value){
  const s=String(value||'anonymous');let h1=0xdeadbeef^s.length,h2=0x41c6ce57^s.length;
@@ -234,19 +282,28 @@ function hashScope(value){
  h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);
  return (4294967296*(2097151&h2)+(h1>>>0)).toString(36);
 }
+function strongFallbackToken(raw){
+ const value=String(raw||'anonymous');let h1=1779033703,h2=3144134277,h3=1013904242,h4=2773480762;
+ const seeded=`mm-learner-scope-v2|${value}`;
+ for(let i=0;i<seeded.length;i++){const k=seeded.charCodeAt(i);h1=h2^Math.imul(h1^k,597399067);h2=h3^Math.imul(h2^k,2869860233);h3=h4^Math.imul(h3^k,951274213);h4=h1^Math.imul(h4^k,2716044179)}
+ h1=Math.imul(h3^(h1>>>18),597399067);h2=Math.imul(h4^(h2>>>22),2869860233);h3=Math.imul(h1^(h3>>>17),951274213);h4=Math.imul(h2^(h4>>>19),2716044179);
+ h1=(h1^h2^h3^h4)>>>0;h2=(h2^h1)>>>0;h3=(h3^h1)>>>0;h4=(h4^h1)>>>0;
+ return [h1,h2,h3,h4].map(x=>x.toString(16).padStart(8,'0')).join('')
+}
 function profileIds(){try{return typeof db!=='undefined'&&db?.users&&typeof db.users==='object'&&!Array.isArray(db.users)?Object.keys(db.users).map(String).filter(Boolean):[]}catch(_){return[]}}
 function rawScopedKey(base,token){return `${base}::${String(token)}`}
 function sharedScope(){const s=window.MM_LEARNER_SCOPE;return s&&typeof s.tokenFor==='function'?s:null}
 function migrateFallbackScopes(){
  const shared=sharedScope();if(!shared)return {status:'shared-unavailable',migrated:0,removedDuplicate:0,conflicts:0,ambiguous:0};
  const ids=[...new Set(profileIds())],byOld=new Map();
- for(const id of ids){const token=hashScope(id);if(!byOld.has(token))byOld.set(token,[]);byOld.get(token).push(id)}
+ for(const id of ids)for(const token of [hashScope(id),strongFallbackToken(id)]){if(!byOld.has(token))byOld.set(token,[]);byOld.get(token).push(id)}
  let migrated=0,removedDuplicate=0,conflicts=0,ambiguous=0;
  for(const base of BASES){
   for(const [oldToken,owners] of byOld){
    const oldKey=rawScopedKey(base,oldToken),legacy=rawGet(oldKey);if(legacy==null)continue;
    if(owners.length!==1){ambiguous++;continue}
-   const target=rawScopedKey(base,shared.tokenFor(owners[0])),current=rawGet(target);
+   const target=rawScopedKey(base,shared.tokenFor(owners[0]));if(oldKey===target)continue;
+   const current=rawGet(target);
    if(current==null){rawSet(target,legacy);if(rawGet(target)===legacy){rawRemove(oldKey);migrated++}else conflicts++;continue}
    if(current===legacy){rawRemove(oldKey);removedDuplicate++;continue}
    conflicts++;
@@ -259,19 +316,33 @@ function ensureSharedMigration(){
  sharedMigration=migrateFallbackScopes();sharedMigrationComplete=true;return sharedMigration
 }
 function scopeToken(raw=learnerId()){
+ if(raw==null||String(raw)==='')return null;
  const shared=sharedScope();if(shared){ensureSharedMigration();return shared.tokenFor(raw)}
- return hashScope(raw)
+ return strongFallbackToken(raw)
 }
 function scopedKey(base,raw=learnerId()){
- const k=String(base);return BASES.includes(k)?rawScopedKey(k,scopeToken(raw)):k
+ const k=String(base);if(!BASES.includes(k))return k;const token=scopeToken(raw);return token?rawScopedKey(k,token):null
 }
 function rawKeys(){const out=[];for(let i=0;i<localStorage.length;i++){const k=rawKey(i);if(k!=null)out.push(k)}return out}
 function assessmentKey(k){return BASES.some(base=>k===base||k.startsWith(base+'::'))}
-function getItem(base){return rawGet(scopedKey(base))}
-function setItem(base,value){rawSet(scopedKey(base),String(value));return true}
-function removeItem(base){rawRemove(scopedKey(base));return true}
+function getItem(base){const k=scopedKey(base);return k?rawGet(k):null}
+function setItem(base,value){const k=scopedKey(base);if(!k)return false;rawSet(k,String(value));return rawGet(k)===String(value)}
+function removeItem(base){const k=scopedKey(base);if(!k)return false;rawRemove(k);return rawGet(k)==null}
 function read(base,fallback=null){try{const raw=getItem(base);if(raw==null)return fallback;const value=JSON.parse(raw);return value==null?fallback:value}catch(_){return fallback}}
 function write(base,value){try{return setItem(base,JSON.stringify(value))}catch(_){return false}}
+function keysForLearner(raw=learnerId()){
+ if(raw==null||String(raw)==='')return [];
+ const learner=String(raw),tokens=new Set([hashScope(learner),strongFallbackToken(learner)]),shared=sharedScope();
+ if(shared)tokens.add(shared.tokenFor(learner));
+ return [...tokens].flatMap(token=>BASES.map(base=>rawScopedKey(base,token)))
+}
+function clearLearner(raw=learnerId()){
+ const keys=keysForLearner(raw);
+ for(const k of keys)rawRemove(k);
+ const remaining=keys.filter(k=>rawGet(k)!=null);
+ if(remaining.length)throw new Error(`Assessment learner cleanup could not be verified: ${remaining.slice(0,3).join(', ')}`);
+ return Object.freeze({learnerId:raw==null?null:String(raw),removed:keys.length,verified:true})
+}
 function clearAll(){for(const k of rawKeys())if(assessmentKey(k))rawRemove(k)}
 function cancelInMemoryAttempt(){
  try{if(typeof activeExam!=='undefined')activeExam=null}catch(_){}
@@ -305,9 +376,9 @@ wrapLearnerChange('createLearner');
 const baseReset=typeof window.resetData==='function'?window.resetData:null;
 if(baseReset&&!baseReset.__mmAssessmentScopeWrapped){
  const wrappedReset=function(){
-  let before=null;try{before=rawGet('mouldmasterProDB')}catch(_){}
+  let before=null,beforeLearner=learnerId();try{before=rawGet('mouldmasterProDB')}catch(_){}
   const r=baseReset.apply(this,arguments);
-  setTimeout(()=>{try{const after=rawGet('mouldmasterProDB');if(after!==before){cancelInMemoryAttempt();clearAll()}}catch(_){}},0);
+  setTimeout(()=>{try{const after=rawGet('mouldmasterProDB');if(after!==before){cancelInMemoryAttempt();clearLearner(beforeLearner)}}catch(error){console.warn('[MouldMaster assessment scope] learner reset cleanup:',error)}},0);
   return r;
  };
  Object.defineProperty(wrappedReset,'__mmAssessmentScopeWrapped',{value:true});window.resetData=wrappedReset;
@@ -325,8 +396,12 @@ window.MM_ASSESSMENT_STORAGE_SCOPE={
  analyticsKey:()=>scopedKey(ANALYTICS_BASE),
  timingKey:()=>scopedKey(TIMING_BASE),
  rotationKey:()=>scopedKey(ROTATION_BASE),
+ uxRotationKey:()=>scopedKey(UX_ROTATION_BASE),
  questionHistoryKey:()=>scopedKey(QUESTION_HISTORY_BASE),
  resultMetaKey:()=>scopedKey(RESULT_META_BASE),
+ blueprintHistoryKey:()=>scopedKey(BLUEPRINT_HISTORY_BASE),
+ keysForLearner,
+ clearLearner,
  clearAll,
  cancelInMemoryAttempt,
  migrateFallbackScopes:ensureSharedMigration,
@@ -352,6 +427,7 @@ if(!ASSESSMENT_STORAGE||typeof ASSESSMENT_STORAGE.read!=='function'||typeof ASSE
 const VERSION='2026.08.24.2';
 const ANALYTICS_KEY='mm_assessment_analytics_v1';
 const REVIEW_KEY='mm_spaced_review_v2';
+const BLUEPRINT_HISTORY_KEY='mm_assessment_blueprint_history_v1';
 const SOURCE_REVIEWED='2026-08-26';
 const SOURCE_REVIEW_BY='2026-11-26';
 const LEVELS=['Beginner','Intermediate','Advanced'];
@@ -359,14 +435,17 @@ const REGIONS=['UK','US','NZ'];
 const BLUEPRINT=['materials','machine','tooling','process','quality','troubleshooting'];
 const LABELS={materials:'Materials & rheology',machine:'Machine & controls',tooling:'Tooling & thermal',process:'Process development',quality:'Quality & statistics',troubleshooting:'Troubleshooting',safety:'Safety & compliance'};
 const IDENTITY_LOCK_VERSION='2026.09.10.1';
-const LOCKED_IDENTITIES=[{"stableId":"reg:NZ:Advanced:0","fingerprint":"fnv1a-a15f8593","reviewedRevision":2,"kind":"regional","level":"Advanced","region":"NZ","difficulty":"Expert safety","competency":"safety","competencies":["safety"],"concept":"safety-nz-engineer-compliance-replaces-duties","reviewedContentFingerprint":"fnv1a-199267ab","reviewedSourceFingerprint":"fnv1a-1b03a7f5"},{"stableId":"reg:NZ:Advanced:1","fingerprint":"fnv1a-144d4d23","reviewedRevision":2,"kind":"regional","level":"Advanced","region":"NZ","difficulty":"Expert safety","competency":"safety","competencies":["safety"],"concept":"safety-nz-robot-conveyor-added-injection","reviewedContentFingerprint":"fnv1a-bedda5f7","reviewedSourceFingerprint":"fnv1a-4f95fc65"},{"stableId":"reg:NZ:Advanced:2","fingerprint":"fnv1a-580a34ce","reviewedRevision":2,"kind":"regional","level":"Advanced","region":"NZ","difficulty":"Expert safety","competency":"safety","competencies":["safety"],"concept":"safety-nz-august-training-health-safety","reviewedContentFingerprint":"fnv1a-24ccd71f","reviewedSourceFingerprint":"fnv1a-94086ca3"},{"stableId":"reg:NZ:Beginner:0","fingerprint":"fnv1a-3fd3af5d","reviewedRevision":2,"kind":"regional","level":"Beginner","region":"NZ","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-nz-production-manager-machine-safety","reviewedContentFingerprint":"fnv1a-ee9dcf53","reviewedSourceFingerprint":"fnv1a-0e9f6305"},{"stableId":"reg:NZ:Beginner:1","fingerprint":"fnv1a-d1eea52d","reviewedRevision":2,"kind":"regional","level":"Beginner","region":"NZ","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-nz-safety-isolation","reviewedContentFingerprint":"fnv1a-20cf90a1","reviewedSourceFingerprint":"fnv1a-5e0e5600"},{"stableId":"reg:NZ:Beginner:2","fingerprint":"fnv1a-02582e6c","reviewedRevision":2,"kind":"regional","level":"Beginner","region":"NZ","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-nz-safety-device-fails-injection","reviewedContentFingerprint":"fnv1a-adc5aab8","reviewedSourceFingerprint":"fnv1a-91ad0bc9"},{"stableId":"reg:NZ:Intermediate:0","fingerprint":"fnv1a-86bce288","reviewedRevision":2,"kind":"regional","level":"Intermediate","region":"NZ","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-nz-maintenance-cleaning-requires-access","reviewedContentFingerprint":"fnv1a-b4cbdc9b","reviewedSourceFingerprint":"fnv1a-93a4f3b5"},{"stableId":"reg:NZ:Intermediate:1","fingerprint":"fnv1a-f0ce1300","reviewedRevision":2,"kind":"regional","level":"Intermediate","region":"NZ","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-nz-safety-isolation","reviewedContentFingerprint":"fnv1a-79cfafc2","reviewedSourceFingerprint":"fnv1a-97cfc0a3"},{"stableId":"reg:NZ:Intermediate:2","fingerprint":"fnv1a-91e9176b","reviewedRevision":2,"kind":"regional","level":"Intermediate","region":"NZ","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-nz-service-complete-machine-about","reviewedContentFingerprint":"fnv1a-990327b5","reviewedSourceFingerprint":"fnv1a-d0b819b9"},{"stableId":"reg:UK:Advanced:0","fingerprint":"fnv1a-b8cb8dd1","reviewedRevision":2,"kind":"regional","level":"Advanced","region":"UK","difficulty":"Expert safety","competency":"safety","competencies":["safety"],"concept":"safety-uk-robot-conveyor-added-existing","reviewedContentFingerprint":"fnv1a-4dc790aa","reviewedSourceFingerprint":"fnv1a-85fee13d"},{"stableId":"reg:UK:Advanced:1","fingerprint":"fnv1a-474a887e","reviewedRevision":2,"kind":"regional","level":"Advanced","region":"UK","difficulty":"Expert safety","competency":"safety","competencies":["safety"],"concept":"safety-uk-machine-current-conformity-documentation","reviewedContentFingerprint":"fnv1a-7d90096b","reviewedSourceFingerprint":"fnv1a-4de986be"},{"stableId":"reg:UK:Advanced:2","fingerprint":"fnv1a-159f7dfb","reviewedRevision":2,"kind":"regional","level":"Advanced","region":"UK","difficulty":"Expert safety","competency":"safety","competencies":["safety"],"concept":"safety-uk-doe","reviewedContentFingerprint":"fnv1a-c4560032","reviewedSourceFingerprint":"fnv1a-9baa4b0f"},{"stableId":"reg:UK:Beginner:0","fingerprint":"fnv1a-0a0d80ea","reviewedRevision":2,"kind":"regional","level":"Beginner","region":"UK","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-uk-safety-isolation","reviewedContentFingerprint":"fnv1a-36b2ae6a","reviewedSourceFingerprint":"fnv1a-a09c7118"},{"stableId":"reg:UK:Beginner:1","fingerprint":"fnv1a-e8da0d83","reviewedRevision":2,"kind":"regional","level":"Beginner","region":"UK","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-uk-safety-isolation","reviewedContentFingerprint":"fnv1a-9a87d5b7","reviewedSourceFingerprint":"fnv1a-fa684cf5"},{"stableId":"reg:UK:Beginner:2","fingerprint":"fnv1a-7ff0db5b","reviewedRevision":2,"kind":"regional","level":"Beginner","region":"UK","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-uk-polymer-grade-produces-visible","reviewedContentFingerprint":"fnv1a-2b93dd0d","reviewedSourceFingerprint":"fnv1a-a50f30ef"},{"stableId":"reg:UK:Intermediate:0","fingerprint":"fnv1a-eaf64e0b","reviewedRevision":2,"kind":"regional","level":"Intermediate","region":"UK","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-uk-training-sheet-puwer-applies","reviewedContentFingerprint":"fnv1a-d05db0a3","reviewedSourceFingerprint":"fnv1a-a366041d"},{"stableId":"reg:UK:Intermediate:1","fingerprint":"fnv1a-4d2f2a2e","reviewedRevision":2,"kind":"regional","level":"Intermediate","region":"UK","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-uk-safety-isolation","reviewedContentFingerprint":"fnv1a-bc0c6665","reviewedSourceFingerprint":"fnv1a-fe383e7c"},{"stableId":"reg:UK:Intermediate:2","fingerprint":"fnv1a-89bd4d3a","reviewedRevision":2,"kind":"regional","level":"Intermediate","region":"UK","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-uk-validation-20430-certification-means","reviewedContentFingerprint":"fnv1a-71cbf510","reviewedSourceFingerprint":"fnv1a-2decd9d4"},{"stableId":"reg:US:Advanced:0","fingerprint":"fnv1a-cbad36e1","reviewedRevision":2,"kind":"regional","level":"Advanced","region":"US","difficulty":"Expert safety","competency":"safety","competencies":["safety"],"concept":"safety-us-company-operates-injection-moulding","reviewedContentFingerprint":"fnv1a-3bc48420","reviewedSourceFingerprint":"fnv1a-0fa97694"},{"stableId":"reg:US:Advanced:1","fingerprint":"fnv1a-24e5b049","reviewedRevision":2,"kind":"regional","level":"Advanced","region":"US","difficulty":"Expert safety","competency":"safety","competencies":["safety"],"concept":"safety-us-safety-isolation","reviewedContentFingerprint":"fnv1a-7d1b29aa","reviewedSourceFingerprint":"fnv1a-7df76c51"},{"stableId":"reg:US:Advanced:2","fingerprint":"fnv1a-94ed16f7","reviewedRevision":2,"kind":"regional","level":"Advanced","region":"US","difficulty":"Expert safety","competency":"safety","competencies":["safety"],"concept":"safety-us-robot-integrated-injection-moulding","reviewedContentFingerprint":"fnv1a-e0aeed2e","reviewedSourceFingerprint":"fnv1a-dfb23c8e"},{"stableId":"reg:US:Beginner:0","fingerprint":"fnv1a-5bbfd852","reviewedRevision":2,"kind":"regional","level":"Beginner","region":"US","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-us-horizontal-injection-moulding-machine","reviewedContentFingerprint":"fnv1a-2f7ff710","reviewedSourceFingerprint":"fnv1a-9284ce40"},{"stableId":"reg:US:Beginner:1","fingerprint":"fnv1a-55f7f381","reviewedRevision":2,"kind":"regional","level":"Beginner","region":"US","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-us-safety-isolation","reviewedContentFingerprint":"fnv1a-af83166f","reviewedSourceFingerprint":"fnv1a-1f3831de"},{"stableId":"reg:US:Beginner:2","fingerprint":"fnv1a-209cf97b","reviewedRevision":2,"kind":"regional","level":"Beginner","region":"US","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-us-purge-compound-introduced-employees","reviewedContentFingerprint":"fnv1a-5bc93f66","reviewedSourceFingerprint":"fnv1a-d32f03e0"},{"stableId":"reg:US:Intermediate:0","fingerprint":"fnv1a-081176be","reviewedRevision":2,"kind":"regional","level":"Intermediate","region":"US","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-us-stuck-cleared-inside-danger","reviewedContentFingerprint":"fnv1a-7350fed8","reviewedSourceFingerprint":"fnv1a-2b1d715d"},{"stableId":"reg:US:Intermediate:1","fingerprint":"fnv1a-e4ee2e71","reviewedRevision":2,"kind":"regional","level":"Intermediate","region":"US","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-us-emergency-pressed-hydraulic-stored","reviewedContentFingerprint":"fnv1a-3e81d5d3","reviewedSourceFingerprint":"fnv1a-2b1d715d"},{"stableId":"reg:US:Intermediate:2","fingerprint":"fnv1a-56dc09c4","reviewedRevision":2,"kind":"regional","level":"Intermediate","region":"US","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-us-safety-engineer-plastics-should","reviewedContentFingerprint":"fnv1a-f4c86623","reviewedSourceFingerprint":"fnv1a-8a4a208a"},{"stableId":"tech:Advanced:0","fingerprint":"fnv1a-9eaca470","reviewedRevision":3,"kind":"technical","level":"Advanced","region":null,"difficulty":"Diagnostic","competency":"quality","competencies":["quality","troubleshooting"],"concept":"capability","reviewedContentFingerprint":"fnv1a-8bd0f301","reviewedSourceFingerprint":"fnv1a-646818ab"},{"stableId":"tech:Advanced:1","fingerprint":"fnv1a-5cdb31e1","reviewedRevision":2,"kind":"technical","level":"Advanced","region":null,"difficulty":"Diagnostic","competency":"tooling","competencies":["tooling","quality","troubleshooting"],"concept":"capability","reviewedContentFingerprint":"fnv1a-ff52dfd1","reviewedSourceFingerprint":"fnv1a-81b6dc5a"},{"stableId":"tech:Advanced:2","fingerprint":"fnv1a-68539e4f","reviewedRevision":3,"kind":"technical","level":"Advanced","region":null,"difficulty":"Diagnostic","competency":"tooling","competencies":["tooling","process","quality","troubleshooting"],"concept":"factor-moulding-study-shows","reviewedContentFingerprint":"fnv1a-8a34bdf8","reviewedSourceFingerprint":"fnv1a-750deb38"},{"stableId":"tech:Advanced:3","fingerprint":"fnv1a-ad59ed03","reviewedRevision":2,"kind":"technical","level":"Advanced","region":null,"difficulty":"Expert","competency":"quality","competencies":["quality"],"concept":"doe","reviewedContentFingerprint":"fnv1a-5a193092","reviewedSourceFingerprint":"fnv1a-1e6184fb"},{"stableId":"tech:Advanced:4","fingerprint":"fnv1a-dbd05a3b","reviewedRevision":2,"kind":"technical","level":"Advanced","region":null,"difficulty":"Expert","competency":"machine","competencies":["machine","tooling","process","troubleshooting"],"concept":"cavity-pressure","reviewedContentFingerprint":"fnv1a-7bc46e8b","reviewedSourceFingerprint":"fnv1a-34a4082e"},{"stableId":"tech:Advanced:5","fingerprint":"fnv1a-e2f9fd96","reviewedRevision":3,"kind":"technical","level":"Advanced","region":null,"difficulty":"Expert","competency":"materials","competencies":["materials","process"],"concept":"mfr-rheology","reviewedContentFingerprint":"fnv1a-4acaec64","reviewedSourceFingerprint":"fnv1a-6818d37a"},{"stableId":"tech:Advanced:6","fingerprint":"fnv1a-0137f76c","reviewedRevision":3,"kind":"technical","level":"Advanced","region":null,"difficulty":"Expert","competency":"quality","competencies":["quality","troubleshooting"],"concept":"measurement","reviewedContentFingerprint":"fnv1a-5e9b4a68","reviewedSourceFingerprint":"fnv1a-866abf5b"},{"stableId":"tech:Advanced:7","fingerprint":"fnv1a-0b5566a6","reviewedRevision":2,"kind":"technical","level":"Advanced","region":null,"difficulty":"Expert","competency":"machine","competencies":["machine","tooling","process","troubleshooting"],"concept":"process-transfer","reviewedContentFingerprint":"fnv1a-afef1a15","reviewedSourceFingerprint":"fnv1a-1f79575c"},{"stableId":"tech:Advanced:8","fingerprint":"fnv1a-ed37656d","reviewedRevision":2,"kind":"technical","level":"Advanced","region":null,"difficulty":"Expert","competency":"materials","competencies":["materials","tooling","process","troubleshooting"],"concept":"mfr-rheology","reviewedContentFingerprint":"fnv1a-55b10a1c","reviewedSourceFingerprint":"fnv1a-63559e49"},{"stableId":"tech:Advanced:9","fingerprint":"fnv1a-2ed306b9","reviewedRevision":3,"kind":"technical","level":"Advanced","region":null,"difficulty":"Expert","competency":"machine","competencies":["machine","tooling","process","troubleshooting"],"concept":"pressure-review-upstream-machine","reviewedContentFingerprint":"fnv1a-74f6b49b","reviewedSourceFingerprint":"fnv1a-ec39afef"},{"stableId":"tech:Beginner:0","fingerprint":"fnv1a-ea6393c4","reviewedRevision":3,"kind":"technical","level":"Beginner","region":null,"difficulty":"Foundation","competency":"process","competencies":["process","quality"],"concept":"shot-delivery","reviewedContentFingerprint":"fnv1a-dad505dc","reviewedSourceFingerprint":"fnv1a-36af43d1"},{"stableId":"tech:Beginner:1","fingerprint":"fnv1a-3e4677f6","reviewedRevision":3,"kind":"technical","level":"Beginner","region":null,"difficulty":"Foundation","competency":"machine","competencies":["machine","process","troubleshooting"],"concept":"shot-delivery","reviewedContentFingerprint":"fnv1a-3e6fc795","reviewedSourceFingerprint":"fnv1a-1f79575c"},{"stableId":"tech:Beginner:2","fingerprint":"fnv1a-93d23461","reviewedRevision":3,"kind":"technical","level":"Beginner","region":null,"difficulty":"Foundation","competency":"machine","competencies":["machine","process","quality","troubleshooting"],"concept":"setpoint-actual","reviewedContentFingerprint":"fnv1a-24380e05","reviewedSourceFingerprint":"fnv1a-7cc5339c"},{"stableId":"tech:Beginner:3","fingerprint":"fnv1a-04cae342","reviewedRevision":2,"kind":"technical","level":"Beginner","region":null,"difficulty":"Foundation","competency":"materials","competencies":["materials","machine"],"concept":"setpoint-actual","reviewedContentFingerprint":"fnv1a-ec71bdf7","reviewedSourceFingerprint":"fnv1a-44e56d72"},{"stableId":"tech:Beginner:4","fingerprint":"fnv1a-e2604a5d","reviewedRevision":2,"kind":"technical","level":"Beginner","region":null,"difficulty":"Applied","competency":"materials","competencies":["materials","machine","troubleshooting"],"concept":"moisture-drying","reviewedContentFingerprint":"fnv1a-9431db61","reviewedSourceFingerprint":"fnv1a-6d6a773c"},{"stableId":"tech:Beginner:5","fingerprint":"fnv1a-1e9466c4","reviewedRevision":3,"kind":"technical","level":"Beginner","region":null,"difficulty":"Applied","competency":"tooling","competencies":["tooling","process","troubleshooting"],"concept":"during-process-comparison-transfer","reviewedContentFingerprint":"fnv1a-96cb5a9c","reviewedSourceFingerprint":"fnv1a-ef98ac47"},{"stableId":"tech:Beginner:6","fingerprint":"fnv1a-f68fe26b","reviewedRevision":3,"kind":"technical","level":"Beginner","region":null,"difficulty":"Applied","competency":"machine","competencies":["machine","tooling","troubleshooting"],"concept":"flash-appears-local-corner","reviewedContentFingerprint":"fnv1a-67105fe7","reviewedSourceFingerprint":"fnv1a-039729bd"},{"stableId":"tech:Beginner:7","fingerprint":"fnv1a-44874ab5","reviewedRevision":3,"kind":"technical","level":"Beginner","region":null,"difficulty":"Applied","competency":"machine","competencies":["machine","tooling","process"],"concept":"cavity-pressure","reviewedContentFingerprint":"fnv1a-6aa6de51","reviewedSourceFingerprint":"fnv1a-a4619674"},{"stableId":"tech:Beginner:8","fingerprint":"fnv1a-4e72086b","reviewedRevision":3,"kind":"technical","level":"Beginner","region":null,"difficulty":"Applied","competency":"tooling","competencies":["tooling","process","troubleshooting"],"concept":"after-mould-water-connection","reviewedContentFingerprint":"fnv1a-08012b43","reviewedSourceFingerprint":"fnv1a-bbdf861c"},{"stableId":"tech:Beginner:9","fingerprint":"fnv1a-f94a69d5","reviewedRevision":2,"kind":"technical","level":"Beginner","region":null,"difficulty":"Applied","competency":"quality","competencies":["quality","troubleshooting"],"concept":"setpoint-actual","reviewedContentFingerprint":"fnv1a-106504d6","reviewedSourceFingerprint":"fnv1a-81b6dc5a"},{"stableId":"tech:Intermediate:0","fingerprint":"fnv1a-7ed65e2d","reviewedRevision":2,"kind":"technical","level":"Intermediate","region":null,"difficulty":"Applied","competency":"tooling","competencies":["tooling","process"],"concept":"gate-seal","reviewedContentFingerprint":"fnv1a-8e40b5b6","reviewedSourceFingerprint":"fnv1a-86365307"},{"stableId":"tech:Intermediate:1","fingerprint":"fnv1a-c6545e90","reviewedRevision":3,"kind":"technical","level":"Intermediate","region":null,"difficulty":"Applied","competency":"process","competencies":["process","troubleshooting"],"concept":"repeats-region-stable-strongly","reviewedContentFingerprint":"fnv1a-f510bfe4","reviewedSourceFingerprint":"fnv1a-a7fcfeaa"},{"stableId":"tech:Intermediate:2","fingerprint":"fnv1a-0721b222","reviewedRevision":3,"kind":"technical","level":"Intermediate","region":null,"difficulty":"Applied","competency":"materials","competencies":["materials","process","troubleshooting"],"concept":"moisture-drying","reviewedContentFingerprint":"fnv1a-61f3cd87","reviewedSourceFingerprint":"fnv1a-cd4a12ab"},{"stableId":"tech:Intermediate:3","fingerprint":"fnv1a-30947697","reviewedRevision":3,"kind":"technical","level":"Intermediate","region":null,"difficulty":"Diagnostic","competency":"machine","competencies":["machine","tooling","process","troubleshooting"],"concept":"tooling-locality","reviewedContentFingerprint":"fnv1a-31eef55a","reviewedSourceFingerprint":"fnv1a-039729bd"},{"stableId":"tech:Intermediate:4","fingerprint":"fnv1a-c497dd13","reviewedRevision":3,"kind":"technical","level":"Intermediate","region":null,"difficulty":"Diagnostic","competency":"materials","competencies":["materials","tooling","process"],"concept":"mfr-rheology","reviewedContentFingerprint":"fnv1a-9edca544","reviewedSourceFingerprint":"fnv1a-6cd5ca8f"},{"stableId":"tech:Intermediate:5","fingerprint":"fnv1a-8e611994","reviewedRevision":2,"kind":"technical","level":"Intermediate","region":null,"difficulty":"Diagnostic","competency":"machine","competencies":["machine","process","troubleshooting"],"concept":"shot-delivery","reviewedContentFingerprint":"fnv1a-e29bd500","reviewedSourceFingerprint":"fnv1a-f68ed5f8"},{"stableId":"tech:Intermediate:6","fingerprint":"fnv1a-0438ad1e","reviewedRevision":3,"kind":"technical","level":"Intermediate","region":null,"difficulty":"Diagnostic","competency":"materials","competencies":["materials","machine","tooling","process"],"concept":"shot-delivery","reviewedContentFingerprint":"fnv1a-6b1f00b7","reviewedSourceFingerprint":"fnv1a-cbef3d89"},{"stableId":"tech:Intermediate:7","fingerprint":"fnv1a-9c16ccd6","reviewedRevision":2,"kind":"technical","level":"Intermediate","region":null,"difficulty":"Diagnostic","competency":"tooling","competencies":["tooling","troubleshooting"],"concept":"cooling-thermal","reviewedContentFingerprint":"fnv1a-3a061fcc","reviewedSourceFingerprint":"fnv1a-b5e9d71c"},{"stableId":"tech:Intermediate:8","fingerprint":"fnv1a-05babde6","reviewedRevision":3,"kind":"technical","level":"Intermediate","region":null,"difficulty":"Applied","competency":"tooling","competencies":["tooling","process","troubleshooting"],"concept":"cooling-thermal","reviewedContentFingerprint":"fnv1a-eacc6fa7","reviewedSourceFingerprint":"fnv1a-bbdf861c"},{"stableId":"tech:Intermediate:9","fingerprint":"fnv1a-46566f2e","reviewedRevision":2,"kind":"technical","level":"Intermediate","region":null,"difficulty":"Applied","competency":"quality","competencies":["quality"],"concept":"doe","reviewedContentFingerprint":"fnv1a-9350d241","reviewedSourceFingerprint":"fnv1a-6d7f006e"}];
+const LOCKED_IDENTITIES=[{"stableId":"reg:NZ:Advanced:0","fingerprint":"fnv1a-a15f8593","reviewedRevision":2,"kind":"regional","level":"Advanced","region":"NZ","difficulty":"Expert safety","competency":"safety","competencies":["safety"],"concept":"safety-nz-engineer-compliance-replaces-duties","reviewedContentFingerprint":"fnv1a-199267ab","reviewedSourceFingerprint":"fnv1a-1b03a7f5"},{"stableId":"reg:NZ:Advanced:1","fingerprint":"fnv1a-144d4d23","reviewedRevision":2,"kind":"regional","level":"Advanced","region":"NZ","difficulty":"Expert safety","competency":"safety","competencies":["safety"],"concept":"safety-nz-robot-conveyor-added-injection","reviewedContentFingerprint":"fnv1a-bedda5f7","reviewedSourceFingerprint":"fnv1a-4f95fc65"},{"stableId":"reg:NZ:Advanced:2","fingerprint":"fnv1a-580a34ce","reviewedRevision":2,"kind":"regional","level":"Advanced","region":"NZ","difficulty":"Expert safety","competency":"safety","competencies":["safety"],"concept":"safety-nz-august-training-health-safety","reviewedContentFingerprint":"fnv1a-24ccd71f","reviewedSourceFingerprint":"fnv1a-94086ca3"},{"stableId":"reg:NZ:Beginner:0","fingerprint":"fnv1a-3fd3af5d","reviewedRevision":2,"kind":"regional","level":"Beginner","region":"NZ","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-nz-production-manager-machine-safety","reviewedContentFingerprint":"fnv1a-ee9dcf53","reviewedSourceFingerprint":"fnv1a-0e9f6305"},{"stableId":"reg:NZ:Beginner:1","fingerprint":"fnv1a-d1eea52d","reviewedRevision":2,"kind":"regional","level":"Beginner","region":"NZ","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-nz-safety-isolation","reviewedContentFingerprint":"fnv1a-20cf90a1","reviewedSourceFingerprint":"fnv1a-5e0e5600"},{"stableId":"reg:NZ:Beginner:2","fingerprint":"fnv1a-02582e6c","reviewedRevision":2,"kind":"regional","level":"Beginner","region":"NZ","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-nz-safety-device-fails-injection","reviewedContentFingerprint":"fnv1a-adc5aab8","reviewedSourceFingerprint":"fnv1a-91ad0bc9"},{"stableId":"reg:NZ:Intermediate:0","fingerprint":"fnv1a-86bce288","reviewedRevision":2,"kind":"regional","level":"Intermediate","region":"NZ","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-nz-maintenance-cleaning-requires-access","reviewedContentFingerprint":"fnv1a-b4cbdc9b","reviewedSourceFingerprint":"fnv1a-93a4f3b5"},{"stableId":"reg:NZ:Intermediate:1","fingerprint":"fnv1a-f0ce1300","reviewedRevision":2,"kind":"regional","level":"Intermediate","region":"NZ","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-nz-safety-isolation","reviewedContentFingerprint":"fnv1a-79cfafc2","reviewedSourceFingerprint":"fnv1a-97cfc0a3"},{"stableId":"reg:NZ:Intermediate:2","fingerprint":"fnv1a-295a6ca1","reviewedRevision":2,"kind":"regional","level":"Intermediate","region":"NZ","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-nz-service-complete-machine-about","reviewedContentFingerprint":"fnv1a-990327b5","reviewedSourceFingerprint":"fnv1a-d0b819b9"},{"stableId":"reg:UK:Advanced:0","fingerprint":"fnv1a-b8cb8dd1","reviewedRevision":2,"kind":"regional","level":"Advanced","region":"UK","difficulty":"Expert safety","competency":"safety","competencies":["safety"],"concept":"safety-uk-robot-conveyor-added-existing","reviewedContentFingerprint":"fnv1a-4dc790aa","reviewedSourceFingerprint":"fnv1a-85fee13d"},{"stableId":"reg:UK:Advanced:1","fingerprint":"fnv1a-474a887e","reviewedRevision":2,"kind":"regional","level":"Advanced","region":"UK","difficulty":"Expert safety","competency":"safety","competencies":["safety"],"concept":"safety-uk-machine-current-conformity-documentation","reviewedContentFingerprint":"fnv1a-7d90096b","reviewedSourceFingerprint":"fnv1a-4de986be"},{"stableId":"reg:UK:Advanced:2","fingerprint":"fnv1a-159f7dfb","reviewedRevision":2,"kind":"regional","level":"Advanced","region":"UK","difficulty":"Expert safety","competency":"safety","competencies":["safety"],"concept":"safety-uk-doe","reviewedContentFingerprint":"fnv1a-c4560032","reviewedSourceFingerprint":"fnv1a-9baa4b0f"},{"stableId":"reg:UK:Beginner:0","fingerprint":"fnv1a-0a0d80ea","reviewedRevision":2,"kind":"regional","level":"Beginner","region":"UK","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-uk-safety-isolation","reviewedContentFingerprint":"fnv1a-36b2ae6a","reviewedSourceFingerprint":"fnv1a-a09c7118"},{"stableId":"reg:UK:Beginner:1","fingerprint":"fnv1a-e8da0d83","reviewedRevision":2,"kind":"regional","level":"Beginner","region":"UK","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-uk-safety-isolation","reviewedContentFingerprint":"fnv1a-9a87d5b7","reviewedSourceFingerprint":"fnv1a-fa684cf5"},{"stableId":"reg:UK:Beginner:2","fingerprint":"fnv1a-7ff0db5b","reviewedRevision":2,"kind":"regional","level":"Beginner","region":"UK","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-uk-polymer-grade-produces-visible","reviewedContentFingerprint":"fnv1a-2b93dd0d","reviewedSourceFingerprint":"fnv1a-a50f30ef"},{"stableId":"reg:UK:Intermediate:0","fingerprint":"fnv1a-eaf64e0b","reviewedRevision":2,"kind":"regional","level":"Intermediate","region":"UK","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-uk-training-sheet-puwer-applies","reviewedContentFingerprint":"fnv1a-d05db0a3","reviewedSourceFingerprint":"fnv1a-a366041d"},{"stableId":"reg:UK:Intermediate:1","fingerprint":"fnv1a-4d2f2a2e","reviewedRevision":2,"kind":"regional","level":"Intermediate","region":"UK","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-uk-safety-isolation","reviewedContentFingerprint":"fnv1a-bc0c6665","reviewedSourceFingerprint":"fnv1a-fe383e7c"},{"stableId":"reg:UK:Intermediate:2","fingerprint":"fnv1a-89bd4d3a","reviewedRevision":2,"kind":"regional","level":"Intermediate","region":"UK","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-uk-validation-20430-certification-means","reviewedContentFingerprint":"fnv1a-71cbf510","reviewedSourceFingerprint":"fnv1a-2decd9d4"},{"stableId":"reg:US:Advanced:0","fingerprint":"fnv1a-cbad36e1","reviewedRevision":2,"kind":"regional","level":"Advanced","region":"US","difficulty":"Expert safety","competency":"safety","competencies":["safety"],"concept":"safety-us-company-operates-injection-moulding","reviewedContentFingerprint":"fnv1a-3bc48420","reviewedSourceFingerprint":"fnv1a-0fa97694"},{"stableId":"reg:US:Advanced:1","fingerprint":"fnv1a-24e5b049","reviewedRevision":2,"kind":"regional","level":"Advanced","region":"US","difficulty":"Expert safety","competency":"safety","competencies":["safety"],"concept":"safety-us-safety-isolation","reviewedContentFingerprint":"fnv1a-7d1b29aa","reviewedSourceFingerprint":"fnv1a-7df76c51"},{"stableId":"reg:US:Advanced:2","fingerprint":"fnv1a-94ed16f7","reviewedRevision":2,"kind":"regional","level":"Advanced","region":"US","difficulty":"Expert safety","competency":"safety","competencies":["safety"],"concept":"safety-us-robot-integrated-injection-moulding","reviewedContentFingerprint":"fnv1a-e0aeed2e","reviewedSourceFingerprint":"fnv1a-dfb23c8e"},{"stableId":"reg:US:Beginner:0","fingerprint":"fnv1a-5bbfd852","reviewedRevision":2,"kind":"regional","level":"Beginner","region":"US","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-us-horizontal-injection-moulding-machine","reviewedContentFingerprint":"fnv1a-2f7ff710","reviewedSourceFingerprint":"fnv1a-9284ce40"},{"stableId":"reg:US:Beginner:1","fingerprint":"fnv1a-55f7f381","reviewedRevision":2,"kind":"regional","level":"Beginner","region":"US","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-us-safety-isolation","reviewedContentFingerprint":"fnv1a-af83166f","reviewedSourceFingerprint":"fnv1a-1f3831de"},{"stableId":"reg:US:Beginner:2","fingerprint":"fnv1a-209cf97b","reviewedRevision":2,"kind":"regional","level":"Beginner","region":"US","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-us-purge-compound-introduced-employees","reviewedContentFingerprint":"fnv1a-5bc93f66","reviewedSourceFingerprint":"fnv1a-d32f03e0"},{"stableId":"reg:US:Intermediate:0","fingerprint":"fnv1a-081176be","reviewedRevision":2,"kind":"regional","level":"Intermediate","region":"US","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-us-stuck-cleared-inside-danger","reviewedContentFingerprint":"fnv1a-7350fed8","reviewedSourceFingerprint":"fnv1a-2b1d715d"},{"stableId":"reg:US:Intermediate:1","fingerprint":"fnv1a-e4ee2e71","reviewedRevision":2,"kind":"regional","level":"Intermediate","region":"US","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-us-emergency-pressed-hydraulic-stored","reviewedContentFingerprint":"fnv1a-3e81d5d3","reviewedSourceFingerprint":"fnv1a-2b1d715d"},{"stableId":"reg:US:Intermediate:2","fingerprint":"fnv1a-56dc09c4","reviewedRevision":2,"kind":"regional","level":"Intermediate","region":"US","difficulty":"Applied safety","competency":"safety","competencies":["safety"],"concept":"safety-us-safety-engineer-plastics-should","reviewedContentFingerprint":"fnv1a-f4c86623","reviewedSourceFingerprint":"fnv1a-8a4a208a"},{"stableId":"tech:Advanced:0","fingerprint":"fnv1a-9eaca470","reviewedRevision":3,"kind":"technical","level":"Advanced","region":null,"difficulty":"Diagnostic","competency":"quality","competencies":["quality","troubleshooting"],"concept":"capability","reviewedContentFingerprint":"fnv1a-8bd0f301","reviewedSourceFingerprint":"fnv1a-646818ab"},{"stableId":"tech:Advanced:1","fingerprint":"fnv1a-5cdb31e1","reviewedRevision":2,"kind":"technical","level":"Advanced","region":null,"difficulty":"Diagnostic","competency":"tooling","competencies":["tooling","quality","troubleshooting"],"concept":"capability","reviewedContentFingerprint":"fnv1a-ff52dfd1","reviewedSourceFingerprint":"fnv1a-81b6dc5a"},{"stableId":"tech:Advanced:2","fingerprint":"fnv1a-68539e4f","reviewedRevision":3,"kind":"technical","level":"Advanced","region":null,"difficulty":"Diagnostic","competency":"tooling","competencies":["tooling","process","quality","troubleshooting"],"concept":"factor-moulding-study-shows","reviewedContentFingerprint":"fnv1a-8a34bdf8","reviewedSourceFingerprint":"fnv1a-750deb38"},{"stableId":"tech:Advanced:3","fingerprint":"fnv1a-ad59ed03","reviewedRevision":2,"kind":"technical","level":"Advanced","region":null,"difficulty":"Expert","competency":"quality","competencies":["quality"],"concept":"doe","reviewedContentFingerprint":"fnv1a-5a193092","reviewedSourceFingerprint":"fnv1a-1e6184fb"},{"stableId":"tech:Advanced:4","fingerprint":"fnv1a-3f2904e4","reviewedRevision":2,"kind":"technical","level":"Advanced","region":null,"difficulty":"Expert","competency":"machine","competencies":["machine","tooling","process","troubleshooting"],"concept":"cavity-pressure","reviewedContentFingerprint":"fnv1a-9859b97e","reviewedSourceFingerprint":"fnv1a-34a4082e"},{"stableId":"tech:Advanced:5","fingerprint":"fnv1a-e2f9fd96","reviewedRevision":3,"kind":"technical","level":"Advanced","region":null,"difficulty":"Expert","competency":"materials","competencies":["materials","process"],"concept":"mfr-rheology","reviewedContentFingerprint":"fnv1a-4acaec64","reviewedSourceFingerprint":"fnv1a-6818d37a"},{"stableId":"tech:Advanced:6","fingerprint":"fnv1a-0137f76c","reviewedRevision":3,"kind":"technical","level":"Advanced","region":null,"difficulty":"Expert","competency":"quality","competencies":["quality","troubleshooting"],"concept":"measurement","reviewedContentFingerprint":"fnv1a-5e9b4a68","reviewedSourceFingerprint":"fnv1a-866abf5b"},{"stableId":"tech:Advanced:7","fingerprint":"fnv1a-0b5566a6","reviewedRevision":2,"kind":"technical","level":"Advanced","region":null,"difficulty":"Expert","competency":"machine","competencies":["machine","tooling","process","troubleshooting"],"concept":"process-transfer","reviewedContentFingerprint":"fnv1a-afef1a15","reviewedSourceFingerprint":"fnv1a-1f79575c"},{"stableId":"tech:Advanced:8","fingerprint":"fnv1a-d95d762c","reviewedRevision":2,"kind":"technical","level":"Advanced","region":null,"difficulty":"Expert","competency":"materials","competencies":["materials","tooling","process","troubleshooting"],"concept":"mfr-rheology","reviewedContentFingerprint":"fnv1a-f0069a75","reviewedSourceFingerprint":"fnv1a-63559e49"},{"stableId":"tech:Advanced:9","fingerprint":"fnv1a-2ed306b9","reviewedRevision":3,"kind":"technical","level":"Advanced","region":null,"difficulty":"Expert","competency":"machine","competencies":["machine","tooling","process","troubleshooting"],"concept":"pressure-review-upstream-machine","reviewedContentFingerprint":"fnv1a-74f6b49b","reviewedSourceFingerprint":"fnv1a-ec39afef"},{"stableId":"tech:Beginner:0","fingerprint":"fnv1a-ea6393c4","reviewedRevision":3,"kind":"technical","level":"Beginner","region":null,"difficulty":"Foundation","competency":"process","competencies":["process","quality"],"concept":"shot-delivery","reviewedContentFingerprint":"fnv1a-dad505dc","reviewedSourceFingerprint":"fnv1a-36af43d1"},{"stableId":"tech:Beginner:1","fingerprint":"fnv1a-3e4677f6","reviewedRevision":3,"kind":"technical","level":"Beginner","region":null,"difficulty":"Foundation","competency":"machine","competencies":["machine","process","troubleshooting"],"concept":"shot-delivery","reviewedContentFingerprint":"fnv1a-3e6fc795","reviewedSourceFingerprint":"fnv1a-1f79575c"},{"stableId":"tech:Beginner:2","fingerprint":"fnv1a-a2fdd2a2","reviewedRevision":3,"kind":"technical","level":"Beginner","region":null,"difficulty":"Foundation","competency":"machine","competencies":["machine","process","quality","troubleshooting"],"concept":"setpoint-actual","reviewedContentFingerprint":"fnv1a-3f3b03a6","reviewedSourceFingerprint":"fnv1a-7cc5339c"},{"stableId":"tech:Beginner:3","fingerprint":"fnv1a-04cae342","reviewedRevision":2,"kind":"technical","level":"Beginner","region":null,"difficulty":"Foundation","competency":"materials","competencies":["materials","machine"],"concept":"setpoint-actual","reviewedContentFingerprint":"fnv1a-ec71bdf7","reviewedSourceFingerprint":"fnv1a-44e56d72"},{"stableId":"tech:Beginner:4","fingerprint":"fnv1a-e2604a5d","reviewedRevision":2,"kind":"technical","level":"Beginner","region":null,"difficulty":"Applied","competency":"materials","competencies":["materials","machine","troubleshooting"],"concept":"moisture-drying","reviewedContentFingerprint":"fnv1a-9431db61","reviewedSourceFingerprint":"fnv1a-6d6a773c"},{"stableId":"tech:Beginner:5","fingerprint":"fnv1a-0875dacf","reviewedRevision":3,"kind":"technical","level":"Beginner","region":null,"difficulty":"Applied","competency":"tooling","competencies":["tooling","process","troubleshooting"],"concept":"during-process-comparison-transfer","reviewedContentFingerprint":"fnv1a-5347c66d","reviewedSourceFingerprint":"fnv1a-ef98ac47"},{"stableId":"tech:Beginner:6","fingerprint":"fnv1a-7afd1595","reviewedRevision":3,"kind":"technical","level":"Beginner","region":null,"difficulty":"Applied","competency":"machine","competencies":["machine","tooling","troubleshooting"],"concept":"flash-appears-local-corner","reviewedContentFingerprint":"fnv1a-e43bd8ad","reviewedSourceFingerprint":"fnv1a-039729bd"},{"stableId":"tech:Beginner:7","fingerprint":"fnv1a-44874ab5","reviewedRevision":3,"kind":"technical","level":"Beginner","region":null,"difficulty":"Applied","competency":"machine","competencies":["machine","tooling","process"],"concept":"cavity-pressure","reviewedContentFingerprint":"fnv1a-6aa6de51","reviewedSourceFingerprint":"fnv1a-a4619674"},{"stableId":"tech:Beginner:8","fingerprint":"fnv1a-4e72086b","reviewedRevision":3,"kind":"technical","level":"Beginner","region":null,"difficulty":"Applied","competency":"tooling","competencies":["tooling","process","troubleshooting"],"concept":"after-mould-water-connection","reviewedContentFingerprint":"fnv1a-08012b43","reviewedSourceFingerprint":"fnv1a-bbdf861c"},{"stableId":"tech:Beginner:9","fingerprint":"fnv1a-b7357a87","reviewedRevision":2,"kind":"technical","level":"Beginner","region":null,"difficulty":"Applied","competency":"quality","competencies":["quality","troubleshooting"],"concept":"setpoint-actual","reviewedContentFingerprint":"fnv1a-106504d6","reviewedSourceFingerprint":"fnv1a-81b6dc5a"},{"stableId":"tech:Intermediate:0","fingerprint":"fnv1a-7ed65e2d","reviewedRevision":2,"kind":"technical","level":"Intermediate","region":null,"difficulty":"Applied","competency":"tooling","competencies":["tooling","process"],"concept":"gate-seal","reviewedContentFingerprint":"fnv1a-8e40b5b6","reviewedSourceFingerprint":"fnv1a-86365307"},{"stableId":"tech:Intermediate:1","fingerprint":"fnv1a-c6545e90","reviewedRevision":3,"kind":"technical","level":"Intermediate","region":null,"difficulty":"Applied","competency":"process","competencies":["process","troubleshooting"],"concept":"repeats-region-stable-strongly","reviewedContentFingerprint":"fnv1a-f510bfe4","reviewedSourceFingerprint":"fnv1a-a7fcfeaa"},{"stableId":"tech:Intermediate:2","fingerprint":"fnv1a-0721b222","reviewedRevision":3,"kind":"technical","level":"Intermediate","region":null,"difficulty":"Applied","competency":"materials","competencies":["materials","process","troubleshooting"],"concept":"moisture-drying","reviewedContentFingerprint":"fnv1a-61f3cd87","reviewedSourceFingerprint":"fnv1a-cd4a12ab"},{"stableId":"tech:Intermediate:3","fingerprint":"fnv1a-30947697","reviewedRevision":3,"kind":"technical","level":"Intermediate","region":null,"difficulty":"Diagnostic","competency":"machine","competencies":["machine","tooling","process","troubleshooting"],"concept":"tooling-locality","reviewedContentFingerprint":"fnv1a-31eef55a","reviewedSourceFingerprint":"fnv1a-039729bd"},{"stableId":"tech:Intermediate:4","fingerprint":"fnv1a-c497dd13","reviewedRevision":3,"kind":"technical","level":"Intermediate","region":null,"difficulty":"Diagnostic","competency":"materials","competencies":["materials","tooling","process"],"concept":"mfr-rheology","reviewedContentFingerprint":"fnv1a-9edca544","reviewedSourceFingerprint":"fnv1a-6cd5ca8f"},{"stableId":"tech:Intermediate:5","fingerprint":"fnv1a-1feffc2e","reviewedRevision":2,"kind":"technical","level":"Intermediate","region":null,"difficulty":"Diagnostic","competency":"machine","competencies":["machine","process","troubleshooting"],"concept":"shot-delivery","reviewedContentFingerprint":"fnv1a-e29bd500","reviewedSourceFingerprint":"fnv1a-f68ed5f8"},{"stableId":"tech:Intermediate:6","fingerprint":"fnv1a-0438ad1e","reviewedRevision":3,"kind":"technical","level":"Intermediate","region":null,"difficulty":"Diagnostic","competency":"materials","competencies":["materials","machine","tooling","process"],"concept":"shot-delivery","reviewedContentFingerprint":"fnv1a-6b1f00b7","reviewedSourceFingerprint":"fnv1a-cbef3d89"},{"stableId":"tech:Intermediate:7","fingerprint":"fnv1a-3819ae25","reviewedRevision":2,"kind":"technical","level":"Intermediate","region":null,"difficulty":"Diagnostic","competency":"tooling","competencies":["tooling","troubleshooting"],"concept":"cooling-thermal","reviewedContentFingerprint":"fnv1a-c855f741","reviewedSourceFingerprint":"fnv1a-b5e9d71c"},{"stableId":"tech:Intermediate:8","fingerprint":"fnv1a-05babde6","reviewedRevision":3,"kind":"technical","level":"Intermediate","region":null,"difficulty":"Applied","competency":"tooling","competencies":["tooling","process","troubleshooting"],"concept":"cooling-thermal","reviewedContentFingerprint":"fnv1a-eacc6fa7","reviewedSourceFingerprint":"fnv1a-bbdf861c"},{"stableId":"tech:Intermediate:9","fingerprint":"fnv1a-46566f2e","reviewedRevision":2,"kind":"technical","level":"Intermediate","region":null,"difficulty":"Applied","competency":"quality","competencies":["quality"],"concept":"doe","reviewedContentFingerprint":"fnv1a-9350d241","reviewedSourceFingerprint":"fnv1a-6d7f006e"}];
 const IDENTITY_BY_FINGERPRINT=new Map(LOCKED_IDENTITIES.map(x=>[x.fingerprint,Object.freeze({...x,competencies:Object.freeze((x.competencies||[]).slice())})]));
 const esc=v=>String(v??'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]));
 const norm=v=>String(v??'').trim().toLowerCase().replace(/\s+/g,' ');
 const shuffle=a=>{const x=a.slice();for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x};
 const obj=x=>x&&typeof x==='object'&&!Array.isArray(x);
-function read(k,d){try{const x=JSON.parse(localStorage.getItem(k)||'');return obj(x)?x:d}catch(_){return d}}
-function write(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(_){return false}}
+function reviewScope(){const s=window.MM_LEARNER_SCOPE;return s&&typeof s.tokenFor==='function'&&typeof s.storageKey==='function'&&typeof s.migrateStoragePrefix==='function'?s:null}
+function reviewLearnerIds(){const s=reviewScope();if(s&&typeof s.knownIds==='function'){const ids=s.knownIds();if(Array.isArray(ids)&&ids.length)return [...new Set(ids.map(String).filter(Boolean))]}try{if(typeof db!=='undefined'&&db?.users&&typeof db.users==='object'&&!Array.isArray(db.users))return [...new Set(Object.keys(db.users).map(String).filter(Boolean))]}catch(_){}return[]}
+function reviewKeyFor(learnerId){const s=reviewScope();if(!s)return null;const id=String(learnerId||'');if(!id)return null;const prefix=REVIEW_KEY+'::';s.registerStoragePrefix?.(prefix);s.migrateStoragePrefix(prefix,id);return s.storageKey(prefix,s.tokenFor(id))}
+function readReview(learnerId){const k=reviewKeyFor(learnerId);if(!k)return null;try{const x=JSON.parse(localStorage.getItem(k)||'');return obj(x)?x:null}catch(_){return null}}
+function writeReview(learnerId,v){const k=reviewKeyFor(learnerId);if(!k)return false;try{localStorage.setItem(k,JSON.stringify(v));return localStorage.getItem(k)===JSON.stringify(v)}catch(_){return false}}
 
 function competencySet(text){
  const t=norm(text),out=[];
@@ -396,7 +475,12 @@ function scenarioId(index){return `scenario:${String(index+1).padStart(2,'0')}`}
 
 const META_BY_TEXT=new Map();
 function fnv1a32(value){let h=2166136261;for(const ch of String(value??'')){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return 'fnv1a-'+(h>>>0).toString(16).padStart(8,'0')}
-function identityFingerprint(q,kind,level,region){const options=Array.isArray(q?.[1])?q[1]:[],correct=Number(q?.[2]),sorted=options.map(norm).sort(),correctText=Number.isInteger(correct)&&correct>=0&&correct<options.length?norm(options[correct]):'';return fnv1a32([kind,level||'',region||'',norm(q?.[0]),sorted.join('␞'),correctText].join('␟'))}
+function identityText(value){
+ let out=norm(value),prefix='the response is to ';
+ if(out.startsWith(prefix))out=out.slice(prefix.length);
+ return out
+}
+function identityFingerprint(q,kind,level,region){const options=Array.isArray(q?.[1])?q[1]:[],correct=Number(q?.[2]),sorted=options.map(identityText).sort(),correctText=Number.isInteger(correct)&&correct>=0&&correct<options.length?identityText(options[correct]):'';return fnv1a32([kind,level||'',region||'',norm(q?.[0]),sorted.join('␞'),correctText].join('␟'))}
 function identityFor(q,kind,level,region,index){
  const fingerprint=identityFingerprint(q,kind,level,region),locked=IDENTITY_BY_FINGERPRINT.get(fingerprint);
  if(!locked)throw new Error(`Assessment identity drift: ${kind}:${region||''}:${level}:${index} is not in reviewed identity lock ${IDENTITY_LOCK_VERSION}`);
@@ -414,20 +498,73 @@ function normaliseTech(q,i,level){const m=identityFor(q,'technical',level,null,i
 function normaliseReg(q,i,region,level){const m=identityFor(q,'regional',level,region,i);return {q:q[0],options:q[1],correct:q[2],explanation:q[3],reference:q[4],sourceUrl:q[5]||null,optionFeedback:q[6]||[],critical:q[7]!==false,kind:'regional',region,...m}}
 function shuffleOptions(item){const mapped=item.options.map((text,oldIndex)=>({text,correct:oldIndex===item.correct,feedback:item.optionFeedback?.[oldIndex]||null}));const mixed=shuffle(mapped);return {...item,options:mixed.map(x=>x.text),optionFeedback:mixed.map(x=>x.feedback),correct:mixed.findIndex(x=>x.correct)}}
 
+function blueprintHistory(){
+ const raw=ASSESSMENT_STORAGE.read(BLUEPRINT_HISTORY_KEY,{levels:{}});
+ return obj(raw)&&obj(raw.levels)?raw:{levels:{}};
+}
+function chooseLeastExposed(indices,pool,counts){
+ const rows=indices.map(i=>({i,count:Number(counts[pool[i].stableId]||0),tie:Math.random()}));
+ rows.sort((a,b)=>a.count-b.count||a.tie-b.tie);
+ return rows[0]?.i;
+}
+function recordBlueprintExposure(level,selected){
+ const state=blueprintHistory(),row=obj(state.levels[level])?state.levels[level]:{counts:{},attempts:0};
+ row.counts=obj(row.counts)?row.counts:{};
+ selected.forEach(item=>{row.counts[item.stableId]=Number(row.counts[item.stableId]||0)+1});
+ row.attempts=Number(row.attempts||0)+1;
+ const values=Object.values(row.counts).map(Number).filter(Number.isFinite),floor=values.length?Math.min(...values):0;
+ if(floor>25)for(const id of Object.keys(row.counts))row.counts[id]=Math.max(0,Number(row.counts[id]||0)-floor+1);
+ row.last=selected.map(item=>item.stableId);
+ state.levels[level]=row;
+ if(!ASSESSMENT_STORAGE.write(BLUEPRINT_HISTORY_KEY,state))throw new Error('Learner-scoped assessment blueprint history could not be saved');
+}
+function preferUnusedConcepts(indices,pool,selected){
+ const usedConcepts=new Set(selected.map(x=>x.concept));
+ const distinct=indices.filter(i=>!usedConcepts.has(pool[i].concept));
+ return distinct.length?distinct:indices;
+}
+function ensureMinimumConceptDiversity(selected,pool,counts,minConcepts=5){
+ const result=selected.slice(0,7),selectedIds=new Set(result.map(x=>x.stableId));
+ const coversBlueprint=items=>BLUEPRINT.every(want=>items.some(item=>(item.competencies||[item.competency]).includes(want)));
+ while(new Set(result.map(x=>x.concept)).size<minConcepts){
+  const usedConcepts=new Set(result.map(x=>x.concept)),conceptCounts={};
+  result.forEach(item=>{conceptCounts[item.concept]=Number(conceptCounts[item.concept]||0)+1});
+  const incoming=pool.map((item,i)=>({item,i})).filter(x=>!selectedIds.has(x.item.stableId)&&!usedConcepts.has(x.item.concept));
+  incoming.sort((a,b)=>Number(counts[a.item.stableId]||0)-Number(counts[b.item.stableId]||0)||a.i-b.i);
+  let swapped=false;
+  for(const candidate of incoming){
+   for(let i=0;i<result.length;i++){
+    if(Number(conceptCounts[result[i].concept]||0)<2)continue;
+    const trial=result.slice();trial[i]=candidate.item;
+    if(!coversBlueprint(trial))continue;
+    selectedIds.delete(result[i].stableId);result[i]=candidate.item;selectedIds.add(candidate.item.stableId);swapped=true;break;
+   }
+   if(swapped)break;
+  }
+  if(!swapped)break;
+ }
+ if(new Set(result.map(x=>x.concept)).size<minConcepts)throw new Error(`Assessment blueprint cannot satisfy ${minConcepts}-concept diversity for ${result[0]?.level||'level'}`);
+ return result;
+}
 function selectBlueprint(level){
  const pool=(D.exams[level]||[]).map((q,i)=>normaliseTech(q,i,level));
+ const history=blueprintHistory(),counts=obj(history.levels[level]?.counts)?history.levels[level].counts:{};
  const unused=new Set(pool.map((_,i)=>i)),selected=[];
  for(const want of BLUEPRINT){
-  let idx=[...unused].find(i=>pool[i].competencies.includes(want));
-  if(idx==null)idx=[...unused].find(i=>pool[i].competency===want);
+  let candidates=[...unused].filter(i=>pool[i].competencies.includes(want));
+  if(!candidates.length)candidates=[...unused].filter(i=>pool[i].competency===want);
+  candidates=preferUnusedConcepts(candidates,pool,selected);
+  const idx=chooseLeastExposed(candidates,pool,counts);
   if(idx==null)continue;
   selected.push(pool[idx]);unused.delete(idx);
  }
  while(selected.length<7&&unused.size){
-  const usedConcepts=new Set(selected.map(x=>x.concept));
-  let idx=[...unused].find(i=>!usedConcepts.has(pool[i].concept));if(idx==null)idx=[...unused][0];selected.push(pool[idx]);unused.delete(idx);
+  const candidates=preferUnusedConcepts([...unused],pool,selected);
+  const idx=chooseLeastExposed(candidates,pool,counts);
+  if(idx==null)break;
+  selected.push(pool[idx]);unused.delete(idx);
  }
- return shuffle(selected.slice(0,7));
+ const result=ensureMinimumConceptDiversity(selected,pool,counts,5);recordBlueprintExposure(level,result);return shuffle(result);
 }
 function blueprintCoverage(items){const c=new Set();items.forEach(x=>(x.competencies||[x.competency]).forEach(k=>c.add(k)));return [...c]}
 
@@ -442,14 +579,19 @@ window.getExamQuestions=function(level,region){
 
 function mergeReview(a,b){return {id:b.id||a.id,stage:Math.max(+a.stage||0,+b.stage||0),due:Math.min(+a.due||Date.now(),+b.due||Date.now()),wrong:(+a.wrong||0)+(+b.wrong||0),right:(+a.right||0)+(+b.right||0),last:Math.max(+a.last||0,+b.last||0),confidence:b.confidence||a.confidence||'medium'}}
 function migrateStableReviewIds(){
- const st=read(REVIEW_KEY,{items:{}});if(!obj(st.items))return 0;let moved=0;
- for(const [id,x] of Object.entries({...st.items})){
-  let m=/^tech:[^:]+:([^:]+):(\d+)$/.exec(id),stable=null;
-  if(m)stable=techId(m[1],+m[2]);
-  if(!stable){m=/^reg:[^:]+:([^:]+):([^:]+):(\d+)$/.exec(id);if(m)stable=regId(m[1],m[2],+m[3])}
-  if(stable&&stable!==id){const v={...x,id:stable};st.items[stable]=st.items[stable]?mergeReview(st.items[stable],v):v;delete st.items[id];moved++}
+ const scope=reviewScope();if(!scope)return {status:'deferred',moved:0,learners:0};
+ let moved=0,learners=0;
+ for(const learnerId of reviewLearnerIds()){
+  const st=readReview(learnerId);if(!st||!obj(st.items))continue;let changed=0;learners++;
+  for(const [id,x] of Object.entries({...st.items})){
+   let m=/^tech:[^:]+:([^:]+):(\d+)$/.exec(id),stable=null;
+   if(m)stable=techId(m[1],+m[2]);
+   if(!stable){m=/^reg:[^:]+:([^:]+):([^:]+):(\d+)$/.exec(id);if(m)stable=regId(m[1],m[2],+m[3])}
+   if(stable&&stable!==id){const v={...x,id:stable};st.items[stable]=st.items[stable]?mergeReview(st.items[stable],v):v;delete st.items[id];changed++;moved++}
+  }
+  if(changed&&!writeReview(learnerId,st))throw new Error('Learner-scoped spaced-review ID migration could not be verified');
  }
- if(moved)write(REVIEW_KEY,st);return moved;
+ return {status:'migrated',moved,learners};
 }
 
 const MORE_SCENARIOS=[
@@ -480,8 +622,8 @@ const MORE_SCENARIOS=[
 ];
 function scenarioFeedback(options,correct,why){return options.map((_,i)=>i===correct?'Correct. '+why:'Not the strongest first move. This option does not test the mechanism most directly supported by the stated evidence.')}
 function addScenarios(){
- const have=new Set(D.scenarios.map(s=>norm(s.title)));
- for(const a of MORE_SCENARIOS){if(have.has(norm(a[0])))continue;D.scenarios.push({title:a[0],situation:a[1],choices:a[2],correct:a[3],why:a[4],feedback:scenarioFeedback(a[2],a[3],a[4]),category:a[5],difficulty:a[6],reference:a[7],sourceUrl:a[8]||null})}
+ const have=new Set(D.scenarios.map(s=>norm(s.title))),authorChoice=window.MM_ASSESSMENT_AUTHOR_CHOICE||((value)=>String(value??''));
+ for(const a of MORE_SCENARIOS){if(have.has(norm(a[0])))continue;const choices=a[2].map(authorChoice);D.scenarios.push({title:a[0],situation:a[1],choices,correct:a[3],why:a[4],feedback:scenarioFeedback(choices,a[3],a[4]),category:a[5],difficulty:a[6],reference:a[7],sourceUrl:a[8]||null})}
  D.scenarios.forEach((s,i)=>{s.mmStableId=s.mmStableId||scenarioId(i);s.difficulty=s.difficulty|| (i<8?'Foundation':i<16?'Diagnostic':'Applied');s.category=s.category||primaryCompetency(s.title+' '+s.situation,i);s.revision=VERSION});
 }
 
@@ -524,9 +666,11 @@ if(baseRenderExams)window.renderExams=function(){const r=baseRenderExams.apply(t
 function nearDuplicates(){const rows=[];for(const level of LEVELS)for(const q of D.exams[level]||[])rows.push({id:META_BY_TEXT.get(norm(q[0]))?.stableId||'',text:q[0],level});const pairs=[];const tok=s=>new Set(norm(s).split(/[^a-z0-9]+/).filter(x=>x.length>3&&!['which','what','strongest','first','most','when','does','with','from','that','this'].includes(x)));for(let i=0;i<rows.length;i++)for(let j=i+1;j<rows.length;j++){if(rows[i].level!==rows[j].level)continue;const a=tok(rows[i].text),b=tok(rows[j].text),inter=[...a].filter(x=>b.has(x)).length,uni=new Set([...a,...b]).size,score=uni?inter/uni:0;if(score>=.72)pairs.push({...rows[i],other:rows[j].id,score:+score.toFixed(2)})}return pairs}
 function leakRisks(){const out=[];for(const level of LEVELS)(D.exams[level]||[]).forEach((q,i)=>{const lens=q[1].map(x=>String(x).length),c=lens[q[2]],others=lens.filter((_,j)=>j!==q[2]),med=others.sort((a,b)=>a-b)[1];if(c>med*1.85&&c-med>28)out.push({id:identityFor(q,'technical',level,null,i).stableId,type:'correct-option-length',correctLength:c,peerMedian:med})});return out}
 
-addScenarios();rebuildMeta();const migrated=migrateStableReviewIds();addStyles();
+addScenarios();rebuildMeta();addStyles();
 D.assessmentQA=D.assessmentQA||{};
-D.assessmentQA.qualitySuite={version:VERSION,reviewed:'26 August 2026',questionBankRevision:VERSION,stableQuestionIds:true,identityLockVersion:IDENTITY_LOCK_VERSION,identityLockedQuestions:LOCKED_IDENTITIES.length,analytics:'device-local only',examBlueprint:['Materials & rheology','Machine & controls','Tooling & thermal','Process development','Quality & statistics','Troubleshooting','Safety & compliance'],technicalExamItems:30,regionalExamItems:27,totalExamItems:57,scenarioDrills:D.scenarios.length,sourceFreshnessReviewed:SOURCE_REVIEWED,sourceFreshnessReviewBy:SOURCE_REVIEW_BY,migratedLegacyReviewRecords:migrated};
+D.assessmentQA.qualitySuite={version:VERSION,reviewed:'26 August 2026',questionBankRevision:VERSION,stableQuestionIds:true,identityLockVersion:IDENTITY_LOCK_VERSION,identityLockedQuestions:LOCKED_IDENTITIES.length,analytics:'device-local only',examBlueprint:['Materials & rheology','Machine & controls','Tooling & thermal','Process development','Quality & statistics','Troubleshooting','Safety & compliance'],technicalExamItems:30,regionalExamItems:27,totalExamItems:57,scenarioDrills:D.scenarios.length,technicalReachability:'learner-scoped least-exposed rotation within competency blueprint',sourceFreshnessReviewed:SOURCE_REVIEWED,sourceFreshnessReviewBy:SOURCE_REVIEW_BY,migratedLegacyReviewRecords:0,reviewMigrationStatus:'deferred'};
+function runStableReviewMigration(){const result=migrateStableReviewIds();D.assessmentQA.qualitySuite.migratedLegacyReviewRecords=result.moved;D.assessmentQA.qualitySuite.reviewMigrationStatus=result.status;return result}
+if(reviewScope())runStableReviewMigration();else window.addEventListener?.('mm:domains-ready',()=>runStableReviewMigration(),{once:true});
 if(D.assessmentQA.deepAudit)D.assessmentQA.deepAudit.scenarioDrills=D.scenarios.length;
 D.assessmentQA.questionRevisionHistory=[
  {version:'2026.08.21.1',date:'21 August 2026',change:'Prior stable assessment bank identifier used by spaced review.'},
@@ -534,7 +678,7 @@ D.assessmentQA.questionRevisionHistory=[
  {version:VERSION,date:'24 August 2026',change:'Stable IDs, competency blueprint, local analytics, per-question evidence, difficulty calibration, scenario expansion, duplicate/leak checks and freshness monitoring.'}
 ];
 window.MM_ASSESSMENT_ANALYTICS={version:VERSION,summary:analyticsSummary,export:()=>analytics(),reset:()=>{ASSESSMENT_STORAGE.removeItem(ANALYTICS_KEY);try{window.renderExams?.()}catch(_){}}};
-window.MM_ASSESSMENT_QUALITY={version:VERSION,identityLockVersion:IDENTITY_LOCK_VERSION,identityCount:LOCKED_IDENTITIES.length,blueprint:BLUEPRINT.slice(),labels:{...LABELS},scenarioCount:D.scenarios.length,questionCount:57,nearDuplicates:nearDuplicates(),answerLeakRisks:leakRisks(),coverage:(level)=>blueprintCoverage(selectBlueprint(level)),resolveIdentity:(q,kind,level,region,index)=>identityFor(q,kind,level,region,index),sourceReview:{reviewed:SOURCE_REVIEWED,reviewBy:SOURCE_REVIEW_BY}};
+window.MM_ASSESSMENT_QUALITY={version:VERSION,identityLockVersion:IDENTITY_LOCK_VERSION,identityCount:LOCKED_IDENTITIES.length,blueprint:BLUEPRINT.slice(),labels:{...LABELS},scenarioCount:D.scenarios.length,questionCount:57,blueprintHistoryKey:BLUEPRINT_HISTORY_KEY,nearDuplicates:nearDuplicates(),answerLeakRisks:leakRisks(),coverage:(level)=>blueprintCoverage(selectBlueprint(level)),resolveIdentity:(q,kind,level,region,index)=>identityFor(q,kind,level,region,index),sourceReview:{reviewed:SOURCE_REVIEWED,reviewBy:SOURCE_REVIEW_BY}};
 })();
 /* <<< assessment-quality-suite.js */
 
@@ -558,7 +702,8 @@ const STRICT_ANSWER_BALANCE={
  'tech:Beginner:6':'Inspect the serviced local shutoff before changing global clamp force',
  'tech:Beginner:7':'Check the repaired runner/gate branch with cavity-specific fill evidence',
  'tech:Beginner:8':'Verify cooling flow, routing and local mould temperatures',
- 'tech:Beginner:9':'Compare current process actuals and material condition with the known-good baseline',
+ 'tech:Beginner:9':'Baseline comparison of current process actuals and material condition',
+ 'tech:Intermediate:5':'Shot-delivery, NRV, feed, transfer and injection-actual checks',
  'tech:Intermediate:0':'A repeatable part-mass plateau as hold time increases',
  'tech:Intermediate:1':'Trapped gas at the end-of-fill vent',
  'tech:Intermediate:3':'Inspect the local insert/shutoff before global process changes',
@@ -600,23 +745,23 @@ const STRICT_ANSWER_BALANCE={
  'reg:NZ:Beginner:2':'Keep it out of use until the safeguard is restored',
  'reg:NZ:Intermediate:0':'Isolate all energy and verify safe state',
  'reg:NZ:Intermediate:1':'Use AS/NZS 4024 as safety evidence while still meeting legal duties',
- 'reg:NZ:Intermediate:2':'Verify safeguards before authorised return to service',
+ 'reg:NZ:Intermediate:2':'Safeguard verification before authorised return to service',
  'reg:NZ:Advanced:0':'HSWA duties remain; standards inform controls',
  'reg:NZ:Advanced:1':'Assess the integrated system, interfaces, tasks and safeguards as a whole',
  'reg:NZ:Advanced:2':'Not yet in force; commencement is 1 April 2027',
 
- 'scenario:01':'Check shot-delivery/NRV, feed and injection actuals',
+ 'scenario:01':'Review shot-delivery/NRV and injection actuals',
  'scenario:02':'Inspect end-of-fill venting and test fill-speed sensitivity',
  'scenario:03':'Inspect local parting-line/insert seating',
  'scenario:04':'Study cooling time against ejection and part quality',
  'scenario:05':'Verify drying history and actual material moisture',
  'scenario:06':'Run a cavity-balance study and inspect the repaired runner',
  'scenario:07':'Trend cooling, material, process and measurement evidence by shift',
- 'scenario:08':'Check local gate, geometry and cooling after gate seal',
+ 'scenario:08':'Local gate, geometry and cooling checks after gate seal',
  'scenario:09':'Compare current fill/pressure, material and thermal actuals with baseline',
  'scenario:10':'Inspect the affected branch/gate using cavity-specific fill evidence',
- 'scenario:11':'Check feed, recovery actuals and shot-delivery repeatability',
- 'scenario:12':'Verify cooling routing, flow and thermal balance against baseline',
+ 'scenario:11':'Feed, recovery-actual and shot-delivery repeatability checks',
+ 'scenario:12':'Cooling routing, flow and thermal-balance verification',
  'scenario:13':'Review draft, texture, cooling, ejection load and tooling condition',
  'scenario:14':'Verify the new measurement fixture before interpreting Cpk',
  'scenario:15':'Treat run order as a confounder; randomise/block the study',
@@ -628,7 +773,7 @@ const STRICT_ANSWER_BALANCE={
  'scenario:21':'Check local venting',
  'scenario:22':'Validate weld-line flow and mechanics',
  'scenario:23':'Inspect the local shutoff',
- 'scenario:24':'Check valve-gate timing and cavity evidence',
+ 'scenario:24':'Valve-gate timing and cavity-evidence checks',
  'scenario:25':'Review pressure history, transfer and sensor health',
  'scenario:26':'Verify vision metrology before changing moulding',
  'scenario:27':'Check sensor zero and acquisition path',
@@ -636,7 +781,7 @@ const STRICT_ANSWER_BALANCE={
  'scenario:29':'Check energy phases and boundary',
  'scenario:30':'Map interface thermal/flow history',
  'scenario:31':'Record insert/interface thermal state and transfer delay',
- 'scenario:32':'Check local thermal, venting and microflow evidence',
+ 'scenario:32':'Local thermal, venting and microflow evidence checks',
  'scenario:33':'Check cell structure and relevant mechanical response',
  'scenario:34':'Check skin/thermal history and foaming method',
  'scenario:35':'Compare process actuals with rheology evidence',
@@ -647,23 +792,34 @@ const STRICT_ANSWER_BALANCE={
  'scenario:40':'Revalidate thermal/ejection quality window'
 };
 
+const authorChoice=window.MM_ASSESSMENT_AUTHOR_CHOICE||((value)=>String(value??''));
+const CONCISE_SCENARIO_WORDING=new Set(['scenario:08','scenario:11','scenario:12','scenario:24','scenario:32']);
+function applyReviewedScenarioWording(){
+ (D.scenarios||[]).forEach((s,i)=>{
+  const id=s.mmStableId||`scenario:${String(i+1).padStart(2,'0')}`;if(!CONCISE_SCENARIO_WORDING.has(id))return;
+  const replacement=STRICT_ANSWER_BALANCE[id],opts=s.choices,key=Number(s.correct);
+  if(!replacement||!Array.isArray(opts)||opts.length!==4||key<0||key>3)throw new Error(`Reviewed scenario wording target changed: ${id}`);
+  opts[key]=authorChoice(replacement);
+ });
+}
+applyReviewedScenarioWording();
 function optionsOf(q){return q?.options??q?.[1]}
 function correctOf(q){return Number(q?.correct??q?.[2])}
 function validateReviewedAnswers(requireFull){
  let validated=0;
  for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<(D.exams?.[level]||[]).length;i++){
-  const id=`tech:${level}:${i}`,replacement=STRICT_ANSWER_BALANCE[id];if(!replacement)continue;
+  const id=`tech:${level}:${i}`;let replacement=STRICT_ANSWER_BALANCE[id];if(!replacement)continue;replacement=authorChoice(replacement);
   const q=D.exams[level][i],opts=optionsOf(q),key=correctOf(q);if(!Array.isArray(opts)||opts.length!==4||key<0||key>3)throw new Error(`Strict answer-balance source invalid: ${id}`);if(String(opts[key])!==replacement)throw new Error(`Reviewed keyed answer drift: ${id}`);validated++;
  }
  for(const region of ['UK','US','NZ'])for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<(D.regionalQuestions?.[region]?.[level]||[]).length;i++){
-  const id=`reg:${region}:${level}:${i}`,replacement=STRICT_ANSWER_BALANCE[id];if(!replacement)continue;
+  const id=`reg:${region}:${level}:${i}`;let replacement=STRICT_ANSWER_BALANCE[id];if(!replacement)continue;replacement=authorChoice(replacement);
   const q=D.regionalQuestions[region][level][i],opts=optionsOf(q),key=correctOf(q);if(!Array.isArray(opts)||opts.length!==4||key<0||key>3)throw new Error(`Strict answer-balance source invalid: ${id}`);if(String(opts[key])!==replacement)throw new Error(`Reviewed keyed answer drift: ${id}`);validated++;
  }
  (D.scenarios||[]).forEach((s,i)=>{
-  const id=s.mmStableId||`scenario:${String(i+1).padStart(2,'0')}`,replacement=STRICT_ANSWER_BALANCE[id];if(!replacement)return;
+  const id=s.mmStableId||`scenario:${String(i+1).padStart(2,'0')}`;let replacement=STRICT_ANSWER_BALANCE[id];if(!replacement)return;replacement=authorChoice(replacement);
   const opts=s.choices,key=Number(s.correct);if(!Array.isArray(opts)||opts.length!==4||key<0||key>3)throw new Error(`Strict answer-balance source invalid: ${id}`);if(String(opts[key])!==replacement)throw new Error(`Reviewed keyed answer drift: ${id}`);validated++;
  });
- if(validated>94||requireFull&&validated!==94)throw new Error(`Reviewed keyed answer coverage mismatch: ${validated}/94`);
+ if(validated>95||requireFull&&validated!==95)throw new Error(`Reviewed keyed answer coverage mismatch: ${validated}/95`);
  window.MM_STABLE_REVIEW_BRIDGE.strictAnswerBalance.validated=validated;
  return validated;
 }
@@ -681,7 +837,7 @@ window.getExamQuestions=function(){
  return rows;
 };
 
-window.MM_STABLE_REVIEW_BRIDGE={version:'2026.09.10.1',stableIdsPrimary:true,fullBlueprintRequired:true,requiredTechnicalDomains:(S.blueprint||[]).slice(),legacyRecordsMigratedBy:'assessment-quality-suite.js',strictAnswerBalance:{validated:0,required:94,runtimeTextMutations:0,policy:'Reviewed keyed answer wording is source-authored; runtime validates drift only; key indexes unchanged'}};
+window.MM_STABLE_REVIEW_BRIDGE={version:'2026.09.10.1',stableIdsPrimary:true,fullBlueprintRequired:true,requiredTechnicalDomains:(S.blueprint||[]).slice(),legacyRecordsMigratedBy:'assessment-quality-suite.js',strictAnswerBalance:{validated:0,required:95,runtimeTextMutations:0,policy:'Reviewed keyed answer wording is source-authored; runtime validates drift only; key indexes unchanged'}};
 validateReviewedAnswers(false);
 function finalizeBalance(){validateReviewedAnswers(true)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',finalizeBalance,{once:true});else finalizeBalance();
@@ -865,14 +1021,37 @@ function enhanceRevisionDetails(){
  return true;
 }
 function addStyles(){return true}
+function syncExamContractCopy(){
+ const region=(typeof user!=='undefined'&&user?.region)||'ALL',modal=document.getElementById('modal');
+ if(!modal||modal.classList.contains('hidden'))return;
+ const heading=[...modal.querySelectorAll('h2')].find(x=>/knowledge check/i.test(x.textContent||''));if(!heading)return;
+ const intro=heading.nextElementSibling;if(!intro||!intro.classList.contains('muted'))return;
+ intro.textContent=region==='ALL'
+  ?'Compare All uses 16 questions: 7 technical plus all 9 safety/compliance items — three each for UK, US and New Zealand. Pass requires at least 80% overall and every safety-critical regional item correct.'
+  :'This knowledge check uses 10 questions: 7 technical plus 3 safety/compliance items for the selected jurisdiction. Pass requires at least 80% overall and every safety-critical regional item correct.';
+}
+
+function syncExamListingContractCopy(){
+ const region=(typeof user!=='undefined'&&user?.region)||'ALL',host=document.getElementById('exams');if(!host)return;
+ const compare=region==='ALL',count=compare?16:10;
+ const head=[...host.querySelectorAll('.section-head')].find(x=>/knowledge checks/i.test(x.textContent||''));
+ const intro=head?.querySelector('p');
+ if(intro)intro.textContent=compare
+  ?'Compare All assessments use 7 technical questions plus all 9 UK/US/NZ safety-compliance items. Single-jurisdiction assessments use 7 technical plus 3 regional items.'
+  :'Each assessment uses 7 technical questions plus 3 safety/compliance questions for the selected jurisdiction.';
+ const detail=compare
+  ?'16 questions · 7 technical + 9 regional safety · 80% overall + all safety-critical'
+  :'10 questions · 7 technical + 3 regional safety · 80% overall + all safety-critical';
+ host.querySelectorAll('.exam-card .muted').forEach(el=>{el.textContent=`${detail} · ${typeof regionName==='function'?regionName(region):region}`});
+}
 
 installAnalyticsExportPatch();addStyles();
-const baseStart=window.startExam;window.startExam=function(){const r=baseStart.apply(this,arguments);setTimeout(initExposureTiming,0);return r};
+const baseStart=window.startExam;window.startExam=function(){const r=baseStart.apply(this,arguments);setTimeout(()=>{initExposureTiming();syncExamContractCopy()},0);return r};
 const baseGrade=window.gradeExam;window.gradeExam=function(){persistExposureTiming();const r=baseGrade.apply(this,arguments);setTimeout(()=>{enhanceRevisionDetails();rewriteTimingPanel()},20);return r};
-const baseRender=typeof window.renderExams==='function'?window.renderExams:null;if(baseRender)window.renderExams=function(){const r=baseRender.apply(this,arguments);setTimeout(rewriteTimingPanel,20);return r};
+const baseRender=typeof window.renderExams==='function'?window.renderExams:null;if(baseRender)window.renderExams=function(){const r=baseRender.apply(this,arguments);setTimeout(()=>{syncExamListingContractCopy();rewriteTimingPanel()},20);return r};
 
 D.assessmentQA=D.assessmentQA||{};D.assessmentQA.finalHardening={version:VERSION,bankVersion:BANK_VERSION,stableIds:allStableIds().length,revision2Items:Object.keys(REVISION2).length,revision3Items:Object.keys(REVISION3).length,responseTiming:'first meaningful question exposure; hidden-tab time excluded',researchFreshness:'separate DOI resolver QA'};
 window.MM_QUESTION_REVISIONS={version:VERSION,bankVersion:BANK_VERSION,stableIds:allStableIds(),baseline:{...BASELINE},revision2:{...REVISION2},revision3:{...REVISION3},forId:revisionFor};
-window.MM_ASSESSMENT_FINAL_HARDENING={version:VERSION,responseTimingKey:TIMING_KEY,rewriteTimingPanel,enhanceRevisionDetails};
+window.MM_ASSESSMENT_FINAL_HARDENING={version:VERSION,responseTimingKey:TIMING_KEY,rewriteTimingPanel,enhanceRevisionDetails,syncExamContractCopy,syncExamListingContractCopy};
 })();
 /* <<< assessment-final-hardening.js */

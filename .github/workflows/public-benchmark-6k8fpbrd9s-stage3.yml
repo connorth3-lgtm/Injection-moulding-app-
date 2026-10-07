@@ -27,7 +27,7 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: '3.12'
-      - run: python -m pip install --disable-pip-version-check openpyxl
+      - run: python -m pip install --disable-pip-version-check openpyxl==3.1.5
       - name: Validate semantic acceptance guards
         run: python qa_public_benchmark_6k8fpbrd9s_stage3.py
       - name: Retrieve exact pvT workbook and reconcile every numeric cell

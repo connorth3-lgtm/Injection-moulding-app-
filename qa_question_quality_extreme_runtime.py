@@ -76,6 +76,10 @@ process.stdout.write(JSON.stringify({items:out,meta:window.MM_PSYCHOMETRIC_HARDE
     need(PSYCHOMETRIC_META and PSYCHOMETRIC_META.get('optionsParallelised')==788,f'psychometric coverage mismatch: {PSYCHOMETRIC_META}')
     need(PSYCHOMETRIC_META.get('scenarioKeyPositions')==[10,10,10,10],f'scenario key positions not balanced: {PSYCHOMETRIC_META}')
     need(PSYCHOMETRIC_META.get('technicalKeyPositions')==[8,8,7,7],f'technical key positions not balanced: {PSYCHOMETRIC_META}')
+    measured=extreme.load_measured_runtime()
+    need(len(measured)==12,'measured assessment must contribute exactly 12 governed decisions')
+    out.extend(measured)
+    need(len(out)==209,f'final governed item count mismatch: {len(out)}')
     return out
 
 
@@ -101,6 +105,12 @@ def surface_features(option,stem):
     return feats
 
 
+def expected_tie_hit(scores,correct):
+    best=max(scores)
+    tied=[i for i,score in enumerate(scores) if math.isclose(score,best,rel_tol=0.0,abs_tol=1e-12)]
+    return (1.0/len(tied)) if correct in tied else 0.0
+
+
 def model_with_features(items,feature_fn,passes=50):
     acc=[];by_kind=defaultdict(list)
     for pass_no in range(passes):
@@ -121,7 +131,7 @@ def model_with_features(items,feature_fn,passes=50):
                     fs=feature_fn(o,x['stem']);score=math.log((pos_n+1)/(pos_n+neg_n+2))
                     for f in fs&vocab:score+=math.log((pos[f]+1)/(pos_n+2))-math.log((neg[f]+1)/(neg_n+2))
                     scores.append(score)
-                pred=max(range(4),key=lambda i:scores[i]);hit=pred==x['correct'];hits+=hit;total+=1;kind_hits[x['kind']]+=hit;kind_total[x['kind']]+=1
+                hit=expected_tie_hit(scores,x['correct']);hits+=hit;total+=1;kind_hits[x['kind']]+=hit;kind_total[x['kind']]+=1
         acc.append(hits/total)
         for kind in kind_total:by_kind[kind].append(kind_hits[kind]/kind_total[kind])
     return {'passes':passes,'chance':0.25,'mean_accuracy':round(sum(acc)/len(acc),3),'min_accuracy':round(min(acc),3),'max_accuracy':round(max(acc),3),'by_kind':{k:round(sum(v)/len(v),3) for k,v in sorted(by_kind.items())}}
@@ -165,12 +175,19 @@ def main():
     extreme.main()
     items=load_psychometric_items()
     semantic=SEMANTIC_CUE_MODEL(items,50)
+    semantic['rawThresholdComparison']={
+        'threshold':semantic.pop('promotionThreshold',None),
+        'wouldPass':semantic.pop('promotionReady',None),
+    }
+    semantic['reviewOnly']=True
+    semantic['blocksPromotion']=False
+    semantic['interpretation']='Content-token accuracy may reflect legitimate moulding knowledge; only form/surface shortcuts are promotion-blocking.'
     report=json.loads((ROOT/'question-quality-extreme-50-pass-report.json').read_text(encoding='utf-8'))
     report['psychometric_runtime']=PSYCHOMETRIC_META
     report['cross_item']['surface_cue_model']=report['cross_item'].pop('lexical_cue_model')
     report['cross_item']['semantic_content_model_review_only']=semantic
     report['rubric']['cross_item']=[x.replace('50-pass grouped lexical cue model','50-pass grouped surface-cue model; semantic/content model reported separately') for x in report['rubric']['cross_item']]
-    report['method_note']='The hard predictive model uses only surface features (length bins, qualifier/absolute/negation presence, punctuation, evidence-vs-parameter starter class and similar form cues). A content-token model is reported separately because technical vocabulary can encode genuine subject knowledge and is not, by itself, a test-taking shortcut.'
+    report['method_note']='The promotion-blocking predictive model uses only answer-form features (length, punctuation and related presentation cues). The content-token model is review-only because technical vocabulary can encode genuine subject knowledge and is not, by itself, a test-taking shortcut.'
     (ROOT/'question-quality-extreme-50-pass-report.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
     print('Psychometric runtime verified:',PSYCHOMETRIC_META,'surface=',report['cross_item']['surface_cue_model'],'semantic-review=',semantic)
 

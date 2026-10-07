@@ -16,6 +16,9 @@ for marker in [
     'coverageSimulation',"R.setImplementation('getExamQuestions',selector,'assessment-runtime-v2')"
 ]: need(marker in src,f'assessment runtime v2 marker missing: {marker}')
 need('attempts:{}' not in src,'generated-form exposure history must not be mislabeled as submitted attempts')
+runtime_v2=(ROOT/'src/domains/shared/runtime-v2.js').read_text(encoding='utf-8')
+need("typeof db!=='undefined'&&db?.activeUser" in runtime_v2 and "typeof user!=='undefined'&&user?.id" in runtime_v2,'runtime-v2 learner storage must resolve canonical lexical learner globals')
+need("quarantine-delete-failed" in runtime_v2 and "legacy-delete-failed" in runtime_v2,'runtime-v2 legacy storage migration must verify deletions')
 
 node=textwrap.dedent(r'''
   global.window=global;

@@ -10,6 +10,7 @@ from http_retry import urlopen_with_retry
 from pathlib import Path
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
+from prove_mendeley_open_sources import materialize_exact_file
 
 DATASET_ID = "4h98rz9f92"
 VERSION = 3
@@ -85,15 +86,12 @@ def profile_sheet(ws):
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("--output", required=True); ap.add_argument("--retrieved-date", required=True); args = ap.parse_args()
-    raw, _ = get(PUBLIC_FILES_ENDPOINT, "application/json")
-    files = flatten_files(json.loads(raw.decode("utf-8")))
-    matches = [x for x in files if file_id(x) == EXPECTED_FILE_ID and file_name(x) == EXPECTED_FILE]
-    if len(matches) != 1: raise RuntimeError("exact HDPE/GNP raw workbook identity drifted")
-    item = matches[0]
-    psha = str(publisher_sha(item) or "").lower()
-    if psha != EXPECTED_SHA256: raise RuntimeError(f"publisher manifest SHA drifted: {psha}")
-    data, final_url = get(file_url(item))
-    digest = hashlib.sha256(data).hexdigest()
+    source_path,digest_uri=materialize_exact_file(
+        DATASET_ID,VERSION,EXPECTED_FILE_ID,EXPECTED_FILE,EXPECTED_SHA256
+    )
+    data=source_path.read_bytes()
+    digest=digest_uri.split(":",1)[1]
+    final_url="job-local-sha-verified-cache"
     if digest != EXPECTED_SHA256: raise RuntimeError(f"retrieved HDPE/GNP workbook SHA drifted: {digest}")
     with tempfile.TemporaryDirectory() as td:
         p = Path(td) / EXPECTED_FILE; p.write_bytes(data)

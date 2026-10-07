@@ -2,13 +2,15 @@
 """Generate hardened runtime copies of the frozen core's inline script blocks.
 
 `MouldMaster_Core_App.html` is also the immutable legacy Windows recovery payload,
-so its bytes are intentionally not rewritten. The browser bootstrap replaces those
-inline blocks with same-origin generated assets during runtime assembly.
+so its bytes are intentionally not rewritten. This generator creates a non-executable,
+build-prepared core shell whose inline scripts are replaced with same-origin generated
+assets and whose static handler/style attributes are retired before publication.
 
-Runtime-only transforms remove the recovery core's historical certificate-print
+Generated script transforms remove the recovery core's historical certificate-print
 `document.write` call and rewrite generated inline event-handler markup to inert
 `data-mm-on*` attributes. A strict delegated bridge is concatenated into the final
-generated core slot so this hardening does not increase BODY_SCRIPTS above 39.
+generated core slot. The browser therefore only installs the prepared shell and
+replays governed scripts in order; it no longer repeats static hardening on startup.
 """
 
 from __future__ import annotations
@@ -29,10 +31,12 @@ DESKTOP_INTEGRITY = ROOT / "desktop/electron/scripts/generate-integrity.cjs"
 HANDLER_BRIDGE_PATH = OUT_DIR / "inline-handler-bridge.js"
 STYLE_BRIDGE_PATH = OUT_DIR / "inline-style-bridge.js"
 
-INLINE_SCRIPT_RE = re.compile(r"<script(?P<attrs>[^>]*)>(?P<body>.*?)</script\s*>", re.I | re.S)
+INLINE_SCRIPT_RE = re.compile(r"<script(?P<attrs>[^>]*)>(?P<body>.*?)</script\b[^>]*>", re.I | re.S)
 SRC_ATTR_RE = re.compile(r"\bsrc\s*=", re.I)
-INDEX_RUNTIME_REF_RE = re.compile(r"['\"]\./src/core-runtime/(core-inline-\d{3}\.js)['\"]")
+PAYLOAD_RUNTIME_REF_RE = re.compile(r'src=["\']\./src/core-runtime/(core-inline-\d{3}\.js)["\']')
+TAG_RE = re.compile(r"<[^>]+>", re.S)
 HANDLER_ATTR_RE = re.compile(r"(?P<prefix>[\s<])on(?P<event>click|change|input|keydown)\s*=", re.I)
+STYLE_ATTR_RE = re.compile(r"(?P<prefix>\s)style\s*=", re.I)
 PRINT_CERTIFICATE_RE = re.compile(
     r"function printCertificate\(level,region\)\{.*?\n\}\n\n/\* Instructor dashboard understands regional score keys\. \*/",
     re.S,
@@ -246,6 +250,41 @@ def retire_handler_attrs(source: str) -> str:
     )
 
 
+def retire_static_tag_attrs(tag: str) -> str:
+    hardened = HANDLER_ATTR_RE.sub(
+        lambda match: f"{match.group('prefix')}data-mm-on{match.group('event').lower()}=",
+        tag,
+    )
+    return STYLE_ATTR_RE.sub(lambda match: f"{match.group('prefix')}data-mm-style=", hardened)
+
+
+def prepared_assembly_payload(core: str, expected_names: list[str]) -> str:
+    cursor = 0
+
+    def externalize(match: re.Match[str]) -> str:
+        nonlocal cursor
+        attrs = match.group("attrs") or ""
+        if SRC_ATTR_RE.search(attrs):
+            return match.group(0)
+        if cursor >= len(expected_names):
+            fail("frozen core contains more inline scripts than generated runtime slots")
+        name = expected_names[cursor]
+        cursor += 1
+        return f'<script{attrs} src="./src/core-runtime/{name}"></script>'
+
+    prepared = INLINE_SCRIPT_RE.sub(externalize, core)
+    if cursor != len(expected_names):
+        fail(f"prepared core externalized {cursor} scripts; expected {len(expected_names)}")
+    prepared = TAG_RE.sub(lambda match: retire_static_tag_attrs(match.group(0)), prepared)
+    if re.search(r"<script\b(?![^>]*\bsrc\s*=)[^>]*>", prepared, flags=re.I):
+        fail("prepared core payload still contains inline script tags")
+    if HANDLER_ATTR_RE.search(prepared):
+        fail("prepared core payload still contains executable handler attributes")
+    if re.search(r"<[^>]*\sstyle\s*=", prepared, flags=re.I | re.S):
+        fail("prepared core payload still contains inline style attributes")
+    return prepared
+
+
 def runtime_transform(name: str, source: str) -> str:
     transformed = source
     if name == "core-inline-001.js":
@@ -275,6 +314,114 @@ def runtime_transform(name: str, source: str) -> str:
             fail("certificate print runtime transform did not match exactly once")
         if "document.write(" in transformed or "document.writeln(" in transformed:
             fail("certificate print runtime transform left document.write active")
+        startup_award_validator = 'if(!mmStartupUniqueLessonIdsAreSafe(record.completed)||!mmStartupUniqueLessonIdsAreSafe(record.bookmarks)||!mmStartupCertificatesAreSafe(record.certificates))return false;'
+        startup_award_validator_hardened = 'if(!mmStartupUniqueLessonIdsAreSafe(record.completed)||!mmStartupUniqueLessonIdsAreSafe(record.bookmarks)||(record.learningAwards!=null&&!mmStartupCertificatesAreSafe(record.learningAwards)))return false;'
+        if transformed.count(startup_award_validator) != 1:
+            fail("frozen learner-award startup validator drifted")
+        transformed = transformed.replace(startup_award_validator, startup_award_validator_hardened, 1)
+        transformed = transformed.replace("user.certificates", "user.learningAwards")
+        transformed = transformed.replace("u.certificates", "u.learningAwards")
+        transformed = transformed.replace("u.certificateMeta", "u.learningAwardMeta")
+        transformed = transformed.replace("user.certificateMeta", "user.learningAwardMeta")
+        transformed = transformed.replace('"certificateMeta"', '"learningAwardMeta"')
+        transformed = transformed.replace("certificateMeta:", "learningAwardMeta:")
+        transformed = transformed.replace("certificates:[]", "learningAwards:[]")
+        transformed = transformed.replace("certificates:Array.isArray(u.learningAwards)?", "learningAwards:Array.isArray(u.learningAwards)?")
+        startup_hydration_anchor = '}catch(e){db=JSON.parse(JSON.stringify(PRISTINE_DB));mmStartupLearnerDataRejected=true}\nlet user = db.users[db.activeUser];'
+        startup_hydration = '''}catch(e){db=JSON.parse(JSON.stringify(PRISTINE_DB));mmStartupLearnerDataRejected=true}
+function mmDerivedLearningAwards(record){
+  const awards=new Set(Array.isArray(record.learningAwards)?record.learningAwards.filter(mmStartupCertificateKeyIsSafe):[]);
+  for(const [key,value] of Object.entries(record.examScores||{}))if(Number(value)>=80&&mmStartupCertificateKeyIsSafe(key))awards.add(key);
+  for(const [key,value] of Object.entries(record.examPassStatus||{}))if(value===true&&mmStartupCertificateKeyIsSafe(key))awards.add(key);
+  return [...awards].slice(0,15);
+}
+for(const record of Object.values(db.users||{})){
+  record.learningAwards=mmDerivedLearningAwards(record);
+  if(!record.learningAwardMeta||typeof record.learningAwardMeta!=="object"||Array.isArray(record.learningAwardMeta))record.learningAwardMeta={};
+  delete record.certificates;
+  delete record.certificateMeta;
+}
+let user = db.users[db.activeUser];'''
+        if transformed.count(startup_hydration_anchor) != 1:
+            fail("frozen learner-award hydration anchor drifted")
+        transformed = transformed.replace(startup_hydration_anchor, startup_hydration, 1)
+        if "user.certificates" in transformed or "u.certificates" in transformed or "certificateMeta:" in transformed:
+            fail("active learner runtime still persists legacy certificate-named award fields")
+        learner_id_expr = 'pvRequireLearnerId("learner-"+Date.now())'
+        learner_id_count = transformed.count(learner_id_expr)
+        if learner_id_count != 2:
+            fail(f"frozen learner creation identity source drifted: expected 2 occurrences, got {learner_id_count}")
+        learner_id_helper = r'''function pvNewLearnerId(){
+  const users=db&&db.users&&typeof db.users==='object'?db.users:{};
+  for(let attempt=0;attempt<8;attempt++){
+    let entropy='';
+    try{entropy=globalThis.crypto?.randomUUID?.()||''}catch(_){}
+    if(!entropy)entropy=`${Date.now().toString(36)}-${Math.random().toString(36).slice(2,12)}-${attempt}`;
+    const id=pvRequireLearnerId(`learner-${entropy}`);
+    if(!Object.prototype.hasOwnProperty.call(users,id))return id;
+  }
+  throw new Error('Unable to allocate a unique learner identifier');
+}
+'''
+        create_marker = "function createLearner(){"
+        if transformed.count(create_marker) < 1:
+            fail("frozen learner creation function missing")
+        transformed = transformed.replace(create_marker, learner_id_helper + create_marker, 1)
+        transformed = transformed.replace(learner_id_expr, "pvNewLearnerId()")
+        standards_marker = "function renderStandards(){"
+        if transformed.count(standards_marker) != 1:
+            fail("frozen standards renderer source drifted; expected one renderStandards function")
+        standards_helper = r'''function pvSafeExternalUrl(raw){
+  const url=String(raw||'').trim();
+  return /^https:\/\/[^\s]+$/i.test(url)?url:'';
+}
+function pvSafeSourceLink(raw,label){
+  const url=pvSafeExternalUrl(raw);
+  return url?`<a class="standard-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)} ↗</a>`:'<span class="tiny muted">Official source URL unavailable</span>';
+}
+function pvStandardsLink(item,label){
+  return pvSafeSourceLink(item?.url,label);
+}
+'''
+        transformed = transformed.replace(standards_marker, standards_helper + standards_marker, 1)
+        standards_links = {
+            '<a class="standard-link" href="${item.url}" target="_blank" rel="noopener">Open official/reference source ↗</a>': "${pvStandardsLink(item,'Open official/reference source ↗')}",
+            '<a class="standard-link" href="${item.url}" target="_blank" rel="noopener">Open source ↗</a>': "${pvStandardsLink(item,'Open source ↗')}",
+        }
+        for old, new in standards_links.items():
+            if transformed.count(old) != 1:
+                fail(f"frozen standards link source drifted for marker: {old}")
+            transformed = transformed.replace(old, new, 1)
+        assessment_source_link = '<a class="standard-link" href="${x.sourceUrl}" target="_blank" rel="noopener">${esc(x.reference)} ↗</a>'
+        assessment_source_count = transformed.count(assessment_source_link)
+        if assessment_source_count != 2:
+            fail(f"frozen assessment source-link count drifted: expected 2, got {assessment_source_count}")
+        transformed = transformed.replace(
+            assessment_source_link,
+            "${pvSafeSourceLink(x.sourceUrl,x.reference)}",
+        )
+        unsafe_defect_prompt = "closeModal();switchView('coach');setCoachPrompt('${esc(d.name).replace(/'/g,\"\\\\'\")}')"
+        if transformed.count(unsafe_defect_prompt) != 1:
+            fail("frozen defect-coach handler source drifted; review bounded handler transform")
+        transformed = transformed.replace(unsafe_defect_prompt, "askCoachForDefect(${i})", 1)
+        defect_helper_marker = "\n}\n\nfunction renderScenarios(){"
+        if transformed.count(defect_helper_marker) != 1:
+            fail("frozen defect renderer boundary drifted; expected one helper insertion point")
+        transformed = transformed.replace(
+            defect_helper_marker,
+            """
+}
+function askCoachForDefect(i){
+ const d=D.defects[i];
+ if(!d)return;
+ closeModal();
+ switchView("coach");
+ setCoachPrompt(String(d.name||""));
+}
+
+function renderScenarios(){""",
+            1,
+        )
         for old, new in SIMULATOR_SEMANTIC_REPLACEMENTS.items():
             if transformed.count(old) != 1:
                 fail(f"frozen simulator semantic source drifted for marker: {old}")
@@ -357,13 +504,74 @@ def runtime_transform(name: str, source: str) -> str:
         if transformed.count(LEGACY_SIM_ACCESSIBILITY) != 1:
             fail("frozen simulator accessibility source drifted; review the runtime hardening transform")
         transformed = transformed.replace(LEGACY_SIM_ACCESSIBILITY, HARDENED_SIM_ACCESSIBILITY, 1)
+        transformed = transformed.replace("clean.certificates", "clean.learningAwards")
+        transformed = transformed.replace("clean.certificateMeta", "clean.learningAwardMeta")
+        transformed = transformed.replace("u.certificates", "u.learningAwards")
+        transformed = transformed.replace("u.certificateMeta", "u.learningAwardMeta")
+        transformed = transformed.replace("certificates:Array.isArray(u.learningAwards)?", "learningAwards:Array.isArray(u.learningAwards)?")
+        transformed = transformed.replace("certificateMeta:pvCleanCertificateMeta(u.learningAwardMeta)", "learningAwardMeta:pvCleanCertificateMeta(u.learningAwardMeta)")
+        if "clean.certificates" in transformed or "u.certificates" in transformed or "certificateMeta:pvCleanCertificateMeta" in transformed:
+            fail("active import runtime still persists legacy certificate-named award fields")
+    if name == "core-inline-008.js":
+        legacy = """setTimeout(function () {
+  try {
+    var dash = document.getElementById("dashboard");
+    var navButtons = document.querySelectorAll("#nav button[data-view]");
+    if (!dash || !dash.innerHTML.trim()) {
+      window.__mmShowStartupFailure(
+        "The application scripts loaded but the Home dashboard did not render."
+      );
+      return;
+    }
+    if (!navButtons.length) {
+      window.__mmShowStartupFailure(
+        "The application rendered but navigation controls were not found."
+      );
+    }
+  } catch (e) {
+    window.__mmShowStartupFailure("Startup self-check failed: " + e.message);
+  }
+}, 700);"""
+        hardened = """(function mmStartupSelfCheck(){
+  var started=Date.now();
+  function check(){
+    try {
+      if (!window.MM_APP_SHELL_FINALIZED) {
+        if (Date.now()-started < 10000) { setTimeout(check,250); return; }
+        window.__mmShowStartupFailure("The application shell did not finish starting within 10 seconds.");
+        return;
+      }
+      var dash = document.getElementById("dashboard");
+      var navButtons = document.querySelectorAll("#nav button[data-view]");
+      if (!dash || !dash.innerHTML.trim()) {
+        window.__mmShowStartupFailure("The application scripts loaded but the Home dashboard did not render.");
+        return;
+      }
+      if (!navButtons.length) {
+        window.__mmShowStartupFailure("The application rendered but navigation controls were not found.");
+      }
+    } catch (e) {
+      window.__mmShowStartupFailure("Startup self-check failed: " + e.message);
+    }
+  }
+  setTimeout(check,250);
+})();"""
+        if transformed.count(legacy) != 1:
+            fail("frozen startup self-check source drifted; review the runtime hardening transform")
+        transformed = transformed.replace(legacy, hardened, 1)
+    if name == "core-inline-010.js":
+        legacy_update_card = "  function mmUpdateCard(){\n    const s=mmUpdateState(), copy=mmStatusText(s.status);\n    return `<div class=\"card form-card\" style=\"margin-top:14px\">\n      <span class=\"eyebrow\">Updates</span>\n      <h2 style=\"margin-bottom:6px\">${copy[0]}</h2>\n      <p class=\"muted\">${copy[1]}</p>\n      <div class=\"grid2\" style=\"margin-top:10px\">\n        <div class=\"stat\"><span>Installed version</span><b>${s.version}</b></div>\n        <div class=\"stat\"><span>Update mode</span><b>Automatic on launch</b></div>\n      </div>\n      <p class=\"tiny muted\" style=\"margin-top:10px\">Learner progress, notes, scores and certificates stay in your browser profile and are not replaced by app updates.</p>\n    </div>`;\n  }\n  function attachUpdateCard(){\n    try{\n      const profile=document.getElementById(\"profile\");\n      if(profile && !profile.querySelector(\"[data-mm-update-card]\")){\n        const wrap=document.createElement(\"div\");\n        wrap.setAttribute(\"data-mm-update-card\",\"1\");\n        wrap.innerHTML=mmUpdateCard();\n        profile.appendChild(wrap);\n      }\n    }catch(e){}\n  }"
+        hardened_update_card = "  function mmUpdateCard(){\n    const s=mmUpdateState(), copy=mmStatusText(s.status);\n    const card=document.createElement(\"div\");card.className=\"card form-card\";card.style.marginTop=\"14px\";\n    const eyebrow=document.createElement(\"span\");eyebrow.className=\"eyebrow\";eyebrow.textContent=\"Updates\";\n    const title=document.createElement(\"h2\");title.style.marginBottom=\"6px\";title.textContent=copy[0];\n    const detail=document.createElement(\"p\");detail.className=\"muted\";detail.textContent=copy[1];\n    const grid=document.createElement(\"div\");grid.className=\"grid2\";grid.style.marginTop=\"10px\";\n    const versionStat=document.createElement(\"div\");versionStat.className=\"stat\";\n    const versionLabel=document.createElement(\"span\");versionLabel.textContent=\"Installed version\";\n    const versionValue=document.createElement(\"b\");versionValue.textContent=String(s.version||MM_APP_VERSION);\n    versionStat.append(versionLabel,versionValue);\n    const modeStat=document.createElement(\"div\");modeStat.className=\"stat\";\n    const modeLabel=document.createElement(\"span\");modeLabel.textContent=\"Update mode\";\n    const modeValue=document.createElement(\"b\");modeValue.textContent=\"Automatic on launch\";\n    modeStat.append(modeLabel,modeValue);grid.append(versionStat,modeStat);\n    const note=document.createElement(\"p\");note.className=\"tiny muted\";note.style.marginTop=\"10px\";\n    note.textContent=\"Learner progress, notes, scores and certificates stay in your browser profile and are not replaced by app updates.\";\n    card.append(eyebrow,title,detail,grid,note);\n    return card;\n  }\n  function attachUpdateCard(){\n    try{\n      const profile=document.getElementById(\"profile\");\n      if(profile && !profile.querySelector(\"[data-mm-update-card]\")){\n        const wrap=document.createElement(\"div\");\n        wrap.setAttribute(\"data-mm-update-card\",\"1\");\n        wrap.appendChild(mmUpdateCard());\n        profile.appendChild(wrap);\n      }\n    }catch(e){}\n  }"
+        if transformed.count(legacy_update_card) != 1:
+            fail("frozen update-card source drifted; review DOM-safe runtime transform")
+        transformed = transformed.replace(legacy_update_card, hardened_update_card, 1)
     return retire_handler_attrs(transformed)
 
 
 def expected_assets(core: str) -> dict[str, str]:
     blocks = inline_blocks(core)
     if not blocks:
-        fail("frozen core has no inline script blocks to externalize at runtime")
+        fail("frozen core has no inline script blocks to externalize at build time")
     if not HANDLER_BRIDGE_PATH.is_file():
         fail("strict handler bridge source is missing")
     if not STYLE_BRIDGE_PATH.is_file():
@@ -403,16 +611,6 @@ def bump_cache(index: str, worker: str) -> tuple[str, str]:
     elif new_cache not in index:
         fail("index expected static cache was not recognised")
     return index, worker
-
-
-def ensure_static_handler_retirement(index: str) -> str:
-    if "function retireInlineHandlerAttrs(parsed)" in index:
-        return index
-    old = '    function prepareDocument(html){const parsed=new DOMParser().parseFromString(html,"text/html");if(!parsed.documentElement||!parsed.head||!parsed.body)throw new Error("Core training document could not be parsed");const scripts=[];'
-    new = '    function retireInlineHandlerAttrs(parsed){for(const eventName of ["click","change","input","keydown"]){const attr="on"+eventName;for(const element of Array.from(parsed.querySelectorAll(`[${attr}]`))){element.setAttribute(`data-mm-on${eventName}`,element.getAttribute(attr)||"");element.removeAttribute(attr)}}return parsed}\n    function prepareDocument(html){const parsed=new DOMParser().parseFromString(html,"text/html");if(!parsed.documentElement||!parsed.head||!parsed.body)throw new Error("Core training document could not be parsed");retireInlineHandlerAttrs(parsed);const scripts=[];'
-    if old not in index:
-        fail("index prepareDocument insertion point drifted")
-    return index.replace(old, new, 1)
 
 
 def insert_worker_assets(worker: str, names: list[str]) -> str:
@@ -465,20 +663,21 @@ def enable_integrity_directory(integrity: str) -> str:
 def check_state() -> None:
     core = CORE.read_text(encoding="utf-8")
     index = INDEX.read_text(encoding="utf-8")
-    if not ASSEMBLY_PAYLOAD.is_file() or ASSEMBLY_PAYLOAD.read_bytes() != CORE.read_bytes():
-        fail("non-executable core assembly payload is missing or differs from the frozen core")
     if 'const CORE_URL="./src/core-runtime/core-source.txt";' not in index:
-        fail("browser bootstrap must assemble from the non-executable core-source.txt payload")
+        fail("browser bootstrap must assemble from the non-executable prepared core-source.txt payload")
     expected = expected_assets(core)
-    refs = list(dict.fromkeys(INDEX_RUNTIME_REF_RE.findall(index)))
     expected_names = list(expected)
+    prepared = prepared_assembly_payload(core, expected_names)
+    if not ASSEMBLY_PAYLOAD.is_file() or ASSEMBLY_PAYLOAD.read_text(encoding="utf-8") != prepared:
+        fail("prepared non-executable core assembly payload is missing or stale")
+    refs = list(dict.fromkeys(PAYLOAD_RUNTIME_REF_RE.findall(prepared)))
     if refs != expected_names:
-        fail(f"index CORE_INLINE_SCRIPTS drifted: {refs} != {expected_names}")
-    if "function externalizeCoreScripts(out)" not in index or "out=externalizeCoreScripts(out)" not in index:
-        fail("browser bootstrap does not externalize frozen core scripts during assembly")
-    if "function retireInlineHandlerAttrs(parsed)" not in index or "retireInlineHandlerAttrs(parsed);retireInlineStyleAttrs(parsed);const scripts=[]" not in index:
-        fail("browser bootstrap does not retire static frozen-core handler attributes before installation")
-    if "function retireInlineStyleAttrs(parsed)" not in index or "./src/core-runtime/inline-style-bridge.js" not in index:
+        fail(f"prepared core runtime refs drifted: {refs} != {expected_names}")
+    if "function versionPreparedCore(out)" not in index or "out=versionPreparedCore(out)" not in index:
+        fail("browser bootstrap does not version prepared core runtime assets")
+    if "function externalizeCoreScripts(out)" in index or "retireInlineHandlerAttrs" in index or "retireInlineStyleAttrs" in index:
+        fail("browser bootstrap must not repeat build-time core externalization or static attribute hardening")
+    if "./src/core-runtime/inline-style-bridge.js" not in index:
         fail("browser bootstrap strict style bridge is missing")
     body_scripts = re.findall(r"\['(\./[^']+\.js)'\s*,\s*'<script", index)
     if len(body_scripts) > 39:
@@ -525,6 +724,20 @@ def check_state() -> None:
     for marker in ("w.opener=null", "d.createElement(\"style\")", "d.body.appendChild(box)", "w.print()"):
         if marker not in hardened:
             fail(f"certificate print runtime hardening marker missing: {marker}")
+    for marker in ("function pvSafeExternalUrl(raw)", "function pvStandardsLink(item,label)", 'rel="noopener noreferrer"', "Official source URL unavailable"):
+        if marker not in hardened:
+            fail(f"standards-link hardening marker missing: {marker}")
+    for marker in ("function pvNewLearnerId()", "crypto?.randomUUID", "Object.prototype.hasOwnProperty.call(users,id)", "Unable to allocate a unique learner identifier"):
+        if marker not in hardened:
+            fail(f"learner identity hardening marker missing: {marker}")
+    if 'learner-"+Date.now()' in hardened:
+        fail("active learner creation must not use timestamp-only profile IDs")
+    if 'href="${item.url}"' in hardened:
+        fail("active standards renderer must not interpolate raw governed URLs into href")
+    if 'href="${x.sourceUrl}"' in hardened:
+        fail("active assessment renderer must not interpolate raw source URLs into href")
+    if "function pvSafeSourceLink(raw,label)" not in hardened:
+        fail("active assessment/source link renderer is missing the HTTPS-safe link helper")
     final_slot = expected[expected_names[-1]]
     for marker in ("MM_INLINE_HANDLER_BRIDGE", "ALLOWED_CALLS", "executeHandler"):
         if marker not in final_slot:
@@ -552,11 +765,11 @@ def check_state() -> None:
     integrity = DESKTOP_INTEGRITY.read_text(encoding="utf-8")
     if "'MouldMaster_Core_App.html'" in integrity:
         fail("desktop integrity base files must not publish the executable raw core HTML")
-    if "STATIC_RUNTIME_DIRS=['src/core-runtime']" not in integrity or "...staticRuntimeFiles" not in integrity:
+    if "STATIC_RUNTIME_DIRS" not in integrity or "'src/core-runtime'" not in integrity or "STATIC_RUNTIME_DIRS.flatMap(filesUnder)" not in integrity or "...staticRuntimeFiles" not in integrity:
         fail("desktop integrity does not derive generated core runtime files")
     print(
         f"Core CSP migration check passed: {len(expected_names)} deterministic core runtime slots; bridge folded into final slot; "
-        "document.write and generated handler attributes transformed out; 39 BODY_SCRIPTS; script-src-attr none."
+        "document.write and generated handler attributes transformed out; prepared core static attrs externalized at build time; script-src-attr none."
     )
 
 
@@ -564,7 +777,7 @@ def apply() -> None:
     core = CORE.read_text(encoding="utf-8")
     expected = expected_assets(core)
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    ASSEMBLY_PAYLOAD.write_bytes(CORE.read_bytes())
+    ASSEMBLY_PAYLOAD.write_text(prepared_assembly_payload(core, list(expected)), encoding="utf-8")
     for old in OUT_DIR.glob("core-inline-*.js"):
         if old.name not in expected:
             old.unlink()
@@ -572,7 +785,6 @@ def apply() -> None:
         (OUT_DIR / name).write_text(body, encoding="utf-8")
 
     index = tighten_script_csp(INDEX.read_text(encoding="utf-8"))
-    index = ensure_static_handler_retirement(index)
     worker = SERVICE_WORKER.read_text(encoding="utf-8")
     index, worker = bump_cache(index, worker)
     worker = insert_worker_assets(worker, list(expected) + [STYLE_BRIDGE_PATH.name])

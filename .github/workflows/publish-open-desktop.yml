@@ -70,9 +70,9 @@ jobs:
             echo "Desktop release identity unchanged at $current; web-only version update will not rebuild or republish desktop." >> "$GITHUB_STEP_SUMMARY"
           fi
 
-  publish-windows:
+  build-windows-release:
     permissions:
-      contents: write
+      contents: read
     needs: detect-desktop-release-change
     if: needs.detect-desktop-release-change.outputs.changed == 'true'
     runs-on: windows-latest
@@ -253,6 +253,65 @@ jobs:
           "MM_RELEASE_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           "MM_RELEASE_TAG=$tag" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           "MM_RELEASE_DIR=$releaseDir" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Retain exact staged desktop release handoff
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: mouldmaster-open-desktop-release-${{ github.sha }}
+          path: desktop/electron/release-assets/*
+          if-no-files-found: error
+  publish-release:
+    permissions:
+      contents: write
+      pull-requests: read
+      actions: read
+    needs: [production-source, detect-desktop-release-change, build-windows-release]
+    if: needs.detect-desktop-release-change.outputs.changed == 'true'
+    runs-on: windows-latest
+    steps:
+      - name: Checkout exact governed source without persisted write credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: Download exact staged desktop release handoff
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: mouldmaster-open-desktop-release-${{ github.sha }}
+          path: desktop/electron/release-assets
+      - name: Verify staged release handoff identity and hashes
+        shell: pwsh
+        run: |
+          $releaseDir = 'desktop/electron/release-assets'
+          $sourceCommit = (Get-Content "$releaseDir/SOURCE_COMMIT.txt" -Raw).Trim()
+          if ($sourceCommit -ne $env:GITHUB_SHA) {
+            throw "Staged desktop release source mismatch: expected $env:GITHUB_SHA got $sourceCommit"
+          }
+          $sumPath = Join-Path $releaseDir 'SHA256SUMS.txt'
+          foreach ($line in Get-Content $sumPath) {
+            if ($line -notmatch '^([a-f0-9]{64})\s\s(.+)$') { throw "Malformed staged SHA256SUMS entry: $line" }
+            $expectedHash=$Matches[1];$name=$Matches[2];$file=Join-Path $releaseDir $name
+            if (-not (Test-Path $file)) { throw "Staged desktop release asset missing: $name" }
+            $actualHash=(Get-FileHash $file -Algorithm SHA256).Hash.ToLower()
+            if ($actualHash -ne $expectedHash) { throw "Staged desktop release hash mismatch: $name" }
+          }
+          $version = (Get-Content 'version.json' -Raw | ConvertFrom-Json).desktop_release
+          if ([string]::IsNullOrWhiteSpace($version)) { throw "desktop_release is missing from version.json" }
+          "MM_RELEASE_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "MM_RELEASE_TAG=desktop-v$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "MM_RELEASE_DIR=$releaseDir" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Recheck governed current-main source before release write
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          python tools/verify_production_source.py
+          --repository "${{ github.repository }}"
+          --source-sha "${{ github.sha }}"
+          --require-native-protection
       - name: Publish one-shot release without asset replacement
         shell: pwsh
         env:
@@ -298,8 +357,4 @@ jobs:
             gh release edit $env:MM_RELEASE_TAG --draft=false
             if ($LASTEXITCODE -ne 0) { throw "Could not publish the complete draft release." }
           }
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: mouldmaster-open-desktop-release-${{ github.sha }}
-          path: desktop/electron/release-assets/*
-          if-no-files-found: error
+

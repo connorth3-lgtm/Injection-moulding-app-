@@ -48,7 +48,7 @@ def render() -> str:
     lines = [
         "# MouldMaster governance status",
         "",
-        f"Current learner-facing web release: **`{release}`**.",
+        f"Current governed web candidate: **`{release}`**.",
         "",
         "This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.",
         "",

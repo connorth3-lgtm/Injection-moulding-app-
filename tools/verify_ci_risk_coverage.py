@@ -5,14 +5,17 @@ from __future__ import annotations
 import fnmatch
 import json
 import os
+import re
 import subprocess
 import time
 import urllib.parse
 import urllib.request
+from urllib.error import HTTPError, URLError
 
 REPO = os.environ.get("GITHUB_REPOSITORY", "connorth3-lgtm/Injection-moulding-app-")
 SHA = os.environ.get("CI_RISK_HEAD_SHA", "").strip() or os.environ.get("GITHUB_SHA", "")
 TOKEN = os.environ.get("GITHUB_TOKEN", "")
+PR_NUMBER = int(os.environ.get("CI_RISK_PR_NUMBER", "0") or "0")
 BASE_REF = os.environ.get("GITHUB_BASE_REF", "main")
 EVENT = os.environ.get("GITHUB_EVENT_NAME", "")
 ATTEMPTS = max(1, int(os.environ.get("CI_RISK_ATTEMPTS", "16")))
@@ -23,6 +26,43 @@ UNIVERSAL = {
     "MouldMaster Domain Foundation QA",
     "Deep Audit Governance",
 }
+WORKFLOW_PATHS = {
+    "MouldMaster Release QA": ".github/workflows/qa.yml",
+    "MouldMaster Domain Foundation QA": ".github/workflows/domain-foundation-qa.yml",
+    "Deep Audit Governance": ".github/workflows/deep-audit-governance.yml",
+    "Mobile Browser QA": ".github/workflows/mobile-browser-qa.yml",
+    "Premium UI QA": ".github/workflows/premium-ui-qa.yml",
+    "MouldMaster Physical PWA Contract QA": ".github/workflows/pwa-physical-device-contract.yml",
+    "Open Desktop Build": ".github/workflows/open-desktop-build.yml",
+    "MouldMaster Pages Release Readiness": ".github/workflows/pages.yml",
+    "Release External Validation Boundary": ".github/workflows/release-external-validation.yml",
+    "Question Quality 50-Pass": ".github/workflows/question-quality-50-pass.yml",
+}
+EXACT_HEAD_REF = "ref: ${{ github.event.pull_request.head.sha || github.sha }}"
+
+def verify_workflow_checkout_contract(workflows: set[str]) -> None:
+    for name in sorted(workflows):
+        path = WORKFLOW_PATHS.get(name)
+        if not path:
+            raise SystemExit(f"CI risk coverage has no workflow path for {name}")
+        try:
+            text = open(path, encoding="utf-8").read()
+        except OSError as exc:
+            raise SystemExit(f"CI risk coverage cannot read {path}: {exc}") from exc
+        lines = text.splitlines()
+        checkout_indexes = [i for i, line in enumerate(lines) if "uses: actions/checkout@" in line]
+        if not checkout_indexes:
+            continue
+        for index in checkout_indexes:
+            block = "\n".join(lines[index:index+8])
+            exact = (
+                EXACT_HEAD_REF in block
+                or "ref: ${{ github.event.pull_request.head.sha }}" in block
+                or "ref: ${{ github.sha }}" in block
+            )
+            if not exact:
+                raise SystemExit(f"{name} is not exact-head safe: checkout in {path} lacks an explicit ref")
+
 RISK_RULES = [
     (
         "browser/runtime",
@@ -36,7 +76,38 @@ RISK_RULES = [
     ),
     (
         "release/provenance",
-        ["version.json", "service-worker.js", "runtime-domain-manifest.json", "release-asset-graph.json", "tools/build_pages_artifact.py", "data/release-external-validation-v1.json"],
+        [
+            "version.json",
+            "service-worker.js",
+            "runtime-domain-manifest.json",
+            "release-asset-graph.json",
+            "tools/build_pages_artifact.py",
+            "tools/build_pages_hold.py",
+            "tools/verify_pages_hold.py",
+            "tools/quarantine_legacy_pages.py",
+            "tools/verify_production_source.py",
+            "tools/verify_preview_source.py",
+            "tools/verify_branch_assurance.py",
+            "tools/verify_main_ruleset.py",
+            "tools/verify_release_external_validation.py",
+            "tools/verify_external_validation_live_bindings.py",
+            "data/release-external-validation-v1.json",
+            "data/main-governance-policy-v1.json",
+            ".github/main-ruleset-attestation.json",
+            ".github/scripts/apply-main-ruleset.sh",
+            ".github/workflows/pages.yml",
+            ".github/workflows/preview-pages.yml",
+            ".github/workflows/main-pr-provenance-guard.yml",
+            ".github/workflows/branch-release-assurance.yml",
+            ".github/workflows/premerge-public-candidate.yml",
+            ".github/workflows/publish-open-desktop.yml",
+            ".github/workflows/microsoft-store-msix.yml",
+            ".github/workflows/desktop-release-immutability-guard.yml",
+            "qa_pages_single_publisher.py",
+            "qa_repo_governance.py",
+            "qa_release_supply_chain.py",
+            "qa_audit_governance.py",
+        ],
         {"MouldMaster Pages Release Readiness", "Release External Validation Boundary", "MouldMaster Physical PWA Contract QA", "Open Desktop Build"},
     ),
     (
@@ -67,24 +138,72 @@ def expected_for(paths: list[str]) -> tuple[set[str], list[str]]:
             classes.append(name)
     return expected, classes
 
-def api_runs() -> dict[str, dict]:
-    query = urllib.parse.urlencode({"head_sha": SHA, "event": "pull_request", "per_page": 100})
-    req = urllib.request.Request(
-        f"https://api.github.com/repos/{REPO}/actions/runs?{query}",
-        headers={
-            "Accept": "application/vnd.github+json",
-            "Authorization": f"Bearer {TOKEN}",
-            "X-GitHub-Api-Version": "2022-11-28",
-            "User-Agent": "mouldmaster-ci-risk-coverage",
-        },
+def run_matches_pr(run: dict) -> bool:
+    prs = run.get("pull_requests") or []
+    return any(
+        isinstance(pr, dict)
+        and int(pr.get("number") or 0) == PR_NUMBER
+        and ((pr.get("base") or {}).get("ref") == BASE_REF)
+        for pr in prs
     )
-    with urllib.request.urlopen(req, timeout=20) as response:
-        payload = json.load(response)
+
+
+def api_runs() -> dict[str, dict]:
+    rows: list[dict] = []
+    for page in range(1, 11):
+        query = urllib.parse.urlencode({
+            "head_sha": SHA,
+            "event": "pull_request",
+            "per_page": 100,
+            "page": page,
+        })
+        req = urllib.request.Request(
+            f"https://api.github.com/repos/{REPO}/actions/runs?{query}",
+            headers={
+                "Accept": "application/vnd.github+json",
+                "Authorization": f"Bearer {TOKEN}",
+                "X-GitHub-Api-Version": "2022-11-28",
+                "User-Agent": "mouldmaster-ci-risk-coverage",
+            },
+        )
+        detail = "unknown API error"
+        payload: object = {}
+        for attempt in range(1, 5):
+            try:
+                with urllib.request.urlopen(req, timeout=20) as response:
+                    payload = json.load(response)
+                break
+            except (HTTPError, URLError, TimeoutError, json.JSONDecodeError) as exc:
+                detail = str(exc)
+                if attempt < 4:
+                    time.sleep(attempt * 2)
+        else:
+            raise RuntimeError(f"GitHub CI risk-coverage query failed after 4 attempts: {detail}")
+        if not isinstance(payload, dict):
+            raise RuntimeError("GitHub CI risk-coverage query returned a non-object payload")
+        page_rows = payload.get("workflow_runs") or []
+        if not isinstance(page_rows, list):
+            raise RuntimeError("GitHub CI risk-coverage query returned invalid workflow_runs")
+        rows.extend(row for row in page_rows if isinstance(row, dict))
+        if len(page_rows) < 100:
+            break
+    else:
+        raise RuntimeError("GitHub CI risk-coverage query exceeded the 1000-run pagination safety bound")
+
     latest: dict[str, dict] = {}
-    for run in payload.get("workflow_runs", []):
+    for run in rows:
+        if not run_matches_pr(run):
+            continue
         name = str(run.get("name") or "")
+        if name not in WORKFLOW_PATHS or run.get("path") != WORKFLOW_PATHS[name]:
+            continue
         prior = latest.get(name)
-        if prior is None or str(run.get("created_at") or "") > str(prior.get("created_at") or ""):
+        key = (str(run.get("updated_at") or run.get("created_at") or ""), int(run.get("id") or 0))
+        prior_key = (
+            str(prior.get("updated_at") or prior.get("created_at") or ""),
+            int(prior.get("id") or 0),
+        ) if prior else ("", 0)
+        if prior is None or key > prior_key:
             latest[name] = run
     return latest
 
@@ -92,17 +211,21 @@ def main() -> None:
     if EVENT != "pull_request":
         print("CI risk-coverage runtime meta-gate: non-PR event; exact-head workflow enforcement skipped.")
         return
-    if not SHA or not TOKEN:
-        raise SystemExit("Exact PR head SHA/GITHUB_TOKEN required for CI risk-coverage verification")
+    if re.fullmatch(r"[0-9a-f]{40}", SHA) is None or not TOKEN or PR_NUMBER < 1:
+        raise SystemExit("Canonical exact PR head SHA, PR number and GITHUB_TOKEN required for CI risk-coverage verification")
     paths = changed_paths()
     expected, classes = expected_for(paths)
+    verify_workflow_checkout_contract(expected)
     print("Changed paths:", json.dumps(paths))
     print("Risk classes:", ", ".join(classes) if classes else "universal-only")
     print("Expected workflows:", ", ".join(sorted(expected)))
 
     latest: dict[str, dict] = {}
     for attempt in range(ATTEMPTS):
-        latest = api_runs()
+        try:
+            latest = api_runs()
+        except RuntimeError as exc:
+            raise SystemExit(str(exc))
         unresolved = []
         failed = []
         for name in sorted(expected):

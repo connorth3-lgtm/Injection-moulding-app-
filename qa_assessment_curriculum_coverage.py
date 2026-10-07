@@ -120,6 +120,12 @@ def normalized_shape(lesson: dict, lines: list[str]) -> str:
 def assessment_report() -> dict:
     source = text("assessment-quality-suite.js")
     identities = json_assignment(source, "const LOCKED_IDENTITIES=")
+    outcome_review = json.loads(text("qa/assessment-outcome-review.json"))
+    proposed_by_id = {
+        clean(row.get("stableId")): outcome_values(row, ("proposedOutcomeIds",))
+        for row in outcome_review.get("mappings", [])
+        if isinstance(row, dict)
+    }
     if not isinstance(identities, list) or not identities:
         raise AssertionError("assessment identity lock is empty or invalid")
 
@@ -193,7 +199,8 @@ def assessment_report() -> dict:
                 "competencies": competencies,
                 "reviewedRevision": row.get("reviewedRevision"),
                 "currentOutcomeIds": outcomes,
-                "mappingStatus": "mapped-pending-sme-review" if outcomes else "pending-sme-mapping",
+                "proposedOutcomeIds": proposed_by_id.get(clean(row.get("stableId")), []),
+                "mappingStatus": "mapped-pending-sme-review" if outcomes else ("proposal-ready-for-sme-review" if proposed_by_id.get(clean(row.get("stableId"))) else "pending-sme-mapping"),
             }
         )
 
@@ -209,6 +216,7 @@ def assessment_report() -> dict:
         "regionalSafetyItemCount": len(regional),
         "technicalItemsWithExplicitOutcomeMetadata": len(tagged),
         "technicalItemsMissingExplicitOutcomeMetadata": len(technical) - len(tagged),
+        "technicalItemsWithProposedOutcomeMappings": sum(1 for row in technical if proposed_by_id.get(clean(row.get("stableId")))),
         "levels": levels,
         "competencyMembershipCounts": dict(sorted(competency_counts.items())),
         "conceptProxy": {
@@ -218,6 +226,7 @@ def assessment_report() -> dict:
         },
         "explicitOutcomeCounts": dict(sorted(outcome_counts.items())),
         "outcomeMappingQueuePendingCount": sum(row["mappingStatus"] == "pending-sme-mapping" for row in mapping_queue),
+        "outcomeMappingProposalReadyCount": sum(row["mappingStatus"] == "proposal-ready-for-sme-review" for row in mapping_queue),
         "outcomeMappingQueue": mapping_queue,
     }
 
@@ -358,7 +367,8 @@ def main() -> None:
         "Assessment breadth:",
         f"{assessment['technicalItemCount']} technical items;",
         f"{assessment['technicalItemsWithExplicitOutcomeMetadata']} with explicit outcome metadata;",
-        f"{assessment['outcomeMappingQueuePendingCount']} pending SME mapping;",
+        f"{assessment['outcomeMappingProposalReadyCount']} proposals ready for SME review;",
+        f"{assessment['outcomeMappingQueuePendingCount']} blank mappings;",
         f"status={assessment['status']}",
     )
     print(

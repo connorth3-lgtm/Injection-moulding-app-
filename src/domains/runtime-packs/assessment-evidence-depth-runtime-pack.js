@@ -430,10 +430,10 @@ schedule();
 /* <<< lesson-deep-authoring-v2.js */
 
 /* >>> assessment-evidence-approval.js */
-/* MouldMaster answer-evidence approval layer — 2026-09-10.1 */
+/* MouldMaster answer-evidence approval layer — 2026.10.05.1 */
 (function(){
 'use strict';
-const VERSION='2026.09.10.1',REVIEWED='2026-08-30',REVIEW_BY='2026-11-30';
+const VERSION='2026.10.05.1',REVIEWED='2026-10-05',REVIEW_BY='2026-11-30';
 const SCOPE='Internal educational content approval; external accreditation or independent third-party SME endorsement is not implied.';
 const HEADLESS_AUDIT=typeof navigator==='undefined'&&typeof document!=='undefined';
 const R=window.MM_RUNTIME_V2||(HEADLESS_AUDIT?Object.freeze({after:()=>()=>{},registerModule:()=>null}):null);
@@ -441,12 +441,13 @@ if(!R||typeof R.after!=='function')throw new Error('assessment-evidence-approval
 const APPROVED_INPUTS={
  'MouldMaster_Core_App.html':'c6b258ccd37d98b2f591f538b34eb33c7705dda6',
  'training-upgrade.js':'ea6ee84e69c4d5ed60776f2022f1bc9462425ea2',
- 'assessment-deep-dive.js':'8f41edb8e855f1b3f8f2277873b7700aa1d4bf29',
- 'src/domains/assessment/assessment-answer-cue-fix.js':'9a6ef14f5eac1e127255afdd050a6f47f6009587',
- 'assessment-quality-suite.js':'2f311bf1349d9c3ba4e5b54958efd3627c98991b',
- 'assessment-stable-review-bridge.js':'b91ac5b4712f96634ffd76a842ae75a417ed6a85',
- 'diagnostic-learning-labs.js':'582ac717d1e218c9144f9d3b69490933f01936da',
- 'material-behaviour-labs.js':'6b0f489c59ef7d5f1e6ebdd5a01d527d294f3f3b'
+ 'assessment-deep-dive.js':'367d941afc67ad62125e1e1cb16ff1a1e48d0123',
+ 'src/domains/assessment/assessment-answer-cue-fix.js':'14cdc9e7dde1aa1a3dcdae8d5fc8c924f8f60bc0',
+ /* Selection-only rebind: learner-scoped blueprint exposure rotation and minimum concept-diversity enforcement changed; locked question identities/content/keys/evidence did not. */
+ 'assessment-quality-suite.js':'0c70c89e4310b88e81bc361b84990cb8493a87a5',
+ 'assessment-stable-review-bridge.js':'36f36be84184ae1fe3b623aaa8dc4ec602854a9b',
+ 'diagnostic-learning-labs.js':'f573088cddb9eb081eb9cf88d266af6c7b31831d',
+ 'material-behaviour-labs.js':'3ce6b1f36c618e0b591b2b5cbb3321a0080ffe6a'
 };
 function buildApproval(){
  const D=window.MM_DATA,E=window.MM_EVIDENCE_SOURCES;
@@ -496,11 +497,26 @@ scheduleApproval();
 const VERSION='2026.09.10.1';
 const REQUIRED_VERSION='2026.09.01.6';
 const REQUIRED_POLICY_VERSION='2026.09.10.1';
+const MEASURED_VERSION='2026.10.05.1';
 const INPUT_BLOB='1540e6d300d2c63bb7212161ae70a65b7559e7a4';
 /* Retired compatibility token for legacy static audits: keyedConciseEdits:3. Active immutable-policy expectation is zero. */
-const EXPECTED={itemsHardened:197,optionsParallelised:788,semanticAnswerChanges:0,technicalTermSubstitutions:0,paddingApplied:false,textMutationCount:0,keyedConciseEdits:0,distractorCueEdits:0,formClauseTrims:0,technicalKeyPositions:[8,8,7,7],scenarioKeyPositions:[10,10,10,10],optionalKeyPositions:[10,10,10,10]};
+const EXPECTED={learnerVisibleDecisions:209,itemsHardened:197,measuredItemsGoverned:12,optionsParallelised:788,semanticAnswerChanges:0,technicalTermSubstitutions:0,paddingApplied:false,textMutationCount:0,keyedConciseEdits:0,distractorCueEdits:0,formClauseTrims:0,technicalKeyPositions:[8,8,7,7],scenarioKeyPositions:[10,10,10,10],optionalKeyPositions:[10,10,10,10],measuredKeyPositions:[3,3,3,3]};
 function sameArray(a,b){return Array.isArray(a)&&Array.isArray(b)&&a.length===b.length&&a.every((x,i)=>x===b[i])}
 function rankCoverage(a,n){return Array.isArray(a)&&a.length===4&&a.every(x=>Number.isInteger(x)&&x>=0)&&a.reduce((s,x)=>s+x,0)===n}
+function measuredCoverage(){
+ const M=window.MM_REAL_MEASURED_ASSESSMENT;
+ if(!M)return null;
+ const cases=Array.isArray(M.cases)?M.cases:[],positions=[0,0,0,0];let count=0;
+ for(let ci=0;ci<cases.length;ci++)for(let qi=0;qi<(Array.isArray(cases[ci]?.questions)?cases[ci].questions.length:0);qi++){positions[(ci*3+qi)%4]++;count++}
+ return {ok:M.version===MEASURED_VERSION&&Number(M.decisionCount)===EXPECTED.measuredItemsGoverned&&count===EXPECTED.measuredItemsGoverned&&sameArray(positions,EXPECTED.measuredKeyPositions),count,positions,version:M.version||null}
+}
+function applyMeasuredCoverage(){
+ const result=measuredCoverage();if(!result)return false;
+ const targets=[window.MM_PSYCHOMETRIC_APPROVAL,window.MM_EVIDENCE_APPROVAL?.psychometricApproval].filter(Boolean);
+ for(const target of targets){target.measuredCoverageOk=result.ok;target.measuredItemsGoverned=result.count;target.measuredKeyPositions=[...result.positions];target.measuredRuntimeVersion=result.version;target.learnerVisibleCoverageOk=Boolean(target.coverageOk&&result.ok&&Number(target.itemsHardened)+result.count===EXPECTED.learnerVisibleDecisions)}
+ const D=window.MM_DATA;if(D?.assessmentQA?.evidenceApproval){D.assessmentQA.evidenceApproval.measuredPsychometricCoverageOk=result.ok;D.assessmentQA.evidenceApproval.learnerVisiblePsychometricCoverageOk=Boolean(targets[0]?.learnerVisibleCoverageOk);if(!targets[0]?.learnerVisibleCoverageOk)D.assessmentQA.evidenceApproval.status='update-required'}
+ return true
+}
 window.MM_PSYCHOMETRIC_CUE_NEUTRALISATION={version:VERSION,scenarioDistractorEdits:0,answerKeyChanges:0,textMutationCount:0,scope:'Validation-only compatibility surface. Runtime scenario distractors, stems and keyed propositions are not rewritten.'};
 function attach(){
  const P=window.MM_PSYCHOMETRIC_HARDENING,A=window.MM_EVIDENCE_APPROVAL,D=window.MM_DATA;
@@ -509,9 +525,12 @@ function attach(){
  const coverageOk=P.version===REQUIRED_VERSION&&P.policyVersion===REQUIRED_POLICY_VERSION&&P.itemsHardened===EXPECTED.itemsHardened&&P.optionsParallelised===EXPECTED.optionsParallelised&&P.semanticAnswerChanges===EXPECTED.semanticAnswerChanges&&P.technicalTermSubstitutions===EXPECTED.technicalTermSubstitutions&&P.paddingApplied===EXPECTED.paddingApplied&&P.textMutationCount===EXPECTED.textMutationCount&&P.keyedConciseEdits===EXPECTED.keyedConciseEdits&&P.distractorCueEdits===EXPECTED.distractorCueEdits&&P.formClauseTrims===EXPECTED.formClauseTrims&&rankCoverage(P.technicalLengthRanks,30)&&rankCoverage(P.regionalLengthRanks,27)&&rankCoverage(P.scenarioLengthRanks,40)&&rankCoverage(P.diagnosticLengthRanks,36)&&rankCoverage(P.materialLengthRanks,24)&&rankCoverage(P.optionalLengthRanks,40)&&sameArray(P.technicalKeyPositions,EXPECTED.technicalKeyPositions)&&sameArray(P.scenarioKeyPositions,EXPECTED.scenarioKeyPositions)&&sameArray(P.optionalKeyPositions,EXPECTED.optionalKeyPositions);
  A.approvedInputs=A.approvedInputs||{};
  A.approvedInputs['assessment-psychometric-hardening.js']=INPUT_BLOB;
- A.psychometricApproval={version:VERSION,requiredRuntimeVersion:REQUIRED_VERSION,requiredPolicyVersion:REQUIRED_POLICY_VERSION,inputBlob:INPUT_BLOB,coverageOk,itemsHardened:P.itemsHardened,optionsParallelised:P.optionsParallelised,semanticAnswerChanges:P.semanticAnswerChanges,technicalTermSubstitutions:P.technicalTermSubstitutions,paddingApplied:P.paddingApplied,textMutationCount:P.textMutationCount,keyedConciseEdits:P.keyedConciseEdits,distractorCueEdits:P.distractorCueEdits,formClauseTrims:P.formClauseTrims,scenarioDistractorCueEdits:0,answerKeyChanges:0,technicalLengthRanks:[...(P.technicalLengthRanks||[])],regionalLengthRanks:[...(P.regionalLengthRanks||[])],scenarioLengthRanks:[...(P.scenarioLengthRanks||[])],diagnosticLengthRanks:[...(P.diagnosticLengthRanks||[])],materialLengthRanks:[...(P.materialLengthRanks||[])],optionalLengthRanks:[...(P.optionalLengthRanks||[])],technicalKeyPositions:[...(P.technicalKeyPositions||[])],scenarioKeyPositions:[...(P.scenarioKeyPositions||[])],optionalKeyPositions:[...(P.optionalKeyPositions||[])],surfaceCueThreshold:0.50,verificationPolicy:'CI audits learner-visible wording and answer-form cues but runtime code may only reorder answer positions while preserving exact stems, option text, feedback pairing and keyed propositions. Any wording correction must be authored in source and reapproved against evidence.',scope:'Assessment-form validation and answer-position balance only; technical propositions, evidence relevance and safety boundaries remain governed by source authoring, evidence approval and proposition-evidence records.'};
+ A.psychometricApproval={version:VERSION,requiredRuntimeVersion:REQUIRED_VERSION,requiredPolicyVersion:REQUIRED_POLICY_VERSION,inputBlob:INPUT_BLOB,coverageOk,learnerVisibleDecisions:EXPECTED.learnerVisibleDecisions,itemsHardened:P.itemsHardened,measuredCoverageOk:null,measuredItemsGoverned:0,measuredKeyPositions:[],measuredRuntimeVersion:null,learnerVisibleCoverageOk:false,optionsParallelised:P.optionsParallelised,semanticAnswerChanges:P.semanticAnswerChanges,technicalTermSubstitutions:P.technicalTermSubstitutions,paddingApplied:P.paddingApplied,textMutationCount:P.textMutationCount,keyedConciseEdits:P.keyedConciseEdits,distractorCueEdits:P.distractorCueEdits,formClauseTrims:P.formClauseTrims,scenarioDistractorCueEdits:0,answerKeyChanges:0,technicalLengthRanks:[...(P.technicalLengthRanks||[])],regionalLengthRanks:[...(P.regionalLengthRanks||[])],scenarioLengthRanks:[...(P.scenarioLengthRanks||[])],diagnosticLengthRanks:[...(P.diagnosticLengthRanks||[])],materialLengthRanks:[...(P.materialLengthRanks||[])],optionalLengthRanks:[...(P.optionalLengthRanks||[])],technicalKeyPositions:[...(P.technicalKeyPositions||[])],scenarioKeyPositions:[...(P.scenarioKeyPositions||[])],optionalKeyPositions:[...(P.optionalKeyPositions||[])],surfaceCueThreshold:0.50,verificationPolicy:'CI audits learner-visible wording and answer-form cues but runtime code may only reorder answer positions while preserving exact stems, option text, feedback pairing and keyed propositions. Any wording correction must be authored in source and reapproved against evidence.',scope:'Core coverageOk validates the 197-item immutable psychometric runtime. Full 209-decision learnerVisibleCoverageOk is set only after the 12 real-measured decisions bind at runtime and satisfy their source-authored 3/3/3/3 position contract. Technical propositions, evidence relevance and safety boundaries remain governed by source authoring, evidence approval and proposition-evidence records.'};
  if(D?.assessmentQA?.evidenceApproval){D.assessmentQA.evidenceApproval.psychometricVersion=REQUIRED_VERSION;D.assessmentQA.evidenceApproval.psychometricPolicyVersion=REQUIRED_POLICY_VERSION;D.assessmentQA.evidenceApproval.psychometricCoverageOk=coverageOk;D.assessmentQA.evidenceApproval.psychometricInputBlob=INPUT_BLOB;if(!coverageOk)D.assessmentQA.evidenceApproval.status='update-required'}
  window.MM_PSYCHOMETRIC_APPROVAL={...A.psychometricApproval};
+ applyMeasuredCoverage();
+ window.addEventListener?.('load',applyMeasuredCoverage,{once:true});
+ window.addEventListener?.('mm:domains-ready',applyMeasuredCoverage);
  if(!coverageOk)console.warn('[MouldMaster] Immutable psychometric approval metadata is stale or incomplete.',{expected:EXPECTED,actual:P});
 }
 attach();

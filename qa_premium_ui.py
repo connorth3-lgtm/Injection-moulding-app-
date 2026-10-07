@@ -82,8 +82,12 @@ need('"premium-ui.css"' in release_qa,'release QA must require premium UI offlin
 need('"premium-dynamic.css"' in release_qa,'release QA must require premium dynamic offline governance')
 
 mobile=text('.github/workflows/mobile-browser-qa.yml')
-need("- '*.css'" in mobile,'Mobile Browser QA must trigger for root stylesheet changes')
-need("- 'qa/**/*.spec.js'" in mobile,'Mobile Browser QA must trigger for learner browser specs')
+impact=text('tools/change_impact.py')
+need("branches: [main, preview]" in mobile,'Mobile Browser QA must run for main/preview PRs and pushes')
+need("tools/github_workflow_baseline.py --workflow mobile-browser-qa.yml" in mobile,'Mobile Browser QA must resolve an exact comparison baseline')
+need("python3 tools/ci_impact.py" in mobile and "needs.impact.outputs.browser == 'true'" in mobile,'Mobile Browser QA must use the shared browser-impact classifier')
+need('p.endswith((".js",".css",".html"))' in impact,'browser impact classifier must include root runtime stylesheet/script/html changes')
+need('p.startswith("qa/") and p.endswith(".spec.js")' in impact,'browser impact classifier must include learner browser specs')
 
 permanent=text('.github/workflows/premium-ui-qa.yml')
 for marker in ['python qa_premium_ui.py','playwright.premium.config.cjs','chromium-premium','webkit-premium','Upload premium UI review artifacts']:

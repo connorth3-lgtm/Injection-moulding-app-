@@ -118,11 +118,42 @@ async function archiveCase(id,reason='Archived from Mould Master workspace',toke
 }
 async function deleteCase(id,token=learnerToken()){return archiveCase(id,'Archived through legacy delete API',token)}
 
+function normalizedLinkRecord(caseId,kind,targetId,meta={},owner=learnerToken(),updatedAt=now()){
+  const cleanCaseId=String(caseId||'').trim(),cleanKind=String(kind||''),cleanTarget=String(targetId||'').trim();
+  if(!cleanCaseId||!cleanKind||!cleanTarget)throw new Error('caseId, kind and targetId are required');
+  if(!LINK_KINDS.includes(cleanKind))throw new Error(`Unknown engineering link kind: ${cleanKind}`);
+  if(cleanTarget.length>500)throw new Error('Engineering link target is too large');
+  if(!meta||typeof meta!=='object'||Array.isArray(meta))throw new Error('Engineering link metadata must be an object');
+  const encoded=JSON.stringify(meta);
+  if(encoded.length>10000)throw new Error('Engineering link metadata is too large');
+  const cleanMeta=JSON.parse(encoded);
+  return {
+    id:`${cleanCaseId}::${cleanKind}::${cleanTarget}`,
+    caseId:cleanCaseId,
+    learnerToken:String(owner),
+    kind:cleanKind,
+    targetId:cleanTarget,
+    meta:cleanMeta,
+    updatedAt:String(updatedAt),
+  }
+}
+async function saveCaseAndLinks(caseRecord,linkInputs=[],token=learnerToken()){
+  const owner=tokenValue(token),record=normalizeCase({...caseRecord,learnerToken:owner});
+  const prior=await getRaw('cases',record.id);
+  if(!prior||String(prior.learnerToken)!==owner)throw new Error(`Unknown engineering case ${record.id}`);
+  if(prior.archivedAt)throw new Error('Archived engineering cases are immutable; restore by importing a new case bundle');
+  record.createdAt=String(prior.createdAt||record.createdAt||now());
+  record.updatedAt=now();
+  const links=linkInputs.map(row=>normalizedLinkRecord(record.id,row.kind,row.targetId,row.meta||{},owner,record.updatedAt));
+  const db=await openDb(),tx=db.transaction(['cases','caseLinks'],'readwrite');
+  tx.objectStore('cases').put(record);
+  for(const link of links)tx.objectStore('caseLinks').put(link);
+  await txDone(tx);db.close();
+  return {case:record,links}
+}
 async function linkCase(caseId,kind,targetId,meta={},token=learnerToken()){
-  if(!caseId||!kind||!targetId)throw new Error('caseId, kind and targetId are required');
   const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)throw new Error(`Unknown engineering case for active learner: ${caseId}`);
-  const id=`${caseId}::${kind}::${targetId}`;
-  const record={id,caseId:String(caseId),learnerToken:owner,kind:String(kind),targetId:String(targetId),meta:{...meta},updatedAt:now()};
+  const record=normalizedLinkRecord(caseId,kind,targetId,meta,owner);
   await put('caseLinks',record);return record
 }
 async function linksForCase(caseId,token=learnerToken()){
@@ -132,27 +163,32 @@ async function linksForCase(caseId,token=learnerToken()){
 async function linkCaseMaterial(caseId,materialGradeId,displayName='',token=learnerToken()){
   const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)throw new Error(`Unknown engineering case ${caseId}`);
   c.materialGradeId=String(materialGradeId);if(displayName)c.material=String(displayName);
-  await saveCase(c,{token:owner});return linkCase(caseId,'material-grade',materialGradeId,{displayName:String(displayName||'')},owner)
+  const result=await saveCaseAndLinks(c,[{kind:'material-grade',targetId:materialGradeId,meta:{displayName:String(displayName||'')}}],owner);
+  return result.links[0]
 }
 async function linkCaseMachine(caseId,machineId,displayName='',token=learnerToken()){
   const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)throw new Error(`Unknown engineering case ${caseId}`);
   c.machineId=String(machineId);if(displayName)c.machine=String(displayName);
-  await saveCase(c,{token:owner});return linkCase(caseId,'machine',machineId,{displayName:String(displayName||'')},owner)
+  const result=await saveCaseAndLinks(c,[{kind:'machine',targetId:machineId,meta:{displayName:String(displayName||'')}}],owner);
+  return result.links[0]
 }
 async function linkCaseMould(caseId,mouldId,displayName='',token=learnerToken()){
   const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)throw new Error(`Unknown engineering case ${caseId}`);
   c.mouldId=String(mouldId);if(displayName)c.mould=String(displayName);
-  await saveCase(c,{token:owner});return linkCase(caseId,'mould',mouldId,{displayName:String(displayName||'')},owner)
+  const result=await saveCaseAndLinks(c,[{kind:'mould',targetId:mouldId,meta:{displayName:String(displayName||'')}}],owner);
+  return result.links[0]
 }
 async function linkCaseProduct(caseId,productId,displayName='',token=learnerToken()){
   const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)throw new Error(`Unknown engineering case ${caseId}`);
   c.productId=String(productId);if(displayName)c.product=String(displayName);
-  await saveCase(c,{token:owner});return linkCase(caseId,'product',productId,{displayName:String(displayName||'')},owner)
+  const result=await saveCaseAndLinks(c,[{kind:'product',targetId:productId,meta:{displayName:String(displayName||'')}}],owner);
+  return result.links[0]
 }
 async function linkCasePart(caseId,partId,displayName='',token=learnerToken()){
   const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)throw new Error(`Unknown engineering case ${caseId}`);
   c.partId=String(partId);if(displayName)c.part=String(displayName);
-  await saveCase(c,{token:owner});return linkCase(caseId,'part',partId,{displayName:String(displayName||'')},owner)
+  const result=await saveCaseAndLinks(c,[{kind:'part',targetId:partId,meta:{displayName:String(displayName||'')}}],owner);
+  return result.links[0]
 }
 async function linkCaseContext(caseId,context={},token=learnerToken()){
   const owner=tokenValue(token),c=await getCase(caseId,owner);if(!c)throw new Error(`Unknown engineering case ${caseId}`);
@@ -162,18 +198,19 @@ async function linkCaseContext(caseId,context={},token=learnerToken()){
     ['mould','mouldId','mould'],
     ['product','productId','product'],
     ['part','partId','part']
-  ],links=[];
+  ],linkInputs=[];
   for(const [kind,idKey,nameKey] of specs){
     const targetId=context[idKey]??c[idKey],displayName=context[nameKey]??c[nameKey];
     if(!targetId)continue;
     c[idKey]=String(targetId);if(displayName)c[nameKey]=String(displayName);
-    links.push(await linkCase(caseId,kind,targetId,{displayName:String(displayName||'')},owner));
+    linkInputs.push({kind,targetId,meta:{displayName:String(displayName||'')}})
   }
-  await saveCase(c,{token:owner});
-  return {caseId:String(caseId),links}
+  const result=await saveCaseAndLinks(c,linkInputs,owner);
+  return {caseId:String(caseId),links:result.links}
 }
 async function linkCaseDataset(caseId,datasetId,label='',token=learnerToken()){return linkCase(caseId,'process-dataset',datasetId,{label:String(label||'')},token)}
 
+const LINK_KINDS=Object.freeze(['material-grade','machine','mould','product','part','process-dataset']);
 const EVIDENCE_KINDS=Object.freeze(['controlled-trial','dimensional-check','defect-observation','maintenance-event','material-lot','acceptance-check']);
 const ACCEPTANCE_STATES=Object.freeze(['not-assessed','pending','accepted','rejected']);
 const EVIDENCE_REQUIRED=Object.freeze({
@@ -277,43 +314,72 @@ async function evidenceSummary(caseId,token=learnerToken()){
   for(const item of active){byKind[item.kind]=(byKind[item.kind]||0)+1;acceptance[item.acceptanceStatus]=(acceptance[item.acceptanceStatus]||0)+1}
   return {caseId:String(caseId),count:items.length,activeCount:active.length,voidedCount:items.length-active.length,completeCount:active.filter(x=>x.complete).length,incompleteCount:active.filter(x=>!x.complete).length,byKind,acceptance,latestAt:active[0]?.occurredAt||null,boundary:'Counts describe recorded evidence only; completeness and acceptance still require human/site review.'}
 }
+function normalizeImportedLink(row,sourceCaseId=''){
+  if(!row||typeof row!=='object'||Array.isArray(row))throw new Error('Case export contains an invalid case link');
+  const kind=String(row.kind||''),targetId=String(row.targetId||'').trim();
+  if(!LINK_KINDS.includes(kind))throw new Error(`Case export contains unknown link kind: ${kind||'(missing)'}`);
+  if(!targetId||targetId.length>500)throw new Error('Case export contains an invalid link target');
+  if(row.caseId!=null&&sourceCaseId&&String(row.caseId)!==String(sourceCaseId))throw new Error('Case export contains a link for a different case');
+  let meta={};
+  if(row.meta!=null){
+    if(!row.meta||typeof row.meta!=='object'||Array.isArray(row.meta))throw new Error('Case export contains invalid link metadata');
+    const encoded=JSON.stringify(row.meta);if(encoded.length>10000)throw new Error('Case export link metadata is too large');
+    meta=JSON.parse(encoded)
+  }
+  return {kind,targetId,meta}
+}
 function validateCaseBundle(bundle){
   if(!bundle||typeof bundle!=='object'||![3,4].includes(Number(bundle.schema)))throw new Error('Unsupported MouldMaster case export schema');
   if(!bundle.case||typeof bundle.case!=='object')throw new Error('Case export is missing its case record');
   if(!Array.isArray(bundle.evidence)||bundle.evidence.length>500)throw new Error('Case export evidence collection is invalid or too large');
   if(bundle.links!=null&&(!Array.isArray(bundle.links)||bundle.links.length>100))throw new Error('Case export link collection is invalid or too large');
   if(bundle.evidenceAudit!=null&&(!Array.isArray(bundle.evidenceAudit)||bundle.evidenceAudit.length>500))throw new Error('Case export audit collection is invalid or too large');
-  const legacy=Number(bundle.schema)===3;
+  const legacy=Number(bundle.schema)===3,sourceCaseId=String(bundle.case.id||''),rawIds=new Set();
+  for(const row of bundle.evidence){
+    const id=String(row?.id||'');
+    if(!legacy&&!id)throw new Error('Schema-4 evidence records require stable ids');
+    if(id&&rawIds.has(id))throw new Error(`Case export contains duplicate evidence id: ${id}`);
+    if(id)rawIds.add(id)
+  }
   const evidence=bundle.evidence.map(row=>{
     if(!row||typeof row!=='object'||row.recordType==='audit')throw new Error('Case export contains an invalid evidence record');
     if(!EVIDENCE_KINDS.includes(String(row.kind||'')))throw new Error(`Case export contains unknown evidence kind: ${String(row.kind||'')}`);
     const normalized=normalizeCaseEvidence({...row,importedLegacy:legacy||Boolean(row.importedLegacy)},bundle.case,'IMPORT-PREFLIGHT');
     if(!normalized.complete&&!legacy)throw new Error(`Case export contains incomplete evidence: ${normalized.missingFields.join(', ')}`);
+    if(!legacy&&normalized.revisionOf&&!rawIds.has(String(normalized.revisionOf)))throw new Error(`Case export evidence revision references unknown id: ${normalized.revisionOf}`);
     return normalized
   });
   const audit=(Array.isArray(bundle.evidenceAudit)?bundle.evidenceAudit:[]).map(row=>{
     if(!row||typeof row!=='object'||row.recordType!=='audit'||!['void'].includes(String(row.action||''))||!row.targetEvidenceId)throw new Error('Case export contains an invalid evidence audit record');
+    if(!legacy&&!rawIds.has(String(row.targetEvidenceId)))throw new Error(`Case export audit references unknown evidence id: ${row.targetEvidenceId}`);
     return {...row}
   });
-  return {schema:Number(bundle.schema),legacy,caseRecord:normalizeCase(bundle.case),evidence,audit,links:Array.isArray(bundle.links)?bundle.links:[]}
+  const links=(Array.isArray(bundle.links)?bundle.links:[]).map(row=>normalizeImportedLink(row,sourceCaseId));
+  return {schema:Number(bundle.schema),legacy,caseRecord:normalizeCase(bundle.case),evidence,audit,links}
 }
 async function importCaseBundle(bundle,token=learnerToken()){
   const owner=tokenValue(token),validated=validateCaseBundle(bundle),newId=uid('case-import'),importedAt=now();
   const caseRecord=normalizeCase({...validated.caseRecord,id:newId,learnerToken:owner,createdAt:importedAt,updatedAt:importedAt,legacySource:`case-export-v${validated.schema}:${validated.caseRecord.id||'unknown'}`});
   const idMap=new Map(validated.evidence.map(row=>[String(row.id),uid('evidence')]));
   const evidence=validated.evidence.map(row=>normalizeCaseEvidence({...row,id:idMap.get(String(row.id)),caseId:newId,learnerToken:owner,recordedAt:row.recordedAt||importedAt,updatedAt:importedAt,revisionOf:row.revisionOf?(idMap.get(String(row.revisionOf))||null):null,importedLegacy:validated.legacy||Boolean(row.importedLegacy)},caseRecord,owner));
-  const audit=validated.audit.map(row=>normalizeEvidenceAudit({...row,id:uid('evidence-audit'),targetEvidenceId:idMap.get(String(row.targetEvidenceId))||''},newId,owner)).filter(row=>row.targetEvidenceId);
+  const audit=validated.audit.map(row=>normalizeEvidenceAudit({...row,id:uid('evidence-audit'),targetEvidenceId:idMap.get(String(row.targetEvidenceId))||''},newId,owner)).filter(row=>validated.legacy?row.targetEvidenceId:true);
   const contextLinks=[
     ['material-grade',caseRecord.materialGradeId,caseRecord.material],['machine',caseRecord.machineId,caseRecord.machine],
     ['mould',caseRecord.mouldId,caseRecord.mould],['product',caseRecord.productId,caseRecord.product],['part',caseRecord.partId,caseRecord.part]
-  ].filter(([,id])=>id).map(([kind,targetId,displayName])=>({id:`${newId}::${kind}::${targetId}`,caseId:newId,learnerToken:owner,kind,targetId:String(targetId),meta:{displayName:String(displayName||'')},updatedAt:importedAt}));
+  ].filter(([,id])=>id).map(([kind,targetId,displayName])=>({kind,targetId:String(targetId),meta:{displayName:String(displayName||'')}}));
+  const byLink=new Map();
+  for(const row of [...contextLinks,...validated.links]){
+    const key=`${row.kind}::${row.targetId}`,prior=byLink.get(key);
+    byLink.set(key,{id:`${newId}::${row.kind}::${row.targetId}`,caseId:newId,learnerToken:owner,kind:row.kind,targetId:String(row.targetId),meta:{...(prior?.meta||{}),...(row.meta||{})},updatedAt:importedAt})
+  }
+  const links=[...byLink.values()];
   const db=await openDb(),tx=db.transaction(['cases','caseLinks','caseEvidence'],'readwrite');
   tx.objectStore('cases').add(caseRecord);
-  for(const link of contextLinks)tx.objectStore('caseLinks').put(link);
+  for(const link of links)tx.objectStore('caseLinks').put(link);
   for(const row of evidence)tx.objectStore('caseEvidence').add(row);
   for(const row of audit)tx.objectStore('caseEvidence').add(row);
   await txDone(tx);db.close();
-  return {caseId:newId,sourceCaseId:String(validated.caseRecord.id||''),schema:validated.schema,evidenceImported:evidence.length,auditImported:audit.length,linksImported:contextLinks.length,legacyEvidence:validated.legacy,importedAt,destructive:false}
+  return {caseId:newId,sourceCaseId:String(validated.caseRecord.id||''),schema:validated.schema,evidenceImported:evidence.length,auditImported:audit.length,linksImported:links.length,legacyEvidence:validated.legacy,importedAt,destructive:false}
 }
 
 function legacyKey(token=learnerToken()){return learnerScope.storageKey(LEGACY_CASE_BASE,tokenValue(token))}
@@ -345,6 +411,6 @@ async function repairLegacyLinkOwnership(token=learnerToken()){
 }
 async function bootstrap(){try{const migration=await migrateLegacyMouldMasterCases();await repairLegacyLinkOwnership();return migration}catch(err){console.warn('[MouldMaster engineering store] legacy migration skipped',err);return null}}
 
-window.MM_ENGINEERING_STORE=Object.freeze({version:VERSION,dbName:DB_NAME,dbVersion:DB_VERSION,normalizeCase,saveCase,listCases,getCase,archiveCase,deleteCase,linkCase,linksForCase,linkCaseMaterial,linkCaseMachine,linkCaseMould,linkCaseProduct,linkCasePart,linkCaseContext,linkCaseDataset,normalizeCaseEvidence,evidenceCompleteness,saveCaseEvidence,listCaseEvidence,evidenceAuditTrail,voidCaseEvidence,reviseCaseEvidence,deleteCaseEvidence,evidenceSummary,validateCaseBundle,importCaseBundle,evidenceKinds:EVIDENCE_KINDS,acceptanceStates:ACCEPTANCE_STATES,importLegacyCases,migrateLegacyMouldMasterCases,repairLegacyLinkOwnership,bootstrap,learnerToken,legacyKey});
+window.MM_ENGINEERING_STORE=Object.freeze({version:VERSION,dbName:DB_NAME,dbVersion:DB_VERSION,normalizeCase,saveCase,listCases,getCase,archiveCase,deleteCase,linkCase,linksForCase,linkCaseMaterial,linkCaseMachine,linkCaseMould,linkCaseProduct,linkCasePart,linkCaseContext,linkCaseDataset,normalizeCaseEvidence,evidenceCompleteness,saveCaseEvidence,listCaseEvidence,evidenceAuditTrail,voidCaseEvidence,reviseCaseEvidence,deleteCaseEvidence,evidenceSummary,validateCaseBundle,importCaseBundle,linkKinds:LINK_KINDS,evidenceKinds:EVIDENCE_KINDS,acceptanceStates:ACCEPTANCE_STATES,importLegacyCases,migrateLegacyMouldMasterCases,repairLegacyLinkOwnership,bootstrap,learnerToken,legacyKey});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bootstrap,{once:true});else bootstrap();
 })();

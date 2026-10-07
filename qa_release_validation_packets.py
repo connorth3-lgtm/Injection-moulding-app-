@@ -36,6 +36,18 @@ evidence_release = ledger.get("release")
 need(isinstance(evidence_release, str) and evidence_release, "external-validation ledger release is missing")
 need(evidence_release == release, "external-validation ledger must be rebound to the current web release")
 
+candidate_workflow_text = (ROOT / ".github" / "workflows" / "premerge-public-candidate.yml").read_text(encoding="utf-8")
+candidate_reuse_guard = (ROOT / "tools" / "verify_retained_candidate_reuse.py").read_text(encoding="utf-8")
+for marker in (
+    "Verify retained candidate producer can be reused",
+    "tools/verify_retained_candidate_reuse.py",
+    "steps.impact.outputs.runtime != 'true' && steps.reuse.outputs.reusable == 'true'",
+    "steps.impact.outputs.runtime == 'true' || steps.reuse.outputs.reusable != 'true'",
+):
+    need(marker in candidate_workflow_text, f"pre-merge candidate reuse guard missing: {marker}")
+for marker in ("conclusion", "success", "artifactDigest", "artifactExpiresAt", "workflow/source provenance"):
+    need(marker in candidate_reuse_guard, f"retained-candidate live provenance guard missing: {marker}")
+
 index_rel = ledger.get("validationIndex")
 need(index_rel == f"qa/EXTERNAL_VALIDATION_{evidence_release}.md", "release validation index path is stale")
 index_path = ROOT / index_rel
@@ -110,7 +122,7 @@ try:
     from verify_pwa_physical_evidence import runtime_fingerprint  # type: ignore
 
     actual_fp = runtime_fingerprint(PAGES)
-    need(actual_fp == candidate.get("runtimeFingerprint"), "physical PWA packet fingerprint is stale")
+    need(actual_fp == candidate.get("runtimeFingerprint"), f"physical PWA packet fingerprint is stale: actual {actual_fp}, retained {candidate.get('runtimeFingerprint')}")
     need(actual_fp == access.get("runtimeFingerprint"), "real-AT packet fingerprint is stale")
     need(actual_fp == nzqa_candidate.get("runtimeFingerprint"), "NZQA external-validation packet fingerprint is stale")
     need(source_sha == nzqa_candidate.get("sourceSha"), "NZQA external-validation candidate source SHA drifted from the retained public candidate")

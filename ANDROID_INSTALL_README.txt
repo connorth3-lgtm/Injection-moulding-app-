@@ -95,6 +95,6 @@ Training content: 2026.08.26.1
 Audited question bank: 2026.08.30.1
 Assessment quality / analytics hardening: 2026.08.24.3
 Learner-scoped assessment storage: 2026.08.24.4
-Question evidence approval: 2026.08.25.2
+Question evidence approval: 2026.10.05.1
 
 version.json is the machine-readable source of truth. The separate versions are intentional: shell/runtime, training content, audited question bank, assessment-quality logic, analytics-storage privacy and evidence approval can change independently.

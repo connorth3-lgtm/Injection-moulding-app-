@@ -94,6 +94,8 @@ need(cross_result.get("status") == "completed-public-measured-benchmark-scope-li
 need((cross_result.get("source") or {}).get("publisherChecksum") == "md5:069e190338b2ca29f736b21fabf407ba", "cross-process publisher checksum drifted")
 need((cross_result.get("profile") or {}).get("injectionScopeMembers") == 15688, "cross-process injection-scope member count drifted")
 need((cross_result.get("profile") or {}).get("acceptedMeasuredTimeSeriesSamples") == 0, "cross-process semantic-review profile cannot inflate accepted samples")
+need("members" not in cross_result and "schemas" not in cross_result, "cross-process review result must remain aggregate-only")
+need(len((cross_result.get("structureSummary") or {}).get("schemaFamilies") or []) == 4, "cross-process compact schema-family evidence drifted")
 
 for did in ["kamp-injection-7996", "foxconn-competition-16600"]:
     gate = loaded[did]["rightsGate"]

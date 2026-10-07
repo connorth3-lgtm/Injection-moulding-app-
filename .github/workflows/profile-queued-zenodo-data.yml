@@ -8,7 +8,7 @@ on:
       - .github/workflows/profile-queued-zenodo-data.yml
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: mouldmaster-profile-queued-zenodo-data
@@ -18,10 +18,16 @@ jobs:
   profile:
     runs-on: ubuntu-latest
     timeout-minutes: 120
+    outputs:
+      source_sha: ${{ steps.source.outputs.sha }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           ref: data/real-dataset-profiling-wave1
+      - id: source
+        name: Record exact profiling source
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: '3.12'
@@ -40,14 +46,61 @@ jobs:
           assert cross['source']['publisherChecksum'] == 'md5:069e190338b2ca29f736b21fabf407ba'
           assert cross['profile']['archiveMembers'] > 0
           assert cross['profile']['acceptedMeasuredTimeSeriesSamples'] == 0
+          assert 'members' not in cross and 'schemas' not in cross
+          assert len(cross['structureSummary']['schemaFamilies']) == 4
+          assert sum(c['files'] for c in cross['structureSummary']['schemaFamilies']) == cross['profile']['injectionTabularFiles']
           assert not impure['profile']['rawRowsOrCellValuesEmitted']
           assert not cross['profile']['rawRowsOrCellValuesEmitted']
           PY
-      - name: Commit aggregate profiles
+      - name: Stage validated aggregate outputs
         run: |
+          mkdir -p qa-artifacts/profile-output/data/public-benchmark-results
+          cp data/public-benchmark-results/impure-pascoe-2022-v1.json qa-artifacts/profile-output/data/public-benchmark-results/
+          cp data/public-benchmark-results/cross-process-chain-17240390-v1.json qa-artifacts/profile-output/data/public-benchmark-results/
+      - name: Retain validated aggregate outputs
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: queued-zenodo-profile-${{ steps.source.outputs.sha }}
+          path: qa-artifacts/profile-output
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    needs: profile
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SOURCE_SHA: ${{ needs.profile.outputs.source_sha }}
+      TARGET_BRANCH: data/real-dataset-profiling-wave1
+      ARTIFACT_NAME: queued-zenodo-profile-${{ needs.profile.outputs.source_sha }}
+    steps:
+      - name: Publish validated aggregate profiles
+        run: |
+          set -euo pipefail
+          artifact_ids="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?per_page=100" --jq ".artifacts[] | select(.name == \"$ARTIFACT_NAME\" and .expired == false) | .id")"
+          test "$(printf '%s\n' "$artifact_ids" | sed '/^$/d' | wc -l)" -eq 1
+          artifact_id="$(printf '%s\n' "$artifact_ids" | sed '/^$/d')"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact_id/zip" > artifact.zip
+          mkdir artifact
+          unzip -q artifact.zip -d artifact
+
+          gh auth setup-git
+          git init repo
+          cd repo
+          git remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
+          remote_head="$(git ls-remote origin "refs/heads/$TARGET_BRANCH" | cut -f1)"
+          test "$remote_head" = "$SOURCE_SHA" || { echo "Target branch advanced from $SOURCE_SHA to $remote_head; refusing stale aggregate publish."; exit 1; }
+          git fetch --depth=1 origin "$TARGET_BRANCH"
+          git checkout --detach "$SOURCE_SHA"
+          cp ../artifact/data/public-benchmark-results/impure-pascoe-2022-v1.json data/public-benchmark-results/
+          cp ../artifact/data/public-benchmark-results/cross-process-chain-17240390-v1.json data/public-benchmark-results/
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -- data/public-benchmark-results/impure-pascoe-2022-v1.json data/public-benchmark-results/cross-process-chain-17240390-v1.json
           git diff --cached --quiet && exit 0
           git commit -m "Profile queued licensed Zenodo datasets"
-          git push origin HEAD:data/real-dataset-profiling-wave1
+          git push origin "HEAD:$TARGET_BRANCH"

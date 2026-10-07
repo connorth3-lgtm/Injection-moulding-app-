@@ -1,11 +1,11 @@
-/* MouldMaster learner UI polish — 2026.10.07.10
+/* MouldMaster learner UI polish — 2026.10.07.11
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.10.07.10';
+const VERSION='2026.10.07.11';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -84,6 +84,13 @@ function syncHomeBalance(){
   else if(!anchor&&!panel.isConnected)root.prepend(panel);
 }
 
+function syncCertificateCounter(){
+  const root=document.getElementById('dashboard');if(!root)return;
+  for(const row of root.querySelectorAll('.statline')){
+    const label=row.querySelector('.muted.tiny');if(String(label?.textContent||'').trim()!=='Certificates earned')continue;
+    const value=row.querySelector('b');if(value)value.textContent=String(Array.isArray(user?.certificates)?user.certificates.length:0)
+  }
+}
 function syncBookDisclosure(){
   const view=document.getElementById('mmBookView');
   if(!view)return;
@@ -172,10 +179,10 @@ function syncDesktopNavigation(){
   const labels={dashboard:'Home',path:'Learn',materials:'Materials',scenarios:'Practice'};
   [...nav.querySelectorAll(':scope > button')].forEach(button=>{
     if(button.dataset.mmDesktopMoreTools)return;
-    const view=button.dataset.view||'';
-    const keep=PRIMARY_DESKTOP_VIEWS.has(view);
+    const view=button.dataset.view||'',registryId=button.dataset.mmRegistryNav||'';
+    const keep=PRIMARY_DESKTOP_VIEWS.has(view)||registryId==='book';
     hideNavButton(button,isDesktop&&!keep);
-    if(keep&&button.querySelector('span'))button.querySelector('span').textContent=labels[view];
+    if(keep&&labels[view]&&button.querySelector('span'))button.querySelector('span').textContent=labels[view];
   });
   nav.querySelectorAll(':scope > .nav-group-label,:scope > details.more-nav').forEach(node=>{node.hidden=isDesktop});
   let more=nav.querySelector('[data-mm-desktop-more-tools]');
@@ -187,6 +194,7 @@ function syncDesktopNavigation(){
   if(more)more.hidden=!isDesktop;
 }
 function visibleViewId(){
+  const book=document.getElementById('mmBookView');if(book&&!book.classList.contains('hidden'))return 'book';
   for(const id of ['dashboard','path','materials','lesson','scenarios','simulator','defects','coach','exams','certificates','glossary','profile','standards','visuals','instructor']){
     const el=document.getElementById(id);if(el&&!el.classList.contains('hidden'))return id
   }
@@ -199,7 +207,8 @@ function syncTopbarContext(){
     dashboard:['Home','Continue learning or jump straight into the moulding task you need.'],
     path:['Learn','Your current lesson first, with the full pathway and resources behind it.'],
     materials:['Materials','Exact-grade catalogue, source evidence, comparisons and material learning.'],
-    scenarios:['Practice','Recommended practice first; specialist tools stay one level deeper.']
+    scenarios:['Practice','Recommended practice first; specialist tools stay one level deeper.'],
+    book:['Book','Evidence-governed injection moulding reference.']
   };
   if(primary[view]){
     if(title)title.textContent=primary[view][0];
@@ -224,15 +233,32 @@ function syncProductStates(){
   document.querySelectorAll('.empty-friendly,.mm-exact-empty,.mm-material-no-match').forEach(el=>el.dataset.mmProductState='empty');
   const failure=document.getElementById('mmStartupFailure');if(failure)failure.dataset.mmProductState='error';
 }
+function syncDataResetLink(){
+  const profile=document.getElementById('profile');if(!profile)return;
+  let card=profile.querySelector('[data-mm-data-reset-link]');
+  if(!card){
+    card=document.createElement('section');
+    card.className='card form-card';
+    card.dataset.mmDataResetLink='1';
+    const eyebrow=document.createElement('span');eyebrow.className='eyebrow';eyebrow.textContent='Local data';
+    const title=document.createElement('h2');title.textContent='Data & Reset';
+    const copy=document.createElement('p');copy.className='muted';copy.textContent='Learner progress, analytics, process-data evidence, engineering evidence, diagnostics and offline app data use different local stores and controls.';
+    const link=document.createElement('a');link.className='ghost';link.href='./support.html#data-reset';link.textContent='Open Data & Reset guide';
+    card.append(eyebrow,title,copy,link);
+    profile.appendChild(card);
+  }
+}
 function syncReadAloudLabel(){
   const host=document.querySelector('.mm-read-aloud details:not([open]) summary');
   if(host&&!host.getAttribute('aria-label'))host.setAttribute('aria-label','Read aloud');
 }
 function run(){
   syncHomeBalance();
+  syncCertificateCounter();
   syncBookDisclosure();
   syncDesktopNavigation();
   syncTopbarContext();
+  syncDataResetLink();
   syncReadAloudLabel();
   syncProductStates();
 }

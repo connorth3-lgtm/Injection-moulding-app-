@@ -3,7 +3,6 @@ name: Exact-head CI Risk Coverage
 on:
   pull_request:
     branches: [main]
-  workflow_dispatch:
 
 permissions:
   contents: read
@@ -22,11 +21,13 @@ jobs:
       - name: Checkout exact pull-request head
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
       - name: Verify cross-workflow coverage on exact head
         env:
           GITHUB_TOKEN: ${{ github.token }}
           CI_RISK_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          CI_RISK_PR_NUMBER: ${{ github.event.pull_request.number }}
           CI_RISK_ATTEMPTS: '180'
           CI_RISK_SLEEP_SECONDS: '20'
         run: python tools/verify_ci_risk_coverage.py

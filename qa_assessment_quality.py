@@ -12,7 +12,7 @@ for p in ['certification/QUALITY_AND_ASSESSMENT_MANUAL.md','sources/ASSESSMENT_S
     need((ROOT/p).exists(),f'missing assessment quality file: {p}')
 
 suite=text('assessment-quality-suite.js')
-for marker in ["const VERSION='2026.08.24.2'","mm_assessment_analytics_v1","tech:${level}:${index}","reg:${region}:${level}:${index}","const BLUEPRINT=['materials','machine','tooling','process','quality','troubleshooting']","Evidence, difficulty & revision","Device-local learning analytics","nearDuplicates","answerLeakRisks","migrateStableReviewIds","scenarioDrills:D.scenarios.length","sourceFreshnessReviewBy"]:
+for marker in ["const VERSION='2026.08.24.2'","mm_assessment_analytics_v1","tech:${level}:${index}","reg:${region}:${level}:${index}","const BLUEPRINT=['materials','machine','tooling','process','quality','troubleshooting']","Evidence, difficulty & revision","Device-local learning analytics","nearDuplicates","answerLeakRisks","migrateStableReviewIds","scenarioDrills:D.scenarios.length","sourceFreshnessReviewBy","BLUEPRINT_HISTORY_KEY","chooseLeastExposed","preferUnusedConcepts","ensureMinimumConceptDiversity","recordBlueprintExposure","technicalReachability"]:
     need(marker in suite,f'assessment quality marker missing: {marker}')
 need(suite.count("['")>=24,'scenario expansion unexpectedly small')
 need('http://' not in suite,'assessment quality source links must use HTTPS')
@@ -45,10 +45,19 @@ base=json.loads(json.dumps(D))
 for title in extra_titles: base['scenarios'].append({'title':title,'situation':'placeholder','choices':['a','b','c','d'],'correct':0,'why':'placeholder','feedback':['a','b','c','d']})
 
 node=r'''
-const fs=require('fs'),vm=require('vm');const D=%s;const store={};
+const fs=require('fs'),vm=require('vm');const D=%s;
+const store={
+ 'mm_spaced_review_v2::strong-learner-a':JSON.stringify({items:{'tech:2026.08.21.1:Beginner:0':{id:'tech:2026.08.21.1:Beginner:0',stage:1,due:1800000000000,wrong:1,right:2,last:1700000000000,confidence:'medium'}}}),
+ 'mm_spaced_review_v2::strong-learner-b':JSON.stringify({items:{'reg:2026.08.21.1:NZ:Beginner:0':{id:'reg:2026.08.21.1:NZ:Beginner:0',stage:2,due:1800000000000,wrong:0,right:3,last:1700000000000,confidence:'high'}}})
+};
 const localStorage={getItem:k=>Object.prototype.hasOwnProperty.call(store,k)?store[k]:null,setItem:(k,v)=>{store[k]=String(v)},removeItem:k=>{delete store[k]},key:i=>Object.keys(store)[i]||null,get length(){return Object.keys(store).length}};
 const document={getElementById:()=>null,querySelectorAll:()=>[],querySelector:()=>null,createElement:()=>({set id(v){this._id=v},get id(){return this._id},textContent:'',appendChild(){},setAttribute(){},insertAdjacentHTML(){},addEventListener(){}}),head:{appendChild(){}},body:{appendChild(){}},documentElement:{},readyState:'complete'};
-const sandbox={window:{MM_DATA:D,addEventListener(){}},document,localStorage,performance:{now:()=>1000},console,setTimeout:(fn)=>{if(typeof fn==='function')fn()},clearTimeout(){},Date,Math,JSON,Map,Set,Blob:function(){},URL:{createObjectURL:()=>'',revokeObjectURL(){}}};
+const db={activeUser:'learner-a',users:{'learner-a':{id:'learner-a'},'learner-b':{id:'learner-b'}}},user=db.users['learner-a'];
+const learnerScope={
+ tokenFor:id=>'strong-'+String(id),storageKey:(prefix,token)=>String(prefix)+String(token),knownIds:()=>Object.keys(db.users),
+ registerStoragePrefix(){},migrateStoragePrefix(){return {status:'no-legacy'}},migrationPlan:id=>({uniqueOwner:false,legacyToken:'legacy-'+String(id)})
+};
+const sandbox={window:{MM_DATA:D,MM_LEARNER_SCOPE:learnerScope,addEventListener(){}},document,localStorage,db,user,performance:{now:()=>1000},console,setTimeout:(fn)=>{if(typeof fn==='function')fn()},clearTimeout(){},Date,Math,JSON,Map,Set,Blob:function(){},URL:{createObjectURL:()=>'',revokeObjectURL(){}}};
 sandbox.window.window=sandbox.window;sandbox.window.localStorage=localStorage;sandbox.window.document=document;sandbox.window.URL=sandbox.URL;sandbox.window.setTimeout=sandbox.setTimeout;vm.createContext(sandbox);
 vm.runInContext(fs.readFileSync(%s,'utf8'),sandbox,{filename:'assessment-deep-dive.js'});
 vm.runInContext(fs.readFileSync(%s,'utf8'),sandbox,{filename:'src/domains/assessment/assessment-answer-cue-fix.js'});
@@ -61,14 +70,33 @@ const definitions=[];
 for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<(D.exams[level]||[]).length;i++){const q=D.exams[level][i];definitions.push({id:`tech:${level}:${i}`,kind:'technical-exam',options:q.options??q[1],correct:Number(q.correct??q[2]),stem:q.q??q[0]})}
 for(const region of ['UK','US','NZ'])for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<(D.regionalQuestions?.[region]?.[level]||[]).length;i++){const q=D.regionalQuestions[region][level][i];definitions.push({id:`reg:${region}:${level}:${i}`,kind:'regional-exam',options:q.options??q[1],correct:Number(q.correct??q[2]),stem:q.q??q[0]})}
 const scenarios=D.scenarios.map(s=>({id:s.mmStableId,title:s.title,options:s.choices,choices:s.choices.length,correct:s.correct,feedback:Array.isArray(s.feedback)?s.feedback.length:0,category:s.category,difficulty:s.difficulty,reference:s.reference||null,sourceUrl:s.sourceUrl||null}));
-process.stdout.write(JSON.stringify({scenarioCount:D.scenarios.length,definitions,exams,quality:Q,scenarios,qa:D.assessmentQA.qualitySuite,history:D.assessmentQA.questionRevisionHistory,bridge:sandbox.window.MM_STABLE_REVIEW_BRIDGE}));
+const reviewA=JSON.parse(store['mm_spaced_review_v2::strong-learner-a']);
+const reviewB=JSON.parse(store['mm_spaced_review_v2::strong-learner-b']);
+const stress={},reachableTechnical={};
+for(const level of ['Beginner','Intermediate','Advanced']){
+ stress[level]={};
+ for(const region of ['UK','US','NZ','ALL']){
+  let minConcepts=99;
+  for(let pass=0;pass<50;pass++){
+   const technical=sandbox.window.getExamQuestions(level,region).filter(q=>q.stableId.startsWith('tech:'));
+   for(const q of technical)reachableTechnical[q.stableId]={id:q.stableId,mmId:q.mmId,difficulty:q.difficulty,competency:q.competency,competencies:q.competencies||[q.competency],concept:q.concept,critical:q.critical,region:q.region||null,options:q.options,correct:q.correct,stem:q.q};
+   minConcepts=Math.min(minConcepts,new Set(technical.map(q=>q.concept)).size);
+  }
+  stress[level][region]=minConcepts;
+ }
+}
+process.stdout.write(JSON.stringify({scenarioCount:D.scenarios.length,definitions,exams,stress,reachableTechnical:Object.values(reachableTechnical),quality:Q,scenarios,qa:D.assessmentQA.qualitySuite,history:D.assessmentQA.questionRevisionHistory,bridge:sandbox.window.MM_STABLE_REVIEW_BRIDGE,reviewA,reviewB,reviewBare:Object.prototype.hasOwnProperty.call(store,'mm_spaced_review_v2')}));
 '''%(json.dumps(base),json.dumps(str(ROOT/'assessment-deep-dive.js')),json.dumps(str(ROOT/'src/domains/assessment/assessment-answer-cue-fix.js')),json.dumps(str(ROOT/'assessment-storage-scope.js')),json.dumps(str(ROOT/'assessment-quality-suite.js')),json.dumps(str(ROOT/'assessment-stable-review-bridge.js')))
+cue_source=(ROOT/'src/domains/assessment/assessment-answer-cue-fix.js').read_text(encoding='utf-8')
+need("Review shot-delivery/NRV and injection actuals" in cue_source,'scenario:01 correct option must stay concise enough to avoid answer-length salience')
+bridge_source=(ROOT/'assessment-stable-review-bridge.js').read_text(encoding='utf-8')
+need("replacement=authorChoice(replacement)" in bridge_source and "(D.scenarios||[]).forEach" in bridge_source,'stable review bridge must validate scenario keyed answers after applying the authored-choice normalization contract')
 with tempfile.NamedTemporaryFile('w',suffix='.js',delete=False,encoding='utf-8') as handle: handle.write(node);node_path=Path(handle.name)
 try: p=subprocess.run(['node',str(node_path)],capture_output=True,text=True,encoding='utf-8',errors='replace')
 finally: node_path.unlink(missing_ok=True)
 need(p.returncode==0,f'assessment quality runtime QA failed: {p.stderr or p.stdout}');runtime=json.loads(p.stdout)
 need(runtime['scenarioCount']==40,f"expected 40 scenario drills, got {runtime['scenarioCount']}")
-need(runtime['qa']['scenarioDrills']==40,'runtime assessment metadata must report 40 scenarios');need(runtime['qa']['stableQuestionIds'] is True,'stable question IDs not enabled');need(runtime['qa']['analytics']=='device-local only','analytics privacy marker missing');need(runtime['bridge']['stableIdsPrimary'] is True,'stable review bridge not active');need(len(runtime.get('history',[]))>=3,'question revision history missing')
+need(runtime['qa']['scenarioDrills']==40,'runtime assessment metadata must report 40 scenarios');need(runtime['qa']['stableQuestionIds'] is True,'stable question IDs not enabled');need(runtime['qa']['analytics']=='device-local only','analytics privacy marker missing');need(runtime['qa'].get('reviewMigrationStatus')=='migrated','learner-scoped spaced-review migration did not run');need(runtime['qa'].get('migratedLegacyReviewRecords')==2,'expected two learner-scoped legacy review IDs to migrate');need('tech:Beginner:0' in runtime['reviewA']['items'] and 'tech:2026.08.21.1:Beginner:0' not in runtime['reviewA']['items'],'learner A stable review ID migration failed');need('reg:NZ:Beginner:0' in runtime['reviewB']['items'] and 'reg:2026.08.21.1:NZ:Beginner:0' not in runtime['reviewB']['items'],'learner B stable review ID migration failed');need(runtime['reviewBare'] is False,'stable review migration created or retained a bare global v2 review store');need(runtime['bridge']['stableIdsPrimary'] is True,'stable review bridge not active');need(len(runtime.get('history',[]))>=3,'question revision history missing')
 
 live_technical={}
 for level,regions in runtime['exams'].items():
@@ -78,6 +106,16 @@ for level,regions in runtime['exams'].items():
         tech=[x for x in items if x['id'].startswith('tech:')];reg=[x for x in items if x['id'].startswith('reg:')];need(len(tech)==7,f'{level}/{region} must contain 7 technical items');need(len(reg)==(9 if region=='ALL' else 3),f'{level}/{region} regional safety item count');need(all(x['critical'] for x in reg),f'{level}/{region} regional items must remain safety-critical')
         coverage=set(c for x in tech for c in x.get('competencies',[]) if c);need(len(coverage)>=5,f'{level}/{region} blueprint covers fewer than 5 technical competency groups: {sorted(coverage)}');need(all(x['difficulty'] for x in items),f'{level}/{region} difficulty metadata missing');concepts=[x['concept'] for x in tech];need(len(set(concepts))>=5,f'{level}/{region} has excessive repeated technical concepts')
         for x in tech: live_technical[x['id']]=x
+
+for x in runtime.get('reachableTechnical',[]): live_technical[x['id']]=x
+expected_technical={x['id'] for x in runtime['definitions'] if x['kind']=='technical-exam'}
+reached_technical=set(live_technical)
+need(reached_technical==expected_technical,f"all 30 approved technical items must become reachable across repeated blueprint-balanced forms; reached {len(reached_technical)}; missing {sorted(expected_technical-reached_technical)}")
+
+# Exercise repeated forms so concept diversity and reachability cannot depend on one lucky Math.random tie.
+for level,regions in runtime['stress'].items():
+    for region,min_concepts in regions.items():
+        need(min_concepts>=5,f'{level}/{region} repeated blueprint diversity fell below 5 concepts: {min_concepts}')
 
 definitions=runtime['definitions'];need(len(definitions)==57,f"expected 57 canonical live definitions, got {len(definitions)}");need(len({x['id'] for x in definitions})==57,'canonical live definition IDs must be unique')
 sc=runtime['scenarios'];need(len({x['id'] for x in sc})==40,'scenario stable IDs must be unique');need(len({x['title'].strip().lower() for x in sc})==40,'scenario titles must be unique');need(all(x['choices']==4 and 0<=x['correct']<4 and x['feedback']==4 for x in sc),'scenario choice/key/feedback integrity');need(all(x['category'] and x['difficulty'] for x in sc),'scenario category/difficulty metadata missing')
@@ -110,10 +148,11 @@ for q in live_technical.values():
     abs_wrong=sum(1 for o in others if absolutes.search(o));abs_correct=bool(absolutes.search(correct));
     if abs_wrong>=2 and not abs_correct:cue_flags.append({'id':q['id'],'type':'absolute-language-distractors','distractors_flagged':abs_wrong})
 severe=[x for x in cue_flags if x['type']=='correct-option-length' and x.get('correct_length',0)>max(70,x.get('peer_median',1)*2.6)];need(not severe,'severe correct-option length cue detected: '+json.dumps(severe[:5]))
-REPORT.write_text(json.dumps({'schema':1,'quality_version':'2026.08.24.2','scenario_count':40,'near_duplicate_flags':near,'runtime_answer_leak_flags':runtime_leaks,'multi_cue_answer_leak_flags':cue_flags,'strict_longest_answer_flags':strict_length_flags,'severe_answer_leaks':severe,'exam_blueprint_minimum':'7 technical items covering at least 5 technical competency groups plus regional safety/compliance','stable_review_ids':True,'analytics':'device-local'},indent=2)+'\n',encoding='utf-8')
+need(not cue_flags,'assessment answer-cue heuristic flagged live technical items: '+json.dumps(cue_flags[:10],ensure_ascii=False))
+REPORT.write_text(json.dumps({'schema':1,'quality_version':'2026.08.24.2','scenario_count':40,'near_duplicate_flags':near,'runtime_answer_leak_flags':runtime_leaks,'multi_cue_answer_leak_flags':cue_flags,'strict_longest_answer_flags':strict_length_flags,'severe_answer_leaks':severe,'exam_blueprint_minimum':'7 technical items covering at least 5 technical competency groups plus regional safety/compliance','stable_review_ids':True,'technical_reachability':'30/30 across repeated learner-scoped blueprint-balanced forms','analytics':'device-local'},indent=2)+'\n',encoding='utf-8')
 
-semantic=text('sources/ASSESSMENT_SEMANTIC_REVIEW_CONTRACT.md');need('197 learner-visible keyed decisions' in semantic and '57 live exam questions' in semantic and '40 shop-floor scenario drills' in semantic and '36 Diagnostic Learning Lab decisions' in semantic and '24 Material Behaviour Lab decisions' in semantic and '40 optional Material Practice decisions' in semantic,'semantic review contract coverage drift');
-need(all(marker in semantic for marker in ['item-level disposition for all 197','stem, keyed answer, every distractor, explanation/feedback','Book consistency','must not create, infer or self-attest those human approvals']),'semantic review completion/independence boundary incomplete');need(all(marker in semantic for marker in ['Unambiguous stem','Technically defensible key','Plausible distractors','Explanation quality','Evidence dependency','Safety boundary','Readable language','Identity and duplication','Measurement discipline','UI fit']),'semantic review contract rubric incomplete');V=json.loads(text('version.json'));manual=text('certification/QUALITY_AND_ASSESSMENT_MANUAL.md');need(f"Current audited question-bank version: `{V.get('question_bank_version')}`." in manual,'quality manual question-bank version must match version.json');need(V.get('question_bank_version')=='2026.08.30.1','question_bank_version must reflect the evidence-diagnostic question release');need(V.get('content_version')=='2026.08.26.1','content_version must match the current 2026.08.26.1 curriculum release');need(V.get('legacy_review_id_version')=='2026.08.21.1','legacy review ID version must remain explicit for migration')
+semantic=text('sources/ASSESSMENT_SEMANTIC_REVIEW_CONTRACT.md');need('209 learner-visible keyed decisions' in semantic and '57 live exam questions' in semantic and '40 shop-floor scenario drills' in semantic and '36 Diagnostic Learning Lab decisions' in semantic and '24 Material Behaviour Lab decisions' in semantic and '40 optional Material Practice decisions' in semantic and '12 Measured-Data Evidence Challenge decisions' in semantic,'semantic review contract coverage drift');
+need(all(marker in semantic for marker in ['item-level disposition for all 209','stem, keyed answer, every distractor, explanation/feedback','Book consistency','must not create, infer or self-attest those human approvals']),'semantic review completion/independence boundary incomplete');need(all(marker in semantic for marker in ['Unambiguous stem','Technically defensible key','Plausible distractors','Explanation quality','Evidence dependency','Safety boundary','Readable language','Identity and duplication','Measurement discipline','UI fit']),'semantic review contract rubric incomplete');V=json.loads(text('version.json'));manual=text('certification/QUALITY_AND_ASSESSMENT_MANUAL.md');need(f"Current audited question-bank version: `{V.get('question_bank_version')}`." in manual,'quality manual question-bank version must match version.json');need(V.get('question_bank_version')=='2026.08.30.1','question_bank_version must reflect the evidence-diagnostic question release');need(V.get('content_version')=='2026.08.26.1','content_version must match the current 2026.08.26.1 curriculum release');need(V.get('legacy_review_id_version')=='2026.08.21.1','legacy review ID version must remain explicit for migration')
 log=text('sources/QUESTION_BANK_CHANGELOG.md')
 for marker in ['2026.08.30.1','all 30 technical questions','insufficient evidence','2026.08.24.2','stable question IDs','device-local question analytics','competency-balanced exam blueprint','Expanded shop-floor scenario drills from 16 to 40','scheduled authoritative-source freshness monitoring']:need(marker in log,f'question-bank changelog marker missing: {marker}')
 idx=text('index.html')
@@ -132,7 +171,7 @@ for asset in ['assessment-storage-scope.js','assessment-quality-suite.js','asses
 integrity=text('desktop/electron/scripts/generate-integrity.cjs')
 for asset in ['assessment-storage-scope.js','src/domains/assessment/assessment-answer-cue-fix.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:need(f"'{asset}'" in integrity,f'{asset} missing from integrity hashes')
 qy=text('.github/workflows/qa.yml')
-need("find . -maxdepth 1 -type f -name '*.js'" in qy,'release workflow must syntax-check root JavaScript dynamically')
+need("Repository-wide JavaScript syntax" in qy,'release workflow must syntax-check root JavaScript dynamically')
 need('python qa_assessment_quality.py' in qy and 'python qa_source_freshness.py' in qy,'release workflow missing assessment quality gates')
 ow=text('.github/workflows/open-desktop-build.yml')
 for asset in ['assessment-storage-scope.js','assessment-quality-suite.js','assessment-stable-review-bridge.js','assessment-analytics-ui.js']:need(f"- '{asset}'" in ow,f'desktop workflow trigger missing {asset}')

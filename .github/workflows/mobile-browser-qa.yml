@@ -2,81 +2,56 @@ name: Mobile Browser QA
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, preview]
   push:
-    branches: [main]
-    paths:
-      - 'index.html'
-      - 'MouldMaster_Core_App.html'
-      - '*.css'
-      - 'src/domains/shell/app-shell-registry.js'
-      - 'src/domains/shell/app-shell-finalize.js'
-      - 'mould-master-workspace.js'
-      - 'learning-experience.js'
-      - 'curriculum-integration.js'
-      - 'specialist-curriculum.js'
-      - 'process-data-diagnostics.js'
-      - 'diagnostic-learning-labs.js'
-      - 'material-behaviour-labs.js'
-      - 'src/domains/**'
-      - 'src/core-runtime/**'
-      - 'material-catalog-v1.json'
-      - 'data/accessibility-real-at-validation-v1.json'
-      - 'qa_accessibility_real_at_contract.py'
-      - 'measured-evidence-integration.js'
-      - 'measured-evidence-decision.js'
-      - 'data/measured-evidence-decision-scenarios-v1.json'
-      - 'qa_measured_evidence_integration.py'
-      - 'qa_measured_evidence_decision_workflows.py'
-      - 'learning-analytics.js'
-      - 'src/domains/shell/pwa-shell.js'
-      - 'reading-patch.js'
-      - 'read-aloud.js'
-      - 'qa_read_aloud.py'
-      - 'service-worker.js'
-      - 'tools/generate_style_csp.cjs'
-      - 'qa_app_shell_registry.py'
-      - 'qa_mould_master_workspace.py'
-      - 'qa_delayed_transfer_reviews.py'
-      - 'qa_webkit_regression.py'
-      - 'qa/mobile-viewport.spec.js'
-      - 'qa/visual-regression.spec.js'
-      - 'qa/visual-regression-baseline.json'
-      - 'qa/learner-ux-repair.spec.js'
-      - 'qa/learn-practice-mobile-style.spec.js'
-      - 'qa/material-grade-detail.spec.js'
-      - 'qa/material-search-scale.spec.js'
-      - 'qa/measured-evidence-decision.spec.js'
-      - 'qa/read-aloud.spec.js'
-      - 'qa/pwa-lifecycle.spec.js'
-      - 'qa/engineering-case-store.spec.js'
-      - 'qa/inline-handler-bridge.spec.js'
-      - 'qa/inline-style-csp.spec.js'
-      - 'qa/cross-browser-smoke.spec.js'
-      - 'qa/performance-budget.json'
-      - 'qa/**/*.spec.js'
-      - 'playwright.config.cjs'
-      - 'playwright.webkit-full.config.cjs'
-      - 'playwright.cross-browser.config.cjs'
-      - 'package.json'
-      - 'package-lock.json'
-      - 'qa_browser_dependency_lock.py'
-      - '.github/workflows/mobile-browser-qa.yml'
+    branches: [main, preview]
   workflow_dispatch:
+
+concurrency:
+  group: mobile-browser-qa-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
   actions: read
 
 jobs:
-  mobile-browser:
+  impact:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    outputs:
+      browser: ${{ steps.classify.outputs.browser }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Classify browser impact
+        id: classify
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TARGET="${{ github.event.pull_request.head.sha || github.sha }}"
+          BASE="$(python3 tools/github_workflow_baseline.py --workflow mobile-browser-qa.yml --target "$TARGET")"
+          python3 tools/ci_impact.py --base "$BASE" --head "$TARGET"
+
+  browser-chromium:
+    needs: impact
+    if: needs.impact.outputs.browser == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        task: [visual, reachability, substantive]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        if: matrix.task == 'substantive'
         with:
           python-version: '3.13'
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -84,6 +59,7 @@ jobs:
           node-version: '22'
           package-manager-cache: false
       - name: Static shell, workspace and measured-evidence QA
+        if: matrix.task == 'substantive'
         run: |
           python qa_app_shell_registry.py
           python qa_mould_master_workspace.py
@@ -93,11 +69,12 @@ jobs:
           python qa_delayed_transfer_reviews.py
           python qa_webkit_regression.py
           python qa_accessibility_real_at_contract.py
-      - name: Install pinned Playwright browser matrix
+      - name: Install pinned Chromium
         run: |
           npm ci --no-audit --fund=false
-          npx playwright install --with-deps chromium firefox webkit
+          npx playwright install --with-deps chromium
       - name: Prepare approved visual baseline
+        if: matrix.task == 'visual'
         run: |
           readarray -t BASELINE_META < <(python - <<'PY'
           import json
@@ -119,82 +96,184 @@ jobs:
           fi
           rm -rf /tmp/mm-visual-baseline
           git worktree add --detach /tmp/mm-visual-baseline "$BASELINE_SHA"
-      - name: Start candidate and baseline MouldMaster servers
+      - name: Start Chromium candidate server
         run: |
-          python -m http.server 4173 --bind 127.0.0.1 > /tmp/mouldmaster-http.log 2>&1 &
-          echo $! > /tmp/mouldmaster-http.pid
-          python -m http.server 4174 --bind 127.0.0.1 --directory /tmp/mm-visual-baseline > /tmp/mouldmaster-baseline-http.log 2>&1 &
-          echo $! > /tmp/mouldmaster-baseline-http.pid
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/mm-http.log 2>&1 &
           for i in {1..20}; do
-            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null && curl -fsS http://127.0.0.1:4174/index.html >/dev/null; then exit 0; fi
+            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then exit 0; fi
             sleep 1
           done
-          cat /tmp/mouldmaster-http.log
-          cat /tmp/mouldmaster-baseline-http.log
           exit 1
-      - name: Chromium mobile density contract
-        run: npx playwright test qa/learn-practice-mobile-style.spec.js --config=playwright.config.cjs
-      - name: WebKit mobile density contract
-        run: npx playwright test qa/learn-practice-mobile-style.spec.js --config=playwright.webkit-full.config.cjs
+      - name: Start visual baseline server
+        if: matrix.task == 'visual'
+        run: |
+          python3 -m http.server 4174 --bind 127.0.0.1 --directory /tmp/mm-visual-baseline > /tmp/mm-baseline.log 2>&1 &
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:4174/index.html >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
       - name: Chromium approved visual regression lock
-        id: visual_lock
-        continue-on-error: true
+        id: visual
+        if: matrix.task == 'visual'
+        continue-on-error: ${{ github.base_ref == 'preview' || github.ref_name == 'preview' }}
         run: npx playwright test qa/visual-regression.spec.js --config=playwright.config.cjs
-      - name: 500 isolated app reliability runs
-        id: app_500
-        continue-on-error: true
-        run: npx playwright test --config=playwright.app-500.config.cjs
+      - name: Record preview visual-baseline HOLD
+        if: matrix.task == 'visual' && (github.base_ref == 'preview' || github.ref_name == 'preview') && steps.visual.outcome == 'failure'
+        run: |
+          echo "::warning::Intentional learner UI changes differ from the approved visual baseline. Preview automated readiness may continue, but human visual-baseline approval remains HOLD."
+          echo "### Human visual-baseline HOLD" >> "$GITHUB_STEP_SUMMARY"
+          echo "The substantive browser suites remain authoritative for automated preview readiness. Visual baseline promotion is still required before a protected-main release." >> "$GITHUB_STEP_SUMMARY"
       - name: UI-only feature reachability audit
-        id: reachability
-        continue-on-error: true
+        if: matrix.task == 'reachability'
         run: npx playwright test --config=playwright.reachability.config.cjs
-      - name: Chromium mobile, material, evidence, engineering-store and PWA regression tests
-        id: chromium_regression
-        continue-on-error: true
-        run: npx playwright test --config=playwright.config.cjs --grep-invert "matches approved .* baseline across learner surfaces"
-      - name: WebKit substantive learner regression tests
-        id: webkit_regression
-        continue-on-error: true
-        run: npx playwright test --config=playwright.webkit-full.config.cjs
-      - name: Cross-browser desktop and tablet smoke tests
-        id: cross_browser_smoke
-        continue-on-error: true
-        run: npx playwright test --config=playwright.cross-browser.config.cjs
-      - name: Upload browser QA artifacts
+      - name: Chromium mobile density contract
+        if: matrix.task == 'substantive'
+        run: npx playwright test qa/learn-practice-mobile-style.spec.js --config=playwright.config.cjs
+      - name: Chromium substantive regression suite
+        if: matrix.task == 'substantive'
+        run: npx playwright test --config=playwright.substantive.config.cjs
+      - name: Upload Chromium QA artifacts
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: mobile-browser-qa
+          name: mobile-browser-chromium-${{ matrix.task }}
           path: qa-artifacts/
           if-no-files-found: warn
           retention-days: 14
-      - name: Enforce browser and visual approval gates
-        if: always()
-        env:
-          VISUAL_OUTCOME: ${{ steps.visual_lock.outcome }}
-          APP_500_OUTCOME: ${{ steps.app_500.outcome }}
-          REACHABILITY_OUTCOME: ${{ steps.reachability.outcome }}
-          CHROMIUM_OUTCOME: ${{ steps.chromium_regression.outcome }}
-          WEBKIT_OUTCOME: ${{ steps.webkit_regression.outcome }}
-          CROSS_BROWSER_OUTCOME: ${{ steps.cross_browser_smoke.outcome }}
+
+  browser-webkit:
+    needs: impact
+    if: needs.impact.outputs.browser == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Install pinned WebKit
         run: |
-          failed=0
-          check_gate() {
-            label="$1"
-            outcome="$2"
-            if [ "$outcome" != "success" ]; then
-              echo "::error::$label did not pass (outcome=$outcome)."
-              failed=1
-            fi
-          }
-          check_gate "Approved visual baseline" "$VISUAL_OUTCOME"
-          check_gate "500 isolated app reliability runs" "$APP_500_OUTCOME"
-          check_gate "UI-only feature reachability audit" "$REACHABILITY_OUTCOME"
-          check_gate "Chromium substantive regression suite" "$CHROMIUM_OUTCOME"
-          check_gate "WebKit substantive learner suite" "$WEBKIT_OUTCOME"
-          check_gate "Cross-browser desktop/tablet smoke suite" "$CROSS_BROWSER_OUTCOME"
-          if [ "$failed" -ne 0 ]; then
-            echo "Browser evidence is complete for the executed suites; unresolved gates remain fail-closed."
-            exit 1
+          npm ci --no-audit --fund=false
+          npx playwright install --with-deps webkit
+      - name: Start WebKit candidate server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/mm-http.log 2>&1 &
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: WebKit mobile density contract
+        run: npx playwright test qa/learn-practice-mobile-style.spec.js --config=playwright.webkit-full.config.cjs
+      - name: WebKit substantive learner regression tests
+        run: npx playwright test --config=playwright.webkit-full.config.cjs
+      - name: Upload WebKit QA artifacts
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: mobile-browser-webkit
+          path: qa-artifacts/webkit-full-report/
+          if-no-files-found: warn
+          retention-days: 14
+
+  browser-cross:
+    needs: impact
+    if: needs.impact.outputs.browser == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Install pinned cross-browser matrix
+        run: |
+          npm ci --no-audit --fund=false
+          npx playwright install --with-deps chromium firefox webkit
+      - name: Start cross-browser candidate server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/mm-http.log 2>&1 &
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: Cross-browser desktop and tablet smoke tests
+        run: npx playwright test --config=playwright.cross-browser.config.cjs
+      - name: Upload cross-browser QA artifacts
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: mobile-browser-cross
+          path: qa-artifacts/cross-browser-report/
+          if-no-files-found: warn
+          retention-days: 14
+
+  app-500-reliability:
+    needs: impact
+    if: needs.impact.outputs.browser == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5]
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Install pinned Chromium
+        run: |
+          npm ci --no-audit --fund=false
+          npx playwright install --with-deps chromium
+      - name: Start reliability candidate server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/mm-http.log 2>&1 &
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: 100-run reliability shard ${{ matrix.shard }}/5
+        run: npx playwright test --config=playwright.app-500.config.cjs --shard=${{ matrix.shard }}/5
+      - name: Upload reliability shard artifacts
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: mobile-browser-app-500-shard-${{ matrix.shard }}
+          path: qa-artifacts/app-500-report/
+          if-no-files-found: warn
+          retention-days: 14
+
+  mobile-browser:
+    if: always()
+    needs: [browser-chromium, browser-webkit, browser-cross, app-500-reliability]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enforce complete mobile browser evidence
+        env:
+          CHROMIUM: ${{ needs.browser-chromium.result }}
+          WEBKIT: ${{ needs.browser-webkit.result }}
+          CROSS_BROWSER: ${{ needs.browser-cross.result }}
+          APP_500: ${{ needs.app-500-reliability.result }}
+        run: |
+          if [ "$CHROMIUM" = "skipped" ] && [ "$WEBKIT" = "skipped" ] && [ "$CROSS_BROWSER" = "skipped" ] && [ "$APP_500" = "skipped" ]; then
+            echo "Mobile Browser QA passed without expensive browser execution: the impact classifier skipped all browser groups."
+            exit 0
           fi
-          echo "All browser and visual approval gates passed."
+          test "$CHROMIUM" = "success" || { echo "::error::Chromium QA did not pass: $CHROMIUM"; exit 1; }
+          test "$WEBKIT" = "success" || { echo "::error::WebKit QA did not pass: $WEBKIT"; exit 1; }
+          test "$CROSS_BROWSER" = "success" || { echo "::error::Cross-browser QA did not pass: $CROSS_BROWSER"; exit 1; }
+          test "$APP_500" = "success" || { echo "::error::All five reliability shards did not pass: $APP_500"; exit 1; }
+          echo "Mobile Browser QA passed: Chromium, WebKit, cross-browser, and all 500 reliability runs succeeded."

@@ -94,7 +94,9 @@ need("const DOMAIN_DELEGATED_ASSETS=['./learning-analytics.js','./src/domains/sh
 need('./learning-analytics.js' in idx,'learning analytics delegated asset missing from browser shell')
 
 sw=text('service-worker.js')
-need("'./curriculum-integration.js'" in sw,'curriculum integration missing from offline cache')
+curriculum_pack=text('src/domains/runtime-packs/curriculum-workspace-runtime-pack.js')
+need("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'" in sw,'curriculum workspace runtime pack missing from offline cache')
+need('/* >>> curriculum-integration.js */' in curriculum_pack,'curriculum integration missing from packed offline runtime')
 
 pkg=json.loads(text('desktop/electron/package.json'))
 froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
@@ -102,7 +104,7 @@ need('../../curriculum-integration.js' in froms,'curriculum integration missing 
 need("'curriculum-integration.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'curriculum integration missing from desktop integrity manifest')
 
 qa=text('.github/workflows/qa.yml')
-need("find . -maxdepth 1 -type f -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check" in qa,'Release QA missing filesystem JavaScript syntax gate')
+need("Repository-wide JavaScript syntax" in qa,'Release QA missing filesystem JavaScript syntax gate')
 need('python qa_curriculum_integration.py' in qa,'Release QA missing curriculum integration gate')
 
 win=text('.github/workflows/open-desktop-build.yml')

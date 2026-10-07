@@ -6,6 +6,7 @@ const VERSION='2026.09.15.4';
 const DB_NAME='mouldmaster-process-data-v1';
 const DB_VERSION=1;
 const MAX_ROWS=50000;
+const MAX_CSV_BYTES=10*1024*1024;
 const ROLE_OPTIONS=['unresolved','actual','setpoint','command','state','quality','derived','structural'];
 const SAMPLING_OPTIONS=['unknown','per-cycle','trace-sample','event','batch'];
 const BLOCKING_SEMANTIC_KINDS=new Set(['unresolved']);
@@ -145,7 +146,7 @@ async function deleteAllProcessData(){
 
 function knownDefinition(column){
   const defs=semanticRegistry?.channels||{};
-  if(defs[column])return {...defs[column]};
+  if(Object.prototype.hasOwnProperty.call(defs,column))return {...defs[column]};
   const lower=String(column||'').toLowerCase();
   let role='unresolved',unit=null,meaning='',sampling_basis='unknown',confidence='low';
   if(/(?:^|_)(?:setpoint|set_point|target|command|cmd)(?:_|$)/.test(lower)){role='command';confidence='medium'}
@@ -196,7 +197,8 @@ function enrichPrepared(prepared,overrides={},datasetMeta={}){
   const semantics={};
   const issues=[];
   for(const key of numeric){
-    const sem=semanticFor(key,overrides[key]||{});
+    const override=Object.prototype.hasOwnProperty.call(overrides,key)?overrides[key]:{};
+    const sem=semanticFor(key,override&&typeof override==='object'&&!Array.isArray(override)?override:{});
     semantics[key]=sem;
     const vals=rows.map(r=>r[key]),present=vals.filter(v=>v!==''&&v!=null),finite=present.map(Number).filter(Number.isFinite),s=stats(finite);
     const missing=rows.length-present.length,invalid=present.length-finite.length,missingRate=rows.length?missing/rows.length:1;
@@ -388,6 +390,7 @@ function wireAdvancedIntake(prepared){
   root.querySelector('[data-di-file]')?.addEventListener('change',async e=>{
     const file=e.target.files?.[0];if(!file)return;
     try{
+      if(!Number.isFinite(file.size)||file.size<0||file.size>MAX_CSV_BYTES)throw new Error('CSV exceeds the 10 MiB local intake safety limit. Choose a smaller source file.');
       const text=await file.text(),base=window.MM_PROCESS_DATA_LOCAL_INTAKE;if(!base)throw new Error('Local intake module unavailable');
       const parsed=base.parseCsv(text),privacyPrepared=base.__rawPrepare?base.__rawPrepare(parsed):base.prepare(parsed);
       preparedSession=enrichPrepared(privacyPrepared,{},readDatasetMeta(root));renderAdvancedIntake(preparedSession)

@@ -17,7 +17,8 @@ const STRICT_ANSWER_BALANCE={
  'tech:Beginner:6':'Inspect the serviced local shutoff before changing global clamp force',
  'tech:Beginner:7':'Check the repaired runner/gate branch with cavity-specific fill evidence',
  'tech:Beginner:8':'Verify cooling flow, routing and local mould temperatures',
- 'tech:Beginner:9':'Compare current process actuals and material condition with the known-good baseline',
+ 'tech:Beginner:9':'Baseline comparison of current process actuals and material condition',
+ 'tech:Intermediate:5':'Shot-delivery, NRV, feed, transfer and injection-actual checks',
  'tech:Intermediate:0':'A repeatable part-mass plateau as hold time increases',
  'tech:Intermediate:1':'Trapped gas at the end-of-fill vent',
  'tech:Intermediate:3':'Inspect the local insert/shutoff before global process changes',
@@ -59,23 +60,23 @@ const STRICT_ANSWER_BALANCE={
  'reg:NZ:Beginner:2':'Keep it out of use until the safeguard is restored',
  'reg:NZ:Intermediate:0':'Isolate all energy and verify safe state',
  'reg:NZ:Intermediate:1':'Use AS/NZS 4024 as safety evidence while still meeting legal duties',
- 'reg:NZ:Intermediate:2':'Verify safeguards before authorised return to service',
+ 'reg:NZ:Intermediate:2':'Safeguard verification before authorised return to service',
  'reg:NZ:Advanced:0':'HSWA duties remain; standards inform controls',
  'reg:NZ:Advanced:1':'Assess the integrated system, interfaces, tasks and safeguards as a whole',
  'reg:NZ:Advanced:2':'Not yet in force; commencement is 1 April 2027',
 
- 'scenario:01':'Check shot-delivery/NRV, feed and injection actuals',
+ 'scenario:01':'Review shot-delivery/NRV and injection actuals',
  'scenario:02':'Inspect end-of-fill venting and test fill-speed sensitivity',
  'scenario:03':'Inspect local parting-line/insert seating',
  'scenario:04':'Study cooling time against ejection and part quality',
  'scenario:05':'Verify drying history and actual material moisture',
  'scenario:06':'Run a cavity-balance study and inspect the repaired runner',
  'scenario:07':'Trend cooling, material, process and measurement evidence by shift',
- 'scenario:08':'Check local gate, geometry and cooling after gate seal',
+ 'scenario:08':'Local gate, geometry and cooling checks after gate seal',
  'scenario:09':'Compare current fill/pressure, material and thermal actuals with baseline',
  'scenario:10':'Inspect the affected branch/gate using cavity-specific fill evidence',
- 'scenario:11':'Check feed, recovery actuals and shot-delivery repeatability',
- 'scenario:12':'Verify cooling routing, flow and thermal balance against baseline',
+ 'scenario:11':'Feed, recovery-actual and shot-delivery repeatability checks',
+ 'scenario:12':'Cooling routing, flow and thermal-balance verification',
  'scenario:13':'Review draft, texture, cooling, ejection load and tooling condition',
  'scenario:14':'Verify the new measurement fixture before interpreting Cpk',
  'scenario:15':'Treat run order as a confounder; randomise/block the study',
@@ -87,7 +88,7 @@ const STRICT_ANSWER_BALANCE={
  'scenario:21':'Check local venting',
  'scenario:22':'Validate weld-line flow and mechanics',
  'scenario:23':'Inspect the local shutoff',
- 'scenario:24':'Check valve-gate timing and cavity evidence',
+ 'scenario:24':'Valve-gate timing and cavity-evidence checks',
  'scenario:25':'Review pressure history, transfer and sensor health',
  'scenario:26':'Verify vision metrology before changing moulding',
  'scenario:27':'Check sensor zero and acquisition path',
@@ -95,7 +96,7 @@ const STRICT_ANSWER_BALANCE={
  'scenario:29':'Check energy phases and boundary',
  'scenario:30':'Map interface thermal/flow history',
  'scenario:31':'Record insert/interface thermal state and transfer delay',
- 'scenario:32':'Check local thermal, venting and microflow evidence',
+ 'scenario:32':'Local thermal, venting and microflow evidence checks',
  'scenario:33':'Check cell structure and relevant mechanical response',
  'scenario:34':'Check skin/thermal history and foaming method',
  'scenario:35':'Compare process actuals with rheology evidence',
@@ -106,23 +107,34 @@ const STRICT_ANSWER_BALANCE={
  'scenario:40':'Revalidate thermal/ejection quality window'
 };
 
+const authorChoice=window.MM_ASSESSMENT_AUTHOR_CHOICE||((value)=>String(value??''));
+const CONCISE_SCENARIO_WORDING=new Set(['scenario:08','scenario:11','scenario:12','scenario:24','scenario:32']);
+function applyReviewedScenarioWording(){
+ (D.scenarios||[]).forEach((s,i)=>{
+  const id=s.mmStableId||`scenario:${String(i+1).padStart(2,'0')}`;if(!CONCISE_SCENARIO_WORDING.has(id))return;
+  const replacement=STRICT_ANSWER_BALANCE[id],opts=s.choices,key=Number(s.correct);
+  if(!replacement||!Array.isArray(opts)||opts.length!==4||key<0||key>3)throw new Error(`Reviewed scenario wording target changed: ${id}`);
+  opts[key]=authorChoice(replacement);
+ });
+}
+applyReviewedScenarioWording();
 function optionsOf(q){return q?.options??q?.[1]}
 function correctOf(q){return Number(q?.correct??q?.[2])}
 function validateReviewedAnswers(requireFull){
  let validated=0;
  for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<(D.exams?.[level]||[]).length;i++){
-  const id=`tech:${level}:${i}`,replacement=STRICT_ANSWER_BALANCE[id];if(!replacement)continue;
+  const id=`tech:${level}:${i}`;let replacement=STRICT_ANSWER_BALANCE[id];if(!replacement)continue;replacement=authorChoice(replacement);
   const q=D.exams[level][i],opts=optionsOf(q),key=correctOf(q);if(!Array.isArray(opts)||opts.length!==4||key<0||key>3)throw new Error(`Strict answer-balance source invalid: ${id}`);if(String(opts[key])!==replacement)throw new Error(`Reviewed keyed answer drift: ${id}`);validated++;
  }
  for(const region of ['UK','US','NZ'])for(const level of ['Beginner','Intermediate','Advanced'])for(let i=0;i<(D.regionalQuestions?.[region]?.[level]||[]).length;i++){
-  const id=`reg:${region}:${level}:${i}`,replacement=STRICT_ANSWER_BALANCE[id];if(!replacement)continue;
+  const id=`reg:${region}:${level}:${i}`;let replacement=STRICT_ANSWER_BALANCE[id];if(!replacement)continue;replacement=authorChoice(replacement);
   const q=D.regionalQuestions[region][level][i],opts=optionsOf(q),key=correctOf(q);if(!Array.isArray(opts)||opts.length!==4||key<0||key>3)throw new Error(`Strict answer-balance source invalid: ${id}`);if(String(opts[key])!==replacement)throw new Error(`Reviewed keyed answer drift: ${id}`);validated++;
  }
  (D.scenarios||[]).forEach((s,i)=>{
-  const id=s.mmStableId||`scenario:${String(i+1).padStart(2,'0')}`,replacement=STRICT_ANSWER_BALANCE[id];if(!replacement)return;
+  const id=s.mmStableId||`scenario:${String(i+1).padStart(2,'0')}`;let replacement=STRICT_ANSWER_BALANCE[id];if(!replacement)return;replacement=authorChoice(replacement);
   const opts=s.choices,key=Number(s.correct);if(!Array.isArray(opts)||opts.length!==4||key<0||key>3)throw new Error(`Strict answer-balance source invalid: ${id}`);if(String(opts[key])!==replacement)throw new Error(`Reviewed keyed answer drift: ${id}`);validated++;
  });
- if(validated>94||requireFull&&validated!==94)throw new Error(`Reviewed keyed answer coverage mismatch: ${validated}/94`);
+ if(validated>95||requireFull&&validated!==95)throw new Error(`Reviewed keyed answer coverage mismatch: ${validated}/95`);
  window.MM_STABLE_REVIEW_BRIDGE.strictAnswerBalance.validated=validated;
  return validated;
 }
@@ -140,7 +152,7 @@ window.getExamQuestions=function(){
  return rows;
 };
 
-window.MM_STABLE_REVIEW_BRIDGE={version:'2026.09.10.1',stableIdsPrimary:true,fullBlueprintRequired:true,requiredTechnicalDomains:(S.blueprint||[]).slice(),legacyRecordsMigratedBy:'assessment-quality-suite.js',strictAnswerBalance:{validated:0,required:94,runtimeTextMutations:0,policy:'Reviewed keyed answer wording is source-authored; runtime validates drift only; key indexes unchanged'}};
+window.MM_STABLE_REVIEW_BRIDGE={version:'2026.09.10.1',stableIdsPrimary:true,fullBlueprintRequired:true,requiredTechnicalDomains:(S.blueprint||[]).slice(),legacyRecordsMigratedBy:'assessment-quality-suite.js',strictAnswerBalance:{validated:0,required:95,runtimeTextMutations:0,policy:'Reviewed keyed answer wording is source-authored; runtime validates drift only; key indexes unchanged'}};
 validateReviewedAnswers(false);
 function finalizeBalance(){validateReviewedAnswers(true)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',finalizeBalance,{once:true});else finalizeBalance();

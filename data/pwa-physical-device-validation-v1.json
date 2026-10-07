@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Automated browser, service-worker and assistive-technology regressions do not substitute for testing on physical iOS/iPadOS and Android devices. Fresh physical validation is required for the current release and must bind to the retained exact-head candidate artifact. Prior device evidence and risk waivers are not relabelled for this runtime. Screen-reader conformance remains governed separately by data/accessibility-real-at-validation-v1.json.",
+  "boundary": "Automated browser, service-worker and assistive-technology regressions do not substitute for testing on physical iOS/iPadOS and Android devices. Fresh physical validation is required for the current release and must bind to the retained exact-head candidate artifact recorded here, never to the mutable preview branch. Screen-reader conformance remains governed separately by data/accessibility-real-at-validation-v1.json.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
@@ -41,16 +41,16 @@
     }
   },
   "privacyBoundary": "Public contract metadata must not include learner names, customer/site identifiers, email addresses, private screenshots, raw process data, backup content, filesystem/user paths or other personal/proprietary evidence. Keep detailed device evidence outside the public repository and reference it only with a non-sensitive review identifier.",
-  "release": "2026.10.07.10",
+  "release": "2026.10.07.11",
   "candidate": {
-    "release": "2026.10.07.10",
-    "sourceSha": "2b0ebb5ebefbc567b168c72e5c706a3b7a5265d8",
-    "runtimeFingerprint": "sha256:4de2af13aae6c22a972c42fc450642090a45964404ca712b621702a5790cedfb",
-    "candidateRunId": 37576165131,
+    "release": "2026.10.07.11",
+    "sourceSha": "8d9d096ee47a03baadca477b3c1fbb8313a6b9e4",
+    "runtimeFingerprint": "sha256:ca5ab8050cd295a0b1ee3a25bde0b9c6fe54410cbe4bf05288039c8f8f486e00",
+    "candidateRunId": 37592095301,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 11463071985,
-    "artifactName": "physical-pwa-candidate-2b0ebb5ebefbc567b168c72e5c706a3b7a5265d8",
-    "artifactDigest": "sha256:cfe22c21277e540276ffb0a7b0ea3109aefb298532713411f8faf43157c22a71",
-    "artifactExpiresAt": "2026-11-06T05:24:54Z"
+    "artifactId": 11469022602,
+    "artifactName": "physical-pwa-candidate-8d9d096ee47a03baadca477b3c1fbb8313a6b9e4",
+    "artifactDigest": "sha256:6124dc5dfc7c8795fa1a5c6f940914d7c141ff02e32dcc3a5880ce5cda62d73b",
+    "artifactExpiresAt": "2027-01-05T08:11:14Z"
   }
 }

@@ -11,7 +11,7 @@ def text(p): return (ROOT/p).read_text(encoding='utf-8')
 def need(ok,msg):
     if not ok: raise AssertionError(msg)
 
-for p in [PATCH,REGIONAL,REGISTER,'index.html','service-worker.js','desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs','.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml','.github/workflows/microsoft-store-msix.yml']:
+for p in [PATCH,REGIONAL,REGISTER,'data/question-centre-v1.json','primary-learning-practice-hubs.js','index.html','service-worker.js','desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs','.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml','.github/workflows/microsoft-store-msix.yml']:
     need((ROOT/p).exists(),f'missing assessment deep-dive file: {p}')
 
 tech=text(PATCH); regional=text(REGIONAL)
@@ -86,6 +86,31 @@ console.log('runtime all-live-question deep dive passed');
 p=subprocess.run(['node','-e',node_test],capture_output=True,text=True)
 need(p.returncode==0,f'all-question runtime QA failed: {p.stderr or p.stdout}')
 
+centre=json.loads(text('data/question-centre-v1.json'))
+need(centre.get('status')=='governed-launcher-index','Question Centre manifest status drift')
+need(centre.get('primaryPromptCount')==169,'Question Centre primary prompt count must remain 169')
+lanes=centre.get('lanes') or []
+need([row.get('id') for row in lanes]==['formal','scenarios','diagnostic','materials','measured'],'Question Centre lane order/identity drift')
+need([row.get('count') for row in lanes]==[57,40,36,24,12],'Question Centre lane counts drift')
+need(sum(int(row.get('count') or 0) for row in lanes)==169,'Question Centre lane counts must sum to 169')
+formal_lane=lanes[0]
+patterns=formal_lane.get('attemptPatterns') or {}
+need(patterns.get('singleJurisdiction')=='10 questions: 7 technical + 3 regional safety/compliance','Question Centre single-jurisdiction attempt contract drift')
+need(patterns.get('compareAll')=='16 questions: 7 technical + 9 regional safety/compliance','Question Centre Compare All attempt contract drift')
+need(str(formal_lane.get('technicalReachability','')).startswith('30/30 approved technical items are reachable'),'Question Centre must preserve 30/30 technical reachability')
+outcomes=formal_lane.get('outcomeMapping') or {}
+need(outcomes.get('proposedTechnicalMappings')=='30/30' and outcomes.get('approvedTechnicalMappings')=='0/30' and outcomes.get('status')=='pending-independent-sme-review','Question Centre must distinguish proposed outcome coverage from independent approval')
+entry=centre.get('canonicalEntryPoint') or {}
+need(entry.get('area')=='Practice' and entry.get('label')=='Question Centre','Question Centre canonical entry point must remain Practice > Question Centre')
+policy=centre.get('policy') or {}
+need(policy.get('centralisesDiscovery') is True and policy.get('duplicatesQuestionText') is False and policy.get('preservesCanonicalScoring') is True,'Question Centre manifest must centralise discovery without copying question content or scoring authority')
+hub=text('primary-learning-practice-hubs.js')
+for marker in ['window.MM_QUESTION_CENTRE=Object.freeze','function openQuestionCentreDetail()','mm-question-centre','Formal knowledge checks','Shop-floor scenarios','Diagnostic questions','Material questions','Measured-evidence decisions','${q.total} governed question/decision prompts']:
+    need(marker in hub,f'Question Centre learner launcher missing: {marker}')
+need('Book chapter self-checks and lesson exercises stay with the teaching they belong to.' in hub,'Question Centre must preserve teaching-context questions outside the consolidated launcher')
+need("case 'question-centre': return openQuestionCentreDetail();" in hub,'Question Centre action must open the dedicated Practice surface rather than a transient modal')
+need("scope:'Learner-facing consolidated launcher only" in hub,'Question Centre governance boundary must state discovery-only consolidation')
+
 reg=text(REGISTER)
 for marker in ['all 57 live exam questions','All 30 technical questions','27 regional','five evidence-reasoning modes','Insufficient evidence is a valid expert answer','ISO 20430:2020','OSHA 29 CFR 1910.147','WorkSafe New Zealand']:
     need(marker in reg,f'question deep-dive register marker missing: {marker}')
@@ -99,7 +124,7 @@ need("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'" in te
 pkg=json.loads(text('desktop/electron/package.json'));froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
 need('../../assessment-deep-dive.js' in froms and '../../src/domains' in froms and '../../assessment-answer-cue-fix.js' not in froms,'assessment patches must use the canonical recursive domain package without a duplicate root compatibility copy')
 integ=text('desktop/electron/scripts/generate-integrity.cjs');need("'assessment-deep-dive.js'" in integ and "'src/domains/assessment/assessment-answer-cue-fix.js'" in integ,'assessment patches missing from integrity set')
-qy=text('.github/workflows/qa.yml');need("find . -maxdepth 1 -type f -name '*.js'" in qy and 'python qa_question_deep_dive.py' in qy,'release workflow missing question QA')
+qy=text('.github/workflows/qa.yml');need("Repository-wide JavaScript syntax" in qy and 'python qa_question_deep_dive.py' in qy,'release workflow missing question QA')
 need('python qa_question_deep_dive.py' in text('.github/workflows/open-desktop-build.yml'),'desktop workflow missing question QA')
 need('python qa_question_deep_dive.py' in text('.github/workflows/microsoft-store-msix.yml'),'Store workflow missing question QA')
 

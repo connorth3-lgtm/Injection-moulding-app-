@@ -43,9 +43,10 @@ need(manifest.get("schema") == 1 and manifest.get("version") == "2026.09.04.1", 
 need(manifest.get("generated") is True, "assessment decision manifest must remain compiler-owned")
 need(manifest.get("questionBankVersion") == "2026.08.30.1", "assessment manifest question-bank version drift")
 need(manifest.get("evidenceApprovalVersion") == "2026.08.30.3", "assessment manifest evidence-approval version drift")
-need(manifest.get("measuredAssessmentVersion") == "2026.09.01.1", "assessment manifest measured-assessment version drift")
+need(manifest.get("measuredAssessmentVersion") == "2026.10.05.1", "assessment manifest measured-assessment version drift")
 need(manifest.get("choiceIdentity", {}).get("questionScoped") is True, "choice identities must be question-scoped")
 need(manifest.get("choiceIdentity", {}).get("rawChoiceTextStored") is False, "manifest must not store raw option text")
+need("not the complete learner-visible inventory" in manifest.get("boundary","") and "40 optional Material Practice decisions" in manifest.get("boundary",""), "manifest boundary must state that optional learner-visible practice is governed outside this evidence-identity subset")
 
 counts = manifest.get("counts") or {}
 expected_kinds = {
@@ -140,4 +141,4 @@ need(row["choiceSelections"][0]["choiceFingerprint"] == legacy_expected and row[
 runtime_manifest = json.loads((ROOT / "runtime-domain-manifest.json").read_text(encoding="utf-8"))
 need("./data/assessment-decision-manifest-v1.json" not in (runtime_manifest.get("dataAssets") or []), "audit-only decision manifest must not become a public runtime data asset")
 
-print("MouldMaster assessment decision identity QA passed: 169 governed decisions, 157 evidence-approved + 12 measured-contract decisions, 676 globally unique question/revision-scoped choices, explicit legacy-unversioned analytics provenance, no raw question/answer text.")
+print("MouldMaster assessment decision identity QA passed: 169 evidence-identity rows (157 evidence-approved + 12 measured-contract) inside the 209-decision learner-visible governance population, 676 globally unique question/revision-scoped choices, explicit legacy-unversioned analytics provenance, no raw question/answer text.")

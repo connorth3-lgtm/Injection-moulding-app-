@@ -2,11 +2,17 @@
 """Fail closed on unsupported or stale external-validation claims for the current release."""
 from __future__ import annotations
 
+import datetime as dt
 import json
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+from qa_curriculum_semantic_review import canonical_lessons as canonical_curriculum_lessons, validate_contract as validate_curriculum_semantics
+
 CONTRACT = ROOT / "data" / "release-external-validation-v1.json"
 VERSION = ROOT / "version.json"
 ALLOWED_SECTION_STATUS = {
@@ -105,7 +111,59 @@ def require_not_future_release(evidence: dict, expected_release: str, label: str
         fail(f"{label} cannot target future release {release}")
 
 
-def validate_accessibility(section: dict, expected_release: str) -> None:
+def candidate_identity(candidate: dict) -> dict:
+    return {
+        "release": candidate.get("release"),
+        "sourceSha": candidate.get("sourceSha"),
+        "runtimeFingerprint": candidate.get("runtimeFingerprint"),
+    }
+
+
+def validate_web_candidate(data: dict, expected_release: str) -> dict:
+    candidate = data.get("webCandidate")
+    if not isinstance(candidate, dict):
+        fail("canonical webCandidate binding is missing")
+    if candidate.get("release") != expected_release:
+        fail("canonical webCandidate release is stale")
+    source_sha = require_sha(candidate.get("sourceSha"), "canonical webCandidate sourceSha")
+    require_fingerprint(candidate.get("runtimeFingerprint"), "canonical webCandidate runtimeFingerprint")
+    require_fingerprint(candidate.get("artifactDigest"), "canonical webCandidate artifactDigest")
+    run_id = candidate.get("candidateRunId")
+    if not isinstance(run_id, int) or run_id <= 0:
+        fail("canonical webCandidate candidateRunId must be a positive integer")
+    artifact_id = candidate.get("artifactId")
+    if not isinstance(artifact_id, int) or artifact_id <= 0:
+        fail("canonical webCandidate artifactId must be a positive integer")
+    if candidate.get("candidateWorkflow") != "Pre-merge Public Candidate":
+        fail("canonical webCandidate must come from Pre-merge Public Candidate")
+    expected_name = f"physical-pwa-candidate-{source_sha}"
+    if candidate.get("artifactName") != expected_name:
+        fail(f"canonical webCandidate artifactName must be {expected_name}")
+    artifact_expires_at = require_nonempty(candidate.get("artifactExpiresAt"), "canonical webCandidate artifactExpiresAt is missing")
+    try:
+        artifact_expiry = dt.datetime.fromisoformat(artifact_expires_at.replace("Z", "+00:00"))
+    except ValueError:
+        fail("canonical webCandidate artifactExpiresAt must be an ISO-8601 instant")
+    if artifact_expiry.tzinfo is None:
+        fail("canonical webCandidate artifactExpiresAt must include a timezone")
+    # Wall-clock liveness is intentionally enforced by
+    # tools/verify_external_validation_live_bindings.py in the promotion gate.
+    # Keeping this repository-only validator time-independent leaves a repair path
+    # available to re-retain/rebind an expired artifact on preview.
+    artifact_expiry.astimezone(dt.timezone.utc)
+
+    policy = data.get("candidatePolicy")
+    if not isinstance(policy, dict):
+        fail("candidatePolicy is missing")
+    if policy.get("previewBranchAuthoritative") is not False:
+        fail("mutable preview branch must never be authoritative external-evidence identity")
+    if policy.get("evidenceAuthority") != "retained-exact-head-artifact":
+        fail("candidatePolicy.evidenceAuthority must be retained-exact-head-artifact")
+    require_nonempty(policy.get("rule"), "candidatePolicy.rule is missing")
+    return candidate
+
+
+def validate_accessibility(section: dict, expected_release: str, web_candidate: dict) -> None:
     packet = require_release_packet(
         section.get("reviewPacket"),
         expected_release,
@@ -123,8 +181,50 @@ def validate_accessibility(section: dict, expected_release: str) -> None:
         fail("accessibility candidate binding is missing")
     if candidate.get("release") != expected_release:
         fail("accessibility candidate release is stale")
+    if candidate != candidate_identity(web_candidate):
+        fail("accessibility candidate does not match canonical webCandidate")
     if candidate.get("sourceSha") != source_sha or candidate.get("runtimeFingerprint") != fingerprint:
         fail("accessibility candidate does not match the governed real-AT contract")
+
+    tasks = evidence.get("requiredTasks")
+    if not isinstance(tasks, list) or len(tasks) != 12:
+        fail("real-AT evidence contract must contain exactly 12 canonical tasks")
+    task_ids = []
+    for task in tasks:
+        if not isinstance(task, dict):
+            fail("real-AT canonical tasks must be objects")
+        task_id = require_nonempty(task.get("id"), "real-AT canonical task id is missing")
+        require_nonempty(task.get("instruction"), f"real-AT canonical task {task_id} instruction is missing")
+        task_ids.append(task_id)
+    if len(set(task_ids)) != 12:
+        fail("real-AT canonical task IDs must be unique")
+
+    matrix = evidence.get("requiredMatrix")
+    if not isinstance(matrix, list) or len(matrix) != 4:
+        fail("real-AT evidence requires the four governed matrix rows")
+    for row in matrix:
+        if not isinstance(row, dict):
+            fail("real-AT matrix row must be an object")
+        task_evidence = row.get("taskEvidence")
+        if not isinstance(task_evidence, dict) or set(task_evidence) != set(task_ids):
+            fail(f"real-AT row {row.get('id')} must contain task-level evidence for all 12 canonical tasks")
+        if row.get("status") == "validated":
+            for key in ("testedAt", "reviewer", "evidenceRef"):
+                require_nonempty(row.get(key), f"validated real-AT row is missing {key}")
+            for task_id in task_ids:
+                task = task_evidence[task_id]
+                if not isinstance(task, dict) or task.get("status") != "pass":
+                    fail(f"validated real-AT row {row.get('id')} has no pass for task {task_id}")
+                require_nonempty(task.get("evidenceRef"), f"validated real-AT row {row.get('id')} task {task_id} is missing evidenceRef")
+        elif row.get("status") == "pending":
+            if any(row.get(key) for key in ("testedAt", "reviewer", "evidenceRef")):
+                fail(f"pending real-AT row {row.get('id')} must not carry validation metadata")
+            for task_id in task_ids:
+                task = task_evidence[task_id]
+                if not isinstance(task, dict) or task.get("status") != "pending" or task.get("evidenceRef") is not None:
+                    fail(f"pending real-AT row {row.get('id')} task {task_id} must remain evidence-free")
+        else:
+            fail(f"real-AT row has invalid status: {row.get('id')}")
 
     if section["status"] == "hold":
         if evidence.get("status") == "validated":
@@ -132,17 +232,10 @@ def validate_accessibility(section: dict, expected_release: str) -> None:
         return
     if evidence.get("status") != "validated":
         fail("accessibility cannot be validated until the real-AT contract status is validated")
-    matrix = evidence.get("requiredMatrix")
-    if not isinstance(matrix, list) or not matrix:
-        fail("validated real-AT evidence requires a non-empty requiredMatrix")
-    for row in matrix:
-        if not isinstance(row, dict) or row.get("status") not in {"pass", "validated"}:
-            fail("validated real-AT evidence requires every matrix row to pass")
-        for key in ("testedAt", "reviewer", "evidenceRef"):
-            require_nonempty(row.get(key), f"validated real-AT row is missing {key}")
+    if any(row.get("status") != "validated" for row in matrix):
+        fail("validated real-AT evidence requires every matrix row to pass all 12 canonical tasks")
 
-
-def validate_pwa(section: dict, expected_release: str) -> None:
+def validate_pwa(section: dict, expected_release: str, web_candidate: dict) -> None:
     require_release_packet(
         section.get("reviewPacket"),
         expected_release,
@@ -154,6 +247,8 @@ def validate_pwa(section: dict, expected_release: str) -> None:
         fail("PWA currentCandidate binding is missing")
     if candidate.get("release") != expected_release:
         fail("PWA candidate release is stale")
+    if candidate != web_candidate:
+        fail("PWA currentCandidate must exactly match canonical webCandidate")
     source_sha = require_sha(candidate.get("sourceSha"), "PWA candidate sourceSha")
     require_fingerprint(candidate.get("runtimeFingerprint"), "PWA candidate runtimeFingerprint")
     require_fingerprint(candidate.get("artifactDigest"), "PWA candidate artifactDigest")
@@ -169,9 +264,15 @@ def validate_pwa(section: dict, expected_release: str) -> None:
     require_nonempty(candidate.get("artifactExpiresAt"), "PWA candidate artifactExpiresAt is missing")
 
     evidence = load_json(ROOT / section["evidenceContract"])
-    if section["status"] == "hold":
-        return
     require_current_release(evidence, expected_release, "PWA physical-device")
+    if evidence.get("candidate") != web_candidate:
+        fail("PWA physical-device contract candidate must exactly match canonical webCandidate")
+    if section["status"] == "hold":
+        if evidence.get("status") == "validated":
+            fail("PWA physical-device ledger is HOLD although its evidence contract says validated")
+        if evidence.get("runtimeFingerprint") is not None:
+            fail("PWA HOLD must not record a validated runtimeFingerprint before genuine device evidence")
+        return
     if evidence.get("status") != "validated":
         fail("current-release PWA cannot be validated without full physical iOS/iPadOS + Android evidence")
     if evidence.get("runtimeFingerprint") != candidate.get("runtimeFingerprint"):
@@ -185,20 +286,37 @@ def validate_book_sme(section: dict, expected_release: str) -> None:
         f"qa/BOOK_SME_REVIEW_{expected_release}.md",
         "Book SME",
     )
-    evidence = load_json(ROOT / section["evidenceContract"])
-    require_not_future_release(evidence, expected_release, "Book SME")
+    evidence_path = ROOT / section["evidenceContract"]
+    evidence = load_json(evidence_path)
+    binding = load_json(ROOT / "data" / "book-sme-release-binding-v1.json")
+    if binding.get("contract") != section["evidenceContract"]:
+        fail("Book SME release binding must identify the governed evidence contract")
+    content_release = require_nonempty(binding.get("contentRelease"), "Book SME binding contentRelease is missing")
+    if evidence.get("release") != content_release:
+        fail("Book SME content release must equal binding.contentRelease")
+    if binding.get("boundWebRelease") != expected_release:
+        fail("Book SME binding.boundWebRelease must equal the current web release")
+    if binding.get("boundWebReleaseSource") != "version.json:web_release":
+        fail("Book SME binding must remain sourced from version.json:web_release")
+
     chapter_ids = evidence.get("chapterIds")
     reviews = evidence.get("reviews")
     required_dimensions = set(evidence.get("requiredDimensions") or [])
+    worked_case_ids = set(evidence.get("workedCaseIds") or [])
+    diagram_ids = set(evidence.get("diagramIds") or [])
+    enrichment_chapters = set(evidence.get("enrichmentChapterIds") or [])
     if not isinstance(chapter_ids, list) or len(chapter_ids) != 46 or len(set(chapter_ids)) != 46:
         fail("Book SME contract must contain exactly 46 unique governed chapter ids")
+    if len(worked_case_ids) != 27:
+        fail("Book SME contract must contain exactly 27 governed worked engineering cases")
+    if len(diagram_ids) != 25:
+        fail("Book SME contract must contain exactly 25 governed instructional diagrams")
     if not isinstance(reviews, list):
         fail("Book SME reviews must be a list")
     if section["status"] == "hold":
         if evidence.get("status") == "validated":
             fail("Book SME is marked hold although its evidence contract says validated; reconcile explicitly")
         return
-    require_current_release(evidence, expected_release, "Book SME")
     if evidence.get("status") != "validated":
         fail("Book SME cannot be validated until the human-review contract status is validated")
     if len(required_dimensions) != 6:
@@ -208,6 +326,9 @@ def validate_book_sme(section: dict, expected_release: str) -> None:
     by_id = {row.get("chapterId"): row for row in reviews if isinstance(row, dict)}
     if set(by_id) != set(chapter_ids):
         fail("validated Book SME reviews must exactly cover the 46 governed chapters")
+
+    reviewed_worked = set()
+    reviewed_diagrams = set()
     for chapter_id, row in by_id.items():
         for key in ("reviewedAt", "reviewerReference", "evidenceRef"):
             require_nonempty(row.get(key), f"validated Book SME review {chapter_id} is missing {key}")
@@ -215,8 +336,26 @@ def validate_book_sme(section: dict, expected_release: str) -> None:
             fail(f"validated Book SME review is not approved: {chapter_id}")
         dimensions = row.get("dimensions") or {}
         if set(dimensions) != required_dimensions or any(value != "pass" for value in dimensions.values()):
-            fail(f"validated Book SME dimensions do not all pass: {chapter_id}")
+            fail(f"validated Book SME review dimensions are incomplete: {chapter_id}")
+        worked = row.get("reviewedWorkedCaseIds") or []
+        diagrams = row.get("reviewedDiagramIds") or []
+        if not isinstance(worked, list) or not isinstance(diagrams, list):
+            fail(f"validated Book SME review sub-asset evidence must use lists: {chapter_id}")
+        if any(item not in worked_case_ids for item in worked):
+            fail(f"validated Book SME review references unknown worked case: {chapter_id}")
+        if any(item not in diagram_ids for item in diagrams):
+            fail(f"validated Book SME review references unknown diagram: {chapter_id}")
+        if len(worked) != len(set(worked)) or len(diagrams) != len(set(diagrams)):
+            fail(f"validated Book SME review duplicates sub-asset evidence: {chapter_id}")
+        reviewed_worked.update(worked)
+        reviewed_diagrams.update(diagrams)
+        if chapter_id in enrichment_chapters and row.get("reviewedEvidenceEnrichment") is not True:
+            fail(f"validated Book SME enrichment chapter lacks explicit enrichment review evidence: {chapter_id}")
 
+    if reviewed_worked != worked_case_ids:
+        fail("validated Book SME reviews must explicitly account for all 27 governed worked engineering cases")
+    if reviewed_diagrams != diagram_ids:
+        fail("validated Book SME reviews must explicitly account for all 25 governed instructional diagrams")
 
 def validate_curriculum(section: dict, expected_release: str) -> None:
     packet = require_release_packet(
@@ -229,19 +368,20 @@ def validate_curriculum(section: dict, expected_release: str) -> None:
     require_current_release(evidence, expected_release, "curriculum SME")
     if evidence.get("packet") != packet:
         fail("curriculum SME contract packet does not match the release ledger")
-    reviews = evidence.get("reviews")
-    lesson_ids = evidence.get("lessonIds")
-    if not isinstance(lesson_ids, list) or len(lesson_ids) != 120 or len(set(lesson_ids)) != 120:
-        fail("curriculum SME contract must contain the canonical 120 unique lesson ids")
-    if not isinstance(reviews, list):
-        fail("curriculum SME reviews must be a list")
+    try:
+        semantic = validate_curriculum_semantics(evidence, canonical_curriculum_lessons())
+    except AssertionError as exc:
+        fail(f"curriculum SME semantic-review contract failed: {exc}")
+    complete = semantic.get("status") == "HUMAN_SME_SEMANTIC_REVIEW_COMPLETE"
     if section["status"] == "hold":
+        if complete:
+            fail("curriculum SME release ledger is HOLD although all seven human-reviewed dimensions are complete for all 120 current lesson fingerprints")
         return
-    if len(reviews) != 120:
-        fail("curriculum SME validation requires one review record for each of 120 lessons")
-    reviewed_ids = {row.get("lessonId") for row in reviews if isinstance(row, dict)}
-    if reviewed_ids != set(lesson_ids):
-        fail("curriculum SME review records do not exactly cover the canonical lesson set")
+    if not complete:
+        fail(
+            "curriculum SME cannot be validated until all 120 current lesson fingerprints have explicit approved human reviews "
+            "for all seven governed semantic dimensions"
+        )
 
 
 def validate_windows(section: dict, expected_release: str) -> None:
@@ -295,7 +435,7 @@ def validate_learner(section: dict, expected_release: str) -> None:
         fail("validated learner evidence must explicitly declare synthetic=false")
 
 
-def validate_nzqa(section: dict, expected_release: str) -> None:
+def validate_nzqa(section: dict, expected_release: str, web_candidate: dict) -> None:
     packet = require_release_packet(
         section.get("reviewPacket"),
         expected_release,
@@ -320,6 +460,13 @@ def validate_nzqa(section: dict, expected_release: str) -> None:
     candidate = contract.get("candidate")
     if not isinstance(candidate, dict):
         fail("NZQA external-validation candidate binding is missing")
+    if candidate != candidate_identity(web_candidate):
+        fail("NZQA contract candidate does not match canonical webCandidate")
+    ledger_candidate = section.get("candidate")
+    if ledger_candidate != candidate_identity(web_candidate):
+        fail("NZQA release ledger candidate does not match canonical webCandidate")
+    if candidate != ledger_candidate:
+        fail("NZQA release ledger and external-validation contract candidate bindings disagree")
     require_sha(candidate.get("sourceSha"), "NZQA candidate sourceSha")
     require_fingerprint(candidate.get("runtimeFingerprint"), "NZQA candidate runtimeFingerprint")
     gates = contract.get("requiredGates")
@@ -374,6 +521,8 @@ def main() -> None:
     if (data.get("technicalAutomation") or {}).get("status") != "pass":
         fail("technicalAutomation.status must be pass for this audited release record")
 
+    web_candidate = validate_web_candidate(data, contract_release)
+
     for name, allowed in ALLOWED_SECTION_STATUS.items():
         section = data.get(name)
         if not isinstance(section, dict):
@@ -414,13 +563,13 @@ def main() -> None:
     else:
         require_nonempty(governance.get("required"), "pending native governance must have an explicit exit condition")
 
-    validate_accessibility(data["accessibility"], contract_release)
-    validate_pwa(data["pwaPhysicalDevices"], contract_release)
+    validate_accessibility(data["accessibility"], contract_release, web_candidate)
+    validate_pwa(data["pwaPhysicalDevices"], contract_release, web_candidate)
     validate_windows(data["windowsDistribution"], contract_release)
     validate_book_sme(data["bookSme"], contract_release)
     validate_curriculum(data["curriculumSme"], contract_release)
     validate_learner(data["learnerOutcomes"], contract_release)
-    validate_nzqa(data["nzqaProvider"], contract_release)
+    validate_nzqa(data["nzqaProvider"], contract_release, web_candidate)
 
     production = data["productionUse"]
     if production.get("status") != "advisory-only" or production.get("authority") != "no-automatic-machine-control":

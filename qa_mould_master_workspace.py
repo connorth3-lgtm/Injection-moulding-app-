@@ -76,6 +76,16 @@ for forbidden in [
 ]: need(forbidden not in js,f'Mould Master workspace contains forbidden second-store/mutation/transport/control path: {forbidden}')
 
 engineering=text('src/domains/engineering/engineering-store.js')
+for marker in [
+    "function normalizedLinkRecord(",
+    "Unknown engineering link kind",
+    "async function saveCaseAndLinks(",
+    "db.transaction(['cases','caseLinks'],'readwrite')",
+    "const result=await saveCaseAndLinks(c,linkInputs,owner)",
+]:
+    need(marker in engineering,f'engineering atomic context-link contract missing: {marker}')
+link_context=engineering.split('async function linkCaseContext(',1)[1].split('async function linkCaseDataset(',1)[0]
+need("await linkCase(" not in link_context,"engineering context linking must not split case/link persistence across transactions")
 for marker in ['importLegacyCases','if(prior?.complete)return','preservedExisting','destructive:false','Engineering case belongs to a different learner profile','linkCaseMachine','linkCaseMould','linkCaseProduct','linkCasePart','linkCaseContext','productId','partId','caseEvidence','archiveCase','archivedAt','case-archive','normalizeCaseEvidence','saveCaseEvidence','listCaseEvidence','voidCaseEvidence','reviseCaseEvidence','evidenceAuditTrail','evidenceSummary','validateCaseBundle','importCaseBundle','evidenceCompleteness','methodRef','acceptanceBasis','materialLot','acceptanceStatus']:
     need(marker in engineering,f'engineering canonical-store migration/ownership marker missing: {marker}')
 need('syncLegacySnapshot' not in engineering,'engineering store must not maintain live localStorage snapshot parity')
@@ -101,7 +111,9 @@ need("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'" in idx
 need(idx.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'") < idx.index("'./src/domains/domain-bootstrap.js'"),'domain bootstrap must load after packed workspace surface so canonical-store hydration can complete')
 
 sw=text('service-worker.js')
-need("'./mould-master-workspace.js'" in sw,'Mould Master workspace missing from offline cache')
+workspace_pack=text('src/domains/runtime-packs/curriculum-workspace-runtime-pack.js')
+need("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'" in sw,'curriculum/workspace runtime pack missing from offline cache')
+need('/* >>> mould-master-workspace.js */' in workspace_pack,'Mould Master workspace missing from packed offline runtime')
 need("'./src/domains/engineering/engineering-store.js'" in sw,'canonical engineering store missing from offline cache')
 need("store-bridge.js" not in sw,'retired engineering bridge remains in offline runtime')
 
@@ -123,7 +135,11 @@ for marker in ['legacy-engineering-case','switchUser','mat-lotte-infino-nh-1033'
 playwright=text('playwright.config.cjs')
 need('engineering-case-store\\.spec\\.js' in playwright,'canonical engineering browser regression missing from Playwright config')
 mobile=text('.github/workflows/mobile-browser-qa.yml')
-need('qa/engineering-case-store.spec.js' in mobile,'canonical engineering browser regression missing from Mobile Browser QA triggers')
-need('engineering-store and PWA regression tests' in mobile,'Mobile Browser QA step no longer names engineering-store regression coverage')
+need((ROOT/'qa/engineering-case-store.spec.js').exists(),'canonical engineering browser regression spec is missing')
+need('engineering-case-store\\.spec\\.js' in playwright,'Mobile Browser QA Chromium config no longer includes engineering-store regression coverage')
+need('npx playwright test --config=playwright.substantive.config.cjs' in mobile,'Mobile Browser QA no longer executes the Chromium substantive regression configuration')
+substantive=text('playwright.substantive.config.cjs')
+need("require('./playwright.config.cjs')" in substantive,'Chromium substantive config must inherit the approved engineering-store Playwright suite')
+need(r"testIgnore:/visual-regression\.spec\.js/" in substantive,'Chromium substantive config must exclude only the separately served immutable visual test')
 
 print('MouldMaster workspace QA passed (single owner-scoped IndexedDB authority, one-time non-destructive legacy import, learner-aware hydration, manifest-derived desktop serving, browser persistence regression, local evidence chain, controlled-test/verification flow, learning links, no production-control or assessment authority)')

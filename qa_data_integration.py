@@ -139,8 +139,11 @@ def main() -> None:
 
     require((ROOT / "qa_process_statistics_integrity.cjs").exists(), "behavioral process-statistics regression test missing")
     require((ROOT / "qa_import_identity_integrity.cjs").exists(), "behavioral import-identity regression test missing")
-    require("extract_service_worker_assets" in builder, "Pages builder must publish both atomic-core and runtime-fetched worker assets")
-    require("on_demand_assets" in builder and "precache_assets" in builder, "Pages manifest must expose cache policy")
+    require("extract_service_worker_assets" in builder, "Pages builder must publish both CORE and OPTIONAL worker assets")
+    require("release_files = set(core_files) | set(optional_files)" in builder, "Pages builder must model the complete service-worker install set")
+    require('"precache_assets": sorted(release_files)' in builder, "Pages manifest must hash-cover every atomically installed service-worker asset")
+    require('"on_demand_assets": []' in builder and '"optional_feature_assets": sorted(optional_files)' in builder,
+            "Pages manifest must not label atomically installed OPTIONAL assets as on-demand")
     require("FORBIDDEN_PREFIXES" in builder and '"data/"' in builder, "raw governed data must remain excluded from public Pages artifact")
 
     desktop_from = {x.get("from") for x in desktop_pkg["build"]["extraResources"] if isinstance(x, dict)}

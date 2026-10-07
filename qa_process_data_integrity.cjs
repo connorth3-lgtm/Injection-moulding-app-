@@ -15,7 +15,11 @@ for(const [token,message] of [
   ['prepared?.validation?.reviewRequired','canonical readiness must consume intake review state'],
   ["code:'prepared-data-review'",'canonical readiness must expose a stable intake-review blocker code'],
   ['analysis-readiness blockers','baseline/drift errors must describe the full canonical readiness gate'],
+  ['const MAX_CSV_BYTES=10*1024*1024','local intake must declare a bounded pre-read CSV byte limit'],
+  ['file.size>MAX_CSV_BYTES','local intake must reject oversized CSV files before reading them'],
 ])assert(runtimeSource.includes(token),message);
+
+assert(runtimeSource.indexOf('file.size>MAX_CSV_BYTES') < runtimeSource.indexOf('await file.text()'),'CSV byte-size guard must execute before file.text() allocates the source payload');
 
 /* Exercise the canonical enrichment predicate without starting its browser installer. */
 const runtimeForReadiness=runtimeSource.replace("install().catch(err=>{console.error('MouldMaster connected process-data runtime failed to initialise',err)});",'');

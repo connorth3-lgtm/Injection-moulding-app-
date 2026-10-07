@@ -71,6 +71,16 @@ Do not enable Node integration in the renderer, disable sandbox/context isolatio
 
 If a native capability is genuinely required, expose the smallest validated API surface possible and document the new threat boundary.
 
+## Finding and fixing breakage
+
+Start with the repair-oriented Doctor instead of guessing which QA file to run:
+
+- `npm run doctor` — inspects the changed files, runs the focused checks that own those areas, keeps going after failures, and writes `qa-artifacts/doctor-report.md` plus `doctor-report.json`.
+- `npm run doctor:fix` — does the same but may safely regenerate deterministic runtime packs, runtime manifests and CSP hashes before rechecking.
+- `npm run doctor:deep` — adds the broader app-wide and core release audits.
+
+When Doctor reports a failure, use the listed **Likely owners** and **Repair** hint first. Fix the owning source or generated artifact rather than weakening a guard. Doctor is intentionally not release authority; full governed QA and exact external validation still control publication.
+
 ## Validation
 
 Before merge, run or ensure CI runs:

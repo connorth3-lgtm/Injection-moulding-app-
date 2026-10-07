@@ -12,6 +12,7 @@ async function openApp(page){
   await seedLearner(page);
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>(typeof window.MM_APP_SHELL_FINALIZED==='string'&&window.MM_APP_SHELL_FINALIZED.length>0)&&window.MM_PRIMARY_HUBS,{timeout:30000});
+  await page.waitForFunction(()=>window.MM_INLINE_HANDLER_BRIDGE?.version==='1',{timeout:30000});
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'),{timeout:30000});
   await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
   await expect(page.locator('#modal')).toBeHidden();
@@ -124,7 +125,15 @@ test('keyboard focus advances through multiple visible learner controls',async({
   const identities=new Set(focusable.map(x=>`${x.tag}#${x.id}:${x.name}`));
   expect(focusable.length,`${browserName} should move focus into visible learner controls`).toBeGreaterThanOrEqual(4);
   expect(identities.size,`${browserName} focus should progress rather than remain trapped on one control`).toBeGreaterThanOrEqual(3);
+  const reverseProbe=page.locator('button:visible,a[href]:visible,input:visible,select:visible,textarea:visible').nth(2);
+  await reverseProbe.focus();
   await page.keyboard.press('Shift+Tab');
-  const afterReverse=await page.evaluate(()=>document.activeElement?.tagName||'');
-  expect(['BODY','HTML',''].includes(afterReverse),`${browserName} reverse keyboard focus should remain in the interface`).toBeFalsy();
+  const afterReverse=await page.evaluate(()=> {
+    const el=document.activeElement;
+    if(!el)return {tag:'',visible:false};
+    const rect=el.getBoundingClientRect(),style=getComputedStyle(el);
+    return {tag:el.tagName,visible:style.display!=='none'&&style.visibility!=='hidden'&&rect.width>0&&rect.height>0};
+  });
+  expect(afterReverse.visible,`${browserName} reverse keyboard focus should move to another visible interface control`).toBeTruthy();
+  expect(['BODY','HTML',''].includes(afterReverse.tag),`${browserName} reverse keyboard focus should not fall out of the interface`).toBeFalsy();
 });

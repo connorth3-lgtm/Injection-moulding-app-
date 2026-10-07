@@ -191,6 +191,8 @@ def verify_runtime_contracts() -> None:
         "baseImportData(new Blob",
         "checksum is not a digital signature",
         "window.MM_LEARNER_BACKUP_INTEGRITY",
+        "bridge.buildTrainingExtras(payload.users)",
+        "learner-scoped review/sign-off",
     ]:
         require(token in backup, f"learner backup integrity runtime contract missing: {token}")
     require(
@@ -214,6 +216,10 @@ def verify_runtime_contracts() -> None:
         "append-only",
         "destructive:false",
         "if(prior?.complete)return {...prior,alreadyComplete:true}",
+        "const LINK_KINDS=Object.freeze",
+        "'process-dataset'",
+        "for(const row of [...contextLinks,...validated.links])",
+        "Case export audit references unknown evidence id",
     ]:
         require(token in engineering, f"engineering migration contract missing: {token}")
 
@@ -222,8 +228,15 @@ def verify_runtime_contracts() -> None:
         "['datasets','shots','baselines','caseLinks','interventions']",
         "deleteAllProcessData",
         "Process-data reset verification failed",
+        "const MAX_CSV_BYTES=10*1024*1024",
+        "file.size>MAX_CSV_BYTES",
+        "await file.text()",
     ]:
         require(token in process, f"process-data integrity contract missing: {token}")
+    require(
+        process.index("file.size>MAX_CSV_BYTES") < process.index("await file.text()"),
+        "process-data CSV byte limit must be checked before reading the file payload",
+    )
 
 
 def run_drill() -> dict:
@@ -238,7 +251,7 @@ def run_drill() -> dict:
         "backupFormat": LEGACY_FORMAT,
         "activeUser": "learner-restored",
         "users": {"learner-restored": {"id": "learner-restored", "name": "Restored", "completed": [1, 2]}},
-        "trainingExtras": {"version": 2, "spacedReview": {"items": {}}, "practicalSignoff": {"checks": {}}},
+        "trainingExtras": {"version": 4, "scope": "learner-registry", "learners": {"learner-restored": {"spacedReview": {"items": {}}, "practicalSignoff": {"checks": {}}}}},
     }
     envelope = build_v3_envelope(payload)
     restored, committed = restore_v3_transaction(current, envelope, len(stable_json(envelope).encode("utf-8")))

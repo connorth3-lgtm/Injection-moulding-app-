@@ -106,6 +106,15 @@ need(
 )
 
 # document.write has been retired. The zero ceiling prevents it from returning.
+# The remaining core-document reconstruction is a single bounded compatibility bridge.
+# It may be retired or simplified, but must not grow additional parse/replace or
+# synthetic lifecycle stages while the legacy core is being converged.
+need(index.count("new DOMParser()") == 1, "core-document parser stage must remain singular until retired")
+need(index.count("document.replaceChild(prepared.root,document.documentElement)") == 1, "whole-document replacement stage must remain singular until retired")
+need(index.count('document.dispatchEvent(new Event("DOMContentLoaded"') == 1, "synthetic DOMContentLoaded redispatch stage must remain singular until retired")
+need(index.count('window.dispatchEvent(new Event("load"') == 1, "synthetic load redispatch stage must remain singular until retired")
+for marker in ("function prepareDocument(", "async function executePreparedScripts(", "async function installDocument("):
+    need(index.count(marker) == 1, f"bootstrap compatibility stage grew or drifted: {marker}")
 write_count = index.count("document.write(")
 need(write_count <= int(baseline["documentWriteCeiling"]), f"document.write bootstrap debt grew: {write_count}")
 need("document.writeln(" not in index, "document.writeln is not permitted in the runtime bootstrap")
@@ -114,7 +123,7 @@ need("document.writeln(" not in index, "document.writeln is not permitted in the
 # runtime uses deterministic generated copies with handler attributes rewritten to
 # inert data attributes. The final generated slot also embeds the strict delegated
 # bridge, avoiding a 40th BODY_SCRIPTS entry.
-inline_core_script_re = re.compile(r"<script\b(?![^>]*\bsrc\s*=)[^>]*>(.*?)</script\s*>", re.I | re.S)
+inline_core_script_re = re.compile(r"<script\b(?![^>]*\bsrc\s*=)[^>]*>(.*?)</script\b[^>]*>", re.I | re.S)
 inline_core_scripts = inline_core_script_re.findall(core)
 core_runtime_scripts = sorted(CORE_RUNTIME_DIR.glob("core-inline-*.js"))
 need(inline_core_scripts, "frozen recovery core unexpectedly has no inline scripts")
@@ -137,11 +146,22 @@ for number, (source, path) in enumerate(zip(inline_core_scripts, core_runtime_sc
             need(marker in generated, f"handler bridge marker missing from final generated core slot: {marker}")
     else:
         need(generated == expected_handler_free, f"handler-free externalized core runtime is stale at slot {number}: {path.name}")
-# Runtime modules loaded by the domain manifest must use the explicit domain-ready lifecycle rather than hot polling for shell availability.
-for rel in ['src/domains/shell/product-areas.js','src/domains/governance/standards-readiness.js']:
-    source=read(rel)
-    need('setInterval(' not in source and 'setTimeout(installWhenReady,50)' not in source,f'{rel} reintroduced startup polling')
-    need("mm:domains-ready" in source,f'{rel} must bind deferred installation to domain readiness')
+domain_bootstrap=read('src/domains/domain-bootstrap.js')
+need("function preloadScript(src)" in domain_bootstrap and "link.rel='preload'" in domain_bootstrap and "link.as='script'" in domain_bootstrap,'domain bootstrap must overlap same-origin asset transfers before ordered execution')
+need("assets.forEach(preloadScript)" in domain_bootstrap,'domain bootstrap must schedule all validated domain assets for preload before execution')
+need("for(const src of assets){await loadScript(src);loaded.push(src)}" in domain_bootstrap,'domain bootstrap must preserve deterministic sequential script execution')
+need(domain_bootstrap.index("assets.forEach(preloadScript)") < domain_bootstrap.index("for(const src of assets){await loadScript(src);loaded.push(src)}"),'domain preloading must occur before ordered execution begins')
+need("Promise.all(assets.map(loadScript" not in domain_bootstrap,'domain scripts must not execute concurrently; only network transfer may overlap')
+
+# Runtime modules loaded by the domain manifest must not hot-poll for shell availability.
+# Product Areas now exposes routing only; canonical Home composition belongs solely
+# to the app-shell registry, so it must not defer or register a dashboard surface.
+product_areas=read('src/domains/shell/product-areas.js')
+need('setInterval(' not in product_areas and 'setTimeout(installWhenReady,50)' not in product_areas,'product-areas reintroduced startup polling')
+need('dashboard.register' not in product_areas and 'product-areas-v1' not in product_areas,'retired Product Areas router reintroduced competing Home ownership')
+standards_readiness=read('src/domains/governance/standards-readiness.js')
+need('setInterval(' not in standards_readiness and 'setTimeout(installWhenReady,50)' not in standards_readiness,'standards-readiness reintroduced startup polling')
+need("mm:domains-ready" in standards_readiness,'standards-readiness must bind deferred installation to domain readiness')
 
 reading_patch=read('reading-patch.js')
 need('new MutationObserver' not in reading_patch,'reading patch reintroduced a whole-document mutation observer')
@@ -189,15 +209,24 @@ ui_polish=read('src/domains/shell/learner-ui-polish.js')
 need('new MutationObserver' not in ui_polish,'learner UI polish reintroduced a whole-body mutation observer')
 need("onRender?.('dashboard',schedule)" in ui_polish and 'onViewChange?.(schedule)' in ui_polish,'learner UI polish must use shell lifecycle events')
 
-need("const CORE_INLINE_SCRIPTS=[" in index, "runtime core script externalization registry missing")
-need("function externalizeCoreScripts(out)" in index, "runtime core script externalization function missing")
-need("out=externalizeCoreScripts(out)" in index, "runtime assembly does not externalize frozen core scripts")
-need("function retireInlineHandlerAttrs(parsed)" in index, "runtime static frozen-core handler retirement is missing")
-need("retireInlineHandlerAttrs(parsed);retireInlineStyleAttrs(parsed);const scripts=[]" in index, "static handler retirement does not run before document installation")
-need("function retireInlineStyleAttrs(parsed)" in index, "runtime frozen-core style-attribute retirement is missing")
+prepared_core=read('src/core-runtime/core-source.txt')
+need("function versionPreparedCore(out)" in index and "out=versionPreparedCore(out)" in index, "runtime bootstrap must version the build-prepared core script refs")
+need("function externalizeCoreScripts(out)" not in index, "runtime bootstrap must not externalize frozen core scripts after build-time preparation")
+need("retireInlineHandlerAttrs" not in index and "retireInlineStyleAttrs" not in index, "runtime bootstrap must not repeat build-time static attribute hardening")
+need(re.search(r"<script\b(?![^>]*\bsrc\s*=)[^>]*>",prepared_core,flags=re.I) is None,"prepared core payload still contains inline scripts")
+need(HANDLER_ATTR_RE.search(prepared_core) is None,"prepared core payload still contains executable static handler attributes")
+need(re.search(r"<[^>]*\sstyle\s*=",prepared_core,flags=re.I|re.S) is None,"prepared core payload still contains inline style attributes")
+need(len(re.findall(r'src=["\']\./src/core-runtime/core-inline-\d{3}\.js["\']',prepared_core))==len(core_runtime_scripts),"prepared core payload must reference every generated core runtime slot exactly once")
 need("./src/core-runtime/inline-style-bridge.js" in index, "strict inline-style bridge is not loaded before core replay")
 for path in core_runtime_scripts:
-    need(f"'./src/core-runtime/{path.name}'" in index, f"runtime core script missing from bootstrap registry: {path.name}")
+    need(f'src="./src/core-runtime/{path.name}"' in prepared_core, f"prepared core payload missing generated runtime slot: {path.name}")
+
+need("const CORE_RUNTIME_PRELOADS=Object.freeze(Array.from({length:10}" in index,'bootstrap must declare the ten governed generated core script preloads')
+need("function preloadStartupScript(src)" in index and "link.rel='preload'" in index and "link.as='script'" in index,'bootstrap must overlap startup script transfers using non-executing preload links')
+need("function preloadStartupScripts()" in index and "...BODY_SCRIPTS.map(row=>row[0])" in index,'startup preloading must include governed body scripts without introducing a second execution registry')
+need(index.index("preloadStartupScripts();") < index.index("assemble(await getCore())"),'startup preloads must begin before the prepared core payload is fetched and assembled')
+need("preloadStartupScript(src)" in index and "document.head.appendChild(link)" in index,'startup preload links must be attached to the document head')
+need("link.dataset.mmStartupPreload='1'" in index,'startup preloads must be identifiable for browser QA and duplicate suppression')
 
 # CSP may become stricter, but it may not add unsafe-eval, remote script origins,
 # inline script attributes, or external runtime connections.

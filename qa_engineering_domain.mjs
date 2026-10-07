@@ -69,6 +69,15 @@ assert.equal(
   'invalid-projected-area-value',
 );
 
+assert.equal(
+  clampSeparatingForce({
+    projectedArea: { value: 1e308, unit: 'm2' },
+    representativePressure: { value: 1e308, unit: 'Pa' },
+  }).reason,
+  'non-finite-engineering-result',
+  'finite inputs that overflow during engineering arithmetic must fail closed',
+);
+
 // Golden mass accounting: four 12.5 g parts plus a 5 g cold runner = 55 g/shot.
 const shot = aggregateShotMass({
   cavityCount: 4,
@@ -1151,6 +1160,24 @@ assert.equal(
     mouldSurfaceTemperatureBasisRef: 'instrumented-mould/trial-18',
   }).reason,
   'invalid-thermal-temperature-order',
+);
+
+assert.equal(
+  amorphousSlabCoolingTimeEstimate({
+    ...amorphousCoolingContext,
+    partThickness: { value: 3, unit: 'mm' },
+    thermalDiffusivity: { value: 0.1, unit: 'mm2/s' },
+    meltTemperature: { value: -100, unit: '°C' },
+    mouldSurfaceTemperature: { value: -300, unit: '°C' },
+    ejectionTemperature: { value: -200, unit: '°C' },
+    materialMorphology: 'amorphous',
+    ejectionCriterionType: 'centerline-temperature',
+    thermalDiffusivityRef: 'grade-property-dataset/rev-4',
+    ejectionCriterionRef: 'validated-part-ejection-study/rev-2',
+    mouldSurfaceTemperatureBasisRef: 'instrumented-mould/trial-18',
+  }).reason,
+  'invalid-mould-surface-temperature-value',
+  'temperatures below absolute zero must fail before thermal arithmetic',
 );
 
 assert.equal(

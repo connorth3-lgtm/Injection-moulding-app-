@@ -19,15 +19,15 @@ async function openApp(page){
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
 
-test('Home is one primary lesson decision plus Book and two non-duplicate specialist tools',async({page})=>{
+test('Home is one primary lesson decision plus Book resume and two non-duplicate specialist tools',async({page})=>{
   await page.setViewportSize({width:810,height:1080});
   await openApp(page);
   const focus=page.locator('#dashboard .mm-today-focus');
-  const book=page.locator('#dashboard [data-mm-home-book]');
   const tools=page.locator('#dashboard .mm-home-balance');
+  const book=page.locator('#dashboard [data-mm-home-book]');
   await expect(focus).toBeVisible();
   await expect(book).toBeVisible();
-  await expect(book.getByRole('button',{name:'Open Book'})).toBeVisible();
+  await expect(book.getByRole('button',{name:/Open Book|Keep Reading/})).toBeVisible();
   await expect(tools).toBeVisible();
   await expect(page.locator('#dashboard .mm-home-task-hub,#dashboard .mm-home-utility')).toHaveCount(0);
   await expect(tools.locator('[data-mm-home-action]')).toHaveCount(2);
@@ -58,27 +58,51 @@ test('Home is one primary lesson decision plus Book and two non-duplicate specia
     const focus=document.querySelector('#dashboard .mm-today-focus').getBoundingClientRect();
     const book=document.querySelector('#dashboard [data-mm-home-book]').getBoundingClientRect();
     const tools=document.querySelector('#dashboard .mm-home-balance').getBoundingClientRect();
+    const nav=document.querySelector('.mobile-nav').getBoundingClientRect();
     return {
       actions:getComputedStyle(document.querySelector('#dashboard .mm-home-balance-grid')).gridTemplateColumns.split(/\s+/).filter(Boolean).length,
       focused:document.activeElement?.dataset?.mmHomeAction||'',
       stable:document.querySelector('[data-mm-home-action="mould-master"]')?.dataset?.mmQaStableNode||'',
-      focusBottom:focus.bottom,bookTop:book.top,bookBottom:book.bottom,toolsTop:tools.top
+      focusBottom:focus.bottom,bookTop:book.top,bookBottom:book.bottom,toolsTop:tools.top,navTop:nav.top
     };
   });
   expect(phone.actions).toBe(2);
   expect(phone.focused).toBe('mould-master');
   expect(phone.stable).toBe('1');
   expect(phone.bookTop).toBeGreaterThanOrEqual(phone.focusBottom-1);
+  expect(phone.bookBottom).toBeLessThanOrEqual(phone.navTop+2);
   expect(phone.toolsTop).toBeGreaterThanOrEqual(phone.bookBottom-1);
 
   await page.setViewportSize({width:1440,height:900});
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
   expect(await page.locator('#dashboard .mm-home-balance-grid').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(/\s+/).filter(Boolean).length)).toBe(2);
 });
+
+test('Home Book card switches from start to learner-scoped Keep Reading state',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>window.MMBook?.getReaderArchitecture?.()||window.MMBook?.load);
+  await page.evaluate(async()=>{
+    await window.MMBook.load();
+    await window.MMBook.openReaderChapter('r04');
+    window.MM_LEARNER_UI_POLISH.refresh();
+  });
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  const book=page.locator('#dashboard [data-mm-home-book]');
+  await page.evaluate(()=>switchView('dashboard'));
+  await page.evaluate(()=>window.MM_LEARNER_UI_POLISH.refresh());
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  await expect(book).toHaveCount(1);
+  await expect(book).toContainText(/Keep reading:/i);
+  await expect(book).toContainText('Chapter 4 of 20');
+  await expect(book.getByRole('button',{name:'Keep Reading'})).toBeVisible();
+  await expect(book.getByRole('button',{name:'Book contents'})).toBeVisible();
+});
+
 test('Book keeps governed status intact but progressively discloses assurance detail without a mutation loop',async({page})=>{
   await page.setViewportSize({width:412,height:915});
   await openApp(page);
-  await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
+  await page.evaluate(()=>window.MMBook.load());
   await page.evaluate(()=>window.MMBook.open());
 
   const governance=page.locator('#mmBookView .mm-book-governance');
@@ -116,7 +140,12 @@ test('desktop navigation stays focused while specialist capabilities remain reac
   await expect(nav.getByRole('button',{name:'Materials'})).toBeVisible();
   await expect(nav.getByRole('button',{name:'Practice'})).toBeVisible();
   await expect(nav.getByRole('button',{name:'More'})).toBeVisible();
-  await expect(nav.getByRole('button',{name:/Book/i})).toBeHidden();
+  const bookNav=nav.locator('[data-mm-registry-nav="book"]');
+  await expect(bookNav).toBeVisible();
+  await bookNav.click();
+  await expect(page.locator('#mmBookView')).toBeVisible();
+  await expect(bookNav).toHaveAttribute('aria-current','page');
+  await nav.getByRole('button',{name:'Home'}).click();
   await expect(nav.getByRole('button',{name:/Data diagnosis/i})).toBeHidden();
   await expect(nav.getByRole('button',{name:/Mould Master/i})).toBeHidden();
 
@@ -175,7 +204,7 @@ test('primary IA keeps Materials singular and every major destination reachable'
   await openApp(page);
   const nav=page.locator('#nav');
   const visibleLabels=await nav.locator(':scope > button').evaluateAll(nodes=>nodes.filter(n=>getComputedStyle(n).display!=='none'&&!n.hidden).map(n=>(n.textContent||'').replace(/\s+/g,' ').trim()));
-  expect(visibleLabels).toEqual(['⌂ Home','▦ Learn','⬡ Materials','⚠ Practice','More']);
+  expect(visibleLabels).toEqual(['⌂ Home','▦ Learn','⬡ Materials','⚠ Practice','▣ Book','More']);
 
   await nav.getByRole('button',{name:'Home'}).click();
   await expect(page.locator('#dashboard')).toBeVisible();
@@ -204,14 +233,22 @@ test('primary IA keeps Materials singular and every major destination reachable'
   await expect(page.locator('#modal .modal-card')).toBeVisible();
   await expect(page.locator('#modal .modal-card h2')).toHaveText('More');
   await expect(page.locator('#modal .quick-action').filter({hasText:/^Materials$/i})).toHaveCount(0);
-  for(const label of ['Process simulator','Defect finder','Troubleshooting coach','Knowledge checks','Standards & safety','Profile & data','Mould Master','Data diagnosis']){
+  for(const label of ['Standards & safety','Profile & data']){
     await expect(page.locator('#modal').getByRole('button',{name:new RegExp(label,'i')})).toBeVisible();
   }
+  for(const label of ['Process simulator','Defect finder','Troubleshooting coach','Knowledge checks','Mould Master','Data diagnosis']){
+    await expect(page.locator('#modal').getByRole('button',{name:new RegExp(label,'i')})).toHaveCount(0);
+  }
+  await page.keyboard.press('Escape');
+  await nav.getByRole('button',{name:'Practice'}).click();
+  await page.locator('#scenarios [data-mm-hub-action="question-centre"]').click();
+  await expect(page.locator('#scenarios .mm-question-centre')).toBeVisible();
+  await expect(page.locator('#scenarios .mm-question-centre')).toContainText('169 governed prompts');
+  await expect(page.locator('#scenarios .mm-question-centre')).toContainText('30 approved technical + 27 regional-safety bank items');
 
   const desktopOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
   expect(desktopOverflow).toBeLessThanOrEqual(1);
 
-  await page.keyboard.press('Escape');
   await page.setViewportSize({width:390,height:844});
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
   const mobile=page.locator('.mobile-nav');
@@ -263,7 +300,7 @@ test('all major app surfaces remain reachable without shell clutter',async({page
 test('Book Materials chapter exposes the complete governed material datasets with structured technical-review rendering',async({page})=>{
   await page.setViewportSize({width:810,height:1080});
   await openApp(page);
-  await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
+  await page.evaluate(()=>window.MMBook.load());
   await page.evaluate(()=>window.MMBook.open());
   await page.locator('[data-mm-book-chapter="material-families"]').click();
   const atlas=page.locator('[data-mm-book-material-atlas]');
@@ -279,7 +316,11 @@ test('Book Materials chapter exposes the complete governed material datasets wit
 
   const canonical=atlas.locator('[data-mm-book-canonical-catalog]');
   await canonical.locator('summary').click();
-  await expect(canonical.locator('[data-mm-book-catalog-grade]')).toHaveCount(260);
+  await expect(canonical.locator('[data-mm-book-catalog-grade]')).toHaveCount(24);
+  const canonicalMore=canonical.locator('[data-mm-book-material-more="catalog"]');
+  await expect(canonicalMore).toContainText('24/260 shown');
+  await canonicalMore.click();
+  await expect(canonical.locator('[data-mm-book-catalog-grade]')).toHaveCount(48);
   const firstGrade=canonical.locator('[data-mm-book-catalog-grade]').first();
   await firstGrade.locator('summary').click();
   await expect(firstGrade).toContainText(/Canonical exact-grade record/i);
@@ -290,7 +331,11 @@ test('Book Materials chapter exposes the complete governed material datasets wit
 
   const regional=atlas.locator('[data-mm-book-regional-evidence]');
   await regional.locator('summary').click();
-  await expect(regional.locator('[data-mm-book-regional-row]')).toHaveCount(284);
+  await expect(regional.locator('[data-mm-book-regional-row]')).toHaveCount(24);
+  const regionalMore=regional.locator('[data-mm-book-material-more="regional"]');
+  await expect(regionalMore).toContainText('24/284 shown');
+  await regionalMore.click();
+  await expect(regional.locator('[data-mm-book-regional-row]')).toHaveCount(48);
   const firstRegional=regional.locator('[data-mm-book-regional-row]').first();
   await firstRegional.locator('summary').click();
   await expect(firstRegional).toContainText(/Regional evidence row 1/i);

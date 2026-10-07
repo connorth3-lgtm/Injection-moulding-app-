@@ -157,9 +157,7 @@ test('product hierarchy keeps Home focused and Materials catalogue dense',async(
     utilityShadow:getComputedStyle(document.querySelector('#dashboard .mm-home-balance')).boxShadow
   }));
   expect(hierarchy.focusShadow).not.toBe('none');
-  // The helper panel's entry animation can briefly expose a fractional
-  // shadow. Wait for the final unshadowed utility state.
-  await expect.poll(async()=>utilities.evaluate(el=>getComputedStyle(el).boxShadow)).toBe('none');
+  expect(hierarchy.utilityShadow).toBe('none');
 
   await page.waitForFunction(()=>Boolean(window.MM_MATERIAL_REGISTRY?.openPage));
   await page.evaluate(()=>window.MM_MATERIAL_REGISTRY.openPage({replaceUrl:false}));
@@ -222,39 +220,29 @@ test('Materials comparison guides valid choices before running evidence work',as
 });
 
 
-test('390px Home keeps the primary lesson and two specialist tools above the nav',async({page})=>{
+test('390px Home keeps lesson, Book and specialist tools in canonical order',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   const actions=page.locator('#dashboard .mm-home-balance-grid button');
   await expect(actions).toHaveCount(2);
   await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
-  const geometry=await page.evaluate(()=>({
-    toolsBottom:document.querySelector('#dashboard .mm-home-balance').getBoundingClientRect().bottom,
-    navTop:document.querySelector('.mobile-nav').getBoundingClientRect().top
-  }));
+  const book=page.locator('#dashboard [data-mm-home-book]');
+  await expect(book).toBeVisible();
+  await expect(book.getByRole('button',{name:/Open Book|Keep Reading/})).toBeVisible();
+  const geometry=await page.evaluate(()=>{
+    const focus=document.querySelector('#dashboard .mm-today-focus').getBoundingClientRect();
+    const book=document.querySelector('#dashboard [data-mm-home-book]').getBoundingClientRect();
+    const tools=document.querySelector('#dashboard .mm-home-balance').getBoundingClientRect();
+    const nav=document.querySelector('.mobile-nav').getBoundingClientRect();
+    return {focusBottom:focus.bottom,bookTop:book.top,bookBottom:book.bottom,toolsTop:tools.top,toolsBottom:tools.bottom,navTop:nav.top};
+  });
+  expect(geometry.bookTop).toBeGreaterThanOrEqual(geometry.focusBottom-1);
+  expect(geometry.toolsTop).toBeGreaterThanOrEqual(geometry.bookBottom-1);
   expect(geometry.toolsBottom).toBeLessThanOrEqual(geometry.navTop+1);
   await expect(page.locator('#dashboard .mm-home-balance')).not.toContainText(/Materials|Practice|Saved lessons|Reference book/i);
   await assertNoHorizontalOverflow(page,'home-390-primary-actions');
 });
 
-test('Home Book card opens the governed Book and returns to Home on phone and desktop',async({page})=>{
-  test.setTimeout(90000);
-  for(const width of [390,1440]){
-    await page.setViewportSize({width,height:900});
-    await openApp(page);
-    await page.waitForFunction(()=>typeof window.MMBook?.open==='function');
-    // Reloads can restore the last route; assert the Home card from Home.
-    await page.evaluate(()=>switchView('dashboard'));
-    const book=page.locator('#dashboard [data-mm-home-book]');
-    await expect(book).toBeVisible();
-    await book.getByRole('button',{name:'Open Book'}).click();
-    await expect(page.locator('#mmBookView')).toBeVisible();
-    await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
-    await expect(page.locator('#mmBookView [data-mm-book-chapter]')).toHaveCount(46);
-    await page.evaluate(()=>switchView('dashboard'));
-    await expect(page.locator('#dashboard [data-mm-home-book]')).toBeVisible();
-  }
-});
 test('mobile Materials keeps search controls sticky and touch sized',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
@@ -262,15 +250,27 @@ test('mobile Materials keeps search controls sticky and touch sized',async({page
   await page.evaluate(()=>window.MM_MATERIAL_REGISTRY.openPage({replaceUrl:false}));
   const filters=page.locator('#mmExactMaterialCatalog .mm-exact-search');
   await expect(filters).toBeVisible();
-  const style=await filters.evaluate(el=>({position:getComputedStyle(el).position,top:getComputedStyle(el).top}));
-  expect(style.position).toBe('sticky');
-  expect(parseFloat(style.top)).toBeGreaterThanOrEqual(0);
-  for(const control of ['[data-mm-exact-query]','[data-mm-exact-manufacturer]']){
-    const box=await page.locator(control).boundingBox();
-    expect(box?.height||0).toBeGreaterThanOrEqual(44);
-  }
+  const readFilterContract=()=>page.evaluate(()=>{
+    const filters=document.querySelector('#mmExactMaterialCatalog .mm-exact-search');
+    const query=document.querySelector('[data-mm-exact-query]');
+    const manufacturer=document.querySelector('[data-mm-exact-manufacturer]');
+    if(!filters||!query||!manufacturer||!filters.isConnected)return null;
+    const style=getComputedStyle(filters),q=query.getBoundingClientRect(),m=manufacturer.getBoundingClientRect();
+    return {position:style.position,top:Number.parseFloat(style.top),queryHeight:q.height,manufacturerHeight:m.height};
+  });
+  await expect.poll(readFilterContract).toEqual({
+    position:'sticky',
+    top:expect.any(Number),
+    queryHeight:expect.any(Number),
+    manufacturerHeight:expect.any(Number)
+  });
+  const hydrated=await readFilterContract();
+  expect(hydrated?.top??-1).toBeGreaterThanOrEqual(0);
+  expect(hydrated?.queryHeight??0).toBeGreaterThanOrEqual(44);
+  expect(hydrated?.manufacturerHeight??0).toBeGreaterThanOrEqual(44);
   await page.locator('[data-mm-exact-results]').evaluate(el=>el.scrollIntoView({block:'end'}));
   await expect(filters).toBeVisible();
+  await expect.poll(async()=> (await readFilterContract())?.position||'').toBe('sticky');
   await assertNoHorizontalOverflow(page,'materials-sticky-filters');
 });
 

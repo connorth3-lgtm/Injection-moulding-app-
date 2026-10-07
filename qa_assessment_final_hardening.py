@@ -16,6 +16,13 @@ required=[
 for p in required: need((ROOT/p).exists(),f'final hardening file missing: {p}')
 
 js=text('src/domains/assessment/assessment-final-hardening.js')
+need('function syncExamContractCopy()' in js,'assessment final hardening must align live modal copy with the selected standards contract')
+need('function syncExamListingContractCopy()' in js,'assessment final hardening must align the assessment listing/cards with the selected standards contract')
+need('16 questions · 7 technical + 9 regional safety' in js,'Compare All assessment cards must disclose the 16-question 7+9 contract')
+need('10 questions · 7 technical + 3 regional safety' in js,'single-region assessment cards must disclose the 10-question 7+3 contract')
+need('syncExamListingContractCopy();rewriteTimingPanel()' in js,'renderExams wrapper must refresh learner-facing attempt counts after region changes')
+need('16 questions: 7 technical plus all 9 safety/compliance items' in js,'Compare All learner copy must disclose the 16-question 7+9 contract')
+need('10 questions: 7 technical plus 3 safety/compliance items' in js,'single-region learner copy must disclose the 10-question 7+3 contract')
 for marker in [
  "const VERSION='2026.08.24.3'","const BANK_VERSION='2026.08.30.1'","mm_assessment_exposure_timing_v1",
  "const S=window.MM_ASSESSMENT_STORAGE_SCOPE","const REVISION3=","const REGIONAL_REVISION_CHANGE=","REVISION3[id]||REVISION2[id]||BASELINE",
@@ -109,7 +116,7 @@ need("'assessment-storage-scope.js'" in text('desktop/electron/scripts/generate-
 need("'src/domains/assessment/assessment-final-hardening.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'final hardening missing from integrity set')
 
 qy=text('.github/workflows/qa.yml')
-need("find . -maxdepth 1 -type f -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check" in qy,'release workflow missing filesystem JavaScript syntax gate')
+need("Repository-wide JavaScript syntax" in qy,'release workflow missing filesystem JavaScript syntax gate')
 need('python qa_assessment_final_hardening.py' in qy,'release workflow missing final hardening QA')
 need('python qa_research_source_freshness.py' in qy,'release workflow missing research-source freshness QA')
 ow=text('.github/workflows/open-desktop-build.yml')

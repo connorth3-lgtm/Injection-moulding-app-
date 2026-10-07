@@ -5,6 +5,15 @@ if(window.MM_DOMAIN_BOOTSTRAP)return;
 const VERSION='2026.09.06.4';
 const MANIFEST='./runtime-domain-manifest.json';
 
+function preloadScript(src){
+  if(document.querySelector(`link[data-mm-domain-preload][href="${src}"]`))return;
+  const link=document.createElement('link');
+  link.rel='preload';
+  link.as='script';
+  link.href=src;
+  link.dataset.mmDomainPreload='1';
+  document.head.appendChild(link);
+}
 function loadScript(src){return new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.async=false;s.dataset.mmDomainAsset='1';s.onload=()=>resolve(src);s.onerror=()=>reject(new Error(`Domain asset failed: ${src}`));document.body.appendChild(s)})}
 function loadPrimaryHubs(){
   if(window.MM_PRIMARY_HUBS||document.querySelector('script[data-mm-primary-hubs]'))return;
@@ -29,11 +38,18 @@ async function boot(){
   if(!r.ok)throw new Error(`${MANIFEST} returned ${r.status}`);
   const manifest=await r.json();
   if(manifest?.schemaVersion!==1||!Array.isArray(manifest.assets))throw new Error('Invalid domain runtime manifest');
+  const assets=manifest.assets.map(src=>{
+    const safe=typeof src==='string'
+      && /^\.\/src\/domains\/(?:[A-Za-z0-9._-]+\/)*[A-Za-z0-9._-]+\.js$/.test(src)
+      && !src.split('/').includes('..');
+    if(!safe)throw new Error(`Unsafe domain asset: ${src}`);
+    return src;
+  });
+  // Start all same-origin transfers together, then preserve the governed execution order.
+  // Preload only changes network scheduling; scripts are still inserted and executed one-by-one.
+  assets.forEach(preloadScript);
   const loaded=[];
-  for(const src of manifest.assets){
-    if(typeof src!=='string'||!src.startsWith('./src/domains/')||!src.endsWith('.js'))throw new Error(`Unsafe domain asset: ${src}`);
-    await loadScript(src);loaded.push(src);
-  }
+  for(const src of assets){await loadScript(src);loaded.push(src)}
   window.dispatchEvent(new CustomEvent('mm:domains-ready',{detail:{version:VERSION,loaded}}));
   return loaded;
 }

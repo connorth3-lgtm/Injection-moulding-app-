@@ -75,7 +75,29 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
   test.describe(viewport.name,()=>{
     test.use({viewport:{width:viewport.width,height:viewport.height}});
 
-    test('lesson opens as one simple flow with no duplicate mobile chrome',async({page})=>{
+    
+test('non-production preview boundary stays complete but compact on phones',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await open(page);
+  await page.evaluate(()=>{
+    const meta=document.createElement('meta');
+    meta.name='mm-publication-boundary';
+    meta.content='non-production-preview';
+    document.head.appendChild(meta);
+    window.MM_LEARNER_UX_REPAIR.repair();
+  });
+  const banner=page.locator('#mmNonProductionPreviewWarning');
+  await expect(banner).toBeVisible();
+  await expect(banner).toContainText('Non-production preview');
+  await expect(banner).toContainText('learner review and validation only');
+  await expect(banner).toContainText('physical-device release gate');
+  const box=await banner.boundingBox();
+  expect(box?.height||999).toBeLessThanOrEqual(78);
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(1);
+});
+
+test('lesson opens as one simple flow with no duplicate mobile chrome',async({page})=>{
       await open(page);
       await page.locator('.mobile-nav > button').filter({hasText:'Learn'}).click();
       await expect(page.locator('#path .mm-learn-hub')).toBeVisible();

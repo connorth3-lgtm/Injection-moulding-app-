@@ -1,367 +1,510 @@
 {
   "schemaVersion": 1,
   "policy": "Human SME review contract for technical assessment outcome mapping. Only mappings with reviewStatus='approved', current reviewedItemRevision, approved referenced outcomes, independenceReviewed=true, an independenceRationale, reviewedBy and reviewedAt are counted. Pending/proposed mappings never count toward breadth. This repository is public; reviewers should use only attribution they intend to publish.",
-  "outcomes": [],
+  "outcomes": [
+    {
+      "outcomeId": "material-condition",
+      "title": "Use material-condition evidence, including exact-grade thermal/moisture requirements, before attributing a process change to the resin.",
+      "important": null,
+      "reviewStatus": "pending",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Machine-proposed from the current reviewed assessment item concept/competency metadata. Requires independent human SME review before it can count as an approved learning outcome."
+    },
+    {
+      "outcomeId": "material-rheology",
+      "title": "Use rheology and exact-grade flow evidence without treating family labels or MFR/MVR as universal process recipes.",
+      "important": null,
+      "reviewStatus": "pending",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Machine-proposed from the current reviewed assessment item concept/competency metadata. Requires independent human SME review before it can count as an approved learning outcome."
+    },
+    {
+      "outcomeId": "shot-delivery-repeatability",
+      "title": "Evaluate shot delivery and machine repeatability evidence before changing downstream settings.",
+      "important": null,
+      "reviewStatus": "pending",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Machine-proposed from the current reviewed assessment item concept/competency metadata. Requires independent human SME review before it can count as an approved learning outcome."
+    },
+    {
+      "outcomeId": "pressure-sensor-evidence",
+      "title": "Interpret pressure signals by measurement location and signal history rather than treating one pressure number as universal evidence.",
+      "important": null,
+      "reviewStatus": "pending",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Machine-proposed from the current reviewed assessment item concept/competency metadata. Requires independent human SME review before it can count as an approved learning outcome."
+    },
+    {
+      "outcomeId": "tooling-locality",
+      "title": "Use cavity/locality and tooling evidence to separate local mould mechanisms from common machine/process mechanisms.",
+      "important": null,
+      "reviewStatus": "pending",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Machine-proposed from the current reviewed assessment item concept/competency metadata. Requires independent human SME review before it can count as an approved learning outcome."
+    },
+    {
+      "outcomeId": "cooling-thermal",
+      "title": "Use cooling-circuit and thermal-state evidence to investigate local dimensional, release and cycle changes.",
+      "important": null,
+      "reviewStatus": "pending",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Machine-proposed from the current reviewed assessment item concept/competency metadata. Requires independent human SME review before it can count as an approved learning outcome."
+    },
+    {
+      "outcomeId": "baseline-transfer",
+      "title": "Compare actual process evidence with a valid baseline when evaluating drift, gate-seal behaviour or transfer between conditions/machines.",
+      "important": null,
+      "reviewStatus": "pending",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Machine-proposed from the current reviewed assessment item concept/competency metadata. Requires independent human SME review before it can count as an approved learning outcome."
+    },
+    {
+      "outcomeId": "measurement-capability",
+      "title": "Use measurement-system and capability evidence to distinguish measurement/variation problems from process conclusions.",
+      "important": null,
+      "reviewStatus": "pending",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Machine-proposed from the current reviewed assessment item concept/competency metadata. Requires independent human SME review before it can count as an approved learning outcome."
+    },
+    {
+      "outcomeId": "designed-experiment-causality",
+      "title": "Use designed experiments, run order and interaction/confounding evidence to support causal conclusions.",
+      "important": null,
+      "reviewStatus": "pending",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "Machine-proposed from the current reviewed assessment item concept/competency metadata. Requires independent human SME review before it can count as an approved learning outcome."
+    }
+  ],
   "mappings": [
     {
       "stableId": "tech:Beginner:0",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "shot-delivery-repeatability"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Beginner:1",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "shot-delivery-repeatability"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Beginner:2",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "baseline-transfer"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Beginner:3",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "material-condition"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Beginner:4",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "material-condition"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Beginner:5",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "tooling-locality"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Beginner:6",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "tooling-locality"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Beginner:7",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "pressure-sensor-evidence"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Beginner:8",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "cooling-thermal"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Beginner:9",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "baseline-transfer",
+        "measurement-capability"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Intermediate:0",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "baseline-transfer"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Intermediate:1",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "baseline-transfer"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Intermediate:2",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "material-condition"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Intermediate:3",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "tooling-locality"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Intermediate:4",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "material-rheology"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Intermediate:5",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "shot-delivery-repeatability"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Intermediate:6",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "shot-delivery-repeatability"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Intermediate:7",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "cooling-thermal"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Intermediate:8",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "cooling-thermal"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Intermediate:9",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "designed-experiment-causality"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Advanced:0",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "measurement-capability"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Advanced:1",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "tooling-locality"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Advanced:2",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "designed-experiment-causality"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Advanced:3",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "designed-experiment-causality"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Advanced:4",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "pressure-sensor-evidence"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Advanced:5",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "material-rheology"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Advanced:6",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "measurement-capability"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Advanced:7",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "baseline-transfer"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Advanced:8",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "material-rheology"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     },
     {
       "stableId": "tech:Advanced:9",
       "reviewStatus": "pending",
-      "proposedOutcomeIds": [],
+      "proposedOutcomeIds": [
+        "pressure-sensor-evidence"
+      ],
       "outcomeIds": [],
       "reviewedItemRevision": null,
       "independenceReviewed": false,
       "independenceRationale": null,
       "reviewedBy": null,
       "reviewedAt": null,
-      "notes": null
+      "notes": "Proposed mapping only; independent SME approval is required before this mapping can count."
     }
   ]
 }

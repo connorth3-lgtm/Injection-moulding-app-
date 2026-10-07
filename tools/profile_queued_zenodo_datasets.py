@@ -18,6 +18,10 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "data" / "public-benchmark-results"
 USER_AGENT = "MouldMaster-data-profiler/1.0 (aggregate research profiling)"
+MAX_PUBLISHER_FILE_BYTES = 2 * 1024 * 1024 * 1024
+CROSS_PROCESS_BYTES = 685541746
+CROSS_PROCESS_MD5 = "069e190338b2ca29f736b21fabf407ba"
+CROSS_PROCESS_SHA256 = "a0c7c07997e6c5a996823744aceb82bfc7b4efd371c7be0f4afc60d04771ec90"
 
 
 def fetch_json(url: str) -> dict:
@@ -33,16 +37,24 @@ def fetch_json(url: str) -> dict:
 
 
 def download(url: str, target: Path, expected_size: int | None = None) -> tuple[str, str]:
+    if expected_size is not None and (expected_size < 0 or expected_size > MAX_PUBLISHER_FILE_BYTES):
+        raise AssertionError(f"publisher file size is outside the local safety bound: {expected_size}")
     md5 = hashlib.md5(usedforsecurity=False)
     sha256 = hashlib.sha256()
     request = Request(url, headers={"User-Agent": USER_AGENT})
+    received = 0
     with urlopen(request, timeout=180) as response, target.open("wb") as output:
         while chunk := response.read(1024 * 1024):
+            received += len(chunk)
+            if received > MAX_PUBLISHER_FILE_BYTES:
+                raise AssertionError(f"download exceeded local file safety bound for {target.name}: {received}")
+            if expected_size is not None and received > expected_size:
+                raise AssertionError(f"download exceeded expected size for {target.name}: {received} > {expected_size}")
             output.write(chunk)
             md5.update(chunk)
             sha256.update(chunk)
-    if expected_size is not None and target.stat().st_size != expected_size:
-        raise AssertionError(f"size mismatch for {target.name}: {target.stat().st_size} != {expected_size}")
+    if expected_size is not None and received != expected_size:
+        raise AssertionError(f"size mismatch for {target.name}: {received} != {expected_size}")
     return md5.hexdigest(), sha256.hexdigest()
 
 
@@ -154,12 +166,17 @@ def profile_cross_process() -> dict:
     if len(files) != 1:
         raise AssertionError(f"expected one cross-process archive, found {len(files)}")
     item = files[0]
+    if int(item.get("size") or -1) != CROSS_PROCESS_BYTES:
+        raise AssertionError(f"cross-process publisher size metadata drifted: {item.get('size')}")
+    if str(item.get("checksum") or "").lower() != f"md5:{CROSS_PROCESS_MD5}":
+        raise AssertionError(f"cross-process publisher checksum metadata drifted: {item.get('checksum')}")
     with tempfile.TemporaryDirectory(prefix="mouldmaster-cross-") as temp:
         archive = Path(temp) / "publisher.zip"
-        md5, sha256 = download(item["links"]["self"], archive, item.get("size"))
-        algorithm, expected = checksum_value(item.get("checksum"))
-        if algorithm == "md5" and md5 != expected:
+        md5, sha256 = download(item["links"]["self"], archive, CROSS_PROCESS_BYTES)
+        if md5 != CROSS_PROCESS_MD5:
             raise AssertionError("cross-process publisher MD5 mismatch")
+        if sha256 != CROSS_PROCESS_SHA256:
+            raise AssertionError("cross-process publisher SHA-256 mismatch")
         profiles = []
         members = []
         with zipfile.ZipFile(archive) as zf:
@@ -174,6 +191,43 @@ def profile_cross_process() -> dict:
                 if scoped and info.filename.lower().endswith((".csv", ".txt")):
                     with zf.open(info) as source:
                         profiles.append(csv_profile(source, info.filename))
+    extension_counts = {}
+    total_member_bytes = 0
+    total_compressed_bytes = 0
+    injection_scope_bytes = 0
+    injection_scope_compressed_bytes = 0
+    for member in members:
+        suffix = Path(member["name"]).suffix.lower().lstrip(".") or "<none>"
+        extension_counts[suffix] = extension_counts.get(suffix, 0) + 1
+        total_member_bytes += member["sizeBytes"]
+        total_compressed_bytes += member["compressedBytes"]
+        if member["injectionScope"]:
+            injection_scope_bytes += member["sizeBytes"]
+            injection_scope_compressed_bytes += member["compressedBytes"]
+
+    family_map = {}
+    for profile in profiles:
+        key = (profile["columns"], tuple(profile["headers"]), profile["delimiter"])
+        family = family_map.setdefault(key, {
+            "columns": profile["columns"],
+            "headers": profile["headers"],
+            "delimiter": profile["delimiter"],
+            "files": 0,
+            "rows": 0,
+            "nonEmptyValues": 0,
+            "numericValues": 0,
+            "widthMismatchRows": 0,
+        })
+        family["files"] += 1
+        family["rows"] += profile["rows"]
+        family["nonEmptyValues"] += profile["nonEmptyValues"]
+        family["numericValues"] += profile["numericValues"]
+        family["widthMismatchRows"] += profile["widthMismatchRows"]
+    schema_families = sorted(
+        family_map.values(),
+        key=lambda item: (-item["files"], item["columns"], item["delimiter"], json.dumps(item["headers"])),
+    )
+
     return {
         "schema_version": 1,
         "status": "completed-public-measured-benchmark-scope-limited",
@@ -189,8 +243,16 @@ def profile_cross_process() -> dict:
             "acceptedMeasuredTimeSeriesSamples": 0,
             "rawRowsOrCellValuesEmitted": False,
         },
-        "members": members,
-        "schemas": profiles,
+        "structureSummary": {
+            "archiveMemberExtensions": dict(sorted(extension_counts.items())),
+            "archiveBytes": {
+                "uncompressed": total_member_bytes,
+                "compressed": total_compressed_bytes,
+                "injectionScopeUncompressed": injection_scope_bytes,
+                "injectionScopeCompressed": injection_scope_compressed_bytes,
+            },
+            "schemaFamilies": schema_families,
+        },
         "retrieval": {"rawPublisherFilesCommitted": False, "rawRowsUploadedAsArtifact": False},
         "limitations": ["Screw-driving members are excluded from injection-moulding counts.", "Measured-value acceptance remains zero until source units and actual-versus-target semantics are mapped from the delivered schema."],
     }

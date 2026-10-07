@@ -1,23 +1,16 @@
 name: Pre-merge Public Candidate
 
 on:
+  # Always create the exact-head candidate gate for governed PRs. The workflow's
+  # impact classifier makes non-runtime changes cheap without leaving a missing
+  # required preview-provenance signal.
   pull_request:
-    branches: [ main ]
-    paths:
-      - 'latest.json'
-      - 'version.json'
-      - 'index.html'
-      - 'service-worker.js'
-      - 'src/domains/shell/pwa-shell.js'
-      - 'src/**'
-      - '*.js'
-      - '*.css'
-      - '*.html'
-      - 'manifest.webmanifest'
+    branches: [ main, preview ]
   workflow_dispatch:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: premerge-public-candidate-${{ github.event.pull_request.number || github.ref }}
@@ -26,20 +19,47 @@ concurrency:
 jobs:
   retain-exact-candidate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 45
     steps:
       - name: Checkout exact PR head
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 1
+          fetch-depth: 0
+
+      - name: Classify runtime impact since retained candidate
+        id: impact
+        run: python3 tools/ci_impact.py --governed-candidate
+
+      - name: Verify retained candidate producer can be reused
+        id: reuse
+        if: steps.impact.outputs.runtime != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if python3 tools/verify_retained_candidate_reuse.py --repository "$GITHUB_REPOSITORY"; then
+            echo "reusable=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "reusable=false" >> "$GITHUB_OUTPUT"
+            echo "Retained candidate producer/artifact is not reusable; rebuilding an exact artifact on this run." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Skip redundant candidate rebuild
+        if: steps.impact.outputs.runtime != 'true' && steps.reuse.outputs.reusable == 'true'
+        run: |
+          echo "No learner-runtime change and the currently bound producer/artifact is live and successful; reusing that exact runtime artifact."
+          echo "No new 90-day candidate artifact was generated." >> "$GITHUB_STEP_SUMMARY"
 
       - name: Set up Python
+        if: steps.impact.outputs.runtime == 'true' || steps.reuse.outputs.reusable != 'true'
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: '3.12'
 
       - name: Build production Pages candidate from exact PR head
+        if: steps.impact.outputs.runtime == 'true' || steps.reuse.outputs.reusable != 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -58,6 +78,7 @@ jobs:
           PY
 
       - name: Report exact public-runtime fingerprint
+        if: steps.impact.outputs.runtime == 'true' || steps.reuse.outputs.reusable != 'true'
         id: fingerprint
         shell: bash
         run: |
@@ -76,18 +97,51 @@ jobs:
           echo "- runtime fingerprint: \`$value\`" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Retain exact candidate for external HOLD execution
+        if: steps.impact.outputs.runtime == 'true' || steps.reuse.outputs.reusable != 'true'
         id: artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: physical-pwa-candidate-${{ github.event.pull_request.head.sha || github.sha }}
           path: .pages-dist
           if-no-files-found: error
-          retention-days: 30
+          retention-days: 90
           compression-level: 9
           include-hidden-files: true
 
       - name: Record artifact provenance
+        if: steps.impact.outputs.runtime == 'true' || steps.reuse.outputs.reusable != 'true'
         run: |
           echo "- artifact id: \`${{ steps.artifact.outputs.artifact-id }}\`" >> "$GITHUB_STEP_SUMMARY"
           echo "- artifact digest: \`${{ steps.artifact.outputs.artifact-digest }}\`" >> "$GITHUB_STEP_SUMMARY"
           echo "This artifact is a validation candidate only. It does not create physical-device, assistive-technology, SME, learner-outcome, signing, Store, accreditation or production authority." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Require exact PR-head quality gates before candidate approval
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          required=(integrity mobile-browser question-quality-50-pass)
+          for attempt in {1..120}; do
+            checks="$(gh api -H "Accept: application/vnd.github+json"               "/repos/${GITHUB_REPOSITORY}/commits/${SOURCE_SHA}/check-runs?per_page=100")"
+            pending=0
+            failed=0
+            for name in "${required[@]}"; do
+              state="$(printf '%s' "$checks" | python3 -c 'import json,sys; d=json.load(sys.stdin); n=sys.argv[1]; xs=[x for x in d.get("check_runs",[]) if x.get("name")==n]; xs.sort(key=lambda x: (x.get("completed_at") or x.get("started_at") or x.get("created_at") or "", int(x.get("id") or 0)), reverse=True); print("missing" if not xs else (xs[0].get("conclusion") or xs[0].get("status") or "unknown"))' "$name")"
+              case "$state" in
+                success) echo "$name: success" ;;
+                queued|in_progress|pending|requested|waiting|missing) echo "$name: $state"; pending=1 ;;
+                *) echo "::error::$name failed or was not successful: $state"; failed=1 ;;
+              esac
+            done
+            if [ "$failed" -ne 0 ]; then exit 1; fi
+            if [ "$pending" -eq 0 ]; then
+              echo "Exact PR-head quality gates passed for $SOURCE_SHA"
+              exit 0
+            fi
+            sleep 20
+          done
+          echo "::error::Timed out waiting for exact PR-head quality gates."
+          exit 1

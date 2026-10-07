@@ -57,6 +57,13 @@ def main() -> None:
         require(required in critical_rows, f"critical CI path missing: {required}")
     backup_regressions = set(critical_rows["backup-import"].get("regressions", []))
     require({"src/domains/learning/backup-authority-notice.js", "qa_learner_backup_integrity.cjs", "tools/health_restore_drill.py"}.issubset(backup_regressions), "backup integrity regression ownership incomplete")
+    for row in critical_rows.values():
+        for declared in row.get("regressions", []):
+            require((ROOT / declared).is_file(), f"health critical-path regression source does not exist: {row.get('id')} -> {declared}")
+    for store in data.get("persistence", {}).get("stores", []):
+        declared = store.get("source")
+        if declared:
+            require((ROOT / declared).is_file(), f"health persistence source does not exist: {store.get('id')} -> {declared}")
     require(set(ci.get("historicalDefectRegressions", [])) >= {281, 282, 283, 285, 288, 300, 311}, "historical audit regressions not tracked")
 
     workflow_text = "\n".join(path.read_text(encoding="utf-8") for path in (ROOT / ".github" / "workflows").glob("*.yml"))
@@ -66,6 +73,10 @@ def main() -> None:
 
     stores = {row["id"]: row for row in data.get("persistence", {}).get("stores", [])}
     require(stores["learner-core"]["identity"] == "mouldmasterProDB", "learner source-of-truth key mismatch")
+    extras = stores["learner-scoped-extras"]
+    require("128-bit" in extras.get("identity", "") and "collision-aware" in extras.get("learnerScope", ""), "learner-scoped extras must use collision-safe canonical identity")
+    require({"src/domains/shared/runtime-v2.js", "assessment-runtime-v2.js", "assessment-storage-scope.js", "assessment-ux.js", "src/domains/learning/training-qa-fix.js", "real-measured-data-assessment.js", "process-data-diagnostics.js", "diagnostic-learning-labs.js", "material-behaviour-labs.js"}.issubset(set(extras.get("sources", []))), "learner-scoped persistence inventory omits a live learner-owned store")
+    require("measured-assessment" in extras.get("backupScope", "") and "process-diagnostics" in extras.get("backupScope", "") and "diagnostic-lab" in extras.get("backupScope", "") and "material-lab" in extras.get("backupScope", "") and "opening history" in extras.get("backupScope", "") and "membership exposure history" in extras.get("backupScope", ""), "learner backup/derived-state boundary is incomplete")
     require(stores["engineering-cases"]["identity"] == "mouldmaster-engineering-v2" and stores["engineering-cases"]["version"] == 3, "engineering DB inventory mismatch")
     require(stores["engineering-cases"].get("stores") == ["cases", "caseLinks", "caseEvidence", "migrations"], "engineering DB store inventory mismatch")
     require("archive" in stores["engineering-cases"].get("deletionBoundary", ""), "engineering case deletion boundary must retain audit history")
@@ -83,6 +94,9 @@ def main() -> None:
     legacy = backup.get("legacyCompatibility", {})
     require(legacy.get("format") == "mouldmaster-backup-v2" and legacy.get("integrityStatus") == "unverified", "legacy backup compatibility status is not explicit")
     require(legacy.get("requiresExplicitUserDisclosure") is True and legacy.get("usesExistingStrictImporter") is True, "legacy backup compatibility boundary incomplete")
+    require(backup.get("unknownEnvelopePropertiesAccepted") is False, "backup envelope exact-key boundary must remain explicit")
+    require(backup.get("unknownPayloadTopLevelPropertiesAccepted") is True, "backup payload importer tolerance must be documented truthfully")
+    require("exact-key checked" in backup.get("payloadUnknownPropertyBoundary", "") and "tolerates additional top-level payload properties" in backup.get("payloadUnknownPropertyBoundary", ""), "backup unknown-property boundary wording is incomplete")
 
     backup_runtime = (ROOT / "src" / "domains" / "learning" / "backup-authority-notice.js").read_text(encoding="utf-8")
     for marker in [

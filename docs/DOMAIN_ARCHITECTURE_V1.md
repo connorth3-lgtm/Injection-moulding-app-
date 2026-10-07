@@ -15,13 +15,13 @@ The 2026-09-03 deep-dive audit converted the freeze from documentation into a mo
 Current ceilings are:
 
 - at most 15 scripts in the ordered `BODY_SCRIPTS` bootstrap list;
-- at most 4 directly injected root-level runtime scripts;
+- **zero** directly injected root-level runtime scripts (the governed target is reached and must remain zero);
 - no new root runtime script outside the captured grandfathered set;
 - no new root `*-fix.js`, `*-hardening.js`, `*-finalize.js`, or `*-extension.js` compatibility layer outside the captured grandfathered set;
 - zero active `document.write` bootstrap calls;
 - no `eval()`, `new Function()`, remote runtime script tags, CSP `unsafe-eval`, or external `connect-src` endpoints in the active runtime.
 
-The budget is a ceiling, not a target. These current 15 / 4 / 0 ceilings reflect the 2026-09-29 audit-hardening tranche. Historically, on 2026-09-03 the first deterministic runtime-pack tranche retired 23 direct evidence/process-data bootstrap entries into two ordered generated packs, reducing BODY_SCRIPTS from 60 to 39 and direct root runtime scripts from 59 to 36 without changing source execution order. Removing a root layer, moving capability under `src/domains/`, removing `document.write`, or replacing `unsafe-inline` with a stricter nonce/hash design is always an improvement and remains allowed.
+The budget is a ceiling, not a target. The current governed ceilings are **15 / 0 / 0** for BODY_SCRIPTS / directly injected root runtime scripts / root compatibility layers. The root-runtime and compatibility targets were reached on 2026-10-03 and must not regress. Historically, on 2026-09-03 the first deterministic runtime-pack tranche retired 23 direct evidence/process-data bootstrap entries into two ordered generated packs, reducing BODY_SCRIPTS from 60 to 39 and direct root runtime scripts from 59 to 36 without changing source execution order. Removing a root layer, moving capability under `src/domains/`, removing `document.write`, or replacing `unsafe-inline` with a stricter nonce/hash design is always an improvement and remains allowed.
 
 ## Five user-facing product areas
 
@@ -114,6 +114,27 @@ Pilot progress as of 2026-09-03:
 - `korea-pilot-v1.json` is an umbrella progress manifest, not a second source of material claims; its `gradeRecords` arrays stay empty and point to separately reviewed/validated datasets.
 
 No glass-fibre percentage, lifecycle state, approval, property condition or processing value is inferred when the primary source does not establish it.
+
+## Domain bootstrap transfer scheduling
+
+The generated domain manifest remains execution-order governed, but the browser no longer waits to begin each network transfer until the previous domain script has executed. The bootstrap validates the complete manifest first, starts same-origin `preload` transfers for every approved domain asset, then inserts and executes the scripts one-by-one in the original manifest order.
+
+This is intentionally **not** concurrent execution. It reduces cold-start network waterfall without changing global initialization order, module ownership, CSP, service-worker authority or runtime semantics. A future demand-loading tranche may reduce the total startup asset set, but must prove feature reachability and lifecycle parity before any domain is removed from the eager execution contract.
+
+## Bootstrap convergence target
+
+The remaining browser bootstrap contains one compatibility bridge that parses a **build-prepared, non-executable core shell**, replaces the document, recreates governed scripts in order and re-dispatches lifecycle events. Static core-script externalization plus inline handler/style retirement now happen deterministically in `tools/externalize_core_scripts.py`; they are no longer repeated by every browser at startup. The remaining document-install bridge is a **bounded retirement target**, not an extensibility point.
+
+Until it is removed:
+
+- there must remain exactly one DOMParser core-document stage;
+- there must remain exactly one whole-document replacement;
+- there must remain exactly one synthetic DOMContentLoaded and one synthetic load redispatch;
+- static core script/handler/style hardening must remain build-time and fail closed if the prepared payload drifts;
+- new product behavior must not add another document-transform stage;
+- removal or simplification is always allowed if browser/PWA/Desktop parity and release integrity stay green.
+
+The target end state is: **canonical source → generated runtime assets → ordinary browser load → invariant verifier**. The migration should externalize/retire the compatibility bridge only after its current ordering, CSP, PWA and recovery semantics have dedicated parity tests.
 
 ## Runtime migration
 

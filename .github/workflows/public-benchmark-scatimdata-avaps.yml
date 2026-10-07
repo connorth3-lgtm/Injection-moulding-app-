@@ -33,7 +33,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install profiling dependencies
-        run: python -m pip install --disable-pip-version-check pandas pyarrow openpyxl h5py
+        run: python -m pip install --disable-pip-version-check pandas==3.0.6 pyarrow==25.0.1 openpyxl==3.1.5 h5py==3.16.0
       - name: AVAPS benchmark regression QA
         run: python qa_public_benchmark_scatimdata.py
 
@@ -48,7 +48,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install profiling dependencies
-        run: python -m pip install --disable-pip-version-check pandas pyarrow openpyxl h5py
+        run: python -m pip install --disable-pip-version-check pandas==3.0.6 pyarrow==25.0.1 openpyxl==3.1.5 h5py==3.16.0
       - name: Retrieve and profile pinned AVAPS archives
         run: |
           mkdir -p benchmark-results

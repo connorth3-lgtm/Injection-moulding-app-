@@ -9,6 +9,8 @@ on:
 
 permissions:
   contents: read
+  actions: read
+  issues: read
 
 concurrency:
   group: release-external-validation-${{ github.ref }}
@@ -19,6 +21,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: '3.12'
@@ -26,21 +30,21 @@ jobs:
         run: python tools/verify_release_external_validation.py
       - name: Verify exact release validation packets
         run: python qa_release_validation_packets.py
+      - name: Verify live retained artifact and external tracker bindings
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          python tools/verify_external_validation_live_bindings.py
+          --repository "${{ github.repository }}"
       - name: Verify External Validation Wave 1 integrity
         run: python qa_external_validation_wave1.py
       - name: Exercise native ruleset verifier contract
         run: python tools/verify_main_ruleset.py --self-test
       - name: Verify live native main ruleset against canonical policy
-        if: github.event_name != 'pull_request' || github.event.pull_request.number != 445
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
         run: python tools/verify_main_ruleset.py --repository "${{ github.repository }}"
-      - name: Record PR 445 external-validation override
-        if: github.event_name == 'pull_request' && github.event.pull_request.number == 445
-        run: |
-          echo 'External/native ruleset validation intentionally skipped for PR #445 by repository owner instruction.'
-          echo 'This does not convert any external HOLD evidence into PASS and does not alter post-merge main validation.'
       - name: Preserve human and operational evidence boundary
         run: |
           echo 'PASS means unsupported external-validation claims are blocked.'

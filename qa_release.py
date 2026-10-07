@@ -7,7 +7,7 @@ import struct
 import subprocess
 import tempfile
 
-WEB_RELEASE = "2026.10.07.10"
+WEB_RELEASE = "2026.10.07.11"
 ANDROID_RELEASE = "2026.08.26.2"
 CONTENT_VERSION = "2026.08.26.1"
 WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
@@ -89,8 +89,33 @@ for asset in [
     "src/domains/shell/accessibility-hardening.js",
 ]:
     assert f"'./{asset}'" in index, f"current learner-facing runtime asset not loaded by shell: {asset}"
-assert "['./reading-patch.js','<script" not in index and "['./training-upgrade.js','<script" not in index and "['./src/domains/learning/training-qa-fix.js','<script" not in index, "learning foundation source scripts must not return as direct bootstrap entries"
+assert "['./reading-patch.js','<script" not in index and "['./training-upgrade.js','<script" not in index and "['./src/domains/learning/training-qa-fix.js','<script" not in index and "['./src/domains/learning/backup-authority-notice.js','<script" not in index, "learning foundation source scripts must not return as direct bootstrap entries"
 assert index.index("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'") < index.index("'./src/domains/shared/runtime-v2.js'") < index.index("'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'"), "runtime-v2 assessment ownership load order is wrong"
+learning_pack = text("src/domains/runtime-packs/learning-foundation-runtime-pack.js")
+assert "/* >>> backup-authority-notice.js */" in learning_pack and "MM_LEARNER_BACKUP_INTEGRITY" in learning_pack, "backup integrity runtime is not wired into the learner-facing foundation pack"
+assert learning_pack.index("/* >>> training-qa-fix.js */") < learning_pack.index("/* >>> backup-authority-notice.js */"), "backup integrity wrapper must load after the governed training import/export bridge"
+manifest = text("runtime-domain-manifest.json")
+assert "./src/domains/learning/backup-authority-notice.js" not in manifest, "packed backup integrity source must not also load through the domain manifest"
+pack_builder = text("tools/build_runtime_packs.py")
+service_worker = text("service-worker.js")
+packed_public_exceptions = {
+    "source-library.js",
+    "reference-data.js",
+    "reference-deep-dive.js",
+    "src/domains/research/reference-research-extension.js",
+    "src/domains/research/reference-20x-extension.js",
+    "reference-2026-expansion.js",
+}
+reference_page = text("reference-data.html")
+for packed_source in re.findall(r'"([^"]+\.js)"', pack_builder):
+    if "runtime-pack" in packed_source:
+        continue
+    present = f"'./{packed_source}'" in service_worker
+    if packed_source in packed_public_exceptions:
+        assert present, f"standalone reference page dependency missing from PWA asset graph: {packed_source}"
+        assert packed_source in reference_page, f"packed-source public exception is not justified by reference-data.html: {packed_source}"
+    else:
+        assert not present, f"retired packed source remains in PWA asset graph: {packed_source}"
 assert index.index("'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'") < index.index("'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'"), "specialist evidence/runtime finalizer load order is wrong"
 for retired in ["assessment-100-pass.js","assessment-deep-dive.js","src/domains/assessment/assessment-answer-cue-fix.js","assessment-storage-scope.js","assessment-quality-suite.js","assessment-stable-review-bridge.js","assessment-analytics-ui.js","src/domains/assessment/assessment-final-hardening.js"]:
     assert f"['./{retired}','<script" not in index, f"assessment foundation direct source is still injected: {retired}"
@@ -100,10 +125,19 @@ assert f"CACHE_VERSION='{WEB_RELEASE}'" in sw
 for asset in [
     "index.html", "src/core-runtime/core-source.txt", "manifest.webmanifest",
     "mouldmaster-192.png", "mouldmaster-512.png", "version.json", "reading-patch.css",
-    "src/domains/runtime-packs/learning-foundation-runtime-pack.js", "src/domains/runtime-packs/assessment-foundation-runtime-pack.js", "source-library.js", "src/domains/shell/pwa-shell.js", "learning-experience.js",
-    "process-data-diagnostics.js", "curriculum-integration.js", "specialist-curriculum.js",
-    "src/domains/learning/specialist-evidence-gap-extension.js", "mould-master-workspace.js", "src/domains/runtime-packs/shell-finalization-runtime-pack.js", "learning-analytics.js",
-    "src/domains/shared/runtime-v2.js", "assessment-runtime-v2.js", "lesson-deep-authoring-v2.js", "assessment-multimodal.js", "src/domains/shell/accessibility-hardening.js",
+    "src/domains/runtime-packs/learning-foundation-runtime-pack.js",
+    "src/domains/runtime-packs/assessment-foundation-runtime-pack.js",
+    "src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js",
+    "src/domains/runtime-packs/evidence-runtime-pack.js",
+    "src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js",
+    "src/domains/runtime-packs/assessment-multimodal-runtime-pack.js",
+    "src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js",
+    "src/domains/runtime-packs/process-data-runtime-pack.js",
+    "src/domains/runtime-packs/curriculum-workspace-runtime-pack.js",
+    "src/domains/runtime-packs/shell-finalization-runtime-pack.js",
+    "source-library.js", "reference-data.js", "reference-deep-dive.js", "reference-2026-expansion.js",
+    "src/domains/shell/pwa-shell.js", "learning-analytics.js",
+    "src/domains/shared/runtime-v2.js", "src/domains/shell/accessibility-hardening.js",
     "learner-ux-repair.css", "premium-ui.css", "premium-dynamic.css", "learner-ux-repair.js"
 ]:
     assert f"'./{asset}'" in sw, f"offline asset missing: {asset}"
@@ -189,12 +223,36 @@ assert "lesson()" in source_lib and "standards()" in source_lib, "sources must b
 assert Path("sources/AUTHORITATIVE_SOURCE_REGISTER.md").exists(), "authoritative source register missing"
 
 bridge = text("src/domains/learning/training-qa-fix.js")
-for marker in ["file.size>10*1024*1024", "clean.id=sid", "clean.certificates=[]", "clean.certificateMeta={}", "clean.examPassStatus={}", "restoreSnapshot(before)", "Certificates must be re-earned", "db!==beforeDb", "LEARNING_ANALYTICS_PREFIX", "ANALYTICS_CLEANUP_CODE", "remaining key(s):", "clearAllAnalyticsStores();clearTrainingExtrasStores()", "analytics were cleared and verified"]:
+for marker in [
+    "file.size>10*1024*1024",
+    "clean.id=sid",
+    "clean.learningAwards=[]",
+    "clean.learningAwardMeta={}",
+    "clean.examPassStatus={}",
+    "restoreSnapshot(before)",
+    "function trainingDestinationKey(base,learnerId)",
+    "function trainingKeyForBackup(base,learnerId)",
+    "function readTrainingForBackup(base,d,learnerId)",
+    "function readMaterialLabsForBackup(d,learnerId)",
+    "Certificates must be re-earned",
+    "db!==beforeDb",
+    "LEARNING_ANALYTICS_PREFIX",
+    "ANALYTICS_CLEANUP_CODE",
+    "remaining key(s):",
+    "clearTrainingExtrasStores();",
+    "clearAllAnalyticsStores();",
+    "for(const [k,v] of Object.entries(trainingWrites)){localStorage.setItem(k,v);if(localStorage.getItem(k)!==v)",
+    "clearLearnerAnalyticsStores(active);clearLearnerTrainingExtras(active);",
+    "Learner reset was not started because the current learner state could not be read safely",
+    "proposed.users[active]=cleanResetLearner(prior,active)",
+    "Other local learner profiles and saved process-data evidence",
+]:
     assert marker in bridge, f"import/reset hardening missing: {marker}"
-storage_commit = bridge.index("for(const [k,v] of Object.entries(writes))localStorage.setItem(k,v)")
-cleanup_commit = bridge.index("clearAllAnalyticsStores();", storage_commit)
+cleanup_commit = bridge.index("clearTrainingExtrasStores();")
+analytics_commit = bridge.index("clearAllAnalyticsStores();", cleanup_commit)
+storage_commit = bridge.index("for(const [k,v] of Object.entries(trainingWrites)){localStorage.setItem(k,v);if(localStorage.getItem(k)!==v)", analytics_commit)
 memory_commit = bridge.index("db=proposed;user=db.users[db.activeUser]")
-assert storage_commit < cleanup_commit < memory_commit, "imported learner registry must activate only after staged writes and verified analytics cleanup"
+assert cleanup_commit < analytics_commit < storage_commit < memory_commit, "imported learner registry must activate only after verified cleanup and scoped training writes"
 shell = text("src/domains/shell/pwa-shell.js")
 assert f"const RELEASE='{WEB_RELEASE}'" in shell
 assert f"const CONTENT='{CONTENT_VERSION}'" in shell
@@ -261,7 +319,7 @@ for js_name in [
     assert p.returncode == 0, f"{js_name}: {p.stderr}"
 
 for html_name in ["index.html", "MouldMaster_Academy_App.html"]:
-    scripts = re.findall(r"<script(?:\s[^>]*)?>(.*?)</script>", text(html_name), flags=re.S | re.I)
+    scripts = re.findall(r"<script(?:\s[^>]*)?>(.*?)</script\b[^>]*>", text(html_name), flags=re.S | re.I)
     for i, script in enumerate(scripts, 1):
         if not script.strip():
             continue

@@ -17,6 +17,15 @@ required_hub = {
     "recommended practice region": 'aria-label="Recommended practice"',
     "task-led chooser": "Choose by the job you want to practise",
     "assessment separation": "Practice is for learning; assessments stay separate.",
+    "question centre": "Question Centre",
+    "question centre launcher": 'data-mm-hub-action="question-centre"',
+    "formal question lane": "Formal knowledge checks",
+    "formal attempt contract": "10 questions in one jurisdiction or 16 in Compare All.",
+    "scenario question lane": "Shop-floor scenarios",
+    "diagnostic question lane": "Diagnostic questions",
+    "material question lane": "Material questions",
+    "measured question lane": "Measured-evidence decisions",
+    "question centre registry": "window.MM_QUESTION_CENTRE=Object.freeze",
     "scenario rotation": "nextScenarioIndex",
     "process-data practice": 'data-mm-hub-action="process-data"',
     "troubleshooting practice": 'data-mm-hub-action="troubleshooting"',
@@ -58,6 +67,13 @@ if "suggested==='guided-retrieval-and-feedback'||rec?.actionType==='stabilize-re
 if "suggested==='different-practice-format'||rec?.actionType==='evidence-confirmation'" not in hub:
     failures.append("Practice hub no longer maps evidence-confirmation recommendations to varied labs")
 
+# The canonical shell is the sole dashboard composition owner. Practice may rewrite
+# legacy action routing, but it must never hide/remove registry slots.
+if "mm-dashboard-slot" in hub or "mmDashboardRegistryBefore" in hub or "mmDashboardRegistryAfter" in hub:
+    failures.append("Practice hub must not inspect, hide or delete canonical dashboard registry slots")
+if "normalizeHomeActions" not in hub:
+    failures.append("Practice hub non-destructive Home action normalizer missing")
+
 # Practice rotation is learner-scoped. If Runtime V2 is unavailable, leave the
 # preference transient rather than sharing one browser-global key across learners.
 if "localStorage.getItem(PRACTICE_ROTATION_KEY)" in hub or "localStorage.setItem(PRACTICE_ROTATION_KEY" in hub:
@@ -97,5 +113,5 @@ print(" - learner-guided recommendation wiring present")
 print(" - recommender activity type and CTA stay aligned")
 print(" - task/time-oriented Practice choices present")
 print(" - mobile explanations and CTAs remain visible")
-print(" - assessments remain a separate lane")
+print(" - assessments remain a separate scoring lane inside the consolidated Question Centre")
 print("NOTE: this is automated regression evidence, not human accessibility or SME instructional validation.")

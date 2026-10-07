@@ -341,3 +341,14 @@ details>summary{border-radius:10px}
 /* 2026.09.16.2 refinement: consistent local Book/navigation iconography. */
 .mm-book-nav-icon{width:17px;height:14px;display:inline-block;border:1.8px solid currentColor;border-radius:3px;position:relative;box-sizing:border-box}.mm-book-nav-icon::after{content:"";position:absolute;top:1px;bottom:1px;left:50%;border-left:1.5px solid currentColor}.mm-book-hero-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 body.mm-home-visible #continueBtn,body[data-mm-view="path"] #continueBtn{display:none!important}
+
+/* Mobile evidence rows must wrap on first paint, even before the optional
+   learner-polish stylesheet finishes loading. This rule is intentionally
+   mirrored there and does not alter evidence text or release authority. */
+@media(max-width:700px){
+  #mmMouldMasterWorkspace .mw-evidence-row > b,
+  #mmMouldMasterWorkspace .mw-evidence-row > div{
+    overflow-wrap:anywhere!important;
+    min-width:0;
+  }
+}

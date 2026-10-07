@@ -67,6 +67,10 @@ for token in [
     "Canonical measured evidence",
     "Measured data behind this topic",
     "Browse all 17 measured families",
+    "data-mme-catalog-launcher",
+    "Browse measured data",
+    "open:openCatalog",
+    "ensureProcessDataLauncher",
     "record-level",
     "material characterisation",
     "process waveform",
@@ -92,7 +96,7 @@ need("./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js" i
 need("/* >>> measured-evidence-integration.js */" in js, "bootstrap pack missing measured-evidence-integration.js")
 need("./src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js" in sw, "offline CORE missing bootstrap assessment/source runtime pack")
 release_qa = (ROOT / ".github/workflows/qa.yml").read_text(encoding="utf-8")
-need("find . -maxdepth 1 -type f -name '*.js'" in release_qa, "Release QA filesystem JavaScript syntax gate missing")
+need("Repository-wide JavaScript syntax" in release_qa, "Release QA filesystem JavaScript syntax gate missing")
 need("python qa_measured_evidence_integration.py" in release_qa, "Release QA integration gate missing")
 
 # Metadata-only safeguard: runtime may contain counts and labels, but no third-party row arrays or sampled signal arrays.

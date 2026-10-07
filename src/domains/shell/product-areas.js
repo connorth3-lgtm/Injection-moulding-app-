@@ -24,18 +24,10 @@ function open(id){
     else coreView('standards');
   }
 }
-function render(slot){
-  slot.innerHTML=`<section class="card mm-product-areas" aria-label="MouldMaster product areas"><div class="mm-product-areas-head"><div><span class="eyebrow">One platform · five jobs</span><h2>What do you need to do?</h2><p>Start from the engineering task rather than the internal module structure.</p></div></div><div class="mm-product-area-grid">${AREAS.map(a=>`<button type="button" class="mm-product-area" data-mm-product-area="${esc(a.id)}"><span class="icon" aria-hidden="true">${esc(a.icon)}</span><b>${esc(a.label)}</b><small>${esc(a.description)}</small></button>`).join('')}</div><div class="mm-product-boundary">Materials distinguishes family-level learning from published exact-grade evidence. Diagnose and Analyse remain evidence-organising tools, not universal production recipes.</div></section>`;
-  slot.querySelectorAll('[data-mm-product-area]').forEach(b=>b.addEventListener('click',()=>open(b.dataset.mmProductArea)));
-}
 function install(){
-  const shell=window.MM_APP_SHELL;
-  if(shell?.dashboard?.register){
-    shell.dashboard.register({id:'product-areas-v1',zone:'before',order:8,render});
-    return true;
-  }
-  return false;
+  // Product-area routing remains available through MM_PRODUCT_AREAS.open(), but
+  // the canonical Home registry owns learner-facing composition.
+  return true;
 }
-if(!install())window.addEventListener('mm:domains-ready',install,{once:true});
 window.MM_PRODUCT_AREAS=Object.freeze({version:VERSION,areas:AREAS,open,install});
 })();
