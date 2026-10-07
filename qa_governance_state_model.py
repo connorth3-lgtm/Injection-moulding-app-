@@ -100,6 +100,10 @@ def main() -> None:
     version = load("version.json")
     external = load("data/release-external-validation-v1.json")
     book_auth = load("data/book-publication-authorization-v1.json")
+    book_manifest = load("data/book-manifest-v1.json")
+    book_accuracy = load("data/book-accuracy-gate-v1.json")
+    book_audit = load("data/book-verification-audit-all-v1.json")
+    book_reader = load("data/book-reader-architecture-v2.json")
     book_sme = load("data/book-sme-review-v1.json")
     curriculum_sme = load("qa/curriculum-semantic-review.json")
     nzqa_external = load("data/nzqa-external-validation-v1.json")
@@ -152,6 +156,17 @@ def main() -> None:
     assert external["governance"]["status"] in {"pending-native-ruleset-apply", "enforced"}
 
     assert book_auth["status"] == "authorized", "current Book publication authorization changed unexpectedly"
+    manifest_ids = [chapter["id"] for part in book_manifest.get("parts", []) for chapter in part.get("chapters", [])]
+    assert len(manifest_ids) == 46 and len(set(manifest_ids)) == 46
+    assert set(book_auth.get("authorizedChapterIds", [])) == set(manifest_ids), "current Book authorization must cover every governed manifest module exactly"
+    reader_module_ids = [module_id for row in book_reader.get("readerChapters", []) for module_id in row.get("moduleIds", [])]
+    assert len(book_reader.get("readerChapters", [])) == 20 and len(reader_module_ids) == 46 and len(set(reader_module_ids)) == 46 and set(reader_module_ids) == set(manifest_ids), "reader architecture must map all governed modules exactly once"
+    lifecycle = book_accuracy.get("recordLifecycle") or {}
+    assert lifecycle.get("status") == "historical-prepublication-gate"
+    assert lifecycle.get("supersededForCurrentPublicationStatusBy") == "data/book-publication-authorization-v1.json"
+    publication_decision = book_audit.get("publicationDecision") or {}
+    assert publication_decision.get("chaptersAutomaticallyVerified") == 0, "historical audit must not self-promote chapters to independent verification"
+    assert publication_decision.get("chaptersReadyForExplicitPromotionReview") == 46
     assert book_sme["status"] == "hold", "independent Book SME status must remain HOLD until real 46/46 human review exists"
     assert book_sme.get("reviews") == [], "current independent Book SME ledger must not contain manufactured approvals"
     assert external["bookSme"]["status"] == book_sme["status"]
