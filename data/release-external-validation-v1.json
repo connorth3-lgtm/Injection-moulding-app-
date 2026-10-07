@@ -13,7 +13,10 @@
     "repositoryPolicy": ".github/MAIN_PROTECTION.md",
     "verifier": "tools/verify_main_ruleset.py",
     "liveRulesetIssue": "#43",
-    "required": "Apply and verify the canonical no-bypass solo-maintainer main ruleset with all six protected status contexts. The repository owner alone must deliberately squash-merge after the exact-head checks succeed; do not claim an independent GitHub reviewer."
+    "required": "Apply and verify the canonical no-bypass solo-maintainer main ruleset with all six protected status contexts. The repository owner alone must deliberately squash-merge after the exact-head checks succeed; do not claim an independent GitHub reviewer.",
+    "liveRulesetId": 22155472,
+    "liveRulesetVerifiedAt": "2026-10-07T05:46:55.135Z",
+    "liveRulesetUpdatedAt": "2026-10-07T18:22:41.578+13:00"
   },
   "accessibility": {
     "status": "hold",
