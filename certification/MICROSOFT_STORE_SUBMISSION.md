@@ -155,7 +155,7 @@ Only actual application screenshots from a test profile should be used for Store
 
 ## Packaging toolchain
 
-Portable/NSIS packaging uses the stable lockfile-pinned `electron-builder` v26 dependency. MSIX support is currently supplied by the exact `electron-builder@27.0.0-alpha.7` beta in the Store workflow because the MSIX target is not available in the pinned v26 stable lane.
+Portable/NSIS packaging uses the stable lockfile-pinned `electron-builder` v26 dependency. MSIX support is currently supplied by the exact `electron-builder@27.0.0-alpha.9` prerelease in the Store workflow because the MSIX target is not available in the pinned v26 stable lane.
 
 The Store workflow currently builds x64 + arm64 and requests:
 - MSIX package output

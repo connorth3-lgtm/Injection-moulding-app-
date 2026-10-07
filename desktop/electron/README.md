@@ -65,7 +65,7 @@ npm run dist:nsis
 npm run dist:msix
 ```
 
-Portable and NSIS builds use the stable `electron-builder` version pinned in `package.json` and `package-lock.json`. MSIX support is isolated in `msix-toolchain/`, where `electron-builder@27.0.0-alpha.7` has its own committed lockfile and is invoked only through `scripts/run-msix-builder.cjs`. Do not silently change either packaging toolchain; run release QA and Windows validation when updating them.
+Portable and NSIS builds use the stable `electron-builder` version pinned in `package.json` and `package-lock.json`. MSIX support is isolated in `msix-toolchain/`, where `electron-builder@27.0.0-alpha.9` has its own committed lockfile and is invoked only through `scripts/run-msix-builder.cjs`. Do not silently change either packaging toolchain; run release QA and Windows validation when updating them.
 
 The tagged GitHub Release is the transparent open-source distribution/testing lane. It includes a portable executable plus SHA-256 sums, source commit, integrity manifest, dependency licence inventory, CycloneDX SBOM and QA reports. It is unsigned unless explicitly stated otherwise.
 
