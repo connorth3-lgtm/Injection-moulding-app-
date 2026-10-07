@@ -15,8 +15,8 @@ This file is generated from `data/health-program-v1.json`. It reports engineerin
 | **BLOCKED / HOLD** | A deliberate governance boundary is waiting for named external evidence or authorised action. | Keep the HOLD visible until the real exit condition is satisfied; age alone does not make it stuck. |
 | **FAILED / STUCK** | Integrity cannot be verified, a canonical binding is missing/contradictory, or a public lifecycle is in an illegal transient state. | Stop promotion/affected workflow, repair the authoritative governed source, and rerun validation. |
 
-Current repository engineering baseline: **BLOCKED / HOLD**. Current native governance: **pending-native-ruleset-apply**. Current external-validation boundary: **BLOCKED / HOLD**.
-Current block reason: Release promotion is blocked until GitHub's live main ruleset matches the canonical independent-review policy; current external human/device/platform evidence remains HOLD independently.
+Current repository engineering baseline: **BLOCKED / HOLD**. Current native governance: **enforced**. Current external-validation boundary: **BLOCKED / HOLD**.
+Current block reason: Native main governance is enforced. Release promotion still requires exact-head protected checks; external human/device/platform evidence remains HOLD independently.
 
 ## Historical control baseline
 
@@ -29,7 +29,7 @@ Current block reason: Release promotion is blocked until GitHub's live main rule
 
 - Current governed web candidate: **2026.10.07.9**.
 - Current release promotion is governed by the declared fast/deep CI tiers and exact-head protected workflows; the historical PR count above is not presented as current-release evidence.
-- Native main governance: **pending-native-ruleset-apply**. Promotion remains blocked until the live ruleset satisfies the canonical policy.
+- Native main governance: **enforced**. Live main ruleset matches the canonical solo-maintainer policy; promotion still requires exact-head protected checks.
 - Current external-validation boundary: **HOLD** until genuine release-bound human/device/platform evidence satisfies the governed exit conditions.
 
 ## Indicators
