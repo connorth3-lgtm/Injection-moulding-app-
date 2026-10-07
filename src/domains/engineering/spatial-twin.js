@@ -261,7 +261,7 @@ function renderHost(){
         </section>
       </aside>
     </div>
-    <footer class="mm-st-boundary">Safety & evidence boundary: Spatial Twin is an authored educational visualisation. It does not reproduce validated machine physics, prescribe production settings, authorise maintenance/safeguard bypass, or provide automatic machine control.</footer>
+    <footer class="mm-st-boundary">Safety & evidence boundary: Spatial Twin is an authored educational visualisation. It does not reproduce validated machine physics, prescribe production settings, authorise maintenance/safeguard bypass, or control production equipment automatically.</footer>
   </div>`;
   bind(host);renderInspector();renderSignals();syncWorld();
 }
@@ -343,7 +343,7 @@ function installWhenReady(){if(install())return;requestAnimationFrame(()=>instal
 const api=Object.freeze({
   version:VERSION,modes:MODES,phases:PHASES,hotspots:HOTSPOTS,scenes:CASE_SCENES,
   open,close,install,setMode,setPhase,setCase,selectHotspot,
-  boundary:'Authored spatial learning visualisation only; no validated machine-physics, production-setting, safeguarding, maintenance or machine-control authority.'
+  boundary:'Authored spatial learning visualisation only; no validated machine-physics, production-setting, safeguarding, maintenance or control authority over production equipment.'
 });
 window.MM_SPATIAL_TWIN=api;
 try{window.MM_RUNTIME_V2?.registerModule?.('spatial-twin',{version:VERSION,type:'spatial-learning',scope:'authored-system-evidence-visualisation',authority:'training-only'})}catch(_){}
