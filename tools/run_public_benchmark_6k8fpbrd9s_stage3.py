@@ -10,6 +10,7 @@ from http_retry import urlopen_with_retry
 from pathlib import Path
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
+from prove_mendeley_open_sources import materialize_exact_file
 
 DATASET_ID = "6k8fpbrd9s"
 VERSION = 1
@@ -126,13 +127,12 @@ def main():
     ap.add_argument("--retrieved-date", required=True)
     args = ap.parse_args()
 
-    raw, _ = get(PUBLIC_FILES_ENDPOINT, "application/json")
-    files = flatten_files(json.loads(raw.decode("utf-8")))
-    matches = [x for x in files if file_id(x) == EXPECTED_FILE_ID and file_name(x) == EXPECTED_FILE]
-    if len(matches) != 1:
-        raise RuntimeError("exact pvT workbook identity drifted")
-    data, final_url = get(file_url(matches[0]))
-    digest = hashlib.sha256(data).hexdigest()
+    source_path,digest_uri=materialize_exact_file(
+        DATASET_ID,VERSION,EXPECTED_FILE_ID,EXPECTED_FILE,EXPECTED_SHA256
+    )
+    data=source_path.read_bytes()
+    digest=digest_uri.split(":",1)[1]
+    final_url="job-local-sha-verified-cache"
     if digest != EXPECTED_SHA256:
         raise RuntimeError(f"publisher SHA-256 drifted: {digest}")
 
