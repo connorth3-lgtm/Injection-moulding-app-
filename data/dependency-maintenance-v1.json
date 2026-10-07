@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "reviewedAt": "2026-09-28",
+  "reviewedAt": "2026-10-07",
   "reviewBy": "2026-10-28",
   "owner": "repository-maintainer",
   "policy": "Critical runtime/build support status must be re-reviewed from authoritative upstream sources before reviewBy. EOL components fail maintenance QA and require an explicit protected upgrade or a time-bounded owned exception that cannot disable required gates.",
@@ -25,7 +25,7 @@
     },
     {
       "id": "electron-desktop",
-      "declared": "44.4.5",
+      "declared": "44.5.1",
       "statusAtReview": "supported-stable",
       "eol": "2027-03-02",
       "owner": "repository-maintainer",
@@ -34,7 +34,7 @@
     },
     {
       "id": "electron-builder",
-      "declared": "26.16.1",
+      "declared": "26.17.0",
       "statusAtReview": "pinned-build-tool",
       "reviewRequired": true,
       "owner": "repository-maintainer",
