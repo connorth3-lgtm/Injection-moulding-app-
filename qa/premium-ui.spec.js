@@ -250,23 +250,27 @@ test('mobile Materials keeps search controls sticky and touch sized',async({page
   await page.evaluate(()=>window.MM_MATERIAL_REGISTRY.openPage({replaceUrl:false}));
   const filters=page.locator('#mmExactMaterialCatalog .mm-exact-search');
   await expect(filters).toBeVisible();
-  await page.waitForFunction(()=>{
+  const readFilterContract=()=>page.evaluate(()=>{
     const filters=document.querySelector('#mmExactMaterialCatalog .mm-exact-search');
     const query=document.querySelector('[data-mm-exact-query]');
     const manufacturer=document.querySelector('[data-mm-exact-manufacturer]');
-    if(!filters||!query||!manufacturer)return false;
+    if(!filters||!query||!manufacturer||!filters.isConnected)return null;
     const style=getComputedStyle(filters),q=query.getBoundingClientRect(),m=manufacturer.getBoundingClientRect();
-    return style.position==='sticky'&&Number.parseFloat(style.top)>=0&&q.height>=44&&m.height>=44;
+    return {position:style.position,top:Number.parseFloat(style.top),queryHeight:q.height,manufacturerHeight:m.height};
   });
-  const style=await filters.evaluate(el=>({position:getComputedStyle(el).position,top:getComputedStyle(el).top}));
-  expect(style.position).toBe('sticky');
-  expect(parseFloat(style.top)).toBeGreaterThanOrEqual(0);
-  for(const control of ['[data-mm-exact-query]','[data-mm-exact-manufacturer]']){
-    const box=await page.locator(control).boundingBox();
-    expect(box?.height||0).toBeGreaterThanOrEqual(44);
-  }
+  await expect.poll(readFilterContract).toEqual({
+    position:'sticky',
+    top:expect.any(Number),
+    queryHeight:expect.any(Number),
+    manufacturerHeight:expect.any(Number)
+  });
+  const hydrated=await readFilterContract();
+  expect(hydrated?.top??-1).toBeGreaterThanOrEqual(0);
+  expect(hydrated?.queryHeight??0).toBeGreaterThanOrEqual(44);
+  expect(hydrated?.manufacturerHeight??0).toBeGreaterThanOrEqual(44);
   await page.locator('[data-mm-exact-results]').evaluate(el=>el.scrollIntoView({block:'end'}));
   await expect(filters).toBeVisible();
+  await expect.poll(async()=> (await readFilterContract())?.position||'').toBe('sticky');
   await assertNoHorizontalOverflow(page,'materials-sticky-filters');
 });
 
