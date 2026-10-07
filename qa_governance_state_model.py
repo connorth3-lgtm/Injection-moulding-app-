@@ -140,9 +140,14 @@ def main() -> None:
 
     assert main_policy.get("schemaVersion") == 1
     assert external["governance"].get("policyFile") == "data/main-governance-policy-v1.json"
-    assert main_policy["pullRequest"]["minimumApprovals"] >= 1
-    assert main_policy["pullRequest"]["independentReviewerRequired"] is True
-    assert main_policy["pullRequest"]["latestHeadApproval"] is True
+    assert main_policy["maintainerMode"] == "solo"
+    assert main_policy["soloMaintainer"]["ownerLogin"] == "connorth3-lgtm"
+    assert main_policy["pullRequest"]["minimumApprovals"] == 0
+    assert main_policy["pullRequest"]["independentReviewerRequired"] is False
+    assert main_policy["pullRequest"]["latestHeadApproval"] is False
+    assert main_policy["pullRequest"]["reviewThreadResolution"] is True
+    assert main_policy["requiredStatusChecks"]["strict"] is True
+    assert "exact-head-risk-coverage" in main_policy["requiredStatusChecks"]["contexts"]
     assert main_policy["bypassActors"] == []
     assert external["governance"]["status"] in {"pending-native-ruleset-apply", "enforced"}
 

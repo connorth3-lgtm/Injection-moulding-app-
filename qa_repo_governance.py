@@ -113,13 +113,13 @@ for marker in [
     "PR_HEAD_REF",
     "PR_HEAD_REPO_ID",
     ".head_repository.id",
-    '.user.type == "User"',
-    "collaborators/$reviewer/permission",
-    "write|maintain|admin",
-    "Independent trusted latest-head human approval verified",
+    '.merged_by.login',
+    "merged_by=$(jq -r",
+    "policy_owner=$(jq -r",
+    "Solo-maintainer manual merge decision verified",
     "all_required_success",
-    "pulls/$PR_NUMBER/reviews",
-    '.user.type == "User"',
+    "repos/$GH_REPO/pulls/$PR_NUMBER",
+    '.merged_by.type',
     "non-canonical exact head SHA",
     'any(.pull_requests[]?; (.number == $pr and .base.ref == "main"))',
     "native protection is authoritative",
@@ -140,9 +140,8 @@ for forbidden in [
 need('"$conclusion" != "success"' in guard, "required PR workflows must still fail audit when completed unsuccessfully")
 need("for attempt in {1..60}" in guard, "read-only workflow audit must tolerate long-running required checks")
 
-# Effective ruleset verification must enforce the explicit independent-review
-# review settings as well as the six governed automated contexts and existing
-# server-side protections.
+# Effective ruleset verification must enforce the explicit solo-maintainer
+# owner-merge policy, all six governed contexts and live security protections.
 for marker in [
     'POLICY_PATH = ROOT / "data" / "main-governance-policy-v1.json"',
     'MAIN_REF = str(POLICY["targetRef"])',
@@ -155,11 +154,11 @@ for marker in [
     '"code_scanning"',
     '"code_quality"',
     '"copilot_code_review"',
-    "required_approving_review_count must be 1 for independent human review",
+    "required_approving_review_count must be 0 for owner-authorized solo releases",
     "required_review_thread_resolution must be true",
-    "dismiss_stale_reviews_on_push must be true",
-    "require_last_push_approval must be true so the latest head is independently reviewed",
-    "require_extra_approval_for_unattributed_changes must be true",
+    "dismiss_stale_reviews_on_push must be false when no approval is required",
+    "require_last_push_approval must be false for a sole maintainer",
+    "require_extra_approval_for_unattributed_changes must be false when no second maintainer exists",
     "copilot_code_review.review_draft_pull_requests must be true",
     "strict_required_status_checks_policy",
     "do_not_enforce_on_create",
@@ -171,12 +170,14 @@ for marker in [
 
 for marker in [
     '"targetRef": "refs/heads/main"',
-    '"minimumApprovals": 1',
-    '"independentReviewerRequired": true',
-    '"latestHeadApproval": true',
+    '"maintainerMode": "solo"',
+    '"ownerLogin": "connorth3-lgtm"',
+    '"minimumApprovals": 0',
+    '"independentReviewerRequired": false',
+    '"latestHeadApproval": false',
     '"reviewThreadResolution": true',
-    '"dismissStaleReviews": true',
-    '"extraApprovalForUnattributedChanges": true',
+    '"dismissStaleReviews": false',
+    '"extraApprovalForUnattributedChanges": false',
     '"squash"',
     '"bypassActors": []',
     '"strict": true',
@@ -382,7 +383,7 @@ need("Manual dispatch is contract-only" in pages and "Manual dispatch does not r
 
 # The administrator helper must transform the live ruleset rather than replace
 # it with a stale static payload. It must preserve existing security/review
-# rules while applying independent human-review semantics and the aggregate exact-head release gate.
+# rules while applying solo-maintainer owner-merger semantics and the aggregate exact-head release gate.
 for marker in [
     'MODE="${1:---dry-run}"',
     "--dry-run|--apply",
@@ -394,11 +395,11 @@ for marker in [
     '"release-external-validation"',
     '"exact-head-risk-coverage"',
     'gh api "repos/$REPO/rulesets/$RULESET_ID" >"$live"',
-    '.parameters.required_approving_review_count = 1',
+    '.parameters.required_approving_review_count = 0',
     ".parameters.required_review_thread_resolution = true",
-    ".parameters.dismiss_stale_reviews_on_push = true",
-    ".parameters.require_last_push_approval = true",
-    ".parameters.require_extra_approval_for_unattributed_changes = true",
+    ".parameters.dismiss_stale_reviews_on_push = false",
+    ".parameters.require_last_push_approval = false",
+    ".parameters.require_extra_approval_for_unattributed_changes = false",
     ".parameters.review_draft_pull_requests = true",
     ".parameters.strict_required_status_checks_policy = true",
     ".parameters.do_not_enforce_on_create = false",
@@ -409,16 +410,16 @@ for marker in [
     'gh api --method PUT "repos/$REPO/rulesets/$RULESET_ID" --input "$payload"',
     'gh api "repos/$REPO/branches/main" --jq',
     'protected',
-    "at least two trusted write-capable collaborators",
+    "authenticated_login",
     "resolved review threads",
 ]:
     need(marker in protection_helper, f"native-protection helper missing marker: {marker}")
 
 need('if [[ "$MODE" == "--dry-run" ]]' in protection_helper, "native-protection helper must expose a non-mutating dry run")
 need(
-    protection_helper.index('write_capable="$(gh api "repos/$REPO/collaborators?affiliation=direct&per_page=100"')
+    protection_helper.index('authenticated_login="$(gh api user --jq')
     < protection_helper.index('if [[ "$MODE" == "--dry-run" ]]; then'),
-    "collaborator feasibility check must run before dry-run exits",
+    "authenticated owner check must run before dry-run exits",
 )
 need("gh auth token" not in protection_helper, "native-protection helper must not extract a GitHub token")
 need("GITHUB_TOKEN=" not in protection_helper, "native-protection helper must not embed or assign a repository token")
@@ -428,11 +429,11 @@ need(
 )
 
 for marker in [
-    "independent human review plus automated evidence",
-    "one required approving review",
-    "approval of the **latest pushed head**",
+    "solo-maintainer manual owner approval plus automated evidence",
+    "zero required second-person approving reviews",
+    "manual owner merger recorded by GitHub",
     "all review conversations resolved",
-    "stale approvals dismissed after new pushes",
+    "release decisions bound to the exact PR head",
     "`integrity`",
     "`mobile-browser`",
     "`build-windows`",
@@ -447,8 +448,8 @@ for marker in [
     "--dry-run",
     "--apply",
     "transforms that exact",
-    "latest-head human approval, all six required checks are green",
-    "Automated checks are necessary but are not equivalent to independent human review",
+    "owner-authorized merge decision, all six required checks are green",
+    "Automated checks do not establish external device, SME or safety validation",
     "Issue #43",
 ]:
     need(marker in protection_doc, f"native-protection documentation missing marker: {marker}")
@@ -602,7 +603,7 @@ for marker in (
 
 print(
     "MouldMaster repository governance QA passed "
-    "(main-only independent human-review native policy; six required contexts; live-preserving helper; "
+    "(main-only solo-maintainer owner-merge native policy; six required contexts; live-preserving helper; "
     "post-push audit read-only; main-only Pages publication source-bound; preview exact-SHA candidate retained without publish authority; Pages requires exact native protection; dual locked desktop toolchains; "
     "guard-gated pruning; preview/main exact-push release assurance; architecture debt gate)"
 )

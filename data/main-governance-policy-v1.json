@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
   "policyId": "mouldmaster-main-governance-policy",
-  "version": "2026.10.03.2",
+  "version": "2026.10.07.solo1",
   "targetRef": "refs/heads/main",
   "enforcement": "active",
   "bypassActors": [],
   "pullRequest": {
-    "minimumApprovals": 1,
-    "independentReviewerRequired": true,
-    "dismissStaleReviews": true,
-    "latestHeadApproval": true,
+    "minimumApprovals": 0,
+    "independentReviewerRequired": false,
+    "dismissStaleReviews": false,
+    "latestHeadApproval": false,
     "reviewThreadResolution": true,
-    "extraApprovalForUnattributedChanges": true,
+    "extraApprovalForUnattributedChanges": false,
     "allowedMergeMethods": [
       "squash"
     ]
@@ -44,5 +44,11 @@
     "deletionBlocked": true,
     "nonFastForwardBlocked": true
   },
-  "exitCondition": "The live GitHub main ruleset exactly matches this policy and at least one trusted human other than the PR author can approve the exact latest PR head."
+  "exitCondition": "Live main-only, no-bypass ruleset matches this policy, all six automated security/release checks pass on the exact PR head, and ownerLogin manually authorizes the squash merge. External validation remains a separate HOLD unless genuine evidence exists.",
+  "maintainerMode": "solo",
+  "soloMaintainer": {
+    "ownerLogin": "connorth3-lgtm",
+    "releaseDecision": "Owner reviews exact-head CI and explicitly performs the GitHub squash merge; merged_by must match ownerLogin.",
+    "humanIndependentCodeApprovalRequired": false
+  }
 }

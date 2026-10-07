@@ -13,7 +13,7 @@
     "repositoryPolicy": ".github/MAIN_PROTECTION.md",
     "verifier": "tools/verify_main_ruleset.py",
     "liveRulesetIssue": "#43",
-    "required": "Add or confirm an independent trusted reviewer, apply the canonical main governance policy to GitHub's live main ruleset, verify the exact live ruleset, then change this status to enforced."
+    "required": "Apply and verify the canonical no-bypass solo-maintainer main ruleset with all six protected status contexts. The repository owner alone must deliberately squash-merge after the exact-head checks succeed; do not claim an independent GitHub reviewer."
   },
   "accessibility": {
     "status": "hold",
@@ -85,7 +85,7 @@
   },
   "visualGovernance": {
     "status": "pending-native-ruleset-apply",
-    "required": "Apply and verify the canonical independent-review main ruleset with at least one genuine latest-head human approval; automated checks and self-review do not substitute for that approval."
+    "required": "Apply and verify the canonical solo-maintainer main ruleset, keep all six automated status/security contexts and record the real owner's manual merge decision; human visual/device/SME validation remains an independent HOLD where required."
   },
   "claims": {
     "fullyExternallyValidated": false,

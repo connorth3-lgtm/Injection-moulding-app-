@@ -85,31 +85,21 @@ jobs:
           fi
           echo "Main commit is merged PR #$PR_NUMBER with source head $PR_HEAD_SHA."
 
-          reviews_pages=$(gh api --paginate --slurp "repos/$GH_REPO/pulls/$PR_NUMBER/reviews?per_page=100")
-          reviews_json=$(jq 'add' <<<"$reviews_pages")
-          candidate_reviewers=$(jq -r --arg head "$PR_HEAD_SHA" --arg author "$PR_AUTHOR" \
-            '.[] | select(.state == "APPROVED" and .commit_id == $head and .user.login != $author and .user.type == "User") | .user.login' \
-            <<<"$reviews_json" | sort -u)
-          trusted_latest_head_approval=false
-          while IFS= read -r reviewer; do
-            [[ -z "$reviewer" ]] && continue
-            permission_json=$(gh api "repos/$GH_REPO/collaborators/$reviewer/permission" 2>/dev/null || true)
-            permission=$(jq -r '.permission // "none"' <<<"$permission_json" 2>/dev/null || echo "none")
-            case "$permission" in
-              write|maintain|admin)
-                echo "Trusted exact-head approval: reviewer=$reviewer permission=$permission"
-                trusted_latest_head_approval=true
-                break
-                ;;
-              *)
-                echo "Ignoring exact-head approval from reviewer=$reviewer with repository permission=$permission"
-                ;;
-            esac
-          done <<<"$candidate_reviewers"
-          if [[ "$trusted_latest_head_approval" != "true" ]]; then
-            fail_audit "Merged PR #$PR_NUMBER lacks an independent trusted human APPROVED review bound to exact latest head $PR_HEAD_SHA."
+          # Solo-maintainer authority is a genuine manual GitHub merge by the
+          # named repository owner. No second-human APPROVED review is claimed.
+          policy_owner=$(jq -r '.soloMaintainer.ownerLogin // empty' data/main-governance-policy-v1.json)
+          if [[ -z "$policy_owner" || "$policy_owner" != "${GH_REPO%%/*}" ]]; then
+            fail_audit "Solo-maintainer policy must name the repository owner."
           fi
-          echo "Independent trusted latest-head human approval verified for merged PR #$PR_NUMBER."
+          merged_detail=$(gh api -H "Accept: application/vnd.github+json" "repos/$GH_REPO/pulls/$PR_NUMBER")
+          merged_by=$(jq -r '.merged_by.login // empty' <<<"$merged_detail")
+          merged_type=$(jq -r '.merged_by.type // empty' <<<"$merged_detail")
+          merged_sha=$(jq -r '.merge_commit_sha // empty' <<<"$merged_detail")
+          merged_at=$(jq -r '.merged_at // empty' <<<"$merged_detail")
+          if [[ "$merged_by" != "$policy_owner" || "$merged_type" != "User" || "$merged_sha" != "$HEAD_SHA" || -z "$merged_at" ]]; then
+            fail_audit "Merged PR #$PR_NUMBER lacks the repository owner's explicit GitHub squash-merge decision bound to exact main head $HEAD_SHA."
+          fi
+          echo "Solo-maintainer manual merge decision verified: owner=$merged_by PR #$PR_NUMBER head=$PR_HEAD_SHA."
 
           required_workflows=(
             "MouldMaster Release QA"
