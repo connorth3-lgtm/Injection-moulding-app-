@@ -116,7 +116,7 @@ test('Book keeps governed status intact but progressively discloses assurance de
 
   await governance.locator('summary').click();
   await expect(page.locator('[data-mm-book-sme-status]')).toBeVisible();
-  await expect(page.locator('[data-mm-book-sme-status]')).toContainText('0/46 chapters approved');
+  await expect(page.locator('[data-mm-book-sme-status]')).toContainText('0/46 governed modules approved');
 
   const mutationCount=await page.evaluate(async()=>{
     const subtitle=document.getElementById('pageSubtitle');
