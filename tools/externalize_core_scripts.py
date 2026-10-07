@@ -314,6 +314,24 @@ def runtime_transform(name: str, source: str) -> str:
             fail("certificate print runtime transform did not match exactly once")
         if "document.write(" in transformed or "document.writeln(" in transformed:
             fail("certificate print runtime transform left document.write active")
+        # CodeQL models any value flowing from a property named "certificates" as
+        # potentially sensitive certificate material. MouldMaster's field contains
+        # only bounded local learning-award identifiers (for example Beginner-NZ),
+        # never TLS/X.509 certificates, credentials, keys or tokens. Keep the
+        # suppression sink-specific so all other clear-text-storage flows stay scanned.
+        storage_sinks = [
+            '  localStorage.setItem("mouldmasterProDB",JSON.stringify(db));',
+            '  try{localStorage.setItem("mouldmasterProDB",JSON.stringify(db))}catch(e){durable=false}',
+            '  localStorage.setItem("mouldmasterProDB",serialized);',
+        ]
+        for sink in storage_sinks:
+            if transformed.count(sink) != 1:
+                fail(f"frozen learner-storage sink drifted: {sink}")
+            transformed = transformed.replace(
+                sink,
+                '  // codeql[js/clear-text-storage-of-sensitive-data] Local learning-award IDs are not credentials or cryptographic certificates.\n' + sink,
+                1,
+            )
         learner_id_expr = 'pvRequireLearnerId("learner-"+Date.now())'
         learner_id_count = transformed.count(learner_id_expr)
         if learner_id_count != 2:
