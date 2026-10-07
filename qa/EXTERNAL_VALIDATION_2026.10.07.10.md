@@ -1,16 +1,16 @@
 # External validation boundary — 2026.10.07.10
 
-Release `2026.10.07.10` is technically governed, while native main governance remains **pending-native-ruleset-apply** and every external-evidence workstream below remains explicit **HOLD**. This index does not create human, device, learner, accreditation, signing, distribution or production-site evidence.
+Release `2026.10.07.10` is technically governed, while native main governance has the verified **solo-maintainer ruleset enforced** and every external-evidence workstream below remains explicit **HOLD**. This index does not create human, device, learner, accreditation, signing, distribution or production-site evidence.
 
 ## Exact retained candidate
 
-- source: `f1a1a85fd98d593f5a01f3e0812b69f24f515838`
-- public-runtime fingerprint: `sha256:8cef2ed43e7127868f90427956ba9370ecd74f8b39e7fb8fc3b6cfe7c4bfc3f9`
-- candidate workflow/run: **Pre-merge Public Candidate** / `37542863980`
-- retained artifact: `physical-pwa-candidate-f1a1a85fd98d593f5a01f3e0812b69f24f515838`
-- artifact id: `11449367318`
-- artifact digest: `sha256:75d57b3ffc2409f5bf355a95eec7038f1ad12cfd00486e7c5a4d102386c195c7`
-- retention expiry: `2026-11-05T22:48:28Z`
+- source: `2b0ebb5ebefbc567b168c72e5c706a3b7a5265d8`
+- public-runtime fingerprint: `sha256:4de2af13aae6c22a972c42fc450642090a45964404ca712b621702a5790cedfb`
+- candidate workflow/run: **Pre-merge Public Candidate** / `37576165131`
+- retained artifact: `physical-pwa-candidate-2b0ebb5ebefbc567b168c72e5c706a3b7a5265d8`
+- artifact id: `11463071985`
+- artifact digest: `sha256:cfe22c21277e540276ffb0a7b0ea3109aefb298532713411f8faf43157c22a71`
+- retention expiry: `2026-11-06T05:24:54Z`
 
 This is a release-boundary **rebind**, not external evidence. Production remains fail-closed while the current governed learner candidate may be exposed only through the repository's non-production release-hold preview path.
 
