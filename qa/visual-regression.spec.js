@@ -96,6 +96,19 @@ async function normalizeCaptureState(page,surface){
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
 
+async function openBookContents(page){
+  await page.evaluate(async()=>{window.MMBook.open();await window.MMBook.load();});
+  await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
+  const contents=page.locator('[data-mm-book-contents]');
+  if(!(await contents.isVisible())){
+    const back=page.locator('[data-mm-book-back]');
+    await expect(back).toBeVisible();
+    await back.click();
+  }
+  await expect(contents).toBeVisible();
+  await expect(contents.locator('[data-mm-book-chapter]').first()).toBeVisible();
+}
+
 async function prepareSurface(page,surface){
   await clearTransientUi(page);
   if(surface==='home'){
@@ -143,12 +156,10 @@ async function prepareSurface(page,surface){
     await page.waitForFunction(()=>Array.isArray(window.activeExam?.questions)&&window.activeExam.questions.length===16&&document.querySelectorAll('#examQuestions .question').length===16);
     await expect(page.locator('#examQuestions')).toBeVisible();
   }else if(surface==='book-contents'){
-    await page.evaluate(()=>window.MMBook.open());
-    await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
+    await openBookContents(page);
     await expect(page.locator('[data-mm-book-chapter]')).toHaveCount(46);
   }else if(surface==='book-materials'){
-    await page.evaluate(()=>window.MMBook.open());
-    await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
+    await openBookContents(page);
     await page.locator('[data-mm-book-chapter="material-families"]').click();
     await expect(page.locator('[data-mm-book-material-atlas]')).toBeVisible();
     const canonical=page.locator('[data-mm-book-canonical-catalog]');
@@ -157,13 +168,11 @@ async function prepareSurface(page,surface){
     await first.locator(':scope > summary').click();
     await expect(first).toBeVisible();
   }else if(surface==='book-late'){
-    await page.evaluate(()=>window.MMBook.open());
-    await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
+    await openBookContents(page);
     await page.locator('[data-mm-book-chapter]').nth(41).click();
     await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
   }else if(surface==='book-trace'){
-    await page.evaluate(()=>window.MMBook.open());
-    await page.waitForFunction(()=>window.MMBook?.getManifest?.()?.parts?.length>0);
+    await openBookContents(page);
     await page.locator('[data-mm-book-chapter]').first().click();
     const trace=page.locator('.mm-book-claim-trace').first();if(await trace.count())await trace.evaluate(el=>{el.open=true});
     await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
@@ -203,8 +212,10 @@ function compare(baseBuffer,candidateBuffer,diffPath){
 }
 
 for(const viewport of manifest.viewports){
-  test(`${viewport.name} matches approved ${manifest.release} baseline across learner surfaces`,async({browser})=>{
-    test.setTimeout(120000);
+  for(let start=0;start<manifest.surfaces.length;start+=4){
+    const surfaces=manifest.surfaces.slice(start,start+4);
+    test(`${viewport.name} ${surfaces.join(' + ')} match approved ${manifest.release} baseline`,async({browser})=>{
+      test.setTimeout(120000);
     fs.mkdirSync(ARTIFACT_ROOT,{recursive:true});
     const candidateContext=await browser.newContext({viewport:{width:viewport.width,height:viewport.height},serviceWorkers:'block'});
     const baselineContext=await browser.newContext({viewport:{width:viewport.width,height:viewport.height},serviceWorkers:'block'});
@@ -215,7 +226,7 @@ for(const viewport of manifest.viewports){
     await openApp(baseline,BASELINE_URL,learnerId);
 
     try{
-      for(const surface of manifest.surfaces){
+      for(const surface of surfaces){
         await prepareSurface(candidate,surface);
         await prepareSurface(baseline,surface);
         const stem=`${viewport.name}-${surface}`;
@@ -231,5 +242,6 @@ for(const viewport of manifest.viewports){
       await candidateContext.close();
       await baselineContext.close();
     }
-  });
+    });
+  }
 }
