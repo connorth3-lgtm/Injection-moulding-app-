@@ -5,7 +5,7 @@ No numeric worksheet values are emitted. Every publisher file ID, filename and S
 stored locally. Remote metadata is version-pinned consistency evidence and supplies the exact public download URL only after file ID/name and publisher SHA checks. Redirects are checked before following them against an exact host allow-list.
 """
 from __future__ import annotations
-import hashlib, json, re, socket, tempfile, time, urllib.error, urllib.parse, urllib.request, zipfile
+import hashlib, html, json, re, socket, tempfile, time, urllib.error, urllib.parse, urllib.request, zipfile
 from http_retry import RETRYABLE_HTTP, urlopen_with_retry
 from pathlib import Path
 from xml.etree import ElementTree as ET
@@ -84,6 +84,34 @@ def public_files(short_id,version):
     return endpoint,get_json(endpoint)
 
 
+def public_page_exact_file(short_id,version,file_id,name):
+    """Resolve one exact file from the version-pinned public dataset page."""
+    if not SHORT_ID_RE.fullmatch(short_id) or not isinstance(version,int) or version<1:
+        raise RuntimeError('invalid locally governed Mendeley dataset identity')
+    validate_pinned_identity(file_id,name)
+    endpoint=f'https://data.mendeley.com/datasets/{short_id}/{version}'
+    assert_https_host(endpoint,{MENDELEY_HOST})
+    req=urllib.request.Request(
+        endpoint,
+        headers={'Accept':'text/html,application/xhtml+xml','User-Agent':'MouldMaster-measured-learning/2.5'},
+    )
+    try:
+        with urlopen_with_retry(req,timeout=60,attempts=5,base_delay=1.5,max_delay=12.0) as r:
+            assert_https_host(r.geturl(),{MENDELEY_HOST})
+            raw=r.read().decode('utf-8','replace')
+    except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError, socket.timeout, ConnectionError) as exc:
+        if isinstance(exc, urllib.error.HTTPError) and exc.code not in RETRYABLE_HTTP:
+            raise
+        raise MendeleyTransportUnavailable(f'Mendeley dataset page unavailable after bounded retries: {exc}') from exc
+    page=html.unescape(raw).replace('\\u002F','/').replace('\\/','/')
+    url=f'{MENDELEY_DOWNLOAD}{short_id}/files/{file_id}/file_downloaded'
+    if url not in page:
+        raise RuntimeError(f'pinned Mendeley file UUID missing from version-pinned dataset page: {short_id}/{file_id}')
+    if name not in page:
+        raise RuntimeError(f'pinned Mendeley filename missing from version-pinned dataset page: {short_id}/{name}')
+    return {'id':file_id,'filename':name,'download_url':url,'identitySource':'version-pinned-public-dataset-page'},endpoint
+
+
 def validate_pinned_identity(file_id,name):
     if not FILE_ID_RE.fullmatch(file_id):
         raise RuntimeError(f'invalid locally pinned Mendeley file id: {file_id!r}')
@@ -148,9 +176,18 @@ def resolve_file(meta,file_id,name,short_id,version,expected_sha=None):
         url=metadata_download_url(item,file_id,name,short_id,expected_sha)
         local_identity={'id':file_id,'filename':name,'identitySource':'version-pinned-publisher-metadata'}
         return local_identity,file_id,[url]
-    raise RuntimeError(
-        f'Mendeley version-pinned metadata identity unresolved after {METADATA_IDENTITY_ATTEMPTS} attempts: {last_error}'
-    )
+    try:
+        item,page_endpoint=public_page_exact_file(short_id,version,file_id,name)
+        url=metadata_download_url(item,file_id,name,short_id,expected_sha)
+        local_identity={'id':file_id,'filename':name,'identitySource':'version-pinned-public-dataset-page','metadataPage':page_endpoint}
+        return local_identity,file_id,[url]
+    except MendeleyTransportUnavailable:
+        raise
+    except RuntimeError as page_error:
+        raise RuntimeError(
+            f'Mendeley version-pinned identity unresolved after {METADATA_IDENTITY_ATTEMPTS} metadata attempts '
+            f'and exact public-page fallback: metadata={last_error}; page={page_error}'
+        ) from page_error
 
 
 def _retryable_download_error(exc):
@@ -230,15 +267,12 @@ def workbook_text_schema(path):
 
 
 
-def materialize_verified_file(source, expected_name):
-    """Return a job-local SHA-verified workbook, reusing bytes already proven in this job.
-
-    The version-pinned metadata must already report the governed SHA. If the
-    delivered body does not match that SHA, retry the body fetch; repeated
-    mismatch is treated as transport corruption/unavailability, never accepted
-    as source drift and never used as evidence.
-    """
-    file_id,name,expected_sha=next(x for x in source['files'] if x[1]==expected_name)
+def materialize_exact_file(short_id,version,file_id,name,expected_sha):
+    """Return exact version/UUID/name bytes only after the pinned SHA-256 matches."""
+    validate_pinned_identity(file_id,name)
+    expected_sha=str(expected_sha or '').lower()
+    if not re.fullmatch(r'[0-9a-f]{64}',expected_sha):
+        raise RuntimeError('invalid governed Mendeley SHA-256')
     CACHE_DIR.mkdir(exist_ok=True)
     suffix=Path(name).suffix or '.bin'
     cached=CACHE_DIR/f'{expected_sha}{suffix}'
@@ -247,8 +281,8 @@ def materialize_verified_file(source, expected_name):
         if digest==expected_sha:
             return cached,'sha256:'+digest
         cached.unlink()
-    _,meta=public_files(source['shortId'],source['version'])
-    _,_,urls=resolve_file(meta,file_id,name,source['shortId'],source['version'],expected_sha)
+    _,meta=public_files(short_id,version)
+    _,_,urls=resolve_file(meta,file_id,name,short_id,version,expected_sha)
     tmp=CACHE_DIR/f'.{expected_sha}.tmp'
     observed=[]
     for attempt in range(3):
@@ -267,9 +301,15 @@ def materialize_verified_file(source, expected_name):
         if attempt < 2:
             time.sleep(2 ** attempt)
     raise MendeleyTransportUnavailable(
-        f"{source['datasetId']}/{name} metadata still pins {expected_sha}, "
-        f"but delivered bodies failed SHA verification after 3 attempts: {observed}"
+        f"{short_id}/{name} expected {expected_sha}, but delivered bodies failed SHA verification "
+        f"after 3 attempts: {observed}"
     )
+
+
+def materialize_verified_file(source, expected_name):
+    """Resolve a governed source entry through the exact-file verifier."""
+    file_id,name,expected_sha=next(x for x in source['files'] if x[1]==expected_name)
+    return materialize_exact_file(source['shortId'],source['version'],file_id,name,expected_sha)
 
 def main():
     try:
