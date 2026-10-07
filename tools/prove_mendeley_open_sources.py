@@ -2,7 +2,7 @@
 """Retrieve benchmark-pinned open Mendeley workbooks and emit text/schema-only proof.
 
 No numeric worksheet values are emitted. Every publisher file ID, filename and SHA-256 is
-stored locally. Remote metadata is version-pinned consistency evidence and supplies the exact public download URL only after file ID/name and publisher SHA checks. Redirects are checked before following them against an exact host allow-list.
+stored locally. Remote metadata is version-pinned consistency evidence when available; an empty/incomplete listing cannot override the repository-pinned file UUID/name/SHA. Downloads use fixed Mendeley dataset/file routes and redirects are checked before following them against an exact host allow-list.
 """
 from __future__ import annotations
 import hashlib, html, json, re, socket, tempfile, time, urllib.error, urllib.parse, urllib.request, zipfile
@@ -84,6 +84,18 @@ def public_files(short_id,version):
     return endpoint,get_json(endpoint)
 
 
+def pinned_download_urls(short_id,version,file_id):
+    if not SHORT_ID_RE.fullmatch(short_id) or not isinstance(version,int) or version<1:
+        raise RuntimeError('invalid locally governed Mendeley dataset identity')
+    if not FILE_ID_RE.fullmatch(file_id):
+        raise RuntimeError('invalid locally pinned Mendeley file id')
+    encoded_id=urllib.parse.quote(file_id,safe='')
+    return [
+        assert_https_host(f'{MENDELEY_DOWNLOAD}{short_id}/files/{encoded_id}/file_downloaded',{MENDELEY_HOST}),
+        assert_https_host(f'{MENDELEY_DOWNLOAD}{short_id}/versions/{version}/files/{encoded_id}/file_downloaded',{MENDELEY_HOST}),
+    ]
+
+
 def public_page_exact_file(short_id,version,file_id,name):
     """Resolve one exact file from the version-pinned public dataset page."""
     if not SHORT_ID_RE.fullmatch(short_id) or not isinstance(version,int) or version<1:
@@ -150,44 +162,37 @@ def metadata_download_url(item,file_id,name,short_id,expected_sha):
 
 
 def resolve_file(meta,file_id,name,short_id,version,expected_sha=None):
-    """Resolve the exact file from version-pinned publisher metadata.
+    """Resolve a governed file without letting incomplete remote metadata redefine identity.
 
-    Mendeley's public metadata API can transiently return an incomplete file list.
-    Retry the same pinned dataset/version identity a bounded number of times, but
-    never fall back to another version, filename, UUID or unversioned download.
+    The repository-pinned dataset/version/file UUID/name/SHA is authoritative. If the
+    exact UUID appears in remote metadata, its filename/SHA must agree; otherwise an
+    empty or incomplete metadata listing is treated as non-authoritative transport noise.
     """
     if expected_sha is None:
         raise RuntimeError('expected source SHA is required for Mendeley resolution')
-    last_error=None
+    validate_pinned_identity(file_id,name)
+    expected_sha=str(expected_sha or '').lower()
+    if not re.fullmatch(r'[0-9a-f]{64}',expected_sha):
+        raise RuntimeError('invalid governed Mendeley SHA-256')
+    urls=pinned_download_urls(short_id,version,file_id)
     current_meta=meta
     for attempt in range(1,METADATA_IDENTITY_ATTEMPTS+1):
-        try:
+        matching=[obj for obj in walk_files(current_meta) if str(obj.get('id') or obj.get('file_id') or '')==file_id] if current_meta is not None else []
+        if matching:
             item=verify_metadata_identity(current_meta,file_id,name,short_id)
-        except RuntimeError as exc:
-            last_error=exc
-            if attempt>=METADATA_IDENTITY_ATTEMPTS:
-                break
-            time.sleep(min(attempt*2,6))
+            metadata_url=metadata_download_url(item,file_id,name,short_id,expected_sha)
+            if metadata_url not in urls:
+                urls.append(metadata_url)
+            return {'id':file_id,'filename':name,'identitySource':'repository-pinned+version-pinned-metadata'},file_id,urls
+        if attempt>=METADATA_IDENTITY_ATTEMPTS:
+            break
+        try:
             _,current_meta=public_files(short_id,version)
-            continue
-        # Once the exact version/file identity exists, checksum or download-URL
-        # drift is authoritative and must fail immediately rather than be treated
-        # as eventual-consistency noise.
-        url=metadata_download_url(item,file_id,name,short_id,expected_sha)
-        local_identity={'id':file_id,'filename':name,'identitySource':'version-pinned-publisher-metadata'}
-        return local_identity,file_id,[url]
-    try:
-        item,page_endpoint=public_page_exact_file(short_id,version,file_id,name)
-        url=metadata_download_url(item,file_id,name,short_id,expected_sha)
-        local_identity={'id':file_id,'filename':name,'identitySource':'version-pinned-public-dataset-page','metadataPage':page_endpoint}
-        return local_identity,file_id,[url]
-    except MendeleyTransportUnavailable:
-        raise
-    except RuntimeError as page_error:
-        raise RuntimeError(
-            f'Mendeley version-pinned identity unresolved after {METADATA_IDENTITY_ATTEMPTS} metadata attempts '
-            f'and exact public-page fallback: metadata={last_error}; page={page_error}'
-        ) from page_error
+        except MendeleyTransportUnavailable:
+            current_meta=None
+            break
+        time.sleep(min(attempt*2,6))
+    return {'id':file_id,'filename':name,'identitySource':'repository-pinned-metadata-incomplete'},file_id,urls
 
 
 def _retryable_download_error(exc):
@@ -268,7 +273,7 @@ def workbook_text_schema(path):
 
 
 def materialize_exact_file(short_id,version,file_id,name,expected_sha):
-    """Return exact version/UUID/name bytes only after the pinned SHA-256 matches."""
+    """Return exact governed bytes only after the repository-pinned SHA-256 matches."""
     validate_pinned_identity(file_id,name)
     expected_sha=str(expected_sha or '').lower()
     if not re.fullmatch(r'[0-9a-f]{64}',expected_sha):
@@ -281,7 +286,10 @@ def materialize_exact_file(short_id,version,file_id,name,expected_sha):
         if digest==expected_sha:
             return cached,'sha256:'+digest
         cached.unlink()
-    _,meta=public_files(short_id,version)
+    try:
+        _,meta=public_files(short_id,version)
+    except MendeleyTransportUnavailable:
+        meta=None
     _,_,urls=resolve_file(meta,file_id,name,short_id,version,expected_sha)
     tmp=CACHE_DIR/f'.{expected_sha}.tmp'
     observed=[]
@@ -324,7 +332,7 @@ def main():
                 source_proof['files'].append({'name':name,'resolvedFileId':file_id,'sha256':digest_uri,'downloadRoute':'job-local-sha-verified-cache','sheets':schema})
             source_proof['status']='source-proof-passed'; source_proof['rawNumericValuesEmitted']=False; proofs.append(source_proof)
             print(json.dumps({'status':'source-proof-passed','datasetId':source['datasetId'],'files':[f['name'] for f in source_proof['files']]},separators=(',',':')))
-        result={'schemaVersion':2,'status':'source-proofs-passed','sources':proofs,'boundary':'Workbook IDs, names, exact hashes, sheet names and bounded text/header labels only. Version-pinned remote metadata must match the governed file identity and SHA before its public download URL is accepted. Download redirects are checked before following and restricted to Mendeley plus its exact public-file S3 host. Numeric worksheet values are not emitted.'}
+        result={'schemaVersion':2,'status':'source-proofs-passed','sources':proofs,'boundary':'Workbook IDs, names, exact hashes, sheet names and bounded text/header labels only. Repository-pinned dataset/version/file UUID/name/SHA governs retrieval. When the exact UUID appears in version-pinned remote metadata, its filename/SHA must match; incomplete metadata cannot redefine the pinned identity. Download redirects are checked before following and restricted to Mendeley plus its exact public-file S3 host. Numeric worksheet values are not emitted.'}
         (out/'mendeley-open-workbook-source-proofs.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
         return 0
     except MendeleyTransportUnavailable as exc:
