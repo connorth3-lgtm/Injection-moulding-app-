@@ -10,6 +10,7 @@ if(!window.MM_MOULD_MASTER_WORKSPACE)throw new Error('app-shell-finalize.js requ
 if(!window.MM_RUNTIME_V2)throw new Error('app-shell-finalize.js requires runtime-v2.js');
 
 const VERSION='2026.09.10.3';
+const runtimeScriptUrl=src=>typeof window.MM_RUNTIME_SCRIPT_URL==='function'?window.MM_RUNTIME_SCRIPT_URL(src):src;
 const R=window.MM_RUNTIME_V2;
 const GAP=window.MM_SPECIALIST_EVIDENCE_GAPS;
 const BASE=window.MM_SPECIALIST_CURRICULUM;
@@ -56,17 +57,17 @@ function patchEvidenceUi(){
 }
 function loadProductionHealth(){
   if(window.MM_PRODUCTION_HEALTH||document.querySelector('script[data-mm-production-health]'))return;
-  const script=document.createElement('script');script.src='./src/domains/governance/production-health.js';script.async=true;script.dataset.mmProductionHealth='1';document.head.appendChild(script);
+  const script=document.createElement('script');script.src=runtimeScriptUrl('./src/domains/governance/production-health.js');script.async=true;script.dataset.mmProductionHealth='1';document.head.appendChild(script);
 }
 function loadConnectedDataRuntime(){
   if(window.MM_CONNECTED_PROCESS_DATA||document.querySelector('script[data-mm-connected-data]'))return;
   const script=document.createElement('script');
-  script.src='./data-integration-runtime.js';
+  script.src=runtimeScriptUrl('./data-integration-runtime.js');
   script.async=true;
   script.dataset.mmConnectedData='1';
   script.addEventListener('load',()=>{
     if(window.MM_PROCESS_INTELLIGENCE_UI||document.querySelector('script[data-mm-process-intelligence]'))return;
-    const ui=document.createElement('script');ui.src='./process-data-intelligence-ui.js';ui.async=true;ui.dataset.mmProcessIntelligence='1';document.head.appendChild(ui);
+    const ui=document.createElement('script');ui.src=runtimeScriptUrl('./process-data-intelligence-ui.js');ui.async=true;ui.dataset.mmProcessIntelligence='1';document.head.appendChild(ui);
   });
   script.addEventListener('error',()=>console.error('MouldMaster connected process-data runtime could not be loaded'));
   document.head.appendChild(script);
@@ -74,7 +75,7 @@ function loadConnectedDataRuntime(){
 function loadMeasuredLearningRuntime(){
   if(window.MM_MEASURED_LEARNING_LIBRARY||document.querySelector('script[data-mm-measured-learning]'))return;
   const script=document.createElement('script');
-  script.src='./measured-learning-library.js';
+  script.src=runtimeScriptUrl('./measured-learning-library.js');
   script.async=true;
   script.dataset.mmMeasuredLearning='1';
   script.addEventListener('error',()=>console.warn('[MouldMaster] Measured Learning runtime unavailable; learner navigation remains disabled.'));
@@ -83,7 +84,7 @@ function loadMeasuredLearningRuntime(){
 function loadSimpleLessonRuntime(){
   if(window.MM_SIMPLE_LESSON_EXPERIENCE||document.querySelector('script[data-mm-simple-lessons]'))return;
   const script=document.createElement('script');
-  script.src='./lesson-simple-experience.js';
+  script.src=runtimeScriptUrl('./lesson-simple-experience.js');
   script.async=true;
   script.dataset.mmSimpleLessons='1';
   script.addEventListener('error',()=>console.warn('[MouldMaster] Simple lesson experience could not be loaded; the standard lesson layout remains available.'));
