@@ -27,7 +27,7 @@ for chapter in chapters:
     require(all(s in source_ids for s in chapter['sourceIds']),f"{chapter['id']} references unknown source")
 require("book-authored-foundations-v1.json" in runtime and 'BATCH_PATHS' in runtime,'canonical runtime does not load authored foundation batch')
 require("verifiedJson(path)" in runtime,'canonical runtime must byte-verify authored batches before parsing')
-require("script.src='./src/domains/learning/book-runtime.js'" in compat,'root compatibility path must delegate to canonical Book runtime')
+require("script.src=runtimeScriptUrl('./src/domains/learning/book-runtime.js')" in compat,'root compatibility path must delegate to canonical Book runtime through explicit release versioning')
 require("chapter.state==='verified'" in runtime,'governed publication gate missing')
 require("chapter.state==='technical-review'" in runtime and 'source evidence review incomplete' in runtime.lower(),'review-draft disclosure missing')
 require('machine setting, safety procedure or source-reviewed production instruction' in runtime,'review boundary is not explicit enough')
