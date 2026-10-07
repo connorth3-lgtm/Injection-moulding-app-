@@ -19,7 +19,7 @@ global.clearInterval=()=>{};
 require(path.join(__dirname,'src/domains/engineering/virtual-apprenticeship.js'));
 const api=global.window.MM_VIRTUAL_APPRENTICESHIP;
 assert.ok(api,'virtual apprenticeship API must register');
-assert.equal(api.version,'2026.10.08.1');
+assert.equal(api.version,'2026.10.08.2');
 assert.equal(api.cases.length,6,'v1 must ship six governed authored practice cases');
 assert.deepEqual(Object.keys(api.levels),['beginner','developing','advanced']);
 assert.match(api.boundary,/no machine-control/i);
