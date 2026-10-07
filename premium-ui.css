@@ -280,6 +280,9 @@ input:focus,select:focus,textarea:focus{border-color:#61d9c3!important;box-shado
 .mm-read-aloud,.mm-listening-shell,.mm-today-focus,.mm-specialist-strip{
   --mm-local-border:rgba(126,170,205,.18);
 }
+/* Home utility actions must remain visually subordinate even before the later
+   learner-polish stylesheet finishes loading in slower engines such as WebKit. */
+#dashboard .mm-home-balance{box-shadow:none!important}
 details>summary{border-radius:10px}
 
 /* Tablet */

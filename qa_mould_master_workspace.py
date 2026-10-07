@@ -39,6 +39,7 @@ for marker in [
     'window.mmOpenMouldMaster',
     "canonicalStore:'mouldmaster-engineering-v2/db3'",
     'async function hydrate({force=false}={})',
+    "if(id&&!get(id))await hydrate({force:true})",
     'hydratedLearnerToken',
     'store.learnerToken()',
     'await store.saveCase(c,{token:owner})',
