@@ -59,6 +59,11 @@ function staticRuntimeScriptDependencies(source){
   for(const match of source.matchAll(assignment))rels.push(match[2].replace(/^\.\//,''));
   const setter=/\b[A-Za-z_$][\w$]*\s*\.\s*setAttribute\(\s*(['"])src\1\s*,\s*(['"])(\.\/[^'"?]+\.js)(?:\?[^'"]*)?\2\s*\)/g;
   for(const match of source.matchAll(setter))rels.push(match[3].replace(/^\.\//,''));
+  // Explicit release-version helpers replaced the former global HTMLScriptElement
+  // interception. Follow literal helper calls as real runtime dependencies so
+  // style CSP coverage does not shrink merely because the loader became safer.
+  const versionedHelper=/(?:\bruntimeScriptUrl|\bwindow\.MM_RUNTIME_SCRIPT_URL\?\.)\(\s*(['"])(\.\/[^'"?]+\.js)(?:\?[^'"]*)?\1\s*\)/g;
+  for(const match of source.matchAll(versionedHelper))rels.push(match[2].replace(/^\.\//,''));
   return rels;
 }
 
