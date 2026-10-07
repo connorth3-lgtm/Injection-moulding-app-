@@ -1,5 +1,5 @@
-const CACHE_VERSION='2026.10.08.1';
-const CACHE_REVISION='deep-fix-r65-20261007';
+const CACHE_VERSION='2026.10.08.2';
+const CACHE_REVISION='virtual-apprenticeship-r66-20261008';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both
@@ -50,6 +50,7 @@ const CORE=[
   './src/domains/engineering/research-context.js',
   './src/domains/process/engineering-core-browser.js',
   './src/domains/engineering/engineer-simulator-ui.js',
+  './src/domains/engineering/virtual-apprenticeship.js',
   './src/domains/governance/standards-readiness.js',
   './src/domains/learning/learning-analytics-loader.js',
   './src/domains/learning/activity-events-v2.js',
