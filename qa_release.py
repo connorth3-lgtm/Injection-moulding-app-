@@ -319,7 +319,7 @@ for js_name in [
     assert p.returncode == 0, f"{js_name}: {p.stderr}"
 
 for html_name in ["index.html", "MouldMaster_Academy_App.html"]:
-    scripts = re.findall(r"<script(?:\s[^>]*)?>(.*?)</script>", text(html_name), flags=re.S | re.I)
+    scripts = re.findall(r"<script(?:\s[^>]*)?>(.*?)</script\b[^>]*>", text(html_name), flags=re.S | re.I)
     for i, script in enumerate(scripts, 1):
         if not script.strip():
             continue
