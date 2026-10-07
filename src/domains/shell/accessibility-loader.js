@@ -5,7 +5,7 @@ if(window.MM_ACCESSIBILITY_HARDENING||window.MM_ACCESSIBILITY_HARDENING_LOADING)
 const analyticsReady=window.MM_LEARNING_ANALYTICS_LOADING||Promise.resolve(window.MM_LEARNING_ANALYTICS||null);
 const base='./src/domains/shell/accessibility-hardening.js';
 const version=String(window.MM_RUNTIME_ASSET_VERSION||'').trim();
-const src=version?`${base}?v=${encodeURIComponent(version)}`:base;
+const src=typeof window.MM_RUNTIME_SCRIPT_URL==='function'?window.MM_RUNTIME_SCRIPT_URL(base):(version?`${base}?v=${encodeURIComponent(version)}`:base);
 const ready=Promise.resolve(analyticsReady).catch(()=>null).then(()=>new Promise((resolve,reject)=>{
   const s=document.createElement('script');
   s.src=src;
