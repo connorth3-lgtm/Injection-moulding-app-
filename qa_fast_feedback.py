@@ -148,6 +148,22 @@ def main() -> int:
         if (ROOT / "qa_mission_control.cjs").exists():
             commands.append(["node", "qa_mission_control.cjs"])
 
+    mission_control_changed = bool(files & {
+        "src/domains/shell/mission-control.js",
+        "src/domains/shell/mission-control.css",
+        "src/domains/engineering/spatial-twin.js",
+        "src/domains/engineering/virtual-apprenticeship.js",
+        "mould-master-workspace.js",
+        "runtime-domain-manifest.json",
+        "tools/generate_runtime_manifest.py",
+        "qa_mission_control.cjs",
+    })
+    if mission_control_changed:
+        if (ROOT / "tools/generate_runtime_manifest.py").exists():
+            commands.append([sys.executable, "tools/generate_runtime_manifest.py", "--check"])
+        if (ROOT / "qa_mission_control.cjs").exists():
+            commands.append(["node", "qa_mission_control.cjs"])
+
     simulator_accessibility_changed = bool(files & {
         "src/core-runtime/core-inline-007.js",
         "qa_simulator_accessibility.py",
