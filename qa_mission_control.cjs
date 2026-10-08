@@ -55,13 +55,15 @@ assert.ok(source.includes("const PROFILE_DB_KEY='mouldmasterProDB'")&&source.inc
 assert.ok(source.includes('shared.storageKey(prefix,token)')&&source.includes("const prefix=STORAGE_KEY+'::'"),'Mission Control persisted-profile fallback must use the canonical learner-scope key format');
 assert.ok(source.includes('function readScopedState()')&&source.includes('function writeScopedState(value)'),'Mission Control must use one scoped read/write boundary across live and startup identity states');
 assert.ok(source.includes('function hydrateBeforeMutation()'),'Mission Control must hydrate learner-scoped state before passive or explicit writes');
-assert.ok(source.includes('function setSurface(id){hydrateCurrentLearner();state.surface'),'Mission Control surface changes must hydrate learner state before saving');
+assert.ok(source.includes('function guardLearnerAction(handler,boundToken)')&&source.includes('if(boundToken!==resolvedLearnerToken())'),'stale mounted Mission Control controls must be rejected after a learner switch');
+assert.ok(source.includes('function snapshot(){')&&source.includes('synchronizeLearnerState();\n  return Object.freeze'),'programmatic Mission Control reads must synchronize learner scope before exposure');
+assert.ok(source.includes('function setSurface(id){synchronizeLearnerState();state.surface'),'Mission Control surface changes must synchronize the active learner before saving');
 assert.ok(source.includes('function scheduleHydration(attempt=0)')&&source.includes('setTimeout(()=>scheduleHydration(attempt+1),50)'),'Mission Control must retry scoped hydration until learner identity is available');
 assert.ok(source.includes('const changed=hydrateCurrentLearner();')&&source.includes('if(attempt>=120)return changed'),'Mission Control startup hydration must keep watching after the first token so transient learner identities cannot strand persisted missions');
 assert.ok(source.includes('hydratedLearnerToken===null&&localMeaningful')&&source.includes('storage.set?.(STORAGE_KEY'),'Mission Control must persist startup mission work when learner scope first resolves');
 assert.ok(source.includes('class="mm-mc-drawer-panel" role="region" aria-label="Mission evidence"'),'Mission evidence drawer must be a labelled modeless region');
 assert.ok(source.includes("state.drawerOpen?evidenceMarkup():''"),'closed Mission evidence drawer must not leave hidden interactive/text content in the DOM');
-assert.ok(source.includes('hydrateCurrentLearner();state.surface'),'view changes must hydrate learner-scoped Mission Control state before saving');
+assert.ok(source.includes('synchronizeLearnerState();state.surface'),'view changes must synchronize learner-scoped Mission Control state before saving');
 assert.ok(source.includes('role="dialog" aria-modal="true" aria-label="Mission Control command search"'),'Mission Control command palette must remain an explicitly named modal dialog');
 
 const css=fs.readFileSync(path.join(__dirname,'src/domains/shell/mission-control.css'),'utf8');
