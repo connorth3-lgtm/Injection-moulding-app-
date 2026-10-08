@@ -67,6 +67,12 @@ for(const marker of [
   '.mm-st-layer-quality','.mm-st-layer-evidence','@media(max-width:820px)','@media(max-width:520px)',
   '@media(prefers-reduced-motion:reduce)'
 ])assert.ok(css.includes(marker),`missing Spatial Twin stylesheet contract: ${marker}`);
+for(const marker of [
+  '#mmSpatialTwin{width:100%;max-width:100%;min-width:0',
+  '.mm-st-casebar select{width:100%;max-width:100%;min-width:0',
+  '.mm-st-layout{display:grid;grid-template-columns:220px minmax(0,1fr) 300px;gap:12px;min-width:0;max-width:100%',
+  '.mm-st-right{display:grid;gap:12px;min-width:0'
+])assert.ok(css.includes(marker),`Spatial Twin mobile intrinsic-width safeguard missing: ${marker}`);
 
 const manifest=JSON.parse(fs.readFileSync(path.join(__dirname,'runtime-domain-manifest.json'),'utf8'));
 const assets=manifest.assets||[];

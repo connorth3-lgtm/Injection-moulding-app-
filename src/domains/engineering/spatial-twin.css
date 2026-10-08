@@ -4,7 +4,7 @@ body[data-mm-spatial-twin="1"] #simulator>.card:not(#mmSpatialTwin),
 body[data-mm-spatial-twin="1"] #simulator>.output-panel:not(#mmSpatialTwin),
 body[data-mm-spatial-twin="1"] #simulator>#mmVirtualApprenticeship{display:none!important}
 body[data-mm-spatial-twin="1"] #simulator{max-width:none!important}
-#mmSpatialTwin{width:100%;max-width:none;margin:0;padding:0;background:transparent;border:0;box-shadow:none}
+#mmSpatialTwin{width:100%;max-width:100%;min-width:0;margin:0;padding:0;background:transparent;border:0;box-shadow:none}
 .mm-st-shell{
   --st-panel:rgba(8,20,33,.92);
   --st-panel-2:rgba(13,30,47,.92);
@@ -14,6 +14,7 @@ body[data-mm-spatial-twin="1"] #simulator{max-width:none!important}
   --st-accent:#65e4ca;
   --st-blue:#79b8ff;
   --st-warn:#f4ca68;
+  min-width:0;max-width:100%;
   min-height:calc(100vh - 120px);
   color:var(--st-text);
 }
@@ -32,21 +33,21 @@ body[data-mm-spatial-twin="1"] #simulator{max-width:none!important}
 .mm-st-context span{display:block;color:#7f99af;font-size:9px;text-transform:uppercase;letter-spacing:.12em}
 .mm-st-context b{display:block;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px}
 .mm-st-context-case{background:linear-gradient(90deg,rgba(17,45,57,.98),rgba(8,24,37,.98))!important}
-.mm-st-casebar{display:flex;align-items:end;justify-content:space-between;gap:14px;margin:12px 0}
-.mm-st-casebar label{display:grid;gap:4px;min-width:min(500px,45vw);font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#8da5ba}
-.mm-st-casebar select{min-height:42px;text-transform:none;letter-spacing:0}
-.mm-st-modebar{display:flex;gap:5px;padding:4px;border:1px solid var(--st-line);border-radius:12px;background:rgba(5,16,28,.74);overflow:auto}
+.mm-st-casebar{display:flex;align-items:end;justify-content:space-between;gap:14px;min-width:0;max-width:100%;margin:12px 0}
+.mm-st-casebar label{display:grid;gap:4px;min-width:0;width:min(500px,45vw);max-width:100%;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#8da5ba}
+.mm-st-casebar select{width:100%;max-width:100%;min-width:0;min-height:42px;text-transform:none;letter-spacing:0}
+.mm-st-modebar{display:flex;gap:5px;min-width:0;max-width:100%;padding:4px;border:1px solid var(--st-line);border-radius:12px;background:rgba(5,16,28,.74);overflow:auto}
 .mm-st-modebar button{
   min-height:34px;padding:6px 10px;border:0;border-radius:8px;background:transparent;color:#95adc1;
   white-space:nowrap;font-size:11px;font-weight:760
 }
 .mm-st-modebar button[aria-pressed="true"]{background:#17364a;color:#eafffb;box-shadow:inset 0 0 0 1px rgba(101,228,202,.28)}
-.mm-st-layout{display:grid;grid-template-columns:220px minmax(0,1fr) 300px;gap:12px;align-items:start}
+.mm-st-layout{display:grid;grid-template-columns:220px minmax(0,1fr) 300px;gap:12px;min-width:0;max-width:100%;align-items:start}
 .mm-st-left,.mm-st-right>section,.mm-st-world{
   border:1px solid var(--st-line);border-radius:16px;background:linear-gradient(180deg,var(--st-panel-2),var(--st-panel));
   box-shadow:0 16px 38px rgba(0,0,0,.18)
 }
-.mm-st-left{padding:15px;position:sticky;top:12px}
+.mm-st-left{min-width:0;padding:15px;position:sticky;top:12px}
 .mm-st-left h3{margin:5px 0 5px;font-size:18px}
 .mm-st-left>p{font-size:11px;line-height:1.45}
 .mm-st-navlist{display:grid;gap:5px;margin-top:12px}
@@ -136,7 +137,7 @@ body[data-mm-spatial-twin="1"] #simulator{max-width:none!important}
 .mm-st-timeline-labels button span{display:grid;place-items:center;width:23px;height:23px;border-radius:50%;border:1px solid #38546b;background:#0c1e2e}
 .mm-st-timeline-labels button.active{color:#dffcf6}.mm-st-timeline-labels button.active span{border-color:#65e4ca;background:#1c5b52}
 .mm-st-timeline input{width:100%;accent-color:#65e4ca}
-.mm-st-right{display:grid;gap:12px;position:sticky;top:12px}
+.mm-st-right{display:grid;gap:12px;min-width:0;position:sticky;top:12px}
 .mm-st-right>section{padding:14px}
 .mm-st-inspector-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
 .mm-st-inspector h3{margin:4px 0 10px;font-size:18px}
