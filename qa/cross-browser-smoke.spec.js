@@ -43,6 +43,52 @@ test('core shell and exact-grade Materials work without layout overflow',async({
   expect(errors).toEqual([]);
 });
 
+test('Mission Control dashboard and stale controls remain isolated on A → B → A profile switches',async({page})=>{
+  await openApp(page);
+  await page.waitForFunction(()=>!!window.MM_MISSION_CONTROL&&!!window.MM_APP_SHELL?.dashboard?.requestCompose);
+  const result=await page.evaluate(()=>{
+    const mission=window.MM_MISSION_CONTROL;
+    mission.startMission({title:'Browser QA — private learner A mission',stage:'evidence'});
+    mission.addEvidence({kind:'measured',text:'Browser QA A-only evidence'});
+    window.MM_APP_SHELL.dashboard.requestCompose();
+    const before=document.querySelector('#dashboard .mm-mc-home-card')?.textContent||'';
+    const staleEvidence=document.querySelector('#dashboard [data-mm-mc-home-evidence]');
+    const staleMode=document.querySelector('#mmMissionControl [data-mm-mc-mode]');
+    const initialA=mission.state();
+    const other={...user,id:'cross-browser-qa-b',name:'Learner B',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1};
+    db.users[other.id]=other;
+    switchUser(other.id);
+    // Recompose in the SAME browser task, before global click/focus events.
+    window.MM_APP_SHELL.dashboard.requestCompose();
+    const bCard=document.querySelector('#dashboard .mm-mc-home-card')?.textContent||'';
+    staleEvidence?.click();
+    staleMode?.click();
+    const bState=mission.state();
+    mission.startMission({title:'Browser QA — learner B mission',stage:'brief'});
+    const advanceB=mission.nextStage();
+    const savedB=mission.state();
+    switchUser('cross-browser-qa');
+    window.MM_APP_SHELL.dashboard.requestCompose();
+    const aCard=document.querySelector('#dashboard .mm-mc-home-card')?.textContent||'';
+    const recoveredA=mission.state();
+    return {
+      sawA:before.includes('private learner A mission'),
+      sawNoA:bCard.includes('Start a connected learning mission')&&!bCard.includes('private learner A mission'),
+      evidenceFromA:initialA.evidence.length,
+      bInitiallyEmpty:bState.mission===null&&bState.evidence.length===0,
+      bUnchangedByStaleMode:bState.mode==='learner',
+      bAdvanced:advanceB&&savedB.mission?.stage==='baseline',
+      aRecovered:aCard.includes('private learner A mission')&&recoveredA.evidence.length===1&&recoveredA.mission?.stage==='evidence',
+      aNeverSawB:!aCard.includes('learner B mission')
+    };
+  });
+  expect(result).toEqual({
+    sawA:true,sawNoA:true,evidenceFromA:1,
+    bInitiallyEmpty:true,bUnchangedByStaleMode:true,bAdvanced:true,
+    aRecovered:true,aNeverSawB:true
+  });
+});
+
 test('engineering store enforces learner ownership for direct case reads',async({page})=>{
   await openApp(page);
   await page.waitForFunction(()=>!!window.MM_ENGINEERING_STORE,{timeout:30000});
