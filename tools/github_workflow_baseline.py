@@ -66,6 +66,46 @@ def api_runs(repository:str,workflow:str,branch:str,token:str)->list[dict]:
     rows=payload.get("workflow_runs")
     return rows if isinstance(rows,list) else []
 
+# Only completed browser jobs, not an aggregate "success" with skipped browser
+# groups, establish an expensive browser coverage baseline for subsequent diffs.
+REQUIRED_BROWSER_JOBS = frozenset({
+    "browser-chromium (visual)",
+    "browser-chromium (reachability)",
+    "browser-chromium (substantive)",
+    "browser-webkit",
+    "browser-cross",
+    "app-500-reliability (1)",
+    "app-500-reliability (2)",
+    "app-500-reliability (3)",
+    "app-500-reliability (4)",
+    "app-500-reliability (5)",
+})
+
+
+def full_browser_proof(jobs: list[dict]) -> bool:
+    successes={str(row.get("name") or "") for row in jobs
+               if isinstance(row,dict) and row.get("status")=="completed"
+               and row.get("conclusion")=="success"}
+    return REQUIRED_BROWSER_JOBS.issubset(successes)
+
+
+def api_browser_proof(repository: str, run_id: object, token: str) -> bool:
+    """Check actual job evidence, not only the green workflow aggregate."""
+    if not isinstance(run_id,int) or run_id <= 0:
+        return False
+    url=f"https://api.github.com/repos/{repository}/actions/runs/{run_id}/jobs?per_page=100"
+    request=urllib.request.Request(url,headers={
+        "Accept":"application/vnd.github+json",
+        "Authorization":f"Bearer {token}",
+        "X-GitHub-Api-Version":"2022-11-28",
+        "User-Agent":"mouldmaster-ci-baseline-resolver",
+    })
+    with urllib.request.urlopen(request,timeout=20) as response:
+        payload=json.load(response)
+    jobs=payload.get("jobs") if isinstance(payload,dict) else None
+    return isinstance(jobs,list) and full_browser_proof(jobs)
+
+
 def pull_request_baseline(target: str) -> str:
     """Choose the complete PR merge base, never the last incidental QA commit.
 
@@ -122,6 +162,17 @@ def resolve(workflow:str,target:str)->str:
                     continue
                 sha=str(row.get("head_sha") or "").strip()
                 if sha and is_ancestor(sha,target):
+                    if workflow=="mobile-browser-qa.yml":
+                        # A previous "success" with every browser job skipped is
+                        # not a browser proof. It must never narrow the diff base.
+                        try:
+                            has_proof=api_browser_proof(repository,row.get("id"),token)
+                        except (OSError, ValueError, KeyError, TypeError) as exc:
+                            print(f"Browser proof job check unavailable ({type(exc).__name__}); ignoring run {row.get('id')}.",file=sys.stderr)
+                            has_proof=False
+                        if not has_proof:
+                            print(f"Ignoring success run {row.get('id')} without complete browser jobs.",file=sys.stderr)
+                            continue
                     print(f"Resolved last successful {workflow} proof: {sha}",file=sys.stderr)
                     return sha
         except Exception as exc:
