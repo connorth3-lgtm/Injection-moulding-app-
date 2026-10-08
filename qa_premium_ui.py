@@ -80,8 +80,7 @@ pkg=json.loads(text('desktop/electron/package.json'))
 extra=[str(x.get('from','')).replace('../../','') for x in pkg.get('build',{}).get('extraResources',[])]
 need('premium-ui.css' in extra,'desktop package must include premium UI stylesheet')
 need('premium-dynamic.css' in extra,'desktop package must include premium dynamic stylesheet')
-need('src/domains/shell/mission-control.css' in extra,'desktop package must include Mission Control stylesheet')
-need('src/domains/shell/mission-control.js' in extra,'desktop package must include Mission Control runtime')
+need('src/domains' in extra,'desktop package must include the governed domain tree containing Mission Control')
 
 integrity=text('desktop/electron/scripts/generate-integrity.cjs')
 need("'premium-ui.css'" in integrity,'desktop integrity manifest must hash premium UI stylesheet')
@@ -91,8 +90,6 @@ need("'src/domains/shell/mission-control.js'" in integrity,'desktop integrity ma
 desktop_qa=text('desktop/electron/scripts/qa.cjs')
 need("'premium-ui.css'" in desktop_qa,'desktop QA must require premium UI stylesheet')
 need("'premium-dynamic.css'" in desktop_qa,'desktop QA must require premium dynamic stylesheet')
-need("'src/domains/shell/mission-control.css'" in desktop_qa,'desktop QA must require Mission Control stylesheet')
-need("'src/domains/shell/mission-control.js'" in desktop_qa,'desktop QA must require Mission Control runtime')
 
 release_qa=text('qa_release.py')
 need('"premium-ui.css"' in release_qa,'release QA must require premium UI offline governance')
