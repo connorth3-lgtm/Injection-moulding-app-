@@ -139,9 +139,11 @@ def content_findings(root: Path, entries: list[tuple[str, str]]) -> tuple[list[s
                     continue
                 if "@" not in ref or not HEX_SHA.fullmatch(ref.rsplit("@", 1)[1]):
                     problems.append(f"unlocked GitHub Action {name}:{lineno}: {ref}")
-        if (name.startswith(SOURCE_PFX) or name in {"index.html", "support.html", "privacy.html"})
+        if (
+            (name.startswith(SOURCE_PFX) or name in {"index.html", "support.html", "privacy.html"})
             and size <= 8 * 1024 * 1024
-            and not name.endswith((".zip", ".png", ".exe"))):
+            and not name.endswith((".zip", ".png", ".exe"))
+        ):
             # Guard actual committed private-key blocks; test/QA rules use a
             # concatenated marker so the scanner cannot flag its own source.
             try:
