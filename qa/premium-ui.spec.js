@@ -383,7 +383,7 @@ test('Mission Control persists context, evidence and command search across app s
   await expect(mc.locator('.mm-mc-palette-host')).toHaveClass(/open/);
   const query=mc.locator('[data-mm-mc-query]');
   await query.fill('Spatial Twin');
-  await expect(mc.locator('[data-mm-mc-command]')).toContainText('Spatial Twin');
+  await expect(mc.locator('[data-mm-mc-command="spatial"]')).toContainText('Spatial Twin');
   await page.keyboard.press('Escape');
 
   await page.evaluate(()=>window.switchView('materials'));
