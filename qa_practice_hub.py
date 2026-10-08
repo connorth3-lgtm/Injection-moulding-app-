@@ -102,6 +102,27 @@ for banned in ("validated production recipe", "automatic machine setting", "mach
     if banned.lower() in hub.lower():
         failures.append(f"Practice hub contains authority wording that needs review: {banned}")
 
+
+# Unified Defect Finder / Troubleshooting Coach is one source-owned workbench.
+for required in (
+    "MM_DIAGNOSTIC_WORKBENCH",
+    "Defect Finder + Troubleshooting Coach",
+    "dxOpen",
+    "rootCauseVerified:false",
+    "productionSetpointsAuthorized:false",
+    "No cause confirmed.",
+    "Evidence gaps to resolve",
+    "data-mm-dx-hypothesis",
+    "case 'troubleshooting': return dxOpen();",
+    "case 'diagnostic-workbench': return dxOpen();",
+    "renderDefects=renderUnifiedDefects",
+    "renderCoach=renderUnifiedCoach",
+):
+    if required.lower() not in hub.lower():
+        failures.append(f"Unified diagnostic contract missing: {required}")
+if 'data-mm-hub-action="defects"' in hub or 'data-mm-hub-action="coach"' in hub:
+    failures.append("Separate legacy diagnostic picker options must be retired")
+
 if failures:
     print("PRACTICE HUB QA: FAIL")
     for failure in failures:
