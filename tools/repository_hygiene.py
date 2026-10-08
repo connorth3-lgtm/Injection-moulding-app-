@@ -17,6 +17,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_BOOK = "src/domains/learning/book-data/"
 SOURCE_QUALITY = "src/domains/quality/data/"
+# Runtime mirrors may be renamed for learner-facing semantics. Keep the
+# canonical ownership explicit rather than accepting any matching checksum.
+MIRROR_CANONICAL_OVERRIDES = {
+    "src/domains/learning/book-data/book-material-regional-evidence-v1.json":
+        "data/asian-aus-nz-material-grade-extraction-wave2-v1.json",
+}
 ALLOWED_BINARY_ARTIFACTS = frozenset({
     "MouldMasterAcademy.exe",  # audited frozen Windows recovery, hash-governed in qa_release.py
     "audit/source-freshness/2026-08-26-run-32916120936/source-freshness-reports.zip",
@@ -85,9 +91,9 @@ def mirror_pairs(names: set[str]) -> list[tuple[str, str]]:
     pairs: list[tuple[str, str]] = []
     for path in sorted(names):
         if path.startswith(SOURCE_BOOK) and path.endswith(".json"):
-            pairs.append((f"data/{Path(path).name}", path))
+            pairs.append((MIRROR_CANONICAL_OVERRIDES.get(path, f"data/{Path(path).name}"), path))
         elif path.startswith(SOURCE_QUALITY) and path.endswith(".json"):
-            pairs.append((f"data/{Path(path).name}", path))
+            pairs.append((MIRROR_CANONICAL_OVERRIDES.get(path, f"data/{Path(path).name}"), path))
     return pairs
 
 
