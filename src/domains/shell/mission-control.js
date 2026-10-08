@@ -182,12 +182,24 @@ function hydrateScopedState(){
   if(hasPersisted&&!hasLive){state=persisted;return true}
   return false
 }
-function hydrateBeforeMutation(){
+function synchronizeLearnerState(){
+  // Every read, render and action must resolve the active learner first.
+  // Browser and profile events can arrive AFTER synchronous shell composition.
   const token=resolvedLearnerToken();
-  if(!token)return false;
-  // Rehydrate before any mutation; no previous learner data may carry across.
-  if(token!==hydratedLearnerToken)hydrateCurrentLearner();
-  return hydratedLearnerToken===token;
+  if(token!==hydratedLearnerToken){
+    if(token)hydrateCurrentLearner();
+    else{state=clone(DEFAULT_STATE);hydratedLearnerToken=null;}
+  }
+  return Boolean(token&&hydratedLearnerToken===token);
+}
+function hydrateBeforeMutation(){return synchronizeLearnerState()}
+function guardLearnerAction(handler,boundToken){
+  return (...args)=>{
+    // A detached control from learner A must never operate on learner B's
+    // mission, even if a profile-change event has not fired yet.
+    if(boundToken!==resolvedLearnerToken()){refreshLearnerView();return false;}
+    return handler(...args);
+  };
 }
 function saveState(){
   const token=resolvedLearnerToken();
@@ -202,11 +214,7 @@ function saveState(){
 function snapshot(){
   // Programmatic consumers must not read a previous learner's records even
   // before the next DOM event or Mission Control render.
-  const token=resolvedLearnerToken();
-  if(token!==hydratedLearnerToken){
-    if(token)hydrateCurrentLearner();
-    else{state=clone(DEFAULT_STATE);hydratedLearnerToken=null;}
-  }
+  synchronizeLearnerState();
   return Object.freeze({version:VERSION,mode:state.mode,surface:state.surface,mission:state.mission?clone(state.mission):null,evidence:clone(state.evidence)});
 }
 function activeStageIndex(){const id=state.mission?.stage||'brief';const i=STAGES.findIndex(x=>x[0]===id);return i<0?0:i}
@@ -280,11 +288,7 @@ function paletteMarkup(){
 function render(){
   // A view can be opened immediately after a profile switch, before the
   // normal hydration scheduler observes it. Never render another owner's data.
-  const token=resolvedLearnerToken();
-  if(token!==hydratedLearnerToken){
-    if(token)hydrateCurrentLearner();
-    else{state=clone(DEFAULT_STATE);hydratedLearnerToken=null;}
-  }
+  synchronizeLearnerState();
   const host=root();if(!host)return;
   host.innerHTML=contextMarkup()+timelineMarkup()+
     `<div class="mm-mc-drawer ${state.drawerOpen?'open':''}" aria-hidden="${state.drawerOpen?'false':'true'}">${state.drawerOpen?evidenceMarkup():''}</div>`+
@@ -306,21 +310,22 @@ function install(){
 }
 function bind(host){
   const boundLearnerToken=resolvedLearnerToken();
-  host.querySelector('[data-mm-mc-palette]')?.addEventListener('click',openPalette);
-  host.querySelector('[data-mm-mc-evidence]')?.addEventListener('click',()=>toggleDrawer(true));
-  host.querySelector('[data-mm-mc-mode]')?.addEventListener('click',cycleMode);
-  host.querySelector('[data-mm-mc-new]')?.addEventListener('click',startMissionDialog);
-  host.querySelector('[data-mm-mc-next]')?.addEventListener('click',nextStage);
-  host.querySelectorAll('[data-mm-mc-stage]').forEach(b=>b.addEventListener('click',()=>setStage(b.dataset.mmMcStage)));
-  host.querySelector('[data-mm-mc-drawer-close]')?.addEventListener('click',()=>toggleDrawer(false));
-  host.querySelector('[data-mm-mc-evidence-add]')?.addEventListener('click',addEvidenceFromDrawer);
-  host.querySelectorAll('[data-mm-mc-evidence-remove]').forEach(b=>b.addEventListener('click',()=>removeEvidence(b.dataset.mmMcEvidenceRemove,boundLearnerToken)));
-  host.querySelectorAll('[data-mm-mc-palette-close]').forEach(b=>b.addEventListener('click',e=>{if(e.target===b||b.tagName==='BUTTON')closePalette()}));
+  const guarded=handler=>guardLearnerAction(handler,boundLearnerToken);
+  host.querySelector('[data-mm-mc-palette]')?.addEventListener('click',guarded(openPalette));
+  host.querySelector('[data-mm-mc-evidence]')?.addEventListener('click',guarded(()=>toggleDrawer(true)));
+  host.querySelector('[data-mm-mc-mode]')?.addEventListener('click',guarded(cycleMode));
+  host.querySelector('[data-mm-mc-new]')?.addEventListener('click',guarded(startMissionDialog));
+  host.querySelector('[data-mm-mc-next]')?.addEventListener('click',guarded(nextStage));
+  host.querySelectorAll('[data-mm-mc-stage]').forEach(b=>b.addEventListener('click',guarded(()=>setStage(b.dataset.mmMcStage))));
+  host.querySelector('[data-mm-mc-drawer-close]')?.addEventListener('click',guarded(()=>toggleDrawer(false)));
+  host.querySelector('[data-mm-mc-evidence-add]')?.addEventListener('click',guarded(addEvidenceFromDrawer));
+  host.querySelectorAll('[data-mm-mc-evidence-remove]').forEach(b=>b.addEventListener('click',guarded(()=>removeEvidence(b.dataset.mmMcEvidenceRemove,boundLearnerToken))));
+  host.querySelectorAll('[data-mm-mc-palette-close]').forEach(b=>b.addEventListener('click',guarded(e=>{if(e.target===b||b.tagName==='BUTTON')closePalette()})));
   const panel=host.querySelector('[data-mm-mc-palette-panel]');panel?.addEventListener('click',e=>e.stopPropagation());
-  const q=host.querySelector('[data-mm-mc-query]');q?.addEventListener('input',()=>renderCommands(q.value));q?.addEventListener('keydown',paletteKeydown);
+  const q=host.querySelector('[data-mm-mc-query]');q?.addEventListener('input',guarded(()=>renderCommands(q.value)));q?.addEventListener('keydown',guarded(paletteKeydown));
 }
 function startMission(input={}){
-  hydrateCurrentLearner();
+  synchronizeLearnerState();
   state.mission=normalizeMission(input);
   state.evidence=[];
   state.drawerOpen=false;state.paletteOpen=false;saveState();render();registerDashboard(true);return snapshot()
@@ -332,7 +337,7 @@ function startMissionDialog(){
   return startMission({title:String(title).trim(),kind:lesson?'learning':'investigation',stage:'brief'})
 }
 function attachContext(input={},options={}){
-  hydrateCurrentLearner();
+  synchronizeLearnerState();
   const context=normalizeContext(input);
   if(!state.mission&&options.startIfEmpty!==false){
     state.mission=normalizeMission({title:options.title||context.caseId||'Injection moulding mission',kind:options.kind||'investigation',stage:options.stage||'brief',context})
@@ -344,15 +349,15 @@ function attachContext(input={},options={}){
   saveState();render();registerDashboard(true);return snapshot()
 }
 function setStage(id){
-  hydrateCurrentLearner();
+  synchronizeLearnerState();
   if(!state.mission||!STAGES.some(x=>x[0]===id))return false;
   state.mission.stage=id;saveState();render();registerDashboard(true);return true
 }
-function nextStage(){if(!state.mission)return false;const i=activeStageIndex();if(i>=STAGES.length-1)return false;return setStage(STAGES[i+1][0])}
-function setMode(id){hydrateCurrentLearner();if(!MODES[id])return false;state.mode=id;saveState();render();return true}
-function cycleMode(){const ids=Object.keys(MODES),i=ids.indexOf(state.mode);setMode(ids[(i+1)%ids.length])}
+function nextStage(){synchronizeLearnerState();if(!state.mission)return false;const i=activeStageIndex();if(i>=STAGES.length-1)return false;return setStage(STAGES[i+1][0])}
+function setMode(id){synchronizeLearnerState();if(!MODES[id])return false;state.mode=id;saveState();render();return true}
+function cycleMode(){synchronizeLearnerState();const ids=Object.keys(MODES),i=ids.indexOf(state.mode);setMode(ids[(i+1)%ids.length])}
 function addEvidence(input={}){
-  hydrateCurrentLearner();
+  synchronizeLearnerState();
   const text=String(input.text||'').trim();if(!text)return false;
   const kind=['observed','measured','hypothesis','unknown','note','verification'].includes(input.kind)?input.kind:'note';
   state.evidence.push({id:'e-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,6),kind,text:text.slice(0,1600),at:new Date().toISOString(),surface:state.surface});
@@ -371,9 +376,9 @@ function removeEvidence(id,expectedToken){
   if(next.length===state.evidence.length)return false;
   state.evidence=next;saveState();render();registerDashboard(true);return true;
 }
-function toggleDrawer(open=!state.drawerOpen){state.drawerOpen=Boolean(open);if(state.drawerOpen)state.paletteOpen=false;render();requestAnimationFrame(()=>root()?.querySelector('[data-mm-mc-evidence-text]')?.focus())}
-function openPalette(){state.paletteOpen=true;state.drawerOpen=false;render();requestAnimationFrame(()=>root()?.querySelector('[data-mm-mc-query]')?.focus())}
-function closePalette(){state.paletteOpen=false;render()}
+function toggleDrawer(open){synchronizeLearnerState();state.drawerOpen=Boolean(open===undefined?!state.drawerOpen:open);if(state.drawerOpen)state.paletteOpen=false;render();requestAnimationFrame(()=>root()?.querySelector('[data-mm-mc-evidence-text]')?.focus())}
+function openPalette(){synchronizeLearnerState();state.paletteOpen=true;state.drawerOpen=false;render();requestAnimationFrame(()=>root()?.querySelector('[data-mm-mc-query]')?.focus())}
+function closePalette(){synchronizeLearnerState();state.paletteOpen=false;render()}
 function paletteKeydown(e){
   const buttons=[...root().querySelectorAll('[data-mm-mc-command]')],current=document.activeElement,idx=buttons.indexOf(current);
   if(e.key==='ArrowDown'){e.preventDefault();(buttons[idx+1]||buttons[0])?.focus()}
@@ -386,7 +391,8 @@ function renderCommands(query=''){
   const matched=commandItems().filter(row=>!q||(`${row.label} ${row.hint||''} ${row.keywords||''}`).toLowerCase().includes(q)).slice(0,17);
   const rows=raw?[...matched,{id:'global-search',label:`Search learning for “${raw.slice(0,80)}”`,hint:'Search lessons, concepts, defects and learning content',keywords:raw,query:raw}]:matched;
   box.innerHTML=rows.length?rows.map((row,i)=>`<button type="button" data-mm-mc-command="${esc(row.id)}" data-mm-mc-index="${i}"><span><b>${esc(row.label)}</b><small>${esc(row.hint||'Open')}</small></span><kbd>↵</kbd></button>`).join(''):'<div class="mm-mc-empty-state"><b>No matching command.</b><p>Try a view, tool, material, evidence or mission term.</p></div>';
-  box.querySelectorAll('[data-mm-mc-command]').forEach(b=>b.addEventListener('click',()=>executeCommand(rows[Number(b.dataset.mmMcIndex)])));
+  const boundLearnerToken=resolvedLearnerToken();
+  box.querySelectorAll('[data-mm-mc-command]').forEach(b=>b.addEventListener('click',guardLearnerAction(()=>executeCommand(rows[Number(b.dataset.mmMcIndex)]),boundLearnerToken)));
 }
 function executeCommand(row){
   if(!row)return false;closePalette();
@@ -416,7 +422,7 @@ function executeCommand(row){
     default:return false;
   }
 }
-function setSurface(id){hydrateCurrentLearner();state.surface=String(id||'').trim()||'unknown';saveState();render()}
+function setSurface(id){synchronizeLearnerState();state.surface=String(id||'').trim()||'unknown';saveState();render()}
 function bindShell(){
   if(unbindView)return;
   const shell=window.MM_APP_SHELL;
@@ -431,10 +437,14 @@ function dashboardHtml(){
   return `<section class="card mm-mc-home-card"><div><span class="eyebrow">Continue mission · ${esc(stage)}</span><h2>${esc(state.mission.title)}</h2><p>${esc([c.machine,c.mould,c.material,c.part].filter(Boolean).join(' · ')||'Context follows you across MouldMaster.')}</p><div class="mm-mc-home-meta"><span>${state.evidence.length} evidence items</span><span>${esc(MODES[state.mode].label)} mode</span></div></div><div class="mm-mc-home-actions"><button type="button" class="primary" data-mm-mc-home-evidence>Open evidence</button><button type="button" class="ghost" data-mm-mc-home-command>Find a tool</button></div></section>`;
 }
 function renderDashboardCard(slot){
+  // The dashboard may recompose synchronously before profile events propagate.
+  synchronizeLearnerState();
   slot.innerHTML=dashboardHtml();
-  slot.querySelector('[data-mm-mc-home-start]')?.addEventListener('click',startMissionDialog);
-  slot.querySelector('[data-mm-mc-home-evidence]')?.addEventListener('click',()=>toggleDrawer(true));
-  slot.querySelector('[data-mm-mc-home-command]')?.addEventListener('click',openPalette);
+  const boundLearnerToken=resolvedLearnerToken();
+  const guarded=handler=>guardLearnerAction(handler,boundLearnerToken);
+  slot.querySelector('[data-mm-mc-home-start]')?.addEventListener('click',guarded(startMissionDialog));
+  slot.querySelector('[data-mm-mc-home-evidence]')?.addEventListener('click',guarded(()=>toggleDrawer(true)));
+  slot.querySelector('[data-mm-mc-home-command]')?.addEventListener('click',guarded(openPalette));
 }
 function registerDashboard(force=false){
   const shell=window.MM_APP_SHELL;if(!shell?.dashboard?.register)return;
@@ -443,6 +453,7 @@ function registerDashboard(force=false){
   shell.dashboard.requestCompose?.();
 }
 function keydown(e){
+  if(resolvedLearnerToken()!==hydratedLearnerToken)refreshLearnerView();
   const target=e.target,typing=target&&['INPUT','TEXTAREA','SELECT'].includes(target.tagName);
   if((e.metaKey||e.ctrlKey)&&String(e.key).toLowerCase()==='k'){e.preventDefault();openPalette();return}
   if(!typing&&e.key==='/'){e.preventDefault();openPalette();return}
@@ -452,10 +463,8 @@ function keydown(e){
   }
 }
 function refreshLearnerView(){
-  const token=resolvedLearnerToken();
-  if(token===hydratedLearnerToken)return false;
-  if(token)hydrateCurrentLearner();
-  else{state=clone(DEFAULT_STATE);hydratedLearnerToken=null;}
+  if(resolvedLearnerToken()===hydratedLearnerToken)return false;
+  synchronizeLearnerState();
   render();registerDashboard(true);return true;
 }
 function installWhenReady(){if(!document.body)return false;install();bindShell();registerDashboard();scheduleHydration();return true}
