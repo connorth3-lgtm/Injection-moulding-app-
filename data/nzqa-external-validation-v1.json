@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.08.3",
+  "release": "2026.10.08.4",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.08.3.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.08.4.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 379,
   "candidate": {
-    "release": "2026.10.08.3",
+    "release": "2026.10.08.4",
     "sourceSha": "88780a311e4aa5ff703f2d5e1c38167303052707",
     "runtimeFingerprint": "sha256:1481bc6e478da6905f98d7b4f29e7d438923f000e3c6918a82ccb3d0a9331503"
   },
