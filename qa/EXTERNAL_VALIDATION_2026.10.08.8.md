@@ -3,13 +3,13 @@
 Release `2026.10.08.8` is technically automated; native main governance remains enforced and all external workstreams remain explicit **HOLD**. Mission Control is an app-wide learner context/evidence/navigation layer and does not create production, accreditation or external-validation authority.
 
 ## Exact current candidate
-- pre-merge candidate source: `d243d887965a51bcd7eff4dfc73287cf5acf6a79`
-- exact public-runtime fingerprint: `sha256:849e3e9926f992a1cbeca7bf37cb262fd2590e152c0dc1f19c87647c016f70e2`
-- candidate build run: `37748002799` (**Pre-merge Public Candidate**)
-- retained physical candidate: `physical-pwa-candidate-d243d887965a51bcd7eff4dfc73287cf5acf6a79`
-- artifact id: `11536916202`
-- artifact ZIP digest: `sha256:d1dbc5d453b1309773b0e2653a2390ce7b26ea468bb0fd2234e8e4041678a010`
-- artifact retention expiry: `2027-01-06T08:09:41Z`
+- pre-merge candidate source: `6aaa53c905f91494ee586563631b61c39784df30`
+- exact public-runtime fingerprint: `sha256:d2e5f46cfd97becd7781b69cd88d78dc0badff8ab991ae9265a987dc5755437e`
+- candidate build run: `37754724412` (**Pre-merge Public Candidate**)
+- retained physical candidate: `physical-pwa-candidate-6aaa53c905f91494ee586563631b61c39784df30`
+- artifact id: `11539542339`
+- artifact ZIP digest: `sha256:e210d4ad39d4259dd644fd0acf20f2203a253d458ea6b701ef39ee5f0b0f7276`
+- artifact retention expiry: `2027-01-06T09:09:44Z`
 
 This is a release-boundary rebind, not external evidence. Mutable `preview` is not evidence authority.
 
