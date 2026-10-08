@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.10.08.3';
+const CACHE_VERSION='2026.10.08.4';
 const CACHE_REVISION='spatial-twin-r67-20261008';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
