@@ -66,6 +66,90 @@ def api_runs(repository:str,workflow:str,branch:str,token:str)->list[dict]:
     rows=payload.get("workflow_runs")
     return rows if isinstance(rows,list) else []
 
+# Only completed browser jobs, not an aggregate "success" with skipped browser
+# groups, establish an expensive browser coverage baseline for subsequent diffs.
+REQUIRED_BROWSER_JOBS = frozenset({
+    "browser-chromium (visual)",
+    "browser-chromium (reachability)",
+    "browser-chromium (substantive)",
+    "browser-webkit",
+    "browser-cross",
+    "app-500-reliability (1)",
+    "app-500-reliability (2)",
+    "app-500-reliability (3)",
+    "app-500-reliability (4)",
+    "app-500-reliability (5)",
+})
+
+
+def full_browser_proof(jobs: list[dict]) -> bool:
+    successes={str(row.get("name") or "") for row in jobs
+               if isinstance(row,dict) and row.get("status")=="completed"
+               and row.get("conclusion")=="success"}
+    return REQUIRED_BROWSER_JOBS.issubset(successes)
+
+
+def api_browser_proof(repository: str, run_id: object, token: str) -> bool:
+    """Check actual job evidence, not only the green workflow aggregate."""
+    if not isinstance(run_id,int) or run_id <= 0:
+        return False
+    url=f"https://api.github.com/repos/{repository}/actions/runs/{run_id}/jobs?per_page=100"
+    request=urllib.request.Request(url,headers={
+        "Accept":"application/vnd.github+json",
+        "Authorization":f"Bearer {token}",
+        "X-GitHub-Api-Version":"2022-11-28",
+        "User-Agent":"mouldmaster-ci-baseline-resolver",
+    })
+    with urllib.request.urlopen(request,timeout=20) as response:
+        payload=json.load(response)
+    jobs=payload.get("jobs") if isinstance(payload,dict) else None
+    return isinstance(jobs,list) and full_browser_proof(jobs)
+
+
+def pull_request_baseline(target: str) -> str:
+    """Choose the complete PR merge base, never the last incidental QA commit.
+
+    A squash-merged retained candidate may not be in the PR's ancestry.
+    When that happens, HEAD^ can miss earlier app/test changes on the same
+    branch and incorrectly skip an expensive required browser proof.
+    """
+    event_path=os.environ.get("GITHUB_EVENT_PATH","").strip()
+    candidates=[]
+    if event_path and Path(event_path).is_file():
+        try:
+            event=json.loads(Path(event_path).read_text(encoding="utf-8"))
+            base_sha=str((((event.get("pull_request") or {}).get("base") or {}).get("sha") or "")).strip()
+            if base_sha:
+                candidates.append(base_sha)
+        except (OSError, ValueError, AttributeError):
+            pass
+    base_ref=os.environ.get("GITHUB_BASE_REF","").strip()
+    if base_ref:
+        candidates.extend((f"origin/{base_ref}",base_ref))
+    for candidate in candidates:
+        if not valid_commit(candidate):
+            continue
+        try:
+            base=git("merge-base",candidate,target)
+        except subprocess.CalledProcessError:
+            continue
+        if base and valid_commit(base):
+            print(f"Using complete PR merge-base proof fallback: {base}",file=sys.stderr)
+            return base
+    return ""
+
+
+def oldest_ancestor(target: str) -> str:
+    """Conservative fail-open on coverage: inspect the whole reachable history."""
+    try:
+        roots=git("rev-list","--max-parents=0",target).splitlines()
+        if roots:
+            return roots[0]
+    except subprocess.CalledProcessError:
+        pass
+    return target
+
+
 def resolve(workflow:str,target:str)->str:
     repository=os.environ.get("GITHUB_REPOSITORY","").strip()
     token=os.environ.get("GITHUB_TOKEN","").strip()
@@ -78,6 +162,17 @@ def resolve(workflow:str,target:str)->str:
                     continue
                 sha=str(row.get("head_sha") or "").strip()
                 if sha and is_ancestor(sha,target):
+                    if workflow=="mobile-browser-qa.yml":
+                        # A previous "success" with every browser job skipped is
+                        # not a browser proof. It must never narrow the diff base.
+                        try:
+                            has_proof=api_browser_proof(repository,row.get("id"),token)
+                        except (OSError, ValueError, KeyError, TypeError) as exc:
+                            print(f"Browser proof job check unavailable ({type(exc).__name__}); ignoring run {row.get('id')}.",file=sys.stderr)
+                            has_proof=False
+                        if not has_proof:
+                            print(f"Ignoring success run {row.get('id')} without complete browser jobs.",file=sys.stderr)
+                            continue
                     print(f"Resolved last successful {workflow} proof: {sha}",file=sys.stderr)
                     return sha
         except Exception as exc:
@@ -86,11 +181,22 @@ def resolve(workflow:str,target:str)->str:
     if fallback and is_ancestor(fallback,target):
         print(f"Using governed retained-candidate fallback: {fallback}",file=sys.stderr)
         return fallback
+    # A first PR run without an ancestor proof must compare its full merge-base.
+    # Previous immediate-parent fallback skipped earlier PR commits after a
+    # squash-merge made the retained candidate's SHA unreachable locally.
+    pull_request=os.environ.get("GITHUB_EVENT_NAME")=="pull_request" or bool(os.environ.get("GITHUB_HEAD_REF"))
+    if pull_request:
+        pr_base=pull_request_baseline(target)
+        if pr_base:
+            return pr_base
+        fallback=oldest_ancestor(target)
+        print(f"PR base unreachable; conservatively checking full history from {fallback}",file=sys.stderr)
+        return fallback
     try:
         fallback=git("rev-parse",f"{target}^")
     except subprocess.CalledProcessError:
         fallback=target
-    print(f"Using immediate-parent fallback: {fallback}",file=sys.stderr)
+    print(f"Using immediate-parent fallback on a non-PR run: {fallback}",file=sys.stderr)
     return fallback
 
 def main()->int:

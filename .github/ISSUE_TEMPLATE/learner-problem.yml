@@ -24,6 +24,30 @@ body:
         - Other learner-facing problem
     validations:
       required: true
+  - type: dropdown
+    id: device
+    attributes:
+      label: Device type (optional)
+      options:
+        - Android phone
+        - iPhone
+        - iPad or Android tablet
+        - Windows computer
+        - Mac computer
+        - Linux computer
+        - Other / unsure
+  - type: input
+    id: browser
+    attributes:
+      label: Browser or app mode (optional)
+      description: Approximate browser/version and whether you used a normal tab or installed PWA; do not enter device IDs.
+      placeholder: "Example: Firefox on Windows, browser tab; or Safari on iPhone, installed PWA"
+  - type: input
+    id: release
+    attributes:
+      label: App release under test (optional)
+      description: Copy only the public web release shown in Support, not a screenshot or local storage.
+      placeholder: "Example: 2026.10.09.2"
   - type: textarea
     id: task
     attributes:
@@ -32,6 +56,12 @@ body:
       placeholder: "Example: Reopen the installed PWA offline and continue the current diagnostic case."
     validations:
       required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+      description: Describe the result you expected; avoid including private content.
+      placeholder: "Example: My current practice task should reopen after returning to Home."
   - type: textarea
     id: happened
     attributes:
