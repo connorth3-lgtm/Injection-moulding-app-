@@ -54,6 +54,7 @@ assert.ok(source.includes('function hydrateScopedState()'),'Mission Control must
 assert.ok(source.includes('function hydrateBeforeMutation()'),'Mission Control must hydrate learner-scoped state before passive or explicit writes');
 assert.ok(source.includes('function setSurface(id){hydrateCurrentLearner();state.surface'),'Mission Control surface changes must hydrate learner state before saving');
 assert.ok(source.includes('function scheduleHydration(attempt=0)')&&source.includes('setTimeout(()=>scheduleHydration(attempt+1),50)'),'Mission Control must retry scoped hydration until learner identity is available');
+assert.ok(source.includes('const changed=hydrateCurrentLearner();')&&source.includes('if(attempt>=120)return changed'),'Mission Control startup hydration must keep watching after the first token so transient learner identities cannot strand persisted missions');
 assert.ok(source.includes('hydratedLearnerToken===null&&localMeaningful')&&source.includes('storage.set?.(STORAGE_KEY'),'Mission Control must persist startup mission work when learner scope first resolves');
 assert.ok(source.includes('class="mm-mc-drawer-panel" role="region" aria-label="Mission evidence"'),'Mission evidence drawer must be a labelled modeless region');
 assert.ok(source.includes("state.drawerOpen?evidenceMarkup():''"),'closed Mission evidence drawer must not leave hidden interactive/text content in the DOM');
