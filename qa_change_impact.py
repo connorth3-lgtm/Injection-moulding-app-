@@ -100,6 +100,52 @@ baseline_source=(Path(__file__).resolve().parent/"tools/github_workflow_baseline
 need('"status":"success"' in baseline_source and "governed_candidate()" in baseline_source,
      "browser proof resolver must select successful runs and retain a conservative governed-candidate fallback")
 
+# Regress the new-PR CI baseline bug: after a squash-merged candidate is not in
+# local ancestry, a first browser run must compare the complete PR merge base,
+# not HEAD^ (which could contain only the last documentation/test commit).
+need(classify({"qa/cross-browser-smoke.spec.js"})["browser"] is True,
+     "a changed cross-browser test must request actual browser execution")
+need("pull_request_baseline(target)" in baseline_source and "oldest_ancestor(target)" in baseline_source,
+     "browser baseline must fail conservatively if the retained candidate is unreachable")
+
+import os
+import tempfile
+from unittest import mock
+import github_workflow_baseline as proof_baseline
+
+with tempfile.TemporaryDirectory() as tmp:
+    event_path=Path(tmp)/"pr-event.json"
+    event_path.write_text(json.dumps({"pull_request":{"base":{"sha":"base-candidate"}}}),encoding="utf-8")
+    with mock.patch.dict(os.environ,{
+        "GITHUB_EVENT_NAME":"pull_request","GITHUB_HEAD_REF":"first-pr-run",
+        "GITHUB_BASE_REF":"preview","GITHUB_EVENT_PATH":str(event_path),
+        "GITHUB_REPOSITORY":"","GITHUB_TOKEN":""
+    }):
+        with mock.patch.object(proof_baseline,"governed_candidate",return_value="unreachable-squash-sha"), \\
+             mock.patch.object(proof_baseline,"is_ancestor",return_value=False), \\
+             mock.patch.object(proof_baseline,"valid_commit",return_value=True), \\
+             mock.patch.object(proof_baseline,"git",return_value="whole-pr-base") as git_calls:
+            need(proof_baseline.resolve("mobile-browser-qa.yml","pr-head")=="whole-pr-base",
+                 "first PR run must use full merge base, not last commit")
+            need(any(call.args[:2]==("merge-base","base-candidate") for call in git_calls.call_args_list),
+                 "browser proof fallback must select the PR event base")
+
+    # When webhook/base refs are unavailable, the safest PR behavior is to
+    # rerun against the oldest reachable ancestor, not silently trust HEAD^.
+    with mock.patch.dict(os.environ,{
+        "GITHUB_EVENT_NAME":"pull_request","GITHUB_HEAD_REF":"first-pr-run",
+        "GITHUB_BASE_REF":"","GITHUB_EVENT_PATH":"/nonexistent/pr-event.json",
+        "GITHUB_REPOSITORY":"","GITHUB_TOKEN":""
+    }):
+        with mock.patch.object(proof_baseline,"governed_candidate",return_value=""), \\
+             mock.patch.object(proof_baseline,"valid_commit",return_value=False), \\
+             mock.patch.object(proof_baseline,"git",return_value="root-of-history") as git_calls:
+            need(proof_baseline.resolve("mobile-browser-qa.yml","pr-head")=="root-of-history",
+                 "unresolvable PR base must select a conservative full-history check")
+            need(any(call.args[:2]==("rev-list","--max-parents=0") for call in git_calls.call_args_list),
+                 "unresolvable PR baseline must not default to HEAD^")
+
+
 candidate_workflow=(Path(__file__).resolve().parent/".github/workflows/premerge-public-candidate.yml").read_text(encoding="utf-8")
 ci_impact_source=(Path(__file__).resolve().parent/"tools/ci_impact.py").read_text(encoding="utf-8")
 need("tools/ci_impact.py --governed-candidate" in candidate_workflow,
