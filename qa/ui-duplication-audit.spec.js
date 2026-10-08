@@ -3,19 +3,21 @@ const {test,expect}=require('@playwright/test');
 const BASE='http://127.0.0.1:4173/index.html';
 test.use({serviceWorkers:'block'});
 
-async function ready(page){
-  await page.addInitScript(()=>{
+async function ready(page,awards=[]){
+  await page.addInitScript(({awards})=>{
     const user={
       id:'ui-duplicate-audit',name:'Fictional UI QA',role:'learner',
-      completed:[1,2],bookmarks:[],notes:{},examScores:{},
-      learningAwards:[],currentLesson:3,lastSeen:'2026-10-09T00:00:00.000Z',
+      completed:[1,2],bookmarks:[],notes:{},
+      examScores:Object.fromEntries(awards.map(id=>[id,92])),
+      examPassStatus:Object.fromEntries(awards.map(id=>[id,true])),
+      learningAwards:awards,currentLesson:3,lastSeen:'2026-10-09T00:00:00.000Z',
       onboardingDone:true,experience:'Beginner',goal:'Learn the full process',
       dailyMinutes:15,region:'ALL'
     };
     localStorage.setItem('mouldmasterProDB',JSON.stringify({
       activeUser:user.id,users:{[user.id]:user}
     }));
-  });
+  },{awards});
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED)&&
     window.MM_PRIMARY_HUBS&&window.MM_LEARNER_UI_POLISH,{timeout:30000});
@@ -133,5 +135,27 @@ test('canonical nav has one active item and no repeated primary destinations',as
     // Home owns Book/resume on desktop; it is intentionally absent from the
     // top-level primary list and remains available via Home and More.
     expect(choices).toHaveLength(5);
+  }
+});
+
+test('earned local certificates remain accurately displayed through active Home progress layout',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await ready(page,['Beginner-ALL','Intermediate-ALL']);
+  for(const width of [1440,810,390]){
+    await page.setViewportSize({width,height:900});
+    await home(page);
+    const state=await page.evaluate(()=>{
+      const progress=document.querySelector('#dashboard .progress-card');
+      const label=progress?.textContent||'';
+      return {
+        awards:window.user?.learningAwards?.length ?? -1,
+        visibleAwardCount:(label.match(/\\b2 certificates earned\\b/)||[]).length,
+        obsoleteStatlines:[...document.querySelectorAll('#dashboard .statline')]
+          .filter(el=>(el.textContent||'').includes('Certificates earned')).length
+      };
+    });
+    expect(state.awards).toBe(2);
+    expect(state.visibleAwardCount,'Home awards at '+width).toBe(1);
+    expect(state.obsoleteStatlines).toBe(0);
   }
 });
