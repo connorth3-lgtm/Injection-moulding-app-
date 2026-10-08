@@ -93,6 +93,8 @@ jobs:
         run: node tools/generate_style_csp.cjs --check
       - name: New2 multi-cavity geometry candidate QA
         run: node qa_multicavity_flowpath.mjs
+      - name: OEM machine library evidence and injection-unit QA
+        run: python3 qa_machine_library.py
       - name: Release and assessment integrity
         run: python qa_release.py
       - name: Learner-runtime release identity bump

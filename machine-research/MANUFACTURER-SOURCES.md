@@ -39,3 +39,14 @@ For every manual or schematic, record:
 - limitations.
 
 A controller manual, family brochure or later machine generation must never be silently relabelled as an exact OEM machine/service manual.
+
+## First official model-level records — checked 2026-10-08
+
+The following *manufacturer-owned* pages identify the published **FNX-Ⅳ**, not older FNX series, and explicitly distinguish injection-unit alternatives:
+
+| Exact OEM model | OEM specification page | Verified model-level scope | Not established |
+|---|---|---|---|
+| NISSEI FNX110Ⅳ | https://www.nisseiplastic.com/en/products/fnx-4/spec.php?model=FNX110%E2%85%A3 | 1100 kN nominal clamp; 12A standard versus 18A injection-unit screw/capacity/pressure options; published mechanical dimensions | Installed injection-unit option, serial/revision, actual usable capability, machine maintenance manual |
+| NISSEI FNX220Ⅳ | https://www.nisseiplastic.com/en/products/fnx-4/spec.php?model=FNX220%E2%85%A3 | 2110 kN nominal clamp; 50A standard versus 71A injection-unit screw/capacity/pressure options; published mechanical dimensions | Installed injection-unit option, serial/revision, actual usable capability, machine maintenance manual |
+
+The machine registry stores a pressure value *with its matching screw diameter and injection unit*, not as a universal capacity for the model. A machine-fit screen must continue to require independently confirmed fitted injection-unit and machine identities. No unknown OEM electrical, hydraulic or parts documentation is treated as discovered.
