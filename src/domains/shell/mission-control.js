@@ -223,10 +223,10 @@ function root(){return document.getElementById('mmMissionControl')}
 function contextValue(v,fallback='Not set'){return String(v||'').trim()||fallback}
 function currentLessonContext(){
   try{
-    if(typeof currentLesson==='function'){
-      const l=currentLesson();
-      if(l)return {title:l.title||l.name||'',id:l.id||''}
-    }
+    // Core resolver is immutable; the legacy currentLesson global is mutable
+    // and must never influence mission titles after script clobbering.
+    const l=typeof mmCoreSafeLesson==='function'?mmCoreSafeLesson():null;
+    if(l)return {title:l.title||l.name||'',id:l.id||''};
   }catch(_){}
   return null
 }
@@ -376,8 +376,17 @@ function removeEvidence(id,expectedToken){
   if(next.length===state.evidence.length)return false;
   state.evidence=next;saveState();render();registerDashboard(true);return true;
 }
-function toggleDrawer(open){synchronizeLearnerState();state.drawerOpen=Boolean(open===undefined?!state.drawerOpen:open);if(state.drawerOpen)state.paletteOpen=false;render();requestAnimationFrame(()=>root()?.querySelector('[data-mm-mc-evidence-text]')?.focus())}
-function openPalette(){synchronizeLearnerState();state.paletteOpen=true;state.drawerOpen=false;render();requestAnimationFrame(()=>root()?.querySelector('[data-mm-mc-query]')?.focus())}
+function toggleDrawer(open){
+  synchronizeLearnerState();state.drawerOpen=Boolean(open===undefined?!state.drawerOpen:open);
+  if(state.drawerOpen)state.paletteOpen=false;render();
+  const boundLearnerToken=resolvedLearnerToken();
+  requestAnimationFrame(()=>{if(boundLearnerToken===resolvedLearnerToken())root()?.querySelector('[data-mm-mc-evidence-text]')?.focus()});
+}
+function openPalette(){
+  synchronizeLearnerState();state.paletteOpen=true;state.drawerOpen=false;render();
+  const boundLearnerToken=resolvedLearnerToken();
+  requestAnimationFrame(()=>{if(boundLearnerToken===resolvedLearnerToken())root()?.querySelector('[data-mm-mc-query]')?.focus()});
+}
 function closePalette(){synchronizeLearnerState();state.paletteOpen=false;render()}
 function paletteKeydown(e){
   const buttons=[...root().querySelectorAll('[data-mm-mc-command]')],current=document.activeElement,idx=buttons.indexOf(current);
@@ -412,7 +421,9 @@ function executeCommand(row){
     case 'global-search':{
       const query=String(row.query||'').trim();
       if(typeof window.openSearch==='function')window.openSearch();else document.getElementById('searchBtn')?.click();
+      const boundLearnerToken=resolvedLearnerToken();
       setTimeout(()=>{
+        if(boundLearnerToken!==resolvedLearnerToken())return;
         const input=document.getElementById('globalSearch');if(!input)return;
         input.value=query;input.dispatchEvent(new Event('input',{bubbles:true}));
         try{if(typeof window.doSearch==='function')window.doSearch()}catch(_){}
