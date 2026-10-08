@@ -108,6 +108,19 @@ function harness(){
   assert.equal(h.read('A').evidence[0].text,'Private A');
 }
 
+// Public state snapshots must not expose the previous learner before any UI event.
+{
+  const h=harness();h.select('A');const api=h.start();
+  api.startMission({title:'Private A snapshot'});
+  api.addEvidence({kind:'note',text:'Private A evidence'});
+  h.select('B');
+  const next=api.state();
+  assert.equal(next.mission,null,'B must not read the previous learner mission');
+  assert.equal(next.evidence.length,0,'B must not read the previous learner evidence');
+  assert.equal(h.read('B'),null,'read-only state access must not write new profile data');
+  assert.equal(h.read('A').evidence[0].text,'Private A evidence');
+}
+
 // Corrupt and untrusted evidence rows are discarded/normalised before render.
 {
   const h=harness();h.select('A');
