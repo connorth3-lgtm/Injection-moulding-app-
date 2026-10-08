@@ -47,7 +47,9 @@ for(const [file,func] of [
 // Windows checkout may use CRLF, even though GitHub's source view uses LF.
 // Exercise that case on Linux as well so a future regex edit cannot reintroduce
 // a Windows-only false failure of the protected resolver.
-assert.match("const resolvedCurriculumLesson=()=>D.lessons[0];\\r\\n".replace(/\\r/g,'\\r'),/const resolvedCurriculumLesson=\\(\\)=>[\\s\\S]*?;\\r?\\n/);
+const crlfResolver="const resolvedCurriculumLesson=()=>D.lessons[0];\r\n";
+assert.match(crlfResolver,/const resolvedCurriculumLesson=\(\)=>[\s\S]*?;\r?\n/,
+  'protected curriculum resolver regex must accept CRLF checkouts');
 
 for(const file of [
   'curriculum-integration.js',
