@@ -105,6 +105,10 @@ jobs:
         run: python qa_runtime_hardening.py
       - name: Release and documentation coherence
         run: python qa_release_docs.py
+      - name: Current governed Book status generated from exact release
+        run: python tools/render_book_governance_status.py --check
+      - name: Mission Control learner-scoped state and stale-control QA
+        run: node qa_mission_control.cjs
       - name: Exact external-validation candidate binding
         run: |
           python tools/verify_release_external_validation.py
