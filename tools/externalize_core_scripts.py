@@ -314,6 +314,24 @@ def runtime_transform(name: str, source: str) -> str:
             fail("certificate print runtime transform did not match exactly once")
         if "document.write(" in transformed or "document.writeln(" in transformed:
             fail("certificate print runtime transform left document.write active")
+        # Keep the active learner renderer immune to a clobbered legacy
+        # window.currentLesson property. The compatibility global remains for
+        # other legacy surfaces, but internal callers bind a stable lexical
+        # resolver to the already-validated active learner and canonical lessons.
+        legacy_lesson = 'function currentLesson(){ return D.lessons.find(l=>l.id===user.currentLesson)||D.lessons[0] }'
+        safe_lesson = 'const mmCoreSafeLesson = () => D.lessons.find(l=>l.id===user.currentLesson)||D.lessons[0];'
+        if transformed.count(legacy_lesson) != 1:
+            fail("frozen currentLesson resolver source drifted; review startup transform")
+        transformed = transformed.replace(legacy_lesson, legacy_lesson + "\n" + safe_lesson, 1)
+        transformed, protected_lesson_calls = re.subn(
+            r'(?<!function )currentLesson\(\)',
+            'mmCoreSafeLesson()',
+            transformed,
+        )
+        if protected_lesson_calls < 4:
+            fail("frozen core learner call sites drifted; review protected startup resolver")
+        if "function mmCoreSafeLesson()" in transformed:
+            fail("currentLesson name transform unexpectedly rewrote a declaration")
         startup_award_validator = 'if(!mmStartupUniqueLessonIdsAreSafe(record.completed)||!mmStartupUniqueLessonIdsAreSafe(record.bookmarks)||!mmStartupCertificatesAreSafe(record.certificates))return false;'
         startup_award_validator_hardened = 'if(!mmStartupUniqueLessonIdsAreSafe(record.completed)||!mmStartupUniqueLessonIdsAreSafe(record.bookmarks)||(record.learningAwards!=null&&!mmStartupCertificatesAreSafe(record.learningAwards)))return false;'
         if transformed.count(startup_award_validator) != 1:
