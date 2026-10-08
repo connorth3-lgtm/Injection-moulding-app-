@@ -79,6 +79,23 @@ function status(c){
   return 'Investigating'
 }
 function completeness(c){const fields=['defect','onset','baseline','evidence','hypothesis','controlledTest','testResult','afterChange','verification','conclusion'];return Math.round(fields.filter(k=>String(c[k]||'').trim()).length/fields.length*100)}
+function missionStageForCase(c){
+  if(String(c.conclusion||'').trim())return 'reflection';
+  if(String(c.verification||'').trim()||String(c.afterChange||'').trim())return 'verification';
+  if(String(c.testResult||'').trim())return 'verification';
+  if(String(c.controlledTest||'').trim())return 'test';
+  if(String(c.hypothesis||'').trim())return 'hypothesis';
+  if(String(c.evidence||'').trim())return 'evidence';
+  if(String(c.baseline||'').trim())return 'baseline';
+  return 'brief'
+}
+function syncMissionContext(c){
+  if(!c)return;
+  window.MM_MISSION_CONTROL?.attachContext?.(
+    {machine:c.machine,mould:c.mould,material:c.material,part:c.part||c.product,caseId:c.id},
+    {startIfEmpty:true,title:c.title||c.defect||'Mould Master investigation',kind:'mould-master',stage:missionStageForCase(c)}
+  )
+}
 
 function style(){if(document.getElementById('mm-mould-master-style'))return;const s=document.createElement('style');s.id='mm-mould-master-style';s.textContent=`
 #mmMouldMasterWorkspace{--mw-line:#31506f;--mw-soft:#0e1d31}.mw-hero{padding:22px;background:radial-gradient(circle at 92% 0%,rgba(85,214,190,.17),transparent 33%),linear-gradient(135deg,#13273d,#0d1b2e)}.mw-hero h2{font-size:30px;margin:7px 0 8px}.mw-hero p{max-width:920px;line-height:1.6;color:#bfd0e2}.mw-boundary{margin-top:12px;padding:12px 14px;border:1px solid #6b5e2d;border-radius:10px;background:#292413;color:#f2e6b4;font-size:12px;line-height:1.55}.mw-loop{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:14px}.mw-loop span{padding:8px 5px;text-align:center;border:1px solid #31506f;border-radius:9px;background:#102137;color:#bfd3e8;font-size:10px}.mw-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:14px 0}.mw-layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(310px,.65fr);gap:14px}.mw-panel{padding:18px}.mw-panel h3{margin:0 0 10px}.mw-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.mw-form .wide{grid-column:1/-1}.mw-form textarea{min-height:96px}.mw-form textarea.tall{min-height:132px}.mw-help{font-size:11px;color:var(--muted);line-height:1.45;margin-top:5px}.mw-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.mw-summary{display:grid;gap:10px}.mw-kpi{padding:13px;border:1px solid #2d4764;border-radius:10px;background:#0e1d31}.mw-kpi span{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.mw-kpi b{display:block;margin-top:4px}.mw-list{display:grid;gap:7px}.mw-item{padding:10px 11px;border:1px solid #2f4a68;border-radius:10px;background:#0f2035}.mw-item b{display:block;margin-bottom:4px}.mw-item p{margin:0;color:#b8c9dc;font-size:12px;line-height:1.45}.mw-chip-row{display:flex;gap:6px;flex-wrap:wrap}.mw-chip{font-size:10px;border:1px solid #3b5978;border-radius:999px;padding:4px 7px;color:#c4d8ed;background:#102137}.mw-cases{display:grid;gap:8px}.mw-case{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px;border:1px solid #304b69;border-radius:11px;background:#0e1d31}.mw-case small{color:var(--muted)}.mw-danger{border-color:#6b3b45!important;color:#ffc7d0!important}.mw-evidence-board{display:grid;gap:8px}.mw-evidence-row{padding:10px 12px;border-left:4px solid #69a8ff;background:#102137;border-radius:8px;line-height:1.45;font-size:12px}.mw-mechanism{border-left-color:#ffd166}.mw-check{border-left-color:#55d6be}.mw-empty{padding:14px;border:1px dashed #3a5675;border-radius:10px;color:var(--muted);font-size:12px}.mw-related button{width:100%;text-align:left;margin-top:6px}.mw-progress{height:7px;background:#20344d;border-radius:99px;overflow:hidden}.mw-progress i{display:block;height:100%;background:linear-gradient(90deg,#55d6be,#69a8ff)}
@@ -183,7 +200,7 @@ async function hydrateCaseEvidence(host,c){
 }
 function casesHtml(active){const cs=all();if(!cs.length)return '<div class="mw-empty">No saved cases yet.</div>';return `<div class="mw-cases">${cs.slice(0,12).map(c=>`<div class="mw-case"><div><b>${esc(c.title||c.defect||'Untitled case')}</b><small>${esc(status(c))} · ${new Date(c.updatedAt).toLocaleDateString()}</small></div><button class="ghost" type="button" data-mw-open="${esc(c.id)}">${c.id===active?'Open':'View'}</button></div>`).join('')}</div>`}
 
-function renderCase(c){activeId=c.id;const host=section();c.status=status(c);const pct=completeness(c);host.innerHTML=`
+function renderCase(c){activeId=c.id;syncMissionContext(c);const host=section();c.status=status(c);const pct=completeness(c);host.innerHTML=`
 <div class="mw-hero card"><div class="eyebrow">Evidence-led troubleshooting workspace</div><h2>Mould Master case</h2><p>Define the symptom, localise where and when it occurs, compare against a known-good baseline, rank mechanisms, run the smallest controlled discriminating test, then verify the before/after result.</p><div class="mw-loop"><span>1 Define</span><span>2 Localise</span><span>3 Collect evidence</span><span>4 Rank mechanism</span><span>5 Controlled test</span><span>6 Verify</span></div><div class="mw-boundary"><b>Production boundary:</b> this workspace organises evidence and learning. It does not provide universal temperatures, pressures, speeds, force limits or authorisation to defeat safeguards. Verify the exact resin, machine, mould, validated process, approved site procedure and applicable safety requirements before real changes.</div></div>
 <div class="mw-toolbar"><div><b>${esc(c.title||c.defect||'Untitled case')}</b><div class="mw-help">Saved locally for this learner only.</div></div><div class="mw-actions"><button class="secondary" type="button" data-mw-new>New case</button><button class="ghost" type="button" data-mw-list>Case list</button><button class="ghost" type="button" data-mw-export>Export case</button></div></div>
 <div class="mw-layout">
