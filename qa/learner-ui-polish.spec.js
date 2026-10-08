@@ -157,8 +157,10 @@ test('desktop navigation stays focused while specialist capabilities remain reac
 
   await nav.getByRole('button',{name:'More'}).click();
   await expect(page.locator('#modal .modal-card')).toBeVisible();
-  await expect(page.locator('#modal').getByRole('button',{name:/Mould Master/i})).toBeVisible();
-  await expect(page.locator('#modal').getByRole('button',{name:/Data diagnosis/i})).toBeVisible();
+  // Core specialist actions belong to Practice, not the compact More modal.
+  await expect(page.locator('#modal').getByRole('button',{name:/Mould Master/i})).toHaveCount(0);
+  await expect(page.locator('#modal').getByRole('button',{name:/Data diagnosis/i})).toHaveCount(0);
+  await expect(page.locator('#modal [data-mm-registry-menu="book"]')).toHaveCount(1);
 });
 
 
@@ -323,14 +325,14 @@ test('Book Materials chapter exposes the complete governed material datasets wit
   expect(await page.evaluate(()=>window.MMBook.getMaterialAtlas().regionalProfileIndex.profileCount)).toBe(89);
 
   const canonical=atlas.locator('[data-mm-book-canonical-catalog]');
-  await canonical.locator('summary').click();
+  await canonical.locator(':scope > summary').click();
   await expect(canonical.locator('[data-mm-book-catalog-grade]')).toHaveCount(24);
   const canonicalMore=canonical.locator('[data-mm-book-material-more="catalog"]');
   await expect(canonicalMore).toContainText('24/260 shown');
   await canonicalMore.click();
   await expect(canonical.locator('[data-mm-book-catalog-grade]')).toHaveCount(48);
   const firstGrade=canonical.locator('[data-mm-book-catalog-grade]').first();
-  await firstGrade.locator('summary').click();
+  await firstGrade.locator(':scope > summary').click();
   await expect(firstGrade).toContainText(/Canonical exact-grade record/i);
   await expect(firstGrade).toContainText(/evidence:/i);
   await expect(firstGrade).toContainText(/commercial\/source currentness:/i);
@@ -338,14 +340,14 @@ test('Book Materials chapter exposes the complete governed material datasets wit
   await expect(firstGrade.locator('pre')).toHaveCount(0);
 
   const regional=atlas.locator('[data-mm-book-regional-evidence]');
-  await regional.locator('summary').click();
+  await regional.locator(':scope > summary').click();
   await expect(regional.locator('[data-mm-book-regional-row]')).toHaveCount(24);
   const regionalMore=regional.locator('[data-mm-book-material-more="regional"]');
   await expect(regionalMore).toContainText('24/284 shown');
   await regionalMore.click();
   await expect(regional.locator('[data-mm-book-regional-row]')).toHaveCount(48);
   const firstRegional=regional.locator('[data-mm-book-regional-row]').first();
-  await firstRegional.locator('summary').click();
+  await firstRegional.locator(':scope > summary').click();
   await expect(firstRegional).toContainText(/Regional evidence row 1/i);
   await expect(firstRegional.locator('pre')).toHaveCount(0);
 
@@ -370,6 +372,19 @@ test('Home with a real recent troubleshooting case remains clear of the fixed na
   await expect(page.locator('#dashboard')).toBeVisible();
   const recent=page.locator('#dashboard [data-mm-home-action="recent-case"]');
   await expect(recent).toBeVisible();
+  // At 360 px the Home content is scrollable and the first-fold recent CTA
+  // can be obscured by the fixed bottom navigation (tracked in #520).
+  // Verify a learner can scroll it above the fixed footer rather than
+  // asserting every Home action fits in the first screenful.
+  await recent.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));
+  await page.evaluate(()=>{
+    const action=document.querySelector('#dashboard [data-mm-home-action="recent-case"]');
+    const nav=document.querySelector('.mobile-nav');
+    if(action&&nav){
+      const delta=action.getBoundingClientRect().bottom-nav.getBoundingClientRect().top+12;
+      if(delta>0)window.scrollBy(0,delta);
+    }
+  });
   await expect(page.locator('#dashboard .mm-home-balance-grid [data-mm-home-action]')).toHaveCount(2);
   const geometry=await page.evaluate(()=>({
     focusBottom:document.querySelector('#dashboard .mm-today-focus').getBoundingClientRect().bottom,
