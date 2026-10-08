@@ -5,6 +5,7 @@ if(window.MM_MISSION_CONTROL)return;
 
 const VERSION='2026.10.08.6';
 const STORAGE_KEY='mm_mission_control_v1';
+const PROFILE_DB_KEY='mouldmasterProDB';
 const STAGES=Object.freeze([
   ['brief','Mission brief'],
   ['baseline','Known good'],
@@ -57,6 +58,41 @@ let hydrationTimer=null;
 function clone(v){return JSON.parse(JSON.stringify(v))}
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function runtimeStorage(){return window.MM_RUNTIME_V2?.storage||null}
+function persistedLearnerId(){
+  try{
+    const raw=localStorage.getItem(PROFILE_DB_KEY);if(!raw)return null;
+    const db=JSON.parse(raw),id=String(db?.activeUser||'').trim();
+    if(id&&db?.users&&typeof db.users==='object'&&db.users[id])return id;
+  }catch(_){}
+  return null
+}
+function resolvedLearnerToken(){
+  const shared=window.MM_LEARNER_SCOPE,id=persistedLearnerId();
+  if(id&&shared?.tokenFor)try{return shared.tokenFor(id)}catch(_){}
+  try{return runtimeStorage()?.learnerToken?.()||null}catch(_){return null}
+}
+function directScopedKey(token){
+  const shared=window.MM_LEARNER_SCOPE;if(!token||!shared?.storageKey)return null;
+  try{
+    const prefix=STORAGE_KEY+'::';
+    shared.registerStoragePrefix?.(prefix);
+    return shared.storageKey(prefix,token)
+  }catch(_){return null}
+}
+function readScopedState(){
+  const token=resolvedLearnerToken();if(!token)return null;
+  const storage=runtimeStorage(),runtimeToken=storage?.learnerToken?.();
+  if(runtimeToken===token)try{return storage.get?.(STORAGE_KEY,null)??null}catch(_){}
+  const key=directScopedKey(token);if(!key)return null;
+  try{const raw=localStorage.getItem(key);return raw==null?null:JSON.parse(raw)}catch(_){return null}
+}
+function writeScopedState(value){
+  const token=resolvedLearnerToken();if(!token)return false;
+  const storage=runtimeStorage(),runtimeToken=storage?.learnerToken?.();
+  if(runtimeToken===token)try{if(storage.set?.(STORAGE_KEY,value)===true)return true}catch(_){}
+  const key=directScopedKey(token);if(!key)return false;
+  try{const payload=JSON.stringify(value);localStorage.setItem(key,payload);return localStorage.getItem(key)===payload}catch(_){return false}
+}
 function normalizeContext(input={}){
   return {
     machine:String(input.machine||'').trim(),
@@ -88,11 +124,11 @@ function normalizeState(saved){
     evidence:Array.isArray(saved.evidence)?saved.evidence.slice(-100):[]
   }
 }
-function loadState(){return normalizeState(runtimeStorage()?.get?.(STORAGE_KEY,null))}
+function loadState(){return normalizeState(readScopedState())}
 function hydrateCurrentLearner(){
-  const storage=runtimeStorage(),token=storage?.learnerToken?.();
+  const storage=runtimeStorage(),token=resolvedLearnerToken();
   if(!token||token===hydratedLearnerToken)return false;
-  const persisted=normalizeState(storage.get?.(STORAGE_KEY,null));
+  const persisted=normalizeState(readScopedState());
   const localMeaningful=Boolean(state.mission)||state.evidence.length>0;
   // A mission can be started during shell startup before the learner identity
   // becomes available. On that first scope resolution, preserve and persist
@@ -101,7 +137,7 @@ function hydrateCurrentLearner(){
   // learner's isolated persisted state and never carry the prior learner over.
   if(hydratedLearnerToken===null&&localMeaningful){
     hydratedLearnerToken=token;
-    storage.set?.(STORAGE_KEY,{
+    writeScopedState({
       schema:1,mode:state.mode,surface:state.surface,mission:state.mission,evidence:state.evidence,
       drawerOpen:false,paletteOpen:false
     });
@@ -124,7 +160,7 @@ function scheduleHydration(attempt=0){
   return changed
 }
 function hydrateScopedState(){
-  const token=runtimeStorage()?.learnerToken?.();
+  const token=resolvedLearnerToken();
   if(!token)return false;
   const persisted=loadState();
   const hasPersisted=Boolean(persisted.mission)||persisted.evidence.length>0||persisted.mode!==DEFAULT_STATE.mode||persisted.surface!==DEFAULT_STATE.surface;
@@ -133,10 +169,10 @@ function hydrateScopedState(){
   return false
 }
 function hydrateBeforeMutation(){
-  const storage=runtimeStorage(),token=storage?.learnerToken?.();
+  const storage=runtimeStorage(),token=resolvedLearnerToken();
   if(!token)return false;
   if(token===hydratedLearnerToken)return true;
-  const persisted=normalizeState(storage.get?.(STORAGE_KEY,null));
+  const persisted=normalizeState(readScopedState());
   const localMeaningful=Boolean(state.mission)||state.evidence.length>0;
   if(!localMeaningful){
     const surface=state.surface;
@@ -147,10 +183,10 @@ function hydrateBeforeMutation(){
   return true
 }
 function saveState(){
-  const token=runtimeStorage()?.learnerToken?.();
+  const token=resolvedLearnerToken();
   if(token&&!hydratedLearnerToken)hydratedLearnerToken=token;
   if(state.mission)state.mission.updatedAt=new Date().toISOString();
-  runtimeStorage()?.set?.(STORAGE_KEY,{
+  writeScopedState({
     schema:1,mode:state.mode,surface:state.surface,mission:state.mission,evidence:state.evidence,
     drawerOpen:false,paletteOpen:false
   });
