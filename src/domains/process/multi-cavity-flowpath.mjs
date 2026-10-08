@@ -225,3 +225,79 @@ export function multiCavityEvidenceCoverage({
     ]),
   });
 }
+
+
+/**
+ * Runner-tree and cavity-gate *identity* audit. Geometry alone cannot establish
+ * flow balancing: this checks paths share segments only as common prefixes,
+ * and ensures every cavity has a distinct identified gate/source reference.
+ * No pressure, viscosity, flow split or production authority is inferred.
+ */
+export function multiCavityGateTopologyReadiness({
+  geometryResult, topologyVerificationRef, cavityGates,
+} = {}) {
+  const ref = value => typeof value === 'string' ? value.trim() : '';
+  if (!geometryResult?.ok || geometryResult.authority !== 'geometry-teaching-candidate-only'
+      || !Array.isArray(geometryResult.value?.cavityPaths)
+      || geometryResult.value.cavityPaths.length < 2) {
+    return reject('valid-multi-cavity-geometry-candidate-required');
+  }
+  const topologyRef = ref(topologyVerificationRef);
+  if (!topologyRef) return reject('verified-path-topology-reference-required');
+  if (!Array.isArray(cavityGates)) return reject('cavity-gates-required');
+  const paths = geometryResult.value.cavityPaths;
+  const known = new Set(paths.map(x => x.cavityId));
+  const gateByCavity = new Map();
+  const gateIds = new Set();
+  for (const [index, gate] of cavityGates.entries()) {
+    const cavityId = ref(gate?.cavityId);
+    const gateId = ref(gate?.gateId);
+    const gateGeometryBasisRef = ref(gate?.gateGeometryBasisRef);
+    if (!cavityId) return reject('gate-cavity-id-required', { index });
+    if (!known.has(cavityId)) return reject('unknown-gate-cavity', { cavityId });
+    if (gateByCavity.has(cavityId)) return reject('duplicate-gate-cavity', { cavityId });
+    if (!gateId) return reject('gate-id-required', { cavityId });
+    if (!gateGeometryBasisRef) return reject('gate-geometry-reference-required', { cavityId });
+    if (gateIds.has(gateId)) return reject('same-gate-assigned-to-multiple-cavities', { gateId });
+    gateIds.add(gateId);
+    gateByCavity.set(cavityId,Object.freeze({cavityId,gateId,gateGeometryBasisRef}));
+  }
+  const missing = paths.filter(p => !gateByCavity.has(p.cavityId)).map(p => p.cavityId);
+  if (missing.length) return reject('missing-cavity-gate-identities',{cavityIds:Object.freeze(missing)});
+  // Paths may have distinct roots (e.g. separate feed circuits). However,
+  // a purported tree cannot split and later reconverge at the same segment.
+  for (let a = 0; a < paths.length; a++) {
+    const first = paths[a];
+    for (let b = a + 1; b < paths.length; b++) {
+      const other = paths[b];
+      let diverged = false;
+      const left = new Set(first.segmentIds);
+      const right = new Set(other.segmentIds);
+      for (let i = 0; i < Math.max(first.segmentIds.length,other.segmentIds.length);i++) {
+        const x = first.segmentIds[i], y = other.segmentIds[i];
+        if (x !== y) diverged = true;
+        if (diverged && ((x && right.has(x)) || (y && left.has(y)))) {
+          return reject('non-tree-shared-segment-after-divergence',{
+            cavityIds:Object.freeze([first.cavityId,other.cavityId]),
+          });
+        }
+      }
+    }
+  }
+  return Object.freeze({
+    ok:true,
+    status:'gate-path-identity-audited-unverified',
+    authority:'runner-tree-metadata-only',
+    productionAuthority:false,
+    geometryBasisRef:geometryResult.value.geometryBasisRef,
+    topologyBasisRef:geometryResult.value.topologyBasisRef,
+    topologyVerificationRef:topologyRef,
+    gates:Object.freeze(paths.map(p=>gateByCavity.get(p.cavityId))),
+    assumptions:Object.freeze([
+      'Reported segment paths and gate IDs still require an independent CAD/as-built and mould-configuration audit.',
+      'This screen assumes directed non-reconvergent runner trees. Manifolds with real reconvergence require a different validated topology model.',
+      'Shared prefix and gate identity cannot establish runner balance, valve-gate timing, shear, pressure loss, gate seal or cavity quality.',
+      'No validated machine settings or production process control is authorised.',
+    ]),
+  });
+}
