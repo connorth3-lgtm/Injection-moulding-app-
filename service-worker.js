@@ -1,5 +1,5 @@
-const CACHE_VERSION='2026.10.08.4';
-const CACHE_REVISION='spatial-twin-r67-20261008';
+const CACHE_VERSION='2026.10.08.6';
+const CACHE_REVISION='mission-control-r73-20261008';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both
@@ -30,6 +30,7 @@ const CORE=[
   './mobile-lesson-fix.css',
   './learner-ux-repair.css',
   './src/domains/engineering/spatial-twin.css',
+  './src/domains/shell/mission-control.css',
   './src/domains/runtime-packs/learning-foundation-runtime-pack.js',
   './src/domains/runtime-packs/assessment-foundation-runtime-pack.js',
   './read-aloud.js',
@@ -122,6 +123,7 @@ const CORE=[
   './src/domains/process/process-statistics.js',
   './src/domains/process/process-data-integrity.js',
   './src/domains/shell/accessibility-loader.js',
+  './src/domains/shell/mission-control.js',
   './src/domains/shell/product-areas.js',
   './src/domains/shell/learner-ui-polish.js',
   './src/domains/shell/learner-ui-polish.css',

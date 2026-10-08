@@ -12,6 +12,7 @@ const REQUIRED_MANIFEST_FILES=[
   'src/domains/engineering/engineering-store.js',
   'src/domains/materials/material-registry.js',
   'src/domains/shell/product-areas.js',
+  'src/domains/shell/mission-control.js',
   'material-catalog-v1.json'
 ];
 
@@ -32,7 +33,7 @@ const BASE_FILES=[
   'source-library.js','measured-evidence-integration.js','measured-evidence-decision.js','measured-learning-library.js','measured-learning-library.css',
   'reference-data.js','reference-data.html','materials.html','reference-deep-dive.js','src/domains/research/reference-research-extension.js','src/domains/research/reference-20x-extension.js',
   'reference-2026-expansion.js','reference-sources.js','reference-browser-ui.js','diagnostic-learning-labs.js','material-behaviour-labs.js',
-  'src/domains/shell/learner-ui-polish.css','src/domains/engineering/spatial-twin.css','service-worker.js','repair.html','privacy.html','support.html'
+  'src/domains/shell/learner-ui-polish.css','src/domains/engineering/spatial-twin.css','src/domains/shell/mission-control.css','service-worker.js','repair.html','privacy.html','support.html'
 ];
 
 function sha(file){return crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex')}

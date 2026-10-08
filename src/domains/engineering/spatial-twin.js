@@ -294,11 +294,22 @@ function syncWorld(){
 }
 function selectHotspot(id){if(!HOTSPOTS[id])return;state.selected=id;saveState();renderInspector();syncWorld()}
 function setMode(id){if(!MODES.some(x=>x[0]===id))return;state.mode=id;saveState();syncWorld()}
-function setPhase(value){const n=Math.max(0,Math.min(PHASES.length-1,Number(value)||0));state.phase=n;saveState();renderSignals();syncWorld()}
+function setPhase(value){
+  const n=Math.max(0,Math.min(PHASES.length-1,Number(value)||0));state.phase=n;saveState();renderSignals();syncWorld();
+  const missionStage=['baseline','evidence','evidence','test','intervention','verification'][n]||'evidence';
+  window.MM_MISSION_CONTROL?.setStage?.(missionStage)
+}
 function setCase(index){
   const list=cases();if(!list.length)return;
   state.caseIndex=Math.max(0,Math.min(list.length-1,Number(index)||0));
-  const focus=scene().focus||[];state.selected=focus[0]||'mould';state.phase=0;saveState();renderHost();
+  const focus=scene().focus||[];state.selected=focus[0]||'mould';state.phase=0;saveState();renderHost();syncMissionContext();
+}
+function syncMissionContext(){
+  const c=currentCase(),s=scene();
+  window.MM_MISSION_CONTROL?.attachContext?.(
+    {machine:s.machine,mould:s.mould,material:s.material,part:c.title,caseId:c.id},
+    {startIfEmpty:true,title:'Investigate: '+c.title,kind:'virtual-apprenticeship',stage:['baseline','evidence','evidence','test','intervention','verification'][state.phase]||'evidence'}
+  )
 }
 function bind(host){
   host.querySelector('[data-mm-st-close]')?.addEventListener('click',close);
@@ -324,7 +335,7 @@ function open(options={}){
   if(options.mode&&MODES.some(x=>x[0]===options.mode))state.mode=options.mode;
   const host=byId('mmSpatialTwin');host.hidden=false;state.open=true;
   document.body?.setAttribute('data-mm-spatial-twin','1');
-  renderHost();saveState();
+  renderHost();saveState();syncMissionContext();
   requestAnimationFrame(()=>{try{host.scrollIntoView({block:'start',behavior:'auto'})}catch(_){}})
   return true;
 }

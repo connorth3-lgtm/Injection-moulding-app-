@@ -91,6 +91,8 @@ jobs:
           node qa_engineer_simulator_units.cjs
           node qa_virtual_apprenticeship.cjs
           node qa_spatial_twin.cjs
+          node qa_mission_control.cjs
+          node qa_mission_control.cjs
 
       - name: Boundary
         if: always()
