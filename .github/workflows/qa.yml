@@ -109,6 +109,8 @@ jobs:
         run: python tools/render_book_governance_status.py --check
       - name: Mission Control learner-scoped state and stale-control QA
         run: node qa_mission_control.cjs
+      - name: New1 Virtual Factory Case One source and isolation QA
+        run: node qa_new1_virtual_factory.cjs
       - name: Cross-platform learner lesson resolver and CRLF regression QA
         run: node qa_lesson_resolver_clobber.cjs
       - name: Exact external-validation candidate binding
