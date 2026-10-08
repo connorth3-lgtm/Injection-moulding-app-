@@ -295,6 +295,10 @@ export function energyPerGoodPart(rows, {
   samplingBasisRef,
   energyMeasurementBasisRef,
   qualityDispositionBasisRef,
+  // Defaults to the original meaning (label 1 iff >=1 good unit). When a
+  // separately evidenced cycle pass/fail status is independent of good-unit
+  // counts, opt in explicitly to allow partially accepted rejected cycles.
+  qualityDispositionSemantics = 'any-good-part',
   // Count good units explicitly for multi-cavity or mixed-disposition cycles.
   // Legacy single-part fixtures must confirm that assumption and its basis.
   goodPartCountKey,
@@ -309,6 +313,7 @@ export function energyPerGoodPart(rows, {
   const qualityRef = String(qualityDispositionBasisRef || '').trim();
   const countField = String(goodPartCountKey || '').trim();
   const countRef = String(goodPartCountBasisRef || '').trim();
+  const dispositionSemantics = String(qualityDispositionSemantics || '').trim();
 
   if (!energyField) return Object.freeze({ valueKwh: null, reason: 'energy-key-required' });
   if (!qualityField) return Object.freeze({ valueKwh: null, reason: 'quality-key-required' });
@@ -317,6 +322,12 @@ export function energyPerGoodPart(rows, {
   if (!samplingRef) return Object.freeze({ valueKwh: null, reason: 'sampling-basis-reference-required' });
   if (!energyRef) return Object.freeze({ valueKwh: null, reason: 'energy-measurement-basis-required' });
   if (!qualityRef) return Object.freeze({ valueKwh: null, reason: 'quality-disposition-basis-required' });
+  if (!['any-good-part', 'independent-cycle-pass-fail'].includes(dispositionSemantics)) {
+    return Object.freeze({ valueKwh: null, reason: 'unsupported-quality-disposition-semantics' });
+  }
+  if (dispositionSemantics === 'independent-cycle-pass-fail' && !countField) {
+    return Object.freeze({ valueKwh: null, reason: 'explicit-good-part-count-required-for-independent-disposition' });
+  }
   if (!countRef) return Object.freeze({ valueKwh: null, reason: 'good-part-count-basis-required' });
   if (!countField && singlePartPerCycleConfirmed !== true) return Object.freeze({ valueKwh: null, reason: 'good-part-count-required' });
 
@@ -350,7 +361,11 @@ export function energyPerGoodPart(rows, {
       const raw = row?.[countField];
       count = typeof raw === 'number' ? raw
         : typeof raw === 'string' && /^\d+$/.test(raw.trim()) ? Number(raw.trim()) : NaN;
-      if (!Number.isSafeInteger(count) || count < 0 || (quality === 0 && count !== 0) || (quality === 1 && count < 1)) {
+      // With the legacy any-good-part convention, the binary disposition
+      // must agree with the explicit count. Independent cycle pass/fail labels
+      // may be zero even when a multi-cavity cycle produced some good units.
+      if (!Number.isSafeInteger(count) || count < 0 ||
+          (dispositionSemantics === 'any-good-part' && quality !== Number(count > 0))) {
         return Object.freeze({ valueKwh: null, reason: 'invalid-good-part-count', cycleId });
       }
     }
@@ -379,9 +394,13 @@ export function energyPerGoodPart(rows, {
     samplingBasisRef: samplingRef,
     energyMeasurementBasisRef: energyRef,
     qualityDispositionBasisRef: qualityRef,
+    qualityDispositionSemantics: dispositionSemantics,
     assumptions: Object.freeze([
       'Every included row represents one uniquely identified cycle with aligned energy, quality disposition and a cited good-part count basis.',
       countField ? 'Good parts are explicitly counted per cycle; rejected and partially accepted cycles contribute energy to the total while only accepted units enter the denominator.' : 'A documented one-accepted-part-per-cycle assumption is required when explicit good-part counts are unavailable.',
+      dispositionSemantics === 'any-good-part'
+        ? 'The 0/1 quality label indicates whether the cycle yielded any good unit; it must agree with the cited good-unit count.'
+        : 'The 0/1 quality label represents an independently evidenced cycle pass/fail classification; it is not a good-unit count and may disagree with whether good units were produced.',
       'The energy channel is confirmed as per-cycle on the stated measurement basis and converted to kWh using only the declared unit.',
       'All cycle energy, including energy consumed by rejected parts, remains in the numerator while only good parts contribute to the denominator.',
       'The quality-disposition basis defines the entered 0/1 labels; the function does not infer product acceptance or root cause.',
