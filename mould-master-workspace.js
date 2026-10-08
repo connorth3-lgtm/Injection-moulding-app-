@@ -257,19 +257,7 @@ async function importCaseFile(file){
   await hydrate({force:true});await open(result.caseId);return result
 }
 function renderList(){activeId='';const host=section();host.innerHTML=`<div class="mw-hero card"><div class="eyebrow">Mould Master</div><h2>Troubleshooting casebook</h2><p>Keep diagnosis tied to the evidence chain rather than a sequence of unrecorded machine adjustments.</p><div class="mw-boundary"><b>Local-only record:</b> cases stay in this browser/desktop profile unless you explicitly export a case JSON file. Restores create a new learner-owned case rather than overwriting an existing case. No case data is uploaded by this module.</div></div><div class="mw-toolbar"><div><h2 style="margin:0">Saved cases</h2><p class="muted" style="margin:4px 0 0">${all().length} local case${all().length===1?'':'s'}</p></div><div class="mw-actions"><button class="primary" type="button" data-mw-new>New case</button><button class="ghost" type="button" data-mw-import>Import case</button></div></div><div class="mw-panel card">${casesHtml('')}</div>`;host.querySelector('[data-mw-new]')?.addEventListener('click',async()=>{try{const c=await saveCase(blank());renderCase(c)}catch(err){persistenceError(err)}});host.querySelector('[data-mw-import]')?.addEventListener('click',()=>{const input=document.createElement('input');input.type='file';input.accept='.json,application/json';input.addEventListener('change',async()=>{try{const result=await importCaseFile(input.files?.[0]);window.toast?.(`Imported case with ${result.evidenceImported} evidence record${result.evidenceImported===1?'':'s'}`)}catch(err){persistenceError(err)}});input.click()});host.querySelectorAll('[data-mw-open]').forEach(b=>b.addEventListener('click',()=>{const c=get(b.dataset.mwOpen);if(c)renderCase(c)}))}
-async function open(id){
-  style();
-  await hydrate();
-  // Callers may persist a case through the canonical engineering store before
-  // asking the workspace to open it. If the workspace hydrated earlier, its
-  // in-memory cache can legitimately be stale. Refresh once on an explicit
-  // cache miss so open(id) honours the canonical store across browsers.
-  if(id&&!get(id))await hydrate({force:true});
-  const host=section();hideViews();host.classList.remove('hidden');header();mark();
-  const c=id&&get(id)||get(activeId);
-  if(c)renderCase(c);else renderList();
-  window.scrollTo?.({top:0,behavior:'smooth'})
-}
+async function open(id){style();await hydrate();const host=section();hideViews();host.classList.remove('hidden');header();mark();const c=id&&get(id)||get(activeId);if(c)renderCase(c);else renderList();window.scrollTo?.({top:0,behavior:'smooth'})}
 async function newCase(seed={}){await hydrate();const c=await saveCase({...blank(),...seed,id:uid(),createdAt:now(),updatedAt:now()});await open(c.id);return c.id}
 
 style();section();
