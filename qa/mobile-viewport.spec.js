@@ -107,11 +107,15 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
 
       await openPracticeHub(page);
       await openPracticeAction(page,'troubleshooting');
-      await expect(page.locator('#modal .modal-card')).toBeVisible();
-      await page.getByRole('button',{name:/Mould Master/i}).click();
+      await expect(page.locator('#defects').getByRole('heading',{name:'Defect Finder + Troubleshooting Coach'})).toBeVisible();
+      await expect(page.locator('#defects [data-mm-dx-action="choose"]').first()).toBeVisible();
+      await expect(page.locator('#modal')).toHaveClass(/hidden/);
+      await expectOnlyCurrent(page,'Practice');
+      // Mould Master remains separately reachable from the Home specialist tools.
+      await page.evaluate(()=>switchView('dashboard'));
+      await page.locator('#dashboard [data-mm-home-action="mould-master"]').click();
       await expect(page.locator('#mmMouldMasterWorkspace')).toBeVisible();
       await expect(page.getByRole('heading',{name:'Troubleshooting casebook'})).toBeVisible();
-      await expectOnlyCurrent(page,'Practice');
     });
 
     test('Data diagnosis and the 50-case deep dive are directly reachable from Practice',async({page})=>{
