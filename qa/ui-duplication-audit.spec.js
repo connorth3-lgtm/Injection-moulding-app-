@@ -118,7 +118,12 @@ test('canonical nav has one active item and no repeated primary destinations',as
   for(const width of [1440,1024,810,412,390,360]){
     await page.setViewportSize({width,height:900});
     await home(page);
-    const host=width>1100?page.locator('#nav'):page.locator('.mobile-nav');
+    // Layout switches to the fixed five-tab bar at <=900px. 901–1100px
+    // retains the sidebar, even though compact UI polish starts at 1101px.
+    // Query the actually visible navigation surface instead of inferring it
+    // from an unrelated visual-polish media breakpoint.
+    const mobile=await page.locator('.mobile-nav').isVisible();
+    const host=mobile?page.locator('.mobile-nav'):page.locator('#nav');
     const choices=await host.locator(':scope > button:visible').evaluateAll(items=>
       items.map(el=>({
         // Core nav buttons prepend decorative glyphs before the semantic span.
@@ -131,12 +136,21 @@ test('canonical nav has one active item and no repeated primary destinations',as
     // (#520). This duplicate-audit test must still reject *multiple* actives.
     expect(choices.filter(v=>v.active).length,'duplicate active navigation at '+width).toBeLessThanOrEqual(1);
     expect(new Set(choices.map(v=>v.label)).size,'repeated nav names at '+width).toBe(choices.length);
-    for(const label of ['Home','Learn','Materials','Practice','More']){
+    for(const label of ['Home','Learn','Materials','Practice']){
       expect(choices.filter(v=>v.label===label).length,'primary nav '+label+' at '+width).toBe(1);
     }
-    // Home owns Book/resume on desktop; it is intentionally absent from the
-    // top-level primary list and remains available via Home and More.
-    expect(choices).toHaveLength(5);
+    if(mobile||width>1100){
+      // The compact fixed bar and polished wide desktop sidebar are both
+      // intentionally five primary actions. Intermediate sidebar widths
+      // retain additional legacy destination controls in named groups.
+      expect(choices.filter(v=>v.label==='More').length).toBe(1);
+      expect(choices).toHaveLength(5);
+    }else{
+      // 901–1100px: More is a disclosure/details group, not another
+      // primary button. Uniqueness still applies across all visible buttons.
+      expect(choices.length).toBeGreaterThanOrEqual(4);
+      expect(choices.filter(v=>v.label==='More').length).toBeLessThanOrEqual(1);
+    }
   }
 });
 
