@@ -45,12 +45,12 @@ test('core shell and exact-grade Materials work without layout overflow',async({
 
 test('Mission Control dashboard and stale controls remain isolated on A → B → A profile switches',async({page})=>{
   await openApp(page);
-  await page.waitForFunction(()=>!!window.MM_MISSION_CONTROL&&!!window.MM_APP_SHELL?.dashboard?.requestCompose);
+  await page.waitForFunction(()=>!!window.MM_MISSION_CONTROL&&!!window.MM_APP_SHELL?.dashboard?.compose);
   const result=await page.evaluate(()=>{
     const mission=window.MM_MISSION_CONTROL;
     mission.startMission({title:'Browser QA — private learner A mission',stage:'evidence'});
     mission.addEvidence({kind:'measured',text:'Browser QA A-only evidence'});
-    window.MM_APP_SHELL.dashboard.requestCompose();
+    window.MM_APP_SHELL.dashboard.compose();
     const before=document.querySelector('#dashboard .mm-mc-home-card')?.textContent||'';
     const staleEvidence=document.querySelector('#dashboard [data-mm-mc-home-evidence]');
     const staleMode=document.querySelector('#mmMissionControl [data-mm-mc-mode]');
@@ -58,8 +58,10 @@ test('Mission Control dashboard and stale controls remain isolated on A → B �
     const other={...user,id:'cross-browser-qa-b',name:'Learner B',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1};
     db.users[other.id]=other;
     switchUser(other.id);
-    // Recompose in the SAME browser task, before global click/focus events.
-    window.MM_APP_SHELL.dashboard.requestCompose();
+    // Compose synchronously in this SAME browser task, before click/focus events.
+    // requestCompose() defers until requestAnimationFrame, so inspecting its
+    // DOM immediately would be testing old markup, not new profile state.
+    window.MM_APP_SHELL.dashboard.compose();
     const bCard=document.querySelector('#dashboard .mm-mc-home-card')?.textContent||'';
     staleEvidence?.click();
     staleMode?.click();
@@ -68,7 +70,7 @@ test('Mission Control dashboard and stale controls remain isolated on A → B �
     const advanceB=mission.nextStage();
     const savedB=mission.state();
     switchUser('cross-browser-qa');
-    window.MM_APP_SHELL.dashboard.requestCompose();
+    window.MM_APP_SHELL.dashboard.compose();
     const aCard=document.querySelector('#dashboard .mm-mc-home-card')?.textContent||'';
     const recoveredA=mission.state();
     return {
