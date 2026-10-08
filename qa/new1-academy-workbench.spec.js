@@ -51,5 +51,10 @@ test('New1 lab remains operable on a narrow mobile viewport without page-level h
     await page.locator('#academyTabs').getByRole('button',{name:label}).click();
     const w=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,client:document.documentElement.clientWidth}));
     expect(w.scroll-w.client,'page-level overflow in '+label).toBeLessThanOrEqual(2);
+    if(label==='Trainer workspace'){
+      const checkboxWidths=await page.locator('.editor input[type=checkbox]').evaluateAll(nodes=>nodes.map(node=>node.getBoundingClientRect().width));
+      expect(checkboxWidths.length).toBeGreaterThan(0);
+      for(const width of checkboxWidths)expect(width,'Trainer checkbox must not fill the form width').toBeLessThanOrEqual(24);
+    }
   }
 });
