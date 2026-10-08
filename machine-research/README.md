@@ -71,3 +71,10 @@ This lets the library cover current and legacy machines without implying that a 
 - OEM I/O allocation, lubrication chart and parts book: not yet found.
 
 See `hwamda/HMD400M6.md`.
+
+## Manufacturer-model expansion — 2026-10-08
+
+Two NISSEI FNX-Ⅳ OEM-published exact-model records have been added: **FNX110Ⅳ** and **FNX220Ⅳ**. These bring the current detailed model total to **three** across the existing eleven manufacturer source indexes. The NISSEI records preserve standard and optional injection-unit/screw/pressure/capacity variants and keep fitted serial, controller firmware, machine-specific manuals and as-built usable capability unknown. See [manufacturer source index](./MANUFACTURER-SOURCES.md).
+
+The original HMD400M6 service-document chase remains open: [OEM document request checklist](./hwamda/OEM_DOCUMENT_REQUEST_CHECKLIST.md). No unverified manual, circuit drawing or later M6-S generation was promoted.
+
