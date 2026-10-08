@@ -74,10 +74,12 @@ document.head.appendChild(style);
 
 function coreContext(){
   try{
-    if(typeof currentLesson!=='function'||typeof D==='undefined')return null;
-    const lesson=currentLesson();
+    if(typeof D==='undefined'||!Array.isArray(D.lessons))return null;
+    const lesson=typeof mmCoreSafeLesson==='function'
+      ? mmCoreSafeLesson() : (D.lessons.find(l=>l.id===user.currentLesson)||D.lessons[0]);
+    if(!lesson)return null;
     const course=D.courses.find(x=>x.id===lesson.course);
-    if(!lesson||!course)return null;
+    if(!course)return null;
     const position=Math.max(0,course.lessonIds.indexOf(lesson.id));
     const completed=typeof user!=='undefined'&&Array.isArray(user.completed)?course.lessonIds.filter(id=>user.completed.includes(id)).length:0;
     const pct=Math.round(completed/course.lessonIds.length*100);
