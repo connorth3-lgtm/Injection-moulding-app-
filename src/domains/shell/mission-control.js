@@ -269,6 +269,13 @@ function paletteMarkup(){
   </div>`;
 }
 function render(){
+  // A view can be opened immediately after a profile switch, before the
+  // normal hydration scheduler observes it. Never render another owner's data.
+  const token=resolvedLearnerToken();
+  if(token!==hydratedLearnerToken){
+    if(token)hydrateCurrentLearner();
+    else{state=clone(DEFAULT_STATE);hydratedLearnerToken=null;}
+  }
   const host=root();if(!host)return;
   host.innerHTML=contextMarkup()+timelineMarkup()+
     `<div class="mm-mc-drawer ${state.drawerOpen?'open':''}" aria-hidden="${state.drawerOpen?'false':'true'}">${state.drawerOpen?evidenceMarkup():''}</div>`+
@@ -435,8 +442,22 @@ function keydown(e){
     else if(state.drawerOpen){e.preventDefault();toggleDrawer(false)}
   }
 }
+function refreshLearnerView(){
+  const token=resolvedLearnerToken();
+  if(token===hydratedLearnerToken)return false;
+  if(token)hydrateCurrentLearner();
+  else{state=clone(DEFAULT_STATE);hydratedLearnerToken=null;}
+  render();registerDashboard(true);return true;
+}
 function installWhenReady(){if(!document.body)return false;install();bindShell();registerDashboard();scheduleHydration();return true}
 
+// A same-tab learner switch does not emit the browser's storage event. After
+// click handlers finish (including keyboard-activated buttons), refresh the
+// bound Mission Control view and dashboard before the next user interaction.
+document.addEventListener('click',()=>Promise.resolve().then(refreshLearnerView),true);
+document.addEventListener('visibilitychange',refreshLearnerView);
+window.addEventListener('focus',refreshLearnerView);
+window.addEventListener('storage',refreshLearnerView);
 window.addEventListener('keydown',keydown);
 window.addEventListener('mm:domains-ready',()=>{bindShell();registerDashboard();scheduleHydration();render()});
 window.MM_MISSION_CONTROL=Object.freeze({
