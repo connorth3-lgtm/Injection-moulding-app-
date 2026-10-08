@@ -453,6 +453,8 @@ test('Unified diagnostic evidence controls remain single-column and readable at 
     expect(entry.inputWidth).toBeLessThanOrEqual(22);
     expect(entry.inputHeight).toBeLessThanOrEqual(22);
     expect(entry.checkboxRight).toBeLessThan(entry.textLeft);
+    expect(entry.checkboxLeft).toBeGreaterThanOrEqual(-1);
+    expect(entry.textLeft).toBeGreaterThan(entry.checkboxLeft+16);
     expect(entry.textRight).toBeLessThanOrEqual(entry.labelRight+2);
     expect(entry.textWidth).toBeGreaterThan(100);
     expect(entry.textHeight).toBeGreaterThan(10);
