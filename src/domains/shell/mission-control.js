@@ -136,7 +136,7 @@ function timelineMarkup(){
 }
 function evidenceMarkup(){
   const rows=state.evidence.slice().reverse();
-  return `<div class="mm-mc-drawer-panel" role="dialog" aria-modal="false" aria-label="Mission evidence">
+  return `<div class="mm-mc-drawer-panel" role="region" aria-label="Mission evidence">
     <header><div><span class="eyebrow">Mission evidence</span><h2>${esc(state.mission?.title||'Evidence drawer')}</h2></div><button type="button" class="ghost" data-mm-mc-drawer-close aria-label="Close evidence drawer">×</button></header>
     <div class="mm-mc-evidence-form">
       <label>Evidence type<select data-mm-mc-evidence-kind><option value="observed">Observed</option><option value="measured">Measured</option><option value="hypothesis">Hypothesis</option><option value="unknown">Unknown</option><option value="note">Note</option><option value="verification">Verification</option></select></label>
