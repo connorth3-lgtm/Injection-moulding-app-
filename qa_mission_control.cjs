@@ -101,4 +101,5 @@ const workspace=fs.readFileSync(path.join(__dirname,'mould-master-workspace.js')
 assert.ok(workspace.includes('syncMissionContext(c)'),'Mould Master must feed persistent engineering context into Mission Control');
 assert.ok(workspace.includes("return 'reflection'")&&workspace.includes("return 'verification'"),'Mould Master evidence maturity must map into the mission timeline');
 
+require('./qa_mission_control_isolation.cjs');
 console.log('Mission Control app-wide context, timeline, evidence, command, responsive and authority-boundary QA passed');
