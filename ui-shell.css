@@ -483,6 +483,18 @@ button:disabled,[aria-disabled="true"]{
 .mm-dx-evidence legend{font-weight:700;padding:0 5px}
 .mm-dx-check{display:flex;gap:10px;align-items:flex-start;padding:8px 0;font-size:14px;line-height:1.4;cursor:pointer}
 .mm-dx-check input{margin-top:3px;flex-shrink:0}
+/* The frozen core's generic input{width:100%;padding:10px} applies to
+   checkboxes too. Override only the unified diagnosis evidence controls. */
+#defects .mm-dx-check,#coach .mm-dx-check{display:flex;align-items:flex-start;gap:12px;width:100%;min-width:0;max-width:100%;box-sizing:border-box}
+#defects .mm-dx-check input[type="checkbox"],#coach .mm-dx-check input[type="checkbox"]{
+  display:block;width:19px;height:19px;min-width:19px;min-height:19px;
+  max-width:19px;max-height:19px;flex:0 0 19px;
+  padding:0;margin:2px 0 0;box-sizing:border-box;
+  appearance:auto;-webkit-appearance:checkbox;border-radius:4px!important
+}
+#defects .mm-dx-check span,#coach .mm-dx-check span{flex:1 1 0;min-width:0;overflow-wrap:anywhere;white-space:normal;line-height:1.45}
+#defects .mm-dx-evidence,#coach .mm-dx-evidence{min-width:0;max-width:100%;box-sizing:border-box;overflow-wrap:anywhere}
+#defects .mm-dx-workbench,#coach .mm-dx-workbench{min-width:0;max-width:100%;box-sizing:border-box}
 .mm-dx-main-action{margin-top:10px;max-width:100%;white-space:normal}
 .mm-dx-result-block{margin:16px 0;padding:15px;border:1px solid var(--border,#39526b);border-radius:12px}
 .mm-dx-result-block h3{margin:0 0 10px;font-size:18px}
