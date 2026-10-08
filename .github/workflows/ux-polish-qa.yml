@@ -2,7 +2,7 @@ name: UX Polish and Book Endurance QA
 on:
   pull_request:
     branches: [main]
-    paths: ['book-runtime.js','src/domains/learning/book-runtime.js','ui-shell.css','premium-ui.css','premium-dynamic.css','qa/ux-polish.spec.js','playwright.ux-polish.config.cjs','package.json','package-lock.json','qa_browser_dependency_lock.py','version.json']
+    paths: ['book-runtime.js','src/domains/learning/book-runtime.js','ui-shell.css','premium-ui.css','premium-dynamic.css','qa/ux-polish.spec.js','qa/learner-ui-polish.spec.js','qa/ui-duplication-audit.spec.js','src/domains/shell/learner-ui-polish.js','src/domains/shell/learner-ui-polish.css','src/domains/shell/app-shell-registry.js','playwright.ux-polish.config.cjs','package.json','package-lock.json','qa_browser_dependency_lock.py','version.json']
   push:
     branches: [main]
 permissions:
