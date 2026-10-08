@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { multiCavityFlowPathGeometry, multiCavityEvidenceCoverage } from './src/domains/process/multi-cavity-flowpath.mjs';
+import { multiCavityFlowPathGeometry, multiCavityEvidenceCoverage, multiCavityGateTopologyReadiness } from './src/domains/process/multi-cavity-flowpath.mjs';
 
 // Synthetic references only: valid metadata does not prove physical measurement.
 const geometry = multiCavityFlowPathGeometry({
@@ -54,4 +54,49 @@ reject({gateSealStudies:[{cavityId:'A',gateSealStudyRef:'gate-A'}]},'missing-gat
 reject({gateSealStudies:[{cavityId:'A',gateSealStudyRef:'gate-A'},{cavityId:'A',gateSealStudyRef:'gate-X'}]},'duplicate-gate-seal-cavity-id');
 reject({gateSealStudies:[{cavityId:'X',gateSealStudyRef:'gate-X'}]},'gate-seal-unknown-cavity-id');
 reject({gateSealStudies:[{cavityId:'A',gateSealStudyRef:''}]},'gate-seal-study-reference-required');
+
+const topologyAudit = changes => multiCavityGateTopologyReadiness({
+  geometryResult:geometry,
+  topologyVerificationRef:'synthetic-reviewed-runner-tree',
+  cavityGates:[
+    {cavityId:'A',gateId:'gate-A',gateGeometryBasisRef:'gate-cad-A'},
+    {cavityId:'B',gateId:'gate-B',gateGeometryBasisRef:'gate-cad-B'},
+  ],
+  ...changes,
+});
+const tree = topologyAudit({});
+assert.equal(tree.ok,true);
+assert.equal(tree.status,'gate-path-identity-audited-unverified');
+assert.equal(tree.productionAuthority,false);
+assert.equal(tree.gates.length,2);
+assert.equal(topologyAudit({topologyVerificationRef:''}).reason,'verified-path-topology-reference-required');
+assert.equal(topologyAudit({cavityGates:null}).reason,'cavity-gates-required');
+assert.equal(topologyAudit({cavityGates:[{cavityId:'A',gateId:'gate-A',gateGeometryBasisRef:'A'}]}).reason,'missing-cavity-gate-identities');
+assert.equal(topologyAudit({cavityGates:[
+  {cavityId:'A',gateId:'same',gateGeometryBasisRef:'A'},
+  {cavityId:'B',gateId:'same',gateGeometryBasisRef:'B'},
+]}).reason,'same-gate-assigned-to-multiple-cavities');
+assert.equal(topologyAudit({cavityGates:[
+  {cavityId:'A',gateId:'gate-A',gateGeometryBasisRef:''},
+  {cavityId:'B',gateId:'gate-B',gateGeometryBasisRef:'B'},
+]}).reason,'gate-geometry-reference-required');
+assert.equal(topologyAudit({cavityGates:[
+  {cavityId:'A',gateId:'gate-A',gateGeometryBasisRef:'A'},
+  {cavityId:'X',gateId:'gate-X',gateGeometryBasisRef:'X'},
+]}).reason,'unknown-gate-cavity');
+const reconverging = multiCavityFlowPathGeometry({
+  mouldConfigurationId:'synthetic-non-tree',geometryBasisRef:'cad-r1',
+  topologyBasisRef:'path-r1',
+  segments:[
+    {segmentId:'root',crossSectionArea:{value:8,unit:'mm2'},channelLength:{value:10,unit:'mm'}},
+    {segmentId:'a',crossSectionArea:{value:8,unit:'mm2'},channelLength:{value:10,unit:'mm'}},
+    {segmentId:'b',crossSectionArea:{value:8,unit:'mm2'},channelLength:{value:10,unit:'mm'}},
+    {segmentId:'join',crossSectionArea:{value:8,unit:'mm2'},channelLength:{value:10,unit:'mm'}},
+  ],
+  cavityPaths:[{cavityId:'A',segmentIds:['root','a','join']},
+    {cavityId:'B',segmentIds:['root','b','join']}],
+});
+assert.equal(reconverging.ok,true,'geometric volume accounting remains non-topological');
+assert.equal(topologyAudit({geometryResult:reconverging}).reason,'non-tree-shared-segment-after-divergence');
+
 console.log('New2 multi-cavity pressure/gate-seal evidence reference QA passed');
