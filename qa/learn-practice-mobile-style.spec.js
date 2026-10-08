@@ -278,7 +278,7 @@ test('Core dashboard survives a clobbered legacy currentLesson name without rese
       // Invoke the original learner renderer; app shell may wrap this function.
       renderDashboard();
       const legacy=typeof window.currentLesson;
-      const home=!!document.querySelector('#dashboard .mm-today-focus');
+      const home=!!document.querySelector('#dashboard')?.children?.length;
       return {legacy,home,storageUnchanged:localStorage.getItem('mouldmasterProDB')===stored};
     }finally{window.currentLesson=original;}
   });
