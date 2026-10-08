@@ -138,7 +138,7 @@ test('canonical nav has one active item and no repeated primary destinations',as
   }
 });
 
-test('earned local certificates remain accurately displayed through active Home progress layout',async({page})=>{
+test('earned local certificates remain accurate in canonical Home progress markup',async({page})=>{
   await page.setViewportSize({width:1440,height:900});
   await ready(page,['Beginner-ALL','Intermediate-ALL']);
   for(const width of [1440,810,390]){
@@ -148,7 +148,7 @@ test('earned local certificates remain accurately displayed through active Home 
       const progress=document.querySelector('#dashboard .progress-card');
       const label=progress?.textContent||'';
       return {
-        awards:window.user?.learningAwards?.length ?? -1,
+        awards:typeof user==='object'&&Array.isArray(user.learningAwards)?user.learningAwards.length:-1,
         visibleAwardCount:(label.match(/\\b2 certificates earned\\b/)||[]).length,
         obsoleteStatlines:[...document.querySelectorAll('#dashboard .statline')]
           .filter(el=>(el.textContent||'').includes('Certificates earned')).length
