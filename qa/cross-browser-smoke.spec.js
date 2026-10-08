@@ -43,6 +43,21 @@ test('core shell and exact-grade Materials work without layout overflow',async({
   expect(errors).toEqual([]);
 });
 
+test('tester Support and Privacy are reachable and public reports warn against data sharing',async({page})=>{
+  // These are public support/privacy surfaces; visiting them must not require
+  // a learner account or an initialized application shell.
+  await page.goto(BASE+'support.html',{waitUntil:'domcontentloaded'});
+  await expect(page.getByRole('heading',{name:'MouldMaster Academy — Support'})).toBeVisible();
+  const report=page.getByRole('link',{name:'Report a learner problem'});
+  await expect(report).toHaveAttribute('href',/issues\/new\?template=learner-problem\.yml$/);
+  await expect(page.getByRole('heading',{name:'Data & Reset'})).toBeVisible();
+  await expect(page.locator('body')).toContainText('Do not attach progress backups');
+  await page.getByRole('link',{name:'Privacy notice'}).first().click();
+  await expect(page.getByRole('heading',{name:'MouldMaster Academy — Privacy Notice'})).toBeVisible();
+  await expect(page.locator('body')).toContainText('browser/app storage');
+  await expect(page.locator('body')).toContainText('does not currently upload');
+});
+
 test('Mission Control dashboard and stale controls remain isolated on A → B → A profile switches',async({page})=>{
   await openApp(page);
   await page.waitForFunction(()=>!!window.MM_MISSION_CONTROL&&!!window.MM_APP_SHELL?.dashboard?.compose);
