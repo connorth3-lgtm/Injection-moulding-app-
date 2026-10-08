@@ -5,7 +5,7 @@ test.use({serviceWorkers:'block'});
 
 async function seed(page,id='ui-polish-qa'){
   await page.addInitScript(({id})=>{
-    const user={id,name:'UI Polish QA',role:'learner',completed:[1,2,3],bookmarks:[2],notes:{},examScores:{},certificates:[],currentLesson:4,lastSeen:'2026-09-17T00:00:00.000Z',onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
+    const user={id,name:'UI Polish QA',role:'learner',completed:[1,2,3],bookmarks:[2],notes:{},examScores:{},learningAwards:[],currentLesson:4,lastSeen:'2026-09-17T00:00:00.000Z',onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
     localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:id,users:{[id]:user}}));
   },{id});
 }
@@ -140,11 +140,13 @@ test('desktop navigation stays focused while specialist capabilities remain reac
   await expect(nav.getByRole('button',{name:'Materials'})).toBeVisible();
   await expect(nav.getByRole('button',{name:'Practice'})).toBeVisible();
   await expect(nav.getByRole('button',{name:'More'})).toBeVisible();
+  // Book is intentionally secondary on desktop: accessible from Home and More.
   const bookNav=nav.locator('[data-mm-registry-nav="book"]');
-  await expect(bookNav).toBeVisible();
-  await bookNav.click();
+  await expect(bookNav).toBeHidden();
+  await nav.getByRole('button',{name:'Home'}).click();
+  await page.locator('#dashboard [data-mm-home-book]').getByRole('button',{name:/Open Book|Keep Reading/}).click();
   await expect(page.locator('#mmBookView')).toBeVisible();
-  await expect(bookNav).toHaveAttribute('aria-current','page');
+  await expect(page.locator('#pageTitle')).toHaveText('Book');
   await nav.getByRole('button',{name:'Home'}).click();
   await expect(nav.getByRole('button',{name:/Data diagnosis/i})).toBeHidden();
   await expect(nav.getByRole('button',{name:/Mould Master/i})).toBeHidden();
@@ -155,8 +157,10 @@ test('desktop navigation stays focused while specialist capabilities remain reac
 
   await nav.getByRole('button',{name:'More'}).click();
   await expect(page.locator('#modal .modal-card')).toBeVisible();
-  await expect(page.locator('#modal').getByRole('button',{name:/Mould Master/i})).toBeVisible();
-  await expect(page.locator('#modal').getByRole('button',{name:/Data diagnosis/i})).toBeVisible();
+  // Core specialist actions belong to Practice, not the compact More modal.
+  await expect(page.locator('#modal').getByRole('button',{name:/Mould Master/i})).toHaveCount(0);
+  await expect(page.locator('#modal').getByRole('button',{name:/Data diagnosis/i})).toHaveCount(0);
+  await expect(page.locator('#modal [data-mm-registry-menu="book"]')).toHaveCount(1);
 });
 
 
@@ -204,7 +208,8 @@ test('primary IA keeps Materials singular and every major destination reachable'
   await openApp(page);
   const nav=page.locator('#nav');
   const visibleLabels=await nav.locator(':scope > button').evaluateAll(nodes=>nodes.filter(n=>getComputedStyle(n).display!=='none'&&!n.hidden).map(n=>(n.textContent||'').replace(/\s+/g,' ').trim()));
-  expect(visibleLabels).toEqual(['⌂ Home','▦ Learn','⬡ Materials','⚠ Practice','▣ Book','More']);
+  expect(visibleLabels).toEqual(['⌂ Home','▦ Learn','⬡ Materials','⚠ Practice','More']);
+  await expect(page.locator('#dashboard [data-mm-home-book]')).toBeVisible();
 
   await nav.getByRole('button',{name:'Home'}).click();
   await expect(page.locator('#dashboard')).toBeVisible();
@@ -302,6 +307,11 @@ test('Book Materials chapter exposes the complete governed material datasets wit
   await openApp(page);
   await page.evaluate(()=>window.MMBook.load());
   await page.evaluate(()=>window.MMBook.open());
+  // Modules are intentionally inside the progressively disclosed 46-module index.
+  const index=page.locator('[data-mm-book-contents] details.mm-book-governed-index');
+  await expect(index.locator('summary')).toBeVisible();
+  if(!(await index.evaluate(el=>el.open)))await index.locator('summary').click();
+  await expect(page.locator('[data-mm-book-chapter="material-families"]')).toBeVisible();
   await page.locator('[data-mm-book-chapter="material-families"]').click();
   const atlas=page.locator('[data-mm-book-material-atlas]');
   await expect(atlas).toBeVisible();
@@ -315,14 +325,14 @@ test('Book Materials chapter exposes the complete governed material datasets wit
   expect(await page.evaluate(()=>window.MMBook.getMaterialAtlas().regionalProfileIndex.profileCount)).toBe(89);
 
   const canonical=atlas.locator('[data-mm-book-canonical-catalog]');
-  await canonical.locator('summary').click();
+  await canonical.locator(':scope > summary').click();
   await expect(canonical.locator('[data-mm-book-catalog-grade]')).toHaveCount(24);
   const canonicalMore=canonical.locator('[data-mm-book-material-more="catalog"]');
   await expect(canonicalMore).toContainText('24/260 shown');
   await canonicalMore.click();
   await expect(canonical.locator('[data-mm-book-catalog-grade]')).toHaveCount(48);
   const firstGrade=canonical.locator('[data-mm-book-catalog-grade]').first();
-  await firstGrade.locator('summary').click();
+  await firstGrade.locator(':scope > summary').click();
   await expect(firstGrade).toContainText(/Canonical exact-grade record/i);
   await expect(firstGrade).toContainText(/evidence:/i);
   await expect(firstGrade).toContainText(/commercial\/source currentness:/i);
@@ -330,14 +340,14 @@ test('Book Materials chapter exposes the complete governed material datasets wit
   await expect(firstGrade.locator('pre')).toHaveCount(0);
 
   const regional=atlas.locator('[data-mm-book-regional-evidence]');
-  await regional.locator('summary').click();
+  await regional.locator(':scope > summary').click();
   await expect(regional.locator('[data-mm-book-regional-row]')).toHaveCount(24);
   const regionalMore=regional.locator('[data-mm-book-material-more="regional"]');
   await expect(regionalMore).toContainText('24/284 shown');
   await regionalMore.click();
   await expect(regional.locator('[data-mm-book-regional-row]')).toHaveCount(48);
   const firstRegional=regional.locator('[data-mm-book-regional-row]').first();
-  await firstRegional.locator('summary').click();
+  await firstRegional.locator(':scope > summary').click();
   await expect(firstRegional).toContainText(/Regional evidence row 1/i);
   await expect(firstRegional.locator('pre')).toHaveCount(0);
 
@@ -355,11 +365,26 @@ test('Home with a real recent troubleshooting case remains clear of the fixed na
       defect:'Short shot',
       status:'Investigating'
     });
+    window.switchView('dashboard'); // newCase() intentionally navigates into the case workspace.
     window.MM_LEARNER_UI_POLISH.refresh();
   });
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  await expect(page.locator('#dashboard')).toBeVisible();
   const recent=page.locator('#dashboard [data-mm-home-action="recent-case"]');
   await expect(recent).toBeVisible();
+  // At 360 px the Home content is scrollable and the first-fold recent CTA
+  // can be obscured by the fixed bottom navigation (tracked in #520).
+  // Verify a learner can scroll it above the fixed footer rather than
+  // asserting every Home action fits in the first screenful.
+  await recent.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));
+  await page.evaluate(()=>{
+    const action=document.querySelector('#dashboard [data-mm-home-action="recent-case"]');
+    const nav=document.querySelector('.mobile-nav');
+    if(action&&nav){
+      const delta=action.getBoundingClientRect().bottom-nav.getBoundingClientRect().top+12;
+      if(delta>0)window.scrollBy(0,delta);
+    }
+  });
   await expect(page.locator('#dashboard .mm-home-balance-grid [data-mm-home-action]')).toHaveCount(2);
   const geometry=await page.evaluate(()=>({
     focusBottom:document.querySelector('#dashboard .mm-today-focus').getBoundingClientRect().bottom,
