@@ -156,6 +156,12 @@ MouldMaster is an educational resource. It does not replace:
 
 Do not bypass guards, interlocks or hazardous-energy controls to follow training content.
 
+## Repository-wide hygiene
+
+All tracked folders are covered by the offline `python3 tools/repository_hygiene.py` gate in required Release QA. It verifies portable Git paths, symlinks/modes, forbidden credential-like files, immutable workflow action refs, valid JSON and byte-identical canonical Book/quality publish mirrors. Unit tests run via `python3 -m unittest discover -s tests -p 'test_repository_hygiene.py'`. Root `.gitignore` prevents accidentally staging local dependencies, test output, release packages and private configuration.
+
+See [Repository hygiene assessment](docs/REPOSITORY_HYGIENE_2026-10-09.md) for every-folder inventory, historically audited binary/archive retention, which generated mirrors are intentionally duplicated, and limits of this structural gate. **Do not remove archived external validation evidence, the locked Windows recovery executable or runtime mirrors just because they look duplicated.** No static repository scan replaces release-specific external human/device approval.
+
 ## Release QA
 
 The release workflows run structural, runtime, question/answer, assessment-quality, learner-scoped analytics, evidence-approval, evidence-maturity, guided-data, cross-library process-data, measured-evidence, mechanism-evidence coverage/promotion, learner-experience, curriculum-integration, specialist-curriculum/evidence-status, material-behaviour, app-shell/mobile-browser, Mould Master workspace, source-freshness, reference/research, desktop-security and certification-readiness checks. Important entry points include:
