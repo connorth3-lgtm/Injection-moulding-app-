@@ -147,7 +147,8 @@ body[data-mm-mission-mode="engineer"] .mm-mc-context{grid-template-columns:minma
   #dashboard .mm-mc-home-card{display:none!important}
   body:not(.mm-mission-active) #mmMissionControl .mm-mc-context-items{display:none}
   body:not(.mm-mission-active) #mmMissionControl .mm-mc-timeline.mm-mc-empty{display:none}
-  .mm-mc-context{grid-template-columns:minmax(0,1fr) auto}
+  .mm-mc-context,
+  body[data-mm-mission-mode="engineer"] .mm-mc-context{grid-template-columns:minmax(0,1fr) auto}
   .mm-mc-context-items{grid-column:1/-1;grid-row:2}
   .mm-mc-actions{grid-column:2;grid-row:1}
   .mm-mc-context-items>div{padding:6px 8px}
