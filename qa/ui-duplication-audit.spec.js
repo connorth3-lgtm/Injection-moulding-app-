@@ -119,7 +119,8 @@ test('canonical nav has one active item and no repeated primary destinations',as
     const host=width>1100?page.locator('#nav'):page.locator('.mobile-nav');
     const choices=await host.locator(':scope > button:visible').evaluateAll(items=>
       items.map(el=>({
-        label:(el.getAttribute('aria-label')||el.textContent||'').replace(/\s+/g,' ').trim(),
+        // Core nav buttons prepend decorative glyphs before the semantic span.
+        label:(el.getAttribute('aria-label')||el.querySelector('span')?.textContent||el.textContent||'').replace(/\s+/g,' ').trim().replace(/^[^A-Za-z0-9]+/u,''),
         view:el.dataset.view||'',
         active:el.getAttribute('aria-current')==='page'
       }))
@@ -129,7 +130,8 @@ test('canonical nav has one active item and no repeated primary destinations',as
     for(const label of ['Home','Learn','Materials','Practice','More']){
       expect(choices.filter(v=>v.label===label).length,'primary nav '+label+' at '+width).toBe(1);
     }
-    if(width<=1100)expect(choices).toHaveLength(5);
-    else expect(choices).toHaveLength(6); // Book is an intentional desktop top-level destination.
+    // Home owns Book/resume on desktop; it is intentionally absent from the
+    // top-level primary list and remains available via Home and More.
+    expect(choices).toHaveLength(5);
   }
 });
