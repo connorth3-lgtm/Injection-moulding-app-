@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 if(window.MM_VIRTUAL_APPRENTICESHIP)return;
-const VERSION='2026.10.08.3';
+const VERSION='2026.10.09.3';
 const STORAGE_KEY='mm_virtual_apprenticeship_v1';
 const LEVELS=Object.freeze({
   beginner:{label:'Beginner · guided',feedback:'immediate'},
@@ -188,7 +188,86 @@ const CASES=Object.freeze([
   }
 ]);
 const STEP_KEYS=Object.freeze(['hypothesis','test','response','verify']);
-const state={caseIndex:0,level:'beginner',answers:{},checked:false};
+
+/* New1: one connected factory assignment, not a second learning authority. */
+const FACTORY_TRACK=Object.freeze([
+  {caseId:'VA-01',role:'Operator',skill:'Baseline drift'},
+  {caseId:'VA-02',role:'Setter',skill:'Cavity identity'},
+  {caseId:'VA-03',role:'Technician',skill:'Thermal evidence'},
+  {caseId:'VA-04',role:'Technician',skill:'Gate-seal study'},
+  {caseId:'VA-05',role:'Troubleshooter',skill:'Fault discrimination'},
+  {caseId:'VA-06',role:'Process engineer',skill:'Signal integrity'}
+]);
+const FACTORY_CASE_ONE=Object.freeze({
+  caseId:'VA-02',cell:'Cell 07',tool:'Simulated four-cavity training mould',
+  book:Object.freeze([
+    {id:'multi-cavity',title:'Multi-cavity balance'},
+    {id:'cavity-pressure',title:'Cavity-pressure evidence'},
+    {id:'feed-system',title:'Runners and gates'},
+    {id:'diagnostic-method',title:'Evidence-led diagnosis'}
+  ]),
+  windows:Object.freeze([
+    {label:'Known good',mass:[12.01,12.00,12.02,12.01]},
+    {label:'Drift',mass:[12.00,12.01,12.02,11.95]},
+    {label:'Fault visible',mass:[12.01,12.00,12.01,11.83]}
+  ])
+});
+const STEP_BOOK=Object.freeze({
+  hypothesis:FACTORY_CASE_ONE.book[0],test:FACTORY_CASE_ONE.book[1],
+  response:FACTORY_CASE_ONE.book[2],verify:FACTORY_CASE_ONE.book[3]
+});
+function tutorPlan(row,result){
+  const gaps=STEP_KEYS.filter(key=>!result?.dimensions?.[key]?.correct);
+  const strengths=STEP_KEYS.filter(key=>result?.dimensions?.[key]?.correct);
+  return {caseId:row?.id||'',gaps,strengths,
+    book:gaps.length?gaps.map(key=>STEP_BOOK[key]):[STEP_BOOK.verify],
+    guidance:gaps.length?'Read the source context for each missed reasoning step, then retry the case.':'The authored reasoning chain is sound. Repeat with fresh evidence; a perfect training answer is not proof of workplace competence.'};
+}
+function competencyRecord(){
+  const completed=loadProgress().completed||{};
+  return FACTORY_TRACK.map(item=>{
+    const row=completed[item.caseId]||{},steps=row.steps||{};
+    return {caseId:item.caseId,role:item.role,skill:item.skill,best:Number(row.best)||0,
+      reviewed:!!row.updated,reasoning:Object.fromEntries(STEP_KEYS.map(k=>[k,steps[k]===true])),
+      boundary:'Local formative practice, not accredited or workplace competence'};
+  });
+}
+function bookButton(host,chapter){
+  const b=make('button','secondary','Book: '+chapter.title);b.type='button';
+  const token=scopedStorage()?.learnerToken?.()||null;
+  b.addEventListener('click',()=>{
+    if(token&&token!==scopedStorage()?.learnerToken?.())return;
+    if(window.MMBook?.openChapter)void Promise.resolve(window.MMBook.openChapter(chapter.id)).catch(()=>{host.dataset.bookUnavailable='1'});
+    else host.dataset.bookUnavailable='1';
+  });
+  return b;
+}
+function renderFactoryCaseOne(host,row){
+  if(row.id!==FACTORY_CASE_ONE.caseId)return;
+  const section=make('section','content-block');section.dataset.mmFactoryCase='1';
+  section.append(make('span','eyebrow','MouldMaster 3.0 · Digital Factory — Case One'),
+    make('h3','','One cavity becomes light'),
+    make('p','muted','Compare the cavity-resolved evidence, read the linked governed Book, explore the Spatial Twin and then explain your discriminating test, controlled response and verification.'));
+  const table=make('table','table'),thead=document.createElement('thead'),header=document.createElement('tr');
+  for(const h of ['Synthetic window','C1 (g)','C2 (g)','C3 (g)','C4 (g)'])header.appendChild(make('th','',h));
+  thead.appendChild(header);table.appendChild(thead);
+  const body=document.createElement('tbody');
+  for(const w of FACTORY_CASE_ONE.windows){
+    const tr=document.createElement('tr');tr.appendChild(make('th','',w.label));
+    for(const mass of w.mass)tr.appendChild(make('td','',mass.toFixed(2)));
+    body.appendChild(tr);
+  }
+  table.appendChild(body);const wrap=make('div','table-wrap');wrap.appendChild(table);section.appendChild(wrap);
+  section.appendChild(make('p','tiny muted','Invented masses for teaching only: not a measured dataset, validation tolerance, process recipe or physically predictive model.'));
+  const buttons=make('div','hero-buttons');
+  for(const chapter of FACTORY_CASE_ONE.book)buttons.appendChild(bookButton(section,chapter));
+  section.appendChild(buttons);
+  section.appendChild(make('p','tiny muted','Book chapters retain their independent evidence/SME status. Reading alone does not award competence.'));
+  section.appendChild(make('p','tiny muted','Apprenticeship track: '+FACTORY_TRACK.map(x=>x.role+' ('+x.caseId+')').join(' → ')));
+  host.appendChild(section);
+}
+
+const state={caseIndex:0,level:'beginner',answers:{},checked:false,attemptSaved:false};
 function esc(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
 function byId(id){return document.getElementById(id)}
 function make(tag,className,text){const el=document.createElement(tag);if(className)el.className=className;if(text!=null)el.textContent=text;return el}
@@ -255,12 +334,24 @@ function renderResult(){
   const ul=document.createElement('ul');
   for(const key of STEP_KEYS){const d=result.dimensions[key],li=make('li','',`${key==='test'?'Next evidence':key[0].toUpperCase()+key.slice(1)}: ${d.correct?'✓':'Review'} — ${d.feedback}`);ul.appendChild(li)}
   box.appendChild(ul);
+  const tutor=tutorPlan(row,result),coach=make('div','content-block');
+  coach.append(make('h3','','Personal engineering tutor · next practice'),make('p','muted',tutor.guidance));
+  coach.appendChild(make('p','tiny muted','Evidence-consistent steps: '+(tutor.strengths.join(', ')||'None yet')));
+  const reading=make('div','hero-buttons');
+  for(const ch of tutor.book)reading.appendChild(bookButton(coach,ch));
+  coach.appendChild(reading);box.appendChild(coach);
   const boundary=make('p','tiny muted','Training result only. A high score does not authorise a real machine, mould, material, maintenance, safeguarding or production change.');box.appendChild(boundary);
-  const progress=loadProgress();progress.attempts=Number(progress.attempts||0)+1;progress.completed=progress.completed||{};const old=progress.completed[row.id]||{};progress.completed[row.id]={best:Math.max(Number(old.best||0),result.total),last:result.total,level:state.level,updated:new Date().toISOString()};saveProgress(progress);
+  if(!state.attemptSaved){
+    const progress=loadProgress();progress.attempts=Number(progress.attempts||0)+1;progress.completed=progress.completed||{};
+    const old=progress.completed[row.id]||{};
+    progress.completed[row.id]={best:Math.max(Number(old.best||0),result.total),last:result.total,level:state.level,
+      steps:Object.fromEntries(STEP_KEYS.map(key=>[key,result.dimensions[key].correct])),updated:new Date().toISOString()};
+    saveProgress(progress);state.attemptSaved=true;
+  }
   const p=byId('mmVaProgress');if(p)p.textContent=progressSummary();
   for(const key of STEP_KEYS){const el=byId(`mmVaFeedback-${key}`);if(el)el.textContent=result.dimensions[key].feedback}
 }
-function resetCase(){state.answers={};state.checked=false;renderCase()}
+function resetCase(){state.answers={};state.checked=false;state.attemptSaved=false;renderCase()}
 function syncMissionContext(stage='evidence'){
   const row=caseDef();
   window.MM_MISSION_CONTROL?.attachContext?.(
@@ -269,7 +360,7 @@ function syncMissionContext(stage='evidence'){
   )
 }
 function openCase(index=0){
-  state.caseIndex=Math.max(0,Math.min(CASES.length-1,Number(index)||0));state.answers={};state.checked=false;
+  state.caseIndex=Math.max(0,Math.min(CASES.length-1,Number(index)||0));state.answers={};state.checked=false;state.attemptSaved=false;
   try{window.MM_SPATIAL_TWIN?.close?.()}catch(_){}
   if(typeof window.switchView==='function')window.switchView('simulator');
   install();renderCase();syncMissionContext('evidence');
@@ -284,9 +375,10 @@ function renderCase(){
   const controls=make('div','grid2');
   const caseLabel=make('label','', 'Case');const caseSelect=document.createElement('select');caseSelect.id='mmVaCaseSelect';CASES.forEach((c,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=`${c.id} · ${c.title}`;o.selected=i===state.caseIndex;caseSelect.appendChild(o)});caseLabel.appendChild(caseSelect);
   const levelLabel=make('label','', 'Coaching level');const levelSelect=document.createElement('select');for(const [id,v] of Object.entries(LEVELS)){const o=document.createElement('option');o.value=id;o.textContent=v.label;o.selected=id===state.level;levelSelect.appendChild(o)}levelLabel.appendChild(levelSelect);controls.append(caseLabel,levelLabel);host.appendChild(controls);
-  caseSelect.addEventListener('change',()=>{state.caseIndex=Number(caseSelect.value)||0;state.answers={};state.checked=false;renderCase();syncMissionContext('evidence')});
-  levelSelect.addEventListener('change',()=>{state.level=levelSelect.value in LEVELS?levelSelect.value:'beginner';state.checked=false;renderCase()});
-  const brief=make('div','callout');brief.append(make('b','', 'Shop-floor brief'),document.createElement('br'),document.createTextNode(row.brief));host.appendChild(brief);
+  caseSelect.addEventListener('change',()=>{state.caseIndex=Number(caseSelect.value)||0;state.answers={};state.checked=false;state.attemptSaved=false;renderCase();syncMissionContext('evidence')});
+  levelSelect.addEventListener('change',()=>{state.level=levelSelect.value in LEVELS?levelSelect.value:'beginner';state.checked=false;state.attemptSaved=false;renderCase()});
+  renderFactoryCaseOne(host,row);
+   const brief=make('div','callout');brief.append(make('b','', 'Shop-floor brief'),document.createElement('br'),document.createTextNode(row.brief));host.appendChild(brief);
   const evidence=make('div','content-block');evidence.append(make('h3','', 'Evidence board'),make('p','tiny muted',`Baseline: ${row.baseline}`));const table=make('div','table-wrap');const t=document.createElement('table');t.className='table';t.innerHTML='<thead><tr><th>Signal / context</th><th>Observed change</th></tr></thead>';const body=document.createElement('tbody');for(const [name,value] of row.observations){const tr=document.createElement('tr');const a=document.createElement('td');a.textContent=name;const b=document.createElement('td');b.textContent=value;tr.append(a,b);body.appendChild(tr)}t.appendChild(body);table.appendChild(t);evidence.appendChild(table);host.appendChild(evidence);
   const bridge=make('div','hero-buttons');const load=make('button','secondary','Load case directions into process simulator');load.type='button';load.addEventListener('click',()=>applyCaseToSimulator(row));const status=make('span','tiny muted','Authored case evidence is separate from physical prediction.');status.id='mmVaBridgeStatus';bridge.append(load,status);host.appendChild(bridge);
   const investigation=make('div','content-block');investigation.append(make('h3','', 'Your investigation'),make('p','muted','Commit to a mechanism, choose the most discriminating next evidence, select one controlled response, then define verification.'));
@@ -317,7 +409,7 @@ function renderSimulatorWithApprenticeship(){
 // after every governed simulator render so navigation cannot silently remove the
 // learner's apprenticeship surface.
 if(baseSimulatorRender)window.renderSimulator=renderSimulatorWithApprenticeship;
-const api=Object.freeze({version:VERSION,cases:CASES,levels:LEVELS,scoreReasoning,applyCaseToSimulator,install,resetCase,openCase,storageKey:STORAGE_KEY,boundary:'Authored learning cases and reasoning coaching only; no machine-control, production-setting or predictive-physics authority.'});
+const api=Object.freeze({version:VERSION,cases:CASES,levels:LEVELS,scoreReasoning,applyCaseToSimulator,install,resetCase,openCase,openFactoryCaseOne:()=>openCase(1),factoryTrack:FACTORY_TRACK,factoryCaseOne:FACTORY_CASE_ONE,tutorPlan,competencyRecord,storageKey:STORAGE_KEY,boundary:'Authored learning cases and reasoning coaching only; no machine-control, production-setting or predictive-physics authority.'});
 window.MM_VIRTUAL_APPRENTICESHIP=api;
 try{window.MM_RUNTIME_V2?.registerModule?.('virtual-apprenticeship',{version:VERSION,type:'simulator-learning',scope:'authored-evidence-first-cases',authority:'training-only'})}catch(_){}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',installWhenReady,{once:true});else installWhenReady();
