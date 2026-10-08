@@ -111,6 +111,8 @@ jobs:
         run: node qa_mission_control.cjs
       - name: New1 Virtual Factory Case One source and isolation QA
         run: node qa_new1_virtual_factory.cjs
+      - name: New1 five connected academy development capabilities QA
+        run: node qa_new1_academy.cjs
       - name: Cross-platform learner lesson resolver and CRLF regression QA
         run: node qa_lesson_resolver_clobber.cjs
       - name: Exact external-validation candidate binding

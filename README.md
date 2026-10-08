@@ -58,7 +58,7 @@ The explicit learner testing URL is `https://connorth3-lgtm.github.io/Injection-
 
 ## New1 — Digital Moulding Factory development patch
 
-The proposed MouldMaster 3.0 programme and the first **Virtual Factory — Case One** evidence/book/competency integration are documented in [docs/NEW1_MOULDMASTER_3_0.md](docs/NEW1_MOULDMASTER_3_0.md). This is currently a **development-only integration prototype**, not loaded by the public learner runtime or approved for tester distribution. The governed web release and all external-validation HOLDs are unchanged.
+The proposed MouldMaster 3.0 programme and the first **Virtual Factory — Case One** evidence/book/competency integration are documented in [docs/NEW1_MOULDMASTER_3_0.md](docs/NEW1_MOULDMASTER_3_0.md). All five upgrades now have a **locally runnable development workbench** (Virtual Factory, 46-module Encyclopaedia explorer, evidence-based tutor, five formative apprenticeship tracks and local trainer assignments). Run `python3 -m http.server 8765 --bind 127.0.0.1` from the repository root, then open `http://127.0.0.1:8765/tools/new1-academy-workbench.html`. This prototype is **not loaded by the public learner runtime** or approved for tester distribution. The governed web release and all external-validation HOLDs are unchanged.
 
 ## Assessment system
 

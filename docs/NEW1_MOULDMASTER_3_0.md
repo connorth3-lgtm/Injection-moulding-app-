@@ -1,51 +1,54 @@
-# New1 / MouldMaster 3.0 — Digital Moulding Factory
+# New1: MouldMaster 3.0 Digital Moulding Factory — five connected upgrades
 
-**Status (9 October 2026): one GitHub development patch; not activated in the production or preview learner shell.** This is a proposed integrated programme, not a claim that the full academy, all proposed volumes, AI tutor, college system or 1,500 questions exist.
+**State, 9 October 2026:** one working development-only GitHub patch. This is not a deployed learner release, college learning-management system, machine-control product, validated physics simulator or accredited professional qualification.
 
-## One cohesive programme
+## Try the integrated development workbench
 
-MouldMaster already has a 120-lesson completion pathway, 20 optional specialist lessons, 46 governed Book modules grouped into 20 reader chapters, six Virtual Apprenticeship cases, Spatial Twin, Mission Control, Runtime V2 learner-scoped storage and formative assessments. The first flagship is an **end-to-end Virtual Factory case**, not a parallel simulator, Book, learner database or grading authority.
+From the root of this repository, run the local-only development server with the command:
 
-The user journey is **enter factory cell → inspect four-cavity baseline → observe cavity 4 mass drift → compare localized pressure/mass/thermal evidence → consult governed Book module → rank mechanisms → choose a discriminating measurement → propose one controlled response → verify all four cavities → reflect → receive targeted formative coaching**.
+    python3 -m http.server 8765 --bind 127.0.0.1
 
-## Implemented as this development patch
+Then visit http://127.0.0.1:8765/tools/new1-academy-workbench.html
 
-- A tested, inert-by-default New1 integration adapter at src/experimental/new1-virtual-factory-case-one.js. It opens existing VA-02 through MM_VIRTUAL_APPRENTICESHIP, opens the existing Spatial Twin at the same case index, and opens the canonical Book module through MMBook.openChapter.
-- A **single source-of-truth formative score**: recommendations and per-dimension tutor feedback derive from the existing Virtual Apprenticeship scoreReasoning function. No new keys, question answers or certificate cut-scores.
-- An existing-learner progress reader uses only MM_RUNTIME_V2.storage and the existing Virtual Apprenticeship progress key. It never creates an unsupervised cohort database, changes progress or promotes attempted practice to workplace competence.
-- A DOM-created **interactive Case One worksheet** now renders the five real VA-02 observations and all four canonical case decision prompts. Learners can inspect Book modules at each step, review a provisional reasoning score with targeted deterministic Book recommendations and refresh their existing local formative progress. The draft decisions are intentionally ephemeral and cleared whenever the active learner token changes. The original VA case remains the sole writer of a learner's official formative attempt.
-- The optional component remains inert until a subsequent governed release adds it to the app's runtime manifest. There is no automatic submission, hidden progress update or parallel score authority.
-- A machine-readable contract at data/new1-virtual-factory-case-one-v1.json and an executable Node regression test at qa_new1_virtual_factory.cjs. This patch wires the test into MouldMaster Release QA so the inactive integration cannot drift silently.
+This local workbench uses the existing canonical six Virtual Apprenticeship cases/scorer, Book manifests and crosswalk, plus authored fictional four-cavity shot data. No new learner account, internet API, third-party publisher, manufacturing equipment or cloud cohort service is required. The workbench is excluded from the service-worker release graph and is not enabled on hosted Pages.
 
-**Deliberate not-done:** The adapter is not added to runtime-domain-manifest, index, service-worker or generated packs. The current web release/cache and exact physical-device candidate provenance remain unchanged. No live or tester-visible New1 feature is claimed.
+## Five actual development modules in one patch
 
-## Five connected upgrade pillars
+| Pillar | Functional implementation | Deliberate limit |
+| --- | --- | --- |
+| 1. Virtual Factory | Four-cavity simulated training-cell evidence, 20 ordered shot rows over known-good, drift, fault and recovery, authored VA-02 shop-floor brief and four canonical reasoning decisions | The normalized part-mass index is fictional, not grams or a production tolerance; not a physics model or machine controller |
+| 2. Engineering Encyclopaedia | Search/filter all 46 governed Book modules, inspect exact evidence statuses, primary-source identifiers and existing course-level crosswalk metadata; link to the original Book API when present | Not independently human-SME-verified; no copied, unreviewed full text or invented 250-chapter content |
+| 3. Personal tutor | Interpret the existing four-dimension Virtual Apprenticeship score into targeted Book sections, explanations and a recommended next authored case | Not an independent answer key, psychometric outcome or general-purpose machine-diagnostic AI |
+| 4. Structured apprenticeship | Five educational role tracks: operator, setter, process technician, troubleshooter and engineer. Each uses already-authored VA-01–06 investigations and reads existing attempt metadata when appropriately scoped | Formative attempts are not workplace competency records or certificates |
+| 5. College/factory trainer | Local assignment JSON template builder with bounded known case IDs and level, and an anonymous four-step learner summary that requires explicit opt-in for each preparation | No person ID, automated trainer access, cloud data transmission, cohort accounts, unsupervised scoring or credential signing |
 
-1. **Virtual Factory:** build richer authored multi-machine/mould/material assignments around the existing Virtual Apprenticeship, Spatial Twin and synthetic process-data engine. Every scene clearly distinguishes authored direction from measured production physics.
-2. **Engineering Encyclopaedia:** extend the governed Book by chapter and claim with diagrams, context, material/grade boundaries, primary sources and source maturity, rather than inserting unreviewed global setpoints.
-3. **Personal engineering tutor:** deterministic evidence-step feedback now has a development prototype; any later adaptive recommendations must remain interpretable, opt-in where appropriate, local by default and separate from official answer keys.
-4. **Structured apprenticeship:** operator, setter, technician, troubleshooter and engineer tracks will require worked evidence before *formative* advancement. An official certificate or professional competency determination still requires distinct human-led validation and moderation.
-5. **Factory/college tools:** future trainer-authored assignments, supervised local cohorts and deliberately shared competency-gap reports must go through privacy, consent, data minimisation and human sign-off design; no cloud backend or trainer access is introduced here.
+## Files and ownership
 
-## Expansion targets (not implemented counts)
+- src/experimental/new1-virtual-factory-case-one.js — original bridge to VA-02, MM_SPATIAL_TWIN, MMBook and learner-scoped MM_RUNTIME_V2 progress.
+  - The concurrently improved Case One worksheet is preserved: it renders canonical VA-02 observations/prompts, offers step-level Book guidance, keeps ephemeral choices scoped to the active learner token, rejects untrusted choices and never writes an official case attempt.
+- src/experimental/new1-academy-core.js — the five linked modules: validated authored cavity evidence, Book index, explainable tutor, formative pathway suggestions, assignment templates and explicit-consent summary.
+- src/experimental/new1-academy-workbench.js — developer-only interactive UI using DOM text nodes; no HTML injection or learner profile writes.
+- data/new1-factory-evidence-v1.json — twenty deterministic training rows with four individual cavity identities. Index values are author-selected and dimensionless, not measured data.
+- data/new1-virtual-factory-case-one-v1.json — flagship VA-02 relationship contract.
+- tools/new1-academy-workbench.html / .css — offline-capable when served locally; a development page, not part of the installable PWA.
+- qa_new1_virtual_factory.cjs / qa_new1_academy.cjs — integrated Node tests wired into mandatory MouldMaster Release QA.
 
-| Area | Long-range planning target |
-| --- | --- |
-| Curriculum | 250+ structured lessons/modules, preserving the current 120-lesson award pathway until independently reviewed |
-| Book | Multi-volume, cross-linked, publisher-verified claims and exercises |
-| Virtual factory | Multiple evidence-authored cells, materials, tools and fault contexts |
-| Diagnostics | 1,000 independently reviewed training cases |
-| Assessments | 1,500 reviewed questions/scenarios with quality, duplicate, sensitivity and moderation controls |
-| Research | Claim → source → scope → evidence-maturity lineage |
-| Progress | Single privacy-protected formative competency view based on canonical learner records |
+The first flagship experience links the existing Book concept to a fictional factory fault, then to canonical authored assessment choices, deterministic feedback, formative apprenticeship guidance and optional trainer assignments. No duplicate scoring authority, shadow learner database or machine setting generator is introduced.
 
-## Promotion checklist — required before making the adapter learner-visible
+## Broader 3.0 ambition, explicitly NOT achieved by this patch
 
-1. Close or explicitly review confirmed UI defects **#520** (tablet five-tab wrap, duplicate Start mission CTA and retired achievement toast); investigate source/code debt **#519** and **#517** without blind deletion.
-2. Integrate the single New1 adapter into the existing governed domain/asset graph, **not** a new app. Add return-to-Book/return-to-case navigation and cross-browser, 320–1440 px/200% zoom and keyboard/screen-reader tests, plus learner A/B isolation and offline tests.
-3. Advance the web release and cache generation. Regenerate applicable manifests/packs deterministically. Produce a **new exact-runtime candidate** with truthful SHA and fingerprint and rebind all **HOLD** contracts and review packets without borrowing old physical-device evidence.
-4. Review simulator educational claims, technical Book links, and human SME decisions. Maintain the distinct physical iOS/iPadOS + Android, real NVDA/VoiceOver, signed Windows, curriculum and Book SME, longitudinal learner, and NZQA/provider validation **HOLDs**.
-5. Stage only via the protected-main release-hold workflow and verify the actual hosted non-production URL against its deployed source SHA before any voluntary tester invitation. Never automatically publish at the production root.
-6. Never infer accredited training, workplace competency, validated digital-twin physics, production recipe or machine-control authority from a successful formative case.
+250+ lessons/modules, a publisher-reviewed multi-volume Book, 1,000 independently validated diagnostics, 1,500 reviewed questions/scenarios, a multi-machine physics-backed cell, and institution-managed cohorts are long-range targets. The existing baseline remains **120 core lessons, 20 separate specialist lessons, 46 governed Book modules, and six VA investigations**.
 
-**Related:** #521 New1 programme, #520 visible UI, #519 source duplication, #517 polish debt, #512 tester handoff. Historical 5 October New1 branches are not merge bases for this patch.
+## Requirements to activate New1 for app learners
+
+1. Resolve real visible UI regressions #520, and separately audit dead core functions #519 and timing/stale compatibility #517 before adding another navigation destination.
+2. Migrate only reviewed New1 modules into the canonical app-shell/runtime-data loading system, with keyboard/mobile/200%-zoom, iPad/Android, A-to-B learner isolation, offline/cache and real assistive-technology evidence. Keep formal assessment keys unchanged.
+3. Increase the PWA web release and service-worker cache revision, regenerate governed runtime assets, build and retain the exact new candidate, and rebind *all* independent current-release validation packets to that actual SHA/fingerprint. Prior device/SME evidence cannot migrate silently.
+4. Publish to the non-production preview only through protected-main release-hold governance and owner-approved merge. Verify actual hosted source SHA and invitation handoff #512 before any tester circulation.
+5. Physical-device, real NVDA/VoiceOver, signed-Windows, Book SME, curriculum SME, learner-outcomes, NZQA/provider and any real-machine/production authority remain separate **HOLD** requirements. A scored virtual case is not proof of practical competence.
+
+This work stays in the same reviewable New1 PR and does not fast-forward the old 5 October branches or bypass protected-main release protections.
+
+## Data and consent boundaries
+
+New1 does not create a learner store. When activated into a governed app, attempt indicators must use canonical Runtime V2 learner-scoped storage; local workbench uses a read-only stub. Its new training shots are synthetic and can never be passed off as real production logs. Trainer exports contain a template only. An anonymous performance summary includes the single current reviewed case and competency gaps, not free-text evidence, identifiers or automatic submissions; sharing outside the workbench remains voluntary and human-controlled.
