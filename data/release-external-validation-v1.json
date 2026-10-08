@@ -24,8 +24,8 @@
     "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.10.08.7.md",
     "candidate": {
       "release": "2026.10.08.7",
-      "sourceSha": "AWAITING-EXACT-RELEASE-7-CANDIDATE",
-      "runtimeFingerprint": "AWAITING-EXACT-RELEASE-7-CANDIDATE"
+      "sourceSha": "d243d887965a51bcd7eff4dfc73287cf5acf6a79",
+      "runtimeFingerprint": "sha256:849e3e9926f992a1cbeca7bf37cb262fd2590e152c0dc1f19c87647c016f70e2"
     },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix."
   },
@@ -35,14 +35,14 @@
     "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.10.08.7.md",
     "currentCandidate": {
       "release": "2026.10.08.7",
-      "sourceSha": "AWAITING-EXACT-RELEASE-7-CANDIDATE",
-      "runtimeFingerprint": "AWAITING-EXACT-RELEASE-7-CANDIDATE",
-      "candidateRunId": null,
+      "sourceSha": "d243d887965a51bcd7eff4dfc73287cf5acf6a79",
+      "runtimeFingerprint": "sha256:849e3e9926f992a1cbeca7bf37cb262fd2590e152c0dc1f19c87647c016f70e2",
+      "candidateRunId": 37748002799,
       "candidateWorkflow": "Pre-merge Public Candidate",
-      "artifactId": null,
-      "artifactName": "AWAITING-EXACT-RELEASE-7-CANDIDATE",
-      "artifactDigest": "AWAITING-EXACT-RELEASE-7-CANDIDATE",
-      "artifactExpiresAt": null
+      "artifactId": 11536916202,
+      "artifactName": "physical-pwa-candidate-d243d887965a51bcd7eff4dfc73287cf5acf6a79",
+      "artifactDigest": "sha256:d1dbc5d453b1309773b0e2653a2390ce7b26ea468bb0fd2234e8e4041678a010",
+      "artifactExpiresAt": "2027-01-06T08:09:41Z"
     },
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release."
   },
@@ -104,20 +104,20 @@
     "required": "Genuine provider ownership, stakeholder need, provider-approved design, authorised assessment/internal moderation, consent-to-assess/CMR confirmation, applicable national moderation, workplace evidence and provider-controlled review/change evidence for the exact governed release.",
     "candidate": {
       "release": "2026.10.08.7",
-      "sourceSha": "AWAITING-EXACT-RELEASE-7-CANDIDATE",
-      "runtimeFingerprint": "AWAITING-EXACT-RELEASE-7-CANDIDATE"
+      "sourceSha": "d243d887965a51bcd7eff4dfc73287cf5acf6a79",
+      "runtimeFingerprint": "sha256:849e3e9926f992a1cbeca7bf37cb262fd2590e152c0dc1f19c87647c016f70e2"
     }
   },
   "webCandidate": {
     "release": "2026.10.08.7",
-    "sourceSha": "AWAITING-EXACT-RELEASE-7-CANDIDATE",
-    "runtimeFingerprint": "AWAITING-EXACT-RELEASE-7-CANDIDATE",
-    "candidateRunId": null,
+    "sourceSha": "d243d887965a51bcd7eff4dfc73287cf5acf6a79",
+    "runtimeFingerprint": "sha256:849e3e9926f992a1cbeca7bf37cb262fd2590e152c0dc1f19c87647c016f70e2",
+    "candidateRunId": 37748002799,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": null,
-    "artifactName": "AWAITING-EXACT-RELEASE-7-CANDIDATE",
-    "artifactDigest": "AWAITING-EXACT-RELEASE-7-CANDIDATE",
-    "artifactExpiresAt": null
+    "artifactId": 11536916202,
+    "artifactName": "physical-pwa-candidate-d243d887965a51bcd7eff4dfc73287cf5acf6a79",
+    "artifactDigest": "sha256:d1dbc5d453b1309773b0e2653a2390ce7b26ea468bb0fd2234e8e4041678a010",
+    "artifactExpiresAt": "2027-01-06T08:09:41Z"
   },
   "candidatePolicy": {
     "previewBranchAuthoritative": false,
