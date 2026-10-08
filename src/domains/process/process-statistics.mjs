@@ -5,7 +5,7 @@ export function finiteNumber(value) {
   if (typeof value === 'number') return Number.isFinite(value) ? value : null;
   if (typeof value !== 'string') return null;
   const input = value.trim();
-  if (!/^[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?$/.test(input)) return null;
+  if (!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/.test(input)) return null;
   const number = Number(input);
   return Number.isFinite(number) ? number : null;
 }
@@ -349,7 +349,7 @@ export function energyPerGoodPart(rows, {
     if (countField) {
       const raw = row?.[countField];
       count = typeof raw === 'number' ? raw
-        : typeof raw === 'string' && /^\\d+$/.test(raw.trim()) ? Number(raw.trim()) : NaN;
+        : typeof raw === 'string' && /^\d+$/.test(raw.trim()) ? Number(raw.trim()) : NaN;
       if (!Number.isSafeInteger(count) || count < 0 || (quality === 0 && count !== 0) || (quality === 1 && count < 1)) {
         return Object.freeze({ valueKwh: null, reason: 'invalid-good-part-count', cycleId });
       }
