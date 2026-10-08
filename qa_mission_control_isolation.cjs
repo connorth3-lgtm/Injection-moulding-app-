@@ -11,7 +11,8 @@ const profileKey='mouldmasterProDB';
 const scopedKey=id=>'mm_mission_control_v1::t'+id;
 
 function harness(){
-  const memory=new Map(),boundActions=[];
+  const memory=new Map(),boundActions=[],listeners=new Map();
+  const track=(owner,type,handler)=>{const key=owner+':'+type;if(!listeners.has(key))listeners.set(key,[]);listeners.get(key).push(handler)};
   const storage={
     getItem:key=>memory.has(key)?memory.get(key):null,
     setItem:(key,value)=>memory.set(key,String(value)),
@@ -19,12 +20,12 @@ function harness(){
   };
   let host=null;
   const document={
-    readyState:'loading',addEventListener(){},
+    readyState:'loading',addEventListener(type,handler){track('document',type,handler)},
     getElementById:id=>id==='mmMissionControl'?host:null,
     body:{dataset:{},classList:{toggle(){}}}
   };
   const window={
-    addEventListener(){},dispatchEvent(){},
+    addEventListener(type,handler){track('window',type,handler)},dispatchEvent(){},
     MM_LEARNER_SCOPE:{
       tokenFor:id=>'t'+id,
       storageKey:(prefix,token)=>prefix+token
@@ -64,7 +65,8 @@ function harness(){
     return host;
   }
   function start(){vm.runInNewContext(source,context,{filename:'mission-control.js'});return window.MM_MISSION_CONTROL}
-  return {memory,storage,select,read,attachHost,start,boundActions};
+  const fireEvent=(owner,type)=>{for(const fn of listeners.get(owner+':'+type)||[])fn()};
+  return {memory,storage,select,read,attachHost,start,boundActions,fireEvent};
 }
 
 // Stale buttons must neither copy A's evidence to B nor delete B's records.
@@ -75,10 +77,13 @@ function harness(){
   api.addEvidence({kind:'measured',text:'A-only confidential measurement'});
   api.addEvidence({kind:'note',text:'A-only context'});
   const before=h.read('A');
-  h.attachHost();api.toggleDrawer(true);
+  const host=h.attachHost();api.toggleDrawer(true);
   const stale=h.boundActions.find(action=>action.id===before.evidence[0].id);
   assert.ok(stale,'evidence delete button must be bound');
-  h.select('B');stale.handler();
+  h.select('B');h.fireEvent('window','focus');
+  assert.ok(!host.innerHTML.includes('Learner A private work'),'old learner mission must not remain visible after a profile switch');
+  assert.ok(!host.innerHTML.includes('A-only confidential measurement'),'old learner evidence must not remain on screen');
+  stale.handler();
   assert.equal(h.read('B'),null,'stale A button must not write A state to learner B');
   assert.equal(h.read('A').evidence.length,2,'A evidence must remain intact');
   api.startMission({title:'Learner B new work'});
@@ -146,4 +151,4 @@ function harness(){
   assert.equal(h.read('A').evidence.length,1);
   assert.equal(h.read('A').evidence[0].text,'Keep me');
 }
-console.log('Mission Control isolation QA passed: profile swaps, first hydration, corrupt restoration, unscoped work and same-profile deletion.');
+console.log('Mission Control isolation QA passed: profile switches, stale-view privacy, first hydration, corrupt restoration, unscoped work and same-profile deletion.');
