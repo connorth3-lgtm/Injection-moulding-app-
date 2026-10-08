@@ -256,9 +256,14 @@ function bindExternalTools(){
   bindExternalTool('material-labs','MM_MATERIAL_BEHAVIOUR_LABS')
 }
 
+function shellCurrentLesson(){
+  try{return typeof mmCoreSafeLesson==='function' ? mmCoreSafeLesson()
+    : (D.lessons.find(l=>l.id===user.currentLesson)||D.lessons[0])}
+  catch(_){return null}
+}
 function curriculumLessonAdapter(){
-  const api=window.MM_CURRICULUM_INTEGRATION;if(!api?.recommendations||typeof currentLesson!=='function')return;
-  const lesson=currentLesson(),root=document.getElementById('lesson');if(!lesson||!root||root.querySelector('#mmCurriculumPractice'))return;
+  const api=window.MM_CURRICULUM_INTEGRATION;if(!api?.recommendations)return;
+  const lesson=shellCurrentLesson(),root=document.getElementById('lesson');if(!lesson||!root||root.querySelector('#mmCurriculumPractice'))return;
   const recs=api.recommendations(lesson.id).slice(0,2);if(!recs.length)return;
   const notes=root.querySelector('#mmNotes')||[...root.querySelectorAll('.lesson-body h3')].find(h=>h.textContent.trim()==='Your lesson notes');if(!notes)return;
   const cards=recs.map((r,i)=>`<article class="mm-curriculum-card"><span class="eyebrow">${i===0?'Closest practice':'Second evidence angle'}</span><h4>${esc(r.title||r.id)}</h4><p>${esc(r.why||'Apply the lesson in guided formative practice.')}</p><button class="secondary" type="button" data-mm-curriculum-open="${esc(r.type)}" data-mm-curriculum-id="${esc(r.id)}">Open practice →</button></article>`).join('');
@@ -267,8 +272,9 @@ function curriculumLessonAdapter(){
   const jumps=root.querySelector('.mm-learning-jumps');if(jumps&&!jumps.querySelector('[data-mm-curriculum-jump]')){const b=document.createElement('button');b.type='button';b.dataset.mmCurriculumJump='1';b.textContent='Linked practice';b.addEventListener('click',()=>document.getElementById('mmCurriculumPractice')?.scrollIntoView({behavior:'smooth',block:'start'}));jumps.appendChild(b)}
 }
 function curriculumDashboardHtml(){
-  const api=window.MM_CURRICULUM_INTEGRATION;if(!api?.recommendations||typeof currentLesson!=='function')return '';
-  const lesson=currentLesson(),rec=api.recommendations(lesson.id)[0];if(!rec)return '';
+  const api=window.MM_CURRICULUM_INTEGRATION;if(!api?.recommendations)return '';
+  const lesson=shellCurrentLesson();if(!lesson)return '';
+  const rec=api.recommendations(lesson.id)[0];if(!rec)return '';
   return `<section class="mm-curriculum-focus" aria-label="Current lesson practice connection"><div><span class="eyebrow">Learning loop</span><b>After ${esc(lesson.title)}: ${esc(rec.title||rec.id)}</b><p>Move from the lesson explanation into guided practice, then return to explain what evidence changed your conclusion.</p></div><button class="ghost" type="button" data-mm-curriculum-dashboard-open>Open linked practice</button></section>`
 }
 function specialistDashboardHtml(){
@@ -305,7 +311,7 @@ function renderBookDashboard(slot){
 function installDefaultDashboardSections(){
   registerDashboard({id:'today-focus',zone:'before',order:10,adopt:'.mm-today-focus'});
   registerDashboard({id:'book',zone:'before',order:20,render:renderBookDashboard});
-  registerDashboard({id:'curriculum-focus',zone:'before',order:30,render:slot=>{slot.innerHTML=curriculumDashboardHtml();slot.querySelector('[data-mm-curriculum-dashboard-open]')?.addEventListener('click',()=>{const lesson=currentLesson(),rec=window.MM_CURRICULUM_INTEGRATION?.recommendations?.(lesson.id)?.[0];if(rec)window.MM_CURRICULUM_INTEGRATION.open?.(rec.type,rec.id,lesson.id)})}});
+  registerDashboard({id:'curriculum-focus',zone:'before',order:30,render:slot=>{slot.innerHTML=curriculumDashboardHtml();slot.querySelector('[data-mm-curriculum-dashboard-open]')?.addEventListener('click',()=>{const lesson=shellCurrentLesson();if(!lesson)return;const rec=window.MM_CURRICULUM_INTEGRATION?.recommendations?.(lesson.id)?.[0];if(rec)window.MM_CURRICULUM_INTEGRATION.open?.(rec.type,rec.id,lesson.id)})}});
   registerDashboard({id:'specialist',zone:'after',order:90,render:slot=>{slot.innerHTML=specialistDashboardHtml();slot.querySelector('[data-mm-specialist-open]')?.addEventListener('click',()=>window.MM_SPECIALIST_CURRICULUM?.open?.())}});
   window.addEventListener('mm:book-resume-change',queueDashboardCompose);
   window.addEventListener('mm:domains-ready',queueDashboardCompose);

@@ -1,13 +1,13 @@
-# MouldMaster real assistive-technology validation — 2026.10.08.8
+# MouldMaster real assistive-technology validation — 2026.10.09.1
 
-Human assistive-technology validation remains **HOLD** for release `2026.10.08.8`.
+Human assistive-technology validation remains **HOLD** for release `2026.10.09.1`.
 
-- retained source: `1a157e66236a7771c6ec18a4aaafe8de7c7f65d0`
-- public-runtime fingerprint: `sha256:f05e0049a4ab0af39dc77286930f0f5af3224de02995013de5e454b2cb1778a2`
-- retained candidate: `physical-pwa-candidate-1a157e66236a7771c6ec18a4aaafe8de7c7f65d0` (`11542607513`)
-- candidate run: `37761968139`
-- artifact digest: `sha256:f2be2165ac23154eda125e036e9e2883f9fd140dafa5f43f8e289153ca7deff8`
-- expiry: `2027-01-06T10:12:43Z`
+- retained source: `f2834fbe610431175c8e6d1af9c53b574fb0cdae`
+- public-runtime fingerprint: `sha256:635c077b760e6985c432bcc90d2a59d754f9aa408df4ebd8efbe6b9177d18f48`
+- retained candidate: `physical-pwa-candidate-f2834fbe610431175c8e6d1af9c53b574fb0cdae` (`11571757354`)
+- candidate run: `37827490029`
+- artifact digest: `sha256:c96365c14d32e47994952cbef17899dc55ec1594f7fdb0764fce1c1a5839549a`
+- expiry: `2027-01-06T18:51:22Z`
 
 The governed NVDA and VoiceOver matrix remains pending. Automated browser checks do not count as real-AT evidence.
 

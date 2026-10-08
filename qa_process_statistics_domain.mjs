@@ -19,6 +19,11 @@ assert.equal(finiteNumber('not-a-number'), null);
 assert.equal(finiteNumber(Infinity), null);
 assert.equal(finiteNumber(0), 0);
 assert.equal(finiteNumber('0'), 0);
+assert.equal(finiteNumber(true), null,'boolean must not become numeric energy');
+assert.equal(finiteNumber(false), null);
+assert.equal(finiteNumber([5]), null,'arrays must not become numeric process observations');
+assert.equal(finiteNumber('0x10'), null,'non-decimal numeric literals are not CSV measures');
+assert.equal(finiteNumber('1.2e2'), 120);
 
 const summary = numericSummary(['', 0, '1', 2, null]);
 assert.deepEqual({ n: summary.n, min: summary.min, max: summary.max, mean: summary.mean }, { n: 3, min: 0, max: 2, mean: 1 });
@@ -249,6 +254,8 @@ const energyEvidence = {
   samplingBasisRef: 'cycle-alignment-schema-rev-A',
   energyMeasurementBasisRef: 'machine-energy-meter-calibration-rev-A',
   qualityDispositionBasisRef: 'approved-quality-disposition-rule-rev-A',
+  goodPartCountBasisRef: 'approved-single-cavity-one-good-part-per-accepted-cycle',
+  singlePartPerCycleConfirmed: true,
 };
 
 const incompleteEnergy = energyPerGoodPart([
@@ -301,6 +308,77 @@ assert.equal(validEnergy.energyMeasurementBasisRef, 'machine-energy-meter-calibr
 assert.equal(validEnergy.qualityDispositionBasisRef, 'approved-quality-disposition-rule-rev-A');
 assert.match(validEnergy.assumptions.join(' '), /rejected parts.*numerator/i);
 
+
+
+assert.equal(energyPerGoodPart([
+  { cycleId: 'C001', energy: 1, quality: 1 },
+], { ...energyEvidence, singlePartPerCycleConfirmed: false }).reason, 'good-part-count-required',
+'do not silently assume one part per cycle');
+
+assert.equal(energyPerGoodPart([
+  { cycleId: 'C001', energy: 1, quality: 1 },
+], { ...energyEvidence, goodPartCountBasisRef: '' }).reason, 'good-part-count-basis-required');
+
+const multiCavityEnergy = energyPerGoodPart([
+  { cycleId:'C001',energy:1,quality:1,goodParts:4 },
+  { cycleId:'C002',energy:1,quality:1,goodParts:4 },
+],{ ...energyEvidence, goodPartCountKey:'goodParts', goodPartCountBasisRef:'four-cavity-disposition-log',
+  singlePartPerCycleConfirmed:false });
+assert.equal(multiCavityEnergy.reason,null);
+assert.equal(multiCavityEnergy.valueKwh,0.25,'eight good parts, not two accepted cycles');
+assert.equal(multiCavityEnergy.goodParts,8);
+assert.equal(multiCavityEnergy.goodPartCountKey,'goodParts');
+
+assert.equal(energyPerGoodPart([
+  {cycleId:'C001',energy:1,quality:0,goodParts:1},
+],{...energyEvidence,goodPartCountKey:'goodParts'}).reason,'invalid-good-part-count');
+assert.equal(energyPerGoodPart([
+  {cycleId:'C001',energy:1,quality:1,goodParts:0},
+],{...energyEvidence,goodPartCountKey:'goodParts'}).reason,'invalid-good-part-count');
+assert.equal(energyPerGoodPart([
+  {cycleId:'C001',energy:1,quality:1,goodParts:'4'},
+],{...energyEvidence,goodPartCountKey:'goodParts'}).goodParts,4);
+
+// Mixed multi-cavity yield: an independently defined cycle-level pass/fail
+// label can be "reject" even when three of four cavities produced good units.
+// The distinction must be opted into explicitly and supported by the cited
+// disposition and good-unit count sources. Energy always counts each cycle.
+const mixedQualityEnergy = energyPerGoodPart([
+  {cycleId:'M001',energy:1,quality:0,goodParts:3},
+  {cycleId:'M002',energy:1,quality:1,goodParts:4},
+  {cycleId:'M003',energy:1,quality:0,goodParts:0},
+],{...energyEvidence,goodPartCountKey:'goodParts',
+  goodPartCountBasisRef:'four-cavity-unit-disposition-log',
+  qualityDispositionBasisRef:'cycle-pass-fail-rule-v2-independent-of-individual-unit-acceptance',
+  qualityDispositionSemantics:'independent-cycle-pass-fail'});
+assert.equal(mixedQualityEnergy.reason,null);
+assert.equal(mixedQualityEnergy.totalKwh,3);
+assert.equal(mixedQualityEnergy.goodParts,7);
+assert.equal(mixedQualityEnergy.valueKwh,3/7);
+assert.equal(mixedQualityEnergy.qualityDispositionSemantics,'independent-cycle-pass-fail');
+assert.match(mixedQualityEnergy.assumptions.join(' '),/independently evidenced cycle pass\/fail classification/);
+assert.equal(energyPerGoodPart([
+  {cycleId:'M001',energy:1,quality:0,goodParts:3},
+],{...energyEvidence,goodPartCountKey:'goodParts'}).reason,'invalid-good-part-count',
+  'do not silently reinterpret existing any-good-part labels');
+assert.equal(energyPerGoodPart([
+  {cycleId:'M001',energy:1,quality:0,goodParts:3},
+],{...energyEvidence,qualityDispositionSemantics:'independent-cycle-pass-fail'})
+  .reason,'explicit-good-part-count-required-for-independent-disposition');
+assert.equal(energyPerGoodPart([
+  {cycleId:'M001',energy:1,quality:1,goodParts:3},
+],{...energyEvidence,goodPartCountKey:'goodParts',qualityDispositionSemantics:'unknown'})
+  .reason,'unsupported-quality-disposition-semantics');
+
+
+assert.equal(energyPerGoodPart([
+  {cycleId:'C001',energy:1e308,quality:1},
+  {cycleId:'C002',energy:1e308,quality:1},
+],energyEvidence).reason,'non-finite-energy-total','overflow must fail closed');
+assert.equal(energyPerGoodPart([
+  {cycleId:'C001',energy:1e308,quality:1},
+  {cycleId:'C002',energy:1e308,quality:1},
+],energyEvidence).valueKwh,null);
 
 assert.equal(PROCESS_STATISTICS_BOUNDARY.machineControl, 'none');
 assert.equal(PROCESS_STATISTICS_BOUNDARY.productionAuthority, 'none');

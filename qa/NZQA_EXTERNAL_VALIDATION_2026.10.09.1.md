@@ -1,10 +1,10 @@
-# NZQA external validation — 2026.10.08.8
+# NZQA external validation — 2026.10.09.1
 
 Repository readiness exists, but external provider/NZQA validation remains **HOLD**.
 
-- retained source: `1a157e66236a7771c6ec18a4aaafe8de7c7f65d0`
-- runtime fingerprint: `sha256:f05e0049a4ab0af39dc77286930f0f5af3224de02995013de5e454b2cb1778a2`
-- retained candidate authority: artifact `11542607513` from run `37761968139`
+- retained source: `f2834fbe610431175c8e6d1af9c53b574fb0cdae`
+- runtime fingerprint: `sha256:635c077b760e6985c432bcc90d2a59d754f9aa408df4ebd8efbe6b9177d18f48`
+- retained candidate authority: artifact `11571757354` from run `37827490029`
 
 Mission Control changes app-wide learning orchestration only. It does not create qualification, moderation, consent-to-assess, workplace-competence or provider authority. All eight governed provider gates remain pending.
 

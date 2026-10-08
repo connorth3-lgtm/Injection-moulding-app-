@@ -1,13 +1,13 @@
-# MouldMaster real assistive-technology validation — 2026.10.08.8
+# MouldMaster real assistive-technology validation — 2026.10.09.2
 
-Human assistive-technology validation remains **HOLD** for release `2026.10.08.8`.
+Human assistive-technology validation remains **HOLD** for release `2026.10.09.2`.
 
-- retained source: `1a157e66236a7771c6ec18a4aaafe8de7c7f65d0`
-- public-runtime fingerprint: `sha256:f05e0049a4ab0af39dc77286930f0f5af3224de02995013de5e454b2cb1778a2`
-- retained candidate: `physical-pwa-candidate-1a157e66236a7771c6ec18a4aaafe8de7c7f65d0` (`11542607513`)
-- candidate run: `37761968139`
-- artifact digest: `sha256:f2be2165ac23154eda125e036e9e2883f9fd140dafa5f43f8e289153ca7deff8`
-- expiry: `2027-01-06T10:12:43Z`
+- retained source: `1759b51f1a36e35348c047f01a571bad4cc98332`
+- public-runtime fingerprint: `sha256:779f87ae4a624deb666686c0baa42c93c7e387ff7733a9248f06dc701b0f3e48`
+- retained candidate: `physical-pwa-candidate-1759b51f1a36e35348c047f01a571bad4cc98332` (`11575821148`)
+- candidate run: `37835444373`
+- artifact digest: `sha256:a152583a875abf2ab46d9751102f2fd40dc52f99c4b57c3367fde9d4d2cdff06`
+- expiry: `2027-01-06T19:54:25Z`
 
 The governed NVDA and VoiceOver matrix remains pending. Automated browser checks do not count as real-AT evidence.
 
@@ -29,4 +29,4 @@ The governed NVDA and VoiceOver matrix remains pending. Automated browser checks
 This packet is a release/candidate binding only. Real assistive-technology validation remains **HOLD** until genuine human NVDA and VoiceOver evidence passes every required task in the governed matrix.
 
 
-The retained exact runtime candidate has been verified for source and artifact provenance. This binding is NOT real-world validation; every external human, device and provider workstream stays HOLD.
+Retained exact-runtime artifact provenance has been verified against a successfully completed Pre-merge Public Candidate producer and its current public-runtime fingerprint. This is technical provenance only: human assistive-technology, physical-device, Windows distribution/signing, Book and curriculum SME, NZQA/provider, learner-outcome and production authorisations remain HOLD. No external approval is inferred.
