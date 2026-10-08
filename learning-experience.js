@@ -43,8 +43,12 @@ styles.textContent=`
 document.head.appendChild(styles);
 
 function context(){
-  const lesson=currentLesson();
+  const lesson=typeof mmCoreSafeLesson==='function'
+    ? mmCoreSafeLesson()
+    : (D.lessons.find(l=>l.id===user.currentLesson)||D.lessons[0]);
+  if(!lesson)return null;
   const course=D.courses.find(x=>x.id===lesson.course);
+  if(!course)return null;
   const position=Math.max(0,course.lessonIds.indexOf(lesson.id));
   const globalIndex=Math.max(0,D.lessons.findIndex(x=>x.id===lesson.id));
   const previous=D.lessons[globalIndex-1]||null;
