@@ -56,6 +56,10 @@ Repository-only gate: `python3 qa_tester_handoff.py`. **Before distributing the 
 
 The explicit learner testing URL is `https://connorth3-lgtm.github.io/Injection-moulding-app-/preview/`. It must display the **Non-production preview** warning; the production root is not the invitation destination.
 
+## New1 — Digital Moulding Factory development patch
+
+The proposed MouldMaster 3.0 programme and the first **Virtual Factory — Case One** evidence/book/competency integration are documented in [docs/NEW1_MOULDMASTER_3_0.md](docs/NEW1_MOULDMASTER_3_0.md). All five upgrades now have a **locally runnable development workbench** (Virtual Factory, 46-module Encyclopaedia explorer, evidence-based tutor, five formative apprenticeship tracks and local trainer assignments). Run `python3 -m http.server 8765 --bind 127.0.0.1` from the repository root, then open `http://127.0.0.1:8765/tools/new1-academy-workbench.html`. This prototype is **not loaded by the public learner runtime** or approved for tester distribution. The governed web release and all external-validation HOLDs are unchanged.
+
 ## Assessment system
 
 The current assessment stack contains 30 technical exam items, 27 UK/US/NZ regional safety/compliance items and 40 scenario drills. A normal regional learning check samples 7 technical items plus 3 regional safety/compliance items; it is a formative/learning-completion assessment, not a validated professional-competence examination. Regional safety items remain mandatory and safety-critical. The current learning-completion certificate policy requires at least 80% overall and zero wrong safety-critical regional items. The 80% threshold is a governed programme rule, not yet an empirically validated competence cut-score.
