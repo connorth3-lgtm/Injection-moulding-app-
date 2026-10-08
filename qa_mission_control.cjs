@@ -17,7 +17,7 @@ global.window={addEventListener(){},dispatchEvent(){}};
 require(path.join(__dirname,'src/domains/shell/mission-control.js'));
 const api=global.window.MM_MISSION_CONTROL;
 assert.ok(api,'Mission Control API must register');
-assert.equal(api.version,'2026.10.08.7');
+assert.equal(api.version,'2026.10.08.8');
 assert.equal(api.stages.length,8,'Mission Control must expose the full eight-stage mission timeline');
 assert.deepEqual(api.stages.map(x=>x[0]),['brief','baseline','evidence','hypothesis','test','intervention','verification','reflection']);
 assert.deepEqual(Object.keys(api.modes),['learner','technician','engineer']);

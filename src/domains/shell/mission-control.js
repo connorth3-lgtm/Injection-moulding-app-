@@ -3,7 +3,7 @@
 'use strict';
 if(window.MM_MISSION_CONTROL)return;
 
-const VERSION='2026.10.08.7';
+const VERSION='2026.10.08.8';
 const STORAGE_KEY='mm_mission_control_v1';
 const PROFILE_DB_KEY='mouldmasterProDB';
 const STAGES=Object.freeze([
