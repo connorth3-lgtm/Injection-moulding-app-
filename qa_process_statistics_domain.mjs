@@ -339,6 +339,38 @@ assert.equal(energyPerGoodPart([
   {cycleId:'C001',energy:1,quality:1,goodParts:'4'},
 ],{...energyEvidence,goodPartCountKey:'goodParts'}).goodParts,4);
 
+// Mixed multi-cavity yield: an independently defined cycle-level pass/fail
+// label can be "reject" even when three of four cavities produced good units.
+// The distinction must be opted into explicitly and supported by the cited
+// disposition and good-unit count sources. Energy always counts each cycle.
+const mixedQualityEnergy = energyPerGoodPart([
+  {cycleId:'M001',energy:1,quality:0,goodParts:3},
+  {cycleId:'M002',energy:1,quality:1,goodParts:4},
+  {cycleId:'M003',energy:1,quality:0,goodParts:0},
+],{...energyEvidence,goodPartCountKey:'goodParts',
+  goodPartCountBasisRef:'four-cavity-unit-disposition-log',
+  qualityDispositionBasisRef:'cycle-pass-fail-rule-v2-independent-of-individual-unit-acceptance',
+  qualityDispositionSemantics:'independent-cycle-pass-fail'});
+assert.equal(mixedQualityEnergy.reason,null);
+assert.equal(mixedQualityEnergy.totalKwh,3);
+assert.equal(mixedQualityEnergy.goodParts,7);
+assert.equal(mixedQualityEnergy.valueKwh,3/7);
+assert.equal(mixedQualityEnergy.qualityDispositionSemantics,'independent-cycle-pass-fail');
+assert.match(mixedQualityEnergy.assumptions.join(' '),/independently evidenced cycle pass\/fail classification/);
+assert.equal(energyPerGoodPart([
+  {cycleId:'M001',energy:1,quality:0,goodParts:3},
+],{...energyEvidence,goodPartCountKey:'goodParts'}).reason,'invalid-good-part-count',
+  'do not silently reinterpret existing any-good-part labels');
+assert.equal(energyPerGoodPart([
+  {cycleId:'M001',energy:1,quality:0,goodParts:3},
+],{...energyEvidence,qualityDispositionSemantics:'independent-cycle-pass-fail'})
+  .reason,'explicit-good-part-count-required-for-independent-disposition');
+assert.equal(energyPerGoodPart([
+  {cycleId:'M001',energy:1,quality:1,goodParts:3},
+],{...energyEvidence,goodPartCountKey:'goodParts',qualityDispositionSemantics:'unknown'})
+  .reason,'unsupported-quality-disposition-semantics');
+
+
 assert.equal(energyPerGoodPart([
   {cycleId:'C001',energy:1e308,quality:1},
   {cycleId:'C002',energy:1e308,quality:1},
