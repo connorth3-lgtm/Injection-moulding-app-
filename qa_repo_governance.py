@@ -529,6 +529,8 @@ for marker in [
     "-name '*.py'",
     "python -m py_compile",
     "run: python qa_architecture_debt.py",
+    "python tools/render_book_governance_status.py --check",
+    "node qa_mission_control.cjs",
 ]:
     need(marker in release_qa, f"release QA cleanup contract missing marker: {marker}")
 
