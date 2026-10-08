@@ -43,6 +43,44 @@ test('core shell and exact-grade Materials work without layout overflow',async({
   expect(errors).toEqual([]);
 });
 
+test('fresh visitor can complete pseudonymous onboarding and safely reload progress',async({page})=>{
+  // Deliberately do NOT call openApp() or seed localStorage: a real invitation
+  // opens an empty browser profile, which most other QA journeys do not cover.
+  await page.goto(BASE,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>window.MM_INLINE_HANDLER_BRIDGE?.version==='1'&&
+    !document.getElementById('mmBootstrap'),{timeout:30000});
+  await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
+  const onboard=page.locator('#modal .onboarding');
+  await expect(onboard).toBeVisible({timeout:15000});
+  await expect(onboard.getByText('Welcome to MouldMaster')).toBeVisible();
+  await onboard.locator('#onName').fill('Trial Learner');
+  await onboard.locator('#onRegion').selectOption('NZ');
+  await onboard.locator('[data-mm-onclick="finishOnboarding()"]').click();
+  await expect(onboard).toHaveCount(0);
+  const state=await page.evaluate(()=>{
+    const db=JSON.parse(localStorage.getItem('mouldmasterProDB')||'null');
+    const u=db?.users?.[db.activeUser];
+    return {
+      persisted:!!db&&!!u,
+      name:u?.name,region:u?.region,onboardingDone:u?.onboardingDone,
+      currentLesson:u?.currentLesson
+    };
+  });
+  expect(state).toEqual({
+    persisted:true,name:'Trial Learner',region:'NZ',onboardingDone:true,currentLesson:1
+  });
+  await page.reload({waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>window.MM_INLINE_HANDLER_BRIDGE?.version==='1'&&
+    !document.getElementById('mmBootstrap'),{timeout:30000});
+  await page.waitForTimeout(350);
+  await expect(page.locator('#modal .onboarding')).toHaveCount(0);
+  await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
+  expect(await page.evaluate(()=>{
+    const d=JSON.parse(localStorage.getItem('mouldmasterProDB')||'null');
+    return d?.users?.[d.activeUser]?.name;
+  })).toBe('Trial Learner');
+});
+
 test('tester Support and Privacy are reachable and public reports warn against data sharing',async({page})=>{
   // These are public support/privacy surfaces; visiting them must not require
   // a learner account or an initialized application shell.
