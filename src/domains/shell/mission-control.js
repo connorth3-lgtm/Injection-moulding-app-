@@ -112,14 +112,16 @@ function hydrateCurrentLearner(){
   return true
 }
 function scheduleHydration(attempt=0){
-  if(hydrateCurrentLearner()){
-    if(root()){render();registerDashboard(true)}
-    return true
-  }
-  if(attempt>=120)return false;
+  const changed=hydrateCurrentLearner();
+  if(changed&&root()){render();registerDashboard(true)}
+  // Learner identity can pass through a transient startup profile before the
+  // canonical active learner is restored. Keep watching for the short startup
+  // window instead of stopping after the first token, so a later token change
+  // rehydrates the correct scoped mission/evidence store.
+  if(attempt>=120)return changed;
   clearTimeout(hydrationTimer);
   hydrationTimer=setTimeout(()=>scheduleHydration(attempt+1),50);
-  return false
+  return changed
 }
 function hydrateScopedState(){
   const token=runtimeStorage()?.learnerToken?.();
