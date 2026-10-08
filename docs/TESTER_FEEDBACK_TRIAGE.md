@@ -1,6 +1,6 @@
 # MouldMaster tester feedback triage
 
-**Operator-only workflow.** Use with [TESTER_HANDOFF.md](TESTER_HANDOFF.md). This is not a substitute for a human safety, security, accessibility or SME review.
+**Operator-only, non-production preview feedback workflow.** Use with [TESTER_HANDOFF.md](TESTER_HANDOFF.md). This is not a substitute for a human safety, security, accessibility or SME review.
 
 ## Intake and data minimisation
 
