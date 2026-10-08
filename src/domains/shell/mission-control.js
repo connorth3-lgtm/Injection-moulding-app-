@@ -199,7 +199,16 @@ function saveState(){
   });
   window.dispatchEvent(new CustomEvent('mm:mission-change',{detail:snapshot()}));
 }
-function snapshot(){return Object.freeze({version:VERSION,mode:state.mode,surface:state.surface,mission:state.mission?clone(state.mission):null,evidence:clone(state.evidence)})}
+function snapshot(){
+  // Programmatic consumers must not read a previous learner's records even
+  // before the next DOM event or Mission Control render.
+  const token=resolvedLearnerToken();
+  if(token!==hydratedLearnerToken){
+    if(token)hydrateCurrentLearner();
+    else{state=clone(DEFAULT_STATE);hydratedLearnerToken=null;}
+  }
+  return Object.freeze({version:VERSION,mode:state.mode,surface:state.surface,mission:state.mission?clone(state.mission):null,evidence:clone(state.evidence)});
+}
 function activeStageIndex(){const id=state.mission?.stage||'brief';const i=STAGES.findIndex(x=>x[0]===id);return i<0?0:i}
 function make(tag,className,text){const el=document.createElement(tag);if(className)el.className=className;if(text!=null)el.textContent=text;return el}
 function root(){return document.getElementById('mmMissionControl')}
