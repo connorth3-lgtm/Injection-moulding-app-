@@ -1,5 +1,5 @@
-const CACHE_VERSION='2026.10.08.7';
-const CACHE_REVISION='unified-diagnostics-r74-20261008';
+const CACHE_VERSION='2026.10.08.8';
+const CACHE_REVISION='diagnostic-repair-r75-20261008';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both
