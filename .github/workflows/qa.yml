@@ -109,6 +109,10 @@ jobs:
         run: |
           python tools/verify_release_external_validation.py
           python qa_release_validation_packets.py
+      - name: All-folder tracked-file, JSON and immutable-workflow hygiene
+        run: |
+          python tools/repository_hygiene.py --report qa-artifacts/repository-hygiene.json
+          python -m unittest discover -s tests -p 'test_repository_hygiene.py'
       - name: Repository governance integrity
         run: python qa_repo_governance.py
       - name: Live protected-main governance policy
