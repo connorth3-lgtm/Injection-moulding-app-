@@ -1,5 +1,4 @@
 """Negative/positive regressions for the offline tracked-file hygiene gate."""
-import json
 import sys
 import tempfile
 import unittest
@@ -56,6 +55,20 @@ class RepositoryHygieneTests(unittest.TestCase):
             mirror.write_text('{"schemaVersion":2}\n', encoding="utf-8")
             problems, _ = hygiene.content_findings(root, names)
             self.assertTrue(any("canonical/published data drift" in value for value in problems))
+
+    def test_renamed_regional_material_mirror_has_explicit_canonical_origin(self):
+        deployed = "src/domains/learning/book-data/book-material-regional-evidence-v1.json"
+        canonical = "data/asian-aus-nz-material-grade-extraction-wave2-v1.json"
+        self.assertEqual(hygiene.mirror_pairs({deployed}), [(canonical, deployed)])
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            p = root / deployed
+            c = root / canonical
+            p.parent.mkdir(parents=True)
+            c.parent.mkdir(parents=True)
+            c.write_text('{"schemaVersion":1}', encoding="utf-8")
+            p.write_text(c.read_text(encoding="utf-8"), encoding="utf-8")
+            self.assertEqual(hygiene.content_findings(root, [(deployed, "100644"), (canonical, "100644")])[0], [])
 
     def test_runtime_mirror_cannot_orphan_its_source(self):
         with tempfile.TemporaryDirectory() as tmp:
