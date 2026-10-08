@@ -83,3 +83,49 @@ assert.ok(!index.includes("'./"+candidatePath+"'"),'Experimental source must not
 assert.match(proposed.boundary,/no parallel answer keys/);
 assert.match(proposed.status,/not loaded/);
 console.log('New1 Case One: canonical Book links, scoring, learner isolation and release-stage safety QA passed');
+
+
+/* Integration against the real authored VA-02 record; avoid a second answer key. */
+const vm=require('node:vm');
+const canonicalSource=fs.readFileSync(path.join(root,'src/domains/engineering/virtual-apprenticeship.js'),'utf8');
+const sandbox={
+  window:{addEventListener(){}},
+  document:{readyState:'loading',addEventListener(){}},
+  setInterval(){return 0;},
+  clearInterval(){},
+  console
+};
+vm.runInNewContext(canonicalSource,sandbox,{filename:'virtual-apprenticeship.js'});
+const canonical=sandbox.window.MM_VIRTUAL_APPRENTICESHIP;
+const actual=canonical.cases.find(x=>x.id==='VA-02');
+assert.ok(actual&&/cavity/i.test(actual.title));
+assert.ok(actual.brief.includes('four-cavity'));
+assert.equal(actual.observations.length,5);
+for(const step of ['hypothesis','test','response','verify'])assert.equal(actual[step].options.filter(x=>x[2]===true).length,1);
+const realAnswers=Object.fromEntries(['hypothesis','test','response','verify'].map(step=>[step,actual[step].options.find(x=>x[2]===true)[0]]));
+assert.equal(proposed.assess(realAnswers,canonical).total,4);
+assert.equal(proposed.assess({...realAnswers,verify:actual.verify.options.find(x=>x[2]===false)[0]},canonical).recommendedBookId,'multi-cavity');
+assert.equal(proposed.assess({...realAnswers,hypothesis:actual.hypothesis.options.find(x=>x[2]===false)[0]},canonical).recommendedBookId,'diagnostic-method');
+
+/* An ephemeral worksheet never leaks its draft answers after a learner swap. */
+let learner='learner-A';
+const guardedBridge=proposed.createBridge({
+  apprenticeship:canonical,
+  runtime:{storage:{learnerToken(){return learner;},get(){return {completed:{}};}}}
+});
+const journey=proposed.createJourney(guardedBridge);
+assert.equal(journey.choose('hypothesis',realAnswers.hypothesis),true);
+assert.equal(journey.choose('test',realAnswers.test),true);
+assert.equal(journey.snapshot().answers.test,realAnswers.test);
+learner='learner-B';
+assert.deepEqual(journey.snapshot().answers,{});
+assert.equal(journey.review().state,'incomplete');
+assert.equal(journey.choose('test','untrusted-option'),false);
+assert.equal(journey.choose('hypothesis',realAnswers.hypothesis),true);
+learner=null;
+assert.equal(journey.snapshot().state,'no-learner');
+assert.deepEqual(journey.snapshot().answers,{});
+assert.equal(journey.review().state,'no-learner');
+assert.match(fs.readFileSync(path.join(root,'src/experimental/new1-virtual-factory-case-one.js'),'utf8'),/Your evidence-to-recovery worksheet/);
+assert.match(fs.readFileSync(path.join(root,'src/experimental/new1-virtual-factory-case-one.js'),'utf8'),/Refresh canonical case progress/);
+console.log('New1 interactive evidence worksheet and real VA-02 scorer/isolation QA passed');

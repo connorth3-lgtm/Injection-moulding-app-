@@ -95,14 +95,15 @@
     function book(){return deps.book||null}
     function spatial(){return deps.spatial||null}
     function runtime(){return deps.runtime||null}
+    function caseDefinition(){return caseRow(apprentice())}
+    function runtimeStorage(){return runtime()?.storage||null}
     function openCase(){
-      const va=apprentice(),row=caseRow(va);
+      const va=apprentice(),row=caseDefinition();
       if(!row||typeof va.openCase!=='function')return false;
-      const index=va.cases.indexOf(row);
-      return va.openCase(index)===true;
+      return va.openCase(va.cases.indexOf(row))===true;
     }
     function openSpatial(){
-      const va=apprentice(),row=caseRow(va),twin=spatial();
+      const va=apprentice(),row=caseDefinition(),twin=spatial();
       if(!row||!twin||typeof twin.open!=='function')return false;
       return twin.open({caseIndex:va.cases.indexOf(row)})===true;
     }
@@ -110,42 +111,145 @@
       if(!BOOK.some(item=>item.id===id)||typeof book()?.openChapter!=='function')return false;
       return book().openChapter(id);
     }
-    function getProgress(){return readExistingProgress(runtime()?.storage)}
+    function getProgress(){return readExistingProgress(runtimeStorage())}
     function review(answers){return assess(answers,apprentice())}
-    return Object.freeze({openCase,openSpatial,openBookChapter,getProgress,review});
+    return Object.freeze({openCase,openSpatial,openBookChapter,getProgress,review,caseDefinition,runtimeStorage});
   }
+  /*
+   * One ephemeral worksheet, tied to the current learner identity. Its choices
+   * never write progress, change a formal answer key or compete with the native
+   * apprenticeship assessment. The native case remains the owner of completion.
+   */
+  function createJourney(bridge){
+    let token=null,answers={},reviewed=null;
+    function learnerToken(){
+      try{
+        const value=bridge.runtimeStorage()?.learnerToken?.();
+        return typeof value==='string'&&value.trim()?value:null;
+      }catch(_){return null}
+    }
+    function synchronize(){
+      const active=learnerToken();
+      if(active!==token){token=active;answers={};reviewed=null;}
+      return token!==null;
+    }
+    function choose(step,optionId){
+      if(!synchronize())return false;
+      const row=bridge.caseDefinition();
+      if(!COMPETENCIES.some(item=>item.step===step)||!row||!Array.isArray(row[step]?.options))return false;
+      if(!row[step].options.some(item=>item[0]===optionId))return false;
+      answers={...answers,[step]:optionId};reviewed=null;
+      return true;
+    }
+    function snapshot(){
+      const ready=synchronize();
+      return Object.freeze({state:ready?'ready':'no-learner',answers:{...answers},reviewed:reviewed?{...reviewed}:null});
+    }
+    function review(){
+      if(!synchronize())return {state:'no-learner',reason:'Choose a learner profile before reviewing this case.'};
+      const result=bridge.review(answers);
+      reviewed=result.state==='formative-review'?result:null;
+      return result;
+    }
+    function reset(){synchronize();answers={};reviewed=null}
+    return Object.freeze({choose,snapshot,review,reset});
+  }
+  let mountCount=0;
   function mount(target,bridge){
     if(!target||typeof target.appendChild!=='function'||!bridge||typeof document==='undefined')return false;
     if(target.querySelector?.('[data-mm-new1-case-one]'))return true;
-    const host=document.createElement('section');
-    host.className='card';
+    const row=bridge.caseDefinition?.();
+    if(!row||row.id!==CASE_ID)return false;
+    const journey=createJourney(bridge),instance=++mountCount;
+    const el=(tag,cls,text)=>{
+      const node=document.createElement(tag);
+      if(cls)node.className=cls;
+      if(text!==undefined)node.textContent=text;
+      return node;
+    };
+    const host=el('section','card');
     host.dataset.mmNew1CaseOne='1';
-    const heading=document.createElement('h2');heading.textContent='Virtual Factory · Case One';
-    const intro=document.createElement('p');
-    intro.textContent='In a simulated four-cavity tool, one cavity becomes light. Review the Book, compare cavity evidence, test a hypothesis and verify recovery using the existing apprenticeship.';
-    host.append(heading,intro);
-    const actions=document.createElement('div');actions.className='hero-buttons';
-    function button(label,fn){
-      const b=document.createElement('button');b.type='button';b.className='secondary';
-      b.textContent=label;b.addEventListener('click',fn);actions.appendChild(b);
+    host.appendChild(el('h2','', 'Virtual Factory · Case One'));
+    host.appendChild(el('p','', 'A four-cavity mould has one lighter cavity. Compare evidence, consult the governed Book, choose a discriminating test and verify all four cavities. This worksheet is formative; completing it does not update certificates.'));
+    const actions=el('div','hero-buttons');
+    function button(label,fn,container=actions){
+      const b=el('button','secondary',label);b.type='button';
+      b.addEventListener('click',fn);container.appendChild(b);return b;
     }
-    button('Enter factory case',()=>bridge.openCase());
-    button('Inspect the Spatial Twin',()=>bridge.openSpatial());
+    button('Open the canonical apprenticeship case',()=>bridge.openCase());
+    button('Inspect this cell in Spatial Twin',()=>bridge.openSpatial());
     button('Read multi-cavity Book module',()=>bridge.openBookChapter('multi-cavity'));
     host.appendChild(actions);
-    const progress=document.createElement('p');progress.className='tiny muted';
-    const observed=bridge.getProgress();
-    progress.textContent=observed.state==='formative-attempt'?
-      'Local formative record: best '+observed.best+'/4 evidence decisions. Not a competence certificate.':
-      'No completed local formative case review is recorded for this learner.';
+    const board=el('section','content-block');
+    board.appendChild(el('h3','', 'Observed evidence'));
+    board.appendChild(el('p','tiny muted','Known good: '+String(row.baseline||'Baseline not provided.')));
+    const list=el('dl','mm-new1-factory-evidence');
+    for(const [label,value] of row.observations||[]){
+      list.append(el('dt','',label),el('dd','',value));
+    }
+    board.appendChild(list);host.appendChild(board);
+    const worksheet=el('section','content-block');
+    worksheet.appendChild(el('h3','', 'Your evidence-to-recovery worksheet'));
+    worksheet.appendChild(el('p','tiny muted','Every choice comes from the existing VA-02 case. Nothing is sent to a server or stored as an award.'));
+    const fields=[];
+    const status=el('p','tiny muted');
+    status.setAttribute('aria-live','polite');
+    function updateSelection(){
+      const snap=journey.snapshot();
+      status.textContent=snap.state==='ready'?'Draft choices stay on this screen until you reset or change learner.':'Select a learner profile to make worksheet choices. Existing learner records remain separate.';
+      for(const input of fields)input.checked=snap.answers[input.dataset.mmNew1Step]===input.value;
+    }
+    for(const item of COMPETENCIES){
+      const step=row[item.step];
+      const group=el('fieldset','content-block');
+      group.appendChild(el('legend','',item.label+' — '+step.prompt));
+      for(const option of step.options){
+        const label=el('label','choice');
+        const input=el('input');input.type='radio';input.name='new1-'+instance+'-'+item.step;
+        input.value=option[0];input.dataset.mmNew1Step=item.step;
+        input.addEventListener('change',()=>{
+          if(!journey.choose(item.step,input.value)){updateSelection();return;}
+          results.replaceChildren();updateSelection();
+        });
+        fields.push(input);label.append(input,el('span','',option[1]));group.appendChild(label);
+      }
+      const help=el('div','tiny muted');
+      const open=button('Read: '+(BOOK.find(b=>b.id===item.chapter)?.label||item.chapter),()=>bridge.openBookChapter(item.chapter),help);
+      open.className='ghost';group.appendChild(help);worksheet.appendChild(group);
+    }
+    worksheet.appendChild(status);
+    const controls=el('div','hero-buttons');
+    const results=el('section','content-block');results.setAttribute('aria-live','polite');
+    button('Review draft reasoning',()=>{
+      const result=journey.review();results.replaceChildren();
+      if(result.state!=='formative-review'){results.appendChild(el('p','',result.reason||'Complete the worksheet before reviewing.'));return;}
+      results.appendChild(el('h3','', 'Formative reasoning: '+result.total+'/'+result.max));
+      for(const d of result.dimensions){
+        results.appendChild(el('p','', (d.correct?'Consistent: ':'Revisit: ')+d.label));
+      }
+      results.appendChild(el('p','',result.tutor));
+      button('Open recommended Book module',()=>bridge.openBookChapter(result.recommendedBookId),results).className='ghost';
+      results.appendChild(el('p','tiny muted','This draft worksheet is not an assessed apprenticeship completion. Complete the canonical case to record formative progress for your learner.'));
+    },controls);
+    button('Reset draft choices',()=>{journey.reset();results.replaceChildren();updateSelection();},controls).className='ghost';
+    worksheet.append(controls,results);host.appendChild(worksheet);
+    const progress=el('p','tiny muted');
+    function refreshProgress(){
+      const observed=bridge.getProgress();
+      progress.textContent=observed.state==='formative-attempt'?
+        'Canonical local formative record: best '+observed.best+'/4 evidence decisions. Not a competence certificate.':
+        observed.state==='not-attempted'?'No completed canonical case review is recorded for this learner.':
+        'Learner-scoped Runtime V2 progress is unavailable. Nothing has been credited.';
+      updateSelection();
+    }
+    button('Refresh canonical case progress',refreshProgress,host).className='ghost';
     host.appendChild(progress);
-    const boundary=document.createElement('p');boundary.className='legal-note';
-    boundary.textContent='Training only. Scenario numbers and outcomes are authored, not validated machine physics. No safeguarding, production recipe, machine-control, accreditation or workplace competence authority.';
-    host.appendChild(boundary);target.appendChild(host);return true;
+    host.appendChild(el('p','legal-note','Training only. Scenario evidence is authored, not validated machine physics. No safeguarding, production recipe, machine-control, accreditation or workplace competence authority.'));
+    target.appendChild(host);refreshProgress();return true;
   }
   return Object.freeze({
     version:VERSION,caseId:CASE_ID,stageFlow:FLOW,bookLinks:BOOK,competencies:COMPETENCIES,
-    missionContext:MISSION_CONTEXT,assess,readExistingProgress,createBridge,mount,
+    missionContext:MISSION_CONTEXT,assess,readExistingProgress,createBridge,createJourney,mount,
     status:'development-only; intentionally not loaded by the governed public runtime',
     boundary:'One case links existing authored simulation, Book and learner-scoped formative records; no parallel answer keys, learner store, machine control or competence sign-off.'
   });
