@@ -166,4 +166,7 @@ need(re.search(r"const next=D\.lessons\[index\+1\]\|\|null",js) is not None,'com
 need("user.currentLesson=next.id" in js,'complete-and-continue must advance currentLesson')
 need("toast('Learning path complete ✓')" in js,'final lesson must terminate the learning path rather than wrap')
 
+clobber=subprocess.run(['node',str(ROOT/'qa_lesson_resolver_clobber.cjs')],capture_output=True,text=True)
+need(clobber.returncode==0,'clobbered currentLesson regression failed: '+(clobber.stderr or clobber.stdout))
+
 print(f'MouldMaster learning experience QA passed (single-source Home focus, gamification retired, compact event-driven mobile hierarchy, complete-and-continue, autosave notes, fixed-nav clearance, coherent runtime={runtime_asset}, offline/desktop packaging)')

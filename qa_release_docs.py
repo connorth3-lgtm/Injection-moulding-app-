@@ -1,6 +1,7 @@
 from pathlib import Path
 from datetime import date
 import json, re
+import subprocess, sys
 
 ROOT=Path(__file__).resolve().parent
 
@@ -10,7 +11,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
- 'web_release':'2026.10.08.8',
+ 'web_release':'2026.10.09.2',
  'android_release':'2026.08.26.2',
  'desktop_release':'2026.09.29.1',
  'content_version':'2026.08.26.1',
@@ -183,5 +184,9 @@ for marker in ['BASELINE_REF','refs/heads/$BASELINE_REF','FETCHED_BASELINE_SHA',
     need(marker in mobile_workflow,f'mobile visual baseline retention guard missing: {marker}')
 prune_workflow=text('.github/workflows/prune-merged-branches.yml')
 need('visual-baseline/*' in prune_workflow,'merged-branch pruning must explicitly preserve visual baseline refs')
+
+# Sharing the hosted preview is a separate fail-closed release operation.
+# The local check is fast and offline; the live URL check is operator-only.
+subprocess.run([sys.executable, str(ROOT / 'qa_tester_handoff.py')], cwd=ROOT, check=True)
 
 print('MouldMaster release/documentation coherence QA passed')

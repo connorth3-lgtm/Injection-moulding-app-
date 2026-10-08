@@ -2,7 +2,7 @@
 
 Historical health-control review: **2026-09-18**  
 Historical source commit: `3e020626205ebdb3c62a155105b6bfb91b8e70df`  
-Current learner-facing web release: **2026.10.08.8**
+Current learner-facing web release: **2026.10.09.2**
 
 This file is generated from `data/health-program-v1.json`. It reports engineering/operations health separately from deliberate external-validation HOLDs.
 
@@ -27,7 +27,7 @@ Current block reason: Native main governance is enforced. Release promotion stil
 
 ## Current release contract
 
-- Current learner-facing web release: **2026.10.08.8**.
+- Current learner-facing web release: **2026.10.09.2**.
 - Current release promotion is governed by the declared fast/deep CI tiers and exact-head protected workflows; the historical PR count above is not presented as current-release evidence.
 - Native main governance: **enforced**. Live main ruleset matches the canonical solo-maintainer policy; promotion still requires exact-head protected checks.
 - Current external-validation boundary: **HOLD** until genuine release-bound human/device/platform evidence satisfies the governed exit conditions.

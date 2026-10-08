@@ -43,6 +43,107 @@ test('core shell and exact-grade Materials work without layout overflow',async({
   expect(errors).toEqual([]);
 });
 
+test('fresh visitor can complete pseudonymous onboarding and safely reload progress',async({page})=>{
+  // Deliberately do NOT call openApp() or seed localStorage: a real invitation
+  // opens an empty browser profile, which most other QA journeys do not cover.
+  await page.goto(BASE,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>window.MM_INLINE_HANDLER_BRIDGE?.version==='1'&&
+    !document.getElementById('mmBootstrap'),{timeout:30000});
+  await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
+  const onboard=page.locator('#modal .onboarding');
+  await expect(onboard).toBeVisible({timeout:15000});
+  await expect(onboard.getByText('Welcome to MouldMaster')).toBeVisible();
+  await onboard.locator('#onName').fill('Trial Learner');
+  await onboard.locator('#onRegion').selectOption('NZ');
+  await onboard.locator('[data-mm-onclick="finishOnboarding()"]').click();
+  await expect(onboard).toHaveCount(0);
+  const state=await page.evaluate(()=>{
+    const db=JSON.parse(localStorage.getItem('mouldmasterProDB')||'null');
+    const u=db?.users?.[db.activeUser];
+    return {
+      persisted:!!db&&!!u,
+      name:u?.name,region:u?.region,onboardingDone:u?.onboardingDone,
+      currentLesson:u?.currentLesson
+    };
+  });
+  expect(state).toEqual({
+    persisted:true,name:'Trial Learner',region:'NZ',onboardingDone:true,currentLesson:1
+  });
+  await page.reload({waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>window.MM_INLINE_HANDLER_BRIDGE?.version==='1'&&
+    !document.getElementById('mmBootstrap'),{timeout:30000});
+  await page.waitForTimeout(350);
+  await expect(page.locator('#modal .onboarding')).toHaveCount(0);
+  await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
+  expect(await page.evaluate(()=>{
+    const d=JSON.parse(localStorage.getItem('mouldmasterProDB')||'null');
+    return d?.users?.[d.activeUser]?.name;
+  })).toBe('Trial Learner');
+});
+
+test('tester Support and Privacy are reachable and public reports warn against data sharing',async({page})=>{
+  // These are public support/privacy surfaces; visiting them must not require
+  // a learner account or an initialized application shell.
+  await page.goto(BASE+'support.html',{waitUntil:'domcontentloaded'});
+  await expect(page.getByRole('heading',{name:'MouldMaster Academy — Support'})).toBeVisible();
+  const report=page.getByRole('link',{name:'Report a learner problem'});
+  await expect(report).toHaveAttribute('href',/issues\/new\?template=learner-problem\.yml$/);
+  await expect(page.getByRole('heading',{name:'Data & Reset'})).toBeVisible();
+  await expect(page.locator('body')).toContainText('Do not attach progress backups');
+  await page.getByRole('link',{name:'Privacy notice'}).first().click();
+  await expect(page.getByRole('heading',{name:'MouldMaster Academy — Privacy Notice'})).toBeVisible();
+  await expect(page.locator('body')).toContainText('browser/app storage');
+  await expect(page.locator('body')).toContainText('does not currently upload');
+});
+
+test('Mission Control dashboard and stale controls remain isolated on A → B → A profile switches',async({page})=>{
+  await openApp(page);
+  await page.waitForFunction(()=>!!window.MM_MISSION_CONTROL&&!!window.MM_APP_SHELL?.dashboard?.compose);
+  const result=await page.evaluate(()=>{
+    const mission=window.MM_MISSION_CONTROL;
+    mission.startMission({title:'Browser QA — private learner A mission',stage:'evidence'});
+    mission.addEvidence({kind:'measured',text:'Browser QA A-only evidence'});
+    window.MM_APP_SHELL.dashboard.compose();
+    const before=document.querySelector('#dashboard .mm-mc-home-card')?.textContent||'';
+    const staleEvidence=document.querySelector('#dashboard [data-mm-mc-home-evidence]');
+    const staleMode=document.querySelector('#mmMissionControl [data-mm-mc-mode]');
+    const initialA=mission.state();
+    const other={...user,id:'cross-browser-qa-b',name:'Learner B',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1};
+    db.users[other.id]=other;
+    switchUser(other.id);
+    // Compose synchronously in this SAME browser task, before click/focus events.
+    // requestCompose() defers until requestAnimationFrame, so inspecting its
+    // DOM immediately would be testing old markup, not new profile state.
+    window.MM_APP_SHELL.dashboard.compose();
+    const bCard=document.querySelector('#dashboard .mm-mc-home-card')?.textContent||'';
+    staleEvidence?.click();
+    staleMode?.click();
+    const bState=mission.state();
+    mission.startMission({title:'Browser QA — learner B mission',stage:'brief'});
+    const advanceB=mission.nextStage();
+    const savedB=mission.state();
+    switchUser('cross-browser-qa');
+    window.MM_APP_SHELL.dashboard.compose();
+    const aCard=document.querySelector('#dashboard .mm-mc-home-card')?.textContent||'';
+    const recoveredA=mission.state();
+    return {
+      sawA:before.includes('private learner A mission'),
+      sawNoA:bCard.includes('Start a connected learning mission')&&!bCard.includes('private learner A mission'),
+      evidenceFromA:initialA.evidence.length,
+      bInitiallyEmpty:bState.mission===null&&bState.evidence.length===0,
+      bUnchangedByStaleMode:bState.mode==='learner',
+      bAdvanced:advanceB&&savedB.mission?.stage==='baseline',
+      aRecovered:aCard.includes('private learner A mission')&&recoveredA.evidence.length===1&&recoveredA.mission?.stage==='evidence',
+      aNeverSawB:!aCard.includes('learner B mission')
+    };
+  });
+  expect(result).toEqual({
+    sawA:true,sawNoA:true,evidenceFromA:1,
+    bInitiallyEmpty:true,bUnchangedByStaleMode:true,bAdvanced:true,
+    aRecovered:true,aNeverSawB:true
+  });
+});
+
 test('engineering store enforces learner ownership for direct case reads',async({page})=>{
   await openApp(page);
   await page.waitForFunction(()=>!!window.MM_ENGINEERING_STORE,{timeout:30000});

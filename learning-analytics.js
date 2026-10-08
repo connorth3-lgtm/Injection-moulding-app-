@@ -111,7 +111,13 @@ function aggregate(events){
 function stepLabel(key){const [module,raw]=String(key).split(':');const step=Number(raw)||0;return `${module==='diagnostic'?'Diagnostic lab':'Process-data case'} · ${PRACTICE_LABELS[module]?.[step]||`Step ${step+1}`}`}
 
 let lessonSession=null,idleTimer=null;
-function lessonId(){try{return typeof currentLesson==='function'?String(currentLesson()?.id||''):''}catch(_){return ''}}
+function lessonId(){
+  try{
+    const lesson=typeof mmCoreSafeLesson==='function' ? mmCoreSafeLesson()
+      : (Array.isArray(D?.lessons)?D.lessons.find(l=>l.id===user.currentLesson)||D.lessons[0]:null);
+    return String(lesson?.id||'');
+  }catch(_){return ''}
+}
 function accrueLesson(){
   if(!lessonSession||lessonSession.activeSince==null)return;
   const now=Date.now();lessonSession.activeMs+=Math.max(0,now-lessonSession.activeSince);lessonSession.activeSince=now;

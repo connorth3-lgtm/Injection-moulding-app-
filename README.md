@@ -17,7 +17,7 @@ The project maintainers do not intend to seek patent protection over implementat
 
 ## Current release lanes
 
-- PWA / browser shell: `2026.10.08.8`
+- PWA / browser shell: `2026.10.09.2`
 - Open Windows desktop: `2026.09.29.1`
 - Android lane: `2026.08.26.2`
 - Training content: `2026.08.26.1`
@@ -40,6 +40,21 @@ The browser/PWA lane is published through GitHub Pages:
 The Pages **production root is fail-closed** when the current learner-runtime fingerprint does not yet have current physical-device authorization. In that state the root serves a release-hold page and the exact governed learner candidate is available only under the clearly labelled non-production `/preview/` path for review and device validation. Prior-release physical evidence is never silently inherited by changed runtime bytes.
 
 The PWA uses an installable web manifest and a service worker for offline support after a successful initial load. The current shell caches the audited core, assessment/runtime layers, guided learning, specialist curriculum, reference data and the privacy/support pages required by the public app. Governed learner-runtime changes must advance the web release/cache identity; mandatory Release QA compares each change with its parent so an installed PWA cannot silently reuse the previous cache generation after runtime bytes change. Release QA also derives the browser shell/domain load graph independently and rejects any shell/runtime asset that is not present in the service-worker governance set.
+
+## Controlled tester handoff (non-production only)
+
+**Do not circulate the learner preview until it is verified as the intended hosted release.** Merging a PR into the `preview` **Git branch** does not deploy it to the hosted `/preview/` URL. The hosted preview is staged by the protected-`main` Pages release-hold workflow, while production-root publication remains blocked by the distinct physical-device authorization gate.
+
+Tester-facing documentation and owner preflight:
+
+- [Owner handoff and no-send checklist](docs/TESTER_HANDOFF.md) — exact protected-main deployment, live-source verification, safety and privacy STOP conditions.
+- [Tester quick start](docs/TESTER_QUICK_START.md) — fictional local profile, learning tasks, feedback and local data limits.
+- [Invitation template](docs/TESTER_INVITATION.md) — copy only after preflight is complete.
+- [Feedback triage](docs/TESTER_FEEDBACK_TRIAGE.md) — immediate safety/privacy escalation and release retesting.
+
+Repository-only gate: `python3 qa_tester_handoff.py`. **Before distributing the URL**, the release operator must run `python3 qa_tester_handoff.py --live --expected-source-sha <PROTECTED_MAIN_DEPLOYED_SHA>`, then complete the manual checklist. The live check confirms that the currently hosted preview matches the intended source SHA and web release; it does **not** provide human physical-device, accessibility, SME, NZQA, learner-outcome or production approval.
+
+The explicit learner testing URL is `https://connorth3-lgtm.github.io/Injection-moulding-app-/preview/`. It must display the **Non-production preview** warning; the production root is not the invitation destination.
 
 ## Assessment system
 
@@ -155,6 +170,12 @@ MouldMaster is an educational resource. It does not replace:
 - employer authorisation and machine-specific practical training.
 
 Do not bypass guards, interlocks or hazardous-energy controls to follow training content.
+
+## Repository-wide hygiene
+
+All tracked folders are covered by the offline `python3 tools/repository_hygiene.py` gate in required Release QA. It verifies portable Git paths, symlinks/modes, forbidden credential-like files, immutable workflow action refs, valid JSON and byte-identical canonical Book/quality publish mirrors. Unit tests run via `python3 -m unittest discover -s tests -p 'test_repository_hygiene.py'`. Root `.gitignore` prevents accidentally staging local dependencies, test output, release packages and private configuration.
+
+See [Repository hygiene assessment](docs/REPOSITORY_HYGIENE_2026-10-09.md) for every-folder inventory, historically audited binary/archive retention, which generated mirrors are intentionally duplicated, and limits of this structural gate. **Do not remove archived external validation evidence, the locked Windows recovery executable or runtime mirrors just because they look duplicated.** No static repository scan replaces release-specific external human/device approval.
 
 ## Release QA
 

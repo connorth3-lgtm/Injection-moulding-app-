@@ -4,8 +4,10 @@
 
 const VERSION='2026.10.01.2';
 const RETURN_KEY='mm_curriculum_return_v1';
+const resolvedCurriculumLesson=()=>typeof mmCoreSafeLesson==='function'
+  ? mmCoreSafeLesson() : (D.lessons.find(l=>l.id===user.currentLesson)||D.lessons[0]);
 
-if(typeof renderLesson!=='function'||typeof renderDashboard!=='function'||typeof currentLesson!=='function'||typeof D==='undefined'){
+if(typeof renderLesson!=='function'||typeof renderDashboard!=='function'||typeof D==='undefined'||!Array.isArray(D.lessons)){
   throw new Error('curriculum-integration.js requires the core lesson runtime');
 }
 if(!window.MM_LEARNING_EXPERIENCE||!window.MM_DIAGNOSTIC_LABS||!window.MM_PROCESS_DATA_DIAGNOSTICS||!window.MM_MATERIAL_BEHAVIOUR_LABS){
@@ -231,7 +233,8 @@ function cardHtml(rec,index,lessonId){
 }
 function decorateLesson(){
   const root=document.getElementById('lesson');
-  const lesson=currentLesson();
+  const lesson=resolvedCurriculumLesson();
+  if(!lesson)return;
   const notes=root?.querySelector('#mmNotes')||[...(root?.querySelectorAll('.lesson-body h3')||[])].find(h=>h.textContent.trim()==='Your lesson notes');
   if(!root||!notes||root.querySelector('#mmCurriculumPractice'))return;
   const recs=recommendationsFor(lesson),guidance=guidanceFor();
@@ -244,7 +247,8 @@ function decorateLesson(){
 function decorateDashboard(){
   const root=document.getElementById('dashboard');
   if(!root||root.querySelector('.mm-curriculum-focus'))return;
-  const lesson=currentLesson();
+  const lesson=resolvedCurriculumLesson();
+  if(!lesson)return;
   const rec=recommendationsFor(lesson)[0];
   if(!rec)return;
   const focus=root.querySelector('.mm-today-focus');

@@ -2,12 +2,12 @@
 
 Human assistive-technology validation remains **HOLD** for release `2026.10.08.8`.
 
-- retained source: `6aaa53c905f91494ee586563631b61c39784df30`
-- public-runtime fingerprint: `sha256:d2e5f46cfd97becd7781b69cd88d78dc0badff8ab991ae9265a987dc5755437e`
-- retained candidate: `physical-pwa-candidate-6aaa53c905f91494ee586563631b61c39784df30` (`11539542339`)
-- candidate run: `37754724412`
-- artifact digest: `sha256:e210d4ad39d4259dd644fd0acf20f2203a253d458ea6b701ef39ee5f0b0f7276`
-- expiry: `2027-01-06T09:09:44Z`
+- retained source: `1a157e66236a7771c6ec18a4aaafe8de7c7f65d0`
+- public-runtime fingerprint: `sha256:f05e0049a4ab0af39dc77286930f0f5af3224de02995013de5e454b2cb1778a2`
+- retained candidate: `physical-pwa-candidate-1a157e66236a7771c6ec18a4aaafe8de7c7f65d0` (`11542607513`)
+- candidate run: `37761968139`
+- artifact digest: `sha256:f2be2165ac23154eda125e036e9e2883f9fd140dafa5f43f8e289153ca7deff8`
+- expiry: `2027-01-06T10:12:43Z`
 
 The governed NVDA and VoiceOver matrix remains pending. Automated browser checks do not count as real-AT evidence.
 
