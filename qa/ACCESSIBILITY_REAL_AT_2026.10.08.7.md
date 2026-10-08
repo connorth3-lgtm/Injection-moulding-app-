@@ -2,12 +2,12 @@
 
 Human assistive-technology validation remains **HOLD** for release `2026.10.08.7`.
 
-- retained source: `AWAITING-VERIFIED-RELEASE-7-CANDIDATE`
-- public-runtime fingerprint: `AWAITING-VERIFIED-RELEASE-7-FINGERPRINT`
-- retained candidate: `physical-pwa-candidate-AWAITING-VERIFIED-RELEASE-7-CANDIDATE` (`AWAITING-VERIFIED-RELEASE-7-ARTIFACT`)
-- candidate run: `AWAITING-VERIFIED-RELEASE-7-RUN`
-- artifact digest: `AWAITING-VERIFIED-RELEASE-7-DIGEST`
-- expiry: `AWAITING-VERIFIED-RELEASE-7-EXPIRY`
+- retained source: `d243d887965a51bcd7eff4dfc73287cf5acf6a79`
+- public-runtime fingerprint: `sha256:849e3e9926f992a1cbeca7bf37cb262fd2590e152c0dc1f19c87647c016f70e2`
+- retained candidate: `physical-pwa-candidate-d243d887965a51bcd7eff4dfc73287cf5acf6a79` (`11536916202`)
+- candidate run: `37748002799`
+- artifact digest: `sha256:d1dbc5d453b1309773b0e2653a2390ce7b26ea468bb0fd2234e8e4041678a010`
+- expiry: `2027-01-06T08:09:41Z`
 
 The governed NVDA and VoiceOver matrix remains pending. Automated browser checks do not count as real-AT evidence.
 
@@ -29,4 +29,4 @@ The governed NVDA and VoiceOver matrix remains pending. Automated browser checks
 This packet is a release/candidate binding only. Real assistive-technology validation remains **HOLD** until genuine human NVDA and VoiceOver evidence passes every required task in the governed matrix.
 
 
-Release-7 packet is provisionally prepared. It is NOT a valid release artifact or evidence source until the exact retained candidate is verified and the AWAITING references are rebound. External validation stays HOLD.
+The retained exact runtime candidate has been verified for source and artifact provenance. This binding is NOT real-world validation; every external human, device and provider workstream stays HOLD.
