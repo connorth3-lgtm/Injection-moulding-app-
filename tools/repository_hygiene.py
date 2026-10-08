@@ -34,6 +34,13 @@ KEY_START = "-----BEGIN " + "(?:RSA |EC |OPENSSH )?PRIVATE KEY-----"
 PRIVATE_KEY_RE = re.compile(KEY_START)
 ACTION_RE = re.compile(r"^\s*-?\s*uses:\s*([^#\s]+)")
 HEX_SHA = re.compile(r"^[a-f0-9]{40}$")
+REQUIRED_IGNORE_MARKERS = frozenset({
+    "/node_modules/", "/desktop/electron/dist/", "/qa-artifacts/",
+    "/.pages-dist/", "/.pages-hold/", "__pycache__/",
+    ".venv/", ".env", ".env.*", "*.pem", "*.p12",
+    "*.pfx", "*.msix", "*.zip", "*.exe",
+})
+
 TOP_DIRS = frozenset({
     ".github", "assets", "audit", "certification", "credentials",
     "data", "desktop", "docs", "machine-research", "qa", "research",
@@ -168,9 +175,22 @@ def content_findings(root: Path, entries: list[tuple[str, str]]) -> tuple[list[s
     return problems, dict(counts)
 
 
+def ignore_findings(root: Path, names: set[str]) -> list[str]:
+    """Prevent accidental reintroduction of local outputs and credentials."""
+    if ".gitignore" not in names:
+        return ["tracked root .gitignore is missing"]
+    actual = {
+        line.strip() for line in (root / ".gitignore").read_text(encoding="utf-8").splitlines()
+        if line.strip() and not line.lstrip().startswith("#")
+    }
+    missing = sorted(REQUIRED_IGNORE_MARKERS - actual)
+    return [f"required local-artifact ignore rule missing: {item}" for item in missing]
+
+
 def audit(root: Path) -> dict:
     entries = tracked(root)
     problems = path_findings(entries)
+    problems.extend(ignore_findings(root, {name for name, _ in entries}))
     content_problems, counts = content_findings(root, entries)
     problems.extend(content_problems)
     counts["top_level_areas"] = len({
