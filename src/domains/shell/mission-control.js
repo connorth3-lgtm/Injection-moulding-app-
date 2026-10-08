@@ -106,6 +106,15 @@ function scheduleHydration(attempt=0){
   hydrationTimer=setTimeout(()=>scheduleHydration(attempt+1),50);
   return false
 }
+function hydrateScopedState(){
+  const token=runtimeStorage()?.learnerToken?.();
+  if(!token)return false;
+  const persisted=loadState();
+  const hasPersisted=Boolean(persisted.mission)||persisted.evidence.length>0||persisted.mode!==DEFAULT_STATE.mode||persisted.surface!==DEFAULT_STATE.surface;
+  const hasLive=Boolean(state.mission)||state.evidence.length>0;
+  if(hasPersisted&&!hasLive){state=persisted;return true}
+  return false
+}
 function saveState(){
   const token=runtimeStorage()?.learnerToken?.();
   if(token&&!hydratedLearnerToken)hydratedLearnerToken=token;
