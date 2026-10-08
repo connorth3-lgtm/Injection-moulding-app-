@@ -230,7 +230,7 @@ function radioGroup(step,row){
     const option=make('label','choice');
     const input=document.createElement('input');input.type='radio';input.name=`mm-va-${step}`;input.value=id;input.checked=state.answers[step]===id;
     const span=make('span','',label);option.append(input,span);list.appendChild(option);
-    input.addEventListener('change',()=>{state.answers[step]=id;state.checked=false;renderFeedback(step);updateCheckButton()});
+    input.addEventListener('change',()=>{state.answers[step]=id;state.checked=false;const missionStage={hypothesis:'hypothesis',test:'test',response:'intervention',verify:'verification'}[step]||'evidence';syncMissionContext(missionStage);renderFeedback(step);updateCheckButton()});
   }
   wrap.appendChild(list);
   const feedback=make('div','tiny muted');feedback.id=`mmVaFeedback-${step}`;feedback.setAttribute('aria-live','polite');wrap.appendChild(feedback);
@@ -261,11 +261,18 @@ function renderResult(){
   for(const key of STEP_KEYS){const el=byId(`mmVaFeedback-${key}`);if(el)el.textContent=result.dimensions[key].feedback}
 }
 function resetCase(){state.answers={};state.checked=false;renderCase()}
+function syncMissionContext(stage='evidence'){
+  const row=caseDef();
+  window.MM_MISSION_CONTROL?.attachContext?.(
+    {part:row.title,caseId:row.id},
+    {startIfEmpty:true,title:'Investigate: '+row.title,kind:'virtual-apprenticeship',stage}
+  )
+}
 function openCase(index=0){
   state.caseIndex=Math.max(0,Math.min(CASES.length-1,Number(index)||0));state.answers={};state.checked=false;
   try{window.MM_SPATIAL_TWIN?.close?.()}catch(_){}
   if(typeof window.switchView==='function')window.switchView('simulator');
-  install();renderCase();
+  install();renderCase();syncMissionContext('evidence');
   const host=byId('mmVirtualApprenticeship');requestAnimationFrame(()=>host?.scrollIntoView?.({block:'start',behavior:'smooth'}));
   return true;
 }
@@ -277,7 +284,7 @@ function renderCase(){
   const controls=make('div','grid2');
   const caseLabel=make('label','', 'Case');const caseSelect=document.createElement('select');caseSelect.id='mmVaCaseSelect';CASES.forEach((c,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=`${c.id} · ${c.title}`;o.selected=i===state.caseIndex;caseSelect.appendChild(o)});caseLabel.appendChild(caseSelect);
   const levelLabel=make('label','', 'Coaching level');const levelSelect=document.createElement('select');for(const [id,v] of Object.entries(LEVELS)){const o=document.createElement('option');o.value=id;o.textContent=v.label;o.selected=id===state.level;levelSelect.appendChild(o)}levelLabel.appendChild(levelSelect);controls.append(caseLabel,levelLabel);host.appendChild(controls);
-  caseSelect.addEventListener('change',()=>{state.caseIndex=Number(caseSelect.value)||0;state.answers={};state.checked=false;renderCase()});
+  caseSelect.addEventListener('change',()=>{state.caseIndex=Number(caseSelect.value)||0;state.answers={};state.checked=false;renderCase();syncMissionContext('evidence')});
   levelSelect.addEventListener('change',()=>{state.level=levelSelect.value in LEVELS?levelSelect.value:'beginner';state.checked=false;renderCase()});
   const brief=make('div','callout');brief.append(make('b','', 'Shop-floor brief'),document.createElement('br'),document.createTextNode(row.brief));host.appendChild(brief);
   const evidence=make('div','content-block');evidence.append(make('h3','', 'Evidence board'),make('p','tiny muted',`Baseline: ${row.baseline}`));const table=make('div','table-wrap');const t=document.createElement('table');t.className='table';t.innerHTML='<thead><tr><th>Signal / context</th><th>Observed change</th></tr></thead>';const body=document.createElement('tbody');for(const [name,value] of row.observations){const tr=document.createElement('tr');const a=document.createElement('td');a.textContent=name;const b=document.createElement('td');b.textContent=value;tr.append(a,b);body.appendChild(tr)}t.appendChild(body);table.appendChild(t);evidence.appendChild(table);host.appendChild(evidence);
