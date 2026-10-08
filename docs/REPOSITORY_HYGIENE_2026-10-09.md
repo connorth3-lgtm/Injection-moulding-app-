@@ -1,6 +1,6 @@
 # Repository-wide hygiene assessment — 9 October 2026
 
-**Scope:** a read-only inventory of the full Git tree, not a claim that every line of code has received human security or engineering review.
+**Scope:** a read-only inventory of the full Git tree, not a claim that every line of code has received human security or engineering review. A root `.gitignore` now prevents accidentally staging local dependencies, generated build/test outputs, credentials and unreviewed installer archives.
 
 ## Tracked-tree inventory
 
@@ -30,6 +30,10 @@ Counts are a historical snapshot; the required `tools/repository_hygiene.py` gat
 | Regressions | Unit tests for unsafe additions, path collisions, symlinks, secret markers, unlocked actions, bad JSON and diverging mirrors |
 
 The new QA does **not** weaken existing release checks, current CSP, runtime dependency graph, cache/release identity, provenance, privacy isolation, human/device HOLDs or protected-main rules.
+
+## Local file hygiene
+
+Root `.gitignore` covers Node/Electron packages, Python environments and caches, generated Pages/QA outputs, local environment files, key stores, desktop installers, ZIP downloads and OS/editor debris. Already tracked historical evidence and the frozen Windows recovery executable remain under their existing immutable SHA/evidence guards. The QA gate requires these ignore rules on future commits. Do not use `git clean -fdx` on a working directory holding unsaved learner or operator data.
 
 ## What was deliberately not deleted
 
