@@ -12,6 +12,7 @@ const REQUIRED_MANIFEST_FILES=[
   'src/domains/engineering/engineering-store.js',
   'src/domains/materials/material-registry.js',
   'src/domains/shell/product-areas.js',
+  'src/domains/shell/mission-control.js',
   'material-catalog-v1.json'
 ];
 
