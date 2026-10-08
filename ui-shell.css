@@ -457,3 +457,41 @@ button:disabled,[aria-disabled="true"]{
 }
 #mmStartupFailure a,#mmStartupFailure button{min-height:44px!important}
 
+
+/* Unified educational defect finding / troubleshooting learning workbench. */
+.mm-dx-workbench{max-width:1280px;margin:0 auto;padding-bottom:35px}
+.mm-dx-hero{border:1px solid var(--border,#39526b);border-radius:20px;padding:clamp(18px,3vw,30px);background:linear-gradient(145deg,#101f33,#152d44);margin-bottom:18px}
+.mm-dx-hero h1{font-size:clamp(26px,3vw,38px);line-height:1.12;margin:8px 0}
+.mm-dx-hero p{max-width:830px;line-height:1.55}
+.mm-dx-disclaimer,.mm-dx-boundary{border-left:4px solid #e7b75c;border-radius:8px;background:rgba(231,183,92,.1);padding:12px 14px;font-size:14px;line-height:1.5}
+.mm-dx-layout{display:grid;grid-template-columns:minmax(260px,.9fr) minmax(0,1.5fr);gap:18px;align-items:start}
+.mm-dx-pane{border:1px solid var(--border,#39526b);background:var(--card,#111f33);border-radius:16px;padding:20px;min-width:0}
+.mm-dx-section-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.mm-dx-section-head h2{margin:0;font-size:21px}.mm-dx-section-head span{font-size:13px;opacity:.8}
+.mm-dx-library{display:grid;gap:9px;max-height:560px;overflow-y:auto;overscroll-behavior:contain;padding:3px}
+.mm-dx-symptom{min-width:0;display:grid;gap:4px;text-align:left;border:1px solid var(--border,#39526b);border-radius:11px;background:rgba(130,170,200,.06);padding:12px;color:inherit;cursor:pointer;white-space:normal}
+.mm-dx-symptom small{font-size:13px;line-height:1.4;opacity:.85}
+.mm-dx-symptom:hover,.mm-dx-symptom:focus-visible{border-color:#74dcc6}
+.mm-dx-symptom.is-selected{outline:2px solid #74dcc6;background:rgba(116,220,198,.11)}
+.mm-dx-symptom[hidden]{display:none}
+.mm-dx-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.mm-dx-field{display:grid;gap:6px;min-width:0;font-weight:600;font-size:14px}
+.mm-dx-field:has(textarea){grid-column:1/-1}
+.mm-dx-field input,.mm-dx-field select,.mm-dx-field textarea,.mm-dx-hypothesis select{width:100%;max-width:100%;background:var(--input-bg,#12233a);color:inherit;border:1px solid var(--border,#47627e);border-radius:10px;padding:10px 12px;min-height:43px;font:inherit;font-weight:400}
+.mm-dx-field textarea{min-height:88px;resize:vertical}
+.mm-dx-evidence{border:1px solid var(--border,#47627e);border-radius:12px;margin:14px 0;padding:14px}
+.mm-dx-evidence legend{font-weight:700;padding:0 5px}
+.mm-dx-check{display:flex;gap:10px;align-items:flex-start;padding:8px 0;font-size:14px;line-height:1.4;cursor:pointer}
+.mm-dx-check input{margin-top:3px;flex-shrink:0}
+.mm-dx-main-action{margin-top:10px;max-width:100%;white-space:normal}
+.mm-dx-result-block{margin:16px 0;padding:15px;border:1px solid var(--border,#39526b);border-radius:12px}
+.mm-dx-result-block h3{margin:0 0 10px;font-size:18px}
+.mm-dx-result-block li{margin:7px 0;line-height:1.5}
+.mm-dx-hypothesis{border-top:1px solid var(--border,#39526b);padding:12px 0}
+.mm-dx-hypothesis p{margin:0 0 6px;line-height:1.4}
+.mm-dx-hypothesis label{display:grid;gap:5px;font-size:13px}
+.mm-dx-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.mm-dx-actions button{white-space:normal}
+@media(max-width:800px){.mm-dx-layout{grid-template-columns:1fr}.mm-dx-library{max-height:280px;grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.mm-dx-library,.mm-dx-fields{grid-template-columns:1fr}.mm-dx-pane{padding:15px}.mm-dx-hero{padding:18px}.mm-dx-actions button{width:100%}}
+@media(prefers-reduced-motion:reduce){.mm-dx-workbench *{scroll-behavior:auto!important}}

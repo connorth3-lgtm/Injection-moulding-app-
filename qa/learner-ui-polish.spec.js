@@ -373,3 +373,44 @@ test('Home with a real recent troubleshooting case remains clear of the fixed na
   expect(geometry.recentBottom).toBeLessThanOrEqual(geometry.navTop+1);
   expect(geometry.overflow).toBeLessThanOrEqual(1);
 });
+
+
+test('Defect Finder and Troubleshooting Coach share an evidence-gated offline case workflow on mobile',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.evaluate(()=>switchView('scenarios'));
+  await page.locator('#scenarios [data-mm-hub-action="troubleshooting"]').click();
+  const root=page.locator('#defects');
+  await expect(root.getByRole('heading',{name:'Defect Finder + Troubleshooting Coach'})).toBeVisible();
+  await expect(page.locator('#modal')).toHaveClass(/hidden/);
+  await expect(root.locator('[data-mm-dx-action="choose"]').first()).toBeVisible();
+  await root.locator('#mmDxSearch').fill('short');
+  await expect(root.locator('[data-mm-dx-action="choose"]:visible').first()).toBeVisible();
+  await root.locator('#mmDxSearch').fill('');
+  await root.locator('[data-mm-dx-action="choose"]').first().click();
+  await expect(root.getByRole('heading',{name:/Describe the actuals/})).toBeVisible();
+  await root.locator('textarea[name="baseline"]').fill('Synthetic stable reference: 12 samples, comparable lot.');
+  await root.locator('textarea[name="observations"]').fill('Synthetic measurements: one cavity showed increased part mass variation.');
+  await root.locator('input[data-mm-dx-evidence="part"]').check();
+  await root.getByRole('button',{name:/Build evidence-led investigation/}).click();
+  await expect(root).toContainText('No cause confirmed.');
+  await expect(root).toContainText('Evidence gaps to resolve');
+  await expect(root).toContainText('Discriminating checks from the defect library');
+  await expect(root.locator('[data-mm-dx-hypothesis]').first()).toHaveValue('unassessed');
+  await root.locator('[data-mm-dx-hypothesis]').first().selectOption('support');
+  const report=await page.evaluate(()=>window.MM_DIAGNOSTIC_WORKBENCH.report());
+  expect(report.authority).toBe('educational-investigation-only');
+  expect(report.rootCauseVerified).toBe(false);
+  expect(report.productionSetpointsAuthorized).toBe(false);
+  expect(report.hypotheses[0].learnerAssessment).toBe('support');
+  expect(report.evidenceReportedAvailable).toContain('part');
+  expect(report.gaps.length).toBeGreaterThan(0);
+
+  await page.evaluate(()=>switchView('coach'));
+  await expect(page.locator('#coach').getByRole('heading',{name:'Defect Finder + Troubleshooting Coach'})).toBeVisible();
+  await expect(page.locator('#coach')).toContainText('No cause confirmed.');
+  const overflow=await page.locator('#coach').evaluate(el=>Math.max(0,el.scrollWidth-el.clientWidth));
+  expect(overflow).toBeLessThanOrEqual(2);
+  await page.locator('#coach [data-mm-dx-action="reset"]').click();
+  await expect(page.locator('#coach')).toContainText('Choose one symptom first');
+});

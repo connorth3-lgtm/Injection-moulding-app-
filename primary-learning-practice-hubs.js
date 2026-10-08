@@ -170,7 +170,7 @@ function openPicker(kind){
   if(kind==='learn-resources'){
     openModal(`<span class="eyebrow">Learn</span><h2>Learning resources</h2><p class="muted">Choose the resource you need.</p><div class="mm-hub-picker-grid"><button type="button" data-mm-hub-action="visuals"><b>Animated visuals</b><small>See core cycle and process ideas visually.</small></button><button type="button" data-mm-hub-action="glossary"><b>Glossary</b><small>Look up injection moulding terms in plain language.</small></button><button type="button" data-mm-hub-action="saved"><b>Saved lessons</b><small>Return to lessons you bookmarked.</small></button></div>`);
   }else if(kind==='troubleshooting'){
-    openModal(`<span class="eyebrow">Practice</span><h2>Troubleshooting</h2><p class="muted">Choose how you want to work the problem.</p><div class="mm-hub-picker-grid"><button type="button" data-mm-hub-action="mould-master"><b>Mould Master</b><small>Build an evidence-led troubleshooting case from a real defect.</small></button><button type="button" data-mm-hub-action="defects"><b>Defect finder</b><small>Start from the symptom and review mechanisms and checks.</small></button><button type="button" data-mm-hub-action="coach"><b>Troubleshooting coach</b><small>Work through a problem with structured offline guidance.</small></button><button type="button" data-mm-hub-action="diagnostic-labs"><b>Diagnostic labs</b><small>Practise evidence-first fault isolation.</small></button></div>`);
+    openModal(`<span class="eyebrow">Practice</span><h2>Troubleshooting</h2><p class="muted">Choose how you want to work the problem.</p><div class="mm-hub-picker-grid"><button type="button" data-mm-hub-action="mould-master"><b>Mould Master</b><small>Build an evidence-led troubleshooting case from a real defect.</small></button><button type="button" data-mm-hub-action="diagnostic-workbench"><b>Defect Finder + Troubleshooting Coach</b><small>One guided workspace: symptoms, competing mechanisms, measured evidence and review-ready learning notes.</small></button><button type="button" data-mm-hub-action="diagnostic-labs"><b>Diagnostic labs</b><small>Practise evidence-first fault isolation.</small></button></div>`);
   }else if(kind==='labs'){
     openModal(`<span class="eyebrow">Practice</span><h2>Labs & simulators</h2><p class="muted">Choose a controlled learning tool.</p><div class="mm-hub-picker-grid"><button type="button" data-mm-hub-action="spatial-twin"><b>Spatial Twin</b><small>Enter an explorable moulding cell, switch evidence modes and time-travel through a governed diagnostic case.</small></button><button type="button" data-mm-hub-action="simulator"><b>Virtual apprenticeship</b><small>Investigate authored shop-floor cases, justify the next evidence, then explore relative process changes in the simulator.</small></button><button type="button" data-mm-hub-action="material-labs"><b>Material labs</b><small>Compare resin behaviour and evidence.</small></button></div>`);
   }else if(kind==='questions'){
@@ -179,6 +179,199 @@ function openPicker(kind){
   requestAnimationFrame(()=>bind(document.getElementById('modal')));
 }
 function closePicker(){try{window.closeModal?.()}catch(_){}}
+
+/* Unified Defect Finder + Troubleshooting Coach.
+   Extension-only: never edit the frozen/generated core. This is a guided,
+   user-evidence-labelled learning workflow, not a production expert system. */
+const DX_VERSION='2026.10.08.1';
+const DX_EVIDENCE=[
+  ['part','Cavity-labelled part quality / mass and the acceptance criteria'],
+  ['pressure','Actual cavity / plastic-side pressure, sensor position and calibration'],
+  ['cycle','Fill, transfer, cushion and recovery actuals from matching shots'],
+  ['material','Verified grade, lot, drying/moisture and conditioning history'],
+  ['mould','Mould, gate, vent, cooling and maintenance observations'],
+  ['baseline','Stable baseline and a comparable sample/measurement system']
+];
+const dxState={selected:-1,query:'',phase:'intake',form:{
+  when:'unknown',distribution:'unknown',change:'unknown',baseline:'',observations:'',
+  comparison:'',reflection:''
+},evidence:[],hypotheses:{}};
+function dxDefects(){return Array.isArray(D?.defects)?D.defects:[]}
+function dxFormValue(key){return esc(dxState.form[key]||'')}
+function dxSelect(key,label,values){
+  return '<label class="mm-dx-field"><span>'+esc(label)+'</span><select name="'+key+'">'+
+    values.map(pair=>'<option value="'+esc(pair[0])+'"'+(dxState.form[key]===pair[0]?' selected':'')+'>'+esc(pair[1])+'</option>').join('')+'</select></label>';
+}
+function dxOpt(key,label){
+  return '<label class="mm-dx-field"><span>'+esc(label)+'</span><textarea name="'+key+'" rows="3" maxlength="2000" placeholder="Record measured observations, not assumed causes">'+dxFormValue(key)+'</textarea></label>';
+}
+function dxEvidenceRows(){
+  return DX_EVIDENCE.map(pair=>'<label class="mm-dx-check"><input type="checkbox" data-mm-dx-evidence="'+esc(pair[0])+'"'+(dxState.evidence.includes(pair[0])?' checked':'')+'> <span>'+esc(pair[1])+'</span></label>').join('');
+}
+function dxLibrary(){
+  return '<section class="mm-dx-pane"><div class="mm-dx-section-head"><h2>1 · Choose a symptom</h2><span>'+dxDefects().length+' training patterns</span></div>'+
+    '<label class="mm-dx-field"><span>Search signs or mechanisms</span><input id="mmDxSearch" type="search" autocomplete="off" placeholder="e.g. short shot, burn, splay" value="'+esc(dxState.query)+'"></label>'+
+    '<div class="mm-dx-library" role="group" aria-label="Defect patterns">'+dxDefects().map((d,i)=>{
+      const terms=(d.name+' '+d.symptom+' '+(d.mechanisms||[]).join(' ')).toLowerCase();
+      return '<button class="mm-dx-symptom'+(dxState.selected===i?' is-selected':'')+'" type="button" data-mm-dx-action="choose" data-mm-dx-id="'+i+'" data-mm-dx-terms="'+esc(terms)+'" aria-pressed="'+(dxState.selected===i?'true':'false')+'"><b>'+esc(d.name)+'</b><small>'+esc(d.symptom)+'</small></button>';
+    }).join('')+'</div></section>';
+}
+function dxIntake(){
+  const defect=dxDefects()[dxState.selected];
+  if(!defect)return '<section class="mm-dx-pane mm-dx-empty"><h2>2 · Build the evidence picture</h2><p>Choose one symptom first. Similar-looking defects may have different mechanisms; no cause is assumed.</p></section>';
+  return '<section class="mm-dx-pane"><div class="mm-dx-section-head"><h2>2 · Describe the actuals</h2><span>'+esc(defect.name)+'</span></div>'+
+    '<p class="muted">For learning only. Do not enter names, serial numbers, confidential recipes or site identifiers.</p>'+
+    '<div class="mm-dx-fields">'+
+    dxSelect('when','When did it appear?',[
+      ['unknown','Not established'],['sudden','Suddenly'],['lot','Following a material or batch change'],
+      ['tool','Following tooling / maintenance'],['machine','Following machine intervention'],['gradual','Gradual drift']])+
+    dxSelect('distribution','Where is the symptom seen?',[
+      ['unknown','Not established'],['one-cavity','One cavity / region'],['all-cavities','Multiple cavities'],
+      ['intermittent','Intermittently'],['whole-part','Whole part']])+
+    dxSelect('change','What changed?',[
+      ['unknown','Unknown'],['material','Material / handling'],['tooling','Tooling / cooling / venting'],
+      ['machine','Machine / tooling configuration'],['method','Method / validated process'],
+      ['none','No known change']])+
+    dxOpt('baseline','Known-good baseline or acceptance evidence')+
+    dxOpt('observations','Current observations, units, location and shot window')+
+    '</div><fieldset class="mm-dx-evidence"><legend>Which evidence is actually available?</legend>'+dxEvidenceRows()+'</fieldset>'+
+    '<button class="primary mm-dx-main-action" type="button" data-mm-dx-action="analyse">Build evidence-led investigation →</button></section>';
+}
+function dxHypothesisRows(defect){
+  return (defect.mechanisms||[]).map((mechanism,i)=>{
+    const value=dxState.hypotheses[i]||'unassessed';
+    return '<div class="mm-dx-hypothesis"><p><strong>'+esc(mechanism)+'</strong></p>'+
+      '<label>Human evidence assessment <select data-mm-dx-hypothesis="'+i+'">'+
+      [['unassessed','Not assessed'],['support','Evidence may support'],['against','Evidence may oppose']].map(pair=>'<option value="'+pair[0]+'"'+(value===pair[0]?' selected':'')+'>'+pair[1]+'</option>').join('')+
+      '</select></label></div>';
+  }).join('');
+}
+function dxReportData(){
+  const defect=dxDefects()[dxState.selected];
+  return {
+    schema:'mm-diagnostic-learning-case-v1',
+    authority:'educational-investigation-only',
+    rootCauseVerified:false,
+    productionSetpointsAuthorized:false,
+    selectedDefect:defect?.name||null,
+    symptomDescription:defect?.symptom||null,
+    context:{...dxState.form},
+    evidenceReportedAvailable:[...dxState.evidence],
+    hypotheses:(defect?.mechanisms||[]).map((name,i)=>({name,learnerAssessment:dxState.hypotheses[i]||'unassessed',validated:false})),
+    referenceChecks:[...(defect?.checks||[])],
+    gaps:DX_EVIDENCE.filter(x=>!dxState.evidence.includes(x[0])).map(x=>x[1]),
+    notes:'A user-entered evidence label or hypothesis is not proof. Follow approved site/OEM/material procedures and independent qualified review.'
+  };
+}
+function dxAnalysis(){
+  const defect=dxDefects()[dxState.selected];if(!defect)return dxIntake();
+  const gaps=DX_EVIDENCE.filter(x=>!dxState.evidence.includes(x[0]));
+  const noBaseline=!dxState.form.baseline.trim();
+  const noObservations=!dxState.form.observations.trim();
+  const selections=['when','distribution','change'].filter(key=>dxState.form[key]==='unknown');
+  return '<section class="mm-dx-pane mm-dx-results" aria-live="polite">'+
+    '<div class="mm-dx-section-head"><h2>3 · Compare mechanisms</h2><span>Unverified investigation</span></div>'+
+    '<p class="mm-dx-boundary"><strong>No cause confirmed.</strong> This is a transparent library-based investigation, not an AI diagnosis, probability estimate, validated physical model or machine instruction.</p>'+
+    '<div class="mm-dx-result-block"><h3>Evidence gaps to resolve</h3><ul>'+
+    (noBaseline?'<li>No comparable known-good baseline documented.</li>':'')+
+    (noObservations?'<li>No current measured observations documented.</li>':'')+
+    selections.map(k=>'<li>'+esc(k)+' remains unknown.</li>').join('')+
+    gaps.map(pair=>'<li>'+esc(pair[1])+' — not yet reported available.</li>').join('')+
+    (!gaps.length&&!noBaseline&&!noObservations&&!selections.length?'<li>References recorded; still independently verify actual records, uncertainty and comparable conditions.</li>':'')+
+    '</ul></div>'+
+    '<div class="mm-dx-result-block"><h3>Mechanism hypotheses</h3><p class="muted">Change these labels only after reviewing direct evidence; the selections are human judgements, not algorithmic confidence.</p>'+dxHypothesisRows(defect)+'</div>'+
+    '<div class="mm-dx-result-block"><h3>Discriminating checks from the defect library</h3><ol>'+
+    (defect.checks||[]).map(item=>'<li>'+esc(item)+'</li>').join('')+'</ol>'+
+    '<p class="muted">Compare like-for-like shots, cavity locations and measurement conditions. Qualified staff choose whether a controlled test is safe and valid.</p></div>'+
+    '<div class="mm-dx-fields">'+dxOpt('comparison','What test or measurement would distinguish these mechanisms?')+
+    dxOpt('reflection','What evidence would confirm recovery, and what remains uncertain?')+'</div>'+
+    '<div class="mm-dx-actions"><button type="button" class="secondary" data-mm-dx-action="back">← Revise intake</button>'+
+    '<button type="button" class="secondary" data-mm-dx-action="export">Export learning case JSON</button>'+
+    '<button type="button" class="secondary" data-mm-dx-action="reset">Start another case</button></div></section>';
+}
+function dxRender(view){
+  const root=document.getElementById(view);if(!root)return;
+  root.dataset.mmDxMode='unified';
+  root.innerHTML='<div class="mm-dx-workbench"><header class="mm-dx-hero"><span class="eyebrow">Practice · Unified diagnostic workbench</span>'+
+    '<h1>Defect Finder + Troubleshooting Coach</h1>'+
+    '<p>Find the physical symptom, develop competing hypotheses, choose the next measurement and document a recovery criterion — in one guided, offline learning workspace.</p>'+
+    '<div class="mm-dx-disclaimer">Educational advisory only · No automatic root-cause ranking · No machine settings or production control</div></header>'+
+    '<div class="mm-dx-layout">'+dxLibrary()+(dxState.phase==='analysis'?dxAnalysis():dxIntake())+'</div></div>';
+  if(!root.dataset.mmDxBound){
+    root.dataset.mmDxBound='1';
+    root.addEventListener('click',event=>{
+      const el=event.target.closest('[data-mm-dx-action]');if(!el||!root.contains(el))return;
+      const action=el.dataset.mmDxAction;
+      if(action==='choose'){
+        const index=Number(el.dataset.mmDxId);
+        if(!Number.isInteger(index)||!dxDefects()[index])return;
+        dxState.selected=index;dxState.phase='intake';dxState.hypotheses={};dxRender(view);
+      }else if(action==='analyse'){
+        dxState.phase='analysis';dxRender(view);
+      }else if(action==='back'){dxState.phase='intake';dxRender(view)}
+      else if(action==='reset'){
+        dxState.selected=-1;dxState.phase='intake';dxState.query='';
+        dxState.hypotheses={};dxState.evidence=[];
+        dxState.form={when:'unknown',distribution:'unknown',change:'unknown',
+          baseline:'',observations:'',comparison:'',reflection:''};
+        dxRender(view);
+      }else if(action==='export'){
+        const data=JSON.stringify(dxReportData(),null,2);
+        const file=new Blob([data],{type:'application/json'});
+        const url=URL.createObjectURL(file);
+        const a=document.createElement('a');a.href=url;a.download='mouldmaster-diagnostic-learning-case.json';
+        document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),0);
+      }
+    });
+    root.addEventListener('input',event=>{
+      if(event.target.id==='mmDxSearch'){
+        dxState.query=event.target.value;
+        const term=dxState.query.trim().toLowerCase();
+        root.querySelectorAll('[data-mm-dx-terms]').forEach(button=>{button.hidden=!button.dataset.mmDxTerms.includes(term)});
+      }else if(event.target.name&&Object.hasOwn(dxState.form,event.target.name)){
+        dxState.form[event.target.name]=event.target.value;
+      }
+    });
+    root.addEventListener('change',event=>{
+      if(event.target.matches('[data-mm-dx-evidence]')){
+        const id=event.target.dataset.mmDxEvidence;
+        dxState.evidence=event.target.checked?[...new Set([...dxState.evidence,id])]:dxState.evidence.filter(x=>x!==id);
+      }else if(event.target.matches('[data-mm-dx-hypothesis]')){
+        dxState.hypotheses[Number(event.target.dataset.mmDxHypothesis)]=event.target.value;
+      }else if(event.target.name&&Object.hasOwn(dxState.form,event.target.name)){
+        dxState.form[event.target.name]=event.target.value;
+      }
+    });
+  }
+  const query=root.querySelector('#mmDxSearch');
+  if(query&&dxState.query)query.dispatchEvent(new Event('input',{bubbles:true}));
+}
+function dxOpen(index){
+  if(Number.isInteger(index)&&dxDefects()[index]){dxState.selected=index;dxState.phase='intake'}
+  try{window.closeModal?.()}catch(_){}
+  switchView('defects');
+}
+function renderUnifiedDefects(){dxRender('defects')}
+function renderUnifiedCoach(){dxRender('coach')}
+if(typeof renderDefects==='function'){
+  renderDefects=renderUnifiedDefects;window.renderDefects=renderUnifiedDefects;
+}
+if(typeof renderCoach==='function'){
+  renderCoach=renderUnifiedCoach;window.renderCoach=renderUnifiedCoach;
+}
+if(typeof openDefect==='function'){
+  openDefect=dxOpen;window.openDefect=dxOpen;
+}
+if(typeof askCoachForDefect==='function'){
+  askCoachForDefect=dxOpen;window.askCoachForDefect=dxOpen;
+}
+window.MM_DIAGNOSTIC_WORKBENCH=Object.freeze({
+  version:DX_VERSION,open:dxOpen,
+  report:dxReportData,
+  authority:'educational learning investigation only',
+  noProductionControl:true
+});
+
 function runAction(action){
   switch(action){
     case 'lesson': return openCurrentLesson();
@@ -190,10 +383,11 @@ function runAction(action){
     case 'glossary': closePicker(); return switchView('glossary');
     case 'saved': closePicker(); return switchView('profile');
     case 'daily': return openDaily();
-    case 'troubleshooting': return openPicker('troubleshooting');
+    case 'troubleshooting': return dxOpen();
     case 'mould-master': closePicker(); return safeOpen('MM_MOULD_MASTER_WORKSPACE',()=>switchView('defects'));
-    case 'defects': closePicker(); return switchView('defects');
-    case 'coach': closePicker(); return switchView('coach');
+    case 'diagnostic-workbench': return dxOpen();
+    case 'defects': return dxOpen();
+    case 'coach': return dxOpen();
     case 'diagnostic-labs': closePicker(); return safeOpen('MM_DIAGNOSTIC_LABS',()=>switchView('scenarios'));
     case 'process-data': return safeOpen('MM_PROCESS_DATA_DIAGNOSTICS');
     case 'scenario-detail': closePicker(); return openScenarioDetail(nextScenarioIndex());
