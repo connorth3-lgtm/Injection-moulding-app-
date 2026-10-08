@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.08.4",
-  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.08.4.md",
-  "sourceSha": "5982b2664c288e3ed9519a1e0836f2babdc861e5",
-  "runtimeFingerprint": "sha256:24607af4f735612e1979a885a7d5ffba80f91b508a10e1cad59bb2891fb888c7",
+  "release": "2026.10.08.5",
+  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.08.5.md",
+  "sourceSha": "2363594088c98ae807e496737225fc81cfcecd1c",
+  "runtimeFingerprint": "sha256:ce8b80d11f9e927226cb6b1cdf6effd307bd8847254f3d92d2de4f0081af444e",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.08.4 is bound to exact retained learner-runtime candidate 5982b2664c288e3ed9519a1e0836f2babdc861e5; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.08.5 is bound to exact retained learner-runtime candidate 2363594088c98ae807e496737225fc81cfcecd1c; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -251,7 +251,7 @@
   "requiredTasks": [
     {
       "id": "AT-01",
-      "instruction": "Navigate the primary product areas and return focus predictably."
+      "instruction": "Navigate the primary product areas through Mission Control, confirm the persistent context/timeline remain understandable, and return focus predictably."
     },
     {
       "id": "AT-02",
@@ -279,7 +279,7 @@
     },
     {
       "id": "AT-08",
-      "instruction": "Exercise dialogs, menus, tab-like controls, expandable regions and form validation with keyboard/AT navigation."
+      "instruction": "Exercise Mission Control command search and evidence drawer plus dialogs, menus, tab-like controls, expandable regions and form validation with keyboard/AT navigation."
     },
     {
       "id": "AT-09",
