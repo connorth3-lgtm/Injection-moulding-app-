@@ -41,9 +41,9 @@
     }
   },
   "privacyBoundary": "Public contract metadata must not include learner names, customer/site identifiers, email addresses, private screenshots, raw process data, backup content, filesystem/user paths or other personal/proprietary evidence. Keep detailed device evidence outside the public repository and reference it only with a non-sensitive review identifier.",
-  "release": "2026.10.08.7",
+  "release": "2026.10.08.8",
   "candidate": {
-    "release": "2026.10.08.7",
+    "release": "2026.10.08.8",
     "sourceSha": "d243d887965a51bcd7eff4dfc73287cf5acf6a79",
     "runtimeFingerprint": "sha256:849e3e9926f992a1cbeca7bf37cb262fd2590e152c0dc1f19c87647c016f70e2",
     "candidateRunId": 37748002799,
