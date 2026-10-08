@@ -19,7 +19,7 @@ global.clearInterval=()=>{};
 require(path.join(__dirname,'src/domains/engineering/virtual-apprenticeship.js'));
 const api=global.window.MM_VIRTUAL_APPRENTICESHIP;
 assert.ok(api,'virtual apprenticeship API must register');
-assert.equal(api.version,'2026.10.08.2');
+assert.equal(api.version,'2026.10.08.3');
 assert.equal(api.cases.length,6,'v1 must ship six governed authored practice cases');
 assert.deepEqual(Object.keys(api.levels),['beginner','developing','advanced']);
 assert.match(api.boundary,/no machine-control/i);
@@ -78,7 +78,9 @@ for(const marker of [
   'renderSimulatorWithApprenticeship',
   'window.renderSimulator=renderSimulatorWithApprenticeship',
   'root.insertBefore(host,root.firstChild)',
-  'navigation cannot silently remove'
+  'navigation cannot silently remove',
+  'function openCase',
+  'Explore this case in Spatial Twin'
 ])assert.ok(source.includes(marker),`missing apprenticeship/safety marker: ${marker}`);
 
 assert.ok(!source.includes("root.insertBefore(host,output)"),'apprenticeship must not insert relative to a nested simulator output node');

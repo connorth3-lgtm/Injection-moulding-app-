@@ -1,8 +1,8 @@
-/* MouldMaster Virtual Apprenticeship — evidence-first simulator practice 2026.10.08.2 */
+/* MouldMaster Virtual Apprenticeship — evidence-first simulator practice 2026.10.08.3 */
 (function(){
 'use strict';
 if(window.MM_VIRTUAL_APPRENTICESHIP)return;
-const VERSION='2026.10.08.2';
+const VERSION='2026.10.08.3';
 const STORAGE_KEY='mm_virtual_apprenticeship_v1';
 const LEVELS=Object.freeze({
   beginner:{label:'Beginner · guided',feedback:'immediate'},
@@ -261,10 +261,19 @@ function renderResult(){
   for(const key of STEP_KEYS){const el=byId(`mmVaFeedback-${key}`);if(el)el.textContent=result.dimensions[key].feedback}
 }
 function resetCase(){state.answers={};state.checked=false;renderCase()}
+function openCase(index=0){
+  state.caseIndex=Math.max(0,Math.min(CASES.length-1,Number(index)||0));state.answers={};state.checked=false;
+  try{window.MM_SPATIAL_TWIN?.close?.()}catch(_){}
+  if(typeof window.switchView==='function')window.switchView('simulator');
+  install();renderCase();
+  const host=byId('mmVirtualApprenticeship');requestAnimationFrame(()=>host?.scrollIntoView?.({block:'start',behavior:'smooth'}));
+  return true;
+}
 function renderCase(){
   const host=byId('mmVirtualApprenticeship');if(!host)return;
   const row=caseDef();host.replaceChildren();
   const head=make('div','section-head');const hcopy=make('div');hcopy.append(make('span','eyebrow','Virtual apprenticeship'),make('h2','',row.title),make('p','muted',row.focus));const pill=make('span','pill',`${row.id} · ${row.difficulty}`);head.append(hcopy,pill);host.appendChild(head);
+  const spatialBar=make('div','hero-buttons');const spatial=make('button','secondary','Explore this case in Spatial Twin');spatial.type='button';spatial.addEventListener('click',()=>window.MM_SPATIAL_TWIN?.open?.({caseIndex:state.caseIndex}));spatialBar.appendChild(spatial);host.appendChild(spatialBar);
   const controls=make('div','grid2');
   const caseLabel=make('label','', 'Case');const caseSelect=document.createElement('select');caseSelect.id='mmVaCaseSelect';CASES.forEach((c,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=`${c.id} · ${c.title}`;o.selected=i===state.caseIndex;caseSelect.appendChild(o)});caseLabel.appendChild(caseSelect);
   const levelLabel=make('label','', 'Coaching level');const levelSelect=document.createElement('select');for(const [id,v] of Object.entries(LEVELS)){const o=document.createElement('option');o.value=id;o.textContent=v.label;o.selected=id===state.level;levelSelect.appendChild(o)}levelLabel.appendChild(levelSelect);controls.append(caseLabel,levelLabel);host.appendChild(controls);
@@ -301,7 +310,7 @@ function renderSimulatorWithApprenticeship(){
 // after every governed simulator render so navigation cannot silently remove the
 // learner's apprenticeship surface.
 if(baseSimulatorRender)window.renderSimulator=renderSimulatorWithApprenticeship;
-const api=Object.freeze({version:VERSION,cases:CASES,levels:LEVELS,scoreReasoning,applyCaseToSimulator,install,resetCase,storageKey:STORAGE_KEY,boundary:'Authored learning cases and reasoning coaching only; no machine-control, production-setting or predictive-physics authority.'});
+const api=Object.freeze({version:VERSION,cases:CASES,levels:LEVELS,scoreReasoning,applyCaseToSimulator,install,resetCase,openCase,storageKey:STORAGE_KEY,boundary:'Authored learning cases and reasoning coaching only; no machine-control, production-setting or predictive-physics authority.'});
 window.MM_VIRTUAL_APPRENTICESHIP=api;
 try{window.MM_RUNTIME_V2?.registerModule?.('virtual-apprenticeship',{version:VERSION,type:'simulator-learning',scope:'authored-evidence-first-cases',authority:'training-only'})}catch(_){}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',installWhenReady,{once:true});else installWhenReady();

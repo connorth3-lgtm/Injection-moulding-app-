@@ -25,6 +25,7 @@
     "./src/domains/process/engineering-core-browser.js",
     "./src/domains/engineering/engineer-simulator-ui.js",
     "./src/domains/engineering/virtual-apprenticeship.js",
+    "./src/domains/engineering/spatial-twin.js",
     "./src/domains/governance/standards-readiness.js",
     "./src/domains/process/process-data-integrity.js",
     "./src/domains/process/process-statistics.js",

@@ -18,6 +18,7 @@ dynamic=text('premium-dynamic.css')
 shell=text('ui-shell.css')
 learner_polish=text('src/domains/shell/learner-ui-polish.js')
 learner_polish_css=text('src/domains/shell/learner-ui-polish.css')
+spatial_css=text('src/domains/engineering/spatial-twin.css')
 learning_experience=text('learning-experience.js')
 for marker in [
     '--mm-surface-0','--mm-accent','--mm-radius-xl','--mm-shadow-lg',
@@ -61,6 +62,9 @@ sw=text('service-worker.js')
 need(f"const CACHE_VERSION='{release}';" in sw,'service-worker release marker stale')
 need("'./premium-ui.css'" in sw,'premium UI stylesheet missing from atomic offline cache')
 need("'./premium-dynamic.css'" in sw,'premium dynamic stylesheet missing from atomic offline cache')
+need("'./src/domains/engineering/spatial-twin.css'" in sw,'Spatial Twin stylesheet missing from atomic offline cache')
+need("'./src/domains/engineering/spatial-twin.js'" in sw,'Spatial Twin runtime missing from atomic offline cache')
+need('http://' not in spatial_css and 'https://' not in spatial_css and '@import' not in spatial_css.lower(),'Spatial Twin stylesheet must remain fully local/offline')
 
 pwa=text('src/domains/shell/pwa-shell.js')
 need(f"const RELEASE='{release}';" in pwa,'PWA shell release marker stale')

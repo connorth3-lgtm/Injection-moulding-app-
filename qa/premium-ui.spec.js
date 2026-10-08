@@ -311,6 +311,7 @@ test('mobile evidence cards wrap long engineering metadata without horizontal ov
       acceptanceBasis:'Approved drawing and QA disposition reference with long descriptive authority',
       result:'Dimension remained within the approved tolerance across the verification sample.'
     },token);
+    await window.MM_MOULD_MASTER_WORKSPACE.hydrate({force:true});
     await window.MM_MOULD_MASTER_WORKSPACE.open(c.id);
   });
   const row=page.locator('#mmMouldMasterWorkspace .mw-evidence-row').first();
@@ -318,4 +319,37 @@ test('mobile evidence cards wrap long engineering metadata without horizontal ov
   await assertNoHorizontalOverflow(page,'mould-master-evidence-390');
   const title=await row.locator(':scope > b').first().evaluate(el=>getComputedStyle(el).overflowWrap);
   expect(['anywhere','break-word']).toContain(title);
+});
+
+
+test('Spatial Twin opens as a responsive evidence-led moulding world',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_SPATIAL_TWIN?.open&&window.MM_VIRTUAL_APPRENTICESHIP?.cases?.length===6));
+  await page.evaluate(()=>window.MM_SPATIAL_TWIN.open({caseIndex:1}));
+  const twin=page.locator('#mmSpatialTwin');
+  await expect(twin).toBeVisible();
+  await expect(twin.locator('[data-mm-st-mode]')).toHaveCount(7);
+  await expect(twin.locator('[data-mm-st-hotspot]')).toHaveCount(7);
+  await expect(twin.locator('[data-mm-st-phase]')).toHaveCount(6);
+  await expect(twin).toContainText('Explore the moulding system, not the menu');
+  await expect(twin).toContainText('No machine control');
+
+  await twin.locator('[data-mm-st-mode="pressure"]').click();
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-mode','pressure');
+  await twin.locator('[data-mm-st-phase="2"]').click();
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-phase','fault');
+  await twin.locator('[data-mm-st-hotspot="cavity4"]').click();
+  await expect(twin.locator('[data-mm-st-inspector]')).toContainText('Cavity 4');
+  await expect(twin.locator('[data-mm-st-inspector]')).toContainText('Evidence to seek');
+
+  await page.setViewportSize({width:390,height:844});
+  await expect(twin).toBeVisible();
+  await assertNoHorizontalOverflow(page,'spatial-twin-390');
+  const mobileWorld=await twin.locator('.mm-st-layout').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length);
+  expect(mobileWorld).toBe(1);
+
+  await twin.locator('[data-mm-st-close]').click();
+  await expect(twin).toBeHidden();
+  await expect(page.locator('#mmVirtualApprenticeship')).toBeVisible();
 });

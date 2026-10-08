@@ -7,7 +7,7 @@ import struct
 import subprocess
 import tempfile
 
-WEB_RELEASE = "2026.10.08.2"
+WEB_RELEASE = "2026.10.08.4"
 ANDROID_RELEASE = "2026.08.26.2"
 CONTENT_VERSION = "2026.08.26.1"
 WINDOWS_RECOVERY_VERSION = "2026.08.21.1"
@@ -138,7 +138,7 @@ for asset in [
     "source-library.js", "reference-data.js", "reference-deep-dive.js", "reference-2026-expansion.js",
     "src/domains/shell/pwa-shell.js", "learning-analytics.js",
     "src/domains/shared/runtime-v2.js", "src/domains/shell/accessibility-hardening.js",
-    "learner-ux-repair.css", "premium-ui.css", "premium-dynamic.css", "learner-ux-repair.js"
+    "learner-ux-repair.css", "premium-ui.css", "premium-dynamic.css", "src/domains/engineering/spatial-twin.css", "src/domains/engineering/spatial-twin.js", "learner-ux-repair.js"
 ]:
     assert f"'./{asset}'" in sw, f"offline asset missing: {asset}"
 for retired in ["reading-patch.js", "training-upgrade.js", "src/domains/learning/training-qa-fix.js"]:

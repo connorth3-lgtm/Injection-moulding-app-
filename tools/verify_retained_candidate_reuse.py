@@ -41,6 +41,13 @@ def parse_instant(value: object, label: str) -> dt.datetime:
 def verify(repository: str, token: str) -> None:
     ledger = json.loads((ROOT / "data" / "release-external-validation-v1.json").read_text(encoding="utf-8"))
     candidate = ledger.get("webCandidate") or {}
+    version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
+    current_release = str(version.get("web_release") or "").strip()
+    candidate_release = str(candidate.get("release") or "").strip()
+    if not current_release:
+        fail("current web release is missing")
+    if candidate_release != current_release:
+        fail(f"candidate release {candidate_release!r} does not match current web release {current_release!r}")
     source_sha = str(candidate.get("sourceSha") or "")
     run_id = candidate.get("candidateRunId")
     artifact_id = candidate.get("artifactId")
