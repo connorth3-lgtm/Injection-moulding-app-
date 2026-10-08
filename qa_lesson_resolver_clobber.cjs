@@ -44,12 +44,17 @@ for(const [file,func] of [
   assert.equal(func==='lessonId'?value:value.lesson?.id??value?.id,func==='lessonId'?'2':2,file+': valid lesson must remain available');
 }
 
+// Windows checkout may use CRLF, even though GitHub's source view uses LF.
+// Exercise that case on Linux as well so a future regex edit cannot reintroduce
+// a Windows-only false failure of the protected resolver.
+assert.match("const resolvedCurriculumLesson=()=>D.lessons[0];\\r\\n".replace(/\\r/g,'\\r'),/const resolvedCurriculumLesson=\\(\\)=>[\\s\\S]*?;\\r?\\n/);
+
 for(const file of [
   'curriculum-integration.js',
   'src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'
 ]){
   const source=fs.readFileSync(path.join(root,file),'utf8');
-  const match=source.match(/const resolvedCurriculumLesson=\(\)=>[\s\S]*?;\n/);
+  const match=source.match(/const resolvedCurriculumLesson=\(\)=>[\s\S]*?;\r?\n/);
   assert.ok(match,file+': missing protected curriculum resolver');
   const run=new Function('D','user','currentLesson','mmCoreSafeLesson',match[0]+'return resolvedCurriculumLesson()');
   assert.equal(run(D,user,poisonedGlobal,undefined).id,2);
