@@ -51,6 +51,9 @@ for(const marker of [
 assert.ok(!/style\s*=/.test(source),'Mission Control runtime must not create inline style attributes under the app CSP');
 assert.ok(!/\.style\./.test(source),'Mission Control runtime must not mutate inline styles under the app CSP');
 assert.ok(source.includes('function hydrateScopedState()'),'Mission Control must support late learner-scoped state hydration');
+assert.ok(source.includes("const PROFILE_DB_KEY='mouldmasterProDB'")&&source.includes('function persistedLearnerId()'),'Mission Control must resolve the persisted active learner during startup');
+assert.ok(source.includes('shared.storageKey(prefix,token)')&&source.includes("const prefix=STORAGE_KEY+'::'"),'Mission Control persisted-profile fallback must use the canonical learner-scope key format');
+assert.ok(source.includes('function readScopedState()')&&source.includes('function writeScopedState(value)'),'Mission Control must use one scoped read/write boundary across live and startup identity states');
 assert.ok(source.includes('function hydrateBeforeMutation()'),'Mission Control must hydrate learner-scoped state before passive or explicit writes');
 assert.ok(source.includes('function setSurface(id){hydrateCurrentLearner();state.surface'),'Mission Control surface changes must hydrate learner state before saving');
 assert.ok(source.includes('function scheduleHydration(attempt=0)')&&source.includes('setTimeout(()=>scheduleHydration(attempt+1),50)'),'Mission Control must retry scoped hydration until learner identity is available');
