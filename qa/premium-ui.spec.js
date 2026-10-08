@@ -6,8 +6,13 @@ function learner(id='premium-ui-qa'){
 
 async function openApp(page){
   await page.addInitScript(({user})=>{
-    localStorage.clear();
-    localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:user.id,users:{[user.id]:user}}));
+    let db=null;
+    try{db=JSON.parse(localStorage.getItem('mouldmasterProDB')||'null')}catch(_){}
+    const seeded=Boolean(db&&db.activeUser===user.id&&db.users&&db.users[user.id]);
+    if(!seeded){
+      localStorage.clear();
+      localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:user.id,users:{[user.id]:user}}));
+    }
   },{user:learner()});
   await page.goto('/index.html',{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED)&&typeof window.switchView==='function');
