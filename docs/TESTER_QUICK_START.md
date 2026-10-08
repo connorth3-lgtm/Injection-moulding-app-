@@ -7,7 +7,7 @@ Thanks for helping test MouldMaster. You are reviewing the *learning experience*
 ## Before opening
 
 - Use your own browser profile on a phone, tablet or computer, preferably on a device you can reset safely. **Do not use a shared production workstation or device containing other people's learner records.**
-- Use an **invented name/pseudonym** for the local learner profile. Do not enter a real person's details, employer, customer, site, production part, proprietary machine settings or confidential process evidence.
+- Use an **invented name/pseudonym** for the local learner profile. When onboarding asks for **Your name**, enter something fictional (for example, **Trial Learner**), or use the default; no real name is required for this evaluation. Do not enter a real person's details, employer, customer, site, production part, proprietary machine settings or confidential process evidence.
 - The app stores learning progress on the **device/browser**, not in a cross-device learner account. Losing site storage can lose your work. Browser private/incognito sessions may not persist progress or offline support.
 - Do **not** upload actual plant CSVs or progress backups for this evaluation. Use only built-in training cases or deliberately fictional examples.
 - On machinery or at work, continue to follow manufacturer instructions, approved site procedures, risk assessment, safeguarding and qualified supervision. Never implement a learning example as a production recipe.
@@ -44,6 +44,6 @@ For safety-critical advice, learner privacy leakage or lost progress, stop that 
 
 ## Your data and limitations
 
-See [Privacy](../privacy.html) and [Support](../support.html) as served **inside the preview** (append `privacy.html` or `support.html` after `/preview/`). Local progress/backups and reset controls have different scopes; a normal learner reset is **not** a full wipe of device/site storage. See Support → **Data & Reset** and use browser/OS site-data clearing when a complete removal is needed.
+Read the **hosted** [Preview Privacy Notice](https://connorth3-lgtm.github.io/Injection-moulding-app-/preview/privacy.html) and [Preview Support / Data & Reset](https://connorth3-lgtm.github.io/Injection-moulding-app-/preview/support.html#data-reset) after the preview has passed live deployment verification. These links are actual tester-facing pages, not source files in GitHub. Local progress/backups and reset controls have different scopes; a normal learner reset is **not** a full wipe of device/site storage. See Support → **Data & Reset** and use browser/OS site-data clearing when a complete removal is needed.
 
 If you have been asked to join a formal learner-outcomes study, that requires **separate information, consent and a governed pilot procedure**; this informal product test does not substitute for that process.
