@@ -49,6 +49,9 @@ const FIXED_COMMANDS=Object.freeze([
 ]);
 
 let state=loadState();
+// Remember the owner of the initial persisted state. A startup profile swap
+// must not attribute an already-loaded learner's records to someone else.
+const initialLoadedLearnerToken=resolvedLearnerToken();
 let installed=false;
 let dashboardRegistered=false;
 let unbindView=null;
@@ -114,6 +117,17 @@ function normalizeMission(input={}){
     updatedAt:String(input.updatedAt||new Date().toISOString())
   }
 }
+function normalizeEvidenceRows(input){
+  if(!Array.isArray(input))return [];
+  return input.filter(row=>row&&typeof row==='object'&&!Array.isArray(row)&&typeof row.id==='string'&&row.id.trim()&&typeof row.text==='string'&&row.text.trim())
+    .slice(-100).map(row=>({
+      id:row.id.slice(0,120),
+      kind:['observed','measured','hypothesis','unknown','note','verification'].includes(row.kind)?row.kind:'note',
+      text:row.text.slice(0,1600),
+      at:typeof row.at==='string'&&Number.isFinite(Date.parse(row.at))?row.at:'',
+      surface:typeof row.surface==='string'?row.surface.slice(0,120):'unknown'
+    }));
+}
 function normalizeState(saved){
   if(!saved||typeof saved!=='object')return clone(DEFAULT_STATE);
   return {
@@ -121,7 +135,7 @@ function normalizeState(saved){
     ...saved,
     mode:MODES[saved.mode]?saved.mode:'learner',
     mission:saved.mission?normalizeMission(saved.mission):null,
-    evidence:Array.isArray(saved.evidence)?saved.evidence.slice(-100):[]
+    evidence:normalizeEvidenceRows(saved.evidence)
   }
 }
 function loadState(){return normalizeState(readScopedState())}
@@ -135,7 +149,7 @@ function hydrateCurrentLearner(){
   // intentional in-memory work instead of replacing it with an empty store.
   // When switching between already-hydrated learners, always load the new
   // learner's isolated persisted state and never carry the prior learner over.
-  if(hydratedLearnerToken===null&&localMeaningful){
+  if(hydratedLearnerToken===null&&localMeaningful&&!initialLoadedLearnerToken){
     hydratedLearnerToken=token;
     writeScopedState({
       schema:1,mode:state.mode,surface:state.surface,mission:state.mission,evidence:state.evidence,
@@ -169,18 +183,11 @@ function hydrateScopedState(){
   return false
 }
 function hydrateBeforeMutation(){
-  const storage=runtimeStorage(),token=resolvedLearnerToken();
+  const token=resolvedLearnerToken();
   if(!token)return false;
-  if(token===hydratedLearnerToken)return true;
-  const persisted=normalizeState(readScopedState());
-  const localMeaningful=Boolean(state.mission)||state.evidence.length>0;
-  if(!localMeaningful){
-    const surface=state.surface;
-    state=persisted;
-    if(surface)state.surface=surface;
-  }
-  hydratedLearnerToken=token;
-  return true
+  // Rehydrate before any mutation; no previous learner data may carry across.
+  if(token!==hydratedLearnerToken)hydrateCurrentLearner();
+  return hydratedLearnerToken===token;
 }
 function saveState(){
   const token=resolvedLearnerToken();
@@ -240,7 +247,7 @@ function evidenceMarkup(){
       <label class="wide">Add to the evidence chain<textarea data-mm-mc-evidence-text rows="3" placeholder="Record what is known, measured, inferred or still unknown."></textarea></label>
       <button type="button" class="primary" data-mm-mc-evidence-add>Add evidence</button>
     </div>
-    <div class="mm-mc-evidence-list">${rows.length?rows.map(row=>`<article class="mm-mc-evidence-row" data-kind="${esc(row.kind)}"><div><span>${esc(row.kind)}</span><time>${esc(new Date(row.at).toLocaleString())}</time></div><p>${esc(row.text)}</p><button type="button" class="ghost" data-mm-mc-evidence-remove="${esc(row.id)}">Remove</button></article>`).join(''):'<div class="mm-mc-empty-state"><b>No mission evidence yet.</b><p>Add observations, measurements, hypotheses and verification notes here. They stay learner-scoped on this device.</p></div>'}</div>
+    <div class="mm-mc-evidence-list">${rows.length?rows.map(row=>`<article class="mm-mc-evidence-row" data-kind="${esc(row.kind)}"><div><span>${esc(row.kind)}</span><time>${esc(row.at?new Date(row.at).toLocaleString():'Time unavailable')}</time></div><p>${esc(row.text)}</p><button type="button" class="ghost" data-mm-mc-evidence-remove="${esc(row.id)}">Remove</button></article>`).join(''):'<div class="mm-mc-empty-state"><b>No mission evidence yet.</b><p>Add observations, measurements, hypotheses and verification notes here. They stay learner-scoped on this device.</p></div>'}</div>
     <footer>Learning/evidence boundary: Mission Control organises context and reasoning. It does not authorise machine, mould, material, maintenance, safeguarding or production changes.</footer>
   </div>`;
 }
@@ -282,6 +289,7 @@ function install(){
   installed=true;render();bindShell();registerDashboard();return true;
 }
 function bind(host){
+  const boundLearnerToken=resolvedLearnerToken();
   host.querySelector('[data-mm-mc-palette]')?.addEventListener('click',openPalette);
   host.querySelector('[data-mm-mc-evidence]')?.addEventListener('click',()=>toggleDrawer(true));
   host.querySelector('[data-mm-mc-mode]')?.addEventListener('click',cycleMode);
@@ -290,7 +298,7 @@ function bind(host){
   host.querySelectorAll('[data-mm-mc-stage]').forEach(b=>b.addEventListener('click',()=>setStage(b.dataset.mmMcStage)));
   host.querySelector('[data-mm-mc-drawer-close]')?.addEventListener('click',()=>toggleDrawer(false));
   host.querySelector('[data-mm-mc-evidence-add]')?.addEventListener('click',addEvidenceFromDrawer);
-  host.querySelectorAll('[data-mm-mc-evidence-remove]').forEach(b=>b.addEventListener('click',()=>removeEvidence(b.dataset.mmMcEvidenceRemove)));
+  host.querySelectorAll('[data-mm-mc-evidence-remove]').forEach(b=>b.addEventListener('click',()=>removeEvidence(b.dataset.mmMcEvidenceRemove,boundLearnerToken)));
   host.querySelectorAll('[data-mm-mc-palette-close]').forEach(b=>b.addEventListener('click',e=>{if(e.target===b||b.tagName==='BUTTON')closePalette()}));
   const panel=host.querySelector('[data-mm-mc-palette-panel]');panel?.addEventListener('click',e=>e.stopPropagation());
   const q=host.querySelector('[data-mm-mc-query]');q?.addEventListener('input',()=>renderCommands(q.value));q?.addEventListener('keydown',paletteKeydown);
@@ -338,7 +346,15 @@ function addEvidenceFromDrawer(){
   const host=root(),kind=host?.querySelector('[data-mm-mc-evidence-kind]')?.value||'note',box=host?.querySelector('[data-mm-mc-evidence-text]');
   if(!box)return false;const ok=addEvidence({kind,text:box.value});if(ok){state.drawerOpen=true;render()}return ok
 }
-function removeEvidence(id){hydrateBeforeMutation();state.evidence=state.evidence.filter(x=>x.id!==id);saveState();render();registerDashboard(true)}
+function removeEvidence(id,expectedToken){
+  const currentToken=resolvedLearnerToken();
+  // Reject clicks from a previous profile's still-mounted evidence controls.
+  if(!currentToken||expectedToken!==currentToken){if(currentToken)hydrateCurrentLearner();render();return false;}
+  if(!hydrateBeforeMutation())return false;
+  const next=state.evidence.filter(x=>x.id!==id);
+  if(next.length===state.evidence.length)return false;
+  state.evidence=next;saveState();render();registerDashboard(true);return true;
+}
 function toggleDrawer(open=!state.drawerOpen){state.drawerOpen=Boolean(open);if(state.drawerOpen)state.paletteOpen=false;render();requestAnimationFrame(()=>root()?.querySelector('[data-mm-mc-evidence-text]')?.focus())}
 function openPalette(){state.paletteOpen=true;state.drawerOpen=false;render();requestAnimationFrame(()=>root()?.querySelector('[data-mm-mc-query]')?.focus())}
 function closePalette(){state.paletteOpen=false;render()}
