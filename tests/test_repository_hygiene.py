@@ -112,6 +112,17 @@ class RepositoryHygieneTests(unittest.TestCase):
             issues, _ = hygiene.content_findings(root, [("src/accidental.txt", "100644")])
             self.assertTrue(any("embedded private-key" in value for value in issues))
 
+    def test_ignore_rules_fail_closed_on_missing_credentials_patterns(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / ".gitignore").write_text("/node_modules/\n", encoding="utf-8")
+            missing = hygiene.ignore_findings(root, {".gitignore"})
+            self.assertTrue(any(".env.*" in value for value in missing))
+            all_rules = sorted(hygiene.REQUIRED_IGNORE_MARKERS)
+            (root / ".gitignore").write_text("\n".join(all_rules) + "\n", encoding="utf-8")
+            self.assertEqual(hygiene.ignore_findings(root, {".gitignore"}), [])
+            self.assertTrue(hygiene.ignore_findings(root, set()))
+
     def test_index_parser_does_not_split_on_whitespace_in_file_path(self):
         output = (
             b"100644 " + b"a" * 40 + b" 0\tdocs/a file.md\0" +
