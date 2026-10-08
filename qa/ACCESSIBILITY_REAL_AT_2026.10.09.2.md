@@ -2,12 +2,12 @@
 
 Human assistive-technology validation remains **HOLD** for release `2026.10.09.2`.
 
-- retained source: `5b5ddc778c58d672999947491c5017ece06d49bd`
+- retained source: `1759b51f1a36e35348c047f01a571bad4cc98332`
 - public-runtime fingerprint: `sha256:779f87ae4a624deb666686c0baa42c93c7e387ff7733a9248f06dc701b0f3e48`
-- retained candidate: `physical-pwa-candidate-5b5ddc778c58d672999947491c5017ece06d49bd` (`11575251369`)
-- candidate run: `37834868036`
-- artifact digest: `sha256:b20726e01867eadfcaa77871aa92a49ec7850690a30a96a35fd1f6e1c8dba798`
-- expiry: `2027-01-06T19:49:49Z`
+- retained candidate: `physical-pwa-candidate-1759b51f1a36e35348c047f01a571bad4cc98332` (`11575821148`)
+- candidate run: `37835444373`
+- artifact digest: `sha256:a152583a875abf2ab46d9751102f2fd40dc52f99c4b57c3367fde9d4d2cdff06`
+- expiry: `2027-01-06T19:54:25Z`
 
 The governed NVDA and VoiceOver matrix remains pending. Automated browser checks do not count as real-AT evidence.
 
@@ -29,4 +29,4 @@ The governed NVDA and VoiceOver matrix remains pending. Automated browser checks
 This packet is a release/candidate binding only. Real assistive-technology validation remains **HOLD** until genuine human NVDA and VoiceOver evidence passes every required task in the governed matrix.
 
 
-PROVISIONAL candidate binding for automated gate convergence only: the artifact source, manifest and fingerprint are verified, but the producer quality gate has not yet completed successfully. This does NOT establish approved retention, production readiness, physical-device, assistive-technology, human SME, learner outcome or provider validation. Every external human/device/provider workstream remains HOLD. Rebind once a successful retained producer exists.
+Retained exact-runtime artifact provenance has been verified against a successfully completed Pre-merge Public Candidate producer and its current public-runtime fingerprint. This is technical provenance only: human assistive-technology, physical-device, Windows distribution/signing, Book and curriculum SME, NZQA/provider, learner-outcome and production authorisations remain HOLD. No external approval is inferred.
