@@ -11,14 +11,20 @@ const profileKey='mouldmasterProDB';
 const scopedKey=id=>'mm_mission_control_v1::t'+id;
 
 function harness(){
-  const memory=new Map(),boundActions=[],listeners=new Map();
+  const memory=new Map(),boundActions=[],modeActions=[],dashboardActions=[],listeners=new Map();
   const track=(owner,type,handler)=>{const key=owner+':'+type;if(!listeners.has(key))listeners.set(key,[]);listeners.get(key).push(handler)};
   const storage={
     getItem:key=>memory.has(key)?memory.get(key):null,
     setItem:(key,value)=>memory.set(key,String(value)),
     removeItem:key=>memory.delete(key)
   };
-  let host=null;
+  let host=null,dashboardRenderer=null,dashboardHtml='';
+  const dashboardSlot={
+    innerHTML:'',
+    querySelector(selector){return {
+      addEventListener(type,handler){if(type==='click')dashboardActions.push({selector,handler})}
+    }}
+  };
   const document={
     readyState:'loading',addEventListener(type,handler){track('document',type,handler)},
     getElementById:id=>id==='mmMissionControl'?host:null,
@@ -26,6 +32,15 @@ function harness(){
   };
   const window={
     addEventListener(type,handler){track('window',type,handler)},dispatchEvent(){},
+    MM_APP_SHELL:{dashboard:{
+      register(item){dashboardRenderer=item.render},
+      requestCompose(){
+        if(!dashboardRenderer)return;
+        dashboardSlot.innerHTML='';
+        dashboardRenderer(dashboardSlot);
+        dashboardHtml=dashboardSlot.innerHTML;
+      }
+    },events:{}},
     MM_LEARNER_SCOPE:{
       tokenFor:id=>'t'+id,
       storageKey:(prefix,token)=>prefix+token
@@ -50,7 +65,12 @@ function harness(){
   function attachHost(){
     host={
       innerHTML:'',
-      querySelector(){return null},
+      querySelector(selector){
+        if(selector==='[data-mm-mc-mode]')return {
+          addEventListener(type,handler){if(type==='click')modeActions.push(handler)}
+        };
+        return null;
+      },
       querySelectorAll(selector){
         if(selector!=='[data-mm-mc-evidence-remove]')return [];
         return [...this.innerHTML.matchAll(/data-mm-mc-evidence-remove="([^"]+)"/g)]
@@ -66,7 +86,11 @@ function harness(){
   }
   function start(){vm.runInNewContext(source,context,{filename:'mission-control.js'});return window.MM_MISSION_CONTROL}
   const fireEvent=(owner,type)=>{for(const fn of listeners.get(owner+':'+type)||[])fn()};
-  return {memory,storage,select,read,attachHost,start,boundActions,fireEvent};
+  return {memory,storage,select,read,attachHost,start,boundActions,modeActions,dashboardActions,fireEvent,
+    composeDashboard(){
+      window.MM_APP_SHELL.dashboard.requestCompose();
+      return dashboardHtml;
+    }};
 }
 
 // Stale buttons must neither copy A's evidence to B nor delete B's records.
@@ -164,4 +188,58 @@ function harness(){
   assert.equal(h.read('A').evidence.length,1);
   assert.equal(h.read('A').evidence[0].text,'Keep me');
 }
-console.log('Mission Control isolation QA passed: profile switches, stale-view privacy, first hydration, corrupt restoration, unscoped work and same-profile deletion.');
+// Shell composition is synchronous and can precede both click microtasks and
+// profile-change events. A direct dashboard compose must scope before reading.
+{
+  const h=harness();h.select('A');const api=h.start();
+  h.fireEvent('window','mm:domains-ready');
+  api.startMission({title:'A confidential project'});
+  api.addEvidence({kind:'measured',text:'A-only defect'});
+  const cardA=h.composeDashboard();
+  assert.match(cardA,/A confidential project/);
+  const staleCard=h.dashboardActions.find(x=>x.selector==='[data-mm-mc-home-evidence]');
+  assert.ok(staleCard,'dashboard evidence control must be bound');
+  h.select('B');
+  const cardB=h.composeDashboard();
+  assert.doesNotMatch(cardB,/A confidential project|A-only defect/,'dashboard compose must not display previous owner');
+  assert.match(cardB,/Start a connected learning mission/,'learner B should have an empty dashboard');
+  staleCard.handler();
+  assert.equal(h.read('B'),null,'stale dashboard evidence action must not affect B');
+  assert.equal(h.read('A').mission.title,'A confidential project');
+  h.select(null);
+  assert.doesNotMatch(h.composeDashboard(),/A confidential project/,'signed-out dashboard must be neutral');
+}
+
+// A saved mission must be readable by the stage action without requiring a
+// preliminary state() or focus event; A's stage must remain unchanged.
+{
+  const h=harness();h.select('A');const api=h.start();
+  api.startMission({title:'A stage',stage:'evidence'});
+  h.storage.setItem(scopedKey('B'),JSON.stringify({
+    mode:'learner',mission:{title:'B saved mission',stage:'brief'},evidence:[]
+  }));
+  h.select('B');
+  assert.equal(api.nextStage(),true,'nextStage must hydrate B before checking mission');
+  assert.equal(h.read('B').mission.stage,'baseline');
+  assert.equal(h.read('A').mission.stage,'evidence');
+}
+
+// Detached mode and stage controls from A must not mutate B, while fresh
+// controls for B must still work normally.
+{
+  const h=harness();h.select('A');const api=h.start();
+  h.attachHost();api.startMission({title:'A controls',stage:'brief'});
+  const staleMode=h.modeActions.at(-1);
+  assert.ok(staleMode,'mode control must be bound');
+  h.select('B');
+  h.storage.setItem(scopedKey('B'),JSON.stringify({
+    mode:'engineer',mission:{title:'B controls',stage:'brief'},evidence:[]
+  }));
+  staleMode();
+  assert.equal(h.read('B').mode,'engineer','stale A mode control must not change B');
+  const freshMode=h.modeActions.at(-1);
+  freshMode();
+  assert.equal(h.read('B').mode,'learner','fresh B control should cycle engineer to learner');
+  assert.equal(h.read('A').mode,'learner');
+}
+console.log('Mission Control isolation QA passed: profile switch, synchronous dashboard, stale controls, navigation, snapshots, malformed restore and unscoped startup.');
