@@ -309,7 +309,7 @@ function radioGroup(step,row){
     const option=make('label','choice');
     const input=document.createElement('input');input.type='radio';input.name=`mm-va-${step}`;input.value=id;input.checked=state.answers[step]===id;
     const span=make('span','',label);option.append(input,span);list.appendChild(option);
-    input.addEventListener('change',()=>{state.answers[step]=id;state.checked=false;const missionStage={hypothesis:'hypothesis',test:'test',response:'intervention',verify:'verification'}[step]||'evidence';syncMissionContext(missionStage);renderFeedback(step);updateCheckButton()});
+    input.addEventListener('change',()=>{state.answers[step]=id;state.checked=false;state.attemptSaved=false;renderResult();const missionStage={hypothesis:'hypothesis',test:'test',response:'intervention',verify:'verification'}[step]||'evidence';syncMissionContext(missionStage);renderFeedback(step);updateCheckButton()});
   }
   wrap.appendChild(list);
   const feedback=make('div','tiny muted');feedback.id=`mmVaFeedback-${step}`;feedback.setAttribute('aria-live','polite');wrap.appendChild(feedback);
