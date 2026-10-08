@@ -398,3 +398,57 @@ test('Mission Control persists context, evidence and command search across app s
   await expect(mc.locator('.mm-mc-timeline')).toBeVisible();
 });
 
+
+
+test('Mission Control persists context across the app and remains mobile-safe',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_MISSION_CONTROL?.startMission&&window.MM_APP_SHELL?.finalized));
+  await page.evaluate(()=>window.MM_MISSION_CONTROL.startMission({
+    title:'QA connected moulding mission',
+    kind:'investigation',
+    stage:'baseline',
+    context:{machine:'IMM-07',mould:'MOULD-184',material:'PA66 GF30',part:'Housing A',caseId:'QA-MC-01'}
+  }));
+
+  const mc=page.locator('#mmMissionControl');
+  await expect(mc).toBeVisible();
+  await expect(mc.locator('[data-mm-mc-stage]')).toHaveCount(8);
+  await expect(mc).toContainText('QA connected moulding mission');
+  await expect(mc).toContainText('IMM-07');
+  await expect(mc).toContainText('MOULD-184');
+  await expect(mc).toContainText('PA66 GF30');
+  const insideMain=await mc.evaluate(el=>Boolean(el.closest('.main')));
+  expect(insideMain).toBe(true);
+
+  await page.evaluate(()=>window.MM_MISSION_CONTROL.addEvidence({kind:'measured',text:'Cavity 4 mass is 0.8% below the known-good baseline.'}));
+  await mc.locator('[data-mm-mc-evidence]').click();
+  await expect(mc.locator('.mm-mc-drawer')).toHaveClass(/open/);
+  await expect(mc.locator('.mm-mc-evidence-row')).toContainText('Cavity 4 mass is 0.8% below the known-good baseline.');
+  await mc.locator('[data-mm-mc-drawer-close]').click();
+
+  await mc.locator('[data-mm-mc-palette]').click();
+  const query=mc.locator('[data-mm-mc-query]');
+  await query.fill('gate seal');
+  await expect(mc.locator('[data-mm-mc-results]')).toContainText('Search learning for “gate seal”');
+  await query.fill('Spatial Twin');
+  await expect(mc.locator('[data-mm-mc-results]')).toContainText('Spatial Twin');
+  await mc.locator('[data-mm-mc-palette-close]').first().click();
+
+  await page.evaluate(()=>window.MM_MISSION_CONTROL.setMode('engineer'));
+  await expect(page.locator('body')).toHaveAttribute('data-mm-mission-mode','engineer');
+  await page.evaluate(()=>window.switchView('materials'));
+  await expect(mc).toContainText('QA connected moulding mission');
+  await expect(mc).toContainText('PA66 GF30');
+
+  await page.reload();
+  await page.waitForFunction(()=>Boolean(window.MM_MISSION_CONTROL?.state));
+  await expect(page.locator('#mmMissionControl')).toContainText('QA connected moulding mission');
+  const persisted=await page.evaluate(()=>window.MM_MISSION_CONTROL.state());
+  expect(persisted.mission?.context?.machine).toBe('IMM-07');
+  expect(persisted.evidence?.length).toBeGreaterThanOrEqual(1);
+
+  await page.setViewportSize({width:390,height:844});
+  await expect(page.locator('#mmMissionControl')).toBeVisible();
+  await assertNoHorizontalOverflow(page,'mission-control-390');
+});
