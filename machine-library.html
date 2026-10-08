@@ -16,6 +16,7 @@ h1{margin:0 0 8px;font-size:clamp(28px,5vw,48px)}h2{margin:0 0 12px}h4{margin-bo
 .stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.chip,.badge{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800}.verified{color:var(--accent)}.strong_match{color:#8dc7ff}.reference_only{color:var(--warn)}.missing{color:var(--bad)}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:16px;margin-top:18px}.card{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:18px}.card h3{margin:0 0 4px;font-size:22px}.section{margin-top:28px}.section-head{display:flex;gap:10px;align-items:end;justify-content:space-between;flex-wrap:wrap}.section-head p{margin:0}
 .specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px}.spec{border:1px solid #243b57;background:#0b1727;border-radius:10px;padding:10px}.spec b{display:block;font-size:13px}.spec span{color:var(--muted);font-size:13px}
+.variant{border:1px solid #2b4462;border-radius:12px;padding:12px;margin:10px 0;background:#0b1727}.variant ul{margin:8px 0}.variant li{margin:5px 0;line-height:1.5}.variant h5{margin:2px 0 8px;font-size:15px}.evidence-boundary{font-size:13px;color:var(--muted);line-height:1.5}
 ul{padding-left:20px}.manual,.source-row{border-top:1px solid #243b57;padding:12px 0}.manual:first-child,.source-row:first-child{border-top:0}.notice{border-left:4px solid var(--warn);background:#1c2230;padding:12px 14px;border-radius:8px;margin:14px 0}
 .empty{padding:32px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}.maker-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:16px}.maker{border:1px solid var(--line);background:#0c1829;border-radius:14px;padding:16px}.maker h3{margin:0 0 3px}.maker .source-row p{margin:4px 0}
 footer{width:min(1180px,94vw);margin:34px auto;color:var(--muted);font-size:13px}
@@ -58,6 +59,16 @@ footer{width:min(1180px,94vw);margin:34px auto;color:var(--muted);font-size:13px
   function sourceRows(list){
     return (list||[]).map(x=>'<div class="source-row"><div>'+badge(x.status||'verified')+' <strong>'+esc(x.title)+'</strong></div><p class="muted">'+esc(x.notes||'')+'</p><a href="'+esc(x.url)+'" target="_blank" rel="noopener">Open official source ↗</a></div>').join('');
   }
+  function injectionUnits(model){
+    const variants=model.published_injection_variants||[];
+    if(!variants.length)return '';
+    const rows=variants.map(v=>{
+      const ds=v.screw_diameter_mm||[],vs=v.injection_capacity_cm3||[],ps=v.maximum_injection_pressure_mpa||[];
+      const options=ds.map((d,i)=>'<li>Ø'+esc(d)+' mm screw — '+esc(vs[i])+' cm³ published capacity; '+esc(ps[i])+' MPa published maximum injection pressure</li>').join('');
+      return '<div class="variant"><h5>Injection unit '+esc(v.injection_unit_id)+' · '+esc(v.published_option)+'</h5><ul>'+options+'</ul><p class="evidence-boundary">Source variant '+esc(v.source_id)+'. Figures are paired by screw diameter, not interchangeable across injection units.</p></div>';
+    }).join('');
+    return '<h4>OEM-published injection-unit variants</h4><p class="evidence-boundary">Published options only. The actual installed injection unit, machine serial and rated/usable processing capability must be independently verified before machine-fit screening.</p>'+rows;
+  }
   function render(){
     const term=q.value.trim().toLowerCase(),st=status.value;
     const makerRows=manufacturers.filter(m=>!term||JSON.stringify(m).toLowerCase().includes(term));
@@ -68,7 +79,7 @@ footer{width:min(1180px,94vw);margin:34px auto;color:var(--muted);font-size:13px
       const specs=Object.entries(m.common_verified_specs||{}).map(([k,v])=>'<div class="spec"><b>'+esc(human(k))+'</b><span>'+esc(v)+'</span></div>').join('');
       const manuals=(m.manuals||[]).map(x=>'<div class="manual"><div>'+badge(x.status)+' <strong>'+esc(x.title)+'</strong></div><p class="muted">'+esc(x.notes||'')+'</p><a href="'+esc(x.url)+'" target="_blank" rel="noopener">Open source ↗</a></div>').join('');
       const wanted=(m.wanted_documents||[]).map(x=>'<li>'+badge(x.status)+' '+esc(x.title)+'</li>').join('');
-      return '<article class="card"><p class="muted">'+esc(m.manufacturer)+' · '+esc(m.series||'')+'</p><h3>'+esc(m.model)+'</h3><div>'+badge(m.research_status==='active'?'strong_match':m.research_status)+'</div><p>'+esc(m.generation_note||'')+'</p><div class="notice"><strong>Year:</strong> '+esc(m.manufacture_year?.value||'Unknown')+' — '+esc(m.manufacture_year?.evidence_note||'')+'</div><h4>Verified/common machine data</h4><div class="specs">'+specs+'</div><h4>Controller</h4><p>'+esc(m.controller?.family||'Unknown')+' · '+badge(m.controller?.confidence||'missing')+'</p><p class="muted">'+esc(m.controller?.host_note||'')+'</p><h4>Manuals and references</h4>'+manuals+'<h4>Still wanted</h4><ul>'+wanted+'</ul></article>';
+      return '<article class="card"><p class="muted">'+esc(m.manufacturer)+' · '+esc(m.series||'')+'</p><h3>'+esc(m.model)+'</h3><div>'+badge(m.research_status==='active'?'strong_match':m.research_status)+'</div><p>'+esc(m.generation_note||'')+'</p><div class="notice"><strong>Year:</strong> '+esc(m.manufacture_year?.value||'Unknown')+' — '+esc(m.manufacture_year?.evidence_note||'')+'</div><h4>Verified/common machine data</h4><div class="specs">'+specs+'</div>'+injectionUnits(m)+'<h4>Controller</h4><p>'+esc(m.controller?.family||'Unknown')+' · '+badge(m.controller?.confidence||'missing')+'</p><p class="muted">'+esc(m.controller?.host_note||'')+'</p><h4>Manuals and references</h4>'+manuals+'<h4>Still wanted</h4><ul>'+wanted+'</ul></article>';
     }).join('');
   }
   q.addEventListener('input',render);status.addEventListener('change',render);render();
