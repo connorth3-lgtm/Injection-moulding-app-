@@ -215,3 +215,75 @@ test.describe('360px narrow-phone hubs',()=>{
     await page.screenshot({path:'qa-artifacts/mobile-materials-360x800.png'});
   });
 });
+
+test('Unified diagnostic evidence controls remain single-column and readable at 360px',async({page})=>{
+  await page.setViewportSize({width:360,height:800});
+  await openApp(page);
+  await page.evaluate(()=>switchView('scenarios'));
+  await page.locator('#scenarios [data-mm-hub-action="troubleshooting"]').click();
+  const root=page.locator('#defects');
+  await root.locator('[data-mm-dx-action="choose"]').first().click();
+  const labels=root.locator('.mm-dx-check');
+  await expect(labels).toHaveCount(6);
+  await expect(labels.first().locator('input[type="checkbox"]')).toBeVisible();
+  const measure=await page.evaluate(()=>{
+    const root=document.getElementById('defects');
+    const evidence=root.querySelector('.mm-dx-evidence');
+    const labels=[...root.querySelectorAll('.mm-dx-check')];
+    const entries=labels.map(label=>{
+      const input=label.querySelector('input');
+      const span=label.querySelector('span');
+      const l=label.getBoundingClientRect(),c=input.getBoundingClientRect(),t=span.getBoundingClientRect();
+      return {inputWidth:c.width,inputHeight:c.height,
+        labelLeft:l.left,labelRight:l.right,
+        checkboxLeft:c.left,checkboxRight:c.right,
+        textLeft:t.left,textRight:t.right,
+        textHeight:t.height,textWidth:t.width};
+    });
+    const e=evidence.getBoundingClientRect();
+    return {scrollWidth:document.documentElement.scrollWidth,
+      clientWidth:document.documentElement.clientWidth,
+      evidenceLeft:e.left,evidenceRight:e.right,entries};
+  });
+  expect(measure.scrollWidth-measure.clientWidth).toBeLessThanOrEqual(2);
+  expect(measure.evidenceRight).toBeLessThanOrEqual(362);
+  expect(measure.evidenceLeft).toBeGreaterThanOrEqual(-2);
+  for(const entry of measure.entries){
+    expect(entry.inputWidth).toBeGreaterThanOrEqual(17);
+    expect(entry.inputWidth).toBeLessThanOrEqual(22);
+    expect(entry.inputHeight).toBeLessThanOrEqual(22);
+    expect(entry.checkboxRight).toBeLessThan(entry.textLeft);
+    expect(entry.checkboxLeft).toBeGreaterThanOrEqual(-1);
+    expect(entry.textLeft).toBeGreaterThan(entry.checkboxLeft+16);
+    expect(entry.textRight).toBeLessThanOrEqual(entry.labelRight+2);
+    expect(entry.textWidth).toBeGreaterThan(100);
+    expect(entry.textHeight).toBeGreaterThan(10);
+  }
+  await labels.nth(1).locator('input').check();
+  await expect(labels.nth(1).locator('input')).toBeChecked();
+  const reported=await page.evaluate(()=>window.MM_DIAGNOSTIC_WORKBENCH.report());
+  expect(reported.evidenceReportedAvailable).toContain('pressure');
+});
+
+test('Core dashboard survives a clobbered legacy currentLesson name without resetting learner state',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  const result=await page.evaluate(()=>{
+    const original=window.currentLesson;
+    const stored=localStorage.getItem('mouldmasterProDB');
+    if(typeof original!=='function')throw new Error('core lesson resolver did not initialise');
+    try{
+      window.currentLesson={invalid:true};
+      if(typeof window.currentLesson==='function')throw new Error('collision setup did not take effect');
+      // Invoke the original learner renderer; app shell may wrap this function.
+      renderDashboard();
+      const legacy=typeof window.currentLesson;
+      const home=!!document.querySelector('#dashboard')?.children?.length;
+      return {legacy,home,storageUnchanged:localStorage.getItem('mouldmasterProDB')===stored};
+    }finally{window.currentLesson=original;}
+  });
+  expect(result.home).toBe(true);
+  expect(result.legacy).toBe('object');
+  expect(result.storageUnchanged).toBe(true);
+  await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
+});

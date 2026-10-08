@@ -159,6 +159,7 @@ function courseProgress(course){
   return {done,total:course.lessonIds.length,pct:Math.round(done/course.lessonIds.length*100)};
 }
 function currentLesson(){ return D.lessons.find(l=>l.id===user.currentLesson)||D.lessons[0] }
+const mmCoreSafeLesson = () => D.lessons.find(l=>l.id===user.currentLesson)||D.lessons[0];
 function updateGlobalProgress(){
   const pct=completedPct();
   $("#sideProgress").style.width=pct+"%";$("#sideProgressText").textContent=pct+"%";
@@ -183,7 +184,7 @@ function renderView(id){
   if(id==="standards")renderStandards();
 }
 function renderDashboard(){
-  const pct=completedPct(), c=currentLesson();
+  const pct=completedPct(), c=mmCoreSafeLesson();
   const certs=user.learningAwards?.length||0;
   $("#dashboard").innerHTML=`
   <div class="hero">
@@ -230,7 +231,7 @@ function renderPath(){
   <div class="learning-map">${D.courses.map(c=>{const p=courseProgress(c);return `<div class="card track-row"><div><span class="eyebrow">${esc(c.level)}</span><h3 style="margin:6px 0">${c.id}. ${esc(c.name)}</h3></div><div><p class="muted">${esc(c.description)}</p><div class="mini-bar"><span style="width:${p.pct}%"></span></div></div><div><b>${p.pct}% complete</b><div style="margin-top:8px"><button class="secondary" data-mm-onclick="openCourse(${c.id})">Open track</button></div></div></div>`}).join("")}</div>`;
 }
 function renderLesson(){
-  const l=currentLesson(), c=D.courses.find(x=>x.id===l.course);
+  const l=mmCoreSafeLesson(), c=D.courses.find(x=>x.id===l.course);
   const bookmarked=user.bookmarks?.includes(l.id);
   $("#lesson").innerHTML=`<div class="lesson-layout">
     <article class="card lesson-body">
@@ -517,7 +518,7 @@ function updateGlobalProgress(){
   const admin=$("#instructorNav"); if(admin) admin.style.display=user.role==="instructor"?"flex":"none";
 }
 function renderDashboard(){
-  const pct=completedPct(), l=currentLesson(), certs=user.learningAwards?.length||0;
+  const pct=completedPct(), l=mmCoreSafeLesson(), certs=user.learningAwards?.length||0;
   const course=D.courses.find(c=>c.id===l.course);
   const cp=courseProgress(course);
   const firstName=(user.name||"Learner").split(" ")[0];
@@ -579,7 +580,7 @@ function renderPath(){
     </div>`;
 }
 function renderLesson(){
-  const l=currentLesson(), c=D.courses.find(x=>x.id===l.course), p=courseProgress(c);
+  const l=mmCoreSafeLesson(), c=D.courses.find(x=>x.id===l.course), p=courseProgress(c);
   const bookmarked=user.bookmarks?.includes(l.id);
   const previous=l.id>1?l.id-1:null, next=l.id<D.lessons.length?l.id+1:null;
   $("#lesson").innerHTML=`
@@ -1325,7 +1326,7 @@ const engagingBaseLesson=renderLesson;
 renderLesson=function(){
   engagingBaseLesson();
   const body=$("#lesson .lesson-body");
-  const l=currentLesson();
+  const l=mmCoreSafeLesson();
   if(body){
     body.insertAdjacentHTML("afterbegin",`<div class="lesson-quest"><b>🎯 Mission ${l.id}/120 · ${esc(l.title)}</b><small>Understand the mechanism, connect it to evidence, then apply it to the shop-floor exercise. Complete the lesson for 25 XP.</small></div>`);
   }
@@ -1750,7 +1751,7 @@ renderSimulator=function(){
 /* Improve lesson evidence literacy using content_patch fields. */
 const fineRenderLesson=renderLesson;
 renderLesson=function(){
-  fineRenderLesson(); const l=currentLesson(),body=$("#lesson .lesson-body"); if(!body)return;
+  fineRenderLesson(); const l=mmCoreSafeLesson(),body=$("#lesson .lesson-body"); if(!body)return;
   const actions=body.querySelector(".lesson-actions-sticky");
   const block=document.createElement("div");block.className="content-block";
   block.innerHTML=`<h3>Evidence check</h3><p><b>Capture:</b> ${esc(l.evidencePrompt||"")}</p><p><b>Common trap:</b> ${esc(l.commonTrap||"")}</p>`;
