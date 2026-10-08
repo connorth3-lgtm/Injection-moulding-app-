@@ -88,8 +88,12 @@ installModalScrollLock();
 function esc(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
 function lessonContext(){
   try{
-    const lesson=currentLesson();
+    const lesson=typeof mmCoreSafeLesson==='function'
+      ? mmCoreSafeLesson()
+      : (D.lessons.find(l=>l.id===user.currentLesson)||D.lessons[0]);
+    if(!lesson)return null;
     const course=D.courses.find(x=>x.id===lesson.course);
+    if(!course)return null;
     const position=Math.max(0,course.lessonIds.indexOf(lesson.id));
     const completed=Array.isArray(user?.completed)?user.completed.length:0;
     const overall=D.lessons?.length?Math.round(completed/D.lessons.length*100):0;
