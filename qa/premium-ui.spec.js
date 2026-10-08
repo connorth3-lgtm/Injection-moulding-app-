@@ -311,6 +311,7 @@ test('mobile evidence cards wrap long engineering metadata without horizontal ov
       acceptanceBasis:'Approved drawing and QA disposition reference with long descriptive authority',
       result:'Dimension remained within the approved tolerance across the verification sample.'
     },token);
+    await window.MM_MOULD_MASTER_WORKSPACE.hydrate({force:true});
     await window.MM_MOULD_MASTER_WORKSPACE.open(c.id);
   });
   const row=page.locator('#mmMouldMasterWorkspace .mw-evidence-row').first();
