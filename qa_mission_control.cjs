@@ -17,7 +17,7 @@ global.window={addEventListener(){},dispatchEvent(){}};
 require(path.join(__dirname,'src/domains/shell/mission-control.js'));
 const api=global.window.MM_MISSION_CONTROL;
 assert.ok(api,'Mission Control API must register');
-assert.equal(api.version,'2026.10.08.5');
+assert.equal(api.version,'2026.10.08.6');
 assert.equal(api.stages.length,8,'Mission Control must expose the full eight-stage mission timeline');
 assert.deepEqual(api.stages.map(x=>x[0]),['brief','baseline','evidence','hypothesis','test','intervention','verification','reflection']);
 assert.deepEqual(Object.keys(api.modes),['learner','technician','engineer']);
@@ -51,6 +51,8 @@ for(const marker of [
 assert.ok(!/style\s*=/.test(source),'Mission Control runtime must not create inline style attributes under the app CSP');
 assert.ok(!/\.style\./.test(source),'Mission Control runtime must not mutate inline styles under the app CSP');
 assert.ok(source.includes('class="mm-mc-drawer-panel" role="region" aria-label="Mission evidence"'),'Mission evidence drawer must be a labelled modeless region');
+assert.ok(source.includes("state.drawerOpen?evidenceMarkup():''"),'closed Mission evidence drawer must not leave hidden interactive/text content in the DOM');
+assert.ok(source.includes('hydrateCurrentLearner();state.surface'),'view changes must hydrate learner-scoped Mission Control state before saving');
 assert.ok(source.includes('role="dialog" aria-modal="true" aria-label="Mission Control command search"'),'Mission Control command palette must remain an explicitly named modal dialog');
 
 const css=fs.readFileSync(path.join(__dirname,'src/domains/shell/mission-control.css'),'utf8');
