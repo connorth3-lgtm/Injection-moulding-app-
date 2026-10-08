@@ -51,6 +51,8 @@ for(const marker of [
 assert.ok(!/style\s*=/.test(source),'Mission Control runtime must not create inline style attributes under the app CSP');
 assert.ok(!/\.style\./.test(source),'Mission Control runtime must not mutate inline styles under the app CSP');
 assert.ok(source.includes('function hydrateScopedState()'),'Mission Control must support late learner-scoped state hydration');
+assert.ok(source.includes('function hydrateBeforeMutation()'),'Mission Control must hydrate learner-scoped state before passive or explicit writes');
+assert.ok(source.includes('if(hydrateBeforeMutation()){state.surface=next;saveState()}'),'Mission Control surface changes must not overwrite unhydrated learner state');
 assert.ok(source.includes('function scheduleHydration(attempt=0)')&&source.includes('setTimeout(()=>scheduleHydration(attempt+1),50)'),'Mission Control must retry scoped hydration until learner identity is available');
 assert.ok(source.includes('class="mm-mc-drawer-panel" role="region" aria-label="Mission evidence"'),'Mission evidence drawer must be a labelled modeless region');
 assert.ok(source.includes("state.drawerOpen?evidenceMarkup():''"),'closed Mission evidence drawer must not leave hidden interactive/text content in the DOM');
