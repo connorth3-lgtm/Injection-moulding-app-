@@ -108,7 +108,10 @@ jobs:
           path: .pages-hold
           if-no-files-found: error
           retention-days: 14
-          include-hidden-files: false
+          # .pages-hold is a dot-prefixed, generated release-hold directory.
+          # The artifact upload defaults to ignoring hidden paths, which would
+          # leave the exact-SHA candidate absent even after local QA passes.
+          include-hidden-files: true
       - name: Explain preview publication boundary
         run: |
           echo "Preview exact-SHA candidate verified and retained."
