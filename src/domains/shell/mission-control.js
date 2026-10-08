@@ -6,14 +6,14 @@ if(window.MM_MISSION_CONTROL)return;
 const VERSION='2026.10.08.5';
 const STORAGE_KEY='mm_mission_control_v1';
 const STAGES=Object.freeze([
-  ['brief','Brief'],
-  ['baseline','Baseline'],
-  ['evidence','Evidence'],
-  ['hypothesis','Hypothesis'],
-  ['test','Test'],
-  ['intervention','Intervention'],
-  ['verification','Verification'],
-  ['reflection','Reflection']
+  ['brief','Mission brief'],
+  ['baseline','Known good'],
+  ['evidence','Gather evidence'],
+  ['hypothesis','Rank cause'],
+  ['test','Controlled test'],
+  ['intervention','Apply intervention'],
+  ['verification','Verify recovery'],
+  ['reflection','Reflect']
 ]);
 const MODES=Object.freeze({
   learner:{label:'Learner',description:'Guided explanations, visible evidence prompts and learning support.'},
@@ -114,15 +114,15 @@ function contextMarkup(){
   return `<div class="mm-mc-context" aria-label="Mission context">
     <button type="button" class="mm-mc-brand" data-mm-mc-palette aria-label="Open Mission Control command search"><span class="mm-mc-orb" aria-hidden="true">MM</span><span><small>Mission Control</small><b>${esc(m?.title||'No active mission')}</b></span><kbd>⌘K</kbd></button>
     <div class="mm-mc-context-items">
-      <div><span>Machine</span><b>${esc(contextValue(c.machine))}</b></div>
-      <div><span>Mould</span><b>${esc(contextValue(c.mould))}</b></div>
-      <div><span>Material</span><b>${esc(contextValue(c.material))}</b></div>
-      <div><span>Part</span><b>${esc(contextValue(c.part))}</b></div>
-      <div><span>Case</span><b>${esc(contextValue(c.caseId))}</b></div>
+      <div><span>Machine context</span><b>${esc(contextValue(c.machine))}</b></div>
+      <div><span>Mould context</span><b>${esc(contextValue(c.mould))}</b></div>
+      <div><span>Material context</span><b>${esc(contextValue(c.material))}</b></div>
+      <div><span>Part context</span><b>${esc(contextValue(c.part))}</b></div>
+      <div><span>Case context</span><b>${esc(contextValue(c.caseId))}</b></div>
     </div>
     <div class="mm-mc-actions">
       <button type="button" class="ghost" data-mm-mc-mode title="Change Mission Control workspace mode">${esc(MODES[state.mode].label)}</button>
-      <button type="button" class="secondary" data-mm-mc-evidence>Evidence <span>${state.evidence.length}</span></button>
+      <button type="button" class="secondary" data-mm-mc-evidence>Mission evidence <span>${state.evidence.length}</span></button>
     </div>
   </div>`;
 }
