@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.08.7",
-  "validationIndex": "qa/EXTERNAL_VALIDATION_2026.10.08.7.md",
+  "release": "2026.10.08.8",
+  "validationIndex": "qa/EXTERNAL_VALIDATION_2026.10.08.8.md",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
     "status": "pass",
@@ -21,9 +21,9 @@
   "accessibility": {
     "status": "hold",
     "evidenceContract": "data/accessibility-real-at-validation-v1.json",
-    "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.10.08.7.md",
+    "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.10.08.8.md",
     "candidate": {
-      "release": "2026.10.08.7",
+      "release": "2026.10.08.8",
       "sourceSha": "d243d887965a51bcd7eff4dfc73287cf5acf6a79",
       "runtimeFingerprint": "sha256:849e3e9926f992a1cbeca7bf37cb262fd2590e152c0dc1f19c87647c016f70e2"
     },
@@ -32,9 +32,9 @@
   "pwaPhysicalDevices": {
     "status": "hold",
     "evidenceContract": "data/pwa-physical-device-validation-v1.json",
-    "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.10.08.7.md",
+    "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.10.08.8.md",
     "currentCandidate": {
-      "release": "2026.10.08.7",
+      "release": "2026.10.08.8",
       "sourceSha": "d243d887965a51bcd7eff4dfc73287cf5acf6a79",
       "runtimeFingerprint": "sha256:849e3e9926f992a1cbeca7bf37cb262fd2590e152c0dc1f19c87647c016f70e2",
       "candidateRunId": 37748002799,
@@ -50,7 +50,7 @@
     "status": "hold",
     "workflow": ".github/workflows/microsoft-store-msix.yml",
     "handoff": "certification/STORE_SUBMISSION_STATUS.md",
-    "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.10.08.7.md",
+    "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.10.08.8.md",
     "sourceSha": "7cfcf8285239411221fe05d5c356e29d39ade36c",
     "desktopRelease": "2026.09.29.1",
     "evidence": null,
@@ -64,20 +64,20 @@
   "bookSme": {
     "status": "hold",
     "evidenceContract": "data/book-sme-review-v1.json",
-    "reviewPacket": "qa/BOOK_SME_REVIEW_2026.10.08.7.md",
+    "reviewPacket": "qa/BOOK_SME_REVIEW_2026.10.08.8.md",
     "required": "Independent human SME approval of all 46 governed Book modules across the six required review dimensions; the 20 reader chapters are structural groupings only.",
     "contentRelease": "2026.10.06.5"
   },
   "curriculumSme": {
     "status": "hold",
     "evidenceContract": "qa/curriculum-semantic-review.json",
-    "reviewPacket": "qa/CURRICULUM_SME_REVIEW_2026.10.08.7.md",
+    "reviewPacket": "qa/CURRICULUM_SME_REVIEW_2026.10.08.8.md",
     "required": "Traceable human SME semantic approval of all 120 canonical lessons."
   },
   "learnerOutcomes": {
     "status": "hold",
     "pilotContract": "data/learner-pilot-v1.json",
-    "pilotPacket": "qa/LEARNER_PILOT_2026.10.08.7.md",
+    "pilotPacket": "qa/LEARNER_PILOT_2026.10.08.8.md",
     "evidence": null,
     "required": "Longitudinal real-learner outcome evidence before efficacy or genuine psychometric-validity claims."
   },
@@ -100,16 +100,16 @@
   "nzqaProvider": {
     "status": "hold",
     "evidenceContract": "data/nzqa-external-validation-v1.json",
-    "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.08.7.md",
+    "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.08.8.md",
     "required": "Genuine provider ownership, stakeholder need, provider-approved design, authorised assessment/internal moderation, consent-to-assess/CMR confirmation, applicable national moderation, workplace evidence and provider-controlled review/change evidence for the exact governed release.",
     "candidate": {
-      "release": "2026.10.08.7",
+      "release": "2026.10.08.8",
       "sourceSha": "d243d887965a51bcd7eff4dfc73287cf5acf6a79",
       "runtimeFingerprint": "sha256:849e3e9926f992a1cbeca7bf37cb262fd2590e152c0dc1f19c87647c016f70e2"
     }
   },
   "webCandidate": {
-    "release": "2026.10.08.7",
+    "release": "2026.10.08.8",
     "sourceSha": "d243d887965a51bcd7eff4dfc73287cf5acf6a79",
     "runtimeFingerprint": "sha256:849e3e9926f992a1cbeca7bf37cb262fd2590e152c0dc1f19c87647c016f70e2",
     "candidateRunId": 37748002799,
