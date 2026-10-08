@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.10.08.6';
-const CACHE_REVISION='mission-control-r71-20261008';
+const CACHE_REVISION='mission-control-r72-20261008';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both
