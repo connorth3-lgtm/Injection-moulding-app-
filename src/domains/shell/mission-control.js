@@ -321,7 +321,7 @@ function keydown(e){
 function installWhenReady(){if(!document.body)return false;install();bindShell();registerDashboard();return true}
 
 window.addEventListener('keydown',keydown);
-window.addEventListener('mm:domains-ready',()=>{bindShell();registerDashboard();render()});
+window.addEventListener('mm:domains-ready',()=>{state=loadState();bindShell();registerDashboard();render()});
 window.MM_MISSION_CONTROL=Object.freeze({
   version:VERSION,stages:STAGES,modes:MODES,install,startMission,attachContext,setStage,nextStage,setMode,
   addEvidence,toggleDrawer,openPalette,closePalette,setSurface,state:snapshot,
