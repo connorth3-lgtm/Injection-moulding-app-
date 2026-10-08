@@ -122,6 +122,8 @@ def main() -> int:
         "src/domains/engineering/virtual-apprenticeship.js",
         "src/domains/engineering/spatial-twin.js",
         "src/domains/engineering/spatial-twin.css",
+        "src/domains/shell/mission-control.js",
+        "src/domains/shell/mission-control.css",
         "src/domains/process/engineering-core.mjs",
         "src/domains/process/engineering-core-browser.js",
         "tools/generate_engineering_browser_adapter.py",
@@ -130,6 +132,7 @@ def main() -> int:
         "qa_engineer_simulator_units.cjs",
         "qa_virtual_apprenticeship.cjs",
         "qa_spatial_twin.cjs",
+        "qa_mission_control.cjs",
     })
     if engineer_simulator_changed:
         if (ROOT / "tools/generate_engineering_browser_adapter.py").exists():
@@ -142,6 +145,8 @@ def main() -> int:
             commands.append(["node", "qa_virtual_apprenticeship.cjs"])
         if (ROOT / "qa_spatial_twin.cjs").exists():
             commands.append(["node", "qa_spatial_twin.cjs"])
+        if (ROOT / "qa_mission_control.cjs").exists():
+            commands.append(["node", "qa_mission_control.cjs"])
 
     simulator_accessibility_changed = bool(files & {
         "src/core-runtime/core-inline-007.js",
