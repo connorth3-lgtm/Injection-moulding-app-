@@ -92,7 +92,22 @@ function loadState(){return normalizeState(runtimeStorage()?.get?.(STORAGE_KEY,n
 function hydrateCurrentLearner(){
   const storage=runtimeStorage(),token=storage?.learnerToken?.();
   if(!token||token===hydratedLearnerToken)return false;
-  state=normalizeState(storage.get?.(STORAGE_KEY,null));
+  const persisted=normalizeState(storage.get?.(STORAGE_KEY,null));
+  const localMeaningful=Boolean(state.mission)||state.evidence.length>0;
+  // A mission can be started during shell startup before the learner identity
+  // becomes available. On that first scope resolution, preserve and persist
+  // intentional in-memory work instead of replacing it with an empty store.
+  // When switching between already-hydrated learners, always load the new
+  // learner's isolated persisted state and never carry the prior learner over.
+  if(hydratedLearnerToken===null&&localMeaningful){
+    hydratedLearnerToken=token;
+    storage.set?.(STORAGE_KEY,{
+      schema:1,mode:state.mode,surface:state.surface,mission:state.mission,evidence:state.evidence,
+      drawerOpen:false,paletteOpen:false
+    });
+    return true
+  }
+  state=persisted;
   hydratedLearnerToken=token;
   return true
 }
