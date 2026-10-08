@@ -121,10 +121,12 @@ with tempfile.TemporaryDirectory() as tmp:
         "GITHUB_BASE_REF":"preview","GITHUB_EVENT_PATH":str(event_path),
         "GITHUB_REPOSITORY":"","GITHUB_TOKEN":""
     }):
-        with mock.patch.object(proof_baseline,"governed_candidate",return_value="unreachable-squash-sha"), \\
-             mock.patch.object(proof_baseline,"is_ancestor",return_value=False), \\
-             mock.patch.object(proof_baseline,"valid_commit",return_value=True), \\
-             mock.patch.object(proof_baseline,"git",return_value="whole-pr-base") as git_calls:
+        with (
+            mock.patch.object(proof_baseline,"governed_candidate",return_value="unreachable-squash-sha"),
+            mock.patch.object(proof_baseline,"is_ancestor",return_value=False),
+            mock.patch.object(proof_baseline,"valid_commit",return_value=True),
+            mock.patch.object(proof_baseline,"git",return_value="whole-pr-base") as git_calls,
+        ):
             need(proof_baseline.resolve("mobile-browser-qa.yml","pr-head")=="whole-pr-base",
                  "first PR run must use full merge base, not last commit")
             need(any(call.args[:2]==("merge-base","base-candidate") for call in git_calls.call_args_list),
@@ -137,9 +139,11 @@ with tempfile.TemporaryDirectory() as tmp:
         "GITHUB_BASE_REF":"","GITHUB_EVENT_PATH":"/nonexistent/pr-event.json",
         "GITHUB_REPOSITORY":"","GITHUB_TOKEN":""
     }):
-        with mock.patch.object(proof_baseline,"governed_candidate",return_value=""), \\
-             mock.patch.object(proof_baseline,"valid_commit",return_value=False), \\
-             mock.patch.object(proof_baseline,"git",return_value="root-of-history") as git_calls:
+        with (
+            mock.patch.object(proof_baseline,"governed_candidate",return_value=""),
+            mock.patch.object(proof_baseline,"valid_commit",return_value=False),
+            mock.patch.object(proof_baseline,"git",return_value="root-of-history") as git_calls,
+        ):
             need(proof_baseline.resolve("mobile-browser-qa.yml","pr-head")=="root-of-history",
                  "unresolvable PR base must select a conservative full-history check")
             need(any(call.args[:2]==("rev-list","--max-parents=0") for call in git_calls.call_args_list),
