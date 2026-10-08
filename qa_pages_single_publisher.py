@@ -62,6 +62,13 @@ for forbidden in (
     "environment:\n      name: github-pages",
 ):
     need(forbidden not in preview_workflow, f"preview workflow must not publish the repository Pages site: {forbidden}")
+# The candidate artifact is intentionally staged under a dot-prefixed directory.
+# actions/upload-artifact otherwise silently excludes its entire path.
+preview_upload = preview_workflow.split("      - name: Retain exact preview candidate", 1)[1].split("      - name: Explain preview publication boundary", 1)[0]
+need("path: .pages-hold" in preview_upload, "preview candidate artifact must be scoped to generated release-hold output")
+need("if-no-files-found: error" in preview_upload, "preview artifact must fail closed when missing")
+need("include-hidden-files: true" in preview_upload,
+     "dot-prefixed .pages-hold candidate must be included in upload-artifact; otherwise the exact-SHA handoff is empty")
 need(preview_workflow.count("pull-requests: read") >= 1, "preview provenance verification requires pull-request read permission")
 need("retain-exact-candidate" not in preview_workflow.split("Require exact-head preview quality gates", 1)[1].split("Validate preview build contracts", 1)[0],
      "preview merge-SHA polling must not wait for the PR-only public-candidate job")
