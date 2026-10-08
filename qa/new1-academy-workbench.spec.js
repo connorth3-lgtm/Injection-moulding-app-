@@ -9,7 +9,7 @@ async function load(page){
 test('all five New1 development pillars stay usable and do not launch new production authority',async({page})=>{
   await load(page);
   await expect(page.locator('.metrics .metric')).toHaveCount(4);
-  await page.getByRole('button',{name:'Recovery',exact:true}).click();
+  await page.getByRole('button',{name:'recovery',exact:true}).click();
   await expect(page.locator('.scroll tbody tr')).toHaveCount(5);
   await page.getByRole('button',{name:'Review my reasoning'}).click();
   await expect(page.locator('#new1Review')).toContainText('Finish all four evidence decisions');
