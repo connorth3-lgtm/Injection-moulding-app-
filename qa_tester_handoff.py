@@ -95,7 +95,7 @@ def verify_local() -> tuple[str, str]:
     for marker in (
         "No questionnaire or learning outcome is automatically submitted",
         "fictional", "Data & Reset", "SECURITY.md",
-        "browser/device", "Non-production preview",
+        "device and browser", "Non-production preview",
     ):
         need(marker.lower() in texts["quickstart"].lower(),
              f"tester quick start is missing: {marker}")
