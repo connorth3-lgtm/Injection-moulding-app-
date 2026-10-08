@@ -212,15 +212,29 @@ const FACTORY_CASE_ONE=Object.freeze({
     {label:'Fault visible',mass:[12.01,12.00,12.01,11.83]}
   ])
 });
-const STEP_BOOK=Object.freeze({
-  hypothesis:FACTORY_CASE_ONE.book[0],test:FACTORY_CASE_ONE.book[1],
-  response:FACTORY_CASE_ONE.book[2],verify:FACTORY_CASE_ONE.book[3]
+const BOOK_INDEX=Object.freeze({
+  'multi-cavity':'Multi-cavity balance','cavity-pressure':'Cavity-pressure evidence',
+  'feed-system':'Runners and gates','diagnostic-method':'Evidence-led diagnosis',
+  'process-baseline':'Process baseline','pressure-loss':'Pressure-loss studies',
+  'vp-transfer':'Velocity-to-pressure transfer','cooling':'Cooling evidence',
+  'dimensional-stability':'Dimensional stability','gate-seal':'Gate-seal study',
+  'burns':'Burn marks and competing mechanisms'
+});
+const CASE_BOOK=Object.freeze({
+  'VA-01':['process-baseline','pressure-loss','vp-transfer','diagnostic-method'],
+  'VA-02':['multi-cavity','cavity-pressure','feed-system','diagnostic-method'],
+  'VA-03':['cooling','dimensional-stability','cooling','diagnostic-method'],
+  'VA-04':['gate-seal','gate-seal','feed-system','diagnostic-method'],
+  'VA-05':['burns','diagnostic-method','burns','process-baseline'],
+  'VA-06':['cavity-pressure','cavity-pressure','cavity-pressure','process-baseline']
 });
 function tutorPlan(row,result){
   const gaps=STEP_KEYS.filter(key=>!result?.dimensions?.[key]?.correct);
   const strengths=STEP_KEYS.filter(key=>result?.dimensions?.[key]?.correct);
+  const readings=CASE_BOOK[row?.id]||CASE_BOOK['VA-02'];
+  const recommended=gaps.length?gaps.map(key=>readings[STEP_KEYS.indexOf(key)]):[readings[3]];
   return {caseId:row?.id||'',gaps,strengths,
-    book:gaps.length?gaps.map(key=>STEP_BOOK[key]):[STEP_BOOK.verify],
+    book:[...new Set(recommended)].map(id=>({id,title:BOOK_INDEX[id]})),
     guidance:gaps.length?'Read the source context for each missed reasoning step, then retry the case.':'The authored reasoning chain is sound. Repeat with fresh evidence; a perfect training answer is not proof of workplace competence.'};
 }
 function competencyRecord(){
