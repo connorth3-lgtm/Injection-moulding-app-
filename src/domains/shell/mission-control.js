@@ -115,6 +115,20 @@ function hydrateScopedState(){
   if(hasPersisted&&!hasLive){state=persisted;return true}
   return false
 }
+function hydrateBeforeMutation(){
+  const storage=runtimeStorage(),token=storage?.learnerToken?.();
+  if(!token)return false;
+  if(token===hydratedLearnerToken)return true;
+  const persisted=normalizeState(storage.get?.(STORAGE_KEY,null));
+  const localMeaningful=Boolean(state.mission)||state.evidence.length>0;
+  if(!localMeaningful){
+    const surface=state.surface;
+    state=persisted;
+    if(surface)state.surface=surface;
+  }
+  hydratedLearnerToken=token;
+  return true
+}
 function saveState(){
   const token=runtimeStorage()?.learnerToken?.();
   if(token&&!hydratedLearnerToken)hydratedLearnerToken=token;
@@ -271,7 +285,7 @@ function addEvidenceFromDrawer(){
   const host=root(),kind=host?.querySelector('[data-mm-mc-evidence-kind]')?.value||'note',box=host?.querySelector('[data-mm-mc-evidence-text]');
   if(!box)return false;const ok=addEvidence({kind,text:box.value});if(ok){state.drawerOpen=true;render()}return ok
 }
-function removeEvidence(id){state.evidence=state.evidence.filter(x=>x.id!==id);saveState();render();registerDashboard(true)}
+function removeEvidence(id){hydrateBeforeMutation();state.evidence=state.evidence.filter(x=>x.id!==id);saveState();render();registerDashboard(true)}
 function toggleDrawer(open=!state.drawerOpen){state.drawerOpen=Boolean(open);if(state.drawerOpen)state.paletteOpen=false;render();requestAnimationFrame(()=>root()?.querySelector('[data-mm-mc-evidence-text]')?.focus())}
 function openPalette(){state.paletteOpen=true;state.drawerOpen=false;render();requestAnimationFrame(()=>root()?.querySelector('[data-mm-mc-query]')?.focus())}
 function closePalette(){state.paletteOpen=false;render()}
