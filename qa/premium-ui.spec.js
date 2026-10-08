@@ -353,3 +353,48 @@ test('Spatial Twin opens as a responsive evidence-led moulding world',async({pag
   await expect(twin).toBeHidden();
   await expect(page.locator('#mmVirtualApprenticeship')).toBeVisible();
 });
+
+test('Mission Control persists context, evidence and command search across app surfaces',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_MISSION_CONTROL?.startMission&&window.MM_APP_SHELL));
+
+  const mc=page.locator('#mmMissionControl');
+  await expect(mc).toBeVisible();
+  await page.evaluate(()=>window.MM_MISSION_CONTROL.startMission({
+    title:'QA cavity-balance mission',
+    kind:'qa',
+    stage:'baseline',
+    context:{machine:'IMM-07',mould:'MOULD-184',material:'PA66 GF30',part:'Housing A',caseId:'QA-MISSION-01'}
+  }));
+  await expect(mc).toContainText('QA cavity-balance mission');
+  await expect(mc).toContainText('IMM-07');
+  await expect(mc).toContainText('MOULD-184');
+  await expect(mc).toContainText('PA66 GF30');
+  await expect(mc.locator('[data-mm-mc-stage]')).toHaveCount(8);
+
+  await page.evaluate(()=>window.MM_MISSION_CONTROL.addEvidence({kind:'measured',text:'Cavity 4 mass lower than peer cavities across repeat shots.'}));
+  await mc.locator('[data-mm-mc-evidence]').click();
+  await expect(mc.locator('.mm-mc-drawer')).toHaveClass(/open/);
+  await expect(mc.locator('.mm-mc-evidence-row')).toContainText('Cavity 4 mass lower than peer cavities');
+  await mc.locator('[data-mm-mc-drawer-close]').click();
+
+  await page.keyboard.press('Control+K');
+  await expect(mc.locator('.mm-mc-palette-host')).toHaveClass(/open/);
+  const query=mc.locator('[data-mm-mc-query]');
+  await query.fill('Spatial Twin');
+  await expect(mc.locator('[data-mm-mc-command]')).toContainText('Spatial Twin');
+  await page.keyboard.press('Escape');
+
+  await page.evaluate(()=>window.switchView('materials'));
+  await expect(mc).toContainText('QA cavity-balance mission');
+  await expect(mc).toContainText('PA66 GF30');
+  await page.evaluate(()=>window.MM_MISSION_CONTROL.setMode('engineer'));
+  await expect(page.locator('body')).toHaveAttribute('data-mm-mission-mode','engineer');
+
+  await page.setViewportSize({width:390,height:844});
+  await expect(mc).toBeVisible();
+  await assertNoHorizontalOverflow(page,'mission-control-390');
+  await expect(mc.locator('.mm-mc-timeline')).toBeVisible();
+});
+
