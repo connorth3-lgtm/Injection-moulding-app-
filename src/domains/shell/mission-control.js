@@ -3,7 +3,7 @@
 'use strict';
 if(window.MM_MISSION_CONTROL)return;
 
-const VERSION='2026.10.08.5';
+const VERSION='2026.10.08.6';
 const STORAGE_KEY='mm_mission_control_v1';
 const STAGES=Object.freeze([
   ['brief','Mission brief'],
@@ -51,6 +51,8 @@ let state=loadState();
 let installed=false;
 let dashboardRegistered=false;
 let unbindView=null;
+let hydratedLearnerToken=null;
+let hydrationTimer=null;
 
 function clone(v){return JSON.parse(JSON.stringify(v))}
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -76,8 +78,7 @@ function normalizeMission(input={}){
     updatedAt:String(input.updatedAt||new Date().toISOString())
   }
 }
-function loadState(){
-  const saved=runtimeStorage()?.get?.(STORAGE_KEY,null);
+function normalizeState(saved){
   if(!saved||typeof saved!=='object')return clone(DEFAULT_STATE);
   return {
     ...clone(DEFAULT_STATE),
@@ -87,7 +88,27 @@ function loadState(){
     evidence:Array.isArray(saved.evidence)?saved.evidence.slice(-100):[]
   }
 }
+function loadState(){return normalizeState(runtimeStorage()?.get?.(STORAGE_KEY,null))}
+function hydrateCurrentLearner(){
+  const storage=runtimeStorage(),token=storage?.learnerToken?.();
+  if(!token||token===hydratedLearnerToken)return false;
+  state=normalizeState(storage.get?.(STORAGE_KEY,null));
+  hydratedLearnerToken=token;
+  return true
+}
+function scheduleHydration(attempt=0){
+  if(hydrateCurrentLearner()){
+    if(root()){render();registerDashboard(true)}
+    return true
+  }
+  if(attempt>=120)return false;
+  clearTimeout(hydrationTimer);
+  hydrationTimer=setTimeout(()=>scheduleHydration(attempt+1),50);
+  return false
+}
 function saveState(){
+  const token=runtimeStorage()?.learnerToken?.();
+  if(token&&!hydratedLearnerToken)hydratedLearnerToken=token;
   if(state.mission)state.mission.updatedAt=new Date().toISOString();
   runtimeStorage()?.set?.(STORAGE_KEY,{
     schema:1,mode:state.mode,surface:state.surface,mission:state.mission,evidence:state.evidence,
@@ -167,7 +188,7 @@ function paletteMarkup(){
 function render(){
   const host=root();if(!host)return;
   host.innerHTML=contextMarkup()+timelineMarkup()+
-    `<div class="mm-mc-drawer ${state.drawerOpen?'open':''}" aria-hidden="${state.drawerOpen?'false':'true'}">${evidenceMarkup()}</div>`+
+    `<div class="mm-mc-drawer ${state.drawerOpen?'open':''}" aria-hidden="${state.drawerOpen?'false':'true'}">${state.drawerOpen?evidenceMarkup():''}</div>`+
     `<div class="mm-mc-palette-host ${state.paletteOpen?'open':''}" aria-hidden="${state.paletteOpen?'false':'true'}">${state.paletteOpen?paletteMarkup():''}</div>`;
   bind(host);
   document.body.dataset.mmMissionMode=state.mode;
@@ -199,6 +220,7 @@ function bind(host){
   const q=host.querySelector('[data-mm-mc-query]');q?.addEventListener('input',()=>renderCommands(q.value));q?.addEventListener('keydown',paletteKeydown);
 }
 function startMission(input={}){
+  hydrateCurrentLearner();
   state.mission=normalizeMission(input);
   state.evidence=[];
   state.drawerOpen=false;state.paletteOpen=false;saveState();render();registerDashboard(true);return snapshot()
@@ -210,6 +232,7 @@ function startMissionDialog(){
   return startMission({title:String(title).trim(),kind:lesson?'learning':'investigation',stage:'brief'})
 }
 function attachContext(input={},options={}){
+  hydrateCurrentLearner();
   const context=normalizeContext(input);
   if(!state.mission&&options.startIfEmpty!==false){
     state.mission=normalizeMission({title:options.title||context.caseId||'Injection moulding mission',kind:options.kind||'investigation',stage:options.stage||'brief',context})
@@ -221,13 +244,15 @@ function attachContext(input={},options={}){
   saveState();render();registerDashboard(true);return snapshot()
 }
 function setStage(id){
+  hydrateCurrentLearner();
   if(!state.mission||!STAGES.some(x=>x[0]===id))return false;
   state.mission.stage=id;saveState();render();registerDashboard(true);return true
 }
 function nextStage(){if(!state.mission)return false;const i=activeStageIndex();if(i>=STAGES.length-1)return false;return setStage(STAGES[i+1][0])}
-function setMode(id){if(!MODES[id])return false;state.mode=id;saveState();render();return true}
+function setMode(id){hydrateCurrentLearner();if(!MODES[id])return false;state.mode=id;saveState();render();return true}
 function cycleMode(){const ids=Object.keys(MODES),i=ids.indexOf(state.mode);setMode(ids[(i+1)%ids.length])}
 function addEvidence(input={}){
+  hydrateCurrentLearner();
   const text=String(input.text||'').trim();if(!text)return false;
   const kind=['observed','measured','hypothesis','unknown','note','verification'].includes(input.kind)?input.kind:'note';
   state.evidence.push({id:'e-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,6),kind,text:text.slice(0,1600),at:new Date().toISOString(),surface:state.surface});
@@ -283,7 +308,7 @@ function executeCommand(row){
     default:return false;
   }
 }
-function setSurface(id){state.surface=String(id||'').trim()||'unknown';saveState();render()}
+function setSurface(id){hydrateCurrentLearner();state.surface=String(id||'').trim()||'unknown';saveState();render()}
 function bindShell(){
   if(unbindView)return;
   const shell=window.MM_APP_SHELL;
@@ -318,10 +343,10 @@ function keydown(e){
     else if(state.drawerOpen){e.preventDefault();toggleDrawer(false)}
   }
 }
-function installWhenReady(){if(!document.body)return false;install();bindShell();registerDashboard();return true}
+function installWhenReady(){if(!document.body)return false;install();bindShell();registerDashboard();scheduleHydration();return true}
 
 window.addEventListener('keydown',keydown);
-window.addEventListener('mm:domains-ready',()=>{state=loadState();bindShell();registerDashboard();render()});
+window.addEventListener('mm:domains-ready',()=>{bindShell();registerDashboard();scheduleHydration();render()});
 window.MM_MISSION_CONTROL=Object.freeze({
   version:VERSION,stages:STAGES,modes:MODES,install,startMission,attachContext,setStage,nextStage,setMode,
   addEvidence,toggleDrawer,openPalette,closePalette,setSurface,state:snapshot,
