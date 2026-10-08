@@ -337,6 +337,11 @@ def runtime_transform(name: str, source: str) -> str:
         if transformed.count(startup_award_validator) != 1:
             fail("frozen learner-award startup validator drifted")
         transformed = transformed.replace(startup_award_validator, startup_award_validator_hardened, 1)
+        legacy_badge_notice = '    persist();confetti(24);funTone("level");\n    setTimeout(()=>toast(`Achievement unlocked: ${newOnes[0].name}`),120);'
+        quiet_badge_notice = '    // Keep awarded badges but retire the disruptive automatic gamification toast.\n    persist();'
+        if transformed.count(legacy_badge_notice) != 1:
+            fail('frozen achievement source drifted; review the noninterruptive UI transform')
+        transformed = transformed.replace(legacy_badge_notice, quiet_badge_notice, 1)
         transformed = transformed.replace("user.certificates", "user.learningAwards")
         transformed = transformed.replace("u.certificates", "u.learningAwards")
         transformed = transformed.replace("u.certificateMeta", "u.learningAwardMeta")
