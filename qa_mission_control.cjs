@@ -50,6 +50,8 @@ for(const marker of [
 
 assert.ok(!/style\s*=/.test(source),'Mission Control runtime must not create inline style attributes under the app CSP');
 assert.ok(!/\.style\./.test(source),'Mission Control runtime must not mutate inline styles under the app CSP');
+assert.ok(source.includes('class="mm-mc-drawer-panel" role="region" aria-label="Mission evidence"'),'Mission evidence drawer must be a labelled modeless region');
+assert.ok(source.includes('role="dialog" aria-modal="true" aria-label="Mission Control command search"'),'Mission Control command palette must remain an explicitly named modal dialog');
 
 const css=fs.readFileSync(path.join(__dirname,'src/domains/shell/mission-control.css'),'utf8');
 for(const marker of [
