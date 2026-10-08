@@ -66,6 +66,50 @@ def api_runs(repository:str,workflow:str,branch:str,token:str)->list[dict]:
     rows=payload.get("workflow_runs")
     return rows if isinstance(rows,list) else []
 
+def pull_request_baseline(target: str) -> str:
+    """Choose the complete PR merge base, never the last incidental QA commit.
+
+    A squash-merged retained candidate may not be in the PR's ancestry.
+    When that happens, HEAD^ can miss earlier app/test changes on the same
+    branch and incorrectly skip an expensive required browser proof.
+    """
+    event_path=os.environ.get("GITHUB_EVENT_PATH","").strip()
+    candidates=[]
+    if event_path and Path(event_path).is_file():
+        try:
+            event=json.loads(Path(event_path).read_text(encoding="utf-8"))
+            base_sha=str((((event.get("pull_request") or {}).get("base") or {}).get("sha") or "")).strip()
+            if base_sha:
+                candidates.append(base_sha)
+        except (OSError, ValueError, AttributeError):
+            pass
+    base_ref=os.environ.get("GITHUB_BASE_REF","").strip()
+    if base_ref:
+        candidates.extend((f"origin/{base_ref}",base_ref))
+    for candidate in candidates:
+        if not valid_commit(candidate):
+            continue
+        try:
+            base=git("merge-base",candidate,target)
+        except subprocess.CalledProcessError:
+            continue
+        if base and valid_commit(base):
+            print(f"Using complete PR merge-base proof fallback: {base}",file=sys.stderr)
+            return base
+    return ""
+
+
+def oldest_ancestor(target: str) -> str:
+    """Conservative fail-open on coverage: inspect the whole reachable history."""
+    try:
+        roots=git("rev-list","--max-parents=0",target).splitlines()
+        if roots:
+            return roots[0]
+    except subprocess.CalledProcessError:
+        pass
+    return target
+
+
 def resolve(workflow:str,target:str)->str:
     repository=os.environ.get("GITHUB_REPOSITORY","").strip()
     token=os.environ.get("GITHUB_TOKEN","").strip()
@@ -86,11 +130,22 @@ def resolve(workflow:str,target:str)->str:
     if fallback and is_ancestor(fallback,target):
         print(f"Using governed retained-candidate fallback: {fallback}",file=sys.stderr)
         return fallback
+    # A first PR run without an ancestor proof must compare its full merge-base.
+    # Previous immediate-parent fallback skipped earlier PR commits after a
+    # squash-merge made the retained candidate's SHA unreachable locally.
+    pull_request=os.environ.get("GITHUB_EVENT_NAME")=="pull_request" or bool(os.environ.get("GITHUB_HEAD_REF"))
+    if pull_request:
+        pr_base=pull_request_baseline(target)
+        if pr_base:
+            return pr_base
+        fallback=oldest_ancestor(target)
+        print(f"PR base unreachable; conservatively checking full history from {fallback}",file=sys.stderr)
+        return fallback
     try:
         fallback=git("rev-parse",f"{target}^")
     except subprocess.CalledProcessError:
         fallback=target
-    print(f"Using immediate-parent fallback: {fallback}",file=sys.stderr)
+    print(f"Using immediate-parent fallback on a non-PR run: {fallback}",file=sys.stderr)
     return fallback
 
 def main()->int:
