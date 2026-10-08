@@ -177,8 +177,11 @@ function render(){
 function install(){
   if(installed&&root())return true;
   const host=make('div','mm-mission-control');host.id='mmMissionControl';
-  const main=document.querySelector('.main')||document.querySelector('main')||document.body.firstElementChild;
-  if(main&&main.parentNode)main.parentNode.insertBefore(host,main);else document.body.prepend(host);
+  const main=document.querySelector('.main')||document.querySelector('main')||document.body;
+  const topbar=main?.querySelector?.(':scope > .topbar')||document.querySelector('.topbar');
+  if(topbar)topbar.insertAdjacentElement('afterend',host);
+  else if(main?.firstChild)main.insertBefore(host,main.firstChild);
+  else main?.appendChild?.(host);
   installed=true;render();bindShell();registerDashboard();return true;
 }
 function bind(host){
@@ -246,7 +249,9 @@ function paletteKeydown(e){
 }
 function renderCommands(query=''){
   const box=root()?.querySelector('[data-mm-mc-results]');if(!box)return;
-  const q=String(query).trim().toLowerCase(),rows=commandItems().filter(row=>!q||(`${row.label} ${row.hint||''} ${row.keywords||''}`).toLowerCase().includes(q)).slice(0,18);
+  const raw=String(query||'').trim(),q=raw.toLowerCase();
+  const matched=commandItems().filter(row=>!q||(`${row.label} ${row.hint||''} ${row.keywords||''}`).toLowerCase().includes(q)).slice(0,17);
+  const rows=raw?[...matched,{id:'global-search',label:`Search learning for “${raw.slice(0,80)}”`,hint:'Search lessons, concepts, defects and learning content',keywords:raw,query:raw}]:matched;
   box.innerHTML=rows.length?rows.map((row,i)=>`<button type="button" data-mm-mc-command="${esc(row.id)}" data-mm-mc-index="${i}"><span><b>${esc(row.label)}</b><small>${esc(row.hint||'Open')}</small></span><kbd>↵</kbd></button>`).join(''):'<div class="mm-mc-empty-state"><b>No matching command.</b><p>Try a view, tool, material, evidence or mission term.</p></div>';
   box.querySelectorAll('[data-mm-mc-command]').forEach(b=>b.addEventListener('click',()=>executeCommand(rows[Number(b.dataset.mmMcIndex)])));
 }
@@ -265,6 +270,16 @@ function executeCommand(row){
     case 'mission-new':return startMissionDialog();
     case 'evidence-open':toggleDrawer(true);return true;
     case 'mode-cycle':cycleMode();return true;
+    case 'global-search':{
+      const query=String(row.query||'').trim();
+      if(typeof window.openSearch==='function')window.openSearch();else document.getElementById('searchBtn')?.click();
+      setTimeout(()=>{
+        const input=document.getElementById('globalSearch');if(!input)return;
+        input.value=query;input.dispatchEvent(new Event('input',{bubbles:true}));
+        try{if(typeof window.doSearch==='function')window.doSearch()}catch(_){}
+      },60);
+      return true;
+    }
     default:return false;
   }
 }
