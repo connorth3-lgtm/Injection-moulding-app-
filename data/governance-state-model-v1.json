@@ -310,7 +310,7 @@
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
-    "technicalAutomation": "fail",
+    "technicalAutomation": "pass",
     "bookPublicationAuthorization": "authorized",
     "bookIndependentSme": "hold",
     "curriculumIndependentSme": "hold",
@@ -345,12 +345,12 @@
   "userFacingTerminologyBoundary": "Internal evidenceMaturity=verified must be displayed as 'Source evidence reviewed'. The word verified must not be used by itself in learner-facing Book assurance because independent human SME/device/learner validation is a separate namespace.",
   "currentAssuranceEvidence": {
     "staticContract": {
-      "status": "fail",
-      "meaning": "The proposed .5 runtime/identity lacks a verified retained exact-head source, fingerprint and passing release-validation contracts. Do not promote while technical automation fails; native GitHub governance is a separate check."
+      "status": "pass",
+      "meaning": "The .5 exact-source candidate has a successful retained artifact with an authentic runtime fingerprint and provenance. This technical contract result is not final PR-head CI, external validation, or promotion authorization."
     },
     "behavioralBrowser": {
-      "status": "fail",
-      "meaning": "Complete exact-head .5 browser, visual and PWA checks are not yet all successful. Historical .4 browser results cannot be treated as .5 human/device evidence."
+      "status": "pass",
+      "meaning": "Automated .5 UX endurance, mobile browser, and relevant PWA regressions passed for the retained runtime source. New PR-head required checks and human visual/device acceptance remain separate gates."
     },
     "externalHumanDevice": {
       "status": "hold",

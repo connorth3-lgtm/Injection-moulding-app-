@@ -1,6 +1,6 @@
 # MouldMaster Academy — private preview tester quick start
 
-**Non-production learning preview · web release 2026.10.09.4 · not a machine-control tool**
+**Non-production learning preview · web release 2026.10.09.5 · not a machine-control tool**
 
 Thanks for helping test MouldMaster. You are reviewing the *learning experience*, not approving machine settings, certifications, qualifications, professional competence, or production procedures. The preview is not an externally validated public release.
 

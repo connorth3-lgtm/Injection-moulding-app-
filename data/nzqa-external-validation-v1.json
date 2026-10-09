@@ -6,8 +6,12 @@
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 379,
-  "candidate": null,
-  "boundary": "Provider G1-G8 evidence remains pending. The exact .5 release runtime candidate has not yet been retained or bound. Prior .4 technical evidence is archive only and cannot grant accreditation, certification, assessment, machine-control or production authorization.",
+  "candidate": {
+    "release": "2026.10.09.5",
+    "sourceSha": "581e08e58f0b9ec3c7a3501f9a3a71d47ed2c184",
+    "runtimeFingerprint": "sha256:216ec18dc5687ffbbb6aecee36b595533b65deb6c25c2c2bb7693f0bc6a97bcf"
+  },
+  "boundary": "Provider G1-G8 evidence remains pending. The .5 exact-source runtime candidate and public fingerprint are retained and bound for human validation; none of the provider gates has been completed. Prior .4 technical evidence is archive only and cannot grant accreditation, certification, assessment, machine-control or production authorization.",
   "requiredGates": [
     {
       "id": "G1-provider",
