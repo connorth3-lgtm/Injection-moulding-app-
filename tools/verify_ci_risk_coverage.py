@@ -120,7 +120,10 @@ RISK_RULES = [
 def changed_paths() -> list[str]:
     if EVENT != "pull_request":
         return []
-    subprocess.run(["git", "fetch", "--no-tags", "--depth=1", "origin", BASE_REF], check=True, stdout=subprocess.DEVNULL)
+    # actions/checkout uses fetch-depth: 0. A later --depth=1 fetch can
+    # shallow the base ref, hiding the common ancestor needed by A...B.
+    # Preserve full history so a genuinely unrelated PR still fails closed.
+    subprocess.run(["git", "fetch", "--no-tags", "origin", BASE_REF], check=True, stdout=subprocess.DEVNULL)
     out = subprocess.check_output(["git", "diff", "--name-only", f"origin/{BASE_REF}...HEAD"], text=True)
     return [line.strip() for line in out.splitlines() if line.strip()]
 

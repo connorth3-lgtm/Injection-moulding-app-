@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import qa_codeql_generated_security  # guarded generated-runtime mitigations
 from tools.externalize_core_scripts import (
     runtime_transform as core_runtime_transform,
     core_shadowed_retirement_enabled,
