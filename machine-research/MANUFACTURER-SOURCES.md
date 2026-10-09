@@ -10,7 +10,7 @@ This index records official manufacturer sources that can be used to build exact
 | ARBURG | https://www.arburg.com/en/contact/technical-service/ | Machine-specific technical service route. |
 | ENGEL | https://www.engelglobal.com/us/digital-solutions/e-connect-portal | e-connect machine park; ENGEL states technical data, maintenance history and manuals are available there. |
 | Sumitomo (SHI) Demag | https://www.sumitomo-shi-demag.eu/products/myconnect | myConnect / myDocumentation; latest digital machine documents and maintenance functions. |
-| FANUC ROBOSHOT | https://www.fanuc.eu/eu-en/product/roboshot/fanuc-roboshot-a-s50ib | Official ROBOSHOT technical specifications and downloadable product documents. |
+| FANUC ROBOSHOT α-S50iB | https://www.fanuc.eu/eu-en/product/roboshot/fanuc-roboshot-a-s50ib | OEM exact-model specifications (500/optional 650 kN clamp, distinct single-/double-platen mould-height options and per-screw injection volumes). Option boundaries and unresolved installed/serial configuration: [research note](FANUC-ROBOSHOT-ALPHA-S50IB-OEM-SOURCE-REVIEW.md). Not promoted to the machine-fit library. |
 | FANUC ROBOSHOT α-S100iB | https://www.fanuc.eu/eu-en/product/roboshot/fanuc-roboshot-a-s100ib | Primary OEM exact α-S100iB dimensions, distinct clamp/platen options and screw/pressure operating modes. Serial-specific setup, true fitted CNC/unit and service docs still need confirmation. |
 | Haitian / Zhafir | https://eu.haitianinter.com/products/ | Current Haitian and Zhafir machine-family overview. |
 | Haitian / Zhafir | https://vt.haitianinter.com/service/ | Official spare-parts, technical-service, remote troubleshooting and training network. |
