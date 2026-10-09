@@ -954,7 +954,14 @@ export function machineSuitabilitySummary({
   if (!mouldId.ok) return mouldId;
   const cleanBasis = typeof basis === 'string' ? basis.trim() : '';
   if (!cleanBasis) return unsupported('suitability-basis-required', { field: 'basis' });
-  if (!Array.isArray(requiredAxisIds) || requiredAxisIds.length < 1 || requiredAxisIds.length > 64) {
+  let validAxisArray = false;
+  try {
+    validAxisArray = Array.isArray(requiredAxisIds) &&
+      requiredAxisIds.length >= 1 && requiredAxisIds.length <= 64;
+  } catch (_) {
+    // Revoked or otherwise uninspectable array proxy: do not throw or PASS.
+  }
+  if (!validAxisArray) {
     return unsupported('required-axis-list-required', { field: 'requiredAxisIds' });
   }
   // A blank, duplicate, coerced or inherited required axis must never vanish
@@ -963,7 +970,12 @@ export function machineSuitabilitySummary({
   // A getter could mutate evidence while validation is in progress.
   const axisIds = [];
   for (let index = 0; index < requiredAxisIds.length; index++) {
-    const slot = Object.getOwnPropertyDescriptor(requiredAxisIds, index);
+    let slot;
+    try {
+      slot = Object.getOwnPropertyDescriptor(requiredAxisIds, index);
+    } catch (_) {
+      return unsupported('invalid-required-axis-id', { field: 'requiredAxisIds' });
+    }
     if (!slot || !Object.prototype.hasOwnProperty.call(slot, 'value') ||
         typeof slot.value !== 'string' ||
         !/^[a-z][a-z0-9_.-]{0,63}$/.test(slot.value) ||
@@ -975,8 +987,14 @@ export function machineSuitabilitySummary({
   if (new Set(axisIds).size !== axisIds.length) {
     return unsupported('duplicate-required-axis-id', { field: 'requiredAxisIds' });
   }
-  const source = assessments && typeof assessments === 'object' &&
-    !Array.isArray(assessments) ? assessments : {};
+  let source = {};
+  try {
+    if (assessments && typeof assessments === 'object' && !Array.isArray(assessments)) {
+      source = assessments;
+    }
+  } catch (_) {
+    // A revoked or invalid assessment proxy must become missing evidence.
+  }
   const expectedIdentity = Object.freeze({
     machineConfigurationId: machineId.value.id,
     injectionUnitConfigurationId: injectionId.value.id,
