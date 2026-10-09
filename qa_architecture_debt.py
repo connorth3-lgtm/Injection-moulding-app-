@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-from qa_codeql_recovery_security import recovery as _codeql_recovery_checked
 from tools.externalize_core_scripts import (
     runtime_transform as core_runtime_transform,
     core_shadowed_retirement_enabled,
