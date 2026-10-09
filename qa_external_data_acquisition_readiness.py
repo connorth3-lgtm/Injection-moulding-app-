@@ -46,6 +46,14 @@ def main():
     queue=(ROOT/"sources/MECHANISM_VALIDATION_QUEUE.md").read_text(encoding="utf-8")
     for issue in ("#334","#335","#336"):
         need(issue in queue,f"mechanism validation queue missing current acquisition issue {issue}")
+    tool=(ROOT/"tools/validate_external_acquisitions.py").read_text(encoding="utf-8")
+    suite=(ROOT/"qa_external_acquisition_validator.py").read_text(encoding="utf-8")
+    for required in ("candidate-for-independent-human-provenance-review",
+                     "external_evidence_acquired", "production_control_authorized",
+                     "check_black_speck", "check_hot_runner", "check_maintenance"):
+        need(required in tool,f"private acquisition preflight contract missing {required}")
+    for number in ("334", "335", "336"):
+        need(f'rejects("{number}"' in suite,f"negative private acquisition fixture missing #{number}")
     print("MouldMaster external data-acquisition readiness QA passed: 3 header-only, privacy-safe, linkage-complete intake schemas for issues #334-#336.")
 
 if __name__=="__main__":
