@@ -82,3 +82,8 @@ The original HMD400M6 service-document chase remains open: [OEM document request
 ## OEM verified model expansion — 2026-10-09
 
 NISSEI's primary FNX-Ⅳ technical pages now support three more exact model records: **FNX80Ⅳ**, **FNX140Ⅳ** and **FNX180Ⅳ**. The detailed research registry therefore rises from three to **six model records** without inventing serial/configuration authority. The separate 9A/12A, 25A/36A variants remain screw-diameter/pressure/shot-capacity linked and covered by `qa_machine_library.py`; installed machine, controller and maintenance documents remain UNKNOWN. No production machine-fit approval or OEM service documentation acquisition is inferred.
+
+
+## FNX280Ⅳ exact-model expansion — 2026-10-09
+
+The [primary-OEM FNX280Ⅳ performance table](https://www.nisseiplastic.com/en/products/fnx-4/spec.php?model=FNX280%E2%85%A3) verifies the published **2740 kN** hybrid FNX-Ⅳ machine, **830 mm** clamp stroke, **320 mm** minimum mould thickness, **1150 mm** maximum daylight, **660 × 660 mm** tie-bar clearance, **955 × 955 mm** die plate, and **130 mm** ejector stroke. Its **standard 71A** and **optional 100A** injection units have different source-published screw, capacity and maximum-pressure tables and are *never* silently interchangeable. This is the seventh detailed model in the 11-manufacturer index. It does not establish the fitted injection unit, actual machine serial, available usable capability, controller/HMI or machine-specific service schematics; real fit/operational decisions require those separately.

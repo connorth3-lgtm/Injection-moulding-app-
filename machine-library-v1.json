@@ -1004,6 +1004,112 @@
               "summary": "Added exact FNX-Ⅳ model record from NISSEI primary specifications. Injection-unit options remain discrete source variants. Serial, controller, service manual and drawings remain unverified; not approved as a machine suitability or operating basis."
             }
           ]
+        },
+        {
+          "id": "nissei-fnx280-iv",
+          "model": "FNX280Ⅳ",
+          "series": "FNX-Ⅳ",
+          "research_status": "active",
+          "generation_note": "NISSEI's published FNX-Ⅳ hybrid machine. These are manufacturer model-family specifications, not a verified installed machine, serial number or injection-unit configuration. Do not interchange the Ⅳ and older FNX generations.",
+          "manufacture_year": {
+            "value": null,
+            "status": "unknown",
+            "evidence_note": "No build year or serial-specific machine identity has been confirmed."
+          },
+          "controller": {
+            "family": "NISSEI machine HMI/controller revision not verified for a particular serial",
+            "confidence": "missing",
+            "host_controller": "unknown",
+            "host_note": "The FNX-Ⅳ family describes network/operation features, but does not establish the fitted controller/HMI firmware or I/O revision for an individual machine."
+          },
+          "common_verified_specs": {
+            "clamping_force_kn": 2740,
+            "clamping_stroke_mm": 830,
+            "min_mould_thickness_mm": 320,
+            "max_daylight_opening_mm": 1150,
+            "tie_bar_clearance_h_x_v_mm": "660 x 660",
+            "die_plate_h_x_v_mm": "955 x 955",
+            "ejector_stroke_mm": 130
+          },
+          "published_injection_variants": [
+            {
+              "injection_unit_id": "71A",
+              "published_option": "standard",
+              "screw_diameter_mm": [
+                56,
+                63,
+                71
+              ],
+              "injection_capacity_cm3": [
+                554,
+                701,
+                891
+              ],
+              "maximum_injection_pressure_mpa": [
+                196,
+                155,
+                122
+              ],
+              "source_id": "nissei-fnx280-iv-official-spec"
+            },
+            {
+              "injection_unit_id": "100A",
+              "published_option": "optional",
+              "screw_diameter_mm": [
+                63,
+                71,
+                80
+              ],
+              "injection_capacity_cm3": [
+                795,
+                1010,
+                1280
+              ],
+              "maximum_injection_pressure_mpa": [
+                205,
+                161,
+                127
+              ],
+              "source_id": "nissei-fnx280-iv-official-spec"
+            }
+          ],
+          "manuals": [],
+          "wanted_documents": [
+            {
+              "title": "Exact machine/revision OEM operator and maintenance manual",
+              "status": "missing"
+            },
+            {
+              "title": "Serial/revision-specific electrical and hydraulic circuit diagrams",
+              "status": "missing"
+            },
+            {
+              "title": "OEM parts/lubrication and controller I/O documentation",
+              "status": "missing"
+            }
+          ],
+          "sources": [
+            {
+              "id": "nissei-fnx280-iv-official-spec",
+              "title": "NISSEI FNX280Ⅳ official performance specification",
+              "publisher": "NISSEI PLASTIC INDUSTRIAL CO., LTD. (primary OEM)",
+              "url": "https://www.nisseiplastic.com/en/products/fnx-4/spec.php?model=FNX280%E2%85%A3",
+              "supports": [
+                "published model/series identity",
+                "common machine dimensions and clamping performance",
+                "per-injection-unit screw diameter, capacity and maximum injection pressure"
+              ],
+              "checked": "2026-10-09",
+              "confidence": "verified for OEM-published model specifications only; not serial-specific",
+              "access": "public manufacturer technical-specification page"
+            }
+          ],
+          "research_log": [
+            {
+              "date": "2026-10-09",
+              "summary": "Added NISSEI's exact FNX280Ⅳ hybrid model OEM publication: 2740 kN; verified common geometry; distinct 71A standard and optional 100A per-screw diameter/injection volume/max-pressure values. Physical machine and fitted injection-unit identity, as-built ratings, controller revision, maintenance and service diagrams remain unknown; not proof of machine suitability or production process authority."
+            }
+          ]
         }
       ]
     },
