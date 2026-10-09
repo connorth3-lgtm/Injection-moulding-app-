@@ -182,15 +182,19 @@ function syncDesktopNavigation(){
     }
   }
 }
-function mobileGrid(){return document.querySelector('#modal .modal-card .grid2')}
 function makeMobileMoreButton(item){
   const b=document.createElement('button');b.type='button';b.className='quick-action';b.dataset.mmRegistryMenu=item.id;
   b.innerHTML=`<span class="icon" aria-hidden="true">${esc(item.icon||'•')}</span><b>${esc(item.label||item.id)}</b><small>${esc(item.description||'Open this tool.')}</small>`;b.setAttribute('aria-label',item.label||item.id);
   b.addEventListener('click',()=>{try{window.closeModal?.()}catch(_){}activeCustomId=item.id;safeCall(item.action);syncActiveState()});return b
 }
-function populateMobileMore(){
+function populateMobileMore(grid){
+  // Bind this deferred update to the *original* More modal. A different
+  // dialog may replace it before the next animation frame.
+  if(!grid)return;
   requestAnimationFrame(()=>{
-    const grid=mobileGrid();if(!grid)return;
+    const modal=document.getElementById('modal');
+    const card=grid.closest('.modal-card');
+    if(!grid.isConnected||!modal?.contains(grid)||!card||card.querySelector('h2')?.textContent.trim()!=='More')return;
     grid.querySelectorAll('[data-mm-registry-menu],[data-mm-diagnostic-menu],[data-mm-process-data-menu],[data-mm-material-menu],[data-mm-learning-insights-menu],[data-mm-reference-data-menu]').forEach(x=>x.remove());
     const items=[...navigationItems.values()].filter(x=>x.mobileMore!==false).sort((a,b)=>(a.order||50)-(b.order||50));
     for(const item of items)grid.appendChild(makeMobileMoreButton(item))
@@ -365,7 +369,7 @@ function openMobileMenuCanonical(){
     });
     grid.dataset.mmMoreReduced='1'
   }
-  populateMobileMore();return r
+  populateMobileMore(grid);return r
 }
 
 function setCustomActive(id,mobileGroup){activeCustomId=id||'';if(mobileGroup&&navigationItems.has(id))navigationItems.get(id).mobileGroup=mobileGroup;syncActiveState();emitView(id)}
