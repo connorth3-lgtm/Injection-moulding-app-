@@ -74,6 +74,12 @@ expected = {
             "71A": ([56, 63, 71], [554, 701, 891], [196, 155, 122]),
         },
     },
+    "nissei-fnx280-iv": {
+        "model": "FNX280Ⅳ", "clamp": 2740, "units": {
+            "71A": ([56, 63, 71], [554, 701, 891], [196, 155, 122]),
+            "100A": ([63, 71, 80], [795, 1010, 1280], [205, 161, 127]),
+        },
+    },
 }
 for key, contract in expected.items():
     m = models[key]
@@ -83,7 +89,7 @@ for key, contract in expected.items():
     assert m["controller"]["confidence"] == "missing"
     assert not m["manuals"], "cannot invent a verified machine manual"
     assert m["sources"][0]["url"].startswith("https://www.nisseiplastic.com/en/products/fnx-4/spec.php?model=")
-    assert m["sources"][0]["checked"] == ("2026-10-09" if key in {"nissei-fnx80-iv", "nissei-fnx140-iv", "nissei-fnx180-iv"} else "2026-10-08")
+    assert m["sources"][0]["checked"] == ("2026-10-09" if key in {"nissei-fnx80-iv", "nissei-fnx140-iv", "nissei-fnx180-iv", "nissei-fnx280-iv"} else "2026-10-08")
     found = {v["injection_unit_id"]: v for v in m["published_injection_variants"]}
     assert set(found) == set(contract["units"])
     for unit, (diam, capacity, pressure) in contract["units"].items():
@@ -92,11 +98,12 @@ for key, contract in expected.items():
         assert got["injection_capacity_cm3"] == capacity
         assert got["maximum_injection_pressure_mpa"] == pressure
     assert all(w["status"] == "missing" for w in m["wanted_documents"])
-    if key in {"nissei-fnx80-iv", "nissei-fnx140-iv", "nissei-fnx180-iv"}:
+    if key in {"nissei-fnx80-iv", "nissei-fnx140-iv", "nissei-fnx180-iv", "nissei-fnx280-iv"}:
         geometry = {
             "nissei-fnx80-iv": (470, 200, 670, "420 x 420", "580 x 580", 75, "9A"),
             "nissei-fnx140-iv": (600, 250, 850, "510 x 510", "730 x 730", 90, "25A"),
             "nissei-fnx180-iv": (700, 250, 950, "560 x 560", "800 x 800", 110, "36A"),
+            "nissei-fnx280-iv": (830, 320, 1150, "660 x 660", "955 x 955", 130, "71A"),
         }[key]
         specs = m["common_verified_specs"]
         assert (

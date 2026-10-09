@@ -60,5 +60,6 @@ These official primary-OEM specifications support model-level geometry, clamp fi
 | FNX80Ⅳ | https://www.nisseiplastic.com/en/products/fnx-4/spec.php?model=FNX80%E2%85%A3 | 792 kN | 9A standard; 12A optional | Installed unit/serial, manuals, actual usable limits |
 | FNX140Ⅳ | https://www.nisseiplastic.com/en/products/fnx-4/spec.php?model=FNX140%E2%85%A3 | 1370 kN | 25A standard; 36A optional | Installed unit/serial, manuals, actual usable limits |
 | FNX180Ⅳ | https://www.nisseiplastic.com/en/products/fnx-4/spec.php?model=FNX180%E2%85%A3 | 1750 kN | 36A standard; 25A optional | Installed unit/serial, manuals, actual usable limits |
+| FNX280Ⅳ | https://www.nisseiplastic.com/en/products/fnx-4/spec.php?model=FNX280%E2%85%A3 | 2740 kN | 71A standard; 100A optional | Installed unit/serial, manuals, actual usable limits |
 
 All screw-specific dimensions, capacity and pressure sets are bound to their exact OEM option IDs in `machine-library-v1.json`; regression QA checks these pairs and model geometry. These are published catalogue values, **not** validated machine limits, physical test evidence or permissions to copy production recipes.
