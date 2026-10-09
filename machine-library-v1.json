@@ -330,6 +330,128 @@
       ],
       "models": [
         {
+          "id": "fanuc-roboshot-alpha-s50ib",
+          "model": "ROBOSHOT α-S50iB",
+          "series": "ROBOSHOT α-SiB",
+          "research_status": "active",
+          "generation_note": "Exact FANUC α-S50iB manufacturer model-level electric machine data only, NOT an installed or serial-confirmed machine. Published 500 kN and increased 650 kN clamp options; single/double platen mould heights differ. The stated six-screw pressure pairs belong to the OEM 350 mm/s table, not the separate 550 mm/s or high-pressure filling modes. No fitted injection-unit, controller revision, service-manual or usable production process rating is inferred.",
+          "manufacture_year": {
+            "value": null,
+            "status": "unknown",
+            "evidence_note": "Model-series listing does not identify a particular machine serial, production year or installed options."
+          },
+          "controller": {
+            "family": "FANUC ROBOSHOT CNC; PANEL iH Pro offered in current product range",
+            "confidence": "missing",
+            "host_controller": "unknown",
+            "host_note": "The manufacturer product page advertises a CNC/PANEL iH Pro product family; no actual machine serial, HMI/controller revision or firmware is authenticated."
+          },
+          "common_verified_specs": {
+            "clamping_force_kn": 500,
+            "clamping_stroke_mm": 250,
+            "tie_bar_clearance_h_x_v_mm": "360 x 320",
+            "die_plate_h_x_v_mm": "500 x 470",
+            "ejector_stroke_mm": 70
+          },
+          "published_clamp_force_options_kn": [
+            500,
+            650
+          ],
+          "published_mould_height_variants": [
+            {
+              "platen_configuration": "single",
+              "standard_min_mm": 210,
+              "standard_max_mm": 410,
+              "increased_min_mm": 210,
+              "increased_max_mm": 460
+            },
+            {
+              "platen_configuration": "double",
+              "standard_min_mm": 150,
+              "standard_max_mm": 350,
+              "increased_min_mm": 150,
+              "increased_max_mm": 400
+            }
+          ],
+          "published_injection_variants": [],
+          "published_screw_data": {
+            "source_id": "fanuc-alpha-s50ib-official-spec",
+            "mode": "FANUC Europe OEM 350 mm/s injection and hold pressure 1/2 table; NOT the separate 550 mm/s or high-pressure filling mode",
+            "screw_diameter_mm": [
+              18,
+              20,
+              22,
+              26,
+              28,
+              32
+            ],
+            "maximum_injection_volume_cm3": [
+              19,
+              24,
+              29,
+              50,
+              58,
+              76
+            ],
+            "maximum_injection_and_hold_pressure_1_mpa": [
+              280,
+              310,
+              290,
+              240,
+              220,
+              180
+            ],
+            "maximum_injection_and_hold_pressure_2_mpa": [
+              260,
+              280,
+              260,
+              210,
+              190,
+              150
+            ],
+            "actual_fitted_injection_unit_id": null,
+            "scope": "Manufacturer-published model-level 350 mm/s mode, separately paired with each screw diameter. Pressure 1 versus pressure 2 are distinct OEM options; neither is direct measured resin pressure or a guaranteed simultaneous speed/pressure rating. Not the separate OEM 550 mm/s or high-pressure-fill row. Actual fitted screw/cylinder and usable limits UNKNOWN; no production machine-fit, validated recipe or automatic-control authority."
+          },
+          "manuals": [],
+          "wanted_documents": [
+            {
+              "title": "Exact serial/revision operation, installation and service manuals",
+              "status": "missing"
+            },
+            {
+              "title": "Machine-specific electrical/hydraulic diagrams and spare parts",
+              "status": "missing"
+            },
+            {
+              "title": "As-built clamp/platen option, injection unit, screw and firmware/controller confirmation",
+              "status": "missing"
+            }
+          ],
+          "sources": [
+            {
+              "id": "fanuc-alpha-s50ib-official-spec",
+              "title": "FANUC ROBOSHOT α-S50iB official model technical specification",
+              "publisher": "FANUC Europe Corporation (primary OEM)",
+              "url": "https://www.fanuc.eu/eu-en/product/roboshot/fanuc-roboshot-a-s50ib",
+              "supports": [
+                "exact ROBOSHOT α-S50iB identity and model-level clamp options",
+                "single/double platen mould height, tie-bar, platen and ejector dimensions",
+                "six screw diameters paired to published injection volumes and separate 350 mm/s pressure 1/2 columns",
+                "explicitly distinct 350 and 550 mm/s injection operation tables"
+              ],
+              "checked": "2026-10-10",
+              "confidence": "verified for current OEM model-level published data only; fitted machine options and validated usable limits unknown",
+              "access": "public exact-model manufacturer page, not an installed-machine manual"
+            }
+          ],
+          "research_log": [
+            {
+              "date": "2026-10-10",
+              "summary": "FANUC Europe exact α-S50iB listing verified: 500 versus increased 650 kN clamp; separate single/double platen die-height options and six paired screw/volume/350 mm/s pressure-1/pressure-2 columns. Do not combine with 550 mm/s/high-pressure data. Actual fitted injection unit, controller/serial and machine-rated production capability remain unknown. No service or wiring manual verified."
+            }
+          ]
+        },
+        {
           "id": "fanuc-roboshot-alpha-s100ib",
           "model": "ROBOSHOT α-S100iB",
           "series": "ROBOSHOT α-SiB",
