@@ -42,6 +42,20 @@ Use a fresh personal browser profile (no production/customer information). At le
 - [ ] The contact/invitation wording explicitly forbids real production data, private backups and training-as-production usage.
 - [ ] The owner has triage capacity for P0/P1 reports and can pause additional invitations promptly.
 
+## Android screenshot regression — active Mission Control mobile Home
+
+A user-supplied Android-style portrait capture (10 October 2026) shows an eight-step Mission Control timeline visually covering the Book card/CTA, alongside a horizontally clipped machine/mould/material context row. The screenshot does **not** identify its release SHA, installed service-worker generation, browser/PWA mode or device/zoom settings, so it must be treated as an **unresolved mobile visual report**, not proof that the current source passes or fails on that exact device.
+
+Before sending invitations, reproduce an active **fictional** mission on Home at mobile widths 320, 360, 390 and 412 CSS px and at 200% zoom. Verify:
+
+- [ ] The numbered mission timeline occupies **normal document flow immediately above** Today’s focus; it is not a floating strip over Book, lesson or the bottom tabs.
+- [ ] All five context fields can be reached and read without sideways page scrolling; labels wrap rather than being cut off.
+- [ ] Book’s **Open Book** action, the five mobile tabs, all stage buttons and **Next** remain touch reachable. Confirm when scrolled to Book, not only on initial load.
+- [ ] Record the **App version** shown on the in-app update card (where available), exact `/preview/` URL or installed-PWA mode, phone/browser, zoom/text scale, steps and **non-sensitive** before/after screenshots. Do not send learner exports or industrial identifiers.
+- [ ] If a PWA seems stale, first close its open windows/tabs completely, reconnect and reopen. If still stale, the in-app **Repair app files** option is a scoped service-worker/cache repair; it is *not* permission to clear site storage or erase profiles. Recheck the app version, screenshot geometry and learner A→B→A isolation after repair.
+
+Automated CSS assertions and browser viewport regressions are helpful but **do not replace physical device/user visual evidence**. Keep #520 and the relevant device/AT release gates on HOLD until actual bound verification is recorded.
+
 ## STOP / no-send conditions
 
 Any failing automated live preflight; mismatched deploy SHA or web release; absent preview notice; production-root learner runtime while the physical gate is HOLD; inaccessible first-run learning; cross-learner data leakage; unsafe machine advice; unverified destructive learner reset; inability to receive problem reports; or loss of the privacy/Support boundary means **do not distribute** until repaired and rechecked.
