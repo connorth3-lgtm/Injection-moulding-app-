@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "release": "2026.10.09.4",
   "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.09.4.md",
-  "sourceSha": null,
-  "runtimeFingerprint": null,
+  "sourceSha": "ff53e2958d7c97d99aba890a23ba7caf4f21d3c6",
+  "runtimeFingerprint": "sha256:7776a3ccccd8d049e7b9a5167e957651220d8f98a8da3b51b046ab85ae0f53a8",
   "status": "pending-real-at-validation",
   "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.09.4 is pending a newly reviewed visual reference and successful exact-source learner-runtime candidate; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
   "requiredMatrix": [
@@ -309,5 +309,6 @@
     "release": "2026.10.09.3",
     "sourceSha": "2f7d31423d0dfb1ce62e8bdec638134232b3f4d9",
     "runtimeFingerprint": "sha256:55975b4b3ae5af39ddafd1f2ed9da08755df96774a92a7878a9410810171653a"
-  }
+  },
+  "technicalCandidateStatus": "successful-exact-source-producer-37871212175;all-real-AT-tasks-pending"
 }

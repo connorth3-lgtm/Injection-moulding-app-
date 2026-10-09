@@ -1,6 +1,6 @@
 # Visual change review packet — proposed MouldMaster 2026.10.09.4
 
-**Status: HUMAN VISUAL REVIEW PENDING — NOT APPROVED / NOT A REFERENCE PROMOTION.**
+**Status: OWNER APPROVED THE PROPOSED TABLET/DESKTOP HOME LAYOUTS ON 2026-10-09; OTHER VISUAL/DEVICE/EXTERNAL APPROVALS REMAIN HOLD.**
 
 This packet captures the requested fixes for [issue #520](https://github.com/connorth3-lgtm/Injection-moulding-app-/issues/520) as presented by [PR #524](https://github.com/connorth3-lgtm/Injection-moulding-app-/pull/524), candidate source `5046956f90404caa0b676454cf97349f2a74ce8f`. Baseline stays `2026.10.08.6` at `5d5ce2fa6a1d827bd935e38d4a70e06be6f7edad`. Diff tolerance remains **12 pixels**, unchanged.
 
@@ -28,3 +28,7 @@ This packet captures the requested fixes for [issue #520](https://github.com/con
 ## Policy and external boundary
 
 Physical iOS/iPadOS+Android, real NVDA/VoiceOver AT, Windows signed distribution, Book/curriculum SME, learner outcomes and NZQA/provider validation remain **HOLD**. This packet is for **non-production visual review**, not physical approval, evidence signoff, PWA production deployment, machine settings or competence authority.
+
+## Owner's explicit design decision — 2026-10-09
+
+The owner responded **“looks good”** to the provided tablet-810×1080 and desktop-1440×900 Home comparison screenshots. This approval is recorded in [PR #524 comment 6072486028](https://github.com/connorth3-lgtm/Injection-moulding-app-/pull/524#issuecomment-6072486028). It covers the proposed one-row five-tab tablet layout and single idle Home mission CTA. The strict 12-pixel reference has been promoted to the exact candidate source `fa27bd16525f8cb216654ea524649a3a37a3195c` via `visual-baseline/2026.10.09.4`. It does **not** assert that the owner examined every affected Book/lesson/assessment screenshot, performed real iPad/200%-zoom testing or granted any external or production sign-off. The new pixel lock protects against unreviewed later visual drift.

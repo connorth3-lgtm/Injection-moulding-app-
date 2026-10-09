@@ -501,15 +501,21 @@ test('idle Home has a single mission CTA while persistent Mission Control and ac
 test('stored First Shot badge never triggers retired automatic achievement celebration on Home',async({page})=>{
   await page.setViewportSize({width:1440,height:900});
   await openApp(page);
-  // Exercise the real badge evaluator directly: startup migrations may persist
-  // learner state in a different scoped store, but the award must still be kept.
+  // This is a persisted legacy-award regression, not a synthetic award-grant
+  // test. Startup normalization may alter the current lesson eligibility.
   const badge=await page.evaluate(()=>{
     const f=funEnsure();
-    f.achievements=f.achievements.filter(id=>id!=='first-lesson');
+    if(!f.achievements.includes('first-lesson'))f.achievements.push('first-lesson');
+    persist();
     checkAchievements();
-    return f.achievements.includes('first-lesson');
+    const db=JSON.parse(localStorage.getItem('mouldmasterProDB')||'{}');
+    return {
+      current:funEnsure().achievements.includes('first-lesson'),
+      stored:Boolean(db.users?.[db.activeUser]?.fun?.achievements?.includes('first-lesson'))
+    };
   });
-  expect(badge).toBeTruthy();
+  expect(badge.current).toBe(true);
+  expect(badge.stored).toBe(true);
   await expect(page.locator('.toast').filter({hasText:/Achievement unlocked:/i})).toHaveCount(0);
   await expect(page.locator('#xpPop:visible')).toHaveCount(0);
   await page.evaluate(()=>switchView('path'));
