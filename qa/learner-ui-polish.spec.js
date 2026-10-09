@@ -439,3 +439,86 @@ test('Defect Finder and Troubleshooting Coach share an evidence-gated offline ca
   await page.locator('#coach [data-mm-dx-action="reset"]').click();
   await expect(page.locator('#coach')).toContainText('Choose one symptom first');
 });
+
+
+test('tablet bottom navigation keeps five touch targets on one row and clears the page content',async({page})=>{
+  await page.setViewportSize({width:810,height:1080});
+  await openApp(page);
+  for(const width of [701,768,810,900]){
+    await page.setViewportSize({width,height:1080});
+    await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+    const data=await page.evaluate(()=>{
+      const nav=document.querySelector('.mobile-nav'),box=nav.getBoundingClientRect();
+      const buttons=[...nav.querySelectorAll(':scope > button')].filter(el=>{
+        const r=el.getBoundingClientRect();
+        return !el.hidden&&getComputedStyle(el).display!=='none'&&r.width>0&&r.height>0;
+      });
+      const rects=buttons.map(el=>el.getBoundingClientRect());
+      return {
+        count:buttons.length,
+        rows:new Set(rects.map(r=>Math.round(r.top))).size,
+        tracks:getComputedStyle(nav).gridTemplateColumns.trim().split(/\s+/).length,
+        minimumHeight:Math.min(...rects.map(r=>r.height)),
+        minimumWidth:Math.min(...rects.map(r=>r.width)),
+        contained:rects.every(r=>r.left>=box.left-1&&r.right<=box.right+1&&r.bottom<=box.bottom+1),
+        clearance:parseFloat(getComputedStyle(document.querySelector('.main')).paddingBottom),
+        navHeight:box.height,
+        overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth
+      };
+    });
+    expect(data.count,'primary button count at '+width).toBe(5);
+    expect(data.rows,'one visual row at '+width).toBe(1);
+    expect(data.tracks,'five CSS tracks at '+width).toBe(5);
+    expect(data.minimumHeight,'minimum touch height at '+width).toBeGreaterThanOrEqual(44);
+    expect(data.minimumWidth,'minimum touch width at '+width).toBeGreaterThanOrEqual(44);
+    expect(data.contained,'all buttons inside bottom nav at '+width).toBeTruthy();
+    expect(data.clearance,'body clearance at '+width).toBeGreaterThanOrEqual(data.navHeight);
+    expect(data.overflow,'horizontal scroll at '+width).toBeLessThanOrEqual(2);
+  }
+  // Wider tablets have the canonical desktop sidebar rather than a bottom bar.
+  for(const width of [1024,1100]){
+    await page.setViewportSize({width,height:900});
+    await expect(page.locator('#nav')).toBeVisible();
+    await expect(page.locator('#nav button[data-view="dashboard"]')).toBeVisible();
+    await expect(page.locator('#nav button[data-view="path"]')).toBeVisible();
+  }
+});
+
+test('idle Home has a single mission CTA while persistent Mission Control and active timeline still work',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await openApp(page);
+  await expect(page.locator('#mmMissionControl [data-mm-mc-palette]')).toBeVisible();
+  await expect(page.locator('#mmMissionControl .mm-mc-empty')).toHaveCount(0);
+  await expect(page.locator('#dashboard [data-mm-mc-home-start]')).toHaveCount(1);
+  page.once('dialog',dialog=>dialog.accept('Fictional moulding training mission'));
+  await page.locator('#dashboard [data-mm-mc-home-start]').click();
+  await expect(page.locator('#mmMissionControl .mm-mc-timeline')).toBeVisible();
+  await expect(page.locator('#mmMissionControl [data-mm-mc-stage]')).toHaveCount(8);
+  await expect(page.locator('#dashboard [data-mm-mc-home-start]')).toHaveCount(0);
+  await expect(page.locator('#dashboard .mm-mc-home-card')).toContainText('Fictional moulding training mission');
+});
+
+test('stored First Shot badge never triggers retired automatic achievement celebration on Home',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await openApp(page);
+  // This is a persisted legacy-award regression, not a synthetic award-grant
+  // test. Startup normalization may alter the current lesson eligibility.
+  const badge=await page.evaluate(()=>{
+    const f=funEnsure();
+    if(!f.achievements.includes('first-lesson'))f.achievements.push('first-lesson');
+    persist();
+    checkAchievements();
+    const db=JSON.parse(localStorage.getItem('mouldmasterProDB')||'{}');
+    return {
+      current:funEnsure().achievements.includes('first-lesson'),
+      stored:Boolean(db.users?.[db.activeUser]?.fun?.achievements?.includes('first-lesson'))
+    };
+  });
+  expect(badge.current).toBe(true);
+  expect(badge.stored).toBe(true);
+  await expect(page.locator('.toast').filter({hasText:/Achievement unlocked:/i})).toHaveCount(0);
+  await expect(page.locator('#xpPop:visible')).toHaveCount(0);
+  await page.evaluate(()=>switchView('path'));
+  await page.evaluate(()=>switchView('dashboard'));
+  await expect(page.locator('.toast').filter({hasText:/Achievement unlocked:/i})).toHaveCount(0);
+});

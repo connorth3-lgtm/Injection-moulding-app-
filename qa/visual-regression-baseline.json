@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.08.6",
-  "commit": "5d5ce2fa6a1d827bd935e38d4a70e06be6f7edad",
+  "release": "2026.10.09.4",
+  "commit": "fa27bd16525f8cb216654ea524649a3a37a3195c",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,6 +41,6 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "2026.10.08.6 is the reviewed learner UI reference for the intentional app-wide Mission Control redesign approved for merge. The reference preserves the persistent Mission Control context bar, mission timeline, evidence drawer, command/search layer, adaptive learner/technician/engineer modes, Spatial Twin integration, and the mobile-safe idle shell while retaining the established Learn, Book, Materials, Practice, assessment and diagnostics surfaces underneath. The captured runtime is the exact 5d5ce2fa6a1d827bd935e38d4a70e06be6f7edad render after fixing learner-scoped mission rehydration, modeless evidence-region semantics, mobile overlap/containment, and exact command-search targeting. Pixel tolerance remains locked at maxDiffPixels 12; this promotion changes the retained reference bytes rather than relaxing the visual gate. Physical-device, real-AT, SME, learner-outcome, NZQA/provider, Windows-distribution and production evidence remain separate HOLDs.",
-  "ref": "visual-baseline/2026.10.08.6"
+  "policy": "Owner reviewed and approved the intended tablet single-row five-tab navigation and desktop Home's single idle Start mission CTA on 2026-10-09, with retained before/after screenshot artifact 11589770134 and explicit PR #524 approval comment 6072486028. The baseline is pinned to the immutable fa27bd16525f8cb216654ea524649a3a37a3195c runtime source on visual-baseline/2026.10.09.4. Automated Chromium reference comparisons remain locked at maxDiffPixels 12 against the approved snapshot; no drift allowance or capture exclusions were changed. This UI-only visual decision is not a claim of independent review of every screenshot, real iPad/200%-zoom, real assistive technology, physical devices, SMEs, NZQA/provider, learner outcomes, Windows signing, or production release authorization: all such separate approvals remain HOLD.",
+  "ref": "visual-baseline/2026.10.09.4"
 }

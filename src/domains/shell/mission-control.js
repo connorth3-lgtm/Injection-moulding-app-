@@ -249,7 +249,9 @@ function contextMarkup(){
   </div>`;
 }
 function timelineMarkup(){
-  if(!state.mission)return `<div class="mm-mc-timeline mm-mc-empty"><button type="button" data-mm-mc-new><b>Start a mission</b><span>Keep context, evidence and progress connected across the app.</span></button></div>`;
+  // Home owns the idle mission CTA; the persistent context, palette and
+  // active mission timeline are preserved for all learners.
+  if(!state.mission)return '';
   const active=activeStageIndex();
   return `<div class="mm-mc-timeline" aria-label="Mission timeline">
     <div class="mm-mc-stage-track">${STAGES.map(([id,label],i)=>`<button type="button" data-mm-mc-stage="${id}" class="${i===active?'active':''} ${i<active?'complete':''}" aria-current="${i===active?'step':'false'}"><span>${i+1}</span><b>${esc(label)}</b></button>`).join('')}</div>
