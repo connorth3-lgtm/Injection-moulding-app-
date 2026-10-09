@@ -72,7 +72,12 @@ def fixture():
         "release": "2026.10.09.6",
         "book_sme": {"status": "hold"},
         "source_seeds": [
-            {"id": "QA-SOURCE-1", "url": "https://example.invalid/qa-only-source"}
+            {"id": "QA-SOURCE-1", "type": "standard",
+             "issuer": "Fictional standards body",
+             "title": "Fictional reviewer reference",
+             "url": "https://example.invalid/qa-only-source",
+             "scope": "Synthetic course review only; no safety acceptance",
+             "checked": "2026-09-14", "currentState": "published-confirmed"}
         ],
         "claim_classes": ["fundamental", "diagnostic-hypothesis"],
     }
@@ -98,6 +103,21 @@ class WorklistTests(unittest.TestCase):
         self.assertEqual(chapter["reviewStatus"], HOLD)
         self.assertEqual(chapter["manifestSourceState"], "source-review")
         self.assertEqual(chapter["declaredBookSourceIds"], ["QA-SOURCE-1"])
+        self.assertEqual(chapter["declaredBookSourceDetails"], [{
+            "sourceId": "QA-SOURCE-1", "sourceType": "standard",
+            "issuer": "Fictional standards body",
+            "title": "Fictional reviewer reference",
+            "url": "https://example.invalid/qa-only-source",
+            "scope": "Synthetic course review only; no safety acceptance",
+            "checked": "2026-09-14",
+            "declaredState": "published-confirmed",
+            "reviewStatus": "DECLARED SOURCE ONLY — NOT independently rechecked"
+        }])
+        self.assertIn("Synthetic course review only", chapter["declaredBookSourceReferences"])
+        no_refs = first["lessons"][1]["possibleBookModules"][0]
+        self.assertEqual(no_refs["declaredBookSourceIds"], [])
+        self.assertEqual(no_refs["declaredBookSourceDetails"], [])
+        self.assertEqual(no_refs["declaredBookSourceReferences"], "")
         self.assertEqual(chapter["declaredBookClaimClasses"], ["fundamental"])
         self.assertEqual(chapter["courseOverlapThemes"], ["synthetic QA thematic overlap"])
         self.assertIn("DECLARED ONLY", chapter["sourceDisclosureStatus"])
@@ -126,6 +146,10 @@ class WorklistTests(unittest.TestCase):
         self.assertEqual(rows[0]["lessonId"], "1")
         self.assertEqual(rows[0]["reviewStatus"], HOLD)
         self.assertEqual(rows[0]["declaredBookSourceIds"], "QA-SOURCE-1")
+        self.assertIn("Fictional reviewer reference", rows[0]["declaredBookSourceReferences"])
+        self.assertIn("https://example.invalid/qa-only-source", rows[0]["declaredBookSourceReferences"])
+        self.assertIn("2026-09-14", rows[0]["declaredBookSourceReferences"])
+        self.assertIn("Synthetic course review only", rows[0]["declaredBookSourceReferences"])
         self.assertEqual(rows[0]["declaredBookClaimClasses"], "fundamental")
         self.assertEqual(rows[0]["courseOverlapThemes"], "synthetic QA thematic overlap")
         self.assertIn("DECLARED ONLY", rows[0]["sourceDisclosureStatus"])
@@ -261,6 +285,22 @@ class WorklistTests(unittest.TestCase):
             "duplicate source seeds": lambda x: x["source_seeds"].append(
                 deepcopy(x["source_seeds"][0])
             ),
+            "source seed omits applicability scope": lambda x: x[
+                "source_seeds"][0].pop("scope"),
+            "source seed fabricates reviewer approval": lambda x: x[
+                "source_seeds"][0].update(approved=True),
+            "source status wrongly marked approved": lambda x: x[
+                "source_seeds"][0].update(currentState="reviewed-and-approved"),
+            "source seed missing checked date": lambda x: x[
+                "source_seeds"][0].pop("checked"),
+            "source seed has invented checked date": lambda x: x[
+                "source_seeds"][0].update(checked="2026-15-99"),
+            "source seed permits URL credentials": lambda x: x[
+                "source_seeds"][0].update(url="https://user:pass@example.invalid/ref"),
+            "source seed URL with extra fragment": lambda x: x[
+                "source_seeds"][0].update(url="https://example.invalid/ref#fraud"),
+            "source seed title hides control character": lambda x: x[
+                "source_seeds"][0].update(title="unsafe\nlink"),
         }
         for label, mutate in mutations.items():
             with self.subTest(label=label):

@@ -12,6 +12,8 @@ import csv
 import json
 from pathlib import Path
 import sys
+from datetime import date
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -22,6 +24,61 @@ from qa_new1_semantic_link_review import book_runtime_fingerprint, check, digest
 
 DISCOVERY = "course-level-overlap-only"
 HOLD = "UNREVIEWED — no exact lesson match or SME approval"
+SOURCE_FIELDS = frozenset((
+    "id", "type", "issuer", "title", "url", "scope", "checked",
+    "currentState",
+))
+# These are source-seed metadata states, not review/approval states.
+SOURCE_DECLARATIONS = frozenset((
+    "published-confirmed", "active",
+    "current-public-manufacturer-document",
+))
+
+
+def validate_source_seed(seed: dict) -> None:
+    need(type(seed) is dict and set(seed) == SOURCE_FIELDS,
+         "Book source seed missing declared reference fields or injecting approvals")
+    for key in SOURCE_FIELDS:
+        need(type(seed[key]) is str and bool(seed[key].strip())
+             and len(seed[key]) <= 2048 and
+             all(ord(ch) >= 32 for ch in seed[key]),
+             "missing, oversized or control-character Book source field: " + key)
+    need(seed["currentState"] in SOURCE_DECLARATIONS,
+         "unreviewed Book source must not claim new/approved evidence state")
+    try:
+        checked = date.fromisoformat(seed["checked"])
+    except ValueError:
+        raise AssertionError("Book source checked date is invalid") from None
+    need(checked.isoformat() == seed["checked"],
+         "Book source checked date must be ISO yyyy-mm-dd")
+    url = urlsplit(seed["url"])
+    need(url.scheme == "https" and bool(url.hostname)
+         and not url.username and not url.password
+         and not any(ch.isspace() for ch in seed["url"])
+         and not url.fragment,
+         "Book source URL must be a bare HTTPS citation with no credentials")
+
+
+def source_ref(seed: dict) -> dict:
+    """Author-only SOURCE DECLARATION, not an approved or rechecked citation."""
+    return {
+        "sourceId": seed["id"], "sourceType": seed["type"],
+        "issuer": seed["issuer"], "title": seed["title"],
+        "url": seed["url"], "scope": seed["scope"],
+        "checked": seed["checked"], "declaredState": seed["currentState"],
+        "reviewStatus": "DECLARED SOURCE ONLY — NOT independently rechecked",
+    }
+
+
+def source_summary(refs: list[dict]) -> str:
+    """Readable CSV cell; safe_spreadsheet_cell still guards the whole value."""
+    return "; ".join(
+        f"{ref['sourceId']} ({ref['issuer']}: {ref['title']}) — "
+        f"{ref['url']} — declared scope: {ref['scope']} — "
+        f"last declared check: {ref['checked']} — state: {ref['declaredState']}"
+        for ref in refs
+    )
+
 
 
 def make_queue(
@@ -54,13 +111,13 @@ def make_queue(
     need(contract["approvedPublicLinks"] is False,
          "reviewer queue must not grant public link authority")
     need(type(source_seeds) is list and len(source_seeds) >= 1
-         and all(type(seed) is dict and type(seed.get("id")) is str
-                 and seed["id"].strip() and type(seed.get("url")) is str
-                 and seed["url"].startswith("https://")
-                 for seed in source_seeds)
-         and len({seed["id"] for seed in source_seeds}) == len(source_seeds),
-         "Book manifest source-seed registry is missing or malformed")
-    known_sources = {seed["id"] for seed in source_seeds}
+         and len(source_seeds) <= 100,
+         "Book manifest source-seed registry missing or unbounded")
+    for seed in source_seeds:
+        validate_source_seed(seed)
+    need(len({seed["id"] for seed in source_seeds}) == len(source_seeds),
+         "Book source-seed IDs must be unique")
+    known_sources = {seed["id"]: seed for seed in source_seeds}
     need(type(claim_classes) is list and len(claim_classes) >= 1
          and all(type(name) is str and name.strip()
                  for name in claim_classes)
@@ -101,12 +158,16 @@ def make_queue(
         for chapter, mapping_row in zip(chapters, mapping, strict=True):
             if course_name not in mapping_row["courseNames"]:
                 continue
+            citations = [source_ref(known_sources[src])
+                         for src in chapter["sourceIds"]]
             candidates.append({
                 "chapterId": chapter["id"],
                 "chapterTitle": chapter.get("title", ""),
                 "manifestSourceState": chapter.get("state", "missing"),
                 # Declarations are review pointers, NOT validated source claims.
                 "declaredBookSourceIds": list(chapter["sourceIds"]),
+                "declaredBookSourceDetails": citations,
+                "declaredBookSourceReferences": source_summary(citations),
                 "declaredBookClaimClasses": list(chapter["claimClasses"]),
                 "courseOverlapThemes": list(mapping_row["themes"]),
                 "sourceDisclosureStatus": "DECLARED ONLY — SME source/applicability review outstanding",
@@ -186,7 +247,8 @@ def write_csv(queue: dict) -> None:
     fields = (
         "lessonId", "lessonTitle", "canonicalCourseName",
         "wholeLessonFingerprint", "chapterId", "chapterTitle",
-        "manifestSourceState", "declaredBookSourceIds", "declaredBookClaimClasses",
+        "manifestSourceState", "declaredBookSourceIds", "declaredBookSourceReferences",
+        "declaredBookClaimClasses",
         "courseOverlapThemes", "sourceDisclosureStatus", "chapterManifestFingerprint",
         "bookPublicationRelease", "bookRuntimeFingerprint", "discoveryBasis", "reviewStatus",
     )
