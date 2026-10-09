@@ -950,6 +950,7 @@ export function machineSuitabilitySummary({
   // from a declared machine-fit check and leave a misleading overall PASS.
   // Inspect own data descriptors, not inherited slots or accessor getters.
   // A getter could mutate evidence while validation is in progress.
+  const axisIds = [];
   for (let index = 0; index < requiredAxisIds.length; index++) {
     const slot = Object.getOwnPropertyDescriptor(requiredAxisIds, index);
     if (!slot || !Object.prototype.hasOwnProperty.call(slot, 'value') ||
@@ -958,11 +959,11 @@ export function machineSuitabilitySummary({
         ['__proto__', 'constructor', 'prototype'].includes(slot.value)) {
       return unsupported('invalid-required-axis-id', { field: 'requiredAxisIds' });
     }
+    axisIds.push(slot.value);
   }
-  if (new Set(requiredAxisIds).size !== requiredAxisIds.length) {
+  if (new Set(axisIds).size !== axisIds.length) {
     return unsupported('duplicate-required-axis-id', { field: 'requiredAxisIds' });
   }
-  const axisIds = [...requiredAxisIds];
   const source = assessments && typeof assessments === 'object' &&
     !Array.isArray(assessments) ? assessments : {};
   const expectedIdentity = Object.freeze({
@@ -972,9 +973,7 @@ export function machineSuitabilitySummary({
   });
   const axes = axisIds.map(id => {
     // Do not execute accessors supplied as assessment evidence.
-    const descriptor = Object.getOwnPropertyDescriptor(source, id);
-    const safeValue = descriptor && Object.prototype.hasOwnProperty.call(descriptor, 'value')
-      ? descriptor.value : null;
+    const safeValue = ownAssessmentField(source, id) ?? null;
     const resolved = assessmentState(safeValue, expectedIdentity);
     return Object.freeze({ id, state: resolved.state, reason: resolved.reason });
   });
