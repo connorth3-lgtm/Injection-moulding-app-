@@ -12,6 +12,14 @@ assert len(data["manufacturers"]) >= 11
 
 ids = set()
 models = {}
+latest_source_check = max(
+    (source["checked"]
+     for maker in data["manufacturers"]
+     for model in maker.get("models", [])
+     for source in model.get("sources", [])),
+    default="",
+)
+assert data["last_updated"] >= latest_source_check, "machine library date predates OEM source verification"
 for maker in data["manufacturers"]:
     assert maker["id"] and maker["name"]
     for row in maker.get("models", []):
