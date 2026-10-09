@@ -589,6 +589,39 @@ assert.equal(accessorAssessmentResult.value.summaryState, 'UNKNOWN');
 assert.equal(accessorAssessmentResult.value.axes[0].reason, 'missing-assessment');
 assert.equal(assessmentGetterCalls, 0,
   'machine-fit assessment validation must not invoke getter evidence');
+// A custom array iterator must never replace the validated own axis slots.
+let axisIteratorCalls = 0;
+const iteratorSpoofAxes = ['shot'];
+Object.defineProperty(iteratorSpoofAxes, Symbol.iterator, {
+  value(){ axisIteratorCalls++; throw Error('untrusted required-axis iterator executed'); },
+});
+assert.equal(makeFitSummary(iteratorSpoofAxes).value.summaryState, 'PASS',
+  'valid own axis must be evaluated independently of custom iterators');
+assert.equal(axisIteratorCalls, 0);
+
+// Nested assessment data must not execute getters or inherit a fake PASS.
+let nestedGetterCalls = 0;
+const nestedAccessorValue = {machineConfigurationId: machineCapacityIds.machineConfigurationId};
+Object.defineProperty(nestedAccessorValue, 'fits', {
+  get(){ nestedGetterCalls++; return true; },
+});
+const nestedAccessorResult = makeFitSummary(['shot'], {
+  shot: {ok:true, value:nestedAccessorValue},
+});
+assert.equal(nestedAccessorResult.value.summaryState, 'UNKNOWN');
+assert.equal(nestedGetterCalls, 0,
+  'nested machine-fit assessment getters must not be called');
+const inheritedPassValue = Object.create({state:'PASS'});
+inheritedPassValue.machineConfigurationId = machineCapacityIds.machineConfigurationId;
+assert.equal(makeFitSummary(['shot'], {shot:{ok:true,value:inheritedPassValue}}).value.summaryState,
+  'UNKNOWN', 'prototype-inherited state cannot justify PASS');
+let innerValueGetterCalls = 0;
+const accessorInner = {ok:true};
+Object.defineProperty(accessorInner, 'value', {
+  get(){ innerValueGetterCalls++; return shotCapacity.value; },
+});
+assert.equal(makeFitSummary(['shot'], {shot:accessorInner}).value.summaryState, 'UNKNOWN');
+assert.equal(innerValueGetterCalls, 0);
 const inheritedShot={};
 Object.setPrototypeOf(inheritedShot,{shot:shotCapacity});
 const inheritedResult=makeFitSummary(['shot'],inheritedShot);
