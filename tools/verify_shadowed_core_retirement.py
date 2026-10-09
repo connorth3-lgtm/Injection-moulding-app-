@@ -66,6 +66,8 @@ def preview_retirement(source: str, *, names: tuple[str, ...] = KNOWN_NAMES) -> 
         need(dead.rstrip().endswith("}"), f"unsafe trailing statement after {name}")
         need(dead.count("\nfunction ") == 0,
              f"nested/multiple top-level declaration boundary near {name}")
+        need(re.search(r"(?m)^(?:const|let|var|class|if|for|while|try|throw|return)\b", dead) is None,
+             f"unexpected column-zero statement in retired span: {name}")
         need(len(dead) > 30, f"suspiciously small declaration: {name}")
         deletions.append((start, following, name))
 
