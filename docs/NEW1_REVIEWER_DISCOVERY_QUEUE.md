@@ -22,6 +22,37 @@ The worklist now fails closed if a chapter refers to an unknown/duplicated Book 
 
 The Book runtime fingerprint is derived from the authorization's pinned `runtimeIntegrity.gitBlobSha1ByFile` source inventory, **not from each chapter's full text individually**; it is intentionally conservative, invalidating prospective exact reviews after *any* published Book payload/source amendment. This source binding does not create human review or navigation approval. The command fails closed if that source inventory is absent/malformed, the canonical lesson or Book population changes unexpectedly, chapter IDs and crosswalk order differ, a course cannot be resolved, the Book publication authorization is unavailable, the independent Book SME status is no longer the currently tracked HOLD, or a public-link flag has been enabled.
 
+
+### One-lesson human review preparation packet
+
+For a human content owner investigating an individual **canonical lesson ID**, generate
+an explicit **unreviewed** packet rather than manually reconciling many JSON rows:
+
+```bash
+python tools/new1_review_packet.py --lesson-id 1 > local-new1-lesson-1-review-prep.md
+```
+
+
+This read-only Markdown packet inherits the complete 120-lesson/46-Book integrity
+checks from the discovery queue and shows the requested canonical lesson and
+whole-lesson fingerprint, the current Book release/source inventory, **every
+course-overlap candidate in Book order**, manifest state, declared source URLs,
+declared applicability and check dates, and a checklist of actual passage,
+source, competency and practice decisions a qualified author must make.
+Chapters without references are flagged **NONE DECLARED**, not silently filled
+with invented citations. Source text is rendered as inert escaped Markdown,
+so injected HTML, headings or links in titles cannot impersonate an approval.
+The packet rejects unknown/ambiguous lesson IDs, altered release provenance,
+fake review states and invented reviewer fields.
+
+**Important:** the packet never fills in reviewer conclusions or evidence,
+does not edit the review contract, and cannot grant public navigation,
+assessment credit or a qualification. Human authors must inspect actual
+Book prose/lesson content (not titles, source IDs or the release fingerprint)
+and retain their review decisions/evidence in the governed restricted process.
+The generated local packet must not be committed as an accepted mapping or
+distributed as evidence of Book SME or external-provider signoff.
+
 ## Human review workflow, still outstanding under #521
 
 1. A qualified author opens the actual lesson content and the actual Book passage. A common course label is **discovery only**; it is not a reason to publish a link.
