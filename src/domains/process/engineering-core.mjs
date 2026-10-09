@@ -935,13 +935,24 @@ export function machineSuitabilitySummary({
   basis,
   provenance = null,
 } = {}) {
+  // Identity and basis must be primitive strings; coercing arbitrary objects
+  // can execute user code or manufacture a plausible machine-fit identity.
+  if (typeof machineConfigurationId !== 'string') {
+    return unsupported('missing-machine-configuration-id', { field: 'machine-configuration-id' });
+  }
+  if (typeof injectionUnitConfigurationId !== 'string') {
+    return unsupported('missing-injection-unit-configuration-id', { field: 'injection-unit-configuration-id' });
+  }
+  if (typeof mouldConfigurationId !== 'string') {
+    return unsupported('missing-mould-configuration-id', { field: 'mould-configuration-id' });
+  }
   const machineId = explicitIdentity(machineConfigurationId, 'machine-configuration-id');
   if (!machineId.ok) return machineId;
   const injectionId = explicitIdentity(injectionUnitConfigurationId, 'injection-unit-configuration-id');
   if (!injectionId.ok) return injectionId;
   const mouldId = explicitIdentity(mouldConfigurationId, 'mould-configuration-id');
   if (!mouldId.ok) return mouldId;
-  const cleanBasis = String(basis || '').trim();
+  const cleanBasis = typeof basis === 'string' ? basis.trim() : '';
   if (!cleanBasis) return unsupported('suitability-basis-required', { field: 'basis' });
   if (!Array.isArray(requiredAxisIds) || requiredAxisIds.length < 1 || requiredAxisIds.length > 64) {
     return unsupported('required-axis-list-required', { field: 'requiredAxisIds' });
