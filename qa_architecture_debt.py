@@ -344,6 +344,9 @@ else:
          "new governed web release must retire all ten shadowed definitions")
 
 
+from qa_core_retirement_boundary import main as verify_core_retirement_boundaries
+verify_core_retirement_boundaries()
+
 print(f"Core shadowed declarations: {len(shadowed_declarations)}/10 (ratchet, no new names); issue #517 runtime regressions retained")
 
 print(

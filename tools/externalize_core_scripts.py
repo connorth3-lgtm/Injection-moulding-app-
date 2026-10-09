@@ -329,6 +329,7 @@ def retire_shadowed_core_declarations(source: str) -> str:
         if (not dead_body.startswith(f"function {name}(")
                 or not dead_body.rstrip().endswith("}")
                 or "\nfunction " in dead_body
+                or re.search(r"(?m)^(?:const|let|var|class|if|for|while|try|throw|return)\b", dead_body)
                 or len(dead_body) < 30):
             fail(f"unsafe earlier shadowed function boundary: {name}")
         ranges.append((start, next_start))
