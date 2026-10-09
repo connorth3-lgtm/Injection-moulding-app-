@@ -84,13 +84,6 @@ function syncHomeBalance(){
   else if(!anchor&&!panel.isConnected)root.prepend(panel);
 }
 
-function syncCertificateCounter(){
-  const root=document.getElementById('dashboard');if(!root)return;
-  for(const row of root.querySelectorAll('.statline')){
-    const label=row.querySelector('.muted.tiny');if(String(label?.textContent||'').trim()!=='Certificates earned')continue;
-    const value=row.querySelector('b');if(value)value.textContent=String(Array.isArray(user?.certificates)?user.certificates.length:0)
-  }
-}
 function syncBookDisclosure(){
   const view=document.getElementById('mmBookView');
   if(!view)return;
@@ -229,6 +222,18 @@ function syncFirstRunModal(){
   if(headings[2])headings[2].textContent='Typical session';
   const primary=root.querySelector('.hero-buttons .primary');if(primary)primary.textContent='Start my path →';
 }
+function observeFirstRunModal(){
+  const modal=document.getElementById('modal');if(!modal)return;
+  // Watch only the existing modal, not the entire app. The core may open
+  // onboarding 120ms after startup, later than the first two polish frames.
+  const observer=new MutationObserver(records=>{
+    const onboardingAdded=records.some(record=>[...record.addedNodes].some(node=>
+      node.nodeType===1&&(node.matches?.('.onboarding')||node.querySelector?.('.onboarding'))
+    ));
+    if(onboardingAdded){syncFirstRunModal();syncProductStates()}
+  });
+  observer.observe(modal,{subtree:true,childList:true});
+}
 function syncProductStates(){
   document.querySelectorAll('.empty-friendly,.mm-exact-empty,.mm-material-no-match').forEach(el=>el.dataset.mmProductState='empty');
   const failure=document.getElementById('mmStartupFailure');if(failure)failure.dataset.mmProductState='error';
@@ -254,7 +259,6 @@ function syncReadAloudLabel(){
 }
 function run(){
   syncHomeBalance();
-  syncCertificateCounter();
   syncBookDisclosure();
   syncDesktopNavigation();
   syncTopbarContext();
@@ -271,6 +275,7 @@ function install(){
   ensureStyles();
   run();
   syncFirstRunModal();
+  observeFirstRunModal();
   requestAnimationFrame(()=>requestAnimationFrame(()=>{syncFirstRunModal();syncProductStates()}));
   // Shell render/view lifecycle events cover app-owned mutations. Avoid a whole-body characterData observer,
   // which previously scheduled a full polish pass for every text mutation in the application.
