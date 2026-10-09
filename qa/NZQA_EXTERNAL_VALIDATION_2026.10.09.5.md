@@ -2,7 +2,7 @@
 
 **STATUS: HOLD — NOT APPROVED / NO HUMAN VALIDATION.**
 
-The proposed `2026.10.09.5` release stages More-modal isolation, first-run onboarding timing correction and removal of an obsolete legacy certificate counter. It has **not** been released or verified on physical devices.
+The proposed `2026.10.09.5` release stages More-modal isolation, first-run onboarding timing correction and removal of an obsolete legacy certificate counter. Repository code integration and any non-production preview publication do not authorize a production release; this candidate has **not** been verified on physical devices or by an independent provider.
 
 **Required evidence:** Independent provider readiness, eight NZQA/provider gates, documented reviewer decisions and no unsupported accreditation claim.
 

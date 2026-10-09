@@ -156,5 +156,5 @@
     "artifactDigest": "sha256:24754e06b2a55c9f1604a7c23fa7d946971068c36f303ebd6b8bec837fdfe8ae",
     "artifactExpiresAt": "2027-01-07T01:44:13Z"
   },
-  "candidateStatus": "HOLD — .5 technical artifact retained and evidence-bound; exact current-PR-head CI, independent visual acceptance and all seven external validations are pending"
+  "candidateStatus": "HOLD — .5 technical artifact retained and evidence-bound; every new code/head change requires its own exact-head CI verification; human visual acceptance and all seven external validations remain pending"
 }
