@@ -113,6 +113,10 @@ jobs:
         run: node qa_new1_virtual_factory.cjs
       - name: New1 five connected academy development capabilities QA
         run: node qa_new1_academy.cjs
+      - name: New1 exact-lesson Book mapping boundary (HOLD)
+        run: |
+          python qa_new1_semantic_link_review.py --self-test
+          python qa_new1_semantic_link_review.py
       - name: Cross-platform learner lesson resolver and CRLF regression QA
         run: node qa_lesson_resolver_clobber.cjs
       - name: Exact external-validation candidate binding
