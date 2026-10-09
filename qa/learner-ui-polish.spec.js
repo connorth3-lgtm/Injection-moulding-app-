@@ -522,3 +522,52 @@ test('stored First Shot badge never triggers retired automatic achievement celeb
   await page.evaluate(()=>switchView('dashboard'));
   await expect(page.locator('.toast').filter({hasText:/Achievement unlocked:/i})).toHaveCount(0);
 });
+
+
+test('late More callback never edits a replacement dialog',async({page})=>{
+  await page.setViewportSize({width:810,height:1080});
+  await openApp(page);
+  // The core More population defers to requestAnimationFrame. Replace the
+  // dialog synchronously before its callback runs, then verify its identity.
+  await page.evaluate(()=>{
+    window.openMobileMenu();
+    window.openModal('<h2>Unrelated dialog</h2><div class="grid2"><p data-mm-foreign-dialog>Keep unrelated content</p></div>');
+  });
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  await expect(page.locator('#modal [data-mm-foreign-dialog]')).toHaveCount(1);
+  await expect(page.locator('#modal [data-mm-registry-menu]')).toHaveCount(0);
+  // A fresh More invocation must still populate its own menu normally.
+  await page.evaluate(()=>window.openMobileMenu());
+  await expect(page.locator('#modal [data-mm-registry-menu="book"]')).toHaveCount(1);
+});
+
+test('delayed first-run onboarding is polished on initial appearance',async({page})=>{
+  await page.setViewportSize({width:810,height:1080});
+  await page.addInitScript(()=>{
+    const id='mm-first-run-timing-qa';
+    const user={id,name:'Learner 1',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},learningAwards:[],currentLesson:1,lastSeen:'2026-10-09T00:00:00.000Z',onboardingDone:false,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
+    localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:id,users:{[id]:user}}));
+  });
+  await page.goto(BASE,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED)&&window.MM_LEARNER_UI_POLISH);
+  const firstRun=page.locator('#modal .onboarding');
+  await expect(firstRun).toBeVisible();
+  await expect(firstRun).toHaveAttribute('data-mm-product-polished','1');
+  await expect(firstRun.locator('h2')).toHaveText('Set up your learning path');
+  await expect(firstRun.locator(':scope > p')).toHaveText('Three quick choices. You can change them later in Profile.');
+});
+
+test('polish never rewrites retired certificate statline from legacy user.certificates',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await openApp(page);
+  await page.evaluate(()=>{
+    const row=document.createElement('div');
+    row.className='statline';
+    row.dataset.mmLegacyAwardFixture='1';
+    row.innerHTML='<span class="muted tiny">Certificates earned</span><b>17</b>';
+    document.querySelector('#dashboard').appendChild(row);
+    window.MM_LEARNER_UI_POLISH.refresh();
+  });
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  await expect(page.locator('#dashboard [data-mm-legacy-award-fixture] b')).toHaveText('17');
+});
