@@ -47,22 +47,50 @@
   }
   function knowledgeIndex(manifest,crosswalk){
     const chapters=chapterRows(manifest);
-    if(!crosswalk||!Array.isArray(crosswalk.chapterMappings))throw Error('A versioned Book/curriculum crosswalk is required.');
+    if(chapters.length!==46)throw Error('The governed Book manifest must contain exactly 46 modules.');
+    if(!crosswalk||crosswalk.schemaVersion!==1||
+      crosswalk.crosswalkId!=='mouldmaster-book-academy-crosswalk'||
+      crosswalk.mappingLevel!=='course-level semantic reinforcement'||
+      !Array.isArray(crosswalk.courseNames)||crosswalk.courseNames.length!==12||
+      !Array.isArray(crosswalk.chapterMappings))
+      throw Error('The versioned, course-level Book/curriculum crosswalk is required.');
+    const validLabel=value=>typeof value==='string'&&value.length>0&&
+      value.length<=160&&value.trim()===value&&!/[\\u0000-\\u001f\\u007f]/.test(value);
+    const knownCourses=new Set(crosswalk.courseNames);
+    if(knownCourses.size!==12||crosswalk.courseNames.some(x=>!validLabel(x)))
+      throw Error('Book crosswalk course registry is invalid or contains duplicates.');
+    if(crosswalk.chapterMappings.length!==chapters.length)
+      throw Error('Book crosswalk must contain every governed chapter in manifest order.');
     const maps=new Map();
-    for(const item of crosswalk.chapterMappings){
-      if(!item||typeof item.chapterId!=='string'||maps.has(item.chapterId))throw Error('Duplicate/invalid Book crosswalk row.');
-      maps.set(item.chapterId,item);
+    for(let i=0;i<chapters.length;i++){
+      const item=crosswalk.chapterMappings[i],chapter=chapters[i];
+      if(!item||item.chapterId!==chapter.id||maps.has(chapter.id))
+        throw Error('Book crosswalk chapter order, identity or membership has drifted.');
+      if(!Array.isArray(item.courseNames)||!item.courseNames.length||
+        item.courseNames.some(x=>!knownCourses.has(x))||
+        new Set(item.courseNames).size!==item.courseNames.length)
+        throw Error('Book crosswalk chapter has missing, duplicate or unknown courses.');
+      if(!Array.isArray(item.themes)||!item.themes.length||
+        item.themes.some(x=>!validLabel(x))||
+        new Set(item.themes).size!==item.themes.length)
+        throw Error('Book crosswalk chapter has invalid or duplicate thematic labels.');
+      maps.set(chapter.id,item);
     }
+    // Search, case and direct-chapter results must not share mutable arrays
+    // with the internal governed index (or the originally supplied manifest).
+    const copyChapter=ch=>({
+      ...ch,sourceIds:[...ch.sourceIds],claimClasses:[...ch.claimClasses],
+      courses:[...ch.courses],themes:[...ch.themes]
+    });
     const entries=chapters.map(ch=>({
-      ...ch,courses:(maps.get(ch.id)?.courseNames||[]).filter(x=>typeof x==='string'),
-      themes:(maps.get(ch.id)?.themes||[]).filter(x=>typeof x==='string')
+      ...ch,courses:[...maps.get(ch.id).courseNames],themes:[...maps.get(ch.id).themes]
     }));
     function search(query='',options={}){
       const q=cleanText(query,120).toLowerCase();
-      const course=cleanText(options.course||'',100);
+      const course=cleanText(options?.course||'',100);
       return entries.filter(ch=>(!course||ch.courses.includes(course))&&
         (!q||[ch.title,ch.id,ch.part,...ch.courses,...ch.themes].join(' ').toLowerCase().includes(q)))
-        .slice(0,46).map(row=>({...row,sourceIds:[...row.sourceIds],courses:[...row.courses],themes:[...row.themes]}));
+        .slice(0,46).map(copyChapter);
     }
     function forCase(caseId){
       const map={
@@ -73,11 +101,12 @@
         'VA-05':['venting','burns','thermal-history'],
         'VA-06':['cavity-pressure','process-monitoring','capability']
       };
-      return (map[caseId]||[]).map(id=>idFor(id,entries)).filter(Boolean);
+      return (Object.prototype.hasOwnProperty.call(map,caseId)?map[caseId]:[])
+        .map(id=>idFor(id,entries)).filter(Boolean).map(copyChapter);
     }
     return Object.freeze({
       chapters:entries.length,search,forCase,
-      chapter:id=>{const ch=idFor(id,entries);return ch?{...ch,courses:[...ch.courses],sourceIds:[...ch.sourceIds]}:null;},
+      chapter:id=>{const ch=idFor(id,entries);return ch?copyChapter(ch):null;},
       scope:'Book module-level metadata and existing course-level semantic mappings; not automatic lesson/SME verification.'
     });
   }

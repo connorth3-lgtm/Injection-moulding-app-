@@ -49,6 +49,10 @@ The first flagship experience links the existing Book concept to a fictional fac
 
 This work stays in the same reviewable New1 PR and does not fast-forward the old 5 October branches or bypass protected-main release protections.
 
+## October 9 development-only Book integrity hardening
+
+The five-pillar development Book explorer now validates the authoritative 46-module crosswalk against the Book manifest **in order**, requires the existing twelve-course registry and rejects missing, unknown or duplicate Book/course/thematic mappings. Its public lookups return detached arrays so callers cannot mutate the internal crosswalk, source-evidence list or later case recommendations. Negative regression tests cover omissions, forged chapters/courses, reordered mappings and accidental caller mutation. This is **course-level semantic reinforcement only**—it does not generate or approve a 120-lesson, lesson-level equivalence or competency score, and no production shell/runtime/cache version changes are introduced.
+
 ## Data and consent boundaries
 
 New1 does not create a learner store. When activated into a governed app, attempt indicators must use canonical Runtime V2 learner-scoped storage; local workbench uses a read-only stub. Its new training shots are synthetic and can never be passed off as real production logs. Trainer exports contain a template only. An anonymous performance summary includes the single current reviewed case and competency gaps, not free-text evidence, identifiers or automatic submissions; sharing outside the workbench remains voluntary and human-controlled.
