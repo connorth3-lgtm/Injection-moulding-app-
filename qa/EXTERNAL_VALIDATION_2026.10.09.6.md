@@ -2,7 +2,7 @@
 
 **STATUS: ALL SEVEN INDEPENDENT STREAMS HOLD; PRODUCTION ROOT HOLD.**
 
-This release candidate is being prepared for technical, visual and external validation. At the time of this packet's creation, no .6 exact-head public runtime artifact has been retained and verified. The earlier .5 technical candidate is historical only. A protected-main merge would be a distinct, governed decision and would not authorize production or external acceptance.
+The .6 technical source `3465fdca76941bf46d360051bc09fcda6d41c611` produced successful Pre-merge Public Candidate run `37923715379`, retained artifact `11612534730`, digest `sha256:c5b5ee1ac437462b515d3080ba49a9ac0a1c17e7e3a8a3399848bb3f0b9ca29d`, and runtime fingerprint `sha256:d5b80ea704ee8297c52d8402ce590f58fa003a38018391fcdc8170c9c0b4f2d0`. The earlier .5 artifact is historical only. This is software provenance, **not** human or device acceptance. A protected-main merge would be a distinct, governed decision and would not authorize production or external acceptance.
 
 ## Release-specific HOLD packets
 
@@ -16,7 +16,7 @@ This release candidate is being prepared for technical, visual and external vali
 
 Software CI, a build artifact and an exact-runtime fingerprint establish only technical identity. They do not substitute for signed desktop distribution, real-device iOS/Android testing, real NVDA/VoiceOver, 46 Book and 120 curriculum independent SME reviews, real learner outcomes, provider G1–G8 or production authority.
 
-Once a successful exact-head candidate artifact exists, bind its actual source SHA, artifact ID, digest and fingerprint using `tools/rebind_external_hold_candidate.py`. Do not fabricate evidence or change any HOLD or advisory-only status. Manual iPad, Android, high-zoom and visual owner acceptance are still required.
+Candidate SHA, artifact ID, digest and fingerprint are recorded in the canonical ledger; `tools/rebind_external_hold_candidate.py` remains the reproducible rebind/check procedure. Do not fabricate evidence or change any HOLD or advisory-only status. Manual iPad, Android, high-zoom and visual owner acceptance are still required.
 
 ## Canonical release-validator paths
 
