@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "webRelease": "2026.10.09.6",
+  "status": "hold-exact-lesson-review",
+  "mappingLevel": "authored exact-lesson to Book-module semantic match",
+  "lessonAuthority": "MouldMaster_Core_App.html:window.MM_DATA.lessons",
+  "bookAuthority": "data/book-manifest-v1.json",
+  "courseCrosswalk": "data/book-curriculum-crosswalk-v1.json",
+  "bookPublicationAuthority": "data/book-publication-authorization-v1.json",
+  "approvedPublicLinks": false,
+  "reviewedLinks": [],
+  "policy": "This contract only records potential human-authored exact lesson-to-Book semantic links. Course-level thematic suggestions are NOT reviewed exact-lesson matches. All entries require current source fingerprints, rationale and real reviewer evidence. Automated shape checks never create reviewer approval, competency evidence, learner completion, assessment credit, workplace competence or a public navigation right; there is no public navigation entitlement. Enabling public links requires separate release-governed, independently reviewed runtime work with real device/AT and offline/deep-link acceptance."
+}
