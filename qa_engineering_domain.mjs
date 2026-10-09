@@ -615,6 +615,21 @@ const badAxisDescriptor = new Proxy(['shot'], {
   getOwnPropertyDescriptor(){ throw Error('malformed evidence descriptor'); },
 });
 assert.equal(makeFitSummary(badAxisDescriptor).ok, false);
+// Option accessors must not be run by destructuring before validation.
+let optionsGetterCalls = 0;
+for (const unsafeKey of ['machineConfigurationId', 'requiredAxisIds', 'assessments', 'basis']) {
+  const accessorOptions = {...safeInputs};
+  Object.defineProperty(accessorOptions, unsafeKey, {
+    get(){ optionsGetterCalls++; return safeInputs[unsafeKey]; },
+  });
+  const outcome = machineSuitabilitySummary(accessorOptions);
+  assert.equal(outcome.ok, false, `accessor option ${unsafeKey} must fail closed`);
+}
+assert.equal(optionsGetterCalls, 0, 'machine-fit options must not invoke getter fields');
+const revokedOptions = Proxy.revocable(safeInputs, {});
+revokedOptions.revoke();
+assert.equal(machineSuitabilitySummary(revokedOptions.proxy).ok, false,
+  'revoked options proxy must return unsupported, not throw');
 // A custom array iterator must never replace the validated own axis slots.
 let axisIteratorCalls = 0;
 const iteratorSpoofAxes = ['shot'];
