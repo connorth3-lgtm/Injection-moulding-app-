@@ -178,7 +178,17 @@ need('data-mm-android-pwa' not in pwa_shell,'retired Android/web label coupling 
 
 visual=json.loads(text('qa/visual-regression-baseline.json'))
 need(re.fullmatch(r'[0-9a-f]{40}',str(visual.get('commit') or '')) is not None,'visual baseline commit must be an exact SHA')
-need(visual.get('ref')==f"visual-baseline/{visual.get('release')}",'visual baseline must use the release-named retained ref')
+# The historical .4 ref was advanced by PR #526 after the owner-approved
+# baseline was locked. Fail closed on the *specific* immutable replacement:
+# all other releases still require their standard release-named ref.
+if visual.get('release')=='2026.10.09.4':
+    need(visual.get('ref')=='visual-baseline/2026.10.09.4-restored-immutable'
+         and visual.get('commit')=='fa27bd16525f8cb216654ea524649a3a37a3195c'
+         and visual.get('maxDiffPixels')==12,
+         '2026.10.09.4 visual baseline must remain bound to approved fa27bd16 at 12px')
+else:
+    need(visual.get('ref')==f"visual-baseline/{visual.get('release')}",
+         'visual baseline must use the release-named retained ref')
 mobile_workflow=text('.github/workflows/mobile-browser-qa.yml')
 for marker in ['BASELINE_REF','refs/heads/$BASELINE_REF','FETCHED_BASELINE_SHA','Visual baseline ref drifted']:
     need(marker in mobile_workflow,f'mobile visual baseline retention guard missing: {marker}')
