@@ -96,15 +96,36 @@
     // lesson. This does not create an exact lesson↔chapter equivalence,
     // award progress, or alter learner data. Runtime callers must pass the
     // governed D.lessons lesson and D.courses registry, not free text.
-    function forLesson(lesson,canonicalCourses){
+    function forLesson(lesson,canonicalCourses,canonicalLessons){
+      const unmapped=()=>Object.freeze({
+        state:'unmapped',chapters:Object.freeze([]),reviewedLessonMatch:false,
+        learningCreditGranted:false,workplaceCompetence:false
+      });
+      // Numeric IDs are not evidence of a governed lesson. Require exact
+      // object membership in the supplied canonical 120-lesson registry.
       if(!lesson||!Number.isInteger(lesson.id)||lesson.id<1||lesson.id>120||
-         !Number.isInteger(lesson.course)||!Array.isArray(canonicalCourses))
-        return Object.freeze({state:'unmapped',chapters:[],reviewedLessonMatch:false});
-      const matches=canonicalCourses.filter(course=>course&&
-        course.id===lesson.course&&typeof course.name==='string'&&
-        Array.isArray(crosswalk.courseNames)&&crosswalk.courseNames.includes(course.name));
-      if(matches.length!==1)
-        return Object.freeze({state:'unmapped',chapters:[],reviewedLessonMatch:false});
+         !Number.isInteger(lesson.course)||!Array.isArray(canonicalLessons)||
+         canonicalLessons.length!==120||!Array.isArray(canonicalCourses)||
+         canonicalCourses.length!==crosswalk.courseNames.length)return unmapped();
+      const lessonIds=new Set();
+      for(const canonical of canonicalLessons){
+        if(!canonical||!Number.isInteger(canonical.id)||canonical.id<1||
+           canonical.id>120||!Number.isInteger(canonical.course)||
+           canonical.course<1||canonical.course>12||lessonIds.has(canonical.id))
+          return unmapped();
+        lessonIds.add(canonical.id);
+      }
+      const courseIds=new Set(),courseNames=new Set();
+      for(const course of canonicalCourses){
+        if(!course||!Number.isInteger(course.id)||course.id<1||course.id>12||
+           !validLabel(course.name)||courseIds.has(course.id)||
+           courseNames.has(course.name)||!crosswalk.courseNames.includes(course.name))
+          return unmapped();
+        courseIds.add(course.id);courseNames.add(course.name);
+      }
+      if(courseNames.size!==12||!canonicalLessons.some(item=>item===lesson))return unmapped();
+      const matches=canonicalCourses.filter(course=>course.id===lesson.course);
+      if(matches.length!==1)return unmapped();
       const courseName=matches[0].name;
       const chapters=entries.filter(ch=>ch.courses.includes(courseName)).slice(0,3).map(ch=>Object.freeze({
         id:ch.id,title:ch.title,sourceState:ch.state,
@@ -330,7 +351,7 @@
       version:VERSION,caseId:'VA-02',factory,index,
       canonicalCase:()=>va.cases.find(row=>row.id==='VA-02'),
       review,lastReview:currentReview,tutor,pathway,
-      lessonGuide:(lesson,canonicalCourses)=>index.forLesson(lesson,canonicalCourses),
+      lessonGuide:(lesson,canonicalCourses,canonicalLessons)=>index.forLesson(lesson,canonicalCourses,canonicalLessons),
       trainerDraft,assignmentExport,learnerShare:shareCurrentReview,
       openCase:()=>bridge.openCase?.()===true,
       openSpatial:()=>bridge.openSpatial?.()===true,
