@@ -119,7 +119,7 @@ class WorklistTests(unittest.TestCase):
         from tools.new1_authoring_review_queue import safe_spreadsheet_cell
         for prefix in ("=", "+", "-", "@"):
             self.assertEqual(safe_spreadsheet_cell(prefix + "1"), "'" + prefix + "1")
-        self.assertEqual(safe_spreadsheet_cell("\\t=SUM(1,1)"), "'\\t=SUM(1,1)")
+        self.assertEqual(safe_spreadsheet_cell("\t=SUM(1,1)"), "'\t=SUM(1,1)")
         self.assertEqual(safe_spreadsheet_cell("Normal lesson"), "Normal lesson")
         self.assertEqual(safe_spreadsheet_cell(12), 12)
 
