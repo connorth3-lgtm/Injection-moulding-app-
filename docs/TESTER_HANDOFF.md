@@ -24,7 +24,7 @@ MouldMaster has separate destinations:
    python3 qa_tester_handoff.py --live --expected-source-sha <ACTUAL_PROTECTED_MAIN_COMMIT_SHA>
    ```
 
-   The command verifies the live root HOLD, `/preview/` markers, publication source, manifest/asset integrity, public/private asset boundary, and that the deployed web-release version matches `version.json`. It must exit **zero**. Do not substitute the PR's pre-merge SHA for the protected-main merge commit.
+   The command first independently checks the GitHub API: the supplied SHA **must equal the latest protected `main` HEAD**, and that same HEAD must have a **successful `push` execution of the governed Pages workflow**. A stale commit, still-running or failed run, successful PR-only candidate, manual dispatch, GitHub API failure or old preview must be treated as **STOP / no-send**, even when the old preview's release/version and its own asset manifest are internally consistent. The command then verifies the live root HOLD, `/preview/` markers, deployment source, manifest/asset integrity, public/private asset boundary, and `version.json` release identity. It must exit **zero**. Do not substitute the PR's pre-merge SHA for the protected-main merge commit. GitHub API connectivity is mandatory for this operator-only check; the normal offline repository QA remains network-free.
 4. Capture a non-sensitive record of the checked release, deployed SHA, checked date, Pages run link, result and operator in the handoff notes. No private tester identifiers belong in public source control.
 
 ## Manual preflight — required

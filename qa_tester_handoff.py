@@ -140,9 +140,81 @@ def verify_local() -> tuple[str, str]:
     return release, root_url
 
 
+
+
+GITHUB_BRANCH_ENDPOINT = "https://api.github.com/repos/connorth3-lgtm/Injection-moulding-app-/branches/main"
+GITHUB_PAGES_RUNS_ENDPOINT = "https://api.github.com/repos/connorth3-lgtm/Injection-moulding-app-/actions/workflows/pages.yml/runs"
+
+
+def check_publication_provenance(branch: object, runs: object, expected_source_sha: str) -> None:
+    """Require exact protected-main HEAD and its successful *push* publisher.
+
+    Reject a stale-but-otherwise-real preview deployment even if the operator
+    accidentally supplies its exact old source SHA. Never accept a PR,
+    manual workflow dispatch or merely queued/completed-with-failure run.
+    This does not substitute for verifying live page bytes afterwards.
+    """
+    need(re.fullmatch(r"[0-9a-f]{40}", expected_source_sha) is not None,
+         "expected protected-main source SHA is invalid")
+    need(isinstance(branch, dict), "GitHub protected-main branch response is invalid")
+    branch_commit = branch.get("commit")
+    need(isinstance(branch_commit, dict), "GitHub protected-main commit response is invalid")
+    actual_sha = branch_commit.get("sha")
+    need(actual_sha == expected_source_sha,
+         "requested preview SHA is stale: it is not the current protected-main HEAD")
+    need(isinstance(runs, dict) and isinstance(runs.get("workflow_runs"), list),
+         "GitHub Pages workflow results are missing or malformed")
+    publishers = [
+        row for row in runs["workflow_runs"]
+        if isinstance(row, dict)
+        and row.get("name") == "MouldMaster Pages Release Readiness"
+        and row.get("path") == ".github/workflows/pages.yml"
+        and row.get("event") == "push"
+        and row.get("head_branch") == "main"
+        and row.get("head_sha") == expected_source_sha
+        and row.get("status") == "completed"
+        and row.get("conclusion") == "success"
+    ]
+    need(bool(publishers),
+         "current protected-main SHA has no successful Pages push publication")
+
+
+def github_public_json(url: str) -> dict:
+    need(url == GITHUB_BRANCH_ENDPOINT or url.startswith(GITHUB_PAGES_RUNS_ENDPOINT + "?"),
+         "GitHub publication verification endpoint is not allowlisted")
+    request = Request(
+        url,
+        headers={
+            "User-Agent": "MouldMaster-Tester-Handoff-Publication/1",
+            "Accept": "application/vnd.github+json",
+            "Cache-Control": "no-cache",
+        },
+    )
+    try:
+        with urlopen(request, timeout=20) as response:
+            need(response.status == 200, "GitHub publication status endpoint is unavailable")
+            payload = json.load(response)
+    except (OSError, ValueError) as exc:
+        # Deliberately avoid displaying raw request/response bodies.
+        raise AssertionError("Tester handoff preflight: GitHub publication could not be independently verified") from exc
+    need(isinstance(payload, dict), "GitHub publication response is not an object")
+    return payload
+
+
+def verify_current_publication(expected_source_sha: str) -> None:
+    branch = github_public_json(GITHUB_BRANCH_ENDPOINT)
+    # The exact known SHA and branch are fixed query components; no user-supplied
+    # endpoint, path, secret, credentials or arbitrary repository URLs are used.
+    runs = github_public_json(
+        GITHUB_PAGES_RUNS_ENDPOINT
+        + "?branch=main&head_sha=" + expected_source_sha + "&per_page=100"
+    )
+    check_publication_provenance(branch, runs, expected_source_sha)
+
 def verify_live(root_url: str, expected_source_sha: str, release: str) -> None:
     need(re.fullmatch(r"[0-9a-f]{40}", expected_source_sha) is not None,
          "expected protected-main SHA must be exactly 40 lowercase hex characters")
+    verify_current_publication(expected_source_sha)
     subprocess.run(
         [
             sys.executable, str(ROOT / "tools/verify_pages_hold.py"),
