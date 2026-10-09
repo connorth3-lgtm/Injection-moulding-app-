@@ -310,7 +310,7 @@
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
-    "technicalAutomation": "fail",
+    "technicalAutomation": "pass",
     "bookPublicationAuthorization": "authorized",
     "bookIndependentSme": "hold",
     "curriculumIndependentSme": "hold",
@@ -345,12 +345,12 @@
   "userFacingTerminologyBoundary": "Internal evidenceMaturity=verified must be displayed as 'Source evidence reviewed'. The word verified must not be used by itself in learner-facing Book assurance because independent human SME/device/learner validation is a separate namespace.",
   "currentAssuranceEvidence": {
     "staticContract": {
-      "status": "fail",
-      "meaning": "No verified .6 exact-head technical candidate was approved at this point; .5 is historical evidence only. Technical status remains FAIL until exact-head retained artifact and current release bindings are proven."
+      "status": "pass",
+      "meaning": "Retained .6 technical runtime source 3465fdca76941bf46d360051bc09fcda6d41c611 produced successful Pre-merge Public Candidate run 37923715379 and artifact 11612534730. Current PR-head protected checks and external physical acceptance remain separately required."
     },
     "behavioralBrowser": {
-      "status": "fail",
-      "meaning": "The new .6 candidate has not yet passed exact-head browser and quality checks. Prior .5 results cannot transfer."
+      "status": "pass",
+      "meaning": "Automated Mobile Browser QA and Question Quality 50-Pass succeeded on the retained .6 runtime source 3465fdca76941bf46d360051bc09fcda6d41c611. New PR-head checks, human visual review and real-device/AT acceptance remain independently required."
     },
     "externalHumanDevice": {
       "status": "hold",
