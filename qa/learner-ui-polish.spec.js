@@ -479,7 +479,8 @@ test('tablet bottom navigation keeps five touch targets on one row and clears th
   for(const width of [1024,1100]){
     await page.setViewportSize({width,height:900});
     await expect(page.locator('#nav')).toBeVisible();
-    await expect(page.locator('#nav').getByRole('button',{name:'More'})).toBeVisible();
+    await expect(page.locator('#nav button[data-view="dashboard"]')).toBeVisible();
+    await expect(page.locator('#nav button[data-view="path"]')).toBeVisible();
   }
 });
 
@@ -500,10 +501,15 @@ test('idle Home has a single mission CTA while persistent Mission Control and ac
 test('stored First Shot badge never triggers retired automatic achievement celebration on Home',async({page})=>{
   await page.setViewportSize({width:1440,height:900});
   await openApp(page);
-  await page.waitForFunction(()=>{
-    const db=JSON.parse(localStorage.getItem('mouldmasterProDB')||'{}');
-    return db.users?.[db.activeUser]?.fun?.achievements?.includes('first-lesson');
+  // Exercise the real badge evaluator directly: startup migrations may persist
+  // learner state in a different scoped store, but the award must still be kept.
+  const badge=await page.evaluate(()=>{
+    const f=funEnsure();
+    f.achievements=f.achievements.filter(id=>id!=='first-lesson');
+    checkAchievements();
+    return f.achievements.includes('first-lesson');
   });
+  expect(badge).toBeTruthy();
   await expect(page.locator('.toast').filter({hasText:/Achievement unlocked:/i})).toHaveCount(0);
   await expect(page.locator('#xpPop:visible')).toHaveCount(0);
   await page.evaluate(()=>switchView('path'));
