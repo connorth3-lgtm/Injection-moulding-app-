@@ -64,6 +64,33 @@
         (!q||[ch.title,ch.id,ch.part,...ch.courses,...ch.themes].join(' ').toLowerCase().includes(q)))
         .slice(0,46).map(row=>({...row,sourceIds:[...row.sourceIds],courses:[...row.courses],themes:[...row.themes]}));
     }
+    // Course-level Book reading suggestions for an existing canonical Academy
+    // lesson. This does not create an exact lesson↔chapter equivalence,
+    // award progress, or alter learner data. Runtime callers must pass the
+    // governed D.lessons lesson and D.courses registry, not free text.
+    function forLesson(lesson,canonicalCourses){
+      if(!lesson||!Number.isInteger(lesson.id)||lesson.id<1||lesson.id>120||
+         !Number.isInteger(lesson.course)||!Array.isArray(canonicalCourses))
+        return Object.freeze({state:'unmapped',chapters:[],reviewedLessonMatch:false});
+      const matches=canonicalCourses.filter(course=>course&&
+        course.id===lesson.course&&typeof course.name==='string'&&
+        Array.isArray(crosswalk.courseNames)&&crosswalk.courseNames.includes(course.name));
+      if(matches.length!==1)
+        return Object.freeze({state:'unmapped',chapters:[],reviewedLessonMatch:false});
+      const courseName=matches[0].name;
+      const chapters=entries.filter(ch=>ch.courses.includes(courseName)).slice(0,3).map(ch=>Object.freeze({
+        id:ch.id,title:ch.title,sourceState:ch.state,
+        mappingBasis:'existing governed course-level Book↔Academy crosswalk',
+        exactLessonMatchReviewed:false
+      }));
+      return Object.freeze({
+        state:chapters.length?'course-level-reading-suggestion':'unmapped',
+        lessonId:lesson.id,courseName,
+        chapters:Object.freeze(chapters),reviewedLessonMatch:false,
+        learningCreditGranted:false,workplaceCompetence:false,
+        guidance:'Explore related Book modules. These are course-level thematic suggestions, not exact-lesson matches or SME-approved equivalence.'
+      });
+    }
     function forCase(caseId){
       const map={
         'VA-01':['velocity-pressure','shot-utilisation','process-baseline'],
@@ -76,7 +103,7 @@
       return (map[caseId]||[]).map(id=>idFor(id,entries)).filter(Boolean);
     }
     return Object.freeze({
-      chapters:entries.length,search,forCase,
+      chapters:entries.length,search,forCase,forLesson,
       chapter:id=>{const ch=idFor(id,entries);return ch?{...ch,courses:[...ch.courses],sourceIds:[...ch.sourceIds]}:null;},
       scope:'Book module-level metadata and existing course-level semantic mappings; not automatic lesson/SME verification.'
     });
@@ -202,6 +229,7 @@
       version:VERSION,caseId:'VA-02',factory,index,
       canonicalCase:()=>va.cases.find(row=>row.id==='VA-02'),
       review,lastReview:()=>lastReview,tutor,pathway,
+      lessonGuide:(lesson,canonicalCourses)=>index.forLesson(lesson,canonicalCourses),
       trainerDraft,assignmentExport,learnerShare,
       openCase:()=>bridge.openCase?.()===true,
       openSpatial:()=>bridge.openSpatial?.()===true,

@@ -37,6 +37,33 @@ assert.equal(index.forCase('VA-02').length,4);
 assert.equal(index.chapter('multi-cavity').id,'multi-cavity');
 assert.equal(index.chapter('multi-cavity').state,'source-review','Unreviewed Book source must not be elevated');
 assert.equal(index.chapter('missing'),null);
+
+// Course-level suggestions must never pretend to be a semantic lesson match,
+// imported learner record, certificate or workplace competency. This is a
+// deterministic developer-only bridge using the existing governed course index.
+const canonicalCourses=crosswalk.courseNames.map((name,i)=>({id:i+1,name}));
+const sampleLesson={id:7,course:3,title:'A canonical Materials lesson'};
+const guide=index.forLesson(sampleLesson,canonicalCourses);
+assert.equal(guide.state,'course-level-reading-suggestion');
+assert.equal(guide.lessonId,7);
+assert.equal(guide.courseName,'Materials');
+assert.ok(guide.chapters.length>=1&&guide.chapters.length<=3);
+assert.ok(guide.chapters.every(row=>index.chapter(row.id)&&row.exactLessonMatchReviewed===false));
+assert.equal(guide.learningCreditGranted,false);
+assert.equal(guide.workplaceCompetence,false);
+assert.equal(guide.reviewedLessonMatch,false);
+assert.equal(Object.isFrozen(guide),true);
+assert.equal(Object.isFrozen(guide.chapters),true);
+assert.equal(Object.isFrozen(guide.chapters[0]),true);
+assert.equal(index.forLesson({id:7,course:777},canonicalCourses).state,'unmapped');
+assert.equal(index.forLesson({id:'7',course:3},canonicalCourses).state,'unmapped');
+assert.equal(index.forLesson({id:0,course:3},canonicalCourses).state,'unmapped');
+assert.equal(index.forLesson({id:121,course:3},canonicalCourses).state,'unmapped');
+assert.equal(index.forLesson(sampleLesson,[{id:3,name:'Unreviewed course'}]).state,'unmapped');
+assert.equal(index.forLesson(sampleLesson,[{id:3,name:'Materials'},{id:3,name:'Materials'}]).state,'unmapped');
+assert.equal(index.forLesson({id:7,course:3,courseName:'Fake exact match'},canonicalCourses).courseName,'Materials');
+assert.deepEqual(index.forLesson(null,canonicalCourses).chapters,[]);
+
 assert.ok(index.search('cavity').length>0);
 assert.equal(lab.tutorPlan(null,index,{}).state,'ready-to-practise');
 const correct={},wrong={};
@@ -56,6 +83,8 @@ const bridge=adapter.createBridge({
  runtime:{storage}
 });
 const app=lab.createAcademy({apprenticeship:va,bookManifest:book,crosswalk,factoryEvidence:factoryData,bridge,storage});
+assert.deepEqual(app.lessonGuide(sampleLesson,canonicalCourses),guide);
+assert.equal(writes,0,'Book reading suggestion must not create a shadow learner store');
 assert.equal(app.openCase(),true);
 assert.equal(app.openSpatial(),true);
 assert.deepEqual(twin,{caseIndex:1});
@@ -119,4 +148,4 @@ for(const rel of [
  assert.ok(!sw.includes("'./"+rel+"'"));
  assert.ok(!shell.includes("'./"+rel+"'"));
 }
-console.log('NEW1 five-pillar academy QA passed: synthetic cavity identity, 46-module Book, canonical VA score, tutor, five learning tracks, trainer consent and public-runtime isolation');
+console.log('NEW1 five-pillar academy QA passed: synthetic cavity identity, 46-module Book, canonical VA score, course-level lesson↔Book suggestions, tutor, five learning tracks, trainer consent and public-runtime isolation');
