@@ -34,6 +34,16 @@ WARNING = (
     "public routes are authorized."
 )
 REGISTRY_FILES = ("book-manifest-v1.json", "book-evidence-registry-v1.json")
+# These are existing source *declaration* vocabulary, never SME/claim approvals.
+# Fail closed if a future source changes state until the authoring policy is
+# updated intentionally. In particular, a forged "approved" is not evidence.
+SOURCE_DECLARATION_STATES = frozenset((
+    "published-confirmed", "active", "current-public-manufacturer-document",
+    "current-public-manufacturer-page", "current-public-training-outline",
+    "peer-reviewed-2022", "public-manufacturer-document-version-8-2025",
+    "current-public-processing-data-sheet-02-2026", "published",
+    "active-listed",
+))
 
 
 def pinned_json(root: Path, publication: dict, name: str) -> dict:
@@ -74,6 +84,8 @@ def source_registry(data: list[tuple[str, dict]]) -> dict[str, dict]:
                      and all(ord(ch) >= 32 for ch in seed[k])
                      for k in SOURCE_FIELDS),
                  "invalid source-seed fields")
+            need(seed["currentState"] in SOURCE_DECLARATION_STATES,
+                 "source declaration cannot claim invented approval or review")
             try:
                 when = date.fromisoformat(seed["checked"])
             except ValueError as exc:
