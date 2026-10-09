@@ -311,6 +311,16 @@ for regression in (
     "polish never rewrites retired certificate statline from legacy user.certificates",
 ):
     need(regression in polish_tests, f"issue #517 regression case missing: {regression}")
+# Prove that old hoisted bodies can be safely isolated for a later governed
+# release. This is a syntax-only dry run, not a learner-runtime modification or
+# completion of #519's downstream browser/physical validation.
+from tools.verify_shadowed_core_retirement import preview_retirement
+retirement_proof = preview_retirement(active_core_slot)
+need(retirement_proof["javascript_syntax"] == "pass",
+     "shadowed core retirement proof must compile as JavaScript")
+need(retirement_proof["candidate_not_published"] is True,
+     "retirement proof must remain an offline preview")
+
 print(f"Core shadowed declarations: {len(shadowed_declarations)}/10 (ratchet, no new names); issue #517 runtime regressions retained")
 
 print(
