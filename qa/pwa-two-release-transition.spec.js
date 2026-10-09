@@ -15,7 +15,7 @@ function workerFor(release){
   const end=source.indexOf('const RELEASE_ASSETS=',start);
   if(start<0||end<0)throw new Error('Could not isolate the service-worker release asset declarations.');
   const minimal=[
-    "const CORE=['./index.html','./runtime.js','./version.json'];",
+    "const CORE=['./index.html','./runtime.js','./mission-control.css','./version.json'];",
     'const OPTIONAL=[];',
     ''
   ].join('\n');
@@ -26,6 +26,9 @@ function htmlFor(release){
   return `<!doctype html>
 <meta charset="utf-8">
 <title>PWA transition ${release}</title>
+<link rel="stylesheet" href="./mission-control.css">
+<section class="mm-mc-context-items"><div>Machine</div><div>Mould</div><div>Material</div><div>Part</div><div>Case</div></section>
+<div class="mm-mc-timeline">Mission steps</div><div class="book-card">Book action</div>
 <script>window.__documentVersion=${JSON.stringify(release)};</script>
 <script src="./runtime.js"></script>
 <script>
@@ -58,6 +61,15 @@ function makeServer(){
     if(pathname==='/runtime.js'){
       res.writeHead(200,{...common,'Content-Type':'text/javascript; charset=utf-8'});
       res.end(`window.__runtimeVersion=${JSON.stringify(state.release)};\n`);
+      return;
+    }
+    if(pathname==='/mission-control.css'){
+      res.writeHead(200,{...common,'Content-Type':'text/css; charset=utf-8'});
+      // Model the photographed older fixed bar and the corrected release:
+      // both CSS generations must remain atomically tied to their worker.
+      res.end(state.release==='v1'
+        ? '/* fixture-layout-v1 */\n.mm-mc-timeline{position:fixed;bottom:0}.mm-mc-context-items{display:grid;grid-template-columns:repeat(5,minmax(100px,1fr));overflow:auto}\n'
+        : '/* fixture-layout-v2 */\n.mm-mc-timeline{position:relative;bottom:auto}.mm-mc-context-items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible}\n');
       return;
     }
     if(pathname==='/version.json'){
@@ -110,12 +122,16 @@ async function clientIdentity(page){
   return page.evaluate(async()=>{
     const runtimeText=await (await fetch('./runtime.js',{cache:'no-store'})).text();
     const version=await (await fetch('./version.json',{cache:'no-store'})).json();
+    const mobileCss=await (await fetch('./mission-control.css',{cache:'no-store'})).text();
     const fetchedRuntime=/__runtimeVersion=["']([^"']+)["']/.exec(runtimeText)?.[1]||'';
     return {
       document:window.__documentVersion,
       runtime:window.__runtimeVersion,
       fetchedRuntime,
       fetchedVersion:version.release,
+      cssGeneration:/fixture-layout-(v\d+)/.exec(mobileCss)?.[1]||'missing',
+      missionPosition:getComputedStyle(document.querySelector('.mm-mc-timeline')).position,
+      contextColumns:getComputedStyle(document.querySelector('.mm-mc-context-items')).gridTemplateColumns.trim().split(/\s+/).length,
       caches:await caches.keys()
     };
   });
@@ -156,6 +172,9 @@ test('an old controlled client stays release-coherent until a complete new relea
     expect(oldClient.fetchedVersion).toBe('v1');
     expect(oldClient.caches).toContain(`mouldmaster-static-v1-${CACHE_REVISION}`);
     expect(oldClient.caches).toContain(`mouldmaster-static-v2-${CACHE_REVISION}`);
+    expect(oldClient).toMatchObject({cssGeneration:'v1',missionPosition:'fixed',contextColumns:5});
+    // This is intentionally the OLD visible design until all v1 clients close:
+    // a waiting v2 worker must not overwrite styles within a v1 document.
 
     // Once the old client leaves the scope, the fully installed v2 release may
     // take over. Retry through about:blank so a transient v1 page never pins the
@@ -181,6 +200,9 @@ test('an old controlled client stays release-coherent until a complete new relea
       fetchedVersion:(await (await fetch('./version.json')).json()).release
     }))).toEqual({document:'v2',runtime:'v2',fetchedVersion:'v2'});
 
+    const newClient=await clientIdentity(next);
+    expect(newClient).toMatchObject({document:'v2',runtime:'v2',fetchedRuntime:'v2',fetchedVersion:'v2',cssGeneration:'v2',missionPosition:'relative',contextColumns:2});
+
     // The completed v2 release must still relaunch coherently with the origin
     // unavailable, preserving the existing offline recovery contract.
     fixture.state.offline=true;
@@ -188,6 +210,7 @@ test('an old controlled client stays release-coherent until a complete new relea
     const offline=await context.newPage();
     await offline.goto(base,{waitUntil:'load'});
     expect(await offline.evaluate(()=>({document:window.__documentVersion,runtime:window.__runtimeVersion}))).toEqual({document:'v2',runtime:'v2'});
+    expect(await clientIdentity(offline)).toMatchObject({cssGeneration:'v2',missionPosition:'relative',contextColumns:2});
   }finally{
     fixture.state.offline=false;
     await closeServer(fixture.server);
@@ -220,6 +243,7 @@ test('an incomplete new release is discarded and the previous release remains us
     const keys=await cacheKeys(page);
     expect(keys).toContain(`mouldmaster-static-v1-${CACHE_REVISION}`);
     expect(keys).not.toContain(`mouldmaster-static-v2-${CACHE_REVISION}`);
+    expect(await clientIdentity(page)).toMatchObject({cssGeneration:'v1',missionPosition:'fixed',contextColumns:5});
     expect(await page.evaluate(async()=>{
       const registration=await navigator.serviceWorker.getRegistration();
       return {waiting:!!registration?.waiting,active:!!registration?.active};
@@ -235,6 +259,7 @@ test('an incomplete new release is discarded and the previous release remains us
     await offline.goto(base,{waitUntil:'load'});
     await waitForControlled(offline);
     expect(await offline.evaluate(()=>({document:window.__documentVersion,runtime:window.__runtimeVersion}))).toEqual({document:'v1',runtime:'v1'});
+    expect(await clientIdentity(offline)).toMatchObject({cssGeneration:'v1',missionPosition:'fixed',contextColumns:5});
   }finally{
     fixture.state.offline=false;
     fixture.state.failPaths.clear();
