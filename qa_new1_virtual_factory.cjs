@@ -126,6 +126,69 @@ learner=null;
 assert.equal(journey.snapshot().state,'no-learner');
 assert.deepEqual(journey.snapshot().answers,{});
 assert.equal(journey.review().state,'no-learner');
+// All presented snapshots are isolated immutable views; there is no way to
+// rewrite a stored review or inject artificial learner performance via a
+// reference returned by the provisional worksheet.
+learner='learner-A';
+const canonicalWorksheet=proposed.createJourney(guardedBridge);
+for(const step of ['hypothesis','test','response','verify'])
+ assert.equal(canonicalWorksheet.choose(step,realAnswers[step]),true);
+const safeReview=canonicalWorksheet.review();
+assert.equal(safeReview.state,'formative-review');
+assert.equal(safeReview.total,4);
+assert.equal(Object.isFrozen(safeReview),true);
+assert.equal(Object.isFrozen(safeReview.gaps),true);
+assert.equal(Object.isFrozen(safeReview.dimensions),true);
+assert.equal(Object.isFrozen(safeReview.dimensions[0]),true);
+const safeSnapshot=canonicalWorksheet.snapshot();
+assert.equal(Object.isFrozen(safeSnapshot.answers),true);
+assert.equal(Object.isFrozen(safeSnapshot.reviewed),true);
+assert.equal(Object.isFrozen(safeSnapshot.reviewed.dimensions[0]),true);
+assert.throws(()=>safeSnapshot.reviewed.dimensions.push({id:'forged'}),TypeError);
+assert.equal(canonicalWorksheet.snapshot().reviewed.total,4);
+learner='learner-B';
+assert.equal(canonicalWorksheet.snapshot().reviewed,null);
+learner='learner-A';
+assert.equal(canonicalWorksheet.snapshot().reviewed,null,'A must not inherit its stale score after an A-B-A context transition');
+// No previous-learner result may be displayed when learner identity changes
+// *during* the score callback itself.
+const midReviewBridge={
+ ...guardedBridge,
+ review(answers){const result=guardedBridge.review(answers);learner='learner-B';return result;}
+};
+learner='learner-A';
+const midReviewJourney=proposed.createJourney(midReviewBridge);
+for(const step of ['hypothesis','test','response','verify'])
+ assert.equal(midReviewJourney.choose(step,realAnswers[step]),true);
+assert.equal(midReviewJourney.review().state,'learner-changed');
+assert.equal(midReviewJourney.snapshot().state,'ready');
+assert.deepEqual(midReviewJourney.snapshot().answers,{});
+assert.equal(midReviewJourney.snapshot().reviewed,null);
+// A broken/forged canonical review never becomes saved worksheet state.
+learner='learner-A';
+const malformedBridge={...guardedBridge,
+ review(){return {state:'formative-review',caseId:'VA-02',total:4,max:4,dimensions:[],gaps:[]}}
+};
+const malformed=proposed.createJourney(malformedBridge);
+for(const step of ['hypothesis','test','response','verify'])
+ assert.equal(malformed.choose(step,realAnswers[step]),true);
+assert.equal(malformed.review().state,'unavailable');
+assert.equal(malformed.snapshot().reviewed,null);
+learner='learner-A';
+let scoreCorrupt=false;
+const flakyBridge={...guardedBridge,
+ review(answers){return scoreCorrupt?
+  {state:'formative-review',caseId:'VA-02',total:4,max:4,dimensions:[],gaps:[]}:
+  guardedBridge.review(answers);}
+};
+const flakyJourney=proposed.createJourney(flakyBridge);
+for(const step of ['hypothesis','test','response','verify'])
+ assert.equal(flakyJourney.choose(step,realAnswers[step]),true);
+assert.equal(flakyJourney.review().state,'formative-review');
+assert.equal(flakyJourney.snapshot().reviewed.total,4);
+scoreCorrupt=true;
+assert.equal(flakyJourney.review().state,'unavailable');
+assert.equal(flakyJourney.snapshot().reviewed,null,'malformed repeat review must invalidate prior score');
 assert.match(fs.readFileSync(path.join(root,'src/experimental/new1-virtual-factory-case-one.js'),'utf8'),/Your evidence-to-recovery worksheet/);
 assert.match(fs.readFileSync(path.join(root,'src/experimental/new1-virtual-factory-case-one.js'),'utf8'),/Refresh canonical case progress/);
 console.log('New1 interactive evidence worksheet and real VA-02 scorer/isolation QA passed');
