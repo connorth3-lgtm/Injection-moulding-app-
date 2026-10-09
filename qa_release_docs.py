@@ -178,12 +178,50 @@ need('data-mm-android-pwa' not in pwa_shell,'retired Android/web label coupling 
 
 visual=json.loads(text('qa/visual-regression-baseline.json'))
 need(re.fullmatch(r'[0-9a-f]{40}',str(visual.get('commit') or '')) is not None,'visual baseline commit must be an exact SHA')
-need(visual.get('ref')==f"visual-baseline/{visual.get('release')}",'visual baseline must use the release-named retained ref')
+# The historical .4 ref was advanced by PR #526 after the owner-approved
+# baseline was locked. Fail closed on the *specific* immutable replacement:
+# all other releases still require their standard release-named ref.
+if visual.get('release')=='2026.10.09.4':
+    need(visual.get('ref')=='visual-baseline/2026.10.09.4-restored-immutable'
+         and visual.get('commit')=='fa27bd16525f8cb216654ea524649a3a37a3195c'
+         and visual.get('maxDiffPixels')==12,
+         '2026.10.09.4 visual baseline must remain bound to approved fa27bd16 at 12px')
+else:
+    need(visual.get('ref')==f"visual-baseline/{visual.get('release')}",
+         'visual baseline must use the release-named retained ref')
 mobile_workflow=text('.github/workflows/mobile-browser-qa.yml')
 for marker in ['BASELINE_REF','refs/heads/$BASELINE_REF','FETCHED_BASELINE_SHA','Visual baseline ref drifted']:
     need(marker in mobile_workflow,f'mobile visual baseline retention guard missing: {marker}')
 prune_workflow=text('.github/workflows/prune-merged-branches.yml')
 need('visual-baseline/*' in prune_workflow,'merged-branch pruning must explicitly preserve visual baseline refs')
+
+# The exact .4 candidate is retained and the protected PRs have merged.
+# This guard tests historical/governance truth, not external acceptance status.
+for packet in (
+    'qa/ACCESSIBILITY_REAL_AT_2026.10.09.4.md',
+    'qa/BOOK_SME_REVIEW_2026.10.09.4.md',
+    'qa/CURRICULUM_SME_REVIEW_2026.10.09.4.md',
+    'qa/LEARNER_PILOT_2026.10.09.4.md',
+    'qa/NZQA_EXTERNAL_VALIDATION_2026.10.09.4.md',
+    'qa/PWA_PHYSICAL_DEVICE_2026.10.09.4.md',
+    'qa/EXTERNAL_VALIDATION_2026.10.09.4.md',
+    'certification/WINDOWS_SIGNING_READINESS_2026.10.09.4.md',
+):
+    review_packet=text(packet)
+    need('PR #524' not in review_packet or 'is DRAFT' not in review_packet,
+         f'stale PR #524 draft claim in {packet}')
+    need('2026.10.09.3\u0060 until a real successor' not in review_packet,
+         f'stale prior release pending-candidate claim in {packet}')
+    need('**STATUS: HOLD' in review_packet,
+         f'external-human HOLD lost in {packet}')
+
+accessibility_contract=json.loads(text('data/accessibility-real-at-validation-v1.json'))
+need(accessibility_contract.get('status')=='pending-real-at-validation',
+     'real assistive-technology validation must remain pending without human evidence')
+need('pending a newly reviewed visual reference' not in accessibility_contract.get('boundary',''),
+     'real AT contract must not contradict retained successful .4 candidate provenance')
+need('human' in accessibility_contract.get('boundary','').lower(),
+     'real AT boundary must continue to explicitly require genuine human review')
 
 # Sharing the hosted preview is a separate fail-closed release operation.
 # The local check is fast and offline; the live URL check is operator-only.
