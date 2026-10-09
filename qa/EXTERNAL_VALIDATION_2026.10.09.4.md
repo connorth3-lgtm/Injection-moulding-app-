@@ -1,8 +1,8 @@
-# External validation release boundary — proposed 2026.10.09.4
+# External validation release boundary — deployed non-production 2026.10.09.4
 
 **STATUS: HOLD — not approved for physical, external, provider or production use.**
 
-The proposed `2026.10.09.4` runtime includes issue #520 tablet navigation and Mission Control idle Home presentation changes. The project owner has approved the supplied tablet and desktop Home layout comparisons; this is scoped UI design approval, **not** complete visual/device or external validation. The immutable `visual-baseline/2026.10.09.4` ref and passing 12-pixel Chromium visual lock preserve the reviewed layout. A fresh exact-source technical runtime artifact exists and is detailed below. The historic `.3` candidate remains archival only.
+The deployed non-production `2026.10.09.4` runtime includes issue #520 tablet navigation and Mission Control idle Home presentation changes. The project owner has approved the supplied tablet and desktop Home layout comparisons; this is scoped UI design approval, **not** complete visual/device or external validation. The immutable `visual-baseline/2026.10.09.4` ref and passing 12-pixel Chromium visual lock preserve the reviewed layout. A fresh exact-source technical runtime artifact exists and is detailed below. The historic `.3` candidate remains archival only.
 
 **Required work:** all seven external validation streams.
 
