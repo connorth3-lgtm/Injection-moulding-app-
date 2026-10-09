@@ -177,6 +177,7 @@ def build_alignment(queue: dict, publication: dict, root: Path = ROOT) -> dict:
             "authoredSourceIds": authored_ids[:],
             "authoredOnlySourceIds": extra,
             "manifestOnlySourceIds": absent,
+            "sharedSourceIds": [sid for sid in manifest_ids if sid in actually_authored],
             "alignment": ("DECLARATIONS DIFFER — human reconciliation needed"
                           if extra or absent else "SAME IDS — claims still unreviewed"),
             "courseOverlapLessonCandidates": len(candidates_by_chapter[cid]),
@@ -233,6 +234,7 @@ def render_summary(result: dict, chapter_id: str | None = None) -> str:
             f"- Authored chapter source IDs: {', '.join(markdown_text(x) for x in row['authoredSourceIds']) or '(none declared)'}",
             f"- Only in authored chapter: {', '.join(markdown_text(x) for x in row['authoredOnlySourceIds']) or '(none)'}",
             f"- Only in manifest: {', '.join(markdown_text(x) for x in row['manifestOnlySourceIds']) or '(none)'}",
+            f"- Shared by both: {', '.join(markdown_text(x) for x in row['sharedSourceIds']) or '(none)'}",
             f"- Course-level candidate lesson count (NOT reviewed matches): {row['courseOverlapLessonCandidates']}",
             "",
         ))
