@@ -27,7 +27,7 @@ HOLD = "UNREVIEWED — no exact lesson match or SME approval"
 def make_queue(
     lessons: list[dict], courses: dict[int, str], chapters: list[dict],
     crosswalk: dict, publication: dict, contract: dict, release: str,
-    book_sme: dict,
+    book_sme: dict, source_seeds: list[dict], claim_classes: list[str],
 ) -> dict:
     """Build deterministic proposals with genuine IDs/hashes and zero approvals."""
     mapping = crosswalk.get("chapterMappings")
@@ -53,6 +53,21 @@ def make_queue(
     current_book_fingerprint = book_runtime_fingerprint(publication)
     need(contract["approvedPublicLinks"] is False,
          "reviewer queue must not grant public link authority")
+    need(type(source_seeds) is list and len(source_seeds) >= 1
+         and all(type(seed) is dict and type(seed.get("id")) is str
+                 and seed["id"].strip() and type(seed.get("url")) is str
+                 and seed["url"].startswith("https://")
+                 for seed in source_seeds)
+         and len({seed["id"] for seed in source_seeds}) == len(source_seeds),
+         "Book manifest source-seed registry is missing or malformed")
+    known_sources = {seed["id"] for seed in source_seeds}
+    need(type(claim_classes) is list and len(claim_classes) >= 1
+         and all(type(name) is str and name.strip()
+                 for name in claim_classes)
+         and len(set(claim_classes)) == len(claim_classes),
+         "Book manifest claim-class registry is missing or malformed")
+    known_classes = set(claim_classes)
+
 
     for chapter, row in zip(chapters, mapping, strict=True):
         need(
@@ -62,6 +77,21 @@ def make_queue(
             and isinstance(row.get("courseNames"), list),
             "Book source and course mapping misaligned",
         )
+        themes = row.get("themes")
+        sources = chapter.get("sourceIds")
+        classes = chapter.get("claimClasses")
+        need(type(themes) is list and bool(themes)
+             and all(type(theme) is str and theme.strip() for theme in themes)
+             and len(set(themes)) == len(themes),
+             "Book course overlap lacks declared thematic rationale")
+        need(type(sources) is list
+             and all(type(src) is str and src in known_sources for src in sources)
+             and len(set(sources)) == len(sources),
+             "Book chapter references unknown, duplicate or missing source IDs")
+        need(type(classes) is list and bool(classes)
+             and all(type(cls) is str and cls in known_classes for cls in classes)
+             and len(set(classes)) == len(classes),
+             "Book chapter declares unknown or missing claim classes")
 
     queue = []
     for lesson in sorted(lessons, key=lambda item: item["id"]):
@@ -75,6 +105,11 @@ def make_queue(
                 "chapterId": chapter["id"],
                 "chapterTitle": chapter.get("title", ""),
                 "manifestSourceState": chapter.get("state", "missing"),
+                # Declarations are review pointers, NOT validated source claims.
+                "declaredBookSourceIds": list(chapter["sourceIds"]),
+                "declaredBookClaimClasses": list(chapter["claimClasses"]),
+                "courseOverlapThemes": list(mapping_row["themes"]),
+                "sourceDisclosureStatus": "DECLARED ONLY — SME source/applicability review outstanding",
                 "chapterManifestFingerprint": digest(chapter),
                 "bookPublicationRelease": publication["version"],
                 "bookRuntimeFingerprint": current_book_fingerprint,
@@ -108,8 +143,9 @@ def make_queue(
         "basis": DISCOVERY,
         "warning": (
             "These are COURSE-level overlaps only, NOT reviewed exact-lesson "
-            "matches, publication authorizations, competency, practice "
-            "activities, training credit or production instructions."
+            "matches, verified Book sources or claim applicability, "
+            "publication authorizations, competency, practice activities, "
+            "training credit or production instructions."
         ),
         "lessons": queue,
     }
@@ -130,6 +166,8 @@ def current_queue() -> dict:
         load("data/new1-semantic-link-review-v1.json"),
         version.get("web_release"),
         load("data/book-sme-review-v1.json"),
+        manifest.get("sourceSeeds"),
+        manifest.get("claimClasses"),
     )
 
 
@@ -148,7 +186,8 @@ def write_csv(queue: dict) -> None:
     fields = (
         "lessonId", "lessonTitle", "canonicalCourseName",
         "wholeLessonFingerprint", "chapterId", "chapterTitle",
-        "manifestSourceState", "chapterManifestFingerprint",
+        "manifestSourceState", "declaredBookSourceIds", "declaredBookClaimClasses",
+        "courseOverlapThemes", "sourceDisclosureStatus", "chapterManifestFingerprint",
         "bookPublicationRelease", "bookRuntimeFingerprint", "discoveryBasis", "reviewStatus",
     )
     writer = csv.DictWriter(sys.stdout, fieldnames=fields, lineterminator="\n")
@@ -159,8 +198,11 @@ def write_csv(queue: dict) -> None:
                 **{k: lesson[k] for k in fields[:4]},
                 **{k: chapter[k] for k in fields[4:]},
             }
-            writer.writerow({key: safe_spreadsheet_cell(value)
-                             for key, value in row.items()})
+            writer.writerow({
+                key: safe_spreadsheet_cell(
+                    "; ".join(value) if isinstance(value, list) else value
+                ) for key, value in row.items()
+            })
 
 
 def main() -> None:
