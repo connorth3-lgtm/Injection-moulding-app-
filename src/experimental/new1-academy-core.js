@@ -22,8 +22,8 @@
     return String(value==null?'':value).replace(/[\u0000-\u001f\u007f]/g,' ').replace(/\s+/g,' ').trim().slice(0,max);
   }
   function boundedScore(value){
-    const n=Number(value);
-    return Number.isInteger(n)&&n>=0&&n<=4?n:null;
+    // Never coerce strings, booleans or arrays into learner attempt scores.
+    return typeof value==='number'&&Number.isInteger(value)&&value>=0&&value<=4?value:null;
   }
   function validCase(id){return CASE_IDS.includes(id)}
   function idFor(id,items){return items.find(x=>x.id===id)||null}
@@ -189,12 +189,24 @@
     });
   }
   function createPathwayView(va,progress){
-    const real=progress&&typeof progress==='object'&&progress.completed&&typeof progress.completed==='object'&&!Array.isArray(progress.completed)?progress.completed:{};
+    const validRecord=progress&&typeof progress==='object'&&!Array.isArray(progress)&&
+      progress.schema===1&&Object.prototype.hasOwnProperty.call(progress,'completed')&&
+      progress.completed&&typeof progress.completed==='object'&&!Array.isArray(progress.completed);
+    const real=validRecord?progress.completed:{};
     return PATHWAYS.map(path=>{
       const items=path.caseIds.map(id=>{
-        const available=va?.cases?.some(row=>row.id===id)===true;
-        const old=real[id],best=boundedScore(old?.best);
-        return {caseId:id,available,attempted:best!==null,best};
+        const available=Array.isArray(va?.cases)&&va.cases.filter(row=>row?.id===id).length===1;
+        const own=Object.prototype.hasOwnProperty.call(real,id);
+        const old=own?real[id]:null;
+        const best=available&&old&&typeof old==='object'&&!Array.isArray(old)&&
+          Object.prototype.hasOwnProperty.call(old,'best')?boundedScore(old.best):null;
+        // Native VA completion includes both the latest score and review time.
+        const last=old&&typeof old==='object'?boundedScore(old.last):null;
+        const updated=old&&typeof old.updated==='string'&&
+          /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(old.updated)&&
+          Number.isFinite(Date.parse(old.updated));
+        const attempted=best!==null&&last!==null&&best>=last&&updated===true;
+        return {caseId:id,available,attempted,best:attempted?best:null};
       });
       return {...path,caseIds:[...path.caseIds],cases:items,
         attempted:items.filter(row=>row.attempted).length,
@@ -329,8 +341,10 @@
     }
     function pathway(){
       const owner=learnerToken();
-      let progress;
-      try{progress=deps.storage?.get?.('mm_virtual_apprenticeship_v1',null)}catch(_){progress=null}
+      let progress=null;
+      // Only the canonical learner-scoped Runtime V2 bridge is authorised
+      // to supply attempts. Caller-injected shadow stores are not trusted.
+      try{progress=bridge.runtimeStorage?.()?.get?.('mm_virtual_apprenticeship_v1',null)}catch(_){progress=null}
       if(learnerToken()!==owner){
         currentReview();
         progress=null;

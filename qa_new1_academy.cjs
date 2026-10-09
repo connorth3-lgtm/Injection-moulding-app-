@@ -131,7 +131,7 @@ for(const step of lab.steps){
 }
 let writes=0,reads=0,opened='',twin=null;
 const storage={
- get(key){reads++;assert.equal(key,'mm_virtual_apprenticeship_v1');return {completed:{'VA-01':{best:4,last:4},'VA-02':{best:3,last:3,level:'developing'}}}},
+ get(key){reads++;assert.equal(key,'mm_virtual_apprenticeship_v1');return {schema:1,completed:{'VA-01':{best:4,last:4,updated:'2026-10-09T00:00:00.000Z'},'VA-02':{best:3,last:3,updated:'2026-10-09T00:01:00.000Z'}}}},
  set(){writes++;throw Error('No shadow store must be written');}
 };
 const bridge=adapter.createBridge({
@@ -254,6 +254,41 @@ assert.throws(()=>inconsistentAcademy.learnerShare({state:'formative-review',tot
 assert.equal(app.pathway().length,5);
 assert.ok(app.pathway().some(x=>x.attempted>0));
 assert.ok(app.pathway().every(x=>!x.credentialAwarded&&!x.workplaceValidated));
+const reviewedRecord={best:4,last:3,updated:'2026-10-09T00:00:00.000Z'};
+const showPath=record=>lab.createPathwayView(va,record).find(x=>x.id==='operator').cases[0];
+assert.equal(showPath({schema:1,completed:{'VA-01':reviewedRecord}}).attempted,true);
+for(const invalid of [
+ {best:'4',last:3,updated:reviewedRecord.updated},
+ {best:true,last:1,updated:reviewedRecord.updated},
+ {best:[],last:0,updated:reviewedRecord.updated},
+ {best:4,last:'3',updated:reviewedRecord.updated},
+ {best:4,last:5,updated:reviewedRecord.updated},
+ {best:2,last:4,updated:reviewedRecord.updated},
+ {best:4,last:3,updated:'not-source-timestamp'},
+ {best:4,last:3},
+ {best:4},
+ 4,null
+]){
+ const actual=showPath({schema:1,completed:{'VA-01':invalid}});
+ assert.equal(actual.attempted,false,'bad native VA row must not count');
+ assert.equal(actual.best,null,'invalid best must not show');
+}
+assert.equal(showPath({completed:{'VA-01':reviewedRecord}}).attempted,false);
+assert.equal(showPath({schema:2,completed:{'VA-01':reviewedRecord}}).attempted,false);
+assert.equal(showPath({schema:1,completed:Object.create({'VA-01':reviewedRecord})}).attempted,false);
+const duplicateVa={cases:[...va.cases,va.cases[0]]};
+assert.equal(lab.createPathwayView(duplicateVa,{schema:1,completed:{'VA-01':reviewedRecord}})
+ .find(x=>x.id==='operator').cases[0].attempted,false);
+let shadowReads=0;
+const shadowStore={get(){shadowReads++;return {schema:1,completed:{'VA-01':reviewedRecord}}}};
+const emptyCanonical={learnerToken(){return 'learner-X'},get(){return null}};
+const emptyCanonicalBridge=adapter.createBridge({apprenticeship:va,runtime:{storage:emptyCanonical}});
+const noShadowAcademy=lab.createAcademy({
+ apprenticeship:va,bookManifest:book,crosswalk,factoryEvidence:factoryData,
+ bridge:emptyCanonicalBridge,storage:shadowStore
+});
+assert.ok(noShadowAcademy.pathway().every(row=>row.attempted===0));
+assert.equal(shadowReads,0,'foreign store must never be consulted');
 assert.ok(reads>0);
 assert.equal(writes,0);
 const assignment=app.trainerDraft({
