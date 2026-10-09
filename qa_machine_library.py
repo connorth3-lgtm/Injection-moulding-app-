@@ -117,6 +117,37 @@ for key, contract in expected.items():
         assert m["sources"][0]["url"].endswith("model=FNX" + key.split("fnx", 1)[1].split("-iv", 1)[0] + "%E2%85%A3")
 
 
+fanuc = models["fanuc-roboshot-alpha-s100ib"]
+assert fanuc["model"] == "ROBOSHOT α-S100iB"
+assert fanuc["series"] == "ROBOSHOT α-SiB"
+assert fanuc["controller"]["confidence"] == "missing", "model-page controller does not prove installed controller"
+assert not fanuc["manuals"] and not fanuc["published_injection_variants"], "do not invent serial-specific manuals/injection-unit identity"
+assert fanuc["common_verified_specs"] == {
+    "clamping_force_kn": 1000,
+    "clamping_stroke_mm": 350,
+    "tie_bar_clearance_h_x_v_mm": "460 x 410",
+    "die_plate_h_x_v_mm": "660 x 610",
+    "ejector_stroke_mm": 100,
+}
+assert fanuc["published_clamp_force_options_kn"] == [1000, 1250], "increased clamp must not silently replace base clamp"
+assert fanuc["published_mould_height_variants"] == [
+    {"platen_configuration":"single","standard_min_mm":220,"standard_max_mm":520,"increased_min_mm":220,"increased_max_mm":620},
+    {"platen_configuration":"double","standard_min_mm":150,"standard_max_mm":450,"increased_min_mm":150,"increased_max_mm":550},
+], "OEM single/double platen and increased height options drifted"
+screw = fanuc["published_screw_data"]
+assert screw["source_id"] == fanuc["sources"][0]["id"]
+assert "200 mm/s" in screw["mode"] and "not high-duty" in screw["mode"]
+assert screw["actual_fitted_injection_unit_id"] is None
+assert screw["screw_diameter_mm"] == [22, 26, 28, 32, 36, 40]
+assert screw["maximum_injection_volume_cm3"] == [29, 50, 58, 103, 147, 181]
+assert screw["maximum_injection_and_hold_pressure_1_mpa"] == [290, 290, 270, 250, 190, 160]
+assert screw["maximum_injection_and_hold_pressure_2_mpa"] == [260, 260, 240, 220, 190, 160]
+assert fanuc["sources"][0]["url"] == "https://www.fanuc.eu/eu-en/product/roboshot/fanuc-roboshot-a-s100ib"
+assert fanuc["sources"][0]["checked"] == "2026-10-09"
+assert "screwData(m)" in page and "mouldHeightOptions(m)" in page, "the operator must see non-interchangeable source variants"
+assert all(w["status"] == "missing" for w in fanuc["wanted_documents"])
+
+
 hmd = models["hwamda-hmd400m6"]
 assert "M6-S" in hmd["generation_note"] and "Do not substitute" in hmd["generation_note"]
 assert any(w["status"] == "missing" for w in hmd["wanted_documents"])
