@@ -41,8 +41,9 @@ assert.equal(index.chapter('missing'),null);
 // imported learner record, certificate or workplace competency. This is a
 // deterministic developer-only bridge using the existing governed course index.
 const canonicalCourses=crosswalk.courseNames.map((name,i)=>({id:i+1,name}));
-const sampleLesson={id:7,course:3,title:'A canonical Materials lesson'};
-const guide=index.forLesson(sampleLesson,canonicalCourses);
+const canonicalLessons=Array.from({length:120},(_,i)=>({id:i+1,course:i===6?3:(i%12)+1,title:i===6?'A canonical Materials lesson':'Fixture lesson '+(i+1)}));
+const sampleLesson=canonicalLessons[6];
+const guide=index.forLesson(sampleLesson,canonicalCourses,canonicalLessons);
 assert.equal(guide.state,'course-level-reading-suggestion');
 assert.equal(guide.lessonId,7);
 assert.equal(guide.courseName,'Materials');
@@ -54,14 +55,32 @@ assert.equal(guide.reviewedLessonMatch,false);
 assert.equal(Object.isFrozen(guide),true);
 assert.equal(Object.isFrozen(guide.chapters),true);
 assert.equal(Object.isFrozen(guide.chapters[0]),true);
-assert.equal(index.forLesson({id:7,course:777},canonicalCourses).state,'unmapped');
-assert.equal(index.forLesson({id:'7',course:3},canonicalCourses).state,'unmapped');
-assert.equal(index.forLesson({id:0,course:3},canonicalCourses).state,'unmapped');
-assert.equal(index.forLesson({id:121,course:3},canonicalCourses).state,'unmapped');
-assert.equal(index.forLesson(sampleLesson,[{id:3,name:'Unreviewed course'}]).state,'unmapped');
-assert.equal(index.forLesson(sampleLesson,[{id:3,name:'Materials'},{id:3,name:'Materials'}]).state,'unmapped');
-assert.equal(index.forLesson({id:7,course:3,courseName:'Fake exact match'},canonicalCourses).courseName,'Materials');
-assert.deepEqual(index.forLesson(null,canonicalCourses).chapters,[]);
+assert.equal(index.forLesson({id:7,course:777},canonicalCourses,canonicalLessons).state,'unmapped');
+assert.equal(index.forLesson({id:'7',course:3},canonicalCourses,canonicalLessons).state,'unmapped');
+assert.equal(index.forLesson({id:0,course:3},canonicalCourses,canonicalLessons).state,'unmapped');
+assert.equal(index.forLesson({id:121,course:3},canonicalCourses,canonicalLessons).state,'unmapped');
+assert.equal(index.forLesson(sampleLesson,[{id:3,name:'Unreviewed course'}],canonicalLessons).state,'unmapped');
+assert.equal(index.forLesson(sampleLesson,[{id:3,name:'Materials'},{id:3,name:'Materials'}],canonicalLessons).state,'unmapped');
+assert.equal(index.forLesson({id:7,course:3,courseName:'Fake exact match'},canonicalCourses,canonicalLessons).state,'unmapped');
+assert.deepEqual(index.forLesson(null,canonicalCourses,canonicalLessons).chapters,[]);
+
+assert.equal(index.forLesson(sampleLesson,canonicalCourses).state,'unmapped','missing canonical lesson registry must fail closed');
+assert.equal(index.forLesson(sampleLesson,canonicalCourses,[]).state,'unmapped');
+assert.equal(index.forLesson({...sampleLesson},canonicalCourses,canonicalLessons).state,'unmapped','forged lesson object must be rejected');
+const duplicateLessons=[...canonicalLessons];duplicateLessons[119]=canonicalLessons[6];
+assert.equal(index.forLesson(sampleLesson,canonicalCourses,duplicateLessons).state,'unmapped');
+const tooFewLessons=canonicalLessons.slice(0,119);
+assert.equal(index.forLesson(sampleLesson,canonicalCourses,tooFewLessons).state,'unmapped');
+const invalidLessons=[...canonicalLessons];invalidLessons[119]={...invalidLessons[119],course:999};
+assert.equal(index.forLesson(sampleLesson,canonicalCourses,invalidLessons).state,'unmapped');
+const duplicateCourses=[...canonicalCourses];duplicateCourses[11]={...canonicalCourses[0]};
+assert.equal(index.forLesson(sampleLesson,duplicateCourses,canonicalLessons).state,'unmapped');
+assert.equal(index.forLesson(sampleLesson,canonicalCourses.slice(0,11),canonicalLessons).state,'unmapped');
+const fakeCourses=canonicalCourses.map(row=>({...row}));fakeCourses[2].name='Invented course';
+assert.equal(index.forLesson(sampleLesson,fakeCourses,canonicalLessons).state,'unmapped');
+assert.equal(guide.reviewedLessonMatch,false);
+assert.equal(guide.learningCreditGranted,false);
+
 
 assert.ok(index.search('cavity').length>0);
 // Reject missing/forged crosswalk metadata instead of rendering an incomplete
@@ -122,7 +141,7 @@ const bridge=adapter.createBridge({
  runtime:{storage}
 });
 const app=lab.createAcademy({apprenticeship:va,bookManifest:book,crosswalk,factoryEvidence:factoryData,bridge,storage});
-assert.deepEqual(app.lessonGuide(sampleLesson,canonicalCourses),guide);
+assert.deepEqual(app.lessonGuide(sampleLesson,canonicalCourses,canonicalLessons),guide);
 assert.equal(writes,0,'Book reading suggestion must not create a shadow learner store');
 assert.equal(app.openCase(),true);
 assert.equal(app.openSpatial(),true);
