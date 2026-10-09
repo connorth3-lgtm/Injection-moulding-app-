@@ -577,6 +577,7 @@ class SourcePinnedPassageInspectionTests(unittest.TestCase):
                          "SAME IDS — claims still unreviewed")
         self.assertEqual(report["chapters"][1]["manifestSourceIds"], [])
         self.assertEqual(report["chapters"][1]["authoredOnlySourceIds"], ["QA-SOURCE-1"])
+        self.assertEqual(report["chapters"][0]["sharedSourceIds"], ["QA-SOURCE-1"])
         self.assertIn("NOT independently rechecked",
                       report["chapters"][1]["sourceDeclarations"][0]["evidenceStatus"])
         self.assertIn("23", render_summary(report))
