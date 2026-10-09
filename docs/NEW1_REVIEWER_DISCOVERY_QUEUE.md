@@ -93,13 +93,13 @@ issue credentials, award credit or activate learner routes.
 
 ### Audit manifest vs actual authored Book source declarations (no automatic repair)
 
-The manifest's \`sourceIds\` are a *manifest-level declaration*. The
+The manifest's `sourceIds` are a *manifest-level declaration*. The
 46 byte-pinned, technically authored chapters may declare additional or
 different source IDs in their **actual chapter content**. A manifest-only
 source list is therefore **not** a complete picture of what the authoring
 draft cites. For instance, the manifest lists no seeds for
-\`what-injection-moulding-is\`, while the source-pinned authored text cites
-\`ISO-294-1-2017\` and \`ASTM-D3641-24\`. This is an **authoring-registry
+`what-injection-moulding-is`, while the source-pinned authored text cites
+`ISO-294-1-2017` and `ASTM-D3641-24`. This is an **authoring-registry
 difference**, not by itself a defect, verification or evidence approval.
 
 From the repository root, reviewers can generate a non-public difference
