@@ -4,8 +4,8 @@
   "validationIndex": "qa/EXTERNAL_VALIDATION_2026.10.09.6.md",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
-    "status": "fail",
-    "claim": "The .6 exact-head retained technical candidate is not yet successful under required browser-quality checks. Prior .5 artifact is archive-only. Until real producer success and independent fingerprint binding, technical automation is explicitly FAIL and all external streams remain HOLD."
+    "status": "pass",
+    "claim": "Release .6 runtime source 3465fdca76941bf46d360051bc09fcda6d41c611 produced successful retained candidate run 37923715379 and artifact 11612534730; Mobile Browser QA and Question Quality 50-Pass succeeded on that exact producer head. All exact PR-head protected checks remain required before merge and every independent external validation stream remains HOLD."
   },
   "governance": {
     "status": "enforced",
@@ -22,7 +22,11 @@
     "status": "hold",
     "evidenceContract": "data/accessibility-real-at-validation-v1.json",
     "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.10.09.6.md",
-    "candidate": null,
+    "candidate": {
+      "release": "2026.10.09.6",
+      "sourceSha": "3465fdca76941bf46d360051bc09fcda6d41c611",
+      "runtimeFingerprint": "sha256:d5b80ea704ee8297c52d8402ce590f58fa003a38018391fcdc8170c9c0b4f2d0"
+    },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix.",
     "previousCandidate": {
       "release": "2026.10.09.4",
@@ -34,7 +38,17 @@
     "status": "hold",
     "evidenceContract": "data/pwa-physical-device-validation-v1.json",
     "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.10.09.6.md",
-    "currentCandidate": null,
+    "currentCandidate": {
+      "release": "2026.10.09.6",
+      "sourceSha": "3465fdca76941bf46d360051bc09fcda6d41c611",
+      "runtimeFingerprint": "sha256:d5b80ea704ee8297c52d8402ce590f58fa003a38018391fcdc8170c9c0b4f2d0",
+      "candidateRunId": 37923715379,
+      "candidateWorkflow": "Pre-merge Public Candidate",
+      "artifactId": 11612534730,
+      "artifactName": "physical-pwa-candidate-3465fdca76941bf46d360051bc09fcda6d41c611",
+      "artifactDigest": "sha256:c5b5ee1ac437462b515d3080ba49a9ac0a1c17e7e3a8a3399848bb3f0b9ca29d",
+      "artifactExpiresAt": "2027-01-07T11:26:16Z"
+    },
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release.",
     "previousCandidate": {
       "release": "2026.10.09.4",
@@ -104,14 +118,28 @@
     "evidenceContract": "data/nzqa-external-validation-v1.json",
     "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.09.6.md",
     "required": "Genuine provider ownership, stakeholder need, provider-approved design, authorised assessment/internal moderation, consent-to-assess/CMR confirmation, applicable national moderation, workplace evidence and provider-controlled review/change evidence for the exact governed release.",
-    "candidate": null,
+    "candidate": {
+      "release": "2026.10.09.6",
+      "sourceSha": "3465fdca76941bf46d360051bc09fcda6d41c611",
+      "runtimeFingerprint": "sha256:d5b80ea704ee8297c52d8402ce590f58fa003a38018391fcdc8170c9c0b4f2d0"
+    },
     "previousCandidate": {
       "release": "2026.10.09.4",
       "sourceSha": "ff53e2958d7c97d99aba890a23ba7caf4f21d3c6",
       "runtimeFingerprint": "sha256:7776a3ccccd8d049e7b9a5167e957651220d8f98a8da3b51b046ab85ae0f53a8"
     }
   },
-  "webCandidate": null,
+  "webCandidate": {
+    "release": "2026.10.09.6",
+    "sourceSha": "3465fdca76941bf46d360051bc09fcda6d41c611",
+    "runtimeFingerprint": "sha256:d5b80ea704ee8297c52d8402ce590f58fa003a38018391fcdc8170c9c0b4f2d0",
+    "candidateRunId": 37923715379,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 11612534730,
+    "artifactName": "physical-pwa-candidate-3465fdca76941bf46d360051bc09fcda6d41c611",
+    "artifactDigest": "sha256:c5b5ee1ac437462b515d3080ba49a9ac0a1c17e7e3a8a3399848bb3f0b9ca29d",
+    "artifactExpiresAt": "2027-01-07T11:26:16Z"
+  },
   "candidatePolicy": {
     "previewBranchAuthoritative": false,
     "evidenceAuthority": "retained-exact-head-artifact",
@@ -128,5 +156,5 @@
     "artifactDigest": "sha256:d5309909602f89c47afda61418489e1543eccfbdd3b71dbefc892fdbaf5990eb",
     "artifactExpiresAt": "2027-01-07T03:22:06Z"
   },
-  "candidateStatus": "HOLD — .6 integration candidate under construction. Previous .5 artifact archived. No .6 physical-device or independent external acceptance; production-root HOLD."
+  "candidateStatus": "TECHNICAL CANDIDATE RETAINED — .6 runtime source and genuine artifact bound; protected CI and owner-reviewed promotion pending; external evidence and production-root remain HOLD."
 }
