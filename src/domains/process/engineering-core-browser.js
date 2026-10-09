@@ -953,8 +953,11 @@ function machineSuitabilitySummary({
     mouldConfigurationId: mouldId.value.id,
   });
   const axes = axisIds.map(id => {
-    const own = Object.prototype.hasOwnProperty.call(source, id);
-    const resolved = assessmentState(own ? source[id] : null, expectedIdentity);
+    // Do not execute accessors supplied as assessment evidence.
+    const descriptor = Object.getOwnPropertyDescriptor(source, id);
+    const safeValue = descriptor && Object.prototype.hasOwnProperty.call(descriptor, 'value')
+      ? descriptor.value : null;
+    const resolved = assessmentState(safeValue, expectedIdentity);
     return Object.freeze({ id, state: resolved.state, reason: resolved.reason });
   });
   const states = axes.map(axis => axis.state);
