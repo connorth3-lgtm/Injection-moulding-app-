@@ -365,3 +365,6 @@ for rel in ['src/domains/shell/pwa-shell.js','learning-analytics.js']:
     need('window.openMobileMenu=function' not in read(rel),f'{rel} reintroduced a mobile-menu wrapper; app-shell-registry owns mobile More composition')
 pwa=read('src/domains/shell/pwa-shell.js')
 need("MM_RUNTIME_V2.after('startExam'" in pwa,'PWA question disclosures must prefer Runtime V2 startExam lifecycle')
+
+# Guard against fixed mission timeline obscuring Book and bottom navigation.
+import qa_mission_control_mobile_layout  # noqa: F401

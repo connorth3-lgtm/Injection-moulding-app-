@@ -860,11 +860,29 @@ export function ejectorStrokeFit({
   );
 }
 
+function ownAssessmentField(record, field) {
+  if (!record || typeof record !== 'object') return undefined;
+  try {
+    const descriptor = Object.getOwnPropertyDescriptor(record, field);
+    return descriptor && Object.prototype.hasOwnProperty.call(descriptor, 'value')
+      ? descriptor.value : undefined;
+  } catch (_) {
+    // A revoked or otherwise uninspectable evidence object cannot justify PASS.
+    return undefined;
+  }
+}
+function assessmentStringField(record, field) {
+  const value = ownAssessmentField(record, field);
+  return typeof value === 'string' ? value.trim() : '';
+}
 function assessmentState(assessment, expectedIdentity = {}) {
   if (!assessment || typeof assessment !== 'object') return { state: 'UNKNOWN', reason: 'missing-assessment' };
-  if (assessment.ok === false) return { state: 'UNKNOWN', reason: assessment.reason || 'unsupported-assessment' };
+  if (ownAssessmentField(assessment, 'ok') === false) {
+    return { state: 'UNKNOWN', reason: assessmentStringField(assessment, 'reason') || 'unsupported-assessment' };
+  }
 
-  const value = assessment?.value && typeof assessment.value === 'object' ? assessment.value : assessment;
+  const inner = ownAssessmentField(assessment, 'value');
+  const value = inner && typeof inner === 'object' ? inner : assessment;
   const identityChecks = [
     ['machineConfigurationId', 'machine-configuration-mismatch'],
     ['injectionUnitConfigurationId', 'injection-unit-configuration-mismatch'],
@@ -872,69 +890,121 @@ function assessmentState(assessment, expectedIdentity = {}) {
   ];
   let carriedIdentityCount = 0;
   for (const [field, reason] of identityChecks) {
-    const actual = String(value?.[field] || '').trim();
-    const expected = String(expectedIdentity?.[field] || '').trim();
+    const actual = assessmentStringField(value, field);
+    const expected = String(expectedIdentity[field] || '').trim();
     if (actual) carriedIdentityCount += 1;
     if (actual && expected && actual !== expected) return { state: 'UNKNOWN', reason };
   }
 
   if (carriedIdentityCount === 0) {
-    const contextIndependent = assessment?.contextIndependent === true || value?.contextIndependent === true;
-    const contextBasisRef = String(assessment?.contextBasisRef || value?.contextBasisRef || '').trim();
+    const contextIndependent = ownAssessmentField(assessment, 'contextIndependent') === true ||
+      ownAssessmentField(value, 'contextIndependent') === true;
+    const contextBasisRef = assessmentStringField(assessment, 'contextBasisRef') ||
+      assessmentStringField(value, 'contextBasisRef');
     if (!contextIndependent) return { state: 'UNKNOWN', reason: 'assessment-identity-unbound' };
     if (!contextBasisRef) return { state: 'UNKNOWN', reason: 'context-basis-required' };
   }
 
-  const explicit = String(value?.state || assessment?.state || '').toUpperCase();
+  const explicit = (assessmentStringField(value, 'state') ||
+    assessmentStringField(assessment, 'state')).toUpperCase();
   if (explicit === 'MARGINAL') {
-    const marginalBasisRef = String(assessment?.marginalBasisRef || value?.marginalBasisRef || '').trim();
+    const marginalBasisRef = assessmentStringField(assessment, 'marginalBasisRef') ||
+      assessmentStringField(value, 'marginalBasisRef');
     return marginalBasisRef
       ? { state: 'MARGINAL', reason: null }
       : { state: 'UNKNOWN', reason: 'marginal-basis-required' };
   }
   if (['PASS', 'FAIL', 'UNKNOWN'].includes(explicit)) return { state: explicit, reason: null };
-  if (typeof value?.exceedsAvailableCapacity === 'boolean') {
-    return { state: value.exceedsAvailableCapacity ? 'FAIL' : 'PASS', reason: null };
-  }
-  if (typeof value?.exceedsUsableCapacity === 'boolean') {
-    return { state: value.exceedsUsableCapacity ? 'FAIL' : 'PASS', reason: null };
-  }
-  if (typeof value?.fits === 'boolean') {
-    return { state: value.fits ? 'PASS' : 'FAIL', reason: null };
+  for (const [field, isFail] of [
+    ['exceedsAvailableCapacity', true],
+    ['exceedsUsableCapacity', true],
+    ['fits', false],
+  ]) {
+    const flag = ownAssessmentField(value, field);
+    if (typeof flag === 'boolean') return { state: flag === isFail ? 'FAIL' : 'PASS', reason: null };
   }
   return { state: 'UNKNOWN', reason: 'assessment-state-unresolved' };
 }
 
-export function machineSuitabilitySummary({
-  machineConfigurationId,
-  injectionUnitConfigurationId,
-  mouldConfigurationId,
-  requiredAxisIds,
-  assessments,
-  basis,
-  provenance = null,
-} = {}) {
+export function machineSuitabilitySummary(input = {}) {
+  // Never destructure user-provided options: getters may execute before the
+  // validation boundary has a chance to reject them.
+  const machineConfigurationId = ownAssessmentField(input, 'machineConfigurationId');
+  const injectionUnitConfigurationId = ownAssessmentField(input, 'injectionUnitConfigurationId');
+  const mouldConfigurationId = ownAssessmentField(input, 'mouldConfigurationId');
+  const requiredAxisIds = ownAssessmentField(input, 'requiredAxisIds');
+  const assessments = ownAssessmentField(input, 'assessments');
+  const basis = ownAssessmentField(input, 'basis');
+  const provenance = ownAssessmentField(input, 'provenance') ?? null;
+  // Identity and basis must be primitive strings; coercing arbitrary objects
+  // can execute user code or manufacture a plausible machine-fit identity.
+  if (typeof machineConfigurationId !== 'string') {
+    return unsupported('missing-machine-configuration-id', { field: 'machine-configuration-id' });
+  }
+  if (typeof injectionUnitConfigurationId !== 'string') {
+    return unsupported('missing-injection-unit-configuration-id', { field: 'injection-unit-configuration-id' });
+  }
+  if (typeof mouldConfigurationId !== 'string') {
+    return unsupported('missing-mould-configuration-id', { field: 'mould-configuration-id' });
+  }
   const machineId = explicitIdentity(machineConfigurationId, 'machine-configuration-id');
   if (!machineId.ok) return machineId;
   const injectionId = explicitIdentity(injectionUnitConfigurationId, 'injection-unit-configuration-id');
   if (!injectionId.ok) return injectionId;
   const mouldId = explicitIdentity(mouldConfigurationId, 'mould-configuration-id');
   if (!mouldId.ok) return mouldId;
-  const cleanBasis = String(basis || '').trim();
+  const cleanBasis = typeof basis === 'string' ? basis.trim() : '';
   if (!cleanBasis) return unsupported('suitability-basis-required', { field: 'basis' });
-  if (!Array.isArray(requiredAxisIds) || requiredAxisIds.length < 1) {
+  let validAxisArray = false;
+  try {
+    validAxisArray = Array.isArray(requiredAxisIds) &&
+      requiredAxisIds.length >= 1 && requiredAxisIds.length <= 64;
+  } catch (_) {
+    // Revoked or otherwise uninspectable array proxy: do not throw or PASS.
+  }
+  if (!validAxisArray) {
     return unsupported('required-axis-list-required', { field: 'requiredAxisIds' });
   }
-  const axisIds = [...new Set(requiredAxisIds.map(value => String(value || '').trim()).filter(Boolean))];
-  if (axisIds.length < 1) return unsupported('required-axis-list-required', { field: 'requiredAxisIds' });
-  const source = assessments && typeof assessments === 'object' ? assessments : {};
+  // A blank, duplicate, coerced or inherited required axis must never vanish
+  // from a declared machine-fit check and leave a misleading overall PASS.
+  // Inspect own data descriptors, not inherited slots or accessor getters.
+  // A getter could mutate evidence while validation is in progress.
+  const axisIds = [];
+  for (let index = 0; index < requiredAxisIds.length; index++) {
+    let slot;
+    try {
+      slot = Object.getOwnPropertyDescriptor(requiredAxisIds, index);
+    } catch (_) {
+      return unsupported('invalid-required-axis-id', { field: 'requiredAxisIds' });
+    }
+    if (!slot || !Object.prototype.hasOwnProperty.call(slot, 'value') ||
+        typeof slot.value !== 'string' ||
+        !/^[a-z][a-z0-9_.-]{0,63}$/.test(slot.value) ||
+        ['__proto__', 'constructor', 'prototype'].includes(slot.value)) {
+      return unsupported('invalid-required-axis-id', { field: 'requiredAxisIds' });
+    }
+    axisIds.push(slot.value);
+  }
+  if (new Set(axisIds).size !== axisIds.length) {
+    return unsupported('duplicate-required-axis-id', { field: 'requiredAxisIds' });
+  }
+  let source = {};
+  try {
+    if (assessments && typeof assessments === 'object' && !Array.isArray(assessments)) {
+      source = assessments;
+    }
+  } catch (_) {
+    // A revoked or invalid assessment proxy must become missing evidence.
+  }
   const expectedIdentity = Object.freeze({
     machineConfigurationId: machineId.value.id,
     injectionUnitConfigurationId: injectionId.value.id,
     mouldConfigurationId: mouldId.value.id,
   });
   const axes = axisIds.map(id => {
-    const resolved = assessmentState(source[id], expectedIdentity);
+    // Do not execute accessors supplied as assessment evidence.
+    const safeValue = ownAssessmentField(source, id) ?? null;
+    const resolved = assessmentState(safeValue, expectedIdentity);
     return Object.freeze({ id, state: resolved.state, reason: resolved.reason });
   });
   const states = axes.map(axis => axis.state);

@@ -346,11 +346,11 @@
   "currentAssuranceEvidence": {
     "staticContract": {
       "status": "pass",
-      "meaning": "The .5 exact-source candidate has a successful retained artifact with an authentic runtime fingerprint and provenance. This technical contract result is not final PR-head CI, external validation, or promotion authorization."
+      "meaning": "Retained .6 technical runtime source 3465fdca76941bf46d360051bc09fcda6d41c611 produced successful Pre-merge Public Candidate run 37923715379 and artifact 11612534730. Current PR-head protected checks and external physical acceptance remain separately required."
     },
     "behavioralBrowser": {
       "status": "pass",
-      "meaning": "Automated .5 UX endurance, mobile browser, and relevant PWA regressions passed for the retained runtime source. New PR-head required checks and human visual/device acceptance remain separate gates."
+      "meaning": "Automated Mobile Browser QA and Question Quality 50-Pass succeeded on the retained .6 runtime source 3465fdca76941bf46d360051bc09fcda6d41c611. New PR-head checks, human visual review and real-device/AT acceptance remain independently required."
     },
     "externalHumanDevice": {
       "status": "hold",

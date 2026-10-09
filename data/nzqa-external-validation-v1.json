@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.09.5",
+  "release": "2026.10.09.6",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.09.5.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.09.6.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 379,
   "candidate": {
-    "release": "2026.10.09.5",
-    "sourceSha": "581e08e58f0b9ec3c7a3501f9a3a71d47ed2c184",
-    "runtimeFingerprint": "sha256:216ec18dc5687ffbbb6aecee36b595533b65deb6c25c2c2bb7693f0bc6a97bcf"
+    "release": "2026.10.09.6",
+    "sourceSha": "3465fdca76941bf46d360051bc09fcda6d41c611",
+    "runtimeFingerprint": "sha256:d5b80ea704ee8297c52d8402ce590f58fa003a38018391fcdc8170c9c0b4f2d0"
   },
-  "boundary": "Provider G1-G8 evidence remains pending. The .5 exact-source runtime candidate and public fingerprint are retained and bound for human validation; none of the provider gates has been completed. Prior .4 technical evidence is archive only and cannot grant accreditation, certification, assessment, machine-control or production authorization.",
+  "boundary": "Provider G1–G8 external evidence remains pending. Release .6 technical runtime source 3465fdca76941bf46d360051bc09fcda6d41c611 and its genuine fingerprint sha256:d5b80ea704ee8297c52d8402ce590f58fa003a38018391fcdc8170c9c0b4f2d0 do not grant provider/accreditation, assessment, production or machine-control authority.",
   "requiredGates": [
     {
       "id": "G1-provider",
