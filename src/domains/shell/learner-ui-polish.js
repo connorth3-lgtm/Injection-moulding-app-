@@ -222,17 +222,18 @@ function syncFirstRunModal(){
   if(headings[2])headings[2].textContent='Typical session';
   const primary=root.querySelector('.hero-buttons .primary');if(primary)primary.textContent='Start my path →';
 }
-function observeFirstRunModal(){
-  const modal=document.getElementById('modal');if(!modal)return;
-  // Watch only the existing modal, not the entire app. The core may open
-  // onboarding 120ms after startup, later than the first two polish frames.
-  const observer=new MutationObserver(records=>{
-    const onboardingAdded=records.some(record=>[...record.addedNodes].some(node=>
-      node.nodeType===1&&(node.matches?.('.onboarding')||node.querySelector?.('.onboarding'))
-    ));
-    if(onboardingAdded){syncFirstRunModal();syncProductStates()}
-  });
-  observer.observe(modal,{subtree:true,childList:true});
+function installFirstRunPolishHook(){
+  // The delayed core 120ms startup callback invokes the mutable global
+  // onboarding function. Patch just that entry point, not the DOM or body.
+  const original=window.showOnboarding;
+  if(typeof original!=='function'||original.mmProductPolishHook)return;
+  const wrapped=function(...args){
+    const result=original.apply(this,args);
+    syncFirstRunModal();syncProductStates();
+    return result;
+  };
+  Object.defineProperty(wrapped,'mmProductPolishHook',{value:true});
+  window.showOnboarding=wrapped;
 }
 function syncProductStates(){
   document.querySelectorAll('.empty-friendly,.mm-exact-empty,.mm-material-no-match').forEach(el=>el.dataset.mmProductState='empty');
@@ -275,7 +276,7 @@ function install(){
   ensureStyles();
   run();
   syncFirstRunModal();
-  observeFirstRunModal();
+  installFirstRunPolishHook();
   requestAnimationFrame(()=>requestAnimationFrame(()=>{syncFirstRunModal();syncProductStates()}));
   // Shell render/view lifecycle events cover app-owned mutations. Avoid a whole-body characterData observer,
   // which previously scheduled a full polish pass for every text mutation in the application.
