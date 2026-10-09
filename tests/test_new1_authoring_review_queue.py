@@ -9,6 +9,7 @@ from unittest.mock import patch
 from tools.new1_authoring_review_queue import (
     DISCOVERY, HOLD, make_queue, write_csv,
 )
+from qa_new1_semantic_link_review import BOOK_RUNTIME_REQUIRED_FILES, book_runtime_fingerprint
 
 
 def fixture():
@@ -54,7 +55,17 @@ def fixture():
     return {
         "lessons": lessons, "courses": courses, "chapters": chapters,
         "crosswalk": crosswalk,
-        "publication": {"status": "authorized", "version": "synthetic-book-v1"},
+        "publication": {
+            "status": "authorized", "version": "synthetic-book-v1",
+            "runtimeIntegrity": {
+                "algorithm": "git-blob-sha1",
+                "gitBlobSha1ByFile": {
+                    name: f"{i:040x}" for i, name in enumerate(
+                        sorted(BOOK_RUNTIME_REQUIRED_FILES), start=1
+                    )
+                },
+            },
+        },
         "contract": contract,
         "release": "2026.10.09.6",
         "book_sme": {"status": "hold"},
@@ -81,6 +92,8 @@ class WorklistTests(unittest.TestCase):
         self.assertEqual(chapter["reviewStatus"], HOLD)
         self.assertEqual(chapter["manifestSourceState"], "source-review")
         self.assertTrue(chapter["chapterManifestFingerprint"].startswith("sha256:"))
+        self.assertEqual(chapter["bookRuntimeFingerprint"], book_runtime_fingerprint(args["publication"]))
+        self.assertEqual(first["bookRuntimeFingerprint"], chapter["bookRuntimeFingerprint"])
         # A serialized discovery worklist MUST NOT contain the record fields
         # that could misrepresent it as human approval or learner completion.
         encoded = json.dumps(first)
@@ -102,8 +115,26 @@ class WorklistTests(unittest.TestCase):
         self.assertGreater(len(rows), 120)
         self.assertEqual(rows[0]["lessonId"], "1")
         self.assertEqual(rows[0]["reviewStatus"], HOLD)
+        self.assertEqual(rows[0]["bookRuntimeFingerprint"], worklist["bookRuntimeFingerprint"])
         self.assertNotIn("reviewer", reader.fieldnames)
         self.assertNotIn("learnerProgress", reader.fieldnames)
+
+    def test_content_source_change_invalidates_review_fingerprint_without_manifest_edit(self):
+        args = fixture()
+        original = make_queue(**args)
+        before = original["lessons"][0]["possibleBookModules"][0]
+        changed = deepcopy(args)
+        # The authoritative Book module metadata and version stay identical;
+        # only an authored Book payload's published blob identity changes.
+        blobs = changed["publication"]["runtimeIntegrity"]["gitBlobSha1ByFile"]
+        blobs["book-authored-foundations-v1.json"] = "a" * 40
+        new = make_queue(**changed)
+        after = new["lessons"][0]["possibleBookModules"][0]
+        self.assertEqual(after["chapterManifestFingerprint"], before["chapterManifestFingerprint"])
+        self.assertEqual(after["bookPublicationRelease"], before["bookPublicationRelease"])
+        self.assertNotEqual(after["bookRuntimeFingerprint"], before["bookRuntimeFingerprint"])
+        self.assertEqual(changed["contract"]["reviewedLinks"], [])
+        self.assertFalse(new["approvedPublicLinks"])
 
     def test_csv_blocks_spreadsheet_formula_injection(self):
         args = fixture()
@@ -134,6 +165,17 @@ class WorklistTests(unittest.TestCase):
             "unapproved Book publication": lambda x: x["publication"].update(
                 status="hold"
             ),
+            "missing Book runtime integrity": lambda x: x["publication"].pop(
+                "runtimeIntegrity"
+            ),
+            "wrong Book runtime hash algorithm": lambda x: x["publication"][
+                "runtimeIntegrity"].update(algorithm="sha256-unverified"),
+            "missing authored Book payload source": lambda x: x["publication"][
+                "runtimeIntegrity"]["gitBlobSha1ByFile"].pop(
+                    "book-authored-foundations-v1.json"),
+            "malformed authorized Book source hash": lambda x: x["publication"][
+                "runtimeIntegrity"]["gitBlobSha1ByFile"].update(
+                    {"book-authored-foundations-v1.json": "sha256:wrong"}),
             "incomplete lesson roster": lambda x: x["lessons"].pop(),
             "duplicate lesson IDs": lambda x: x["lessons"][-1].update(id=1),
             "incomplete chapter roster": lambda x: x["chapters"].pop(),
