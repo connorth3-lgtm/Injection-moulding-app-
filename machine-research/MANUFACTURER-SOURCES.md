@@ -11,6 +11,7 @@ This index records official manufacturer sources that can be used to build exact
 | ENGEL | https://www.engelglobal.com/us/digital-solutions/e-connect-portal | e-connect machine park; ENGEL states technical data, maintenance history and manuals are available there. |
 | Sumitomo (SHI) Demag | https://www.sumitomo-shi-demag.eu/products/myconnect | myConnect / myDocumentation; latest digital machine documents and maintenance functions. |
 | FANUC ROBOSHOT | https://www.fanuc.eu/eu-en/product/roboshot/fanuc-roboshot-a-s50ib | Official ROBOSHOT technical specifications and downloadable product documents. |
+| FANUC ROBOSHOT α-S100iB | https://www.fanuc.eu/eu-en/product/roboshot/fanuc-roboshot-a-s100ib | Primary OEM exact α-S100iB dimensions, distinct clamp/platen options and screw/pressure operating modes. Serial-specific setup, true fitted CNC/unit and service docs still need confirmation. |
 | Haitian / Zhafir | https://eu.haitianinter.com/products/ | Current Haitian and Zhafir machine-family overview. |
 | Haitian / Zhafir | https://vt.haitianinter.com/service/ | Official spare-parts, technical-service, remote troubleshooting and training network. |
 | KraussMaffei | https://www.kraussmaffei.com/en/service/sales-service | Official injection-moulding machinery service area. |
