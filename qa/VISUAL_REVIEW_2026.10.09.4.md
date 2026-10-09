@@ -32,3 +32,19 @@ Physical iOS/iPadOS+Android, real NVDA/VoiceOver AT, Windows signed distribution
 ## Owner's explicit design decision — 2026-10-09
 
 The owner responded **“looks good”** to the provided tablet-810×1080 and desktop-1440×900 Home comparison screenshots. This approval is recorded in [PR #524 comment 6072486028](https://github.com/connorth3-lgtm/Injection-moulding-app-/pull/524#issuecomment-6072486028). It covers the proposed one-row five-tab tablet layout and single idle Home mission CTA. The strict 12-pixel reference has been promoted to the exact candidate source `fa27bd16525f8cb216654ea524649a3a37a3195c` via `visual-baseline/2026.10.09.4`. It does **not** assert that the owner examined every affected Book/lesson/assessment screenshot, performed real iPad/200%-zoom testing or granted any external or production sign-off. The new pixel lock protects against unreviewed later visual drift.
+
+## Subsequent protected-merge and hosted verification — 2026-10-09
+
+The unchecked checklist above is the **historical pre-approval request**, not an assertion that the later protected merge failed:
+
+- Owner's scoped Home-layout approval and locked 12-pixel baseline were subsequently recorded (see owner decision above); independent review of **every** affected screen was *not* attested.
+- The revised `2026.10.09.4` release and exact-source candidate producer passed; retained candidate provenance is recorded in the release-specific technical evidence packets. The earlier `.3` producer statement above is historical.
+- [PR #524](https://github.com/connorth3-lgtm/Injection-moulding-app-/pull/524) merged into protected `main` at `566fe49e8254770774ae6d0f7a0c22f295924032`. Follow-ups [#525](https://github.com/connorth3-lgtm/Injection-moulding-app-/pull/525) and [#526](https://github.com/connorth3-lgtm/Injection-moulding-app-/pull/526) merged without file-content modifications.
+- Latest observed hosted non-production `/preview/deployment.json` reported `3b3df9e3aa1b5af8078b7ad227f450abb302abdd` from `main` and version `2026.10.09.4`. See [post-merge audit](POST_MERGE_AUDIT_2026.10.09.4.md). This is not production authorization.
+- **Still open:** real iPad/touch/200% zoom, physical PWA, human NVDA/VoiceOver, independent subject-matter/provider/outcomes validations. Root production stays HOLD.
+
+## Visual baseline ref recovery after PR #526 — 2026-10-09
+
+The originally named `visual-baseline/2026.10.09.4` ref was advanced during #526's branch-history reconciliation from owner-approved commit `fa27bd16525f8cb216654ea524649a3a37a3195c` to `4f32dc6fbc64aa28fd946ffb055f79c26f992468`. This caused the fail-closed Chromium visual job to stop **before screenshot comparison** with the explicit “ref drifted” error. The original ref and its newer branch history are retained without a force-push or rewrite.
+
+The replacement immutable ref `visual-baseline/2026.10.09.4-restored-immutable` points to the **same exact, owner-approved original commit `fa27bd16525f8cb216654ea524649a3a37a3195c`**, not to a new unreviewed screenshot reference. `qa/visual-regression-baseline.json` continues to require this exact SHA and `maxDiffPixels=12`; the release QA script allows this specific documented recovery only for `.4` and retains the release-named ref rule for all future releases. Automated screenshot comparison must still pass, and human iPad/200%-zoom/whole-app review stays open. No runtime, approval scope or external/production permission is changed.
