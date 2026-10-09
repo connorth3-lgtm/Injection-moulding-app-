@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import difflib
+import json
 import re
 from pathlib import Path
 
@@ -285,7 +286,69 @@ def prepared_assembly_payload(core: str, expected_names: list[str]) -> str:
     return prepared
 
 
-def runtime_transform(name: str, source: str) -> str:
+
+# The immutable Windows recovery source cannot be changed. Its ten earlier
+# shadowed classic-script functions may only be retired from the *generated*
+# web/desktop learner runtime in the next governed web/cache release.
+CORE_SHADOWED_RETIRE_NAMES = (
+    "updateGlobalProgress", "renderDashboard", "renderPath", "renderLesson",
+    "renderExams", "startExam", "gradeExam", "renderCertificates",
+    "certificateCard", "renderProfile",
+)
+CORE_RETIRE_MIN_RELEASE = (2026, 10, 9, 6)
+CORE_TOP_LEVEL_FUNCTION = re.compile(r"(?m)^function\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*\(")
+
+
+def core_shadowed_retirement_enabled() -> bool:
+    version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
+    raw = str(version.get("web_release") or "")
+    if not re.fullmatch(r"\d{4}\.\d{2}\.\d{2}\.\d+", raw):
+        fail("cannot select generated core retirement with unknown release identity")
+    return tuple(map(int, raw.split("."))) >= CORE_RETIRE_MIN_RELEASE
+
+
+def retire_shadowed_core_declarations(source: str) -> str:
+    """Remove only proven earlier declarations; leave later active bodies intact."""
+    decls = list(CORE_TOP_LEVEL_FUNCTION.finditer(source))
+    original = {}
+    for match in decls:
+        original.setdefault(match.group(1), []).append(match.start())
+    duplicates = {name for name, offsets in original.items() if len(offsets) > 1}
+    if duplicates != set(CORE_SHADOWED_RETIRE_NAMES):
+        fail(f"core shadowed function inventory drifted: {sorted(duplicates)}")
+    if any(len(original[name]) != 2 for name in CORE_SHADOWED_RETIRE_NAMES):
+        fail("core earlier/active function pair count drifted")
+    starts = sorted(m.start() for m in decls)
+    ranges = []
+    for name in CORE_SHADOWED_RETIRE_NAMES:
+        start = original[name][0]
+        next_start = next((pos for pos in starts if pos > start), None)
+        if next_start is None:
+            fail(f"bounded shadowed function end missing: {name}")
+        dead_body = source[start:next_start]
+        if (not dead_body.startswith(f"function {name}(")
+                or not dead_body.rstrip().endswith("}")
+                or "\nfunction " in dead_body
+                or len(dead_body) < 30):
+            fail(f"unsafe earlier shadowed function boundary: {name}")
+        ranges.append((start, next_start))
+    retired = source
+    for start, end in sorted(ranges, reverse=True):
+        retired = retired[:start] + retired[end:]
+    after = {}
+    for match in CORE_TOP_LEVEL_FUNCTION.finditer(retired):
+        after.setdefault(match.group(1), []).append(match.start())
+    if any(len(after[name]) != 1 for name in CORE_SHADOWED_RETIRE_NAMES):
+        fail("generated core still has duplicated or missing active declarations")
+    if any(len(after.get(name, [])) != len(offsets)
+           for name, offsets in original.items()
+           if name not in CORE_SHADOWED_RETIRE_NAMES):
+        fail("generated retirement touched an unrelated function")
+    return retired
+
+
+
+def runtime_transform(name: str, source: str, *, retire_shadowed: bool = False) -> str:
     transformed = source
     if name == "core-inline-001.js":
         old = '''    box.style.cssText =
@@ -588,6 +651,8 @@ function renderScenarios(){""",
         if transformed.count(legacy_update_card) != 1:
             fail("frozen update-card source drifted; review DOM-safe runtime transform")
         transformed = transformed.replace(legacy_update_card, hardened_update_card, 1)
+    if name == "core-inline-004.js" and retire_shadowed:
+        transformed = retire_shadowed_core_declarations(transformed)
     return retire_handler_attrs(transformed)
 
 
@@ -603,7 +668,7 @@ def expected_assets(core: str) -> dict[str, str]:
     result: dict[str, str] = {}
     for index, source in enumerate(blocks, start=1):
         name = f"core-inline-{index:03d}.js"
-        transformed = runtime_transform(name, source)
+        transformed = runtime_transform(name, source, retire_shadowed=core_shadowed_retirement_enabled())
         if index == len(blocks):
             transformed = transformed.rstrip() + "\n\n/* ===== strict delegated handler bridge ===== */\n" + bridge
         result[name] = transformed
