@@ -133,6 +133,44 @@ the Book source IDs, review registry or authorized content-release inventory
 from these diagnostics is **not permitted automatically**. All human
 semantic approvals, practice/competency ties and public navigation remain HOLD.
 
+### One-pair human review worksheet — all decisions deliberately blank
+
+For a qualified content owner, the next read-only step puts the *complete
+canonical lesson*, the actual published Book passages, and the current
+manifest-versus-authored citation differences into **one local worksheet**
+with explicit prompts for every Book section:
+
+```bash
+python tools/new1_human_review_worksheet.py --lesson-id 1 --chapter-id what-injection-moulding-is > local-new1-human-worksheet.md
+```
+
+The generated worksheet contains the exact lesson fingerprint, Book release
+and source-inventory fingerprint, manifest chapter fingerprint, declared
+source IDs from **both** authoring levels, original declared bibliographic
+details, and **section SHA-256 values**. Its section-by-section fields for
+instructional fit, rationale, source applicability, safety restrictions,
+potential corrections, and separately governed competency/practice evidence
+are **UNDECIDED / HUMAN INPUT REQUIRED**. The full lesson and the complete
+actual Book chapter are included as source-prose Appendix A; no relevant
+passage is generated, summarized or represented as an approved equivalence.
+
+The command depends on the existing three fail-closed audits: canonical
+lesson/course membership, published-byte-matched Book prose (46/46 module
+coverage) and published-byte-matched Book evidence declarations. New
+regression checks reject forged source approval statuses in metadata even if
+the attacker updates the relevant blob fingerprint; published status words
+must stay within an explicit source-*declaration* vocabulary. Rehashed
+source metadata is never equivalent to qualified content review.
+
+**No human content is authored by this tool**, no Book/lesson review record
+is submitted or auto-signed, and a generated/filled worksheet must not be
+added to the public repository or used for learning credit, navigation,
+credentials, machine-control decisions or release. Qualified reviewers must
+independently check original citations, document the exact passages and
+competency/practice applicability, and use a separately governed review
+process for any genuine acceptance. All SME, physical-device/AT,
+offline/privacy, provider and production gates remain HOLD.
+
 ## Human review workflow, still outstanding under #521
 
 1. A qualified author opens the actual lesson content and the actual Book passage. A common course label is **discovery only**; it is not a reason to publish a link.
