@@ -91,6 +91,48 @@ commit review outputs as approved evidence or expose them to learners.
 The tool cannot edit the authoritative semantic-link review contract,
 issue credentials, award credit or activate learner routes.
 
+### Audit manifest vs actual authored Book source declarations (no automatic repair)
+
+The manifest's `sourceIds` are a *manifest-level declaration*. The
+46 byte-pinned, technically authored chapters may declare additional or
+different source IDs in their **actual chapter content**. A manifest-only
+source list is therefore **not** a complete picture of what the authoring
+draft cites. For instance, the manifest lists no seeds for
+`what-injection-moulding-is`, while the source-pinned authored text cites
+`ISO-294-1-2017` and `ASTM-D3641-24`. This is an **authoring-registry
+difference**, not by itself a defect, verification or evidence approval.
+
+From the repository root, reviewers can generate a non-public difference
+report, select a Book module, or export the fully structured read-only JSON:
+
+```bash
+python tools/new1_book_source_alignment.py > local-book-source-differences.md
+python tools/new1_book_source_alignment.py --chapter-id what-injection-moulding-is
+python tools/new1_book_source_alignment.py --json > local-book-source-differences.json
+```
+
+
+The tool verifies the Book manifest, evidence registry and all three authored
+chapter batches against the currently authorized **exact Git blob SHA-1 bytes**.
+It checks the unique source-ID declarations across the five source registries,
+with no invented references, and reports manifest-only, authored-only and
+common IDs for all 46 modules. Declared titles, issuers, URLs, dates, scopes
+and states are shown solely as **pointers for human verification**. Its
+course-level candidate counts are **not** reviewed lesson matches. Invalid
+or duplicate source records, unknown source IDs, malformed declarations,
+stale bytes, forged public-link status, incomplete Book or curriculum coverage
+and crosswalk provenance drift fail closed. CSV/learner/runtime material is
+neither produced nor edited.
+
+**Required human follow-up:** qualified content owners must resolve any
+meaningful publication-manifest versus authored source discrepancies in the
+appropriate upstream governance process, inspect and independently check the
+actual references for the *specific claim*, and determine which exact
+Book passages legitimately reinforce which canonical lessons. Rewriting
+the Book source IDs, review registry or authorized content-release inventory
+from these diagnostics is **not permitted automatically**. All human
+semantic approvals, practice/competency ties and public navigation remain HOLD.
+
 ## Human review workflow, still outstanding under #521
 
 1. A qualified author opens the actual lesson content and the actual Book passage. A common course label is **discovery only**; it is not a reason to publish a link.

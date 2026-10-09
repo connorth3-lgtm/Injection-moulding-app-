@@ -129,6 +129,7 @@ jobs:
         run: |
           python tools/new1_authoring_review_queue.py
           python tools/new1_passage_inspection.py --lesson-id 1 --chapter-id what-injection-moulding-is > /dev/null
+          python tools/new1_book_source_alignment.py > /dev/null
           python -m unittest discover -s tests -p 'test_new1_authoring_review_queue.py' -v
       - name: Cross-platform learner lesson resolver and CRLF regression QA
         run: node qa_lesson_resolver_clobber.cjs
