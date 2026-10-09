@@ -53,6 +53,44 @@ and retain their review decisions/evidence in the governed restricted process.
 The generated local packet must not be committed as an accepted mapping or
 distributed as evidence of Book SME or external-provider signoff.
 
+### Read the actual Book sections alongside the exact canonical lesson
+
+The one-lesson preparation packet identifies potential Book modules, but titles
+and bibliographic declarations cannot substitute for **reading the actual
+passages**. Qualified reviewers can now inspect one exact candidate at a time:
+
+```bash
+python tools/new1_review_packet.py --lesson-id 1 > local-new1-lesson-1-review-prep.md
+python tools/new1_passage_inspection.py --lesson-id 1 --chapter-id what-injection-moulding-is > local-new1-lesson-1-book-inspection.md
+```
+
+
+The second command prints the **complete canonical lesson record** and
+**all actual authored Book section texts** (with numbered section headings
+and content hashes) for the specified Book candidate. It includes exact
+chapter provenance, the declared authored-chapter scope, source IDs and
+review-status disclaimers. Both inputs are local repository content only;
+no external sources are fetched or independently checked.
+
+This inspection **fails closed** if the selected module is not even in the
+lesson's original course-overlap worklist, the lesson fingerprint differs,
+the Book release/source inventory changes, the manifest chapter metadata
+differs, the authored source files do not match their **published Git blob
+SHA-1s**, or any of the 46 authored chapters are missing, duplicated,
+reordered or lack required passage structure. It covers the three
+publication-pinned authored chapter batches; other publication files retain
+their separate governance checks. All untrusted prose is HTML-escaped
+inside inert Markdown preformatted blocks so a forged heading or HTML link
+in a source file cannot impersonate a human attestation.
+
+The output is a **local reading aid**, not a completed source/copyright
+verification or professional process instruction. The exact lesson↔Book
+pair, passage interpretation, evidence applicability, chapter scope,
+competency and practical exercise links **remain UNREVIEWED**. Do not
+commit review outputs as approved evidence or expose them to learners.
+The tool cannot edit the authoritative semantic-link review contract,
+issue credentials, award credit or activate learner routes.
+
 ## Human review workflow, still outstanding under #521
 
 1. A qualified author opens the actual lesson content and the actual Book passage. A common course label is **discovery only**; it is not a reason to publish a link.
