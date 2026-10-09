@@ -216,6 +216,11 @@ assert screw_150["maximum_injection_and_hold_pressure_2_mpa"] == [280, 280, 260,
 assert "not direct resin pressure" in screw_150["scope"] or "neither pressure is melt/resin pressure" in screw_150["scope"]
 assert fanuc_150["sources"][0]["url"].startswith("https://www.fanuc.eu/")
 assert fanuc_150["sources"][1]["url"] == "https://www.fanucamerica.com/products/roboshot/roboshot-a-s150ib"
+assert "SOURCE-REVISION CONFLICT" in screw_150["scope"] and "2024" in screw_150["scope"]
+assert screw_150["mode"].startswith("FANUC Europe 2021")
+assert fanuc_150["sources"][2]["url"].endswith("roboshot-alpha-ib-series-brochure-en-2024.pdf?la=sl")
+assert "revision" in fanuc_150["sources"][2]["confidence"]
+
 assert all(s["checked"] == "2026-10-09" for s in fanuc_150["sources"])
 assert all(w["status"] == "missing" for w in fanuc_150["wanted_documents"])
 

@@ -608,7 +608,7 @@
           "published_injection_variants": [],
           "published_screw_data": {
             "source_id": "fanuc-alpha-s150ib-europe-datasheet",
-            "mode": "FANUC Europe 200 mm/s base operating table (NOT separate 350 mm/s or high-pressure filling mode)",
+            "mode": "FANUC Europe 2021 OEM 200 mm/s base operating table (NOT separate 350 mm/s/high-pressure mode or later revised specifications)",
             "screw_diameter_mm": [
               32,
               36,
@@ -642,7 +642,7 @@
               200
             ],
             "actual_fitted_injection_unit_id": null,
-            "scope": "Catalog screw, volume and injection/hold pressure-1 versus pressure-2 pairs apply only to the indicated 200 mm/s configuration; neither pressure is melt/resin pressure, guaranteed simultaneous with maximum speed, proof of fitted screw/barrel, usable machine capacity, nor a production safety/process limit."
+            "scope": "Catalog screw, volume and injection/hold pressure-1 versus pressure-2 pairs apply only to the indicated 200 mm/s configuration; neither pressure is melt/resin pressure, guaranteed simultaneous with maximum speed, proof of fitted screw/barrel, usable machine capacity, nor a production safety/process limit. SOURCE-REVISION CONFLICT: a later FANUC 2024 α-iB series brochure shows lower 48/52 mm pressure-1/pressure-2 values (190/160 MPa) under its 200 mm/s operating table versus 230/200 MPa here in the 2021 sheet. The two OEM revisions are not interchangeable; exact applicable vintage/installed barrel must be checked."
           },
           "manuals": [],
           "wanted_documents": [
@@ -689,12 +689,29 @@
               "checked": "2026-10-09",
               "confidence": "verified published model specification only",
               "access": "public manufacturer product page"
+            },
+            {
+              "id": "fanuc-alpha-s150ib-2024-oem-family-brochure",
+              "title": "FANUC ROBOSHOT α-iB series brochure (2024; differing S150iB pressure data)",
+              "publisher": "FANUC Europe Corporation (primary OEM)",
+              "url": "https://www.fanuc.eu/~/media/files/pdf/products/roboshot/mbr-04413-rs%20roboshot%20alpha%20ib%20series/v4/roboshot-alpha-ib-series-brochure-en-2024.pdf?la=sl",
+              "supports": [
+                "independent same-OEM revision comparison, not proof of installed screw/barrel or current unit",
+                "2024 series 200 mm/s columns and differing 48/52 mm injection/hold pressure values"
+              ],
+              "checked": "2026-10-09",
+              "confidence": "verified as version-specific contrasting manufacturer brochure, not exact-machine certification",
+              "access": "public manufacturer series brochure"
             }
           ],
           "research_log": [
             {
               "date": "2026-10-09",
               "summary": "Cross-checked FANUC America's α-S150iB OEM model listing with FANUC Europe's 2021 two-page α-S150iB mechanical datasheet. The six base-speed (200 mm/s) screw rows retain separate pressure 1/2 cylinder conditions; increased clamp, single/double platen and faster 350 mm/s modes remain distinct. The catalogue says injection-unit pressure is not direct resin pressure and maximum speed/pressure are not guaranteed together. The smaller-capacity S150iB model has a different screw family and is NOT included in this record. Fitted hardware/firmware, manuals, plant usage and machine suitability remain unverified."
+            },
+            {
+              "date": "2026-10-09",
+              "summary": "Cross-revision conflict detected: FANUC 2024 α-iB series brochure gives pressure-1/pressure-2 of 190/160 MPa for 48/52 mm in its 200 mm/s S150iB table, while the FANUC 2021 model sheet gives 230/200 MPa. Preserve the expressly labelled 2021 variant and the independent 2024 source; do not silently promote either to fitted/current machine limits or combine with other speed modes."
             }
           ]
         }
