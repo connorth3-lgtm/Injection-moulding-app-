@@ -1,8 +1,8 @@
-# External validation release boundary — proposed 2026.10.09.4
+# External validation release boundary — deployed non-production 2026.10.09.4
 
 **STATUS: HOLD — not approved for physical, external, provider or production use.**
 
-The proposed `2026.10.09.4` runtime includes issue #520 tablet navigation and Mission Control idle Home presentation changes. The project owner has approved the supplied tablet and desktop Home layout comparisons; this is scoped UI design approval, **not** complete visual/device or external validation. The immutable `visual-baseline/2026.10.09.4` ref and passing 12-pixel Chromium visual lock preserve the reviewed layout. A fresh exact-source technical runtime artifact exists and is detailed below. The historic `.3` candidate remains archival only.
+The deployed non-production `2026.10.09.4` runtime includes issue #520 tablet navigation and Mission Control idle Home presentation changes. The project owner has approved the supplied tablet and desktop Home layout comparisons; this is scoped UI design approval, **not** complete visual/device or external validation. The immutable `visual-baseline/2026.10.09.4` ref and passing 12-pixel Chromium visual lock preserve the reviewed layout. A fresh exact-source technical runtime artifact exists and is detailed below. The historic `.3` candidate remains archival only.
 
 **Required work:** all seven external validation streams.
 
@@ -19,7 +19,7 @@ This workstream remains blocked until its own real, traceable external evidence 
 
 Also retain the Windows signing HOLD in `certification/WINDOWS_SIGNING_READINESS_2026.10.09.4.md`.
 
-**Provenance:** [PR #524](https://github.com/connorth3-lgtm/Injection-moulding-app-/pull/524) is DRAFT. [Visual review packet](../qa/VISUAL_REVIEW_2026.10.09.4.md) records owner-approved Home comparison scope. [Issue #379](https://github.com/connorth3-lgtm/Injection-moulding-app-/issues/379) tracks prior release `2026.10.09.3` until a real successor candidate is validated and rebound. Production Pages root remains release-held.
+**Provenance (updated 2026-10-09):** [PR #524](https://github.com/connorth3-lgtm/Injection-moulding-app-/pull/524) merged into protected `main` at `566fe49e8254770774ae6d0f7a0c22f295924032`; follow-up history-only PRs [#525](https://github.com/connorth3-lgtm/Injection-moulding-app-/pull/525) and [#526](https://github.com/connorth3-lgtm/Injection-moulding-app-/pull/526) merged with no changed files. The latest audited protected `main` and hosted non-production `/preview/deployment.json` both identified `3b3df9e3aa1b5af8078b7ad227f450abb302abdd`, release `2026.10.09.4`. [Visual review packet](../qa/VISUAL_REVIEW_2026.10.09.4.md) records the owner's *scoped Home-layout* approval; [issue #379](https://github.com/connorth3-lgtm/Injection-moulding-app-/issues/379) tracks **current `.4` external-validation HOLD**, not approval. The production Pages root remains release-held; real devices, human AT, signed Windows, SMEs, outcomes, provider/NZQA and production are **not** approved.
 
 ## Verified exact `.4` automated technical candidate (EXTERNAL HOLD)
 

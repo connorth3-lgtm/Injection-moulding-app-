@@ -5,7 +5,7 @@
   "sourceSha": "ff53e2958d7c97d99aba890a23ba7caf4f21d3c6",
   "runtimeFingerprint": "sha256:7776a3ccccd8d049e7b9a5167e957651220d8f98a8da3b51b046ab85ae0f53a8",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.09.4 is pending a newly reviewed visual reference and successful exact-source learner-runtime candidate; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.09.4 has an exact retained automated technical candidate and approved *scoped* Home visual reference; both the successfully published non-production preview and the record of genuine NVDA/VoiceOver task evidence are distinct. Human assistive-technology validation across the required matrix remains pending; no production/external approval is implied.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
