@@ -423,7 +423,8 @@ class SourcePinnedPassageInspectionTests(unittest.TestCase):
             payload = {
                 "schema": 1,
                 "bookId": "mouldmaster-book",
-                "status": "technical-review",
+                "status": ("technical-review-drafts" if filename == AUTHORED_BATCHES[-1]
+                           else "technical-review"),
                 "chapters": rows,
             }
             raw = json.dumps(payload, indent=2, ensure_ascii=False).encode()
