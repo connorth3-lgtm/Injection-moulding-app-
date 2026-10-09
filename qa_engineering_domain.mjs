@@ -553,6 +553,16 @@ for (const bad of [['shot', ''],['shot','shot'],['shot',' '],
   assert.equal(result.ok,false,'misleading PASS accepted malformed required-axis list');
   assert.match(result.reason,/invalid-required-axis-id|duplicate-required-axis-id/);
 }
+// Sparse arrays and inherited indexed slots must not evade Array.prototype.some.
+const sparseAxes = ['shot', 'gate'];
+delete sparseAxes[1];
+assert.equal(makeFitSummary(sparseAxes).ok, false,
+  'sparse required-axis slot must not be omitted from machine-fit declaration');
+const inheritedAxis = ['shot', 'gate'];
+delete inheritedAxis[1];
+Object.setPrototypeOf(inheritedAxis, Object.assign(Object.create(Array.prototype), {1:'gate'}));
+assert.equal(makeFitSummary(inheritedAxis).ok, false,
+  'inherited required-axis array slot must not count as declared evidence');
 const inheritedShot={};
 Object.setPrototypeOf(inheritedShot,{shot:shotCapacity});
 const inheritedResult=makeFitSummary(['shot'],inheritedShot);
