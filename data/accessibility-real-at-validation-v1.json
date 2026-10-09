@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.09.5",
-  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.09.5.md",
-  "sourceSha": "581e08e58f0b9ec3c7a3501f9a3a71d47ed2c184",
-  "runtimeFingerprint": "sha256:216ec18dc5687ffbbb6aecee36b595533b65deb6c25c2c2bb7693f0bc6a97bcf",
+  "release": "2026.10.09.6",
+  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.09.6.md",
+  "sourceSha": null,
+  "runtimeFingerprint": null,
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. The .5 candidate has a retained exact-source technical artifact and fingerprint; independent human NVDA/VoiceOver validation remains pending. All NVDA/VoiceOver tasks must be personally tested, documented and signed off; prior .4 approvals or artifacts cannot be reused.",
+  "boundary": "Real NVDA and VoiceOver testing for .6 is pending. Previous .5 technical artifacts cannot establish .6 accessibility validation; all human assistive-technology work and source-specific candidate attestation remain HOLD.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
