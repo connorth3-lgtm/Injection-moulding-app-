@@ -182,6 +182,44 @@ assert fanuc_130["sources"][0]["checked"] == "2026-10-09"
 assert all(w["status"] == "missing" for w in fanuc_130["wanted_documents"])
 
 
+# FANUC α-S150iB base-speed row MUST NOT be mixed with the separate
+# small-capacity machine configuration or 350 mm/s high-pressure option.
+fanuc_150 = models["fanuc-roboshot-alpha-s150ib"]
+assert fanuc_150["model"] == "ROBOSHOT α-S150iB"
+assert fanuc_150["series"] == "ROBOSHOT α-SiB"
+assert fanuc_150["research_status"] == "active"
+assert fanuc_150["manufacture_year"]["status"] == "unknown"
+assert fanuc_150["controller"]["confidence"] == "missing"
+assert not fanuc_150["manuals"] and not fanuc_150["published_injection_variants"]
+assert fanuc_150["common_verified_specs"] == {
+    "clamping_force_kn": 1500,
+    "clamping_stroke_mm": 440,
+    "tie_bar_clearance_h_x_v_mm": "560 x 510",
+    "die_plate_h_x_v_mm": "800 x 750",
+    "ejector_stroke_mm": 150,
+}
+assert fanuc_150["published_clamp_force_options_kn"] == [1500, 1800]
+assert fanuc_150["published_mould_height_variants"] == [
+    {"platen_configuration":"double","standard_min_mm":200,"standard_max_mm":500,
+     "increased_min_mm":200,"increased_max_mm":600},
+    {"platen_configuration":"single","standard_min_mm":275,"standard_max_mm":575,
+     "increased_min_mm":275,"increased_max_mm":675},
+]
+screw_150 = fanuc_150["published_screw_data"]
+assert screw_150["source_id"] == fanuc_150["sources"][0]["id"]
+assert "200 mm/s" in screw_150["mode"] and "NOT separate 350 mm/s" in screw_150["mode"]
+assert screw_150["actual_fitted_injection_unit_id"] is None
+assert screw_150["screw_diameter_mm"] == [32, 36, 40, 44, 48, 52]
+assert screw_150["maximum_injection_volume_cm3"] == [121, 153, 188, 268, 318, 442]
+assert screw_150["maximum_injection_and_hold_pressure_1_mpa"] == [310, 310, 260, 220, 230, 200]
+assert screw_150["maximum_injection_and_hold_pressure_2_mpa"] == [280, 280, 260, 220, 230, 200]
+assert "not direct resin pressure" in screw_150["scope"] or "neither pressure is melt/resin pressure" in screw_150["scope"]
+assert fanuc_150["sources"][0]["url"].startswith("https://www.fanuc.eu/")
+assert fanuc_150["sources"][1]["url"] == "https://www.fanucamerica.com/products/roboshot/roboshot-a-s150ib"
+assert all(s["checked"] == "2026-10-09" for s in fanuc_150["sources"])
+assert all(w["status"] == "missing" for w in fanuc_150["wanted_documents"])
+
+
 hmd = models["hwamda-hmd400m6"]
 assert "M6-S" in hmd["generation_note"] and "Do not substitute" in hmd["generation_note"]
 assert any(w["status"] == "missing" for w in hmd["wanted_documents"])
