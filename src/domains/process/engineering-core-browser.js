@@ -929,15 +929,16 @@ function assessmentState(assessment, expectedIdentity = {}) {
   return { state: 'UNKNOWN', reason: 'assessment-state-unresolved' };
 }
 
-function machineSuitabilitySummary({
-  machineConfigurationId,
-  injectionUnitConfigurationId,
-  mouldConfigurationId,
-  requiredAxisIds,
-  assessments,
-  basis,
-  provenance = null,
-} = {}) {
+function machineSuitabilitySummary(input = {}) {
+  // Never destructure user-provided options: getters may execute before the
+  // validation boundary has a chance to reject them.
+  const machineConfigurationId = ownAssessmentField(input, 'machineConfigurationId');
+  const injectionUnitConfigurationId = ownAssessmentField(input, 'injectionUnitConfigurationId');
+  const mouldConfigurationId = ownAssessmentField(input, 'mouldConfigurationId');
+  const requiredAxisIds = ownAssessmentField(input, 'requiredAxisIds');
+  const assessments = ownAssessmentField(input, 'assessments');
+  const basis = ownAssessmentField(input, 'basis');
+  const provenance = ownAssessmentField(input, 'provenance') ?? null;
   // Identity and basis must be primitive strings; coercing arbitrary objects
   // can execute user code or manufacture a plausible machine-fit identity.
   if (typeof machineConfigurationId !== 'string') {
