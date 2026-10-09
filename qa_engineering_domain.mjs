@@ -535,6 +535,34 @@ assert.equal(suitabilityPass.value.summaryState, 'PASS');
 assert.equal(suitabilityPass.value.coverageComplete, true);
 assert.match(suitabilityPass.assumptions.join(' '), /not a universal declaration/i);
 
+// Fail closed on truncated required-axis declarations: dropping a blank,
+// duplicate or coerced axis could previously yield a misleading overall PASS.
+const makeFitSummary = (requiredAxisIds, assessments = {shot:shotCapacity}) =>
+  machineSuitabilitySummary({
+    machineConfigurationId: commonFitIds.machineConfigurationId,
+    injectionUnitConfigurationId: machineCapacityIds.injectionUnitConfigurationId,
+    mouldConfigurationId: commonFitIds.mouldConfigurationId,
+    basis: 'declared machine-axis integrity fixture',
+    requiredAxisIds, assessments,
+  });
+for (const bad of [['shot', ''],['shot','shot'],['shot',' '],
+                   ['shot', 0], ['shot', null], ['shot', {toString:()=> 'shot'}],
+                   ['shot', '__proto__'], ['shot', 'constructor'],
+                   ['shot', 'CAPACITY']]) {
+  const result=makeFitSummary(bad);
+  assert.equal(result.ok,false,'misleading PASS accepted malformed required-axis list');
+  assert.match(result.reason,/invalid-required-axis-id|duplicate-required-axis-id/);
+}
+const inheritedShot={};
+Object.setPrototypeOf(inheritedShot,{shot:shotCapacity});
+const inheritedResult=makeFitSummary(['shot'],inheritedShot);
+assert.equal(inheritedResult.value.summaryState,'UNKNOWN',
+  'inherited/prototype assessment must not count as verified machine-fit evidence');
+assert.equal(inheritedResult.value.axes[0].reason,'missing-assessment');
+assert.equal(makeFitSummary(['shot'],[shotCapacity]).value.summaryState,'UNKNOWN');
+assert.equal(makeFitSummary(['shot']).value.summaryState,'PASS',
+  'legitimate exact-identity required machine-fit axis should remain usable');
+
 const wrongMachineShot = shotCapacityAssessment({
   machineConfigurationId: 'IMM-99/config-Z',
   injectionUnitConfigurationId: machineCapacityIds.injectionUnitConfigurationId,

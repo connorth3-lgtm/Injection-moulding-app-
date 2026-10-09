@@ -925,16 +925,27 @@ export function machineSuitabilitySummary({
   if (!Array.isArray(requiredAxisIds) || requiredAxisIds.length < 1) {
     return unsupported('required-axis-list-required', { field: 'requiredAxisIds' });
   }
-  const axisIds = [...new Set(requiredAxisIds.map(value => String(value || '').trim()).filter(Boolean))];
-  if (axisIds.length < 1) return unsupported('required-axis-list-required', { field: 'requiredAxisIds' });
-  const source = assessments && typeof assessments === 'object' ? assessments : {};
+  // A blank, duplicate, coerced or inherited required axis must never vanish
+  // from a declared machine-fit check and leave a misleading overall PASS.
+  if (requiredAxisIds.some(id => typeof id !== 'string' ||
+      !/^[a-z][a-z0-9_.-]{0,63}$/.test(id) ||
+      ['__proto__', 'constructor', 'prototype'].includes(id))) {
+    return unsupported('invalid-required-axis-id', { field: 'requiredAxisIds' });
+  }
+  if (new Set(requiredAxisIds).size !== requiredAxisIds.length) {
+    return unsupported('duplicate-required-axis-id', { field: 'requiredAxisIds' });
+  }
+  const axisIds = [...requiredAxisIds];
+  const source = assessments && typeof assessments === 'object' &&
+    !Array.isArray(assessments) ? assessments : {};
   const expectedIdentity = Object.freeze({
     machineConfigurationId: machineId.value.id,
     injectionUnitConfigurationId: injectionId.value.id,
     mouldConfigurationId: mouldId.value.id,
   });
   const axes = axisIds.map(id => {
-    const resolved = assessmentState(source[id], expectedIdentity);
+    const own = Object.prototype.hasOwnProperty.call(source, id);
+    const resolved = assessmentState(own ? source[id] : null, expectedIdentity);
     return Object.freeze({ id, state: resolved.state, reason: resolved.reason });
   });
   const states = axes.map(axis => axis.state);
