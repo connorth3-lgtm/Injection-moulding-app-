@@ -25,8 +25,26 @@ packet=data.get('packet')
 need(packet==f'qa/ACCESSIBILITY_REAL_AT_{evidence_release}.md','real AT evidence packet must remain bound to its recorded release')
 packet_path=ROOT/packet
 need(packet_path.is_file(),'real AT release packet is missing')
-need(SHA_RE.fullmatch(str(data.get('sourceSha') or '')) is not None,'real AT sourceSha must be a lowercase 40-character commit SHA')
-need(FP_RE.fullmatch(str(data.get('runtimeFingerprint') or '')) is not None,'real AT runtimeFingerprint must be sha256:<64 lowercase hex>')
+# Browser/AT structural QA must run before the exact-head candidate producer.
+# An explicitly staged, entirely evidence-free candidate is admissible ONLY
+# when the technical release gate is failing and all external gates are HOLD.
+# Protected Release QA / release-validation-packets remain strictly fail-closed.
+ledger=json.loads((ROOT/'data'/'release-external-validation-v1.json').read_text(encoding='utf-8'))
+source=data.get('sourceSha')
+fingerprint=data.get('runtimeFingerprint')
+provisional=(source is None and fingerprint is None)
+if provisional:
+    need(data.get('status')=='pending-real-at-validation','unbound source may not assert human AT validation')
+    need(ledger.get('release')==release,'provisional real AT release mismatch')
+    need((ledger.get('technicalAutomation') or {}).get('status')=='fail','unbound real AT requires explicit technical fail')
+    need((ledger.get('accessibility') or {}).get('status')=='hold' and (ledger.get('accessibility') or {}).get('candidate') is None,
+         'unbound real AT cannot claim current candidate or external approval')
+    need((ledger.get('pwaPhysicalDevices') or {}).get('status')=='hold' and (ledger.get('pwaPhysicalDevices') or {}).get('currentCandidate') is None,
+         'unbound AT candidate cannot claim current PWA candidate')
+    need((data.get('previousCandidate') or {}).get('release')!=release,'unbound real AT must retain separate earlier release')
+else:
+    need(SHA_RE.fullmatch(str(source or '')) is not None,'real AT sourceSha must be a lowercase 40-character commit SHA')
+    need(FP_RE.fullmatch(str(fingerprint or '')) is not None,'real AT runtimeFingerprint must be sha256:<64 lowercase hex>')
 need('Automated browser and accessibility regressions do not substitute for real assistive-technology interaction' in data.get('boundary',''),'real AT automation boundary missing')
 
 tasks=data.get('requiredTasks') or []
