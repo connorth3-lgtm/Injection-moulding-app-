@@ -19,7 +19,6 @@ sys.path.insert(0, str(ROOT))
 from qa_new1_semantic_link_review import book_runtime_fingerprint, digest, need
 from tools.new1_authoring_review_queue import (
     DISCOVERY, HOLD, SOURCE_FIELDS, current_queue,
-    safe_spreadsheet_cell,
 )
 from tools.new1_passage_inspection import (
     AUTHORED_BATCHES, authored_chapter_index, git_blob_sha1,
@@ -39,7 +38,8 @@ REGISTRY_FILES = ("book-manifest-v1.json", "book-evidence-registry-v1.json")
 
 def pinned_json(root: Path, publication: dict, name: str) -> dict:
     """Only inspect repository data matching the Book's published byte identity."""
-    need(name in REGISTRY_FILES, "unapproved Book source registry requested")
+    need(name in REGISTRY_FILES + AUTHORED_BATCHES,
+         "unapproved Book source registry requested")
     inventory = publication.get("runtimeIntegrity", {}).get("gitBlobSha1ByFile")
     need(type(inventory) is dict, "Book source inventory unavailable")
     expected = inventory.get(name)
@@ -125,8 +125,9 @@ def build_alignment(queue: dict, publication: dict, root: Path = ROOT) -> dict:
     source_batches = [(REGISTRY_FILES[0], manifest),
                       (REGISTRY_FILES[1], evidence)]
     for name in AUTHORED_BATCHES:
-        # The authored index already rejects any divergence from pinned bytes.
-        source_batches.append((name, json.loads((root / "data" / name).read_bytes())))
+        # Read again through the pinned-byte verifier: even a mid-run file
+        # replacement must not feed unverified source references to reviewers.
+        source_batches.append((name, pinned_json(root, publication, name)))
     declared_sources = source_registry(source_batches)
 
     candidates_by_chapter: dict[str, set[int]] = {cid: set() for cid in indexed}
@@ -157,6 +158,7 @@ def build_alignment(queue: dict, publication: dict, root: Path = ROOT) -> dict:
         manifest_ids, authored_ids = (manifest_chapter.get("sourceIds"),
                                      authored.get("sourceIds"))
         need(type(manifest_ids) is list and type(authored_ids) is list
+             and all(type(x) is str for x in manifest_ids + authored_ids)
              and len(set(manifest_ids)) == len(manifest_ids)
              and len(set(authored_ids)) == len(authored_ids),
              "duplicate or missing source declaration list")
