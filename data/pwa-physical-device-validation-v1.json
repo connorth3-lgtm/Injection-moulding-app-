@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "New .5 runtime candidate has not been built and attested. Physical iOS/iPadOS/Android install, update, offline, storage pressure and safe-area evidence must be acquired from real devices. Previous .4 retained candidate is archival only. All production/physical validation remains HOLD.",
+  "boundary": "Automated browser, service-worker and assistive-technology regressions do not substitute for testing on physical iOS/iPadOS and Android devices. New .5 runtime candidate is not yet built, bound, or attested. Fresh real-device tests (install, update, offline, restart, storage pressure and safe-area) are required. The old .4 exact-head artifact is previous-release evidence only; screen-reader acceptance remains separately governed by data/accessibility-real-at-validation-v1.json.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
