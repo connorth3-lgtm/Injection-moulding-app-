@@ -55,7 +55,7 @@
       !Array.isArray(crosswalk.chapterMappings))
       throw Error('The versioned, course-level Book/curriculum crosswalk is required.');
     const validLabel=value=>typeof value==='string'&&value.length>0&&
-      value.length<=160&&value.trim()===value&&!/[\\u0000-\\u001f\\u007f]/.test(value);
+      value.length<=160&&value.trim()===value&&!/[\u0000-\u001f\u007f]/.test(value);
     const knownCourses=new Set(crosswalk.courseNames);
     if(knownCourses.size!==12||crosswalk.courseNames.some(x=>!validLabel(x)))
       throw Error('Book crosswalk course registry is invalid or contains duplicates.');
