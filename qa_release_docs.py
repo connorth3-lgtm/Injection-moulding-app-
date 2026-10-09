@@ -185,6 +185,34 @@ for marker in ['BASELINE_REF','refs/heads/$BASELINE_REF','FETCHED_BASELINE_SHA',
 prune_workflow=text('.github/workflows/prune-merged-branches.yml')
 need('visual-baseline/*' in prune_workflow,'merged-branch pruning must explicitly preserve visual baseline refs')
 
+# The exact .4 candidate is retained and the protected PRs have merged.
+# This guard tests historical/governance truth, not external acceptance status.
+for packet in (
+    'qa/ACCESSIBILITY_REAL_AT_2026.10.09.4.md',
+    'qa/BOOK_SME_REVIEW_2026.10.09.4.md',
+    'qa/CURRICULUM_SME_REVIEW_2026.10.09.4.md',
+    'qa/LEARNER_PILOT_2026.10.09.4.md',
+    'qa/NZQA_EXTERNAL_VALIDATION_2026.10.09.4.md',
+    'qa/PWA_PHYSICAL_DEVICE_2026.10.09.4.md',
+    'qa/EXTERNAL_VALIDATION_2026.10.09.4.md',
+    'certification/WINDOWS_SIGNING_READINESS_2026.10.09.4.md',
+):
+    review_packet=text(packet)
+    need('PR #524' not in review_packet or 'is DRAFT' not in review_packet,
+         f'stale PR #524 draft claim in {packet}')
+    need('2026.10.09.3\u0060 until a real successor' not in review_packet,
+         f'stale prior release pending-candidate claim in {packet}')
+    need('**STATUS: HOLD' in review_packet,
+         f'external-human HOLD lost in {packet}')
+
+accessibility_contract=json.loads(text('data/accessibility-real-at-validation-v1.json'))
+need(accessibility_contract.get('status')=='pending-real-at-validation',
+     'real assistive-technology validation must remain pending without human evidence')
+need('pending a newly reviewed visual reference' not in accessibility_contract.get('boundary',''),
+     'real AT contract must not contradict retained successful .4 candidate provenance')
+need('human' in accessibility_contract.get('boundary','').lower(),
+     'real AT boundary must continue to explicitly require genuine human review')
+
 # Sharing the hosted preview is a separate fail-closed release operation.
 # The local check is fast and offline; the live URL check is operator-only.
 subprocess.run([sys.executable, str(ROOT / 'qa_tester_handoff.py')], cwd=ROOT, check=True)
