@@ -21,7 +21,6 @@ from qa_new1_semantic_link_review import load, need
 from tools.new1_authoring_review_queue import current_queue
 from tools.new1_book_source_alignment import build_alignment
 from tools.new1_passage_inspection import authored_chapter_index, render_passages
-from tools.new1_review_packet import markdown_text
 from tools.new1_human_review_worksheet import REVIEW_STATES
 
 UNDECIDED = "UNDECIDED"
