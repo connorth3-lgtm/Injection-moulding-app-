@@ -15,6 +15,12 @@ assert "position:fixed" not in rule, "fixed bar overlaps the Book and bottom nav
 assert "overflow:auto" in mobile and ".mm-mc-stage-track" in mobile
 assert "env(safe-area-inset-bottom,0px)" in mobile
 small = css[css.index("@media(max-width:480px)"):]
-assert ".mm-mc-context-items{grid-template-columns:minmax(0,1fr);overflow:visible}" in small
+assert ".mm-mc-context-items{grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible}" in small
 assert ".mm-mc-context-items b{white-space:normal;overflow-wrap:anywhere}" in small
+assert ".mm-mc-context-items>div:last-child{grid-column:1/-1}" in small
+assert ".mm-mc-stage-track button{min-width:44px;min-height:44px;padding:6px}" in mobile
+assert ".mm-mc-next{min-width:64px;min-height:44px}" in mobile
+zoom = css[css.index("@media(max-width:320px)"):]
+assert ".mm-mc-context-items{grid-template-columns:minmax(0,1fr)}" in zoom
+assert ".mm-mc-context-items>div:last-child{grid-column:auto}" in zoom
 print("PASS: mobile mission steps remain in flow; context labels wrap and nav safe area is respected")
