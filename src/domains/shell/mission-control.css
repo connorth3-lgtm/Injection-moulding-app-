@@ -178,9 +178,9 @@ body[data-mm-mission-mode="engineer"] .mm-mc-context{grid-template-columns:minma
     border-radius:12px;box-shadow:none
   }
   .mm-mc-stage-track{display:flex;overflow:auto;gap:3px}
-  .mm-mc-stage-track button{min-width:38px;padding:4px}
+  .mm-mc-stage-track button{min-width:44px;min-height:44px;padding:6px}
   .mm-mc-stage-track button b{display:none}
-  .mm-mc-next{min-width:58px}
+  .mm-mc-next{min-width:64px;min-height:44px}
   /* The timeline now occupies normal space; retain only navigation clearance. */
   body.mm-mission-active .main{padding-bottom:calc(var(--mm-mobile-nav-height,64px) + env(safe-area-inset-bottom,0px) + 24px)!important}
   .mm-mc-drawer{width:100vw}
@@ -189,14 +189,20 @@ body[data-mm-mission-mode="engineer"] .mm-mc-context{grid-template-columns:minma
 @media(max-width:480px){
   .mm-mc-context{grid-template-columns:1fr auto}
   /* One context at a time: no clipped labels or sideways page overflow. */
-  .mm-mc-context-items{grid-template-columns:minmax(0,1fr);overflow:visible}
+  .mm-mc-context-items{grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible}
   .mm-mc-context-items>div{min-width:0}
+  .mm-mc-context-items>div:last-child{grid-column:1/-1}
   .mm-mc-context-items b{white-space:normal;overflow-wrap:anywhere}
   .mm-mc-brand small{font-size:7px}
   .mm-mc-brand b{font-size:10px}
   .mm-mc-actions button{min-height:38px;padding-inline:8px}
   .mm-mc-evidence-form{grid-template-columns:1fr}
   .mm-mc-evidence-form label.wide{grid-column:auto}
+}
+@media(max-width:320px){
+  /* Narrow effective viewport at 200% zoom: prevent two cramped columns. */
+  .mm-mc-context-items{grid-template-columns:minmax(0,1fr)}
+  .mm-mc-context-items>div:last-child{grid-column:auto}
 }
 @media(prefers-reduced-motion:reduce){
   .mm-mc-drawer{transition:none}
