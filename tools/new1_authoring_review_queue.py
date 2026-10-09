@@ -18,7 +18,7 @@ sys.path.insert(0, str(ROOT))
 
 from qa_book_curriculum_crosswalk import canonical_curriculum, lesson_course_name
 from qa_curriculum_semantic_review import lesson_fingerprint
-from qa_new1_semantic_link_review import check, digest, load, need
+from qa_new1_semantic_link_review import book_runtime_fingerprint, check, digest, load, need
 
 DISCOVERY = "course-level-overlap-only"
 HOLD = "UNREVIEWED — no exact lesson match or SME approval"
@@ -50,6 +50,7 @@ def make_queue(
     # review records and the prohibition on learner-facing activation.
     check(contract, lessons, courses, chapters, mapping, publication, release)
     need(book_sme.get("status") == "hold", "independent Book SME HOLD drift")
+    current_book_fingerprint = book_runtime_fingerprint(publication)
     need(contract["approvedPublicLinks"] is False,
          "reviewer queue must not grant public link authority")
 
@@ -76,6 +77,7 @@ def make_queue(
                 "manifestSourceState": chapter.get("state", "missing"),
                 "chapterManifestFingerprint": digest(chapter),
                 "bookPublicationRelease": publication["version"],
+                "bookRuntimeFingerprint": current_book_fingerprint,
                 "discoveryBasis": DISCOVERY,
                 "reviewStatus": HOLD,
             })
@@ -98,6 +100,7 @@ def make_queue(
         "purpose": "NON-PUBLIC human author discovery queue",
         "webRelease": release,
         "bookPublicationRelease": publication["version"],
+        "bookRuntimeFingerprint": current_book_fingerprint,
         "status": "hold-exact-lesson-review",
         "approvedPublicLinks": False,
         "exactLessonMatchesVerified": 0,
@@ -146,7 +149,7 @@ def write_csv(queue: dict) -> None:
         "lessonId", "lessonTitle", "canonicalCourseName",
         "wholeLessonFingerprint", "chapterId", "chapterTitle",
         "manifestSourceState", "chapterManifestFingerprint",
-        "bookPublicationRelease", "discoveryBasis", "reviewStatus",
+        "bookPublicationRelease", "bookRuntimeFingerprint", "discoveryBasis", "reviewStatus",
     )
     writer = csv.DictWriter(sys.stdout, fieldnames=fields, lineterminator="\n")
     writer.writeheader()
