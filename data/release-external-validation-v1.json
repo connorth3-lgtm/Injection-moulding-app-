@@ -4,8 +4,8 @@
   "validationIndex": "qa/EXTERNAL_VALIDATION_2026.10.09.5.md",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
-    "status": "hold",
-    "claim": "New .5 runtime bytes and cache identity are staged, but an exact-head retained technical candidate with authentic source SHA/fingerprint/artifact provenance has not been bound. Existing .4 evidence is archival only. All seven human/external streams and production remain HOLD."
+    "status": "fail",
+    "claim": "Proposed 2026.10.09.5 exact-source artifact and runtime fingerprint are not yet verified or bound; automated release promotion checks fail closed while external human/device/provider and production remain HOLD. Prior .4 technical evidence is historical only."
   },
   "governance": {
     "status": "enforced",
