@@ -578,6 +578,17 @@ const oversizedResult = makeFitSummary(oversizedAxes);
 assert.equal(oversizedResult.ok, false,
   'oversized required-axis declaration must be rejected before traversal');
 assert.equal(oversizedResult.reason, 'required-axis-list-required');
+// Assessment getters are untrusted evidence, not callable validation hooks.
+const accessorAssessments = {};
+let assessmentGetterCalls = 0;
+Object.defineProperty(accessorAssessments, 'shot', {
+  get(){ assessmentGetterCalls++; return shotCapacity; }, configurable:true
+});
+const accessorAssessmentResult = makeFitSummary(['shot'], accessorAssessments);
+assert.equal(accessorAssessmentResult.value.summaryState, 'UNKNOWN');
+assert.equal(accessorAssessmentResult.value.axes[0].reason, 'missing-assessment');
+assert.equal(assessmentGetterCalls, 0,
+  'machine-fit assessment validation must not invoke getter evidence');
 const inheritedShot={};
 Object.setPrototypeOf(inheritedShot,{shot:shotCapacity});
 const inheritedResult=makeFitSummary(['shot'],inheritedShot);
