@@ -863,11 +863,29 @@ function ejectorStrokeFit({
   );
 }
 
+function ownAssessmentField(record, field) {
+  if (!record || typeof record !== 'object') return undefined;
+  try {
+    const descriptor = Object.getOwnPropertyDescriptor(record, field);
+    return descriptor && Object.prototype.hasOwnProperty.call(descriptor, 'value')
+      ? descriptor.value : undefined;
+  } catch (_) {
+    // A revoked or otherwise uninspectable evidence object cannot justify PASS.
+    return undefined;
+  }
+}
+function assessmentStringField(record, field) {
+  const value = ownAssessmentField(record, field);
+  return typeof value === 'string' ? value.trim() : '';
+}
 function assessmentState(assessment, expectedIdentity = {}) {
   if (!assessment || typeof assessment !== 'object') return { state: 'UNKNOWN', reason: 'missing-assessment' };
-  if (assessment.ok === false) return { state: 'UNKNOWN', reason: assessment.reason || 'unsupported-assessment' };
+  if (ownAssessmentField(assessment, 'ok') === false) {
+    return { state: 'UNKNOWN', reason: assessmentStringField(assessment, 'reason') || 'unsupported-assessment' };
+  }
 
-  const value = assessment?.value && typeof assessment.value === 'object' ? assessment.value : assessment;
+  const inner = ownAssessmentField(assessment, 'value');
+  const value = inner && typeof inner === 'object' ? inner : assessment;
   const identityChecks = [
     ['machineConfigurationId', 'machine-configuration-mismatch'],
     ['injectionUnitConfigurationId', 'injection-unit-configuration-mismatch'],
@@ -875,35 +893,38 @@ function assessmentState(assessment, expectedIdentity = {}) {
   ];
   let carriedIdentityCount = 0;
   for (const [field, reason] of identityChecks) {
-    const actual = String(value?.[field] || '').trim();
-    const expected = String(expectedIdentity?.[field] || '').trim();
+    const actual = assessmentStringField(value, field);
+    const expected = String(expectedIdentity[field] || '').trim();
     if (actual) carriedIdentityCount += 1;
     if (actual && expected && actual !== expected) return { state: 'UNKNOWN', reason };
   }
 
   if (carriedIdentityCount === 0) {
-    const contextIndependent = assessment?.contextIndependent === true || value?.contextIndependent === true;
-    const contextBasisRef = String(assessment?.contextBasisRef || value?.contextBasisRef || '').trim();
+    const contextIndependent = ownAssessmentField(assessment, 'contextIndependent') === true ||
+      ownAssessmentField(value, 'contextIndependent') === true;
+    const contextBasisRef = assessmentStringField(assessment, 'contextBasisRef') ||
+      assessmentStringField(value, 'contextBasisRef');
     if (!contextIndependent) return { state: 'UNKNOWN', reason: 'assessment-identity-unbound' };
     if (!contextBasisRef) return { state: 'UNKNOWN', reason: 'context-basis-required' };
   }
 
-  const explicit = String(value?.state || assessment?.state || '').toUpperCase();
+  const explicit = (assessmentStringField(value, 'state') ||
+    assessmentStringField(assessment, 'state')).toUpperCase();
   if (explicit === 'MARGINAL') {
-    const marginalBasisRef = String(assessment?.marginalBasisRef || value?.marginalBasisRef || '').trim();
+    const marginalBasisRef = assessmentStringField(assessment, 'marginalBasisRef') ||
+      assessmentStringField(value, 'marginalBasisRef');
     return marginalBasisRef
       ? { state: 'MARGINAL', reason: null }
       : { state: 'UNKNOWN', reason: 'marginal-basis-required' };
   }
   if (['PASS', 'FAIL', 'UNKNOWN'].includes(explicit)) return { state: explicit, reason: null };
-  if (typeof value?.exceedsAvailableCapacity === 'boolean') {
-    return { state: value.exceedsAvailableCapacity ? 'FAIL' : 'PASS', reason: null };
-  }
-  if (typeof value?.exceedsUsableCapacity === 'boolean') {
-    return { state: value.exceedsUsableCapacity ? 'FAIL' : 'PASS', reason: null };
-  }
-  if (typeof value?.fits === 'boolean') {
-    return { state: value.fits ? 'PASS' : 'FAIL', reason: null };
+  for (const [field, isFail] of [
+    ['exceedsAvailableCapacity', true],
+    ['exceedsUsableCapacity', true],
+    ['fits', false],
+  ]) {
+    const flag = ownAssessmentField(value, field);
+    if (typeof flag === 'boolean') return { state: flag === isFail ? 'FAIL' : 'PASS', reason: null };
   }
   return { state: 'UNKNOWN', reason: 'assessment-state-unresolved' };
 }
