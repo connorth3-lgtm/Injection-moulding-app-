@@ -195,8 +195,9 @@ for marker in (
 need('"$branch" == "preview"' in pruner, "branch pruner must never delete the permanent preview promotion branch")
 
 # Branch deletion must reconfirm the ref has not moved after safety evaluation.
+# A failed HEAD lookup must fail closed, never become an empty-string success.
 for marker in (
-    "live_sha=$(gh api \"repos/$GH_REPO/git/ref/heads/$branch\" --jq '.object.sha' 2>/dev/null || true)",
+    "live_sha=$(gh_read \"repos/$GH_REPO/git/ref/heads/$branch\" --jq '.object.sha')",
     '[[ -z "$live_sha" || "$live_sha" != "$sha" ]]',
     "Keeping branch whose head moved during prune evaluation",
     "live SHA rechecked",
