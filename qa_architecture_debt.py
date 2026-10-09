@@ -1,7 +1,12 @@
 from __future__ import annotations
 
 from pathlib import Path
-from tools.externalize_core_scripts import runtime_transform as core_runtime_transform
+from tools.externalize_core_scripts import (
+    runtime_transform as core_runtime_transform,
+    core_shadowed_retirement_enabled,
+    CORE_SHADOWED_RETIRE_NAMES,
+)
+import hashlib
 import json
 import re
 
@@ -133,7 +138,7 @@ need(STYLE_BRIDGE_PATH.is_file(), "strict inline-style bridge source is missing"
 for number, (source, path) in enumerate(zip(inline_core_scripts, core_runtime_scripts), start=1):
     need(path.name == f"core-inline-{number:03d}.js", f"core runtime ordering drifted at slot {number}: {path.name}")
     generated = path.read_text(encoding="utf-8")
-    expected_handler_free = core_runtime_transform(path.name, source)
+    expected_handler_free = core_runtime_transform(path.name, source, retire_shadowed=core_shadowed_retirement_enabled())
     need(HANDLER_ATTR_RE.search(generated) is None, f"active generated core runtime still emits inline handler attributes: {path.name}")
     if path.name == "core-inline-004.js":
         need(source.count("document.write(") == 1, "frozen certificate print debt drifted; review runtime transform")
@@ -320,6 +325,24 @@ need(retirement_proof["javascript_syntax"] == "pass",
      "shadowed core retirement proof must compile as JavaScript")
 need(retirement_proof["candidate_not_published"] is True,
      "retirement proof must remain an offline preview")
+# The future release path is already exercised and proven to produce exactly
+# the expected, syntax-checked candidate. The current held .5 runtime must
+# remain byte-for-byte original; only a governed >=.6 release activates this.
+preview_source = core_runtime_transform("core-inline-004.js", inline_core_scripts[3],
+                                        retire_shadowed=True)
+preview_sha = hashlib.sha256(preview_source.encode("utf-8")).hexdigest()
+need(preview_sha == retirement_proof["candidate_sha256"],
+     "future generated retirement differs from independently verified dry run")
+for retired_name in CORE_SHADOWED_RETIRE_NAMES:
+    count = len(re.findall(r"(?m)^function\s+"+retired_name+r"\s*\(", preview_source))
+    need(count == 1, f"future generated runtime did not retire {retired_name} exactly")
+if not core_shadowed_retirement_enabled():
+    need(len(shadowed_declarations) == 10,
+         "held current-release generated core cannot be silently mutated")
+else:
+    need(len(shadowed_declarations) == 0,
+         "new governed web release must retire all ten shadowed definitions")
+
 
 print(f"Core shadowed declarations: {len(shadowed_declarations)}/10 (ratchet, no new names); issue #517 runtime regressions retained")
 
