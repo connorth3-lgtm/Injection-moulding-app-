@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | The .5 exact-source candidate has a successful retained artifact with an authentic runtime fingerprint and provenance. This technical contract result is not final PR-head CI, external validation, or promotion authorization. |
-| Behavioral / browser | **pass** | Automated .5 UX endurance, mobile browser, and relevant PWA regressions passed for the retained runtime source. New PR-head required checks and human visual/device acceptance remain separate gates. |
+| Static / contract | **fail** | No verified .6 exact-head technical candidate was approved at this point; .5 is historical evidence only. Technical status remains FAIL until exact-head retained artifact and current release bindings are proven. |
+| Behavioral / browser | **fail** | The new .6 candidate has not yet passed exact-head browser and quality checks. Prior .5 results cannot transfer. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
