@@ -450,6 +450,116 @@
               "summary": "Verified FANUC ROBOSHOT α-S100iB from the manufacturer's own product specification. Nominal 1000 kN versus increased 1250 kN, single/double platen height ranges and 200 mm/s injection-and-hold pressure modes are explicitly not collapsed into one fit rating. Actual serial, unit, available speeds, firmware, wiring and service manual remain unverified. No production machine suitability/recipe authority."
             }
           ]
+        },
+        {
+          "id": "fanuc-roboshot-alpha-s130ib",
+          "model": "ROBOSHOT α-S130iB",
+          "series": "ROBOSHOT α-SiB",
+          "research_status": "active",
+          "generation_note": "FANUC official α-S130iB electric injection moulding machine model-level technical table, not an installed or serial-verified machine. The 1300 kN base clamp has no increased-clamp option on the referenced model page. Only single-platen die-height variants are published; the 200 mm/s screw/pressure table does not identify a fitted injection unit or transfer ratings from other speed/high-pressure modes.",
+          "manufacture_year": {
+            "value": null,
+            "status": "unknown",
+            "evidence_note": "Model specification does not establish manufacture date, serial or machine-specific configuration."
+          },
+          "controller": {
+            "family": "FANUC ROBOSHOT CNC; installed HMI/controller and firmware not verified",
+            "confidence": "missing",
+            "host_controller": "unknown",
+            "host_note": "FANUC describes series CNC control, but no exact fitted controller hardware, parameters, firmware or site I/O has been verified."
+          },
+          "common_verified_specs": {
+            "clamping_force_kn": 1300,
+            "clamping_stroke_mm": 400,
+            "tie_bar_clearance_h_x_v_mm": "530 x 530",
+            "die_plate_h_x_v_mm": "730 x 730",
+            "ejector_stroke_mm": 100
+          },
+          "published_clamp_force_options_kn": [
+            1300
+          ],
+          "published_mould_height_variants": [
+            {
+              "platen_configuration": "single",
+              "standard_min_mm": 200,
+              "standard_max_mm": 570,
+              "increased_min_mm": 200,
+              "increased_max_mm": 670
+            }
+          ],
+          "published_injection_variants": [],
+          "published_screw_data": {
+            "source_id": "fanuc-alpha-s130ib-official-spec",
+            "mode": "OEM 200 mm/s base operating table (not 200 mm/s high-duty, 350 mm/s or high-pressure filling mode)",
+            "screw_diameter_mm": [
+              26,
+              28,
+              32,
+              36,
+              40
+            ],
+            "maximum_injection_volume_cm3": [
+              50,
+              58,
+              103,
+              147,
+              181
+            ],
+            "maximum_injection_and_hold_pressure_1_mpa": [
+              290,
+              270,
+              250,
+              190,
+              160
+            ],
+            "maximum_injection_and_hold_pressure_2_mpa": [
+              260,
+              240,
+              220,
+              190,
+              160
+            ],
+            "actual_fitted_injection_unit_id": null,
+            "scope": "Published FANUC model-level operating table, per screw diameter and discrete pressure-1 vs pressure-2 mode only. Do not infer a fitted injection unit, combine speed/pressure modes, certify usable machine capacity or approve a production machine/mould fit."
+          },
+          "manuals": [],
+          "wanted_documents": [
+            {
+              "title": "Exact serial/revision operator/maintenance and CNC/HMI documentation",
+              "status": "missing"
+            },
+            {
+              "title": "Machine-specific electrical, hydraulic and wiring drawings",
+              "status": "missing"
+            },
+            {
+              "title": "As-built screw/injection unit, single-platen die-height option and control revision",
+              "status": "missing"
+            }
+          ],
+          "sources": [
+            {
+              "id": "fanuc-alpha-s130ib-official-spec",
+              "title": "FANUC ROBOSHOT α-S130iB official technical specifications",
+              "publisher": "FANUC Europe Corporation (primary OEM)",
+              "url": "https://www.fanuc.eu/eu-en/product/roboshot/fanuc-roboshot-a-s130ib",
+              "supports": [
+                "exact α-S130iB model/series, 1300 kN clamp and single-platen height options",
+                "tie-bar/platen/clamp/ejector dimensions",
+                "individual screw diameters and corresponding maximum injection volumes",
+                "separate published 200 mm/s injection-and-hold pressure 1/2 rows"
+              ],
+              "checked": "2026-10-09",
+              "confidence": "verified for published model-level table only; unverified installed injection unit/controller",
+              "access": "public primary manufacturer technical-specification page"
+            }
+          ],
+          "research_log": [
+            {
+              "date": "2026-10-09",
+              "summary": "Added α-S130iB from FANUC Europe primary product specifications: 1300 kN base clamp, single-platen 200–570 mm standard or 200–670 mm increased die-height, five individually matched 200 mm/s screw/injection volume/pressure 1/2 values. No fabricated double-platen model option, fitted machine/controller/screw, increase-clamp rating or machine-specific manual. FANUC America's page contains an apparently erroneous duplicated 26 mm listing; the Europe OEM table and other official localisations show 36 mm in the fourth position. No machine-fit or production process authority."
+            }
+          ]
         }
       ]
     },

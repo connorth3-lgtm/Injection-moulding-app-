@@ -147,6 +147,40 @@ assert fanuc["sources"][0]["checked"] == "2026-10-09"
 assert "screwData(m)" in page and "mouldHeightOptions(m)" in page, "the operator must see non-interchangeable source variants"
 assert all(w["status"] == "missing" for w in fanuc["wanted_documents"])
 
+# FANUC's official α-S130iB listing is a separate exact model and must never
+# borrow S100/150iB pressure, clamp or platen-configuration variants.
+fanuc_130 = models["fanuc-roboshot-alpha-s130ib"]
+assert fanuc_130["model"] == "ROBOSHOT α-S130iB"
+assert fanuc_130["series"] == "ROBOSHOT α-SiB"
+assert fanuc_130["research_status"] == "active"
+assert fanuc_130["manufacture_year"]["status"] == "unknown"
+assert fanuc_130["controller"]["confidence"] == "missing"
+assert not fanuc_130["manuals"] and not fanuc_130["published_injection_variants"]
+assert fanuc_130["common_verified_specs"] == {
+    "clamping_force_kn": 1300,
+    "clamping_stroke_mm": 400,
+    "tie_bar_clearance_h_x_v_mm": "530 x 530",
+    "die_plate_h_x_v_mm": "730 x 730",
+    "ejector_stroke_mm": 100,
+}
+assert fanuc_130["published_clamp_force_options_kn"] == [1300]
+assert fanuc_130["published_mould_height_variants"] == [
+    {"platen_configuration": "single",
+     "standard_min_mm": 200, "standard_max_mm": 570,
+     "increased_min_mm": 200, "increased_max_mm": 670}
+]
+screw_130 = fanuc_130["published_screw_data"]
+assert screw_130["source_id"] == fanuc_130["sources"][0]["id"]
+assert "200 mm/s" in screw_130["mode"] and "not 200 mm/s high-duty" in screw_130["mode"]
+assert screw_130["actual_fitted_injection_unit_id"] is None
+assert screw_130["screw_diameter_mm"] == [26, 28, 32, 36, 40]
+assert screw_130["maximum_injection_volume_cm3"] == [50, 58, 103, 147, 181]
+assert screw_130["maximum_injection_and_hold_pressure_1_mpa"] == [290, 270, 250, 190, 160]
+assert screw_130["maximum_injection_and_hold_pressure_2_mpa"] == [260, 240, 220, 190, 160]
+assert fanuc_130["sources"][0]["url"] == "https://www.fanuc.eu/eu-en/product/roboshot/fanuc-roboshot-a-s130ib"
+assert fanuc_130["sources"][0]["checked"] == "2026-10-09"
+assert all(w["status"] == "missing" for w in fanuc_130["wanted_documents"])
+
 
 hmd = models["hwamda-hmd400m6"]
 assert "M6-S" in hmd["generation_note"] and "Do not substitute" in hmd["generation_note"]
