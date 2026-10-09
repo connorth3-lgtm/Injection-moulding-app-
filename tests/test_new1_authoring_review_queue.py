@@ -741,5 +741,110 @@ class SourcePinnedPassageInspectionTests(unittest.TestCase):
         self.assertNotIn("reviewerApproval", result)
 
 
+    def review_draft_fixture(self):
+        """Exact, synthetic, publication-pinned draft, never real SME evidence."""
+        from tools.new1_review_draft import make_template
+        data, queue, root = self.alignment_fixture()
+        template = make_template(
+            queue, 1, "fictional-book-1",
+            lessons=data["lessons"], manifest_chapters=data["chapters"],
+            publication=data["publication"], root=root,
+        )
+        return data, queue, root, template
+
+    def test_private_json_review_draft_starts_unsubmitted_and_unreviewed(self):
+        from tools.new1_review_draft import check_draft, UNDECIDED
+        data, queue, root, template = self.review_draft_fixture()
+        report = check_draft(template, deepcopy(template))
+        self.assertEqual(template["status"], "LOCAL_UNSUBMITTED_DRAFT")
+        self.assertEqual(len(template["sectionReviews"]), 2)
+        self.assertTrue(all(x["decision"] == UNDECIDED
+                            for x in template["sectionReviews"]))
+        self.assertEqual(report["sectionsStillUndecided"], 2)
+        self.assertEqual(report["humanDecisionsEntered"], 0)
+        self.assertFalse(report["approvedPublicLinks"])
+        self.assertFalse(report["semanticEquivalenceVerified"])
+        self.assertFalse(report["humanSMEApprovalVerified"])
+        self.assertFalse(report["submissionAccepted"])
+        self.assertFalse(report["learnerCreditAuthorized"])
+        self.assertEqual(data["contract"]["reviewedLinks"], [])
+        self.assertFalse(queue["approvedPublicLinks"])
+
+    def test_local_draft_lint_can_only_report_shape_even_when_fields_entered(self):
+        from tools.new1_review_draft import check_draft
+        _, _, _, template = self.review_draft_fixture()
+        draft = deepcopy(template)
+        section = draft["sectionReviews"][0]
+        section["decision"] = "exact instructional fit"
+        section["lessonPassageRef"] = "Synthetic lesson field and excerpt number 1"
+        section["rationale"] = "QA-only fictional reasoning of more than thirty-two characters."
+        section["sourceAssessment"] = "QA-only fictional source was reviewed in a sandbox, not reality."
+        section["limitations"] = "QA synthetic limits."
+        section["reviewEvidenceRef"] = "qa:fictional-review"
+        section["declaredSourcesExamined"] = ["QA-SOURCE-1"]
+        report = check_draft(template, draft)
+        self.assertEqual(report["humanDecisionsEntered"], 1)
+        self.assertEqual(report["sectionsStillUndecided"], 1)
+        self.assertEqual(report["status"], "UNSUBMITTED — FORMAT VALIDATED ONLY")
+        self.assertFalse(report["humanSMEApprovalVerified"])
+        self.assertFalse(report["semanticEquivalenceVerified"])
+        self.assertFalse(report["approvedPublicLinks"])
+        self.assertFalse(report["submissionAccepted"])
+
+    def test_private_draft_rejects_forged_approval_keys_or_status(self):
+        from tools.new1_review_draft import check_draft
+        _, _, _, template = self.review_draft_fixture()
+        tamper = [
+            lambda d: d.update(approvedPublicLinks=True),
+            lambda d: d.update(status="SME_APPROVED"),
+            lambda d: d.update(lessonId=2),
+            lambda d: d.update(bookRuntimeFingerprint="sha256:" + "0" * 64),
+            lambda d: d.update(sectionReviews=d["sectionReviews"][:1]),
+            lambda d: d["sectionReviews"][0].update(decision="approved"),
+            lambda d: d["sectionReviews"][0].update(humanSMEApproval=True),
+            lambda d: d["sectionReviews"][0].update(sectionFingerprint="sha256:" + "f" * 64),
+            lambda d: d["sectionReviews"][0].update(sectionNumber=2),
+            lambda d: d["sectionReviews"][0].update(declaredSourcesExamined=["QA-NO-SOURCE"]),
+            lambda d: d["sectionReviews"][0].update(rationale="fake review evidence"),
+        ]
+        for index, mutate in enumerate(tamper):
+            with self.subTest(case=index):
+                draft = deepcopy(template)
+                mutate(draft)
+                with self.assertRaises(AssertionError):
+                    check_draft(template, draft)
+
+    def test_local_private_draft_json_rejects_duplicate_keys_and_oversize(self):
+        import tempfile
+        from pathlib import Path
+        from tools.new1_review_draft import parse_private_json
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "review.json"
+            for payload in (
+                b'{"lessonId": 1, "lessonId": 99}',
+                b'{"sectionReviews": [{"decision": "UNDECIDED", "decision": "approved"}]}',
+                b'{"x": NaN}',
+                b'{"x": Infinity}',
+                b"{" + b"x" * 256001 + b"}",
+            ):
+                path.write_bytes(payload)
+                with self.assertRaises(AssertionError):
+                    parse_private_json(path)
+            path.write_bytes(b'{"valid":true}')
+            self.assertEqual(parse_private_json(path), {"valid": True})
+
+    def test_private_draft_refuses_changed_pinned_source_provenance(self):
+        from tools.new1_review_draft import make_template
+        data, queue, root, _ = self.review_draft_fixture()
+        path = root / "data" / "book-evidence-registry-v1.json"
+        path.write_bytes(path.read_bytes() + b"\n")
+        with self.assertRaisesRegex(AssertionError, "do not match published"):
+            make_template(
+                queue, 1, "fictional-book-1",
+                lessons=data["lessons"], manifest_chapters=data["chapters"],
+                publication=data["publication"], root=root,
+            )
+
+
 if __name__ == "__main__":
     unittest.main()
