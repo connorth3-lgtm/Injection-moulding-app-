@@ -2,7 +2,7 @@
 
 **STATUS: HOLD — NOT APPROVED / NO HUMAN VALIDATION.**
 
-The proposed `2026.10.09.5` UI-timing candidate improves More-dialog isolation, first-run onboarding polish and removes an obsolete certificate statline mutator. Its web/PWA identity is separate from the deployed `2026.10.09.4` preview. **It has not been merged, deployed, independently tested or approved.**
+The proposed `2026.10.09.5` UI-timing candidate improves More-dialog isolation, first-run onboarding polish and removes an obsolete certificate statline mutator. Its web/PWA identity is separate from the deployed `2026.10.09.4` preview. **A protected-main code merge and non-production preview deployment are not independent human/device acceptance, certification or production-root approval. All release-specific external validation remains HOLD.**
 
 **Required evidence:** Human NVDA/Firefox, NVDA/Chromium and VoiceOver/macOS/iOS interaction matrix; keyboard, focus, live-region, modal transitions and 200% zoom.
 

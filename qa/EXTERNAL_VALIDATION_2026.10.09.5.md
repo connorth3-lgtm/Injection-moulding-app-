@@ -2,7 +2,7 @@
 
 **STATUS: ALL SEVEN STREAMS HOLD. PRODUCTION ROOT HOLD.**
 
-This is a **proposed**, not merged or deployed, UI-timing web/PWA release for More-dialog isolation, delayed onboarding polish and obsolete certificate counter removal. A real retained .5 technical candidate is now bound; no human/device test is approved. Its new release/cache identity must never inherit .4 approval.
+This release's technical code is eligible for protected-main integration after the exact-head checks and repository-owner squash-merge decision. The retained .5 public runtime candidate is evidence-bound, but a protected-main merge permits only the explicitly labelled non-production `/preview/` deployment while physical-device and external validation remain HOLD. No human/device review or production-root launch is approved; .4 external approvals cannot transfer.
 
 ## Current-release HOLD packets
 
