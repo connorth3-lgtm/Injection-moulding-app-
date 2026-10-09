@@ -534,5 +534,118 @@ class SourcePinnedPassageInspectionTests(unittest.TestCase):
             self.render(data, queue, root)
 
 
+    def alignment_fixture(self):
+        """Synthetic published registries with deliberate declaration differences."""
+        from tools.new1_passage_inspection import git_blob_sha1
+        data, _, root = self.pinned_fixture()
+        registry = {
+            "schema": 1, "bookId": "mouldmaster-book",
+            "parts": [{"chapters": data["chapters"]}],
+            "sourceSeeds": data["source_seeds"],
+        }
+        evidence = {"schema": 1, "bookId": "mouldmaster-book",
+                    "sourceSeeds": [{
+                        "id": "QA-SOURCE-2", "type": "standard",
+                        "issuer": "Another fictional body",
+                        "title": "Synthetic only",
+                        "url": "https://example.invalid/source-two",
+                        "scope": "Fictional QA evidence only",
+                        "checked": "2026-09-14", "currentState": "active",
+                    }]}
+        for name, doc in (("book-manifest-v1.json", registry),
+                          ("book-evidence-registry-v1.json", evidence)):
+            raw = json.dumps(doc, ensure_ascii=False).encode()
+            (root / "data" / name).write_bytes(raw)
+            data["publication"]["runtimeIntegrity"]["gitBlobSha1ByFile"][name] = (
+                git_blob_sha1(raw)
+            )
+        return data, make_queue(**data), root
+
+    def test_source_alignment_reports_real_declaration_differences_not_approvals(self):
+        from tools.new1_book_source_alignment import build_alignment, render_summary
+        data, queue, root = self.alignment_fixture()
+        original = deepcopy(queue)
+        report = build_alignment(queue, data["publication"], root)
+        self.assertEqual(report["totalBookModules"], 46)
+        # Every even synthetic manifest chapter has no source ID; its actual
+        # authored chapter has QA-SOURCE-1. No automatic manifest edits.
+        self.assertEqual(report["modulesWithDeclarationDifferences"], 23)
+        self.assertEqual(report["modulesWithIdenticalDeclaredSourceIds"], 23)
+        self.assertEqual(report["exactLessonMatchesVerified"], 0)
+        self.assertFalse(report["approvedPublicLinks"])
+        self.assertEqual(report["chapters"][0]["alignment"],
+                         "SAME IDS — claims still unreviewed")
+        self.assertEqual(report["chapters"][1]["manifestSourceIds"], [])
+        self.assertEqual(report["chapters"][1]["authoredOnlySourceIds"], ["QA-SOURCE-1"])
+        self.assertIn("NOT independently rechecked",
+                      report["chapters"][1]["sourceDeclarations"][0]["evidenceStatus"])
+        self.assertIn("23", render_summary(report))
+        self.assertIn("QA-SOURCE-1", render_summary(report, "fictional-book-2"))
+        with self.assertRaisesRegex(AssertionError, "unknown canonical"):
+            render_summary(report, "not-a-book-module")
+        self.assertEqual(queue, original)
+        self.assertEqual(data["contract"]["reviewedLinks"], [])
+
+    def test_source_alignment_rejects_manifest_and_evidence_byte_drift(self):
+        from tools.new1_book_source_alignment import build_alignment
+        for name in ("book-manifest-v1.json", "book-evidence-registry-v1.json"):
+            with self.subTest(file=name):
+                data, queue, root = self.alignment_fixture()
+                path = root / "data" / name
+                path.write_bytes(path.read_bytes() + b"\n")
+                with self.assertRaisesRegex(AssertionError, "do not match published"):
+                    build_alignment(queue, data["publication"], root)
+
+    def test_source_alignment_rejects_unknown_source_and_duplicate_registry_id(self):
+        from tools.new1_book_source_alignment import build_alignment
+        from tools.new1_passage_inspection import git_blob_sha1
+        data, _, root = self.alignment_fixture()
+        path = root / "data" / "book-authored-foundations-v1.json"
+        obj = json.loads(path.read_bytes())
+        obj["chapters"][0]["sourceIds"] = ["QA-SOURCE-UNDECLARED"]
+        raw = json.dumps(obj).encode()
+        path.write_bytes(raw)
+        data["publication"]["runtimeIntegrity"]["gitBlobSha1ByFile"][path.name] = (
+            git_blob_sha1(raw)
+        )
+        queue = make_queue(**data)
+        with self.assertRaisesRegex(AssertionError, "outside pinned governance registries"):
+            build_alignment(queue, data["publication"], root)
+
+        data, _, root = self.alignment_fixture()
+        path = root / "data" / "book-evidence-registry-v1.json"
+        obj = json.loads(path.read_bytes())
+        obj["sourceSeeds"][0]["id"] = "QA-SOURCE-1"
+        raw = json.dumps(obj).encode()
+        path.write_bytes(raw)
+        data["publication"]["runtimeIntegrity"]["gitBlobSha1ByFile"][path.name] = (
+            git_blob_sha1(raw)
+        )
+        queue = make_queue(**data)
+        with self.assertRaisesRegex(AssertionError, "duplicate source ID"):
+            build_alignment(queue, data["publication"], root)
+
+    def test_source_alignment_rejects_forged_approval_and_unsafe_urls(self):
+        from tools.new1_book_source_alignment import build_alignment
+        from tools.new1_passage_inspection import git_blob_sha1
+        data, queue, root = self.alignment_fixture()
+        bad_queue = deepcopy(queue)
+        bad_queue["approvedPublicLinks"] = True
+        with self.assertRaises(AssertionError):
+            build_alignment(bad_queue, data["publication"], root)
+        data, _, root = self.alignment_fixture()
+        path = root / "data" / "book-evidence-registry-v1.json"
+        obj = json.loads(path.read_bytes())
+        obj["sourceSeeds"][0]["url"] = "https://bad:password@example.invalid/"
+        raw = json.dumps(obj).encode()
+        path.write_bytes(raw)
+        data["publication"]["runtimeIntegrity"]["gitBlobSha1ByFile"][path.name] = (
+            git_blob_sha1(raw)
+        )
+        queue = make_queue(**data)
+        with self.assertRaisesRegex(AssertionError, "unsafe declared source URL"):
+            build_alignment(queue, data["publication"], root)
+
+
 if __name__ == "__main__":
     unittest.main()
