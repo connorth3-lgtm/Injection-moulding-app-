@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.09.4`**.
+Current governed web candidate: **`2026.10.09.5`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Repository-controlled static, schema, arithmetic and source-binding checks pass on the current candidate. Live GitHub native governance is reported separately and does not inherit this pass. |
-| Behavioral / browser | **pass** | Automated browser/runtime behavior suites pass on the current candidate; browser automation is not physical-device or human-assistive-technology evidence. |
+| Static / contract | **pass** | The .5 exact-source candidate has a successful retained artifact with an authentic runtime fingerprint and provenance. This technical contract result is not final PR-head CI, external validation, or promotion authorization. |
+| Behavioral / browser | **pass** | Automated .5 UX endurance, mobile browser, and relevant PWA regressions passed for the retained runtime source. New PR-head required checks and human visual/device acceptance remain separate gates. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |

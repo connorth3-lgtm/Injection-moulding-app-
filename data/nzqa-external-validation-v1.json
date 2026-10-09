@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.09.4",
+  "release": "2026.10.09.5",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.09.4.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.09.5.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 379,
   "candidate": {
-    "release": "2026.10.09.4",
-    "sourceSha": "ff53e2958d7c97d99aba890a23ba7caf4f21d3c6",
-    "runtimeFingerprint": "sha256:7776a3ccccd8d049e7b9a5167e957651220d8f98a8da3b51b046ab85ae0f53a8"
+    "release": "2026.10.09.5",
+    "sourceSha": "581e08e58f0b9ec3c7a3501f9a3a71d47ed2c184",
+    "runtimeFingerprint": "sha256:216ec18dc5687ffbbb6aecee36b595533b65deb6c25c2c2bb7693f0bc6a97bcf"
   },
-  "boundary": "Repository readiness, mappings, templates and automated QA do not create NZQA approval, provider accreditation, consent to assess, moderation acceptance, learner competence, workplace competence or qualification award.",
+  "boundary": "Provider G1-G8 evidence remains pending. The .5 exact-source runtime candidate and public fingerprint are retained and bound for human validation; none of the provider gates has been completed. Prior .4 technical evidence is archive only and cannot grant accreditation, certification, assessment, machine-control or production authorization.",
   "requiredGates": [
     {
       "id": "G1-provider",
@@ -57,8 +57,8 @@
   "evidence": null,
   "validationRule": "Validated requires genuine provider-owned evidence for all eight gates, public-safe evidence references, exact release/candidate binding, and separate reviewed promotion of the canonical external-validation status. Automation must not manufacture completion.",
   "previousCandidate": {
-    "release": "2026.10.09.3",
-    "sourceSha": "2f7d31423d0dfb1ce62e8bdec638134232b3f4d9",
-    "runtimeFingerprint": "sha256:55975b4b3ae5af39ddafd1f2ed9da08755df96774a92a7878a9410810171653a"
+    "release": "2026.10.09.4",
+    "sourceSha": "ff53e2958d7c97d99aba890a23ba7caf4f21d3c6",
+    "runtimeFingerprint": "sha256:7776a3ccccd8d049e7b9a5167e957651220d8f98a8da3b51b046ab85ae0f53a8"
   }
 }
