@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-10-08",
+  "last_updated": "2026-10-09",
   "title": "Injection Moulding Machine Library",
   "scope": "Manufacturer, model, controller, manual, service-document and verified-specification registry for injection moulding machines.",
   "verification_levels": {
@@ -458,6 +458,118 @@
       ],
       "models": [
         {
+          "id": "nissei-fnx80-iv",
+          "model": "FNX80Ⅳ",
+          "series": "FNX-Ⅳ",
+          "research_status": "active",
+          "generation_note": "NISSEI's published FNX-Ⅳ hybrid machine. These are manufacturer model-family specifications, not a verified installed machine, serial number or injection-unit configuration. Do not interchange the Ⅳ and older FNX generations.",
+          "manufacture_year": {
+            "value": null,
+            "status": "unknown",
+            "evidence_note": "No build year or serial-specific machine identity has been confirmed."
+          },
+          "controller": {
+            "family": "NISSEI machine HMI/controller revision not verified for a particular serial",
+            "confidence": "missing",
+            "host_controller": "unknown",
+            "host_note": "The FNX-Ⅳ family describes network/operation features, but does not establish the fitted controller/HMI firmware or I/O revision for an individual machine."
+          },
+          "common_verified_specs": {
+            "clamping_force_kn": 792,
+            "clamping_stroke_mm": 470,
+            "min_mould_thickness_mm": 200,
+            "max_daylight_opening_mm": 670,
+            "tie_bar_clearance_h_x_v_mm": "420 x 420",
+            "die_plate_h_x_v_mm": "580 x 580",
+            "ejector_stroke_mm": 75
+          },
+          "published_injection_variants": [
+            {
+              "injection_unit_id": "9A",
+              "published_option": "standard",
+              "screw_diameter_mm": [
+                26,
+                28,
+                32,
+                36
+              ],
+              "injection_capacity_cm3": [
+                59,
+                69,
+                90,
+                114
+              ],
+              "maximum_injection_pressure_mpa": [
+                265,
+                244,
+                187,
+                147
+              ],
+              "source_id": "nissei-fnx80-iv-official-spec"
+            },
+            {
+              "injection_unit_id": "12A",
+              "published_option": "optional",
+              "screw_diameter_mm": [
+                28,
+                32,
+                36,
+                40
+              ],
+              "injection_capacity_cm3": [
+                77,
+                101,
+                127,
+                157
+              ],
+              "maximum_injection_pressure_mpa": [
+                265,
+                226,
+                179,
+                145
+              ],
+              "source_id": "nissei-fnx80-iv-official-spec"
+            }
+          ],
+          "manuals": [],
+          "wanted_documents": [
+            {
+              "title": "Exact machine/revision OEM operator and maintenance manual",
+              "status": "missing"
+            },
+            {
+              "title": "Serial/revision-specific electrical and hydraulic circuit diagrams",
+              "status": "missing"
+            },
+            {
+              "title": "OEM parts/lubrication and controller I/O documentation",
+              "status": "missing"
+            }
+          ],
+          "sources": [
+            {
+              "id": "nissei-fnx80-iv-official-spec",
+              "title": "NISSEI FNX80Ⅳ official performance specification",
+              "publisher": "NISSEI PLASTIC INDUSTRIAL CO., LTD. (primary OEM)",
+              "url": "https://www.nisseiplastic.com/en/products/fnx-4/spec.php?model=FNX80%E2%85%A3",
+              "supports": [
+                "published model/series identity",
+                "common machine dimensions and clamping performance",
+                "per-injection-unit screw diameter, capacity and maximum injection pressure"
+              ],
+              "checked": "2026-10-09",
+              "confidence": "verified for OEM-published model specifications only; not serial-specific",
+              "access": "public manufacturer technical-specification page"
+            }
+          ],
+          "research_log": [
+            {
+              "date": "2026-10-09",
+              "summary": "Added original NISSEI model-IV OEM technical page, preserving standard vs optional injection-unit variants and per-screw pressure/capacity. Fitted unit, machine serial/controller and exact service/electrical/hydraulic documentation remain unknown. No validated machine-fit or operating authority."
+            }
+          ]
+        },
+        {
           "id": "nissei-fnx110-iv",
           "model": "FNX110Ⅳ",
           "series": "FNX-Ⅳ",
@@ -566,6 +678,224 @@
             {
               "date": "2026-10-08",
               "summary": "Added exact FNX-Ⅳ model record from NISSEI primary specifications. Injection-unit options remain discrete source variants. Serial, controller, service manual and drawings remain unverified; not approved as a machine suitability or operating basis."
+            }
+          ]
+        },
+        {
+          "id": "nissei-fnx140-iv",
+          "model": "FNX140Ⅳ",
+          "series": "FNX-Ⅳ",
+          "research_status": "active",
+          "generation_note": "NISSEI's published FNX-Ⅳ hybrid machine. These are manufacturer model-family specifications, not a verified installed machine, serial number or injection-unit configuration. Do not interchange the Ⅳ and older FNX generations.",
+          "manufacture_year": {
+            "value": null,
+            "status": "unknown",
+            "evidence_note": "No build year or serial-specific machine identity has been confirmed."
+          },
+          "controller": {
+            "family": "NISSEI machine HMI/controller revision not verified for a particular serial",
+            "confidence": "missing",
+            "host_controller": "unknown",
+            "host_note": "The FNX-Ⅳ family describes network/operation features, but does not establish the fitted controller/HMI firmware or I/O revision for an individual machine."
+          },
+          "common_verified_specs": {
+            "clamping_force_kn": 1370,
+            "clamping_stroke_mm": 600,
+            "min_mould_thickness_mm": 250,
+            "max_daylight_opening_mm": 850,
+            "tie_bar_clearance_h_x_v_mm": "510 x 510",
+            "die_plate_h_x_v_mm": "730 x 730",
+            "ejector_stroke_mm": 90
+          },
+          "published_injection_variants": [
+            {
+              "injection_unit_id": "25A",
+              "published_option": "standard",
+              "screw_diameter_mm": [
+                36,
+                40,
+                45,
+                50
+              ],
+              "injection_capacity_cm3": [
+                163,
+                201,
+                254,
+                314
+              ],
+              "maximum_injection_pressure_mpa": [
+                255,
+                219,
+                173,
+                140
+              ],
+              "source_id": "nissei-fnx140-iv-official-spec"
+            },
+            {
+              "injection_unit_id": "36A",
+              "published_option": "optional",
+              "screw_diameter_mm": [
+                45,
+                50,
+                56
+              ],
+              "injection_capacity_cm3": [
+                286,
+                353,
+                443
+              ],
+              "maximum_injection_pressure_mpa": [
+                207,
+                168,
+                134
+              ],
+              "source_id": "nissei-fnx140-iv-official-spec"
+            }
+          ],
+          "manuals": [],
+          "wanted_documents": [
+            {
+              "title": "Exact machine/revision OEM operator and maintenance manual",
+              "status": "missing"
+            },
+            {
+              "title": "Serial/revision-specific electrical and hydraulic circuit diagrams",
+              "status": "missing"
+            },
+            {
+              "title": "OEM parts/lubrication and controller I/O documentation",
+              "status": "missing"
+            }
+          ],
+          "sources": [
+            {
+              "id": "nissei-fnx140-iv-official-spec",
+              "title": "NISSEI FNX140Ⅳ official performance specification",
+              "publisher": "NISSEI PLASTIC INDUSTRIAL CO., LTD. (primary OEM)",
+              "url": "https://www.nisseiplastic.com/en/products/fnx-4/spec.php?model=FNX140%E2%85%A3",
+              "supports": [
+                "published model/series identity",
+                "common machine dimensions and clamping performance",
+                "per-injection-unit screw diameter, capacity and maximum injection pressure"
+              ],
+              "checked": "2026-10-09",
+              "confidence": "verified for OEM-published model specifications only; not serial-specific",
+              "access": "public manufacturer technical-specification page"
+            }
+          ],
+          "research_log": [
+            {
+              "date": "2026-10-09",
+              "summary": "Added original NISSEI model-IV OEM technical page, preserving standard vs optional injection-unit variants and per-screw pressure/capacity. Fitted unit, machine serial/controller and exact service/electrical/hydraulic documentation remain unknown. No validated machine-fit or operating authority."
+            }
+          ]
+        },
+        {
+          "id": "nissei-fnx180-iv",
+          "model": "FNX180Ⅳ",
+          "series": "FNX-Ⅳ",
+          "research_status": "active",
+          "generation_note": "NISSEI's published FNX-Ⅳ hybrid machine. These are manufacturer model-family specifications, not a verified installed machine, serial number or injection-unit configuration. Do not interchange the Ⅳ and older FNX generations.",
+          "manufacture_year": {
+            "value": null,
+            "status": "unknown",
+            "evidence_note": "No build year or serial-specific machine identity has been confirmed."
+          },
+          "controller": {
+            "family": "NISSEI machine HMI/controller revision not verified for a particular serial",
+            "confidence": "missing",
+            "host_controller": "unknown",
+            "host_note": "The FNX-Ⅳ family describes network/operation features, but does not establish the fitted controller/HMI firmware or I/O revision for an individual machine."
+          },
+          "common_verified_specs": {
+            "clamping_force_kn": 1750,
+            "clamping_stroke_mm": 700,
+            "min_mould_thickness_mm": 250,
+            "max_daylight_opening_mm": 950,
+            "tie_bar_clearance_h_x_v_mm": "560 x 560",
+            "die_plate_h_x_v_mm": "800 x 800",
+            "ejector_stroke_mm": 110
+          },
+          "published_injection_variants": [
+            {
+              "injection_unit_id": "25A",
+              "published_option": "optional",
+              "screw_diameter_mm": [
+                36,
+                40,
+                45,
+                50
+              ],
+              "injection_capacity_cm3": [
+                163,
+                201,
+                254,
+                314
+              ],
+              "maximum_injection_pressure_mpa": [
+                255,
+                219,
+                173,
+                140
+              ],
+              "source_id": "nissei-fnx180-iv-official-spec"
+            },
+            {
+              "injection_unit_id": "36A",
+              "published_option": "standard",
+              "screw_diameter_mm": [
+                45,
+                50,
+                56
+              ],
+              "injection_capacity_cm3": [
+                286,
+                353,
+                443
+              ],
+              "maximum_injection_pressure_mpa": [
+                207,
+                168,
+                134
+              ],
+              "source_id": "nissei-fnx180-iv-official-spec"
+            }
+          ],
+          "manuals": [],
+          "wanted_documents": [
+            {
+              "title": "Exact machine/revision OEM operator and maintenance manual",
+              "status": "missing"
+            },
+            {
+              "title": "Serial/revision-specific electrical and hydraulic circuit diagrams",
+              "status": "missing"
+            },
+            {
+              "title": "OEM parts/lubrication and controller I/O documentation",
+              "status": "missing"
+            }
+          ],
+          "sources": [
+            {
+              "id": "nissei-fnx180-iv-official-spec",
+              "title": "NISSEI FNX180Ⅳ official performance specification",
+              "publisher": "NISSEI PLASTIC INDUSTRIAL CO., LTD. (primary OEM)",
+              "url": "https://www.nisseiplastic.com/en/products/fnx-4/spec.php?model=FNX180%E2%85%A3",
+              "supports": [
+                "published model/series identity",
+                "common machine dimensions and clamping performance",
+                "per-injection-unit screw diameter, capacity and maximum injection pressure"
+              ],
+              "checked": "2026-10-09",
+              "confidence": "verified for OEM-published model specifications only; not serial-specific",
+              "access": "public manufacturer technical-specification page"
+            }
+          ],
+          "research_log": [
+            {
+              "date": "2026-10-09",
+              "summary": "Added original NISSEI model-IV OEM technical page, preserving standard vs optional injection-unit variants and per-screw pressure/capacity. Fitted unit, machine serial/controller and exact service/electrical/hydraulic documentation remain unknown. No validated machine-fit or operating authority."
             }
           ]
         },

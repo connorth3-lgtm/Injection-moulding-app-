@@ -44,6 +44,24 @@ for maker in data["manufacturers"]:
             assert "machine" in row["generation_note"].lower()
 
 expected = {
+    "nissei-fnx80-iv": {
+        "model": "FNX80Ⅳ", "clamp": 792, "units": {
+            "9A": ([26,28,32,36], [59,69,90,114], [265,244,187,147]),
+            "12A": ([28,32,36,40], [77,101,127,157], [265,226,179,145]),
+        },
+    },
+    "nissei-fnx140-iv": {
+        "model": "FNX140Ⅳ", "clamp": 1370, "units": {
+            "25A": ([36,40,45,50], [163,201,254,314], [255,219,173,140]),
+            "36A": ([45,50,56], [286,353,443], [207,168,134]),
+        },
+    },
+    "nissei-fnx180-iv": {
+        "model": "FNX180Ⅳ", "clamp": 1750, "units": {
+            "25A": ([36,40,45,50], [163,201,254,314], [255,219,173,140]),
+            "36A": ([45,50,56], [286,353,443], [207,168,134]),
+        },
+    },
     "nissei-fnx110-iv": {
         "model": "FNX110Ⅳ", "clamp": 1100, "units": {
             "12A": ([28, 32, 36, 40], [77, 101, 127, 157], [265, 226, 179, 145]),
@@ -65,7 +83,7 @@ for key, contract in expected.items():
     assert m["controller"]["confidence"] == "missing"
     assert not m["manuals"], "cannot invent a verified machine manual"
     assert m["sources"][0]["url"].startswith("https://www.nisseiplastic.com/en/products/fnx-4/spec.php?model=")
-    assert m["sources"][0]["checked"] == "2026-10-08"
+    assert m["sources"][0]["checked"] == ("2026-10-09" if key in {"nissei-fnx80-iv", "nissei-fnx140-iv", "nissei-fnx180-iv"} else "2026-10-08")
     found = {v["injection_unit_id"]: v for v in m["published_injection_variants"]}
     assert set(found) == set(contract["units"])
     for unit, (diam, capacity, pressure) in contract["units"].items():
@@ -74,6 +92,23 @@ for key, contract in expected.items():
         assert got["injection_capacity_cm3"] == capacity
         assert got["maximum_injection_pressure_mpa"] == pressure
     assert all(w["status"] == "missing" for w in m["wanted_documents"])
+    if key in {"nissei-fnx80-iv", "nissei-fnx140-iv", "nissei-fnx180-iv"}:
+        geometry = {
+            "nissei-fnx80-iv": (470, 200, 670, "420 x 420", "580 x 580", 75, "9A"),
+            "nissei-fnx140-iv": (600, 250, 850, "510 x 510", "730 x 730", 90, "25A"),
+            "nissei-fnx180-iv": (700, 250, 950, "560 x 560", "800 x 800", 110, "36A"),
+        }[key]
+        specs = m["common_verified_specs"]
+        assert (
+            specs["clamping_stroke_mm"], specs["min_mould_thickness_mm"],
+            specs["max_daylight_opening_mm"], specs["tie_bar_clearance_h_x_v_mm"],
+            specs["die_plate_h_x_v_mm"], specs["ejector_stroke_mm"]
+        ) == geometry[:6], f"OEM geometry pairing drift for {key}"
+        assert found[geometry[6]]["published_option"] == "standard"
+        assert all(v["published_option"] == ("standard" if v["injection_unit_id"] == geometry[6] else "optional")
+                   for v in found.values())
+        assert m["sources"][0]["url"].endswith("model=FNX" + key.split("fnx", 1)[1].split("-iv", 1)[0] + "%E2%85%A3")
+
 
 hmd = models["hwamda-hmd400m6"]
 assert "M6-S" in hmd["generation_note"] and "Do not substitute" in hmd["generation_note"]

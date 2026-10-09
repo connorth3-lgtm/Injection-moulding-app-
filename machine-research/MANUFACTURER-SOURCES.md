@@ -50,3 +50,15 @@ The following *manufacturer-owned* pages identify the published **FNX-Ⅳ**, not
 | NISSEI FNX220Ⅳ | https://www.nisseiplastic.com/en/products/fnx-4/spec.php?model=FNX220%E2%85%A3 | 2110 kN nominal clamp; 50A standard versus 71A injection-unit screw/capacity/pressure options; published mechanical dimensions | Installed injection-unit option, serial/revision, actual usable capability, machine maintenance manual |
 
 The machine registry stores a pressure value *with its matching screw diameter and injection unit*, not as a universal capacity for the model. A machine-fit screen must continue to require independently confirmed fitted injection-unit and machine identities. No unknown OEM electrical, hydraulic or parts documentation is treated as discovered.
+
+## Additional NISSEI FNX-Ⅳ exact-model source records — 2026-10-09
+
+These official primary-OEM specifications support model-level geometry, clamp figures, screw diameters, injection volumes and pressures for separately listed injection units. They do **not** identify the injection-unit assembly actually installed on a specific machine or verify controller, service manual or maintenance state.
+
+| Exact OEM model | OEM data | Clamp | Published injection-unit variants | Still unverified |
+|---|---|---:|---|---|
+| FNX80Ⅳ | https://www.nisseiplastic.com/en/products/fnx-4/spec.php?model=FNX80%E2%85%A3 | 792 kN | 9A standard; 12A optional | Installed unit/serial, manuals, actual usable limits |
+| FNX140Ⅳ | https://www.nisseiplastic.com/en/products/fnx-4/spec.php?model=FNX140%E2%85%A3 | 1370 kN | 25A standard; 36A optional | Installed unit/serial, manuals, actual usable limits |
+| FNX180Ⅳ | https://www.nisseiplastic.com/en/products/fnx-4/spec.php?model=FNX180%E2%85%A3 | 1750 kN | 36A standard; 25A optional | Installed unit/serial, manuals, actual usable limits |
+
+All screw-specific dimensions, capacity and pressure sets are bound to their exact OEM option IDs in `machine-library-v1.json`; regression QA checks these pairs and model geometry. These are published catalogue values, **not** validated machine limits, physical test evidence or permissions to copy production recipes.

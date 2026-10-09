@@ -78,3 +78,7 @@ Two NISSEI FNX-Ⅳ OEM-published exact-model records have been added: **FNX110�
 
 The original HMD400M6 service-document chase remains open: [OEM document request checklist](./hwamda/OEM_DOCUMENT_REQUEST_CHECKLIST.md). No unverified manual, circuit drawing or later M6-S generation was promoted.
 
+
+## OEM verified model expansion — 2026-10-09
+
+NISSEI's primary FNX-Ⅳ technical pages now support three more exact model records: **FNX80Ⅳ**, **FNX140Ⅳ** and **FNX180Ⅳ**. The detailed research registry therefore rises from three to **six model records** without inventing serial/configuration authority. The separate 9A/12A, 25A/36A variants remain screw-diameter/pressure/shot-capacity linked and covered by `qa_machine_library.py`; installed machine, controller and maintenance documents remain UNKNOWN. No production machine-fit approval or OEM service documentation acquisition is inferred.
