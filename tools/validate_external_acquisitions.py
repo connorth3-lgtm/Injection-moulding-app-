@@ -198,9 +198,31 @@ def validate(issue: str, header: list[str], rows: list[dict]) -> dict:
     require(all(isinstance(row,dict) and None not in row and
                 set(row) == set(header) and all(v is not None for v in row.values())
                 for row in rows), "malformed or extra-field CSV data")
+    if issue in ("334", "336"):
+        ids = [row.get("record_id") for row in rows]
+        require(len(ids) == len(set(ids)), "duplicate source-record identities rejected")
     summary = CHECKS[issue](rows)
     return {"issue":f"#{issue}","structural_state":"candidate-for-independent-human-provenance-review",
             "external_evidence_acquired":False, "production_control_authorized":False,**summary}
+
+
+def resolve_private_input(input_path: Path) -> Path:
+    # Refuse even a symlink from the public checkout into a private source.
+    # Data custody remains entirely with the authorised operator.
+    repository = TEMPLATE_DIR.parent.resolve()
+    requested = input_path.expanduser().absolute()
+    # Check both the user's path and the resolved target. This rejects public-
+    # checkout symlinks pointing outside, plus external symlinks pointing in.
+    require(not requested.is_relative_to(repository),
+            "private measured records must be stored outside the public repository checkout")
+    try:
+        resolved = input_path.expanduser().resolve(strict=True)
+    except OSError:
+        raise EvidenceStructureError("private CSV input is unavailable") from None
+    require(resolved.is_file(), "private CSV input is not a readable file")
+    require(not resolved.is_relative_to(repository),
+            "private measured records must be stored outside the public repository checkout")
+    return resolved
 
 
 def main() -> None:
@@ -209,8 +231,8 @@ def main() -> None:
     ap.add_argument("--input",type=Path,required=True,
                     help="private authorised CSV: never a public repository fixture")
     args = ap.parse_args()
-    require(args.input.is_file(), "private CSV input file is unavailable")
-    with args.input.open(encoding="utf-8-sig",newline="") as f:
+    private_source = resolve_private_input(args.input)
+    with private_source.open(encoding="utf-8-sig",newline="") as f:
         reader = csv.DictReader(f)
         header = reader.fieldnames or []
         verify_header(header,args.issue)

@@ -5,7 +5,9 @@ from __future__ import annotations
 import csv
 import io
 from pathlib import Path
-from tools.validate_external_acquisitions import validate, EvidenceStructureError, SCHEMAS, TEMPLATE_DIR
+from tools.validate_external_acquisitions import (
+    validate, EvidenceStructureError, SCHEMAS, TEMPLATE_DIR, resolve_private_input,
+)
 
 
 def header(issue):
@@ -47,6 +49,8 @@ bad=[dict(row) for row in black];bad[3]["verification_state"]="pending"
 rejects("334",bad,"verification")
 bad=[dict(row) for row in black];bad[1]["shot_index"]=bad[0]["shot_index"]
 rejects("334",bad,"duplicate shot")
+bad=[dict(row) for row in black];bad[1]["record_id"]=bad[0]["record_id"]
+rejects("334",bad,"duplicate source-record")
 bad=[dict(row) for row in black];bad[2]["relative_time_s"]="0.5"
 rejects("334",bad,"timestamps")
 
@@ -87,6 +91,8 @@ for i,phase in enumerate(("pre","pre","post","post"),1):
 assert validate("336",header("336"),maintenance)["external_evidence_acquired"] is False
 bad=[dict(row) for row in maintenance];bad[2]["condition_metric_unit"]="inch"
 rejects("336",bad,"metrics")
+bad=[dict(row) for row in maintenance];bad[3]["record_id"]=bad[1]["record_id"]
+rejects("336",bad,"duplicate source-record")
 bad=[dict(row) for row in maintenance];bad[2]["relative_sequence"]="0"
 rejects("336",bad,"chronology")
 bad=[dict(row) for row in maintenance];bad[3]["verification_state"]="unverified"
@@ -94,4 +100,12 @@ rejects("336",bad,"verification")
 rejects("336",maintenance[:2],"two comparable")
 for issue in SCHEMAS:
     rejects(issue,[],"header-only")
+# Real acquisitions must never be kept under, or symlinked into, the public checkout.
+try:
+    resolve_private_input(TEMPLATE_DIR / SCHEMAS["334"])
+except EvidenceStructureError as exc:
+    assert "outside the public repository" in str(exc)
+else:
+    raise AssertionError("public repository path was erroneously accepted")
+
 print("Private acquisition structural checks passed: positive and negative synthetic fixtures for #334/#335/#336; no real evidence is claimed.")
