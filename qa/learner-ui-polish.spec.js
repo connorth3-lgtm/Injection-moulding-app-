@@ -504,6 +504,9 @@ test('stored First Shot badge never triggers retired automatic achievement celeb
   // Exercise the real badge evaluator directly: startup migrations may persist
   // learner state in a different scoped store, but the award must still be kept.
   const badge=await page.evaluate(()=>{
+    // Seed the minimal synthetic completion in the runtime's active learner;
+    // the startup/profile scopes may normalize the localStorage fixture.
+    user.completed=[1];
     const f=funEnsure();
     f.achievements=f.achievements.filter(id=>id!=='first-lesson');
     checkAchievements();
