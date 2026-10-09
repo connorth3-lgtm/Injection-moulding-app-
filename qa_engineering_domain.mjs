@@ -604,6 +604,17 @@ assert.equal(machineSuitabilitySummary({...safeInputs, machineConfigurationId:fo
 assert.equal(machineSuitabilitySummary({...safeInputs, basis:forgedIdentity}).ok, false);
 assert.equal(identityCoercionCalls, 0,
   'machine identity or basis must not execute object coercion hooks');
+// Revoked proxies are malformed evidence, not uncaught exceptions or PASS.
+const revokedAxisInput = Proxy.revocable(['shot'], {});
+revokedAxisInput.revoke();
+assert.equal(makeFitSummary(revokedAxisInput.proxy).ok, false);
+const revokedEvidenceInput = Proxy.revocable({shot: shotCapacity}, {});
+revokedEvidenceInput.revoke();
+assert.equal(makeFitSummary(['shot'], revokedEvidenceInput.proxy).value.summaryState, 'UNKNOWN');
+const badAxisDescriptor = new Proxy(['shot'], {
+  getOwnPropertyDescriptor(){ throw Error('malformed evidence descriptor'); },
+});
+assert.equal(makeFitSummary(badAxisDescriptor).ok, false);
 // A custom array iterator must never replace the validated own axis slots.
 let axisIteratorCalls = 0;
 const iteratorSpoofAxes = ['shot'];
