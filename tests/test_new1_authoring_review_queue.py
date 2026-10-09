@@ -390,5 +390,149 @@ class ReviewPacketTests(unittest.TestCase):
                 render_packet(bad, 1)
 
 
+class SourcePinnedPassageInspectionTests(unittest.TestCase):
+    """Every successful packet reads real bytes pinned to the publication inventory."""
+
+    def pinned_fixture(self):
+        import tempfile
+        from pathlib import Path
+        from tools.new1_passage_inspection import AUTHORED_BATCHES, git_blob_sha1
+
+        data = fixture()
+        scratch = tempfile.TemporaryDirectory()
+        self.addCleanup(scratch.cleanup)
+        root = Path(scratch.name)
+        (root / "data").mkdir()
+
+        chapters = []
+        for original in data["chapters"]:
+            chapters.append({
+                "id": original["id"],
+                "state": "technical-review",
+                "applicability": "Synthetic QA only, not applicable to production.",
+                "sourceIds": ["QA-SOURCE-1"],
+                "sections": [
+                    {"title": "Mechanism", "text": "Fictional text <script>alert(1)</script>."},
+                    {"title": "Validation", "text": "No verified exact lesson comparison."},
+                ],
+            })
+
+        for filename, rows in zip(AUTHORED_BATCHES, [
+            chapters[:5], chapters[5:14], chapters[14:]
+        ], strict=True):
+            payload = {
+                "schema": 1,
+                "bookId": "mouldmaster-book",
+                "status": ("technical-review-drafts" if filename == AUTHORED_BATCHES[-1]
+                           else "technical-review"),
+                "chapters": rows,
+            }
+            raw = json.dumps(payload, indent=2, ensure_ascii=False).encode()
+            (root / "data" / filename).write_bytes(raw)
+            data["publication"]["runtimeIntegrity"]["gitBlobSha1ByFile"][
+                filename
+            ] = git_blob_sha1(raw)
+
+        queue = make_queue(**data)
+        return data, queue, root
+
+    def render(self, data, queue, root, lesson_id=1,
+               chapter_id="fictional-book-1"):
+        from tools.new1_passage_inspection import render_passages
+        return render_passages(
+            queue, lesson_id, chapter_id,
+            lessons=data["lessons"], manifest_chapters=data["chapters"],
+            publication=data["publication"], root=root,
+        )
+
+    def test_complete_source_bound_text_and_inert_display(self):
+        data, queue, root = self.pinned_fixture()
+        before = deepcopy(queue)
+        text = self.render(data, queue, root)
+        self.assertIn("HUMAN-ONLY", text)
+        self.assertIn("Full canonical lesson JSON", text)
+        self.assertIn("Fictional course lesson 1", text)
+        self.assertIn("Exact section SHA-256: sha256:", text)
+        self.assertIn("data/book-authored-foundations-v1.json", text)
+        self.assertIn("Fictional text &lt;script&gt;alert(1)&lt;/script&gt;", text)
+        self.assertNotIn("<script>alert(1)</script>", text)
+        self.assertIn("UNREVIEWED", text)
+        self.assertIn("No exact link, reviewer record", text)
+        self.assertEqual(text, self.render(data, queue, root))
+        self.assertEqual(queue, before)
+        self.assertEqual(data["contract"]["reviewedLinks"], [])
+        self.assertFalse(queue["approvedPublicLinks"])
+
+    def test_source_byte_drift_fails_closed_even_with_same_chapter_ids(self):
+        data, queue, root = self.pinned_fixture()
+        file = root / "data" / "book-authored-foundations-v1.json"
+        original = file.read_bytes()
+        file.write_bytes(original.replace(b"Fictional text", b"Modified text", 1))
+        with self.assertRaisesRegex(AssertionError, "differ from published fingerprint"):
+            self.render(data, queue, root)
+
+    def test_other_batch_drift_and_missing_batch_fail_closed(self):
+        data, queue, root = self.pinned_fixture()
+        for name in ("book-chapters-materials-machine-v1.json",
+                     "book-authored-remaining-v1.json"):
+            path = root / "data" / name
+            original = path.read_bytes()
+            path.write_bytes(original + b"\n")
+            with self.assertRaisesRegex(AssertionError, "differ from published fingerprint"):
+                self.render(data, queue, root)
+            path.write_bytes(original)
+        missing = root / "data" / "book-authored-remaining-v1.json"
+        missing.unlink()
+        with self.assertRaisesRegex(AssertionError, "missing authored Book batch"):
+            self.render(data, queue, root)
+
+    def test_cannot_pair_non_candidate_or_spoof_lesson_or_public_approval(self):
+        data, queue, root = self.pinned_fixture()
+        with self.assertRaisesRegex(AssertionError, "not even a course-level"):
+            self.render(data, queue, root, chapter_id="fictional-book-2")
+        with self.assertRaises(AssertionError):
+            self.render(data, queue, root, lesson_id=True)
+        forged_lesson = deepcopy(data)
+        forged_lesson["lessons"][0]["title"] = "Forged lesson"
+        with self.assertRaisesRegex(AssertionError, "differs from discovery packet"):
+            self.render(forged_lesson, queue, root)
+        forged_queue = deepcopy(queue)
+        forged_queue["approvedPublicLinks"] = True
+        with self.assertRaises(AssertionError):
+            self.render(data, forged_queue, root)
+        forged_publication = deepcopy(data)
+        forged_publication["publication"]["version"] = "future"
+        with self.assertRaisesRegex(AssertionError, "differs from discovery packet"):
+            self.render(forged_publication, queue, root)
+
+    def test_duplicate_authored_chapter_and_missing_passage_rejected(self):
+        data, queue, root = self.pinned_fixture()
+        from tools.new1_passage_inspection import git_blob_sha1
+        path = root / "data" / "book-authored-remaining-v1.json"
+        doc = json.loads(path.read_text())
+        doc["chapters"][0]["id"] = "fictional-book-1"
+        raw = json.dumps(doc).encode()
+        path.write_bytes(raw)
+        data["publication"]["runtimeIntegrity"]["gitBlobSha1ByFile"][
+            path.name
+        ] = git_blob_sha1(raw)
+        queue = make_queue(**data)
+        with self.assertRaisesRegex(AssertionError, "duplicate/invalid authored Book chapter"):
+            self.render(data, queue, root)
+
+        data, queue, root = self.pinned_fixture()
+        path = root / "data" / "book-authored-foundations-v1.json"
+        doc = json.loads(path.read_text())
+        doc["chapters"][0]["sections"] = []
+        raw = json.dumps(doc).encode()
+        path.write_bytes(raw)
+        data["publication"]["runtimeIntegrity"]["gitBlobSha1ByFile"][
+            path.name
+        ] = git_blob_sha1(raw)
+        queue = make_queue(**data)
+        with self.assertRaisesRegex(AssertionError, "missing or malformed passages"):
+            self.render(data, queue, root)
+
+
 if __name__ == "__main__":
     unittest.main()
