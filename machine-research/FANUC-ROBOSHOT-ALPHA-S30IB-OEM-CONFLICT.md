@@ -9,6 +9,8 @@
 | FANUC Europe | https://www.fanuc.eu/eu-en/product/roboshot/fanuc-roboshot-a-s30ib | **440 × 420 mm** | EU technical-specification page, checked 2026-10-10 |
 | FANUC America | https://www.fanucamerica.com/products/roboshot/roboshot-a-s30ib | **440 × 240 mm** | US product technical-details page, checked 2026-10-10 |
 
+**Additional revision-bound manufacturer document:** FANUC Europe’s linked [α-S30iB Mechanical specifications PDF (MDS-04995-EN, © 2024 FANUC Europe)](https://d16ohktstcjvly.cloudfront.net/asset/513891251684/document_juqs5kiecp567ad5pq7p4up070), page 1, separately publishes **440 × 420 mm** H×V platen. It supports the European variant's stated value and contains injection-unit-versus-resin-pressure and theoretical-speed caveats, but does **not** by itself explain or retract the contradictory live FANUC America **440 × 240 mm** value.
+
 **The numbers conflict by 180 mm in the vertical platen dimension.** Both pages identify ROBOSHOT α-S30iB, but no source examined here establishes whether this is a region/revision/variant difference, source-page typo, or another explanation. The discrepancy is **UNRESOLVED**, not a reason to average, select the more convenient number or claim a safe tooling envelope. Keep the α-S30iB die-platen/clearance claim **UNKNOWN** for any installed or recommended machine until FANUC supplies a revision-bound answer.
 
 ## Commonly published model-level figures (not an as-built configuration)
