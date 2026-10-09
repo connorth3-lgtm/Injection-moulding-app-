@@ -927,9 +927,13 @@ export function machineSuitabilitySummary({
   }
   // A blank, duplicate, coerced or inherited required axis must never vanish
   // from a declared machine-fit check and leave a misleading overall PASS.
-  if (requiredAxisIds.some(id => typeof id !== 'string' ||
+  if (Array.from({ length: requiredAxisIds.length }, (_, index) =>
+      !Object.prototype.hasOwnProperty.call(requiredAxisIds, index) ||
+      typeof requiredAxisIds[index] !== 'string' ||
+      !/^[a-z][a-z0-9_.-]{0,63}$/.test(requiredAxisIds[index]) ||
+      ['__proto__', 'constructor', 'prototype'].includes(requiredAxisIds[index])).some(Boolean)) {
       !/^[a-z][a-z0-9_.-]{0,63}$/.test(id) ||
-      ['__proto__', 'constructor', 'prototype'].includes(id))) {
+
     return unsupported('invalid-required-axis-id', { field: 'requiredAxisIds' });
   }
   if (new Set(requiredAxisIds).size !== requiredAxisIds.length) {
