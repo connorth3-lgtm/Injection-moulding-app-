@@ -130,6 +130,17 @@ def current_queue() -> dict:
     )
 
 
+def safe_spreadsheet_cell(value: object) -> object:
+    """Stop workbook applications evaluating a CSV cell as a formula."""
+    if not isinstance(value, str):
+        return value
+    # Whitespace/BOM prefixes do not reliably prevent spreadsheet execution.
+    leading = value.lstrip(" \t\r\n\ufeff")
+    if leading.startswith(("=", "+", "-", "@")):
+        return "'" + value
+    return value
+
+
 def write_csv(queue: dict) -> None:
     fields = (
         "lessonId", "lessonTitle", "canonicalCourseName",
@@ -141,10 +152,12 @@ def write_csv(queue: dict) -> None:
     writer.writeheader()
     for lesson in queue["lessons"]:
         for chapter in lesson["possibleBookModules"]:
-            writer.writerow({
+            row = {
                 **{k: lesson[k] for k in fields[:4]},
                 **{k: chapter[k] for k in fields[4:]},
-            })
+            }
+            writer.writerow({key: safe_spreadsheet_cell(value)
+                             for key, value in row.items()})
 
 
 def main() -> None:
