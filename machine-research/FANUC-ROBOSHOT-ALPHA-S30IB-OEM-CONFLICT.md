@@ -27,6 +27,10 @@ Both official pages show:
 
 FANUC Europe additionally displays a **600 mm/s** maximum injection-speed table with separate five-column `pressure 1`, `pressure 2`, and **high-pressure filling mode** entries. Those published rows must remain distinct, and no mode's ratings are adopted here as a process window, fitted screw, available resin pressure or simultaneous performance guarantee. Do not transfer the α-S50iB/α-S100iB or other model options.
 
+## Machine-readable source-conflict gate
+
+The versioned [unresolved conflict register](oem-source-conflicts-v1.json) retains both manufacturer-page observations and the Europe MDS-04995-EN 2024 technical sheet as **distinct source claims**. The fail-closed `qa_oem_source_conflicts.py` validator and its adversarial tests run under protected Release QA. They reject changing either dimension, fabricating a resolution/approval, or introducing α-S30iB as a published machine-library model or alias before a separately reviewed OEM resolution. This is a CI safety contract, **not** an automated determination that either region is correct or that an actual machine is suitable.
+
 ## Quarantine and OEM resolution requirements
 
 1. Preserve **both source URLs**, region and checked date as source variants. Do not add a single definitive platen dimension to `machine-library-v1.json` on the strength of either page alone.
