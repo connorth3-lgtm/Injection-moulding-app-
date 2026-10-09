@@ -563,6 +563,14 @@ delete inheritedAxis[1];
 Object.setPrototypeOf(inheritedAxis, Object.assign(Object.create(Array.prototype), {1:'gate'}));
 assert.equal(makeFitSummary(inheritedAxis).ok, false,
   'inherited required-axis array slot must not count as declared evidence');
+// Accessor-index axes are invalid even when the getter returns a valid ID.
+// Validation must not execute untrusted getters or infer a PASS from them.
+const getterAxes = ['shot', 'gate'];
+let getterCalls = 0;
+Object.defineProperty(getterAxes, 1, {get(){ getterCalls++; return 'gate'; }, configurable:true});
+const getterResult = makeFitSummary(getterAxes);
+assert.equal(getterResult.ok, false, 'accessor required-axis entry must fail closed');
+assert.equal(getterCalls, 0, 'required-axis validation must not call getters');
 // Bound attacker-controlled axis array lengths before allocating traversal state.
 const oversizedAxes = ['shot'];
 oversizedAxes.length = 1_000_000;
