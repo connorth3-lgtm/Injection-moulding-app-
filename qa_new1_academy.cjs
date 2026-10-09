@@ -37,7 +37,73 @@ assert.equal(index.forCase('VA-02').length,4);
 assert.equal(index.chapter('multi-cavity').id,'multi-cavity');
 assert.equal(index.chapter('multi-cavity').state,'source-review','Unreviewed Book source must not be elevated');
 assert.equal(index.chapter('missing'),null);
+// Course-level suggestions must never pretend to be a semantic lesson match,
+// imported learner record, certificate or workplace competency. This is a
+// deterministic developer-only bridge using the existing governed course index.
+const canonicalCourses=crosswalk.courseNames.map((name,i)=>({id:i+1,name}));
+const sampleLesson={id:7,course:3,title:'A canonical Materials lesson'};
+const guide=index.forLesson(sampleLesson,canonicalCourses);
+assert.equal(guide.state,'course-level-reading-suggestion');
+assert.equal(guide.lessonId,7);
+assert.equal(guide.courseName,'Materials');
+assert.ok(guide.chapters.length>=1&&guide.chapters.length<=3);
+assert.ok(guide.chapters.every(row=>index.chapter(row.id)&&row.exactLessonMatchReviewed===false));
+assert.equal(guide.learningCreditGranted,false);
+assert.equal(guide.workplaceCompetence,false);
+assert.equal(guide.reviewedLessonMatch,false);
+assert.equal(Object.isFrozen(guide),true);
+assert.equal(Object.isFrozen(guide.chapters),true);
+assert.equal(Object.isFrozen(guide.chapters[0]),true);
+assert.equal(index.forLesson({id:7,course:777},canonicalCourses).state,'unmapped');
+assert.equal(index.forLesson({id:'7',course:3},canonicalCourses).state,'unmapped');
+assert.equal(index.forLesson({id:0,course:3},canonicalCourses).state,'unmapped');
+assert.equal(index.forLesson({id:121,course:3},canonicalCourses).state,'unmapped');
+assert.equal(index.forLesson(sampleLesson,[{id:3,name:'Unreviewed course'}]).state,'unmapped');
+assert.equal(index.forLesson(sampleLesson,[{id:3,name:'Materials'},{id:3,name:'Materials'}]).state,'unmapped');
+assert.equal(index.forLesson({id:7,course:3,courseName:'Fake exact match'},canonicalCourses).courseName,'Materials');
+assert.deepEqual(index.forLesson(null,canonicalCourses).chapters,[]);
+
 assert.ok(index.search('cavity').length>0);
+// Reject missing/forged crosswalk metadata instead of rendering an incomplete
+// path as if an Academy lesson or Book chapter had been verified.
+const missingChapter=structuredClone(crosswalk);
+missingChapter.chapterMappings.pop();
+assert.throws(()=>lab.knowledgeIndex(book,missingChapter),/every governed chapter/);
+const renamedChapter=structuredClone(crosswalk);
+renamedChapter.chapterMappings[0].chapterId='unreviewed-fake-module';
+assert.throws(()=>lab.knowledgeIndex(book,renamedChapter),/identity|membership/);
+const reorderedChapters=structuredClone(crosswalk);
+[reorderedChapters.chapterMappings[0],reorderedChapters.chapterMappings[1]]=
+ [reorderedChapters.chapterMappings[1],reorderedChapters.chapterMappings[0]];
+assert.throws(()=>lab.knowledgeIndex(book,reorderedChapters),/order/);
+const forgedCourse=structuredClone(crosswalk);
+forgedCourse.chapterMappings[0].courseNames=['Unreviewed invented Academy course'];
+assert.throws(()=>lab.knowledgeIndex(book,forgedCourse),/unknown courses/);
+const duplicateCourse=structuredClone(crosswalk);
+duplicateCourse.chapterMappings[0].courseNames.push(duplicateCourse.chapterMappings[0].courseNames[0]);
+assert.throws(()=>lab.knowledgeIndex(book,duplicateCourse),/duplicate/);
+const missingThemes=structuredClone(crosswalk);
+missingThemes.chapterMappings[0].themes=[];
+assert.throws(()=>lab.knowledgeIndex(book,missingThemes),/thematic/);
+const mislabelledLevel=structuredClone(crosswalk);
+mislabelledLevel.mappingLevel='lesson-level-equivalence';
+assert.throws(()=>lab.knowledgeIndex(book,mislabelledLevel),/course-level/);
+// Public result arrays must not poison the private index or source manifest.
+const original=index.chapter('multi-cavity');
+const fromCase=index.forCase('VA-02')[0];
+fromCase.courses.push('Invented');
+fromCase.themes.push('Invented');
+fromCase.sourceIds.push('Invented');
+fromCase.claimClasses.push('Invented');
+const direct=index.chapter('multi-cavity');
+direct.courses.length=0;
+direct.claimClasses.length=0;
+const searched=index.search('multi-cavity')[0];
+searched.themes.length=0;
+assert.deepEqual(index.chapter('multi-cavity'),original,'lookup must isolate all nested arrays');
+assert.deepEqual(index.forCase('VA-02')[0],original,'case-specific lookup must remain immutable by callers');
+assert.equal(index.search('multi-cavity')[0].themes.length,original.themes.length);
+
 assert.equal(lab.tutorPlan(null,index,{}).state,'ready-to-practise');
 const correct={},wrong={};
 for(const step of lab.steps){
@@ -56,6 +122,8 @@ const bridge=adapter.createBridge({
  runtime:{storage}
 });
 const app=lab.createAcademy({apprenticeship:va,bookManifest:book,crosswalk,factoryEvidence:factoryData,bridge,storage});
+assert.deepEqual(app.lessonGuide(sampleLesson,canonicalCourses),guide);
+assert.equal(writes,0,'Book reading suggestion must not create a shadow learner store');
 assert.equal(app.openCase(),true);
 assert.equal(app.openSpatial(),true);
 assert.deepEqual(twin,{caseIndex:1});
@@ -73,6 +141,40 @@ assert.equal(high.total,4);
 assert.deepEqual(high.gaps,[]);
 assert.equal(app.tutor().nextCoachingLevel,'advanced');
 assert.equal(app.tutor().recommendedCase,'VA-06');
+// Formative coaching never survives an A→B→A learner-profile switch.
+let activeLearner='learner-A';
+const scopedStorage={
+ learnerToken(){return activeLearner},
+ get(key){assert.equal(key,'mm_virtual_apprenticeship_v1');return {completed:{}}}
+};
+const scopedBridge=adapter.createBridge({apprenticeship:va,runtime:{storage:scopedStorage}});
+const scopedAcademy=lab.createAcademy({
+ apprenticeship:va,bookManifest:book,crosswalk,factoryEvidence:factoryData,
+ bridge:scopedBridge,storage:scopedStorage
+});
+assert.equal(scopedAcademy.review(correct).total,4);
+assert.equal(scopedAcademy.tutor().state,'coached');
+activeLearner='learner-B';
+assert.equal(scopedAcademy.lastReview(),null,'learner B must not see learner A review');
+assert.equal(scopedAcademy.tutor().state,'ready-to-practise');
+assert.equal(scopedAcademy.review(wrong).total,0);
+assert.equal(scopedAcademy.tutor().state,'coached');
+activeLearner='learner-A';
+assert.equal(scopedAcademy.lastReview(),null,'A must not inherit B review');
+assert.equal(scopedAcademy.tutor().state,'ready-to-practise');
+// A profile switch inside a scorer callback must not cache the stale result.
+activeLearner='learner-B';
+const switchingBridge={
+ ...scopedBridge,
+ review(answers){const result=scopedBridge.review(answers);activeLearner='learner-C';return result}
+};
+const switchingAcademy=lab.createAcademy({
+ apprenticeship:va,bookManifest:book,crosswalk,factoryEvidence:factoryData,
+ bridge:switchingBridge,storage:scopedStorage
+});
+assert.equal(switchingAcademy.review(correct).state,'learner-changed');
+assert.equal(switchingAcademy.lastReview(),null);
+assert.equal(switchingAcademy.tutor().state,'ready-to-practise');
 assert.equal(app.pathway().length,5);
 assert.ok(app.pathway().some(x=>x.attempted>0));
 assert.ok(app.pathway().every(x=>!x.credentialAwarded&&!x.workplaceValidated));
@@ -119,4 +221,4 @@ for(const rel of [
  assert.ok(!sw.includes("'./"+rel+"'"));
  assert.ok(!shell.includes("'./"+rel+"'"));
 }
-console.log('NEW1 five-pillar academy QA passed: synthetic cavity identity, 46-module Book, canonical VA score, tutor, five learning tracks, trainer consent and public-runtime isolation');
+console.log('NEW1 five-pillar academy QA passed: synthetic cavity identity, 46-module Book, canonical VA score, course-level lesson↔Book suggestions, tutor, five learning tracks, trainer consent and public-runtime isolation');

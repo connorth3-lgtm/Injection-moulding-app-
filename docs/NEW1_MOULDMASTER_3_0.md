@@ -35,6 +35,12 @@ This local workbench uses the existing canonical six Virtual Apprenticeship case
 
 The first flagship experience links the existing Book concept to a fictional factory fault, then to canonical authored assessment choices, deterministic feedback, formative apprenticeship guidance and optional trainer assignments. No duplicate scoring authority, shadow learner database or machine setting generator is introduced.
 
+## Canonical lesson → Book course-level discovery (developer-only)
+
+The experimental academy can now answer `academy.lessonGuide(canonicalLesson, canonicalCourses)` using the existing `data/book-curriculum-crosswalk-v1.json`. It checks the numeric canonical lesson/course IDs against the supplied governed course registry, returns at most three related Book modules with their existing evidence state, and returns `unmapped` for an unknown or ambiguous course. No new crosswalk, lesson completion, hidden learner profile, certificate or production advice is generated.
+
+**Semantic limit:** this is explicitly course-level thematic discovery. It is not an authored reviewed exact-lesson/chapter/competency mapping. Turning suggestions into public app links, saved learner progress or instructional claims requires the separate content-owner and Book/curriculum SME review, stable deep-link/offline behavior, and a new governed release. The current `.5` PWA remains unchanged.
+
 ## Broader 3.0 ambition, explicitly NOT achieved by this patch
 
 250+ lessons/modules, a publisher-reviewed multi-volume Book, 1,000 independently validated diagnostics, 1,500 reviewed questions/scenarios, a multi-machine physics-backed cell, and institution-managed cohorts are long-range targets. The existing baseline remains **120 core lessons, 20 separate specialist lessons, 46 governed Book modules, and six VA investigations**.
@@ -48,6 +54,10 @@ The first flagship experience links the existing Book concept to a fictional fac
 5. Physical-device, real NVDA/VoiceOver, signed-Windows, Book SME, curriculum SME, learner-outcomes, NZQA/provider and any real-machine/production authority remain separate **HOLD** requirements. A scored virtual case is not proof of practical competence.
 
 This work stays in the same reviewable New1 PR and does not fast-forward the old 5 October branches or bypass protected-main release protections.
+
+## October 9 development-only Book integrity hardening
+
+The five-pillar development Book explorer now validates the authoritative 46-module crosswalk against the Book manifest **in order**, requires the existing twelve-course registry and rejects missing, unknown or duplicate Book/course/thematic mappings. Its public lookups return detached arrays so callers cannot mutate the internal crosswalk, source-evidence list or later case recommendations. Negative regression tests cover omissions, forged chapters/courses, reordered mappings and accidental caller mutation. Learner-token scoping also clears cached formative coaching on A→B→A profile changes (including an identity change mid-review), without creating a new learner store. This is **course-level semantic reinforcement only**—it does not generate or approve a 120-lesson, lesson-level equivalence or competency score, and no production shell/runtime/cache version changes are introduced.
 
 ## Data and consent boundaries
 
