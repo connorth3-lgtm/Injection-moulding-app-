@@ -5,6 +5,7 @@ Never calls GitHub; both workflow job scripts are executed with a fake gh CLI.
 """
 from __future__ import annotations
 
+import json
 import os
 from pathlib import Path
 import re
