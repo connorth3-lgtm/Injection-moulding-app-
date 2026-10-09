@@ -4,8 +4,8 @@
   "validationIndex": "qa/EXTERNAL_VALIDATION_2026.10.09.6.md",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
-    "status": "pending",
-    "claim": "The .6 exact-head technical candidate has not yet been retained and verified. All previous .5 artifacts are archive-only; automated CI, independent visual/device/SME/provider validation and release-specific HOLDs remain required."
+    "status": "fail",
+    "claim": "The .6 exact-head retained technical candidate is not yet successful under required browser-quality checks. Prior .5 artifact is archive-only. Until real producer success and independent fingerprint binding, technical automation is explicitly FAIL and all external streams remain HOLD."
   },
   "governance": {
     "status": "enforced",
