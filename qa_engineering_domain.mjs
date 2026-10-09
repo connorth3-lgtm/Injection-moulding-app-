@@ -623,7 +623,13 @@ for (const unsafeKey of ['machineConfigurationId', 'requiredAxisIds', 'assessmen
     get(){ optionsGetterCalls++; return safeInputs[unsafeKey]; },
   });
   const outcome = machineSuitabilitySummary(accessorOptions);
-  assert.equal(outcome.ok, false, `accessor option ${unsafeKey} must fail closed`);
+  if (unsafeKey === 'assessments') {
+    assert.equal(outcome.ok, true);
+    assert.equal(outcome.value.summaryState, 'UNKNOWN',
+      'accessor assessment collection must become missing evidence, never PASS');
+  } else {
+    assert.equal(outcome.ok, false, `accessor option ${unsafeKey} must fail closed`);
+  }
 }
 assert.equal(optionsGetterCalls, 0, 'machine-fit options must not invoke getter fields');
 const revokedOptions = Proxy.revocable(safeInputs, {});
