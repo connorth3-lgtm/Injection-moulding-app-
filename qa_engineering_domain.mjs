@@ -589,6 +589,21 @@ assert.equal(accessorAssessmentResult.value.summaryState, 'UNKNOWN');
 assert.equal(accessorAssessmentResult.value.axes[0].reason, 'missing-assessment');
 assert.equal(assessmentGetterCalls, 0,
   'machine-fit assessment validation must not invoke getter evidence');
+// Machine-fit identity/basis objects must not be coerced via custom toString.
+let identityCoercionCalls = 0;
+const forgedIdentity = {toString(){ identityCoercionCalls++; return machineCapacityIds.machineConfigurationId; }};
+const safeInputs = {
+  machineConfigurationId: machineCapacityIds.machineConfigurationId,
+  injectionUnitConfigurationId: machineCapacityIds.injectionUnitConfigurationId,
+  mouldConfigurationId: commonFitIds.mouldConfigurationId,
+  basis: 'declared machine identity regression',
+  requiredAxisIds: ['shot'],
+  assessments: {shot: shotCapacity},
+};
+assert.equal(machineSuitabilitySummary({...safeInputs, machineConfigurationId:forgedIdentity}).ok, false);
+assert.equal(machineSuitabilitySummary({...safeInputs, basis:forgedIdentity}).ok, false);
+assert.equal(identityCoercionCalls, 0,
+  'machine identity or basis must not execute object coercion hooks');
 // A custom array iterator must never replace the validated own axis slots.
 let axisIteratorCalls = 0;
 const iteratorSpoofAxes = ['shot'];
