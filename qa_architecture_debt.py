@@ -279,6 +279,40 @@ for path in sorted(scan_paths):
 need(re.search(r"\beval\s*\(", core) is None, "eval() is forbidden in the frozen core HTML")
 need(re.search(r"\bnew\s+Function\s*\(", core) is None, "new Function() is forbidden in the frozen core HTML")
 
+# Remaining duplicate declaration ceiling for issue #519. The immutable
+# recovery core must not be edited or rewritten in place: all future reduction
+# goes through the deterministic externalizer, with a governed runtime release.
+# Keep this ratchet monotonic (allow one, forbid three) so future cleanup may
+# remove any of the ten shadowed declarations without weakening CI.
+legacy_dupe_names = {
+    "updateGlobalProgress", "renderDashboard", "renderPath", "renderLesson",
+    "renderExams", "startExam", "gradeExam", "renderCertificates",
+    "certificateCard", "renderProfile",
+}
+active_core_slot = read("src/core-runtime/core-inline-004.js")
+core_declarations = re.findall(r"(?m)^function\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*\(", active_core_slot)
+declaration_counts: dict[str, int] = {}
+for declaration in core_declarations:
+    declaration_counts[declaration] = declaration_counts.get(declaration, 0) + 1
+shadowed_declarations = {name: count for name, count in declaration_counts.items() if count > 1}
+need(not (set(shadowed_declarations) - legacy_dupe_names),
+     f"new duplicate top-level core function declaration(s): {sorted(set(shadowed_declarations) - legacy_dupe_names)}")
+need(all(declaration_counts.get(name, 0) in (1, 2) for name in legacy_dupe_names),
+     "known core declaration was removed entirely or duplicated more than twice")
+need(len(shadowed_declarations) <= 10,
+     "core duplicate declaration debt increased above its 10-function ceiling")
+polish = read("src/domains/shell/learner-ui-polish.js")
+need("syncCertificateCounter" not in polish and "user.certificates" not in polish,
+     "issue #517 legacy certificate shim was reintroduced")
+polish_tests = read("qa/learner-ui-polish.spec.js")
+for regression in (
+    "late More callback never edits a replacement dialog",
+    "delayed first-run onboarding is polished on initial appearance",
+    "polish never rewrites retired certificate statline from legacy user.certificates",
+):
+    need(regression in polish_tests, f"issue #517 regression case missing: {regression}")
+print(f"Core shadowed declarations: {len(shadowed_declarations)}/10 (ratchet, no new names); issue #517 runtime regressions retained")
+
 print(
     "MouldMaster architecture debt guard passed: "
     f"{len(body_scripts)}/{baseline['runtimeBodyScriptCeiling']} bootstrap scripts; "
