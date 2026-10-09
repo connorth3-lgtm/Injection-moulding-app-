@@ -977,9 +977,7 @@ function defectCard(d,i){return `<div class="card defect-card" data-defect="${es
 function filterDefects(){const q=$("#defectSearch").value.toLowerCase();$$("[data-defect]").forEach(x=>x.classList.toggle("hidden",!x.dataset.defect.includes(q)))}
 function openDefect(i){
  const d=D.defects[i];
- openModal(`<span class="eyebrow">Defect lab</span><h2>${esc(d.name)}</h2><p class="muted">${esc(d.symptom)}</p><div class="grid2"><div><h3>Likely mechanisms</h3><div class="cause-list">${d.mechanisms.map(x=>`<div class="cause">${esc(x)}</div>`).join("")}</div></div><div><h3>Evidence / checks</h3><div class="cause-list">${d.checks.map(x=>`<div class="cause">${esc(x)}</div>`).join("")}</div></div></div><div class="callout"><b>Best practice:</b> rank mechanisms by evidence, then run the smallest controlled test that distinguishes between them.</div><button class="primary" data-mm-coach-link="1">Ask coach about ${esc(d.name)}</button>`);
- const coachLink=document.querySelector('[data-mm-coach-link]');
- if(coachLink)coachLink.addEventListener('click',()=>{closeModal();switchView('coach');setCoachPrompt(d.name)},{once:true});
+ openModal(`<span class="eyebrow">Defect lab</span><h2>${esc(d.name)}</h2><p class="muted">${esc(d.symptom)}</p><div class="grid2"><div><h3>Likely mechanisms</h3><div class="cause-list">${d.mechanisms.map(x=>`<div class="cause">${esc(x)}</div>`).join("")}</div></div><div><h3>Evidence / checks</h3><div class="cause-list">${d.checks.map(x=>`<div class="cause">${esc(x)}</div>`).join("")}</div></div></div><div class="callout"><b>Best practice:</b> rank mechanisms by evidence, then run the smallest controlled test that distinguishes between them.</div><button class="primary" onclick="closeModal();switchView('coach');setCoachPrompt('${esc(d.name).replace(/'/g,"\\'")}')">Ask coach about ${esc(d.name)}</button>`);
 }
 
 function renderScenarios(){
@@ -3091,7 +3089,7 @@ setTimeout(function () {
       <h2 style="margin-bottom:6px">${copy[0]}</h2>
       <p class="muted">${copy[1]}</p>
       <div class="grid2" style="margin-top:10px">
-        <div class="stat"><span>Installed version</span><b>${esc(s.version)}</b></div>
+        <div class="stat"><span>Installed version</span><b>${s.version}</b></div>
         <div class="stat"><span>Update mode</span><b>Automatic on launch</b></div>
       </div>
       <p class="tiny muted" style="margin-top:10px">Learner progress, notes, scores and certificates stay in your browser profile and are not replaced by app updates.</p>
