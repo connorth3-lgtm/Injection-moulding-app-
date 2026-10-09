@@ -932,7 +932,6 @@ export function machineSuitabilitySummary({
       typeof requiredAxisIds[index] !== 'string' ||
       !/^[a-z][a-z0-9_.-]{0,63}$/.test(requiredAxisIds[index]) ||
       ['__proto__', 'constructor', 'prototype'].includes(requiredAxisIds[index])).some(Boolean)) {
-      !/^[a-z][a-z0-9_.-]{0,63}$/.test(id) ||
 
     return unsupported('invalid-required-axis-id', { field: 'requiredAxisIds' });
   }
