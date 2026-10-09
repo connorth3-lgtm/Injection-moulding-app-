@@ -323,5 +323,72 @@ class WorklistTests(unittest.TestCase):
             make_queue(**args)
 
 
+class ReviewPacketTests(unittest.TestCase):
+    def test_single_lesson_packet_keeps_discovery_and_hold(self):
+        from tools.new1_review_packet import render_packet
+        args = fixture()
+        queue = make_queue(**args)
+        before = deepcopy(queue)
+        result = render_packet(queue, 1)
+        self.assertEqual(result, render_packet(queue, 1))
+        self.assertTrue(result.startswith("# NEW1 review preparation — lesson 1"))
+        self.assertIn("UNREVIEWED / HUMAN-ONLY", result)
+        self.assertIn("NO PUBLIC LINKS OR LEARNING CREDIT", result)
+        self.assertIn("Fictional course lesson 1", result)
+        self.assertIn("Candidate 1: Fictional module 1", result)
+        self.assertIn("QA-SOURCE-1", result)
+        self.assertIn("https://example.invalid/qa-only-source", result)
+        self.assertIn("NOT independently checked", result)
+        self.assertIn("actual *published Book passages*", result)
+        self.assertNotIn("approved exact lesson match", result.lower())
+        self.assertEqual(queue, before)
+        self.assertEqual(args["contract"]["reviewedLinks"], [])
+
+    def test_missing_references_are_not_invented(self):
+        from tools.new1_review_packet import render_packet
+        result = render_packet(make_queue(**fixture()), 2)
+        self.assertIn("NONE DECLARED — human verification required", result)
+        self.assertNotIn("https://example.invalid/qa-only-source", result)
+        self.assertIn("UNREVIEWED", result)
+
+    def test_untrusted_metadata_cannot_inject_headings_html_or_links(self):
+        from tools.new1_review_packet import render_packet
+        args = fixture()
+        args["lessons"][0]["title"] = "QA\n# Approved <script>run()</script>"
+        args["chapters"][0]["title"] = "[Evil](javascript:bad) | Candidate"
+        queue = make_queue(**args)
+        result = render_packet(queue, 1)
+        self.assertNotIn("\n# Approved", result)
+        self.assertNotIn("<script>", result)
+        self.assertNotIn("[Evil](javascript:bad)", result)
+        self.assertIn("&lt;script&gt;", result)
+        self.assertIn("UNREVIEWED", result)
+
+    def test_packet_rejects_forged_authority_and_ambiguous_id(self):
+        from tools.new1_review_packet import render_packet
+        queue = make_queue(**fixture())
+        for bad_id in (0, 121, True, "1"):
+            with self.subTest(lesson=bad_id), self.assertRaises(AssertionError):
+                render_packet(queue, bad_id)
+        mutations = (
+            lambda q: q.update(approvedPublicLinks=True),
+            lambda q: q.update(exactLessonMatchesVerified=1),
+            lambda q: q["lessons"][1].update(lessonId=1),
+            lambda q: q["lessons"][0]["possibleBookModules"][0].update(
+                reviewStatus="REVIEWED"),
+            lambda q: q["lessons"][0]["possibleBookModules"][0].update(
+                reviewer="imaginary approval"),
+            lambda q: q["lessons"][0]["possibleBookModules"][0][
+                "declaredBookSourceDetails"][0].update(reviewStatus="verified"),
+            lambda q: q["lessons"][0]["possibleBookModules"][0].update(
+                bookRuntimeFingerprint="sha256:stale"),
+        )
+        for mutate in mutations:
+            bad = deepcopy(queue)
+            mutate(bad)
+            with self.assertRaises(AssertionError):
+                render_packet(bad, 1)
+
+
 if __name__ == "__main__":
     unittest.main()
