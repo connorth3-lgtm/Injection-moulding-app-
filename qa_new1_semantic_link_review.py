@@ -282,6 +282,24 @@ def self_test() -> None:
     bad["reviewedLinks"] = [review] * 361
     must_reject(bad, "unbounded review records")
 
+    # A Book prose, source-qualification, reader or SME source change can
+    # preserve both manifest metadata and the publication version. It must
+    # nevertheless invalidate any previously authored exact semantic review.
+    changed_publication = deepcopy(publication)
+    changed_publication["runtimeIntegrity"]["gitBlobSha1ByFile"][
+        "book-authored-foundations-v1.json"
+    ] = "b" * 40
+    try:
+        check(one, lessons, courses, chapters, links, changed_publication,
+              "2026.10.09.6")
+    except AssertionError as exc:
+        need("Book authored payload or evidence changed" in str(exc),
+             "published Book prose/source drift must invalidate exact links")
+    else:
+        raise AssertionError(
+            "Stale exact Book mapping accepted after authored payload changed"
+        )
+
     partial = deepcopy(one)
     try:
         check(partial, lessons[:-1], courses, chapters, links, publication,
