@@ -11,6 +11,7 @@ from datetime import date
 from hashlib import sha256
 import json
 from pathlib import Path
+import re
 import sys
 
 from qa_book_curriculum_crosswalk import canonical_curriculum, lesson_course_name
@@ -21,6 +22,7 @@ CONTRACT = "data/new1-semantic-link-review-v1.json"
 RECORD_KEYS = {
     "lessonId", "chapterId", "canonicalCourseName",
     "lessonFingerprint", "chapterFingerprint", "bookPublicationRelease",
+    "bookRuntimeFingerprint",
     "reviewedAt", "reviewer", "reviewEvidenceRef", "rationale",
 }
 
@@ -41,6 +43,38 @@ def digest(value: dict) -> str:
         value, sort_keys=True, separators=(",", ":"), ensure_ascii=False,
         allow_nan=False,
     ).encode("utf-8")).hexdigest()
+
+
+# Book-manifest chapter metadata alone does not cover authored Book prose.
+# Bind prospective human reviews to the published source-integrity manifest
+# covering the authored chapters, reader, citations and source qualification.
+BOOK_RUNTIME_REQUIRED_FILES = frozenset((
+    "book-manifest-v1.json",
+    "book-authored-foundations-v1.json",
+    "book-chapters-materials-machine-v1.json",
+    "book-authored-remaining-v1.json",
+    "book-reader-architecture-v2.json",
+    "book-sme-review-v1.json",
+))
+GIT_BLOB_SHA1 = re.compile(r"^[0-9a-f]{40}$")
+
+
+def book_runtime_fingerprint(publication: dict) -> str:
+    integrity = publication.get("runtimeIntegrity")
+    need(type(integrity) is dict and integrity.get("algorithm") == "git-blob-sha1",
+         "published Book source-integrity algorithm is missing or unsafe")
+    blobs = integrity.get("gitBlobSha1ByFile")
+    need(type(blobs) is dict and BOOK_RUNTIME_REQUIRED_FILES.issubset(blobs),
+         "published Book payload or reader source is not in the integrity inventory")
+    need(len(blobs) <= 128 and all(
+        type(name) is str and type(sha) is str
+        and name.endswith(".json") and "/" not in name and ".." not in name
+        and GIT_BLOB_SHA1.fullmatch(sha)
+        for name, sha in blobs.items()
+    ), "malformed or invented published Book runtime source fingerprints")
+    # Deliberately coarse-grained: any published Book file change should
+    # require human re-review, even if the manifest's chapter row is identical.
+    return digest({"algorithm": "git-blob-sha1", "gitBlobSha1ByFile": blobs})
 
 
 def check(contract: dict, lessons: list[dict], courses: dict[int, str],
@@ -91,6 +125,7 @@ def check(contract: dict, lessons: list[dict], courses: dict[int, str],
     need(publication.get("status") == "authorized" and
          type(publication.get("version")) is str,
          "Book source publication authority is unavailable")
+    current_book_fingerprint = book_runtime_fingerprint(publication)
     links = contract.get("reviewedLinks")
     need(isinstance(links, list) and len(links) <= 360,
          "reviewedLinks must be a bounded list")
@@ -118,6 +153,8 @@ def check(contract: dict, lessons: list[dict], courses: dict[int, str],
              "stale or invented Book manifest-chapter fingerprint")
         need(row["bookPublicationRelease"] == publication["version"],
              "Book publication release changed; rerun authored review")
+        need(row["bookRuntimeFingerprint"] == current_book_fingerprint,
+             "Book authored payload or evidence changed; human re-review required")
         for name in ("reviewer", "reviewEvidenceRef", "rationale"):
             value = row[name]
             need(type(value) is str and len(value.strip()) >=
@@ -156,7 +193,17 @@ def self_test() -> None:
          "courseNames": [courses[((n - 1) % 12) + 1]]}
         for n, chapter in enumerate(chapters, start=1)
     ]
-    publication = {"status": "authorized", "version": "synthetic-qa-book-v1"}
+    publication = {
+        "status": "authorized", "version": "synthetic-qa-book-v1",
+        "runtimeIntegrity": {
+            "algorithm": "git-blob-sha1",
+            "gitBlobSha1ByFile": {
+                name: f"{n:040x}" for n, name in enumerate(
+                    sorted(BOOK_RUNTIME_REQUIRED_FILES), start=1
+                )
+            },
+        },
+    }
     fixture = {
         "schemaVersion": 1, "webRelease": "2026.10.09.6",
         "status": "hold-exact-lesson-review",
@@ -192,6 +239,7 @@ def self_test() -> None:
         "lessonFingerprint": lesson_fingerprint(lessons[0]),
         "chapterFingerprint": digest(chapters[0]),
         "bookPublicationRelease": publication["version"],
+        "bookRuntimeFingerprint": book_runtime_fingerprint(publication),
         "reviewedAt": "2020-01-02",
         "reviewer": "Synthetic fixture only",
         "reviewEvidenceRef": "qa-only:no-human-evidence",
@@ -210,6 +258,7 @@ def self_test() -> None:
         ("stale lesson hash", "reviewedLinks.0.lessonFingerprint", "sha256:wrong"),
         ("stale chapter hash", "reviewedLinks.0.chapterFingerprint", "sha256:wrong"),
         ("stale Book release", "reviewedLinks.0.bookPublicationRelease", "obsolete"),
+        ("stale authored Book payload", "reviewedLinks.0.bookRuntimeFingerprint", "sha256:old"),
         ("missing reviewer", "reviewedLinks.0.reviewer", ""),
         ("missing human evidence", "reviewedLinks.0.reviewEvidenceRef", ""),
         ("unsupported rationale", "reviewedLinks.0.rationale", "too short"),
