@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-10-09",
+  "last_updated": "2026-10-10",
   "title": "Injection Moulding Machine Library",
   "scope": "Manufacturer, model, controller, manual, service-document and verified-specification registry for injection moulding machines.",
   "verification_levels": {
