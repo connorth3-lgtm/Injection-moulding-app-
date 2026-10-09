@@ -117,6 +117,10 @@ jobs:
         run: |
           python qa_new1_semantic_link_review.py --self-test
           python qa_new1_semantic_link_review.py
+      - name: New1 author-only lesson/Book discovery queue (unreviewed HOLD)
+        run: |
+          python tools/new1_authoring_review_queue.py
+          python -m unittest discover -s tests -p 'test_new1_authoring_review_queue.py' -v
       - name: Cross-platform learner lesson resolver and CRLF regression QA
         run: node qa_lesson_resolver_clobber.cjs
       - name: Exact external-validation candidate binding
