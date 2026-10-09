@@ -91,7 +91,7 @@ mobile_style_markers=[
     'body{padding-bottom:0!important}',
     '.main{padding:12px 12px calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))!important}',
     '.topbar{position:relative!important;top:auto!important',
-    '.mobile-nav{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;position:fixed!important;left:0!important;right:0!important;bottom:0!important',
+    '.mobile-nav{display:grid!important;grid-template-columns:repeat(4,1fr)!important;position:fixed!important;left:0!important;right:0!important;bottom:0!important',
     '.mobile-nav button{min-height:52px!important',
     '#app .top-actions #continueBtn{display:none!important}'
 ]
