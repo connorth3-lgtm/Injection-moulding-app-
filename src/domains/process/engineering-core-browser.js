@@ -925,7 +925,7 @@ function machineSuitabilitySummary({
   if (!mouldId.ok) return mouldId;
   const cleanBasis = String(basis || '').trim();
   if (!cleanBasis) return unsupported('suitability-basis-required', { field: 'basis' });
-  if (!Array.isArray(requiredAxisIds) || requiredAxisIds.length < 1) {
+  if (!Array.isArray(requiredAxisIds) || requiredAxisIds.length < 1 || requiredAxisIds.length > 64) {
     return unsupported('required-axis-list-required', { field: 'requiredAxisIds' });
   }
   // A blank, duplicate, coerced or inherited required axis must never vanish
