@@ -12,6 +12,14 @@ assert len(data["manufacturers"]) >= 11
 
 ids = set()
 models = {}
+latest_source_check = max(
+    (source["checked"]
+     for maker in data["manufacturers"]
+     for model in maker.get("models", [])
+     for source in model.get("sources", [])),
+    default="",
+)
+assert data["last_updated"] >= latest_source_check, "machine library date predates OEM source verification"
 for maker in data["manufacturers"]:
     assert maker["id"] and maker["name"]
     for row in maker.get("models", []):
@@ -115,6 +123,47 @@ for key, contract in expected.items():
         assert all(v["published_option"] == ("standard" if v["injection_unit_id"] == geometry[6] else "optional")
                    for v in found.values())
         assert m["sources"][0]["url"].endswith("model=FNX" + key.split("fnx", 1)[1].split("-iv", 1)[0] + "%E2%85%A3")
+
+
+
+# α-S50iB has its own six-column 350 mm/s table. It MUST NOT inherit
+# α-S100iB or 550 mm/s options, or imply any as-built/validated process rating.
+fanuc_50 = models["fanuc-roboshot-alpha-s50ib"]
+assert fanuc_50["model"] == "ROBOSHOT α-S50iB"
+assert fanuc_50["series"] == "ROBOSHOT α-SiB"
+assert fanuc_50["research_status"] == "active"
+assert fanuc_50["manufacture_year"]["status"] == "unknown"
+assert fanuc_50["controller"]["confidence"] == "missing"
+assert not fanuc_50["manuals"] and not fanuc_50["published_injection_variants"]
+assert all(w["status"] == "missing" for w in fanuc_50["wanted_documents"])
+assert fanuc_50["common_verified_specs"] == {
+    "clamping_force_kn": 500,
+    "clamping_stroke_mm": 250,
+    "tie_bar_clearance_h_x_v_mm": "360 x 320",
+    "die_plate_h_x_v_mm": "500 x 470",
+    "ejector_stroke_mm": 70,
+}
+assert fanuc_50["published_clamp_force_options_kn"] == [500, 650]
+assert fanuc_50["published_mould_height_variants"] == [
+    {"platen_configuration": "single", "standard_min_mm": 210,
+     "standard_max_mm": 410, "increased_min_mm": 210,
+     "increased_max_mm": 460},
+    {"platen_configuration": "double", "standard_min_mm": 150,
+     "standard_max_mm": 350, "increased_min_mm": 150,
+     "increased_max_mm": 400},
+]
+screw_50 = fanuc_50["published_screw_data"]
+assert screw_50["source_id"] == fanuc_50["sources"][0]["id"]
+assert "350 mm/s" in screw_50["mode"] and "NOT the separate 550 mm/s" in screw_50["mode"]
+assert screw_50["actual_fitted_injection_unit_id"] is None
+assert screw_50["screw_diameter_mm"] == [18, 20, 22, 26, 28, 32]
+assert screw_50["maximum_injection_volume_cm3"] == [19, 24, 29, 50, 58, 76]
+assert screw_50["maximum_injection_and_hold_pressure_1_mpa"] == [280, 310, 290, 240, 220, 180]
+assert screw_50["maximum_injection_and_hold_pressure_2_mpa"] == [260, 280, 260, 210, 190, 150]
+assert "neither is direct measured resin pressure" in screw_50["scope"]
+assert "production machine-fit" in screw_50["scope"]
+assert fanuc_50["sources"][0]["url"] == "https://www.fanuc.eu/eu-en/product/roboshot/fanuc-roboshot-a-s50ib"
+assert fanuc_50["sources"][0]["checked"] == "2026-10-10"
 
 
 fanuc = models["fanuc-roboshot-alpha-s100ib"]
