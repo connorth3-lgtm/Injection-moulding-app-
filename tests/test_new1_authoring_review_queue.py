@@ -300,7 +300,7 @@ class WorklistTests(unittest.TestCase):
             "source seed URL with extra fragment": lambda x: x[
                 "source_seeds"][0].update(url="https://example.invalid/ref#fraud"),
             "source seed title hides control character": lambda x: x[
-                "source_seeds"][0].update(title="unsafe\\nlink"),
+                "source_seeds"][0].update(title="unsafe\nlink"),
         }
         for label, mutate in mutations.items():
             with self.subTest(label=label):
