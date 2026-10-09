@@ -188,7 +188,10 @@ body[data-mm-mission-mode="engineer"] .mm-mc-context{grid-template-columns:minma
 }
 @media(max-width:480px){
   .mm-mc-context{grid-template-columns:1fr auto}
-  .mm-mc-context-items{grid-template-columns:repeat(5,112px)}
+  /* One context at a time: no clipped labels or sideways page overflow. */
+  .mm-mc-context-items{grid-template-columns:minmax(0,1fr);overflow:visible}
+  .mm-mc-context-items>div{min-width:0}
+  .mm-mc-context-items b{white-space:normal;overflow-wrap:anywhere}
   .mm-mc-brand small{font-size:7px}
   .mm-mc-brand b{font-size:10px}
   .mm-mc-actions button{min-height:38px;padding-inline:8px}
