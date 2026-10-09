@@ -37,7 +37,6 @@ assert.equal(index.forCase('VA-02').length,4);
 assert.equal(index.chapter('multi-cavity').id,'multi-cavity');
 assert.equal(index.chapter('multi-cavity').state,'source-review','Unreviewed Book source must not be elevated');
 assert.equal(index.chapter('missing'),null);
-
 // Course-level suggestions must never pretend to be a semantic lesson match,
 // imported learner record, certificate or workplace competency. This is a
 // deterministic developer-only bridge using the existing governed course index.
@@ -65,6 +64,46 @@ assert.equal(index.forLesson({id:7,course:3,courseName:'Fake exact match'},canon
 assert.deepEqual(index.forLesson(null,canonicalCourses).chapters,[]);
 
 assert.ok(index.search('cavity').length>0);
+// Reject missing/forged crosswalk metadata instead of rendering an incomplete
+// path as if an Academy lesson or Book chapter had been verified.
+const missingChapter=structuredClone(crosswalk);
+missingChapter.chapterMappings.pop();
+assert.throws(()=>lab.knowledgeIndex(book,missingChapter),/every governed chapter/);
+const renamedChapter=structuredClone(crosswalk);
+renamedChapter.chapterMappings[0].chapterId='unreviewed-fake-module';
+assert.throws(()=>lab.knowledgeIndex(book,renamedChapter),/identity|membership/);
+const reorderedChapters=structuredClone(crosswalk);
+[reorderedChapters.chapterMappings[0],reorderedChapters.chapterMappings[1]]=
+ [reorderedChapters.chapterMappings[1],reorderedChapters.chapterMappings[0]];
+assert.throws(()=>lab.knowledgeIndex(book,reorderedChapters),/order/);
+const forgedCourse=structuredClone(crosswalk);
+forgedCourse.chapterMappings[0].courseNames=['Unreviewed invented Academy course'];
+assert.throws(()=>lab.knowledgeIndex(book,forgedCourse),/unknown courses/);
+const duplicateCourse=structuredClone(crosswalk);
+duplicateCourse.chapterMappings[0].courseNames.push(duplicateCourse.chapterMappings[0].courseNames[0]);
+assert.throws(()=>lab.knowledgeIndex(book,duplicateCourse),/duplicate/);
+const missingThemes=structuredClone(crosswalk);
+missingThemes.chapterMappings[0].themes=[];
+assert.throws(()=>lab.knowledgeIndex(book,missingThemes),/thematic/);
+const mislabelledLevel=structuredClone(crosswalk);
+mislabelledLevel.mappingLevel='lesson-level-equivalence';
+assert.throws(()=>lab.knowledgeIndex(book,mislabelledLevel),/course-level/);
+// Public result arrays must not poison the private index or source manifest.
+const original=index.chapter('multi-cavity');
+const fromCase=index.forCase('VA-02')[0];
+fromCase.courses.push('Invented');
+fromCase.themes.push('Invented');
+fromCase.sourceIds.push('Invented');
+fromCase.claimClasses.push('Invented');
+const direct=index.chapter('multi-cavity');
+direct.courses.length=0;
+direct.claimClasses.length=0;
+const searched=index.search('multi-cavity')[0];
+searched.themes.length=0;
+assert.deepEqual(index.chapter('multi-cavity'),original,'lookup must isolate all nested arrays');
+assert.deepEqual(index.forCase('VA-02')[0],original,'case-specific lookup must remain immutable by callers');
+assert.equal(index.search('multi-cavity')[0].themes.length,original.themes.length);
+
 assert.equal(lab.tutorPlan(null,index,{}).state,'ready-to-practise');
 const correct={},wrong={};
 for(const step of lab.steps){
