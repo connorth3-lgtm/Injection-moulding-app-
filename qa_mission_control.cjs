@@ -40,6 +40,7 @@ for(const marker of [
   'Open evidence drawer',
   'Spatial Twin',
   'Virtual Apprenticeship',
+  'Digital Factory — Case One',
   'Mould Master',
   'Process Data',
   'MM_APP_SHELL',
