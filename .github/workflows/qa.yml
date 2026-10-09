@@ -137,6 +137,8 @@ jobs:
           python -m unittest discover -s tests -p 'test_repository_hygiene.py'
       - name: Repository governance integrity
         run: python qa_repo_governance.py
+      - name: Retry-safe GitHub merged-branch pruning (mock API only)
+        run: python qa_prune_transient.py
       - name: Live protected-main governance policy
         if: (github.event_name == 'pull_request' && github.base_ref == 'main') || github.ref == 'refs/heads/main'
         env:
