@@ -563,6 +563,13 @@ delete inheritedAxis[1];
 Object.setPrototypeOf(inheritedAxis, Object.assign(Object.create(Array.prototype), {1:'gate'}));
 assert.equal(makeFitSummary(inheritedAxis).ok, false,
   'inherited required-axis array slot must not count as declared evidence');
+// Bound attacker-controlled axis array lengths before allocating traversal state.
+const oversizedAxes = ['shot'];
+oversizedAxes.length = 1_000_000;
+const oversizedResult = makeFitSummary(oversizedAxes);
+assert.equal(oversizedResult.ok, false,
+  'oversized required-axis declaration must be rejected before traversal');
+assert.equal(oversizedResult.reason, 'required-axis-list-required');
 const inheritedShot={};
 Object.setPrototypeOf(inheritedShot,{shot:shotCapacity});
 const inheritedResult=makeFitSummary(['shot'],inheritedShot);
