@@ -927,13 +927,16 @@ export function machineSuitabilitySummary({
   }
   // A blank, duplicate, coerced or inherited required axis must never vanish
   // from a declared machine-fit check and leave a misleading overall PASS.
-  if (Array.from({ length: requiredAxisIds.length }, (_, index) =>
-      !Object.prototype.hasOwnProperty.call(requiredAxisIds, index) ||
-      typeof requiredAxisIds[index] !== 'string' ||
-      !/^[a-z][a-z0-9_.-]{0,63}$/.test(requiredAxisIds[index]) ||
-      ['__proto__', 'constructor', 'prototype'].includes(requiredAxisIds[index])).some(Boolean)) {
-
-    return unsupported('invalid-required-axis-id', { field: 'requiredAxisIds' });
+  // Inspect own data descriptors, not inherited slots or accessor getters.
+  // A getter could mutate evidence while validation is in progress.
+  for (let index = 0; index < requiredAxisIds.length; index++) {
+    const slot = Object.getOwnPropertyDescriptor(requiredAxisIds, index);
+    if (!slot || !Object.prototype.hasOwnProperty.call(slot, 'value') ||
+        typeof slot.value !== 'string' ||
+        !/^[a-z][a-z0-9_.-]{0,63}$/.test(slot.value) ||
+        ['__proto__', 'constructor', 'prototype'].includes(slot.value)) {
+      return unsupported('invalid-required-axis-id', { field: 'requiredAxisIds' });
+    }
   }
   if (new Set(requiredAxisIds).size !== requiredAxisIds.length) {
     return unsupported('duplicate-required-axis-id', { field: 'requiredAxisIds' });
