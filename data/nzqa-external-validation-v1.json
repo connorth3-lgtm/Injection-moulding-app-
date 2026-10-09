@@ -1,16 +1,12 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.09.3",
+  "release": "2026.10.09.4",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.09.3.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.09.4.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 379,
-  "candidate": {
-    "release": "2026.10.09.3",
-    "sourceSha": "2f7d31423d0dfb1ce62e8bdec638134232b3f4d9",
-    "runtimeFingerprint": "sha256:55975b4b3ae5af39ddafd1f2ed9da08755df96774a92a7878a9410810171653a"
-  },
+  "candidate": null,
   "boundary": "Repository readiness, mappings, templates and automated QA do not create NZQA approval, provider accreditation, consent to assess, moderation acceptance, learner competence, workplace competence or qualification award.",
   "requiredGates": [
     {
@@ -55,5 +51,10 @@
     }
   ],
   "evidence": null,
-  "validationRule": "Validated requires genuine provider-owned evidence for all eight gates, public-safe evidence references, exact release/candidate binding, and separate reviewed promotion of the canonical external-validation status. Automation must not manufacture completion."
+  "validationRule": "Validated requires genuine provider-owned evidence for all eight gates, public-safe evidence references, exact release/candidate binding, and separate reviewed promotion of the canonical external-validation status. Automation must not manufacture completion.",
+  "previousCandidate": {
+    "release": "2026.10.09.3",
+    "sourceSha": "2f7d31423d0dfb1ce62e8bdec638134232b3f4d9",
+    "runtimeFingerprint": "sha256:55975b4b3ae5af39ddafd1f2ed9da08755df96774a92a7878a9410810171653a"
+  }
 }
