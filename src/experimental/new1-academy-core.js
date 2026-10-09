@@ -254,6 +254,30 @@
       if(active!==reviewOwner){lastReview=null;reviewOwner=active}
       return lastReview;
     }
+    function verifiedReview(result){
+      if(result?.state!=='formative-review')return null;
+      if(result.caseId!=='VA-02'||result.max!==4||
+         !Number.isInteger(result.total)||result.total<0||result.total>4||
+         !Array.isArray(result.dimensions)||result.dimensions.length!==4||
+         !Array.isArray(result.gaps))return null;
+      const dimensions=result.dimensions.map(row=>row&&typeof row==='object'?Object.freeze({
+        id:row.id,step:row.step,label:row.label,correct:row.correct===true,chapter:row.chapter
+      }):null);
+      if(dimensions.some(x=>!x)||new Set(dimensions.map(x=>x.id)).size!==4||
+         new Set(dimensions.map(x=>x.step)).size!==4||
+         dimensions.some(x=>!['mechanism','evidence','controlled-response','verification'].includes(x.id)||
+                             !STEP_KEYS.includes(x.step)))return null;
+      const gaps=dimensions.filter(x=>!x.correct).map(x=>x.id);
+      if(result.total!==4-gaps.length||result.gaps.length!==gaps.length||
+         gaps.some((id,i)=>id!==result.gaps[i]))return null;
+      // Do not expose mutable canonical bridge scorer internals to a future
+      // trainer-export caller. Keep the exact normalized score, not a copy
+      // supplied by a UI component or a different learner profile.
+      return Object.freeze({...result,
+        dimensions:Object.freeze(dimensions),
+        gaps:Object.freeze([...gaps])
+      });
+    }
     function review(answers){
       const active=learnerToken();
       currentReview();
@@ -265,22 +289,49 @@
         lastReview=null;reviewOwner=learnerToken();
         return {state:'learner-changed',reason:'The learner profile changed during review. Reopen the case for this learner.'};
       }
-      lastReview=result?.state==='formative-review'?result:null;
+      const snapshot=verifiedReview(result);
+      lastReview=snapshot;
       reviewOwner=active;
-      return result;
+      if(result?.state==='formative-review'&&!snapshot)
+        return {state:'unavailable',reason:'Canonical formative scoring fields were inconsistent.'};
+      return snapshot||result;
     }
-    function tutor(){return tutorPlan(currentReview(),index,bridge.getProgress())}
+    function tutor(){
+      const owner=learnerToken(),snapshot=currentReview();
+      let progress;
+      try{progress=bridge.getProgress()}catch(_){progress=null}
+      if(learnerToken()!==owner){
+        currentReview();
+        return tutorPlan(null,index,{});
+      }
+      return tutorPlan(snapshot,index,progress);
+    }
     function pathway(){
+      const owner=learnerToken();
       let progress;
       try{progress=deps.storage?.get?.('mm_virtual_apprenticeship_v1',null)}catch(_){progress=null}
+      if(learnerToken()!==owner){
+        currentReview();
+        progress=null;
+      }
       return createPathwayView(va,progress);
+    }
+    function shareCurrentReview(candidate,permission){
+      if(permission!==true)throw Error('Voluntary learner-sharing consent is required on each export.');
+      const owner=learnerToken(),canonical=currentReview();
+      if(!canonical||canonical!==candidate)
+        throw Error('Only the current learner’s reviewed canonical formative case may be shared.');
+      const packet=learnerShare(canonical,true);
+      if(learnerToken()!==owner||currentReview()!==canonical)
+        throw Error('Learner profile changed while preparing the reviewed summary.');
+      return packet;
     }
     return Object.freeze({
       version:VERSION,caseId:'VA-02',factory,index,
       canonicalCase:()=>va.cases.find(row=>row.id==='VA-02'),
       review,lastReview:currentReview,tutor,pathway,
       lessonGuide:(lesson,canonicalCourses)=>index.forLesson(lesson,canonicalCourses),
-      trainerDraft,assignmentExport,learnerShare,
+      trainerDraft,assignmentExport,learnerShare:shareCurrentReview,
       openCase:()=>bridge.openCase?.()===true,
       openSpatial:()=>bridge.openSpatial?.()===true,
       openChapter:id=>index.chapter(id)?bridge.openBookChapter?.(id):false,
