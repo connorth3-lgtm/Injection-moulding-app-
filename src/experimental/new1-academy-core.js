@@ -242,13 +242,34 @@
     const bridge=deps.bridge;
     if(!bridge||typeof bridge.review!=='function'||typeof bridge.getProgress!=='function')
       throw Error('New1 requires the existing Case One bridge for canonical assessment/progress.');
-    let lastReview=null;
+    let lastReview=null,reviewOwner=null;
+    function learnerToken(){
+      try{
+        const token=bridge.runtimeStorage?.()?.learnerToken?.();
+        return typeof token==='string'&&token.trim()?token:null;
+      }catch(_){return null}
+    }
+    function currentReview(){
+      const active=learnerToken();
+      if(active!==reviewOwner){lastReview=null;reviewOwner=active}
+      return lastReview;
+    }
     function review(answers){
+      const active=learnerToken();
+      currentReview();
       const result=bridge.review(answers);
-      if(result?.state==='formative-review')lastReview=result;
+      // Do not retain a learner A score if the active profile changed while
+      // its assessment callback was running. Workbench-only mocks have no
+      // learner token and retain only their local ephemeral formative result.
+      if(learnerToken()!==active){
+        lastReview=null;reviewOwner=learnerToken();
+        return {state:'learner-changed',reason:'The learner profile changed during review. Reopen the case for this learner.'};
+      }
+      lastReview=result?.state==='formative-review'?result:null;
+      reviewOwner=active;
       return result;
     }
-    function tutor(){return tutorPlan(lastReview,index,bridge.getProgress())}
+    function tutor(){return tutorPlan(currentReview(),index,bridge.getProgress())}
     function pathway(){
       let progress;
       try{progress=deps.storage?.get?.('mm_virtual_apprenticeship_v1',null)}catch(_){progress=null}
@@ -257,7 +278,7 @@
     return Object.freeze({
       version:VERSION,caseId:'VA-02',factory,index,
       canonicalCase:()=>va.cases.find(row=>row.id==='VA-02'),
-      review,lastReview:()=>lastReview,tutor,pathway,
+      review,lastReview:currentReview,tutor,pathway,
       lessonGuide:(lesson,canonicalCourses)=>index.forLesson(lesson,canonicalCourses),
       trainerDraft,assignmentExport,learnerShare,
       openCase:()=>bridge.openCase?.()===true,

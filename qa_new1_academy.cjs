@@ -141,6 +141,40 @@ assert.equal(high.total,4);
 assert.deepEqual(high.gaps,[]);
 assert.equal(app.tutor().nextCoachingLevel,'advanced');
 assert.equal(app.tutor().recommendedCase,'VA-06');
+// Formative coaching never survives an A→B→A learner-profile switch.
+let activeLearner='learner-A';
+const scopedStorage={
+ learnerToken(){return activeLearner},
+ get(key){assert.equal(key,'mm_virtual_apprenticeship_v1');return {completed:{}}}
+};
+const scopedBridge=adapter.createBridge({apprenticeship:va,runtime:{storage:scopedStorage}});
+const scopedAcademy=lab.createAcademy({
+ apprenticeship:va,bookManifest:book,crosswalk,factoryEvidence:factoryData,
+ bridge:scopedBridge,storage:scopedStorage
+});
+assert.equal(scopedAcademy.review(correct).total,4);
+assert.equal(scopedAcademy.tutor().state,'coached');
+activeLearner='learner-B';
+assert.equal(scopedAcademy.lastReview(),null,'learner B must not see learner A review');
+assert.equal(scopedAcademy.tutor().state,'ready-to-practise');
+assert.equal(scopedAcademy.review(wrong).total,0);
+assert.equal(scopedAcademy.tutor().state,'coached');
+activeLearner='learner-A';
+assert.equal(scopedAcademy.lastReview(),null,'A must not inherit B review');
+assert.equal(scopedAcademy.tutor().state,'ready-to-practise');
+// A profile switch inside a scorer callback must not cache the stale result.
+activeLearner='learner-B';
+const switchingBridge={
+ ...scopedBridge,
+ review(answers){const result=scopedBridge.review(answers);activeLearner='learner-C';return result}
+};
+const switchingAcademy=lab.createAcademy({
+ apprenticeship:va,bookManifest:book,crosswalk,factoryEvidence:factoryData,
+ bridge:switchingBridge,storage:scopedStorage
+});
+assert.equal(switchingAcademy.review(correct).state,'learner-changed');
+assert.equal(switchingAcademy.lastReview(),null);
+assert.equal(switchingAcademy.tutor().state,'ready-to-practise');
 assert.equal(app.pathway().length,5);
 assert.ok(app.pathway().some(x=>x.attempted>0));
 assert.ok(app.pathway().every(x=>!x.credentialAwarded&&!x.workplaceValidated));
