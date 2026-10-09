@@ -21,7 +21,8 @@ def fixture():
     courses = {i: f"Fictional course {i}" for i in range(1, 13)}
     chapters = [
         {"id": f"fictional-book-{i}", "title": f"Fictional module {i}",
-         "state": "source-review"}
+         "state": "source-review", "sourceIds": ["QA-SOURCE-1"] if i % 2 else [],
+         "claimClasses": ["fundamental", "diagnostic-hypothesis"] if i % 3 == 0 else ["fundamental"]}
         for i in range(1, 47)
     ]
     crosswalk = {
@@ -31,7 +32,8 @@ def fixture():
         "courseNames": list(courses.values()),
         "chapterMappings": [
             {"chapterId": c["id"],
-             "courseNames": [courses[((i - 1) % 12) + 1]]}
+             "courseNames": [courses[((i - 1) % 12) + 1]],
+             "themes": ["synthetic QA thematic overlap"]}
             for i, c in enumerate(chapters, 1)
         ],
     }
@@ -69,6 +71,10 @@ def fixture():
         "contract": contract,
         "release": "2026.10.09.6",
         "book_sme": {"status": "hold"},
+        "source_seeds": [
+            {"id": "QA-SOURCE-1", "url": "https://example.invalid/qa-only-source"}
+        ],
+        "claim_classes": ["fundamental", "diagnostic-hypothesis"],
     }
 
 
@@ -91,6 +97,10 @@ class WorklistTests(unittest.TestCase):
         self.assertEqual(chapter["discoveryBasis"], DISCOVERY)
         self.assertEqual(chapter["reviewStatus"], HOLD)
         self.assertEqual(chapter["manifestSourceState"], "source-review")
+        self.assertEqual(chapter["declaredBookSourceIds"], ["QA-SOURCE-1"])
+        self.assertEqual(chapter["declaredBookClaimClasses"], ["fundamental"])
+        self.assertEqual(chapter["courseOverlapThemes"], ["synthetic QA thematic overlap"])
+        self.assertIn("DECLARED ONLY", chapter["sourceDisclosureStatus"])
         self.assertTrue(chapter["chapterManifestFingerprint"].startswith("sha256:"))
         self.assertEqual(chapter["bookRuntimeFingerprint"], book_runtime_fingerprint(args["publication"]))
         self.assertEqual(first["bookRuntimeFingerprint"], chapter["bookRuntimeFingerprint"])
@@ -115,6 +125,10 @@ class WorklistTests(unittest.TestCase):
         self.assertGreater(len(rows), 120)
         self.assertEqual(rows[0]["lessonId"], "1")
         self.assertEqual(rows[0]["reviewStatus"], HOLD)
+        self.assertEqual(rows[0]["declaredBookSourceIds"], "QA-SOURCE-1")
+        self.assertEqual(rows[0]["declaredBookClaimClasses"], "fundamental")
+        self.assertEqual(rows[0]["courseOverlapThemes"], "synthetic QA thematic overlap")
+        self.assertIn("DECLARED ONLY", rows[0]["sourceDisclosureStatus"])
         self.assertEqual(rows[0]["bookRuntimeFingerprint"], worklist["bookRuntimeFingerprint"])
         self.assertNotIn("reviewer", reader.fieldnames)
         self.assertNotIn("learnerProgress", reader.fieldnames)
@@ -135,6 +149,31 @@ class WorklistTests(unittest.TestCase):
         self.assertNotEqual(after["bookRuntimeFingerprint"], before["bookRuntimeFingerprint"])
         self.assertEqual(changed["contract"]["reviewedLinks"], [])
         self.assertFalse(new["approvedPublicLinks"])
+
+    def test_disclosed_sources_do_not_become_reviewed_when_manifest_changes(self):
+        args = fixture()
+        queue = make_queue(**args)
+        before = queue["lessons"][0]["possibleBookModules"][0]
+        changed = deepcopy(args)
+        changed["chapters"][0]["sourceIds"] = []
+        changed["chapters"][0]["claimClasses"] = ["diagnostic-hypothesis"]
+        changed["crosswalk"]["chapterMappings"][0]["themes"] = [
+            "alternative hypothetical cross-course rationale"
+        ]
+        refreshed = make_queue(**changed)
+        after = refreshed["lessons"][0]["possibleBookModules"][0]
+        self.assertNotEqual(
+            before["chapterManifestFingerprint"], after["chapterManifestFingerprint"]
+        )
+        self.assertEqual(after["declaredBookSourceIds"], [])
+        self.assertEqual(after["declaredBookClaimClasses"], ["diagnostic-hypothesis"])
+        self.assertEqual(after["courseOverlapThemes"], [
+            "alternative hypothetical cross-course rationale"
+        ])
+        self.assertEqual(after["reviewStatus"], HOLD)
+        self.assertEqual(refreshed["exactLessonMatchesVerified"], 0)
+        self.assertFalse(refreshed["approvedPublicLinks"])
+        self.assertEqual(args["contract"]["reviewedLinks"], [])
 
     def test_csv_blocks_spreadsheet_formula_injection(self):
         args = fixture()
@@ -196,6 +235,31 @@ class WorklistTests(unittest.TestCase):
             ),
             "outdated release": lambda x: x.update(
                 release="2026.10.09.7"
+            ),
+            "invented chapter source": lambda x: x["chapters"][0].update(
+                sourceIds=["QA-SOURCE-INVENTED"]
+            ),
+            "duplicate chapter source": lambda x: x["chapters"][0].update(
+                sourceIds=["QA-SOURCE-1", "QA-SOURCE-1"]
+            ),
+            "missing source metadata": lambda x: x["chapters"][0].pop(
+                "sourceIds"
+            ),
+            "unknown claim class": lambda x: x["chapters"][0].update(
+                claimClasses=["approved-proven"]
+            ),
+            "missing claim classes": lambda x: x["chapters"][0].update(
+                claimClasses=[]
+            ),
+            "missing thematic rationale": lambda x: x["crosswalk"][
+                "chapterMappings"][0].pop("themes"),
+            "duplicate thematic reason": lambda x: x["crosswalk"][
+                "chapterMappings"][0].update(themes=["same", "same"]),
+            "unqualified source seed URL": lambda x: x["source_seeds"][0].update(
+                url="javascript:unsafe"
+            ),
+            "duplicate source seeds": lambda x: x["source_seeds"].append(
+                deepcopy(x["source_seeds"][0])
             ),
         }
         for label, mutate in mutations.items():
