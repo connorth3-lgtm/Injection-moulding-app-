@@ -17,7 +17,7 @@ The project maintainers do not intend to seek patent protection over implementat
 
 ## Current release lanes
 
-- PWA / browser shell: `2026.10.09.2`
+- PWA / browser shell: `2026.10.09.3`
 - Open Windows desktop: `2026.09.29.1`
 - Android lane: `2026.08.26.2`
 - Training content: `2026.08.26.1`
@@ -55,6 +55,10 @@ Tester-facing documentation and owner preflight:
 Repository-only gate: `python3 qa_tester_handoff.py`. **Before distributing the URL**, the release operator must run `python3 qa_tester_handoff.py --live --expected-source-sha <PROTECTED_MAIN_DEPLOYED_SHA>`, then complete the manual checklist. The live check confirms that the currently hosted preview matches the intended source SHA and web release; it does **not** provide human physical-device, accessibility, SME, NZQA, learner-outcome or production approval.
 
 The explicit learner testing URL is `https://connorth3-lgtm.github.io/Injection-moulding-app-/preview/`. It must display the **Non-production preview** warning; the production root is not the invitation destination.
+
+## New1 — Digital Moulding Factory development patch
+
+The proposed MouldMaster 3.0 programme and the first **Virtual Factory — Case One** evidence/book/competency integration are documented in [docs/NEW1_MOULDMASTER_3_0.md](docs/NEW1_MOULDMASTER_3_0.md). All five upgrades now have a **locally runnable development workbench** (Virtual Factory, 46-module Encyclopaedia explorer, evidence-based tutor, five formative apprenticeship tracks and local trainer assignments). Run `python3 -m http.server 8765 --bind 127.0.0.1` from the repository root, then open `http://127.0.0.1:8765/tools/new1-academy-workbench.html`. This prototype is **not loaded by the public learner runtime** or approved for tester distribution. The governed web release and all external-validation HOLDs are unchanged.
 
 ## Assessment system
 

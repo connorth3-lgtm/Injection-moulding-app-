@@ -19,7 +19,7 @@ global.clearInterval=()=>{};
 require(path.join(__dirname,'src/domains/engineering/virtual-apprenticeship.js'));
 const api=global.window.MM_VIRTUAL_APPRENTICESHIP;
 assert.ok(api,'virtual apprenticeship API must register');
-assert.equal(api.version,'2026.10.08.3');
+assert.equal(api.version,'2026.10.09.3');
 assert.equal(api.cases.length,6,'v1 must ship six governed authored practice cases');
 assert.deepEqual(Object.keys(api.levels),['beginner','developing','advanced']);
 assert.match(api.boundary,/no machine-control/i);
@@ -46,6 +46,15 @@ for(const c of api.cases){
   assert.equal(scored.pct,100,`${c.id} correct evidence chain should score 100%`);
 }
 
+assert.equal(api.factoryTrack.length,6,'six existing cases form one formative programme');
+assert.equal(api.factoryCaseOne.caseId,'VA-02','factory entry must reuse the authored cavity case');
+assert.deepEqual(api.factoryCaseOne.book.map(c=>c.id),['multi-cavity','cavity-pressure','feed-system','diagnostic-method']);
+assert.ok(api.factoryCaseOne.windows.every(w=>w.mass.length===4),'cavity identities must not be averaged away');
+const target=api.cases[1];
+const good=Object.fromEntries(['hypothesis','test','response','verify'].map(k=>[k,target[k].options.find(o=>o[2])[0]]));
+assert.equal(api.tutorPlan(target,api.scoreReasoning(target,good)).gaps.length,0);
+assert.equal(api.tutorPlan(target,api.scoreReasoning(target,{})).book.length,4,'missed skills must recommend relevant Book reading');
+assert.equal(api.competencyRecord().length,6,'one scoped practice record for academy track');
 const first=api.cases[0];
 const wrong={
   hypothesis:first.hypothesis.options.find(x=>!x[2])[0],

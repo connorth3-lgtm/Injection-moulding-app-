@@ -1,6 +1,6 @@
 # MouldMaster — controlled tester handoff
 
-**Release family:** `2026.10.09.2`  
+**Release family:** `2026.10.09.3`  
 **Status:** PREPARED, **not cleared to circulate** until the protected-main hosted preview and human checks below are verified.
 
 This is an owner-facing rollout playbook for a **small, voluntary, non-production usability cohort**. It is **not** production-root launch approval, physical-device authorization, formal real-AT testing, a learner-outcomes study, NZQA/provider approval or machine-control authorisation.
