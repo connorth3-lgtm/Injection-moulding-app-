@@ -209,9 +209,17 @@ def validate(issue: str, header: list[str], rows: list[dict]) -> dict:
 def resolve_private_input(input_path: Path) -> Path:
     # Refuse even a symlink from the public checkout into a private source.
     # Data custody remains entirely with the authorised operator.
-    resolved = input_path.expanduser().resolve(strict=True)
-    require(resolved.is_file(), "private CSV input is not a readable file")
     repository = TEMPLATE_DIR.parent.resolve()
+    requested = input_path.expanduser().absolute()
+    # Check both the user's path and the resolved target. This rejects public-
+    # checkout symlinks pointing outside, plus external symlinks pointing in.
+    require(not requested.is_relative_to(repository),
+            "private measured records must be stored outside the public repository checkout")
+    try:
+        resolved = input_path.expanduser().resolve(strict=True)
+    except OSError:
+        raise EvidenceStructureError("private CSV input is unavailable") from None
+    require(resolved.is_file(), "private CSV input is not a readable file")
     require(not resolved.is_relative_to(repository),
             "private measured records must be stored outside the public repository checkout")
     return resolved
