@@ -14,7 +14,7 @@ python tools/new1_authoring_review_queue.py --csv > new1-review-worklist.csv
 python tools/new1_authoring_review_queue.py --json > new1-review-worklist.json
 ```
 
-These files are optional **local disposable reviewer aids** and must not be published as accepted learner mappings or ingested as a learner-progress backup. They contain no reviewer attestations, answer keys, assessment scores, learner identifiers or actual industrial data. Keep any real reviewers' private contact details/evidence in the appropriate restricted review process rather than public source.
+These files are optional **local disposable reviewer aids** and must not be published as accepted learner mappings or ingested as a learner-progress backup. They contain no reviewer attestations, answer keys, assessment scores, learner identifiers or actual industrial data. CSV export prefixes possible spreadsheet-formula cells with a literal apostrophe so future lesson/Book titles cannot execute when opened in workbook software. Keep any real reviewers' private contact details/evidence in the appropriate restricted review process rather than public source.
 
 Every row is copied from the authoritative lesson and Book registries and carries a whole-lesson fingerprint, **manifest-metadata-only** Book chapter fingerprint, current Book publication version, and the sole candidate basis `course-level-overlap-only`. **No fuzzy title ranking or semantic equivalence is inferred.** All candidate modules for a canonical course are presented in original Book order: reviewers must select, reject, or identify an uncovered concept themselves.
 
