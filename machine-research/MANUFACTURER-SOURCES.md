@@ -64,3 +64,11 @@ These official primary-OEM specifications support model-level geometry, clamp fi
 | FNX280Ⅳ | https://www.nisseiplastic.com/en/products/fnx-4/spec.php?model=FNX280%E2%85%A3 | 2740 kN | 71A standard; 100A optional | Installed unit/serial, manuals, actual usable limits |
 
 All screw-specific dimensions, capacity and pressure sets are bound to their exact OEM option IDs in `machine-library-v1.json`; regression QA checks these pairs and model geometry. These are published catalogue values, **not** validated machine limits, physical test evidence or permissions to copy production recipes.
+
+## Exact FANUC ROBOSHOT α-S130iB OEM model record — 9 October 2026
+
+The primary [FANUC Europe ROBOSHOT α-S130iB technical specifications](https://www.fanuc.eu/eu-en/product/roboshot/fanuc-roboshot-a-s130ib) verify a **1300 kN** clamp, **400 mm** clamp stroke, **530 × 530 mm** tie bars, **730 × 730 mm** platens, and **100 mm** ejector stroke. Only the single-platen die-height variant is represented: **200–570 mm** standard or **200–670 mm** increased (optional). There is no claimed double-platen configuration or increased clamp rating for this exact model.
+
+The separately labelled published *200 mm/s base* operating table pairs screw diameters **26/28/32/36/40 mm** with injection volumes **50/58/103/147/181 cm³**, injection/hold **pressure 1 290/270/250/190/160 MPa** and distinct **pressure 2 260/240/220/190/160 MPa**. High-duty, 350 mm/s and high-pressure-fill figures must not be combined with these base-mode values. Note that the FANUC America website's short model summary appears to duplicate `26` in place of the fourth `36` mm screw; this registry uses the internally coherent FANUC Europe OEM five-column table, also reflected in other official FANUC localisations.
+
+This is the **ninth** detailed model across the eleven indexed OEMs, not a verified installed machine or evidence of the fitted unit, controller firmware, die-height option, service manuals, or production-safe process limits. The three key external measured-data acquisition issues and Hwamda HMD400M6 exact service-manual search remain independent OPEN requirements.
