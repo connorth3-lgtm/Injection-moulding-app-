@@ -99,6 +99,10 @@ jobs:
         run: |
           python qa_oem_source_conflicts.py
           python -m unittest discover -s tests -p 'test_oem_source_conflicts.py' -v
+      - name: Quarantine unresolved original HMD400M6 fitted-machine evidence
+        run: |
+          python qa_hwamda_evidence_boundary.py
+          python -m unittest discover -s tests -p 'test_hwamda_evidence_boundary.py' -v
       - name: New2 cavity pressure and gate-seal evidence reference QA
         run: node qa_multicavity_evidence.mjs
       - name: Release and assessment integrity
