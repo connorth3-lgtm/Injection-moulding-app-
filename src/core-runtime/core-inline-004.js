@@ -1239,8 +1239,8 @@ function checkAchievements(){
     if(a.test()&&!f.achievements.includes(a.id)){f.achievements.push(a.id);newOnes.push(a)}
   }
   if(newOnes.length){
-    persist();confetti(24);funTone("level");
-    setTimeout(()=>toast(`Achievement unlocked: ${newOnes[0].name}`),120);
+    // Keep awarded badges but retire the disruptive automatic gamification toast.
+    persist();
   }
 }
 function achievementsHTML(){
