@@ -137,9 +137,26 @@ def check(contract: dict, lessons: list[dict], courses: dict[int, str],
 
 
 def self_test() -> None:
-    lesson = {"id": 1, "course": 1, "title": "Synthetic lesson"}
-    chapter = {"id": "book-1", "title": "Synthetic chapter"}
-    pub = {"status": "authorized", "version": "book-v1"}
+    # Completely fabricated QA-only registries. A valid shape must never be
+    # mistaken for an accepted human review or public learner link.
+    from copy import deepcopy
+
+    lessons = [
+        {"id": n, "course": ((n - 1) % 12) + 1,
+         "title": f"Synthetic QA lesson {n}"}
+        for n in range(1, 121)
+    ]
+    courses = {n: f"QA Course {n}" for n in range(1, 13)}
+    chapters = [
+        {"id": f"qa-book-{n}", "title": f"Synthetic QA Book {n}"}
+        for n in range(1, 47)
+    ]
+    links = [
+        {"chapterId": chapter["id"],
+         "courseNames": [courses[((n - 1) % 12) + 1]]}
+        for n, chapter in enumerate(chapters, start=1)
+    ]
+    publication = {"status": "authorized", "version": "synthetic-qa-book-v1"}
     fixture = {
         "schemaVersion": 1, "webRelease": "2026.10.09.6",
         "status": "hold-exact-lesson-review",
@@ -149,33 +166,83 @@ def self_test() -> None:
         "courseCrosswalk": "data/book-curriculum-crosswalk-v1.json",
         "bookPublicationAuthority": "data/book-publication-authorization-v1.json",
         "approvedPublicLinks": False,
-        "policy": "Course suggestion is not reviewed exact-lesson mapping; "
-                  "automated shape checks grant no public navigation entitlement. "
-                  "offline/deep-link acceptance requires independent review.",
+        "policy": "Course suggestions are not reviewed exact-lesson matches. "
+                  "Automated shape checks grant no public navigation entitlement. "
+                  "All offline/deep-link navigation remains on HOLD.",
         "reviewedLinks": [],
     }
-    # The fixture verifies a bounded HOLD with empty links; full-population
-    # integration is checked independently against 120/46 canonical records.
+
+    def run(value: dict) -> int:
+        return check(value, lessons, courses, chapters, links, publication,
+                     "2026.10.09.6")
+
+    def must_reject(value: dict, label: str) -> None:
+        try:
+            run(value)
+        except AssertionError as exc:
+            need(str(exc).startswith("New1 exact-link HOLD:"),
+                 f"{label} rejected outside fail-closed contract")
+        else:
+            raise AssertionError(f"Synthetic {label} was accepted")
+
+    need(run(fixture) == 0, "empty review-HOLD contract failed")
+    review = {
+        "lessonId": 1, "chapterId": "qa-book-1",
+        "canonicalCourseName": "QA Course 1",
+        "lessonFingerprint": lesson_fingerprint(lessons[0]),
+        "chapterFingerprint": digest(chapters[0]),
+        "bookPublicationRelease": publication["version"],
+        "reviewedAt": "2020-01-02",
+        "reviewer": "Synthetic fixture only",
+        "reviewEvidenceRef": "qa-only:no-human-evidence",
+        "rationale": "Synthetic mapping record solely to exercise the guarded parser.",
+    }
+    one = deepcopy(fixture)
+    one["reviewedLinks"] = [review]
+    need(run(one) == 1, "validly shaped QA record was not parsed")
+
+    mutations = (
+        ("public activation", "approvedPublicLinks", True),
+        ("unknown lesson", "reviewedLinks.0.lessonId", 999),
+        ("boolean lesson ID", "reviewedLinks.0.lessonId", True),
+        ("unknown chapter", "reviewedLinks.0.chapterId", "invented-chapter"),
+        ("course mismatch", "reviewedLinks.0.canonicalCourseName", "QA Course 2"),
+        ("stale lesson hash", "reviewedLinks.0.lessonFingerprint", "sha256:wrong"),
+        ("stale chapter hash", "reviewedLinks.0.chapterFingerprint", "sha256:wrong"),
+        ("stale Book release", "reviewedLinks.0.bookPublicationRelease", "obsolete"),
+        ("missing reviewer", "reviewedLinks.0.reviewer", ""),
+        ("missing human evidence", "reviewedLinks.0.reviewEvidenceRef", ""),
+        ("unsupported rationale", "reviewedLinks.0.rationale", "too short"),
+        ("future review", "reviewedLinks.0.reviewedAt", "2999-01-01"),
+    )
+    for label, slot, forged in mutations:
+        bad = deepcopy(one)
+        if slot == "approvedPublicLinks":
+            bad[slot] = forged
+        else:
+            bad["reviewedLinks"][0][slot.split(".")[-1]] = forged
+        must_reject(bad, label)
+
+    bad = deepcopy(one)
+    bad["reviewedLinks"].append(deepcopy(review))
+    must_reject(bad, "duplicate lesson/chapter mapping")
+    bad = deepcopy(one)
+    bad["reviewedLinks"][0]["learnerCompletion"] = True
+    must_reject(bad, "synthetic learner credit")
+    bad = deepcopy(one)
+    bad["reviewedLinks"] = [review] * 361
+    must_reject(bad, "unbounded review records")
+
+    partial = deepcopy(one)
     try:
-        check(fixture, [lesson], {1: "Foundations"}, [chapter],
-              [{"chapterId": "book-1", "courseNames": ["Foundations"]}],
-              pub, "2026.10.09.6")
+        check(partial, lessons[:-1], courses, chapters, links, publication,
+              "2026.10.09.6")
     except AssertionError as exc:
         need("canonical registry membership incomplete" in str(exc),
-             "population guard lost")
+             "incomplete canonical registry guard lost")
     else:
-        raise AssertionError("Synthetic partial registries were accepted")
-    fixture["approvedPublicLinks"] = True
-    try:
-        check(fixture, [lesson], {1: "Foundations"}, [chapter],
-              [{"chapterId": "book-1", "courseNames": ["Foundations"]}],
-              pub, "2026.10.09.6")
-    except AssertionError as exc:
-        need("unsupported public activation" in str(exc),
-             "public activation failed to close")
-    else:
-        raise AssertionError("Unreviewed public activation was accepted")
-    print("New1 exact-link fail-closed contract self-test passed")
+        raise AssertionError("Partial canonical lesson registry was accepted")
+    print("New1 exact-link HOLD contract self-test passed: positive shape and adversarial rejection")
 
 
 def main() -> None:
