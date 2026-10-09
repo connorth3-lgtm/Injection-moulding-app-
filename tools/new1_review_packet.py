@@ -9,7 +9,12 @@ from __future__ import annotations
 
 import argparse
 import html
+from pathlib import Path
 import re
+import sys
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 
 from qa_new1_semantic_link_review import need
 from tools.new1_authoring_review_queue import DISCOVERY, HOLD, current_queue
