@@ -92,7 +92,7 @@ function tutor(host){
  frame(host,'3 / 5 · Evidence-first feedback','Personal engineering tutor','Your recommended Book modules and next case are derived from the existing authored reasoning scorer.');
  const plan=academy.tutor();const intro=node('section',undefined,'panel');
  intro.append(text(plan.headline,'h3'),text('Recommended practice: '+plan.recommendedCase+' · Coaching level: '+plan.nextCoachingLevel));
- if(state.review?.state==='formative-review')intro.append(text('Current formative result '+state.review.total+'/4'));
+ if(academy.lastReview()?.state==='formative-review')intro.append(text('Current formative result '+academy.lastReview().total+'/4'));
  else intro.append(text('Review Case One to personalize the recommendations.'));
  host.append(intro);
  const cards=node('div',undefined,'cards');
@@ -148,13 +148,15 @@ function trainer(host){
  const consent=node('input');consent.type='checkbox';const label=node('label',undefined,'option');label.append(consent,text('I agree to prepare my anonymous formative summary.','span'));share.append(label);
  const summary=node('pre',undefined,'output');summary.setAttribute('aria-live','polite');
  share.append(action('Prepare summary',()=>{
-  try{summary.textContent=JSON.stringify(academy.learnerShare(state.review,consent.checked),null,2)}
+  try{summary.textContent=JSON.stringify(academy.learnerShare(academy.lastReview(),consent.checked),null,2)}
   catch(error){summary.textContent='Cannot prepare summary: '+error.message}
  }),summary);
  share.append(text('Learning-performance summaries can still be sensitive; sharing remains voluntary and external to this workbench.','p','boundary'));host.append(share);
 }
 function render(){
  if(!academy)return;
+ // Never present the previous learner's locally cached score after a profile change.
+ if(state.review?.state==='formative-review'&&academy.lastReview()!==state.review)state.review=null;
  const tabs=$('academyTabs'),panel=$('academyPanel');clear(tabs);clear(panel);
  PILLARS.forEach(([key,label])=>{const b=action(label,()=>switchTo(key));b.setAttribute('aria-current',state.tab===key?'page':'false');tabs.append(b)});
  panel.setAttribute('aria-label',PILLARS.find(x=>x[0]===state.tab)?.[1]||'New1');

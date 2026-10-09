@@ -141,6 +141,14 @@ assert.equal(high.total,4);
 assert.deepEqual(high.gaps,[]);
 assert.equal(app.tutor().nextCoachingLevel,'advanced');
 assert.equal(app.tutor().recommendedCase,'VA-06');
+assert.equal(Object.isFrozen(high),true,'review snapshot must not be caller-mutable');
+assert.equal(Object.isFrozen(high.gaps),true);
+assert.equal(Object.isFrozen(high.dimensions),true);
+assert.equal(Object.isFrozen(high.dimensions[0]),true);
+assert.throws(()=>high.gaps.push('invented-credit'),TypeError);
+assert.throws(()=>app.learnerShare({...high},true),/current learner.*reviewed/i,
+  'a forged shallow copy of a canonical score must not be exportable');
+assert.throws(()=>app.learnerShare({...high,total:4,gaps:[]},true),/current learner.*reviewed/i);
 // Formative coaching never survives an A→B→A learner-profile switch.
 let activeLearner='learner-A';
 const scopedStorage={
@@ -152,14 +160,23 @@ const scopedAcademy=lab.createAcademy({
  apprenticeship:va,bookManifest:book,crosswalk,factoryEvidence:factoryData,
  bridge:scopedBridge,storage:scopedStorage
 });
-assert.equal(scopedAcademy.review(correct).total,4);
+const learnerAReview=scopedAcademy.review(correct);
+assert.equal(learnerAReview.total,4);
 assert.equal(scopedAcademy.tutor().state,'coached');
+assert.equal(scopedAcademy.learnerShare(learnerAReview,true).reasoningConsistent,4);
 activeLearner='learner-B';
+assert.throws(()=>scopedAcademy.learnerShare(learnerAReview,true),/current learner.*reviewed/i,
+  'learner A score must not export under learner B');
+
 assert.equal(scopedAcademy.lastReview(),null,'learner B must not see learner A review');
 assert.equal(scopedAcademy.tutor().state,'ready-to-practise');
-assert.equal(scopedAcademy.review(wrong).total,0);
+const learnerBReview=scopedAcademy.review(wrong);
+assert.equal(learnerBReview.total,0);
 assert.equal(scopedAcademy.tutor().state,'coached');
+assert.equal(scopedAcademy.learnerShare(learnerBReview,true).reasoningConsistent,0);
 activeLearner='learner-A';
+assert.throws(()=>scopedAcademy.learnerShare(learnerBReview,true),/current learner.*reviewed/i);
+
 assert.equal(scopedAcademy.lastReview(),null,'A must not inherit B review');
 assert.equal(scopedAcademy.tutor().state,'ready-to-practise');
 // A profile switch inside a scorer callback must not cache the stale result.
@@ -175,6 +192,46 @@ const switchingAcademy=lab.createAcademy({
 assert.equal(switchingAcademy.review(correct).state,'learner-changed');
 assert.equal(switchingAcademy.lastReview(),null);
 assert.equal(switchingAcademy.tutor().state,'ready-to-practise');
+// A getter can change learner identity halfway through the UI render.
+// Neither tutor recommendations nor pathway attempt indicators may leak.
+activeLearner='learner-A';
+const switchingProgressBridge={
+ ...scopedBridge,
+ getProgress(){activeLearner='learner-B';return {state:'formative-attempt',best:4,coachingLevel:'advanced'}}
+};
+const switchingProgressAcademy=lab.createAcademy({
+ apprenticeship:va,bookManifest:book,crosswalk,factoryEvidence:factoryData,
+ bridge:switchingProgressBridge,storage:scopedStorage
+});
+const staleProgressReview=switchingProgressAcademy.review(correct);
+assert.equal(staleProgressReview.total,4);
+assert.equal(switchingProgressAcademy.tutor().state,'ready-to-practise');
+assert.equal(switchingProgressAcademy.lastReview(),null);
+assert.throws(()=>switchingProgressAcademy.learnerShare(staleProgressReview,true),/current learner.*reviewed/i);
+activeLearner='learner-A';
+const switchingPathwayStore={
+ learnerToken(){return activeLearner},
+ get(){activeLearner='learner-B';return {completed:{'VA-01':{best:4}}}}
+};
+const switchingPathwayBridge=adapter.createBridge({apprenticeship:va,runtime:{storage:switchingPathwayStore}});
+const switchingPathwayAcademy=lab.createAcademy({
+ apprenticeship:va,bookManifest:book,crosswalk,factoryEvidence:factoryData,
+ bridge:switchingPathwayBridge,storage:switchingPathwayStore
+});
+assert.ok(switchingPathwayAcademy.pathway().every(track=>track.attempted===0),
+ 'cross-profile mid-read attempt data must not render');
+activeLearner='learner-A';
+const inconsistentBridge={...scopedBridge,review(){return {
+ state:'formative-review',caseId:'VA-02',max:4,total:4,dimensions:[],gaps:[]
+}}};
+const inconsistentAcademy=lab.createAcademy({
+ apprenticeship:va,bookManifest:book,crosswalk,factoryEvidence:factoryData,
+ bridge:inconsistentBridge,storage:scopedStorage
+});
+assert.equal(inconsistentAcademy.review(correct).state,'unavailable');
+assert.equal(inconsistentAcademy.lastReview(),null);
+assert.throws(()=>inconsistentAcademy.learnerShare({state:'formative-review',total:4,gaps:[]},true),
+ /current learner.*reviewed/i);
 assert.equal(app.pathway().length,5);
 assert.ok(app.pathway().some(x=>x.attempted>0));
 assert.ok(app.pathway().every(x=>!x.credentialAwarded&&!x.workplaceValidated));
@@ -204,7 +261,7 @@ const html=readText('tools/new1-academy-workbench.html');
 assert.match(html,/Developer preview only/);
 assert.ok(html.includes('../src/experimental/new1-academy-core.js'));
 assert.ok(html.includes('../src/domains/engineering/virtual-apprenticeship.js'));
-for(const marker of ['academy.assignmentExport','academy.learnerShare','MM_NEW1_ACADEMY','academy.review(state.answers)'])
+for(const marker of ['academy.assignmentExport','academy.learnerShare','academy.lastReview()','MM_NEW1_ACADEMY','academy.review(state.answers)'])
  assert.ok(ui.includes(marker),'Missing workbench integration: '+marker);
 assert.ok(!/\binnerHTML\b/.test(ui),'No injection-prone HTML string rendering');
 assert.ok(!/\blocalStorage\b/.test(ui),'Local demo must not read/write real learner records');
