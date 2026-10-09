@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **fail** |
+| Technical automation | **pass** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | No verified .6 exact-head technical candidate was approved at this point; .5 is historical evidence only. Technical status remains FAIL until exact-head retained artifact and current release bindings are proven. |
-| Behavioral / browser | **fail** | The new .6 candidate has not yet passed exact-head browser and quality checks. Prior .5 results cannot transfer. |
+| Static / contract | **pass** | Retained .6 technical runtime source 3465fdca76941bf46d360051bc09fcda6d41c611 produced successful Pre-merge Public Candidate run 37923715379 and artifact 11612534730. Current PR-head protected checks and external physical acceptance remain separately required. |
+| Behavioral / browser | **pass** | Automated Mobile Browser QA and Question Quality 50-Pass succeeded on the retained .6 runtime source 3465fdca76941bf46d360051bc09fcda6d41c611. New PR-head checks, human visual review and real-device/AT acceptance remain independently required. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
