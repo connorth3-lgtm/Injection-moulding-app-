@@ -37,6 +37,7 @@ const FIXED_COMMANDS=Object.freeze([
   {id:'materials',label:'Materials',hint:'Material families and governed evidence',keywords:'resin polymer grade'},
   {id:'spatial',label:'Spatial Twin',hint:'Enter the explorable moulding cell',keywords:'digital twin cell simulator'},
   {id:'apprentice',label:'Virtual Apprenticeship',hint:'Evidence-first shop-floor investigations',keywords:'case scenario diagnosis'},
+  {id:'factory-case-one',label:'Digital Factory — Case One',hint:'Four-cavity training: Book, Spatial Twin and evidence decisions',keywords:'factory new1 mouldmaster 3.0 cavity training'},
   {id:'mould-master',label:'Mould Master',hint:'Build a persistent troubleshooting case',keywords:'diagnose case evidence'},
   {id:'process-data',label:'Process Data',hint:'Analyse machine, cavity and quality signals',keywords:'chart csv trend'},
   {id:'book',label:'Book',hint:'Governed injection moulding reference',keywords:'reference chapter'},
@@ -412,6 +413,7 @@ function executeCommand(row){
     case 'exams':return view('exams');case 'profile':return view('profile');case 'standards':return view('standards');
     case 'spatial':return window.MM_SPATIAL_TWIN?.open?.({})??view('simulator');
     case 'apprentice':return window.MM_VIRTUAL_APPRENTICESHIP?.openCase?.(0)??view('simulator');
+    case 'factory-case-one':return window.MM_VIRTUAL_APPRENTICESHIP?.openFactoryCaseOne?.()??view('simulator');
     case 'mould-master':return window.MM_MOULD_MASTER_WORKSPACE?.open?.()??view('defects');
     case 'process-data':return window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.()??view('scenarios');
     case 'book':return window.MMBook?.open?.()??false;
