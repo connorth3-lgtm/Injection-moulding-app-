@@ -143,13 +143,48 @@
     }
     function snapshot(){
       const ready=synchronize();
-      return Object.freeze({state:ready?'ready':'no-learner',answers:{...answers},reviewed:reviewed?{...reviewed}:null});
+      return Object.freeze({
+        state:ready?'ready':'no-learner',
+        answers:Object.freeze({...answers}),
+        reviewed:reviewed?Object.freeze({...reviewed}):null
+      });
     }
     function review(){
       if(!synchronize())return {state:'no-learner',reason:'Choose a learner profile before reviewing this case.'};
-      const result=bridge.review(answers);
-      reviewed=result.state==='formative-review'?result:null;
-      return result;
+      const owner=token;
+      // Invalidate the prior reviewed state before every new scoring attempt.
+      // A malformed or throwing scorer must not resurrect the old score.
+      reviewed=null;
+      const result=bridge.review({...answers});
+      // A synchronous scorer or storage callback can switch the active profile.
+      // Do not return an A score into the B worksheet even for one render.
+      if(learnerToken()!==owner){
+        synchronize();
+        return {state:'learner-changed',reason:'The learner profile changed during review. Reopen the case for this learner.'};
+      }
+      if(result?.state!=='formative-review'){
+        reviewed=null;
+        return result;
+      }
+      if(result.caseId!==CASE_ID||result.max!==4||
+         !Number.isInteger(result.total)||result.total<0||result.total>4||
+         !Array.isArray(result.dimensions)||result.dimensions.length!==4||
+         !Array.isArray(result.gaps)||result.gaps.length!==4-result.total)
+        return {state:'unavailable',reason:'Canonical formative scoring fields were inconsistent.'};
+      const dimensions=result.dimensions.map(row=>row&&typeof row==='object'?
+        Object.freeze({id:row.id,step:row.step,label:row.label,
+          correct:row.correct===true,chapter:row.chapter}):null);
+      const gaps=dimensions.filter(row=>row&&!row.correct).map(row=>row.id);
+      if(dimensions.some(row=>!row)||new Set(dimensions.map(row=>row.id)).size!==4||
+         gaps.length!==result.gaps.length||
+         gaps.some((id,i)=>id!==result.gaps[i])){
+        reviewed=null;
+        return {state:'unavailable',reason:'Canonical formative dimension identities were inconsistent.'};
+      }
+      reviewed=Object.freeze({...result,
+        dimensions:Object.freeze(dimensions),gaps:Object.freeze([...gaps])
+      });
+      return reviewed;
     }
     function reset(){synchronize();answers={};reviewed=null}
     return Object.freeze({choose,snapshot,review,reset});
