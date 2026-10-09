@@ -81,7 +81,7 @@ def authored_chapter_index(publication: dict, manifest_chapters: list[dict],
             raise AssertionError("invalid published Book batch: " + name) from exc
         need(type(batch) is dict and batch.get("schema") == 1
              and batch.get("bookId") == "mouldmaster-book"
-             and batch.get("status") == "technical-review",
+             and batch.get("status") in ("technical-review", "technical-review-drafts"),
              "authored Book batch review boundary invalid: " + name)
         rows = batch.get("chapters")
         need(type(rows) is list and rows, "Book batch has no chapters: " + name)
