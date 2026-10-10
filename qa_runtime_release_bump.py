@@ -42,12 +42,18 @@ def packed_source_inputs(source: str) -> set[str]:
     }
 
 
-# Compare the complete change being validated, not merely the final commit on a
-# multi-commit PR. actions/checkout checks out GitHub's synthetic pull-request
-# merge commit for pull_request runs, where HEAD^ is the protected base branch.
-# On push runs HEAD^ is the previous protected-main commit. In both cases this
-# makes the release gate cover the full governed runtime delta presented to CI.
-parent = git("rev-parse", "HEAD^").strip()
+# The QA workflow checks out the *exact pull-request source SHA*, not GitHub's
+# synthetic merge commit. HEAD^ therefore names the last source-branch commit,
+# not the protected target branch. Comparing HEAD^ silently missed the 190-commit
+# preview -> main runtime delta in #592. Resolve the actual merge base for PRs;
+# push workflows continue to compare the immediately preceding commit.
+from tools.runtime_release_diff import choose_comparison_base
+
+parent = choose_comparison_base(
+    git,
+    event_name=__import__("os").environ.get("GITHUB_EVENT_NAME", ""),
+    base_ref=__import__("os").environ.get("GITHUB_BASE_REF", ""),
+)
 changed = {x.strip() for x in git("diff", "--name-only", parent, "HEAD").splitlines() if x.strip()}
 
 worker = (ROOT / "service-worker.js").read_text(encoding="utf-8")
