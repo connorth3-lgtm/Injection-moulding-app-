@@ -146,3 +146,21 @@ test('Book ignores a delayed chapter load after switching back to Home',async({p
     expect(await page.evaluate(()=>document.documentElement.classList.contains('mm-book-instant-scroll'))).toBe(false);
   }finally{unblockRequest();}
 });
+
+
+test('Book route changes preserve the last visible reading bookmark',async({page})=>{
+  await openApp(page);
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r01'));
+  await expect(page.locator('#mmBookView [data-mm-book-reader]')).toBeVisible();
+  await page.waitForTimeout(260);
+  const before=await page.evaluate(()=>window.MMBook.getResume());
+  expect(before?.kind).toBe('reader-chapter');
+  await page.evaluate(()=>window.switchView('dashboard'));
+  await expect(page.locator('#dashboard')).toBeVisible();
+  await expect(page.locator('#mmBookView')).toBeHidden();
+  const after=await page.evaluate(()=>window.MMBook.getResume());
+  expect(after?.id).toBe(before.id);
+  expect(after?.anchorId).toBe(before.anchorId);
+  expect(after?.scrollY).toBe(before.scrollY);
+  expect(await page.evaluate(()=>document.documentElement.classList.contains('mm-book-instant-scroll'))).toBe(false);
+});
