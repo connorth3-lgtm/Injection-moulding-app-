@@ -2,7 +2,7 @@ name: Deep Audit Governance
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ main, preview ]
   push:
     branches: [ main ]
   workflow_dispatch:
