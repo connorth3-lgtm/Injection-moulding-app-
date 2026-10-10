@@ -27,7 +27,12 @@ test('Materials has a dedicated entry page and first-class library layout',async
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
   await expect(page.locator('#materials')).toBeVisible();
   await expect(page.locator('#mmMaterialsPageIntro')).toBeVisible();
-  await expect(page.locator('#mmMaterialsPageIntro')).toContainText('Material library & engineering evidence');
+  await expect(page.locator('#mmMaterialsPageIntro')).toContainText('Compare grades');
+  await expect(page.locator('#mmMaterialsPageIntro .mm-material-page-stat')).toHaveCount(0);
+  await expect(page.locator('#mmMaterialsPageIntro')).not.toContainText('Published exact grades');
+  await expect(page.locator('#mmExactMaterialCatalog [data-mm-all-material-index]')).toBeVisible();
+  const firstCatalogueChild=await page.locator('#mmExactMaterialCatalog').evaluate(root=>root.firstElementChild?.hasAttribute('data-mm-all-material-index'));
+  expect(firstCatalogueChild).toBe(true);
   await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
   await expect(page.locator('#mmMaterialCompare')).toBeVisible();
   await expect(page.locator('#mmMaterialChange')).toBeVisible();
@@ -46,7 +51,10 @@ test('360px Materials entry keeps the catalogue search in the first screen witho
   const root=page.locator('#mmExactMaterialCatalog');
   const intro=page.locator('#mmMaterialsPageIntro');
   await expect(intro).toBeVisible();
+  await expect(intro.locator('.mm-material-page-nav button')).toHaveCount(3);
+  await expect(intro.locator('.mm-material-page-stat')).toHaveCount(0);
   await expect(root.locator('[data-mm-all-material-query]')).toBeInViewport();
+  await expect(root.getByRole('heading',{name:'All materials'})).toBeVisible();
   await expect(intro.getByRole('button',{name:'Compare grades'})).toBeVisible();
   await expect(intro.getByRole('button',{name:'Change assistant'})).toBeVisible();
   await expect(intro.getByRole('button',{name:'Material learning'})).toBeVisible();
