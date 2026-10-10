@@ -46,8 +46,8 @@ test('one clear lesson flow keeps original engineering depth without repeated ta
   const details=deep.locator('details.mm-deep-v2-card');
   expect(await details.evaluate(el=>el.open)).toBe(false);
   await expect(details.locator('.mm-deep-v2-detail')).toBeHidden();
-  await expect(details.locator('summary')).toContainText('Engineering detail & examples');
-  await details.locator('summary').first().click();
+  await expect(details.locator(':scope > summary')).toContainText('Engineering detail & examples');
+  await details.locator(':scope > summary').click();
   await expect(details.getByRole('heading',{name:'Mechanism'})).toBeVisible();
   await expect(details.getByRole('heading',{name:'Evidence chain'})).toBeVisible();
   await expect(details.getByRole('heading',{name:'Plant decision'})).toBeVisible();
@@ -94,7 +94,7 @@ test('generic no-source references do not consume the mobile lesson screen',asyn
 
 test('lesson has one clear ending and optional evidence stays out of the default flow',async({page})=>{
   await openLesson(page);
-  const details=page.locator('#mmLessonDeepV2 details');
+  const details=page.locator('#mmLessonDeepV2 details.mm-deep-v2-card');
   const directEvidenceCount=await page.locator('#lesson .lesson-body > .content-block, #lesson .lesson-body > .mm-simple-section').evaluateAll(nodes=>nodes.filter(node=>/^Evidence check$/i.test(node.querySelector(':scope > h3')?.textContent?.trim()||'')).length);
   expect(directEvidenceCount).toBe(0);
   await details.locator(':scope > summary').click();
