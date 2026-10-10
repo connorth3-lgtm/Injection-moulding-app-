@@ -380,6 +380,8 @@ need('Reasoning scenario:' in book_runtime and 'Chapter depth:' in book_runtime 
 need('readerKeyTermsHtml' in book_runtime and 'readerTermGuideHtml' in book_runtime and 'Chapter thread:' in book_runtime and 'Key-term guide' in book_runtime, 'Book first-read chapter-thread/key-term navigation missing')
 need('mm-book-scope-note' in book_runtime and '<strong>Applicability:</strong>' in book_runtime, 'Book first-read applicability progressive disclosure missing')
 need('mm-book-reader-worked-case' in book_runtime and 'Worked example:' in book_runtime and 'synthetic teaching data' in book_runtime, 'Book first-read worked-example progressive disclosure missing')
+need('mm-book-toc' in book_runtime and 'mm-book-toc-number' in book_runtime, 'Book chapter titles must remain visible in the table of contents')
+need('mm-book-page-turn' in book_runtime and 'Next chapter' in book_runtime, 'Sequential chapter navigation missing')
 need(reader_architecture.get('firstReadPolicy') and 'progressive disclosure' in reader_architecture.get('firstReadPolicy'), 'Book first-read policy missing from governed reader architecture')
 need(all(row.get('readingThread') and 3 <= len(row.get('keyTerms') or []) <= 8 for row in readers), 'Book first-read chapter threads/key terms incomplete')
 need(authorization.get('readerArchitectureAuthorization',{}).get('firstReadPresentation',{}).get('workedExamplesOptionalExpand') is True, 'Book first-read presentation authorization missing')
