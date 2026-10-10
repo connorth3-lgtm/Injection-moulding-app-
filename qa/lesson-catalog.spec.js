@@ -134,6 +134,17 @@ test('optional specialist selection opens its authored content without awarding 
   const done=await page.evaluate(()=>user.completed);
   expect(done).toEqual([1,2]);
 });
+test('global search leads to Learn without displaying another list of lesson matches',async({page})=>{
+  await ready(page);
+  await page.evaluate(()=>openSearch());
+  await page.locator('#globalSearch').fill('polymer');
+  const results=page.locator('#searchResults');
+  await expect(results.locator('[data-mm-global-lesson-library]')).toBeVisible();
+  await expect(results.locator('button[data-mm-onclick*="goLesson("]')).toHaveCount(0);
+  await results.locator('[data-mm-global-lesson-library]').click();
+  await expect(page.locator('#path .mm-all-lessons')).toBeVisible();
+  await expect(page.locator('#path [data-mm-catalog-query]')).toHaveValue('polymer');
+});
 test('catalogue stays within a 360px mobile viewport',async({page})=>{
   await page.setViewportSize({width:360,height:800});
   await ready(page);
