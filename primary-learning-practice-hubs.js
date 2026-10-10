@@ -7,7 +7,7 @@ if(typeof renderPath!=='function'||typeof renderScenarios!=='function'||typeof s
   return;
 }
 
-const VERSION='2026.09.24.1';
+const VERSION='2026.10.10.4';
 const PRACTICE_ROTATION_KEY='mm_practice_scenario_rotation_v1';
 const originalRenderScenarios=renderScenarios;
 
