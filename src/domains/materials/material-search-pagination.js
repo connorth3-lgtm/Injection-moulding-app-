@@ -97,6 +97,10 @@ async function enhance(){
     // A catalogue result is a navigation action, not just a search-box update.
     // Wait for the indexed exact-grade render before revealing and focusing its
     // evidence card; otherwise it remains below the fold on narrow screens.
+    // The all-materials catalogue is independent of the exact-grade panel's
+    // previous manufacturer selection. Clear that stale filter before jumping
+    // so a valid published grade cannot vanish from the destination results.
+    manufacturer.value='';
     query.value=id;
     await render(true);
     const grade=host.querySelector('[data-mm-material-grade]');
