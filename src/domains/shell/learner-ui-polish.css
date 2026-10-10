@@ -673,3 +673,17 @@
   #mmBookView .mm-book-toc>li>button:focus-visible,
   #mmBookView .mm-book-page-turn>button:focus-visible{outline:2px solid Highlight;outline-offset:2px}
 }
+
+
+/* The Book is a reading surface, not a Mission Control dashboard. Hide only
+   the mission's status strip, NEVER its overlay hosts, data or shortcuts. The
+   context returns automatically on Home/Learn/Practice without JS state edits. */
+@media screen {
+  body:has(#mmBookView:not(.hidden)) #mmMissionControl>.mm-mc-context,
+  body:has(#mmBookView:not(.hidden)) #mmMissionControl>.mm-mc-timeline {
+    display:none!important
+  }
+  body:has(#mmBookView:not(.hidden)) #pageSubtitle {
+    display:none!important
+  }
+}
