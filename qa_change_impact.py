@@ -96,6 +96,16 @@ need("tools/ci_impact.py --base \"$BASE\" --head \"$TARGET\"" in mobile_workflow
      "Mobile Browser QA must classify the exact range from successful proof to current PR head")
 need("cancel-in-progress: true" in mobile_workflow,
      "Mobile Browser QA may cancel superseded runs only because its next run inherits the last successful proof baseline")
+# Exact-head protected-main 50-Pass may never report success by skipping all
+# audits just because the previous preview retained-candidate SHA is an
+# ancestor. A mandatory protected-main release deserves a real new suite.
+question_workflow=(Path(__file__).resolve().parent/".github/workflows/question-quality-50-pass.yml").read_text(encoding="utf-8")
+need("python3 tools/ci_impact.py --governed-candidate" in question_workflow,
+     "metadata-only preview question-quality routing must retain the governed-candidate optimization")
+need('"${{ github.event_name }}" = "pull_request"' in question_workflow
+     and '"${{ github.base_ref }}" = "main"' in question_workflow
+     and 'echo "question_quality=true" >> "$GITHUB_OUTPUT"' in question_workflow,
+     "protected-main Question Quality 50-Pass must force actual assessment audits rather than skip")
 
 # Execute the actual workflow's bash aggregator in a few representative
 # protected-main and preview scenarios. We cannot rely on text markers alone:
