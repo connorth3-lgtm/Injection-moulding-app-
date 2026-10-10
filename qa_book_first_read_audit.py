@@ -177,8 +177,13 @@ def main() -> None:
     for row in rows:
         print(f"{row['id']}  {row['visibleWords']:>4} words / "
               f"{len(row['omitted']):>2} hidden sections  {row['title']}")
-    if args.check and len(under) != 12:
-        raise AssertionError(f"first-read chapter depth snapshot changed: {len(under)} below target; manually refresh editorial review")
+    if args.check:
+        # A soft editorial goal must not become a hidden publication gate.
+        # More (or fewer) visible words can reflect legitimate author edits;
+        # audit() already checks all 20 groups, 46 modules and 53 source
+        # disclosures. Human review remains an independent HOLD.
+        if len(rows) != 20 or modules != 46 or omissions != 53:
+            raise AssertionError("governed reader coverage changed")
     if args.report_json:
         args.report_json.parent.mkdir(parents=True, exist_ok=True)
         args.report_json.write_text(json.dumps(editorial_review_packet(rows, modules, omissions), indent=2) + "\n", encoding="utf-8")

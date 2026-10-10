@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import re
 
 ROOT = Path(__file__).resolve().parent
 WORKFLOWS = (
@@ -12,26 +13,40 @@ WORKFLOWS = (
 )
 
 
-def event_branches(text: str, event: str, path: str) -> str:
+def event_branches(text: str, event: str, path: str) -> set[str]:
+    """Read only the selected top-level on: event, not another event or comments."""
     marker = f"\n  {event}:\n"
-    if marker not in text:
-        raise AssertionError(f"{path}: missing {event} event")
+    if text.count(marker) != 1:
+        raise AssertionError(f"{path}: require exactly one {event} event")
     fragment = text.split(marker, 1)[1]
+    branch_lines = []
     for line in fragment.splitlines():
-        # A sibling "on:" event begins at two spaces; its branches are below.
+        # A sibling on: event begins at two spaces; nested event keys use four.
         if line.startswith("  ") and not line.startswith("    "):
             break
+        if line.lstrip().startswith("branches:") and not line.startswith("    branches:"):
+            raise AssertionError(f"{path}: invalid {event} branch indentation")
         if line.startswith("    branches:"):
-            return line.strip()
-    raise AssertionError(f"{path}: {event} requires explicit branch filtering")
+            branch_lines.append(line)
+    if len(branch_lines) != 1:
+        raise AssertionError(f"{path}: {event} requires exactly one branch allowlist")
+    match = re.fullmatch(r"\s{4}branches:\s*\[([^\]]*)\]\s*(?:#.*)?", branch_lines[0])
+    if not match:
+        raise AssertionError(f"{path}: {event} branches must be an explicit inline list")
+    values = [item.strip().strip("'\"") for item in match.group(1).split(",")]
+    if any(not re.fullmatch(r"[a-z][a-z0-9-]*", value) for value in values):
+        raise AssertionError(f"{path}: invalid {event} branch name")
+    if len(values) != len(set(values)):
+        raise AssertionError(f"{path}: duplicated {event} branch allowlist")
+    return set(values)
 
 
 def validate(text: str, path: str) -> None:
     pull = event_branches(text, "pull_request", path)
-    if "main" not in pull or "preview" not in pull:
-        raise AssertionError(f"{path}: PR preflight must include main and preview")
+    if pull != {"main", "preview"}:
+        raise AssertionError(f"{path}: PR preflight must target exactly main and preview")
     push = event_branches(text, "push", path)
-    if "main" not in push or "preview" in push:
+    if push != {"main"}:
         raise AssertionError(f"{path}: only protected main pushes may run this workflow")
     if "pull_request.head.sha || github.sha" not in text:
         raise AssertionError(f"{path}: must inspect the exact pull request head")

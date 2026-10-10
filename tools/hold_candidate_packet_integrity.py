@@ -51,6 +51,8 @@ def candidate_identity(candidate: dict, release: str) -> dict:
     except ValueError as exc:
         raise ValueError("External HOLD provenance: invalid artifact expiry") from exc
     require(timestamp.tzinfo is not None, "artifact expiry lacks timezone")
+    require(timestamp.astimezone(dt.timezone.utc) > dt.datetime.now(dt.timezone.utc),
+            "retained candidate artifact is expired")
     return candidate
 
 

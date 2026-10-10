@@ -11,7 +11,7 @@ class FirstReadReviewQueueTests(unittest.TestCase):
         self.assertEqual(packet["readerChapterCount"], 20)
         self.assertEqual(packet["governedModuleCount"], 46)
         self.assertEqual(packet["omittedSourceSectionCount"], 53)
-        self.assertEqual(packet["chaptersBelowSoftTarget"], 12)
+        self.assertEqual(packet["chaptersBelowSoftTarget"], sum(r["belowTarget"] for r in rows))
         self.assertEqual({r["readerId"] for r in packet["chapters"]},
                          {f"r{i:02d}" for i in range(1, 21)})
         self.assertEqual({r["readerId"] for r in packet["chapters"] if r["priority"] == "first-review"},
@@ -67,6 +67,22 @@ class FirstReadReviewQueueTests(unittest.TestCase):
         with mock.patch("qa_book_first_read_audit.presentation_map", side_effect=overlapping):
             with self.assertRaisesRegex(AssertionError, "both omit and supplement"):
                 audit()
+
+
+    def test_non_gating_word_count_change_does_not_fail_check(self):
+        import io
+        from contextlib import redirect_stdout
+        from unittest.mock import patch
+        from qa_book_first_read_audit import main
+
+        rows, modules, omitted = audit()
+        improved = [dict(row, belowTarget=False) for row in rows]
+        with patch("qa_book_first_read_audit.audit", return_value=(improved, modules, omitted)):
+            with patch("sys.argv", ["qa_book_first_read_audit.py", "--check"]):
+                with redirect_stdout(io.StringIO()) as out:
+                    main()
+        self.assertIn("0 below", out.getvalue())
+        self.assertIn("NOT VERIFIED", out.getvalue())
 
     def test_soft_word_threshold_is_not_an_approval_gate(self):
         rows, modules, omissions = audit()

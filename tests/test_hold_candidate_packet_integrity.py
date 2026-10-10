@@ -21,7 +21,7 @@ CANDIDATE = {
     "candidateRunId": 456,
     "candidateWorkflow": "Pre-merge Public Candidate",
     "artifactName": "physical-pwa-candidate-" + SHA,
-    "artifactExpiresAt": "2027-01-01T00:00:00Z",
+    "artifactExpiresAt": "2099-01-01T00:00:00Z",
 }
 
 
@@ -48,7 +48,7 @@ def banner():
         f"# Technical packet — {RELEASE}\n\n"
         f"> **RETAINED {RELEASE} TECHNICAL ARTIFACT; ALL EXTERNAL REVIEWS HOLD.** "
         f"[producer](https://github.com/org/repo/actions/runs/456) artifact **123** "
-        f"source {SHA} digest {DIGEST} expiry 2027-01-01T00:00:00Z fingerprint {FP}\n\n"
+        f"source {SHA} digest {DIGEST} expiry 2099-01-01T00:00:00Z fingerprint {FP}\n\n"
         "**STATUS: HOLD — no real testing or approval.**\n"
     )
 
@@ -110,6 +110,11 @@ class PacketBoundaryTests(unittest.TestCase):
             candidate = dict(CANDIDATE, **{key: value})
             with self.subTest(key=key, value=value), self.assertRaises(ValueError):
                 candidate_identity(candidate, RELEASE)
+
+    def test_expired_artifact_cannot_be_presented_as_current_release_evidence(self):
+        expired = dict(CANDIDATE, artifactExpiresAt="2020-01-01T00:00:00Z")
+        with self.assertRaisesRegex(ValueError, "artifact is expired"):
+            candidate_identity(expired, RELEASE)
 
     def test_external_approval_and_machine_authority_cannot_be_smuggled_in(self):
         for area in PACKETS:

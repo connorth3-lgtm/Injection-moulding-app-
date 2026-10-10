@@ -145,6 +145,8 @@ jobs:
           python tools/verify_release_external_validation.py
           python qa_release_validation_packets.py
           python -m unittest discover -s tests -p 'test_hold_candidate_packet_integrity.py' -v
+          python -m unittest discover -s tests -p 'test_governance_candidate_identity.py' -v
+          python -m unittest discover -s tests -p 'test_preview_release_branch_policy.py' -v
           python -m unittest discover -s tests -p 'test_rebind_external_hold_candidate.py' -v
       - name: All-folder tracked-file, JSON and immutable-workflow hygiene
         run: |
