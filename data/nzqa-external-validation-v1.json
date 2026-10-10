@@ -1,17 +1,13 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.11.2",
+  "release": "2026.10.11.3",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.11.2.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.11.3.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 379,
-  "candidate": {
-    "release": "2026.10.11.2",
-    "sourceSha": "62cbc79224b133f5953d26b09547001e73961481",
-    "runtimeFingerprint": "sha256:85daf719b86418fbc94610973f173a058455ecc0bec2e9bf53320da6e2f08306"
-  },
-  "boundary": "Genuine provider G1–G8 external evidence remains pending for 2026.10.11.2; retained exact-source technical candidate 62cbc79224b133f5953d26b09547001e73961481 with fingerprint sha256:85daf719b86418fbc94610973f173a058455ecc0bec2e9bf53320da6e2f08306 is not accreditation, assessment authority or production/machine-control permission. Verify producer workflow quality outcome separately before release.",
+  "candidate": null,
+  "boundary": "Genuine provider G1–G8 review for 2026.10.11.3 remains pending; an exact-source successful technical candidate must be retained and rebound before any provider testing. No accreditation, assessment authority, deployment, or machine-control permission.",
   "requiredGates": [
     {
       "id": "G1-provider",
@@ -57,8 +53,8 @@
   "evidence": null,
   "validationRule": "Validated requires genuine provider-owned evidence for all eight gates, public-safe evidence references, exact release/candidate binding, and separate reviewed promotion of the canonical external-validation status. Automation must not manufacture completion.",
   "previousCandidate": {
-    "release": "2026.10.09.4",
-    "sourceSha": "ff53e2958d7c97d99aba890a23ba7caf4f21d3c6",
-    "runtimeFingerprint": "sha256:7776a3ccccd8d049e7b9a5167e957651220d8f98a8da3b51b046ab85ae0f53a8"
+    "release": "2026.10.11.3",
+    "sourceSha": "62cbc79224b133f5953d26b09547001e73961481",
+    "runtimeFingerprint": "sha256:85daf719b86418fbc94610973f173a058455ecc0bec2e9bf53320da6e2f08306"
   }
 }
