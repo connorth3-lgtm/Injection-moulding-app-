@@ -1,41 +1,65 @@
-# Lean Academy navigation and Book first reading — #582
+# MouldMaster Book as a book — #582
 
-**Scope:** reversible presentation hierarchy only. No canonical Academy lesson,
-Book governed module, source citation, engineering/safety text, assessment,
-learner progress, storage schema, permission or PWA route is changed.
+**User direction:** “Make the book just a book.” This is a reading
+experience, not another learner dashboard or expert review workflow.
+The Academy app retains its already compact Home/Learn/Materials/Practice/More
+navigation. The Book is a single reading route, not a competing app.
 
-## Before and after
+## What readers see
 
-| Surface | Previous first screen | Simplified first screen |
-| --- | --- | --- |
-| Desktop sidebar | The core source lists 14 navigation options, but the **actual published UI already consolidates these** into Home, Learn, Materials, Practice and More; Book is reachable from Home and More via `learner-ui-polish.js` | **Preserve the working compact primary shell.** Do not create a competing sidebar or hide Materials from the accessible primary destinations. Existing specialist tools stay in the governed More modal without duplicated navigation. |
-| Book contents | Large repeated Book title/intro, status, depth-band explanation, learning boundary, first-read policy, key-term guide, then 20 chapter buttons; on 360px phones chapter one did not appear above the bottom bar | Keep the complete original Book title and intro under a keyboard-accessible `About this Book` disclosure, with publication review status and listening still directly reachable. Show `Choose a chapter` and all 20 chapter choices earlier. Depth/reading terms and guidance remain under the existing optional guide; all 46 governed modules remain reachable through the existing index. |
-| Book chapter | Repeated Book hero and global accuracy card, chapter goal, separate thread/terms/sequence prompts, governance disclosure, then actual prose | Book hero and global accuracy card are hidden **only while reading a 20-chapter reader view**. The chapter title/goal and authored text remain immediate. Reader thread, key terms and sequence prompts move under one optional `Chapter guide`. Module source review status, applicability, diagrams, worked examples, evidence, sources, learning checks and all technical text remain available. |
+- **Contents:** Twenty numbered **chapter titles** in one uncluttered table
+  of contents. No progress badge, module counter or source-review ratio beside
+  every chapter. The 46 canonical governed source modules remain accessible
+  from the optional **Source module index**, *after* the chapter contents.
+- **Chapter:** A chapter number, title and short introduction, followed
+  directly by the **original authored prose**, readable headings, engineering
+  illustrations and worked examples in a quiet one-column text layout.
+  Chapter goals are kept as opening text, rather than a task dashboard.
+- **Page turning:** Ordinary **Previous chapter / Contents / Next chapter**
+  controls at the end; direct chapter links, Book resume, read-aloud,
+  keyboard navigation and search retain their existing routes and semantics.
+- **End matter:** The original Book study prompts, key terms, reader guide,
+  claim/source declarations and evidence review status remain present under
+  optional **Study questions** and **Notes, sources & review status**
+  after the prose, not interleaved as dashboard panels while reading.
+- **Review and safety boundaries:** Applicability/scope paragraphs remain
+  **visible** inside each governed module. A module not source-reviewed
+  retains an immediately visible incomplete-review warning; qualification,
+  site and machine controls are never silently promoted or removed.
+  The complete original introduction, editorial status and listening action
+  remain reachable from Contents, behind a small “About this Book” disclosure.
+- **No content deletion:** The Book manifest, all 46 published source modules,
+  chapter content, published fingerprints, citations, diagrams, worked cases,
+  learning terms, checked claims and separate SME/qualification decisions
+  are unchanged. Nothing creates an exact Book-to-Academy link or awards credit.
 
-## Accessibility, safety and release boundaries
+## Why the navigation was not rewritten
 
-- The original compact desktop shell and mobile navigation remain unchanged. An early experimental attempt to hide Materials behind More broke its primary reachability and existing UX QA, so it was **reverted**. No new navigation handlers, IDs or state are introduced. The existing More modal continues to expose specialist tools.
-- The mobile bottom navigation, modal More interface, learner progress,
-  saved Book position, original governed chapters and read-aloud logic remain
-  untouched. Existing source identity/governance and human SME limitations
-  are neither promoted nor removed.
-- Independent in-person iPad/touch/200%-zoom, assistive technology,
-  provider/NZQA and real production-machine validation remain **HOLD**
-  regardless of passing automated browser checks. Do not interpret visual
-  simplification as permission to issue industrial settings or learning credit.
+Inspecting the *actual live app* showed that desktop already has five
+focused primary destinations (Home, Learn, Materials, Practice, More), with
+Book reachable from Home and More. An earlier sidebar rearrangement
+accidentally hid Materials and failed browser UX tests; **it was reverted**.
+Product improvement means removing distraction, not duplicating or breaking
+existing navigation.
 
-## Automated regression checks
+## Browser and release review
 
-`qa/premium-ui.spec.js` now verifies that the four existing desktop primary
-routes and the governed More modal remain reachable (avoiding accidental
-loss of Materials), and that all 20 *direct* Book reader chapter controls and optional Book guides remain available. A 360×800 mobile-first-run assertion verifies the top of chapter one is above the fixed bottom bar, and the original Book title/introduction can be expanded intact.
-It verifies that the Book hero returns on navigating back and that the first
-reader chapter shows governed authored content without repeated Book chrome.
-Cross-browser Premium UI QA and the existing protected release workflows
-remain required before merge.
+`qa/premium-ui.spec.js` exercises twenty plain chapter-title controls,
+real Book chapter/section text, technical scope visibility, optional
+endnotes, source record access, direct Previous/Next/Contents progression,
+original introduction/listening/governance access, and a first chapter choice
+above the fixed bottom bar at a 360×800 phone viewport. Existing Chromium,
+WebKit, Book endurance, mobile visual, physical-PWA and release gates apply.
 
-**Not yet demonstrated:** measured learner usability improvement, real
-accessibility devices, source-SME signoff, or a reduced production download
-payload. The Git repository's larger QA, duplicated Book source-registry
-copies and desktop binary are separate packaging/retention decisions that
-must not be removed solely to make the tracked tree look smaller.
+This **changes visible screenshots and public runtime bytes**, so previous
+approved visual snapshots and retained release-validation candidate hashes
+cannot authorize the new layout. PR #583 stays **draft** until real screenshots
+are deliberately approved by the project owner, a newly successful exact
+candidate is retained and all external `HOLD` identity contracts are safely
+rebound with the real artifact, and the full exact-head protected CI passes.
+No automation can pretend physical-device/iPad/AT, human SME, NZQA/provider,
+learner outcome or production validation has happened. Those gates remain
+**HOLD** until genuine independent evidence exists.
+
+The goal is *a readable book with sources at the back* rather than an
+additional course, catalogue, dashboard or engineering control panel.
