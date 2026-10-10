@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import hashlib
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -394,6 +396,9 @@ extra = desktop['build']['extraResources']
 need(any(x.get('from') == '../../src/domains' and x.get('to') == 'mouldmaster/src/domains' for x in extra), 'desktop package no longer carries canonical domain runtime/data')
 need("'src/domains/learning/book-data'" in integrity_script, 'desktop integrity manifest no longer includes Book data')
 need('STATIC_DATA_DIRS.flatMap(filesUnder)' in integrity_script, 'desktop static-data integrity enumeration missing')
+
+subprocess.run([sys.executable, str(ROOT / 'qa_book_first_read_audit.py'), '--check'], cwd=ROOT, check=True)
+subprocess.run([sys.executable, str(ROOT / 'qa_pwa_precache_inventory.py'), '--check'], cwd=ROOT, check=True)
 
 print('PASS: Book uses one canonical runtime with exact-byte publication binding and fail-closed authorization.')
 print('PASS: dynamic scripts are release-versioned before late loaders, Book is globally searchable, and learner-facing academic evidence uses canonical DOI links.')
