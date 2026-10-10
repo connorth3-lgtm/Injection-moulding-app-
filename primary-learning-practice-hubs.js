@@ -409,6 +409,9 @@ function createLessonCatalog(){
   const core=()=>Array.isArray(D?.lessons)?D.lessons:[];
   const courses=()=>Array.isArray(D?.courses)?D.courses:[];
   const specialists=()=>Array.isArray(window.MM_SPECIALIST_CURRICULUM?.lessons)?window.MM_SPECIALIST_CURRICULUM.lessons:[];
+  const materialLessons=()=>typeof MAT_LESSONS!=='undefined'&&Array.isArray(MAT_LESSONS)?MAT_LESSONS:[];
+  const materialChapters=()=>typeof MATERIALS!=='undefined'&&Array.isArray(MATERIALS.chapters)?MATERIALS.chapters:[];
+  const materialDone=id=>Array.isArray(user?.materialScience?.completed)&&user.materialScience.completed.includes(id);
   const done=id=>Array.isArray(user?.completed)&&user.completed.includes(id);
   const saved=id=>Array.isArray(user?.bookmarks)&&user.bookmarks.includes(id);
   function markup(){
@@ -420,13 +423,20 @@ function createLessonCatalog(){
         <summary><span class="mm-catalog-group-name">${course.id}. ${esc(course.name)}</span><span class="mm-catalog-group-meta">${complete}/${lessons.length} · ${esc(course.level||'Core')}</span></summary>
         <div class="mm-catalog-rows">${lessons.map(l=>`<button type="button" class="mm-catalog-lesson${l.id===active?' is-current':''}" data-mm-lesson-id="${l.id}" data-mm-catalog-item data-mm-catalog-type="core" data-mm-catalog-done="${done(l.id)?'1':'0'}" data-mm-catalog-saved="${saved(l.id)?'1':'0'}" data-mm-catalog-text="${esc([l.title,l.summary,course.name,l.level,l.id].join(' ').toLowerCase())}" ${l.id===active?'aria-current="step"':''}><span class="mm-catalog-num">${l.id}</span><span class="mm-catalog-title">${esc(l.title)}</span><span class="mm-catalog-state">${done(l.id)?'✓ Done':saved(l.id)?'★ Saved':l.id===active?'Reading':'Open'}</span></button>`).join('')}</div></details>`;
     }).join('');
+    const materialGroups=materialChapters().map(chapter=>{
+      const lessons=materialLessons().filter(l=>l.chapter===chapter.id);
+      const completed=lessons.filter(l=>materialDone(l.id)).length;
+      return `<details class="mm-catalog-group" data-mm-catalog-group>
+        <summary><span class="mm-catalog-group-name">Material science · ${chapter.id}. ${esc(chapter.name)}</span><span class="mm-catalog-group-meta">${completed}/${lessons.length} · separate progress</span></summary>
+        <div class="mm-catalog-rows">${lessons.map(l=>`<button type="button" class="mm-catalog-lesson" data-mm-material-id="${l.id}" data-mm-catalog-item data-mm-catalog-type="material" data-mm-catalog-done="${materialDone(l.id)?'1':'0'}" data-mm-catalog-saved="0" data-mm-catalog-text="${esc([l.title,l.intro,l.chapterName,l.level,l.id].join(' ').toLowerCase())}"><span class="mm-catalog-num">M${l.id}</span><span class="mm-catalog-title">${esc(l.title)}</span><span class="mm-catalog-state">${materialDone(l.id)?'✓ Done':'Open'}</span></button>`).join('')}</div></details>`;
+    }).join('');
     const extra=specialists();
     const extraGroup=extra.length?`<details class="mm-catalog-group" data-mm-catalog-group><summary><span class="mm-catalog-group-name">Optional specialist lessons</span><span class="mm-catalog-group-meta">${extra.length} extras · separate progress</span></summary><div class="mm-catalog-rows">${extra.map(l=>`<button type="button" class="mm-catalog-lesson" data-mm-specialist-id="${esc(l.id)}" data-mm-catalog-item data-mm-catalog-type="specialist" data-mm-catalog-text="${esc([l.id,l.title,l.level].join(' ').toLowerCase())}"><span class="mm-catalog-num">${esc(l.id)}</span><span class="mm-catalog-title">${esc(l.title)}</span><span class="mm-catalog-state">Open</span></button>`).join('')}</div></details>`:'';
     return `<section class="mm-all-lessons" data-mm-lesson-catalog aria-label="All lessons">
-      <div class="mm-catalog-head"><h2>All lessons</h2><p>${core().length} core lessons across ${courses().length} tracks${extra.length?` · ${extra.length} optional specialist lessons`:''}. Search, filter or choose any lesson.</p></div>
-      <div class="mm-catalog-controls"><label><span>Find a lesson</span><input type="search" autocomplete="off" placeholder="Search topics or lessons" data-mm-catalog-query value="${esc(state.query)}"></label><label><span>Show</span><select data-mm-catalog-filter><option value="all"${state.filter==='all'?' selected':''}>All lessons</option><option value="todo"${state.filter==='todo'?' selected':''}>Not finished</option><option value="done"${state.filter==='done'?' selected':''}>Completed</option><option value="saved"${state.filter==='saved'?' selected':''}>Saved</option><option value="specialist"${state.filter==='specialist'?' selected':''}>Specialist</option></select></label></div>
+      <div class="mm-catalog-head"><h2>All lessons</h2><p>${core().length} core · ${materialLessons().length} material science · ${extra.length} optional specialist lessons. All in one library, with separate progress.</p></div>
+      <div class="mm-catalog-controls"><label><span>Find a lesson</span><input type="search" autocomplete="off" placeholder="Search topics or lessons" data-mm-catalog-query value="${esc(state.query)}"></label><label><span>Show</span><select data-mm-catalog-filter><option value="all"${state.filter==='all'?' selected':''}>All lessons</option><option value="todo"${state.filter==='todo'?' selected':''}>Not finished</option><option value="done"${state.filter==='done'?' selected':''}>Completed</option><option value="saved"${state.filter==='saved'?' selected':''}>Saved</option><option value="material"${state.filter==='material'?' selected':''}>Material science</option><option value="specialist"${state.filter==='specialist'?' selected':''}>Specialist</option></select></label></div>
       <p class="mm-catalog-results" aria-live="polite" data-mm-catalog-count></p>
-      <div class="mm-catalog-groups">${groups}${extraGroup}</div>
+      <div class="mm-catalog-groups">${groups}${materialGroups}${extraGroup}</div>
       <p class="mm-catalog-empty" data-mm-catalog-empty hidden>No matching lessons. Try another search or filter.</p>
     </section>`;
   }
@@ -447,8 +457,12 @@ function createLessonCatalog(){
       let visible=0;
       group.querySelectorAll('[data-mm-catalog-item]').forEach(button=>{
         const type=button.dataset.mmCatalogType;
-        const matchesStatus=state.filter==='all'||(state.filter==='specialist'?type==='specialist':type==='core'&&
-          (state.filter==='todo'?button.dataset.mmCatalogDone==='0':state.filter==='done'?button.dataset.mmCatalogDone==='1':button.dataset.mmCatalogSaved==='1'));
+        const matchesStatus=state.filter==='all'||
+          (state.filter==='specialist'?type==='specialist':
+           state.filter==='material'?type==='material':
+           state.filter==='saved'?type==='core'&&button.dataset.mmCatalogSaved==='1':
+           (type==='core'||type==='material')&&
+            (state.filter==='todo'?button.dataset.mmCatalogDone==='0':button.dataset.mmCatalogDone==='1'));
         const matchesText=!query||(button.dataset.mmCatalogText||'').includes(query);
         button.hidden=!(matchesStatus&&matchesText);
         if(!button.hidden)visible++;
@@ -474,11 +488,21 @@ function createLessonCatalog(){
     input?.addEventListener('input',()=>{state.query=input.value;update(root)});
     filter?.addEventListener('change',()=>{state.filter=filter.value;update(root)});
     box.addEventListener('click',event=>{
-      const button=event.target.closest('button[data-mm-lesson-id],button[data-mm-specialist-id]');
+      const button=event.target.closest('button[data-mm-lesson-id],button[data-mm-specialist-id],button[data-mm-material-id]');
       if(!button||!box.contains(button))return;
       if(button.dataset.mmSpecialistId){
         const id=button.dataset.mmSpecialistId;
         if(specialists().some(l=>l.id===id))window.mmSpecialistLesson?.(id);
+        return;
+      }
+      if(button.dataset.mmMaterialId){
+        const materialId=Number(button.dataset.mmMaterialId);
+        if(Number.isInteger(materialId)&&materialLessons().some(l=>l.id===materialId)&&typeof openMaterialLesson==='function'){
+          if(typeof materialTab!=='undefined')materialTab='learn';
+          switchView('materials');
+          openMaterialLesson(materialId);
+          mountMaterialReader();
+        }
         return;
       }
       const id=Number(button.dataset.mmLessonId);
@@ -488,7 +512,7 @@ function createLessonCatalog(){
     update(root);
   }
   function open(options={}){
-    const allowed=['all','todo','done','saved','specialist'];
+    const allowed=['all','todo','done','saved','material','specialist'];
     state.filter=allowed.includes(options.filter)?options.filter:'all';
     state.query=typeof options.query==='string'?options.query.trim().slice(0,120):'';
     window.mmSpecialistClose?.();
@@ -519,7 +543,7 @@ function createLessonCatalog(){
     nav.appendChild(button);
     root.insertBefore(nav,layout||root.firstChild);
   }
-  return Object.freeze({markup,attach,mountLesson,open,counts:()=>({core:core().length,specialist:specialists().length})});
+  return Object.freeze({markup,attach,mountLesson,open,counts:()=>({core:core().length,material:materialLessons().length,specialist:specialists().length})});
 }
 const lessonCatalog=createLessonCatalog();
 
@@ -528,7 +552,7 @@ function learnHubMarkup(){
   const lesson=c?.lesson;const course=c?.course;
   const lessonLine=course?`${esc(course.name)} · Lesson ${(c.position||0)+1} of ${course.lessonIds.length}`:'Your current lesson';
   return `<div class="mm-primary-hub mm-learn-hub">
-    <header class="mm-primary-hub-head"><span class="eyebrow">Learn</span><h1>Lessons</h1><p>One library for every core lesson and optional specialist extension.</p></header>
+    <header class="mm-primary-hub-head"><span class="eyebrow">Learn</span><h1>Lessons</h1><p>Core, material science and specialist lessons in one place.</p></header>
     <section class="mm-hub-continue mm-primary-hub-card" aria-label="Continue learning"><div class="mm-hub-continue-copy"><span class="eyebrow">Continue</span><h2>${esc(lesson?.title||'Your next lesson')}</h2><p>${lessonLine}</p><div class="mm-hub-progress"><div class="mini-bar" aria-hidden="true"><span style="width:${c?.overall||0}%"></span></div><strong>${c?.overall||0}% complete</strong></div></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="lesson">Continue lesson →</button></section>
     ${lessonCatalog.markup()}
     <div class="mm-catalog-extra"><button class="secondary" type="button" data-mm-hub-action="learn-resources">Visuals & glossary →</button></div>
@@ -673,7 +697,50 @@ function openScenarioDetail(index=null){
 renderPath=renderLearnHub;window.renderPath=renderLearnHub;
 renderScenarios=renderPracticeHub;window.renderScenarios=renderPracticeHub;
 window.MM_APP_SHELL?.events?.onRender?.('lesson',()=>requestAnimationFrame(lessonCatalog.mountLesson));
-window.MM_LESSON_CATALOG=Object.freeze({version:'2026.10.10.2',counts:lessonCatalog.counts,open:lessonCatalog.open});
+window.MM_LESSON_CATALOG=Object.freeze({version:'2026.10.10.3',counts:lessonCatalog.counts,open:lessonCatalog.open});
+// Material Science authored lessons share Learn's single catalogue. Their
+// own reader and local completion state are preserved, while the Materials
+// workspace remains available for reference, labs and knowledge checks.
+const materialView=document.getElementById('materials');
+const originalSwitchMaterialTab=typeof switchMaterialTab==='function'?switchMaterialTab:null;
+if(typeof materialTab!=='undefined'&&materialTab==='learn')materialTab='explorer';
+function mountMaterialReader(){
+  if(!materialView)return;
+  const legacy=materialView.querySelector('.mat-chapters');
+  if(legacy&&originalSwitchMaterialTab){originalSwitchMaterialTab('explorer');return}
+  const layout=materialView.querySelector('.mat-learn-layout');
+  if(layout){
+    layout.classList.add('mm-one-column-material');
+    layout.querySelector('.mat-side')?.remove();
+    if(!materialView.querySelector('.mm-lesson-catalog-return')){
+      const nav=document.createElement('nav');
+      nav.className='mm-lesson-catalog-return';
+      nav.setAttribute('aria-label','Return to all material lessons');
+      const back=document.createElement('button');
+      back.type='button';back.className='ghost';
+      back.textContent='← All material lessons';
+      back.addEventListener('click',()=>lessonCatalog.open({filter:'material'}));
+      nav.appendChild(back);
+      layout.before(nav);
+    }
+  }
+  materialView.querySelectorAll('.mat-tabs button').forEach(button=>{
+    if(!/switchMaterialTab\(['"]learn['"]\)/.test(button.getAttribute('data-mm-onclick')||''))return;
+    button.textContent='All lessons';
+    button.setAttribute('data-mm-onclick','mmHubOpenMaterialLessons()');
+    button.classList.remove('active');
+  });
+}
+window.mmHubOpenMaterialLessons=()=>lessonCatalog.open({filter:'material'});
+if(originalSwitchMaterialTab){
+  window.switchMaterialTab=function(tab){
+    if(tab==='learn')return lessonCatalog.open({filter:'material'});
+    return originalSwitchMaterialTab(tab);
+  };
+}
+if(materialView)new MutationObserver(mountMaterialReader).observe(materialView,{childList:true,subtree:true});
+mountMaterialReader();
+
 // The specialist reader stays independent, but all specialist *browsing*
 // goes through Learn. Old launches (Home, More, specialist reader Back) land
 // on the same filtered catalogue instead of opening a second lesson grid.
