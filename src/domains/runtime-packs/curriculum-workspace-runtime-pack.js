@@ -415,11 +415,20 @@ function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 // learner, quarantining ambiguous or orphaned legacy progress instead of
 // accidentally attributing another learner's specialist completions.
 const SPECIALIST_STORAGE_PREFIX=`${STORAGE_BASE}::`;
-const learnerScope=window.MM_LEARNER_SCOPE;
-learnerScope?.registerStoragePrefix?.(SPECIALIST_STORAGE_PREFIX);
+// This pack runs before the manifest-driven learner-scope asset. Resolve the
+// service when used, never snapshot window.MM_LEARNER_SCOPE during bootstrap.
+let registeredLearnerScope=null;
+function specialistScope(){
+  const scope=window.MM_LEARNER_SCOPE;
+  if(!scope?.token||!scope?.storageKey||!scope?.registerStoragePrefix)return null;
+  if(scope!==registeredLearnerScope){
+    try{scope.registerStoragePrefix(SPECIALIST_STORAGE_PREFIX);registeredLearnerScope=scope}catch(_){return null}
+  }
+  return scope;
+}
 function storageKey(){
-  if(!learnerScope?.token||!learnerScope?.storageKey)return null;
-  try{return learnerScope.storageKey(SPECIALIST_STORAGE_PREFIX,learnerScope.token())}catch(_){return null}
+  const scope=specialistScope();if(!scope)return null;
+  try{return scope.storageKey(SPECIALIST_STORAGE_PREFIX,scope.token())}catch(_){return null}
 }
 function readState(){
   const key=storageKey();if(!key)return {};
@@ -586,12 +595,22 @@ function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 // Evidence-gap completion has its own namespace, but the same collision-safe
 // learner scope as the other 12 specialist lessons. Only uniquely owned legacy
 // progress migrates; an ambiguous 32-bit hash is quarantined, not reassigned.
-const learnerScope=window.MM_LEARNER_SCOPE;
 const GAP_STORAGE_PREFIX=`${STORAGE_BASE}::`;
-learnerScope?.registerStoragePrefix?.(GAP_STORAGE_PREFIX);
+let registeredLearnerScope=null;
+function gapScope(){
+  // Runtime packs execute before the asynchronous domain manifest installs
+  // MM_LEARNER_SCOPE. Rebind lazily; an absent scope must never fall back to
+  // the old collision-prone learner hash or a shared anonymous bucket.
+  const scope=window.MM_LEARNER_SCOPE;
+  if(!scope?.token||!scope?.storageKey||!scope?.registerStoragePrefix)return null;
+  if(scope!==registeredLearnerScope){
+    try{scope.registerStoragePrefix(GAP_STORAGE_PREFIX);registeredLearnerScope=scope}catch(_){return null}
+  }
+  return scope;
+}
 function key(base){
-  if(!learnerScope?.token||!learnerScope?.storageKey)return null;
-  try{return learnerScope.storageKey(`${base}::`,learnerScope.token())}catch(_){return null}
+  const scope=gapScope();if(!scope)return null;
+  try{return scope.storageKey(`${base}::`,scope.token())}catch(_){return null}
 }
 function readKey(base){
   const scoped=key(base);if(!scoped)return {};
