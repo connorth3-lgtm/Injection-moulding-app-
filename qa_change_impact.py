@@ -96,6 +96,42 @@ need("tools/ci_impact.py --base \"$BASE\" --head \"$TARGET\"" in mobile_workflow
      "Mobile Browser QA must classify the exact range from successful proof to current PR head")
 need("cancel-in-progress: true" in mobile_workflow,
      "Mobile Browser QA may cancel superseded runs only because its next run inherits the last successful proof baseline")
+
+# Execute the actual workflow's bash aggregator in a few representative
+# protected-main and preview scenarios. We cannot rely on text markers alone:
+# main promotion must never turn all-skipped browser jobs into a green context.
+import subprocess
+import os
+aggregator=mobile_workflow.split(
+    "      - name: Enforce complete mobile browser evidence\n",1
+)[1].split("        run: |\n",1)[1]
+lines=aggregator.splitlines()
+need(all(not line or line.startswith("          ") for line in lines),
+     "aggregator shell indentation drifted; cannot safely run regression")
+script="\n".join(line[10:] if line else "" for line in lines)
+for label,event,base,groups,expected_ok,expected_message in [
+    ("protected main skips", "pull_request", "main",
+     ("skipped","skipped","skipped","skipped"), False, "skip-only"),
+    ("preview metadata skips", "pull_request", "preview",
+     ("skipped","skipped","skipped","skipped"), True, "without expensive"),
+    ("main push metadata skips", "push", "",
+     ("skipped","skipped","skipped","skipped"), True, "without expensive"),
+    ("protected main complete evidence", "pull_request", "main",
+     ("success","success","success","success"), True, "all 500 reliability"),
+    ("protected main incomplete evidence", "pull_request", "main",
+     ("success","skipped","success","success"), False, "WebKit QA did not pass"),
+    ("protected main red browser", "pull_request", "main",
+     ("failure","success","success","success"), False, "Chromium QA did not pass"),
+]:
+    env=dict(os.environ, EVENT_NAME=event, BASE_REF=base,
+             **dict(zip(("CHROMIUM","WEBKIT","CROSS_BROWSER","APP_500"),groups)))
+    execution=subprocess.run(["bash","-e","-c",script],env=env,
+                             text=True,capture_output=True,timeout=8)
+    need((execution.returncode==0)==expected_ok,
+         f"{label}: unexpected aggregator result {execution.returncode}: {execution.stdout} {execution.stderr}")
+    need(expected_message in execution.stdout+execution.stderr,
+         f"{label}: expected diagnostic missing")
+
 baseline_source=(Path(__file__).resolve().parent/"tools/github_workflow_baseline.py").read_text(encoding="utf-8")
 need('"status":"success"' in baseline_source and "governed_candidate()" in baseline_source,
      "browser proof resolver must select successful runs and retain a conservative governed-candidate fallback")
