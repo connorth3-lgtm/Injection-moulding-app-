@@ -8,10 +8,10 @@
   "issueNumber": 379,
   "candidate": {
     "release": "2026.10.11.1",
-    "sourceSha": "8a94ee0230121d029068401a5295ec51b45ff9c7",
+    "sourceSha": "886116199e611b225dbae7b266f4c1402287d8e7",
     "runtimeFingerprint": "sha256:9271d2b52806780953e8b50d3ae66505dca50da11684b8dd9272e9da5e83155b"
   },
-  "boundary": "Provider G1–G8 external evidence remains pending for 2026.10.11.1; source 8a94ee0230121d029068401a5295ec51b45ff9c7 has a retained technical artifact only. Earlier .6 source and fingerprints are historical, not provider, accreditation, assessment, production or machine-control authority. The candidate run must complete successfully before the new source is treated as a verified technical candidate.",
+  "boundary": "Genuine provider G1–G8 external evidence remains pending for release 2026.10.11.1; source 886116199e611b225dbae7b266f4c1402287d8e7, successful run 38081915524 and public fingerprint sha256:9271d2b52806780953e8b50d3ae66505dca50da11684b8dd9272e9da5e83155b record a verified technical candidate only. Previous .6 records remain historical. None of this grants accreditation, assessment authority, validated processing or machine-control permission.",
   "requiredGates": [
     {
       "id": "G1-provider",

@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Retained .6 technical runtime source 3465fdca76941bf46d360051bc09fcda6d41c611 produced successful Pre-merge Public Candidate run 37923715379 and artifact 11612534730. Current PR-head protected checks and external physical acceptance remain separately required. |
-| Behavioral / browser | **pass** | Automated Mobile Browser QA and Question Quality 50-Pass succeeded on the retained .6 runtime source 3465fdca76941bf46d360051bc09fcda6d41c611. New PR-head checks, human visual review and real-device/AT acceptance remain independently required. |
+| Static / contract | **pass** | Authentic 2026.10.11.1 runtime source 886116199e611b225dbae7b266f4c1402287d8e7 produced successful exact-source Pre-merge Public Candidate run 38081915524 and retained artifact 11680527534, with public fingerprint independently computed from archived bytes. New final-head protected-main CI and all external approvals remain independently gated. |
+| Behavioral / browser | **pass** | Mobile Browser QA Chromium/WebKit and reliability suites plus Question Quality 50-Pass passed for technical runtime source 886116199e611b225dbae7b266f4c1402287d8e7. The prior immutable Book Materials visual baseline requires separate strict protected-main acceptance; real devices and human reviews remain HOLD. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |

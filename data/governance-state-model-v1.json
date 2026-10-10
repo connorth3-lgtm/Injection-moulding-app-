@@ -310,7 +310,7 @@
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
-    "technicalAutomation": "fail",
+    "technicalAutomation": "pass",
     "bookPublicationAuthorization": "authorized",
     "bookIndependentSme": "hold",
     "curriculumIndependentSme": "hold",
@@ -345,12 +345,12 @@
   "userFacingTerminologyBoundary": "Internal evidenceMaturity=verified must be displayed as 'Source evidence reviewed'. The word verified must not be used by itself in learner-facing Book assurance because independent human SME/device/learner validation is a separate namespace.",
   "currentAssuranceEvidence": {
     "staticContract": {
-      "status": "fail",
-      "meaning": "The 2026.10.11.1 exact-source public artifact exists, but the current technical candidate producer has not yet demonstrated a successful exact-head QA/retention run. This is HOLD/fail-closed; no protected-main or external acceptance can be inferred."
+      "status": "pass",
+      "meaning": "Authentic 2026.10.11.1 runtime source 886116199e611b225dbae7b266f4c1402287d8e7 produced successful exact-source Pre-merge Public Candidate run 38081915524 and retained artifact 11680527534, with public fingerprint independently computed from archived bytes. New final-head protected-main CI and all external approvals remain independently gated."
     },
     "behavioralBrowser": {
-      "status": "fail",
-      "meaning": "The 2026.10.11.1 exact-source public artifact exists, but the current technical candidate producer has not yet demonstrated a successful exact-head QA/retention run. This is HOLD/fail-closed; no protected-main or external acceptance can be inferred."
+      "status": "pass",
+      "meaning": "Mobile Browser QA Chromium/WebKit and reliability suites plus Question Quality 50-Pass passed for technical runtime source 886116199e611b225dbae7b266f4c1402287d8e7. The prior immutable Book Materials visual baseline requires separate strict protected-main acceptance; real devices and human reviews remain HOLD."
     },
     "externalHumanDevice": {
       "status": "hold",
