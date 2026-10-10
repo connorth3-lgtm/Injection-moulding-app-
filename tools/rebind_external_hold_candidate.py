@@ -184,10 +184,14 @@ def main():
     ledger["nzqaProvider"]["candidate"]=identity.copy()
     at["sourceSha"]=a.source_sha
     at["runtimeFingerprint"]=a.runtime_fingerprint
-    at["boundary"]=(
-        f"Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. "
-        f"Release {a.release} is bound to exact retained learner-runtime candidate {a.source_sha}; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded."
-    )
+    if changed and not a.check:
+        at["boundary"]=(
+            f"Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. "
+            f"Release {a.release} is bound to exact retained learner-runtime candidate {a.source_sha}; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded."
+        )
+    else:
+        need(a.release in at.get("boundary","") and a.source_sha in at.get("boundary",""),
+             "real-AT boundary must contain exact current candidate without rewriting human notes")
     nzqa["candidate"]=identity.copy()
     pwa["candidate"]=candidate.copy()
     if changed and not a.check:
