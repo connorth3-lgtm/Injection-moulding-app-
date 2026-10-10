@@ -39,6 +39,41 @@ test('Materials has a dedicated entry page and first-class library layout',async
   expect(geometry.page).toBeLessThanOrEqual(geometry.viewport+1);
 });
 
+test('Materials displays all results with filters collapsed and clears selections on mobile',async({page})=>{
+  await openMaterials(page);
+  const root=page.locator('#mmExactMaterialCatalog');
+  const filters=root.locator('[data-mm-all-material-filters]');
+  const results=root.locator('[data-mm-all-material-results]');
+  const status=root.locator('[data-mm-all-material-status]');
+  const search=root.locator('[data-mm-all-material-query]');
+  const showAll=root.locator('[data-mm-all-material-clear]');
+  await expect(filters).not.toHaveAttribute('open','');
+  await expect(search).toBeVisible();
+  await expect(results.locator('[data-mm-material-index-result]')).not.toHaveCount(0);
+  await expect(status).toContainText('matching material records');
+  await expect(filters.locator('[data-mm-all-material-region]')).toBeHidden();
+
+  await filters.locator('summary').click();
+  await expect(filters.locator('[data-mm-all-material-region]')).toBeVisible();
+  await filters.locator('[data-mm-all-material-type]').selectOption('exact-grade');
+  await expect(filters.locator('summary')).toContainText('1 active');
+  await filters.locator('summary').click();
+  await expect(filters).not.toHaveAttribute('open','');
+  await expect(results.locator('[data-mm-material-index-type="exact-grade"]')).not.toHaveCount(0);
+
+  await search.fill('GP5206F');
+  await expect(results).toContainText('LG Chem');
+  await expect(showAll).toBeVisible();
+  await showAll.click();
+  await expect(search).toHaveValue('');
+  await expect(filters.locator('summary')).toContainText('Optional');
+  await expect(filters.locator('[data-mm-all-material-type]')).toHaveValue('');
+  await expect(showAll).toBeHidden();
+  await expect(results.locator('[data-mm-material-index-result]')).not.toHaveCount(0);
+  const geometry=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,page:document.documentElement.scrollWidth}));
+  expect(geometry.page).toBeLessThanOrEqual(geometry.viewport+1);
+});
+
 test('unified material index searches exact-grade processing evidence, family reference data and material labs',async({page})=>{
   await openMaterials(page);
   const root=page.locator('#mmExactMaterialCatalog');
@@ -47,6 +82,7 @@ test('unified material index searches exact-grade processing evidence, family re
   const results=root.locator('[data-mm-all-material-results]');
   const status=root.locator('[data-mm-all-material-status]');
 
+  await root.locator('[data-mm-all-material-filters] > summary').click();
   await type.selectOption('exact-grade');
   await query.fill('maximum moisture content');
   await expect(status).toContainText('matching material records');
@@ -88,6 +124,7 @@ test('unified material index searches exact-grade processing evidence, family re
 test('unified index can jump an exact-grade result into the exact-grade catalog search',async({page})=>{
   await openMaterials(page,768);
   const root=page.locator('#mmExactMaterialCatalog');
+  await root.locator('[data-mm-all-material-filters] > summary').click();
   await root.locator('[data-mm-all-material-type]').selectOption('exact-grade');
   await root.locator('[data-mm-all-material-query]').fill('GP5206F');
   const result=root.locator('[data-mm-material-index-result="grade:mat-lgchem-lupoy-gp5206f"]');
@@ -113,6 +150,7 @@ test('material catalogue can browse exact grades by region, country, manufacture
   await expect(boundary).toContainText("manufacturer's country");
   await expect(boundary).toContainText(/does not prove exact-grade manufacturing origin|neither proves exact-grade manufacturing origin/i);
 
+  await root.locator('[data-mm-all-material-filters] > summary').click();
   await type.selectOption('exact-grade');
   await region.selectOption({label:'Asia-Pacific'});
   await country.selectOption({label:'South Korea'});
@@ -151,6 +189,7 @@ test('multidimensional catalogue exposes application process and evidence browse
 
   await expect(root).toContainText('Multidimensional material catalogue');
   await expect(boundary).toContainText(/not suitability recommendations/i);
+  await root.locator('[data-mm-all-material-filters] > summary').click();
   await type.selectOption('exact-grade');
 
   const facets=await page.evaluate(()=>window.MM_MATERIAL_SEARCH.facets());
