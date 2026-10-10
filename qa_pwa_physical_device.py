@@ -94,6 +94,31 @@ with tempfile.TemporaryDirectory() as td:
 
     fingerprint = module.runtime_fingerprint(artifact)
     need(fingerprint.startswith("sha256:") and len(fingerprint) == 71, "runtime fingerprint format is invalid")
+    # Test both file and directory links: neither may enter the exact public
+    # runtime fingerprint (or silently escape the artifact tree).
+    linked_file = artifact / "linked-private.txt"
+    private = Path(td) / "private.txt"
+    private.write_text("do not include host bytes", encoding="utf-8")
+    linked_file.symlink_to(private)
+    try:
+        module.runtime_fingerprint(artifact)
+    except SystemExit as exc:
+        need("symlink" in str(exc), "file symlink must fail with a clear diagnostic")
+    else:
+        raise AssertionError("public runtime fingerprint accepted a linked external file")
+    linked_file.unlink()
+    linked_directory = artifact / "linked-directory"
+    linked_directory.symlink_to(Path(td), target_is_directory=True)
+    try:
+        module.runtime_fingerprint(artifact)
+    except SystemExit as exc:
+        need("symlink" in str(exc), "directory symlink must fail with a clear diagnostic")
+    else:
+        raise AssertionError("public runtime fingerprint accepted a linked directory")
+    linked_directory.unlink()
+    need(module.runtime_fingerprint(artifact) == fingerprint,
+         "rejecting symlinks must not perturb the genuine exact public asset digest")
+
     before_metadata = fingerprint
     (artifact / "deployment.json").write_text('{"source_sha":"evidence-only-change"}\n', encoding="utf-8")
     (artifact / "pages-manifest.json").write_text('{"source_sha":"evidence-only-change"}\n', encoding="utf-8")

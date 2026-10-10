@@ -7,6 +7,7 @@ import argparse
 import datetime as dt
 import json
 import os
+import re
 import shutil
 import subprocess
 import time
@@ -56,6 +57,50 @@ def parse_instant(value: object, label: str) -> dt.datetime:
     if parsed.tzinfo is None:
         fail(f"{label} must include a timezone")
     return parsed.astimezone(dt.timezone.utc)
+
+
+def verify_current_tracker(issue: object, issue_number: int, candidate: dict) -> None:
+    """Require the *active* tracker entry, not historical mentions, to match.
+
+    The former substring check allowed a superseded candidate appearing
+    anywhere in a long issue to satisfy the live current-release contract.
+    """
+    if not isinstance(issue, dict) or issue.get("pull_request"):
+        fail(f"NZQA tracker #{issue_number} is not a normal issue")
+    if issue.get("state") != "open":
+        fail(f"NZQA tracker #{issue_number} must remain open while provider validation is pending")
+    title = str(issue.get("title") or "")
+    body = str(issue.get("body") or "")
+    release = candidate.get("release")
+    if not isinstance(release, str) or not release:
+        fail("candidate release identity is missing")
+    if not re.search(r"(?<![0-9.])" + re.escape(release) + r"(?![0-9.])", title):
+        fail(f"NZQA tracker #{issue_number} title does not name current release {release}")
+
+    # Historical notes are intentionally retained below the first divider;
+    # only the current, clearly marked top block can bind this release.
+    current = body.split("\n---\n", 1)[0]
+    current_lines = re.findall(r"(?m)^\*\*Current governed technical candidate:\*\*\s*(.+)$", current)
+    if len(current_lines) != 1:
+        fail(f"NZQA tracker #{issue_number} needs one explicitly marked current technical candidate")
+    line = current_lines[0]
+
+    expected = {
+        "release": (r"\bRelease\s+`?([0-9]{4}\.[0-9]{2}\.[0-9]{2}\.[0-9]+)`?", release),
+        "source SHA": (r"\bsource\s+`?([0-9a-f]{40})`?(?![0-9a-f])", candidate["sourceSha"]),
+        "runtime fingerprint": (
+            r"\bfingerprint\s+`?(sha256:[0-9a-f]{64})`?(?![0-9a-f])",
+            candidate["runtimeFingerprint"],
+        ),
+        "producer run": (r"/actions/runs/([1-9][0-9]*)\)", str(candidate["candidateRunId"])),
+        "artifact id": (r"\bartifact\s+`?([1-9][0-9]*)`?(?![0-9])", str(candidate["artifactId"])),
+    }
+    for label, (pattern, wanted) in expected.items():
+        seen = re.findall(pattern, line, flags=re.IGNORECASE)
+        if seen != [str(wanted)]:
+            fail(f"NZQA tracker #{issue_number} current {label} mismatches retained candidate")
+    if not re.search(r"\bG1\s*[–-]\s*G8\b", current) or "pending-external" not in current:
+        fail(f"NZQA tracker #{issue_number} does not explicitly retain G1–G8 external HOLD")
 
 
 def verify(repository: str, token: str) -> None:
@@ -115,19 +160,7 @@ def verify(repository: str, token: str) -> None:
     if not isinstance(issue_number, int) or issue_number <= 0:
         fail("NZQA issueNumber is invalid")
     issue = request_json(token, f"repos/{repository}/issues/{issue_number}")
-    if not isinstance(issue, dict) or issue.get("pull_request"):
-        fail(f"NZQA tracker #{issue_number} is not a normal issue")
-    if issue.get("state") != "open":
-        fail(f"NZQA tracker #{issue_number} must remain open while provider validation is pending")
-    title = str(issue.get("title") or "")
-    body = str(issue.get("body") or "")
-    for label, value in (
-        ("release", release),
-        ("source SHA", source_sha),
-        ("runtime fingerprint", str(candidate.get("runtimeFingerprint") or "")),
-    ):
-        if value not in title and value not in body:
-            fail(f"NZQA tracker #{issue_number} does not contain current {label}: {value}")
+    verify_current_tracker(issue, issue_number, candidate)
 
     print(
         f"External live bindings verified: governed {candidate_workflow} run {run_id} produced retained artifact {artifact_id} "
