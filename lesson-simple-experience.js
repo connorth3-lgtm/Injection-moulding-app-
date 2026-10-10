@@ -202,6 +202,87 @@ function foldMeasuredEvidence(article){
     details.append(summary,panel);
   }
 }
+/* Keep all authored technical information, but avoid showing the same instructions
+   in the overview, learning goals, next-step card and authoring summary. */
+function lessonTextKey(text){
+  return String(text||'').toLowerCase().replace(/\s+/g,' ').replace(/[.!?]+$/,'').trim();
+}
+function compactLearningSections(article){
+  // The canonical key points and shop-floor activity remain in the main reading flow.
+  // Goals are still available verbatim, without being another full-size teaching card.
+  const goals=[...article.children].find(el=>
+    el.matches('.content-block,.mm-simple-section')&&
+    /^(what you.ll be able to do|learning objectives|by the end of this lesson)/i.test(
+      el.querySelector(':scope > h3')?.textContent?.trim()||'')
+  );
+  if(goals){
+    const disclosure=document.createElement('details');
+    disclosure.className='mm-simple-goals';
+    const summary=document.createElement('summary');
+    summary.textContent='Learning goals';
+    const content=document.createElement('div');
+    content.className='mm-simple-goals-content';
+    [...goals.children].forEach(child=>{
+      if(child.tagName==='H3')return;
+      content.appendChild(child);
+    });
+    disclosure.append(summary,content);
+    goals.replaceWith(disclosure);
+  }
+
+  // A summary repeated word-for-word as the introduction adds no context.
+  // Remove only exact text matches; near matches and all differing detail survive.
+  const overview=article.querySelector(':scope > .mm-simple-lesson-hero .mm-simple-lesson-summary');
+  const introduction=[...article.children].find(el=>
+    el.matches('.content-block,.mm-simple-section')&&
+    /^why this matters$/i.test(el.querySelector(':scope > h3')?.textContent?.trim()||'')
+  );
+  const introText=introduction?.querySelector(':scope > p')?.textContent;
+  if(overview&&introText&&lessonTextKey(overview.textContent)===lessonTextKey(introText)&&
+     introduction.querySelectorAll('p').length===1&&
+     !introduction.querySelector('ul,ol,button,input,textarea,details')){
+    introduction.remove();
+  }
+
+  // Navigation already has one primary Complete & continue action; this
+  // additional preview card does not carry independent technical teaching.
+  article.querySelectorAll(':scope > .mm-next-card').forEach(el=>el.remove());
+
+  // Historic numbered reading guides and progress widgets repeat the hero.
+  // They are chrome, not safety warnings or authored lesson information.
+  article.querySelectorAll('.mm-reading-guide,.mm-read-marker,:scope > .mm-lesson-progress').forEach(el=>el.remove());
+
+  const deep=article.querySelector('#mmLessonDeepV2');
+  if(!deep)return;
+  const essentials=deep.querySelector('.mm-deep-v2-essentials');
+  if(essentials){
+    const boundary=deep.querySelector('.mm-deep-v2-boundary');
+    const safety=/Safety boundary:/i.test(boundary?.textContent||'');
+    if(safety){
+      // Do not bury the explicit safeguarding caution in the collapsed detail.
+      essentials.querySelectorAll('.mm-deep-v2-row').forEach(row=>{
+        if(!/^Watch out$/i.test(row.querySelector('h4')?.textContent?.trim()||''))row.remove();
+      });
+      essentials.setAttribute('aria-label','Safety guidance');
+    }else{
+      // Key takeaway repeats the authored points; Apply repeats the exercise.
+      // Their complete mechanism, evidence and decision remain in More detail.
+      essentials.remove();
+    }
+  }
+  // Consolidate the two optional teaching disclosures into a single entry.
+  // Preserve the authored plain-English examples and measured-evidence prompts.
+  const detail=deep.querySelector('.mm-deep-v2-detail');
+  const extra=article.querySelector('.mm-extra-help');
+  if(detail&&extra&&!detail.contains(extra)){
+    detail.insertBefore(extra,detail.querySelector('.mm-deep-v2-id')||null);
+  }
+  const summary=deep.querySelector('details.mm-deep-v2-card > summary');
+  if(summary){
+    const label=summary.querySelector('b');
+    if(label&&label.textContent!=='Engineering detail & examples')label.textContent='Engineering detail & examples';
+  }
+}
 function simplifyCoreLesson(){
   const root=document.getElementById('lesson');
   const article=root?.querySelector('.lesson-body');
@@ -234,6 +315,7 @@ function simplifyCoreLesson(){
   compactCompletionActions(article);
   foldEvidenceCheck(article);
   foldMeasuredEvidence(article);
+  compactLearningSections(article);
 }
 function simplifyMaterialLesson(){
   for(const article of document.querySelectorAll('.mat-lesson')){
