@@ -49,6 +49,13 @@ for marker in [
 ]:
     need(marker in book,f"Book resume hardening missing: {marker}")
 
+# Core routing hides the Book scroll root before emitting onViewChange.
+# The Book must save the live position at the pre-route boundary, including
+# programmatic window.switchView, not only clicks or pagehide.
+need("function prepareRouteExit(id)" in book and "prepareRouteExit,openResume" in book,
+     "Book must expose an explicit pre-route bookmark flush")
+need("window.MMBook?.prepareRouteExit?.(id)" in registry,
+     "canonical shell must flush Book before captured.switchView hides the reader")
 need("localStorage.getItem(BOOK_RESUME_KEY)" not in book,"Book resume must not use a device-global live storage key")
 need("LEGACY_BOOK_RESUME_KEY='mouldmasterBookResume:v1'" in book,"experimental legacy Book resume cleanup marker missing")
 need("if(!exists){clearResume();showContents();return false}" in book,"stale Book resume must fail safely to contents")
