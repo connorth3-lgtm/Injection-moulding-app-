@@ -5,7 +5,7 @@ This tool updates candidate identity/provenance only. It refuses to promote any
 external validation status or populate human/device/provider evidence.
 """
 from __future__ import annotations
-import argparse, copy, datetime as dt, json, re
+import argparse, copy, datetime as dt, json, os, re, tempfile
 from pathlib import Path
 
 from hold_candidate_packet_integrity import PACKETS, candidate_identity, hold_statuses, validate_packet, validate_packets
@@ -78,6 +78,55 @@ def prepare_packets(ledger, candidate):
         updates[target] = update_banner(target.read_text(encoding="utf-8"), candidate, rel)
     return updates
 
+
+def stage_governance_model(model, candidate):
+    """An unverified new technical candidate may never inherit prior PASS claims."""
+    result=copy.deepcopy(model)
+    result["currentPublicBoundary"]["technicalAutomation"]="fail"
+    evidence=result["currentAssuranceEvidence"]
+    evidence["staticContract"]={
+        "status":"fail",
+        "meaning":(
+            f"HOLD: release {candidate['release']} source {candidate['sourceSha']} artifact "
+            f"{candidate['artifactId']} and producer {candidate['candidateRunId']} are staged as technical "
+            "metadata only; producer success and quality are NOT independently verified. "
+            "No source, human, device or production approval is implied."
+        ),
+    }
+    evidence["behavioralBrowser"]={
+        "status":"fail",
+        "meaning":(
+            f"HOLD: browser and question gates for release {candidate['release']} source "
+            f"{candidate['sourceSha']} must be independently verified on the staged candidate; "
+            "prior green workflows do not transfer to a different exact source."
+        ),
+    }
+    need(evidence["externalHumanDevice"]["status"]=="hold",
+         "staged candidate cannot promote external human evidence")
+    return result
+
+
+def commit_staged_files(files):
+    """Stage all writes before replacing any file; attempt rollback on disk failure."""
+    snapshots={path:path.read_bytes() for path in files}
+    temps={}
+    changed=[]
+    try:
+        for path, content in files.items():
+            with tempfile.NamedTemporaryFile("wb",dir=path.parent,prefix=".mm-staged-",delete=False) as out:
+                out.write(content.encode("utf-8"))
+                temps[path]=Path(out.name)
+        for path, tmp in temps.items():
+            os.replace(tmp,path)
+            changed.append(path)
+    except OSError:
+        for path in reversed(changed):
+            path.write_bytes(snapshots[path])
+        raise
+    finally:
+        for tmp in temps.values():
+            tmp.unlink(missing_ok=True)
+
 def main():
     ap=argparse.ArgumentParser()
     ap.add_argument("--release",required=True)
@@ -128,7 +177,7 @@ def main():
             "status":"fail",
             "claim":"New candidate metadata staged, but producer success and exact-head quality remain unverified. Independent validation is HOLD."
         }
-        ledger["candidateStatus"]="Technical candidate staged; producer success NOT independently verified; seven external streams HOLD."
+        ledger["candidateStatus"]="HOLD — new candidate producer success NOT independently verified; seven external streams remain HOLD."
     ledger["webCandidate"]=candidate.copy()
     ledger["pwaPhysicalDevices"]["currentCandidate"]=candidate.copy()
     ledger["accessibility"]["candidate"]=identity.copy()
@@ -141,6 +190,19 @@ def main():
     )
     nzqa["candidate"]=identity.copy()
     pwa["candidate"]=candidate.copy()
+    if changed and not a.check:
+        pwa["boundary"]=(
+            f"Retained release {a.release} candidate {a.source_sha} and artifact {a.artifact_id} are NOT "
+            "evidence of testing on physical iOS/iPadOS and Android devices. "
+            "Real device install, offline restart, reboot, update, storage-pressure and zoom remain pending. "
+            "Real assistive-technology validation is separately governed by "
+            "data/accessibility-real-at-validation-v1.json. "
+            "Production root, signing, provider and machine-control authority remain HOLD."
+        )
+        nzqa["boundary"]=(
+            f"Release {a.release} technical candidate {a.source_sha} does not establish any of "
+            "NZQA/provider G1–G8 external gates or assessment/accreditation authority."
+        )
     assert_hold_boundaries(ledger,at,nzqa,pwa)
 
     if a.check:
@@ -151,10 +213,21 @@ def main():
         print("External HOLD candidate binding is current")
         return 0
     packet_updates=prepare_packets(ledger,candidate)
-    for key,data in zip(("ledger","at","nzqa","pwa"),(ledger,at,nzqa,pwa)):
-        write(FILES[key],data)
-    for path,text in packet_updates.items():
-        path.write_text(text,encoding="utf-8")
+    staged={
+        FILES[key]:json.dumps(data,indent=2)+"\n"
+        for key,data in zip(("ledger","at","nzqa","pwa"),(ledger,at,nzqa,pwa))
+    }
+    staged.update(packet_updates)
+    if changed:
+        # The public status and canonical assurance layers must move to FAIL
+        # in the same transaction as the new candidate; the previous successful
+        # source/build does not authorize this different identity.
+        governance_path=ROOT/"data/governance-state-model-v1.json"
+        governance=stage_governance_model(load(governance_path),candidate)
+        staged[governance_path]=json.dumps(governance,indent=2)+"\n"
+        from render_governance_status import render
+        staged[ROOT/"GOVERNANCE_STATUS.md"]=render(model_override=governance)
+    commit_staged_files(staged)
     print(f"Rebound four HOLD contracts and seven packets to {a.source_sha} without external validation")
     if changed:print("Technical automation FAIL until independent candidate producer verification")
     return 0

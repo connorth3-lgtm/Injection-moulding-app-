@@ -38,8 +38,8 @@ def load(path: Path) -> dict:
     return value
 
 
-def render() -> str:
-    model = load(MODEL)
+def render(*, model_override: dict | None = None) -> str:
+    model = model_override if model_override is not None else load(MODEL)
     version = load(VERSION)
     boundary = model.get("currentPublicBoundary")
     assurance = model.get("currentAssuranceEvidence")
