@@ -272,7 +272,19 @@ function compactLearningSections(article){
   // Consolidate the two optional teaching disclosures into a single entry.
   // Preserve the authored plain-English examples and measured-evidence prompts.
   const detail=deep.querySelector('.mm-deep-v2-detail');
-  const extra=article.querySelector('.mm-extra-help');
+  // The legacy teaching module may arrive before or after the lesson's deep
+  // authoring hook. Keep its complete text, but expose it as one optional
+  // disclosure nested inside Engineering detail instead of a second card.
+  const teaching=article.querySelector('#mmTeaching');
+  let extra=article.querySelector('.mm-extra-help');
+  if(detail&&teaching&&!extra){
+    extra=document.createElement('details');
+    extra.className='mm-extra-help';
+    const summary=document.createElement('summary');
+    summary.innerHTML='<span>Extra help</span><b>Show examples and explanations</b>';
+    teaching.before(extra);
+    extra.append(summary,teaching);
+  }
   if(detail&&extra&&!detail.contains(extra)){
     detail.insertBefore(extra,detail.querySelector('.mm-deep-v2-boundary')||detail.querySelector('.mm-deep-v2-id')||null);
   }
