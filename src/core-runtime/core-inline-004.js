@@ -145,7 +145,9 @@ function switchView(id){
   };
   $("#pageTitle").textContent=titles[id][0];$("#pageSubtitle").textContent=titles[id][1];
   renderView(id);
-  window.scrollTo({top:0,behavior:"smooth"});
+  // Primary workspace changes must start at the top synchronously; smooth scrolling
+  // can leave the previous page position visible or clipped on mobile WebKit.
+  window.scrollTo({top:0,behavior:"instant"});
 }
 $$("#nav button").forEach(b=>b.addEventListener("click",()=>switchView(b.dataset.view)));
 $("#continueBtn").onclick=()=>{switchView("lesson")};
