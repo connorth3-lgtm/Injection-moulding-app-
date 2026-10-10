@@ -550,6 +550,14 @@ button:disabled,[aria-disabled="true"]{
 }
 
 
+/* Material lessons keep their original authored reader and assessment state,
+   but no second material chapter or four-lesson sidebar is visible. */
+#materials .mat-learn-layout.mm-one-column-material{grid-template-columns:minmax(0,1fr);max-width:860px;margin-inline:auto}
+#materials .mat-lesson{min-width:0}
+#materials .mm-lesson-catalog-return{max-width:860px;margin:12px auto}
+#materials .mm-lesson-catalog-return button{min-height:44px;padding:9px 14px;font-size:14px}
+#materials .mm-lesson-catalog-return button:focus-visible{outline:3px solid #73ceff;outline-offset:3px}
+
 /* Compact lesson reading flow: goals are optional, technical reasoning stays intact. */
 #lesson.mm-simple-lesson .mm-simple-goals{margin:0 0 14px;border:1px solid #304a68;border-radius:13px;background:#0e1d31;overflow:hidden}
 #lesson.mm-simple-lesson .mm-simple-goals>summary{min-height:46px;display:flex;align-items:center;gap:8px;padding:10px 14px;cursor:pointer;color:#eaf3ff;font-size:15px;font-weight:750;list-style:none}
