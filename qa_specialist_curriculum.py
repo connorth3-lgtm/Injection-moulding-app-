@@ -97,7 +97,21 @@ for item_id in re.findall(r"\{type:'core',id:'(\d+)'",js):
 need("data-view=\"defects\"" in core,'Defect Finder target missing for specialist internal-defect practice')
 need("data-view=\"standards\"" in core,'Standards & safety target missing for specialist safety practice')
 
-need('localStorage.getItem(storageKey())' in js and 'localStorage.setItem(storageKey()' in js,'specialist local completion storage missing')
+# The specialist progress namespace stays separate, but must now use the
+# canonical collision-safe learner storage boundary. Do not reintroduce the
+# legacy 32-bit per-profile FNV hash just to satisfy a syntactic assertion.
+for marker in [
+    'const learnerScope=window.MM_LEARNER_SCOPE',
+    'learnerScope?.registerStoragePrefix?.(SPECIALIST_STORAGE_PREFIX)',
+    'learnerScope.storageKey(SPECIALIST_STORAGE_PREFIX,learnerScope.token())',
+    'if(!learnerScope?.token||!learnerScope?.storageKey)return null',
+    'localStorage.getItem(key)',
+    'localStorage.setItem(key,payload)',
+    'mm:specialist-progress-change'
+]:
+    need(marker in js,f'specialist canonical learner-scoped progress contract missing: {marker}')
+need('function learnerToken()' not in js and '2166136261' not in js,
+     'specialist progress must not reintroduce ambiguous 32-bit learner hashes')
 need('mm_specialist_curriculum_v1' in js,'specialist storage namespace missing')
 need('Mark specialist lesson complete' in js,'specialist completion UI missing')
 
