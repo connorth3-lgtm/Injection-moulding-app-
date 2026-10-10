@@ -249,7 +249,12 @@ test('ambiguous legacy specialist hash is quarantined rather than shared between
     const own=scope.storageKey(prefix,scope.tokenFor(first));
     const other=scope.storageKey(prefix,scope.tokenFor(second));
     const gapPrefix='mm_specialist_evidence_gaps_v1::';
-    return {old:localStorage.getItem(oldKey),a:localStorage.getItem(own),b:localStorage.getItem(other),gapOld:localStorage.getItem(scope.storageKey(gapPrefix,scope.legacyTokenFor(first))),gapA:localStorage.getItem(scope.storageKey(gapPrefix,scope.tokenFor(first))),gapB:localStorage.getItem(scope.storageKey(gapPrefix,scope.tokenFor(second))),quarantine:[...Array(localStorage.length)].map((_,i)=>localStorage.key(i)).filter(k=>k?.startsWith('mm_scope_quarantine_v1::')),aComplete:window.MM_SPECIALIST_CURRICULUM.isComplete('S01'),gapComplete:window.MM_SPECIALIST_EVIDENCE_GAPS.isComplete('S13')};
+    // Both modules register/migrate their legacy prefix on first progress read.
+    // Trigger that boundary BEFORE inspecting raw storage; object-literal field
+    // evaluation is left-to-right, so reading `old` first observes pre-migration data.
+    const aComplete=window.MM_SPECIALIST_CURRICULUM.isComplete('S01');
+    const gapComplete=window.MM_SPECIALIST_EVIDENCE_GAPS.isComplete('S13');
+    return {old:localStorage.getItem(oldKey),a:localStorage.getItem(own),b:localStorage.getItem(other),gapOld:localStorage.getItem(scope.storageKey(gapPrefix,scope.legacyTokenFor(first))),gapA:localStorage.getItem(scope.storageKey(gapPrefix,scope.tokenFor(first))),gapB:localStorage.getItem(scope.storageKey(gapPrefix,scope.tokenFor(second))),quarantine:[...Array(localStorage.length)].map((_,i)=>localStorage.key(i)).filter(k=>k?.startsWith('mm_scope_quarantine_v1::')),aComplete,gapComplete};
   },{first,second});
   expect(inspect.old).toBeNull();
   expect(inspect.a).toBeNull();
