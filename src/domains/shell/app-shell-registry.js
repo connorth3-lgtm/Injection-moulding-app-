@@ -343,6 +343,8 @@ function renderLessonCanonical(){
   curriculumLessonAdapter();syncActiveState();requestAnimationFrame(syncActiveState);emitRender('lesson')
 }
 function switchViewCanonical(id){
+  // Capture scoped Book position before core view-hiding and smooth scrolling.
+  window.MMBook?.prepareRouteExit?.(id);
   activeCustomId='';const r=captured.switchView.apply(this,arguments);
   // Cancel the core's smooth scroll on workspace changes: the previous page can
   // remain clipped while short views render, particularly on mobile WebKit.
