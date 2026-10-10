@@ -193,3 +193,28 @@ test('Book menu launch survives its canonical route event and closes on Home',as
   await expect(page.locator('#mmBookView')).toBeHidden();
   expect(await page.evaluate(()=>document.documentElement.classList.contains('mm-book-instant-scroll'))).toBe(false);
 });
+
+test('Material Atlas discloses comparison restrictions, sources and unknown supplier currentness',async({page})=>{
+  await openApp(page);
+  await page.evaluate(()=>window.MMBook.openChapter('material-families'));
+  await page.waitForFunction(()=>window.MMBook?.getMaterialCatalog?.()?.grades?.length===260);
+  const restricted=page.locator('[data-mm-book-catalog-grade="mat-basf-elastollan-wy1140"]');
+  await restricted.locator('summary').click();
+  const restrictedRow=restricted.locator('table tbody tr').first();
+  await expect(restrictedRow).toContainText('Specific Gravity');
+  await expect(restrictedRow).toContainText('1.12');
+  await expect(restrictedRow).toContainText('ASTM D 792');
+  await expect(restrictedRow.locator('[role="note"]')).toContainText('Not comparable');
+  await expect(restrictedRow).toContainText('Source: src-basf-elastollan-wy1140-2026');
+  await expect(restrictedRow).toContainText('not a specification');
+  await expect(restricted).toContainText('Current availability and processing suitability not verified');
+
+  const comparable=page.locator('[data-mm-book-catalog-grade="mat-arkema-rilsan-bmno"]');
+  await comparable.locator('summary').click();
+  const comparableRow=comparable.locator('table tbody tr').first();
+  await expect(comparableRow).toContainText('ISO 1133');
+  await expect(comparableRow).toContainText('235 °C');
+  await expect(comparableRow).toContainText('2.16 kg');
+  await expect(comparableRow.locator('[role="note"]')).toHaveCount(0);
+  await expect(comparable).not.toContainText('Not comparable');
+});
