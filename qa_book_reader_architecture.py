@@ -124,7 +124,7 @@ for name in ("book-reader-architecture-v2.json","book-editorial-expansion-review
     assert hashes.get(name)==git_blob(PACKAGED/name), f"authorization hash drift for {name}"
 
 assert sme.get("status")=="hold" and sme.get("reviews")==[] and len(sme.get("chapterIds",[]))==46
-for marker in ("READER_PATH","EDITORIAL_REVIEW_PATH","validateReaderArchitecture","validateEditorialExpansionReview","showReaderChapter","readerChapterHtml","readerLearningHtml","readerReferencesHtml","readerKeyTermsHtml","readerTermGuideHtml","mm-book-reader-scope","mm-book-reader-worked-case","Chapter thread:","Key-term guide","First-read path:","Choose a chapter","46 governed modules","getReaderArchitecture","getEditorialExpansionReview","Reasoning scenario:","Depth labels:","Chapter depth:"):
+for marker in ("READER_PATH","EDITORIAL_REVIEW_PATH","validateReaderArchitecture","validateEditorialExpansionReview","showReaderChapter","readerChapterHtml","readerLearningHtml","readerReferencesHtml","readerKeyTermsHtml","readerTermGuideHtml","mm-book-scope-note","mm-book-reader-worked-case","Chapter thread:","Key-term guide","Reading:","mm-book-toc","Source module index (46 entries)","getReaderArchitecture","getEditorialExpansionReview","Reasoning scenario:","Depth labels:","Chapter depth:"):
     assert marker in runtime, f"reader runtime marker missing: {marker}"
 for asset in ("./src/domains/learning/book-data/book-reader-architecture-v2.json","./src/domains/learning/book-data/book-editorial-expansion-review-v1.json"):
     assert asset in sw, f"reader governance asset missing from atomic cache: {asset}"
