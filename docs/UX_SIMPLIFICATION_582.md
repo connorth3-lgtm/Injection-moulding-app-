@@ -8,7 +8,7 @@ learner progress, storage schema, permission or PWA route is changed.
 
 | Surface | Previous first screen | Simplified first screen |
 | --- | --- | --- |
-| Desktop sidebar | The core source lists 14 navigation options, but the **actual published UI already consolidates these** into Home, Learn, Materials, Practice, Book and More via `learner-ui-polish.js` | **Preserve the working compact primary shell.** Do not create a competing sidebar or hide Materials from the accessible primary destinations. Existing specialist tools stay in the governed More modal without duplicated navigation. |
+| Desktop sidebar | The core source lists 14 navigation options, but the **actual published UI already consolidates these** into Home, Learn, Materials, Practice and More; Book is reachable from Home and More via `learner-ui-polish.js` | **Preserve the working compact primary shell.** Do not create a competing sidebar or hide Materials from the accessible primary destinations. Existing specialist tools stay in the governed More modal without duplicated navigation. |
 | Book contents | Intro paragraph, status, depth-band explanation, learning boundary, first-read policy, key-term guide, then 20 chapter buttons | Clear `Choose a chapter` cue, a short sentence and all 20 reader chapters. Depth-band explanation, source governance, first-read notes and key-term guide remain one optional native disclosure; 46 governed module drilldown remains in its existing optional index. |
 | Book chapter | Repeated Book hero and global accuracy card, chapter goal, separate thread/terms/sequence prompts, governance disclosure, then actual prose | Book hero and global accuracy card are hidden **only while reading a 20-chapter reader view**. The chapter title/goal and authored text remain immediate. Reader thread, key terms and sequence prompts move under one optional `Chapter guide`. Module source review status, applicability, diagrams, worked examples, evidence, sources, learning checks and all technical text remain available. |
 
@@ -27,7 +27,7 @@ learner progress, storage schema, permission or PWA route is changed.
 ## Automated regression checks
 
 `qa/premium-ui.spec.js` now verifies that the four existing desktop primary
-routes and specialist More modal remain reachable (avoiding accidental
+routes and the governed More modal remain reachable (avoiding accidental
 loss of Materials), and that all 20 *direct* Book reader chapter controls and optional Book guides remain available.
 It verifies that the Book hero returns on navigating back and that the first
 reader chapter shows governed authored content without repeated Book chrome.
