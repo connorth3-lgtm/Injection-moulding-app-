@@ -135,6 +135,35 @@ test('optional specialist selection opens its authored content without awarding 
   const done=await page.evaluate(()=>user.completed);
   expect(done).toEqual([1,2]);
 });
+
+test('specialist completion appears in unified Done/Not finished filters without granting core credit',async({page})=>{
+  await ready(page);
+  const catalog=page.locator('#path .mm-all-lessons');
+  await catalog.locator('[data-mm-catalog-filter]').selectOption('specialist');
+  const specialist=catalog.locator('[data-mm-specialist-id="S01"]');
+  await expect(specialist.locator('.mm-catalog-state')).toHaveText('Open');
+  await specialist.click();
+  await expect(page.locator('#mmSpecialistModal')).toBeVisible();
+  await page.locator('#mmSpecialistBody').getByRole('button',{name:'Mark specialist lesson complete'}).click();
+  await expect(specialist.locator('.mm-catalog-state')).toHaveText('✓ Done');
+  await expect(specialist).toHaveAttribute('data-mm-catalog-done','1');
+  await page.evaluate(()=>window.mmSpecialistClose());
+  await catalog.locator('[data-mm-catalog-filter]').selectOption('done');
+  await expect(catalog.locator('[data-mm-catalog-count]')).toHaveText('3 lessons shown');
+  await expect(specialist).toBeVisible();
+  await catalog.locator('[data-mm-catalog-filter]').selectOption('todo');
+  await expect(catalog.locator('[data-mm-catalog-count]')).toHaveText('173 lessons shown');
+  await expect(specialist).toBeHidden();
+  expect(await page.evaluate(()=>user.completed)).toEqual([1,2]);
+  await catalog.locator('[data-mm-catalog-filter]').selectOption('specialist');
+  await specialist.click();
+  await page.locator('#mmSpecialistBody').getByRole('button',{name:'Mark incomplete'}).click();
+  await expect(specialist.locator('.mm-catalog-state')).toHaveText('Open');
+  await page.evaluate(()=>window.mmSpecialistClose());
+  await catalog.locator('[data-mm-catalog-filter]').selectOption('done');
+  await expect(catalog.locator('[data-mm-catalog-count]')).toHaveText('2 lessons shown');
+});
+
 test('global search leads to Learn without displaying another list of lesson matches',async({page})=>{
   await ready(page);
   await page.evaluate(()=>openSearch());
