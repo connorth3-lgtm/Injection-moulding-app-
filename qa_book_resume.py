@@ -10,6 +10,7 @@ def need(ok,msg):
 book=text("src/domains/learning/book-runtime.js")
 finalizer=text("src/domains/shell/app-shell-finalize.js")
 registry=text("src/domains/shell/app-shell-registry.js")
+reading_patch=text("reading-patch.js")
 training=text("src/domains/learning/training-qa-fix.js")
 storage=text("docs/STORAGE_OWNERSHIP_MATRIX.md")
 ui_shell=text("ui-shell.css")
@@ -58,6 +59,11 @@ need("window.MMBook?.prepareRouteExit?.(id)" in registry,
      "canonical shell must flush Book before captured.switchView hides the reader")
 need("const scrollY=bookScrollTop(),anchor=readerAnchor()" in book,
      "Book must sample the live scroll position before anchor geometry can move the viewport")
+need("R.before('switchView',id=>" in reading_patch and "window.MMBook?.prepareRouteExit?.(id)" in reading_patch,
+     "early stable-view-entry hook must flush scoped Book bookmark before scroll reset")
+need(reading_patch.index("window.MMBook?.prepareRouteExit?.(id)") <
+     reading_patch.index("settleViewTop();",reading_patch.index("R.before('switchView'")),
+     "stable view-entry reset must never run ahead of Book resume save")
 need("localStorage.getItem(BOOK_RESUME_KEY)" not in book,"Book resume must not use a device-global live storage key")
 need("LEGACY_BOOK_RESUME_KEY='mouldmasterBookResume:v1'" in book,"experimental legacy Book resume cleanup marker missing")
 need("if(!exists){clearResume();showContents();return false}" in book,"stale Book resume must fail safely to contents")
