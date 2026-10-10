@@ -37,6 +37,23 @@ test('search, status and saved filters find the canonical lessons without changi
   const db=await page.evaluate(()=>JSON.parse(localStorage.getItem('mouldmasterProDB')));
   expect(db.users['catalog-qa'].completed).toEqual([1,2]);
 });
+test('temporary search restores the learner’s expanded courses instead of opening all tracks',async({page})=>{
+  await ready(page);
+  const catalog=page.locator('#path .mm-all-lessons');
+  const groups=catalog.locator('[data-mm-catalog-group]');
+  const first=groups.nth(0),second=groups.nth(1),third=groups.nth(2);
+  expect(await first.evaluate(el=>el.open)).toBe(true);
+  expect(await second.evaluate(el=>el.open)).toBe(false);
+  await second.locator('summary').first().click();
+  expect(await second.evaluate(el=>el.open)).toBe(true);
+  await catalog.locator('[data-mm-catalog-query]').fill('zzzz-no-match');
+  await expect(catalog.locator('[data-mm-catalog-count]')).toHaveText('0 lessons shown');
+  await catalog.locator('[data-mm-catalog-query]').fill('');
+  await expect(catalog.locator('[data-mm-catalog-count]')).toHaveText('140 lessons shown');
+  expect(await first.evaluate(el=>el.open)).toBe(true);
+  expect(await second.evaluate(el=>el.open)).toBe(true);
+  expect(await third.evaluate(el=>el.open)).toBe(false);
+});
 test('lesson reader includes the same library, not an extra 10-lesson sidebar',async({page})=>{
   await ready(page);
   await page.locator('#path [data-mm-catalog-group]').nth(1).locator('summary').first().click();
