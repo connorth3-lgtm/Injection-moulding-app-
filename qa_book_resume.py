@@ -56,6 +56,8 @@ need("function prepareRouteExit(id)" in book and "prepareRouteExit,openResume" i
      "Book must expose an explicit pre-route bookmark flush")
 need("window.MMBook?.prepareRouteExit?.(id)" in registry,
      "canonical shell must flush Book before captured.switchView hides the reader")
+need("const scrollY=bookScrollTop(),anchor=readerAnchor()" in book,
+     "Book must sample the live scroll position before anchor geometry can move the viewport")
 need("localStorage.getItem(BOOK_RESUME_KEY)" not in book,"Book resume must not use a device-global live storage key")
 need("LEGACY_BOOK_RESUME_KEY='mouldmasterBookResume:v1'" in book,"experimental legacy Book resume cleanup marker missing")
 need("if(!exists){clearResume();showContents();return false}" in book,"stale Book resume must fail safely to contents")
