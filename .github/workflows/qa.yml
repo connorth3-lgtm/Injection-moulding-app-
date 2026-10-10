@@ -160,6 +160,8 @@ jobs:
         run: python tools/verify_main_ruleset.py --repository "${{ github.repository }}"
       - name: Pages publisher governance integrity
         run: python qa_pages_single_publisher.py
+      - name: Main-promotion readiness gates preflight on preview
+        run: python qa_preview_release_readiness_coverage.py
       - name: Release supply-chain governance integrity
         run: python qa_release_supply_chain.py
       - name: Preview/main exact-push assurance contract
