@@ -62,6 +62,7 @@ test('Book opens as 20 plain chapters with previous/next and optional end matter
   await reader.locator('.mm-book-reader-guide > summary').click();
   await expect(reader.locator('.mm-book-reader-key-terms')).toBeVisible();
   await reader.locator('[data-mm-book-page-turn="r02"]').click();
+  await expect(page.locator('#mmBookView')).toBeVisible();
   await expect(reader.locator('.mm-book-chapter-number')).toHaveText('Chapter 2');
   await reader.locator('[data-mm-book-page-turn="r01"]').click();
   await expect(reader.locator('.mm-book-chapter-number')).toHaveText('Chapter 1');
