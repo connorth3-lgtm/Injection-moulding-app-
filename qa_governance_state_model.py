@@ -3,6 +3,7 @@ from __future__ import annotations
 from copy import deepcopy
 from pathlib import Path
 import json
+import re
 
 from qa_curriculum_semantic_review import canonical_lessons as canonical_curriculum_lessons, validate_contract as validate_curriculum_semantics
 
@@ -88,19 +89,43 @@ def validate_public_snapshot(snapshot: dict, *, book_sme: dict, curriculum_sme: 
 
 
 def validate_assurance_candidate_identity(assurance: dict, candidate: dict, release: str) -> None:
-    """Prevent passing public status from citing stale technical candidate bytes."""
+    """Bind passing provenance to *labelled exact* current-release identities.
+
+    Merely finding an ID as a substring let artifact 123 pass within 91234,
+    or allowed an old candidate to be described as passing if the true SHA
+    appeared elsewhere in a disclaimer.
+    """
     static = assurance["staticContract"]
     browser = assurance["behavioralBrowser"]
     assert static.get("status") == browser.get("status") == "pass", "assurance must stay release-bound"
+    assert isinstance(candidate, dict), "passing assurance requires a real retained candidate"
+
+    def exact_token(text: str, label: str, pattern: str, expected: object) -> None:
+        matches = re.findall(pattern, text)
+        assert matches == [str(expected)], (
+            f"{label} must identify exactly one current source/candidate value: {matches!r}"
+        )
+
+    # Each status layer must identify the *actual* source and release, with
+    # no second candidate/source or ambiguous active value.
     for label, row in (("static", static), ("browser", browser)):
         meaning = str(row.get("meaning") or "")
-        for value in (release, candidate.get("sourceSha")):
-            assert value and value in meaning, f"{label} assurance still cites an older release/source"
+        exact_token(meaning, f"{label} release",
+                    r"\brelease\s+([0-9]{4}\.[0-9]{2}\.[0-9]{2}\.[0-9]+)\b", release)
+        exact_token(meaning, f"{label} source",
+                    r"\bsource\s+([0-9a-f]{40})(?![0-9a-f])", candidate["sourceSha"])
+
     static_text = str(static.get("meaning") or "")
-    for value in (str(candidate.get("candidateRunId") or ""), str(candidate.get("artifactId") or ""),
-                  str(candidate.get("runtimeFingerprint") or "")):
-        assert value and value in static_text, "static assurance has stale or missing exact artifact provenance"
-    assert assurance["externalHumanDevice"].get("status") == "hold", "external human/device assurance is never a CI approval"
+    exact_token(static_text, "static producer run",
+                r"\brun\s+([1-9][0-9]*)(?![0-9])", candidate["candidateRunId"])
+    exact_token(static_text, "static artifact",
+                r"\bartifact\s+([1-9][0-9]*)(?![0-9])", candidate["artifactId"])
+    exact_token(static_text, "static runtime fingerprint",
+                r"\bfingerprint\s+(sha256:[0-9a-f]{64})(?![0-9a-f])",
+                candidate["runtimeFingerprint"])
+    assert assurance["externalHumanDevice"].get("status") == "hold", (
+        "external human/device assurance is never a CI approval"
+    )
 
 
 def expect_failure(label: str, fn) -> None:
