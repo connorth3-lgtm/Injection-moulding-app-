@@ -549,3 +549,33 @@ button:disabled,[aria-disabled="true"]{
 
 /* Relevant provenance note appears with the advanced facets, not above the list. */
 #materials .mm-material-all-filters [data-mm-catalogue-boundary]{margin:0 12px 10px;padding:8px 10px;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+
+/* Phone Materials: show the catalogue search before repeated hero content. */
+@media(max-width:700px){
+  #materials #mmMaterialsPageIntro{padding:12px!important;gap:8px!important;margin-bottom:10px!important}
+  #materials #mmMaterialsPageIntro>div:first-child .eyebrow,
+  #materials #mmMaterialsPageIntro>div:first-child p{display:none!important}
+  #materials #mmMaterialsPageIntro h2{font-size:18px!important;line-height:1.3!important;margin:0!important}
+  #materials #mmMaterialsPageIntro .mm-material-page-stats{display:flex!important;gap:0!important}
+  #materials #mmMaterialsPageIntro .mm-material-page-stat{display:none!important}
+  #materials #mmMaterialsPageIntro .mm-material-page-stat:first-child{
+    display:flex!important;align-items:baseline;gap:6px;padding:0!important;
+    border:0!important;background:none!important
+  }
+  #materials #mmMaterialsPageIntro .mm-material-page-stat b{font-size:14px!important}
+  #materials #mmMaterialsPageIntro .mm-material-page-stat span{font-size:11px!important}
+  #materials #mmMaterialsPageIntro .mm-material-page-nav{display:flex!important;gap:6px!important;flex-wrap:wrap!important}
+  #materials #mmMaterialsPageIntro .mm-material-page-nav [data-mm-material-jump="catalog"]{display:none!important}
+  #materials #mmMaterialsPageIntro .mm-material-page-nav button{
+    width:auto!important;min-height:38px!important;min-width:0!important;
+    padding:7px 9px!important;font-size:12px!important;flex:1 1 auto!important
+  }
+  #materials #mmExactMaterialCatalog{padding:12px!important}
+  #materials #mmExactMaterialCatalog .mm-exact-head h2{font-size:18px!important;line-height:1.3!important}
+  #materials #mmExactMaterialCatalog .mm-exact-head p:not(.mm-material-coverage){display:none!important}
+  #materials #mmExactMaterialCatalog .mm-material-coverage{font-size:11px!important;line-height:1.4!important}
+  #materials #mmExactMaterialCatalog .mm-material-all-index{padding:10px!important;margin-top:10px!important}
+  #materials #mmExactMaterialCatalog .mm-material-all-index-head .eyebrow{display:none!important}
+  #materials #mmExactMaterialCatalog .mm-material-all-index-head h3{font-size:18px!important;margin:0 0 4px!important}
+  #materials #mmExactMaterialCatalog .mm-material-all-index-head>p{display:none!important}
+}
