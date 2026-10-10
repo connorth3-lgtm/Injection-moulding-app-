@@ -109,11 +109,14 @@ test('36 material lessons move to Learn while keeping independent progress and o
   await expect(page.locator('#materials article.mat-lesson')).toBeVisible();
   await expect(page.locator('#materials .mat-chapters,#materials .mat-lesson-list')).toHaveCount(0);
   await expect(page.locator('#materials .mat-lesson')).toContainText('Macromolecules & chain architecture');
+  await page.locator('#materials .lesson-actions-sticky .primary').click();
+  await expect(page.locator('#materials .mat-lesson')).toContainText('Thermoplastics, thermosets & elastomers');
   const state=await page.evaluate(()=>({core:[...user.completed],material:user.materialScience?.completed||[]}));
   expect(state.core).toEqual([1,2]);
-  expect(state.material).toEqual([]);
+  expect(state.material).toEqual([1]);
   await page.locator('#materials .mm-lesson-catalog-return button').click();
   await expect(catalog.locator('[data-mm-catalog-filter]')).toHaveValue('material');
+  await expect(catalog.locator('[data-mm-material-id="1"]')).toContainText('Done');
   await page.evaluate(()=>switchView('materials'));
   await expect(page.locator('#materials .mat-chapters')).toHaveCount(0);
   await expect(page.locator('#materials .mat-tabs')).toBeVisible();
