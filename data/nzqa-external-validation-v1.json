@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.09.6",
+  "release": "2026.10.11.1",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.09.6.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.11.1.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 379,
   "candidate": {
-    "release": "2026.10.09.6",
-    "sourceSha": "3afecf1a000c20213657fc5ff86797be121d472e",
-    "runtimeFingerprint": "sha256:862c93c4f9cb4660ff289d5913a5b0138d8e5f532ace6ad5001bfbe23175677e"
+    "release": "2026.10.11.1",
+    "sourceSha": "8a94ee0230121d029068401a5295ec51b45ff9c7",
+    "runtimeFingerprint": "sha256:9271d2b52806780953e8b50d3ae66505dca50da11684b8dd9272e9da5e83155b"
   },
-  "boundary": "Provider G1–G8 external evidence remains pending. Release .6 technical runtime source 3465fdca76941bf46d360051bc09fcda6d41c611 and its genuine fingerprint sha256:d5b80ea704ee8297c52d8402ce590f58fa003a38018391fcdc8170c9c0b4f2d0 do not grant provider/accreditation, assessment, production or machine-control authority.",
+  "boundary": "Provider G1–G8 external evidence remains pending for 2026.10.11.1; source 8a94ee0230121d029068401a5295ec51b45ff9c7 has a retained technical artifact only. Earlier .6 source and fingerprints are historical, not provider, accreditation, assessment, production or machine-control authority. The candidate run must complete successfully before the new source is treated as a verified technical candidate.",
   "requiredGates": [
     {
       "id": "G1-provider",
