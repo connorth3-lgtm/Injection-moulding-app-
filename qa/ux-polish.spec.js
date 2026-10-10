@@ -18,15 +18,17 @@ async function openBook(page){
   await expect(contents.locator('[data-mm-book-chapter]').first()).toBeVisible();
   await expect(page.locator('[data-mm-book-chapter]')).toHaveCount(46);
 }
-test('deep Book chapters open at their heading and Back restores contents position',async({page})=>{await page.setViewportSize({width:360,height:800});await openApp(page);await openBook(page);expect(await page.locator('[data-mm-book-mode="read"]').count()).toBe(0);const target=page.locator('[data-mm-book-chapter]').nth(41);await target.scrollIntoViewIfNeeded();const before=await page.evaluate(()=>window.scrollY);await target.click();await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();const y=(await page.locator('[data-mm-book-reader] h2').boundingBox()).y;expect(y).toBeGreaterThanOrEqual(0);expect(y).toBeLessThan(220);await page.locator('[data-mm-book-back]').click();await expect(page.locator('[data-mm-book-contents]')).toBeVisible();await expect.poll(async()=>Math.abs((await page.evaluate(()=>window.scrollY))-before),{timeout:3000}).toBeLessThan(90);});
+test('deep Book chapters open at their heading and Back restores contents position',async({page})=>{await page.setViewportSize({width:360,height:800});await openApp(page);await openBook(page);expect(await page.locator('[data-mm-book-mode="read"]').count()).toBe(0);const target=page.locator('[data-mm-book-chapter]').nth(41);await target.scrollIntoViewIfNeeded();await page.evaluate(()=>{window.__mmBookClickY=null;document.addEventListener('pointerdown',()=>{window.__mmBookClickY=window.scrollY;},{capture:true,once:true})});await target.click();const before=await page.evaluate(()=>window.__mmBookClickY);expect(before).not.toBeNull();await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();const y=(await page.locator('[data-mm-book-reader] h2').boundingBox()).y;expect(y).toBeGreaterThanOrEqual(0);expect(y).toBeLessThan(220);await page.locator('[data-mm-book-back]').click();await expect(page.locator('[data-mm-book-contents]')).toBeVisible();await expect.poll(async()=>Math.abs((await page.evaluate(()=>window.scrollY))-before),{timeout:3000}).toBeLessThan(90);});
 test('Book reader page turns preserve the contents bookmark',async({page})=>{
   await page.setViewportSize({width:360,height:800});
   await openApp(page);
   await openBook(page);
   const target=page.locator('[data-mm-book-reader-chapter-open]').nth(15);
   await target.scrollIntoViewIfNeeded();
-  const before=await page.evaluate(()=>window.scrollY);
+  await page.evaluate(()=>{window.__mmBookClickY=null;document.addEventListener('pointerdown',()=>{window.__mmBookClickY=window.scrollY;},{capture:true,once:true})});
   await target.click();
+  const before=await page.evaluate(()=>window.__mmBookClickY);
+  expect(before).not.toBeNull();
   await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
   await page.locator('[data-mm-book-page-turn]').last().click();
   await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
