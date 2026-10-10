@@ -164,3 +164,21 @@ test('Book route changes preserve the last visible reading bookmark',async({page
   expect(after?.scrollY).toBe(before.scrollY);
   expect(await page.evaluate(()=>document.documentElement.classList.contains('mm-book-instant-scroll'))).toBe(false);
 });
+
+test('Book menu launch survives its canonical route event and closes on Home',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await openApp(page);
+  const more=page.locator('#nav [data-mm-desktop-more-tools]');
+  await expect(more).toBeVisible();
+  await more.click();
+  const launcher=page.locator('[data-mm-registry-menu="book"]');
+  await expect(launcher).toBeVisible();
+  await launcher.click();
+  // The shell emits onViewChange('book') *after* opening the Book.
+  // This event announces the current route; it must not close the reader.
+  await expect(page.locator('#mmBookView')).toBeVisible();
+  await page.evaluate(()=>window.switchView('dashboard'));
+  await expect(page.locator('#dashboard')).toBeVisible();
+  await expect(page.locator('#mmBookView')).toBeHidden();
+  expect(await page.evaluate(()=>document.documentElement.classList.contains('mm-book-instant-scroll'))).toBe(false);
+});
