@@ -27,7 +27,12 @@ test('Materials has a dedicated entry page and first-class library layout',async
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
   await expect(page.locator('#materials')).toBeVisible();
   await expect(page.locator('#mmMaterialsPageIntro')).toBeVisible();
-  await expect(page.locator('#mmMaterialsPageIntro')).toContainText('Material library & engineering evidence');
+  await expect(page.locator('#mmMaterialsPageIntro')).toContainText('Compare grades');
+  await expect(page.locator('#mmMaterialsPageIntro .mm-material-page-stat')).toHaveCount(0);
+  await expect(page.locator('#mmMaterialsPageIntro')).not.toContainText('Published exact grades');
+  await expect(page.locator('#mmExactMaterialCatalog [data-mm-all-material-index]')).toBeVisible();
+  const firstCatalogueChild=await page.locator('#mmExactMaterialCatalog').evaluate(root=>root.firstElementChild?.hasAttribute('data-mm-all-material-index'));
+  expect(firstCatalogueChild).toBe(true);
   await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
   await expect(page.locator('#mmMaterialCompare')).toBeVisible();
   await expect(page.locator('#mmMaterialChange')).toBeVisible();
@@ -35,6 +40,70 @@ test('Materials has a dedicated entry page and first-class library layout',async
   await expect(page.locator('#nav button[data-view="materials"] span')).toHaveText('Materials');
   await page.getByRole('button',{name:'Compare grades'}).click();
   await expect(page.locator('#mmMaterialCompare')).toBeInViewport();
+  const geometry=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,page:document.documentElement.scrollWidth}));
+  expect(geometry.page).toBeLessThanOrEqual(geometry.viewport+1);
+});
+
+test('360px Materials entry keeps the catalogue search in the first screen without removing section shortcuts',async({page})=>{
+  await openMaterials(page,360);
+  await page.setViewportSize({width:360,height:800});
+  await page.evaluate(()=>window.scrollTo(0,0));
+  const root=page.locator('#mmExactMaterialCatalog');
+  const intro=page.locator('#mmMaterialsPageIntro');
+  await expect(intro).toBeVisible();
+  await expect(intro.locator('.mm-material-page-nav button')).toHaveCount(3);
+  await expect(intro.locator('.mm-material-page-stat')).toHaveCount(0);
+  await expect(root.locator('[data-mm-all-material-query]')).toBeInViewport();
+  await expect(root.getByRole('heading',{name:'All materials'})).toBeVisible();
+  await expect(intro.getByRole('button',{name:'Compare grades'})).toBeVisible();
+  await expect(intro.getByRole('button',{name:'Change assistant'})).toBeVisible();
+  await expect(intro.getByRole('button',{name:'Material learning'})).toBeVisible();
+  await expect(root.locator('[data-mm-all-material-filters]')).not.toHaveAttribute('open','');
+  const geometry=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,page:document.documentElement.scrollWidth}));
+  expect(geometry.page).toBeLessThanOrEqual(geometry.viewport+1);
+});
+
+test('Materials displays all results with filters collapsed and clears selections on mobile',async({page})=>{
+  await openMaterials(page);
+  const root=page.locator('#mmExactMaterialCatalog');
+  const filters=root.locator('[data-mm-all-material-filters]');
+  const results=root.locator('[data-mm-all-material-results]');
+  const status=root.locator('[data-mm-all-material-status]');
+  const search=root.locator('[data-mm-all-material-query]');
+  const showAll=root.locator('[data-mm-all-material-clear]');
+  await expect(filters).not.toHaveAttribute('open','');
+  await expect(search).toBeVisible();
+  await expect(results.locator('[data-mm-material-index-result]')).not.toHaveCount(0);
+  await expect(status).toContainText('matching material records');
+  await expect(filters.locator('[data-mm-all-material-region]')).toBeHidden();
+  const firstResult=results.locator('[data-mm-material-index-result]').first();
+  await expect(firstResult).not.toHaveAttribute('open','');
+  await expect(firstResult.locator('summary')).toBeVisible();
+  await expect(firstResult.locator('.mm-material-index-detail')).toBeHidden();
+  await firstResult.locator('summary').click();
+  await expect(firstResult).toHaveAttribute('open','');
+  await expect(firstResult.locator('.mm-material-index-detail')).toBeVisible();
+  await firstResult.locator('summary').click();
+  await expect(firstResult.locator('.mm-material-index-detail')).toBeHidden();
+
+  await filters.locator('summary').click();
+  await expect(filters.locator('[data-mm-all-material-region]')).toBeVisible();
+  await expect(filters.locator('[data-mm-catalogue-boundary]')).toBeVisible();
+  await filters.locator('[data-mm-all-material-type]').selectOption('exact-grade');
+  await expect(filters.locator('summary')).toContainText('1 active');
+  await filters.locator('summary').click();
+  await expect(filters).not.toHaveAttribute('open','');
+  await expect(results.locator('[data-mm-material-index-type="exact-grade"]')).not.toHaveCount(0);
+
+  await search.fill('GP5206F');
+  await expect(results).toContainText('LG Chem');
+  await expect(showAll).toBeVisible();
+  await showAll.click();
+  await expect(search).toHaveValue('');
+  await expect(filters.locator('summary')).toContainText('Optional');
+  await expect(filters.locator('[data-mm-all-material-type]')).toHaveValue('');
+  await expect(showAll).toBeHidden();
+  await expect(results.locator('[data-mm-material-index-result]')).not.toHaveCount(0);
   const geometry=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,page:document.documentElement.scrollWidth}));
   expect(geometry.page).toBeLessThanOrEqual(geometry.viewport+1);
 });
@@ -47,6 +116,7 @@ test('unified material index searches exact-grade processing evidence, family re
   const results=root.locator('[data-mm-all-material-results]');
   const status=root.locator('[data-mm-all-material-status]');
 
+  await root.locator('[data-mm-all-material-filters] > summary').click();
   await type.selectOption('exact-grade');
   await query.fill('maximum moisture content');
   await expect(status).toContainText('matching material records');
@@ -88,10 +158,14 @@ test('unified material index searches exact-grade processing evidence, family re
 test('unified index can jump an exact-grade result into the exact-grade catalog search',async({page})=>{
   await openMaterials(page,768);
   const root=page.locator('#mmExactMaterialCatalog');
+  await root.locator('[data-mm-all-material-filters] > summary').click();
   await root.locator('[data-mm-all-material-type]').selectOption('exact-grade');
   await root.locator('[data-mm-all-material-query]').fill('GP5206F');
   const result=root.locator('[data-mm-material-index-result="grade:mat-lgchem-lupoy-gp5206f"]');
   await expect(result).toBeVisible();
+  await expect(result).not.toHaveAttribute('open','');
+  await result.locator('summary').click();
+  await expect(result).toHaveAttribute('open','');
   await result.getByRole('button',{name:'Show exact grade'}).click();
   await expect(root.locator('[data-mm-exact-query]')).toHaveValue('mat-lgchem-lupoy-gp5206f');
   await expect(root.locator('[data-mm-material-grade="mat-lgchem-lupoy-gp5206f"]')).toBeVisible();
@@ -113,6 +187,7 @@ test('material catalogue can browse exact grades by region, country, manufacture
   await expect(boundary).toContainText("manufacturer's country");
   await expect(boundary).toContainText(/does not prove exact-grade manufacturing origin|neither proves exact-grade manufacturing origin/i);
 
+  await root.locator('[data-mm-all-material-filters] > summary').click();
   await type.selectOption('exact-grade');
   await region.selectOption({label:'Asia-Pacific'});
   await country.selectOption({label:'South Korea'});
@@ -149,8 +224,10 @@ test('multidimensional catalogue exposes application process and evidence browse
   const results=root.locator('[data-mm-all-material-results]');
   const boundary=root.locator('[data-mm-catalogue-boundary]');
 
-  await expect(root).toContainText('Multidimensional material catalogue');
+  await expect(root.getByRole('heading',{name:'All materials'})).toBeVisible();
+  await expect(root.locator('[data-mm-all-material-index]')).toBeVisible();
   await expect(boundary).toContainText(/not suitability recommendations/i);
+  await root.locator('[data-mm-all-material-filters] > summary').click();
   await type.selectOption('exact-grade');
 
   const facets=await page.evaluate(()=>window.MM_MATERIAL_SEARCH.facets());
