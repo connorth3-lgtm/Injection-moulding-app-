@@ -156,7 +156,7 @@
     "artifactDigest": "sha256:9f30bbfe431852681739cfad2c9d00a08fd624c712d83f5ede68af1eb48a35d9",
     "artifactExpiresAt": "2027-01-08T17:13:43Z"
   },
-  "candidateStatus": "PENDING EXACT-HEAD PRODUCER SUCCESS — 2026.10.11.1 artifact 11679959204 exists, but producer success and protected-main gates not yet verified; all seven external streams remain HOLD.",
+  "candidateStatus": "HOLD — 2026.10.11.1 artifact 11679959204 exists, but exact-head producer success is not yet established; external human/device/provider and production validation remain HOLD.",
   "previousPreviousCandidate": {
     "release": "2026.10.09.5",
     "sourceSha": "581e08e58f0b9ec3c7a3501f9a3a71d47ed2c184",
