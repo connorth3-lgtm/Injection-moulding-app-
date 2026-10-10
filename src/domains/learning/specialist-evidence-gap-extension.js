@@ -95,16 +95,30 @@ const LESSONS=[
 ];
 
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function learnerToken(){
-  let raw='anonymous';
-  try{if(typeof user!=='undefined'&&user?.id)raw=String(user.id);else if(window.db?.activeUser)raw=String(window.db.activeUser)}catch(_){}
-  let h=2166136261;for(let i=0;i<raw.length;i++){h^=raw.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(36)
+// Evidence-gap completion has its own namespace, but the same collision-safe
+// learner scope as the other 12 specialist lessons. Only uniquely owned legacy
+// progress migrates; an ambiguous 32-bit hash is quarantined, not reassigned.
+const learnerScope=window.MM_LEARNER_SCOPE;
+const GAP_STORAGE_PREFIX=`${STORAGE_BASE}::`;
+learnerScope?.registerStoragePrefix?.(GAP_STORAGE_PREFIX);
+function key(base){
+  if(!learnerScope?.token||!learnerScope?.storageKey)return null;
+  try{return learnerScope.storageKey(`${base}::`,learnerScope.token())}catch(_){return null}
 }
-function key(base){return `${base}::${learnerToken()}`}
-function readKey(base){try{const x=JSON.parse(localStorage.getItem(key(base))||'{}');return x&&typeof x==='object'?x:{}}catch(_){return {}}}
-function writeGap(x){try{localStorage.setItem(key(STORAGE_BASE),JSON.stringify(x))}catch(_){}}
+function readKey(base){
+  const scoped=key(base);if(!scoped)return {};
+  try{const x=JSON.parse(localStorage.getItem(scoped)||'{}');return x&&typeof x==='object'&&!Array.isArray(x)?x:{}}catch(_){return {}}
+}
+function writeGap(x){
+  const scoped=key(STORAGE_BASE);if(!scoped)return false;
+  try{const payload=JSON.stringify(x);localStorage.setItem(scoped,payload);return localStorage.getItem(scoped)===payload}catch(_){return false}
+}
 function gapDone(id){return !!readKey(STORAGE_BASE)[id]}
-function setGapDone(id,done){const s=readKey(STORAGE_BASE);if(done)s[id]=true;else delete s[id];writeGap(s);patchDashboard();}
+function setGapDone(id,done){
+  const s=readKey(STORAGE_BASE);if(done)s[id]=true;else delete s[id];
+  writeGap(s);patchDashboard();
+  window.dispatchEvent(new CustomEvent('mm:specialist-progress-change',{detail:{id,completed:gapDone(id)}}));
+}
 function baseDoneCount(){return Object.keys(readKey(BASE_STORAGE)).filter(id=>/^S(?:0[1-9]|1[0-2])$/.test(id)).length}
 function gapDoneCount(){return LESSONS.filter(x=>gapDone(x.id)).length}
 function totalDone(){return baseDoneCount()+gapDoneCount()}
@@ -166,6 +180,6 @@ if(priorRenderDashboard){renderDashboard=function(){priorRenderDashboard();patch
 
 for(const l of LESSONS){BASE.lessons.push({id:l.id,title:l.title,level:l.level,coreLessons:[...l.coreLessons],practices:l.practices.map(p=>({...p})),evidenceArea:l.evidenceArea,evidenceStatus:l.evidenceStatus})}
 BASE.evidenceGapExtension={version:VERSION,lessonCount:LESSONS.length,status:'Registry-controlled',scope:'Optional formative evidence-gap learning; does not alter the canonical 120 lessons, formal assessment answers or certificate requirements.'};
-window.MM_SPECIALIST_EVIDENCE_GAPS={version:VERSION,optional:true,lessonCount:LESSONS.length,lessons:LESSONS.map(l=>({id:l.id,title:l.title,evidenceArea:l.evidenceArea,evidenceStatus:l.evidenceStatus,coreLessons:[...l.coreLessons]})),open:window.mmSpecialistOpen,scope:BASE.evidenceGapExtension.scope};
+window.MM_SPECIALIST_EVIDENCE_GAPS={version:VERSION,optional:true,lessonCount:LESSONS.length,lessons:LESSONS.map(l=>({id:l.id,title:l.title,evidenceArea:l.evidenceArea,evidenceStatus:l.evidenceStatus,coreLessons:[...l.coreLessons]})),open:window.mmSpecialistOpen,isComplete:gapDone,scope:BASE.evidenceGapExtension.scope};
 if(typeof currentView==='string'&&currentView==='dashboard')patchDashboard();
 })();
