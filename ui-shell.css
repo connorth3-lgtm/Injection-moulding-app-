@@ -550,3 +550,17 @@ button:disabled,[aria-disabled="true"]{
   .mm-catalog-state{grid-column:2;padding-bottom:2px}
   #lesson .mm-lessons-drawer>summary{align-items:flex-start;flex-direction:column;gap:3px}
 }
+
+
+/* Compact lesson reading flow: goals are optional, technical reasoning stays intact. */
+#lesson.mm-simple-lesson .mm-simple-goals{margin:0 0 14px;border:1px solid #304a68;border-radius:13px;background:#0e1d31;overflow:hidden}
+#lesson.mm-simple-lesson .mm-simple-goals>summary{min-height:46px;display:flex;align-items:center;gap:8px;padding:10px 14px;cursor:pointer;color:#eaf3ff;font-size:15px;font-weight:750;list-style:none}
+#lesson.mm-simple-lesson .mm-simple-goals>summary::-webkit-details-marker{display:none}
+#lesson.mm-simple-lesson .mm-simple-goals>summary::before{content:'▸';color:#9fd8ff}
+#lesson.mm-simple-lesson .mm-simple-goals[open]>summary::before{content:'▾'}
+#lesson.mm-simple-lesson .mm-simple-goals-content{padding:4px 17px 15px;border-top:1px solid #304a68}
+#lesson.mm-simple-lesson .mm-simple-goals-content ul{margin:8px 0 0;padding-left:21px}
+#lesson.mm-simple-lesson .mm-simple-goals-content li{font-size:14px;line-height:1.55;color:#c7d6e8}
+#lesson.mm-simple-lesson .mm-simple-goals>summary:focus-visible{outline:3px solid #73ceff;outline-offset:-3px}
+#lesson.mm-simple-lesson #mmLessonDeepV2 .mm-extra-help{margin:15px 0 0;box-shadow:none}
+#lesson.mm-simple-lesson #mmLessonDeepV2 .mm-extra-help summary:focus-visible{outline:3px solid #73ceff;outline-offset:-3px}
