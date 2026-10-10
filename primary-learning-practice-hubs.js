@@ -694,6 +694,12 @@ function normalizeHomeActions(){
   });
 }
 window.MM_APP_SHELL?.events?.onRender?.('dashboard',()=>requestAnimationFrame(normalizeHomeActions));
+// Dashboard slots may recompose outside normal render calls (Book resume,
+// domain readiness). Never let that recreate a second specialist lesson list.
+const homeRoot=document.getElementById('dashboard');
+if(homeRoot)new MutationObserver(()=>{
+  homeRoot.querySelectorAll('#mmSpecialistDashboard').forEach(el=>el.remove());
+}).observe(homeRoot,{childList:true,subtree:true});
 
 function removeProfileLessonGrid(){
   const root=document.getElementById('profile');if(!root)return;
