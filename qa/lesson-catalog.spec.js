@@ -9,6 +9,9 @@ async function ready(page){
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>Boolean(window.MM_PRIMARY_HUBS&&window.MM_SIMPLE_LESSON_EXPERIENCE&&window.MM_LESSON_CATALOG&&window.MM_APP_SHELL_FINALIZED));
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
+  // The curriculum pack loads before the async domain manifest; specialist
+  // persistence must bind to the real learner-scope service, not a null boot snapshot.
+  await page.waitForFunction(()=>Boolean(window.MM_LEARNER_SCOPE));
   await page.evaluate(()=>switchView('path'));
 }
 test('120 core, 36 material and 20 optional specialist lessons share one Learn page',async({page})=>{
