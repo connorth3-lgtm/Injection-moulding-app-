@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Successful release 2026.10.11.1 technical candidate source 886116199e611b225dbae7b266f4c1402287d8e7 and retained artifact 11680527534 are NOT physical-device evidence. All install, offline/restart/reboot, update, safe-area, storage-pressure and zoom tests on real iOS/iPadOS and Android remain pending; accessibility-real-at-validation-v1.json is a separate human HOLD, and production root and signing are not authorised.",
+  "boundary": "Successful release 2026.10.11.1 technical candidate source 886116199e611b225dbae7b266f4c1402287d8e7 and retained artifact 11680527534 are NOT evidence of validation on physical iOS/iPadOS and Android devices. All install, offline/restart/reboot, update, safe-area, storage-pressure and zoom tests on real iOS/iPadOS and Android remain pending; accessibility-real-at-validation-v1.json is a separate human HOLD, and production root and signing are not authorised.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
