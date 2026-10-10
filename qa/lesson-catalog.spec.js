@@ -191,6 +191,36 @@ test('specialist legacy progress migrates only to its owning strong learner scop
 });
 
 
+
+test('ambiguous legacy specialist hash is quarantined rather than shared between learners',async({page})=>{
+  const first='usr-aghg3vrqppm',second='usr-uiz7eldknw6';
+  await page.addInitScript(({first,second})=>{
+    localStorage.clear();
+    const user=id=>({id,name:id,role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'});
+    localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:first,users:{[first]:user(first),[second]:user(second)}}));
+    const legacy=id=>{let h=2166136261;for(const ch of id){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return (h>>>0).toString(36)};
+    if(legacy(first)!==legacy(second))throw new Error('QA fixture must have an actual legacy hash collision');
+    localStorage.setItem('mm_specialist_curriculum_v1::'+legacy(first),JSON.stringify({S01:true}));
+  },{first,second});
+  await page.goto(BASE,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>!!window.MM_SPECIALIST_CURRICULUM?.isComplete&&!!window.MM_LEARNER_SCOPE&&!document.getElementById('mmBootstrap'));
+  const inspect=await page.evaluate(({first,second})=>{
+    const scope=window.MM_LEARNER_SCOPE,prefix='mm_specialist_curriculum_v1::';
+    const oldKey=scope.storageKey(prefix,scope.legacyTokenFor(first));
+    const own=scope.storageKey(prefix,scope.tokenFor(first));
+    const other=scope.storageKey(prefix,scope.tokenFor(second));
+    return {old:localStorage.getItem(oldKey),a:localStorage.getItem(own),b:localStorage.getItem(other),quarantine:[...Array(localStorage.length)].map((_,i)=>localStorage.key(i)).filter(k=>k?.startsWith('mm_scope_quarantine_v1::')),aComplete:window.MM_SPECIALIST_CURRICULUM.isComplete('S01')};
+  },{first,second});
+  expect(inspect.old).toBeNull();
+  expect(inspect.a).toBeNull();
+  expect(inspect.b).toBeNull();
+  expect(inspect.quarantine.length).toBeGreaterThan(0);
+  expect(inspect.aComplete).toBe(false);
+  await page.evaluate(id=>switchUser(id),second);
+  expect(await page.evaluate(()=>window.MM_SPECIALIST_CURRICULUM.isComplete('S01'))).toBe(false);
+});
+
+
 test('global search leads to Learn without displaying another list of lesson matches',async({page})=>{
   await ready(page);
   await page.evaluate(()=>openSearch());
