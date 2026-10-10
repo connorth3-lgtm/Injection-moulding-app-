@@ -574,7 +574,7 @@
     const modules=reader.moduleIds.map(id=>allChapters().find(ch=>ch.id===id));
     if(modules.some(x=>!x))throw new Error(`Reader chapter contains unavailable governed module: ${reader.id}`);
     const n=allReaderChapters().findIndex(x=>x.id===reader.id)+1;
-    const governance='<p>Reader chapters group governed technical modules. Evidence status and independent SME review remain attached to each original module. Source review does not authorize machine, site or qualification changes.</p>';
+    const governance='<details class="mm-book-reader-governance"><summary>Review notes</summary><p>Reader chapters group governed technical modules. Evidence status and independent SME review remain attached to each original module. Source review does not authorize machine, site or qualification changes.</p></details>';
     const notes=`<details class="mm-book-reader-notes"><summary>Notes, sources & review status</summary>
       ${governance}
       <h3>Module evidence and review records</h3>
