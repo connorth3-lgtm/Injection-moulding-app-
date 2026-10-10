@@ -1,15 +1,15 @@
 # Real assistive-technology validation — 2026.10.11.1
 
-> **NEW 2026.10.11.1 non-production technical candidate; RELEASE ON HOLD.** GitHub retains artifact #11679959204 from candidate run #38081322293 for exact source `8a94ee0230121d029068401a5295ec51b45ff9c7` (public-runtime fingerprint `sha256:9271d2b52806780953e8b50d3ae66505dca50da11684b8dd9272e9da5e83155b`, artifact digest `sha256:468c3771174290d5b71cc55d7f999332feb3c784a24e60507dd6486837311fbf`, expiration 2027-01-08T19:49:30Z). **At packet creation the producer was not yet confirmed successful.** This artifact is source identity, NOT physical-device, real-AT, independent SME, learner, Windows signing, NZQA/provider, production or machine-control evidence. Independently verify its workflow success and exact-head CI before any promotion.
+> **VERIFIED 2026.10.11.1 TECHNICAL CANDIDATE — EXTERNAL REVIEW / MAIN MERGE HOLD.** [Successful exact-source producer run 38081915524](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/38081915524) retained artifact **11680527534**, SHA `886116199e611b225dbae7b266f4c1402287d8e7`, artifact digest `sha256:c5dde459429b7c6e5aaaa820dbea86d39c163ee9ed3cbc046fbe71c884c9e7e6`, expiry `2027-01-08T19:58:52Z`, and independently verified public-runtime fingerprint `sha256:9271d2b52806780953e8b50d3ae66505dca50da11684b8dd9272e9da5e83155b`. This proves technical identity and retention **only**; it is not physical-device, real AT, SME, learner outcome, provider/NZQA, Windows signing, protected-main release, publication or machine-control approval. All seven external streams remain **HOLD**.
 
 
 **STATUS: HOLD — no independent human validation or approved AT evidence.**
 
-This .6 candidate changes generated core-runtime declarations, engineering evidence checks, Mission Control mobile layout, and release identity. Earlier .5 candidate artifacts and any automated accessibility checks are not human NVDA/VoiceOver approval for this runtime.
+This .1 release candidate includes the learner-facing Book, Home, Materials and Learn integration, exact-grade evidence-limit disclosures and mobile layout work. Automated browser and accessibility checks do not establish human NVDA/VoiceOver approval.
 
 Required: named human reviewer and dated evidence for NVDA/Firefox on Windows, NVDA/Chromium on Windows, VoiceOver/macOS and VoiceOver/iOS; keyboard navigation, focus transitions, live regions, form labels, Book reading, engineering evidence boundaries, Mission Control timeline, zoom, and offline restart.
 
-The source SHA and fingerprint must come from the retained .6 exact-head artifact before human testing begins. All task evidence, reviewer identifiers and signoffs remain pending in `data/accessibility-real-at-validation-v1.json`. No machine-control or certification authority is granted.
+The exact .1 source SHA and runtime fingerprint are in the verified retained producer record above; future real-AT tests must bind to that exact runtime and produce their own dated human evidence. All task evidence, reviewer identifiers and signoffs remain pending in `data/accessibility-real-at-validation-v1.json`. No machine-control or certification authority is granted.
 
 ## Canonical assistive-technology task matrix (all untested)
 
