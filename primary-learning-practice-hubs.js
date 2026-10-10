@@ -573,37 +573,6 @@ function normalizeHomeActions(){
 }
 window.MM_APP_SHELL?.events?.onRender?.('dashboard',()=>requestAnimationFrame(normalizeHomeActions));
 
-/* Small, reversible sidebar hierarchy: keep the existing bound route buttons
-   and their data-view/IDs; only move secondary buttons into one native details
-   group. This does not alter the mobile shell or learner navigation authority. */
-function configureLeanNavigation(){
-  const nav=document.getElementById('nav');
-  if(!nav||nav.dataset.mmLeanNav==='1')return;
-  const legacy=nav.querySelector('details.more-nav:not(.mm-lean-secondary)');
-  const secondaryIds=['materials','simulator','defects','coach','glossary',
-    'standards','exams','certificates'];
-  const secondary=secondaryIds.map(id=>nav.querySelector('button[data-view="'+id+'"]'));
-  if(!legacy||secondary.some(button=>!button))return; // No partially migrated nav.
-  const advanced=[...legacy.querySelectorAll('button[data-view]')];
-  const details=document.createElement('details');
-  details.className='more-nav mm-lean-secondary';
-  const summary=document.createElement('summary');
-  summary.textContent='More · Tools, reference & progress';
-  details.append(summary);
-  secondary.concat(advanced).forEach(button=>details.append(button));
-  legacy.remove();
-  nav.append(details);
-  nav.dataset.mmLeanNav='1';
-  const sync=()=>{
-    const active=!!details.querySelector('button.active');
-    if(active)details.open=true; // Deep links / programmatic view switches stay discoverable.
-    details.classList.toggle('mm-lean-secondary-active',active);
-  };
-  new MutationObserver(sync).observe(details,{subtree:true,attributes:true,
-    attributeFilter:['class']});
-  sync();
-}
-
 function configureMore(){
   const items=window.MM_APP_SHELL?.navigation?.items;
   const practiceOwned=new Set(['mould-master','diagnostic-labs','process-data','material-labs','question-centre']);
@@ -614,7 +583,6 @@ function pruneMore(){
   const duplicate=/^(Materials|Material science)$/i;
   modal.querySelectorAll('.quick-action').forEach(button=>{const label=(button.querySelector('b')?.textContent||'').trim();if(duplicate.test(label))button.remove()});
 }
-configureLeanNavigation();
 configureMore();
 window.MM_APP_SHELL?.events?.onViewChange?.(id=>{if(id==='more')requestAnimationFrame(()=>requestAnimationFrame(pruneMore))});
 
