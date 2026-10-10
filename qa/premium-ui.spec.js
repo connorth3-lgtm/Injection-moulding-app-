@@ -452,6 +452,9 @@ test('Mission Control persists context across the app and remains mobile-safe',a
 
   await page.reload();
   await page.waitForFunction(()=>Boolean(window.MM_MISSION_CONTROL?.state));
+  // The app may restore the previous materials route after reload. Assert
+  // Home's intentional suppression only after explicitly navigating Home.
+  await page.evaluate(()=>window.switchView('dashboard'));
   await expect(page.locator('#mmMissionControl .mm-mc-context')).toBeHidden();
   await page.evaluate(()=>window.switchView('materials'));
   await expect(page.locator('#mmMissionControl')).toBeVisible();
