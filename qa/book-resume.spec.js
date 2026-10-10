@@ -247,3 +247,60 @@ test('Book reading bookmark survives immediate Contents exit and Listening scrol
   expect(after.anchorId).toBe(saved.anchorId);
   expect(after.scrollY).toBe(saved.scrollY);
 });
+
+test('Book Contents returns keyboard focus to the originating reader and module entries',async({page})=>{
+  await boot(page);
+  await page.evaluate(()=>window.MMBook.open());
+  const chapter=page.locator('[data-mm-book-reader-chapter-open="r08"]');
+  await expect(chapter).toBeVisible();
+  await chapter.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
+  const back=page.locator('[data-mm-book-back]');
+  await back.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('[data-mm-book-contents]')).toBeVisible();
+  await expect(chapter).toBeFocused();
+  await expect(chapter).toBeInViewport();
+
+  const index=page.locator('details.mm-book-governed-index');
+  await index.locator('summary').click();
+  const moduleButton=page.locator('[data-mm-book-chapter]').first();
+  await moduleButton.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
+  await page.locator('[data-mm-book-back]').focus();
+  await page.keyboard.press('Enter');
+  await expect(moduleButton).toBeFocused();
+  await expect(moduleButton).toBeInViewport();
+});
+
+test('older compatible release bookmarks migrate after chapter validation and remain learner scoped',async({page})=>{
+  await boot(page);
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r08'));
+  const anchor=page.locator('[data-mm-book-reader] [data-mm-book-anchor]').nth(4);
+  await expect(anchor).toBeVisible();
+  const anchorId=await anchor.getAttribute('data-mm-book-anchor');
+  await scrollAnchor(page,anchor);
+  await page.getByRole('button',{name:'Home'}).first().click();
+
+  const key=await page.evaluate(()=>{
+    const scoped=window.MMBook.resumeStorageKey();
+    const old=JSON.parse(localStorage.getItem(scoped));
+    old.bookRelease='2026.10.06.4';
+    localStorage.setItem(scoped,JSON.stringify(old));
+    return scoped;
+  });
+  expect((await page.evaluate(()=>window.MMBook.getResume())).bookRelease).toBe('2026.10.06.4');
+  expect(await page.evaluate(()=>window.MMBook.openResume())).toBeTruthy();
+  await expect(page.locator('[data-mm-book-reader-chapter="r08"]')).toBeVisible();
+  await expect(page.locator('[data-mm-book-anchor="'+anchorId+'"]')).toBeVisible();
+  const migrated=await page.evaluate(()=>window.MMBook.getResume());
+  expect(migrated.bookRelease).toBe(await page.evaluate(()=>window.MMBook.version));
+  expect(migrated.anchorId).toBe(anchorId);
+
+  await activate(page,'reader-b');
+  expect(await page.evaluate(()=>window.MMBook.getResume())).toBeNull();
+  await activate(page,'reader-a');
+  expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key))?.bookRelease,key)).toBe(migrated.bookRelease);
+});
