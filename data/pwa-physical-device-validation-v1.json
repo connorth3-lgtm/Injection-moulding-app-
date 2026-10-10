@@ -44,14 +44,14 @@
   "release": "2026.10.09.6",
   "candidate": {
     "release": "2026.10.09.6",
-    "sourceSha": "f1f33ba42477c51a7290b02ea4b379223e001ad9",
-    "runtimeFingerprint": "sha256:4a7d3afb067ee33eff1b73394a79d94bcc1d7abd5e4f791f2f2dfe1f65a76a62",
-    "candidateRunId": 38041740285,
+    "sourceSha": "3afecf1a000c20213657fc5ff86797be121d472e",
+    "runtimeFingerprint": "sha256:862c93c4f9cb4660ff289d5913a5b0138d8e5f532ace6ad5001bfbe23175677e",
+    "candidateRunId": 38070869664,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 11666156925,
-    "artifactName": "physical-pwa-candidate-f1f33ba42477c51a7290b02ea4b379223e001ad9",
-    "artifactDigest": "sha256:364c5e009f8a75df1207bbf03d6261d9dc2ef8dc381bcf249926e11201094e9b",
-    "artifactExpiresAt": "2027-01-08T09:32:18Z"
+    "artifactId": 11676178993,
+    "artifactName": "physical-pwa-candidate-3afecf1a000c20213657fc5ff86797be121d472e",
+    "artifactDigest": "sha256:9f30bbfe431852681739cfad2c9d00a08fd624c712d83f5ede68af1eb48a35d9",
+    "artifactExpiresAt": "2027-01-08T17:13:43Z"
   },
   "previousCandidate": {
     "release": "2026.10.09.5",
