@@ -97,6 +97,7 @@ def audit() -> tuple[list[dict], int, int]:
             "title": chapter["title"],
             "visibleWords": visible,
             "moduleCount": len(chapter["moduleIds"]),
+            "moduleIds": list(chapter["moduleIds"]),
             "omitted": omitted_details,
             "belowTarget": visible < SOFT_WORD_TARGET,
         })
@@ -109,9 +110,48 @@ def audit() -> tuple[list[dict], int, int]:
     return rows, len(all_seen), suppressed
 
 
+def editorial_review_packet(rows: list[dict], modules: int, omissions: int) -> dict:
+    """Source-derived triage only; cannot confer or imply editorial/SME approval."""
+    priorities = {"r07", "r10", "r11", "r15"}
+    queue = [
+        {
+            "readerId": row["id"],
+            "title": row["title"],
+            "chapterNumber": row["number"],
+            "moduleIds": list(row["moduleIds"]),
+            "visibleWords": row["visibleWords"],
+            "belowNonGatingTarget": row["belowTarget"],
+            "wordGapToSoftTarget": max(0, SOFT_WORD_TARGET - row["visibleWords"]),
+            "sourceSectionsBehindDisclosure": [
+                {"moduleId": entry[0], "sectionTitle": entry[1], "sourceWords": entry[2]}
+                for entry in row["omitted"]
+            ],
+            "priority": "first-review" if row["id"] in priorities else "normal",
+            "independentSmeStatus": "UNREVIEWED",
+            "reviewerFindings": None,
+        }
+        for row in rows
+    ]
+    queue.sort(key=lambda row: (row["priority"] != "first-review", -row["wordGapToSoftTarget"], row["chapterNumber"]))
+    return {
+        "schemaVersion": 1,
+        "kind": "source-derived-editorial-triage-not-a-technical-approval",
+        "governance": (
+            "The 850-word target is non-gating. Counts and priorities are for independent editorial and Book SME review. "
+            "No automated output is an SME decision, fabrication of technical content, learner validation or release authorization."
+        ),
+        "readerChapterCount": len(rows),
+        "governedModuleCount": modules,
+        "omittedSourceSectionCount": omissions,
+        "chaptersBelowSoftTarget": sum(row["belowTarget"] for row in rows),
+        "chapters": queue,
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--check", action="store_true")
+    parser.add_argument("--report-json", type=Path, help="Write source-derived, unapproved editorial review queue JSON")
     args = parser.parse_args()
     rows, modules, omissions = audit()
     under = [row for row in rows if row["belowTarget"]]
@@ -123,6 +163,9 @@ def main() -> None:
               f"{len(row['omitted']):>2} hidden sections  {row['title']}")
     if args.check and len(under) != 12:
         raise AssertionError(f"first-read chapter depth snapshot changed: {len(under)} below target; manually refresh editorial review")
+    if args.report_json:
+        args.report_json.parent.mkdir(parents=True, exist_ok=True)
+        args.report_json.write_text(json.dumps(editorial_review_packet(rows, modules, omissions), indent=2) + "\n", encoding="utf-8")
     print("Source-section presentation mappings contain no stale pointers.")
     print("Independent source/Book SME, physical-device/AT and publication signoff: NOT VERIFIED.")
 
