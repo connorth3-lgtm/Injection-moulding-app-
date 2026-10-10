@@ -208,6 +208,9 @@ function lessonTextKey(text){
   return String(text||'').toLowerCase().replace(/\s+/g,' ').replace(/[.!?]+$/,'').trim();
 }
 function compactLearningSections(article){
+  // Remove visual scaffolding before comparing authored prose, so generated
+  // step markers cannot prevent strict duplicate detection.
+  article.querySelectorAll('.mm-reading-guide,.mm-read-marker,:scope > .mm-lesson-progress').forEach(el=>el.remove());
   // The canonical key points and shop-floor activity remain in the main reading flow.
   // Goals are still available verbatim, without being another full-size teaching card.
   const goals=[...article.children].find(el=>
@@ -247,10 +250,6 @@ function compactLearningSections(article){
   // Navigation already has one primary Complete & continue action; this
   // additional preview card does not carry independent technical teaching.
   article.querySelectorAll(':scope > .mm-next-card').forEach(el=>el.remove());
-
-  // Historic numbered reading guides and progress widgets repeat the hero.
-  // They are chrome, not safety warnings or authored lesson information.
-  article.querySelectorAll('.mm-reading-guide,.mm-read-marker,:scope > .mm-lesson-progress').forEach(el=>el.remove());
 
   const deep=article.querySelector('#mmLessonDeepV2');
   if(!deep)return;
