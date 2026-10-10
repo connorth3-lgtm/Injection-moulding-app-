@@ -749,8 +749,7 @@ function switchView(id){
   };
   $("#pageTitle").textContent=titles[id][0];$("#pageSubtitle").textContent=titles[id][1];
   renderView(id);
-  // Starting a different workspace must not leave mobile WebKit at the previous scroll position.
-  window.scrollTo({top:0,behavior:"instant"});
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 $$("#nav button").forEach(b=>b.addEventListener("click",()=>switchView(b.dataset.view)));
 $("#continueBtn").onclick=()=>{switchView("lesson")};
