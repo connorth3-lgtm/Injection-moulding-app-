@@ -416,7 +416,7 @@ function createLessonCatalog(){
   const saved=id=>Array.isArray(user?.bookmarks)&&user.bookmarks.includes(id);
   // Specialist completion is owned by the independent specialist curriculum.
   // Read through its API rather than reimplementing learner storage or credit.
-  const specialistDone=id=>window.MM_SPECIALIST_CURRICULUM?.isComplete?.(id)===true;
+  const specialistDone=id=>window.MM_SPECIALIST_CURRICULUM?.isComplete?.(id)===true||window.MM_SPECIALIST_EVIDENCE_GAPS?.isComplete?.(id)===true;
   function markup(){
     const active=Number(user?.currentLesson);
     const groups=courses().map(course=>{
@@ -506,7 +506,12 @@ function createLessonCatalog(){
       if(!button||!box.contains(button))return;
       if(button.dataset.mmSpecialistId){
         const id=button.dataset.mmSpecialistId;
-        if(specialists().some(l=>l.id===id))window.mmSpecialistLesson?.(id);
+        if(specialists().some(l=>l.id===id)){
+          // S13–S20 use the independent evidence-gap reader; the base
+          // specialist reader intentionally knows only S01–S12.
+          if(window.MM_SPECIALIST_EVIDENCE_GAPS?.lessons?.some(l=>l.id===id))window.mmSpecialistGapLesson?.(id);
+          else window.mmSpecialistLesson?.(id);
+        }
         return;
       }
       if(button.dataset.mmMaterialId){
