@@ -594,7 +594,7 @@
   function renderOverview(){
     if(!ui||!manifest||!readerArchitecture)return;
     const verified=verifiedChapters(),review=allChapters().filter(ch=>ch.state==='technical-review'),readers=allReaderChapters();
-    ui.summary.textContent=`${readers.length} chapters · ${allChapters().length} source modules · ${review.length} under technical review · ${verified.length} source-reviewed`;
+    ui.summary.textContent=`${readers.length} reader chapters · ${allChapters().length} governed modules · ${review.length} modules in technical review · ${verified.length} source-reviewed modules`;
     if(ui.smeStatus)ui.smeStatus.textContent=smeStatusText();
     // Plain numbered contents. The full governed 46-module index and editorial
     // notes remain accessible AFTER the 20 chapter titles, without badges.
