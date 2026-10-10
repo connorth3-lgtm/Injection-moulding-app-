@@ -18,32 +18,46 @@ async function openLesson(page){
   await expect(page.locator('#mmLessonDeepV2')).toBeVisible();
 }
 
-test('lesson essentials keep only the minimum default teaching and deeper reasoning stays collapsed',async({page})=>{
+test('one clear lesson flow keeps original engineering depth without repeated takeaways',async({page})=>{
   await openLesson(page);
-  const section=page.locator('#mmLessonDeepV2');
-  const essentials=section.locator('.mm-deep-v2-essentials');
-  await expect(essentials).toBeVisible();
-  const rows=essentials.locator('.mm-deep-v2-row');
-  await expect(rows).toHaveCount(2);
-  await expect(rows.nth(0).getByRole('heading',{name:'Key takeaway'})).toBeVisible();
-  await expect(rows.nth(1).getByRole('heading',{name:'Apply'})).toBeVisible();
+  const article=page.locator('#lesson article.lesson-body');
+  await expect(article.locator('.mm-simple-lesson-hero')).toBeVisible();
+  await expect(article.getByRole('heading',{name:'What you need to know'})).toBeVisible();
+  await expect(article.locator('.callout')).toBeVisible();
+  await expect(article.locator('.mm-next-card')).toHaveCount(0);
+  await expect(article.locator('.mm-reading-guide,.mm-read-marker,.mm-lesson-progress')).toHaveCount(0);
 
-  const visibleCopy=await rows.locator('p').allTextContents();
-  expect(visibleCopy).toHaveLength(2);
-  for(const text of visibleCopy)expect(text.trim().length).toBeLessThanOrEqual(176);
-  await expect(section.locator('.mm-deep-v2-grid')).toHaveCount(0);
+  const goals=article.locator('.mm-simple-goals');
+  await expect(goals).toBeVisible();
+  expect(await goals.evaluate(el=>el.open)).toBe(false);
+  const authored=await page.evaluate(()=>({
+    objectives:D.lessons.find(l=>l.id===user.currentLesson).objectives,
+    keypoints:D.lessons.find(l=>l.id===user.currentLesson).keypoints,
+    exercise:D.lessons.find(l=>l.id===user.currentLesson).exercise
+  }));
+  await expect(goals.locator('li')).toHaveCount(authored.objectives.length);
+  await goals.locator('summary').click();
+  for(const objective of authored.objectives)await expect(goals).toContainText(objective);
+  for(const point of authored.keypoints)await expect(article).toContainText(point);
+  await expect(article).toContainText(authored.exercise);
 
-  const details=section.locator('details');
+  const deep=article.locator('#mmLessonDeepV2');
+  await expect(deep.locator('.mm-deep-v2-essentials')).toHaveCount(0);
+  const details=deep.locator('details.mm-deep-v2-card');
   expect(await details.evaluate(el=>el.open)).toBe(false);
   await expect(details.locator('.mm-deep-v2-detail')).toBeHidden();
-  await details.locator('summary').click();
-  await expect(details.locator('.mm-deep-v2-detail')).toBeVisible();
+  await expect(details.locator('summary')).toContainText('Engineering detail & examples');
+  await details.locator('summary').first().click();
   await expect(details.getByRole('heading',{name:'Mechanism'})).toBeVisible();
   await expect(details.getByRole('heading',{name:'Evidence chain'})).toBeVisible();
   await expect(details.getByRole('heading',{name:'Plant decision'})).toBeVisible();
   await expect(details.getByRole('heading',{name:'Misconception check'})).toBeVisible();
   await expect(details.getByRole('heading',{name:'Teach-back'})).toBeVisible();
   await expect(details.locator('.mm-deep-v2-boundary')).toBeVisible();
+  await expect(details.locator('.mm-extra-help')).toHaveCount(1);
+  await expect(article.locator(':scope > .mm-extra-help')).toHaveCount(0);
+  await details.locator('.mm-extra-help > summary').click();
+  await expect(details.locator('#mmTeaching')).toBeVisible();
 });
 
 test('lesson notes are a small optional action until the learner opens them',async({page})=>{
@@ -102,4 +116,42 @@ test('lesson has one clear ending and optional evidence stays out of the default
   const listenBox=await listen.boundingBox();
   expect(listenBox?.width||999).toBeLessThanOrEqual(112);
   expect(listenBox?.height||999).toBeLessThanOrEqual(48);
+});
+
+test('safety-specific boundary stays visible while technical detail is optional',async({page})=>{
+  await openLesson(page);
+  await page.evaluate(()=>goLesson(6)); // Canonical safety start-up lesson
+  const deep=page.locator('#lesson #mmLessonDeepV2');
+  const essentials=deep.locator('.mm-deep-v2-essentials');
+  await expect(essentials).toBeVisible();
+  await expect(essentials.locator('.mm-deep-v2-row')).toHaveCount(1);
+  await expect(essentials.getByRole('heading',{name:'Watch out'})).toBeVisible();
+  await expect(essentials).toContainText('Safety boundary');
+  const detail=deep.locator('details.mm-deep-v2-card');
+  expect(await detail.evaluate(el=>el.open)).toBe(false);
+  await detail.locator('summary').first().click();
+  await expect(detail.locator('.mm-deep-v2-boundary')).toContainText('Safety boundary');
+});
+
+test('only literally repeated introductions collapse; differing engineering context stays visible',async({page})=>{
+  await openLesson(page);
+  const candidate=await page.evaluate(()=>{
+    const clean=v=>String(v||'').toLowerCase().replace(/\s+/g,' ').replace(/[.!?]+$/,'').trim();
+    const different=D.lessons.find(l=>clean(l.intro)!==clean(l.summary));
+    return different?.id||1;
+  });
+  await page.evaluate(id=>goLesson(id),candidate);
+  const active=await page.evaluate(()=>({intro:D.lessons.find(l=>l.id===user.currentLesson).intro,summary:D.lessons.find(l=>l.id===user.currentLesson).summary}));
+  if(active.intro.toLowerCase().trim()!==active.summary.toLowerCase().trim()){
+    const intro=page.locator('#lesson .lesson-body .content-block').filter({has:page.getByRole('heading',{name:'Why this matters'})});
+    await expect(intro).toBeVisible();
+    await expect(intro).toContainText(active.intro);
+  }
+  await page.evaluate(()=>{
+    const lesson=D.lessons.find(l=>l.id===user.currentLesson);
+    lesson.intro=lesson.summary;
+    renderLesson();
+  });
+  await expect(page.locator('#lesson .lesson-body .content-block').filter({has:page.getByRole('heading',{name:'Why this matters'})})).toHaveCount(0);
+  await expect(page.locator('#lesson .mm-simple-lesson-summary')).toBeVisible();
 });
