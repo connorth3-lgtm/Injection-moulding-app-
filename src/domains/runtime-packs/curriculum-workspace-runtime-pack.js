@@ -419,7 +419,7 @@ function storageKey(){return `${STORAGE_BASE}::${learnerToken()}`}
 function readState(){try{const x=JSON.parse(localStorage.getItem(storageKey())||'{}');return x&&typeof x==='object'?x:{}}catch(_){return {}}}
 function writeState(x){try{localStorage.setItem(storageKey(),JSON.stringify(x))}catch(_){}}
 function isDone(id){return !!readState()[id]}
-function setDone(id,done){const s=readState();if(done)s[id]=true;else delete s[id];writeState(s);decorateDashboard(true)}
+function setDone(id,done){const s=readState();if(done)s[id]=true;else delete s[id];writeState(s);decorateDashboard(true);window.dispatchEvent(new CustomEvent('mm:specialist-progress-change',{detail:{id,completed:isDone(id)}}))}
 function coreLesson(id){return CORE.lessons.find(x=>x.id===Number(id))}
 
 function ensureStyle(){
@@ -468,7 +468,7 @@ function decorateDashboard(force){
 const originalRenderDashboard=typeof renderDashboard==='function'?renderDashboard:null;
 if(originalRenderDashboard){renderDashboard=function(){originalRenderDashboard();decorateDashboard(false)}}
 window.mmSpecialistOpen=open;window.mmSpecialistClose=close;window.mmSpecialistLesson=renderLesson;window.mmSpecialistPractice=practice;window.mmSpecialistToggle=toggle;
-window.MM_SPECIALIST_CURRICULUM={version:VERSION,coreLessonCount:120,optional:true,lessons:LESSONS.map(l=>({id:l.id,title:l.title,level:l.level,coreLessons:[...l.coreLessons],practices:l.practices.map(p=>({...p}))})),open,scope:'Optional formative specialist learning; canonical 120-lesson completion path and formal assessment/certificate rules are unchanged; no production recipe.'};
+window.MM_SPECIALIST_CURRICULUM={version:VERSION,coreLessonCount:120,optional:true,lessons:LESSONS.map(l=>({id:l.id,title:l.title,level:l.level,coreLessons:[...l.coreLessons],practices:l.practices.map(p=>({...p}))})),isComplete:isDone,open,scope:'Optional formative specialist learning; canonical 120-lesson completion path and formal assessment/certificate rules are unchanged; no production recipe.'};
 window.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
 if(typeof currentView==='string'&&currentView==='dashboard')decorateDashboard(false);
 })();
