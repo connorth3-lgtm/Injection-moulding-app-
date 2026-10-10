@@ -551,18 +551,45 @@
     return `<section class="mm-book-reader-learning"><span class="eyebrow">Chapter depth: ${esc(reader.depthBand)}</span><h3 data-mm-book-anchor="reader:${esc(reader.id)}:learning">Learning check</h3>${scenario}<h4 data-mm-book-anchor="reader:${esc(reader.id)}:learning:objectives">By the end of this chapter</h4><ul>${reader.learningObjectives.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><h4 data-mm-book-anchor="reader:${esc(reader.id)}:learning:check">Check your understanding</h4><ol>${reader.checkQuestions.map(x=>`<li>${esc(x)}</li>`).join('')}</ol><h4 data-mm-book-anchor="reader:${esc(reader.id)}:learning:apply">Apply it</h4><p>${esc(reader.applyPrompt)}</p></section>`;
   }
   function verifiedChapterHtml(chapter,options={}){const sections=Array.isArray(chapter.sections)?chapter.sections:[],includeTechnicalMaterial=options.includeTechnicalMaterial!==false;return `<article class="mm-book-verified-chapter" data-mm-book-verified-chapter="${esc(chapter.id)}"><span class="eyebrow">Source evidence reviewed</span><h2 data-mm-book-anchor="chapter:${esc(chapter.id)}">${esc(chapter.title)}</h2><p><b>Applicability:</b> ${esc(chapter.applicability||'See attached evidence and controlling documentation.')}</p>${sections.map((s,index)=>`<section><h3 data-mm-book-anchor="chapter:${esc(chapter.id)}:section:${index}">${esc(s.title||'')}</h3>${proseHtml(s.text)}</section>`).join('')}${diagramHtml(chapter)}${workedCaseHtml(chapter)}${includeTechnicalMaterial?materialAtlasHtml(chapter):''}${sourceHtml(chapter)}${claimTraceHtml(chapter)}</article>`;}
+  // Reading prose comes first; the source/SME records are preserved in chapter
+  // notes instead of repeated as technical badges between paragraphs.
   function readerModuleHtml(chapter){
     const sections=readerSections(chapter),verified=chapter.state==='verified';
-    const status=verified?'Source evidence reviewed':stateLabel(chapter.state);
-    const boundary=!verified&&chapter.reviewBoundary?`<p><b>Review boundary:</b> ${esc(chapter.reviewBoundary)}</p>`:'';
-    const scope=`<details class="mm-book-reader-scope"><summary><b>Applicability and scope</b></summary><p>${esc(chapter.applicability||'See governed module scope.')}</p>${boundary}</details>`;
-    return `<section class="mm-book-reader-module" data-mm-book-reader-module="${esc(chapter.id)}"><span class="eyebrow">${esc(status)} · governed module</span><h3 data-mm-book-anchor="module:${esc(chapter.id)}">${esc(chapter.title)}</h3>${scope}${sections.map((s,index)=>`<section><h4 data-mm-book-anchor="module:${esc(chapter.id)}:section:${index}">${esc(s.title||'')}</h4>${proseHtml(s.text)}</section>`).join('')}${readerSupplementHtml(chapter)}${diagramHtml(chapter,{readerMode:true})}${workedCaseHtml(chapter,{readerMode:true})}${chapter.id==='material-families'?materialAtlasHtml(chapter):''}${readerModuleEvidenceHtml(chapter)}</section>`;
+    const caution=!verified?`<p class="mm-book-review-warning"><strong>${esc(stateLabel(chapter.state))} — independent technical approval not established.</strong></p>`:'';
+    const boundary=!verified&&chapter.reviewBoundary?`<p><strong>Review boundary:</strong> ${esc(chapter.reviewBoundary)}</p>`:'';
+    const scope=`<aside class="mm-book-scope-note"><p><strong>Applicability:</strong> ${esc(chapter.applicability||'See governed module scope.')}</p>${boundary}</aside>`;
+    return `<section class="mm-book-reader-module" data-mm-book-reader-module="${esc(chapter.id)}"><h3 data-mm-book-anchor="module:${esc(chapter.id)}">${esc(chapter.title)}</h3>${caution}${scope}${sections.map((s,index)=>`<section><h4 data-mm-book-anchor="module:${esc(chapter.id)}:section:${index}">${esc(s.title||'')}</h4>${proseHtml(s.text)}</section>`).join('')}${readerSupplementHtml(chapter)}${diagramHtml(chapter,{readerMode:true})}${workedCaseHtml(chapter,{readerMode:true})}${chapter.id==='material-families'?materialAtlasHtml(chapter):''}</section>`;
+  }
+  function readerPageTurn(reader){
+    const rows=allReaderChapters(),index=rows.findIndex(row=>row.id===reader.id);
+    if(index<0)throw new Error('Unknown reader chapter in page navigation');
+    const previous=rows[index-1],next=rows[index+1];
+    return `<nav class="mm-book-page-turn" aria-label="Book chapter navigation">
+      ${previous?`<button type="button" data-mm-book-page-turn="${esc(previous.id)}" aria-label="Previous chapter: ${esc(previous.title)}">← Previous chapter</button>`:''}
+      <button type="button" data-mm-book-back>Contents</button>
+      ${next?`<button type="button" data-mm-book-page-turn="${esc(next.id)}" aria-label="Next chapter: ${esc(next.title)}">Next chapter →</button>`:''}
+    </nav>`;
   }
   function readerChapterHtml(reader){
-    const modules=reader.moduleIds.map(id=>allChapters().find(ch=>ch.id===id));if(modules.some(x=>!x))throw new Error(`Reader chapter contains unavailable governed module: ${reader.id}`);
-    const verified=modules.every(ch=>ch.state==='verified'),label=verified?'Source evidence reviewed modules':'Contains technical-review module(s)';
-    const governance=`<details class="mm-book-reader-governance"><summary><b>Evidence and review status</b> — ${modules.length} governed module${modules.length===1?'':'s'}</summary><p>This reader chapter is a structural grouping. Technical claims, evidence status and independent SME review remain attached to the underlying governed modules.</p></details>`;
-    return `<article class="mm-book-reader-chapter" data-mm-book-reader-chapter="${esc(reader.id)}"><span class="eyebrow">Reader chapter · ${esc(reader.depthBand)} depth · ${esc(label)}</span><h2 data-mm-book-anchor="reader:${esc(reader.id)}">${esc(reader.title)}</h2><p>${esc(reader.goal)}</p><details class="mm-book-reader-guide"><summary>Chapter guide · key terms and reading plan</summary><div class="callout"><b>Chapter thread:</b> ${esc(reader.readingThread)}</div>${readerKeyTermsHtml(reader)}${reader.sequencePrompt?`<div class="callout"><b>How to read this chapter:</b> ${esc(reader.sequencePrompt)}</div>`:''}</details>${governance}${modules.map(readerModuleHtml).join('')}${readerLearningHtml(reader)}${readerReferencesHtml(reader,modules)}</article>`;
+    const modules=reader.moduleIds.map(id=>allChapters().find(ch=>ch.id===id));
+    if(modules.some(x=>!x))throw new Error(`Reader chapter contains unavailable governed module: ${reader.id}`);
+    const n=allReaderChapters().findIndex(x=>x.id===reader.id)+1;
+    const governance='<p>Reader chapters group governed technical modules. Evidence status and independent SME review remain attached to each original module. Source review does not authorize machine, site or qualification changes.</p>';
+    const notes=`<details class="mm-book-reader-notes"><summary>Notes, sources & review status</summary>
+      ${governance}
+      <h3>Module evidence and review records</h3>
+      ${modules.map(ch=>`<section><h4>${esc(ch.title)} — ${esc(stateLabel(ch.state))}</h4>${readerModuleEvidenceHtml(ch)}</section>`).join('')}
+      ${readerReferencesHtml(reader,modules)}
+      <details class="mm-book-reader-guide"><summary>Reading guide & terminology</summary><p>${esc(reader.readingThread)}</p>${readerKeyTermsHtml(reader)}${reader.sequencePrompt?`<p>${esc(reader.sequencePrompt)}</p>`:''}</details>
+    </details>`;
+    const study=`<details class="mm-book-reader-study"><summary>Study questions (optional)</summary>${readerLearningHtml(reader)}</details>`;
+    return `<article class="mm-book-reader-chapter mm-book-prose" data-mm-book-reader-chapter="${esc(reader.id)}">
+      <p class="mm-book-chapter-number">Chapter ${n}</p>
+      <h2 data-mm-book-anchor="reader:${esc(reader.id)}">${esc(reader.title)}</h2>
+      <p class="mm-book-chapter-lede">${esc(reader.goal)}</p>
+      ${modules.map(readerModuleHtml).join('')}
+      ${study}${notes}${readerPageTurn(reader)}
+    </article>`;
   }
   function renderOverview(){
     if(!ui||!manifest||!readerArchitecture)return;
