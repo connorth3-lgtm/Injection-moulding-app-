@@ -38,7 +38,7 @@ for marker in [
     "for(let node=start;node&&node!==document.body;node=node.parentElement)",
     "bindBookScrollRoot()",
     "bindMaterialPagination(ui.reader);bindBookScrollRoot();",
-    "ui.reader.hidden=false;bindBack();bindMaterialPagination(ui.reader);bindBookScrollRoot();rememberReadingPosition('reader-chapter'",
+    "ui.reader.hidden=false;bindBack();ui.reader.querySelectorAll('[data-mm-book-page-turn]').forEach(button=>button.addEventListener('click',()=>showReaderChapter(button.dataset.mmBookPageTurn)));bindMaterialPagination(ui.reader);bindBookScrollRoot();rememberReadingPosition('reader-chapter'",
     "ui.reader.hidden=false;bindBack();bindBookScrollRoot();rememberReadingPosition('chapter'",
     "scrollBookBy(delta)",
     "const atEnd=scrollHeight>0&&scrollTop+clientHeight>=scrollHeight-3",
