@@ -106,6 +106,20 @@ async function expectNarrowReadableTiles(page,rootSelector,expectedCount=4){
   expect(result.overlap).toBe(false);
 }
 
+async function expectUnifiedLessonCatalog(page){
+  const root=page.locator('#path .mm-all-lessons');
+  await expect(root).toBeVisible();
+  await expect(root.locator('[data-mm-catalog-group]')).toHaveCount(13);
+  await expect(root.locator('[data-mm-catalog-item]')).toHaveCount(140);
+  const geometry=await page.evaluate(()=>{
+    const root=document.querySelector('#path .mm-all-lessons');
+    const rect=root.getBoundingClientRect();
+    return {width:rect.width,viewport:innerWidth,overflow:document.documentElement.scrollWidth-innerWidth};
+  });
+  expect(geometry.width).toBeLessThanOrEqual(geometry.viewport+2);
+  expect(geometry.overflow).toBeLessThanOrEqual(2);
+}
+
 async function expectFullWidthPrimaryAction(page,rootSelector){
   const geometry=await page.evaluate(rootSelector=>{
     const root=document.querySelector(rootSelector);
@@ -160,10 +174,10 @@ async function expectMaterialDensity(page){
 
 test.use({viewport:{width:412,height:915}});
 
-test('Learn hub keeps compact left-aligned mobile cards under strict CSP',async({page})=>{
+test('Learn hub shows the unified compact lesson catalogue under strict CSP',async({page})=>{
   await openApp(page);
   await openHub(page,'Learn','#path .mm-learn-hub');
-  await expectReadableTiles(page,'#path .mm-learn-hub',3);
+  await expectUnifiedLessonCatalog(page);
   await expectFullWidthPrimaryAction(page,'#path .mm-learn-hub');
   await page.screenshot({path:'qa-artifacts/mobile-learn-hub-412x915.png',fullPage:true});
 });
@@ -186,10 +200,10 @@ test('Material chapters are content-driven and enter at the top on 412px phones'
 test.describe('360px narrow-phone hubs',()=>{
   test.use({viewport:{width:360,height:800}});
 
-  test('Learn and Practice use content-driven one-column cards instead of empty title slabs',async({page})=>{
+  test('Learn catalogue and Practice cards fit on a narrow phone',async({page})=>{
     await openApp(page);
     await openHub(page,'Learn','#path .mm-learn-hub');
-    await expectNarrowReadableTiles(page,'#path .mm-learn-hub',3);
+    await expectUnifiedLessonCatalog(page);
 
     await openHub(page,'Practice','#scenarios .mm-practice-hub');
     await expectNarrowReadableTiles(page,'#scenarios .mm-practice-hub');
