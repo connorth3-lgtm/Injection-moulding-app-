@@ -567,6 +567,9 @@ function createLessonCatalog(){
 }
 const lessonCatalog=createLessonCatalog();
 window.addEventListener('mm:specialist-progress-change',()=>lessonCatalog.refreshSpecialistProgress());
+// The manifest installs learner scope after the classic-script curriculum pack.
+// Refresh any Learn page opened during bootstrap once owned progress can migrate.
+window.addEventListener('mm:domains-ready',()=>lessonCatalog.refreshSpecialistProgress());
 
 function learnHubMarkup(){
   const c=lessonContext();
