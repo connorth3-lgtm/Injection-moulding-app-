@@ -416,7 +416,7 @@ function createLessonCatalog(){
   const saved=id=>Array.isArray(user?.bookmarks)&&user.bookmarks.includes(id);
   // Specialist completion is owned by the independent specialist curriculum.
   // Read through its API rather than reimplementing learner storage or credit.
-  const specialistDone=id=>window.MM_SPECIALIST_CURRICULUM?.isComplete?.(id)===true;
+  const specialistDone=id=>window.MM_SPECIALIST_CURRICULUM?.isComplete?.(id)===true||window.MM_SPECIALIST_EVIDENCE_GAPS?.isComplete?.(id)===true;
   function markup(){
     const active=Number(user?.currentLesson);
     const groups=courses().map(course=>{
