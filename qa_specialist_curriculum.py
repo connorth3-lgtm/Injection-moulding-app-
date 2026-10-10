@@ -101,10 +101,11 @@ need("data-view=\"standards\"" in core,'Standards & safety target missing for sp
 # canonical collision-safe learner storage boundary. Do not reintroduce the
 # legacy 32-bit per-profile FNV hash just to satisfy a syntactic assertion.
 for marker in [
-    'const learnerScope=window.MM_LEARNER_SCOPE',
-    'learnerScope?.registerStoragePrefix?.(SPECIALIST_STORAGE_PREFIX)',
-    'learnerScope.storageKey(SPECIALIST_STORAGE_PREFIX,learnerScope.token())',
-    'if(!learnerScope?.token||!learnerScope?.storageKey)return null',
+    'const scope=window.MM_LEARNER_SCOPE',
+    'scope.registerStoragePrefix(SPECIALIST_STORAGE_PREFIX)',
+    'scope.storageKey(SPECIALIST_STORAGE_PREFIX,scope.token())',
+    'if(!scope?.token||!scope?.storageKey||!scope?.registerStoragePrefix)return null',
+    'let registeredLearnerScope=null',
     'localStorage.getItem(key)',
     'localStorage.setItem(key,payload)',
     'mm:specialist-progress-change'
