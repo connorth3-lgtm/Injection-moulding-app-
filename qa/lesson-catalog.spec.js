@@ -165,6 +165,35 @@ test('specialist completion appears in unified Done/Not finished filters without
 });
 
 
+
+test('evidence-gap specialist lesson opens from Learn and updates independent completion',async({page})=>{
+  await ready(page);
+  const catalog=page.locator('#path .mm-all-lessons');
+  await catalog.locator('[data-mm-catalog-filter]').selectOption('specialist');
+  const gap=catalog.locator('[data-mm-specialist-id="S13"]');
+  await expect(gap).toBeVisible();
+  await expect(gap.locator('.mm-catalog-state')).toHaveText('Open');
+  // This is the first specialist modal opened in the session; it must not
+  // recurse through the unified Learn launcher instead of creating the reader.
+  await gap.click();
+  await expect(page.locator('#mmSpecialistModal')).toBeVisible();
+  const title=await page.evaluate(()=>window.MM_SPECIALIST_EVIDENCE_GAPS.lessons.find(l=>l.id==='S13').title);
+  await expect(page.locator('#mmSpecialistTitle')).toHaveText(title);
+  await page.locator('#mmSpecialistBody').getByRole('button',{name:'Mark specialist lesson complete'}).click();
+  await expect(gap.locator('.mm-catalog-state')).toHaveText('✓ Done');
+  expect(await page.evaluate(()=>window.MM_SPECIALIST_EVIDENCE_GAPS.isComplete('S13'))).toBe(true);
+  await page.evaluate(()=>window.mmSpecialistClose());
+  await catalog.locator('[data-mm-catalog-filter]').selectOption('done');
+  await expect(catalog.locator('[data-mm-catalog-count]')).toHaveText('3 lessons shown');
+  expect(await page.evaluate(()=>user.completed)).toEqual([1,2]);
+  await catalog.locator('[data-mm-catalog-filter]').selectOption('specialist');
+  await gap.click();
+  await page.locator('#mmSpecialistBody').getByRole('button',{name:'Mark incomplete'}).click();
+  await expect(gap.locator('.mm-catalog-state')).toHaveText('Open');
+  expect(await page.evaluate(()=>window.MM_SPECIALIST_EVIDENCE_GAPS.isComplete('S13'))).toBe(false);
+});
+
+
 test('specialist legacy progress migrates only to its owning strong learner scope',async({page})=>{
   await page.addInitScript(()=>{
     localStorage.clear();
