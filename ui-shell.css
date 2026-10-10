@@ -511,6 +511,10 @@ button:disabled,[aria-disabled="true"]{
 @media(prefers-reduced-motion:reduce){.mm-dx-workbench *{scroll-behavior:auto!important}}
 
 
+/* Blocking dialogs must outrank the fixed primary nav at every mobile size.
+   The audited core modal is z-index:20 while the shell nav uses z-index:40. */
+#modal.modal{z-index:60!important}
+
 /* Unified Learn / lesson catalogue — all canonical and optional specialist lessons. */
 .mm-all-lessons{margin:20px 0;padding:18px;border:1px solid #304a68;border-radius:17px;background:#0f2035;min-width:0}
 .mm-catalog-head h2{margin:0 0 5px;font-size:clamp(21px,3vw,26px);line-height:1.2}
