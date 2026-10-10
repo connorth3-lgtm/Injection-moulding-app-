@@ -233,9 +233,13 @@ test('Book exposes every consolidated weld-line source section on demand without
   const notes=chapter.locator('details.mm-book-reader-notes');
   const source=notes.locator('[data-mm-book-omitted-module="weld-lines"]');
   await expect(source).toHaveCount(1);
-  await expect(source).not.toBeVisible();
-  await notes.locator(':scope > summary').click();
+  // A closed <details> still renders its <summary>. Check the disclosure
+  // state rather than visibility of the container (which differs on WebKit).
+  await expect(source).not.toHaveAttribute('open','');
+  if(!(await notes.getAttribute('open')))await notes.locator(':scope > summary').click();
+  await expect(notes).toHaveAttribute('open','');
   await source.locator(':scope > summary').click();
+  await expect(source).toHaveAttribute('open','');
   await expect(source.locator('section h5')).toHaveCount(6);
   await expect(source).toContainText('How they form');
   await expect(source).toContainText('Formation begins with divided flow');
