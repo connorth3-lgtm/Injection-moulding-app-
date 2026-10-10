@@ -5,8 +5,8 @@
 - **20** first-read chapters / **46** unique governed source modules; all 46 remain in the accessible source-module index.
 - **12** first-read chapters have under 850 default-visible words.
 - **53** whole authored sections are suppressed from the default reader view (their full source modules remain available).
-- **0** currently valid optional supplemental section redirects; one legacy documentation/ISO-packaging mapping points to no authored section. This is inert in the current UI and is pinned as a known unresolved mapping for a future governed runtime-release cleanup. The audit rejects any new stale pointers.
-- No editorial rewrite, new source claim, source/evidence decision, curriculum SME signoff, actual reading comprehension, physical offline measurement or production authority is asserted by this audit.
+- **0** separate supplemental section redirects; the obsolete documentation/ISO-packaging pointer was removed. All **53** consolidated original sections are reachable on demand in the reader's optional Notes panel, without changing first-read measurements. The audit rejects stale section pointers.
+- No editorial rewrite, new source claim, source/evidence decision, curriculum SME signoff, actual reading comprehension, physical offline measurement or production authority is asserted by this audit. The optional source disclosure reproduces existing authored wording and is not a human review.
 
 ## Per-reader audit
 
