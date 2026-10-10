@@ -606,3 +606,8 @@ button:disabled,[aria-disabled="true"]{
   }
   #materials #mmExactMaterialCatalog .mm-material-all-index-head h3{font-size:20px!important}
 }
+
+/* The Materials index can jump to an exact-grade evidence card. Keep its heading
+   below the compact topbar, and preserve a visible keyboard-focus destination. */
+#materials .mm-exact-grade{scroll-margin-top:88px}
+#materials .mm-exact-grade:focus{outline:2px solid #73ceff;outline-offset:3px}
