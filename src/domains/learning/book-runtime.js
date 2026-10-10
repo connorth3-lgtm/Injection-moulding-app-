@@ -63,9 +63,7 @@
     'sink-voids':Object.freeze(['Both arise from contraction','Surface sink and internal void are different outcomes','Test the pressure-and-cooling history']),
     'black-specks':Object.freeze(['Separate continuous contamination from event-driven contamination'])
   });
-  const READER_SUPPLEMENT_SECTIONS=Object.freeze({
-    'documentation':Object.freeze(['Reading ISO 9001 marks on material packaging'])
-  });
+  const READER_SUPPLEMENT_SECTIONS=Object.freeze({});
   let manifest=null,manifestPromise=null,materialPromise=null,coldMaterialSearchPromise=null,publicationAuthorization=null,bookSmeReview=null,qualificationReview=null,highRiskReview=null,workedCaseLedger=null,workedCasesByChapter=new Map(),diagramLedger=null,diagramsByChapter=new Map(),evidenceEnrichmentLedger=null,claimEvidenceReference=null,claimEvidenceByChapter=new Map(),claimEvidenceClaimsByChapter=new Map(),readerArchitecture=null,editorialExpansionReview=null,materialAtlas=null,materialCatalog=null,materialRegionalEvidence=null,materialSearchIndex={catalog:[],regional:[]},integrityMap=null,ui=null,previousView=null,open=false,contentsScrollY=0,contentsWindowScrollY=0,pendingContentsScroll=null,contentsFocus=null,bookIntentEpoch=0;
   const BOOK_RESUME_PREFIX='mm_book_resume_v1::',LEGACY_BOOK_RESUME_KEY='mouldmasterBookResume:v1',BOOK_RESUME_SCHEMA=1;
   let activeReadingPosition=null,activeReadingScopeKey=null,resumeScrollTimer=0,boundBookScrollRoot=null;
@@ -444,7 +442,13 @@
         const shown=list.children.length,next=Math.min(rows.length,shown+MATERIAL_PAGE_SIZE);
         const html=kind==='catalog'?rows.slice(shown,next).map(canonicalGradeHtml).join(''):rows.slice(shown,next).map((row,index)=>regionalRecordHtml(row,shown+index)).join('');
         list.insertAdjacentHTML('beforeend',html);
-        if(next>=rows.length)button.remove();else button.textContent=`Load ${Math.min(MATERIAL_PAGE_SIZE,rows.length-next)} more · ${next}/${rows.length} shown`;
+        if(next>=rows.length){
+          // Removing the focused final Load more control must not strand a
+          // keyboard user on the document body. Move to the first new record.
+          const wasFocused=document.activeElement===button;
+          button.remove();
+          if(wasFocused)list.children[shown]?.querySelector('summary')?.focus();
+        }else button.textContent=`Load ${Math.min(MATERIAL_PAGE_SIZE,rows.length-next)} more · ${next}/${rows.length} shown`;
       });
     }
   }
@@ -540,6 +544,15 @@
     if(!rows.length)return '';
     return `<details class="mm-book-reader-supplement"><summary><b>Additional context</b> — optional quality/evidence sidebar</summary><div>${rows.map((section,index)=>`<section><h4 data-mm-book-anchor="module:${esc(chapter.id)}:supplement:${index}">${esc(section.title)}</h4>${proseHtml(section.text)}</section>`).join('')}</div></details>`;
   }
+  // The simplified first-read path keeps repeated source sections out of its
+  // main prose. Expose the exact authored wording only in the optional notes,
+  // so a reader can audit it without navigating away or claiming SME approval.
+  function readerOmittedSectionsHtml(chapter){
+    const omitted=new Set(READER_SECTION_OMISSIONS[chapter.id]||[]);
+    const rows=(chapter.sections||[]).filter(section=>omitted.has(section.title));
+    if(!rows.length)return '';
+    return `<details class="mm-book-reader-source-sections" data-mm-book-omitted-module="${esc(chapter.id)}"><summary><b>Consolidated source sections</b> — ${rows.length} original section${rows.length===1?'':'s'}</summary><p><small>These original sections are omitted from the streamlined first read to avoid repetition. The governed source wording remains unchanged; independent human SME approval is still pending.</small></p>${rows.map(section=>`<section><h5>${esc(section.title||'')}</h5>${proseHtml(section.text)}</section>`).join('')}</details>`;
+  }
   function diagramHtml(chapter,options={}){const readerMode=options.readerMode===true,items=diagramsByChapter.get(chapter.id)||[];return items.map(item=>`<figure class="mm-book-engineering-diagram" data-mm-book-diagram="${esc(item.id)}"><img src="./${esc(item.asset)}" alt="${esc(item.alt)}" loading="lazy" decoding="async"><figcaption><b>${esc(item.title)}</b><br><span>${esc(item.caption)}</span><br><small>${readerMode?'Instructional diagram · not to scale':'Governed instructional diagram · not to scale · independent human SME review remains pending.'}</small></figcaption></figure>`).join('');}
   function workedCaseHtml(chapter,options={}){
     const readerMode=options.readerMode===true,items=workedCasesByChapter.get(chapter.id)||[];
@@ -608,7 +621,7 @@
     const notes=`<details class="mm-book-reader-notes"><summary>Notes, sources & review status</summary>
       ${governance}
       <h3>Module evidence and review records</h3>
-      ${modules.map(ch=>`<section><h4>${esc(ch.title)} — ${esc(stateLabel(ch.state))}</h4>${readerModuleEvidenceHtml(ch)}</section>`).join('')}
+      ${modules.map(ch=>`<section><h4>${esc(ch.title)} — ${esc(stateLabel(ch.state))}</h4>${readerModuleEvidenceHtml(ch)}${readerOmittedSectionsHtml(ch)}</section>`).join('')}
       ${readerReferencesHtml(reader,modules)}
       <details class="mm-book-reader-guide"><summary>Reading guide & terminology</summary><p><strong>Chapter thread:</strong> ${esc(reader.readingThread)}</p>${readerKeyTermsHtml(reader)}${reader.sequencePrompt?`<p>${esc(reader.sequencePrompt)}</p>`:''}</details>
     </details>`;
@@ -688,6 +701,7 @@
   }
   function focusBookContents(){
     if(!ui?.contents||ui.contents.hidden)return;
+    if(contentsFocus?.kind==='listen'&&!ui.listen.disabled){ui.listen.focus({preventScroll:true});return;}
     const attr=contentsFocus?.kind==='reader-chapter'?'mmBookReaderChapterOpen':'mmBookChapter';
     const selector=contentsFocus?.kind==='reader-chapter'?'[data-mm-book-reader-chapter-open]':'[data-mm-book-chapter]';
     const target=contentsFocus?.id?[...ui.parts.querySelectorAll(selector)].find(button=>button.dataset[attr]===contentsFocus.id):null;
@@ -729,7 +743,7 @@
     const modules=reader.moduleIds.map(id=>allChapters().find(ch=>ch.id===id)).filter(ch=>ch?.state==='verified');if(!modules.length)return '';
     return `<article class="mm-book-reader-chapter"><span class="eyebrow">Reader chapter · source-reviewed modules</span><h2>${esc(reader.title)}</h2><p>${esc(reader.goal)}</p>${modules.map(readerListeningModuleHtml).join('')}</article>`;
   }
-  function startVerifiedListening(){if(!ui)return;const listening=allReaderChapters().map(readerListeningChapterHtml).filter(Boolean);if(!listening.length)return;const reader=window.MMReadAloud,details=document.querySelector('.mm-read-aloud details'),play=document.querySelector('.mm-read-aloud [data-mm-read="play"]');if(!reader?.supported||!details||!play){ui.summary.textContent='Source-reviewed Book text is available to read, but device speech synthesis is unavailable.';return;}if(!ui.reader.hidden)flushReadingPosition({notify:true});clearTimeout(resumeScrollTimer);resumeScrollTimer=0;activeReadingPosition=null;activeReadingScopeKey=null;reader.stop?.();const back='<button type="button" class="ghost" data-mm-book-back>← Book contents</button>';ui.reader.innerHTML=`${back}${listening.join('')}`;ui.contents.hidden=true;ui.hero.hidden=true;ui.accuracy.hidden=true;ui.reader.hidden=false;bindBack();bindBookScrollRoot();scrollBookReaderToTop();requestAnimationFrame(()=>{reader.refresh?.();details.open=true;play.click();});emitBookRender('listening');}
+  function startVerifiedListening(){if(!ui)return;const listening=allReaderChapters().map(readerListeningChapterHtml).filter(Boolean);if(!listening.length)return;const reader=window.MMReadAloud,details=document.querySelector('.mm-read-aloud details'),play=document.querySelector('.mm-read-aloud [data-mm-read="play"]');if(!reader?.supported||!details||!play){ui.summary.textContent='Source-reviewed Book text is available to read, but device speech synthesis is unavailable.';return;}if(!ui.reader.hidden)flushReadingPosition({notify:true});rememberContentsBeforeReading();contentsFocus={kind:'listen'};clearTimeout(resumeScrollTimer);resumeScrollTimer=0;activeReadingPosition=null;activeReadingScopeKey=null;reader.stop?.();const back='<button type="button" class="ghost" data-mm-book-back>← Book contents</button>';ui.reader.innerHTML=`${back}${listening.join('')}`;ui.contents.hidden=true;ui.hero.hidden=true;ui.accuracy.hidden=true;ui.reader.hidden=false;bindBack();bindBookScrollRoot();scrollBookReaderToTop();requestAnimationFrame(()=>{reader.refresh?.();details.open=true;play.click();});emitBookRender('listening');}
   function openBook(){if(!ui)return;if(open)flushReadingPosition({notify:true});clearTimeout(resumeScrollTimer);resumeScrollTimer=0;activeReadingPosition=null;activeReadingScopeKey=null;bookIntentEpoch++;previousView=[...document.querySelectorAll('.view')].find(v=>!v.classList.contains('hidden')&&v!==ui.view)||previousView;document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));ui.view.classList.remove('hidden');restoreBookChrome();open=true;setBookInstantScroll(true);document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('active'));ui.nav.classList.add('active');const title=document.getElementById('pageTitle'),subtitle=document.getElementById('pageSubtitle');if(title)title.textContent='Book';if(subtitle)subtitle.textContent='Evidence-governed injection moulding reference — 20 reader chapters preserve 46 module-level claim and source boundaries.';contentsScrollY=0;contentsWindowScrollY=0;pendingContentsScroll=null;showContents({restoreScroll:false});scrollBookTo(0);emitBookRender('contents');if(!manifest){ui.summary.textContent='Loading governed Book content on demand…';ui.smeStatus.textContent='Independent human SME review status loads with the Book content.';void ensureManifest().catch(()=>{});}}
   async function openChapter(id){openBook();const intent=bookIntentEpoch,learnerKey=resumeStorageKey();try{await ensureManifest();if(open&&intent===bookIntentEpoch&&resumeStorageKey()===learnerKey&&!ui.view.classList.contains('hidden'))showChapter(id);}catch(_){}}
   async function openResume(){

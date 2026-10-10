@@ -221,3 +221,54 @@ test('Material Atlas discloses comparison restrictions, sources and unknown supp
   await expect(comparableRow.locator('[role="note"]')).toHaveCount(0);
   await expect(comparable).not.toContainText('Not comparable');
 });
+
+
+test('Book exposes every consolidated weld-line source section on demand without crowding first read',async({page})=>{
+  await openApp(page);
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r15'));
+  const chapter=page.locator('[data-mm-book-reader-chapter="r15"]');
+  await expect(chapter).toBeVisible();
+  // The original module titles are not duplicated in the linear first read.
+  await expect(chapter.locator('[data-mm-book-reader-module="weld-lines"] h4',{hasText:'How they form'})).toHaveCount(0);
+  const notes=chapter.locator('details.mm-book-reader-notes');
+  const source=notes.locator('[data-mm-book-omitted-module="weld-lines"]');
+  await expect(source).toHaveCount(1);
+  // A closed <details> still renders its <summary>. Check the disclosure
+  // state rather than visibility of the container (which differs on WebKit).
+  await expect(source).not.toHaveAttribute('open','');
+  if((await notes.getAttribute('open'))===null)await notes.locator(':scope > summary').click();
+  await expect(notes).toHaveAttribute('open','');
+  await source.locator(':scope > summary').click();
+  await expect(source).toHaveAttribute('open','');
+  await expect(source.locator('section h5')).toHaveCount(6);
+  await expect(source).toContainText('How they form');
+  await expect(source).toContainText('Formation begins with divided flow');
+  await expect(source).toContainText('independent human SME approval is still pending');
+
+  // The optional wording comes from the same governed original module.
+  const originalHeading=await source.locator('section h5').first().textContent();
+  const originalBody=await source.locator('section').first().innerText();
+  await page.evaluate(()=>window.MMBook.openChapter('weld-lines'));
+  const full=page.locator('[data-mm-book-verified-chapter="weld-lines"]');
+  await expect(full).toBeVisible();
+  const matched=full.locator('section').filter({has:page.locator('h3',{hasText:originalHeading})}).first();
+  await expect(matched).toBeVisible();
+  expect(await matched.innerText()).toBe(originalBody);
+});
+
+test('Material Atlas final keyboard pagination leaves focus on a newly loaded record',async({page})=>{
+  await openApp(page);
+  await page.evaluate(()=>window.MMBook.openChapter('material-families'));
+  await page.waitForFunction(()=>window.MMBook?.getMaterialCatalog?.()?.grades?.length===260);
+  const catalog=page.locator('[data-mm-book-canonical-catalog]');
+  await catalog.locator(':scope > summary').click();
+  const more=page.locator('[data-mm-book-material-more="catalog"]');
+  for(let batch=0;batch<10;batch++){
+    await expect(more).toHaveCount(1);
+    await more.focus();
+    await page.keyboard.press('Enter');
+  }
+  await expect(more).toHaveCount(0);
+  await expect(catalog.locator('[data-mm-book-catalog-grade]')).toHaveCount(260);
+  await expect(catalog.locator('[data-mm-book-catalog-grade]').nth(240).locator('summary')).toBeFocused();
+});

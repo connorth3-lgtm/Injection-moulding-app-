@@ -62,8 +62,6 @@ def audit() -> tuple[list[dict], int, int]:
         raise AssertionError(f"missing/unexpected authored modules: {set(metadata) ^ set(authored)}")
     if set(omissions) - set(authored) or set(supplements) - set(authored):
         raise AssertionError("section presentation references an unknown authored module")
-    expected_stale_supplements = {("documentation", "Reading ISO 9001 marks on material packaging")}
-    observed_stale_supplements = set()
     for mappings, label in ((omissions, "omitted"), (supplements, "supplemental")):
         for module, titles in mappings.items():
             section_titles = [s["title"] for s in authored[module]["sections"]]
@@ -71,11 +69,7 @@ def audit() -> tuple[list[dict], int, int]:
                 raise AssertionError(f"duplicate {label} presentation titles in {module}")
             for title in titles:
                 if section_titles.count(title) != 1:
-                    if label != "supplemental":
-                        raise AssertionError(f"{label} section drifted from governed {module}: {title}")
-                    observed_stale_supplements.add((module, title))
-    if observed_stale_supplements != expected_stale_supplements:
-        raise AssertionError(f"unknown/or repaired legacy supplemental mapping: {observed_stale_supplements}; requires a governed versioned runtime change")
+                    raise AssertionError(f"{label} section drifted from governed {module}: {title}")
     rows = []
     all_seen = []
     suppressed = 0
@@ -129,7 +123,7 @@ def main() -> None:
               f"{len(row['omitted']):>2} hidden sections  {row['title']}")
     if args.check and len(under) != 12:
         raise AssertionError(f"first-read chapter depth snapshot changed: {len(under)} below target; manually refresh editorial review")
-    print("Known inert documentation supplemental pointer: unresolved in the governed runtime; future versioned cleanup required.")
+    print("Source-section presentation mappings contain no stale pointers.")
     print("Independent source/Book SME, physical-device/AT and publication signoff: NOT VERIFIED.")
 
 
