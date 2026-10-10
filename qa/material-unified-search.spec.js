@@ -181,6 +181,33 @@ test('unified index can jump an exact-grade result into the exact-grade catalog 
 });
 
 
+
+test('catalogue grade jump clears a stale exact-grade manufacturer filter',async({page})=>{
+  await openMaterials(page,360);
+  const root=page.locator('#mmExactMaterialCatalog');
+  const manufacturer=root.locator('[data-mm-exact-manufacturer]');
+  const options=await manufacturer.locator('option').evaluateAll(items=>
+    items.map(el=>({value:el.value,label:el.textContent||''})));
+  const other=options.find(option=>option.value&&!/LG Chem/i.test(option.label));
+  expect(other,'a second published manufacturer is available').toBeTruthy();
+  await manufacturer.selectOption(other.value);
+  await expect(manufacturer).toHaveValue(other.value);
+
+  await root.locator('[data-mm-all-material-query]').fill('GP5206F');
+  const result=root.locator('[data-mm-material-index-result="grade:mat-lgchem-lupoy-gp5206f"]');
+  await expect(result).toBeVisible();
+  await result.locator('summary').click();
+  await result.getByRole('button',{name:'Show exact grade'}).click();
+
+  await expect(manufacturer).toHaveValue('');
+  await expect(root.locator('[data-mm-exact-query]')).toHaveValue('mat-lgchem-lupoy-gp5206f');
+  const grade=root.locator('[data-mm-material-grade="mat-lgchem-lupoy-gp5206f"]');
+  await expect(grade).toBeVisible();
+  await expect(grade).toBeFocused();
+  await expect(root.locator('[data-mm-material-grade]')).toHaveCount(1);
+});
+
+
 test('material catalogue can browse exact grades by region, country, manufacturer and family without implying origin',async({page})=>{
   await openMaterials(page,768);
   const root=page.locator('#mmExactMaterialCatalog');
