@@ -239,8 +239,8 @@ function compactLearningSections(article){
   );
   const introText=introduction?.querySelector(':scope > p')?.textContent;
   if(overview&&introText&&lessonTextKey(overview.textContent)===lessonTextKey(introText)&&
-     introduction.querySelectorAll('p').length===1&&
-     !introduction.querySelector('ul,ol,button,input,textarea,details')){
+     introduction.children.length===2&&introduction.querySelectorAll(':scope > p').length===1&&
+     !introduction.querySelector('a[href],ul,ol,button,input,textarea,details,figure,section')){
     introduction.remove();
   }
 
@@ -275,7 +275,7 @@ function compactLearningSections(article){
   const detail=deep.querySelector('.mm-deep-v2-detail');
   const extra=article.querySelector('.mm-extra-help');
   if(detail&&extra&&!detail.contains(extra)){
-    detail.insertBefore(extra,detail.querySelector('.mm-deep-v2-id')||null);
+    detail.insertBefore(extra,detail.querySelector('.mm-deep-v2-boundary')||detail.querySelector('.mm-deep-v2-id')||null);
   }
   const summary=deep.querySelector('details.mm-deep-v2-card > summary');
   if(summary){
