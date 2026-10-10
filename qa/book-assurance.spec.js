@@ -272,3 +272,30 @@ test('Material Atlas final keyboard pagination leaves focus on a newly loaded re
   await expect(catalog.locator('[data-mm-book-catalog-grade]')).toHaveCount(260);
   await expect(catalog.locator('[data-mm-book-catalog-grade]').nth(240).locator('summary')).toBeFocused();
 });
+
+
+test('Book warm Material Atlas pagination adds exactly one batch per click in both lists',async({page})=>{
+  await openApp(page);
+  await page.evaluate(()=>window.MMBook.openChapter('material-families'));
+  await page.waitForFunction(()=>window.MMBook?.getMaterialCatalog?.()?.grades?.length===260&&window.MMBook?.getMaterialRegionalEvidence?.()?.records?.length===284);
+  // Warm derived-reader entry binds from the chapter and atlas hydration paths.
+  for(let pass=0;pass<2;pass++){
+    await page.evaluate(()=>window.MMBook.openReaderChapter('r03'));
+    const chapter=page.locator('[data-mm-book-reader-chapter="r03"]');
+    await expect(chapter).toBeVisible();
+    for(const [kind,disclosure,record] of [
+      ['catalog','[data-mm-book-canonical-catalog]','[data-mm-book-catalog-grade]'],
+      ['regional','[data-mm-book-regional-evidence]','[data-mm-book-regional-row]']
+    ]){
+      await chapter.locator(disclosure+' > summary').click();
+      await expect(chapter.locator(record)).toHaveCount(24);
+      const more=chapter.locator('[data-mm-book-material-more="'+kind+'"]');
+      await expect(more).toHaveCount(1);
+      await more.click();
+      await expect(chapter.locator(record)).toHaveCount(48);
+      await expect(more).toContainText('48/');
+      await more.click();
+      await expect(chapter.locator(record)).toHaveCount(72);
+    }
+  }
+});

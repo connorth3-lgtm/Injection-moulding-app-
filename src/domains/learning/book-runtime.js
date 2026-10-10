@@ -435,6 +435,10 @@
   }
   function bindMaterialPagination(root){
     for(const button of root?.querySelectorAll?.('[data-mm-book-material-more]')||[]){
+      // Re-entering a warm reader chapter can bind the same button twice.
+      // One click must add exactly one batch, not skip 24 records.
+      if(button.dataset.mmBookPaginationBound==='true')continue;
+      button.dataset.mmBookPaginationBound='true';
       button.addEventListener('click',()=>{
         const kind=button.dataset.mmBookMaterialMore,list=root.querySelector(`[data-mm-book-material-list="${kind}"]`);
         if(!list)return;
