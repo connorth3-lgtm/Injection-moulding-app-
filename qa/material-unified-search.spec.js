@@ -224,7 +224,8 @@ test('multidimensional catalogue exposes application process and evidence browse
   const results=root.locator('[data-mm-all-material-results]');
   const boundary=root.locator('[data-mm-catalogue-boundary]');
 
-  await expect(root).toContainText('Multidimensional material catalogue');
+  await expect(root.getByRole('heading',{name:'All materials'})).toBeVisible();
+  await expect(root.locator('[data-mm-all-material-index]')).toBeVisible();
   await expect(boundary).toContainText(/not suitability recommendations/i);
   await root.locator('[data-mm-all-material-filters] > summary').click();
   await type.selectOption('exact-grade');
