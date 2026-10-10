@@ -119,14 +119,25 @@ const LESSONS=[
 ];
 
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function learnerToken(){
-  let raw='anonymous';
-  try{if(typeof user!=='undefined'&&user?.id)raw=String(user.id);else if(window.db?.activeUser)raw=String(window.db.activeUser)}catch(_){}
-  let h=2166136261;for(let i=0;i<raw.length;i++){h^=raw.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(36)
+// Completion remains separate from the core and material-science stores.
+// The shared scope upgrades legacy 32-bit keys only for a provably unique
+// learner, quarantining ambiguous or orphaned legacy progress instead of
+// accidentally attributing another learner's specialist completions.
+const SPECIALIST_STORAGE_PREFIX=`${STORAGE_BASE}::`;
+const learnerScope=window.MM_LEARNER_SCOPE;
+learnerScope?.registerStoragePrefix?.(SPECIALIST_STORAGE_PREFIX);
+function storageKey(){
+  if(!learnerScope?.token||!learnerScope?.storageKey)return null;
+  try{return learnerScope.storageKey(SPECIALIST_STORAGE_PREFIX,learnerScope.token())}catch(_){return null}
 }
-function storageKey(){return `${STORAGE_BASE}::${learnerToken()}`}
-function readState(){try{const x=JSON.parse(localStorage.getItem(storageKey())||'{}');return x&&typeof x==='object'?x:{}}catch(_){return {}}}
-function writeState(x){try{localStorage.setItem(storageKey(),JSON.stringify(x))}catch(_){}}
+function readState(){
+  const key=storageKey();if(!key)return {};
+  try{const x=JSON.parse(localStorage.getItem(key)||'{}');return x&&typeof x==='object'&&!Array.isArray(x)?x:{}}catch(_){return {}}
+}
+function writeState(x){
+  const key=storageKey();if(!key)return false;
+  try{const payload=JSON.stringify(x);localStorage.setItem(key,payload);return localStorage.getItem(key)===payload}catch(_){return false}
+}
 function isDone(id){return !!readState()[id]}
 function setDone(id,done){const s=readState();if(done)s[id]=true;else delete s[id];writeState(s);decorateDashboard(true);window.dispatchEvent(new CustomEvent('mm:specialist-progress-change',{detail:{id,completed:isDone(id)}}))}
 function coreLesson(id){return CORE.lessons.find(x=>x.id===Number(id))}
