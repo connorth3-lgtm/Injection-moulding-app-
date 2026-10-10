@@ -84,8 +84,8 @@ test('premium UI reduced motion contract remains calm',async({page})=>{
   await page.emulateMedia({reducedMotion:'reduce'});
   await openApp(page);
   await page.evaluate(()=>switchView('path'));
-  await expect(page.locator('#path .mm-hub-tile').first()).toBeVisible();
-  const durations=await page.locator('#path .mm-hub-tile').first().evaluate(el=>({transition:getComputedStyle(el).transitionDuration,animation:getComputedStyle(el).animationDuration}));
+  await expect(page.locator('#path .mm-all-lessons')).toBeVisible();
+  const durations=await page.locator('#path .mm-catalog-lesson').first().evaluate(el=>({transition:getComputedStyle(el).transitionDuration,animation:getComputedStyle(el).animationDuration}));
   const parse=s=>String(s).split(',').map(v=>parseFloat(v)||0);
   expect(Math.max(...parse(durations.transition))).toBeLessThanOrEqual(.02);
   expect(Math.max(...parse(durations.animation))).toBeLessThanOrEqual(.02);

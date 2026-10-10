@@ -343,7 +343,11 @@ function renderLessonCanonical(){
   curriculumLessonAdapter();syncActiveState();requestAnimationFrame(syncActiveState);emitRender('lesson')
 }
 function switchViewCanonical(id){
-  activeCustomId='';const r=captured.switchView.apply(this,arguments);syncActiveState();requestAnimationFrame(syncActiveState);emitView(id);return r
+  activeCustomId='';const r=captured.switchView.apply(this,arguments);
+  // Cancel the core's smooth scroll on workspace changes: the previous page can
+  // remain clipped while short views render, particularly on mobile WebKit.
+  window.scrollTo({top:0,behavior:'instant'});
+  syncActiveState();requestAnimationFrame(syncActiveState);emitView(id);return r
 }
 function bindCanonicalCoreNavigation(){
   const nav=document.getElementById('nav');if(!nav||nav.dataset.mmCanonicalCoreNav==='1')return;
