@@ -9,7 +9,6 @@ if(typeof renderPath!=='function'||typeof renderScenarios!=='function'||typeof s
 
 const VERSION='2026.09.24.1';
 const PRACTICE_ROTATION_KEY='mm_practice_scenario_rotation_v1';
-const originalRenderPath=renderPath;
 const originalRenderScenarios=renderScenarios;
 
 /* Hub presentation lives in external CSS because the app CSP intentionally
@@ -172,7 +171,7 @@ function openDaily(){
 function openPicker(kind){
   if(typeof openModal!=='function')return;
   if(kind==='learn-resources'){
-    openModal(`<span class="eyebrow">Learn</span><h2>Learning resources</h2><p class="muted">Choose the resource you need.</p><div class="mm-hub-picker-grid"><button type="button" data-mm-hub-action="visuals"><b>Animated visuals</b><small>See core cycle and process ideas visually.</small></button><button type="button" data-mm-hub-action="glossary"><b>Glossary</b><small>Look up injection moulding terms in plain language.</small></button><button type="button" data-mm-hub-action="saved"><b>Saved lessons</b><small>Return to lessons you bookmarked.</small></button></div>`);
+    openModal(`<span class="eyebrow">Learn</span><h2>Learning resources</h2><p class="muted">Choose the resource you need.</p><div class="mm-hub-picker-grid"><button type="button" data-mm-hub-action="visuals"><b>Animated visuals</b><small>See core cycle and process ideas visually.</small></button><button type="button" data-mm-hub-action="glossary"><b>Glossary</b><small>Look up injection moulding terms in plain language.</small></button></div>`);
   }else if(kind==='troubleshooting'){
     openModal(`<span class="eyebrow">Practice</span><h2>Troubleshooting</h2><p class="muted">Choose how you want to work the problem.</p><div class="mm-hub-picker-grid"><button type="button" data-mm-hub-action="mould-master"><b>Mould Master</b><small>Build an evidence-led troubleshooting case from a real defect.</small></button><button type="button" data-mm-hub-action="diagnostic-workbench"><b>Defect Finder + Troubleshooting Coach</b><small>One guided workspace: symptoms, competing mechanisms, measured evidence and review-ready learning notes.</small></button><button type="button" data-mm-hub-action="diagnostic-labs"><b>Diagnostic labs</b><small>Practise evidence-first fault isolation.</small></button></div>`);
   }else if(kind==='labs'){
@@ -379,13 +378,13 @@ window.MM_DIAGNOSTIC_WORKBENCH=Object.freeze({
 function runAction(action){
   switch(action){
     case 'lesson': return openCurrentLesson();
-    case 'path-detail': return openLearningPathDetail();
+    case 'path-detail': return lessonCatalog.open({filter:'all'});
     case 'materials': return switchView('materials');
-    case 'specialist': return safeOpen('MM_SPECIALIST_CURRICULUM');
+    case 'specialist': return lessonCatalog.open({filter:'specialist'});
     case 'learn-resources': return openPicker('learn-resources');
     case 'visuals': closePicker(); return switchView('visuals');
     case 'glossary': closePicker(); return switchView('glossary');
-    case 'saved': closePicker(); return switchView('profile');
+    case 'saved': closePicker(); return lessonCatalog.open({filter:'saved'});
     case 'daily': return openDaily();
     case 'troubleshooting': return dxOpen();
     case 'mould-master': closePicker(); return safeOpen('MM_MOULD_MASTER_WORKSPACE',()=>switchView('defects'));
@@ -488,19 +487,39 @@ function createLessonCatalog(){
     });
     update(root);
   }
+  function open(options={}){
+    const allowed=['all','todo','done','saved','specialist'];
+    state.filter=allowed.includes(options.filter)?options.filter:'all';
+    state.query=typeof options.query==='string'?options.query.trim().slice(0,120):'';
+    window.mmSpecialistClose?.();
+    if(typeof currentView==='string'&&currentView==='path')renderLearnHub();
+    else switchView('path');
+    requestAnimationFrame(()=>{
+      const library=document.querySelector('#path .mm-all-lessons');
+      library?.scrollIntoView?.({block:'start',behavior:'auto'});
+    });
+  }
   function mountLesson(){
     const root=document.getElementById('lesson');
-    if(!root||!root.querySelector('.lesson-body')||root.querySelector('.mm-lessons-drawer'))return;
-    const side=root.querySelector('.lesson-side');
-    if(side)side.remove();
+    if(!root||!root.querySelector('.lesson-body'))return;
+    root.querySelector('.mm-lessons-drawer')?.remove();
+    root.querySelector('.lesson-side')?.remove();
     root.classList.add('mm-unified-lesson');
-    const layout=root.querySelector('.lesson-layout');if(layout)layout.classList.add('mm-one-column-lesson');
-    const disclosure=document.createElement('details');disclosure.className='mm-lessons-drawer';
-    disclosure.innerHTML='<summary><span>Browse all lessons</span><small>Core + specialist · Search & filter</small></summary>'+markup();
-    root.insertBefore(disclosure,layout||root.firstChild);
-    attach(disclosure);
+    const layout=root.querySelector('.lesson-layout');
+    if(layout)layout.classList.add('mm-one-column-lesson');
+    if(root.querySelector('.mm-lesson-catalog-return'))return;
+    const nav=document.createElement('nav');
+    nav.className='mm-lesson-catalog-return';
+    nav.setAttribute('aria-label','Return to the lesson library');
+    const button=document.createElement('button');
+    button.type='button';
+    button.className='ghost';
+    button.textContent='← All lessons';
+    button.addEventListener('click',()=>open({filter:'all'}));
+    nav.appendChild(button);
+    root.insertBefore(nav,layout||root.firstChild);
   }
-  return Object.freeze({markup,attach,mountLesson,counts:()=>({core:core().length,specialist:specialists().length})});
+  return Object.freeze({markup,attach,mountLesson,open,counts:()=>({core:core().length,specialist:specialists().length})});
 }
 const lessonCatalog=createLessonCatalog();
 
@@ -637,7 +656,7 @@ function detailBack(root,label,back){
   const bar=document.createElement('div');bar.className='mm-hub-detail-back';bar.innerHTML=`<button type="button">← ${esc(back)}</button><span>${esc(label)}</span>`;
   bar.querySelector('button').addEventListener('click',()=>back==='Learn'?renderLearnHub():renderPracticeHub());root.prepend(bar);
 }
-function openLearningPathDetail(){const root=document.getElementById('path');if(!root)return;root.dataset.mmHubMode='detail';originalRenderPath();detailBack(root,'Full learning pathway','Learn');window.scrollTo({top:0,behavior:'smooth'})}
+function openLearningPathDetail(){return lessonCatalog.open({filter:'all'})}
 function openScenarioDetail(index=null){
   const root=document.getElementById('scenarios');if(!root)return;
   root.dataset.mmHubMode='detail';
@@ -654,19 +673,62 @@ function openScenarioDetail(index=null){
 renderPath=renderLearnHub;window.renderPath=renderLearnHub;
 renderScenarios=renderPracticeHub;window.renderScenarios=renderPracticeHub;
 window.MM_APP_SHELL?.events?.onRender?.('lesson',()=>requestAnimationFrame(lessonCatalog.mountLesson));
-window.MM_LESSON_CATALOG=Object.freeze({version:'2026.10.10.1',counts:lessonCatalog.counts});
+window.MM_LESSON_CATALOG=Object.freeze({version:'2026.10.10.2',counts:lessonCatalog.counts,open:lessonCatalog.open});
+// The specialist reader stays independent, but all specialist *browsing*
+// goes through Learn. Old launches (Home, More, specialist reader Back) land
+// on the same filtered catalogue instead of opening a second lesson grid.
+if(window.MM_SPECIALIST_CURRICULUM){
+  window.MM_SPECIALIST_CURRICULUM.open=()=>lessonCatalog.open({filter:'specialist'});
+  window.mmSpecialistOpen=window.MM_SPECIALIST_CURRICULUM.open;
+}
 window.mmHubOpenLesson=openCurrentLesson;
 window.mmHubOpenLearningPath=openLearningPathDetail;
 window.mmHubOpenScenarios=openScenarioDetail;
 
 function normalizeHomeActions(){
   const root=document.getElementById('dashboard');if(!root)return;
+  root.querySelectorAll('#mmSpecialistDashboard').forEach(el=>el.remove());
   root.querySelectorAll('button[data-mm-onclick]').forEach(button=>{
     const action=button.getAttribute('data-mm-onclick')||'';
     if(/switchView\((['"])lesson\1\)/.test(action))button.setAttribute('data-mm-onclick','mmHubOpenLesson()');
   });
 }
 window.MM_APP_SHELL?.events?.onRender?.('dashboard',()=>requestAnimationFrame(normalizeHomeActions));
+
+function removeProfileLessonGrid(){
+  const root=document.getElementById('profile');if(!root)return;
+  for(const heading of root.querySelectorAll(':scope > .section-head')){
+    if(!/^Saved lessons$/i.test(heading.querySelector('h2,h3')?.textContent?.trim()||''))continue;
+    const list=heading.nextElementSibling;
+    if(list?.matches('.grid'))list.remove();
+    heading.remove();
+  }
+}
+const profileRoot=document.getElementById('profile');
+if(profileRoot)new MutationObserver(removeProfileLessonGrid).observe(profileRoot,{childList:true});
+removeProfileLessonGrid();
+
+// Global search still finds defects. It no longer duplicates a second
+// searchable list of lessons: a single contextual link opens Learn filtered.
+document.addEventListener('input',event=>{
+  if(event.target?.id!=='globalSearch')return;
+  const query=String(event.target.value||'').trim();
+  requestAnimationFrame(()=>{
+    const modal=document.getElementById('modal');
+    const results=modal?.querySelector('#searchResults');
+    if(!results||!modal.contains(event.target))return;
+    const matches=results.querySelectorAll('button.search-item[data-mm-onclick*="goLesson("]');
+    matches.forEach(el=>el.remove());
+    results.querySelector('[data-mm-global-lesson-library]')?.remove();
+    if(query.length<2)return;
+    const link=document.createElement('button');
+    link.type='button';link.className='search-item';
+    link.dataset.mmGlobalLessonLibrary='1';
+    link.textContent='Search all lessons in Learn →';
+    link.addEventListener('click',()=>{window.closeModal?.();lessonCatalog.open({query})});
+    results.prepend(link);
+  });
+});
 
 function configureMore(){
   const items=window.MM_APP_SHELL?.navigation?.items;
