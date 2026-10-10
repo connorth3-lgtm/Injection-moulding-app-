@@ -155,7 +155,7 @@ test('Book route changes preserve the last visible reading bookmark',async({page
   // Route exit flushes any pending 180ms scroll save. Compare with the
   // visible scroll at the instant of exit, not with an older debounced value
   // that can legitimately still be 0 during WebKit's deferred layout.
-  const {before,after,visibleScrollY}=await page.evaluate(()=>{
+  const {before,after,visibleScrollY,storageWrites,debug}=await page.evaluate(()=>{
     let root=document.querySelector('#mmBookView [data-mm-book-reader]');
     for(;root&&root!==document.body;root=root.parentElement){
       const style=getComputedStyle(root);
@@ -164,15 +164,26 @@ test('Book route changes preserve the last visible reading bookmark',async({page
     if(!root||root===document.body)root=document.scrollingElement||document.documentElement;
     const visibleScrollY=Math.max(0,Number(root.scrollTop)||0);
     const before=window.MMBook.getResume();
-    window.switchView('dashboard');
-    return {before,after:window.MMBook.getResume(),visibleScrollY};
+    const storageWrites=[],setItem=Storage.prototype.setItem;
+    Storage.prototype.setItem=function(key,value){
+      if(String(key).startsWith('mm_book_resume_v1::')){
+        try{storageWrites.push({value:JSON.parse(value)?.scrollY,key:String(key)})}catch(_){}
+      }
+      return setItem.call(this,key,value);
+    };
+    const debug={hasPreExit:typeof window.MMBook.prepareRouteExit,
+      dispatch:window.MM_RUNTIME_V2?.snapshot?.()?.core?.switchView,
+      viewHidden:document.querySelector('#mmBookView')?.classList.contains('hidden'),
+      readerHidden:document.querySelector('#mmBookView [data-mm-book-reader]')?.hidden};
+    try{window.switchView('dashboard')}finally{Storage.prototype.setItem=setItem}
+    return {before,after:window.MMBook.getResume(),visibleScrollY,storageWrites,debug};
   });
   expect(before?.kind).toBe('reader-chapter');
   await expect(page.locator('#dashboard')).toBeVisible();
   await expect(page.locator('#mmBookView')).toBeHidden();
   expect(after?.id).toBe(before.id);
   expect(after?.anchorId).toBe(before.anchorId);
-  expect(after?.scrollY).toBeCloseTo(visibleScrollY,1);
+  expect(after?.scrollY,`route exit: ${JSON.stringify({before:before?.scrollY,after:after?.scrollY,visibleScrollY,storageWrites,debug})}`).toBeCloseTo(visibleScrollY,1);
   expect(await page.evaluate(()=>document.documentElement.classList.contains('mm-book-instant-scroll'))).toBe(false);
 });
 
