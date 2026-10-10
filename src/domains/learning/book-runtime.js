@@ -580,7 +580,7 @@
       <h3>Module evidence and review records</h3>
       ${modules.map(ch=>`<section><h4>${esc(ch.title)} — ${esc(stateLabel(ch.state))}</h4>${readerModuleEvidenceHtml(ch)}</section>`).join('')}
       ${readerReferencesHtml(reader,modules)}
-      <details class="mm-book-reader-guide"><summary>Reading guide & terminology</summary><p>${esc(reader.readingThread)}</p>${readerKeyTermsHtml(reader)}${reader.sequencePrompt?`<p>${esc(reader.sequencePrompt)}</p>`:''}</details>
+      <details class="mm-book-reader-guide"><summary>Reading guide & terminology</summary><p><strong>Chapter thread:</strong> ${esc(reader.readingThread)}</p>${readerKeyTermsHtml(reader)}${reader.sequencePrompt?`<p>${esc(reader.sequencePrompt)}</p>`:''}</details>
     </details>`;
     const study=`<details class="mm-book-reader-study"><summary>Study questions (optional)</summary>${readerLearningHtml(reader)}</details>`;
     return `<article class="mm-book-reader-chapter mm-book-prose" data-mm-book-reader-chapter="${esc(reader.id)}">
@@ -606,7 +606,7 @@
       ${(manifest.parts||[]).map(part=>`<section><h4>${esc(part.title)}</h4><div>${(part.chapters||[]).map(chapter=>`<button type="button" class="ghost mm-book-chapter-button" data-mm-book-chapter="${esc(chapter.id)}">${esc(chapter.title)} <small>${esc(chapter.level)} · ${esc(stateLabel(chapter.state))}</small></button>`).join('')}</div></section>`).join('')}</details>`;
     const notes=`<details class="mm-book-contents-guide"><summary>Reading guide & editorial notes</summary>
       <p>Reading chapters group governed source modules. Their evidence, claim and independent SME statuses remain module-specific.</p>
-      <p><strong>Depth:</strong> ${esc(readerArchitecture.depthBandMeaning)}</p>
+      <p><strong>Depth labels:</strong> ${esc(readerArchitecture.depthBandMeaning)}</p>
       <p><strong>Reading:</strong> ${esc(readerArchitecture.firstReadPolicy)}</p>
       <p>Study questions do not authorize machine, material, mould, product or site changes beyond controlling documentation.</p>
       ${readerTermGuideHtml(readers)}
