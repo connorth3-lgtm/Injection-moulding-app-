@@ -509,3 +509,105 @@ button:disabled,[aria-disabled="true"]{
 @media(max-width:800px){.mm-dx-layout{grid-template-columns:1fr}.mm-dx-library{max-height:280px;grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){.mm-dx-library,.mm-dx-fields{grid-template-columns:1fr}.mm-dx-pane{padding:15px}.mm-dx-hero{padding:18px}.mm-dx-actions button{width:100%}}
 @media(prefers-reduced-motion:reduce){.mm-dx-workbench *{scroll-behavior:auto!important}}
+
+/* Keep the material catalogue in view on phones: advanced facets open on demand. */
+#materials .mm-material-all-search{display:flex;align-items:end;flex-wrap:wrap;gap:10px;margin:12px 0 8px}
+#materials .mm-material-all-search label{display:block;flex:1 1 240px;min-width:0}
+#materials .mm-material-all-search input{width:100%;max-width:100%;min-height:44px;margin-top:6px}
+#materials .mm-material-all-search button{min-height:44px}
+#materials .mm-material-all-search button[hidden]{display:none!important}
+#materials .mm-material-all-filters{margin:9px 0 12px;border:1px solid rgba(141,179,210,.28);border-radius:12px;background:rgba(7,22,35,.48);min-width:0}
+#materials .mm-material-all-filters summary{display:flex;align-items:center;gap:12px;min-height:46px;padding:11px 13px;cursor:pointer;list-style:none;font-weight:700}
+#materials .mm-material-all-filters summary::-webkit-details-marker{display:none}
+#materials .mm-material-all-filters summary::after{content:"⌄";font-size:21px;line-height:1;margin-left:0}
+#materials .mm-material-all-filters[open] summary::after{transform:rotate(180deg)}
+#materials .mm-material-all-filters [data-mm-all-material-filter-count]{margin-left:auto;font-size:12px;font-weight:600;color:var(--muted,#aebfd1)}
+#materials .mm-material-all-filters .mm-material-all-index-controls{padding:0 12px 12px;min-width:0}
+#materials .mm-material-all-filters select{min-width:0;max-width:100%}
+#materials .mm-material-all-filters summary:focus-visible{outline:2px solid #74dcc6;outline-offset:2px;border-radius:10px}
+@media(max-width:700px){
+  #materials .mm-material-all-search{display:block}
+  #materials .mm-material-all-search button:not([hidden]){width:100%;margin-top:8px}
+  #materials .mm-material-all-filters .mm-material-all-index-controls{grid-template-columns:minmax(0,1fr)!important}
+}
+
+/* A scannable catalogue: each result opens its evidence only on demand. */
+#materials .mm-material-index-card{min-width:0;overflow:visible}
+#materials .mm-material-index-summary{display:flex;flex-direction:column;align-items:flex-start;gap:5px;list-style:none;cursor:pointer;min-height:74px;position:relative;padding-right:24px}
+#materials .mm-material-index-summary::-webkit-details-marker{display:none}
+#materials .mm-material-index-summary:focus-visible{outline:2px solid #74dcc6;outline-offset:3px;border-radius:6px}
+#materials .mm-material-index-summary .mm-material-index-meta{margin:0;gap:8px}
+#materials .mm-material-index-title{font-size:16px;line-height:1.35;font-weight:750;overflow-wrap:anywhere}
+#materials .mm-material-index-summary .mm-material-index-subtitle{font-size:12px;color:var(--muted,#b5c6d8)}
+#materials .mm-material-index-expand{font-size:12px;color:#a9c9dc;font-weight:600}
+#materials .mm-material-index-summary::after{content:"⌄";position:absolute;right:3px;top:30px;font-size:20px}
+#materials .mm-material-index-card[open] .mm-material-index-summary::after{transform:rotate(180deg)}
+#materials .mm-material-index-card[open] .mm-material-index-expand{display:none}
+#materials .mm-material-index-detail{min-width:0;margin-top:10px;padding-top:10px;border-top:1px solid rgba(141,179,210,.22)}
+#materials .mm-material-index-detail p{overflow-wrap:anywhere}
+#materials .mm-material-index-detail button{max-width:100%;white-space:normal}
+
+/* Relevant provenance note appears with the advanced facets, not above the list. */
+#materials .mm-material-all-filters [data-mm-catalogue-boundary]{margin:0 12px 10px;padding:8px 10px;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+
+/* Phone Materials: show the catalogue search before repeated hero content. */
+@media(max-width:700px){
+  #materials #mmMaterialsPageIntro{padding:12px!important;gap:8px!important;margin-bottom:10px!important}
+  #materials #mmMaterialsPageIntro>div:first-child .eyebrow,
+  #materials #mmMaterialsPageIntro>div:first-child p{display:none!important}
+  #materials #mmMaterialsPageIntro h2{font-size:18px!important;line-height:1.3!important;margin:0!important}
+  #materials #mmMaterialsPageIntro .mm-material-page-stats{display:flex!important;gap:0!important}
+  #materials #mmMaterialsPageIntro .mm-material-page-stat{display:none!important}
+  #materials #mmMaterialsPageIntro .mm-material-page-stat:first-child{
+    display:flex!important;align-items:baseline;gap:6px;padding:0!important;
+    border:0!important;background:none!important
+  }
+  #materials #mmMaterialsPageIntro .mm-material-page-stat b{font-size:14px!important}
+  #materials #mmMaterialsPageIntro .mm-material-page-stat span{font-size:11px!important}
+  #materials #mmMaterialsPageIntro .mm-material-page-nav{display:flex!important;gap:6px!important;flex-wrap:wrap!important}
+  #materials #mmMaterialsPageIntro .mm-material-page-nav [data-mm-material-jump="catalog"]{display:none!important}
+  #materials #mmMaterialsPageIntro .mm-material-page-nav button{
+    width:auto!important;min-height:38px!important;min-width:0!important;
+    padding:7px 9px!important;font-size:12px!important;flex:1 1 auto!important
+  }
+  #materials #mmExactMaterialCatalog{padding:12px!important}
+  #materials #mmExactMaterialCatalog .mm-exact-head h2{font-size:18px!important;line-height:1.3!important}
+  #materials #mmExactMaterialCatalog .mm-exact-head p:not(.mm-material-coverage){display:none!important}
+  #materials #mmExactMaterialCatalog .mm-material-coverage{font-size:11px!important;line-height:1.4!important}
+  #materials #mmExactMaterialCatalog .mm-material-all-index{padding:10px!important;margin-top:10px!important}
+  #materials #mmExactMaterialCatalog .mm-material-all-index-head .eyebrow{display:none!important}
+  #materials #mmExactMaterialCatalog .mm-material-all-index-head h3{font-size:18px!important;margin:0 0 4px!important}
+  #materials #mmExactMaterialCatalog .mm-material-all-index-head>p{display:none!important}
+}
+
+/* Materials: one catalogue heading instead of three competing hero/grade titles. */
+#materials #mmMaterialsPageIntro.mm-material-page-tools{
+  display:block!important;margin:0 0 10px!important;padding:0!important;
+  border:0!important;background:transparent!important;box-shadow:none!important
+}
+#materials #mmMaterialsPageIntro .mm-material-page-nav{
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important
+}
+#materials #mmMaterialsPageIntro .mm-material-page-nav button{
+  width:100%!important;min-width:0!important;min-height:42px!important;
+  font-size:12px!important;line-height:1.25!important;
+  padding:8px!important;white-space:normal!important;flex:none!important
+}
+#materials #mmExactMaterialCatalog .mm-material-all-index{margin-top:0!important}
+#materials #mmExactMaterialCatalog .mm-material-all-index-head h3{margin:0 0 7px!important;font-size:21px!important}
+#materials #mmExactMaterialCatalog .mm-exact-head{
+  margin-top:18px!important;padding-top:16px!important;
+  border-top:1px solid rgba(141,179,210,.22)
+}
+@media(max-width:700px){
+  #materials #mmMaterialsPageIntro .mm-material-page-nav{gap:5px!important}
+  #materials #mmMaterialsPageIntro .mm-material-page-nav button{
+    font-size:11px!important;padding:7px 5px!important;min-height:42px!important
+  }
+  #materials #mmExactMaterialCatalog .mm-material-all-index-head h3{font-size:20px!important}
+}
+
+/* The Materials index can jump to an exact-grade evidence card. Keep its heading
+   below the compact topbar, and preserve a visible keyboard-focus destination. */
+#materials .mm-exact-grade{scroll-margin-top:88px}
+#materials .mm-exact-grade:focus{outline:2px solid #73ceff;outline-offset:3px}
