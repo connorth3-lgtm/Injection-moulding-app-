@@ -594,17 +594,38 @@
   function renderOverview(){
     if(!ui||!manifest||!readerArchitecture)return;
     const verified=verifiedChapters(),review=allChapters().filter(ch=>ch.state==='technical-review'),readers=allReaderChapters();
-    ui.summary.textContent=`${readers.length} reader chapters · ${allChapters().length} governed modules · ${review.length} modules in technical review · ${verified.length} source-reviewed modules`;
+    ui.summary.textContent=`${readers.length} chapters · ${allChapters().length} source modules · ${review.length} under technical review · ${verified.length} source-reviewed`;
     if(ui.smeStatus)ui.smeStatus.textContent=smeStatusText();
-    ui.parts.innerHTML=`<section class="card"><span class="eyebrow">MouldMaster Book</span><h3>Choose a chapter</h3><p class="muted">20 chapters. Start at chapter 1 or go directly to the subject you need.</p><details class="mm-book-contents-guide"><summary>About the Book · depth, evidence and reading guide</summary><p class="muted">Chapters group 46 governed modules without changing evidence, claim or SME-review status.</p><p class="muted"><b>Depth labels:</b> ${esc(readerArchitecture.depthBandMeaning)}</p><p class="muted"><b>Learning boundary:</b> objectives, checks, application prompts and reasoning scenarios test understanding; they do not authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.</p><p class="muted"><b>First-read path:</b> ${esc(readerArchitecture.firstReadPolicy)}</p>${readerTermGuideHtml(readers)}</details><div>${readers.map((reader,index)=>{const modules=reader.moduleIds.map(id=>allChapters().find(ch=>ch.id===id)).filter(Boolean),verifiedModules=modules.filter(ch=>ch.state==='verified').length;return `<button type="button" class="ghost mm-book-chapter-button" data-mm-book-reader-chapter-open="${esc(reader.id)}"><b>${index+1}. ${esc(reader.title)}</b><br><small>Chapter depth: ${esc(reader.depthBand)} · ${modules.length} governed module${modules.length===1?'':'s'} · ${verifiedModules}/${modules.length} source-reviewed</small></button>`}).join('')}</div><details class="mm-book-governed-index"><summary><b>Governed module index</b> — 46 traceable review units</summary>${(manifest.parts||[]).map((part,partIndex)=>`<section><h4>${esc(part.title)}</h4><div>${(part.chapters||[]).map((chapter,chapterIndex)=>`<button type="button" class="ghost mm-book-chapter-button" data-mm-book-chapter="${esc(chapter.id)}"><b>${chapterIndex+1}. ${esc(chapter.title)}</b><br><small>${esc(chapter.level)} · ${esc(stateLabel(chapter.state))}</small></button>`).join('')}</div></section>`).join('')}</details></section>`;
-    ui.parts.querySelectorAll('[data-mm-book-reader-chapter-open]').forEach(b=>b.addEventListener('click',()=>showReaderChapter(b.dataset.mmBookReaderChapterOpen)));
-    ui.parts.querySelectorAll('[data-mm-book-chapter]').forEach(b=>b.addEventListener('click',()=>showChapter(b.dataset.mmBookChapter)));
-    ui.listen.disabled=!verified.length;ui.listen.textContent=verified.length?'Listen to source-reviewed Book':'Listening unlocks after source evidence review';
+    // Plain numbered contents. The full governed 46-module index and editorial
+    // notes remain accessible AFTER the 20 chapter titles, without badges.
+    const toc=`<ol class="mm-book-toc">${readers.map((reader,index)=>`<li>
+      <button type="button" data-mm-book-reader-chapter-open="${esc(reader.id)}">
+        <span class="mm-book-toc-number">${index+1}.</span><span>${esc(reader.title)}</span>
+      </button></li>`).join('')}</ol>`;
+    const moduleIndex=`<details class="mm-book-governed-index"><summary>Source module index (46 entries)</summary>
+      ${(manifest.parts||[]).map(part=>`<section><h4>${esc(part.title)}</h4><div>${(part.chapters||[]).map(chapter=>`<button type="button" class="ghost mm-book-chapter-button" data-mm-book-chapter="${esc(chapter.id)}">${esc(chapter.title)} <small>${esc(chapter.level)} · ${esc(stateLabel(chapter.state))}</small></button>`).join('')}</div></section>`).join('')}</details>`;
+    const notes=`<details class="mm-book-contents-guide"><summary>Reading guide & editorial notes</summary>
+      <p>Reading chapters group governed source modules. Their evidence, claim and independent SME statuses remain module-specific.</p>
+      <p><strong>Depth:</strong> ${esc(readerArchitecture.depthBandMeaning)}</p>
+      <p><strong>Reading:</strong> ${esc(readerArchitecture.firstReadPolicy)}</p>
+      <p>Study questions do not authorize machine, material, mould, product or site changes beyond controlling documentation.</p>
+      ${readerTermGuideHtml(readers)}
+    </details>`;
+    ui.parts.innerHTML=`<section class="card mm-book-table-of-contents">
+      <h2>Contents</h2>${toc}
+      <div class="mm-book-toc-appendix">${notes}${moduleIndex}</div>
+    </section>`;
+    ui.parts.querySelectorAll('[data-mm-book-reader-chapter-open]').forEach(button=>
+      button.addEventListener('click',()=>showReaderChapter(button.dataset.mmBookReaderChapterOpen)));
+    ui.parts.querySelectorAll('[data-mm-book-chapter]').forEach(button=>
+      button.addEventListener('click',()=>showChapter(button.dataset.mmBookChapter)));
+    ui.listen.disabled=!verified.length;
+    ui.listen.textContent=verified.length?'Listen to source-reviewed Book':'Listening unlocks after source evidence review';
   }
   function showReaderChapter(id){
     const reader=allReaderChapters().find(x=>x.id===id);if(!reader||!ui)return;
     contentsScrollY=bookScrollTop();restoreBookChrome();ui.hero.hidden=true;ui.accuracy.hidden=true;const back='<button type="button" class="ghost" data-mm-book-back>← Book contents</button>';
-    ui.reader.innerHTML=`${back}${readerChapterHtml(reader)}`;ui.contents.hidden=true;ui.reader.hidden=false;bindBack();bindMaterialPagination(ui.reader);bindBookScrollRoot();rememberReadingPosition('reader-chapter',id,reader.title,0);scrollBookReaderToTop();emitBookRender('reader-chapter',id);
+    ui.reader.innerHTML=`${back}${readerChapterHtml(reader)}`;ui.contents.hidden=true;ui.reader.hidden=false;bindBack();ui.reader.querySelectorAll('[data-mm-book-page-turn]').forEach(button=>button.addEventListener('click',()=>showReaderChapter(button.dataset.mmBookPageTurn)));bindMaterialPagination(ui.reader);bindBookScrollRoot();rememberReadingPosition('reader-chapter',id,reader.title,0);scrollBookReaderToTop();emitBookRender('reader-chapter',id);
     if(reader.moduleIds.includes('material-families'))void hydrateMaterialAtlas();
   }
   function restoreBookChrome(){if(!ui)return;ui.hero.hidden=false;ui.accuracy.hidden=false;}function stopBookSpeech(){try{window.MMReadAloud?.stop?.();}catch(_){}}function bookScrollTop(){const root=bookScrollRoot();return Math.max(0,isDocumentScrollRoot(root)?document.scrollingElement?.scrollTop||0:root.scrollTop||0);}function scrollBookReaderToTop(){requestAnimationFrame(()=>{if(!ui?.reader)return;scrollBookBy(ui.reader.getBoundingClientRect().top-bookViewportTop());const heading=ui.reader.querySelector('h2');if(heading){heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}});}function showContents({restoreScroll=true}={}){if(!ui)return;stopBookSpeech();const active=document.activeElement;if(active&&ui.reader?.contains(active)&&typeof active.blur==='function')active.blur();restoreBookChrome();ui.reader.hidden=true;ui.contents.hidden=false;void ui.contents.offsetHeight;if(restoreScroll)scrollBookTo(contentsScrollY);}function bindBack(){ui?.reader?.querySelector('[data-mm-book-back]')?.addEventListener('click',()=>showContents());}
