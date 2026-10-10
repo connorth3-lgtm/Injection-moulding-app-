@@ -304,3 +304,34 @@ test('older compatible release bookmarks migrate after chapter validation and re
   await activate(page,'reader-a');
   expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key))?.bookRelease,key)).toBe(migrated.bookRelease);
 });
+
+test('upgrade cannot silently use a changed heading index when the saved anchor is gone',async({page})=>{
+  await boot(page);
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r08'));
+  await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
+  await page.getByRole('button',{name:'Home'}).first().click();
+  const oldKey=await page.evaluate(()=>{
+    const key=window.MMBook.resumeStorageKey();
+    const old=JSON.parse(localStorage.getItem(key));
+    old.bookRelease='2026.10.06.4';
+    old.anchorId='module:removed-legacy-module:section:8';
+    old.anchorIndex=6;
+    old.anchorText='Removed heading from prior edition';
+    old.anchorOffset=150;
+    old.anchorOffsetId=old.anchorId;
+    old.scrollY=900;
+    localStorage.setItem(key,JSON.stringify(old));
+    return key;
+  });
+  const events=await page.evaluate(async()=>{
+    const restored=new Promise(resolve=>window.addEventListener('mm:book-resume-restored',event=>resolve(event.detail),{once:true}));
+    const success=await window.MMBook.openResume();
+    return {success,detail:await restored};
+  });
+  expect(events.success).toBeTruthy();
+  expect(events.detail.anchorId).toBe('');
+  const current=await page.evaluate(()=>window.MMBook.getResume());
+  expect(current.bookRelease).toBe(await page.evaluate(()=>window.MMBook.version));
+  expect(current.anchorId).not.toBe('module:removed-legacy-module:section:8');
+  expect(await page.evaluate(key=>localStorage.getItem(key)!==null,oldKey)).toBe(true);
+});
