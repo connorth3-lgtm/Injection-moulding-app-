@@ -168,3 +168,82 @@ test('Keep Reading restores, stale IDs fail to contents, and learner reset clear
   await expect(page.locator('[data-mm-book-contents]')).toBeVisible();
   expect(await page.evaluate(()=>window.MMBook.getResume())).toBeNull();
 });
+
+
+
+test('Book delayed scroll saves cannot cross learner profiles',async({page})=>{
+  await boot(page,'reader-a');
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r08'));
+  await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
+
+  const aKey=await page.evaluate(()=>window.MMBook.resumeStorageKey());
+  const beforeA=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),aKey);
+  expect(beforeA.id).toBe('r08');
+
+  // Core profile changes do not inherently navigate away from the Book view.
+  // A debounced scroll after switching must not persist A's reading state as B.
+  const bKey=await page.evaluate(()=>{
+    switchUser('reader-b');
+    return window.MMBook.resumeStorageKey();
+  });
+  expect(bKey).not.toBe(aKey);
+  await page.evaluate(()=>{
+    window.scrollTo(0,700);
+    window.dispatchEvent(new Event('scroll'));
+  });
+  await page.waitForTimeout(260);
+  expect(await page.evaluate(key=>localStorage.getItem(key),bKey)).toBeNull();
+  expect((await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),aKey)).id).toBe('r08');
+
+  // Once B explicitly starts reading, B gets a separate bookmark and A stays.
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r01'));
+  await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
+  expect((await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),bKey)).id).toBe('r01');
+  expect((await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),aKey)).id).toBe('r08');
+});
+
+
+test('Book reading bookmark survives immediate Contents exit and Listening scroll',async({page})=>{
+  await boot(page);
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r08'));
+  const anchors=page.locator('[data-mm-book-reader] [data-mm-book-anchor]');
+  await expect(anchors.nth(6)).toBeVisible();
+  const chosen=await anchors.nth(6).getAttribute('data-mm-book-anchor');
+  expect(chosen).toBeTruthy();
+  // Move and navigate in the same browser task, before the 180ms scroll debounce.
+  await page.evaluate(()=>{
+    const target=document.querySelectorAll('[data-mm-book-reader] [data-mm-book-anchor]')[6];
+    target.scrollIntoView({block:'start',behavior:'instant'});
+    window.dispatchEvent(new Event('scroll'));
+    document.querySelector('[data-mm-book-back]').click();
+  });
+  await expect(page.locator('[data-mm-book-contents]')).toBeVisible();
+  const saved=await page.evaluate(()=>window.MMBook.getResume());
+  expect(saved.id).toBe('r08');
+  expect(saved.anchorId).toBe(chosen);
+
+  // Speech availability is device-dependent. Stub only its playback adapter:
+  // the Book's verified module gating and reading state remain production code.
+  await page.evaluate(()=>{
+    const panel=document.createElement('div');
+    panel.className='mm-read-aloud';
+    panel.innerHTML='<details><summary>Speech test adapter</summary><button type="button" data-mm-read="play">Play</button></details>';
+    document.body.prepend(panel);
+    window.MMReadAloud={supported:true,stop(){},refresh(){}};
+    window.MMBook.startVerifiedListening();
+  });
+  await expect(page.locator('#mmBookView [data-mm-book-reader]')).toBeVisible();
+  await expect(page.locator('#mmBookView [data-mm-book-reader] h2').first()).toBeVisible();
+  await page.evaluate(()=>{
+    const reader=document.querySelector('#mmBookView [data-mm-book-reader]');
+    reader.scrollTop=500;
+    window.scrollTo(0,700);
+    window.dispatchEvent(new Event('scroll'));
+    reader.dispatchEvent(new Event('scroll'));
+  });
+  await page.waitForTimeout(250);
+  const after=await page.evaluate(()=>window.MMBook.getResume());
+  expect(after.id).toBe(saved.id);
+  expect(after.anchorId).toBe(saved.anchorId);
+  expect(after.scrollY).toBe(saved.scrollY);
+});
