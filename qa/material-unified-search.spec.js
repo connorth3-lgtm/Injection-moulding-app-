@@ -39,6 +39,22 @@ test('Materials has a dedicated entry page and first-class library layout',async
   expect(geometry.page).toBeLessThanOrEqual(geometry.viewport+1);
 });
 
+test('360px Materials entry keeps the catalogue search in the first screen without removing section shortcuts',async({page})=>{
+  await openMaterials(page,360);
+  await page.setViewportSize({width:360,height:800});
+  await page.evaluate(()=>window.scrollTo(0,0));
+  const root=page.locator('#mmExactMaterialCatalog');
+  const intro=page.locator('#mmMaterialsPageIntro');
+  await expect(intro).toBeVisible();
+  await expect(root.locator('[data-mm-all-material-query]')).toBeInViewport();
+  await expect(intro.getByRole('button',{name:'Compare grades'})).toBeVisible();
+  await expect(intro.getByRole('button',{name:'Change assistant'})).toBeVisible();
+  await expect(intro.getByRole('button',{name:'Material learning'})).toBeVisible();
+  await expect(root.locator('[data-mm-all-material-filters]')).not.toHaveAttribute('open','');
+  const geometry=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,page:document.documentElement.scrollWidth}));
+  expect(geometry.page).toBeLessThanOrEqual(geometry.viewport+1);
+});
+
 test('Materials displays all results with filters collapsed and clears selections on mobile',async({page})=>{
   await openMaterials(page);
   const root=page.locator('#mmExactMaterialCatalog');
