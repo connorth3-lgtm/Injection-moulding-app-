@@ -579,3 +579,30 @@ button:disabled,[aria-disabled="true"]{
   #materials #mmExactMaterialCatalog .mm-material-all-index-head h3{font-size:18px!important;margin:0 0 4px!important}
   #materials #mmExactMaterialCatalog .mm-material-all-index-head>p{display:none!important}
 }
+
+/* Materials: one catalogue heading instead of three competing hero/grade titles. */
+#materials #mmMaterialsPageIntro.mm-material-page-tools{
+  display:block!important;margin:0 0 10px!important;padding:0!important;
+  border:0!important;background:transparent!important;box-shadow:none!important
+}
+#materials #mmMaterialsPageIntro .mm-material-page-nav{
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important
+}
+#materials #mmMaterialsPageIntro .mm-material-page-nav button{
+  width:100%!important;min-width:0!important;min-height:42px!important;
+  font-size:12px!important;line-height:1.25!important;
+  padding:8px!important;white-space:normal!important;flex:none!important
+}
+#materials #mmExactMaterialCatalog .mm-material-all-index{margin-top:0!important}
+#materials #mmExactMaterialCatalog .mm-material-all-index-head h3{margin:0 0 7px!important;font-size:21px!important}
+#materials #mmExactMaterialCatalog .mm-exact-head{
+  margin-top:18px!important;padding-top:16px!important;
+  border-top:1px solid rgba(141,179,210,.22)
+}
+@media(max-width:700px){
+  #materials #mmMaterialsPageIntro .mm-material-page-nav{gap:5px!important}
+  #materials #mmMaterialsPageIntro .mm-material-page-nav button{
+    font-size:11px!important;padding:7px 5px!important;min-height:42px!important
+  }
+  #materials #mmExactMaterialCatalog .mm-material-all-index-head h3{font-size:20px!important}
+}
