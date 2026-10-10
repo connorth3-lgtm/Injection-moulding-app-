@@ -24,6 +24,50 @@ class FirstReadReviewQueueTests(unittest.TestCase):
         self.assertIn("non-gating", packet["governance"])
         self.assertIn("not-a-technical-approval", packet["kind"])
 
+    def test_hidden_section_evidence_is_exact_source_bound_and_unapproved(self):
+        from pathlib import Path
+        import hashlib
+        import json
+        import re
+        rows, modules, omissions = audit()
+        packet = editorial_review_packet(rows, modules, omissions)
+        evidence = [entry for row in packet["chapters"] for entry in row["sourceSectionsBehindDisclosure"]]
+        self.assertEqual(len(evidence), 53)
+        self.assertEqual(len({(entry["moduleId"], entry["sectionTitle"]) for entry in evidence}), 53)
+        datasets = {}
+        for entry in evidence:
+            path = entry["authoredSource"]
+            self.assertRegex(path, r"^data/book-[a-z0-9-]+\.json$")
+            self.assertRegex(entry["sourceTextSha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(entry["disclosure"], "omitted-from-first-read")
+            if path not in datasets:
+                datasets[path] = {chapter["id"]: chapter for chapter in
+                                  json.loads((Path(__file__).resolve().parents[1] / path).read_text())["chapters"]}
+            sections = [item for item in datasets[path][entry["moduleId"]]["sections"]
+                        if item["title"] == entry["sectionTitle"]]
+            self.assertEqual(len(sections), 1)
+            self.assertEqual(entry["sourceTextSha256"],
+                             hashlib.sha256(sections[0]["text"].encode("utf-8")).hexdigest())
+        self.assertTrue(all(r["independentSmeStatus"] == "UNREVIEWED"
+                            for r in packet["chapters"]))
+
+    def test_conflicting_omission_and_optional_source_mappings_fail_closed(self):
+        import unittest.mock as mock
+        from qa_book_first_read_audit import presentation_map
+        real = presentation_map
+        omissions, _modules, _suppressed = audit()
+        reader = next(row for row in omissions if row["omitted"])
+        module, title, _count = reader["omitted"][0]
+
+        def overlapping(runtime, name):
+            if name == "READER_SUPPLEMENT_SECTIONS":
+                return {module: [title]}
+            return real(runtime, name)
+
+        with mock.patch("qa_book_first_read_audit.presentation_map", side_effect=overlapping):
+            with self.assertRaisesRegex(AssertionError, "both omit and supplement"):
+                audit()
+
     def test_soft_word_threshold_is_not_an_approval_gate(self):
         rows, modules, omissions = audit()
         packet = editorial_review_packet(rows, modules, omissions)

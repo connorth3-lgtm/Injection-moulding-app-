@@ -8,6 +8,7 @@ Counts are whitespace-delimited tokens, not measured comprehension or screen-rea
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -53,11 +54,13 @@ def audit() -> tuple[list[dict], int, int]:
     supplements = presentation_map(runtime, "READER_SUPPLEMENT_SECTIONS")
     metadata = {chapter["id"]: chapter for part in manifest["parts"] for chapter in part["chapters"]}
     authored: dict[str, dict] = {}
+    authored_source: dict[str, str] = {}
     for source in BATCHES:
         for chapter in read(source)["chapters"]:
             if chapter["id"] in authored:
                 raise AssertionError(f"duplicate authored module: {chapter['id']}")
             authored[chapter["id"]] = chapter
+            authored_source[chapter["id"]] = source
     if set(metadata) != set(authored):
         raise AssertionError(f"missing/unexpected authored modules: {set(metadata) ^ set(authored)}")
     if set(omissions) - set(authored) or set(supplements) - set(authored):
@@ -70,12 +73,17 @@ def audit() -> tuple[list[dict], int, int]:
             for title in titles:
                 if section_titles.count(title) != 1:
                     raise AssertionError(f"{label} section drifted from governed {module}: {title}")
+    for module_id in authored:
+        overlap=set(omissions.get(module_id, [])) & set(supplements.get(module_id, []))
+        if overlap:
+            raise AssertionError(f"Book {module_id} cannot both omit and supplement a governed section: {sorted(overlap)}")
     rows = []
     all_seen = []
     suppressed = 0
     for number, chapter in enumerate(architecture["readerChapters"], start=1):
         visible = word_count(chapter["goal"])
         omitted_details = []
+        source_evidence = []
         for module_id in chapter["moduleIds"]:
             if module_id not in authored:
                 raise AssertionError(f"reader chapter uses missing module {module_id}")
@@ -84,6 +92,16 @@ def audit() -> tuple[list[dict], int, int]:
             visible += word_count(module.get("title") or metadata[module_id]["title"])
             visible += word_count(module.get("applicability"))
             for section in module["sections"]:
+                if section["title"] in omissions.get(module_id, []) or section["title"] in supplements.get(module_id, []):
+                    source_evidence.append({
+                        "moduleId": module_id,
+                        "sectionTitle": section["title"],
+                        "sourceWords": word_count(section["text"]),
+                        "authoredSource": "data/" + authored_source[module_id],
+                        "sourceTextSha256": hashlib.sha256(section["text"].encode("utf-8")).hexdigest(),
+                        "disclosure": "omitted-from-first-read" if section["title"] in omissions.get(module_id, [])
+                                      else "optional-in-first-read",
+                    })
                 if section["title"] in omissions.get(module_id, []):
                     omitted_details.append((module_id, section["title"], word_count(section["text"])))
                     suppressed += 1
@@ -99,6 +117,7 @@ def audit() -> tuple[list[dict], int, int]:
             "moduleCount": len(chapter["moduleIds"]),
             "moduleIds": list(chapter["moduleIds"]),
             "omitted": omitted_details,
+            "omittedEvidence": source_evidence,
             "belowTarget": visible < SOFT_WORD_TARGET,
         })
     if len(rows) != 20 or len(all_seen) != 46 or len(set(all_seen)) != 46:
@@ -122,10 +141,7 @@ def editorial_review_packet(rows: list[dict], modules: int, omissions: int) -> d
             "visibleWords": row["visibleWords"],
             "belowNonGatingTarget": row["belowTarget"],
             "wordGapToSoftTarget": max(0, SOFT_WORD_TARGET - row["visibleWords"]),
-            "sourceSectionsBehindDisclosure": [
-                {"moduleId": entry[0], "sectionTitle": entry[1], "sourceWords": entry[2]}
-                for entry in row["omitted"]
-            ],
+            "sourceSectionsBehindDisclosure": list(row["omittedEvidence"]),
             "priority": "first-review" if row["id"] in priorities else "normal",
             "independentSmeStatus": "UNREVIEWED",
             "reviewerFindings": None,

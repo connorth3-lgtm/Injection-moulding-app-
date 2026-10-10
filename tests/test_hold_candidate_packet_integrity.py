@@ -73,6 +73,31 @@ class PacketBoundaryTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "runtime fingerprint missing"):
             validate_packet(text, "qa/BOOK_SME_REVIEW.md", CANDIDATE, RELEASE)
 
+
+    def test_id_digit_collision_cannot_spoof_run_or_artifact(self):
+        forged = banner().replace("artifact **123**", "artifact **91234**")
+        with self.assertRaisesRegex(ValueError, "artifact id"):
+            validate_packet(forged, "qa/BOOK_SME_REVIEW.md", CANDIDATE, RELEASE)
+        forged = banner().replace("/actions/runs/456", "/actions/runs/94567")
+        with self.assertRaisesRegex(ValueError, "run URL"):
+            validate_packet(forged, "qa/BOOK_SME_REVIEW.md", CANDIDATE, RELEASE)
+
+    def test_historical_identifiers_cannot_satisfy_current_banner(self):
+        wrong = banner().replace(SHA, "d" * 40)
+        wrong += "\nOld archive source " + SHA + "\n"
+        with self.assertRaisesRegex(ValueError, "source"):
+            validate_packet(wrong, "qa/BOOK_SME_REVIEW.md", CANDIDATE, RELEASE)
+        wrong = banner().replace("artifact **123**", "artifact **321**")
+        wrong += "\nHistorical artifact **123**\n"
+        with self.assertRaisesRegex(ValueError, "artifact id"):
+            validate_packet(wrong, "qa/BOOK_SME_REVIEW.md", CANDIDATE, RELEASE)
+
+    def test_current_hold_cannot_be_replaced_by_historical_hold(self):
+        wrong = banner().replace("**STATUS: HOLD", "**STATUS: APPROVED")
+        wrong += "\n" * 15 + "\n**STATUS: HOLD — old release only.**"
+        with self.assertRaisesRegex(ValueError, "current review HOLD"):
+            validate_packet(wrong, "qa/BOOK_SME_REVIEW.md", CANDIDATE, RELEASE)
+
     def test_artifact_must_be_exact_name_not_suffix(self):
         corrupted = copy.deepcopy(CANDIDATE)
         corrupted["artifactName"] = "unexpected-prefix-physical-pwa-candidate-" + SHA
