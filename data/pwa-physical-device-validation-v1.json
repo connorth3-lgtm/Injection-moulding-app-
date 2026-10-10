@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Release 2026.10.11.3 is UNBOUND to a successful exact-source candidate. Physical iOS/iPadOS and Android install, offline/restart/reboot, update, safe-area, storage-pressure and zoom checks are all pending; no external approval or production authority.",
+  "boundary": "Retained release 2026.10.11.3 candidate 0c93cfeddc60f50c9f7e5d567fb041592a47d2c6 and artifact 11682829264 are NOT evidence of testing on physical iOS/iPadOS and Android devices. All install, offline/restart/reboot, update, safe-area, storage-pressure and zoom checks remain pending. Real assistive-technology verification is separate, and production root and signing are not authorised.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
@@ -42,7 +42,17 @@
   },
   "privacyBoundary": "Public contract metadata must not include learner names, customer/site identifiers, email addresses, private screenshots, raw process data, backup content, filesystem/user paths or other personal/proprietary evidence. Keep detailed device evidence outside the public repository and reference it only with a non-sensitive review identifier.",
   "release": "2026.10.11.3",
-  "candidate": null,
+  "candidate": {
+    "release": "2026.10.11.3",
+    "sourceSha": "0c93cfeddc60f50c9f7e5d567fb041592a47d2c6",
+    "runtimeFingerprint": "sha256:c5942fcd791077c81171c359e5c8480f23c0c2855d93affb9673162b57bcf50d",
+    "candidateRunId": 38089059338,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 11682829264,
+    "artifactName": "physical-pwa-candidate-0c93cfeddc60f50c9f7e5d567fb041592a47d2c6",
+    "artifactDigest": "sha256:dc44475be8d0d99cc97141c51e21176a7b0721ca3868025413cd9ccf473c9425",
+    "artifactExpiresAt": "2027-01-08T21:48:59Z"
+  },
   "previousCandidate": {
     "release": "2026.10.11.3",
     "sourceSha": "62cbc79224b133f5953d26b09547001e73961481",
