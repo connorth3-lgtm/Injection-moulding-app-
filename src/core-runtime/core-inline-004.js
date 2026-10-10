@@ -145,8 +145,7 @@ function switchView(id){
   };
   $("#pageTitle").textContent=titles[id][0];$("#pageSubtitle").textContent=titles[id][1];
   renderView(id);
-  // Primary workspace changes must start at the top synchronously; smooth scrolling
-  // can leave the previous page position visible or clipped on mobile WebKit.
+  // Starting a different workspace must not leave mobile WebKit at the previous scroll position.
   window.scrollTo({top:0,behavior:"instant"});
 }
 $$("#nav button").forEach(b=>b.addEventListener("click",()=>switchView(b.dataset.view)));
