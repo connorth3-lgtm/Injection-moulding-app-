@@ -215,6 +215,47 @@ authorized. That requires independent human verification and governed
 signoff outside this tool, including separate competency/practice and
 device/AT/offline/learner-isolation acceptance.
 
+### Local batch-format triage across multiple separate reviewer drafts
+
+To see structural human-input **coverage** across multiple *explicitly
+selected private JSON files* without copying their underlying passage
+rationales or evidence into a report, use:
+
+```bash
+python tools/new1_local_review_batch.py > local-new1-empty-draft-baseline.json
+python tools/new1_local_review_batch.py \
+  --draft local-private-new1-review.json \
+  --draft second-local-private-new1-review.json > local-new1-draft-triage.json
+```
+
+The first command generates an **empty local-input baseline**: canonical
+120-lesson and 46-Book-module inventory and course-level *discovery*
+candidate count, including Book modules with authored/manifest source-ID
+differences. It is not a review completion percentage: many course-level
+candidates should never become exact semantic links.
+
+The second checks each selected file using the same source-pinned private
+draft validator and publishes only **source IDs/lesson IDs/chapter IDs and
+numerical decision-field counts** to standard output. The data is sorted
+deterministically; file paths, local reviewer rationales, evidence pointers,
+source-assessment notes, and other free-text entries are **not** included.
+Each lesson↔Book pair may have at most one selected local draft, to prevent
+silent double counting. Unknown/cross-course pairs, stale Book bytes or
+source fingerprints, forged approvals, malformed draft evidence, duplicate
+pairs and oversized batches are rejected rather than silently skipped.
+Only explicitly supplied paths are read; the tool neither searches folders
+nor uploads files or writes the repository.
+
+The output always identifies itself as
+`UNSUBMITTED — LOCAL FORMAT TRIAGE ONLY`, reports *entered format-valid
+human-input fields* and still-undecided section slots, and permanently
+reports **zero actually verified human reviews, zero verified exact
+lesson matches and no accepted submissions or public navigation**.
+Field counts cannot establish reviewer identity, actual independent source
+checking, instruction suitability, competency/practice achievement, safety,
+NZQA/provider approval or readiness to release. Keep even these locally
+generated summaries inside the appropriate restricted review context.
+
 ## Human review workflow, still outstanding under #521
 
 1. A qualified author opens the actual lesson content and the actual Book passage. A common course label is **discovery only**; it is not a reason to publish a link.
