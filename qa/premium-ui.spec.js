@@ -36,9 +36,9 @@ test('compact desktop shell retains Materials and specialist More access',async(
   // button hierarchy or changed routing contract is added to the app shell.
   await nav.locator('button[data-mm-desktop-more-tools]').click();
   await expect(page.locator('#modal')).toBeVisible();
-  await expect(page.locator('#modal .quick-action').filter({hasText:'Defect finder'})).toBeVisible();
-  await page.locator('#modal .quick-action').filter({hasText:'Defect finder'}).click();
-  await expect(page.locator('#defects')).toBeVisible();
+  await expect(page.locator('#modal').getByRole('button',{name:'Standards & safety'})).toBeVisible();
+  await page.locator('#modal').getByRole('button',{name:'Standards & safety'}).click();
+  await expect(page.locator('#standards')).toBeVisible();
 });
 
 test('Book first reading shows chapter prose without repeated introductory chrome',async({page})=>{
@@ -60,8 +60,8 @@ test('Book first reading shows chapter prose without repeated introductory chrom
   const contents=page.locator('#mmBookView [data-mm-book-contents]');
   await expect(contents.locator('.card > div > button[data-mm-book-reader-chapter-open]')).toHaveCount(20);
   await expect(contents.locator('.mm-book-contents-guide')).not.toHaveAttribute('open');
-  await contents.locator('.mm-book-contents-guide summary').click();
-  await expect(contents.locator('.mm-book-term-guide')).toBeVisible();
+  await contents.locator('.mm-book-contents-guide > summary').click();
+  await expect(contents.locator('.mm-book-term-guide > summary')).toBeVisible();
 });
 
 test('premium UI stylesheet is active on the primary learner shell',async({page})=>{
