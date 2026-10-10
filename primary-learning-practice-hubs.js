@@ -506,7 +506,12 @@ function createLessonCatalog(){
       if(!button||!box.contains(button))return;
       if(button.dataset.mmSpecialistId){
         const id=button.dataset.mmSpecialistId;
-        if(specialists().some(l=>l.id===id))window.mmSpecialistLesson?.(id);
+        if(specialists().some(l=>l.id===id)){
+          // S13–S20 use the independent evidence-gap reader; the base
+          // specialist reader intentionally knows only S01–S12.
+          if(window.MM_SPECIALIST_EVIDENCE_GAPS?.lessons?.some(l=>l.id===id))window.mmSpecialistGapLesson?.(id);
+          else window.mmSpecialistLesson?.(id);
+        }
         return;
       }
       if(button.dataset.mmMaterialId){
