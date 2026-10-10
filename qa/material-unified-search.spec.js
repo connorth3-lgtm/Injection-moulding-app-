@@ -64,6 +64,7 @@ test('Materials displays all results with filters collapsed and clears selection
 
   await filters.locator('summary').click();
   await expect(filters.locator('[data-mm-all-material-region]')).toBeVisible();
+  await expect(filters.locator('[data-mm-catalogue-boundary]')).toBeVisible();
   await filters.locator('[data-mm-all-material-type]').selectOption('exact-grade');
   await expect(filters.locator('summary')).toContainText('1 active');
   await filters.locator('summary').click();
