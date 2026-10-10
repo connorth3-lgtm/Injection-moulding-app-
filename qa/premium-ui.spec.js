@@ -41,6 +41,24 @@ test('compact desktop shell retains Materials and specialist More access',async(
   await expect(page.locator('#standards')).toBeVisible();
 });
 
+test('Book reading hides Mission Control strip without losing learner workspace',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await openApp(page);
+  const mission=page.locator('#mmMissionControl > .mm-mc-context');
+  await expect(mission).toBeVisible();
+  await page.evaluate(()=>window.MMBook.open());
+  await expect(page.locator('#mmBookView')).toBeVisible();
+  await expect(mission).toBeHidden();
+  await expect(page.locator('#pageSubtitle')).toBeHidden();
+  // The mission's overlays and learner data are untouched; hiding the strip
+  // is specific to the Book reading route, not a global app state change.
+  await expect(page.locator('#mmMissionControl .mm-mc-palette-host')).toBeAttached();
+  await page.locator('#nav').getByRole('button',{name:'Home'}).click();
+  await expect(page.locator('#dashboard')).toBeVisible();
+  await expect(mission).toBeVisible();
+  await expect(page.locator('#pageSubtitle')).toBeVisible();
+});
+
 test('Book opens as 20 plain chapters with previous/next and optional end matter',async({page})=>{
   await page.setViewportSize({width:1280,height:860});
   await openApp(page);
