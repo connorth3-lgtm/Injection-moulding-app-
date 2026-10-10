@@ -8,8 +8,8 @@
   "issueNumber": 379,
   "candidate": {
     "release": "2026.10.09.6",
-    "sourceSha": "3465fdca76941bf46d360051bc09fcda6d41c611",
-    "runtimeFingerprint": "sha256:d5b80ea704ee8297c52d8402ce590f58fa003a38018391fcdc8170c9c0b4f2d0"
+    "sourceSha": "f1f33ba42477c51a7290b02ea4b379223e001ad9",
+    "runtimeFingerprint": "sha256:4a7d3afb067ee33eff1b73394a79d94bcc1d7abd5e4f791f2f2dfe1f65a76a62"
   },
   "boundary": "Provider G1–G8 external evidence remains pending. Release .6 technical runtime source 3465fdca76941bf46d360051bc09fcda6d41c611 and its genuine fingerprint sha256:d5b80ea704ee8297c52d8402ce590f58fa003a38018391fcdc8170c9c0b4f2d0 do not grant provider/accreditation, assessment, production or machine-control authority.",
   "requiredGates": [
