@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.09.5",
-  "commit": "fa27bd16525f8cb216654ea524649a3a37a3195c",
+  "release": "2026.10.10.1",
+  "commit": "52160745ac51cbc9dae108315adc27fc1a3f5910",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,6 +41,6 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "Comparison-only reference for the proposed 2026.10.09.5 UI-timing release. This new immutable ref intentionally points to the exact owner-approved 2026.10.09.4 baseline source fa27bd16525f8cb216654ea524649a3a37a3195c; it is not an independent approval of the new runtime. The Chromium visual maxDiffPixels=12 remains unchanged, and any material layout difference must be reviewed by a human before promotion. Real iPad, 200% zoom, NVDA/VoiceOver, physical PWA, SME, learner outcomes, NZQA/provider and production authorizations all remain HOLD.",
-  "ref": "visual-baseline/2026.10.09.5"
+  "policy": "Owner explicitly approved the proposed Book/Home/Materials/176-lesson Learn visual changes in ChatGPT on 2026-10-10 after receiving the exact composite Chromium baseline/current/diff comparison artifact link (run 38038705991, artifact 11664742980). New immutable QA comparison ref is pinned to the exact composite candidate source 52160745ac51cbc9dae108315adc27fc1a3f5910. This records the owner's visual-direction acceptance; it does not assert that every screenshot or difference file was individually inspected. The strict Chromium maxDiffPixels=12 is unchanged. The previous visual-baseline/2026.10.09.5 at fa27bd16525f8cb216654ea524649a3a37a3195c remains intact. This composite PR is DRAFT QA ONLY and is NOT authorized to merge. Real iPad, 200% zoom, NVDA/VoiceOver, physical PWA, Windows distribution, independent Book/curriculum SME, learner outcomes, NZQA/provider, release-candidate identity, and production authorization remain HOLD.",
+  "ref": "visual-baseline/2026.10.10.1"
 }

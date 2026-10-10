@@ -108,7 +108,9 @@ jobs:
       - name: Release and assessment integrity
         run: python qa_release.py
       - name: Learner-runtime release identity bump
-        run: python qa_runtime_release_bump.py
+        run: |
+          python -m unittest -v qa_runtime_release_diff_test.py
+          python qa_runtime_release_bump.py
       - name: Runtime shell hardening
         run: python qa_runtime_hardening.py
       - name: Release and documentation coherence

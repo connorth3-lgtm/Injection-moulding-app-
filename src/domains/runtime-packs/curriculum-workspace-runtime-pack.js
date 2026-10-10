@@ -410,16 +410,36 @@ const LESSONS=[
 ];
 
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function learnerToken(){
-  let raw='anonymous';
-  try{if(typeof user!=='undefined'&&user?.id)raw=String(user.id);else if(window.db?.activeUser)raw=String(window.db.activeUser)}catch(_){}
-  let h=2166136261;for(let i=0;i<raw.length;i++){h^=raw.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(36)
+// Completion remains separate from the core and material-science stores.
+// The shared scope upgrades legacy 32-bit keys only for a provably unique
+// learner, quarantining ambiguous or orphaned legacy progress instead of
+// accidentally attributing another learner's specialist completions.
+const SPECIALIST_STORAGE_PREFIX=`${STORAGE_BASE}::`;
+// This pack runs before the manifest-driven learner-scope asset. Resolve the
+// service when used, never snapshot window.MM_LEARNER_SCOPE during bootstrap.
+let registeredLearnerScope=null;
+function specialistScope(){
+  const scope=window.MM_LEARNER_SCOPE;
+  if(!scope?.token||!scope?.storageKey||!scope?.registerStoragePrefix)return null;
+  if(scope!==registeredLearnerScope){
+    try{scope.registerStoragePrefix(SPECIALIST_STORAGE_PREFIX);registeredLearnerScope=scope}catch(_){return null}
+  }
+  return scope;
 }
-function storageKey(){return `${STORAGE_BASE}::${learnerToken()}`}
-function readState(){try{const x=JSON.parse(localStorage.getItem(storageKey())||'{}');return x&&typeof x==='object'?x:{}}catch(_){return {}}}
-function writeState(x){try{localStorage.setItem(storageKey(),JSON.stringify(x))}catch(_){}}
+function storageKey(){
+  const scope=specialistScope();if(!scope)return null;
+  try{return scope.storageKey(SPECIALIST_STORAGE_PREFIX,scope.token())}catch(_){return null}
+}
+function readState(){
+  const key=storageKey();if(!key)return {};
+  try{const x=JSON.parse(localStorage.getItem(key)||'{}');return x&&typeof x==='object'&&!Array.isArray(x)?x:{}}catch(_){return {}}
+}
+function writeState(x){
+  const key=storageKey();if(!key)return false;
+  try{const payload=JSON.stringify(x);localStorage.setItem(key,payload);return localStorage.getItem(key)===payload}catch(_){return false}
+}
 function isDone(id){return !!readState()[id]}
-function setDone(id,done){const s=readState();if(done)s[id]=true;else delete s[id];writeState(s);decorateDashboard(true)}
+function setDone(id,done){const s=readState();if(done)s[id]=true;else delete s[id];writeState(s);decorateDashboard(true);window.dispatchEvent(new CustomEvent('mm:specialist-progress-change',{detail:{id,completed:isDone(id)}}))}
 function coreLesson(id){return CORE.lessons.find(x=>x.id===Number(id))}
 
 function ensureStyle(){
@@ -468,7 +488,7 @@ function decorateDashboard(force){
 const originalRenderDashboard=typeof renderDashboard==='function'?renderDashboard:null;
 if(originalRenderDashboard){renderDashboard=function(){originalRenderDashboard();decorateDashboard(false)}}
 window.mmSpecialistOpen=open;window.mmSpecialistClose=close;window.mmSpecialistLesson=renderLesson;window.mmSpecialistPractice=practice;window.mmSpecialistToggle=toggle;
-window.MM_SPECIALIST_CURRICULUM={version:VERSION,coreLessonCount:120,optional:true,lessons:LESSONS.map(l=>({id:l.id,title:l.title,level:l.level,coreLessons:[...l.coreLessons],practices:l.practices.map(p=>({...p}))})),open,scope:'Optional formative specialist learning; canonical 120-lesson completion path and formal assessment/certificate rules are unchanged; no production recipe.'};
+window.MM_SPECIALIST_CURRICULUM={version:VERSION,coreLessonCount:120,optional:true,lessons:LESSONS.map(l=>({id:l.id,title:l.title,level:l.level,coreLessons:[...l.coreLessons],practices:l.practices.map(p=>({...p}))})),isComplete:isDone,open,scope:'Optional formative specialist learning; canonical 120-lesson completion path and formal assessment/certificate rules are unchanged; no production recipe.'};
 window.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
 if(typeof currentView==='string'&&currentView==='dashboard')decorateDashboard(false);
 })();
@@ -572,16 +592,40 @@ const LESSONS=[
 ];
 
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function learnerToken(){
-  let raw='anonymous';
-  try{if(typeof user!=='undefined'&&user?.id)raw=String(user.id);else if(window.db?.activeUser)raw=String(window.db.activeUser)}catch(_){}
-  let h=2166136261;for(let i=0;i<raw.length;i++){h^=raw.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(36)
+// Evidence-gap completion has its own namespace, but the same collision-safe
+// learner scope as the other 12 specialist lessons. Only uniquely owned legacy
+// progress migrates; an ambiguous 32-bit hash is quarantined, not reassigned.
+const GAP_STORAGE_PREFIX=`${STORAGE_BASE}::`;
+let registeredLearnerScope=null;
+function gapScope(){
+  // Runtime packs execute before the asynchronous domain manifest installs
+  // MM_LEARNER_SCOPE. Rebind lazily; an absent scope must never fall back to
+  // the old collision-prone learner hash or a shared anonymous bucket.
+  const scope=window.MM_LEARNER_SCOPE;
+  if(!scope?.token||!scope?.storageKey||!scope?.registerStoragePrefix)return null;
+  if(scope!==registeredLearnerScope){
+    try{scope.registerStoragePrefix(GAP_STORAGE_PREFIX);registeredLearnerScope=scope}catch(_){return null}
+  }
+  return scope;
 }
-function key(base){return `${base}::${learnerToken()}`}
-function readKey(base){try{const x=JSON.parse(localStorage.getItem(key(base))||'{}');return x&&typeof x==='object'?x:{}}catch(_){return {}}}
-function writeGap(x){try{localStorage.setItem(key(STORAGE_BASE),JSON.stringify(x))}catch(_){}}
+function key(base){
+  const scope=gapScope();if(!scope)return null;
+  try{return scope.storageKey(`${base}::`,scope.token())}catch(_){return null}
+}
+function readKey(base){
+  const scoped=key(base);if(!scoped)return {};
+  try{const x=JSON.parse(localStorage.getItem(scoped)||'{}');return x&&typeof x==='object'&&!Array.isArray(x)?x:{}}catch(_){return {}}
+}
+function writeGap(x){
+  const scoped=key(STORAGE_BASE);if(!scoped)return false;
+  try{const payload=JSON.stringify(x);localStorage.setItem(scoped,payload);return localStorage.getItem(scoped)===payload}catch(_){return false}
+}
 function gapDone(id){return !!readKey(STORAGE_BASE)[id]}
-function setGapDone(id,done){const s=readKey(STORAGE_BASE);if(done)s[id]=true;else delete s[id];writeGap(s);patchDashboard();}
+function setGapDone(id,done){
+  const s=readKey(STORAGE_BASE);if(done)s[id]=true;else delete s[id];
+  writeGap(s);patchDashboard();
+  window.dispatchEvent(new CustomEvent('mm:specialist-progress-change',{detail:{id,completed:gapDone(id)}}));
+}
 function baseDoneCount(){return Object.keys(readKey(BASE_STORAGE)).filter(id=>/^S(?:0[1-9]|1[0-2])$/.test(id)).length}
 function gapDoneCount(){return LESSONS.filter(x=>gapDone(x.id)).length}
 function totalDone(){return baseDoneCount()+gapDoneCount()}
@@ -622,7 +666,11 @@ function patchCatalog(){
 }
 function openGapLesson(id){
   const l=LESSONS.find(x=>x.id===id);if(!l)return;
-  ensureStyle();const modal=document.getElementById('mmSpecialistModal');if(!modal){window.mmSpecialistOpen?.();return setTimeout(()=>openGapLesson(id),0)}
+  ensureStyle();const modal=document.getElementById('mmSpecialistModal');if(!modal){
+    // The unified Learn router overrides mmSpecialistOpen. Only the captured
+    // base launcher creates the modal, so use it for the first gap lesson.
+    baseOpen();return openGapLesson(id)
+  }
   modal.classList.remove('hidden');const body=document.getElementById('mmSpecialistBody'),title=document.getElementById('mmSpecialistTitle');if(!body||!title)return;title.textContent=l.title;
   const coreButtons=l.coreLessons.map(n=>{const x=coreLesson(n);return x?`<button class="ghost" type="button" data-mm-onclick="mmSpecialistPractice('core','${n}')">${n}. ${esc(x.title)}</button>`:''}).join('');
   body.innerHTML=boundary()+`<button class="ghost" type="button" data-mm-onclick="mmSpecialistOpen()">← All specialist extensions</button><section class="mm-specialist-section"><span class="mm-specialist-eyebrow">Gap this closes</span><p>${esc(l.gap)}</p><div class="mm-specialist-evidence-state">${evidenceStateMarkup(l)}</div></section><section class="mm-specialist-section"><h3>Learning objectives</h3><ul>${l.objectives.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section><section class="mm-specialist-section"><h3>Key engineering points</h3><ul>${l.keypoints.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section><section class="mm-specialist-section mm-specialist-evidence"><h3>Evidence task</h3><p>${esc(l.evidenceTask)}</p></section><section class="mm-specialist-section"><h3>Linked core learning</h3><div class="mm-specialist-core">${coreButtons}</div></section><section class="mm-specialist-section"><h3>Apply the extension</h3><p>Use established formative learning to examine the mechanism without turning study-specific evidence into a universal production rule.</p><div class="mm-specialist-actions">${l.practices.map((p,i)=>`<button class="secondary" type="button" data-mm-onclick="mmSpecialistPractice('${p.type}','${esc(p.id||'')}')">${esc(p.label||`Practice ${i+1}`)}</button>`).join('')}</div></section><div class="mm-specialist-done-row"><span>${gapDone(l.id)?'Completed locally ✓':'Optional completion is stored only on this device for this learner.'}</span><button class="primary" type="button" data-mm-onclick="mmSpecialistGapToggle('${l.id}')">${gapDone(l.id)?'Mark incomplete':'Mark specialist lesson complete'}</button></div>`;
@@ -643,7 +691,7 @@ if(priorRenderDashboard){renderDashboard=function(){priorRenderDashboard();patch
 
 for(const l of LESSONS){BASE.lessons.push({id:l.id,title:l.title,level:l.level,coreLessons:[...l.coreLessons],practices:l.practices.map(p=>({...p})),evidenceArea:l.evidenceArea,evidenceStatus:l.evidenceStatus})}
 BASE.evidenceGapExtension={version:VERSION,lessonCount:LESSONS.length,status:'Registry-controlled',scope:'Optional formative evidence-gap learning; does not alter the canonical 120 lessons, formal assessment answers or certificate requirements.'};
-window.MM_SPECIALIST_EVIDENCE_GAPS={version:VERSION,optional:true,lessonCount:LESSONS.length,lessons:LESSONS.map(l=>({id:l.id,title:l.title,evidenceArea:l.evidenceArea,evidenceStatus:l.evidenceStatus,coreLessons:[...l.coreLessons]})),open:window.mmSpecialistOpen,scope:BASE.evidenceGapExtension.scope};
+window.MM_SPECIALIST_EVIDENCE_GAPS={version:VERSION,optional:true,lessonCount:LESSONS.length,lessons:LESSONS.map(l=>({id:l.id,title:l.title,evidenceArea:l.evidenceArea,evidenceStatus:l.evidenceStatus,coreLessons:[...l.coreLessons]})),open:window.mmSpecialistOpen,isComplete:gapDone,scope:BASE.evidenceGapExtension.scope};
 if(typeof currentView==='string'&&currentView==='dashboard')patchDashboard();
 })();
 /* <<< specialist-evidence-gap-extension.js */

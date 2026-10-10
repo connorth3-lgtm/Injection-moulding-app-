@@ -283,7 +283,11 @@ test('UI audit contract: one page title, compact header actions, useful Home, de
   await openLearnHub(page);
   await expect(page.locator('body[data-mm-view="path"] .topbar>div:first-child')).toBeHidden();
   await expect(page.locator('#path .mm-primary-hub-head h1')).toHaveCount(1);
-  expect(await page.locator('#path .mm-hub-grid').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length)).toBe(2);
+  // Learn is now a unified 176-lesson catalogue, not the removed shortcut-tile grid.
+  await expect(page.locator('#path .mm-all-lessons')).toBeVisible();
+  await expect(page.locator('#path [data-mm-catalog-item]')).toHaveCount(176);
+  const learnOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(learnOverflow).toBeLessThanOrEqual(2);
 
   await openPracticeHub(page);
   await expect(page.locator('body[data-mm-view="scenarios"] .topbar>div:first-child')).toBeHidden();
@@ -303,9 +307,7 @@ test('UI audit contract: one page title, compact header actions, useful Home, de
   expect(overlap).toBeFalsy();
 });
 
-test('active Mission Control does not cover Book or clip context on Android-size Home',async({page})=>{
-  // Regression for a user Android capture: stage bar over Book CTA and clipped context.
-  // Assert rendered browser geometry, not just the presence of CSS strings.
+test('Mission Control is absent on small Home but remains unclipped in Practice',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   await page.waitForFunction(()=>Boolean(window.MM_MISSION_CONTROL?.startMission));
@@ -323,28 +325,29 @@ test('active Mission Control does not cover Book or clip context on Android-size
       caseId:'QA-MOBILE-CONTEXT-CASE'
     }
   }));
-  await expect(mc.locator('.mm-mc-timeline')).toBeVisible();
-  await expect(book).toBeVisible();
-  await expect(mc.locator('[data-mm-mc-stage]')).toHaveCount(8);
-
   for(const width of [320,360,390,412]){
     await page.setViewportSize({width,height:844});
-    await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+    await page.evaluate(()=>switchView('dashboard'));
+    await expect(mc.locator('.mm-mc-context')).toBeHidden();
+    await expect(mc.locator('.mm-mc-timeline')).toBeHidden();
+    await expect(page.locator('#dashboard .mm-mc-home-card')).toBeHidden();
+    await expect(book).toBeVisible();
+    await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
+    const homeOverflow=await page.evaluate(()=>
+      document.documentElement.scrollWidth-document.documentElement.clientWidth);
+    expect(homeOverflow,'Home does not overflow at '+width).toBeLessThanOrEqual(1);
+
+    await page.evaluate(()=>switchView('scenarios'));
+    await expect(mc.locator('.mm-mc-context')).toBeVisible();
+    await expect(mc.locator('.mm-mc-timeline')).toBeVisible();
+    await expect(mc.locator('[data-mm-mc-stage]')).toHaveCount(8);
     const geometry=await page.evaluate(()=>{
-      const root=document.querySelector('#mmMissionControl');
-      const context=root.querySelector('.mm-mc-context-items');
-      const timeline=root.querySelector('.mm-mc-timeline');
-      const next=root.querySelector('[data-mm-mc-next]');
-      const stages=[...root.querySelectorAll('[data-mm-mc-stage]')];
-      const focus=document.querySelector('#dashboard .mm-today-focus');
-      const book=document.querySelector('#dashboard [data-mm-home-book]');
-      const main=document.querySelector('main.main')||document.querySelector('.main');
-      const cr=context.getBoundingClientRect();
-      const tr=timeline.getBoundingClientRect();
-      const fr=focus.getBoundingClientRect();
-      const br=book.getBoundingClientRect();
-      const overlap=(a,b)=>a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top;
-      const visibleText=[...context.querySelectorAll('b')].every(label=>{
+      const context=document.querySelector('#mmMissionControl .mm-mc-context-items');
+      const timeline=document.querySelector('#mmMissionControl .mm-mc-timeline');
+      const next=document.querySelector('#mmMissionControl [data-mm-mc-next]');
+      const stages=[...document.querySelectorAll('#mmMissionControl [data-mm-mc-stage]')];
+      const cr=context.getBoundingClientRect(),tr=timeline.getBoundingClientRect();
+      const contextFits=[...context.querySelectorAll('b')].every(label=>{
         const box=label.getBoundingClientRect();
         return box.left>=cr.left-1&&box.right<=cr.right+1&&
           label.scrollWidth<=label.clientWidth+1;
@@ -353,36 +356,26 @@ test('active Mission Control does not cover Book or clip context on Android-size
         position:getComputedStyle(timeline).position,
         columns:getComputedStyle(context).gridTemplateColumns.trim().split(/\s+/).length,
         contextScroll:context.scrollWidth-context.clientWidth,
-        contextFits:visibleText,
-        contextBottom:cr.bottom,
-        stageTop:tr.top,stageBottom:tr.bottom,
-        firstCardTop:fr.top,bookTop:br.top,
-        overlapsFocus:overlap(tr,fr),
-        overlapsBook:overlap(tr,br),
+        contextFits,
+        stageTop:tr.top,contextBottom:cr.bottom,
         nextHeight:next.getBoundingClientRect().height,
         minStageHeight:Math.min(...stages.map(el=>el.getBoundingClientRect().height)),
-        totalOverflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
-        mainPaddingBottom:parseFloat(getComputedStyle(main).paddingBottom)
+        overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth
       };
     });
-    expect(geometry.position,'stage bar must be in normal flow at '+width).not.toBe('fixed');
-    expect(geometry.position,'stage bar must not float over cards at '+width).not.toBe('sticky');
-    expect(geometry.stageTop,'timeline follows context at '+width).toBeGreaterThanOrEqual(geometry.contextBottom-2);
-    expect(geometry.firstCardTop,'focus follows timeline at '+width).toBeGreaterThanOrEqual(geometry.stageBottom-2);
-    expect(geometry.bookTop,'Book follows timeline at '+width).toBeGreaterThanOrEqual(geometry.stageBottom-2);
-    expect(geometry.overlapsFocus).toBe(false);
-    expect(geometry.overlapsBook).toBe(false);
-    expect(geometry.columns,'no horizontally clipped context at '+width).toBe(width<=320?1:2);
-    expect(geometry.contextScroll,'context must not scroll sideways at '+width).toBeLessThanOrEqual(1);
-    expect(geometry.contextFits,'every context value must fit at '+width).toBe(true);
-    expect(geometry.totalOverflow,'no page-wide horizontal overflow at '+width).toBeLessThanOrEqual(1);
+    expect(geometry.position).not.toBe('fixed');
+    expect(geometry.position).not.toBe('sticky');
+    expect(geometry.stageTop).toBeGreaterThanOrEqual(geometry.contextBottom-2);
+    expect(geometry.columns,'context columns at '+width).toBe(width<=320?1:2);
+    expect(geometry.contextScroll).toBeLessThanOrEqual(1);
+    expect(geometry.contextFits,'unclipped context at '+width).toBe(true);
     expect(geometry.nextHeight).toBeGreaterThanOrEqual(44);
     expect(geometry.minStageHeight).toBeGreaterThanOrEqual(44);
-    expect(geometry.mainPaddingBottom).toBeGreaterThan(0);
+    expect(geometry.overflow).toBeLessThanOrEqual(1);
   }
 
-  // The Book CTA must remain tappable when scrolled into view.
   await page.setViewportSize({width:390,height:844});
+  await page.evaluate(()=>switchView('dashboard'));
   const button=book.locator('button').first();
   await button.scrollIntoViewIfNeeded();
   const unobstructed=await button.evaluate(btn=>{
@@ -392,5 +385,6 @@ test('active Mission Control does not cover Book or clip context on Android-size
     const top=document.elementFromPoint(x,y);
     return Boolean(top&&(top===btn||btn.contains(top)));
   });
-  expect(unobstructed,'Book CTA must not be masked by mission or mobile chrome').toBe(true);
+  expect(unobstructed,'Book CTA remains tappable on uncluttered Home').toBe(true);
 });
+

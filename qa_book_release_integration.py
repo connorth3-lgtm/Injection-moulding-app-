@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import hashlib
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -346,7 +348,7 @@ need("for(let node=start?.parentElement;node&&node!==document.body;node=node.par
 need("if(isDocumentScrollRoot(root)){window.scrollBy(0,amount);return}" in book_runtime and "if(isDocumentScrollRoot(root)){window.scrollTo(0,value);return}" in book_runtime and "root.scrollTop=(Number(root.scrollTop)||0)+amount" in book_runtime and "root.scrollTop=value" in book_runtime, 'Book resume scrolling must use browser-native document scrolling and direct nested-root scrolling so restoration is instant and independent of global smooth-scroll CSS')
 need("anchorOffsetId:anchor.anchorOffsetId" in book_runtime and "offsetIdentity===anchorId" in book_runtime, 'Book resume pixel offsets must remain bound to the stable anchor identity that produced them')
 need("activationTop=top+24" in book_runtime and "x.rect.top<=activationTop" in book_runtime, 'Book resume anchor selection must treat headings in the near-top reading band as current so a visually active heading is not saved as the previous section')
-need("scrollBookBy(delta)" in book_runtime and "await alignReadingAnchor(heading,desired)" in book_runtime and "else scrollBookTo(snapshot.scrollY)" in book_runtime, 'Book resume restoration must deterministically align anchors and fallback scroll positions through the active scroll root')
+need("scrollBookBy(delta)" in book_runtime and "await alignReadingAnchor(heading,desired)" in book_runtime and "else if(snapshot.bookRelease===VERSION)scrollBookTo(snapshot.scrollY)" in book_runtime and "else scrollBookBy(ui.reader.getBoundingClientRect().top-bookViewportTop())" in book_runtime, 'Book resume must align stable anchors, retain same-release scroll fallback and avoid stale absolute-scroll guesses after upgrade')
 need("setBookInstantScroll(true)" in book_runtime and "setBookInstantScroll(false)" in book_runtime, 'Book open/leave lifecycle must isolate Book scrolling from legacy global smooth-scroll CSS')
 need("showContents({restoreScroll:false});scrollBookTo(0)" in book_runtime, 'Book open must not race a delayed contents-scroll restore against Keep Reading')
 need('getClaimEvidenceReference' in book_runtime and 'getClaimEvidenceReference' in claim_trace_runtime, 'complete claim trace must reconcile against the governed final claim-evidence index')
@@ -378,8 +380,11 @@ need('function proseHtml(value)' in book_runtime and 'words.length<=90' in book_
 need('const metaList=' in book_runtime and 'No separate assumptions list is declared' in book_runtime and 'No separate units list is declared' in book_runtime, 'Book reader worked examples must present consistent assumptions/units metadata')
 need('Reasoning scenario:' in book_runtime and 'Chapter depth:' in book_runtime and 'Depth labels:' in book_runtime, 'Book reader pedagogy/depth clarification missing')
 need('readerKeyTermsHtml' in book_runtime and 'readerTermGuideHtml' in book_runtime and 'Chapter thread:' in book_runtime and 'Key-term guide' in book_runtime, 'Book first-read chapter-thread/key-term navigation missing')
-need('mm-book-reader-scope' in book_runtime and 'Applicability and scope' in book_runtime, 'Book first-read applicability progressive disclosure missing')
+need(all(s in book_runtime for s in ('mm-book-scope-note','<strong>Applicability:</strong>','mm-book-review-warning','Review boundary:')), 'Book prose must keep visible scope and incomplete independent technical review warnings')
 need('mm-book-reader-worked-case' in book_runtime and 'Worked example:' in book_runtime and 'synthetic teaching data' in book_runtime, 'Book first-read worked-example progressive disclosure missing')
+need('mm-book-toc' in book_runtime and 'mm-book-toc-number' in book_runtime, 'Book chapter titles must remain visible in the table of contents')
+need('mm-book-page-turn' in book_runtime and 'Next chapter' in book_runtime, 'Sequential chapter navigation missing')
+need(all(s in book_runtime for s in ('mm-book-reader-notes','mm-book-reader-study','readerModuleEvidenceHtml(ch)','readerReferencesHtml(reader,modules)','readerLearningHtml(reader)')), 'Book end matter must retain original module sources, chapter references and learning questions')
 need(reader_architecture.get('firstReadPolicy') and 'progressive disclosure' in reader_architecture.get('firstReadPolicy'), 'Book first-read policy missing from governed reader architecture')
 need(all(row.get('readingThread') and 3 <= len(row.get('keyTerms') or []) <= 8 for row in readers), 'Book first-read chapter threads/key terms incomplete')
 need(authorization.get('readerArchitectureAuthorization',{}).get('firstReadPresentation',{}).get('workedExamplesOptionalExpand') is True, 'Book first-read presentation authorization missing')
@@ -391,6 +396,9 @@ extra = desktop['build']['extraResources']
 need(any(x.get('from') == '../../src/domains' and x.get('to') == 'mouldmaster/src/domains' for x in extra), 'desktop package no longer carries canonical domain runtime/data')
 need("'src/domains/learning/book-data'" in integrity_script, 'desktop integrity manifest no longer includes Book data')
 need('STATIC_DATA_DIRS.flatMap(filesUnder)' in integrity_script, 'desktop static-data integrity enumeration missing')
+
+subprocess.run([sys.executable, str(ROOT / 'qa_book_first_read_audit.py'), '--check'], cwd=ROOT, check=True)
+subprocess.run([sys.executable, str(ROOT / 'qa_pwa_precache_inventory.py'), '--check'], cwd=ROOT, check=True)
 
 print('PASS: Book uses one canonical runtime with exact-byte publication binding and fail-closed authorization.')
 print('PASS: dynamic scripts are release-versioned before late loaders, Book is globally searchable, and learner-facing academic evidence uses canonical DOI links.')
