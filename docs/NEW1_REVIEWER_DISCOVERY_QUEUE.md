@@ -171,6 +171,50 @@ competency/practice applicability, and use a separately governed review
 process for any genuine acceptance. All SME, physical-device/AT,
 offline/privacy, provider and production gates remain HOLD.
 
+### Structured LOCAL draft for human input (format checks only)
+
+The narrative worksheet above is useful for reading; when a qualified reviewer
+needs an **editable structured draft**, generate a separate local JSON file with
+every section explicitly `UNDECIDED`. This is not a public review record:
+
+```bash
+python tools/new1_review_draft.py --lesson-id 1 --chapter-id what-injection-moulding-is --template > local-private-new1-review.json
+# Human owner may edit their copy offline. For example, record exact passages,
+# source assessment and reasoning without publishing private reviewer data.
+python tools/new1_review_draft.py --lesson-id 1 --chapter-id what-injection-moulding-is --check-local local-private-new1-review.json
+```
+
+The author-only template binds the 120-lesson source and 46-module Book
+authoring to the currently pinned publication, entire Book source inventory,
+individual section SHA-256s and exact module/candidate membership.
+Fields describing identity, section order and hashes are immutable. A
+human may fill the section decision (exact fit, partial, unsuitable, new
+authoring required), lesson passage reference, rationale, source assessment,
+scope limitations, evidence pointer and source IDs they examined. Sections
+left `UNDECIDED` must remain completely empty; typed decisions require
+substantive text entries, but **the tool cannot determine whether any
+statement or reviewer is authentic**.
+
+The local linter rejects changed source hashes, source or Book identities,
+duplicate JSON keys, invented approvals/unknown fields, invalid section
+order, unfamiliar reference IDs, unsupported decisions, ambiguous types and
+unbounded or contradictory draft content. It returns only
+`UNSUBMITTED — FORMAT VALIDATED ONLY` plus counts of entered/undecided
+sections. Every authority flag remains explicitly **false**, including
+`semanticEquivalenceVerified`, `humanSMEApprovalVerified`,
+`approvedPublicLinks`, `learnerCreditAuthorized` and
+`submissionAccepted`. Neither CLI mode writes the repository, sends data
+to a service, fills in semantic answers, or elevates this draft into the
+separate `reviewedLinks` approval registry.
+
+**Keep filled local reviewer drafts/private citations out of the public
+repository.** Format-complete text is *not* evidence that external sources
+were visited, their terms permit reuse, the Book passage really matches
+the lesson, a qualified SME approved anything or production release is
+authorized. That requires independent human verification and governed
+signoff outside this tool, including separate competency/practice and
+device/AT/offline/learner-isolation acceptance.
+
 ## Human review workflow, still outstanding under #521
 
 1. A qualified author opens the actual lesson content and the actual Book passage. A common course label is **discovery only**; it is not a reason to publish a link.
