@@ -509,3 +509,24 @@ button:disabled,[aria-disabled="true"]{
 @media(max-width:800px){.mm-dx-layout{grid-template-columns:1fr}.mm-dx-library{max-height:280px;grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){.mm-dx-library,.mm-dx-fields{grid-template-columns:1fr}.mm-dx-pane{padding:15px}.mm-dx-hero{padding:18px}.mm-dx-actions button{width:100%}}
 @media(prefers-reduced-motion:reduce){.mm-dx-workbench *{scroll-behavior:auto!important}}
+
+/* Keep the material catalogue in view on phones: advanced facets open on demand. */
+#materials .mm-material-all-search{display:flex;align-items:end;flex-wrap:wrap;gap:10px;margin:12px 0 8px}
+#materials .mm-material-all-search label{display:block;flex:1 1 240px;min-width:0}
+#materials .mm-material-all-search input{width:100%;max-width:100%;min-height:44px;margin-top:6px}
+#materials .mm-material-all-search button{min-height:44px}
+#materials .mm-material-all-search button[hidden]{display:none!important}
+#materials .mm-material-all-filters{margin:9px 0 12px;border:1px solid rgba(141,179,210,.28);border-radius:12px;background:rgba(7,22,35,.48);min-width:0}
+#materials .mm-material-all-filters summary{display:flex;align-items:center;gap:12px;min-height:46px;padding:11px 13px;cursor:pointer;list-style:none;font-weight:700}
+#materials .mm-material-all-filters summary::-webkit-details-marker{display:none}
+#materials .mm-material-all-filters summary::after{content:"⌄";font-size:21px;line-height:1;margin-left:0}
+#materials .mm-material-all-filters[open] summary::after{transform:rotate(180deg)}
+#materials .mm-material-all-filters [data-mm-all-material-filter-count]{margin-left:auto;font-size:12px;font-weight:600;color:var(--muted,#aebfd1)}
+#materials .mm-material-all-filters .mm-material-all-index-controls{padding:0 12px 12px;min-width:0}
+#materials .mm-material-all-filters select{min-width:0;max-width:100%}
+#materials .mm-material-all-filters summary:focus-visible{outline:2px solid #74dcc6;outline-offset:2px;border-radius:10px}
+@media(max-width:700px){
+  #materials .mm-material-all-search{display:block}
+  #materials .mm-material-all-search button:not([hidden]){width:100%;margin-top:8px}
+  #materials .mm-material-all-filters .mm-material-all-index-controls{grid-template-columns:minmax(0,1fr)!important}
+}
