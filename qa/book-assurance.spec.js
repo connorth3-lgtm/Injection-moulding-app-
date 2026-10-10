@@ -109,9 +109,40 @@ test('Cold global search finds exact-grade Book material chapter without loading
   await input.fill('DURACON M90-44');
   await expect(page.locator('[data-mm-book-search-result]')).not.toHaveCount(0);
   await expect(page.locator('[data-mm-book-search-result]').first()).toContainText('Book:');
+  await input.fill('D');
+  await expect(page.locator('[data-mm-book-search-result]')).toHaveCount(0);
+  await input.fill('DURACON M90-44');
+  await expect(page.locator('[data-mm-book-search-result]')).not.toHaveCount(0);
   expect(await page.evaluate(()=>window.MMBook.getMaterialCatalog())).toBeNull();
   expect(await page.evaluate(()=>window.MMBook.getMaterialRegionalEvidence())).toBeNull();
   const resources=await page.evaluate(()=>performance.getEntriesByType('resource').map(entry=>entry.name));
   expect(resources.some(url=>url.includes('book-material-regional-evidence-v1.json'))).toBeFalsy();
 });
 
+
+
+test('Book ignores a delayed chapter load after switching back to Home',async({page})=>{
+  await openApp(page);
+  expect(await page.evaluate(()=>window.MMBook.getManifest())).toBeNull();
+  let unblockRequest,requestStarted;
+  const blocked=new Promise(resolve=>{unblockRequest=resolve;});
+  const requested=new Promise(resolve=>{requestStarted=resolve;});
+  await page.route('**/book-publication-authorization-v1.json',async route=>{
+    requestStarted();
+    await blocked;
+    await route.continue();
+  });
+  try{
+    await page.evaluate(()=>{void window.MMBook.openReaderChapter('r01');});
+    await requested;
+    await expect(page.locator('#mmBookView')).toBeVisible();
+    await page.evaluate(()=>window.switchView('dashboard'));
+    await expect(page.locator('#dashboard')).toBeVisible();
+    await expect(page.locator('#mmBookView')).toBeHidden();
+    unblockRequest();
+    await page.waitForFunction(()=>Boolean(window.MMBook.getManifest()));
+    await expect(page.locator('#mmBookView [data-mm-book-reader-chapter]')).toHaveCount(0);
+    await expect(page.locator('#nav [data-mm-book-tab].active')).toHaveCount(0);
+    expect(await page.evaluate(()=>document.documentElement.classList.contains('mm-book-instant-scroll'))).toBe(false);
+  }finally{unblockRequest();}
+});
