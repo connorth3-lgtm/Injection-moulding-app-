@@ -101,6 +101,8 @@ test('phone Book is a simple contents page, original intro and sources preserved
   await page.evaluate(async()=>{window.MMBook.open();await window.MMBook.load();});
   const contents=page.locator('#mmBookView [data-mm-book-contents]');
   await expect(contents).toBeVisible();
+  // Actual document order puts chapters ahead of optional publication utilities.
+  expect(await page.locator('#mmBookView').evaluate(view=>Array.from(view.children).indexOf(view.querySelector('[data-mm-book-contents]'))<Array.from(view.children).indexOf(view.querySelector('[data-mm-book-hero]')))).toBe(true);
   const intro=page.locator('#mmBookView .mm-book-intro-details');
   await expect(intro).toHaveCount(1);
   await expect(intro).not.toHaveAttribute('open');
