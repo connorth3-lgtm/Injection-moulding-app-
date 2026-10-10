@@ -54,23 +54,47 @@ test('temporary search restores the learner’s expanded courses instead of open
   expect(await second.evaluate(el=>el.open)).toBe(true);
   expect(await third.evaluate(el=>el.open)).toBe(false);
 });
-test('lesson reader includes the same library, not an extra 10-lesson sidebar',async({page})=>{
+test('lesson reader links back to Learn rather than rendering a second lesson catalogue',async({page})=>{
   await ready(page);
   await page.locator('#path [data-mm-catalog-group]').nth(1).locator('summary').first().click();
   await page.locator('#path [data-mm-lesson-id="12"]').click();
   await expect(page.locator('#lesson')).toBeVisible();
   await expect(page.locator('#lesson .lesson-side')).toHaveCount(0);
-  const drawer=page.locator('#lesson .mm-lessons-drawer');
-  await expect(drawer).toBeVisible();
-  await drawer.locator('summary').first().click();
-  await expect(drawer.locator('[data-mm-lesson-id]')).toHaveCount(120);
-  await expect(drawer.locator('[data-mm-specialist-id]')).toHaveCount(20);
-  await drawer.locator('[data-mm-catalog-query]').fill('zzzz-no-match');
-  await expect(drawer.locator('[data-mm-catalog-empty]')).toBeVisible();
-  await drawer.locator('[data-mm-catalog-query]').fill('');
-  await drawer.locator('[data-mm-lesson-id="9"]').click();
-  await expect(page.locator('#lesson .mm-simple-lesson-hero')).toContainText('9');
-  expect(await page.evaluate(()=>user.currentLesson)).toBe(9);
+  await expect(page.locator('#lesson .mm-lessons-drawer,#lesson .mm-all-lessons')).toHaveCount(0);
+  const returnLink=page.locator('#lesson .mm-lesson-catalog-return button');
+  await expect(returnLink).toHaveText('← All lessons');
+  await returnLink.click();
+  await expect(page.locator('#path .mm-all-lessons')).toBeVisible();
+  await expect(page.locator('#path [data-mm-lesson-id]')).toHaveCount(120);
+  await expect(page.locator('#path [data-mm-specialist-id]')).toHaveCount(20);
+});
+
+test('saved lesson cards and duplicate specialist grids are removed from other views',async({page})=>{
+  await ready(page);
+  await page.evaluate(()=>switchView('profile'));
+  await expect(page.locator('#profile .form-card')).toHaveCount(2);
+  await expect(page.locator('#profile .course-card')).toHaveCount(0);
+  await expect(page.locator('#profile .section-head').filter({hasText:'Saved lessons'})).toHaveCount(0);
+  await page.evaluate(()=>window.MM_LESSON_CATALOG.open({filter:'saved'}));
+  const library=page.locator('#path .mm-all-lessons');
+  await expect(library.locator('[data-mm-catalog-count]')).toHaveText('2 lessons shown');
+  await expect(library.locator('[data-mm-catalog-filter]')).toHaveValue('saved');
+  await page.evaluate(()=>switchView('dashboard'));
+  await expect(page.locator('#dashboard #mmSpecialistDashboard')).toHaveCount(0);
+});
+
+test('legacy specialist launch opens the filtered Learn catalogue, not a second modal grid',async({page})=>{
+  await ready(page);
+  await page.evaluate(()=>window.MM_SPECIALIST_CURRICULUM.open());
+  await expect(page.locator('#path .mm-all-lessons')).toBeVisible();
+  await expect(page.locator('#path [data-mm-catalog-filter]')).toHaveValue('specialist');
+  await expect(page.locator('#path [data-mm-catalog-count]')).toHaveText('20 lessons shown');
+  await expect(page.locator('#mmSpecialistModal')).toBeHidden();
+  await page.locator('#path [data-mm-specialist-id="S01"]').click();
+  await expect(page.locator('#mmSpecialistModal')).toBeVisible();
+  await page.locator('#mmSpecialistBody').getByRole('button',{name:/All specialist extensions/}).click();
+  await expect(page.locator('#mmSpecialistModal')).toBeHidden();
+  await expect(page.locator('#path [data-mm-catalog-filter]')).toHaveValue('specialist');
 });
 test('optional specialist selection opens its authored content without awarding core credit',async({page})=>{
   await ready(page);
