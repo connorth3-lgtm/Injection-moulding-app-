@@ -509,3 +509,44 @@ button:disabled,[aria-disabled="true"]{
 @media(max-width:800px){.mm-dx-layout{grid-template-columns:1fr}.mm-dx-library{max-height:280px;grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){.mm-dx-library,.mm-dx-fields{grid-template-columns:1fr}.mm-dx-pane{padding:15px}.mm-dx-hero{padding:18px}.mm-dx-actions button{width:100%}}
 @media(prefers-reduced-motion:reduce){.mm-dx-workbench *{scroll-behavior:auto!important}}
+
+
+/* Unified Learn / lesson catalogue — all canonical and optional specialist lessons. */
+.mm-all-lessons{margin:20px 0;padding:18px;border:1px solid #304a68;border-radius:17px;background:#0f2035;min-width:0}
+.mm-catalog-head h2{margin:0 0 5px;font-size:clamp(21px,3vw,26px);line-height:1.2}
+.mm-catalog-head p{margin:0 0 15px;color:#bccfe3;line-height:1.5}
+.mm-catalog-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(150px,210px);gap:10px}
+.mm-catalog-controls label{display:flex;flex-direction:column;gap:5px;min-width:0;color:#cde0f3;font-size:13px;font-weight:700}
+.mm-catalog-controls input,.mm-catalog-controls select{width:100%;min-width:0;min-height:46px;background:#09182a;border:1px solid #466584;border-radius:11px;color:#f1f7ff;padding:10px 12px;font:inherit;font-size:15px}
+.mm-catalog-controls :is(input,select):focus-visible,.mm-catalog-lesson:focus-visible,.mm-catalog-group summary:focus-visible{outline:3px solid #73ceff;outline-offset:2px}
+.mm-catalog-results{margin:12px 0 8px;color:#c0d4e7;font-size:13px}
+.mm-catalog-groups{display:grid;gap:8px}
+.mm-catalog-group{border:1px solid #324e6a;background:#10273d;border-radius:12px;overflow:hidden;min-width:0}
+.mm-catalog-group summary{cursor:pointer;display:flex;justify-content:space-between;gap:12px;align-items:center;padding:13px 15px;font-weight:750;line-height:1.4;list-style-position:inside}
+.mm-catalog-group summary::marker{color:#8dcae9}
+.mm-catalog-group-name{flex:1;min-width:0}
+.mm-catalog-group-meta{font-size:12px;font-weight:650;color:#b6cae0;flex-shrink:0}
+.mm-catalog-rows{display:grid;padding:5px 8px 8px;border-top:1px solid #304a68}
+.mm-catalog-lesson{display:grid;grid-template-columns:42px minmax(0,1fr) auto;align-items:center;gap:10px;width:100%;text-align:left;min-height:45px;padding:8px 9px;border:0;border-bottom:1px solid #284057;border-radius:8px;color:#eaf4ff;background:transparent;cursor:pointer;font:inherit}
+.mm-catalog-lesson:last-child{border-bottom:0}
+.mm-catalog-lesson:hover,.mm-catalog-lesson.is-current{background:#1a3b55}
+.mm-catalog-num{font-size:12px;color:#9dc4df;font-weight:800}
+.mm-catalog-title{font-size:14px;line-height:1.4;overflow-wrap:anywhere}
+.mm-catalog-state{font-size:12px;color:#9dc7d6;white-space:nowrap}
+.mm-catalog-empty{color:#bed0df;font-size:14px;padding:14px 0}
+.mm-all-lessons [hidden],.mm-catalog-group[hidden],.mm-catalog-lesson[hidden],.mm-catalog-empty[hidden]{display:none!important}
+.mm-catalog-extra{margin:12px 0 0}.mm-catalog-extra button{min-height:44px}
+#lesson.mm-unified-lesson .lesson-layout.mm-one-column-lesson{grid-template-columns:minmax(0,1fr)!important;max-width:860px;margin-inline:auto}
+#lesson .mm-lessons-drawer{max-width:860px;margin:0 auto 16px;border:1px solid #36516f;border-radius:14px;background:#102338;overflow:hidden}
+#lesson .mm-lessons-drawer>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;min-height:52px;padding:13px 17px;font-weight:800;list-style:inside}
+#lesson .mm-lessons-drawer>summary small{color:#a7c8df;font-weight:500;font-size:12px}
+#lesson .mm-lessons-drawer>.mm-all-lessons{margin:0;border:0;border-top:1px solid #36516f;border-radius:0;padding:15px}
+@media(max-width:640px){
+  .mm-all-lessons{padding:13px;margin:14px 0}
+  .mm-catalog-controls{grid-template-columns:1fr}
+  .mm-catalog-group summary{align-items:flex-start;flex-wrap:wrap;gap:5px;padding:12px}
+  .mm-catalog-group-meta{width:100%;padding-left:18px}
+  .mm-catalog-lesson{grid-template-columns:33px minmax(0,1fr);gap:6px}
+  .mm-catalog-state{grid-column:2;padding-bottom:2px}
+  #lesson .mm-lessons-drawer>summary{align-items:flex-start;flex-direction:column;gap:3px}
+}
