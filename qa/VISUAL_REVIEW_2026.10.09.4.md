@@ -1,5 +1,7 @@
 # Visual change review packet — proposed MouldMaster 2026.10.09.4
 
+**Historical release record (2026.10.09.4 only).** This packet records the state observed on 9 October 2026 before the later `.5` integration. It does not describe the latest protected `main` or deployed preview. Current `.5` release evidence is governed separately; all independent human/device/provider validations and production-root authorization remain on HOLD.
+
 **Status: OWNER APPROVED THE PROPOSED TABLET/DESKTOP HOME LAYOUTS ON 2026-10-09; OTHER VISUAL/DEVICE/EXTERNAL APPROVALS REMAIN HOLD.**
 
 This packet captures the requested fixes for [issue #520](https://github.com/connorth3-lgtm/Injection-moulding-app-/issues/520) as presented by [PR #524](https://github.com/connorth3-lgtm/Injection-moulding-app-/pull/524), candidate source `5046956f90404caa0b676454cf97349f2a74ce8f`. Baseline stays `2026.10.08.6` at `5d5ce2fa6a1d827bd935e38d4a70e06be6f7edad`. Diff tolerance remains **12 pixels**, unchanged.

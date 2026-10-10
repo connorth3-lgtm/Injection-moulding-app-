@@ -11,7 +11,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
- 'web_release':'2026.10.09.4',
+ 'web_release':'2026.10.09.6',
  'android_release':'2026.08.26.2',
  'desktop_release':'2026.09.29.1',
  'content_version':'2026.08.26.1',
@@ -226,5 +226,6 @@ need('human' in accessibility_contract.get('boundary','').lower(),
 # Sharing the hosted preview is a separate fail-closed release operation.
 # The local check is fast and offline; the live URL check is operator-only.
 subprocess.run([sys.executable, str(ROOT / 'qa_tester_handoff.py')], cwd=ROOT, check=True)
+subprocess.run([sys.executable, str(ROOT / 'qa_tester_handoff_publication.py')], cwd=ROOT, check=True)
 
 print('MouldMaster release/documentation coherence QA passed')

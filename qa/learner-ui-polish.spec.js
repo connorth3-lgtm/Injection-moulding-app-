@@ -484,18 +484,60 @@ test('tablet bottom navigation keeps five touch targets on one row and clears th
   }
 });
 
-test('idle Home has a single mission CTA while persistent Mission Control and active timeline still work',async({page})=>{
+test('Home omits Mission Control panels but keeps mission data and Practice controls',async({page})=>{
   await page.setViewportSize({width:1440,height:900});
   await openApp(page);
-  await expect(page.locator('#mmMissionControl [data-mm-mc-palette]')).toBeVisible();
-  await expect(page.locator('#mmMissionControl .mm-mc-empty')).toHaveCount(0);
-  await expect(page.locator('#dashboard [data-mm-mc-home-start]')).toHaveCount(1);
-  page.once('dialog',dialog=>dialog.accept('Fictional moulding training mission'));
-  await page.locator('#dashboard [data-mm-mc-home-start]').click();
-  await expect(page.locator('#mmMissionControl .mm-mc-timeline')).toBeVisible();
-  await expect(page.locator('#mmMissionControl [data-mm-mc-stage]')).toHaveCount(8);
-  await expect(page.locator('#dashboard [data-mm-mc-home-start]')).toHaveCount(0);
-  await expect(page.locator('#dashboard .mm-mc-home-card')).toContainText('Fictional moulding training mission');
+  const mission=page.locator('#mmMissionControl');
+  await expect(mission).toHaveCount(1);
+  await expect(mission.locator('.mm-mc-context')).toBeHidden();
+  await expect(mission.locator('.mm-mc-timeline')).toHaveCount(0);
+  await expect(page.locator('#dashboard .mm-mc-home-card')).toBeHidden();
+  await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
+  await expect(page.locator('#dashboard [data-mm-home-book]')).toBeVisible();
+  const initial=await page.evaluate(()=>window.MM_MISSION_CONTROL.state());
+  await page.evaluate(()=>window.MM_MISSION_CONTROL.startMission({
+    title:'Fictional moulding training mission',
+    context:{machine:'Electric press',mould:'4-cavity mould',
+      material:'Engineering polymer',part:'Training part',caseId:'VA-01'}
+  }));
+  await expect(mission.locator('.mm-mc-context')).toBeHidden();
+  await expect(mission.locator('.mm-mc-timeline')).toBeHidden();
+  await expect(page.locator('#dashboard .mm-mc-home-card')).toBeHidden();
+  const after=await page.evaluate(()=>window.MM_MISSION_CONTROL.state());
+  expect(after.mission.title).toBe('Fictional moulding training mission');
+  expect(after.mission.context.caseId).toBe('VA-01');
+  await page.evaluate(()=>switchView('scenarios'));
+  await expect(page.locator('#scenarios')).toBeVisible();
+  await expect(mission.locator('.mm-mc-context')).toBeVisible();
+  await expect(mission.locator('.mm-mc-timeline')).toBeVisible();
+  await expect(mission.locator('[data-mm-mc-stage]')).toHaveCount(8);
+  await expect(mission.locator('.mm-mc-context')).toContainText('Electric press');
+  await expect(mission.locator('.mm-mc-context')).toContainText('VA-01');
+  await page.evaluate(()=>switchView('dashboard'));
+  await expect(mission.locator('.mm-mc-context')).toBeHidden();
+  await expect(mission.locator('.mm-mc-timeline')).toBeHidden();
+  // The keyboard command palette remains callable even though its Home strip
+  // is no longer part of the visible layout.
+  await page.keyboard.press('Control+k');
+  await expect(mission.locator('.mm-mc-palette')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(mission.locator('.mm-mc-palette')).toHaveCount(0);
+});
+
+test('mobile Home never shows Mission Control context or steps',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.evaluate(()=>window.MM_MISSION_CONTROL.startMission({
+    title:'Mobile training context',
+    context:{machine:'Electric press',mould:'4-cavity mould',caseId:'VA-01'}
+  }));
+  await expect(page.locator('#mmMissionControl .mm-mc-context')).toBeHidden();
+  await expect(page.locator('#mmMissionControl .mm-mc-timeline')).toBeHidden();
+  await expect(page.locator('#dashboard .mm-mc-home-card')).toBeHidden();
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(2);
+  await page.evaluate(()=>switchView('scenarios'));
+  await expect(page.locator('#mmMissionControl .mm-mc-context')).toBeVisible();
 });
 
 test('stored First Shot badge never triggers retired automatic achievement celebration on Home',async({page})=>{
@@ -521,4 +563,53 @@ test('stored First Shot badge never triggers retired automatic achievement celeb
   await page.evaluate(()=>switchView('path'));
   await page.evaluate(()=>switchView('dashboard'));
   await expect(page.locator('.toast').filter({hasText:/Achievement unlocked:/i})).toHaveCount(0);
+});
+
+
+test('late More callback never edits a replacement dialog',async({page})=>{
+  await page.setViewportSize({width:810,height:1080});
+  await openApp(page);
+  // The core More population defers to requestAnimationFrame. Replace the
+  // dialog synchronously before its callback runs, then verify its identity.
+  await page.evaluate(()=>{
+    window.openMobileMenu();
+    window.openModal('<h2>Unrelated dialog</h2><div class="grid2"><p data-mm-foreign-dialog>Keep unrelated content</p></div>');
+  });
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  await expect(page.locator('#modal [data-mm-foreign-dialog]')).toHaveCount(1);
+  await expect(page.locator('#modal [data-mm-registry-menu]')).toHaveCount(0);
+  // A fresh More invocation must still populate its own menu normally.
+  await page.evaluate(()=>window.openMobileMenu());
+  await expect(page.locator('#modal [data-mm-registry-menu="book"]')).toHaveCount(1);
+});
+
+test('delayed first-run onboarding is polished on initial appearance',async({page})=>{
+  await page.setViewportSize({width:810,height:1080});
+  await page.addInitScript(()=>{
+    const id='mm-first-run-timing-qa';
+    const user={id,name:'Learner 1',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},learningAwards:[],currentLesson:1,lastSeen:'2026-10-09T00:00:00.000Z',onboardingDone:false,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
+    localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:id,users:{[id]:user}}));
+  });
+  await page.goto(BASE,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED)&&window.MM_LEARNER_UI_POLISH);
+  const firstRun=page.locator('#modal .onboarding');
+  await expect(firstRun).toBeVisible();
+  await expect(firstRun).toHaveAttribute('data-mm-product-polished','1');
+  await expect(firstRun.locator('h2')).toHaveText('Set up your learning path');
+  await expect(firstRun.locator(':scope > p')).toHaveText('Three quick choices. You can change them later in Profile.');
+});
+
+test('polish never rewrites retired certificate statline from legacy user.certificates',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await openApp(page);
+  await page.evaluate(()=>{
+    const row=document.createElement('div');
+    row.className='statline';
+    row.dataset.mmLegacyAwardFixture='1';
+    row.innerHTML='<span class="muted tiny">Certificates earned</span><b>17</b>';
+    document.querySelector('#dashboard').appendChild(row);
+    window.MM_LEARNER_UI_POLISH.refresh();
+  });
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  await expect(page.locator('#dashboard [data-mm-legacy-award-fixture] b')).toHaveText('17');
 });

@@ -29,6 +29,39 @@ jobs:
         run: |
           set -euo pipefail
           owner="${GH_REPO%%/*}"
+
+          # Retry read-only API requests on transient GitHub 429/5xx errors.
+          # Buffer each entire response: a failed --paginate request must
+          # never yield a partial branch inventory or duplicated stdout.
+          gh_read() {
+            local attempt=1 out err
+            out="$(mktemp)"
+            err="$(mktemp)"
+            while (( attempt <= 4 )); do
+              if gh api "$@" >"$out" 2>"$err"; then
+                cat "$out"
+                rm -f "$out" "$err"
+                return 0
+              fi
+              if (( attempt == 4 )) || ! grep -Eq 'HTTP (429|500|502|503|504)' "$err"; then
+                cat "$err" >&2
+                rm -f "$out" "$err"
+                return 1
+              fi
+              echo "Retrying transient read-only GitHub API error (attempt $attempt of 4)" >&2
+              sleep "$((attempt * 2))"
+              attempt=$((attempt + 1))
+            done
+          }
+
+          branch_snapshot="$(mktemp)"
+          trap 'rm -f "$branch_snapshot"' EXIT
+          # Require the *complete* branch list before considering any deletion.
+          gh_read --paginate "repos/$GH_REPO/branches?per_page=100" --jq '.[] | [.name,.commit.sha] | @tsv' >"$branch_snapshot"
+          if ! grep -q $'^main\t' "$branch_snapshot"; then
+            echo "Fail closed: complete branch inventory lacks protected main" >&2
+            exit 1
+          fi
           candidates=0
           kept=0
 
@@ -42,13 +75,13 @@ jobs:
                 ;;
             esac
 
-            ahead=$(gh api "repos/$GH_REPO/compare/main...$sha" --jq '.ahead_by')
+            ahead=$(gh_read "repos/$GH_REPO/compare/main...$sha" --jq '.ahead_by')
             reason=""
 
             if [[ "$ahead" == "0" ]]; then
               reason="no commits ahead of main"
             else
-              merged_same_head=$(gh api --method GET "repos/$GH_REPO/pulls" \
+              merged_same_head=$(gh_read --method GET "repos/$GH_REPO/pulls" \
                 -f state=closed \
                 -f base=main \
                 -f head="$owner:$branch" \
@@ -66,7 +99,7 @@ jobs:
               echo "Would keep branch with $ahead unique commit(s): $branch"
               kept=$((kept+1))
             fi
-          done < <(gh api --paginate "repos/$GH_REPO/branches?per_page=100" --jq '.[] | [.name,.commit.sha] | @tsv')
+          done <"$branch_snapshot"
 
           echo "Manual preview only: $candidates deletion candidate(s), $kept retained branch(es). No refs were changed." >> "$GITHUB_STEP_SUMMARY"
 
@@ -85,6 +118,39 @@ jobs:
         run: |
           set -euo pipefail
           owner="${GH_REPO%%/*}"
+
+          # Retry read-only API requests on transient GitHub 429/5xx errors.
+          # Buffer each entire response: a failed --paginate request must
+          # never yield a partial branch inventory or duplicated stdout.
+          gh_read() {
+            local attempt=1 out err
+            out="$(mktemp)"
+            err="$(mktemp)"
+            while (( attempt <= 4 )); do
+              if gh api "$@" >"$out" 2>"$err"; then
+                cat "$out"
+                rm -f "$out" "$err"
+                return 0
+              fi
+              if (( attempt == 4 )) || ! grep -Eq 'HTTP (429|500|502|503|504)' "$err"; then
+                cat "$err" >&2
+                rm -f "$out" "$err"
+                return 1
+              fi
+              echo "Retrying transient read-only GitHub API error (attempt $attempt of 4)" >&2
+              sleep "$((attempt * 2))"
+              attempt=$((attempt + 1))
+            done
+          }
+
+          branch_snapshot="$(mktemp)"
+          trap 'rm -f "$branch_snapshot"' EXIT
+          # Require the *complete* branch list before considering any deletion.
+          gh_read --paginate "repos/$GH_REPO/branches?per_page=100" --jq '.[] | [.name,.commit.sha] | @tsv' >"$branch_snapshot"
+          if ! grep -q $'^main\t' "$branch_snapshot"; then
+            echo "Fail closed: complete branch inventory lacks protected main" >&2
+            exit 1
+          fi
           deleted=0
           kept=0
 
@@ -98,13 +164,13 @@ jobs:
                 ;;
             esac
 
-            ahead=$(gh api "repos/$GH_REPO/compare/main...$sha" --jq '.ahead_by')
+            ahead=$(gh_read "repos/$GH_REPO/compare/main...$sha" --jq '.ahead_by')
             reason=""
 
             if [[ "$ahead" == "0" ]]; then
               reason="no commits ahead of main"
             else
-              merged_same_head=$(gh api --method GET "repos/$GH_REPO/pulls" \
+              merged_same_head=$(gh_read --method GET "repos/$GH_REPO/pulls" \
                 -f state=closed \
                 -f base=main \
                 -f head="$owner:$branch" \
@@ -116,19 +182,20 @@ jobs:
             fi
 
             if [[ -n "$reason" ]]; then
-              live_sha=$(gh api "repos/$GH_REPO/git/ref/heads/$branch" --jq '.object.sha' 2>/dev/null || true)
+              live_sha=$(gh_read "repos/$GH_REPO/git/ref/heads/$branch" --jq '.object.sha')
               if [[ -z "$live_sha" || "$live_sha" != "$sha" ]]; then
                 echo "Keeping branch whose head moved during prune evaluation: $branch (expected $sha, now ${live_sha:-missing})"
                 kept=$((kept+1))
                 continue
               fi
               echo "Deleting merged branch: $branch ($reason; live SHA rechecked)"
+              # Do NOT retry DELETE: HTTP 502 can conceal a successful mutation.
               gh api --method DELETE "repos/$GH_REPO/git/refs/heads/$branch"
               deleted=$((deleted+1))
             else
               echo "Keeping branch with $ahead unique commit(s) and no merged PR at its current head: $branch"
               kept=$((kept+1))
             fi
-          done < <(gh api --paginate "repos/$GH_REPO/branches?per_page=100" --jq '.[] | [.name,.commit.sha] | @tsv')
+          done <"$branch_snapshot"
 
           echo "Deleted $deleted proven merged branch(es); kept $kept branch(es) whose current head is not proven safe to remove." >> "$GITHUB_STEP_SUMMARY"

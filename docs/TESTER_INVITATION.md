@@ -10,7 +10,7 @@ We're inviting a small group of people to try **MouldMaster Academy**, an inject
 
 This is an **early, non-production learning preview**, not accredited training, a validated manufacturing tool or a source of production settings.
 
-**Web release prepared for this invitation: `2026.10.09.4`**. The inviter must confirm this same release is actually deployed before sharing the link. It does not authorise changes to equipment or site procedures.
+**Web release prepared for this invitation: `2026.10.09.6`**. The inviter must confirm this same release is actually deployed before sharing the link. It does not authorise changes to equipment or site procedures.
 
 **Preview link (only after it has been verified by the inviter):**  
 https://connorth3-lgtm.github.io/Injection-moulding-app-/preview/

@@ -22,8 +22,8 @@
     return String(value==null?'':value).replace(/[\u0000-\u001f\u007f]/g,' ').replace(/\s+/g,' ').trim().slice(0,max);
   }
   function boundedScore(value){
-    const n=Number(value);
-    return Number.isInteger(n)&&n>=0&&n<=4?n:null;
+    // Never coerce strings, booleans or arrays into learner attempt scores.
+    return typeof value==='number'&&Number.isInteger(value)&&value>=0&&value<=4?value:null;
   }
   function validCase(id){return CASE_IDS.includes(id)}
   function idFor(id,items){return items.find(x=>x.id===id)||null}
@@ -47,22 +47,98 @@
   }
   function knowledgeIndex(manifest,crosswalk){
     const chapters=chapterRows(manifest);
-    if(!crosswalk||!Array.isArray(crosswalk.chapterMappings))throw Error('A versioned Book/curriculum crosswalk is required.');
+    if(chapters.length!==46)throw Error('The governed Book manifest must contain exactly 46 modules.');
+    if(!crosswalk||crosswalk.schemaVersion!==1||
+      crosswalk.crosswalkId!=='mouldmaster-book-academy-crosswalk'||
+      crosswalk.mappingLevel!=='course-level semantic reinforcement'||
+      !Array.isArray(crosswalk.courseNames)||crosswalk.courseNames.length!==12||
+      !Array.isArray(crosswalk.chapterMappings))
+      throw Error('The versioned, course-level Book/curriculum crosswalk is required.');
+    const validLabel=value=>typeof value==='string'&&value.length>0&&
+      value.length<=160&&value.trim()===value&&!/[\u0000-\u001f\u007f]/.test(value);
+    const knownCourses=new Set(crosswalk.courseNames);
+    if(knownCourses.size!==12||crosswalk.courseNames.some(x=>!validLabel(x)))
+      throw Error('Book crosswalk course registry is invalid or contains duplicates.');
+    if(crosswalk.chapterMappings.length!==chapters.length)
+      throw Error('Book crosswalk must contain every governed chapter in manifest order.');
     const maps=new Map();
-    for(const item of crosswalk.chapterMappings){
-      if(!item||typeof item.chapterId!=='string'||maps.has(item.chapterId))throw Error('Duplicate/invalid Book crosswalk row.');
-      maps.set(item.chapterId,item);
+    for(let i=0;i<chapters.length;i++){
+      const item=crosswalk.chapterMappings[i],chapter=chapters[i];
+      if(!item||item.chapterId!==chapter.id||maps.has(chapter.id))
+        throw Error('Book crosswalk chapter order, identity or membership has drifted.');
+      if(!Array.isArray(item.courseNames)||!item.courseNames.length||
+        item.courseNames.some(x=>!knownCourses.has(x))||
+        new Set(item.courseNames).size!==item.courseNames.length)
+        throw Error('Book crosswalk chapter has missing, duplicate or unknown courses.');
+      if(!Array.isArray(item.themes)||!item.themes.length||
+        item.themes.some(x=>!validLabel(x))||
+        new Set(item.themes).size!==item.themes.length)
+        throw Error('Book crosswalk chapter has invalid or duplicate thematic labels.');
+      maps.set(chapter.id,item);
     }
+    // Search, case and direct-chapter results must not share mutable arrays
+    // with the internal governed index (or the originally supplied manifest).
+    const copyChapter=ch=>({
+      ...ch,sourceIds:[...ch.sourceIds],claimClasses:[...ch.claimClasses],
+      courses:[...ch.courses],themes:[...ch.themes]
+    });
     const entries=chapters.map(ch=>({
-      ...ch,courses:(maps.get(ch.id)?.courseNames||[]).filter(x=>typeof x==='string'),
-      themes:(maps.get(ch.id)?.themes||[]).filter(x=>typeof x==='string')
+      ...ch,courses:[...maps.get(ch.id).courseNames],themes:[...maps.get(ch.id).themes]
     }));
     function search(query='',options={}){
       const q=cleanText(query,120).toLowerCase();
-      const course=cleanText(options.course||'',100);
+      const course=cleanText(options?.course||'',100);
       return entries.filter(ch=>(!course||ch.courses.includes(course))&&
         (!q||[ch.title,ch.id,ch.part,...ch.courses,...ch.themes].join(' ').toLowerCase().includes(q)))
-        .slice(0,46).map(row=>({...row,sourceIds:[...row.sourceIds],courses:[...row.courses],themes:[...row.themes]}));
+        .slice(0,46).map(copyChapter);
+    }
+    // Course-level Book reading suggestions for an existing canonical Academy
+    // lesson. This does not create an exact lesson↔chapter equivalence,
+    // award progress, or alter learner data. Runtime callers must pass the
+    // governed D.lessons lesson and D.courses registry, not free text.
+    function forLesson(lesson,canonicalCourses,canonicalLessons){
+      const unmapped=()=>Object.freeze({
+        state:'unmapped',chapters:Object.freeze([]),reviewedLessonMatch:false,
+        learningCreditGranted:false,workplaceCompetence:false
+      });
+      // Numeric IDs are not evidence of a governed lesson. Require exact
+      // object membership in the supplied canonical 120-lesson registry.
+      if(!lesson||!Number.isInteger(lesson.id)||lesson.id<1||lesson.id>120||
+         !Number.isInteger(lesson.course)||!Array.isArray(canonicalLessons)||
+         canonicalLessons.length!==120||!Array.isArray(canonicalCourses)||
+         canonicalCourses.length!==crosswalk.courseNames.length)return unmapped();
+      const lessonIds=new Set();
+      for(const canonical of canonicalLessons){
+        if(!canonical||!Number.isInteger(canonical.id)||canonical.id<1||
+           canonical.id>120||!Number.isInteger(canonical.course)||
+           canonical.course<1||canonical.course>12||lessonIds.has(canonical.id))
+          return unmapped();
+        lessonIds.add(canonical.id);
+      }
+      const courseIds=new Set(),courseNames=new Set();
+      for(const course of canonicalCourses){
+        if(!course||!Number.isInteger(course.id)||course.id<1||course.id>12||
+           !validLabel(course.name)||courseIds.has(course.id)||
+           courseNames.has(course.name)||!crosswalk.courseNames.includes(course.name))
+          return unmapped();
+        courseIds.add(course.id);courseNames.add(course.name);
+      }
+      if(courseNames.size!==12||!canonicalLessons.some(item=>item===lesson))return unmapped();
+      const matches=canonicalCourses.filter(course=>course.id===lesson.course);
+      if(matches.length!==1)return unmapped();
+      const courseName=matches[0].name;
+      const chapters=entries.filter(ch=>ch.courses.includes(courseName)).slice(0,3).map(ch=>Object.freeze({
+        id:ch.id,title:ch.title,sourceState:ch.state,
+        mappingBasis:'existing governed course-level Book↔Academy crosswalk',
+        exactLessonMatchReviewed:false
+      }));
+      return Object.freeze({
+        state:chapters.length?'course-level-reading-suggestion':'unmapped',
+        lessonId:lesson.id,courseName,
+        chapters:Object.freeze(chapters),reviewedLessonMatch:false,
+        learningCreditGranted:false,workplaceCompetence:false,
+        guidance:'Explore related Book modules. These are course-level thematic suggestions, not exact-lesson matches or SME-approved equivalence.'
+      });
     }
     function forCase(caseId){
       const map={
@@ -73,11 +149,12 @@
         'VA-05':['venting','burns','thermal-history'],
         'VA-06':['cavity-pressure','process-monitoring','capability']
       };
-      return (map[caseId]||[]).map(id=>idFor(id,entries)).filter(Boolean);
+      return (Object.prototype.hasOwnProperty.call(map,caseId)?map[caseId]:[])
+        .map(id=>idFor(id,entries)).filter(Boolean).map(copyChapter);
     }
     return Object.freeze({
-      chapters:entries.length,search,forCase,
-      chapter:id=>{const ch=idFor(id,entries);return ch?{...ch,courses:[...ch.courses],sourceIds:[...ch.sourceIds]}:null;},
+      chapters:entries.length,search,forCase,forLesson,
+      chapter:id=>{const ch=idFor(id,entries);return ch?copyChapter(ch):null;},
       scope:'Book module-level metadata and existing course-level semantic mappings; not automatic lesson/SME verification.'
     });
   }
@@ -112,12 +189,24 @@
     });
   }
   function createPathwayView(va,progress){
-    const real=progress&&typeof progress==='object'&&progress.completed&&typeof progress.completed==='object'&&!Array.isArray(progress.completed)?progress.completed:{};
+    const validRecord=progress&&typeof progress==='object'&&!Array.isArray(progress)&&
+      progress.schema===1&&Object.prototype.hasOwnProperty.call(progress,'completed')&&
+      progress.completed&&typeof progress.completed==='object'&&!Array.isArray(progress.completed);
+    const real=validRecord?progress.completed:{};
     return PATHWAYS.map(path=>{
       const items=path.caseIds.map(id=>{
-        const available=va?.cases?.some(row=>row.id===id)===true;
-        const old=real[id],best=boundedScore(old?.best);
-        return {caseId:id,available,attempted:best!==null,best};
+        const available=Array.isArray(va?.cases)&&va.cases.filter(row=>row?.id===id).length===1;
+        const own=Object.prototype.hasOwnProperty.call(real,id);
+        const old=own?real[id]:null;
+        const best=available&&old&&typeof old==='object'&&!Array.isArray(old)&&
+          Object.prototype.hasOwnProperty.call(old,'best')?boundedScore(old.best):null;
+        // Native VA completion includes both the latest score and review time.
+        const last=old&&typeof old==='object'?boundedScore(old.last):null;
+        const updated=old&&typeof old.updated==='string'&&
+          /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(old.updated)&&
+          Number.isFinite(Date.parse(old.updated));
+        const attempted=best!==null&&last!==null&&best>=last&&updated===true;
+        return {caseId:id,available,attempted,best:attempted?best:null};
       });
       return {...path,caseIds:[...path.caseIds],cases:items,
         attempted:items.filter(row=>row.attempted).length,
@@ -186,23 +275,98 @@
     const bridge=deps.bridge;
     if(!bridge||typeof bridge.review!=='function'||typeof bridge.getProgress!=='function')
       throw Error('New1 requires the existing Case One bridge for canonical assessment/progress.');
-    let lastReview=null;
-    function review(answers){
-      const result=bridge.review(answers);
-      if(result?.state==='formative-review')lastReview=result;
-      return result;
+    let lastReview=null,reviewOwner=null;
+    function learnerToken(){
+      try{
+        const token=bridge.runtimeStorage?.()?.learnerToken?.();
+        return typeof token==='string'&&token.trim()?token:null;
+      }catch(_){return null}
     }
-    function tutor(){return tutorPlan(lastReview,index,bridge.getProgress())}
-    function pathway(){
+    function currentReview(){
+      const active=learnerToken();
+      if(active!==reviewOwner){lastReview=null;reviewOwner=active}
+      return lastReview;
+    }
+    function verifiedReview(result){
+      if(result?.state!=='formative-review')return null;
+      if(result.caseId!=='VA-02'||result.max!==4||
+         !Number.isInteger(result.total)||result.total<0||result.total>4||
+         !Array.isArray(result.dimensions)||result.dimensions.length!==4||
+         !Array.isArray(result.gaps))return null;
+      const dimensions=result.dimensions.map(row=>row&&typeof row==='object'?Object.freeze({
+        id:row.id,step:row.step,label:row.label,correct:row.correct===true,chapter:row.chapter
+      }):null);
+      if(dimensions.some(x=>!x)||new Set(dimensions.map(x=>x.id)).size!==4||
+         new Set(dimensions.map(x=>x.step)).size!==4||
+         dimensions.some(x=>!['mechanism','evidence','controlled-response','verification'].includes(x.id)||
+                             !STEP_KEYS.includes(x.step)))return null;
+      const gaps=dimensions.filter(x=>!x.correct).map(x=>x.id);
+      if(result.total!==4-gaps.length||result.gaps.length!==gaps.length||
+         gaps.some((id,i)=>id!==result.gaps[i]))return null;
+      // Do not expose mutable canonical bridge scorer internals to a future
+      // trainer-export caller. Keep the exact normalized score, not a copy
+      // supplied by a UI component or a different learner profile.
+      return Object.freeze({...result,
+        dimensions:Object.freeze(dimensions),
+        gaps:Object.freeze([...gaps])
+      });
+    }
+    function review(answers){
+      const active=learnerToken();
+      currentReview();
+      const result=bridge.review(answers);
+      // Do not retain a learner A score if the active profile changed while
+      // its assessment callback was running. Workbench-only mocks have no
+      // learner token and retain only their local ephemeral formative result.
+      if(learnerToken()!==active){
+        lastReview=null;reviewOwner=learnerToken();
+        return {state:'learner-changed',reason:'The learner profile changed during review. Reopen the case for this learner.'};
+      }
+      const snapshot=verifiedReview(result);
+      lastReview=snapshot;
+      reviewOwner=active;
+      if(result?.state==='formative-review'&&!snapshot)
+        return {state:'unavailable',reason:'Canonical formative scoring fields were inconsistent.'};
+      return snapshot||result;
+    }
+    function tutor(){
+      const owner=learnerToken(),snapshot=currentReview();
       let progress;
-      try{progress=deps.storage?.get?.('mm_virtual_apprenticeship_v1',null)}catch(_){progress=null}
+      try{progress=bridge.getProgress()}catch(_){progress=null}
+      if(learnerToken()!==owner){
+        currentReview();
+        return tutorPlan(null,index,{});
+      }
+      return tutorPlan(snapshot,index,progress);
+    }
+    function pathway(){
+      const owner=learnerToken();
+      let progress=null;
+      // Only the canonical learner-scoped Runtime V2 bridge is authorised
+      // to supply attempts. Caller-injected shadow stores are not trusted.
+      try{progress=bridge.runtimeStorage?.()?.get?.('mm_virtual_apprenticeship_v1',null)}catch(_){progress=null}
+      if(learnerToken()!==owner){
+        currentReview();
+        progress=null;
+      }
       return createPathwayView(va,progress);
+    }
+    function shareCurrentReview(candidate,permission){
+      if(permission!==true)throw Error('Voluntary learner-sharing consent is required on each export.');
+      const owner=learnerToken(),canonical=currentReview();
+      if(!canonical||canonical!==candidate)
+        throw Error('Only the current learner’s reviewed canonical formative case may be shared.');
+      const packet=learnerShare(canonical,true);
+      if(learnerToken()!==owner||currentReview()!==canonical)
+        throw Error('Learner profile changed while preparing the reviewed summary.');
+      return packet;
     }
     return Object.freeze({
       version:VERSION,caseId:'VA-02',factory,index,
       canonicalCase:()=>va.cases.find(row=>row.id==='VA-02'),
-      review,lastReview:()=>lastReview,tutor,pathway,
-      trainerDraft,assignmentExport,learnerShare,
+      review,lastReview:currentReview,tutor,pathway,
+      lessonGuide:(lesson,canonicalCourses,canonicalLessons)=>index.forLesson(lesson,canonicalCourses,canonicalLessons),
+      trainerDraft,assignmentExport,learnerShare:shareCurrentReview,
       openCase:()=>bridge.openCase?.()===true,
       openSpatial:()=>bridge.openSpatial?.()===true,
       openChapter:id=>index.chapter(id)?bridge.openBookChapter?.(id):false,

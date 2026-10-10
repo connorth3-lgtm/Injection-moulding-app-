@@ -1,7 +1,13 @@
 from __future__ import annotations
 
 from pathlib import Path
-from tools.externalize_core_scripts import runtime_transform as core_runtime_transform
+import qa_codeql_generated_security  # guarded generated-runtime mitigations
+from tools.externalize_core_scripts import (
+    runtime_transform as core_runtime_transform,
+    core_shadowed_retirement_enabled,
+    CORE_SHADOWED_RETIRE_NAMES,
+)
+import hashlib
 import json
 import re
 
@@ -133,7 +139,7 @@ need(STYLE_BRIDGE_PATH.is_file(), "strict inline-style bridge source is missing"
 for number, (source, path) in enumerate(zip(inline_core_scripts, core_runtime_scripts), start=1):
     need(path.name == f"core-inline-{number:03d}.js", f"core runtime ordering drifted at slot {number}: {path.name}")
     generated = path.read_text(encoding="utf-8")
-    expected_handler_free = core_runtime_transform(path.name, source)
+    expected_handler_free = core_runtime_transform(path.name, source, retire_shadowed=core_shadowed_retirement_enabled())
     need(HANDLER_ATTR_RE.search(generated) is None, f"active generated core runtime still emits inline handler attributes: {path.name}")
     if path.name == "core-inline-004.js":
         need(source.count("document.write(") == 1, "frozen certificate print debt drifted; review runtime transform")
@@ -279,6 +285,71 @@ for path in sorted(scan_paths):
 need(re.search(r"\beval\s*\(", core) is None, "eval() is forbidden in the frozen core HTML")
 need(re.search(r"\bnew\s+Function\s*\(", core) is None, "new Function() is forbidden in the frozen core HTML")
 
+# Remaining duplicate declaration ceiling for issue #519. The immutable
+# recovery core must not be edited or rewritten in place: all future reduction
+# goes through the deterministic externalizer, with a governed runtime release.
+# Keep this ratchet monotonic (allow one, forbid three) so future cleanup may
+# remove any of the ten shadowed declarations without weakening CI.
+legacy_dupe_names = {
+    "updateGlobalProgress", "renderDashboard", "renderPath", "renderLesson",
+    "renderExams", "startExam", "gradeExam", "renderCertificates",
+    "certificateCard", "renderProfile",
+}
+active_core_slot = read("src/core-runtime/core-inline-004.js")
+core_declarations = re.findall(r"(?m)^function\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*\(", active_core_slot)
+declaration_counts: dict[str, int] = {}
+for declaration in core_declarations:
+    declaration_counts[declaration] = declaration_counts.get(declaration, 0) + 1
+shadowed_declarations = {name: count for name, count in declaration_counts.items() if count > 1}
+need(not (set(shadowed_declarations) - legacy_dupe_names),
+     f"new duplicate top-level core function declaration(s): {sorted(set(shadowed_declarations) - legacy_dupe_names)}")
+need(all(declaration_counts.get(name, 0) in (1, 2) for name in legacy_dupe_names),
+     "known core declaration was removed entirely or duplicated more than twice")
+need(len(shadowed_declarations) <= 10,
+     "core duplicate declaration debt increased above its 10-function ceiling")
+polish = read("src/domains/shell/learner-ui-polish.js")
+need("syncCertificateCounter" not in polish and "user.certificates" not in polish,
+     "issue #517 legacy certificate shim was reintroduced")
+polish_tests = read("qa/learner-ui-polish.spec.js")
+for regression in (
+    "late More callback never edits a replacement dialog",
+    "delayed first-run onboarding is polished on initial appearance",
+    "polish never rewrites retired certificate statline from legacy user.certificates",
+):
+    need(regression in polish_tests, f"issue #517 regression case missing: {regression}")
+# Prove that old hoisted bodies can be safely isolated for a later governed
+# release. This is a syntax-only dry run, not a learner-runtime modification or
+# completion of #519's downstream browser/physical validation.
+from tools.verify_shadowed_core_retirement import preview_retirement
+retirement_proof = preview_retirement(active_core_slot)
+need(retirement_proof["javascript_syntax"] == "pass",
+     "shadowed core retirement proof must compile as JavaScript")
+need(retirement_proof["candidate_not_published"] is True,
+     "retirement proof must remain an offline preview")
+# The future release path is already exercised and proven to produce exactly
+# the expected, syntax-checked candidate. The current held .5 runtime must
+# remain byte-for-byte original; only a governed >=.6 release activates this.
+preview_source = core_runtime_transform("core-inline-004.js", inline_core_scripts[3],
+                                        retire_shadowed=True)
+preview_sha = hashlib.sha256(preview_source.encode("utf-8")).hexdigest()
+need(preview_sha == retirement_proof["candidate_sha256"],
+     "future generated retirement differs from independently verified dry run")
+for retired_name in CORE_SHADOWED_RETIRE_NAMES:
+    count = len(re.findall(r"(?m)^function\s+"+retired_name+r"\s*\(", preview_source))
+    need(count == 1, f"future generated runtime did not retire {retired_name} exactly")
+if not core_shadowed_retirement_enabled():
+    need(len(shadowed_declarations) == 10,
+         "held current-release generated core cannot be silently mutated")
+else:
+    need(len(shadowed_declarations) == 0,
+         "new governed web release must retire all ten shadowed definitions")
+
+
+from qa_core_retirement_boundary import main as verify_core_retirement_boundaries
+verify_core_retirement_boundaries()
+
+print(f"Core shadowed declarations: {len(shadowed_declarations)}/10 (ratchet, no new names); issue #517 runtime regressions retained")
+
 print(
     "MouldMaster architecture debt guard passed: "
     f"{len(body_scripts)}/{baseline['runtimeBodyScriptCeiling']} bootstrap scripts; "
@@ -294,3 +365,6 @@ for rel in ['src/domains/shell/pwa-shell.js','learning-analytics.js']:
     need('window.openMobileMenu=function' not in read(rel),f'{rel} reintroduced a mobile-menu wrapper; app-shell-registry owns mobile More composition')
 pwa=read('src/domains/shell/pwa-shell.js')
 need("MM_RUNTIME_V2.after('startExam'" in pwa,'PWA question disclosures must prefer Runtime V2 startExam lifecycle')
+
+# Guard against fixed mission timeline obscuring Book and bottom navigation.
+import qa_mission_control_mobile_layout  # noqa: F401

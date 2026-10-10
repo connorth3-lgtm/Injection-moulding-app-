@@ -535,6 +535,150 @@ assert.equal(suitabilityPass.value.summaryState, 'PASS');
 assert.equal(suitabilityPass.value.coverageComplete, true);
 assert.match(suitabilityPass.assumptions.join(' '), /not a universal declaration/i);
 
+// Fail closed on truncated required-axis declarations: dropping a blank,
+// duplicate or coerced axis could previously yield a misleading overall PASS.
+const makeFitSummary = (requiredAxisIds, assessments = {shot:shotCapacity}) =>
+  machineSuitabilitySummary({
+    machineConfigurationId: commonFitIds.machineConfigurationId,
+    injectionUnitConfigurationId: machineCapacityIds.injectionUnitConfigurationId,
+    mouldConfigurationId: commonFitIds.mouldConfigurationId,
+    basis: 'declared machine-axis integrity fixture',
+    requiredAxisIds, assessments,
+  });
+for (const bad of [['shot', ''],['shot','shot'],['shot',' '],
+                   ['shot', 0], ['shot', null], ['shot', {toString:()=> 'shot'}],
+                   ['shot', '__proto__'], ['shot', 'constructor'],
+                   ['shot', 'CAPACITY']]) {
+  const result=makeFitSummary(bad);
+  assert.equal(result.ok,false,'misleading PASS accepted malformed required-axis list');
+  assert.match(result.reason,/invalid-required-axis-id|duplicate-required-axis-id/);
+}
+// Sparse arrays and inherited indexed slots must not evade Array.prototype.some.
+const sparseAxes = ['shot', 'gate'];
+delete sparseAxes[1];
+assert.equal(makeFitSummary(sparseAxes).ok, false,
+  'sparse required-axis slot must not be omitted from machine-fit declaration');
+const inheritedAxis = ['shot', 'gate'];
+delete inheritedAxis[1];
+Object.setPrototypeOf(inheritedAxis, Object.assign(Object.create(Array.prototype), {1:'gate'}));
+assert.equal(makeFitSummary(inheritedAxis).ok, false,
+  'inherited required-axis array slot must not count as declared evidence');
+// Accessor-index axes are invalid even when the getter returns a valid ID.
+// Validation must not execute untrusted getters or infer a PASS from them.
+const getterAxes = ['shot', 'gate'];
+let getterCalls = 0;
+Object.defineProperty(getterAxes, 1, {get(){ getterCalls++; return 'gate'; }, configurable:true});
+const getterResult = makeFitSummary(getterAxes);
+assert.equal(getterResult.ok, false, 'accessor required-axis entry must fail closed');
+assert.equal(getterCalls, 0, 'required-axis validation must not call getters');
+// Bound attacker-controlled axis array lengths before allocating traversal state.
+const oversizedAxes = ['shot'];
+oversizedAxes.length = 1_000_000;
+const oversizedResult = makeFitSummary(oversizedAxes);
+assert.equal(oversizedResult.ok, false,
+  'oversized required-axis declaration must be rejected before traversal');
+assert.equal(oversizedResult.reason, 'required-axis-list-required');
+// Assessment getters are untrusted evidence, not callable validation hooks.
+const accessorAssessments = {};
+let assessmentGetterCalls = 0;
+Object.defineProperty(accessorAssessments, 'shot', {
+  get(){ assessmentGetterCalls++; return shotCapacity; }, configurable:true
+});
+const accessorAssessmentResult = makeFitSummary(['shot'], accessorAssessments);
+assert.equal(accessorAssessmentResult.value.summaryState, 'UNKNOWN');
+assert.equal(accessorAssessmentResult.value.axes[0].reason, 'missing-assessment');
+assert.equal(assessmentGetterCalls, 0,
+  'machine-fit assessment validation must not invoke getter evidence');
+// Machine-fit identity/basis objects must not be coerced via custom toString.
+let identityCoercionCalls = 0;
+const forgedIdentity = {toString(){ identityCoercionCalls++; return machineCapacityIds.machineConfigurationId; }};
+const safeInputs = {
+  machineConfigurationId: machineCapacityIds.machineConfigurationId,
+  injectionUnitConfigurationId: machineCapacityIds.injectionUnitConfigurationId,
+  mouldConfigurationId: commonFitIds.mouldConfigurationId,
+  basis: 'declared machine identity regression',
+  requiredAxisIds: ['shot'],
+  assessments: {shot: shotCapacity},
+};
+assert.equal(machineSuitabilitySummary({...safeInputs, machineConfigurationId:forgedIdentity}).ok, false);
+assert.equal(machineSuitabilitySummary({...safeInputs, basis:forgedIdentity}).ok, false);
+assert.equal(identityCoercionCalls, 0,
+  'machine identity or basis must not execute object coercion hooks');
+// Revoked proxies are malformed evidence, not uncaught exceptions or PASS.
+const revokedAxisInput = Proxy.revocable(['shot'], {});
+revokedAxisInput.revoke();
+assert.equal(makeFitSummary(revokedAxisInput.proxy).ok, false);
+const revokedEvidenceInput = Proxy.revocable({shot: shotCapacity}, {});
+revokedEvidenceInput.revoke();
+assert.equal(makeFitSummary(['shot'], revokedEvidenceInput.proxy).value.summaryState, 'UNKNOWN');
+const badAxisDescriptor = new Proxy(['shot'], {
+  getOwnPropertyDescriptor(){ throw Error('malformed evidence descriptor'); },
+});
+assert.equal(makeFitSummary(badAxisDescriptor).ok, false);
+// Option accessors must not be run by destructuring before validation.
+let optionsGetterCalls = 0;
+for (const unsafeKey of ['machineConfigurationId', 'requiredAxisIds', 'assessments', 'basis']) {
+  const accessorOptions = {...safeInputs};
+  Object.defineProperty(accessorOptions, unsafeKey, {
+    get(){ optionsGetterCalls++; return safeInputs[unsafeKey]; },
+  });
+  const outcome = machineSuitabilitySummary(accessorOptions);
+  if (unsafeKey === 'assessments') {
+    assert.equal(outcome.ok, true);
+    assert.equal(outcome.value.summaryState, 'UNKNOWN',
+      'accessor assessment collection must become missing evidence, never PASS');
+  } else {
+    assert.equal(outcome.ok, false, `accessor option ${unsafeKey} must fail closed`);
+  }
+}
+assert.equal(optionsGetterCalls, 0, 'machine-fit options must not invoke getter fields');
+const revokedOptions = Proxy.revocable(safeInputs, {});
+revokedOptions.revoke();
+assert.equal(machineSuitabilitySummary(revokedOptions.proxy).ok, false,
+  'revoked options proxy must return unsupported, not throw');
+// A custom array iterator must never replace the validated own axis slots.
+let axisIteratorCalls = 0;
+const iteratorSpoofAxes = ['shot'];
+Object.defineProperty(iteratorSpoofAxes, Symbol.iterator, {
+  value(){ axisIteratorCalls++; throw Error('untrusted required-axis iterator executed'); },
+});
+assert.equal(makeFitSummary(iteratorSpoofAxes).value.summaryState, 'PASS',
+  'valid own axis must be evaluated independently of custom iterators');
+assert.equal(axisIteratorCalls, 0);
+
+// Nested assessment data must not execute getters or inherit a fake PASS.
+let nestedGetterCalls = 0;
+const nestedAccessorValue = {machineConfigurationId: machineCapacityIds.machineConfigurationId};
+Object.defineProperty(nestedAccessorValue, 'fits', {
+  get(){ nestedGetterCalls++; return true; },
+});
+const nestedAccessorResult = makeFitSummary(['shot'], {
+  shot: {ok:true, value:nestedAccessorValue},
+});
+assert.equal(nestedAccessorResult.value.summaryState, 'UNKNOWN');
+assert.equal(nestedGetterCalls, 0,
+  'nested machine-fit assessment getters must not be called');
+const inheritedPassValue = Object.create({state:'PASS'});
+inheritedPassValue.machineConfigurationId = machineCapacityIds.machineConfigurationId;
+assert.equal(makeFitSummary(['shot'], {shot:{ok:true,value:inheritedPassValue}}).value.summaryState,
+  'UNKNOWN', 'prototype-inherited state cannot justify PASS');
+let innerValueGetterCalls = 0;
+const accessorInner = {ok:true};
+Object.defineProperty(accessorInner, 'value', {
+  get(){ innerValueGetterCalls++; return shotCapacity.value; },
+});
+assert.equal(makeFitSummary(['shot'], {shot:accessorInner}).value.summaryState, 'UNKNOWN');
+assert.equal(innerValueGetterCalls, 0);
+const inheritedShot={};
+Object.setPrototypeOf(inheritedShot,{shot:shotCapacity});
+const inheritedResult=makeFitSummary(['shot'],inheritedShot);
+assert.equal(inheritedResult.value.summaryState,'UNKNOWN',
+  'inherited/prototype assessment must not count as verified machine-fit evidence');
+assert.equal(inheritedResult.value.axes[0].reason,'missing-assessment');
+assert.equal(makeFitSummary(['shot'],[shotCapacity]).value.summaryState,'UNKNOWN');
+assert.equal(makeFitSummary(['shot']).value.summaryState,'PASS',
+  'legitimate exact-identity required machine-fit axis should remain usable');
+
 const wrongMachineShot = shotCapacityAssessment({
   machineConfigurationId: 'IMM-99/config-Z',
   injectionUnitConfigurationId: machineCapacityIds.injectionUnitConfigurationId,

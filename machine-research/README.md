@@ -78,3 +78,27 @@ Two NISSEI FNX-Ⅳ OEM-published exact-model records have been added: **FNX110�
 
 The original HMD400M6 service-document chase remains open: [OEM document request checklist](./hwamda/OEM_DOCUMENT_REQUEST_CHECKLIST.md). No unverified manual, circuit drawing or later M6-S generation was promoted.
 
+
+## OEM verified model expansion — 2026-10-09
+
+NISSEI's primary FNX-Ⅳ technical pages now support three more exact model records: **FNX80Ⅳ**, **FNX140Ⅳ** and **FNX180Ⅳ**. The detailed research registry therefore rises from three to **six model records** without inventing serial/configuration authority. The separate 9A/12A, 25A/36A variants remain screw-diameter/pressure/shot-capacity linked and covered by `qa_machine_library.py`; installed machine, controller and maintenance documents remain UNKNOWN. No production machine-fit approval or OEM service documentation acquisition is inferred.
+
+
+## FNX280Ⅳ exact-model expansion — 2026-10-09
+
+The [primary-OEM FNX280Ⅳ performance table](https://www.nisseiplastic.com/en/products/fnx-4/spec.php?model=FNX280%E2%85%A3) verifies the published **2740 kN** hybrid FNX-Ⅳ machine, **830 mm** clamp stroke, **320 mm** minimum mould thickness, **1150 mm** maximum daylight, **660 × 660 mm** tie-bar clearance, **955 × 955 mm** die plate, and **130 mm** ejector stroke. Its **standard 71A** and **optional 100A** injection units have different source-published screw, capacity and maximum-pressure tables and are *never* silently interchangeable. This is the seventh detailed model in the 11-manufacturer index. It does not establish the fitted injection unit, actual machine serial, available usable capability, controller/HMI or machine-specific service schematics; real fit/operational decisions require those separately.
+
+
+## Second OEM with source-scoped detailed model record — 2026-10-09
+
+The official [FANUC ROBOSHOT α-S100iB specifications](https://www.fanuc.eu/eu-en/product/roboshot/fanuc-roboshot-a-s100ib) add a separately sourced **eighth** detailed model, spanning **FANUC, NISSEI and Hwamda** within the eleven-OEM index. The published 1000 kN base versus 1250 kN increased clamp must remain distinct. So must the single/double platen and increased die-height ranges, and the 200 mm/s base screw-table injection/hold pressure mode **1 versus 2**. The FANUC product page does not identify any particular *installed* injection-unit assembly, so the record **deliberately does not invent** a named injection-unit variant or fitted unit ID; it displays the OEM's six screw/volume/pressure columns in a clearly labelled, separate operating-mode table. Specific electrical/hydraulic drawings, firmware and the on-site usable capacity remain missing. The source-backed numbers are not permission to prescribe production limits or approve a machine-mould fit.
+
+## FANUC ROBOSHOT α-S130iB source-bound expansion — 9 October 2026
+
+The ninth detailed exact-model record uses FANUC Europe's primary [α-S130iB specifications](https://www.fanuc.eu/eu-en/product/roboshot/fanuc-roboshot-a-s130ib): **1300 kN** clamp, single-platen **200–570 mm** standard or **200–670 mm** increased die-height, five individually linked screw/injection-volume/pressure-1/pressure-2 columns at the source-defined **200 mm/s base mode**, and model-specific platen/tie-bar/stroke figures. The catalogue's 200 mm/s values do **not** establish the actual fitted injection unit or apply to other speed/pressure modes. Missing controller, OEM service and circuit documents remain **missing**; machine-fit, production recipes and human/device validation remain unapproved.
+
+## FANUC ROBOSHOT α-S150iB model-only record — 9 October 2026
+
+The [FANUC America published specifications](https://www.fanucamerica.com/products/roboshot/roboshot-a-s150ib) and [FANUC Europe 2021 OEM datasheet](https://www.fanuc.eu/~/media/files/pdf/products/roboshot/datasheets/en/datasheets-2021/datasheets-a-s150ib-en.pdf?la=bg) add the **tenth** detailed OEM-sourced machine model. This is the conventional α-S150iB configuration, *not* the distinct small-capacity screw version. **1500/optional 1800 kN** clamps, independent single/double-platen mould-height options, and six screw-specific **200 mm/s base-mode** volume/pressure-1/pressure-2 columns remain source-paired. A machine's real fitted configuration, usable pressure/flow, measured production data, OEM maintenance/service documents and physical acceptance are all **unknown/OPEN**; no production parameter or machine safety certification can be inferred.
+
+**OEM revision conflict — not a current pressure limit:** The [FANUC 2024 ROBOSHOT α-iB series brochure](https://www.fanuc.eu/~/media/files/pdf/products/roboshot/mbr-04413-rs%20roboshot%20alpha%20ib%20series/v4/roboshot-alpha-ib-series-brochure-en-2024.pdf?la=sl) publishes **190/160 MPa** for the 48/52 mm screw's pressure-1/pressure-2 200 mm/s rows, whereas the retained **2021 model-specific datasheet** shows **230/200 MPa** in each respective row. The registry explicitly labels the 2021 values and source conflict; actual applicability to a machine serial/screw/barrel, injection mode and manufacturing generation remains **UNKNOWN**. Never silently merge or substitute these source versions. 

@@ -182,15 +182,19 @@ function syncDesktopNavigation(){
     }
   }
 }
-function mobileGrid(){return document.querySelector('#modal .modal-card .grid2')}
 function makeMobileMoreButton(item){
   const b=document.createElement('button');b.type='button';b.className='quick-action';b.dataset.mmRegistryMenu=item.id;
   b.innerHTML=`<span class="icon" aria-hidden="true">${esc(item.icon||'•')}</span><b>${esc(item.label||item.id)}</b><small>${esc(item.description||'Open this tool.')}</small>`;b.setAttribute('aria-label',item.label||item.id);
   b.addEventListener('click',()=>{try{window.closeModal?.()}catch(_){}activeCustomId=item.id;safeCall(item.action);syncActiveState()});return b
 }
-function populateMobileMore(){
+function populateMobileMore(grid){
+  // Bind this deferred update to the *original* More modal. A different
+  // dialog may replace it before the next animation frame.
+  if(!grid)return;
   requestAnimationFrame(()=>{
-    const grid=mobileGrid();if(!grid)return;
+    const modal=document.getElementById('modal');
+    const card=grid.closest('.modal-card');
+    if(!grid.isConnected||!modal?.contains(grid)||!card||card.querySelector('h2')?.textContent.trim()!=='More')return;
     grid.querySelectorAll('[data-mm-registry-menu],[data-mm-diagnostic-menu],[data-mm-process-data-menu],[data-mm-material-menu],[data-mm-learning-insights-menu],[data-mm-reference-data-menu]').forEach(x=>x.remove());
     const items=[...navigationItems.values()].filter(x=>x.mobileMore!==false).sort((a,b)=>(a.order||50)-(b.order||50));
     for(const item of items)grid.appendChild(makeMobileMoreButton(item))
@@ -339,7 +343,12 @@ function renderLessonCanonical(){
   curriculumLessonAdapter();syncActiveState();requestAnimationFrame(syncActiveState);emitRender('lesson')
 }
 function switchViewCanonical(id){
-  activeCustomId='';const r=captured.switchView.apply(this,arguments);syncActiveState();requestAnimationFrame(syncActiveState);emitView(id);return r
+  // Runtime V2's BEFORE hook already saves Book before invoking this handler.
+  activeCustomId='';const r=captured.switchView.apply(this,arguments);
+  // Cancel the core's smooth scroll on workspace changes: the previous page can
+  // remain clipped while short views render, particularly on mobile WebKit.
+  window.scrollTo({top:0,behavior:'instant'});
+  syncActiveState();requestAnimationFrame(syncActiveState);emitView(id);return r
 }
 function bindCanonicalCoreNavigation(){
   const nav=document.getElementById('nav');if(!nav||nav.dataset.mmCanonicalCoreNav==='1')return;
@@ -349,6 +358,8 @@ function bindCanonicalCoreNavigation(){
     if(!button||button.closest('#nav')!==nav||button.disabled)return;
     const view=button.dataset.view;if(!view)return;
     event.preventDefault();event.stopImmediatePropagation();
+    // Direct primary-nav clicks bypass Runtime V2's before-hook dispatcher.
+    window.MMBook?.prepareRouteExit?.(view);
     switchViewCanonical(view);
   },true);
 }
@@ -365,7 +376,7 @@ function openMobileMenuCanonical(){
     });
     grid.dataset.mmMoreReduced='1'
   }
-  populateMobileMore();return r
+  populateMobileMore(grid);return r
 }
 
 function setCustomActive(id,mobileGroup){activeCustomId=id||'';if(mobileGroup&&navigationItems.has(id))navigationItems.get(id).mobileGroup=mobileGroup;syncActiveState();emitView(id)}

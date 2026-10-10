@@ -198,8 +198,19 @@ def main() -> None:
 
     assurance = model.get("currentAssuranceEvidence") or {}
     assert set(assurance) == {"staticContract", "behavioralBrowser", "externalHumanDevice"}, "assurance evidence layers drifted"
-    assert assurance["staticContract"].get("status") == "pass"
-    assert assurance["behavioralBrowser"].get("status") == "pass"
+    # A newly staged runtime may honestly be technically failing while the
+    # retained candidate is produced; it must never be called a passing
+    # contract or a validated external release before its exact-head binding.
+    if external["technicalAutomation"]["status"] == "fail":
+        assert assurance["staticContract"].get("status") == "fail"
+        assert assurance["behavioralBrowser"].get("status") == "fail"
+        assert external["candidateStatus"].startswith("HOLD")
+        assert external["webCandidate"] is None
+        assert external["pwaPhysicalDevices"]["currentCandidate"] is None
+    else:
+        assert external["technicalAutomation"]["status"] == "pass"
+        assert assurance["staticContract"].get("status") == "pass"
+        assert assurance["behavioralBrowser"].get("status") == "pass"
     assert assurance["externalHumanDevice"].get("status") == "hold"
 
     assert external["productionUse"]["status"] == "advisory-only"

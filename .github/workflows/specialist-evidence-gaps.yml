@@ -4,6 +4,14 @@ on:
   push:
     branches: [main, evidence-coverage-hardening]
     paths:
+      - 'tools/validate_external_acquisitions.py'
+      - 'qa_external_acquisition_validator.py'
+      - 'qa_external_data_acquisition_readiness.py'
+      - 'sources/REAL_PROCESS_DATA_CAPTURE_CONTRACT.md'
+      - 'sources/MECHANISM_VALIDATION_QUEUE.md'
+      - 'data/black-speck-intervention-recovery-template.csv'
+      - 'data/hot-runner-synchronised-trace-template.csv'
+      - 'data/mould-maintenance-recovery-template.csv'
       - 'specialist-curriculum.js'
       - 'src/domains/learning/specialist-evidence-gap-extension.js'
       - 'src/domains/shell/app-shell-finalize.js'
@@ -15,12 +23,8 @@ on:
       - 'data/black-speck-intervention-recovery-template.csv'
       - 'data/hot-runner-synchronised-trace-template.csv'
       - 'data/mould-maintenance-recovery-template.csv'
-      - 'qa_external_data_acquisition_readiness.py'
-      - 'sources/REAL_PROCESS_DATA_CAPTURE_CONTRACT.md'
-      - 'sources/MECHANISM_VALIDATION_QUEUE.md'
-      - 'data/black-speck-intervention-recovery-template.csv'
-      - 'data/hot-runner-synchronised-trace-template.csv'
-      - 'data/mould-maintenance-recovery-template.csv'
+      - 'tools/validate_external_acquisitions.py'
+      - 'qa_external_acquisition_validator.py'
       - 'data/evidence-coverage-v1.json'
       - 'data/evidence-promotion-overlay-v2.json'
       - 'index.html'
@@ -74,3 +78,5 @@ jobs:
         run: python qa_specialist_evidence_gaps.py
       - name: External measured-data acquisition readiness
         run: python qa_external_data_acquisition_readiness.py
+      - name: Private measured-data structural validator self-test
+        run: python qa_external_acquisition_validator.py

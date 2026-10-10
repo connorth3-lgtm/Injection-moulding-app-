@@ -106,6 +106,20 @@ async function expectNarrowReadableTiles(page,rootSelector,expectedCount=4){
   expect(result.overlap).toBe(false);
 }
 
+async function expectUnifiedLessonCatalog(page){
+  const root=page.locator('#path .mm-all-lessons');
+  await expect(root).toBeVisible();
+  await expect(root.locator('[data-mm-catalog-group]')).toHaveCount(22);
+  await expect(root.locator('[data-mm-catalog-item]')).toHaveCount(176);
+  const geometry=await page.evaluate(()=>{
+    const root=document.querySelector('#path .mm-all-lessons');
+    const rect=root.getBoundingClientRect();
+    return {width:rect.width,viewport:innerWidth,overflow:document.documentElement.scrollWidth-innerWidth};
+  });
+  expect(geometry.width).toBeLessThanOrEqual(geometry.viewport+2);
+  expect(geometry.overflow).toBeLessThanOrEqual(2);
+}
+
 async function expectFullWidthPrimaryAction(page,rootSelector){
   const geometry=await page.evaluate(rootSelector=>{
     const root=document.querySelector(rootSelector);
@@ -123,36 +137,36 @@ async function expectFullWidthPrimaryAction(page,rootSelector){
 async function openMaterials(page){
   await page.locator('.mobile-nav > button').filter({hasText:'Materials'}).click();
   await expect(page.locator('#materials')).toBeVisible();
-  await expect(page.locator('#materials .mat-chapter').first()).toBeVisible();
+  // Lesson navigation is in Learn; Materials keeps the searchable, source-backed catalogue.
+  await expect(page.locator('#mmExactMaterialCatalog [data-mm-all-material-index]')).toBeVisible();
+  await expect(page.locator('#mmExactMaterialCatalog [data-mm-all-material-query]')).toBeVisible();
+  await expect(page.locator('#materials .mat-chapter')).toHaveCount(0);
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
 
 async function expectMaterialDensity(page){
   const result=await page.evaluate(()=>{
     const root=document.getElementById('materials');
-    const cards=[...root.querySelectorAll('.mat-chapter')];
-    const first=cards[0];
-    const copy=first.querySelector('p');
-    const action=first.querySelector('.course-bottom button,.course-bottom .primary,.course-bottom .secondary,button');
+    const catalogue=root.querySelector('#mmExactMaterialCatalog [data-mm-all-material-index]');
+    const search=catalogue?.querySelector('[data-mm-all-material-query]');
+    const cards=[...catalogue.querySelectorAll('[data-mm-material-index-result]')];
     const boxes=cards.slice(0,4).map(card=>card.getBoundingClientRect());
+    const firstText=(cards[0]?.textContent||'').trim();
+    const searchRect=search?.getBoundingClientRect();
     return {
       count:cards.length,
-      minHeight:getComputedStyle(first).minHeight,
-      firstHeight:first.getBoundingClientRect().height,
-      copyHeight:copy?.getBoundingClientRect().height||0,
-      copyText:(copy?.textContent||'').trim(),
-      actionHeight:action?.getBoundingClientRect().height||0,
+      searchHeight:searchRect?.height||0,
+      searchWidth:searchRect?.width||0,
+      firstTextLength:firstText.length,
       overflowX:Math.max(0,root.scrollWidth-root.clientWidth),
       scrollTop:window.scrollY||document.scrollingElement?.scrollTop||0,
       overlap:boxes.some((a,i)=>boxes.some((b,j)=>j>i&&a.top<b.bottom&&a.bottom>b.top&&a.left<b.right&&a.right>b.left))
     };
   });
   expect(result.count).toBeGreaterThanOrEqual(4);
-  expect(result.minHeight).toBe('0px');
-  expect(result.firstHeight).toBeLessThan(300);
-  expect(result.copyHeight).toBeGreaterThan(20);
-  expect(result.copyText.length).toBeGreaterThan(30);
-  expect(result.actionHeight).toBeGreaterThanOrEqual(44);
+  expect(result.searchHeight).toBeGreaterThanOrEqual(36);
+  expect(result.searchWidth).toBeGreaterThan(150);
+  expect(result.firstTextLength).toBeGreaterThan(30);
   expect(result.overflowX).toBeLessThanOrEqual(1);
   expect(result.scrollTop).toBeLessThanOrEqual(1);
   expect(result.overlap).toBe(false);
@@ -160,10 +174,10 @@ async function expectMaterialDensity(page){
 
 test.use({viewport:{width:412,height:915}});
 
-test('Learn hub keeps compact left-aligned mobile cards under strict CSP',async({page})=>{
+test('Learn hub shows the unified compact lesson catalogue under strict CSP',async({page})=>{
   await openApp(page);
   await openHub(page,'Learn','#path .mm-learn-hub');
-  await expectReadableTiles(page,'#path .mm-learn-hub',3);
+  await expectUnifiedLessonCatalog(page);
   await expectFullWidthPrimaryAction(page,'#path .mm-learn-hub');
   await page.screenshot({path:'qa-artifacts/mobile-learn-hub-412x915.png',fullPage:true});
 });
@@ -176,7 +190,7 @@ test('Practice hub keeps compact left-aligned mobile cards under strict CSP',asy
   await page.screenshot({path:'qa-artifacts/mobile-practice-hub-412x915.png',fullPage:true});
 });
 
-test('Material chapters are content-driven and enter at the top on 412px phones',async({page})=>{
+test('Materials catalogue remains readable and enters at the top on 412px phones',async({page})=>{
   await openApp(page);
   await openMaterials(page);
   await expectMaterialDensity(page);
@@ -186,10 +200,10 @@ test('Material chapters are content-driven and enter at the top on 412px phones'
 test.describe('360px narrow-phone hubs',()=>{
   test.use({viewport:{width:360,height:800}});
 
-  test('Learn and Practice use content-driven one-column cards instead of empty title slabs',async({page})=>{
+  test('Learn catalogue and Practice cards fit on a narrow phone',async({page})=>{
     await openApp(page);
     await openHub(page,'Learn','#path .mm-learn-hub');
-    await expectNarrowReadableTiles(page,'#path .mm-learn-hub',3);
+    await expectUnifiedLessonCatalog(page);
 
     await openHub(page,'Practice','#scenarios .mm-practice-hub');
     await expectNarrowReadableTiles(page,'#scenarios .mm-practice-hub');
@@ -205,7 +219,7 @@ test.describe('360px narrow-phone hubs',()=>{
     await expect.poll(()=>page.evaluate(()=>window.scrollY||document.scrollingElement?.scrollTop||0),{timeout:2500}).toBeLessThanOrEqual(1);
   });
 
-  test('Material chapters keep readable copy, tap targets and stable view-entry position',async({page})=>{
+  test('Materials catalogue keeps readable results, search tap targets and stable view-entry position',async({page})=>{
     await openApp(page);
     await openHub(page,'Practice','#scenarios .mm-practice-hub');
     await page.evaluate(()=>window.scrollTo(0,document.scrollingElement?.scrollHeight||document.body.scrollHeight));

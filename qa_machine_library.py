@@ -12,6 +12,14 @@ assert len(data["manufacturers"]) >= 11
 
 ids = set()
 models = {}
+latest_source_check = max(
+    (source["checked"]
+     for maker in data["manufacturers"]
+     for model in maker.get("models", [])
+     for source in model.get("sources", [])),
+    default="",
+)
+assert data["last_updated"] >= latest_source_check, "machine library date predates OEM source verification"
 for maker in data["manufacturers"]:
     assert maker["id"] and maker["name"]
     for row in maker.get("models", []):
@@ -44,6 +52,24 @@ for maker in data["manufacturers"]:
             assert "machine" in row["generation_note"].lower()
 
 expected = {
+    "nissei-fnx80-iv": {
+        "model": "FNX80Ⅳ", "clamp": 792, "units": {
+            "9A": ([26,28,32,36], [59,69,90,114], [265,244,187,147]),
+            "12A": ([28,32,36,40], [77,101,127,157], [265,226,179,145]),
+        },
+    },
+    "nissei-fnx140-iv": {
+        "model": "FNX140Ⅳ", "clamp": 1370, "units": {
+            "25A": ([36,40,45,50], [163,201,254,314], [255,219,173,140]),
+            "36A": ([45,50,56], [286,353,443], [207,168,134]),
+        },
+    },
+    "nissei-fnx180-iv": {
+        "model": "FNX180Ⅳ", "clamp": 1750, "units": {
+            "25A": ([36,40,45,50], [163,201,254,314], [255,219,173,140]),
+            "36A": ([45,50,56], [286,353,443], [207,168,134]),
+        },
+    },
     "nissei-fnx110-iv": {
         "model": "FNX110Ⅳ", "clamp": 1100, "units": {
             "12A": ([28, 32, 36, 40], [77, 101, 127, 157], [265, 226, 179, 145]),
@@ -56,6 +82,12 @@ expected = {
             "71A": ([56, 63, 71], [554, 701, 891], [196, 155, 122]),
         },
     },
+    "nissei-fnx280-iv": {
+        "model": "FNX280Ⅳ", "clamp": 2740, "units": {
+            "71A": ([56, 63, 71], [554, 701, 891], [196, 155, 122]),
+            "100A": ([63, 71, 80], [795, 1010, 1280], [205, 161, 127]),
+        },
+    },
 }
 for key, contract in expected.items():
     m = models[key]
@@ -65,7 +97,7 @@ for key, contract in expected.items():
     assert m["controller"]["confidence"] == "missing"
     assert not m["manuals"], "cannot invent a verified machine manual"
     assert m["sources"][0]["url"].startswith("https://www.nisseiplastic.com/en/products/fnx-4/spec.php?model=")
-    assert m["sources"][0]["checked"] == "2026-10-08"
+    assert m["sources"][0]["checked"] == ("2026-10-09" if key in {"nissei-fnx80-iv", "nissei-fnx140-iv", "nissei-fnx180-iv", "nissei-fnx280-iv"} else "2026-10-08")
     found = {v["injection_unit_id"]: v for v in m["published_injection_variants"]}
     assert set(found) == set(contract["units"])
     for unit, (diam, capacity, pressure) in contract["units"].items():
@@ -74,6 +106,173 @@ for key, contract in expected.items():
         assert got["injection_capacity_cm3"] == capacity
         assert got["maximum_injection_pressure_mpa"] == pressure
     assert all(w["status"] == "missing" for w in m["wanted_documents"])
+    if key in {"nissei-fnx80-iv", "nissei-fnx140-iv", "nissei-fnx180-iv", "nissei-fnx280-iv"}:
+        geometry = {
+            "nissei-fnx80-iv": (470, 200, 670, "420 x 420", "580 x 580", 75, "9A"),
+            "nissei-fnx140-iv": (600, 250, 850, "510 x 510", "730 x 730", 90, "25A"),
+            "nissei-fnx180-iv": (700, 250, 950, "560 x 560", "800 x 800", 110, "36A"),
+            "nissei-fnx280-iv": (830, 320, 1150, "660 x 660", "955 x 955", 130, "71A"),
+        }[key]
+        specs = m["common_verified_specs"]
+        assert (
+            specs["clamping_stroke_mm"], specs["min_mould_thickness_mm"],
+            specs["max_daylight_opening_mm"], specs["tie_bar_clearance_h_x_v_mm"],
+            specs["die_plate_h_x_v_mm"], specs["ejector_stroke_mm"]
+        ) == geometry[:6], f"OEM geometry pairing drift for {key}"
+        assert found[geometry[6]]["published_option"] == "standard"
+        assert all(v["published_option"] == ("standard" if v["injection_unit_id"] == geometry[6] else "optional")
+                   for v in found.values())
+        assert m["sources"][0]["url"].endswith("model=FNX" + key.split("fnx", 1)[1].split("-iv", 1)[0] + "%E2%85%A3")
+
+
+
+# α-S50iB has its own six-column 350 mm/s table. It MUST NOT inherit
+# α-S100iB or 550 mm/s options, or imply any as-built/validated process rating.
+fanuc_50 = models["fanuc-roboshot-alpha-s50ib"]
+assert fanuc_50["model"] == "ROBOSHOT α-S50iB"
+assert fanuc_50["series"] == "ROBOSHOT α-SiB"
+assert fanuc_50["research_status"] == "active"
+assert fanuc_50["manufacture_year"]["status"] == "unknown"
+assert fanuc_50["controller"]["confidence"] == "missing"
+assert not fanuc_50["manuals"] and not fanuc_50["published_injection_variants"]
+assert all(w["status"] == "missing" for w in fanuc_50["wanted_documents"])
+assert fanuc_50["common_verified_specs"] == {
+    "clamping_force_kn": 500,
+    "clamping_stroke_mm": 250,
+    "tie_bar_clearance_h_x_v_mm": "360 x 320",
+    "die_plate_h_x_v_mm": "500 x 470",
+    "ejector_stroke_mm": 70,
+}
+assert fanuc_50["published_clamp_force_options_kn"] == [500, 650]
+assert fanuc_50["published_mould_height_variants"] == [
+    {"platen_configuration": "single", "standard_min_mm": 210,
+     "standard_max_mm": 410, "increased_min_mm": 210,
+     "increased_max_mm": 460},
+    {"platen_configuration": "double", "standard_min_mm": 150,
+     "standard_max_mm": 350, "increased_min_mm": 150,
+     "increased_max_mm": 400},
+]
+screw_50 = fanuc_50["published_screw_data"]
+assert screw_50["source_id"] == fanuc_50["sources"][0]["id"]
+assert "350 mm/s" in screw_50["mode"] and "NOT the separate 550 mm/s" in screw_50["mode"]
+assert screw_50["actual_fitted_injection_unit_id"] is None
+assert screw_50["screw_diameter_mm"] == [18, 20, 22, 26, 28, 32]
+assert screw_50["maximum_injection_volume_cm3"] == [19, 24, 29, 50, 58, 76]
+assert screw_50["maximum_injection_and_hold_pressure_1_mpa"] == [280, 310, 290, 240, 220, 180]
+assert screw_50["maximum_injection_and_hold_pressure_2_mpa"] == [260, 280, 260, 210, 190, 150]
+assert "neither is direct measured resin pressure" in screw_50["scope"]
+assert "production machine-fit" in screw_50["scope"]
+assert fanuc_50["sources"][0]["url"] == "https://www.fanuc.eu/eu-en/product/roboshot/fanuc-roboshot-a-s50ib"
+assert fanuc_50["sources"][0]["checked"] == "2026-10-10"
+
+
+fanuc = models["fanuc-roboshot-alpha-s100ib"]
+assert fanuc["model"] == "ROBOSHOT α-S100iB"
+assert fanuc["series"] == "ROBOSHOT α-SiB"
+assert fanuc["controller"]["confidence"] == "missing", "model-page controller does not prove installed controller"
+assert not fanuc["manuals"] and not fanuc["published_injection_variants"], "do not invent serial-specific manuals/injection-unit identity"
+assert fanuc["common_verified_specs"] == {
+    "clamping_force_kn": 1000,
+    "clamping_stroke_mm": 350,
+    "tie_bar_clearance_h_x_v_mm": "460 x 410",
+    "die_plate_h_x_v_mm": "660 x 610",
+    "ejector_stroke_mm": 100,
+}
+assert fanuc["published_clamp_force_options_kn"] == [1000, 1250], "increased clamp must not silently replace base clamp"
+assert fanuc["published_mould_height_variants"] == [
+    {"platen_configuration":"single","standard_min_mm":220,"standard_max_mm":520,"increased_min_mm":220,"increased_max_mm":620},
+    {"platen_configuration":"double","standard_min_mm":150,"standard_max_mm":450,"increased_min_mm":150,"increased_max_mm":550},
+], "OEM single/double platen and increased height options drifted"
+screw = fanuc["published_screw_data"]
+assert screw["source_id"] == fanuc["sources"][0]["id"]
+assert "200 mm/s" in screw["mode"] and "not high-duty" in screw["mode"]
+assert screw["actual_fitted_injection_unit_id"] is None
+assert screw["screw_diameter_mm"] == [22, 26, 28, 32, 36, 40]
+assert screw["maximum_injection_volume_cm3"] == [29, 50, 58, 103, 147, 181]
+assert screw["maximum_injection_and_hold_pressure_1_mpa"] == [290, 290, 270, 250, 190, 160]
+assert screw["maximum_injection_and_hold_pressure_2_mpa"] == [260, 260, 240, 220, 190, 160]
+assert fanuc["sources"][0]["url"] == "https://www.fanuc.eu/eu-en/product/roboshot/fanuc-roboshot-a-s100ib"
+assert fanuc["sources"][0]["checked"] == "2026-10-09"
+assert "screwData(m)" in page and "mouldHeightOptions(m)" in page, "the operator must see non-interchangeable source variants"
+assert all(w["status"] == "missing" for w in fanuc["wanted_documents"])
+
+# FANUC's official α-S130iB listing is a separate exact model and must never
+# borrow S100/150iB pressure, clamp or platen-configuration variants.
+fanuc_130 = models["fanuc-roboshot-alpha-s130ib"]
+assert fanuc_130["model"] == "ROBOSHOT α-S130iB"
+assert fanuc_130["series"] == "ROBOSHOT α-SiB"
+assert fanuc_130["research_status"] == "active"
+assert fanuc_130["manufacture_year"]["status"] == "unknown"
+assert fanuc_130["controller"]["confidence"] == "missing"
+assert not fanuc_130["manuals"] and not fanuc_130["published_injection_variants"]
+assert fanuc_130["common_verified_specs"] == {
+    "clamping_force_kn": 1300,
+    "clamping_stroke_mm": 400,
+    "tie_bar_clearance_h_x_v_mm": "530 x 530",
+    "die_plate_h_x_v_mm": "730 x 730",
+    "ejector_stroke_mm": 100,
+}
+assert fanuc_130["published_clamp_force_options_kn"] == [1300]
+assert fanuc_130["published_mould_height_variants"] == [
+    {"platen_configuration": "single",
+     "standard_min_mm": 200, "standard_max_mm": 570,
+     "increased_min_mm": 200, "increased_max_mm": 670}
+]
+screw_130 = fanuc_130["published_screw_data"]
+assert screw_130["source_id"] == fanuc_130["sources"][0]["id"]
+assert "200 mm/s" in screw_130["mode"] and "not 200 mm/s high-duty" in screw_130["mode"]
+assert screw_130["actual_fitted_injection_unit_id"] is None
+assert screw_130["screw_diameter_mm"] == [26, 28, 32, 36, 40]
+assert screw_130["maximum_injection_volume_cm3"] == [50, 58, 103, 147, 181]
+assert screw_130["maximum_injection_and_hold_pressure_1_mpa"] == [290, 270, 250, 190, 160]
+assert screw_130["maximum_injection_and_hold_pressure_2_mpa"] == [260, 240, 220, 190, 160]
+assert fanuc_130["sources"][0]["url"] == "https://www.fanuc.eu/eu-en/product/roboshot/fanuc-roboshot-a-s130ib"
+assert fanuc_130["sources"][0]["checked"] == "2026-10-09"
+assert all(w["status"] == "missing" for w in fanuc_130["wanted_documents"])
+
+
+# FANUC α-S150iB base-speed row MUST NOT be mixed with the separate
+# small-capacity machine configuration or 350 mm/s high-pressure option.
+fanuc_150 = models["fanuc-roboshot-alpha-s150ib"]
+assert fanuc_150["model"] == "ROBOSHOT α-S150iB"
+assert fanuc_150["series"] == "ROBOSHOT α-SiB"
+assert fanuc_150["research_status"] == "active"
+assert fanuc_150["manufacture_year"]["status"] == "unknown"
+assert fanuc_150["controller"]["confidence"] == "missing"
+assert not fanuc_150["manuals"] and not fanuc_150["published_injection_variants"]
+assert fanuc_150["common_verified_specs"] == {
+    "clamping_force_kn": 1500,
+    "clamping_stroke_mm": 440,
+    "tie_bar_clearance_h_x_v_mm": "560 x 510",
+    "die_plate_h_x_v_mm": "800 x 750",
+    "ejector_stroke_mm": 150,
+}
+assert fanuc_150["published_clamp_force_options_kn"] == [1500, 1800]
+assert fanuc_150["published_mould_height_variants"] == [
+    {"platen_configuration":"double","standard_min_mm":200,"standard_max_mm":500,
+     "increased_min_mm":200,"increased_max_mm":600},
+    {"platen_configuration":"single","standard_min_mm":275,"standard_max_mm":575,
+     "increased_min_mm":275,"increased_max_mm":675},
+]
+screw_150 = fanuc_150["published_screw_data"]
+assert screw_150["source_id"] == fanuc_150["sources"][0]["id"]
+assert "200 mm/s" in screw_150["mode"] and "NOT separate 350 mm/s" in screw_150["mode"]
+assert screw_150["actual_fitted_injection_unit_id"] is None
+assert screw_150["screw_diameter_mm"] == [32, 36, 40, 44, 48, 52]
+assert screw_150["maximum_injection_volume_cm3"] == [121, 153, 188, 268, 318, 442]
+assert screw_150["maximum_injection_and_hold_pressure_1_mpa"] == [310, 310, 260, 220, 230, 200]
+assert screw_150["maximum_injection_and_hold_pressure_2_mpa"] == [280, 280, 260, 220, 230, 200]
+assert "not direct resin pressure" in screw_150["scope"] or "neither pressure is melt/resin pressure" in screw_150["scope"]
+assert fanuc_150["sources"][0]["url"].startswith("https://www.fanuc.eu/")
+assert fanuc_150["sources"][1]["url"] == "https://www.fanucamerica.com/products/roboshot/roboshot-a-s150ib"
+assert "SOURCE-REVISION CONFLICT" in screw_150["scope"] and "2024" in screw_150["scope"]
+assert screw_150["mode"].startswith("FANUC Europe 2021")
+assert fanuc_150["sources"][2]["url"].endswith("roboshot-alpha-ib-series-brochure-en-2024.pdf?la=sl")
+assert "version-specific" in fanuc_150["sources"][2]["confidence"]
+
+assert all(s["checked"] == "2026-10-09" for s in fanuc_150["sources"])
+assert all(w["status"] == "missing" for w in fanuc_150["wanted_documents"])
+
 
 hmd = models["hwamda-hmd400m6"]
 assert "M6-S" in hmd["generation_note"] and "Do not substitute" in hmd["generation_note"]

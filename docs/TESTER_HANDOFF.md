@@ -1,6 +1,6 @@
 # MouldMaster — controlled tester handoff
 
-**Release family:** `2026.10.09.4`  
+**Release family:** `2026.10.09.6`  
 **Status:** PREPARED, **not cleared to circulate** until the protected-main hosted preview and human checks below are verified.
 
 This is an owner-facing rollout playbook for a **small, voluntary, non-production usability cohort**. It is **not** production-root launch approval, physical-device authorization, formal real-AT testing, a learner-outcomes study, NZQA/provider approval or machine-control authorisation.
@@ -24,7 +24,7 @@ MouldMaster has separate destinations:
    python3 qa_tester_handoff.py --live --expected-source-sha <ACTUAL_PROTECTED_MAIN_COMMIT_SHA>
    ```
 
-   The command verifies the live root HOLD, `/preview/` markers, publication source, manifest/asset integrity, public/private asset boundary, and that the deployed web-release version matches `version.json`. It must exit **zero**. Do not substitute the PR's pre-merge SHA for the protected-main merge commit.
+   The command first independently checks the GitHub API: the supplied SHA **must equal the latest protected `main` HEAD**, and that same HEAD must have a **successful `push` execution of the governed Pages workflow**. A stale commit, still-running or failed run, successful PR-only candidate, manual dispatch, GitHub API failure or old preview must be treated as **STOP / no-send**, even when the old preview's release/version and its own asset manifest are internally consistent. The command then verifies the live root HOLD, `/preview/` markers, deployment source, manifest/asset integrity, public/private asset boundary, and `version.json` release identity. It must exit **zero**. Do not substitute the PR's pre-merge SHA for the protected-main merge commit. GitHub API connectivity is mandatory for this operator-only check; the normal offline repository QA remains network-free.
 4. Capture a non-sensitive record of the checked release, deployed SHA, checked date, Pages run link, result and operator in the handoff notes. No private tester identifiers belong in public source control.
 
 ## Manual preflight — required
@@ -41,6 +41,20 @@ Use a fresh personal browser profile (no production/customer information). At le
 - [ ] Issue template and a **private fallback reply route to the inviter** are workable, including for people without GitHub accounts.
 - [ ] The contact/invitation wording explicitly forbids real production data, private backups and training-as-production usage.
 - [ ] The owner has triage capacity for P0/P1 reports and can pause additional invitations promptly.
+
+## Android screenshot regression — active Mission Control mobile Home
+
+A user-supplied Android-style portrait capture (10 October 2026) shows an eight-step Mission Control timeline visually covering the Book card/CTA, alongside a horizontally clipped machine/mould/material context row. The screenshot does **not** identify its release SHA, installed service-worker generation, browser/PWA mode or device/zoom settings, so it must be treated as an **unresolved mobile visual report**, not proof that the current source passes or fails on that exact device.
+
+Before sending invitations, reproduce an active **fictional** mission on Home at mobile widths 320, 360, 390 and 412 CSS px and at 200% zoom. Verify:
+
+- [ ] The numbered mission timeline occupies **normal document flow immediately above** Today’s focus; it is not a floating strip over Book, lesson or the bottom tabs.
+- [ ] All five context fields can be reached and read without sideways page scrolling; labels wrap rather than being cut off.
+- [ ] Book’s **Open Book** action, the five mobile tabs, all stage buttons and **Next** remain touch reachable. Confirm when scrolled to Book, not only on initial load.
+- [ ] Record the **App version** shown on the in-app update card (where available), exact `/preview/` URL or installed-PWA mode, phone/browser, zoom/text scale, steps and **non-sensitive** before/after screenshots. Do not send learner exports or industrial identifiers.
+- [ ] If a PWA seems stale, first close its open windows/tabs completely, reconnect and reopen. If still stale, the in-app **Repair app files** option is a scoped service-worker/cache repair; it is *not* permission to clear site storage or erase profiles. Recheck the app version, screenshot geometry and learner A→B→A isolation after repair.
+
+Automated CSS assertions and browser viewport regressions are helpful but **do not replace physical device/user visual evidence**. Keep #520 and the relevant device/AT release gates on HOLD until actual bound verification is recorded.
 
 ## STOP / no-send conditions
 

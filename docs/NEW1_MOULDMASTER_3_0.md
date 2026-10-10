@@ -35,6 +35,12 @@ This local workbench uses the existing canonical six Virtual Apprenticeship case
 
 The first flagship experience links the existing Book concept to a fictional factory fault, then to canonical authored assessment choices, deterministic feedback, formative apprenticeship guidance and optional trainer assignments. No duplicate scoring authority, shadow learner database or machine setting generator is introduced.
 
+## Canonical lesson → Book course-level discovery (developer-only)
+
+The experimental academy can now answer `academy.lessonGuide(canonicalLesson, canonicalCourses)` using the existing `data/book-curriculum-crosswalk-v1.json`. It checks the numeric canonical lesson/course IDs against the supplied governed course registry, returns at most three related Book modules with their existing evidence state, and returns `unmapped` for an unknown or ambiguous course. No new crosswalk, lesson completion, hidden learner profile, certificate or production advice is generated.
+
+**Semantic limit:** this is explicitly course-level thematic discovery. It is not an authored reviewed exact-lesson/chapter/competency mapping. Turning suggestions into public app links, saved learner progress or instructional claims requires the separate content-owner and Book/curriculum SME review, stable deep-link/offline behavior, and a new governed release. The current `.5` PWA remains unchanged.
+
 ## Broader 3.0 ambition, explicitly NOT achieved by this patch
 
 250+ lessons/modules, a publisher-reviewed multi-volume Book, 1,000 independently validated diagnostics, 1,500 reviewed questions/scenarios, a multi-machine physics-backed cell, and institution-managed cohorts are long-range targets. The existing baseline remains **120 core lessons, 20 separate specialist lessons, 46 governed Book modules, and six VA investigations**.
@@ -49,6 +55,24 @@ The first flagship experience links the existing Book concept to a fictional fac
 
 This work stays in the same reviewable New1 PR and does not fast-forward the old 5 October branches or bypass protected-main release protections.
 
+## October 9 development-only Book integrity hardening
+
+The five-pillar development Book explorer now validates the authoritative 46-module crosswalk against the Book manifest **in order**, requires the existing twelve-course registry and rejects missing, unknown or duplicate Book/course/thematic mappings. Its public lookups return detached arrays so callers cannot mutate the internal crosswalk, source-evidence list or later case recommendations. Negative regression tests cover omissions, forged chapters/courses, reordered mappings and accidental caller mutation. Learner-token scoping also clears cached formative coaching on A→B→A profile changes (including an identity change mid-review), without creating a new learner store. This is **course-level semantic reinforcement only**—it does not generate or approve a 120-lesson, lesson-level equivalence or competency score, and no production shell/runtime/cache version changes are introduced.
+
 ## Data and consent boundaries
 
 New1 does not create a learner store. When activated into a governed app, attempt indicators must use canonical Runtime V2 learner-scoped storage; local workbench uses a read-only stub. Its new training shots are synthetic and can never be passed off as real production logs. Trainer exports contain a template only. An anonymous performance summary includes the single current reviewed case and competency gaps, not free-text evidence, identifiers or automatic submissions; sharing outside the workbench remains voluntary and human-controlled.
+
+## October 9 New1 trainer-share and profile-boundary hardening
+
+The developer-only New1 Case One review now stores an immutable, internally verified snapshot of the canonical six-case Virtual Apprenticeship scorer's VA-02 result. The four distinct reasoning dimensions, source gaps, and exact 0–4 total must agree; a malformed scorer response becomes unavailable rather than coachable or shareable. Trainer-summary export verifies **fresh voluntary consent**, exact reference identity with the **currently held canonical review**, and stable active learner token before and after preparation. Forged result copies and reviews from another learner are rejected. Tutor/progress callbacks that switch the current learner cannot leak previous-profile coaching or attempted-case counts. The workbench rereads the current canonical review instead of displaying a stale cached score.
+
+Adversarial synthetic-only regression tests cover altered scores, immutable dimension arrays, A→B profile export, changes *inside* progress callbacks, and malformed canonical scoring results. This remains **development-only**; it creates no learner store, actual instructor data-transfer, credentials, SME approval, real-world outcomes, physics prediction or public `.5` release change. Issue #521 remains OPEN pending human-reviewed learner journeys and actual device/AT acceptance.
+
+## Canonical lesson registry guard — 9 October 2026
+
+The developer-only lesson-to-Book course suggestion now accepts only a lesson **object from the actual supplied canonical 120-lesson registry** (strict reference identity), alongside the complete unique 12-course registry and governed 46-Book-module course crosswalk. Plausible but invented numeric IDs, forged copies, duplicated/out-of-range lessons and incomplete or conflicting course registries return **unmapped** instead of showing a misleading Book suggestion. Callers must pass the existing `D.lessons` and `D.courses` references; no shadow curriculum store is created. A structurally complete caller-supplied registry does **not** prove a human-approved lesson–Book equivalence: suggestions remain course-level, formative, no credit or workplace competence. Negative tests use fabricated roster fixtures for software QA only. This remains excluded from the released `.5` app, and #521/#326/#327 stay OPEN until reviewed and governed.
+
+## Canonical pathway attempt hardening — 9 October 2026
+
+The developer-only New1 role pathway now rejects coercible strings, booleans, arrays, inherited/ambiguous case IDs, unsupported storage schema, and partial best-only draft scores as real reviewed attempts. For a displayed attempt it requires exactly one governed VA case, bounded integer best and last results (best >= last), and the canonical completion timestamp. Bad or absent records fail closed to no attempt. The pathway reads ONLY from the canonical Runtime V2 learner-scoped bridge, not an injected generic/shadow store. Negative synthetic unit fixtures check corrupted scores, prototype injection, schema conflicts and shadow-store injection. This neither changes the held .5 learner runtime nor awards qualifications, and #521 remains OPEN for governed public integration and real learner/device acceptance.

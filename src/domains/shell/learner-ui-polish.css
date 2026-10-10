@@ -1,4 +1,4 @@
-/* MouldMaster learner UI polish — 2026.10.09.4 */
+/* MouldMaster learner UI polish — 2026.10.09.6 */
 
 /* Book: the evidence contract stays visible and accessible, but it no longer
    competes with the learner's chapter choice above the fold. */
@@ -35,6 +35,28 @@
   .mm-book-material-atlas-disclosure>summary,.mm-book-material-profile>summary{align-items:flex-start}
   .mm-book-material-profile-body{padding:0 9px 10px}
   .mm-book-material-profile-body pre{font-size:10px}
+}
+/* A compact Book contents introduction: technical sources/status/listening
+   remain visible; the existing large title and descriptive intro are not lost. */
+#mmBookView .mm-book-intro-details{
+  margin:8px 0 4px;border:1px solid rgba(125,169,205,.20);
+  border-radius:12px;background:rgba(9,24,39,.48)
+}
+#mmBookView .mm-book-intro-details>summary{
+  min-height:44px;padding:10px 13px;display:flex;align-items:center;
+  cursor:pointer;list-style:none;font-weight:700;color:#dce8f6
+}
+#mmBookView .mm-book-intro-details>summary::-webkit-details-marker{display:none}
+#mmBookView .mm-book-intro-details>summary::after{
+  content:"+";margin-left:auto;color:#5fe0c6;font-size:18px
+}
+#mmBookView .mm-book-intro-details[open]>summary::after{content:"−"}
+#mmBookView .mm-book-intro-details>h2{
+  font-size:clamp(22px,3vw,29px);line-height:1.15;
+  letter-spacing:-.02em;margin:10px 13px 8px
+}
+#mmBookView .mm-book-intro-details>p{
+  margin:0 13px 14px;line-height:1.5;color:var(--mm-text,#c7d6e5)
 }
 .mm-book-governance,.mm-book-assurance-details{border:1px solid rgba(125,169,205,.2);border-radius:13px;background:rgba(9,24,39,.72);overflow:hidden}
 .mm-book-governance{margin:10px 0 12px}
@@ -263,7 +285,7 @@
   #dashboard .mm-home-book-actions button{width:100%!important;min-width:0!important;min-height:44px!important;padding:8px 9px!important;font-size:11.5px!important;white-space:nowrap!important}
 }
 
-/* Canonical Home hierarchy — 2026.10.09.4 */
+/* Canonical Home hierarchy — 2026.10.09.6 */
 /* Home keeps one dominant lesson decision, one persistent Book/Keep Reading surface,
    and two specialist shortcuts without duplicating Learn, Materials, Practice or Saved lessons. */
 #dashboard{
@@ -543,4 +565,125 @@
 }
 @media(prefers-reduced-motion:reduce){
   #dashboard .mm-home-balance-grid button{transition:none!important}
+}
+
+/* Book, not a dashboard: one numbered contents list and a quiet text column.
+   All original technical words, scope limits and human-review status remain.
+   Source records and study questions follow the prose like end matter. */
+#mmBookView .mm-book-table-of-contents{
+  max-width:840px;margin:0 auto;padding:16px 22px 28px!important
+}
+#mmBookView .mm-book-table-of-contents>h2{
+  font:600 clamp(28px,4vw,38px)/1.2 Georgia,"Times New Roman",serif;
+  letter-spacing:-.025em;margin:4px 0 18px
+}
+#mmBookView .mm-book-toc{list-style:none;padding:0;margin:0;counter-reset:none}
+#mmBookView .mm-book-toc>li{margin:0;border-bottom:1px solid rgba(151,176,197,.17)}
+#mmBookView .mm-book-toc>li>button{
+  appearance:none;display:flex;gap:13px;align-items:baseline;
+  padding:12px 9px;min-height:44px;text-align:left;width:100%;
+  border:0;border-radius:0;background:transparent!important;color:inherit;
+  font:500 clamp(15px,1.9vw,18px)/1.45 Georgia,"Times New Roman",serif;
+  cursor:pointer;box-shadow:none
+}
+#mmBookView .mm-book-toc>li>button:hover,
+#mmBookView .mm-book-toc>li>button:focus-visible{
+  background:rgba(122,164,201,.12)!important
+}
+#mmBookView .mm-book-toc-number{
+  flex:none;min-width:2ch;text-align:right;color:#a6b7ca;font-variant-numeric:tabular-nums
+}
+#mmBookView .mm-book-toc-appendix{margin-top:18px;display:grid;gap:8px}
+#mmBookView .mm-book-toc-appendix>details{
+  margin:0;padding:0;background:transparent;border:0;
+  border-top:1px solid rgba(151,176,197,.17)
+}
+#mmBookView .mm-book-toc-appendix>details>summary{
+  font-size:14px;line-height:1.5;min-height:44px;cursor:pointer;
+  padding:12px 6px;color:#bfd1e0
+}
+#mmBookView [data-mm-book-reader]{
+  max-width:900px;margin-inline:auto;padding:clamp(15px,3vw,36px)!important
+}
+#mmBookView .mm-book-prose{font-family:Georgia,"Times New Roman",serif}
+#mmBookView .mm-book-prose h2{
+  font:600 clamp(29px,4vw,41px)/1.2 Georgia,"Times New Roman",serif;
+  letter-spacing:-.025em;margin:0 0 18px
+}
+#mmBookView .mm-book-prose h3{
+  font:600 clamp(22px,2.6vw,27px)/1.3 Georgia,"Times New Roman",serif;
+  margin:34px 0 12px
+}
+#mmBookView .mm-book-prose h4{
+  font:600 clamp(18px,2.2vw,22px)/1.35 Georgia,"Times New Roman",serif;
+  margin:26px 0 8px
+}
+#mmBookView .mm-book-prose p,
+#mmBookView .mm-book-prose li{
+  font-size:clamp(16px,1.7vw,18px);line-height:1.72
+}
+#mmBookView .mm-book-prose .mm-book-chapter-number{
+  font:600 14px/1.4 system-ui,sans-serif;letter-spacing:.08em;
+  text-transform:uppercase;color:#b7c9da;margin:0 0 8px
+}
+#mmBookView .mm-book-prose .mm-book-chapter-lede{
+  font-size:clamp(17px,2vw,20px);line-height:1.55;
+  margin:0 0 26px;color:#d2dfeb
+}
+#mmBookView .mm-book-prose .mm-book-reader-module{
+  border:0;border-top:1px solid rgba(151,176,197,.22);
+  padding-top:4px;margin-top:30px
+}
+#mmBookView .mm-book-prose .mm-book-scope-note{
+  border-left:3px solid #8096ac;background:rgba(115,145,174,.09);
+  padding:8px 16px;margin:18px 0 24px
+}
+#mmBookView .mm-book-prose .mm-book-scope-note p,
+#mmBookView .mm-book-prose .mm-book-review-warning{
+  font:14px/1.6 system-ui,sans-serif;margin:2px 0 6px
+}
+#mmBookView .mm-book-prose .mm-book-review-warning{color:#f6ce9d}
+#mmBookView .mm-book-prose>.mm-book-reader-study,
+#mmBookView .mm-book-prose>.mm-book-reader-notes{
+  font-family:system-ui,sans-serif;margin-top:24px;
+  border-top:1px solid rgba(151,176,197,.22);padding-top:5px
+}
+#mmBookView .mm-book-prose>.mm-book-reader-study>summary,
+#mmBookView .mm-book-prose>.mm-book-reader-notes>summary{
+  min-height:44px;padding:10px 8px;cursor:pointer;
+  font-size:15px;color:#bed0e0
+}
+#mmBookView .mm-book-page-turn{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:8px;margin-top:30px;
+  padding-top:16px;border-top:1px solid rgba(151,176,197,.22)
+}
+#mmBookView .mm-book-page-turn>button{
+  appearance:none;min-height:44px;padding:8px 12px;
+  background:transparent;color:#d7e6f4;border:1px solid rgba(151,176,197,.26);
+  border-radius:8px;cursor:pointer;font:600 13px/1.4 system-ui,sans-serif
+}
+#mmBookView .mm-book-page-turn>button:hover{background:rgba(122,164,201,.12)}
+@media(max-width:700px){
+  #mmBookView .mm-book-table-of-contents{padding:12px 15px 22px!important}
+  #mmBookView .mm-book-toc>li>button{padding:10px 4px}
+  #mmBookView .mm-book-page-turn>button{flex:1 1 auto}
+}
+@media(forced-colors:active){
+  #mmBookView .mm-book-toc>li>button:focus-visible,
+  #mmBookView .mm-book-page-turn>button:focus-visible{outline:2px solid Highlight;outline-offset:2px}
+}
+
+
+/* The Book is a reading surface, not a Mission Control dashboard. Hide only
+   the mission's status strip, NEVER its overlay hosts, data or shortcuts. The
+   context returns automatically on Home/Learn/Practice without JS state edits. */
+@media screen {
+  body:has(#mmBookView:not(.hidden)) #mmMissionControl>.mm-mc-context,
+  body:has(#mmBookView:not(.hidden)) #mmMissionControl>.mm-mc-timeline {
+    display:none!important
+  }
+  body:has(#mmBookView:not(.hidden)) #pageSubtitle {
+    display:none!important
+  }
 }

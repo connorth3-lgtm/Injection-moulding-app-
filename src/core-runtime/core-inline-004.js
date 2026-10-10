@@ -160,11 +160,6 @@ function courseProgress(course){
 }
 function currentLesson(){ return D.lessons.find(l=>l.id===user.currentLesson)||D.lessons[0] }
 const mmCoreSafeLesson = () => D.lessons.find(l=>l.id===user.currentLesson)||D.lessons[0];
-function updateGlobalProgress(){
-  const pct=completedPct();
-  $("#sideProgress").style.width=pct+"%";$("#sideProgressText").textContent=pct+"%";
-  $("#profileMini").innerHTML=`<div class="row"><div class="row" style="justify-content:flex-start"><div class="avatar">${(user.name||"L").slice(0,1).toUpperCase()}</div><div><b>${esc(user.name)}</b><div class="tiny muted">${esc(user.role||"learner")}</div></div></div><span class="pill">${pct}%</span></div>`;
-}
 function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 
 function renderView(id){
@@ -183,36 +178,6 @@ function renderView(id){
   if(id==="profile")renderProfile();
   if(id==="standards")renderStandards();
 }
-function renderDashboard(){
-  const pct=completedPct(), c=mmCoreSafeLesson();
-  const certs=user.learningAwards?.length||0;
-  $("#dashboard").innerHTML=`
-  <div class="hero">
-    <div class="card hero-main">
-      <span class="eyebrow">Personalised learning path</span>
-      <h2>From first moulding cycle to advanced process engineering.</h2>
-      <p>Train machine fundamentals, material behaviour, tooling, process development, scientific moulding, validation, DOE, automation, simulation and expert root-cause thinking.</p>
-      <div class="hero-buttons">
-        <button class="primary" data-mm-onclick="switchView('lesson')">Continue: ${esc(c.title)}</button>
-        <button class="secondary" data-mm-onclick="switchView('simulator')">Open process simulator</button>
-        <button class="ghost" data-mm-onclick="switchView('scenarios')">Practice troubleshooting</button>
-      </div>
-    </div>
-    <div class="card statbox">
-      <div class="statline"><span class="muted tiny">Overall progress</span><b>${pct}%</b></div>
-      <div class="statline"><span class="muted tiny">Lessons completed</span><b>${user.completed.length}/${D.lessons.length}</b></div>
-      <div class="statline"><span class="muted tiny">Certificates earned</span><b>${certs}/3</b></div>
-    </div>
-  </div>
-  <div class="kpis">
-    <div class="card kpi"><span>Micro-lessons</span><b>120</b></div>
-    <div class="card kpi"><span>Technical tracks</span><b>12</b></div>
-    <div class="card kpi"><span>Defects in lab</span><b>${D.defects.length}</b></div>
-    <div class="card kpi"><span>Scenario drills</span><b>${D.scenarios.length}</b></div>
-  </div>
-  <div class="section-head"><div><h2>Continue your path</h2><p>Progress moves from core concepts toward evidence-based engineering.</p></div><button class="ghost" data-mm-onclick="switchView('path')">View all tracks</button></div>
-  <div class="grid">${D.courses.slice(0,6).map(courseCard).join("")}</div>`;
-}
 function courseCard(c){
   const p=courseProgress(c);
   return `<div class="card course-card">
@@ -225,39 +190,6 @@ function openCourse(id){
   const c=D.courses.find(x=>x.id===id);
   const next=c.lessonIds.find(id=>!user.completed.includes(id))||c.lessonIds[0];
   user.currentLesson=next;persist();switchView("lesson");
-}
-function renderPath(){
-  $("#path").innerHTML=`<div class="section-head"><div><h2>Beginner → Expert pathway</h2><p>Each track contains 10 concise lessons plus practical exercises.</p></div><span class="pill">120 lessons</span></div>
-  <div class="learning-map">${D.courses.map(c=>{const p=courseProgress(c);return `<div class="card track-row"><div><span class="eyebrow">${esc(c.level)}</span><h3 style="margin:6px 0">${c.id}. ${esc(c.name)}</h3></div><div><p class="muted">${esc(c.description)}</p><div class="mini-bar"><span style="width:${p.pct}%"></span></div></div><div><b>${p.pct}% complete</b><div style="margin-top:8px"><button class="secondary" data-mm-onclick="openCourse(${c.id})">Open track</button></div></div></div>`}).join("")}</div>`;
-}
-function renderLesson(){
-  const l=mmCoreSafeLesson(), c=D.courses.find(x=>x.id===l.course);
-  const bookmarked=user.bookmarks?.includes(l.id);
-  $("#lesson").innerHTML=`<div class="lesson-layout">
-    <article class="card lesson-body">
-      <span class="eyebrow">${esc(l.level)} · ${l.duration} min</span>
-      <h2>${l.id}. ${esc(l.title)}</h2>
-      <p>${esc(l.intro)}</p>
-      <div class="callout"><b>Lesson focus:</b> ${esc(l.summary)}</div>
-      <h3>Learning objectives</h3><ul>${l.objectives.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
-      <h3>Key engineering points</h3><ul>${l.keypoints.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
-      <h3>Shop-floor exercise</h3><p>${esc(l.exercise)}</p>
-      <div class="callout"><b>Evidence habit:</b> Record the starting condition, the change, the measured response and your conclusion. This makes troubleshooting transferable to other machines, moulds and shifts.</div>
-      <h3>Your lesson notes</h3>
-      <textarea class="note-area" id="lessonNotes" placeholder="Record observations, machine examples, questions or formulas...">${esc(user.notes?.[l.id]||"")}</textarea>
-      <div class="hero-buttons">
-        <button class="primary" data-mm-onclick="completeLesson(${l.id})">${user.completed.includes(l.id)?"Completed ✓":"Mark complete"}</button>
-        <button class="secondary" data-mm-onclick="saveLessonNote(${l.id})">Save notes</button>
-        <button class="ghost" data-mm-onclick="toggleBookmark(${l.id})">${bookmarked?"★ Bookmarked":"☆ Bookmark"}</button>
-      </div>
-    </article>
-    <aside class="card lesson-side">
-      <span class="eyebrow">Track ${c.id}: ${esc(c.name)}</span>
-      <div class="mini-bar"><span style="width:${courseProgress(c).pct}%"></span></div>
-      <div class="lesson-list">${c.lessonIds.map(id=>{const x=D.lessons.find(q=>q.id===id);return `<button class="${id===l.id?"active":""}" data-mm-onclick="goLesson(${id})">${user.completed.includes(id)?"✓ ":""}${id}. ${esc(x.title)}</button>`}).join("")}</div>
-      <button class="secondary" style="width:100%;margin-top:12px" data-mm-onclick="nextLesson()">Next lesson →</button>
-    </aside>
-  </div>`;
 }
 function goLesson(id){user.currentLesson=id;persist();renderLesson();window.scrollTo({top:0,behavior:"smooth"})}
 function nextLesson(){let id=user.currentLesson+1;if(id>D.lessons.length)id=1;goLesson(id)}
@@ -409,29 +341,6 @@ function coachReply(q){
  return "Structure the problem as Material, Machine, Mould, Method and Measurement. Define exactly where and when the symptom occurs, compare current actuals with a known-good process, rank the mechanisms by evidence, then run one controlled confirmation test.";
 }
 
-function renderExams(){
- $("#exams").innerHTML=`<div class="section-head"><div><h2>Certification ladder</h2><p>Pass each exam at 80% or better. Certificates are stored locally for this learner.</p></div></div>
- <div class="grid">${Object.keys(D.exams).map(level=>{const score=user.examScores?.[level];return `<div class="card exam-card"><span class="eyebrow">${level}</span><h3>${level} Injection Moulding Certificate</h3><p class="muted">10 questions · pass mark 80%</p><div class="course-bottom"><span class="pill">${score==null?"Not attempted":"Best: "+score+"%"}</span><button class="secondary" data-mm-onclick="startExam('${level}')">Start exam</button></div></div>`}).join("")}</div>`;
-}
-function startExam(level){
- const q=D.exams[level];
- openModal(`<span class="eyebrow">${level} certification</span><h2>${level} exam</h2><div id="examQuestions">${q.map((x,i)=>`<div class="question"><b>${i+1}. ${esc(x[0])}</b>${x[1].map((o,j)=>`<label class="option"><input type="radio" name="ex${i}" value="${j}"> ${esc(o)}</label>`).join("")}</div>`).join("")}</div><button class="primary" data-mm-onclick="gradeExam('${level}')">Grade exam</button><div id="examResult" class="callout hidden"></div>`);
-}
-function gradeExam(level){
- const q=D.exams[level];let n=0;q.forEach((x,i)=>{const r=document.querySelector(`input[name=ex${i}]:checked`);if(r&&+r.value===x[2])n++});
- const pct=Math.round(n/q.length*100);user.examScores=user.examScores||{};user.examScores[level]=Math.max(user.examScores[level]||0,pct);
- let earned=false;if(pct>=80 && !user.learningAwards.includes(level)){user.learningAwards.push(level);earned=true}
- persist();
- const r=$("#examResult");r.classList.remove("hidden");r.innerHTML=`<b>${n}/${q.length} correct — ${pct}%</b><br>${pct>=80?"Pass ✓"+(earned?" Certificate earned.":""):"Review the relevant learning tracks and try again."}`;
-}
-function renderCertificates(){
- const levels=["Beginner","Intermediate","Advanced"];
- $("#certificates").innerHTML=`<div class="section-head"><div><h2>Your certificates</h2><p>Certificates are local learning records, not third-party accredited qualifications.</p></div></div><div class="grid">${levels.map(l=>user.learningAwards.includes(l)?certificateCard(l):`<div class="card cert"><div class="seal">MM</div><h2>${l}</h2><p class="muted">Not yet earned</p><button class="secondary no-print" data-mm-onclick="switchView('exams')">Take exam</button></div>`).join("")}</div>`;
-}
-function certificateCard(l){
- return `<div class="card cert"><div class="seal">MM</div><span class="eyebrow">Certificate of completion</span><h2>${l} Injection Moulding</h2><p>This certifies that <b>${esc(user.name)}</b> passed the MouldMaster Academy ${l} knowledge assessment.</p><p class="muted">Local learning record · ${new Date().toLocaleDateString()}</p><button class="secondary no-print" data-mm-onclick="window.print()">Print / Save as PDF</button></div>`;
-}
-
 function renderInstructor(){
  const users=Object.values(db.users);
  $("#instructor").innerHTML=`<div class="kpis"><div class="card kpi"><span>Local learners</span><b>${users.length}</b></div><div class="card kpi"><span>Total completions</span><b>${users.reduce((n,u)=>n+(u.completed?.length||0),0)}</b></div><div class="card kpi"><span>Certificates</span><b>${users.reduce((n,u)=>n+(u.learningAwards?.length||0),0)}</b></div><div class="card kpi"><span>Course size</span><b>120</b></div></div>
@@ -464,11 +373,6 @@ function renderGlossary(){
 }
 function filterGlossary(){const q=$("#glossarySearch").value.toLowerCase();$$("[data-term]").forEach(x=>x.classList.toggle("hidden",!x.dataset.term.includes(q)))}
 
-function renderProfile(){
- $("#profile").innerHTML=`<div class="grid2"><div class="card form-card"><span class="eyebrow">Learner profile</span><h2>${esc(user.name)}</h2><label>Name<input id="profileName" value="${esc(user.name)}"></label><label style="display:block;margin-top:10px">Role<select id="profileRole"><option ${user.role==="learner"?"selected":""}>learner</option><option ${user.role==="instructor"?"selected":""}>instructor</option></select></label><button class="primary" style="margin-top:12px" data-mm-onclick="saveProfile()">Save profile</button></div>
- <div class="card form-card"><span class="eyebrow">Local data</span><h2>Backup & reset</h2><p class="muted">Export progress as JSON for backup, or import it later on the same or another browser.</p><div class="hero-buttons"><button class="secondary" data-mm-onclick="exportData()">Export JSON</button><label class="ghost" style="display:inline-block">Import JSON<input type="file" accept=".json" data-mm-onchange="importData(this.files[0])" style="display:none"></label><button class="danger" data-mm-onclick="resetData()">Reset all local data</button></div></div></div>
- <div class="section-head"><div><h2>Bookmarks</h2><p>Saved lessons for review.</p></div></div><div class="grid">${(user.bookmarks||[]).map(id=>{const l=D.lessons.find(x=>x.id===id);return l?`<div class="card course-card"><span class="eyebrow">${esc(l.level)}</span><h3>${esc(l.title)}</h3><p>${esc(l.summary)}</p><button class="secondary" data-mm-onclick="goLesson(${id});switchView('lesson')">Open lesson</button></div>`:""}).join("")||`<div class="card form-card"><p class="muted">No bookmarks yet.</p></div>`}`;
-}
 function saveProfile(){user.name=$("#profileName").value.trim()||user.name;user.role=$("#profileRole").value;persist();updateGlobalProgress();renderProfile();toast("Profile updated")}
 function exportData(){
  const blob=new Blob([JSON.stringify(db,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="mouldmaster-progress.json";a.click();URL.revokeObjectURL(a.href)

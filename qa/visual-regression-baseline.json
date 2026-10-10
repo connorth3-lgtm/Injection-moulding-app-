@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.09.4",
-  "commit": "fa27bd16525f8cb216654ea524649a3a37a3195c",
+  "release": "2026.10.10.1",
+  "commit": "52160745ac51cbc9dae108315adc27fc1a3f5910",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,6 +41,6 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "Owner reviewed and approved the intended tablet single-row five-tab navigation and desktop Home's single idle Start mission CTA on 2026-10-09, with retained before/after screenshot artifact 11589770134 and explicit PR #524 approval comment 6072486028. The baseline is pinned to the immutable fa27bd16525f8cb216654ea524649a3a37a3195c runtime source on visual-baseline/2026.10.09.4-restored-immutable (a new immutable alias restored at the exact approved fa27bd16 commit because the original release ref was later advanced by historical branch reconciliation). Automated Chromium reference comparisons remain locked at maxDiffPixels 12 against the approved snapshot; no drift allowance or capture exclusions were changed. This UI-only visual decision is not a claim of independent review of every screenshot, real iPad/200%-zoom, real assistive technology, physical devices, SMEs, NZQA/provider, learner outcomes, Windows signing, or production release authorization: all such separate approvals remain HOLD.",
-  "ref": "visual-baseline/2026.10.09.4-restored-immutable"
+  "policy": "Owner explicitly approved the proposed Book/Home/Materials/176-lesson Learn visual changes in ChatGPT on 2026-10-10 after receiving the exact composite Chromium baseline/current/diff comparison artifact link (run 38038705991, artifact 11664742980). New immutable QA comparison ref is pinned to the exact composite candidate source 52160745ac51cbc9dae108315adc27fc1a3f5910. This records the owner's visual-direction acceptance; it does not assert that every screenshot or difference file was individually inspected. The strict Chromium maxDiffPixels=12 is unchanged. The previous visual-baseline/2026.10.09.5 at fa27bd16525f8cb216654ea524649a3a37a3195c remains intact. This composite PR is DRAFT QA ONLY and is NOT authorized to merge. Real iPad, 200% zoom, NVDA/VoiceOver, physical PWA, Windows distribution, independent Book/curriculum SME, learner outcomes, NZQA/provider, release-candidate identity, and production authorization remain HOLD.",
+  "ref": "visual-baseline/2026.10.10.1"
 }

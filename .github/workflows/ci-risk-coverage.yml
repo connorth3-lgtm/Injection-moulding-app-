@@ -23,6 +23,8 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
+      - name: Regression — preserve merge-base ancestry
+        run: python -m unittest -v qa_ci_risk_history_test.py
       - name: Verify cross-workflow coverage on exact head
         env:
           GITHUB_TOKEN: ${{ github.token }}

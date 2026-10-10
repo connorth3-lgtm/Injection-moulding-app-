@@ -1,11 +1,11 @@
-/* MouldMaster learner UI polish — 2026.10.09.4
+/* MouldMaster learner UI polish — 2026.10.09.6
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.10.09.4';
+const VERSION='2026.10.09.6';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -84,13 +84,6 @@ function syncHomeBalance(){
   else if(!anchor&&!panel.isConnected)root.prepend(panel);
 }
 
-function syncCertificateCounter(){
-  const root=document.getElementById('dashboard');if(!root)return;
-  for(const row of root.querySelectorAll('.statline')){
-    const label=row.querySelector('.muted.tiny');if(String(label?.textContent||'').trim()!=='Certificates earned')continue;
-    const value=row.querySelector('b');if(value)value.textContent=String(Array.isArray(user?.certificates)?user.certificates.length:0)
-  }
-}
 function syncBookDisclosure(){
   const view=document.getElementById('mmBookView');
   if(!view)return;
@@ -131,6 +124,23 @@ function syncBookDisclosure(){
         note.textContent='Evidence verification does not replace current machine, mould, material, hot-runner, workplace or independent-human review requirements.';
         body.appendChild(note);
       }
+    }
+    // The book's original title and introduction duplicate the app-level Book
+    // heading before the reader reaches chapter one, especially on phones.
+    // Keep the actual nodes and content, but make that optional orientation
+    // readable on demand. No technical text, status or listening action moves.
+    const introHeading=hero.querySelector(':scope > h2');
+    const introText=[...hero.querySelectorAll(':scope > p')].find(p=>
+      !p.matches('[data-mm-book-summary],[data-mm-book-sme-status]'));
+    if(introHeading&&introText&&!hero.querySelector('.mm-book-intro-details')){
+      const introDetails=document.createElement('details');
+      introDetails.className='mm-book-intro-details';
+      const introSummary=document.createElement('summary');
+      introSummary.textContent='About this Book';
+      introDetails.append(introSummary,introHeading,introText);
+      const governance=hero.querySelector('.mm-book-governance');
+      if(governance)governance.insertAdjacentElement('beforebegin',introDetails);
+      else hero.appendChild(introDetails);
     }
     const listen=hero.querySelector('[data-mm-book-mode="listen"]');
     if(listen&&!listen.disabled&&listen.textContent!=='Listen to Book')listen.textContent='Listen to Book';
@@ -229,6 +239,19 @@ function syncFirstRunModal(){
   if(headings[2])headings[2].textContent='Typical session';
   const primary=root.querySelector('.hero-buttons .primary');if(primary)primary.textContent='Start my path →';
 }
+function installFirstRunPolishHook(){
+  // The delayed core 120ms startup callback invokes the mutable global
+  // onboarding function. Patch just that entry point, not the DOM or body.
+  const original=window.showOnboarding;
+  if(typeof original!=='function'||original.mmProductPolishHook)return;
+  const wrapped=function(...args){
+    const result=original.apply(this,args);
+    syncFirstRunModal();syncProductStates();
+    return result;
+  };
+  Object.defineProperty(wrapped,'mmProductPolishHook',{value:true});
+  window.showOnboarding=wrapped;
+}
 function syncProductStates(){
   document.querySelectorAll('.empty-friendly,.mm-exact-empty,.mm-material-no-match').forEach(el=>el.dataset.mmProductState='empty');
   const failure=document.getElementById('mmStartupFailure');if(failure)failure.dataset.mmProductState='error';
@@ -254,7 +277,6 @@ function syncReadAloudLabel(){
 }
 function run(){
   syncHomeBalance();
-  syncCertificateCounter();
   syncBookDisclosure();
   syncDesktopNavigation();
   syncTopbarContext();
@@ -271,6 +293,7 @@ function install(){
   ensureStyles();
   run();
   syncFirstRunModal();
+  installFirstRunPolishHook();
   requestAnimationFrame(()=>requestAnimationFrame(()=>{syncFirstRunModal();syncProductStates()}));
   // Shell render/view lifecycle events cover app-owned mutations. Avoid a whole-body characterData observer,
   // which previously scheduled a full polish pass for every text mutation in the application.

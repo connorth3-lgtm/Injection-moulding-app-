@@ -25,6 +25,10 @@ Keep sensitive plate/serial photographs and contact information in an authorised
 
 > We are looking for the authorised Hwamda documentation for an original **HMD400M6 / M6** machine, not an **HMD400M6-S** servo-generation substitute. Can you identify the documents that match our machine plate/serial and installed injection unit and controller? We need the operation/maintenance manual, electrical and hydraulic drawings, OEM I/O assignment, lubrication diagram, parts list and injection-unit revision chart. Please confirm each document's title, revision, machine/serial applicability, delivery route and permission to retain/cite it. We can supply nameplate and component identification privately through your approved channel.
 
+## Conflicting source-injection-unit variants
+
+The public research ledger records two **non-reconciled** injection-unit tables for the original HMD400M6; see [evidence-boundary register](HMD400M6-EVIDENCE-BOUNDARY-v1.json). Do not send either set as though it were an installed machine rating. Ask the OEM to identify the fitted screw/barrel/injection-unit part number **and** the revision/version of the technical pack and whether the two tables reflect options, generations, typographical errors or untraceable secondary claims. Current official [Hwamda service/parts information](https://hwamdaglobal.com/en/solutions/global-service-and-spare-parts/) confirms machine/controller/serial details are essential to the request; it does not publish the missing original-M6 service schematics.
+
 ## Verification procedure before adding to the public library
 
 For every returned document, record source/publisher, exact retrieval URL or private-access provenance, date checked, document number, revision and permitted sharing level. Compare machine model **and suffix**, as-built controller/I/O hardware and installed injection unit with the named serial. Mark unrelated Techmation hardware books and M6-S material `reference_only` until identity is proven. Distinguish verified *document identity* from independently tested *machine capability*.

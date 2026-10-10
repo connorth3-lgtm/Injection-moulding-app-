@@ -142,3 +142,21 @@ Older source-unlock work remains useful where lawful source bytes become availab
 ## Safety and governance boundary
 
 This contract is for evidence quality, learning validation and diagnostic-method evaluation. It does not define validated process windows, universal settings, maintenance limits or automatic control logic. Real changes remain subject to the exact machine, mould, material, approved process, site procedures, change control, competent engineering review and applicable safety requirements.
+
+## Private measured-record structural preflight (9 October 2026)
+
+Once a site has **authorised the data transfer and granted reuse rights**, keep its actual records **outside this public Git repository**. Using a trusted, isolated local workstation, fill the header-only issue-specific CSV (with approved aliases, cycle/measurement units and calibration references), then run:
+
+```bash
+python3 tools/validate_external_acquisitions.py --issue 334 --input /secure/private/black-specks.csv
+python3 tools/validate_external_acquisitions.py --issue 335 --input /secure/private/valve-traces.csv
+python3 tools/validate_external_acquisitions.py --issue 336 --input /secure/private/mould-recovery.csv
+```
+
+This **structural-only** preflight rejects missing chronological before/after shot linkage, non-finite/contradictory measurements, command-only or unsynchronised hot-runner records, absent calibration/sensor/quality joins, non-comparable pre/post mould metrics and missing independent post-event verification. A pass prints **counts only**, no raw source rows, and explicitly reports `external_evidence_acquired=false`. It does not prove provenance, human authorship, calibration validity, rights, recovery causation, external transferability, production machine-control authority or an acceptance score. Negative recovery must be retained, not discarded to create an apparent improvement.
+
+`python3 qa_external_acquisition_validator.py` uses tiny **synthetic unit-test fixtures** to verify the preflight logic; these fixtures **do not** count toward acquisition #334/#335/#336 and are not uploaded as industrial evidence. Site owners must separately review original records, rights, method, independent verification, anonymisation and appropriate cross-machine/lot evidence. Keep all three acquisition issues **OPEN** until genuinely measured rights-clear data has been independently accepted.
+
+### Local data custody guard (9 October 2026)
+
+The intake CLI also refuses CSV paths that resolve **inside the public repository checkout**, including symlink aliases, to reduce accidental commits of customer/site measurements. The real measured files belong in an authorised, access-controlled location and must be reviewed for identifiers and sharing rights before even a private structural preflight. Duplicate source-record IDs are rejected in the black-speck and mould-maintenance pathways. These checks are defensive screening, not a confidentiality audit or independent provenance approval.

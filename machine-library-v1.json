@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-10-08",
+  "last_updated": "2026-10-10",
   "title": "Injection Moulding Machine Library",
   "scope": "Manufacturer, model, controller, manual, service-document and verified-specification registry for injection moulding machines.",
   "verification_levels": {
@@ -328,7 +328,516 @@
           "notes": "Official ROBOSHOT model pages expose technical specifications and downloadable product documents."
         }
       ],
-      "models": []
+      "models": [
+        {
+          "id": "fanuc-roboshot-alpha-s50ib",
+          "model": "ROBOSHOT α-S50iB",
+          "series": "ROBOSHOT α-SiB",
+          "research_status": "active",
+          "generation_note": "Exact FANUC α-S50iB manufacturer model-level electric machine data only, NOT an installed or serial-confirmed machine. Published 500 kN and increased 650 kN clamp options; single/double platen mould heights differ. The stated six-screw pressure pairs belong to the OEM 350 mm/s table, not the separate 550 mm/s or high-pressure filling modes. No fitted injection-unit, controller revision, service-manual or usable production process rating is inferred.",
+          "manufacture_year": {
+            "value": null,
+            "status": "unknown",
+            "evidence_note": "Model-series listing does not identify a particular machine serial, production year or installed options."
+          },
+          "controller": {
+            "family": "FANUC ROBOSHOT CNC; PANEL iH Pro offered in current product range",
+            "confidence": "missing",
+            "host_controller": "unknown",
+            "host_note": "The manufacturer product page advertises a CNC/PANEL iH Pro product family; no actual machine serial, HMI/controller revision or firmware is authenticated."
+          },
+          "common_verified_specs": {
+            "clamping_force_kn": 500,
+            "clamping_stroke_mm": 250,
+            "tie_bar_clearance_h_x_v_mm": "360 x 320",
+            "die_plate_h_x_v_mm": "500 x 470",
+            "ejector_stroke_mm": 70
+          },
+          "published_clamp_force_options_kn": [
+            500,
+            650
+          ],
+          "published_mould_height_variants": [
+            {
+              "platen_configuration": "single",
+              "standard_min_mm": 210,
+              "standard_max_mm": 410,
+              "increased_min_mm": 210,
+              "increased_max_mm": 460
+            },
+            {
+              "platen_configuration": "double",
+              "standard_min_mm": 150,
+              "standard_max_mm": 350,
+              "increased_min_mm": 150,
+              "increased_max_mm": 400
+            }
+          ],
+          "published_injection_variants": [],
+          "published_screw_data": {
+            "source_id": "fanuc-alpha-s50ib-official-spec",
+            "mode": "FANUC Europe OEM 350 mm/s injection and hold pressure 1/2 table; NOT the separate 550 mm/s or high-pressure filling mode",
+            "screw_diameter_mm": [
+              18,
+              20,
+              22,
+              26,
+              28,
+              32
+            ],
+            "maximum_injection_volume_cm3": [
+              19,
+              24,
+              29,
+              50,
+              58,
+              76
+            ],
+            "maximum_injection_and_hold_pressure_1_mpa": [
+              280,
+              310,
+              290,
+              240,
+              220,
+              180
+            ],
+            "maximum_injection_and_hold_pressure_2_mpa": [
+              260,
+              280,
+              260,
+              210,
+              190,
+              150
+            ],
+            "actual_fitted_injection_unit_id": null,
+            "scope": "Manufacturer-published model-level 350 mm/s mode, separately paired with each screw diameter. Pressure 1 versus pressure 2 are distinct OEM options; neither is direct measured resin pressure or a guaranteed simultaneous speed/pressure rating. Not the separate OEM 550 mm/s or high-pressure-fill row. Actual fitted screw/cylinder and usable limits UNKNOWN; no production machine-fit, validated recipe or automatic-control authority."
+          },
+          "manuals": [],
+          "wanted_documents": [
+            {
+              "title": "Exact serial/revision operation, installation and service manuals",
+              "status": "missing"
+            },
+            {
+              "title": "Machine-specific electrical/hydraulic diagrams and spare parts",
+              "status": "missing"
+            },
+            {
+              "title": "As-built clamp/platen option, injection unit, screw and firmware/controller confirmation",
+              "status": "missing"
+            }
+          ],
+          "sources": [
+            {
+              "id": "fanuc-alpha-s50ib-official-spec",
+              "title": "FANUC ROBOSHOT α-S50iB official model technical specification",
+              "publisher": "FANUC Europe Corporation (primary OEM)",
+              "url": "https://www.fanuc.eu/eu-en/product/roboshot/fanuc-roboshot-a-s50ib",
+              "supports": [
+                "exact ROBOSHOT α-S50iB identity and model-level clamp options",
+                "single/double platen mould height, tie-bar, platen and ejector dimensions",
+                "six screw diameters paired to published injection volumes and separate 350 mm/s pressure 1/2 columns",
+                "explicitly distinct 350 and 550 mm/s injection operation tables"
+              ],
+              "checked": "2026-10-10",
+              "confidence": "verified for current OEM model-level published data only; fitted machine options and validated usable limits unknown",
+              "access": "public exact-model manufacturer page, not an installed-machine manual"
+            }
+          ],
+          "research_log": [
+            {
+              "date": "2026-10-10",
+              "summary": "FANUC Europe exact α-S50iB listing verified: 500 versus increased 650 kN clamp; separate single/double platen die-height options and six paired screw/volume/350 mm/s pressure-1/pressure-2 columns. Do not combine with 550 mm/s/high-pressure data. Actual fitted injection unit, controller/serial and machine-rated production capability remain unknown. No service or wiring manual verified."
+            }
+          ]
+        },
+        {
+          "id": "fanuc-roboshot-alpha-s100ib",
+          "model": "ROBOSHOT α-S100iB",
+          "series": "ROBOSHOT α-SiB",
+          "research_status": "active",
+          "generation_note": "FANUC official α-S100iB electric-machine model specification, not an installed machine or serial-verified option. Published base clamp is 1000 kN; increased 1250 kN is separate. Mould-height ranges differ for single vs double platen and increased options. Screw data are one published 200 mm/s operating table, NOT certified fitted injection-unit IDs or universal high-pressure filling limits.",
+          "manufacture_year": {
+            "value": null,
+            "status": "unknown",
+            "evidence_note": "An individual machine year and serial has not been established from OEM model literature."
+          },
+          "controller": {
+            "family": "FANUC ROBOSHOT CNC; PANEL iH Pro named on official model product page",
+            "confidence": "missing",
+            "host_controller": "unknown",
+            "host_note": "The product page markets PANEL iH Pro, but the fitted controller/HMI revision, parameters, wiring and firmware for any specific serial are not authenticated."
+          },
+          "common_verified_specs": {
+            "clamping_force_kn": 1000,
+            "clamping_stroke_mm": 350,
+            "tie_bar_clearance_h_x_v_mm": "460 x 410",
+            "die_plate_h_x_v_mm": "660 x 610",
+            "ejector_stroke_mm": 100
+          },
+          "published_clamp_force_options_kn": [
+            1000,
+            1250
+          ],
+          "published_mould_height_variants": [
+            {
+              "platen_configuration": "single",
+              "standard_min_mm": 220,
+              "standard_max_mm": 520,
+              "increased_min_mm": 220,
+              "increased_max_mm": 620
+            },
+            {
+              "platen_configuration": "double",
+              "standard_min_mm": 150,
+              "standard_max_mm": 450,
+              "increased_min_mm": 150,
+              "increased_max_mm": 550
+            }
+          ],
+          "published_injection_variants": [],
+          "published_screw_data": {
+            "source_id": "fanuc-alpha-s100ib-official-spec",
+            "mode": "OEM 200 mm/s base operating table (not high-duty, higher-speed or high-pressure filling mode)",
+            "screw_diameter_mm": [
+              22,
+              26,
+              28,
+              32,
+              36,
+              40
+            ],
+            "maximum_injection_volume_cm3": [
+              29,
+              50,
+              58,
+              103,
+              147,
+              181
+            ],
+            "maximum_injection_and_hold_pressure_1_mpa": [
+              290,
+              290,
+              270,
+              250,
+              190,
+              160
+            ],
+            "maximum_injection_and_hold_pressure_2_mpa": [
+              260,
+              260,
+              240,
+              220,
+              190,
+              160
+            ],
+            "actual_fitted_injection_unit_id": null,
+            "scope": "Published operating-table values only; 1 and 2 are distinct pressure modes. They must not be treated as simultaneously available, the machine's as-built rating, or a validated usable process limit."
+          },
+          "manuals": [],
+          "wanted_documents": [
+            {
+              "title": "Exact serial/revision operator/maintenance and controller/HMI documents",
+              "status": "missing"
+            },
+            {
+              "title": "Machine-specific electrical and hydraulic/wiring drawings",
+              "status": "missing"
+            },
+            {
+              "title": "As-built platen configuration, injected unit/screw assembly and controller firmware confirmation",
+              "status": "missing"
+            }
+          ],
+          "sources": [
+            {
+              "id": "fanuc-alpha-s100ib-official-spec",
+              "title": "FANUC ROBOSHOT α-S100iB official technical specifications",
+              "publisher": "FANUC Europe Corporation (primary OEM)",
+              "url": "https://www.fanuc.eu/eu-en/product/roboshot/fanuc-roboshot-a-s100ib",
+              "supports": [
+                "exact model/series and CNC product identity",
+                "base versus increased clamp and mould-height option distinctions",
+                "tie-bar, platen, stroke and ejector dimensions",
+                "per-screw volume and separate pressure 1/2 operating-mode tables"
+              ],
+              "checked": "2026-10-09",
+              "confidence": "verified for model-level published data only; not as-built machine or fitted injection unit",
+              "access": "public manufacturer product specification"
+            }
+          ],
+          "research_log": [
+            {
+              "date": "2026-10-09",
+              "summary": "Verified FANUC ROBOSHOT α-S100iB from the manufacturer's own product specification. Nominal 1000 kN versus increased 1250 kN, single/double platen height ranges and 200 mm/s injection-and-hold pressure modes are explicitly not collapsed into one fit rating. Actual serial, unit, available speeds, firmware, wiring and service manual remain unverified. No production machine suitability/recipe authority."
+            }
+          ]
+        },
+        {
+          "id": "fanuc-roboshot-alpha-s130ib",
+          "model": "ROBOSHOT α-S130iB",
+          "series": "ROBOSHOT α-SiB",
+          "research_status": "active",
+          "generation_note": "FANUC official α-S130iB electric injection moulding machine model-level technical table, not an installed or serial-verified machine. The 1300 kN base clamp has no increased-clamp option on the referenced model page. Only single-platen die-height variants are published; the 200 mm/s screw/pressure table does not identify a fitted injection unit or transfer ratings from other speed/high-pressure modes.",
+          "manufacture_year": {
+            "value": null,
+            "status": "unknown",
+            "evidence_note": "Model specification does not establish manufacture date, serial or machine-specific configuration."
+          },
+          "controller": {
+            "family": "FANUC ROBOSHOT CNC; installed HMI/controller and firmware not verified",
+            "confidence": "missing",
+            "host_controller": "unknown",
+            "host_note": "FANUC describes series CNC control, but no exact fitted controller hardware, parameters, firmware or site I/O has been verified."
+          },
+          "common_verified_specs": {
+            "clamping_force_kn": 1300,
+            "clamping_stroke_mm": 400,
+            "tie_bar_clearance_h_x_v_mm": "530 x 530",
+            "die_plate_h_x_v_mm": "730 x 730",
+            "ejector_stroke_mm": 100
+          },
+          "published_clamp_force_options_kn": [
+            1300
+          ],
+          "published_mould_height_variants": [
+            {
+              "platen_configuration": "single",
+              "standard_min_mm": 200,
+              "standard_max_mm": 570,
+              "increased_min_mm": 200,
+              "increased_max_mm": 670
+            }
+          ],
+          "published_injection_variants": [],
+          "published_screw_data": {
+            "source_id": "fanuc-alpha-s130ib-official-spec",
+            "mode": "OEM 200 mm/s base operating table (not 200 mm/s high-duty, 350 mm/s or high-pressure filling mode)",
+            "screw_diameter_mm": [
+              26,
+              28,
+              32,
+              36,
+              40
+            ],
+            "maximum_injection_volume_cm3": [
+              50,
+              58,
+              103,
+              147,
+              181
+            ],
+            "maximum_injection_and_hold_pressure_1_mpa": [
+              290,
+              270,
+              250,
+              190,
+              160
+            ],
+            "maximum_injection_and_hold_pressure_2_mpa": [
+              260,
+              240,
+              220,
+              190,
+              160
+            ],
+            "actual_fitted_injection_unit_id": null,
+            "scope": "Published FANUC model-level operating table, per screw diameter and discrete pressure-1 vs pressure-2 mode only. Do not infer a fitted injection unit, combine speed/pressure modes, certify usable machine capacity or approve a production machine/mould fit."
+          },
+          "manuals": [],
+          "wanted_documents": [
+            {
+              "title": "Exact serial/revision operator/maintenance and CNC/HMI documentation",
+              "status": "missing"
+            },
+            {
+              "title": "Machine-specific electrical, hydraulic and wiring drawings",
+              "status": "missing"
+            },
+            {
+              "title": "As-built screw/injection unit, single-platen die-height option and control revision",
+              "status": "missing"
+            }
+          ],
+          "sources": [
+            {
+              "id": "fanuc-alpha-s130ib-official-spec",
+              "title": "FANUC ROBOSHOT α-S130iB official technical specifications",
+              "publisher": "FANUC Europe Corporation (primary OEM)",
+              "url": "https://www.fanuc.eu/eu-en/product/roboshot/fanuc-roboshot-a-s130ib",
+              "supports": [
+                "exact α-S130iB model/series, 1300 kN clamp and single-platen height options",
+                "tie-bar/platen/clamp/ejector dimensions",
+                "individual screw diameters and corresponding maximum injection volumes",
+                "separate published 200 mm/s injection-and-hold pressure 1/2 rows"
+              ],
+              "checked": "2026-10-09",
+              "confidence": "verified for published model-level table only; unverified installed injection unit/controller",
+              "access": "public primary manufacturer technical-specification page"
+            }
+          ],
+          "research_log": [
+            {
+              "date": "2026-10-09",
+              "summary": "Added α-S130iB from FANUC Europe primary product specifications: 1300 kN base clamp, single-platen 200–570 mm standard or 200–670 mm increased die-height, five individually matched 200 mm/s screw/injection volume/pressure 1/2 values. No fabricated double-platen model option, fitted machine/controller/screw, increase-clamp rating or machine-specific manual. FANUC America's page contains an apparently erroneous duplicated 26 mm listing; the Europe OEM table and other official localisations show 36 mm in the fourth position. No machine-fit or production process authority."
+            }
+          ]
+        },
+        {
+          "id": "fanuc-roboshot-alpha-s150ib",
+          "model": "ROBOSHOT α-S150iB",
+          "series": "ROBOSHOT α-SiB",
+          "research_status": "active",
+          "generation_note": "Exact FANUC α-S150iB model-level OEM electric machine data; not the separate small-capacity α-S150iB configuration or an installed/serial-verified machine. Standard 1500 kN and optionally increased 1800 kN clamps, single/double platen heights and source-defined 200 mm/s screw/pressure tables cannot be conflated with a fitted injection unit, high-speed modes or validated machine suitability.",
+          "manufacture_year": {
+            "value": null,
+            "status": "unknown",
+            "evidence_note": "FANUC model product page and 2021 European datasheet do not authenticate the date or configuration of any individual machine."
+          },
+          "controller": {
+            "family": "FANUC ROBOSHOT CNC; installed controller/HMI and firmware unknown",
+            "confidence": "missing",
+            "host_controller": "unknown",
+            "host_note": "The model/series marketing material cannot establish a particular serial number's CNC hardware, firmware, machine I/O or safety configuration."
+          },
+          "common_verified_specs": {
+            "clamping_force_kn": 1500,
+            "clamping_stroke_mm": 440,
+            "tie_bar_clearance_h_x_v_mm": "560 x 510",
+            "die_plate_h_x_v_mm": "800 x 750",
+            "ejector_stroke_mm": 150
+          },
+          "published_clamp_force_options_kn": [
+            1500,
+            1800
+          ],
+          "published_mould_height_variants": [
+            {
+              "platen_configuration": "double",
+              "standard_min_mm": 200,
+              "standard_max_mm": 500,
+              "increased_min_mm": 200,
+              "increased_max_mm": 600
+            },
+            {
+              "platen_configuration": "single",
+              "standard_min_mm": 275,
+              "standard_max_mm": 575,
+              "increased_min_mm": 275,
+              "increased_max_mm": 675
+            }
+          ],
+          "published_injection_variants": [],
+          "published_screw_data": {
+            "source_id": "fanuc-alpha-s150ib-europe-datasheet",
+            "mode": "FANUC Europe 2021 OEM 200 mm/s base operating table (NOT separate 350 mm/s/high-pressure mode or later revised specifications)",
+            "screw_diameter_mm": [
+              32,
+              36,
+              40,
+              44,
+              48,
+              52
+            ],
+            "maximum_injection_volume_cm3": [
+              121,
+              153,
+              188,
+              268,
+              318,
+              442
+            ],
+            "maximum_injection_and_hold_pressure_1_mpa": [
+              310,
+              310,
+              260,
+              220,
+              230,
+              200
+            ],
+            "maximum_injection_and_hold_pressure_2_mpa": [
+              280,
+              280,
+              260,
+              220,
+              230,
+              200
+            ],
+            "actual_fitted_injection_unit_id": null,
+            "scope": "Catalog screw, volume and injection/hold pressure-1 versus pressure-2 pairs apply only to the indicated 200 mm/s configuration; neither pressure is melt/resin pressure, guaranteed simultaneous with maximum speed, proof of fitted screw/barrel, usable machine capacity, nor a production safety/process limit. SOURCE-REVISION CONFLICT: a later FANUC 2024 α-iB series brochure shows lower 48/52 mm pressure-1/pressure-2 values (190/160 MPa) under its 200 mm/s operating table versus 230/200 MPa here in the 2021 sheet. The two OEM revisions are not interchangeable; exact applicable vintage/installed barrel must be checked."
+          },
+          "manuals": [],
+          "wanted_documents": [
+            {
+              "title": "Serial-specific operator/maintenance and CNC/HMI revision manuals",
+              "status": "missing"
+            },
+            {
+              "title": "Machine-specific electrical, hydraulic, I/O and safety drawings",
+              "status": "missing"
+            },
+            {
+              "title": "As-installed screw/barrel, clamp/die-height option and serial controller confirmation",
+              "status": "missing"
+            }
+          ],
+          "sources": [
+            {
+              "id": "fanuc-alpha-s150ib-europe-datasheet",
+              "title": "ROBOSHOT α-S150iB Mechanical specifications (2021 OEM datasheet)",
+              "publisher": "FANUC Europe Corporation (primary OEM)",
+              "url": "https://www.fanuc.eu/~/media/files/pdf/products/roboshot/datasheets/en/datasheets-2021/datasheets-a-s150ib-en.pdf?la=bg",
+              "supports": [
+                "exact model and machine geometry",
+                "1500 versus 1800 kN option and separate double/single platen heights",
+                "per-screw 200 mm/s injection volume and distinct cylinder-dependent pressure-1/pressure-2 tables",
+                "model-specific caveats on injection/hold pressure and rated versus actual speed"
+              ],
+              "checked": "2026-10-09",
+              "confidence": "verified model-level datasheet, not as-built machine",
+              "access": "public manufacturer technical datasheet"
+            },
+            {
+              "id": "fanuc-alpha-s150ib-america-oem-spec",
+              "title": "ROBOSHOT α-S150iB official model specifications",
+              "publisher": "FANUC America (primary OEM)",
+              "url": "https://www.fanucamerica.com/products/roboshot/roboshot-a-s150ib",
+              "supports": [
+                "model/series identity",
+                "1500 kN clamp with optional increased 1800 kN",
+                "screw diameters and injection volumes",
+                "platen configuration, tie-bar and ejector dimensions"
+              ],
+              "checked": "2026-10-09",
+              "confidence": "verified published model specification only",
+              "access": "public manufacturer product page"
+            },
+            {
+              "id": "fanuc-alpha-s150ib-2024-oem-family-brochure",
+              "title": "FANUC ROBOSHOT α-iB series brochure (2024; differing S150iB pressure data)",
+              "publisher": "FANUC Europe Corporation (primary OEM)",
+              "url": "https://www.fanuc.eu/~/media/files/pdf/products/roboshot/mbr-04413-rs%20roboshot%20alpha%20ib%20series/v4/roboshot-alpha-ib-series-brochure-en-2024.pdf?la=sl",
+              "supports": [
+                "independent same-OEM revision comparison, not proof of installed screw/barrel or current unit",
+                "2024 series 200 mm/s columns and differing 48/52 mm injection/hold pressure values"
+              ],
+              "checked": "2026-10-09",
+              "confidence": "verified as version-specific contrasting manufacturer brochure, not exact-machine certification",
+              "access": "public manufacturer series brochure"
+            }
+          ],
+          "research_log": [
+            {
+              "date": "2026-10-09",
+              "summary": "Cross-checked FANUC America's α-S150iB OEM model listing with FANUC Europe's 2021 two-page α-S150iB mechanical datasheet. The six base-speed (200 mm/s) screw rows retain separate pressure 1/2 cylinder conditions; increased clamp, single/double platen and faster 350 mm/s modes remain distinct. The catalogue says injection-unit pressure is not direct resin pressure and maximum speed/pressure are not guaranteed together. The smaller-capacity S150iB model has a different screw family and is NOT included in this record. Fitted hardware/firmware, manuals, plant usage and machine suitability remain unverified."
+            },
+            {
+              "date": "2026-10-09",
+              "summary": "Cross-revision conflict detected: FANUC 2024 α-iB series brochure gives pressure-1/pressure-2 of 190/160 MPa for 48/52 mm in its 200 mm/s S150iB table, while the FANUC 2021 model sheet gives 230/200 MPa. Preserve the expressly labelled 2021 variant and the independent 2024 source; do not silently promote either to fitted/current machine limits or combine with other speed modes."
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "haitian",
@@ -458,6 +967,118 @@
       ],
       "models": [
         {
+          "id": "nissei-fnx80-iv",
+          "model": "FNX80Ⅳ",
+          "series": "FNX-Ⅳ",
+          "research_status": "active",
+          "generation_note": "NISSEI's published FNX-Ⅳ hybrid machine. These are manufacturer model-family specifications, not a verified installed machine, serial number or injection-unit configuration. Do not interchange the Ⅳ and older FNX generations.",
+          "manufacture_year": {
+            "value": null,
+            "status": "unknown",
+            "evidence_note": "No build year or serial-specific machine identity has been confirmed."
+          },
+          "controller": {
+            "family": "NISSEI machine HMI/controller revision not verified for a particular serial",
+            "confidence": "missing",
+            "host_controller": "unknown",
+            "host_note": "The FNX-Ⅳ family describes network/operation features, but does not establish the fitted controller/HMI firmware or I/O revision for an individual machine."
+          },
+          "common_verified_specs": {
+            "clamping_force_kn": 792,
+            "clamping_stroke_mm": 470,
+            "min_mould_thickness_mm": 200,
+            "max_daylight_opening_mm": 670,
+            "tie_bar_clearance_h_x_v_mm": "420 x 420",
+            "die_plate_h_x_v_mm": "580 x 580",
+            "ejector_stroke_mm": 75
+          },
+          "published_injection_variants": [
+            {
+              "injection_unit_id": "9A",
+              "published_option": "standard",
+              "screw_diameter_mm": [
+                26,
+                28,
+                32,
+                36
+              ],
+              "injection_capacity_cm3": [
+                59,
+                69,
+                90,
+                114
+              ],
+              "maximum_injection_pressure_mpa": [
+                265,
+                244,
+                187,
+                147
+              ],
+              "source_id": "nissei-fnx80-iv-official-spec"
+            },
+            {
+              "injection_unit_id": "12A",
+              "published_option": "optional",
+              "screw_diameter_mm": [
+                28,
+                32,
+                36,
+                40
+              ],
+              "injection_capacity_cm3": [
+                77,
+                101,
+                127,
+                157
+              ],
+              "maximum_injection_pressure_mpa": [
+                265,
+                226,
+                179,
+                145
+              ],
+              "source_id": "nissei-fnx80-iv-official-spec"
+            }
+          ],
+          "manuals": [],
+          "wanted_documents": [
+            {
+              "title": "Exact machine/revision OEM operator and maintenance manual",
+              "status": "missing"
+            },
+            {
+              "title": "Serial/revision-specific electrical and hydraulic circuit diagrams",
+              "status": "missing"
+            },
+            {
+              "title": "OEM parts/lubrication and controller I/O documentation",
+              "status": "missing"
+            }
+          ],
+          "sources": [
+            {
+              "id": "nissei-fnx80-iv-official-spec",
+              "title": "NISSEI FNX80Ⅳ official performance specification",
+              "publisher": "NISSEI PLASTIC INDUSTRIAL CO., LTD. (primary OEM)",
+              "url": "https://www.nisseiplastic.com/en/products/fnx-4/spec.php?model=FNX80%E2%85%A3",
+              "supports": [
+                "published model/series identity",
+                "common machine dimensions and clamping performance",
+                "per-injection-unit screw diameter, capacity and maximum injection pressure"
+              ],
+              "checked": "2026-10-09",
+              "confidence": "verified for OEM-published model specifications only; not serial-specific",
+              "access": "public manufacturer technical-specification page"
+            }
+          ],
+          "research_log": [
+            {
+              "date": "2026-10-09",
+              "summary": "Added original NISSEI model-IV OEM technical page, preserving standard vs optional injection-unit variants and per-screw pressure/capacity. Fitted unit, machine serial/controller and exact service/electrical/hydraulic documentation remain unknown. No validated machine-fit or operating authority."
+            }
+          ]
+        },
+        {
           "id": "nissei-fnx110-iv",
           "model": "FNX110Ⅳ",
           "series": "FNX-Ⅳ",
@@ -570,6 +1191,224 @@
           ]
         },
         {
+          "id": "nissei-fnx140-iv",
+          "model": "FNX140Ⅳ",
+          "series": "FNX-Ⅳ",
+          "research_status": "active",
+          "generation_note": "NISSEI's published FNX-Ⅳ hybrid machine. These are manufacturer model-family specifications, not a verified installed machine, serial number or injection-unit configuration. Do not interchange the Ⅳ and older FNX generations.",
+          "manufacture_year": {
+            "value": null,
+            "status": "unknown",
+            "evidence_note": "No build year or serial-specific machine identity has been confirmed."
+          },
+          "controller": {
+            "family": "NISSEI machine HMI/controller revision not verified for a particular serial",
+            "confidence": "missing",
+            "host_controller": "unknown",
+            "host_note": "The FNX-Ⅳ family describes network/operation features, but does not establish the fitted controller/HMI firmware or I/O revision for an individual machine."
+          },
+          "common_verified_specs": {
+            "clamping_force_kn": 1370,
+            "clamping_stroke_mm": 600,
+            "min_mould_thickness_mm": 250,
+            "max_daylight_opening_mm": 850,
+            "tie_bar_clearance_h_x_v_mm": "510 x 510",
+            "die_plate_h_x_v_mm": "730 x 730",
+            "ejector_stroke_mm": 90
+          },
+          "published_injection_variants": [
+            {
+              "injection_unit_id": "25A",
+              "published_option": "standard",
+              "screw_diameter_mm": [
+                36,
+                40,
+                45,
+                50
+              ],
+              "injection_capacity_cm3": [
+                163,
+                201,
+                254,
+                314
+              ],
+              "maximum_injection_pressure_mpa": [
+                255,
+                219,
+                173,
+                140
+              ],
+              "source_id": "nissei-fnx140-iv-official-spec"
+            },
+            {
+              "injection_unit_id": "36A",
+              "published_option": "optional",
+              "screw_diameter_mm": [
+                45,
+                50,
+                56
+              ],
+              "injection_capacity_cm3": [
+                286,
+                353,
+                443
+              ],
+              "maximum_injection_pressure_mpa": [
+                207,
+                168,
+                134
+              ],
+              "source_id": "nissei-fnx140-iv-official-spec"
+            }
+          ],
+          "manuals": [],
+          "wanted_documents": [
+            {
+              "title": "Exact machine/revision OEM operator and maintenance manual",
+              "status": "missing"
+            },
+            {
+              "title": "Serial/revision-specific electrical and hydraulic circuit diagrams",
+              "status": "missing"
+            },
+            {
+              "title": "OEM parts/lubrication and controller I/O documentation",
+              "status": "missing"
+            }
+          ],
+          "sources": [
+            {
+              "id": "nissei-fnx140-iv-official-spec",
+              "title": "NISSEI FNX140Ⅳ official performance specification",
+              "publisher": "NISSEI PLASTIC INDUSTRIAL CO., LTD. (primary OEM)",
+              "url": "https://www.nisseiplastic.com/en/products/fnx-4/spec.php?model=FNX140%E2%85%A3",
+              "supports": [
+                "published model/series identity",
+                "common machine dimensions and clamping performance",
+                "per-injection-unit screw diameter, capacity and maximum injection pressure"
+              ],
+              "checked": "2026-10-09",
+              "confidence": "verified for OEM-published model specifications only; not serial-specific",
+              "access": "public manufacturer technical-specification page"
+            }
+          ],
+          "research_log": [
+            {
+              "date": "2026-10-09",
+              "summary": "Added original NISSEI model-IV OEM technical page, preserving standard vs optional injection-unit variants and per-screw pressure/capacity. Fitted unit, machine serial/controller and exact service/electrical/hydraulic documentation remain unknown. No validated machine-fit or operating authority."
+            }
+          ]
+        },
+        {
+          "id": "nissei-fnx180-iv",
+          "model": "FNX180Ⅳ",
+          "series": "FNX-Ⅳ",
+          "research_status": "active",
+          "generation_note": "NISSEI's published FNX-Ⅳ hybrid machine. These are manufacturer model-family specifications, not a verified installed machine, serial number or injection-unit configuration. Do not interchange the Ⅳ and older FNX generations.",
+          "manufacture_year": {
+            "value": null,
+            "status": "unknown",
+            "evidence_note": "No build year or serial-specific machine identity has been confirmed."
+          },
+          "controller": {
+            "family": "NISSEI machine HMI/controller revision not verified for a particular serial",
+            "confidence": "missing",
+            "host_controller": "unknown",
+            "host_note": "The FNX-Ⅳ family describes network/operation features, but does not establish the fitted controller/HMI firmware or I/O revision for an individual machine."
+          },
+          "common_verified_specs": {
+            "clamping_force_kn": 1750,
+            "clamping_stroke_mm": 700,
+            "min_mould_thickness_mm": 250,
+            "max_daylight_opening_mm": 950,
+            "tie_bar_clearance_h_x_v_mm": "560 x 560",
+            "die_plate_h_x_v_mm": "800 x 800",
+            "ejector_stroke_mm": 110
+          },
+          "published_injection_variants": [
+            {
+              "injection_unit_id": "25A",
+              "published_option": "optional",
+              "screw_diameter_mm": [
+                36,
+                40,
+                45,
+                50
+              ],
+              "injection_capacity_cm3": [
+                163,
+                201,
+                254,
+                314
+              ],
+              "maximum_injection_pressure_mpa": [
+                255,
+                219,
+                173,
+                140
+              ],
+              "source_id": "nissei-fnx180-iv-official-spec"
+            },
+            {
+              "injection_unit_id": "36A",
+              "published_option": "standard",
+              "screw_diameter_mm": [
+                45,
+                50,
+                56
+              ],
+              "injection_capacity_cm3": [
+                286,
+                353,
+                443
+              ],
+              "maximum_injection_pressure_mpa": [
+                207,
+                168,
+                134
+              ],
+              "source_id": "nissei-fnx180-iv-official-spec"
+            }
+          ],
+          "manuals": [],
+          "wanted_documents": [
+            {
+              "title": "Exact machine/revision OEM operator and maintenance manual",
+              "status": "missing"
+            },
+            {
+              "title": "Serial/revision-specific electrical and hydraulic circuit diagrams",
+              "status": "missing"
+            },
+            {
+              "title": "OEM parts/lubrication and controller I/O documentation",
+              "status": "missing"
+            }
+          ],
+          "sources": [
+            {
+              "id": "nissei-fnx180-iv-official-spec",
+              "title": "NISSEI FNX180Ⅳ official performance specification",
+              "publisher": "NISSEI PLASTIC INDUSTRIAL CO., LTD. (primary OEM)",
+              "url": "https://www.nisseiplastic.com/en/products/fnx-4/spec.php?model=FNX180%E2%85%A3",
+              "supports": [
+                "published model/series identity",
+                "common machine dimensions and clamping performance",
+                "per-injection-unit screw diameter, capacity and maximum injection pressure"
+              ],
+              "checked": "2026-10-09",
+              "confidence": "verified for OEM-published model specifications only; not serial-specific",
+              "access": "public manufacturer technical-specification page"
+            }
+          ],
+          "research_log": [
+            {
+              "date": "2026-10-09",
+              "summary": "Added original NISSEI model-IV OEM technical page, preserving standard vs optional injection-unit variants and per-screw pressure/capacity. Fitted unit, machine serial/controller and exact service/electrical/hydraulic documentation remain unknown. No validated machine-fit or operating authority."
+            }
+          ]
+        },
+        {
           "id": "nissei-fnx220-iv",
           "model": "FNX220Ⅳ",
           "series": "FNX-Ⅳ",
@@ -672,6 +1511,112 @@
             {
               "date": "2026-10-08",
               "summary": "Added exact FNX-Ⅳ model record from NISSEI primary specifications. Injection-unit options remain discrete source variants. Serial, controller, service manual and drawings remain unverified; not approved as a machine suitability or operating basis."
+            }
+          ]
+        },
+        {
+          "id": "nissei-fnx280-iv",
+          "model": "FNX280Ⅳ",
+          "series": "FNX-Ⅳ",
+          "research_status": "active",
+          "generation_note": "NISSEI's published FNX-Ⅳ hybrid machine. These are manufacturer model-family specifications, not a verified installed machine, serial number or injection-unit configuration. Do not interchange the Ⅳ and older FNX generations.",
+          "manufacture_year": {
+            "value": null,
+            "status": "unknown",
+            "evidence_note": "No build year or serial-specific machine identity has been confirmed."
+          },
+          "controller": {
+            "family": "NISSEI machine HMI/controller revision not verified for a particular serial",
+            "confidence": "missing",
+            "host_controller": "unknown",
+            "host_note": "The FNX-Ⅳ family describes network/operation features, but does not establish the fitted controller/HMI firmware or I/O revision for an individual machine."
+          },
+          "common_verified_specs": {
+            "clamping_force_kn": 2740,
+            "clamping_stroke_mm": 830,
+            "min_mould_thickness_mm": 320,
+            "max_daylight_opening_mm": 1150,
+            "tie_bar_clearance_h_x_v_mm": "660 x 660",
+            "die_plate_h_x_v_mm": "955 x 955",
+            "ejector_stroke_mm": 130
+          },
+          "published_injection_variants": [
+            {
+              "injection_unit_id": "71A",
+              "published_option": "standard",
+              "screw_diameter_mm": [
+                56,
+                63,
+                71
+              ],
+              "injection_capacity_cm3": [
+                554,
+                701,
+                891
+              ],
+              "maximum_injection_pressure_mpa": [
+                196,
+                155,
+                122
+              ],
+              "source_id": "nissei-fnx280-iv-official-spec"
+            },
+            {
+              "injection_unit_id": "100A",
+              "published_option": "optional",
+              "screw_diameter_mm": [
+                63,
+                71,
+                80
+              ],
+              "injection_capacity_cm3": [
+                795,
+                1010,
+                1280
+              ],
+              "maximum_injection_pressure_mpa": [
+                205,
+                161,
+                127
+              ],
+              "source_id": "nissei-fnx280-iv-official-spec"
+            }
+          ],
+          "manuals": [],
+          "wanted_documents": [
+            {
+              "title": "Exact machine/revision OEM operator and maintenance manual",
+              "status": "missing"
+            },
+            {
+              "title": "Serial/revision-specific electrical and hydraulic circuit diagrams",
+              "status": "missing"
+            },
+            {
+              "title": "OEM parts/lubrication and controller I/O documentation",
+              "status": "missing"
+            }
+          ],
+          "sources": [
+            {
+              "id": "nissei-fnx280-iv-official-spec",
+              "title": "NISSEI FNX280Ⅳ official performance specification",
+              "publisher": "NISSEI PLASTIC INDUSTRIAL CO., LTD. (primary OEM)",
+              "url": "https://www.nisseiplastic.com/en/products/fnx-4/spec.php?model=FNX280%E2%85%A3",
+              "supports": [
+                "published model/series identity",
+                "common machine dimensions and clamping performance",
+                "per-injection-unit screw diameter, capacity and maximum injection pressure"
+              ],
+              "checked": "2026-10-09",
+              "confidence": "verified for OEM-published model specifications only; not serial-specific",
+              "access": "public manufacturer technical-specification page"
+            }
+          ],
+          "research_log": [
+            {
+              "date": "2026-10-09",
+              "summary": "Added NISSEI's exact FNX280Ⅳ hybrid model OEM publication: 2740 kN; verified common geometry; distinct 71A standard and optional 100A per-screw diameter/injection volume/max-pressure values. Physical machine and fitted injection-unit identity, as-built ratings, controller revision, maintenance and service diagrams remain unknown; not proof of machine suitability or production process authority."
             }
           ]
         }

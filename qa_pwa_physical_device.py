@@ -34,7 +34,23 @@ need(base["status"] == "pending-physical-device-validation", "current repository
 need(base["release"] == version["web_release"], "physical-device contract must be bound to the current web release")
 need(base["runtimeFingerprint"] is None, "pending physical-device contract must not claim a validated runtime fingerprint")
 need(base["testedAt"] is None and base["testerReference"] is None and base["evidenceReference"] is None, "pending physical-device contract must not carry pseudo-validation metadata")
-need(base.get("candidate", {}).get("release") == version["web_release"], "pending contract must retain the exact current candidate release binding")
+# A new release must run browser/contract preflight before its exact-head
+# candidate producer. Permit that evidence-free staging state ONLY while
+# technicalAutomation explicitly fails; release-integrity gates still reject it.
+candidate=base.get("candidate") or {}
+if candidate:
+    need(candidate.get("release") == version["web_release"],
+         "pending contract must retain the exact current candidate release binding")
+else:
+    ledger=json.loads((ROOT/"data"/"release-external-validation-v1.json").read_text(encoding="utf-8"))
+    need(ledger.get("release")==version["web_release"], "candidate-staging release must match version")
+    need((ledger.get("technicalAutomation") or {}).get("status")=="fail",
+         "missing candidate is permissible only while technical automation fails")
+    need((ledger.get("pwaPhysicalDevices") or {}).get("status")=="hold" and
+         (ledger.get("pwaPhysicalDevices") or {}).get("currentCandidate") is None,
+         "missing candidate cannot assert a current PWA artifact or approval")
+    need((base.get("previousCandidate") or {}).get("release") != version["web_release"],
+         "missing candidate must retain its actual previous release")
 need("physical iOS/iPadOS and Android devices" in base["boundary"], "physical-device boundary must remain explicit")
 need("accessibility-real-at-validation-v1.json" in base["boundary"], "screen-reader evidence must remain separately governed")
 

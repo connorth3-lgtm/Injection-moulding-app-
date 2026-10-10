@@ -283,7 +283,11 @@ test('UI audit contract: one page title, compact header actions, useful Home, de
   await openLearnHub(page);
   await expect(page.locator('body[data-mm-view="path"] .topbar>div:first-child')).toBeHidden();
   await expect(page.locator('#path .mm-primary-hub-head h1')).toHaveCount(1);
-  expect(await page.locator('#path .mm-hub-grid').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length)).toBe(2);
+  // Learn is now a unified 176-lesson catalogue, not the removed shortcut-tile grid.
+  await expect(page.locator('#path .mm-all-lessons')).toBeVisible();
+  await expect(page.locator('#path [data-mm-catalog-item]')).toHaveCount(176);
+  const learnOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(learnOverflow).toBeLessThanOrEqual(2);
 
   await openPracticeHub(page);
   await expect(page.locator('body[data-mm-view="scenarios"] .topbar>div:first-child')).toBeHidden();
@@ -302,3 +306,85 @@ test('UI audit contract: one page title, compact header actions, useful Home, de
   });
   expect(overlap).toBeFalsy();
 });
+
+test('Mission Control is absent on small Home but remains unclipped in Practice',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_MISSION_CONTROL?.startMission));
+  const mc=page.locator('#mmMissionControl');
+  const book=page.locator('#dashboard [data-mm-home-book]');
+  await page.evaluate(()=>window.MM_MISSION_CONTROL.startMission({
+    title:'QA mobile mission layout only',
+    kind:'investigation',
+    stage:'baseline',
+    context:{
+      machine:'Electric press — long QA machine context',
+      mould:'Four-cavity training mould context',
+      material:'Engineering polymer example grade',
+      part:'Long fictional housing reference',
+      caseId:'QA-MOBILE-CONTEXT-CASE'
+    }
+  }));
+  for(const width of [320,360,390,412]){
+    await page.setViewportSize({width,height:844});
+    await page.evaluate(()=>switchView('dashboard'));
+    await expect(mc.locator('.mm-mc-context')).toBeHidden();
+    await expect(mc.locator('.mm-mc-timeline')).toBeHidden();
+    await expect(page.locator('#dashboard .mm-mc-home-card')).toBeHidden();
+    await expect(book).toBeVisible();
+    await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
+    const homeOverflow=await page.evaluate(()=>
+      document.documentElement.scrollWidth-document.documentElement.clientWidth);
+    expect(homeOverflow,'Home does not overflow at '+width).toBeLessThanOrEqual(1);
+
+    await page.evaluate(()=>switchView('scenarios'));
+    await expect(mc.locator('.mm-mc-context')).toBeVisible();
+    await expect(mc.locator('.mm-mc-timeline')).toBeVisible();
+    await expect(mc.locator('[data-mm-mc-stage]')).toHaveCount(8);
+    const geometry=await page.evaluate(()=>{
+      const context=document.querySelector('#mmMissionControl .mm-mc-context-items');
+      const timeline=document.querySelector('#mmMissionControl .mm-mc-timeline');
+      const next=document.querySelector('#mmMissionControl [data-mm-mc-next]');
+      const stages=[...document.querySelectorAll('#mmMissionControl [data-mm-mc-stage]')];
+      const cr=context.getBoundingClientRect(),tr=timeline.getBoundingClientRect();
+      const contextFits=[...context.querySelectorAll('b')].every(label=>{
+        const box=label.getBoundingClientRect();
+        return box.left>=cr.left-1&&box.right<=cr.right+1&&
+          label.scrollWidth<=label.clientWidth+1;
+      });
+      return {
+        position:getComputedStyle(timeline).position,
+        columns:getComputedStyle(context).gridTemplateColumns.trim().split(/\s+/).length,
+        contextScroll:context.scrollWidth-context.clientWidth,
+        contextFits,
+        stageTop:tr.top,contextBottom:cr.bottom,
+        nextHeight:next.getBoundingClientRect().height,
+        minStageHeight:Math.min(...stages.map(el=>el.getBoundingClientRect().height)),
+        overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth
+      };
+    });
+    expect(geometry.position).not.toBe('fixed');
+    expect(geometry.position).not.toBe('sticky');
+    expect(geometry.stageTop).toBeGreaterThanOrEqual(geometry.contextBottom-2);
+    expect(geometry.columns,'context columns at '+width).toBe(width<=320?1:2);
+    expect(geometry.contextScroll).toBeLessThanOrEqual(1);
+    expect(geometry.contextFits,'unclipped context at '+width).toBe(true);
+    expect(geometry.nextHeight).toBeGreaterThanOrEqual(44);
+    expect(geometry.minStageHeight).toBeGreaterThanOrEqual(44);
+    expect(geometry.overflow).toBeLessThanOrEqual(1);
+  }
+
+  await page.setViewportSize({width:390,height:844});
+  await page.evaluate(()=>switchView('dashboard'));
+  const button=book.locator('button').first();
+  await button.scrollIntoViewIfNeeded();
+  const unobstructed=await button.evaluate(btn=>{
+    const r=btn.getBoundingClientRect();
+    const x=Math.max(1,Math.min(innerWidth-2,(r.left+r.right)/2));
+    const y=Math.max(1,Math.min(innerHeight-2,(r.top+r.bottom)/2));
+    const top=document.elementFromPoint(x,y);
+    return Boolean(top&&(top===btn||btn.contains(top)));
+  });
+  expect(unobstructed,'Book CTA remains tappable on uncluttered Home').toBe(true);
+});
+
