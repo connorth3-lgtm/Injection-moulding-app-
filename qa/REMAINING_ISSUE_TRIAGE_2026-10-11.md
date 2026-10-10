@@ -20,3 +20,5 @@ This is a software-side disposition register, not issue closure or approval. PR 
 | #278 | GitHub platform immutable releases setting, new actual immutable desktop tag | Repository guard is not admin settings proof |
 
 **DO NOT close these issues** simply because this PR and technical CI pass. Each issue requires its own missing real-world evidence or editorial/operator acceptance, and main/production release still has independent protected gates.
+
+**Release-identity note:** This PR changes only QA scripts, Playwright fixtures and internal audit documentation. Its final tree leaves `src/domains/learning/book-runtime.js`, `service-worker.js`, `version.json`, release evidence contracts and learner-facing deployment bytes identical to the merged `preview` base. Run the full Book release QA and assert that the exact PR-head protected checks succeed before merge.
