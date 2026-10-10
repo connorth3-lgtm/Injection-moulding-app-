@@ -365,6 +365,8 @@ test('Mission Control persists context, evidence and command search across app s
   await page.waitForFunction(()=>Boolean(window.MM_MISSION_CONTROL?.startMission&&window.MM_APP_SHELL));
 
   const mc=page.locator('#mmMissionControl');
+  await expect(mc.locator('.mm-mc-context')).toBeHidden();
+  await page.evaluate(()=>window.switchView('scenarios'));
   await expect(mc).toBeVisible();
   await page.evaluate(()=>window.MM_MISSION_CONTROL.startMission({
     title:'QA cavity-balance mission',
@@ -409,6 +411,8 @@ test('Mission Control persists context across the app and remains mobile-safe',a
   await page.setViewportSize({width:1440,height:900});
   await openApp(page);
   await page.waitForFunction(()=>Boolean(window.MM_MISSION_CONTROL?.startMission&&window.MM_APP_SHELL?.finalized));
+  await expect(page.locator('#mmMissionControl .mm-mc-context')).toBeHidden();
+  await page.evaluate(()=>window.switchView('scenarios'));
   await page.evaluate(()=>window.MM_MISSION_CONTROL.startMission({
     title:'QA connected moulding mission',
     kind:'investigation',
@@ -448,6 +452,9 @@ test('Mission Control persists context across the app and remains mobile-safe',a
 
   await page.reload();
   await page.waitForFunction(()=>Boolean(window.MM_MISSION_CONTROL?.state));
+  await expect(page.locator('#mmMissionControl .mm-mc-context')).toBeHidden();
+  await page.evaluate(()=>window.switchView('materials'));
+  await expect(page.locator('#mmMissionControl')).toBeVisible();
   await expect(page.locator('#mmMissionControl')).toContainText('QA connected moulding mission');
   const persisted=await page.evaluate(()=>window.MM_MISSION_CONTROL.state());
   expect(persisted.mission?.context?.machine).toBe('IMM-07');
