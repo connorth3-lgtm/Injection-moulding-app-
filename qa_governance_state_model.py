@@ -87,6 +87,22 @@ def validate_public_snapshot(snapshot: dict, *, book_sme: dict, curriculum_sme: 
         raise AssertionError("public MouldMaster production authority must remain advisory-only without separate controlled-site authorization")
 
 
+def validate_assurance_candidate_identity(assurance: dict, candidate: dict, release: str) -> None:
+    """Prevent passing public status from citing stale technical candidate bytes."""
+    static = assurance["staticContract"]
+    browser = assurance["behavioralBrowser"]
+    assert static.get("status") == browser.get("status") == "pass", "assurance must stay release-bound"
+    for label, row in (("static", static), ("browser", browser)):
+        meaning = str(row.get("meaning") or "")
+        for value in (release, candidate.get("sourceSha")):
+            assert value and value in meaning, f"{label} assurance still cites an older release/source"
+    static_text = str(static.get("meaning") or "")
+    for value in (str(candidate.get("candidateRunId") or ""), str(candidate.get("artifactId") or ""),
+                  str(candidate.get("runtimeFingerprint") or "")):
+        assert value and value in static_text, "static assurance has stale or missing exact artifact provenance"
+    assert assurance["externalHumanDevice"].get("status") == "hold", "external human/device assurance is never a CI approval"
+
+
 def expect_failure(label: str, fn) -> None:
     try:
         fn()
@@ -228,6 +244,13 @@ def main() -> None:
         assert external["technicalAutomation"]["status"] == "pass"
         assert assurance["staticContract"].get("status") == "pass"
         assert assurance["behavioralBrowser"].get("status") == "pass"
+        validate_assurance_candidate_identity(assurance, external["webCandidate"], current_release)
+        stale = deepcopy(assurance)
+        stale["staticContract"]["meaning"] = stale["staticContract"]["meaning"].replace(str(external["webCandidate"]["sourceSha"]), "0" * 40)
+        expect_failure("stale static source cannot pass", lambda: validate_assurance_candidate_identity(stale, external["webCandidate"], current_release))
+        stale = deepcopy(assurance)
+        stale["behavioralBrowser"]["meaning"] = stale["behavioralBrowser"]["meaning"].replace(current_release, "2026.10.11.1")
+        expect_failure("stale browser release cannot pass", lambda: validate_assurance_candidate_identity(stale, external["webCandidate"], current_release))
     assert assurance["externalHumanDevice"].get("status") == "hold"
 
     assert external["productionUse"]["status"] == "advisory-only"

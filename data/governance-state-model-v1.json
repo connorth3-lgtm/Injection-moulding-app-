@@ -346,11 +346,11 @@
   "currentAssuranceEvidence": {
     "staticContract": {
       "status": "pass",
-      "meaning": "Authentic 2026.10.11.1 runtime source 886116199e611b225dbae7b266f4c1402287d8e7 produced successful exact-source Pre-merge Public Candidate run 38081915524 and retained artifact 11680527534, with public fingerprint independently computed from archived bytes. New final-head protected-main CI and all external approvals remain independently gated."
+      "meaning": "Successful exact-source Pre-merge Public Candidate run 38089059338 retained web release 2026.10.11.3, source 0c93cfeddc60f50c9f7e5d567fb041592a47d2c6, artifact 11682829264, with public-runtime fingerprint sha256:c5942fcd791077c81171c359e5c8480f23c0c2855d93affb9673162b57bcf50d verified from the actual archived Pages bytes. This is technical source identity, not final protected-main release approval, human review, physical-device or production authorization."
     },
     "behavioralBrowser": {
       "status": "pass",
-      "meaning": "Mobile Browser QA Chromium/WebKit and reliability suites plus Question Quality 50-Pass passed for technical runtime source 886116199e611b225dbae7b266f4c1402287d8e7. The prior immutable Book Materials visual baseline requires separate strict protected-main acceptance; real devices and human reviews remain HOLD."
+      "meaning": "Mobile Browser QA (Chromium/WebKit, visual and reliability) and Question Quality 50-Pass passed for release 2026.10.11.3 exact candidate source 0c93cfeddc60f50c9f7e5d567fb041592a47d2c6. Book Materials visual owner acceptance, real devices and human AT/SME/provider validation remain separate HOLDs; protected-main checks still gate publication."
     },
     "externalHumanDevice": {
       "status": "hold",

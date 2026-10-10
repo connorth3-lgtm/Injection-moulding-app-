@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Retained release 2026.10.11.3 candidate 0c93cfeddc60f50c9f7e5d567fb041592a47d2c6 and artifact 11682829264 are NOT evidence of testing on physical iOS/iPadOS and Android devices. All install, offline/restart/reboot, update, safe-area, storage-pressure and zoom checks remain pending. Real assistive-technology verification is separate, and production root and signing are not authorised.",
+  "boundary": "Retained release 2026.10.11.3 candidate 0c93cfeddc60f50c9f7e5d567fb041592a47d2c6 and artifact 11682829264 are NOT evidence of testing on physical iOS/iPadOS and Android devices. All install, offline/restart/reboot, update, safe-area, storage-pressure and zoom checks remain pending. Real assistive-technology validation is governed separately by data/accessibility-real-at-validation-v1.json (human NVDA and VoiceOver), not this device contract. Production root, signed distribution and machine control remain on HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
