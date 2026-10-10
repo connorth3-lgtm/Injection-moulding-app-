@@ -148,10 +148,7 @@ function syncBookDisclosure(){
   }
 }
 
-// One clear learner journey: Home, Learn and Practice stay up front.
-// Book remains a governed injected direct route; Materials and specialist
-// routes stay available through the existing accessible More modal.
-const PRIMARY_DESKTOP_VIEWS=new Set(['dashboard','path','scenarios']);
+const PRIMARY_DESKTOP_VIEWS=new Set(['dashboard','path','materials','scenarios']);
 function hideNavButton(button,hidden){
   if(!button)return;
   if(hidden){
