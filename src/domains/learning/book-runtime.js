@@ -66,7 +66,7 @@
   const READER_SUPPLEMENT_SECTIONS=Object.freeze({
     'documentation':Object.freeze(['Reading ISO 9001 marks on material packaging'])
   });
-  let manifest=null,manifestPromise=null,materialPromise=null,coldMaterialSearchPromise=null,publicationAuthorization=null,bookSmeReview=null,qualificationReview=null,highRiskReview=null,workedCaseLedger=null,workedCasesByChapter=new Map(),diagramLedger=null,diagramsByChapter=new Map(),evidenceEnrichmentLedger=null,claimEvidenceReference=null,claimEvidenceByChapter=new Map(),claimEvidenceClaimsByChapter=new Map(),readerArchitecture=null,editorialExpansionReview=null,materialAtlas=null,materialCatalog=null,materialRegionalEvidence=null,materialSearchIndex={catalog:[],regional:[]},integrityMap=null,ui=null,previousView=null,open=false,contentsScrollY=0,contentsWindowScrollY=0,pendingContentsScroll=null,bookIntentEpoch=0;
+  let manifest=null,manifestPromise=null,materialPromise=null,coldMaterialSearchPromise=null,publicationAuthorization=null,bookSmeReview=null,qualificationReview=null,highRiskReview=null,workedCaseLedger=null,workedCasesByChapter=new Map(),diagramLedger=null,diagramsByChapter=new Map(),evidenceEnrichmentLedger=null,claimEvidenceReference=null,claimEvidenceByChapter=new Map(),claimEvidenceClaimsByChapter=new Map(),readerArchitecture=null,editorialExpansionReview=null,materialAtlas=null,materialCatalog=null,materialRegionalEvidence=null,materialSearchIndex={catalog:[],regional:[]},integrityMap=null,ui=null,previousView=null,open=false,contentsScrollY=0,contentsWindowScrollY=0,pendingContentsScroll=null,contentsFocus=null,bookIntentEpoch=0;
   const BOOK_RESUME_PREFIX='mm_book_resume_v1::',LEGACY_BOOK_RESUME_KEY='mouldmasterBookResume:v1',BOOK_RESUME_SCHEMA=1;
   let activeReadingPosition=null,activeReadingScopeKey=null,resumeScrollTimer=0,boundBookScrollRoot=null;
   function resumeStorageKey(){
@@ -83,7 +83,15 @@
       localStorage.removeItem(LEGACY_BOOK_RESUME_KEY);
     }catch(_){}
   }
-  function validResumeShape(value){return value&&typeof value==='object'&&value.schema===BOOK_RESUME_SCHEMA&&value.bookRelease===VERSION&&typeof value.id==='string'&&value.id.length>0&&['reader-chapter','chapter'].includes(value.kind)}
+  function validResumeShape(value){
+    // A runtime version bump is not, by itself, a reason to destroy a learner's
+    // bookmark. The stable chapter identity is checked against the newly loaded
+    // manifest in openResume, before any older position is accepted.
+    return value&&typeof value==='object'&&value.schema===BOOK_RESUME_SCHEMA
+      &&typeof value.bookRelease==='string'&&/^\d{4}\.\d{2}\.\d{2}\.\d+$/.test(value.bookRelease)
+      &&typeof value.id==='string'&&/^[a-z0-9][a-z0-9-]{0,100}$/.test(value.id)
+      &&['reader-chapter','chapter'].includes(value.kind);
+  }
   function readResume(){
     const key=resumeStorageKey();if(!key)return null;
     try{const value=JSON.parse(localStorage.getItem(key)||'null');if(!validResumeShape(value)){if(value!=null)localStorage.removeItem(key);return null}return value}catch(_){return null}
@@ -185,20 +193,27 @@
   }
   function restoreReadingPosition(snapshot,intent=bookIntentEpoch){
     if(!open||intent!==bookIntentEpoch)return Promise.resolve(false);
-    clearTimeout(resumeScrollTimer);resumeScrollTimer=0;activeReadingScopeKey=resumeStorageKey();activeReadingPosition={...snapshot};
+    clearTimeout(resumeScrollTimer);resumeScrollTimer=0;activeReadingScopeKey=resumeStorageKey();activeReadingPosition={...snapshot,bookRelease:VERSION};
     return new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(async()=>{
       if(!open||intent!==bookIntentEpoch||!ui?.reader||ui.reader.hidden){resolve(false);return}
       bindBookScrollRoot();
       const heads=[...ui.reader.querySelectorAll('h2[data-mm-book-anchor],h3[data-mm-book-anchor],h4[data-mm-book-anchor]')],anchorId=String(snapshot.anchorId||''),index=Number.isInteger(snapshot.anchorIndex)?snapshot.anchorIndex:-1,wanted=String(snapshot.anchorText||'').trim();
       const byId=anchorId?heads.find(el=>el.dataset.mmBookAnchor===anchorId):null;
-      const heading=byId||(index>=0&&index<heads.length?heads[index]:null)||(wanted?heads.find(el=>String(el.textContent||'').trim()===wanted):null);
+      const byText=wanted?heads.find(el=>String(el.textContent||'').trim()===wanted):null;
+       const byIndex=index>=0&&index<heads.length?heads[index]:null;
+       // An anchor index can point at different content after a Book upgrade.
+       // Prefer stable ID, then exact heading text; retain the index fallback
+       // only within the same runtime release.
+       const heading=byId||byText||(snapshot.bookRelease===VERSION?byIndex:null);
       if(heading){
         const savedOffset=Number(snapshot.anchorOffset),offsetIdentity=String(snapshot.anchorOffsetId||'');
         const desired=byId&&offsetIdentity===anchorId&&Number.isFinite(savedOffset)?savedOffset:bookViewportTop();
         await alignReadingAnchor(heading,desired);
-      }else scrollBookTo(snapshot.scrollY);
+      }else if(snapshot.bookRelease===VERSION)scrollBookTo(snapshot.scrollY);
+       else scrollBookBy(ui.reader.getBoundingClientRect().top-bookViewportTop());
       if(!open||intent!==bookIntentEpoch){resolve(false);return}
-      window.dispatchEvent(new CustomEvent('mm:book-resume-restored',{detail:{id:snapshot.id,anchorId:heading?.dataset?.mmBookAnchor||''}}));
+      if(snapshot.bookRelease!==VERSION)flushReadingPosition({notify:true});
+       window.dispatchEvent(new CustomEvent('mm:book-resume-restored',{detail:{id:snapshot.id,anchorId:heading?.dataset?.mmBookAnchor||''}}));
       resolve(true);
     })));
   }
@@ -391,10 +406,17 @@
   }
   function canonicalGradeHtml(grade){
     const manufacturer=grade.manufacturer?.name||'Unknown manufacturer',family=grade.polymer?.family||'Unknown polymer',provenance=grade.provenance?.stage||'unreviewed',lifecycle=grade.lifecycle?.status||'unknown',checkedAt=grade.lifecycle?.checkedAt||'not recorded';
-    const properties=(grade.properties||[]).map(p=>`<tr><th scope="row">${esc(p.property||'Property')}</th><td>${esc([p.value,p.unit].filter(x=>x!==null&&x!==undefined&&x!=='').join(' '))}</td><td>${esc([p.testMethod,p.temperatureC!=null?`${p.temperatureC} °C`:'',p.loadKg!=null?`${p.loadKg} kg`:'',p.direction&&p.direction!=='not-applicable'?p.direction:''].filter(Boolean).join(' · '))}</td><td>${esc(p.limitations||'')}</td></tr>`).join('');
+    const properties=(grade.properties||[]).map(p=>{
+      const method=[p.testMethod,p.temperatureC!=null?`${p.temperatureC} °C`:'',p.loadKg!=null?`${p.loadKg} kg`:'',p.direction&&p.direction!=='not-applicable'?p.direction:''].filter(Boolean).join(' · ');
+      // comparisonReady=false is a governed restriction even when a named
+      // method exists. Never infer comparability from a numeric value alone.
+      const warning=p.comparisonReady===false?'<div role="note"><strong class="mm-book-material-comparison-warning">Not comparable — method, conditions or evidence insufficient</strong></div>':'';
+      const source=[p.sourceId,p.sourcePage].filter(Boolean).join(' · ');
+      return `<tr><th scope="row">${esc(p.property||'Property')}</th><td>${esc([p.value,p.unit].filter(x=>x!==null&&x!==undefined&&x!=='').join(' '))}</td><td>${esc(method)}${warning}</td><td>${esc(p.limitations||'')}${source?`<div><small>Source: ${esc(source)}</small></div>`:''}</td></tr>`;
+    }).join('');
     const processing=(grade.processing||[]).map(p=>{const range=p.value!=null?`${p.value} ${p.unit||''}`:[p.min,p.max].some(x=>x!=null)?`${p.min??'—'}–${p.max??'—'} ${p.unit||''}`:'—';return `<tr><th scope="row">${esc(p.parameter||'Processing guidance')}</th><td>${esc(range.trim())}</td><td>${esc(p.condition||'')}</td></tr>`;}).join('');
     const sources=(grade.sources||[]).map(s=>`<li>${s.url?`<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer"><b>${esc(s.title||s.publisher||s.id)}</b></a>`:`<b>${esc(s.title||s.publisher||s.id)}</b>`}<br><small>${esc([s.publisher,s.kind,s.documentDate].filter(Boolean).join(' · '))}</small></li>`).join('');
-    return `<details class="mm-book-material-profile" data-mm-book-catalog-grade="${esc(grade.id)}"><summary><span><b>${esc(manufacturer)} — ${esc(grade.grade)}</b><small>${esc([grade.brand,family,`evidence: ${provenance}`,`commercial/source currentness: ${lifecycle}`,`checked: ${checkedAt}`].filter(Boolean).join(' · '))}</small></span><span aria-hidden="true">+</span></summary><div class="mm-book-material-profile-body"><p><b>Canonical exact-grade record.</b> Evidence integrity and product/source currentness are separate statuses: a provenance-reviewed value can still have unknown lifecycle/currentness. Supplier values remain conditional on the shown method, condition and current source documentation.</p>${grade.composition?.notes?`<p>${esc(grade.composition.notes)}</p>`:''}${properties?`<h4>Measured properties</h4><div class="mm-book-table-wrap"><table><thead><tr><th>Property</th><th>Value</th><th>Condition / method</th><th>Boundary</th></tr></thead><tbody>${properties}</tbody></table></div>`:''}${processing?`<h4>Supplier processing guidance</h4><div class="mm-book-table-wrap"><table><thead><tr><th>Parameter</th><th>Value / range</th><th>Boundary</th></tr></thead><tbody>${processing}</tbody></table></div>`:''}${sources?`<h4>Sources</h4><ul>${sources}</ul>`:''}</div></details>`;
+    return `<details class="mm-book-material-profile" data-mm-book-catalog-grade="${esc(grade.id)}"><summary><span><b>${esc(manufacturer)} — ${esc(grade.grade)}</b><small>${esc([grade.brand,family,`evidence: ${provenance}`,`commercial/source currentness: ${lifecycle}`,`checked: ${checkedAt}`].filter(Boolean).join(' · '))}</small></span><span aria-hidden="true">+</span></summary><div class="mm-book-material-profile-body"><p><b>Canonical exact-grade record.</b> Evidence integrity and product/source currentness are separate statuses: a provenance-reviewed value can still have unknown lifecycle/currentness. Supplier values remain conditional on the shown method, condition and current source documentation.</p>${lifecycle==='unknown'?'<p role="note"><strong>Current availability and processing suitability not verified.</strong> Check the current exact-grade supplier TDS, processing instructions and SDS where applicable before use; provenance review is not supplier-currentness verification.</p>':''}${grade.composition?.notes?`<p>${esc(grade.composition.notes)}</p>`:''}${properties?`<h4>Measured properties</h4><div class="mm-book-table-wrap"><table><thead><tr><th>Property</th><th>Value</th><th>Condition / method</th><th>Boundary</th></tr></thead><tbody>${properties}</tbody></table></div>`:''}${processing?`<h4>Supplier processing guidance</h4><div class="mm-book-table-wrap"><table><thead><tr><th>Parameter</th><th>Value / range</th><th>Boundary</th></tr></thead><tbody>${processing}</tbody></table></div>`:''}${sources?`<h4>Sources</h4><ul>${sources}</ul>`:''}</div></details>`;
   }
   function regionalRecordHtml(row,index){
     const maker=row.manufacturer||row.organization||row.country||'Regional evidence',single=row.grade||'',multi=Array.isArray(row.grades)?row.grades.map(x=>typeof x==='string'?x:x?.grade).filter(Boolean):[],label=single||multi.slice(0,3).join(', ')||row.recordType||row.polymer||`Record ${index+1}`,meta=[row.polymer,row.region||row.country,row.recordType,row.status].filter(Boolean).join(' · ');
@@ -649,12 +671,55 @@
   }
   function showReaderChapter(id){
     const reader=allReaderChapters().find(x=>x.id===id);if(!reader||!ui)return;
-    bookIntentEpoch++;rememberContentsBeforeReading();restoreBookChrome();ui.hero.hidden=true;ui.accuracy.hidden=true;const back='<button type="button" class="ghost" data-mm-book-back>← Book contents</button>';
+    bookIntentEpoch++;rememberContentsBeforeReading();contentsFocus={kind:'reader-chapter',id};restoreBookChrome();ui.hero.hidden=true;ui.accuracy.hidden=true;const back='<button type="button" class="ghost" data-mm-book-back>← Book contents</button>';
     ui.reader.innerHTML=`${back}${readerChapterHtml(reader)}`;ui.contents.hidden=true;ui.reader.hidden=false;bindBack();ui.reader.querySelectorAll('[data-mm-book-page-turn]').forEach(button=>button.addEventListener('click',()=>showReaderChapter(button.dataset.mmBookPageTurn)));bindMaterialPagination(ui.reader);bindBookScrollRoot();rememberReadingPosition('reader-chapter',id,reader.title,0);scrollBookReaderToTop();emitBookRender('reader-chapter',id);
     if(reader.moduleIds.includes('material-families'))void hydrateMaterialAtlas();
   }
-  function restoreBookChrome(){if(!ui)return;ui.hero.hidden=false;ui.accuracy.hidden=false;}function stopBookSpeech(){try{window.MMReadAloud?.stop?.();}catch(_){}}function bookScrollTop(){const root=bookScrollRoot();return Math.max(0,isDocumentScrollRoot(root)?document.scrollingElement?.scrollTop||0:root.scrollTop||0);}function scrollBookReaderToTop(){requestAnimationFrame(()=>{if(!ui?.reader)return;scrollBookBy(ui.reader.getBoundingClientRect().top-bookViewportTop());const heading=ui.reader.querySelector('h2');if(heading){heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}});}function showContents({restoreScroll=true}={}){if(!ui)return;const intent=++bookIntentEpoch;if(!ui.reader.hidden)flushReadingPosition({notify:true});activeReadingPosition=null;activeReadingScopeKey=null;stopBookSpeech();const active=document.activeElement;if(active&&ui.reader?.contains(active)&&typeof active.blur==='function')active.blur();restoreBookChrome();ui.reader.hidden=true;ui.contents.hidden=false;void ui.contents.offsetHeight;if(restoreScroll){const target=contentsScrollY,windowTarget=contentsWindowScrollY;scrollBookTo(target);window.scrollTo({top:windowTarget,behavior:'instant'});requestAnimationFrame(()=>requestAnimationFrame(()=>{if(intent===bookIntentEpoch&&ui?.contents&&!ui.contents.hidden&&ui?.reader?.hidden){scrollBookTo(target);window.scrollTo({top:windowTarget,behavior:'instant'});}}));}}function bindBack(){ui?.reader?.querySelectorAll('[data-mm-book-back]').forEach(button=>button.addEventListener('click',()=>showContents()));}
-  function emitBookRender(kind,id=''){window.dispatchEvent(new CustomEvent('mm:book-render',{detail:{kind,id}}));}function showChapter(id){const chapter=allChapters().find(ch=>ch.id===id);if(!chapter||!ui)return;bookIntentEpoch++;rememberContentsBeforeReading();const sections=Array.isArray(chapter.sections)?chapter.sections:[];restoreBookChrome();const back='<button type="button" class="ghost" data-mm-book-back>← Book contents</button>';if(chapter.state==='verified')ui.reader.innerHTML=`${back}${verifiedChapterHtml(chapter)}`;else if(chapter.state==='technical-review'&&sections.length)ui.reader.innerHTML=`${back}<span class="eyebrow">Technical review draft — source evidence review incomplete</span><h2>${esc(chapter.title)}</h2><p><b>Applicability:</b> ${esc(chapter.applicability||'Under review.')}</p><div class="callout"><b>Review boundary:</b> ${esc(chapter.reviewBoundary||'This draft is visible for technical review. Do not treat it as a machine setting, safety procedure or source-reviewed production instruction.')}</div>${sections.map((s,index)=>`<section><h3 data-mm-book-anchor="chapter:${esc(chapter.id)}:section:${index}">${esc(s.title||'')}</h3>${proseHtml(s.text)}</section>`).join('')}${sourceHtml(chapter)}`;else ui.reader.innerHTML=`${back}<span class="eyebrow">${esc(stateLabel(chapter.state))}</span><h2>${esc(chapter.title)}</h2><p><b>This chapter is not being published as technical teaching content yet.</b></p><p>MouldMaster is reviewing the claims, applicability and sources first.</p>${sourceHtml(chapter)}`;ui.contents.hidden=true;ui.reader.hidden=false;bindBack();bindBookScrollRoot();rememberReadingPosition('chapter',id,chapter.title,0);scrollBookReaderToTop();emitBookRender('chapter',id);if(id==='material-families')void hydrateMaterialAtlas();}
+  function restoreBookChrome(){if(!ui)return;ui.hero.hidden=false;ui.accuracy.hidden=false;}
+  function stopBookSpeech(){try{window.MMReadAloud?.stop?.();}catch(_){}}
+  function bookScrollTop(){const root=bookScrollRoot();return Math.max(0,isDocumentScrollRoot(root)?document.scrollingElement?.scrollTop||0:root.scrollTop||0);}
+  function scrollBookReaderToTop(){
+    requestAnimationFrame(()=>{
+      if(!ui?.reader)return;
+      scrollBookBy(ui.reader.getBoundingClientRect().top-bookViewportTop());
+      const heading=ui.reader.querySelector('h2');
+      if(heading){heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}
+    });
+  }
+  function focusBookContents(){
+    if(!ui?.contents||ui.contents.hidden)return;
+    const attr=contentsFocus?.kind==='reader-chapter'?'mmBookReaderChapterOpen':'mmBookChapter';
+    const selector=contentsFocus?.kind==='reader-chapter'?'[data-mm-book-reader-chapter-open]':'[data-mm-book-chapter]';
+    const target=contentsFocus?.id?[...ui.parts.querySelectorAll(selector)].find(button=>button.dataset[attr]===contentsFocus.id):null;
+    const fallback=ui.parts.querySelector('.mm-book-table-of-contents h2');
+    const destination=target||fallback;
+    if(!destination)return;
+    if(!target)destination.setAttribute('tabindex','-1');
+    destination.focus({preventScroll:true});
+  }
+  function showContents({restoreScroll=true}={}){
+    if(!ui)return;
+    const intent=++bookIntentEpoch,wasReading=!ui.reader.hidden;
+    if(wasReading)flushReadingPosition({notify:true});
+    activeReadingPosition=null;activeReadingScopeKey=null;stopBookSpeech();
+    const active=document.activeElement;
+    const restoreFocus=wasReading&&(ui.reader.contains(active)||active===document.body);
+    restoreBookChrome();
+    ui.reader.hidden=true;ui.contents.hidden=false;
+    void ui.contents.offsetHeight;
+    if(restoreFocus)focusBookContents();
+    if(restoreScroll){
+      const target=contentsScrollY,windowTarget=contentsWindowScrollY;
+      scrollBookTo(target);window.scrollTo({top:windowTarget,behavior:'instant'});
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{
+        if(intent===bookIntentEpoch&&ui?.contents&&!ui.contents.hidden&&ui?.reader?.hidden){
+          scrollBookTo(target);window.scrollTo({top:windowTarget,behavior:'instant'});
+        }
+      }));
+    }
+  }
+  function bindBack(){ui?.reader?.querySelectorAll('[data-mm-book-back]').forEach(button=>button.addEventListener('click',()=>showContents()));}
+  function emitBookRender(kind,id=''){window.dispatchEvent(new CustomEvent('mm:book-render',{detail:{kind,id}}));}function showChapter(id){const chapter=allChapters().find(ch=>ch.id===id);if(!chapter||!ui)return;bookIntentEpoch++;rememberContentsBeforeReading();contentsFocus={kind:'chapter',id};const sections=Array.isArray(chapter.sections)?chapter.sections:[];restoreBookChrome();const back='<button type="button" class="ghost" data-mm-book-back>← Book contents</button>';if(chapter.state==='verified')ui.reader.innerHTML=`${back}${verifiedChapterHtml(chapter)}`;else if(chapter.state==='technical-review'&&sections.length)ui.reader.innerHTML=`${back}<span class="eyebrow">Technical review draft — source evidence review incomplete</span><h2>${esc(chapter.title)}</h2><p><b>Applicability:</b> ${esc(chapter.applicability||'Under review.')}</p><div class="callout"><b>Review boundary:</b> ${esc(chapter.reviewBoundary||'This draft is visible for technical review. Do not treat it as a machine setting, safety procedure or source-reviewed production instruction.')}</div>${sections.map((s,index)=>`<section><h3 data-mm-book-anchor="chapter:${esc(chapter.id)}:section:${index}">${esc(s.title||'')}</h3>${proseHtml(s.text)}</section>`).join('')}${sourceHtml(chapter)}`;else ui.reader.innerHTML=`${back}<span class="eyebrow">${esc(stateLabel(chapter.state))}</span><h2>${esc(chapter.title)}</h2><p><b>This chapter is not being published as technical teaching content yet.</b></p><p>MouldMaster is reviewing the claims, applicability and sources first.</p>${sourceHtml(chapter)}`;ui.contents.hidden=true;ui.reader.hidden=false;bindBack();bindBookScrollRoot();rememberReadingPosition('chapter',id,chapter.title,0);scrollBookReaderToTop();emitBookRender('chapter',id);if(id==='material-families')void hydrateMaterialAtlas();}
   function readerListeningModuleHtml(chapter){
     if(chapter?.state!=='verified')return '';
     const sections=readerSections(chapter);
