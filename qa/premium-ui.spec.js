@@ -24,6 +24,57 @@ async function assertNoHorizontalOverflow(page,label){
   expect(dims.scrollWidth,`${label}: no horizontal overflow`).toBeLessThanOrEqual(dims.clientWidth+1);
 }
 
+test('lean sidebar keeps core journeys prominent and secondary routes reachable',async({page})=>{
+  await page.setViewportSize({width:1280,height:860});
+  await openApp(page);
+  const nav=page.locator('#nav[data-mm-lean-nav="1"]');
+  await expect(nav).toHaveCount(1);
+  const primary=nav.locator(':scope > button[data-view]');
+  expect(await primary.evaluateAll(nodes=>nodes.map(node=>node.dataset.view)))
+    .toEqual(['dashboard','path','scenarios']);
+  const more=nav.locator(':scope > details.mm-lean-secondary');
+  await expect(more).toHaveCount(1);
+  await expect(more).not.toHaveAttribute('open');
+  const advanced=['materials','simulator','defects','coach','glossary','standards',
+    'exams','certificates','visuals','instructor','profile'];
+  expect(await more.locator('button[data-view]').evaluateAll(nodes=>nodes.map(x=>x.dataset.view)))
+    .toEqual(advanced);
+  await more.locator('summary').click();
+  await expect(more.locator('button[data-view="simulator"]')).toBeVisible();
+  await more.locator('button[data-view="simulator"]').click();
+  await expect(page.locator('#simulator')).toBeVisible();
+  // Programmatic/deep-linked secondary destinations should never be hidden
+  // inside a closed disclosure, nor should any existing route ID disappear.
+  await page.evaluate(()=>{document.querySelector('#nav .mm-lean-secondary').open=false;switchView('standards');});
+  await expect(more).toHaveAttribute('open');
+  await expect(more.locator('button[data-view="standards"]')).toBeVisible();
+  await primary.locator('[data-view="path"]').click();
+  await expect(page.locator('#path')).toBeVisible();
+});
+
+test('Book first reading shows chapter prose without repeated introductory chrome',async({page})=>{
+  await page.setViewportSize({width:1280,height:860});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MMBook?.openReaderChapter));
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r01'));
+  const reader=page.locator('#mmBookView [data-mm-book-reader]');
+  await expect(reader.locator('[data-mm-book-reader-chapter="r01"]')).toBeVisible();
+  await expect(reader.locator('[data-mm-book-reader-module]').first()).toBeVisible();
+  await expect(page.locator('#mmBookView [data-mm-book-hero]')).toBeHidden();
+  await expect(page.locator('#mmBookView [data-mm-book-accuracy]')).toBeHidden();
+  const guide=reader.locator('details.mm-book-reader-guide');
+  await expect(guide).not.toHaveAttribute('open');
+  await guide.locator('summary').click();
+  await expect(guide.locator('.mm-book-reader-key-terms')).toBeVisible();
+  await reader.locator('[data-mm-book-back]').click();
+  await expect(page.locator('#mmBookView [data-mm-book-hero]')).toBeVisible();
+  const contents=page.locator('#mmBookView [data-mm-book-contents]');
+  await expect(contents.locator('[data-mm-book-reader-chapter-open]')).toHaveCount(20);
+  await expect(contents.locator('.mm-book-contents-guide')).not.toHaveAttribute('open');
+  await contents.locator('.mm-book-contents-guide summary').click();
+  await expect(contents.locator('.mm-book-term-guide')).toBeVisible();
+});
+
 test('premium UI stylesheet is active on the primary learner shell',async({page})=>{
   await openApp(page);
   const premiumLink=page.locator('link[href*="premium-ui.css"]');
