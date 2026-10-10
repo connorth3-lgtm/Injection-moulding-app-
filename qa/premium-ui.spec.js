@@ -64,6 +64,27 @@ test('Book first reading shows chapter prose without repeated introductory chrom
   await expect(contents.locator('.mm-book-term-guide > summary')).toBeVisible();
 });
 
+test('phone Book puts first chapter above bottom bar without losing introduction',async({page})=>{
+  await page.setViewportSize({width:360,height:800});
+  await openApp(page);
+  await page.evaluate(async()=>{window.MMBook.open();await window.MMBook.load();});
+  await expect(page.locator('#mmBookView [data-mm-book-contents]')).toBeVisible();
+  const intro=page.locator('#mmBookView .mm-book-intro-details');
+  await expect(intro).toHaveCount(1);
+  await expect(intro).not.toHaveAttribute('open');
+  const first=page.locator('#mmBookView [data-mm-book-contents] .card > div > button[data-mm-book-reader-chapter-open]').first();
+  await expect(first).toBeVisible();
+  const firstTop=await first.evaluate(el=>el.getBoundingClientRect().top);
+  const bar=await page.locator('.mobile-nav').boundingBox();
+  expect(firstTop,'chapter 1 must start above fixed mobile navigation').toBeLessThan((bar?.y||730)-22);
+  await intro.locator(':scope > summary').click();
+  await expect(intro.locator('h2')).toContainText('Injection moulding');
+  await expect(intro.locator('p')).toContainText('reference');
+  await expect(page.locator('#mmBookView [data-mm-book-hero] [data-mm-book-mode="listen"]')).toBeVisible();
+  const pub=page.locator('#mmBookView [data-mm-book-hero] .mm-book-governance');
+  await expect(pub.locator('summary')).toBeVisible();
+});
+
 test('premium UI stylesheet is active on the primary learner shell',async({page})=>{
   await openApp(page);
   const premiumLink=page.locator('link[href*="premium-ui.css"]');
