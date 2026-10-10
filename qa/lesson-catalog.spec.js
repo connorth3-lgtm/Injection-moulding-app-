@@ -11,13 +11,14 @@ async function ready(page){
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
   await page.evaluate(()=>switchView('path'));
 }
-test('all 120 core and 20 optional specialist lessons share one browsable Learn page',async({page})=>{
+test('120 core, 36 material and 20 optional specialist lessons share one Learn page',async({page})=>{
   await ready(page);
   const library=page.locator('#path .mm-all-lessons');
   await expect(library.locator('[data-mm-lesson-id]')).toHaveCount(120);
   await expect(library.locator('[data-mm-specialist-id]')).toHaveCount(20);
-  await expect(library.locator('[data-mm-catalog-group]')).toHaveCount(13);
-  await expect(library.locator('[data-mm-catalog-count]')).toHaveText('140 lessons shown');
+  await expect(library.locator('[data-mm-material-id]')).toHaveCount(36);
+  await expect(library.locator('[data-mm-catalog-group]')).toHaveCount(22);
+  await expect(library.locator('[data-mm-catalog-count]')).toHaveText('176 lessons shown');
   await expect(page.locator('#path [data-mm-hub-action="path-detail"]')).toHaveCount(0);
   await expect(page.locator('#path [data-mm-hub-action="specialist"]')).toHaveCount(0);
 });
@@ -49,7 +50,7 @@ test('temporary search restores the learner’s expanded courses instead of open
   await catalog.locator('[data-mm-catalog-query]').fill('zzzz-no-match');
   await expect(catalog.locator('[data-mm-catalog-count]')).toHaveText('0 lessons shown');
   await catalog.locator('[data-mm-catalog-query]').fill('');
-  await expect(catalog.locator('[data-mm-catalog-count]')).toHaveText('140 lessons shown');
+  await expect(catalog.locator('[data-mm-catalog-count]')).toHaveText('176 lessons shown');
   expect(await first.evaluate(el=>el.open)).toBe(true);
   expect(await second.evaluate(el=>el.open)).toBe(true);
   expect(await third.evaluate(el=>el.open)).toBe(false);
@@ -67,6 +68,7 @@ test('lesson reader links back to Learn rather than rendering a second lesson ca
   await expect(page.locator('#path .mm-all-lessons')).toBeVisible();
   await expect(page.locator('#path [data-mm-lesson-id]')).toHaveCount(120);
   await expect(page.locator('#path [data-mm-specialist-id]')).toHaveCount(20);
+  await expect(page.locator('#path [data-mm-material-id]')).toHaveCount(36);
 });
 
 test('saved lesson cards and duplicate specialist grids are removed from other views',async({page})=>{
@@ -95,6 +97,29 @@ test('legacy specialist launch opens the filtered Learn catalogue, not a second 
   await page.locator('#mmSpecialistBody').getByRole('button',{name:/All specialist extensions/}).click();
   await expect(page.locator('#mmSpecialistModal')).toBeHidden();
   await expect(page.locator('#path [data-mm-catalog-filter]')).toHaveValue('specialist');
+});
+test('36 material lessons move to Learn while keeping independent progress and original content',async({page})=>{
+  await ready(page);
+  await page.evaluate(()=>window.MM_LESSON_CATALOG.open({filter:'material'}));
+  const catalog=page.locator('#path .mm-all-lessons');
+  await expect(catalog.locator('[data-mm-catalog-count]')).toHaveText('36 lessons shown');
+  await expect(catalog.locator('[data-mm-material-id]')).toHaveCount(36);
+  await expect(catalog.locator('[data-mm-catalog-group]:not([hidden])')).toHaveCount(9);
+  await catalog.locator('[data-mm-material-id="1"]').click();
+  await expect(page.locator('#materials article.mat-lesson')).toBeVisible();
+  await expect(page.locator('#materials .mat-chapters,#materials .mat-lesson-list')).toHaveCount(0);
+  await expect(page.locator('#materials .mat-lesson')).toContainText('Macromolecules & chain architecture');
+  const state=await page.evaluate(()=>({core:[...user.completed],material:user.materialScience?.completed||[]}));
+  expect(state.core).toEqual([1,2]);
+  expect(state.material).toEqual([]);
+  await page.locator('#materials .mm-lesson-catalog-return button').click();
+  await expect(catalog.locator('[data-mm-catalog-filter]')).toHaveValue('material');
+  await page.evaluate(()=>switchView('materials'));
+  await expect(page.locator('#materials .mat-chapters')).toHaveCount(0);
+  await expect(page.locator('#materials .mat-tabs')).toBeVisible();
+  await expect(page.locator('#materials .mat-tabs button').filter({hasText:'All lessons'})).toHaveCount(1);
+  await page.locator('#materials .mat-tabs button').filter({hasText:'All lessons'}).click();
+  await expect(catalog.locator('[data-mm-catalog-filter]')).toHaveValue('material');
 });
 test('optional specialist selection opens its authored content without awarding core credit',async({page})=>{
   await ready(page);
