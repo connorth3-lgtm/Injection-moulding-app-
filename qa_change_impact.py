@@ -96,6 +96,52 @@ need("tools/ci_impact.py --base \"$BASE\" --head \"$TARGET\"" in mobile_workflow
      "Mobile Browser QA must classify the exact range from successful proof to current PR head")
 need("cancel-in-progress: true" in mobile_workflow,
      "Mobile Browser QA may cancel superseded runs only because its next run inherits the last successful proof baseline")
+# Exact-head protected-main 50-Pass may never report success by skipping all
+# audits just because the previous preview retained-candidate SHA is an
+# ancestor. A mandatory protected-main release deserves a real new suite.
+question_workflow=(Path(__file__).resolve().parent/".github/workflows/question-quality-50-pass.yml").read_text(encoding="utf-8")
+need("python3 tools/ci_impact.py --governed-candidate" in question_workflow,
+     "metadata-only preview question-quality routing must retain the governed-candidate optimization")
+need('"${{ github.event_name }}" = "pull_request"' in question_workflow
+     and '"${{ github.base_ref }}" = "main"' in question_workflow
+     and 'echo "question_quality=true" >> "$GITHUB_OUTPUT"' in question_workflow,
+     "protected-main Question Quality 50-Pass must force actual assessment audits rather than skip")
+
+# Execute the actual workflow's bash aggregator in a few representative
+# protected-main and preview scenarios. We cannot rely on text markers alone:
+# main promotion must never turn all-skipped browser jobs into a green context.
+import subprocess
+import os
+aggregator=mobile_workflow.split(
+    "      - name: Enforce complete mobile browser evidence\n",1
+)[1].split("        run: |\n",1)[1]
+lines=aggregator.splitlines()
+need(all(not line or line.startswith("          ") for line in lines),
+     "aggregator shell indentation drifted; cannot safely run regression")
+script="\n".join(line[10:] if line else "" for line in lines)
+for label,event,base,groups,expected_ok,expected_message in [
+    ("protected main skips", "pull_request", "main",
+     ("skipped","skipped","skipped","skipped"), False, "skip-only"),
+    ("preview metadata skips", "pull_request", "preview",
+     ("skipped","skipped","skipped","skipped"), True, "without expensive"),
+    ("main push metadata skips", "push", "",
+     ("skipped","skipped","skipped","skipped"), True, "without expensive"),
+    ("protected main complete evidence", "pull_request", "main",
+     ("success","success","success","success"), True, "all 500 reliability"),
+    ("protected main incomplete evidence", "pull_request", "main",
+     ("success","skipped","success","success"), False, "WebKit QA did not pass"),
+    ("protected main red browser", "pull_request", "main",
+     ("failure","success","success","success"), False, "Chromium QA did not pass"),
+]:
+    env=dict(os.environ, EVENT_NAME=event, BASE_REF=base,
+             **dict(zip(("CHROMIUM","WEBKIT","CROSS_BROWSER","APP_500"),groups)))
+    execution=subprocess.run(["bash","-e","-c",script],env=env,
+                             text=True,capture_output=True,timeout=8)
+    need((execution.returncode==0)==expected_ok,
+         f"{label}: unexpected aggregator result {execution.returncode}: {execution.stdout} {execution.stderr}")
+    need(expected_message in execution.stdout+execution.stderr,
+         f"{label}: expected diagnostic missing")
+
 baseline_source=(Path(__file__).resolve().parent/"tools/github_workflow_baseline.py").read_text(encoding="utf-8")
 need('"status":"success"' in baseline_source and "governed_candidate()" in baseline_source,
      "browser proof resolver must select successful runs and retain a conservative governed-candidate fallback")
@@ -125,6 +171,43 @@ need(not proof_baseline.full_browser_proof([
     {"name":"browser-cross","status":"completed","conclusion":"skipped"},
 ]),
      "a green skip-only aggregator cannot stand in for real browser execution")
+
+# Protected-main MUST rerun real browser jobs for the whole preview->main
+# runtime delta, even when an ancestor preview browser run was fully green.
+# The old resolver reused that preview SHA, yielding browser=false and a
+# green required mobile-browser aggregate with every browser group skipped.
+with mock.patch.dict(os.environ,{
+    "GITHUB_EVENT_NAME":"pull_request",
+    "GITHUB_HEAD_REF":"release-deep-fix",
+    "GITHUB_BASE_REF":"main",
+    "GITHUB_REPOSITORY":"org/repo",
+    "GITHUB_TOKEN":"fake-token",
+    "GITHUB_RUN_ID":"current-run",
+}):
+    with (
+        mock.patch.object(proof_baseline,"pull_request_baseline",return_value="protected-main-merge-base") as base_check,
+        mock.patch.object(proof_baseline,"api_runs",return_value=[
+            {"id":123,"head_sha":"successful-preview-ancestor"}
+        ]) as no_previous_proof,
+    ):
+        need(proof_baseline.resolve("mobile-browser-qa.yml","release-head")
+             =="protected-main-merge-base",
+             "main PR must compare complete protected main delta, not last preview proof")
+        base_check.assert_called_once_with("release-head")
+        no_previous_proof.assert_not_called()
+
+    # Broken/missing protected-main base cannot return to a previous preview
+    # proof or HEAD^: conservatively inspect the oldest reachable ancestor.
+    with (
+        mock.patch.object(proof_baseline,"pull_request_baseline",return_value=""),
+        mock.patch.object(proof_baseline,"oldest_ancestor",return_value="entire-history-root") as oldest,
+        mock.patch.object(proof_baseline,"api_runs") as no_previous_proof,
+    ):
+        need(proof_baseline.resolve("mobile-browser-qa.yml","release-head")
+             =="entire-history-root",
+             "missing main base must fail open on test coverage, not skip runtime")
+        oldest.assert_called_once_with("release-head")
+        no_previous_proof.assert_not_called()
 
 with tempfile.TemporaryDirectory() as tmp:
     event_path=Path(tmp)/"pr-event.json"

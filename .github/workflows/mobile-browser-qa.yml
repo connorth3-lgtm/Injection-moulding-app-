@@ -267,8 +267,16 @@ jobs:
           WEBKIT: ${{ needs.browser-webkit.result }}
           CROSS_BROWSER: ${{ needs.browser-cross.result }}
           APP_500: ${{ needs.app-500-reliability.result }}
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
         run: |
           if [ "$CHROMIUM" = "skipped" ] && [ "$WEBKIT" = "skipped" ] && [ "$CROSS_BROWSER" = "skipped" ] && [ "$APP_500" = "skipped" ]; then
+            # A protected-main PR cannot borrow a previous preview proof or
+            # accidentally pass after a faulty impact classification.
+            if [ "$EVENT_NAME" = "pull_request" ] && [ "$BASE_REF" = "main" ]; then
+              echo "::error::Protected-main PR requires real Chromium, WebKit, cross-browser and reliability proof; skip-only browser workflow cannot pass."
+              exit 1
+            fi
             echo "Mobile Browser QA passed without expensive browser execution: the impact classifier skipped all browser groups."
             exit 0
           fi

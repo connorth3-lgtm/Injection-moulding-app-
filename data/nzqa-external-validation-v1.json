@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.09.6",
+  "release": "2026.10.11.1",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.09.6.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.11.1.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 379,
   "candidate": {
-    "release": "2026.10.09.6",
-    "sourceSha": "3afecf1a000c20213657fc5ff86797be121d472e",
-    "runtimeFingerprint": "sha256:862c93c4f9cb4660ff289d5913a5b0138d8e5f532ace6ad5001bfbe23175677e"
+    "release": "2026.10.11.1",
+    "sourceSha": "886116199e611b225dbae7b266f4c1402287d8e7",
+    "runtimeFingerprint": "sha256:9271d2b52806780953e8b50d3ae66505dca50da11684b8dd9272e9da5e83155b"
   },
-  "boundary": "Provider G1–G8 external evidence remains pending. Release .6 technical runtime source 3465fdca76941bf46d360051bc09fcda6d41c611 and its genuine fingerprint sha256:d5b80ea704ee8297c52d8402ce590f58fa003a38018391fcdc8170c9c0b4f2d0 do not grant provider/accreditation, assessment, production or machine-control authority.",
+  "boundary": "Genuine provider G1–G8 external evidence remains pending for release 2026.10.11.1; source 886116199e611b225dbae7b266f4c1402287d8e7, successful run 38081915524 and public fingerprint sha256:9271d2b52806780953e8b50d3ae66505dca50da11684b8dd9272e9da5e83155b record a verified technical candidate only. Previous .6 records remain historical. None of this grants accreditation, assessment authority, validated processing or machine-control permission.",
   "requiredGates": [
     {
       "id": "G1-provider",

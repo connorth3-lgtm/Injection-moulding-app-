@@ -205,8 +205,25 @@ def main() -> None:
         assert assurance["staticContract"].get("status") == "fail"
         assert assurance["behavioralBrowser"].get("status") == "fail"
         assert external["candidateStatus"].startswith("HOLD")
-        assert external["webCandidate"] is None
-        assert external["pwaPhysicalDevices"]["currentCandidate"] is None
+        # An authentically retained artifact may exist while its producing
+        # workflow is incomplete/failed. That is *not* successful technical
+        # validation: the external release gate must still fail closed.
+        # Preserve its exact audit identity without falsely deleting it or
+        # recording a pass. Both canonical and PWA contract candidates must
+        # agree or both be genuinely unbound.
+        staged = external["webCandidate"]
+        if staged is None:
+            assert external["pwaPhysicalDevices"]["currentCandidate"] is None
+        else:
+            assert isinstance(staged, dict)
+            assert staged.get("release") == version.get("web_release")
+            assert isinstance(staged.get("sourceSha"), str) and len(staged["sourceSha"]) == 40
+            assert str(staged.get("runtimeFingerprint", "")).startswith("sha256:")
+            assert isinstance(staged.get("candidateRunId"), int) and staged["candidateRunId"] > 0
+            assert isinstance(staged.get("artifactId"), int) and staged["artifactId"] > 0
+            assert external["pwaPhysicalDevices"]["currentCandidate"] == staged
+            assert "producer" in external["candidateStatus"].lower()
+            assert "success" in external["candidateStatus"].lower()
     else:
         assert external["technicalAutomation"]["status"] == "pass"
         assert assurance["staticContract"].get("status") == "pass"

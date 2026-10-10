@@ -155,6 +155,22 @@ def resolve(workflow:str,target:str)->str:
     token=os.environ.get("GITHUB_TOKEN","").strip()
     branch=os.environ.get("GITHUB_HEAD_REF","").strip()
     current_run=str(os.environ.get("GITHUB_RUN_ID","")).strip()
+    # A successful *preview* browser proof is not a protected-main release
+    # proof. Reusing its SHA skips the earlier preview->main runtime delta:
+    # this produced a green mobile-browser aggregate with ALL browser jobs
+    # skipped on PR #594. Main PRs must test the complete protected-base
+    # comparison, including strict visual baselines, even when the source
+    # branch has a successful ancestor proof.
+    if (workflow=="mobile-browser-qa.yml"
+            and os.environ.get("GITHUB_EVENT_NAME")=="pull_request"
+            and os.environ.get("GITHUB_BASE_REF","").strip()=="main"):
+        base=pull_request_baseline(target)
+        if base:
+            print(f"Protected-main browser proof requires complete PR delta from {base}.",file=sys.stderr)
+            return base
+        fallback=oldest_ancestor(target)
+        print(f"Protected-main base unavailable; checking all reachable history from {fallback}.",file=sys.stderr)
+        return fallback
     if repository and token:
         try:
             for row in api_runs(repository,workflow,branch,token):
