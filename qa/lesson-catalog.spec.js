@@ -39,6 +39,7 @@ test('search, status and saved filters find the canonical lessons without changi
 });
 test('lesson reader includes the same library, not an extra 10-lesson sidebar',async({page})=>{
   await ready(page);
+  await page.locator('#path [data-mm-catalog-group]').nth(1).locator('summary').first().click();
   await page.locator('#path [data-mm-lesson-id="12"]').click();
   await expect(page.locator('#lesson')).toBeVisible();
   await expect(page.locator('#lesson .lesson-side')).toHaveCount(0);
