@@ -72,17 +72,26 @@ def validate_packet(text: str, path: str, candidate: dict, release: str) -> None
     require(len(banners) == 1, f"{path}: missing or ambiguous current-candidate banner")
     banner = banners[0]
     require(release in banner, f"{path}: banner release stale")
-    for label, value in (
-        ("source", candidate["sourceSha"]),
-        ("runtime fingerprint", candidate["runtimeFingerprint"]),
-        ("artifact digest", candidate["artifactDigest"]),
-        ("artifact id", str(candidate["artifactId"])),
-        ("expiry", candidate["artifactExpiresAt"]),
-        ("run URL", f"/actions/runs/{candidate['candidateRunId']}"),
-    ):
-        require(value in banner, f"{path}: current {label} missing from release banner")
+    # Reject substring forgeries: artifact 123 must not accept 91234;
+    # a historical correct SHA must not satisfy the current provenance banner.
+    token_patterns = (
+        ("source", r"\bsource\s+`?([0-9a-f]{40})`?(?=[\s,.;]|$)", candidate["sourceSha"]),
+        ("runtime fingerprint", r"\bfingerprint\s+`?(sha256:[0-9a-f]{64})`?(?=[\s,.;]|$)",
+         candidate["runtimeFingerprint"]),
+        ("artifact digest", r"\bdigest\s+`?(sha256:[0-9a-f]{64})`?(?=[\s,.;]|$)",
+         candidate["artifactDigest"]),
+        ("artifact id", r"\bartifact\s+\*\*([1-9][0-9]*)\*\*", str(candidate["artifactId"])),
+        ("expiry", r"\bexpiry\s+`?([0-9TZ:+.-]+)`?(?=[\s,.;]|$)", candidate["artifactExpiresAt"]),
+        ("run URL", r"/actions/runs/([1-9][0-9]*)\)", str(candidate["candidateRunId"])),
+    )
+    for label, pattern, expected in token_patterns:
+        matches = re.findall(pattern, banner)
+        require(matches == [expected],
+                f"{path}: current {label} missing, ambiguous or mismatched in active banner")
     require("HOLD" in banner, f"{path}: independent acceptance must remain HOLD")
-    require("STATUS: HOLD" in text or "STATUS: ALL SEVEN" in text, f"{path}: review HOLD statement missing")
+    current_intro = "\n".join(lines[:12])
+    require("STATUS: HOLD" in current_intro or "STATUS: ALL SEVEN" in current_intro,
+            f"{path}: current review HOLD statement missing")
 
 
 def validate_packets(root: Path, ledger: dict) -> int:
