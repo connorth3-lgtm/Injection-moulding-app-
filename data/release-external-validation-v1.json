@@ -4,8 +4,8 @@
   "validationIndex": "qa/EXTERNAL_VALIDATION_2026.10.11.1.md",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
-    "status": "pending",
-    "claim": "The exact 2026.10.11.1 source 8a94ee0230121d029068401a5295ec51b45ff9c7 produced real immutable artifact 11679959204 in pull-request candidate workflow run 38081322293; runtime fingerprint sha256:9271d2b52806780953e8b50d3ae66505dca50da11684b8dd9272e9da5e83155b independently computed from that artifact's actual public bytes. Producer run success and exact-head QA remain pending; this is NOT approved technical validation, physical-device, SME, AT, NZQA/provider, Windows, learner-outcome, publication or machine-control authority."
+    "status": "fail",
+    "claim": "The exact 2026.10.11.1 source 8a94ee0230121d029068401a5295ec51b45ff9c7 produced real immutable artifact 11679959204 in pull-request candidate workflow run 38081322293; runtime fingerprint sha256:9271d2b52806780953e8b50d3ae66505dca50da11684b8dd9272e9da5e83155b independently computed from that artifact's actual public bytes. Producer run success and exact-head QA are not yet established; technical automation is explicitly FAIL until verified; this is NOT approved technical validation, physical-device, SME, AT, NZQA/provider, Windows, learner-outcome, publication or machine-control authority."
   },
   "governance": {
     "status": "enforced",
