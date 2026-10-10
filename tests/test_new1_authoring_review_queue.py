@@ -936,7 +936,7 @@ class SourcePinnedPassageInspectionTests(unittest.TestCase):
             batch_summary(queue, data["publication"], [noncandidate], **kwargs)
         injected = deepcopy(template)
         injected["approvedPublicLinks"] = True
-        with self.assertRaisesRegex(AssertionError, "forged"):
+        with self.assertRaisesRegex(AssertionError, "approval fields"):
             batch_summary(queue, data["publication"], [injected], **kwargs)
         fake_fingerprint = deepcopy(template)
         fake_fingerprint["bookRuntimeFingerprint"] = "sha256:" + "a" * 64
