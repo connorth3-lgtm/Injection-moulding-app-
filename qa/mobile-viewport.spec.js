@@ -283,7 +283,11 @@ test('UI audit contract: one page title, compact header actions, useful Home, de
   await openLearnHub(page);
   await expect(page.locator('body[data-mm-view="path"] .topbar>div:first-child')).toBeHidden();
   await expect(page.locator('#path .mm-primary-hub-head h1')).toHaveCount(1);
-  expect(await page.locator('#path .mm-hub-grid').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length)).toBe(2);
+  // Learn is now a unified 176-lesson catalogue, not the removed shortcut-tile grid.
+  await expect(page.locator('#path .mm-all-lessons')).toBeVisible();
+  await expect(page.locator('#path [data-mm-catalog-item]')).toHaveCount(176);
+  const learnOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(learnOverflow).toBeLessThanOrEqual(2);
 
   await openPracticeHub(page);
   await expect(page.locator('body[data-mm-view="scenarios"] .topbar>div:first-child')).toBeHidden();
