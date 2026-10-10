@@ -164,6 +164,33 @@ test('specialist completion appears in unified Done/Not finished filters without
   await expect(catalog.locator('[data-mm-catalog-count]')).toHaveText('2 lessons shown');
 });
 
+
+test('specialist legacy progress migrates only to its owning strong learner scope',async({page})=>{
+  await page.addInitScript(()=>{
+    localStorage.clear();
+    const make=id=>({id,name:id,role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'});
+    localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:'specialist-a',users:{'specialist-a':make('specialist-a'),'specialist-b':make('specialist-b')}}));
+    let hash=2166136261;
+    for(const ch of 'specialist-a'){hash^=ch.charCodeAt(0);hash=Math.imul(hash,16777619)}
+    localStorage.setItem('mm_specialist_curriculum_v1::'+(hash>>>0).toString(36),JSON.stringify({S01:true}));
+  });
+  await page.goto(BASE,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>!!window.MM_SPECIALIST_CURRICULUM?.isComplete&&!!window.MM_LEARNER_SCOPE&&!!window.MM_LESSON_CATALOG&&!document.getElementById('mmBootstrap'));
+  const migrated=await page.evaluate(()=>{
+    const scope=window.MM_LEARNER_SCOPE,prefix='mm_specialist_curriculum_v1::';
+    return {newKey:scope.storageKey(prefix,scope.tokenFor('specialist-a')),oldKey:scope.storageKey(prefix,scope.legacyTokenFor('specialist-a')),completed:window.MM_SPECIALIST_CURRICULUM.isComplete('S01')};
+  });
+  expect(migrated.completed).toBe(true);
+  expect(migrated.newKey).toMatch(/[a-f0-9]{32}$/);
+  expect(await page.evaluate(key=>localStorage.getItem(key),migrated.oldKey)).toBeNull();
+  expect(JSON.parse(await page.evaluate(key=>localStorage.getItem(key),migrated.newKey))).toEqual({S01:true});
+  await page.evaluate(()=>switchUser('specialist-b'));
+  expect(await page.evaluate(()=>window.MM_SPECIALIST_CURRICULUM.isComplete('S01'))).toBe(false);
+  await page.evaluate(()=>switchUser('specialist-a'));
+  expect(await page.evaluate(()=>window.MM_SPECIALIST_CURRICULUM.isComplete('S01'))).toBe(true);
+});
+
+
 test('global search leads to Learn without displaying another list of lesson matches',async({page})=>{
   await ready(page);
   await page.evaluate(()=>openSearch());
