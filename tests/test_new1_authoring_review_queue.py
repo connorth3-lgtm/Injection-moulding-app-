@@ -846,5 +846,120 @@ class SourcePinnedPassageInspectionTests(unittest.TestCase):
             )
 
 
+    def test_private_batch_baseline_has_no_reviewers_approvals_or_private_fields(self):
+        from tools.new1_local_review_batch import batch_summary, STATUS
+        data, queue, root, template = self.review_draft_fixture()
+        kwargs = {
+            "lessons": data["lessons"],
+            "manifest_chapters": data["chapters"],
+            "root": root,
+        }
+        before = deepcopy(queue)
+        empty = batch_summary(queue, data["publication"], [], **kwargs)
+        self.assertEqual(empty["status"], STATUS)
+        self.assertEqual(empty["canonicalLessonCount"], 120)
+        self.assertEqual(empty["canonicalBookModuleCount"], 46)
+        self.assertGreater(empty["courseLevelCandidatePairs"], 0)
+        self.assertEqual(empty["localDraftsFormatChecked"], 0)
+        self.assertEqual(empty["sectionSlotsInProvidedDrafts"], 0)
+        self.assertEqual(empty["realHumanReviewsVerified"], 0)
+        self.assertEqual(empty["exactLessonMatchesVerified"], 0)
+        self.assertFalse(empty["approvedPublicLinks"])
+        self.assertFalse(empty["submissionAccepted"])
+        self.assertEqual(empty["rows"], [])
+        single = batch_summary(queue, data["publication"], [template], **kwargs)
+        self.assertEqual(single["localDraftsFormatChecked"], 1)
+        self.assertEqual(single["distinctLessonsWithLocalDrafts"], 1)
+        self.assertEqual(single["distinctBookModulesWithLocalDrafts"], 1)
+        self.assertEqual(single["sectionSlotsInProvidedDrafts"], 2)
+        self.assertEqual(single["stillUndecidedInProvidedDrafts"], 2)
+        self.assertEqual(single["formatValidManualDecisionsEntered"], 0)
+        self.assertFalse(single["rows"][0]["exactLessonEquivalenceVerified"])
+        self.assertEqual(queue, before)
+
+    def test_private_batch_deterministic_sort_counts_and_does_not_leak_prose(self):
+        from tools.new1_local_review_batch import batch_summary
+        from tools.new1_review_draft import make_template
+        data, queue, root, template = self.review_draft_fixture()
+        kwargs = {
+            "lessons": data["lessons"],
+            "manifest_chapters": data["chapters"], "root": root,
+        }
+        lesson_13 = make_template(
+            queue, 13, "fictional-book-1",
+            publication=data["publication"], **kwargs,
+        )
+        filled = deepcopy(template)
+        section = filled["sectionReviews"][0]
+        section["decision"] = "unsuitable"
+        section["lessonPassageRef"] = "Fictional private passage description"
+        section["rationale"] = "Synthetic confidential reasoning that cannot be made public."
+        section["sourceAssessment"] = "Confidential QA-only citation analysis without authority."
+        section["limitations"] = "Fictional material only."
+        section["reviewEvidenceRef"] = "private:fictional-review-record"
+        section["declaredSourcesExamined"] = ["QA-SOURCE-1"]
+        filled["sourceReconciliationNote"] = "PRIVATE HUMAN NOTES MUST NEVER PRINT"
+        result = batch_summary(
+            queue, data["publication"], [lesson_13, filled], **kwargs)
+        reverse = batch_summary(
+            queue, data["publication"], [filled, lesson_13], **kwargs)
+        self.assertEqual(result, reverse)
+        self.assertEqual(result["localDraftsFormatChecked"], 2)
+        self.assertEqual(result["distinctLessonsWithLocalDrafts"], 2)
+        self.assertEqual(result["distinctBookModulesWithLocalDrafts"], 1)
+        self.assertEqual(result["sectionSlotsInProvidedDrafts"], 4)
+        self.assertEqual(result["formatValidManualDecisionsEntered"], 1)
+        self.assertEqual(result["stillUndecidedInProvidedDrafts"], 3)
+        self.assertEqual([r["lessonId"] for r in result["rows"]], [1, 13])
+        serialized = json.dumps(result)
+        for secret in ("PRIVATE HUMAN NOTES MUST NEVER PRINT",
+                       "Synthetic confidential reasoning",
+                       "private:fictional-review-record",
+                       "Fictional private passage description"):
+            self.assertNotIn(secret, serialized)
+        self.assertFalse(result["approvedPublicLinks"])
+        self.assertEqual(result["realHumanReviewsVerified"], 0)
+
+    def test_private_batch_fails_closed_for_duplicate_nonmember_and_approval(self):
+        from tools.new1_local_review_batch import batch_summary
+        data, queue, root, template = self.review_draft_fixture()
+        kwargs = {
+            "lessons": data["lessons"],
+            "manifest_chapters": data["chapters"], "root": root,
+        }
+        with self.assertRaisesRegex(AssertionError, "same lesson-Book pair"):
+            batch_summary(queue, data["publication"],
+                          [deepcopy(template), deepcopy(template)], **kwargs)
+        noncandidate = deepcopy(template)
+        noncandidate["chapterId"] = "fictional-book-2"
+        with self.assertRaisesRegex(AssertionError, "noncanonical/noncandidate"):
+            batch_summary(queue, data["publication"], [noncandidate], **kwargs)
+        injected = deepcopy(template)
+        injected["approvedPublicLinks"] = True
+        with self.assertRaisesRegex(AssertionError, "forged"):
+            batch_summary(queue, data["publication"], [injected], **kwargs)
+        fake_fingerprint = deepcopy(template)
+        fake_fingerprint["bookRuntimeFingerprint"] = "sha256:" + "a" * 64
+        with self.assertRaisesRegex(AssertionError, "source identity"):
+            batch_summary(queue, data["publication"], [fake_fingerprint], **kwargs)
+        forged_queue = deepcopy(queue)
+        forged_queue["approvedPublicLinks"] = True
+        with self.assertRaises(AssertionError):
+            batch_summary(forged_queue, data["publication"], [], **kwargs)
+        with self.assertRaisesRegex(AssertionError, "batch size"):
+            batch_summary(queue, data["publication"], [template] * 121, **kwargs)
+
+    def test_private_batch_verifies_pinned_book_bytes_even_without_drafts(self):
+        from tools.new1_local_review_batch import batch_summary
+        data, queue, root, _ = self.review_draft_fixture()
+        path = root / "data" / "book-evidence-registry-v1.json"
+        path.write_bytes(path.read_bytes() + b"\n")
+        with self.assertRaisesRegex(AssertionError, "do not match published"):
+            batch_summary(
+                queue, data["publication"], [], lessons=data["lessons"],
+                manifest_chapters=data["chapters"], root=root,
+            )
+
+
 if __name__ == "__main__":
     unittest.main()
