@@ -52,6 +52,15 @@ test('Materials displays all results with filters collapsed and clears selection
   await expect(results.locator('[data-mm-material-index-result]')).not.toHaveCount(0);
   await expect(status).toContainText('matching material records');
   await expect(filters.locator('[data-mm-all-material-region]')).toBeHidden();
+  const firstResult=results.locator('[data-mm-material-index-result]').first();
+  await expect(firstResult).not.toHaveAttribute('open','');
+  await expect(firstResult.locator('summary')).toBeVisible();
+  await expect(firstResult.locator('.mm-material-index-detail')).toBeHidden();
+  await firstResult.locator('summary').click();
+  await expect(firstResult).toHaveAttribute('open','');
+  await expect(firstResult.locator('.mm-material-index-detail')).toBeVisible();
+  await firstResult.locator('summary').click();
+  await expect(firstResult.locator('.mm-material-index-detail')).toBeHidden();
 
   await filters.locator('summary').click();
   await expect(filters.locator('[data-mm-all-material-region]')).toBeVisible();
@@ -129,6 +138,9 @@ test('unified index can jump an exact-grade result into the exact-grade catalog 
   await root.locator('[data-mm-all-material-query]').fill('GP5206F');
   const result=root.locator('[data-mm-material-index-result="grade:mat-lgchem-lupoy-gp5206f"]');
   await expect(result).toBeVisible();
+  await expect(result).not.toHaveAttribute('open','');
+  await result.locator('summary').click();
+  await expect(result).toHaveAttribute('open','');
   await result.getByRole('button',{name:'Show exact grade'}).click();
   await expect(root.locator('[data-mm-exact-query]')).toHaveValue('mat-lgchem-lupoy-gp5206f');
   await expect(root.locator('[data-mm-material-grade="mat-lgchem-lupoy-gp5206f"]')).toBeVisible();
