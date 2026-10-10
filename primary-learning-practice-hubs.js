@@ -414,6 +414,9 @@ function createLessonCatalog(){
   const materialDone=id=>Array.isArray(user?.materialScience?.completed)&&user.materialScience.completed.includes(id);
   const done=id=>Array.isArray(user?.completed)&&user.completed.includes(id);
   const saved=id=>Array.isArray(user?.bookmarks)&&user.bookmarks.includes(id);
+  // Specialist completion is owned by the independent specialist curriculum.
+  // Read through its API rather than reimplementing learner storage or credit.
+  const specialistDone=id=>window.MM_SPECIALIST_CURRICULUM?.isComplete?.(id)===true;
   function markup(){
     const active=Number(user?.currentLesson);
     const groups=courses().map(course=>{
@@ -431,7 +434,7 @@ function createLessonCatalog(){
         <div class="mm-catalog-rows">${lessons.map(l=>`<button type="button" class="mm-catalog-lesson" data-mm-material-id="${l.id}" data-mm-catalog-item data-mm-catalog-type="material" data-mm-catalog-done="${materialDone(l.id)?'1':'0'}" data-mm-catalog-saved="0" data-mm-catalog-text="${esc([l.title,l.intro,l.chapterName,l.level,l.id].join(' ').toLowerCase())}"><span class="mm-catalog-num">M${l.id}</span><span class="mm-catalog-title">${esc(l.title)}</span><span class="mm-catalog-state">${materialDone(l.id)?'✓ Done':'Open'}</span></button>`).join('')}</div></details>`;
     }).join('');
     const extra=specialists();
-    const extraGroup=extra.length?`<details class="mm-catalog-group" data-mm-catalog-group><summary><span class="mm-catalog-group-name">Optional specialist lessons</span><span class="mm-catalog-group-meta">${extra.length} extras · separate progress</span></summary><div class="mm-catalog-rows">${extra.map(l=>`<button type="button" class="mm-catalog-lesson" data-mm-specialist-id="${esc(l.id)}" data-mm-catalog-item data-mm-catalog-type="specialist" data-mm-catalog-text="${esc([l.id,l.title,l.level].join(' ').toLowerCase())}"><span class="mm-catalog-num">${esc(l.id)}</span><span class="mm-catalog-title">${esc(l.title)}</span><span class="mm-catalog-state">Open</span></button>`).join('')}</div></details>`:'';
+    const extraGroup=extra.length?`<details class="mm-catalog-group" data-mm-catalog-group><summary><span class="mm-catalog-group-name">Optional specialist lessons</span><span class="mm-catalog-group-meta">${extra.length} extras · separate progress</span></summary><div class="mm-catalog-rows">${extra.map(l=>`<button type="button" class="mm-catalog-lesson" data-mm-specialist-id="${esc(l.id)}" data-mm-catalog-item data-mm-catalog-type="specialist" data-mm-catalog-done="${specialistDone(l.id)?'1':'0'}" data-mm-catalog-text="${esc([l.id,l.title,l.level].join(' ').toLowerCase())}"><span class="mm-catalog-num">${esc(l.id)}</span><span class="mm-catalog-title">${esc(l.title)}</span><span class="mm-catalog-state">${specialistDone(l.id)?'✓ Done':'Open'}</span></button>`).join('')}</div></details>`:'';
     return `<section class="mm-all-lessons" data-mm-lesson-catalog aria-label="All lessons">
       <div class="mm-catalog-head"><h2>All lessons</h2><p>${core().length} core · ${materialLessons().length} material science · ${extra.length} optional specialist lessons. All in one library, with separate progress.</p></div>
       <div class="mm-catalog-controls"><label><span>Find a lesson</span><input type="search" autocomplete="off" placeholder="Search topics or lessons" data-mm-catalog-query value="${esc(state.query)}"></label><label><span>Show</span><select data-mm-catalog-filter><option value="all"${state.filter==='all'?' selected':''}>All lessons</option><option value="todo"${state.filter==='todo'?' selected':''}>Not finished</option><option value="done"${state.filter==='done'?' selected':''}>Completed</option><option value="saved"${state.filter==='saved'?' selected':''}>Saved</option><option value="material"${state.filter==='material'?' selected':''}>Material science</option><option value="specialist"${state.filter==='specialist'?' selected':''}>Specialist</option></select></label></div>
@@ -461,7 +464,7 @@ function createLessonCatalog(){
           (state.filter==='specialist'?type==='specialist':
            state.filter==='material'?type==='material':
            state.filter==='saved'?type==='core'&&button.dataset.mmCatalogSaved==='1':
-           (type==='core'||type==='material')&&
+           (type==='core'||type==='material'||type==='specialist')&&
             (state.filter==='todo'?button.dataset.mmCatalogDone==='0':button.dataset.mmCatalogDone==='1'));
         const matchesText=!query||(button.dataset.mmCatalogText||'').includes(query);
         button.hidden=!(matchesStatus&&matchesText);
@@ -479,6 +482,17 @@ function createLessonCatalog(){
     const counter=box.querySelector('[data-mm-catalog-count]');
     if(counter)counter.textContent=`${count} lesson${count===1?'':'s'} shown`;
     const empty=box.querySelector('[data-mm-catalog-empty]');if(empty)empty.hidden=count>0;
+  }
+  function refreshSpecialistProgress(){
+    const root=document.getElementById('path'),box=root?.querySelector('[data-mm-lesson-catalog]');
+    if(!box)return;
+    box.querySelectorAll('[data-mm-specialist-id]').forEach(button=>{
+      const completed=specialistDone(button.dataset.mmSpecialistId);
+      button.dataset.mmCatalogDone=completed?'1':'0';
+      const status=button.querySelector('.mm-catalog-state');
+      if(status)status.textContent=completed?'✓ Done':'Open';
+    });
+    update(root);
   }
   function attach(root){
     const box=root?.querySelector('[data-mm-lesson-catalog]');if(!box||box.dataset.mmCatalogBound==='1')return;
@@ -544,9 +558,10 @@ function createLessonCatalog(){
     nav.appendChild(button);
     root.insertBefore(nav,layout||root.firstChild);
   }
-  return Object.freeze({markup,attach,mountLesson,open,counts:()=>({core:core().length,material:materialLessons().length,specialist:specialists().length})});
+  return Object.freeze({markup,attach,mountLesson,open,refreshSpecialistProgress,counts:()=>({core:core().length,material:materialLessons().length,specialist:specialists().length})});
 }
 const lessonCatalog=createLessonCatalog();
+window.addEventListener('mm:specialist-progress-change',()=>lessonCatalog.refreshSpecialistProgress());
 
 function learnHubMarkup(){
   const c=lessonContext();
