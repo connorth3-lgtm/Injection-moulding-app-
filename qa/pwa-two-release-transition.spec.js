@@ -16,7 +16,7 @@ function workerFor(release){
   if(start<0||end<0)throw new Error('Could not isolate the service-worker release asset declarations.');
   const minimal=[
     "const CORE=['./index.html','./runtime.js','./mission-control.css','./version.json'];",
-    'const OPTIONAL=[];',
+    "const OPTIONAL=['./study-packet.json'];",
     ''
   ].join('\n');
   return source.slice(0,start)+minimal+source.slice(end);
@@ -39,7 +39,7 @@ window.__registrationPromise=('serviceWorker' in navigator)
 }
 
 function makeServer(){
-  const state={release:'v1',offline:false,failPaths:new Set()};
+  const state={release:'v1',offline:false,failPaths:new Set(),failedAssetResponses:0};
   const server=http.createServer((req,res)=>{
     if(state.offline){
       res.writeHead(503,{'Cache-Control':'no-store','Content-Type':'text/plain; charset=utf-8'});
@@ -49,6 +49,7 @@ function makeServer(){
     const pathname=new URL(req.url,'http://fixture.invalid').pathname;
     const common={'Cache-Control':'no-store'};
     if(state.failPaths.has(pathname)){
+      state.failedAssetResponses+=1;
       res.writeHead(503,{...common,'Content-Type':'text/plain; charset=utf-8'});
       res.end(`forced update failure for ${pathname}`);
       return;
@@ -75,6 +76,11 @@ function makeServer(){
     if(pathname==='/version.json'){
       res.writeHead(200,{...common,'Content-Type':'application/json; charset=utf-8'});
       res.end(JSON.stringify({release:state.release}));
+      return;
+    }
+    if(pathname==='/study-packet.json'){
+      res.writeHead(200,{...common,'Content-Type':'application/json; charset=utf-8'});
+      res.end(JSON.stringify({release:state.release,provenance:'optional-offline-fixture'}));
       return;
     }
     if(pathname==='/service-worker.js'){
@@ -260,6 +266,45 @@ test('an incomplete new release is discarded and the previous release remains us
     await waitForControlled(offline);
     expect(await offline.evaluate(()=>({document:window.__documentVersion,runtime:window.__runtimeVersion}))).toEqual({document:'v1',runtime:'v1'});
     expect(await clientIdentity(offline)).toMatchObject({cssGeneration:'v1',missionPosition:'fixed',contextColumns:5});
+  }finally{
+    fixture.state.offline=false;
+    fixture.state.failPaths.clear();
+    await closeServer(fixture.server);
+  }
+});
+
+test('a missing OPTIONAL precache asset blocks the whole update, not just the optional appendix',async({page,context})=>{
+  test.setTimeout(90000);
+  const fixture=makeServer();
+  const base=await listen(fixture.server);
+  try{
+    await page.goto(base,{waitUntil:'load'});
+    await waitForControlled(page);
+    expect(await page.evaluate(async()=>(await (await fetch('./study-packet.json')).json()).release)).toBe('v1');
+    expect(await cacheKeys(page)).toContain(`mouldmaster-static-v1-${CACHE_REVISION}`);
+    fixture.state.release='v2';
+    fixture.state.failPaths.add('/study-packet.json');
+    await page.evaluate(async()=>{
+      const registration=await navigator.serviceWorker.getRegistration();
+      if(!registration)throw new Error('missing prior valid registration');
+      await registration.update();
+    });
+    await expect.poll(()=>fixture.state.failedAssetResponses,{timeout:30000}).toBeGreaterThan(0);
+    await expect.poll(async()=>page.evaluate(async()=>{
+      const r=await navigator.serviceWorker.getRegistration();
+      return !!r?.installing;
+    }),{timeout:30000}).toBe(false);
+    expect(await cacheKeys(page)).toContain(`mouldmaster-static-v1-${CACHE_REVISION}`);
+    expect(await cacheKeys(page)).not.toContain(`mouldmaster-static-v2-${CACHE_REVISION}`);
+    expect(await page.evaluate(async()=>(await (await fetch('./study-packet.json')).json()).release)).toBe('v1');
+    fixture.state.offline=true;
+    fixture.state.failPaths.clear();
+    await page.close();
+    const offline=await context.newPage();
+    await offline.goto(base,{waitUntil:'load'});
+    await waitForControlled(offline);
+    expect(await clientIdentity(offline)).toMatchObject({document:'v1',runtime:'v1',fetchedVersion:'v1'});
+    expect(await offline.evaluate(async()=>(await (await fetch('./study-packet.json')).json()).release)).toBe('v1');
   }finally{
     fixture.state.offline=false;
     fixture.state.failPaths.clear();
