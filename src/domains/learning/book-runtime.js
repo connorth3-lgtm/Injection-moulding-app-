@@ -157,7 +157,9 @@
   function updateReadingScroll({notify=false}={}){
     if(!open||!activeReadingPosition||ui?.reader?.hidden)return false;
     if(resumeStorageKey()!==activeReadingScopeKey){activeReadingPosition=null;activeReadingScopeKey=null;return false;}
-    const anchor=readerAnchor(),next={...activeReadingPosition,scrollY:bookScrollTop(),anchorId:anchor.anchorId,anchorIndex:anchor.anchorIndex,anchorText:anchor.anchorText,anchorOffset:anchor.anchorOffset,anchorOffsetId:anchor.anchorOffsetId,updatedAt:new Date().toISOString()};
+    // Sample the visible scroll offset BEFORE readerAnchor triggers style/layout
+    // measurement. Scroll anchoring may move the viewport during those reads.
+    const scrollY=bookScrollTop(),anchor=readerAnchor(),next={...activeReadingPosition,scrollY,anchorId:anchor.anchorId,anchorIndex:anchor.anchorIndex,anchorText:anchor.anchorText,anchorOffset:anchor.anchorOffset,anchorOffsetId:anchor.anchorOffsetId,updatedAt:new Date().toISOString()};
     activeReadingPosition=next;return writeResume(next,{notify})
   }
   function flushReadingPosition({notify=false}={}){clearTimeout(resumeScrollTimer);resumeScrollTimer=0;return updateReadingScroll({notify})}
