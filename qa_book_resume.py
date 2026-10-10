@@ -55,8 +55,10 @@ for marker in [
 # programmatic window.switchView, not only clicks or pagehide.
 need("function prepareRouteExit(id)" in book and "prepareRouteExit,openResume" in book,
      "Book must expose an explicit pre-route bookmark flush")
-need("window.MMBook?.prepareRouteExit?.(id)" in registry,
-     "canonical shell must flush Book before captured.switchView hides the reader")
+need("window.MMBook?.prepareRouteExit?.(view)" in registry,
+     "direct canonical navigation must flush Book before core hides the reader")
+need("window.MMBook?.prepareRouteExit?.(id)" not in registry,
+     "Runtime V2 already flushes Book; shell implementation must not double-write after reset")
 need("const scrollY=bookScrollTop(),anchor=readerAnchor()" in book,
      "Book must sample the live scroll position before anchor geometry can move the viewport")
 need("R.before('switchView',id=>" in reading_patch and "window.MMBook?.prepareRouteExit?.(id)" in reading_patch,
