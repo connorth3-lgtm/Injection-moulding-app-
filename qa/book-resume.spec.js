@@ -170,6 +170,39 @@ test('Keep Reading restores, stale IDs fail to contents, and learner reset clear
 });
 
 
+
+test('Book delayed scroll saves cannot cross learner profiles',async({page})=>{
+  await boot(page,'reader-a');
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r08'));
+  await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
+
+  const aKey=await page.evaluate(()=>window.MMBook.resumeStorageKey());
+  const beforeA=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),aKey);
+  expect(beforeA.id).toBe('r08');
+
+  // Core profile changes do not inherently navigate away from the Book view.
+  // A debounced scroll after switching must not persist A's reading state as B.
+  const bKey=await page.evaluate(()=>{
+    switchUser('reader-b');
+    return window.MMBook.resumeStorageKey();
+  });
+  expect(bKey).not.toBe(aKey);
+  await page.evaluate(()=>{
+    window.scrollTo(0,700);
+    window.dispatchEvent(new Event('scroll'));
+  });
+  await page.waitForTimeout(260);
+  expect(await page.evaluate(key=>localStorage.getItem(key),bKey)).toBeNull();
+  expect((await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),aKey)).id).toBe('r08');
+
+  // Once B explicitly starts reading, B gets a separate bookmark and A stays.
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r01'));
+  await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
+  expect((await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),bKey)).id).toBe('r01');
+  expect((await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),aKey)).id).toBe('r08');
+});
+
+
 test('Book reading bookmark survives immediate Contents exit and Listening scroll',async({page})=>{
   await boot(page);
   await page.evaluate(()=>window.MMBook.openReaderChapter('r08'));
