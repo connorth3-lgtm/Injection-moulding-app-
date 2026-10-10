@@ -166,10 +166,18 @@ test('unified index can jump an exact-grade result into the exact-grade catalog 
   await expect(result).not.toHaveAttribute('open','');
   await result.locator('summary').click();
   await expect(result).toHaveAttribute('open','');
+  // Reproduce the short-screen navigation gap: the matched evidence card may
+  // be present in the DOM without ever being placed in the reader's viewport.
+  await page.setViewportSize({width:360,height:800});
   await result.getByRole('button',{name:'Show exact grade'}).click();
   await expect(root.locator('[data-mm-exact-query]')).toHaveValue('mat-lgchem-lupoy-gp5206f');
-  await expect(root.locator('[data-mm-material-grade="mat-lgchem-lupoy-gp5206f"]')).toBeVisible();
+  const grade=root.locator('[data-mm-material-grade="mat-lgchem-lupoy-gp5206f"]');
+  await expect(grade).toBeVisible();
   await expect(root.locator('[data-mm-material-grade]')).toHaveCount(1);
+  await expect(grade).toBeFocused();
+  const headingRect=await grade.locator('h3').evaluate(el=>{const r=el.getBoundingClientRect();return {top:r.top,bottom:r.bottom,height:innerHeight}});
+  expect(headingRect.top,'grade heading is not hidden by the app chrome').toBeGreaterThanOrEqual(0);
+  expect(headingRect.bottom,'grade heading lands in the mobile viewport').toBeLessThan(headingRect.height-60);
 });
 
 
