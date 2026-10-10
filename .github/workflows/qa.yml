@@ -144,6 +144,7 @@ jobs:
         run: |
           python tools/verify_release_external_validation.py
           python qa_release_validation_packets.py
+          python -m unittest discover -s tests -p 'test_hold_candidate_packet_integrity.py' -v
       - name: All-folder tracked-file, JSON and immutable-workflow hygiene
         run: |
           python tools/repository_hygiene.py --report qa-artifacts/repository-hygiene.json
@@ -186,6 +187,8 @@ jobs:
           python qa_book_derived_governance.py
           python qa_book_release_integration.py
           python qa_book_reader_architecture.py
+          python qa_book_first_read_audit.py --check --report-json qa-artifacts/book-first-read-editorial-queue.json
+          python -m unittest discover -s tests -p 'test_book_first_read_review_queue.py' -v
           python qa_book_resume.py
           python qa_book_engineering_diagrams.py
           python qa_book_worked_cases_next_release.py
