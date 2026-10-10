@@ -165,6 +165,35 @@ test('specialist completion appears in unified Done/Not finished filters without
 });
 
 
+
+test('evidence-gap specialist lesson opens from Learn and updates independent completion',async({page})=>{
+  await ready(page);
+  const catalog=page.locator('#path .mm-all-lessons');
+  await catalog.locator('[data-mm-catalog-filter]').selectOption('specialist');
+  const gap=catalog.locator('[data-mm-specialist-id="S13"]');
+  await expect(gap).toBeVisible();
+  await expect(gap.locator('.mm-catalog-state')).toHaveText('Open');
+  // This is the first specialist modal opened in the session; it must not
+  // recurse through the unified Learn launcher instead of creating the reader.
+  await gap.click();
+  await expect(page.locator('#mmSpecialistModal')).toBeVisible();
+  const title=await page.evaluate(()=>window.MM_SPECIALIST_EVIDENCE_GAPS.lessons.find(l=>l.id==='S13').title);
+  await expect(page.locator('#mmSpecialistTitle')).toHaveText(title);
+  await page.locator('#mmSpecialistBody').getByRole('button',{name:'Mark specialist lesson complete'}).click();
+  await expect(gap.locator('.mm-catalog-state')).toHaveText('✓ Done');
+  expect(await page.evaluate(()=>window.MM_SPECIALIST_EVIDENCE_GAPS.isComplete('S13'))).toBe(true);
+  await page.evaluate(()=>window.mmSpecialistClose());
+  await catalog.locator('[data-mm-catalog-filter]').selectOption('done');
+  await expect(catalog.locator('[data-mm-catalog-count]')).toHaveText('3 lessons shown');
+  expect(await page.evaluate(()=>user.completed)).toEqual([1,2]);
+  await catalog.locator('[data-mm-catalog-filter]').selectOption('specialist');
+  await gap.click();
+  await page.locator('#mmSpecialistBody').getByRole('button',{name:'Mark incomplete'}).click();
+  await expect(gap.locator('.mm-catalog-state')).toHaveText('Open');
+  expect(await page.evaluate(()=>window.MM_SPECIALIST_EVIDENCE_GAPS.isComplete('S13'))).toBe(false);
+});
+
+
 test('specialist legacy progress migrates only to its owning strong learner scope',async({page})=>{
   await page.addInitScript(()=>{
     localStorage.clear();
@@ -173,21 +202,27 @@ test('specialist legacy progress migrates only to its owning strong learner scop
     let hash=2166136261;
     for(const ch of 'specialist-a'){hash^=ch.charCodeAt(0);hash=Math.imul(hash,16777619)}
     localStorage.setItem('mm_specialist_curriculum_v1::'+(hash>>>0).toString(36),JSON.stringify({S01:true}));
+    localStorage.setItem('mm_specialist_evidence_gaps_v1::'+(hash>>>0).toString(36),JSON.stringify({S13:true}));
   });
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>!!window.MM_SPECIALIST_CURRICULUM?.isComplete&&!!window.MM_LEARNER_SCOPE&&!!window.MM_LESSON_CATALOG&&!document.getElementById('mmBootstrap'));
   const migrated=await page.evaluate(()=>{
     const scope=window.MM_LEARNER_SCOPE,prefix='mm_specialist_curriculum_v1::';
-    return {newKey:scope.storageKey(prefix,scope.tokenFor('specialist-a')),oldKey:scope.storageKey(prefix,scope.legacyTokenFor('specialist-a')),completed:window.MM_SPECIALIST_CURRICULUM.isComplete('S01')};
+    return {newKey:scope.storageKey(prefix,scope.tokenFor('specialist-a')),oldKey:scope.storageKey(prefix,scope.legacyTokenFor('specialist-a')),completed:window.MM_SPECIALIST_CURRICULUM.isComplete('S01'),gapNew:scope.storageKey('mm_specialist_evidence_gaps_v1::',scope.tokenFor('specialist-a')),gapOld:scope.storageKey('mm_specialist_evidence_gaps_v1::',scope.legacyTokenFor('specialist-a')),gapCompleted:window.MM_SPECIALIST_EVIDENCE_GAPS.isComplete('S13')};
   });
   expect(migrated.completed).toBe(true);
+  expect(migrated.gapCompleted).toBe(true);
   expect(migrated.newKey).toMatch(/[a-f0-9]{32}$/);
   expect(await page.evaluate(key=>localStorage.getItem(key),migrated.oldKey)).toBeNull();
   expect(JSON.parse(await page.evaluate(key=>localStorage.getItem(key),migrated.newKey))).toEqual({S01:true});
+  expect(await page.evaluate(key=>localStorage.getItem(key),migrated.gapOld)).toBeNull();
+  expect(JSON.parse(await page.evaluate(key=>localStorage.getItem(key),migrated.gapNew))).toEqual({S13:true});
   await page.evaluate(()=>switchUser('specialist-b'));
   expect(await page.evaluate(()=>window.MM_SPECIALIST_CURRICULUM.isComplete('S01'))).toBe(false);
+  expect(await page.evaluate(()=>window.MM_SPECIALIST_EVIDENCE_GAPS.isComplete('S13'))).toBe(false);
   await page.evaluate(()=>switchUser('specialist-a'));
   expect(await page.evaluate(()=>window.MM_SPECIALIST_CURRICULUM.isComplete('S01'))).toBe(true);
+  expect(await page.evaluate(()=>window.MM_SPECIALIST_EVIDENCE_GAPS.isComplete('S13'))).toBe(true);
 });
 
 
@@ -201,6 +236,7 @@ test('ambiguous legacy specialist hash is quarantined rather than shared between
     const legacy=id=>{let h=2166136261;for(const ch of id){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return (h>>>0).toString(36)};
     if(legacy(first)!==legacy(second))throw new Error('QA fixture must have an actual legacy hash collision');
     localStorage.setItem('mm_specialist_curriculum_v1::'+legacy(first),JSON.stringify({S01:true}));
+    localStorage.setItem('mm_specialist_evidence_gaps_v1::'+legacy(first),JSON.stringify({S13:true}));
   },{first,second});
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>!!window.MM_SPECIALIST_CURRICULUM?.isComplete&&!!window.MM_LEARNER_SCOPE&&!document.getElementById('mmBootstrap'));
@@ -209,15 +245,21 @@ test('ambiguous legacy specialist hash is quarantined rather than shared between
     const oldKey=scope.storageKey(prefix,scope.legacyTokenFor(first));
     const own=scope.storageKey(prefix,scope.tokenFor(first));
     const other=scope.storageKey(prefix,scope.tokenFor(second));
-    return {old:localStorage.getItem(oldKey),a:localStorage.getItem(own),b:localStorage.getItem(other),quarantine:[...Array(localStorage.length)].map((_,i)=>localStorage.key(i)).filter(k=>k?.startsWith('mm_scope_quarantine_v1::')),aComplete:window.MM_SPECIALIST_CURRICULUM.isComplete('S01')};
+    const gapPrefix='mm_specialist_evidence_gaps_v1::';
+    return {old:localStorage.getItem(oldKey),a:localStorage.getItem(own),b:localStorage.getItem(other),gapOld:localStorage.getItem(scope.storageKey(gapPrefix,scope.legacyTokenFor(first))),gapA:localStorage.getItem(scope.storageKey(gapPrefix,scope.tokenFor(first))),gapB:localStorage.getItem(scope.storageKey(gapPrefix,scope.tokenFor(second))),quarantine:[...Array(localStorage.length)].map((_,i)=>localStorage.key(i)).filter(k=>k?.startsWith('mm_scope_quarantine_v1::')),aComplete:window.MM_SPECIALIST_CURRICULUM.isComplete('S01'),gapComplete:window.MM_SPECIALIST_EVIDENCE_GAPS.isComplete('S13')};
   },{first,second});
   expect(inspect.old).toBeNull();
   expect(inspect.a).toBeNull();
   expect(inspect.b).toBeNull();
-  expect(inspect.quarantine.length).toBeGreaterThan(0);
+  expect(inspect.gapOld).toBeNull();
+  expect(inspect.gapA).toBeNull();
+  expect(inspect.gapB).toBeNull();
+  expect(inspect.quarantine.length).toBeGreaterThanOrEqual(2);
   expect(inspect.aComplete).toBe(false);
+  expect(inspect.gapComplete).toBe(false);
   await page.evaluate(id=>switchUser(id),second);
   expect(await page.evaluate(()=>window.MM_SPECIALIST_CURRICULUM.isComplete('S01'))).toBe(false);
+  expect(await page.evaluate(()=>window.MM_SPECIALIST_EVIDENCE_GAPS.isComplete('S13'))).toBe(false);
 });
 
 
