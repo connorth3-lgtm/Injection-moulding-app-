@@ -435,6 +435,15 @@ function createLessonCatalog(){
     const box=root?.querySelector('[data-mm-lesson-catalog]');if(!box)return;
     let count=0;
     const query=state.query.trim().toLowerCase();
+    const filtering=!!query||state.filter!=='all';
+    const wasFiltering=box.dataset.mmCatalogFiltering==='1';
+    // A temporary search should not leave all thirteen courses expanded.
+    // Restore the learner's pre-search open sections when the filter clears.
+    if(filtering&&!wasFiltering){
+      box.querySelectorAll('[data-mm-catalog-group]').forEach(group=>{
+        group.dataset.mmCatalogPrevOpen=group.open?'1':'0';
+      });
+    }
     box.querySelectorAll('[data-mm-catalog-group]').forEach(group=>{
       let visible=0;
       group.querySelectorAll('[data-mm-catalog-item]').forEach(button=>{
@@ -446,9 +455,14 @@ function createLessonCatalog(){
         if(!button.hidden)visible++;
       });
       group.hidden=visible===0;
-      if(query||state.filter!=='all')group.open=visible>0;
+      if(filtering)group.open=visible>0;
+      else if(wasFiltering&&group.dataset.mmCatalogPrevOpen!==undefined){
+        group.open=group.dataset.mmCatalogPrevOpen==='1';
+        delete group.dataset.mmCatalogPrevOpen;
+      }
       count+=visible;
     });
+    box.dataset.mmCatalogFiltering=filtering?'1':'0';
     const counter=box.querySelector('[data-mm-catalog-count]');
     if(counter)counter.textContent=`${count} lesson${count===1?'':'s'} shown`;
     const empty=box.querySelector('[data-mm-catalog-empty]');if(empty)empty.hidden=count>0;
