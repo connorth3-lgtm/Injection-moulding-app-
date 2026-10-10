@@ -41,10 +41,11 @@ need('learner completion never changes evidence status' in js,'completion/eviden
 # S13-S20 are an independent completion store, not an exception to canonical
 # learner isolation. Preserve ownership-verified migration and fail-closed writes.
 for marker in [
-    'const learnerScope=window.MM_LEARNER_SCOPE',
-    'learnerScope?.registerStoragePrefix?.(GAP_STORAGE_PREFIX)',
-    'learnerScope.storageKey(`${base}::`,learnerScope.token())',
-    'if(!learnerScope?.token||!learnerScope?.storageKey)return null',
+    'const scope=window.MM_LEARNER_SCOPE',
+    'scope.registerStoragePrefix(GAP_STORAGE_PREFIX)',
+    'scope.storageKey(`${base}::`,scope.token())',
+    'if(!scope?.token||!scope?.storageKey||!scope?.registerStoragePrefix)return null',
+    'let registeredLearnerScope=null',
     'localStorage.getItem(scoped)',
     'localStorage.setItem(scoped,payload)',
     'mm:specialist-progress-change',
