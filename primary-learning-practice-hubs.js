@@ -516,6 +516,7 @@ function createLessonCatalog(){
     state.filter=allowed.includes(options.filter)?options.filter:'all';
     state.query=typeof options.query==='string'?options.query.trim().slice(0,120):'';
     window.mmSpecialistClose?.();
+    if(typeof materialTab!=='undefined'&&materialTab==='learn')materialTab='explorer';
     if(typeof currentView==='string'&&currentView==='path')renderLearnHub();
     else switchView('path');
     requestAnimationFrame(()=>{
