@@ -198,6 +198,9 @@ test('Material Atlas discloses comparison restrictions, sources and unknown supp
   await openApp(page);
   await page.evaluate(()=>window.MMBook.openChapter('material-families'));
   await page.waitForFunction(()=>window.MMBook?.getMaterialCatalog?.()?.grades?.length===260);
+  const disclosure=page.locator('[data-mm-book-canonical-catalog]');
+  await disclosure.locator(':scope > summary').click();
+  await expect(disclosure).toHaveAttribute('open','');
   const restricted=page.locator('[data-mm-book-catalog-grade="mat-basf-elastollan-wy1140"]');
   await restricted.locator('summary').click();
   const restrictedRow=restricted.locator('table tbody tr').first();
