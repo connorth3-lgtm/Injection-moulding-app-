@@ -58,9 +58,9 @@ test('Book reading hides Mission Control strip without losing learner workspace'
   await page.locator('#nav').getByRole('button',{name:'Home'}).click();
   await expect(page.locator('#dashboard')).toBeVisible();
   await expect(mission).toBeHidden();
+  await expect(page.locator('#pageSubtitle')).toBeVisible();
   await page.evaluate(()=>switchView('scenarios'));
   await expect(mission).toBeVisible();
-  await expect(page.locator('#pageSubtitle')).toBeVisible();
 });
 
 test('Book opens as 20 plain chapters with previous/next and optional end matter',async({page})=>{
