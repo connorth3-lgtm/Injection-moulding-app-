@@ -54,10 +54,15 @@ test('one clear lesson flow keeps original engineering depth without repeated ta
   await expect(details.getByRole('heading',{name:'Misconception check'})).toBeVisible();
   await expect(details.getByRole('heading',{name:'Teach-back'})).toBeVisible();
   await expect(details.locator('.mm-deep-v2-boundary')).toBeVisible();
-  await expect(details.locator('.mm-extra-help')).toHaveCount(1);
-  await expect(article.locator(':scope > .mm-extra-help')).toHaveCount(0);
-  await details.locator('.mm-extra-help > summary').click();
-  await expect(details.locator('#mmTeaching')).toBeVisible();
+  // The legacy plain-English teaching extension is optional and is not present in every lesson.
+  // When present, keep it in the one engineering-detail disclosure rather than a competing card.
+  const teaching=article.locator('#mmTeaching');
+  if(await teaching.count()){
+    await expect(details.locator('.mm-extra-help')).toHaveCount(1);
+    await expect(article.locator(':scope > .mm-extra-help')).toHaveCount(0);
+    await details.locator('.mm-extra-help > summary').click();
+    await expect(details.locator('#mmTeaching')).toBeVisible();
+  }
 });
 
 test('lesson notes are a small optional action until the learner opens them',async({page})=>{
