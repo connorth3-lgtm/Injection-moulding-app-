@@ -43,7 +43,7 @@ function renderAllResult(doc){
   const tagHtml=tags.length?`<div class="mm-material-index-meta">${[...new Set(tags)].map(tag=>`<span class="pill">${esc(tag)}</span>`).join('')}</div>`:'';
   return `<details class="mm-material-index-card" data-mm-material-index-result="${esc(doc.id)}" data-mm-material-index-type="${esc(doc.type)}"><summary class="mm-material-index-summary"><span class="mm-material-index-meta"><span class="pill">${esc(materialTypeLabel(doc.type))}</span>${sourceCount?`<span>${sourceCount} evidence source${sourceCount===1?'':'s'}</span>`:''}</span><strong class="mm-material-index-title">${esc(doc.title)}</strong>${catalogueMeta}<span class="mm-material-index-expand">View details</span></summary><div class="mm-material-index-detail">${contextMeta}${tagHtml}${doc.subtitle?`<p class="mm-material-index-subtitle">${esc(doc.subtitle)}</p>`:''}<p>${esc(resultSummary(doc))}</p>${doc.materialGradeId?`<button type="button" class="secondary" data-mm-index-grade="${esc(doc.materialGradeId)}">Show exact grade</button>`:''}</div></details>`;
 }
-function installAllIndex(root,index,query){
+function installAllIndex(root,index,query,revealExactGrade){
   if(root.querySelector('[data-mm-all-material-index]'))return;
   const section=document.createElement('section');section.className='mm-material-all-index';section.dataset.mmAllMaterialIndex='';
   section.innerHTML=`<div class="mm-material-all-index-head"><h3>All materials</h3></div><div class="mm-material-all-search"><label>Find a material<input data-mm-all-material-query type="search" placeholder="Name, polymer, grade or property"></label><button type="button" class="secondary" data-mm-all-material-clear hidden>Show all materials</button></div><details class="mm-material-all-filters" data-mm-all-material-filters><summary><span>Filter materials</span><span data-mm-all-material-filter-count>Optional</span></summary><p class="mm-exact-boundary" data-mm-catalogue-boundary>Country means the manufacturer's country. Region is a browsing facet derived from manufacturer country; neither proves exact-grade manufacturing origin, plant origin or local availability. Application and process tags come from explicit published grade text for browsing only and are not suitability recommendations. Only published records appear; private staging records are excluded.</p><div class="mm-material-all-index-controls"><label>Region<select data-mm-all-material-region><option value="">All regions</option></select></label><label>Country<select data-mm-all-material-country><option value="">All countries</option></select></label><label>Manufacturer<select data-mm-all-material-manufacturer><option value="">All manufacturers</option></select></label><label>Polymer family<select data-mm-all-material-family><option value="">All polymer families</option></select></label><label>Application<select data-mm-all-material-application><option value="">All applications</option></select></label><label>Process<select data-mm-all-material-process><option value="">All processes</option></select></label><label>Evidence<select data-mm-all-material-evidence><option value="">All evidence</option></select></label><label>Result type<select data-mm-all-material-type><option value="">All published material data</option><option value="exact-grade">Exact grades</option><option value="reference-material">Family / reference</option><option value="material-lab">Material labs</option><option value="material-practice">Material practice</option></select></label></div></details><p class="mm-exact-boundary" data-mm-all-material-status role="status" aria-live="polite"></p><div class="mm-material-all-results" data-mm-all-material-results></div><div class="mm-exact-actions" data-mm-all-material-pager><button type="button" class="secondary" data-mm-all-material-page="previous">Previous</button><button type="button" class="secondary" data-mm-all-material-page="next">Next</button></div>`;
@@ -75,7 +75,7 @@ function installAllIndex(root,index,query){
     previous.disabled=!result.hasPrevious;next.disabled=!result.hasNext;pager.hidden=result.pageCount<=1;
     status.textContent=`${result.total} matching material records · page ${result.page} of ${result.pageCount}`;
     root.dataset.mmUnifiedMaterialIndex='1';root.dataset.mmUnifiedMaterialTotal=String(result.total);
-    host.querySelectorAll('[data-mm-index-grade]').forEach(button=>button.addEventListener('click',()=>{query.value=button.dataset.mmIndexGrade||'';query.dispatchEvent(new Event('input',{bubbles:true}));query.focus();}));
+    host.querySelectorAll('[data-mm-index-grade]').forEach(button=>button.addEventListener('click',()=>{const id=button.dataset.mmIndexGrade||'';revealExactGrade(id).catch(err=>console.warn('[MouldMaster exact grade navigation]',err));}));
   }
   for(const control of [allQuery,type,region,country,catalogueManufacturer,family,application,process,evidence])control.addEventListener(control===allQuery?'input':'change',()=>render(true).catch(err=>console.warn('[MouldMaster unified material index]',err)));
   clearAll.addEventListener('click',()=>{
@@ -93,7 +93,18 @@ async function enhance(){
   await registry.installPanel();const root=document.getElementById('mmExactMaterialCatalog');if(!root||root.dataset.mmIndexedPagination==='1')return !!root;
   root.dataset.mmIndexedPagination='1';
   const query=replaceControl(root,'[data-mm-exact-query]'),manufacturer=replaceControl(root,'[data-mm-exact-manufacturer]'),host=root.querySelector('[data-mm-exact-results]');if(!query||!manufacturer||!host)return false;
-  installAllIndex(root,index,query);
+  installAllIndex(root,index,query,async id=>{
+    // A catalogue result is a navigation action, not just a search-box update.
+    // Wait for the indexed exact-grade render before revealing and focusing its
+    // evidence card; otherwise it remains below the fold on narrow screens.
+    query.value=id;
+    await render(true);
+    const grade=host.querySelector('[data-mm-material-grade]');
+    if(grade?.dataset.mmMaterialGrade!==id)return;
+    grade.setAttribute('tabindex','-1');
+    grade.scrollIntoView({block:'start',behavior:'instant'});
+    grade.focus({preventScroll:true});
+  });
   const status=document.createElement('p');status.className='mm-exact-boundary';status.dataset.mmMaterialPageStatus='';status.setAttribute('role','status');status.setAttribute('aria-live','polite');
   const pager=document.createElement('div');pager.className='mm-exact-actions';pager.dataset.mmMaterialPager='';const previous=makeButton('Previous','previous'),next=makeButton('Next','next');pager.append(previous,next);host.insertAdjacentElement('afterend',status);status.insertAdjacentElement('afterend',pager);
   let page=1,seq=0;
