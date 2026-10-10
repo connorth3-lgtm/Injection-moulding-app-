@@ -152,16 +152,27 @@ test('Book route changes preserve the last visible reading bookmark',async({page
   await openApp(page);
   await page.evaluate(()=>window.MMBook.openReaderChapter('r01'));
   await expect(page.locator('#mmBookView [data-mm-book-reader]')).toBeVisible();
-  await page.waitForTimeout(260);
-  const before=await page.evaluate(()=>window.MMBook.getResume());
+  // Route exit flushes any pending 180ms scroll save. Compare with the
+  // visible scroll at the instant of exit, not with an older debounced value
+  // that can legitimately still be 0 during WebKit's deferred layout.
+  const {before,after,visibleScrollY}=await page.evaluate(()=>{
+    let root=document.querySelector('#mmBookView [data-mm-book-reader]');
+    for(;root&&root!==document.body;root=root.parentElement){
+      const style=getComputedStyle(root);
+      if(/^(auto|scroll|overlay)$/.test(String(style.overflowY||'').toLowerCase())&&root.scrollHeight>root.clientHeight+1)break;
+    }
+    if(!root||root===document.body)root=document.scrollingElement||document.documentElement;
+    const visibleScrollY=Math.max(0,Number(root.scrollTop)||0);
+    const before=window.MMBook.getResume();
+    window.switchView('dashboard');
+    return {before,after:window.MMBook.getResume(),visibleScrollY};
+  });
   expect(before?.kind).toBe('reader-chapter');
-  await page.evaluate(()=>window.switchView('dashboard'));
   await expect(page.locator('#dashboard')).toBeVisible();
   await expect(page.locator('#mmBookView')).toBeHidden();
-  const after=await page.evaluate(()=>window.MMBook.getResume());
   expect(after?.id).toBe(before.id);
   expect(after?.anchorId).toBe(before.anchorId);
-  expect(after?.scrollY).toBe(before.scrollY);
+  expect(after?.scrollY).toBeCloseTo(visibleScrollY,1);
   expect(await page.evaluate(()=>document.documentElement.classList.contains('mm-book-instant-scroll'))).toBe(false);
 });
 
