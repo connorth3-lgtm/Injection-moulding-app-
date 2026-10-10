@@ -48,7 +48,7 @@ test('lean sidebar keeps core journeys prominent and secondary routes reachable'
   await page.evaluate(()=>{document.querySelector('#nav .mm-lean-secondary').open=false;switchView('standards');});
   await expect(more).toHaveAttribute('open');
   await expect(more.locator('button[data-view="standards"]')).toBeVisible();
-  await primary.locator('[data-view="path"]').click();
+  await nav.locator(':scope > button[data-view="path"]').click();
   await expect(page.locator('#path')).toBeVisible();
 });
 
