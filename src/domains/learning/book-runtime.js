@@ -189,7 +189,7 @@
       if(heading){
         const savedOffset=Number(snapshot.anchorOffset),offsetIdentity=String(snapshot.anchorOffsetId||'');
         const desired=byId&&offsetIdentity===anchorId&&Number.isFinite(savedOffset)?savedOffset:bookViewportTop();
-        await alignReadingAnchor(heading,desired,5,intent);
+        await alignReadingAnchor(heading,desired);
       }else scrollBookTo(snapshot.scrollY);
       if(!open||intent!==bookIntentEpoch){resolve(false);return}
       window.dispatchEvent(new CustomEvent('mm:book-resume-restored',{detail:{id:snapshot.id,anchorId:heading?.dataset?.mmBookAnchor||''}}));
