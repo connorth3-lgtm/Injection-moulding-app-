@@ -37,10 +37,11 @@ function resultSummary(doc){
 }
 function renderAllResult(doc){
   const sourceCount=(doc.sourceIds||[]).length,cat=doc.catalog||null;
-  const catalogueMeta=cat?`<p class="mm-material-index-subtitle"><b>${esc(cat.region)}</b> · ${esc(cat.country)} · ${esc(cat.manufacturer)} · ${esc(cat.family)} · ${esc(cat.evidenceStage||'unknown evidence stage')}</p>`:'';
+  const catalogueMeta=cat?`<span class="mm-material-index-subtitle">${esc(cat.country)} · ${esc(cat.family)}</span>`:'';
+  const contextMeta=cat?`<p class="mm-material-index-subtitle"><b>${esc(cat.region)}</b> · ${esc(cat.country)} · ${esc(cat.manufacturer)} · ${esc(cat.family)} · ${esc(cat.evidenceStage||'unknown evidence stage')}</p>`:'';
   const tags=cat?[...(cat.applications||[]),...(cat.processes||[]),...(cat.evidence||[])]:[];
   const tagHtml=tags.length?`<div class="mm-material-index-meta">${[...new Set(tags)].map(tag=>`<span class="pill">${esc(tag)}</span>`).join('')}</div>`:'';
-  return `<article class="mm-material-index-card" data-mm-material-index-result="${esc(doc.id)}" data-mm-material-index-type="${esc(doc.type)}"><div class="mm-material-index-meta"><span class="pill">${esc(materialTypeLabel(doc.type))}</span>${sourceCount?`<span>${sourceCount} evidence source${sourceCount===1?'':'s'}</span>`:''}</div><h4>${esc(doc.title)}</h4>${catalogueMeta}${tagHtml}${doc.subtitle?`<p class="mm-material-index-subtitle">${esc(doc.subtitle)}</p>`:''}<p>${esc(resultSummary(doc))}</p>${doc.materialGradeId?`<button type="button" class="secondary" data-mm-index-grade="${esc(doc.materialGradeId)}">Show exact grade</button>`:''}</article>`;
+  return `<details class="mm-material-index-card" data-mm-material-index-result="${esc(doc.id)}" data-mm-material-index-type="${esc(doc.type)}"><summary class="mm-material-index-summary"><span class="mm-material-index-meta"><span class="pill">${esc(materialTypeLabel(doc.type))}</span>${sourceCount?`<span>${sourceCount} evidence source${sourceCount===1?'':'s'}</span>`:''}</span><strong class="mm-material-index-title">${esc(doc.title)}</strong>${catalogueMeta}<span class="mm-material-index-expand">View details</span></summary><div class="mm-material-index-detail">${contextMeta}${tagHtml}${doc.subtitle?`<p class="mm-material-index-subtitle">${esc(doc.subtitle)}</p>`:''}<p>${esc(resultSummary(doc))}</p>${doc.materialGradeId?`<button type="button" class="secondary" data-mm-index-grade="${esc(doc.materialGradeId)}">Show exact grade</button>`:''}</div></details>`;
 }
 function installAllIndex(root,index,query){
   if(root.querySelector('[data-mm-all-material-index]'))return;
