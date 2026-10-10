@@ -124,11 +124,20 @@ function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 // learner, quarantining ambiguous or orphaned legacy progress instead of
 // accidentally attributing another learner's specialist completions.
 const SPECIALIST_STORAGE_PREFIX=`${STORAGE_BASE}::`;
-const learnerScope=window.MM_LEARNER_SCOPE;
-learnerScope?.registerStoragePrefix?.(SPECIALIST_STORAGE_PREFIX);
+// This pack runs before the manifest-driven learner-scope asset. Resolve the
+// service when used, never snapshot window.MM_LEARNER_SCOPE during bootstrap.
+let registeredLearnerScope=null;
+function specialistScope(){
+  const scope=window.MM_LEARNER_SCOPE;
+  if(!scope?.token||!scope?.storageKey||!scope?.registerStoragePrefix)return null;
+  if(scope!==registeredLearnerScope){
+    try{scope.registerStoragePrefix(SPECIALIST_STORAGE_PREFIX);registeredLearnerScope=scope}catch(_){return null}
+  }
+  return scope;
+}
 function storageKey(){
-  if(!learnerScope?.token||!learnerScope?.storageKey)return null;
-  try{return learnerScope.storageKey(SPECIALIST_STORAGE_PREFIX,learnerScope.token())}catch(_){return null}
+  const scope=specialistScope();if(!scope)return null;
+  try{return scope.storageKey(SPECIALIST_STORAGE_PREFIX,scope.token())}catch(_){return null}
 }
 function readState(){
   const key=storageKey();if(!key)return {};
