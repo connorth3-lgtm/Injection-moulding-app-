@@ -109,8 +109,8 @@ async function expectNarrowReadableTiles(page,rootSelector,expectedCount=4){
 async function expectUnifiedLessonCatalog(page){
   const root=page.locator('#path .mm-all-lessons');
   await expect(root).toBeVisible();
-  await expect(root.locator('[data-mm-catalog-group]')).toHaveCount(13);
-  await expect(root.locator('[data-mm-catalog-item]')).toHaveCount(140);
+  await expect(root.locator('[data-mm-catalog-group]')).toHaveCount(22);
+  await expect(root.locator('[data-mm-catalog-item]')).toHaveCount(176);
   const geometry=await page.evaluate(()=>{
     const root=document.querySelector('#path .mm-all-lessons');
     const rect=root.getBoundingClientRect();
