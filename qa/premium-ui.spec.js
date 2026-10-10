@@ -267,7 +267,13 @@ test('product hierarchy keeps Home focused and Materials catalogue dense',async(
   // the canonical style owner rather than sampling the transient legacy card style.
   await page.waitForFunction(()=>{
     const link=document.querySelector('link[data-mm-learner-ui-polish]');
-    return Boolean(window.MM_LEARNER_UI_POLISH && link?.sheet);
+    const focus=document.querySelector('#dashboard .mm-today-focus');
+    const utilities=document.querySelector('#dashboard .mm-home-balance');
+    // A parsed WebKit stylesheet can precede the first computed-style update.
+    // Wait for the required presentation, not only link.sheet availability.
+    return Boolean(window.MM_LEARNER_UI_POLISH && link?.sheet && focus && utilities &&
+      getComputedStyle(focus).boxShadow!=='none' &&
+      getComputedStyle(utilities).boxShadow==='none');
   });
   const hierarchy=await page.evaluate(()=>({
     focusShadow:getComputedStyle(document.querySelector('#dashboard .mm-today-focus')).boxShadow,
