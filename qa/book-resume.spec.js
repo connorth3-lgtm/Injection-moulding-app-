@@ -251,7 +251,7 @@ test('Book reading bookmark survives immediate Contents exit and Listening scrol
 test('Book Contents returns keyboard focus to the originating reader and module entries',async({page})=>{
   await boot(page);
   await page.evaluate(()=>window.MMBook.open());
-  const chapter=page.locator('[data-mm-book-reader-chapter-open="r08"]');
+  const chapter=page.locator('.mm-book-toc > li > button[data-mm-book-reader-chapter-open="r08"]');
   await expect(chapter).toBeVisible();
   await chapter.focus();
   await page.keyboard.press('Enter');
