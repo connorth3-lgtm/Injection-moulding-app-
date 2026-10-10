@@ -8,7 +8,8 @@ navigation. The Book is a single reading route, not a competing app.
 ## What readers see
 
 - **Contents:** Twenty numbered **chapter titles** in one uncluttered table
-  of contents. No progress badge, module counter or source-review ratio beside
+  of contents, **before** any publication controls or the original introduction.
+  No progress badge, module counter or source-review ratio beside
   every chapter. The 46 canonical governed source modules remain accessible
   from the optional **Source module index**, *after* the chapter contents.
 - **Chapter:** A chapter number, title and short introduction, followed
@@ -27,7 +28,8 @@ navigation. The Book is a single reading route, not a competing app.
   retains an immediately visible incomplete-review warning; qualification,
   site and machine controls are never silently promoted or removed.
   The complete original introduction, editorial status and listening action
-  remain reachable from Contents, behind a small “About this Book” disclosure.
+  remain reachable **after** the chapter table of contents, with introduction
+  text under the small “About this Book” disclosure.
 - **No content deletion:** The Book manifest, all 46 published source modules,
   chapter content, published fingerprints, citations, diagrams, worked cases,
   learning terms, checked claims and separate SME/qualification decisions
