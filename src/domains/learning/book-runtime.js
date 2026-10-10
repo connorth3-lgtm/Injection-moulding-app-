@@ -199,12 +199,18 @@
       bindBookScrollRoot();
       const heads=[...ui.reader.querySelectorAll('h2[data-mm-book-anchor],h3[data-mm-book-anchor],h4[data-mm-book-anchor]')],anchorId=String(snapshot.anchorId||''),index=Number.isInteger(snapshot.anchorIndex)?snapshot.anchorIndex:-1,wanted=String(snapshot.anchorText||'').trim();
       const byId=anchorId?heads.find(el=>el.dataset.mmBookAnchor===anchorId):null;
-      const heading=byId||(index>=0&&index<heads.length?heads[index]:null)||(wanted?heads.find(el=>String(el.textContent||'').trim()===wanted):null);
+      const byText=wanted?heads.find(el=>String(el.textContent||'').trim()===wanted):null;
+       const byIndex=index>=0&&index<heads.length?heads[index]:null;
+       // An anchor index can point at different content after a Book upgrade.
+       // Prefer stable ID, then exact heading text; retain the index fallback
+       // only within the same runtime release.
+       const heading=byId||byText||(snapshot.bookRelease===VERSION?byIndex:null);
       if(heading){
         const savedOffset=Number(snapshot.anchorOffset),offsetIdentity=String(snapshot.anchorOffsetId||'');
         const desired=byId&&offsetIdentity===anchorId&&Number.isFinite(savedOffset)?savedOffset:bookViewportTop();
         await alignReadingAnchor(heading,desired);
-      }else scrollBookTo(snapshot.scrollY);
+      }else if(snapshot.bookRelease===VERSION)scrollBookTo(snapshot.scrollY);
+       else scrollBookBy(ui.reader.getBoundingClientRect().top-bookViewportTop());
       if(!open||intent!==bookIntentEpoch){resolve(false);return}
       if(snapshot.bookRelease!==VERSION)flushReadingPosition({notify:true});
        window.dispatchEvent(new CustomEvent('mm:book-resume-restored',{detail:{id:snapshot.id,anchorId:heading?.dataset?.mmBookAnchor||''}}));
