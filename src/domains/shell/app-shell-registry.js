@@ -343,6 +343,7 @@ function renderLessonCanonical(){
   curriculumLessonAdapter();syncActiveState();requestAnimationFrame(syncActiveState);emitRender('lesson')
 }
 function switchViewCanonical(id){
+  // Runtime V2's BEFORE hook already saves Book before invoking this handler.
   activeCustomId='';const r=captured.switchView.apply(this,arguments);syncActiveState();requestAnimationFrame(syncActiveState);emitView(id);return r
 }
 function bindCanonicalCoreNavigation(){
@@ -353,6 +354,8 @@ function bindCanonicalCoreNavigation(){
     if(!button||button.closest('#nav')!==nav||button.disabled)return;
     const view=button.dataset.view;if(!view)return;
     event.preventDefault();event.stopImmediatePropagation();
+    // Direct primary-nav clicks bypass Runtime V2's before-hook dispatcher.
+    window.MMBook?.prepareRouteExit?.(view);
     switchViewCanonical(view);
   },true);
 }

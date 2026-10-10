@@ -24,6 +24,107 @@ async function assertNoHorizontalOverflow(page,label){
   expect(dims.scrollWidth,`${label}: no horizontal overflow`).toBeLessThanOrEqual(dims.clientWidth+1);
 }
 
+test('compact desktop shell retains Materials and specialist More access',async({page})=>{
+  await page.setViewportSize({width:1440,height:860});
+  await openApp(page);
+  const nav=page.locator('#nav');
+  for(const label of ['Home','Learn','Materials','Practice']){
+    await expect(nav.locator(':scope > button:visible').filter({hasText:label})).toHaveCount(1);
+  }
+  await expect(nav.locator('button[data-mm-desktop-more-tools]')).toBeVisible();
+  // Advanced tools remain reachable through the existing modal: no cloned
+  // button hierarchy or changed routing contract is added to the app shell.
+  await nav.locator('button[data-mm-desktop-more-tools]').click();
+  await expect(page.locator('#modal')).toBeVisible();
+  await expect(page.locator('#modal').getByRole('button',{name:'Standards & safety'})).toBeVisible();
+  await page.locator('#modal').getByRole('button',{name:'Standards & safety'}).click();
+  await expect(page.locator('#standards')).toBeVisible();
+});
+
+test('Book reading hides Mission Control strip without losing learner workspace',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await openApp(page);
+  const mission=page.locator('#mmMissionControl > .mm-mc-context');
+  await expect(mission).toBeVisible();
+  await page.evaluate(()=>window.MMBook.open());
+  await expect(page.locator('#mmBookView')).toBeVisible();
+  await expect(mission).toBeHidden();
+  await expect(page.locator('#pageSubtitle')).toBeHidden();
+  // The mission's overlays and learner data are untouched; hiding the strip
+  // is specific to the Book reading route, not a global app state change.
+  await expect(page.locator('#mmMissionControl .mm-mc-palette-host')).toBeAttached();
+  await page.locator('#nav').getByRole('button',{name:'Home'}).click();
+  await expect(page.locator('#dashboard')).toBeVisible();
+  await expect(mission).toBeVisible();
+  await expect(page.locator('#pageSubtitle')).toBeVisible();
+});
+
+test('Book opens as 20 plain chapters with previous/next and optional end matter',async({page})=>{
+  await page.setViewportSize({width:1280,height:860});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MMBook?.openReaderChapter));
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r01'));
+  const reader=page.locator('#mmBookView [data-mm-book-reader]');
+  await expect(reader.locator('[data-mm-book-reader-chapter="r01"]')).toBeVisible();
+  await expect(reader.locator('.mm-book-chapter-number')).toHaveText('Chapter 1');
+  await expect(reader.locator('[data-mm-book-reader-module]').first()).toBeVisible();
+  await expect(page.locator('#mmBookView [data-mm-book-hero]')).toBeHidden();
+  await expect(page.locator('#mmBookView [data-mm-book-accuracy]')).toBeHidden();
+  await expect(reader.locator('.mm-book-scope-note').first()).toBeVisible();
+  // Technical review is not edited away or treated as a verified machine source.
+  await expect(reader.locator('.mm-book-reader-notes')).not.toHaveAttribute('open');
+  await expect(reader.locator('.mm-book-reader-study')).not.toHaveAttribute('open');
+  await reader.locator('.mm-book-reader-notes > summary').click();
+  await expect(reader.locator('.mm-book-inline-evidence').first()).toBeVisible();
+  await expect(reader.locator('.mm-book-reader-references')).toBeVisible();
+  await reader.locator('.mm-book-reader-guide > summary').click();
+  await expect(reader.locator('.mm-book-reader-key-terms')).toBeVisible();
+  await reader.locator('[data-mm-book-page-turn="r02"]').click();
+  await expect(page.locator('#mmBookView')).toBeVisible();
+  await expect(reader.locator('.mm-book-chapter-number')).toHaveText('Chapter 2');
+  await reader.locator('[data-mm-book-page-turn="r01"]').click();
+  await expect(reader.locator('.mm-book-chapter-number')).toHaveText('Chapter 1');
+  await reader.locator('.mm-book-page-turn [data-mm-book-back]').click();
+  await expect(page.locator('#mmBookView [data-mm-book-hero]')).toBeVisible();
+  const contents=page.locator('#mmBookView [data-mm-book-contents]');
+  await expect(contents.locator('.mm-book-toc > li > button[data-mm-book-reader-chapter-open]')).toHaveCount(20);
+  await expect(contents.locator('.mm-book-toc > li').first()).toContainText('1.');
+  await expect(contents.locator('.mm-book-contents-guide')).not.toHaveAttribute('open');
+  await contents.locator('.mm-book-contents-guide > summary').click();
+  await expect(contents.locator('.mm-book-term-guide > summary')).toBeVisible();
+  await expect(contents.locator('.mm-book-governed-index [data-mm-book-chapter]')).toHaveCount(46);
+});
+
+test('phone Book is a simple contents page, original intro and sources preserved',async({page})=>{
+  await page.setViewportSize({width:360,height:800});
+  await openApp(page);
+  await page.evaluate(async()=>{window.MMBook.open();await window.MMBook.load();});
+  const contents=page.locator('#mmBookView [data-mm-book-contents]');
+  await expect(contents).toBeVisible();
+  // Actual document order puts chapters ahead of optional publication utilities.
+  expect(await page.locator('#mmBookView').evaluate(view=>Array.from(view.children).indexOf(view.querySelector('[data-mm-book-contents]'))<Array.from(view.children).indexOf(view.querySelector('[data-mm-book-hero]')))).toBe(true);
+  const intro=page.locator('#mmBookView .mm-book-intro-details');
+  await expect(intro).toHaveCount(1);
+  await expect(intro).not.toHaveAttribute('open');
+  const first=contents.locator('.mm-book-toc > li > button').first();
+  await expect(first).toBeVisible();
+  const firstTop=await first.evaluate(el=>el.getBoundingClientRect().top);
+  const bar=await page.locator('.mobile-nav').boundingBox();
+  expect(firstTop,'chapter 1 starts above fixed mobile navigation').toBeLessThan((bar?.y||730)-22);
+  await intro.locator(':scope > summary').click();
+  await expect(intro.locator('h2')).toContainText('Injection moulding');
+  await expect(intro.locator('p')).toContainText('reference');
+  await expect(page.locator('#mmBookView [data-mm-book-hero] [data-mm-book-mode="listen"]')).toBeVisible();
+  await expect(page.locator('#mmBookView [data-mm-book-hero] .mm-book-governance > summary')).toBeVisible();
+  await first.click();
+  const reader=page.locator('#mmBookView [data-mm-book-reader]');
+  await expect(reader.locator('.mm-book-chapter-number')).toHaveText('Chapter 1');
+  await expect(reader.locator('.mm-book-reader-study')).not.toHaveAttribute('open');
+  await expect(reader.locator('.mm-book-reader-notes')).not.toHaveAttribute('open');
+  await expect(reader.locator('.mm-book-scope-note').first()).toBeVisible();
+  await expect(reader.locator('[data-mm-book-page-turn="r02"]')).toBeAttached();
+});
+
 test('premium UI stylesheet is active on the primary learner shell',async({page})=>{
   await openApp(page);
   const premiumLink=page.locator('link[href*="premium-ui.css"]');
