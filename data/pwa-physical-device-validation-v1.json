@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Retained release 2026.10.11.2 technical source 003a950733164d383749e4d1425497b617e415ce and artifact 11682155927 are NOT evidence of validation on physical iOS/iPadOS and Android devices. All install, offline/restart/reboot, update, safe-area, storage-pressure and zoom tests on real iOS/iPadOS and Android remain pending; accessibility-real-at-validation-v1.json is a separate human HOLD, and production root and signing are not authorised.",
+  "boundary": "Retained release 2026.10.11.2 candidate 62cbc79224b133f5953d26b09547001e73961481 and artifact 11682347645 are NOT evidence of validation on physical iOS/iPadOS and Android devices. All real install, offline/restart/reboot, update, safe-area, storage-pressure and zoom tests on physical iOS/iPadOS and Android remain pending; accessibility-real-at-validation-v1.json is a separate human HOLD. Production root and signing are not authorised.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
@@ -44,14 +44,14 @@
   "release": "2026.10.11.2",
   "candidate": {
     "release": "2026.10.11.2",
-    "sourceSha": "003a950733164d383749e4d1425497b617e415ce",
+    "sourceSha": "62cbc79224b133f5953d26b09547001e73961481",
     "runtimeFingerprint": "sha256:85daf719b86418fbc94610973f173a058455ecc0bec2e9bf53320da6e2f08306",
-    "candidateRunId": 38084932422,
+    "candidateRunId": 38086330944,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 11682155927,
-    "artifactName": "physical-pwa-candidate-003a950733164d383749e4d1425497b617e415ce",
-    "artifactDigest": "sha256:698e7b1a4c1c302645ca049c90132e873afbb1e64f565fada768c0c0f29346cd",
-    "artifactExpiresAt": "2027-01-08T20:44:36Z"
+    "artifactId": 11682347645,
+    "artifactName": "physical-pwa-candidate-62cbc79224b133f5953d26b09547001e73961481",
+    "artifactDigest": "sha256:b72064749889a7e402e1cfb661723caae809136bc98aa8527c8e62461e27ae48",
+    "artifactExpiresAt": "2027-01-08T21:06:15Z"
   },
   "previousCandidate": {
     "release": "2026.10.09.5",

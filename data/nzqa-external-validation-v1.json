@@ -8,10 +8,10 @@
   "issueNumber": 379,
   "candidate": {
     "release": "2026.10.11.2",
-    "sourceSha": "003a950733164d383749e4d1425497b617e415ce",
+    "sourceSha": "62cbc79224b133f5953d26b09547001e73961481",
     "runtimeFingerprint": "sha256:85daf719b86418fbc94610973f173a058455ecc0bec2e9bf53320da6e2f08306"
   },
-  "boundary": "Genuine provider G1–G8 external evidence remains pending for 2026.10.11.2; retained exact-source technical candidate 003a950733164d383749e4d1425497b617e415ce with fingerprint sha256:85daf719b86418fbc94610973f173a058455ecc0bec2e9bf53320da6e2f08306 is not accreditation, assessment authority or production/machine-control permission. Verify producer workflow quality outcome separately before release.",
+  "boundary": "Genuine provider G1–G8 external evidence remains pending for 2026.10.11.2; retained exact-source technical candidate 62cbc79224b133f5953d26b09547001e73961481 with fingerprint sha256:85daf719b86418fbc94610973f173a058455ecc0bec2e9bf53320da6e2f08306 is not accreditation, assessment authority or production/machine-control permission. Verify producer workflow quality outcome separately before release.",
   "requiredGates": [
     {
       "id": "G1-provider",

@@ -5,7 +5,7 @@
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
     "status": "pass",
-    "claim": "Exact-source 2026.10.11.2 public-runtime bytes from commit 003a950733164d383749e4d1425497b617e415ce were built and retained under Pre-merge Public Candidate run 38084932422 as artifact 11682155927 (digest sha256:698e7b1a4c1c302645ca049c90132e873afbb1e64f565fada768c0c0f29346cd; expiry 2027-01-08T20:44:36Z); runtime fingerprint sha256:85daf719b86418fbc94610973f173a058455ecc0bec2e9bf53320da6e2f08306 was independently reproduced from downloaded artifact bytes. This establishes build/retention identity only. Final CI success, visual approval, protected-main publication and independent human/device/provider validation remain separate gates. Do not treat an artifact upload as a successfully approved workflow."
+    "claim": "Exact-source 2026.10.11.2 runtime bytes were retained by Pre-merge Public Candidate workflow 38086330944 (source 62cbc79224b133f5953d26b09547001e73961481, artifact 11682347645, digest sha256:b72064749889a7e402e1cfb661723caae809136bc98aa8527c8e62461e27ae48; expiry 2027-01-08T21:06:15Z) and independently fingerprinted as sha256:85daf719b86418fbc94610973f173a058455ecc0bec2e9bf53320da6e2f08306. Retention and source integrity alone do not grant release, acceptance or external validation; confirm producer success separately. All physical-device, human accessibility/SME, learner/provider and protected-main gates remain HOLD."
   },
   "governance": {
     "status": "enforced",
@@ -24,7 +24,7 @@
     "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.10.11.2.md",
     "candidate": {
       "release": "2026.10.11.2",
-      "sourceSha": "003a950733164d383749e4d1425497b617e415ce",
+      "sourceSha": "62cbc79224b133f5953d26b09547001e73961481",
       "runtimeFingerprint": "sha256:85daf719b86418fbc94610973f173a058455ecc0bec2e9bf53320da6e2f08306"
     },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix.",
@@ -40,14 +40,14 @@
     "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.10.11.2.md",
     "currentCandidate": {
       "release": "2026.10.11.2",
-      "sourceSha": "003a950733164d383749e4d1425497b617e415ce",
+      "sourceSha": "62cbc79224b133f5953d26b09547001e73961481",
       "runtimeFingerprint": "sha256:85daf719b86418fbc94610973f173a058455ecc0bec2e9bf53320da6e2f08306",
-      "candidateRunId": 38084932422,
+      "candidateRunId": 38086330944,
       "candidateWorkflow": "Pre-merge Public Candidate",
-      "artifactId": 11682155927,
-      "artifactName": "physical-pwa-candidate-003a950733164d383749e4d1425497b617e415ce",
-      "artifactDigest": "sha256:698e7b1a4c1c302645ca049c90132e873afbb1e64f565fada768c0c0f29346cd",
-      "artifactExpiresAt": "2027-01-08T20:44:36Z"
+      "artifactId": 11682347645,
+      "artifactName": "physical-pwa-candidate-62cbc79224b133f5953d26b09547001e73961481",
+      "artifactDigest": "sha256:b72064749889a7e402e1cfb661723caae809136bc98aa8527c8e62461e27ae48",
+      "artifactExpiresAt": "2027-01-08T21:06:15Z"
     },
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release.",
     "previousCandidate": {
@@ -120,7 +120,7 @@
     "required": "Genuine provider ownership, stakeholder need, provider-approved design, authorised assessment/internal moderation, consent-to-assess/CMR confirmation, applicable national moderation, workplace evidence and provider-controlled review/change evidence for the exact governed release.",
     "candidate": {
       "release": "2026.10.11.2",
-      "sourceSha": "003a950733164d383749e4d1425497b617e415ce",
+      "sourceSha": "62cbc79224b133f5953d26b09547001e73961481",
       "runtimeFingerprint": "sha256:85daf719b86418fbc94610973f173a058455ecc0bec2e9bf53320da6e2f08306"
     },
     "previousCandidate": {
@@ -131,14 +131,14 @@
   },
   "webCandidate": {
     "release": "2026.10.11.2",
-    "sourceSha": "003a950733164d383749e4d1425497b617e415ce",
+    "sourceSha": "62cbc79224b133f5953d26b09547001e73961481",
     "runtimeFingerprint": "sha256:85daf719b86418fbc94610973f173a058455ecc0bec2e9bf53320da6e2f08306",
-    "candidateRunId": 38084932422,
+    "candidateRunId": 38086330944,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 11682155927,
-    "artifactName": "physical-pwa-candidate-003a950733164d383749e4d1425497b617e415ce",
-    "artifactDigest": "sha256:698e7b1a4c1c302645ca049c90132e873afbb1e64f565fada768c0c0f29346cd",
-    "artifactExpiresAt": "2027-01-08T20:44:36Z"
+    "artifactId": 11682347645,
+    "artifactName": "physical-pwa-candidate-62cbc79224b133f5953d26b09547001e73961481",
+    "artifactDigest": "sha256:b72064749889a7e402e1cfb661723caae809136bc98aa8527c8e62461e27ae48",
+    "artifactExpiresAt": "2027-01-08T21:06:15Z"
   },
   "candidatePolicy": {
     "previewBranchAuthoritative": false,
@@ -156,7 +156,7 @@
     "artifactDigest": "sha256:9f30bbfe431852681739cfad2c9d00a08fd624c712d83f5ede68af1eb48a35d9",
     "artifactExpiresAt": "2027-01-08T17:13:43Z"
   },
-  "candidateStatus": "RETAINED EXACT-SOURCE TECHNICAL ARTIFACT 2026.10.11.2; candidate quality/approval checks pending — source 003a950733164d383749e4d1425497b617e415ce, artifact 11682155927; independent physical device/AT/Book SME/curriculum SME/learner/provider/Windows/visual approvals and protected-main publication HOLD.",
+  "candidateStatus": "Retained exact-source 2026.10.11.2 web artifact for commit 62cbc79224b133f5953d26b09547001e73961481, producer workflow 38086330944 and artifact 11682347645. Workflow success must be confirmed independently before reuse; external review, protected-main publication and machine-control remain HOLD.",
   "previousPreviousCandidate": {
     "release": "2026.10.09.5",
     "sourceSha": "581e08e58f0b9ec3c7a3501f9a3a71d47ed2c184",

@@ -236,7 +236,7 @@ test('Book exposes every consolidated weld-line source section on demand without
   // A closed <details> still renders its <summary>. Check the disclosure
   // state rather than visibility of the container (which differs on WebKit).
   await expect(source).not.toHaveAttribute('open','');
-  if(!(await notes.getAttribute('open')))await notes.locator(':scope > summary').click();
+  if((await notes.getAttribute('open'))===null)await notes.locator(':scope > summary').click();
   await expect(notes).toHaveAttribute('open','');
   await source.locator(':scope > summary').click();
   await expect(source).toHaveAttribute('open','');
