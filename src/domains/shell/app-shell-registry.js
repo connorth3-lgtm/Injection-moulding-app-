@@ -343,6 +343,9 @@ function renderLessonCanonical(){
   curriculumLessonAdapter();syncActiveState();requestAnimationFrame(syncActiveState);emitRender('lesson')
 }
 function switchViewCanonical(id){
+  // Book must flush its scoped bookmark before the core route hides its
+  // scroll container; the later onViewChange notification is too late.
+  window.MMBook?.prepareRouteExit?.(id);
   activeCustomId='';const r=captured.switchView.apply(this,arguments);syncActiveState();requestAnimationFrame(syncActiveState);emitView(id);return r
 }
 function bindCanonicalCoreNavigation(){
