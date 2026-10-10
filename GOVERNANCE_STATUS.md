@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.11.1`**.
+Current governed web candidate: **`2026.10.11.2`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Authentic 2026.10.11.1 runtime source 886116199e611b225dbae7b266f4c1402287d8e7 produced successful exact-source Pre-merge Public Candidate run 38081915524 and retained artifact 11680527534, with public fingerprint independently computed from archived bytes. New final-head protected-main CI and all external approvals remain independently gated. |
+| Static / contract | **historical preview candidate** | Earlier 2026.10.11.1 runtime source 886116199e611b225dbae7b266f4c1402287d8e7 produced successful exact-source Pre-merge Public Candidate run 38081915524 and retained artifact 11680527534, with public fingerprint independently computed from archived bytes. New final-head protected-main CI and all external approvals remain independently gated. |
 | Behavioral / browser | **pass** | Mobile Browser QA Chromium/WebKit and reliability suites plus Question Quality 50-Pass passed for technical runtime source 886116199e611b225dbae7b266f4c1402287d8e7. The prior immutable Book Materials visual baseline requires separate strict protected-main acceptance; real devices and human reviews remain HOLD. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
