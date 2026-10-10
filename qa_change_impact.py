@@ -126,6 +126,43 @@ need(not proof_baseline.full_browser_proof([
 ]),
      "a green skip-only aggregator cannot stand in for real browser execution")
 
+# Protected-main MUST rerun real browser jobs for the whole preview->main
+# runtime delta, even when an ancestor preview browser run was fully green.
+# The old resolver reused that preview SHA, yielding browser=false and a
+# green required mobile-browser aggregate with every browser group skipped.
+with mock.patch.dict(os.environ,{
+    "GITHUB_EVENT_NAME":"pull_request",
+    "GITHUB_HEAD_REF":"release-deep-fix",
+    "GITHUB_BASE_REF":"main",
+    "GITHUB_REPOSITORY":"org/repo",
+    "GITHUB_TOKEN":"fake-token",
+    "GITHUB_RUN_ID":"current-run",
+}):
+    with (
+        mock.patch.object(proof_baseline,"pull_request_baseline",return_value="protected-main-merge-base") as base_check,
+        mock.patch.object(proof_baseline,"api_runs",return_value=[
+            {"id":123,"head_sha":"successful-preview-ancestor"}
+        ]) as no_previous_proof,
+    ):
+        need(proof_baseline.resolve("mobile-browser-qa.yml","release-head")
+             =="protected-main-merge-base",
+             "main PR must compare complete protected main delta, not last preview proof")
+        base_check.assert_called_once_with("release-head")
+        no_previous_proof.assert_not_called()
+
+    # Broken/missing protected-main base cannot return to a previous preview
+    # proof or HEAD^: conservatively inspect the oldest reachable ancestor.
+    with (
+        mock.patch.object(proof_baseline,"pull_request_baseline",return_value=""),
+        mock.patch.object(proof_baseline,"oldest_ancestor",return_value="entire-history-root") as oldest,
+        mock.patch.object(proof_baseline,"api_runs") as no_previous_proof,
+    ):
+        need(proof_baseline.resolve("mobile-browser-qa.yml","release-head")
+             =="entire-history-root",
+             "missing main base must fail open on test coverage, not skip runtime")
+        oldest.assert_called_once_with("release-head")
+        no_previous_proof.assert_not_called()
+
 with tempfile.TemporaryDirectory() as tmp:
     event_path=Path(tmp)/"pr-event.json"
     event_path.write_text(json.dumps({"pull_request":{"base":{"sha":"base-candidate"}}}),encoding="utf-8")
