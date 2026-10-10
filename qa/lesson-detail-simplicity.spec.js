@@ -92,11 +92,11 @@ test('lesson has one clear ending and optional evidence stays out of the default
   const details=page.locator('#mmLessonDeepV2 details');
   const directEvidenceCount=await page.locator('#lesson .lesson-body > .content-block, #lesson .lesson-body > .mm-simple-section').evaluateAll(nodes=>nodes.filter(node=>/^Evidence check$/i.test(node.querySelector(':scope > h3')?.textContent?.trim()||'')).length);
   expect(directEvidenceCount).toBe(0);
-  await details.locator('summary').click();
+  await details.locator(':scope > summary').click();
   await expect(details.getByRole('heading',{name:'Evidence check'})).toBeVisible();
   await expect(details.getByText(/^Capture:/)).toBeVisible();
   await expect(details.getByText(/^Common trap:/)).toBeVisible();
-  await details.locator('summary').click();
+  await details.locator(':scope > summary').click();
   const actions=page.locator('#lesson .lesson-actions-sticky.mm-simple-completion');
   await expect(actions).toBeVisible();
   await expect(actions.locator('button:visible')).toHaveCount(1);
@@ -120,7 +120,9 @@ test('lesson has one clear ending and optional evidence stays out of the default
 
 test('safety-specific boundary stays visible while technical detail is optional',async({page})=>{
   await openLesson(page);
-  await page.evaluate(()=>goLesson(6)); // Canonical safety start-up lesson
+  const safetyId=await page.evaluate(()=>window.MM_LESSON_DEEP_AUTHORING_V2.records.find(row=>row.boundary.startsWith('Safety boundary:'))?.id);
+  expect(safetyId).toBeTruthy();
+  await page.evaluate(id=>goLesson(id),safetyId);
   const deep=page.locator('#lesson #mmLessonDeepV2');
   const essentials=deep.locator('.mm-deep-v2-essentials');
   await expect(essentials).toBeVisible();
