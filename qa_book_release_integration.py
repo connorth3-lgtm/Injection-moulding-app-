@@ -372,7 +372,7 @@ need('style="' not in book_runtime and "style='" not in book_runtime, 'Book runt
 for marker in ('READER_SECTION_OMISSIONS','READER_SUPPLEMENT_SECTIONS','readerSections','readerSupplementHtml','readerModuleEvidenceHtml','mm-book-reader-governance','mm-book-inline-evidence'):
     need(marker in book_runtime, f'Book reader editorial consolidation safeguard missing: {marker}')
 need("'diagnostic-method':Object.freeze(['Start with the symptom','Build competing mechanisms','Change to learn'" in book_runtime, 'Book reader must consolidate the repeated diagnostic-method opening')
-need('const READER_SUPPLEMENT_SECTIONS=Object.freeze({});' in book_runtime, 'Book reader must not claim an absent source section was moved to optional context')
+need("'documentation':Object.freeze(['Reading ISO 9001 marks on material packaging'])" in book_runtime, 'Book reader must move the packaging/certification example into optional context')
 need("workedCaseHtml(chapter,{readerMode:true})" in book_runtime and "diagramHtml(chapter,{readerMode:true})" in book_runtime, 'Book reader must keep cases/diagrams while reducing repeated governance text')
 need('Module evidence' in book_runtime and 'Worked-example evidence' in book_runtime and 'Chapter references' in book_runtime, 'Book reader evidence must remain available behind progressive disclosure')
 need("'black-specks':Object.freeze(['Separate continuous contamination from event-driven contamination'])" in book_runtime, 'Book reader must consolidate the remaining black-speck chronology repetition')

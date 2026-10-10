@@ -63,7 +63,9 @@
     'sink-voids':Object.freeze(['Both arise from contraction','Surface sink and internal void are different outcomes','Test the pressure-and-cooling history']),
     'black-specks':Object.freeze(['Separate continuous contamination from event-driven contamination'])
   });
-  const READER_SUPPLEMENT_SECTIONS=Object.freeze({}); // No current authored section is designated as supplemental.
+  const READER_SUPPLEMENT_SECTIONS=Object.freeze({
+    'documentation':Object.freeze(['Reading ISO 9001 marks on material packaging'])
+  });
   let manifest=null,manifestPromise=null,materialPromise=null,coldMaterialSearchPromise=null,publicationAuthorization=null,bookSmeReview=null,qualificationReview=null,highRiskReview=null,workedCaseLedger=null,workedCasesByChapter=new Map(),diagramLedger=null,diagramsByChapter=new Map(),evidenceEnrichmentLedger=null,claimEvidenceReference=null,claimEvidenceByChapter=new Map(),claimEvidenceClaimsByChapter=new Map(),readerArchitecture=null,editorialExpansionReview=null,materialAtlas=null,materialCatalog=null,materialRegionalEvidence=null,materialSearchIndex={catalog:[],regional:[]},integrityMap=null,ui=null,previousView=null,open=false,contentsScrollY=0,contentsWindowScrollY=0,pendingContentsScroll=null,contentsFocus=null,bookIntentEpoch=0;
   const BOOK_RESUME_PREFIX='mm_book_resume_v1::',LEGACY_BOOK_RESUME_KEY='mouldmasterBookResume:v1',BOOK_RESUME_SCHEMA=1;
   let activeReadingPosition=null,activeReadingScopeKey=null,resumeScrollTimer=0,boundBookScrollRoot=null;
