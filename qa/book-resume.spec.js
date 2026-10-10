@@ -335,3 +335,26 @@ test('upgrade cannot silently use a changed heading index when the saved anchor 
   expect(current.anchorId).not.toBe('module:removed-legacy-module:section:8');
   expect(await page.evaluate(key=>localStorage.getItem(key)!==null,oldKey)).toBe(true);
 });
+
+
+test('Book listening return focuses the original Contents listening control',async({page})=>{
+  await boot(page);
+  await page.evaluate(()=>window.MMBook.open());
+  const listen=page.locator('#mmBookView [data-mm-book-mode="listen"]');
+  await expect(listen).toBeEnabled();
+  await page.evaluate(()=>{
+    const panel=document.createElement('div');
+    panel.className='mm-read-aloud';
+    panel.innerHTML='<details><summary>Speech test adapter</summary><button type="button" data-mm-read="play">Play</button></details>';
+    document.body.prepend(panel);
+    window.MMReadAloud={supported:true,stop(){},refresh(){}};
+  });
+  await listen.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#mmBookView [data-mm-book-reader]')).toBeVisible();
+  const back=page.locator('#mmBookView [data-mm-book-reader] > button[data-mm-book-back]').first();
+  await back.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#mmBookView [data-mm-book-contents]')).toBeVisible();
+  await expect(listen).toBeFocused();
+});
