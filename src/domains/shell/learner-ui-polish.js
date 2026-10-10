@@ -125,6 +125,23 @@ function syncBookDisclosure(){
         body.appendChild(note);
       }
     }
+    // The book's original title and introduction duplicate the app-level Book
+    // heading before the reader reaches chapter one, especially on phones.
+    // Keep the actual nodes and content, but make that optional orientation
+    // readable on demand. No technical text, status or listening action moves.
+    const introHeading=hero.querySelector(':scope > h2');
+    const introText=[...hero.querySelectorAll(':scope > p')].find(p=>
+      !p.matches('[data-mm-book-summary],[data-mm-book-sme-status]'));
+    if(introHeading&&introText&&!hero.querySelector('.mm-book-intro-details')){
+      const introDetails=document.createElement('details');
+      introDetails.className='mm-book-intro-details';
+      const introSummary=document.createElement('summary');
+      introSummary.textContent='About this Book';
+      introDetails.append(introSummary,introHeading,introText);
+      const governance=hero.querySelector('.mm-book-governance');
+      if(governance)governance.insertAdjacentElement('beforebegin',introDetails);
+      else hero.appendChild(introDetails);
+    }
     const listen=hero.querySelector('[data-mm-book-mode="listen"]');
     if(listen&&!listen.disabled&&listen.textContent!=='Listen to Book')listen.textContent='Listen to Book';
   }
