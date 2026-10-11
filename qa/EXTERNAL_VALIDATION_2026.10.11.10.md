@@ -17,3 +17,13 @@ The approved *design reference* is not an approval of actual browser-rendered .1
 Machine control and production-recipe validation remain prohibited; this learner app is advisory/educational only.
 
 The previous `.9` packets and candidate are historical and stay separately referenced by their original IDs and release. After exact-head software checks and retention succeed, a release coordinator must generate fresh, source-bound `.10` review packets with real artifact identities and retain all seven HOLD statuses until actual independent validation.
+
+## Canonical .10 HOLD packets
+
+- **Real NVDA/VoiceOver AT** — `qa/ACCESSIBILITY_REAL_AT_2026.10.11.10.md` (HOLD; staging-only, source/artifact not yet bound)
+- **Physical PWA devices** — `qa/PWA_PHYSICAL_DEVICE_2026.10.11.10.md` (HOLD; staging-only, source/artifact not yet bound)
+- **Windows signing/distribution** — `certification/WINDOWS_SIGNING_READINESS_2026.10.11.10.md` (HOLD; staging-only, source/artifact not yet bound)
+- **Book SME** — `qa/BOOK_SME_REVIEW_2026.10.11.10.md` (HOLD; staging-only, source/artifact not yet bound)
+- **Curriculum SME** — `qa/CURRICULUM_SME_REVIEW_2026.10.11.10.md` (HOLD; staging-only, source/artifact not yet bound)
+- **Learner pilot** — `qa/LEARNER_PILOT_2026.10.11.10.md` (HOLD; staging-only, source/artifact not yet bound)
+- **NZQA/provider** — `qa/NZQA_EXTERNAL_VALIDATION_2026.10.11.10.md` (HOLD; staging-only, source/artifact not yet bound)
