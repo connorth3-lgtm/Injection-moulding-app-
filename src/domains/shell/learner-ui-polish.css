@@ -1321,3 +1321,18 @@ html.mm-reference-photo-ready .mm-reference-photo>.mm-reference-picture{
   opacity:.96;filter:contrast(1.06) saturate(.86);
   display:block!important;pointer-events:none;
 }
+
+/* One title, one catalogue and one expand affordance per result. Native
+   <details> behaviour stays intact for touch, keyboard and assistive tech. */
+.mm-reference-layout #materials .mm-material-all-index-head .mm-reference-materials-title{
+  margin:0 0 6px!important;
+}
+.mm-reference-layout #materials .mm-material-index-card > .mm-material-index-summary{
+  list-style:none!important;
+}
+.mm-reference-layout #materials .mm-material-index-card > .mm-material-index-summary::-webkit-details-marker{
+  display:none!important;
+}
+.mm-reference-layout #materials .mm-material-index-card > .mm-material-index-summary::marker{
+  content:""!important;
+}
