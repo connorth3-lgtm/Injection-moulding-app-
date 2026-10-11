@@ -1016,7 +1016,7 @@ html.mm-reference-layout{
   background:linear-gradient(90deg,rgba(3,15,27,.75),transparent 93%);
 }
 .mm-reference-layout #dashboard .mm-today-focus{
-  margin-top:0!important;border-radius:13px!important;
+  margin-top:0!important;border-radius:20px!important;
   background:linear-gradient(145deg,#05365b,#064678)!important;
   border-color:#008bff!important;padding:12px!important;
 }
@@ -1136,7 +1136,12 @@ html.mm-reference-layout{
   font-size:15px!important;min-height:49px!important;padding:12px!important;
 }
 .mm-reference-layout #materials .mm-material-all-results{
-  display:grid!important;grid-template-columns:1fr!important;gap:7px!important;
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;
+}
+@media(max-width:700px){
+  .mm-reference-layout #materials .mm-material-all-results{
+    grid-template-columns:1fr!important;
+  }
 }
 .mm-reference-layout #materials .mm-material-index-card{
   background:#071f2d!important;border:1px solid #24485b!important;

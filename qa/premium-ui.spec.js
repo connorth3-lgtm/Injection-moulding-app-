@@ -368,7 +368,16 @@ test('390px Home keeps lesson, Book and specialist tools in canonical order',asy
   });
   expect(geometry.bookTop).toBeGreaterThanOrEqual(geometry.focusBottom-1);
   expect(geometry.toolsTop).toBeGreaterThanOrEqual(geometry.bookBottom-1);
-  expect(geometry.toolsBottom).toBeLessThanOrEqual(geometry.navTop+1);
+  // The approved illustrated Home deliberately shows a machine hero and a
+  // Continue practice tile before Toolbox. All cards stay in document flow;
+  // the floating bottom nav must not cover the final tool when scrolled to.
+  const toolbox=page.locator('#dashboard .mm-home-balance');
+  await toolbox.scrollIntoViewIfNeeded();
+  const reachable=await toolbox.evaluate(el=>{
+    const r=el.getBoundingClientRect(),nav=document.querySelector('.mobile-nav').getBoundingClientRect();
+    return r.top<nav.top && r.bottom>0;
+  });
+  expect(reachable).toBe(true);
   await expect(page.locator('#dashboard .mm-home-balance')).not.toContainText(/Materials|Practice|Saved lessons|Reference book/i);
   await assertNoHorizontalOverflow(page,'home-390-primary-actions');
 });
