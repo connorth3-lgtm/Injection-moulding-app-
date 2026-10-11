@@ -158,7 +158,9 @@ test('Home is one primary lesson decision plus Book resume and two non-duplicate
       focusBottom:focus.bottom,bookTop:book.top,bookBottom:book.bottom,toolsTop:tools.top,navTop:nav.top
     };
   });
-  expect(phone.actions).toBe(2);
+  // Compact phone Toolbox intentionally uses one column for two retained actions.
+  expect(phone.actions).toBe(1);
+  await expect(tools.locator('[data-mm-home-action]')).toHaveCount(2);
   expect(phone.focused).toBe('mould-master');
   expect(phone.stable).toBe('1');
   expect(phone.bookTop).toBeGreaterThanOrEqual(phone.focusBottom-1);
