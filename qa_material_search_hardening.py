@@ -43,6 +43,6 @@ index_code=text('src/domains/materials/material-search-index.js')
 for marker in ['searchAllPage','referenceDocuments','labDocuments','exactGradeDocument','window.MM_REFERENCE_DATA','window.MM_MATERIAL_BEHAVIOUR_LABS','window.MM_MATERIAL_PRACTICE_EXTENSIONS']:
     need(marker in index_code,f'unified material index marker missing: {marker}')
 unified=text(unified_spec)
-for marker in ['maximum moisture content','hydrolysis','formaldehyde','reference-material','material-lab','Show exact grade']:
+for marker in ['maximum moisture content','hydrolysis','formaldehyde','reference-material','material-lab','data-mm-unified-grade','Primary sources']:
     need(marker in unified,f'unified material search regression marker missing: {marker}')
 print('MouldMaster material search hardening QA passed (race-safe exact catalog plus unified published-material index, accessible pagination, Chromium/WebKit regression, offline core)')
