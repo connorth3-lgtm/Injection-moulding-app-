@@ -58,7 +58,9 @@ test('Book reading hides Mission Control strip without losing learner workspace'
   await page.locator('#nav').getByRole('button',{name:'Home'}).click();
   await expect(page.locator('#dashboard')).toBeVisible();
   await expect(mission).toBeHidden();
-  await expect(page.locator('#pageSubtitle')).toBeVisible();
+  // The Home intro copy is deliberately removed; the actual lesson card remains.
+  await expect(page.locator('#pageSubtitle')).toBeHidden();
+  await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
   await page.evaluate(()=>switchView('scenarios'));
   await expect(mission).toBeVisible();
 });
