@@ -544,7 +544,7 @@ function materials(){
     if(sourced&&!sourced.querySelector('.mm-reference-diagrams')){
       const figure=document.createElement('figure');figure.className='mm-reference-diagrams';
       figure.append(
-        picture('materials','Illustrative polymer pellets from selected design',9),
+        picture('materials','Illustrative polymer pellets from selected design',materialTile),
         picture('process','Conceptual molecule diagram from selected design',31),
         picture('mould','Illustrative moulded component from selected design',32)
       );
