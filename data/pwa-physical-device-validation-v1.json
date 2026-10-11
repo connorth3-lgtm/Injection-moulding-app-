@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Release 2026.10.11.10 is a new unverified UI candidate with NO retained exact-head artifact or physical-device validation yet. The previous 2026.10.11.9 retained candidate and artifact remain historical software automation evidence only. Real iOS/iPadOS and Android install, audible Read Aloud, offline/restart/reboot, storage-pressure, zoom and navigation tests remain pending. Real assistive-technology is separately governed by data/accessibility-real-at-validation-v1.json. Independent SME/provider, Windows signing, production root and machine-control remain HOLD.",
+  "boundary": "Release 2026.10.11.10 is a new unverified UI candidate with NO retained exact-head artifact or physical-device validation yet. The previous 2026.10.11.9 retained candidate and artifact remain historical software automation evidence only. Testing on physical iOS/iPadOS and Android devices for install, audible Read Aloud, offline/restart/reboot, storage-pressure, zoom and navigation tests remain pending. Real assistive-technology is separately governed by data/accessibility-real-at-validation-v1.json. Independent SME/provider, Windows signing, production root and machine-control remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
