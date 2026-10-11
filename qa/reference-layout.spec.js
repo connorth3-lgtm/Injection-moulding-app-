@@ -38,6 +38,11 @@ for(const width of [320,360,390,412]){
     await expect(converter.locator('output')).toHaveText('1 MPa');
     await converter.getByRole('button',{name:'Close'}).click();
     await expect(converter).toBeHidden();
+    await page.locator('#dashboard .mm-reference-home-practice').click();
+    await expect(page.locator('#scenarios')).toHaveAttribute('data-mm-hub-mode','detail');
+    await expect(page.locator('#scenarios .mm-hub-detail-back')).toBeVisible();
+    await page.evaluate(()=>switchView('dashboard'));
+    await expect(page.locator('#dashboard .mm-reference-home-hero')).toBeVisible();
     await expect(page.locator('#mmMissionControl .mm-mc-context')).toHaveCount(0);
     await expect(page.locator('#mmMissionControl .mm-mc-timeline')).toHaveCount(0);
 
