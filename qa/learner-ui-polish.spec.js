@@ -42,6 +42,35 @@ test('Materials deep link is intentional but does not become the Home relaunch r
   expect(new URL(page.url()).searchParams.has('view')).toBe(false);
 });
 
+test('five mobile tabs start with actionable content instead of oversized introductions',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  const nav=page.locator('.mobile-nav');
+  await expect(page.locator('body[data-mm-view="dashboard"] .topbar>div:first-child')).toBeHidden();
+  await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
+  await expect(page.locator('#searchBtn')).toBeVisible();
+
+  await nav.getByRole('button',{name:'Learn'}).click();
+  await expect(page.locator('#path .mm-learn-hub>.mm-primary-hub-head')).toBeHidden();
+  await expect(page.locator('#path .mm-hub-continue [data-mm-hub-action="lesson"]')).toBeVisible();
+
+  await nav.getByRole('button',{name:'Materials'}).click();
+  await expect(page.locator('#materials #mmExactMaterialCatalog .mm-exact-head')).toBeHidden();
+  await expect(page.locator('#materials .mm-material-all-index-head')).toBeHidden();
+  await expect(page.locator('#materials [data-mm-all-material-query]')).toBeVisible();
+  await expect(page.locator('#materials [data-mm-catalogue-boundary]')).toBeAttached();
+  await expect(page.locator('#materials #mmMaterialsPageIntro [data-mm-material-jump="compare"]')).toBeVisible();
+  await expect(page.locator('#materials .mm-exact-grade').first()).toBeAttached();
+
+  await nav.getByRole('button',{name:'Practice'}).click();
+  await expect(page.locator('#scenarios .mm-practice-hub>.mm-primary-hub-head')).toBeHidden();
+  await expect(page.locator('#scenarios [data-mm-hub-action="troubleshooting"]')).toBeVisible();
+
+  await nav.getByRole('button',{name:'More'}).click();
+  await expect(page.locator('#modal .modal-card')).toBeVisible();
+  await expect(page.locator('#modal .quick-action').first()).toBeVisible();
+});
+
 test('Home is one primary lesson decision plus Book resume and two non-duplicate specialist tools',async({page})=>{
   await page.setViewportSize({width:810,height:1080});
   await openApp(page);
