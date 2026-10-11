@@ -1,17 +1,13 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.11.9",
+  "release": "2026.10.11.10",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.11.9.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.11.10.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 379,
-  "candidate": {
-    "release": "2026.10.11.9",
-    "sourceSha": "d572ee13d8f2f09139882ff1a271e855284f6e3c",
-    "runtimeFingerprint": "sha256:97d9cdf902986357f9446796478525f1b61c0f37162387a042121c310ee4d3c7"
-  },
-  "boundary": "Release 2026.10.11.9 technically verified candidate d572ee13d8f2f09139882ff1a271e855284f6e3c does not establish NZQA/provider G1–G8 approval, competence certification, accreditation or assessment authority; all eight provider gates remain pending-external.",
+  "candidate": null,
+  "boundary": "2026.10.11.10 is a draft UI redesign with NO retained exact-source candidate or independent provider G1–G8 approval. Every provider gate remains pending-external. Historical .9 source/fingerprint are not current evidence. No competence, accreditation, assessment or automatic machine-control authority is granted.",
   "requiredGates": [
     {
       "id": "G1-provider",
@@ -57,8 +53,8 @@
   "evidence": null,
   "validationRule": "Validated requires genuine provider-owned evidence for all eight gates, public-safe evidence references, exact release/candidate binding, and separate reviewed promotion of the canonical external-validation status. Automation must not manufacture completion.",
   "previousCandidate": {
-    "release": "2026.10.11.8",
-    "sourceSha": "ed8645bb137cea5449251dc562e51100ed113592",
-    "runtimeFingerprint": "sha256:2b6b69065d4f2f1a466e05495a1e1272337386651760ac5448017a8621d706c9"
+    "release": "2026.10.11.9",
+    "sourceSha": "d572ee13d8f2f09139882ff1a271e855284f6e3c",
+    "runtimeFingerprint": "sha256:97d9cdf902986357f9446796478525f1b61c0f37162387a042121c310ee4d3c7"
   }
 }
