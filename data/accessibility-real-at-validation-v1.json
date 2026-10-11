@@ -306,7 +306,7 @@
     "textZoom200Percent": true
   },
   "previousCandidate": {
-    "release": "2026.10.11.8",
+    "release": "2026.10.11.7",
     "sourceSha": "efcacc7256846abd7d1dbe1fae2d21e5d88acb92",
     "runtimeFingerprint": "sha256:77d528e2a527adcbf7e436e0669355ac9a4df24c8c2eae2982c68387156bd374"
   },
