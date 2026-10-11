@@ -527,10 +527,14 @@ function materialArt(label){
 function materials(){
   const root=document.getElementById('materials'),catalogue=root?.querySelector('[data-mm-all-material-index]');
   if(!root||!catalogue)return;
-  if(!root.querySelector('.mm-reference-materials-title')){
-    const h=document.createElement('h1');h.className='mm-reference-materials-title';h.textContent='Materials';
-    catalogue.before(h);
+  // One visible heading belongs to the consolidated catalogue itself.
+  // Never add a separate Materials hero above the catalogue.
+  const heading=catalogue.querySelector('.mm-material-all-index-head h3');
+  if(heading){
+    heading.textContent='Materials';
+    heading.classList.add('mm-reference-materials-title');
   }
+  root.querySelectorAll(':scope > .mm-reference-materials-title').forEach(extra=>extra.remove());
   catalogue.querySelectorAll('.mm-material-index-card:not([data-mm-reference-illustrated])').forEach(card=>{
     card.dataset.mmReferenceIllustrated='1';
     const sum=card.querySelector('.mm-material-index-summary');
