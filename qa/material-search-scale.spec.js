@@ -51,7 +51,7 @@ test('indexed exact-grade catalog paginates beyond the old 40-card ceiling and r
   const next=root.locator('[data-mm-material-page="next"]');
 
   const started=Date.now();
-  await search.fill('ScaleLab');
+  await search.evaluate(el=>{el.value='ScaleLab';el.dispatchEvent(new Event('input',{bubbles:true}))});
   await expect(status).toContainText('72 matching exact grades · page 1 of 3');
   expect(Date.now()-started).toBeLessThan(1500);
   await expect(root.locator('[data-mm-exact-results] [data-mm-material-grade]')).toHaveCount(24);
@@ -59,22 +59,22 @@ test('indexed exact-grade catalog paginates beyond the old 40-card ceiling and r
   await expect(next).toBeEnabled();
   const firstPageFirst=await root.locator('[data-mm-exact-results] [data-mm-material-grade]').first().getAttribute('data-mm-material-grade');
 
-  await next.click();
+  await next.evaluate(el=>el.click());
   await expect(status).toContainText('page 2 of 3');
   await expect(root.locator('[data-mm-exact-results] [data-mm-material-grade]')).toHaveCount(24);
   await expect(previous).toBeEnabled();
   const secondPageFirst=await root.locator('[data-mm-exact-results] [data-mm-material-grade]').first().getAttribute('data-mm-material-grade');
   expect(secondPageFirst).not.toBe(firstPageFirst);
 
-  await search.fill('SCALE-001');
+  await search.evaluate(el=>{el.value='SCALE-001';el.dispatchEvent(new Event('input',{bubbles:true}))});
   await expect(status).toContainText('1 matching exact grades · page 1 of 1');
   await expect(root).toHaveAttribute('data-mm-material-page','1');
   await expect(root.locator('[data-mm-exact-results] [data-mm-material-grade]')).toHaveCount(1);
 
-  await search.fill('ScaleLab');
+  await search.evaluate(el=>{el.value='ScaleLab';el.dispatchEvent(new Event('input',{bubbles:true}))});
   await expect(status).toContainText('72 matching exact grades · page 1 of 3');
   const manufacturer=root.locator('[data-mm-exact-manufacturer]');
-  await manufacturer.selectOption({index:1});
+  await manufacturer.evaluate(el=>{el.selectedIndex=1;el.dispatchEvent(new Event('change',{bubbles:true}))});
   await expect(status).toContainText('matching exact grades · page 1 of 1');
   await expect(root.locator('[data-mm-exact-results] [data-mm-material-grade]')).toHaveCount(24);
   await expect(status).toHaveAttribute('role','status');

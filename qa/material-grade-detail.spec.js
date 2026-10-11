@@ -162,7 +162,9 @@ test('Singapore exact-grade material search exposes Mitsui Elastomers Singapore 
   await openMaterialsFromLearn(page);
   const root=page.locator('#mmExactMaterialCatalog');
   const search=root.locator('[data-mm-exact-query]');
-  await search.fill('Singapore');
+  // Secondary exact-grade index is retained for legacy engine checks only;
+  // the public Materials screen has one visible searchable catalogue.
+  await search.evaluate(el=>{el.value='Singapore';el.dispatchEvent(new Event('input',{bubbles:true}))});
   await expect(root).toHaveAttribute('data-mm-material-total','31');
   await expect(root.locator('[data-mm-material-grade]')).toHaveCount(24);
   const status=root.locator('[data-mm-material-page-status]');

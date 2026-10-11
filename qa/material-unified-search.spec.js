@@ -83,12 +83,12 @@ test('Materials displays all results with filters collapsed and clears selection
   await expect(filters.locator('[data-mm-all-material-region]')).toBeHidden();
   const firstResult=results.locator('[data-mm-material-index-result]').first();
   await expect(firstResult).not.toHaveAttribute('open','');
-  await expect(firstResult.locator('summary')).toBeVisible();
+  await expect(firstResult.locator(':scope > summary')).toBeVisible();
   await expect(firstResult.locator('.mm-material-index-detail')).toBeHidden();
-  await firstResult.locator('summary').click();
+  await firstResult.locator(':scope > summary').click();
   await expect(firstResult).toHaveAttribute('open','');
   await expect(firstResult.locator('.mm-material-index-detail')).toBeVisible();
-  await firstResult.locator('summary').click();
+  await firstResult.locator(':scope > summary').click();
   await expect(firstResult.locator('.mm-material-index-detail')).toBeHidden();
 
   await filters.locator('summary').click();
@@ -186,7 +186,9 @@ test('unified search ignores a stale hidden exact-grade manufacturer selection',
   const options=await legacy.locator('option').evaluateAll(nodes=>nodes.map(node=>({value:node.value,label:node.textContent||''})));
   const other=options.find(opt=>opt.value&&!/LG Chem/i.test(opt.label));
   expect(other).toBeTruthy();
-  await legacy.selectOption(other.value);
+  // Legacy grade filters remain mounted but hidden. Change them programmatically
+  // to prove they cannot silently constrain the sole visible index.
+  await legacy.evaluate((el,value)=>{el.value=value;el.dispatchEvent(new Event('change',{bubbles:true}))},other.value);
   await root.locator('[data-mm-all-material-query]').fill('GP5206F');
   const result=root.locator('[data-mm-material-index-result="grade:mat-lgchem-lupoy-gp5206f"]');
   await expect(result).toBeVisible();

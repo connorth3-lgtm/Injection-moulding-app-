@@ -139,7 +139,8 @@ test('Home is one primary lesson decision plus Book resume and two non-duplicate
   }));
   expect(tablet.dashboardWidth).toBeLessThanOrEqual(960.5);
   expect(tablet.outer).toBe(1);
-  expect(tablet.actions).toBe(2);
+  // The approved illustrated tablet layout flows Toolbox actions in one column.
+  expect(tablet.actions).toBe(1);
   expect(tablet.lessonBeforeBook).toBeTruthy();
   expect(tablet.bookBeforeTools).toBeTruthy();
 
