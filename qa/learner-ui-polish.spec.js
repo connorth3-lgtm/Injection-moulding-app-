@@ -59,8 +59,10 @@ test('five mobile tabs start with actionable content instead of oversized introd
   await expect(page.locator('#materials .mm-material-all-index-head h3')).toBeVisible();
   await expect(page.locator('#materials [data-mm-all-material-query]')).toBeVisible();
   await expect(page.locator('#materials [data-mm-catalogue-boundary]')).toBeAttached();
-  await expect(page.locator('#materials #mmMaterialsPageIntro [data-mm-material-jump="compare"]')).toBeVisible();
-  await expect(page.locator('#materials .mm-exact-grade').first()).toBeAttached();
+  await expect(page.locator('#materials #mmMaterialsPageIntro')).toBeVisible();
+  await expect(page.locator('#materials [data-mm-all-material-results] [data-mm-material-index-result]').first()).toBeVisible();
+  await expect(page.locator('#materials [data-mm-exact-query]')).toBeHidden();
+  await expect(page.locator('#materials [data-mm-exact-results]')).toBeHidden();
 
   await nav.getByRole('button',{name:'Practice'}).click();
   await expect(page.locator('#scenarios .mm-practice-hub>.mm-primary-hub-head')).toBeHidden();
@@ -604,9 +606,9 @@ test('Every primary tab omits Mission Control strip while mission data and keybo
   await expect(page.locator('#scenarios')).toBeVisible();
   await expect(mission.locator('.mm-mc-context')).toBeHidden();
   await expect(mission.locator('.mm-mc-timeline')).toBeHidden();
-  await expect(mission.locator('[data-mm-mc-stage]')).toHaveCount(8);
-  await expect(mission.locator('.mm-mc-context')).toContainText('Electric press');
-  await expect(mission.locator('.mm-mc-context')).toContainText('VA-01');
+  await expect(mission.locator('[data-mm-mc-stage]')).toHaveCount(0);
+  await expect(mission.locator('.mm-mc-context')).toHaveCount(0);
+  await expect(mission.locator('.mm-mc-timeline')).toHaveCount(0);
   expect((await page.evaluate(()=>window.MM_MISSION_CONTROL.state())).mission.context.caseId).toBe('VA-01');
   await page.evaluate(()=>switchView('dashboard'));
   await expect(mission.locator('.mm-mc-context')).toBeHidden();
