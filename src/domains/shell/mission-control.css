@@ -210,3 +210,18 @@ body[data-mm-mission-mode="engineer"] .mm-mc-context{grid-template-columns:minma
 @media(forced-colors:active){
   .mm-mc-context,.mm-mc-timeline,.mm-mc-drawer-panel,.mm-mc-palette,.mm-mc-brand,.mm-mc-context-items>div{forced-color-adjust:auto}
 }
+
+
+/* Home is a learning dashboard, not a persistent mission workspace.
+   Remove the Mission Control header, machine/mould/material/part/case grid,
+   evidence counter and stage tracker, plus the redundant Home mission card.
+   Only presentation is hidden: scoped mission evidence, keyboard command
+   search, and the full mission controls on Learn/Practice remain unchanged.
+   The root/overlay hosts MUST stay mounted for learner isolation and keyboard
+   access even when the Home route is active. */
+body[data-mm-view="dashboard"] #mmMissionControl > .mm-mc-context,
+body[data-mm-view="dashboard"] #mmMissionControl > .mm-mc-timeline,
+body[data-mm-view="dashboard"] #dashboard .mm-dashboard-slot[data-mm-dashboard-section="mission-control"],
+body[data-mm-view="dashboard"] #dashboard .mm-mc-home-card {
+  display:none!important
+}

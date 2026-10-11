@@ -38,6 +38,23 @@ need('does not alter the canonical 120 lessons' in js,'canonical-path boundary m
 need('function resolvedStatus(l)' in js and 'function evidenceStateMarkup(l)' in js,'specialist renderer must resolve registry-aligned evidence state directly')
 need("status:'Registry-controlled'" in js,'specialist extension must declare registry-controlled evidence state')
 need('learner completion never changes evidence status' in js,'completion/evidence separation missing from learner boundary')
+# S13-S20 are an independent completion store, not an exception to canonical
+# learner isolation. Preserve ownership-verified migration and fail-closed writes.
+for marker in [
+    'const scope=window.MM_LEARNER_SCOPE',
+    'scope.registerStoragePrefix(GAP_STORAGE_PREFIX)',
+    'scope.storageKey(`${base}::`,scope.token())',
+    'if(!scope?.token||!scope?.storageKey||!scope?.registerStoragePrefix)return null',
+    'let registeredLearnerScope=null',
+    'localStorage.getItem(scoped)',
+    'localStorage.setItem(scoped,payload)',
+    'mm:specialist-progress-change',
+    'isComplete:gapDone',
+    'baseOpen();return openGapLesson(id)'
+]:
+    need(marker in js,f'evidence-gap canonical learner scope / first-open contract missing: {marker}')
+need('function learnerToken()' not in js and '2166136261' not in js,
+     'evidence-gap progress must not reintroduce ambiguous 32-bit learner hashes')
 need('eight provisional evidence areas' not in js,'dashboard must not claim all registry-tracked lessons remain provisional after promotions')
 need('eight evidence-gap lessons are explicitly provisional' not in js,'learning boundary must not falsely downgrade promoted mechanisms')
 

@@ -7,9 +7,8 @@ if(typeof renderPath!=='function'||typeof renderScenarios!=='function'||typeof s
   return;
 }
 
-const VERSION='2026.09.24.1';
+const VERSION='2026.10.10.4';
 const PRACTICE_ROTATION_KEY='mm_practice_scenario_rotation_v1';
-const originalRenderPath=renderPath;
 const originalRenderScenarios=renderScenarios;
 
 /* Hub presentation lives in external CSS because the app CSP intentionally
@@ -172,7 +171,7 @@ function openDaily(){
 function openPicker(kind){
   if(typeof openModal!=='function')return;
   if(kind==='learn-resources'){
-    openModal(`<span class="eyebrow">Learn</span><h2>Learning resources</h2><p class="muted">Choose the resource you need.</p><div class="mm-hub-picker-grid"><button type="button" data-mm-hub-action="visuals"><b>Animated visuals</b><small>See core cycle and process ideas visually.</small></button><button type="button" data-mm-hub-action="glossary"><b>Glossary</b><small>Look up injection moulding terms in plain language.</small></button><button type="button" data-mm-hub-action="saved"><b>Saved lessons</b><small>Return to lessons you bookmarked.</small></button></div>`);
+    openModal(`<span class="eyebrow">Learn</span><h2>Learning resources</h2><p class="muted">Choose the resource you need.</p><div class="mm-hub-picker-grid"><button type="button" data-mm-hub-action="visuals"><b>Animated visuals</b><small>See core cycle and process ideas visually.</small></button><button type="button" data-mm-hub-action="glossary"><b>Glossary</b><small>Look up injection moulding terms in plain language.</small></button></div>`);
   }else if(kind==='troubleshooting'){
     openModal(`<span class="eyebrow">Practice</span><h2>Troubleshooting</h2><p class="muted">Choose how you want to work the problem.</p><div class="mm-hub-picker-grid"><button type="button" data-mm-hub-action="mould-master"><b>Mould Master</b><small>Build an evidence-led troubleshooting case from a real defect.</small></button><button type="button" data-mm-hub-action="diagnostic-workbench"><b>Defect Finder + Troubleshooting Coach</b><small>One guided workspace: symptoms, competing mechanisms, measured evidence and review-ready learning notes.</small></button><button type="button" data-mm-hub-action="diagnostic-labs"><b>Diagnostic labs</b><small>Practise evidence-first fault isolation.</small></button></div>`);
   }else if(kind==='labs'){
@@ -379,13 +378,13 @@ window.MM_DIAGNOSTIC_WORKBENCH=Object.freeze({
 function runAction(action){
   switch(action){
     case 'lesson': return openCurrentLesson();
-    case 'path-detail': return openLearningPathDetail();
+    case 'path-detail': return lessonCatalog.open({filter:'all'});
     case 'materials': return switchView('materials');
-    case 'specialist': return safeOpen('MM_SPECIALIST_CURRICULUM');
+    case 'specialist': return lessonCatalog.open({filter:'specialist'});
     case 'learn-resources': return openPicker('learn-resources');
     case 'visuals': closePicker(); return switchView('visuals');
     case 'glossary': closePicker(); return switchView('glossary');
-    case 'saved': closePicker(); return switchView('profile');
+    case 'saved': closePicker(); return lessonCatalog.open({filter:'saved'});
     case 'daily': return openDaily();
     case 'troubleshooting': return dxOpen();
     case 'mould-master': closePicker(); return safeOpen('MM_MOULD_MASTER_WORKSPACE',()=>switchView('defects'));
@@ -405,21 +404,182 @@ function runAction(action){
   }
 }
 
+function createLessonCatalog(){
+  const state={query:'',filter:'all'};
+  const core=()=>Array.isArray(D?.lessons)?D.lessons:[];
+  const courses=()=>Array.isArray(D?.courses)?D.courses:[];
+  const specialists=()=>Array.isArray(window.MM_SPECIALIST_CURRICULUM?.lessons)?window.MM_SPECIALIST_CURRICULUM.lessons:[];
+  const materialLessons=()=>typeof MAT_LESSONS!=='undefined'&&Array.isArray(MAT_LESSONS)?MAT_LESSONS:[];
+  const materialChapters=()=>typeof MATERIALS!=='undefined'&&Array.isArray(MATERIALS.chapters)?MATERIALS.chapters:[];
+  const materialDone=id=>Array.isArray(user?.materialScience?.completed)&&user.materialScience.completed.includes(id);
+  const done=id=>Array.isArray(user?.completed)&&user.completed.includes(id);
+  const saved=id=>Array.isArray(user?.bookmarks)&&user.bookmarks.includes(id);
+  // Specialist completion is owned by the independent specialist curriculum.
+  // Read through its API rather than reimplementing learner storage or credit.
+  const specialistDone=id=>window.MM_SPECIALIST_CURRICULUM?.isComplete?.(id)===true||window.MM_SPECIALIST_EVIDENCE_GAPS?.isComplete?.(id)===true;
+  function markup(){
+    const active=Number(user?.currentLesson);
+    const groups=courses().map(course=>{
+      const lessons=(course.lessonIds||[]).map(id=>core().find(l=>l.id===id)).filter(Boolean);
+      const complete=lessons.filter(l=>done(l.id)).length;
+      return `<details class="mm-catalog-group" data-mm-catalog-group ${course.lessonIds?.includes(active)?'open':''}>
+        <summary><span class="mm-catalog-group-name">${course.id}. ${esc(course.name)}</span><span class="mm-catalog-group-meta">${complete}/${lessons.length} · ${esc(course.level||'Core')}</span></summary>
+        <div class="mm-catalog-rows">${lessons.map(l=>`<button type="button" class="mm-catalog-lesson${l.id===active?' is-current':''}" data-mm-lesson-id="${l.id}" data-mm-catalog-item data-mm-catalog-type="core" data-mm-catalog-done="${done(l.id)?'1':'0'}" data-mm-catalog-saved="${saved(l.id)?'1':'0'}" data-mm-catalog-text="${esc([l.title,l.summary,course.name,l.level,l.id].join(' ').toLowerCase())}" ${l.id===active?'aria-current="step"':''}><span class="mm-catalog-num">${l.id}</span><span class="mm-catalog-title">${esc(l.title)}</span><span class="mm-catalog-state">${done(l.id)?'✓ Done':saved(l.id)?'★ Saved':l.id===active?'Reading':'Open'}</span></button>`).join('')}</div></details>`;
+    }).join('');
+    const materialGroups=materialChapters().map(chapter=>{
+      const lessons=materialLessons().filter(l=>l.chapter===chapter.id);
+      const completed=lessons.filter(l=>materialDone(l.id)).length;
+      return `<details class="mm-catalog-group" data-mm-catalog-group>
+        <summary><span class="mm-catalog-group-name">Material science · ${chapter.id}. ${esc(chapter.name)}</span><span class="mm-catalog-group-meta">${completed}/${lessons.length} · separate progress</span></summary>
+        <div class="mm-catalog-rows">${lessons.map(l=>`<button type="button" class="mm-catalog-lesson" data-mm-material-id="${l.id}" data-mm-catalog-item data-mm-catalog-type="material" data-mm-catalog-done="${materialDone(l.id)?'1':'0'}" data-mm-catalog-saved="0" data-mm-catalog-text="${esc([l.title,l.intro,l.chapterName,l.level,l.id].join(' ').toLowerCase())}"><span class="mm-catalog-num">M${l.id}</span><span class="mm-catalog-title">${esc(l.title)}</span><span class="mm-catalog-state">${materialDone(l.id)?'✓ Done':'Open'}</span></button>`).join('')}</div></details>`;
+    }).join('');
+    const extra=specialists();
+    const extraGroup=extra.length?`<details class="mm-catalog-group" data-mm-catalog-group><summary><span class="mm-catalog-group-name">Optional specialist lessons</span><span class="mm-catalog-group-meta">${extra.length} extras · separate progress</span></summary><div class="mm-catalog-rows">${extra.map(l=>`<button type="button" class="mm-catalog-lesson" data-mm-specialist-id="${esc(l.id)}" data-mm-catalog-item data-mm-catalog-type="specialist" data-mm-catalog-done="${specialistDone(l.id)?'1':'0'}" data-mm-catalog-text="${esc([l.id,l.title,l.level].join(' ').toLowerCase())}"><span class="mm-catalog-num">${esc(l.id)}</span><span class="mm-catalog-title">${esc(l.title)}</span><span class="mm-catalog-state">${specialistDone(l.id)?'✓ Done':'Open'}</span></button>`).join('')}</div></details>`:'';
+    return `<section class="mm-all-lessons" data-mm-lesson-catalog aria-label="All lessons">
+      <div class="mm-catalog-head"><h2>All lessons</h2><p>${core().length} core · ${materialLessons().length} material science · ${extra.length} optional specialist lessons. All in one library, with separate progress.</p></div>
+      <div class="mm-catalog-controls"><label><span>Find a lesson</span><input type="search" autocomplete="off" placeholder="Search topics or lessons" data-mm-catalog-query value="${esc(state.query)}"></label><label><span>Show</span><select data-mm-catalog-filter><option value="all"${state.filter==='all'?' selected':''}>All lessons</option><option value="todo"${state.filter==='todo'?' selected':''}>Not finished</option><option value="done"${state.filter==='done'?' selected':''}>Completed</option><option value="saved"${state.filter==='saved'?' selected':''}>Saved</option><option value="material"${state.filter==='material'?' selected':''}>Material science</option><option value="specialist"${state.filter==='specialist'?' selected':''}>Specialist</option></select></label></div>
+      <p class="mm-catalog-results" aria-live="polite" data-mm-catalog-count></p>
+      <div class="mm-catalog-groups">${groups}${materialGroups}${extraGroup}</div>
+      <p class="mm-catalog-empty" data-mm-catalog-empty hidden>No matching lessons. Try another search or filter.</p>
+    </section>`;
+  }
+  function update(root){
+    const box=root?.querySelector('[data-mm-lesson-catalog]');if(!box)return;
+    let count=0;
+    const query=state.query.trim().toLowerCase();
+    const filtering=!!query||state.filter!=='all';
+    const wasFiltering=box.dataset.mmCatalogFiltering==='1';
+    // A temporary search should not leave all thirteen courses expanded.
+    // Restore the learner's pre-search open sections when the filter clears.
+    if(filtering&&!wasFiltering){
+      box.querySelectorAll('[data-mm-catalog-group]').forEach(group=>{
+        group.dataset.mmCatalogPrevOpen=group.open?'1':'0';
+      });
+    }
+    box.querySelectorAll('[data-mm-catalog-group]').forEach(group=>{
+      let visible=0;
+      group.querySelectorAll('[data-mm-catalog-item]').forEach(button=>{
+        const type=button.dataset.mmCatalogType;
+        const matchesStatus=state.filter==='all'||
+          (state.filter==='specialist'?type==='specialist':
+           state.filter==='material'?type==='material':
+           state.filter==='saved'?type==='core'&&button.dataset.mmCatalogSaved==='1':
+           (type==='core'||type==='material'||type==='specialist')&&
+            (state.filter==='todo'?button.dataset.mmCatalogDone==='0':button.dataset.mmCatalogDone==='1'));
+        const matchesText=!query||(button.dataset.mmCatalogText||'').includes(query);
+        button.hidden=!(matchesStatus&&matchesText);
+        if(!button.hidden)visible++;
+      });
+      group.hidden=visible===0;
+      if(filtering)group.open=visible>0;
+      else if(wasFiltering&&group.dataset.mmCatalogPrevOpen!==undefined){
+        group.open=group.dataset.mmCatalogPrevOpen==='1';
+        delete group.dataset.mmCatalogPrevOpen;
+      }
+      count+=visible;
+    });
+    box.dataset.mmCatalogFiltering=filtering?'1':'0';
+    const counter=box.querySelector('[data-mm-catalog-count]');
+    if(counter)counter.textContent=`${count} lesson${count===1?'':'s'} shown`;
+    const empty=box.querySelector('[data-mm-catalog-empty]');if(empty)empty.hidden=count>0;
+  }
+  function refreshSpecialistProgress(){
+    const root=document.getElementById('path'),box=root?.querySelector('[data-mm-lesson-catalog]');
+    if(!box)return;
+    box.querySelectorAll('[data-mm-specialist-id]').forEach(button=>{
+      const completed=specialistDone(button.dataset.mmSpecialistId);
+      button.dataset.mmCatalogDone=completed?'1':'0';
+      const status=button.querySelector('.mm-catalog-state');
+      if(status)status.textContent=completed?'✓ Done':'Open';
+    });
+    update(root);
+  }
+  function attach(root){
+    const box=root?.querySelector('[data-mm-lesson-catalog]');if(!box||box.dataset.mmCatalogBound==='1')return;
+    box.dataset.mmCatalogBound='1';
+    const input=box.querySelector('[data-mm-catalog-query]');
+    const filter=box.querySelector('[data-mm-catalog-filter]');
+    input?.addEventListener('input',()=>{state.query=input.value;update(root)});
+    filter?.addEventListener('change',()=>{state.filter=filter.value;update(root)});
+    box.addEventListener('click',event=>{
+      const button=event.target.closest('button[data-mm-lesson-id],button[data-mm-specialist-id],button[data-mm-material-id]');
+      if(!button||!box.contains(button))return;
+      if(button.dataset.mmSpecialistId){
+        const id=button.dataset.mmSpecialistId;
+        if(specialists().some(l=>l.id===id)){
+          // S13–S20 use the independent evidence-gap reader; the base
+          // specialist reader intentionally knows only S01–S12.
+          if(window.MM_SPECIALIST_EVIDENCE_GAPS?.lessons?.some(l=>l.id===id))window.mmSpecialistGapLesson?.(id);
+          else window.mmSpecialistLesson?.(id);
+        }
+        return;
+      }
+      if(button.dataset.mmMaterialId){
+        const materialId=Number(button.dataset.mmMaterialId);
+        if(Number.isInteger(materialId)&&materialLessons().some(l=>l.id===materialId)&&typeof openMaterialLesson==='function'){
+          if(typeof materialTab!=='undefined')materialTab='learn';
+          switchView('materials');
+          openMaterialLesson(materialId);
+          mountMaterialReader();
+        }
+        return;
+      }
+      const id=Number(button.dataset.mmLessonId);
+      if(!Number.isInteger(id)||!core().some(l=>l.id===id))return;
+      user.currentLesson=id;persist();openCurrentLesson();
+    });
+    update(root);
+  }
+  function open(options={}){
+    const allowed=['all','todo','done','saved','material','specialist'];
+    state.filter=allowed.includes(options.filter)?options.filter:'all';
+    state.query=typeof options.query==='string'?options.query.trim().slice(0,120):'';
+    window.mmSpecialistClose?.();
+    if(typeof materialTab!=='undefined'&&materialTab==='learn')materialTab='explorer';
+    if(typeof currentView==='string'&&currentView==='path')renderLearnHub();
+    else switchView('path');
+    requestAnimationFrame(()=>{
+      const library=document.querySelector('#path .mm-all-lessons');
+      library?.scrollIntoView?.({block:'start',behavior:'auto'});
+    });
+  }
+  function mountLesson(){
+    const root=document.getElementById('lesson');
+    if(!root||!root.querySelector('.lesson-body'))return;
+    root.querySelector('.mm-lessons-drawer')?.remove();
+    root.querySelector('.lesson-side')?.remove();
+    root.classList.add('mm-unified-lesson');
+    const layout=root.querySelector('.lesson-layout');
+    if(layout)layout.classList.add('mm-one-column-lesson');
+    if(root.querySelector('.mm-lesson-catalog-return'))return;
+    const nav=document.createElement('nav');
+    nav.className='mm-lesson-catalog-return';
+    nav.setAttribute('aria-label','Return to the lesson library');
+    const button=document.createElement('button');
+    button.type='button';
+    button.className='ghost';
+    button.textContent='← All lessons';
+    button.addEventListener('click',()=>open({filter:'all'}));
+    nav.appendChild(button);
+    root.insertBefore(nav,layout||root.firstChild);
+  }
+  return Object.freeze({markup,attach,mountLesson,open,refreshSpecialistProgress,counts:()=>({core:core().length,material:materialLessons().length,specialist:specialists().length})});
+}
+const lessonCatalog=createLessonCatalog();
+window.addEventListener('mm:specialist-progress-change',()=>lessonCatalog.refreshSpecialistProgress());
+// The manifest installs learner scope after the classic-script curriculum pack.
+// Refresh any Learn page opened during bootstrap once owned progress can migrate.
+window.addEventListener('mm:domains-ready',()=>lessonCatalog.refreshSpecialistProgress());
+
 function learnHubMarkup(){
   const c=lessonContext();
-  const saved=Array.isArray(user?.bookmarks)?user.bookmarks.length:0;
-  const specialistCount=window.MM_SPECIALIST_CURRICULUM?.lessons?.length||0;
-  const totalTracks=D?.courses?.length||12;
   const lesson=c?.lesson;const course=c?.course;
-  const lessonLine=course?`${esc(course.name)} · Lesson ${(c.position||0)+1} of ${course.lessonIds.length}`:'Your current learning path';
+  const lessonLine=course?`${esc(course.name)} · Lesson ${(c.position||0)+1} of ${course.lessonIds.length}`:'Your current lesson';
   return `<div class="mm-primary-hub mm-learn-hub">
-    <header class="mm-primary-hub-head"><span class="eyebrow">Learn</span><h1>What do you want to learn?</h1><p>Continue your current lesson or choose a learning area.</p></header>
+    <header class="mm-primary-hub-head"><span class="eyebrow">Learn</span><h1>Lessons</h1><p>Core, material science and specialist lessons in one place.</p></header>
     <section class="mm-hub-continue mm-primary-hub-card" aria-label="Continue learning"><div class="mm-hub-continue-copy"><span class="eyebrow">Continue</span><h2>${esc(lesson?.title||'Your next lesson')}</h2><p>${lessonLine}</p><div class="mm-hub-progress"><div class="mini-bar" aria-hidden="true"><span style="width:${c?.overall||0}%"></span></div><strong>${c?.overall||0}% complete</strong></div></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="lesson">Continue lesson →</button></section>
-    <section class="mm-hub-section"><div class="mm-hub-section-head"><h2>Choose a learning area</h2><p>Open only what you need.</p></div><div class="mm-hub-grid">
-      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="path-detail"><span class="eyebrow">Core learning</span><b>Learning path</b><small>All ${totalTracks} tracks and lessons.</small><span class="mm-hub-tile-action">Browse learning path →</span></button>
-      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="specialist"><span class="eyebrow">Advanced</span><b>Specialist learning</b><small>${specialistCount?`${specialistCount} optional advanced lessons.`:'Optional advanced lessons.'}</small><span class="mm-hub-tile-action">Open specialist learning →</span></button>
-      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="learn-resources"><span class="eyebrow">Resources</span><b>Visuals, glossary & saved</b><small>Diagrams, terms and ${saved} saved lesson${saved===1?'':'s'}.</small><span class="mm-hub-tile-action">Open learning resources →</span></button>
-    </div></section>
+    ${lessonCatalog.markup()}
+    <div class="mm-catalog-extra"><button class="secondary" type="button" data-mm-hub-action="learn-resources">Visuals & glossary →</button></div>
   </div>`;
 }
 
@@ -538,13 +698,13 @@ function practiceHubMarkup(){
     <section class="mm-hub-assessment" aria-label="Question Centre"><div class="mm-hub-assessment-copy"><b>Question Centre</b><small>Formal checks, scenarios, diagnostic questions, material questions and measured-evidence decisions are gathered here. Lesson exercises and Book self-checks stay beside their teaching.</small></div><button class="secondary" type="button" data-mm-hub-action="question-centre">Open all question modes →</button></section>
   </div>`;
 }
-function renderLearnHub(){const root=document.getElementById('path');if(!root)return;root.dataset.mmHubMode='hub';root.innerHTML=learnHubMarkup();bind(root)}
+function renderLearnHub(){const root=document.getElementById('path');if(!root)return;root.dataset.mmHubMode='hub';root.innerHTML=learnHubMarkup();bind(root);lessonCatalog.attach(root)}
 function renderPracticeHub(){const root=document.getElementById('scenarios');if(!root)return;root.dataset.mmHubMode='hub';root.innerHTML=practiceHubMarkup();bind(root);window.MM_APP_SHELL?.navigation?.setCustomActive?.('')}
 function detailBack(root,label,back){
   const bar=document.createElement('div');bar.className='mm-hub-detail-back';bar.innerHTML=`<button type="button">← ${esc(back)}</button><span>${esc(label)}</span>`;
   bar.querySelector('button').addEventListener('click',()=>back==='Learn'?renderLearnHub():renderPracticeHub());root.prepend(bar);
 }
-function openLearningPathDetail(){const root=document.getElementById('path');if(!root)return;root.dataset.mmHubMode='detail';originalRenderPath();detailBack(root,'Full learning pathway','Learn');window.scrollTo({top:0,behavior:'smooth'})}
+function openLearningPathDetail(){return lessonCatalog.open({filter:'all'})}
 function openScenarioDetail(index=null){
   const root=document.getElementById('scenarios');if(!root)return;
   root.dataset.mmHubMode='detail';
@@ -560,18 +720,112 @@ function openScenarioDetail(index=null){
 
 renderPath=renderLearnHub;window.renderPath=renderLearnHub;
 renderScenarios=renderPracticeHub;window.renderScenarios=renderPracticeHub;
+window.MM_APP_SHELL?.events?.onRender?.('lesson',()=>requestAnimationFrame(lessonCatalog.mountLesson));
+window.MM_LESSON_CATALOG=Object.freeze({version:'2026.10.10.3',counts:lessonCatalog.counts,open:lessonCatalog.open});
+// Material Science authored lessons share Learn's single catalogue. Their
+// own reader and local completion state are preserved, while the Materials
+// workspace remains available for reference, labs and knowledge checks.
+const materialView=document.getElementById('materials');
+const originalSwitchMaterialTab=typeof switchMaterialTab==='function'?switchMaterialTab:null;
+if(typeof materialTab!=='undefined'&&materialTab==='learn')materialTab='explorer';
+function mountMaterialReader(){
+  if(!materialView)return;
+  const legacy=materialView.querySelector('.mat-chapters');
+  if(legacy&&originalSwitchMaterialTab){originalSwitchMaterialTab('explorer');return}
+  const layout=materialView.querySelector('.mat-learn-layout');
+  if(layout){
+    layout.classList.add('mm-one-column-material');
+    layout.querySelector('.mat-side')?.remove();
+    if(!materialView.querySelector('.mm-lesson-catalog-return')){
+      const nav=document.createElement('nav');
+      nav.className='mm-lesson-catalog-return';
+      nav.setAttribute('aria-label','Return to all material lessons');
+      const back=document.createElement('button');
+      back.type='button';back.className='ghost';
+      back.textContent='← All material lessons';
+      back.addEventListener('click',()=>lessonCatalog.open({filter:'material'}));
+      nav.appendChild(back);
+      layout.before(nav);
+    }
+  }
+  materialView.querySelectorAll('.mat-tabs button').forEach(button=>{
+    if(!/switchMaterialTab\(['"]learn['"]\)/.test(button.getAttribute('data-mm-onclick')||''))return;
+    button.textContent='All lessons';
+    button.setAttribute('data-mm-onclick','mmHubOpenMaterialLessons()');
+    button.classList.remove('active');
+  });
+}
+window.mmHubOpenMaterialLessons=()=>lessonCatalog.open({filter:'material'});
+if(originalSwitchMaterialTab){
+  window.switchMaterialTab=function(tab){
+    if(tab==='learn')return lessonCatalog.open({filter:'material'});
+    return originalSwitchMaterialTab(tab);
+  };
+}
+if(materialView)new MutationObserver(mountMaterialReader).observe(materialView,{childList:true,subtree:true});
+mountMaterialReader();
+
+// The specialist reader stays independent, but all specialist *browsing*
+// goes through Learn. Old launches (Home, More, specialist reader Back) land
+// on the same filtered catalogue instead of opening a second lesson grid.
+if(window.MM_SPECIALIST_CURRICULUM){
+  window.MM_SPECIALIST_CURRICULUM.open=()=>lessonCatalog.open({filter:'specialist'});
+  window.mmSpecialistOpen=window.MM_SPECIALIST_CURRICULUM.open;
+}
 window.mmHubOpenLesson=openCurrentLesson;
 window.mmHubOpenLearningPath=openLearningPathDetail;
 window.mmHubOpenScenarios=openScenarioDetail;
 
 function normalizeHomeActions(){
   const root=document.getElementById('dashboard');if(!root)return;
+  root.querySelectorAll('#mmSpecialistDashboard').forEach(el=>el.remove());
   root.querySelectorAll('button[data-mm-onclick]').forEach(button=>{
     const action=button.getAttribute('data-mm-onclick')||'';
     if(/switchView\((['"])lesson\1\)/.test(action))button.setAttribute('data-mm-onclick','mmHubOpenLesson()');
   });
 }
 window.MM_APP_SHELL?.events?.onRender?.('dashboard',()=>requestAnimationFrame(normalizeHomeActions));
+// Dashboard slots may recompose outside normal render calls (Book resume,
+// domain readiness). Never let that recreate a second specialist lesson list.
+const homeRoot=document.getElementById('dashboard');
+if(homeRoot)new MutationObserver(()=>{
+  homeRoot.querySelectorAll('#mmSpecialistDashboard').forEach(el=>el.remove());
+}).observe(homeRoot,{childList:true,subtree:true});
+
+function removeProfileLessonGrid(){
+  const root=document.getElementById('profile');if(!root)return;
+  for(const heading of root.querySelectorAll(':scope > .section-head')){
+    if(!/^Saved lessons$/i.test(heading.querySelector('h2,h3')?.textContent?.trim()||''))continue;
+    const list=heading.nextElementSibling;
+    if(list?.matches('.grid'))list.remove();
+    heading.remove();
+  }
+}
+const profileRoot=document.getElementById('profile');
+if(profileRoot)new MutationObserver(removeProfileLessonGrid).observe(profileRoot,{childList:true});
+removeProfileLessonGrid();
+
+// Global search still finds defects. It no longer duplicates a second
+// searchable list of lessons: a single contextual link opens Learn filtered.
+document.addEventListener('input',event=>{
+  if(event.target?.id!=='globalSearch')return;
+  const query=String(event.target.value||'').trim();
+  requestAnimationFrame(()=>{
+    const modal=document.getElementById('modal');
+    const results=modal?.querySelector('#searchResults');
+    if(!results||!modal.contains(event.target))return;
+    const matches=results.querySelectorAll('button.search-item[data-mm-onclick*="goLesson("]');
+    matches.forEach(el=>el.remove());
+    results.querySelector('[data-mm-global-lesson-library]')?.remove();
+    if(query.length<2)return;
+    const link=document.createElement('button');
+    link.type='button';link.className='search-item';
+    link.dataset.mmGlobalLessonLibrary='1';
+    link.textContent='Search all lessons in Learn →';
+    link.addEventListener('click',()=>{window.closeModal?.();lessonCatalog.open({query})});
+    results.prepend(link);
+  });
+});
 
 function configureMore(){
   const items=window.MM_APP_SHELL?.navigation?.items;

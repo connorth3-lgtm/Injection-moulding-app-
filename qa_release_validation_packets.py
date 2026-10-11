@@ -134,6 +134,11 @@ finally:
     if PAGES.exists():
         shutil.rmtree(PAGES)
 
+# A matching runtime fingerprint in JSON is insufficient when a tester packet
+# still points to a stale build artifact. Inspect all seven visible banners.
+from tools.hold_candidate_packet_integrity import validate_packets
+need(validate_packets(ROOT, ledger) == 7, "external HOLD packet provenance coverage incomplete")
+
 for name in ("accessibility", "pwaPhysicalDevices", "windowsDistribution", "bookSme", "curriculumSme", "learnerOutcomes", "nzqaProvider"):
     need((ledger.get(name) or {}).get("status") == "hold", f"{name} must remain HOLD until genuine external evidence exists")
 

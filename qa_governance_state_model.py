@@ -3,6 +3,7 @@ from __future__ import annotations
 from copy import deepcopy
 from pathlib import Path
 import json
+import re
 
 from qa_curriculum_semantic_review import canonical_lessons as canonical_curriculum_lessons, validate_contract as validate_curriculum_semantics
 
@@ -85,6 +86,46 @@ def validate_public_snapshot(snapshot: dict, *, book_sme: dict, curriculum_sme: 
         raise AssertionError("NZQA/provider validation cannot outrun genuine provider/consent/moderation evidence")
     if snapshot.get("productionAuthority") != "advisory-only":
         raise AssertionError("public MouldMaster production authority must remain advisory-only without separate controlled-site authorization")
+
+
+def validate_assurance_candidate_identity(assurance: dict, candidate: dict, release: str) -> None:
+    """Bind passing provenance to *labelled exact* current-release identities.
+
+    Merely finding an ID as a substring let artifact 123 pass within 91234,
+    or allowed an old candidate to be described as passing if the true SHA
+    appeared elsewhere in a disclaimer.
+    """
+    static = assurance["staticContract"]
+    browser = assurance["behavioralBrowser"]
+    assert static.get("status") == browser.get("status") == "pass", "assurance must stay release-bound"
+    assert isinstance(candidate, dict), "passing assurance requires a real retained candidate"
+
+    def exact_token(text: str, label: str, pattern: str, expected: object) -> None:
+        matches = re.findall(pattern, text)
+        assert matches == [str(expected)], (
+            f"{label} must identify exactly one current source/candidate value: {matches!r}"
+        )
+
+    # Each status layer must identify the *actual* source and release, with
+    # no second candidate/source or ambiguous active value.
+    for label, row in (("static", static), ("browser", browser)):
+        meaning = str(row.get("meaning") or "")
+        exact_token(meaning, f"{label} release",
+                    r"\brelease\s+([0-9]{4}\.[0-9]{2}\.[0-9]{2}\.[0-9]+)\b", release)
+        exact_token(meaning, f"{label} source",
+                    r"\bsource\s+([0-9a-f]{40})(?![0-9a-f])", candidate["sourceSha"])
+
+    static_text = str(static.get("meaning") or "")
+    exact_token(static_text, "static producer run",
+                r"\brun\s+([1-9][0-9]*)(?![0-9])", candidate["candidateRunId"])
+    exact_token(static_text, "static artifact",
+                r"\bartifact\s+([1-9][0-9]*)(?![0-9])", candidate["artifactId"])
+    exact_token(static_text, "static runtime fingerprint",
+                r"\bfingerprint\s+(sha256:[0-9a-f]{64})(?![0-9a-f])",
+                candidate["runtimeFingerprint"])
+    assert assurance["externalHumanDevice"].get("status") == "hold", (
+        "external human/device assurance is never a CI approval"
+    )
 
 
 def expect_failure(label: str, fn) -> None:
@@ -205,12 +246,36 @@ def main() -> None:
         assert assurance["staticContract"].get("status") == "fail"
         assert assurance["behavioralBrowser"].get("status") == "fail"
         assert external["candidateStatus"].startswith("HOLD")
-        assert external["webCandidate"] is None
-        assert external["pwaPhysicalDevices"]["currentCandidate"] is None
+        # An authentically retained artifact may exist while its producing
+        # workflow is incomplete/failed. That is *not* successful technical
+        # validation: the external release gate must still fail closed.
+        # Preserve its exact audit identity without falsely deleting it or
+        # recording a pass. Both canonical and PWA contract candidates must
+        # agree or both be genuinely unbound.
+        staged = external["webCandidate"]
+        if staged is None:
+            assert external["pwaPhysicalDevices"]["currentCandidate"] is None
+        else:
+            assert isinstance(staged, dict)
+            assert staged.get("release") == version.get("web_release")
+            assert isinstance(staged.get("sourceSha"), str) and len(staged["sourceSha"]) == 40
+            assert str(staged.get("runtimeFingerprint", "")).startswith("sha256:")
+            assert isinstance(staged.get("candidateRunId"), int) and staged["candidateRunId"] > 0
+            assert isinstance(staged.get("artifactId"), int) and staged["artifactId"] > 0
+            assert external["pwaPhysicalDevices"]["currentCandidate"] == staged
+            assert "producer" in external["candidateStatus"].lower()
+            assert "success" in external["candidateStatus"].lower()
     else:
         assert external["technicalAutomation"]["status"] == "pass"
         assert assurance["staticContract"].get("status") == "pass"
         assert assurance["behavioralBrowser"].get("status") == "pass"
+        validate_assurance_candidate_identity(assurance, external["webCandidate"], current_release)
+        stale = deepcopy(assurance)
+        stale["staticContract"]["meaning"] = stale["staticContract"]["meaning"].replace(str(external["webCandidate"]["sourceSha"]), "0" * 40)
+        expect_failure("stale static source cannot pass", lambda: validate_assurance_candidate_identity(stale, external["webCandidate"], current_release))
+        stale = deepcopy(assurance)
+        stale["behavioralBrowser"]["meaning"] = stale["behavioralBrowser"]["meaning"].replace(current_release, "2026.10.11.1")
+        expect_failure("stale browser release cannot pass", lambda: validate_assurance_candidate_identity(stale, external["webCandidate"], current_release))
     assert assurance["externalHumanDevice"].get("status") == "hold"
 
     assert external["productionUse"]["status"] == "advisory-only"

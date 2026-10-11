@@ -79,7 +79,14 @@
   function installStableViewEntry(){
     const R=window.MM_RUNTIME_V2;
     if(!R?.before||!R?.after||window.__MM_STABLE_VIEW_ENTRY__)return false;
-    R.before('switchView',()=>{const active=document.activeElement;if(active&&typeof active.blur==='function')active.blur();settleViewTop()});
+    R.before('switchView',id=>{
+      // The exit bookmark must be recorded BEFORE settleViewTop resets the
+      // document scroll root. Shell onViewChange fires after that reset.
+      window.MMBook?.prepareRouteExit?.(id);
+      const active=document.activeElement;
+      if(active&&typeof active.blur==='function')active.blur();
+      settleViewTop();
+    });
     R.after('switchView',()=>{settleViewTop();requestAnimationFrame(()=>requestAnimationFrame(settleViewTop))});
     window.__MM_STABLE_VIEW_ENTRY__='2026.09.24.5-runtime-hook';
     return true;

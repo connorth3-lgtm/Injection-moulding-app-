@@ -108,7 +108,9 @@ jobs:
       - name: Release and assessment integrity
         run: python qa_release.py
       - name: Learner-runtime release identity bump
-        run: python qa_runtime_release_bump.py
+        run: |
+          python -m unittest -v qa_runtime_release_diff_test.py
+          python qa_runtime_release_bump.py
       - name: Runtime shell hardening
         run: python qa_runtime_hardening.py
       - name: Release and documentation coherence
@@ -142,6 +144,11 @@ jobs:
         run: |
           python tools/verify_release_external_validation.py
           python qa_release_validation_packets.py
+          python -m unittest discover -s tests -p 'test_hold_candidate_packet_integrity.py' -v
+          python -m unittest discover -s tests -p 'test_governance_candidate_identity.py' -v
+          python -m unittest discover -s tests -p 'test_preview_release_branch_policy.py' -v
+          python -m unittest discover -s tests -p 'test_external_live_tracker_binding.py' -v
+          python -m unittest discover -s tests -p 'test_rebind_external_hold_candidate.py' -v
       - name: All-folder tracked-file, JSON and immutable-workflow hygiene
         run: |
           python tools/repository_hygiene.py --report qa-artifacts/repository-hygiene.json
@@ -157,6 +164,8 @@ jobs:
         run: python tools/verify_main_ruleset.py --repository "${{ github.repository }}"
       - name: Pages publisher governance integrity
         run: python qa_pages_single_publisher.py
+      - name: Main-promotion readiness gates preflight on preview
+        run: python qa_preview_release_readiness_coverage.py
       - name: Release supply-chain governance integrity
         run: python qa_release_supply_chain.py
       - name: Preview/main exact-push assurance contract
@@ -184,6 +193,8 @@ jobs:
           python qa_book_derived_governance.py
           python qa_book_release_integration.py
           python qa_book_reader_architecture.py
+          python qa_book_first_read_audit.py --check --report-json qa-artifacts/book-first-read-editorial-queue.json
+          python -m unittest discover -s tests -p 'test_book_first_read_review_queue.py' -v
           python qa_book_resume.py
           python qa_book_engineering_diagrams.py
           python qa_book_worked_cases_next_release.py

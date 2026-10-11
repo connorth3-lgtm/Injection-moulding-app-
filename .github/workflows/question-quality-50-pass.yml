@@ -24,7 +24,18 @@ jobs:
           fetch-depth: 0
       - name: Classify question-quality impact
         id: impact
-        run: python3 tools/ci_impact.py --governed-candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Full 50-pass assessment evidence is mandatory for a protected-main
+          # promotion, even when the source previously passed preview QA. The
+          # retained candidate baseline only proves preview's smaller delta.
+          if [ "${{ github.event_name }}" = "pull_request" ] && [ "${{ github.base_ref }}" = "main" ]; then
+            echo "Protected-main promotion requires fresh complete Question Quality 50-Pass proof."
+            echo "question_quality=true" >> "$GITHUB_OUTPUT"
+          else
+            python3 tools/ci_impact.py --governed-candidate
+          fi
       - name: Skip unrelated update
         if: steps.impact.outputs.question_quality != 'true'
         run: |

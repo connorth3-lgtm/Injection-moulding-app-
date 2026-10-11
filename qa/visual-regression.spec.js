@@ -231,6 +231,11 @@ for(const viewport of manifest.viewports){
     await openApp(baseline,BASELINE_URL,learnerId);
 
     try{
+      // Audit every surface in the group before reporting drift. Short-circuiting
+      // at the first mismatch hides the other candidate/baseline/diff images and
+      // leaves an incomplete human-review packet. The approved 12-pixel gate
+      // remains strict: ANY recorded mismatch fails the whole test group.
+      const drifts=[];
       for(const surface of surfaces){
         await prepareSurface(candidate,surface);
         await prepareSurface(baseline,surface);
@@ -241,8 +246,11 @@ for(const viewport of manifest.viewports){
         const candidateBuffer=await capture(candidate,candidatePath,surface);
         const baselineBuffer=await capture(baseline,baselinePath,surface);
         const diffPixels=await compare(baselineBuffer,candidateBuffer,diffPath);
-        expect(diffPixels,`${stem} drifted by ${diffPixels} pixels from ${manifest.release} @ ${manifest.commit}`).toBeLessThanOrEqual(manifest.maxDiffPixels);
+        if(diffPixels>manifest.maxDiffPixels)drifts.push({surface:stem,diffPixels});
       }
+      expect(drifts,drifts.map(({surface,diffPixels})=>
+        `${surface} drifted by ${diffPixels} pixels from ${manifest.release} @ ${manifest.commit}`
+      ).join('\n')).toEqual([]);
     }finally{
       await candidateContext.close();
       await baselineContext.close();

@@ -301,18 +301,10 @@ async function renderResults(root){
   host.innerHTML=rows.map(renderGrade).join('');
   host.querySelectorAll('[data-mm-exact-case]').forEach(b=>b.addEventListener('click',async()=>{b.disabled=true;try{await startMouldMasterCase(b.dataset.mmExactCase)}catch(err){console.error('[MouldMaster materials]',err);b.disabled=false}}));
 }
-function materialsStatsMarkup(c){
-  const s=c?.statistics||{};
-  return `<div class="mm-material-page-stats" aria-label="Material library coverage">
-    <div class="mm-material-page-stat"><b>${s.exactGrades??(c?.grades||[]).length}</b><span>Published exact grades</span></div>
-    <div class="mm-material-page-stat"><b>${s.manufacturers??(c?.manufacturers||[]).length}</b><span>Manufacturers</span></div>
-    <div class="mm-material-page-stat"><b>${s.polymerFamilies??0}</b><span>Polymer families</span></div>
-    <div class="mm-material-page-stat"><b>${s.comparisonReadyObservations??0}</b><span>Comparison-ready observations</span></div>
-  </div>`
-}
-function pageIntro(c){
-  const el=document.createElement('section');el.id='mmMaterialsPageIntro';el.className='mm-material-page-hero';
-  el.innerHTML=`<div><span class="eyebrow">Materials</span><h2>Material library & engineering evidence</h2><p>Search exact grades, inspect the source evidence, compare matching observations and move a grade into Mould Master when you need to investigate.</p></div>${materialsStatsMarkup(c)}<nav class="mm-material-page-nav" aria-label="Materials page sections"><button type="button" class="secondary" data-mm-material-jump="catalog">Grade library</button><button type="button" class="secondary" data-mm-material-jump="compare">Compare grades</button><button type="button" class="secondary" data-mm-material-jump="change">Change assistant</button><button type="button" class="ghost" data-mm-material-jump="learning">Material learning</button></nav>`;
+function pageIntro(){
+  const el=document.createElement('section');el.id='mmMaterialsPageIntro';el.className='mm-material-page-tools';
+  el.setAttribute('aria-label','Material library & engineering evidence tools');
+  el.innerHTML='<nav class="mm-material-page-nav" aria-label="Material tools"><button type="button" class="secondary" data-mm-material-jump="compare">Compare grades</button><button type="button" class="secondary" data-mm-material-jump="change">Change assistant</button><button type="button" class="ghost" data-mm-material-jump="learning">Material learning</button></nav>';
   return el
 }
 function learningIntro(){
@@ -340,7 +332,7 @@ async function installPanel(){
   const section=document.createElement('section');section.id='mmExactMaterialCatalog';section.className='card mm-exact-materials';
   const gradeOptions=(c.grades||[]).map(g=>`<option value="${esc(g.id)}">${esc(displayName(g))}</option>`).join('');
   section.innerHTML=`<div class="mm-exact-head"><div><span class="eyebrow">Grade library</span><h2>Exact commercial grades</h2><p>Search source-backed grades and inspect the evidence behind each value.</p><p class="mm-material-coverage" data-mm-material-coverage>${c.statistics?`${c.statistics.manufacturers} manufacturers · ${c.statistics.countries} countries · ${c.statistics.polymerFamilies} polymer families · ${c.statistics.comparisonReadyObservations} comparison-ready observations`:''}</p></div><span class="pill">${(c.statistics?.exactGrades??(c.grades||[]).length)} published</span></div><div class="mm-exact-search"><label>Search manufacturer, brand or grade<input data-mm-exact-query placeholder="e.g. manufacturer, PC/ABS, grade"></label><label>Manufacturer<select data-mm-exact-manufacturer><option value="">All manufacturers</option>${(c.manufacturers||[]).map(m=>`<option value="${esc(m.id)}">${esc(m.name)}</option>`).join('')}</select></label></div><div class="mm-exact-results" data-mm-exact-results></div><div class="mm-material-decision" id="mmMaterialCompare" data-mm-material-decision><div class="mm-material-decision-head"><span class="eyebrow">Compare</span><h3>Compare exact-grade evidence</h3><p>See only condition-matched evidence side by side. No ranking or production settings.</p></div><div class="mm-material-compare-controls"><label>Grade A<select data-mm-compare-a><option value="">Select exact grade</option>${gradeOptions}</select></label><label>Grade B<select data-mm-compare-b><option value="">Select exact grade</option>${gradeOptions}</select></label><button type="button" class="secondary" data-mm-run-material-compare disabled aria-disabled="true">Compare evidence</button></div><div data-mm-material-compare-result aria-live="polite"><p class="mm-exact-empty">Select two exact grades to review their evidence side by side.</p></div><div class="mm-material-change-assistant" id="mmMaterialChange" data-mm-material-change-assistant><span class="eyebrow">Grade change</span><h3>Plan an evidence-led material change</h3><p>See published differences, evidence gaps and the checks still needed before approval.</p><div class="mm-material-compare-controls"><label>Current grade<select data-mm-change-before><option value="">Select current exact grade</option>${gradeOptions}</select></label><label>Proposed grade<select data-mm-change-after><option value="">Select proposed exact grade</option>${gradeOptions}</select></label><button type="button" class="secondary" data-mm-run-material-change disabled aria-disabled="true">Build delta report</button></div><div data-mm-material-change-result aria-live="polite"><p class="mm-exact-empty">Select two exact grades to build a sourced change report.</p></div></div>${renderMaterialChangeChecklist()}</div><div class="mm-exact-boundary">Only validated exact-grade records are shown here. Property values retain their test context; processing observations retain their primary source and are not universal production recipes.</div>`;
-  const intro=pageIntro(c),learning=learningIntro();
+  const intro=pageIntro(),learning=learningIntro();
   host.prepend(section);host.prepend(intro);section.insertAdjacentElement('afterend',learning);
   host.dataset.mmMaterialsPage='dedicated';
   const navLabel=document.querySelector('#nav button[data-view="materials"] span');if(navLabel)navLabel.textContent='Materials';

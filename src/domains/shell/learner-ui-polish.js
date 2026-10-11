@@ -1,11 +1,11 @@
-/* MouldMaster learner UI polish — 2026.10.09.6
+/* MouldMaster learner UI polish — 2026.10.11.3
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.10.09.6';
+const VERSION='2026.10.11.3';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -124,6 +124,23 @@ function syncBookDisclosure(){
         note.textContent='Evidence verification does not replace current machine, mould, material, hot-runner, workplace or independent-human review requirements.';
         body.appendChild(note);
       }
+    }
+    // The book's original title and introduction duplicate the app-level Book
+    // heading before the reader reaches chapter one, especially on phones.
+    // Keep the actual nodes and content, but make that optional orientation
+    // readable on demand. No technical text, status or listening action moves.
+    const introHeading=hero.querySelector(':scope > h2');
+    const introText=[...hero.querySelectorAll(':scope > p')].find(p=>
+      !p.matches('[data-mm-book-summary],[data-mm-book-sme-status]'));
+    if(introHeading&&introText&&!hero.querySelector('.mm-book-intro-details')){
+      const introDetails=document.createElement('details');
+      introDetails.className='mm-book-intro-details';
+      const introSummary=document.createElement('summary');
+      introSummary.textContent='About this Book';
+      introDetails.append(introSummary,introHeading,introText);
+      const governance=hero.querySelector('.mm-book-governance');
+      if(governance)governance.insertAdjacentElement('beforebegin',introDetails);
+      else hero.appendChild(introDetails);
     }
     const listen=hero.querySelector('[data-mm-book-mode="listen"]');
     if(listen&&!listen.disabled&&listen.textContent!=='Listen to Book')listen.textContent='Listen to Book';

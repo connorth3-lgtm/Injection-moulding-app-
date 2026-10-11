@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.09.5",
-  "commit": "fa27bd16525f8cb216654ea524649a3a37a3195c",
+  "release": "2026.10.11.3",
+  "commit": "cf68994c400814a0b529b955a94f196b2b1449be",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,6 +41,6 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "Comparison-only reference for the proposed 2026.10.09.5 UI-timing release. This new immutable ref intentionally points to the exact owner-approved 2026.10.09.4 baseline source fa27bd16525f8cb216654ea524649a3a37a3195c; it is not an independent approval of the new runtime. The Chromium visual maxDiffPixels=12 remains unchanged, and any material layout difference must be reviewed by a human before promotion. Real iPad, 200% zoom, NVDA/VoiceOver, physical PWA, SME, learner outcomes, NZQA/provider and production authorizations all remain HOLD.",
-  "ref": "visual-baseline/2026.10.09.5"
+  "policy": "On 2026-10-11 the owner expressly authorized promoting the current 2026.10.11.3 learner UI to the hosted non-production /preview/ path via PR #603, conditional on protected-main CI and production HOLD. The prior approved Chromium baseline 2026.10.10.1 (source 52160745ac51cbc9dae108315adc27fc1a3f5910) detected Material Atlas changes on four viewports; the exact failed run 38096152752 generated complete candidate/old/diff images (artifact 11685789264). Technical screenshot inspection confirmed the Material Atlas adds an explicit current-availability/processing-suitability-not-verified warning for a source-currentness-unknown grade, shifting later text without changing other shown UI elements. This record does not claim the owner independently opened/inspected every screenshot. The new pinned QA comparison source is exact preview SHA cf68994c400814a0b529b955a94f196b2b1449be and newly created visual-baseline/2026.10.11.3; the previous baseline ref remains preserved. Strict maxDiffPixels=12, viewport/surface coverage and fail-closed main visual gating are unchanged. Independent real devices, 200% zoom, NVDA/VoiceOver, Book/curriculum SME, learner studies, NZQA/provider G1-G8, Windows signing, production/root and machine-control authority remain HOLD. Protected-main /preview/ deployment still requires all exact-head CI to pass.",
+  "ref": "visual-baseline/2026.10.11.3"
 }

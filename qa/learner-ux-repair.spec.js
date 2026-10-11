@@ -176,12 +176,15 @@ test('open mobile modal stays above the fixed primary navigation',async({page})=
   await open(page);
   await page.locator('.mobile-nav > button').filter({hasText:/More/i}).click();
   await expect(page.locator('#modal')).not.toHaveClass(/hidden/);
-  const layers=await page.evaluate(()=>{
+  // Wait for the shell's async stylesheet to settle; the modal must still
+  // outrank mobile navigation at the end of the actual rendered state.
+  await expect.poll(async()=>page.evaluate(()=>{
     const modal=document.getElementById('modal');
     const nav=document.querySelector('.mobile-nav');
-    return {modal:Number.parseInt(getComputedStyle(modal).zIndex,10)||0,nav:Number.parseInt(getComputedStyle(nav).zIndex,10)||0};
-  });
-  expect(layers.modal).toBeGreaterThan(layers.nav);
+    const modalZ=Number.parseInt(getComputedStyle(modal).zIndex,10)||0;
+    const navZ=Number.parseInt(getComputedStyle(nav).zIndex,10)||0;
+    return modalZ>navZ;
+  }),{timeout:10000}).toBe(true);
 });
 
 test('learner UX repair preserves the governed selector and adds audited rotation',async({page})=>{

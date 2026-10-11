@@ -343,7 +343,12 @@ function renderLessonCanonical(){
   curriculumLessonAdapter();syncActiveState();requestAnimationFrame(syncActiveState);emitRender('lesson')
 }
 function switchViewCanonical(id){
-  activeCustomId='';const r=captured.switchView.apply(this,arguments);syncActiveState();requestAnimationFrame(syncActiveState);emitView(id);return r
+  // Runtime V2's BEFORE hook already saves Book before invoking this handler.
+  activeCustomId='';const r=captured.switchView.apply(this,arguments);
+  // Cancel the core's smooth scroll on workspace changes: the previous page can
+  // remain clipped while short views render, particularly on mobile WebKit.
+  window.scrollTo({top:0,behavior:'instant'});
+  syncActiveState();requestAnimationFrame(syncActiveState);emitView(id);return r
 }
 function bindCanonicalCoreNavigation(){
   const nav=document.getElementById('nav');if(!nav||nav.dataset.mmCanonicalCoreNav==='1')return;
@@ -353,6 +358,8 @@ function bindCanonicalCoreNavigation(){
     if(!button||button.closest('#nav')!==nav||button.disabled)return;
     const view=button.dataset.view;if(!view)return;
     event.preventDefault();event.stopImmediatePropagation();
+    // Direct primary-nav clicks bypass Runtime V2's before-hook dispatcher.
+    window.MMBook?.prepareRouteExit?.(view);
     switchViewCanonical(view);
   },true);
 }

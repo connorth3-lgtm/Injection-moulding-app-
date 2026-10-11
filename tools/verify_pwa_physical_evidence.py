@@ -70,9 +70,16 @@ def sha256(path: Path) -> str:
 def runtime_fingerprint(artifact: Path) -> str:
     if not artifact.is_dir():
         fail(f"Pages artifact directory not found: {artifact}")
+    # Fingerprints must never follow filesystem symlinks. A linked file could
+    # pull host/private bytes into the public artifact digest; a linked
+    # directory can also evade complete release coverage checks.
+    entries = list(artifact.rglob("*"))
+    linked = [path for path in entries if path.is_symlink()]
+    if linked:
+        fail(f"public runtime artifact contains symlink: {linked[0].relative_to(artifact)}")
     files = [
         path
-        for path in artifact.rglob("*")
+        for path in entries
         if path.is_file() and path.relative_to(artifact).as_posix() not in EXCLUDED
     ]
     if len(files) < 20:

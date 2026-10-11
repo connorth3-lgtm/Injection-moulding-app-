@@ -30,7 +30,7 @@ test('Book distinguishes source evidence review from independent human validatio
   const expectedState=contract.status==='validated'&&contract.approved===contract.total?'validated':'pending';
   await expect(view.locator('[data-mm-book-sme-status]')).toHaveText(`Independent human SME review: ${expectedState} — ${contract.approved}/${contract.total} governed modules approved. Reader chapters are derived groupings, not separate SME approvals.`);
 
-  const readerButtons=view.locator('section.card > div > button[data-mm-book-reader-chapter-open]');
+  const readerButtons=view.locator('.mm-book-toc > li > button[data-mm-book-reader-chapter-open]');
   const moduleButtons=view.locator('[data-mm-book-chapter]');
   await expect(readerButtons).toHaveCount(20);
   await expect(moduleButtons).toHaveCount(46);
@@ -109,9 +109,193 @@ test('Cold global search finds exact-grade Book material chapter without loading
   await input.fill('DURACON M90-44');
   await expect(page.locator('[data-mm-book-search-result]')).not.toHaveCount(0);
   await expect(page.locator('[data-mm-book-search-result]').first()).toContainText('Book:');
+  await input.fill('D');
+  await expect(page.locator('[data-mm-book-search-result]')).toHaveCount(0);
+  await input.fill('DURACON M90-44');
+  await expect(page.locator('[data-mm-book-search-result]')).not.toHaveCount(0);
   expect(await page.evaluate(()=>window.MMBook.getMaterialCatalog())).toBeNull();
   expect(await page.evaluate(()=>window.MMBook.getMaterialRegionalEvidence())).toBeNull();
   const resources=await page.evaluate(()=>performance.getEntriesByType('resource').map(entry=>entry.name));
   expect(resources.some(url=>url.includes('book-material-regional-evidence-v1.json'))).toBeFalsy();
 });
 
+
+
+test('Book ignores a delayed chapter load after switching back to Home',async({page})=>{
+  await openApp(page);
+  expect(await page.evaluate(()=>window.MMBook.getManifest())).toBeNull();
+  let unblockRequest,requestStarted;
+  const blocked=new Promise(resolve=>{unblockRequest=resolve;});
+  const requested=new Promise(resolve=>{requestStarted=resolve;});
+  await page.route('**/book-publication-authorization-v1.json',async route=>{
+    requestStarted();
+    await blocked;
+    await route.continue();
+  });
+  try{
+    await page.evaluate(()=>{void window.MMBook.openReaderChapter('r01');});
+    await requested;
+    await expect(page.locator('#mmBookView')).toBeVisible();
+    await page.evaluate(()=>window.switchView('dashboard'));
+    await expect(page.locator('#dashboard')).toBeVisible();
+    await expect(page.locator('#mmBookView')).toBeHidden();
+    unblockRequest();
+    await page.waitForFunction(()=>Boolean(window.MMBook.getManifest()));
+    await expect(page.locator('#mmBookView [data-mm-book-reader-chapter]')).toHaveCount(0);
+    await expect(page.locator('#nav [data-mm-book-tab].active')).toHaveCount(0);
+    expect(await page.evaluate(()=>document.documentElement.classList.contains('mm-book-instant-scroll'))).toBe(false);
+  }finally{unblockRequest();}
+});
+
+
+test('Book route changes preserve the last visible reading bookmark',async({page})=>{
+  await openApp(page);
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r01'));
+  await expect(page.locator('#mmBookView [data-mm-book-reader]')).toBeVisible();
+  // Route exit flushes any pending 180ms scroll save. Compare with the
+  // visible scroll at the instant of exit, not with an older debounced value
+  // that can legitimately still be 0 during WebKit's deferred layout.
+  const {before,after,visibleScrollY}=await page.evaluate(()=>{
+    let root=document.querySelector('#mmBookView [data-mm-book-reader]');
+    for(;root&&root!==document.body;root=root.parentElement){
+      const style=getComputedStyle(root);
+      if(/^(auto|scroll|overlay)$/.test(String(style.overflowY||'').toLowerCase())&&root.scrollHeight>root.clientHeight+1)break;
+    }
+    if(!root||root===document.body)root=document.scrollingElement||document.documentElement;
+    const visibleScrollY=Math.max(0,Number(root.scrollTop)||0);
+    const before=window.MMBook.getResume();
+    window.switchView('dashboard');
+    return {before,after:window.MMBook.getResume(),visibleScrollY};
+  });
+  expect(before?.kind).toBe('reader-chapter');
+  await expect(page.locator('#dashboard')).toBeVisible();
+  await expect(page.locator('#mmBookView')).toBeHidden();
+  expect(after?.id).toBe(before.id);
+  expect(after?.anchorId).toBe(before.anchorId);
+  expect(after?.scrollY).toBeCloseTo(visibleScrollY,1);
+  expect(await page.evaluate(()=>document.documentElement.classList.contains('mm-book-instant-scroll'))).toBe(false);
+});
+
+test('Book menu launch survives its canonical route event and closes on Home',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await openApp(page);
+  const more=page.locator('#nav [data-mm-desktop-more-tools]');
+  await expect(more).toBeVisible();
+  await more.click();
+  const launcher=page.locator('[data-mm-registry-menu="book"]');
+  await expect(launcher).toBeVisible();
+  await launcher.click();
+  // The shell emits onViewChange('book') *after* opening the Book.
+  // This event announces the current route; it must not close the reader.
+  await expect(page.locator('#mmBookView')).toBeVisible();
+  await page.evaluate(()=>window.switchView('dashboard'));
+  await expect(page.locator('#dashboard')).toBeVisible();
+  await expect(page.locator('#mmBookView')).toBeHidden();
+  expect(await page.evaluate(()=>document.documentElement.classList.contains('mm-book-instant-scroll'))).toBe(false);
+});
+
+test('Material Atlas discloses comparison restrictions, sources and unknown supplier currentness',async({page})=>{
+  await openApp(page);
+  await page.evaluate(()=>window.MMBook.openChapter('material-families'));
+  await page.waitForFunction(()=>window.MMBook?.getMaterialCatalog?.()?.grades?.length===260);
+  const disclosure=page.locator('[data-mm-book-canonical-catalog]');
+  await disclosure.locator(':scope > summary').click();
+  await expect(disclosure).toHaveAttribute('open','');
+  const restricted=page.locator('[data-mm-book-catalog-grade="mat-basf-elastollan-wy1140"]');
+  await restricted.locator('summary').click();
+  const restrictedRow=restricted.locator('table tbody tr').first();
+  await expect(restrictedRow).toContainText('Specific Gravity');
+  await expect(restrictedRow).toContainText('1.12');
+  await expect(restrictedRow).toContainText('ASTM D 792');
+  await expect(restrictedRow.locator('[role="note"]')).toContainText('Not comparable');
+  await expect(restrictedRow).toContainText('Source: src-basf-elastollan-wy1140-2026');
+  await expect(restrictedRow).toContainText('not a specification');
+  await expect(restricted).toContainText('Current availability and processing suitability not verified');
+
+  const comparable=page.locator('[data-mm-book-catalog-grade="mat-arkema-rilsan-bmno"]');
+  await comparable.locator('summary').click();
+  const comparableRow=comparable.locator('table tbody tr').first();
+  await expect(comparableRow).toContainText('ISO 1133');
+  await expect(comparableRow).toContainText('235 °C');
+  await expect(comparableRow).toContainText('2.16 kg');
+  await expect(comparableRow.locator('[role="note"]')).toHaveCount(0);
+  await expect(comparable).not.toContainText('Not comparable');
+});
+
+
+test('Book exposes every consolidated weld-line source section on demand without crowding first read',async({page})=>{
+  await openApp(page);
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r15'));
+  const chapter=page.locator('[data-mm-book-reader-chapter="r15"]');
+  await expect(chapter).toBeVisible();
+  // The original module titles are not duplicated in the linear first read.
+  await expect(chapter.locator('[data-mm-book-reader-module="weld-lines"] h4',{hasText:'How they form'})).toHaveCount(0);
+  const notes=chapter.locator('details.mm-book-reader-notes');
+  const source=notes.locator('[data-mm-book-omitted-module="weld-lines"]');
+  await expect(source).toHaveCount(1);
+  // A closed <details> still renders its <summary>. Check the disclosure
+  // state rather than visibility of the container (which differs on WebKit).
+  await expect(source).not.toHaveAttribute('open','');
+  if((await notes.getAttribute('open'))===null)await notes.locator(':scope > summary').click();
+  await expect(notes).toHaveAttribute('open','');
+  await source.locator(':scope > summary').click();
+  await expect(source).toHaveAttribute('open','');
+  await expect(source.locator('section h5')).toHaveCount(6);
+  await expect(source).toContainText('How they form');
+  await expect(source).toContainText('Formation begins with divided flow');
+  await expect(source).toContainText('independent human SME approval is still pending');
+
+  // The optional wording comes from the same governed original module.
+  const originalHeading=await source.locator('section h5').first().textContent();
+  const originalBody=await source.locator('section').first().innerText();
+  await page.evaluate(()=>window.MMBook.openChapter('weld-lines'));
+  const full=page.locator('[data-mm-book-verified-chapter="weld-lines"]');
+  await expect(full).toBeVisible();
+  const matched=full.locator('section').filter({has:page.locator('h3',{hasText:originalHeading})}).first();
+  await expect(matched).toBeVisible();
+  expect(await matched.innerText()).toBe(originalBody);
+});
+
+test('Material Atlas final keyboard pagination leaves focus on a newly loaded record',async({page})=>{
+  await openApp(page);
+  await page.evaluate(()=>window.MMBook.openChapter('material-families'));
+  await page.waitForFunction(()=>window.MMBook?.getMaterialCatalog?.()?.grades?.length===260);
+  const catalog=page.locator('[data-mm-book-canonical-catalog]');
+  await catalog.locator(':scope > summary').click();
+  const more=page.locator('[data-mm-book-material-more="catalog"]');
+  for(let batch=0;batch<10;batch++){
+    await expect(more).toHaveCount(1);
+    await more.focus();
+    await page.keyboard.press('Enter');
+  }
+  await expect(more).toHaveCount(0);
+  await expect(catalog.locator('[data-mm-book-catalog-grade]')).toHaveCount(260);
+  await expect(catalog.locator('[data-mm-book-catalog-grade]').nth(240).locator('summary')).toBeFocused();
+});
+
+
+test('Book warm Material Atlas pagination adds exactly one batch per click in both lists',async({page})=>{
+  await openApp(page);
+  await page.evaluate(()=>window.MMBook.openChapter('material-families'));
+  await page.waitForFunction(()=>window.MMBook?.getMaterialCatalog?.()?.grades?.length===260&&window.MMBook?.getMaterialRegionalEvidence?.()?.records?.length===284);
+  // Warm derived-reader entry binds from the chapter and atlas hydration paths.
+  for(let pass=0;pass<2;pass++){
+    await page.evaluate(()=>window.MMBook.openReaderChapter('r03'));
+    const chapter=page.locator('[data-mm-book-reader-chapter="r03"]');
+    await expect(chapter).toBeVisible();
+    for(const [kind,disclosure,record] of [
+      ['catalog','[data-mm-book-canonical-catalog]','[data-mm-book-catalog-grade]'],
+      ['regional','[data-mm-book-regional-evidence]','[data-mm-book-regional-row]']
+    ]){
+      await chapter.locator(disclosure+' > summary').click();
+      await expect(chapter.locator(record)).toHaveCount(24);
+      const more=chapter.locator('[data-mm-book-material-more="'+kind+'"]');
+      await expect(more).toHaveCount(1);
+      await more.click();
+      await expect(chapter.locator(record)).toHaveCount(48);
+      await expect(more).toContainText('48/');
+      await more.click();
+      await expect(chapter.locator(record)).toHaveCount(72);
+    }
+  }
+});

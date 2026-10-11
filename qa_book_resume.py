@@ -10,6 +10,7 @@ def need(ok,msg):
 book=text("src/domains/learning/book-runtime.js")
 finalizer=text("src/domains/shell/app-shell-finalize.js")
 registry=text("src/domains/shell/app-shell-registry.js")
+reading_patch=text("reading-patch.js")
 training=text("src/domains/learning/training-qa-fix.js")
 storage=text("docs/STORAGE_OWNERSHIP_MATRIX.md")
 ui_shell=text("ui-shell.css")
@@ -38,7 +39,7 @@ for marker in [
     "for(let node=start;node&&node!==document.body;node=node.parentElement)",
     "bindBookScrollRoot()",
     "bindMaterialPagination(ui.reader);bindBookScrollRoot();",
-    "ui.reader.hidden=false;bindBack();bindMaterialPagination(ui.reader);bindBookScrollRoot();rememberReadingPosition('reader-chapter'",
+    "ui.reader.hidden=false;bindBack();ui.reader.querySelectorAll('[data-mm-book-page-turn]').forEach(button=>button.addEventListener('click',()=>showReaderChapter(button.dataset.mmBookPageTurn)));bindMaterialPagination(ui.reader);bindBookScrollRoot();rememberReadingPosition('reader-chapter'",
     "ui.reader.hidden=false;bindBack();bindBookScrollRoot();rememberReadingPosition('chapter'",
     "scrollBookBy(delta)",
     "const atEnd=scrollHeight>0&&scrollTop+clientHeight>=scrollHeight-3",
@@ -49,6 +50,22 @@ for marker in [
 ]:
     need(marker in book,f"Book resume hardening missing: {marker}")
 
+# Core routing hides the Book scroll root before emitting onViewChange.
+# The Book must save the live position at the pre-route boundary, including
+# programmatic window.switchView, not only clicks or pagehide.
+need("function prepareRouteExit(id)" in book and "prepareRouteExit,openResume" in book,
+     "Book must expose an explicit pre-route bookmark flush")
+need("window.MMBook?.prepareRouteExit?.(view)" in registry,
+     "direct canonical navigation must flush Book before core hides the reader")
+need("window.MMBook?.prepareRouteExit?.(id)" not in registry,
+     "Runtime V2 already flushes Book; shell implementation must not double-write after reset")
+need("const scrollY=bookScrollTop(),anchor=readerAnchor()" in book,
+     "Book must sample the live scroll position before anchor geometry can move the viewport")
+need("R.before('switchView',id=>" in reading_patch and "window.MMBook?.prepareRouteExit?.(id)" in reading_patch,
+     "early stable-view-entry hook must flush scoped Book bookmark before scroll reset")
+need(reading_patch.index("window.MMBook?.prepareRouteExit?.(id)") <
+     reading_patch.index("settleViewTop();",reading_patch.index("R.before('switchView'")),
+     "stable view-entry reset must never run ahead of Book resume save")
 need("localStorage.getItem(BOOK_RESUME_KEY)" not in book,"Book resume must not use a device-global live storage key")
 need("LEGACY_BOOK_RESUME_KEY='mouldmasterBookResume:v1'" in book,"experimental legacy Book resume cleanup marker missing")
 need("if(!exists){clearResume();showContents();return false}" in book,"stale Book resume must fail safely to contents")
