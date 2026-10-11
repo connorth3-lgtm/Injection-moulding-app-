@@ -346,7 +346,7 @@
   "currentAssuranceEvidence": {
     "staticContract": {
       "status": "pass",
-      "meaning": "Automated contract release 2026.10.11.8 source ed8645bb137cea5449251dc562e51100ed113592: successful producer 38163449886, retained artifact 11711246457, public-runtime fingerprint sha256:2b6b69065d4f2f1a466e05495a1e1272337386651760ac5448017a8621d706c9. Owner-approved strict visual baseline, browser suite and Question Quality 50-Pass succeeded; all seven external evidence streams remain HOLD."
+      "meaning": "Automated contract release 2026.10.11.8 source ed8645bb137cea5449251dc562e51100ed113592: verified producer run 38163449886, retained artifact 11711246457, public runtime fingerprint sha256:2b6b69065d4f2f1a466e05495a1e1272337386651760ac5448017a8621d706c9. Owner-approved strict visual baseline, browser suite and Question Quality 50-Pass succeeded; all seven external evidence streams remain HOLD."
     },
     "behavioralBrowser": {
       "status": "pass",
