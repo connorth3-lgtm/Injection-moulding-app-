@@ -228,4 +228,36 @@ need('human' in accessibility_contract.get('boundary','').lower(),
 subprocess.run([sys.executable, str(ROOT / 'qa_tester_handoff.py')], cwd=ROOT, check=True)
 subprocess.run([sys.executable, str(ROOT / 'qa_tester_handoff_publication.py')], cwd=ROOT, check=True)
 
+# Current release-specific review packets must identify the same retained
+# candidate as the canonical ledger; historical mentions cannot satisfy them.
+from tools.hold_candidate_packet_integrity import (
+    PACKETS as CURRENT_HOLD_PACKETS,
+    candidate_identity as verify_hold_candidate_identity,
+    validate_packet as verify_hold_packet,
+    validate_packets as verify_all_hold_packets,
+)
+current_ledger=json.loads(text('data/release-external-validation-v1.json'))
+need(current_ledger.get('release')==V['web_release'],
+     'current external HOLD ledger release must agree with version.json')
+current_candidate=verify_hold_candidate_identity(current_ledger.get('webCandidate'),V['web_release'])
+if all((current_ledger.get(area) or {}).get('status')=='hold' for area in CURRENT_HOLD_PACKETS):
+    need(verify_all_hold_packets(ROOT,current_ledger)==len(CURRENT_HOLD_PACKETS),
+         'all seven current HOLD packets must have exact retained candidate provenance')
+else:
+    for area,(field,_) in CURRENT_HOLD_PACKETS.items():
+        if (current_ledger.get(area) or {}).get('status')=='hold':
+            packet_path=current_ledger[area][field]
+            verify_hold_packet(text(packet_path),packet_path,current_candidate,V['web_release'])
+# A previous candidate in the active banner must fail even if genuine.
+windows_packet=current_ledger['windowsDistribution']['readinessPacket']
+original_packet=text(windows_packet)
+corrupted=original_packet.replace(current_candidate['sourceSha'],'0'*40,1)
+need(corrupted!=original_packet,'current candidate SHA absent from Windows HOLD packet')
+try:
+    verify_hold_packet(corrupted,windows_packet,current_candidate,V['web_release'])
+except ValueError:
+    pass
+else:
+    raise AssertionError('stale source in current Windows HOLD banner was accepted')
+
 print('MouldMaster release/documentation coherence QA passed')
