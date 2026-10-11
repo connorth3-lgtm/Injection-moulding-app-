@@ -91,8 +91,25 @@ async function normalizeCaptureState(page,surface){
         }
       });
     }
+    // Opening the first canonical grade can let separate Chromium contexts
+    // restore different scroll offsets (about 28 px in an otherwise identical
+    // screenshot). Align both contexts on the same visible grade heading,
+    // without changing any pixel-diff tolerance or app presentation.
+    if(surface==='book-materials'){
+      const grade=document.querySelector('[data-mm-book-catalog-grade]');
+      if(!grade)throw new Error('Book materials visual anchor is missing');
+      grade.scrollIntoView({block:'start',inline:'nearest',behavior:'instant'});
+    }else if(surface==='lesson'){
+      window.scrollTo({top:0,left:0,behavior:'instant'});
+      const main=document.querySelector('main.main')||document.querySelector('.main');
+      if(main)main.scrollTop=0;
+    }
   },{surface});
-  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  // Text metrics and final layout must settle before strict pixel comparison.
+  await page.evaluate(async()=>{
+    await document.fonts.ready;
+    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+  });
 }
 
 async function openBookContents(page,{expandIndex=false}={}){
