@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.11.8",
+  "release": "2026.10.11.9",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.11.8.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.11.9.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 379,
   "candidate": {
-    "release": "2026.10.11.8",
-    "sourceSha": "ed8645bb137cea5449251dc562e51100ed113592",
-    "runtimeFingerprint": "sha256:2b6b69065d4f2f1a466e05495a1e1272337386651760ac5448017a8621d706c9"
+    "release": "2026.10.11.9",
+    "sourceSha": "4116eda8950b65c337f22c7f0f981822e200569d",
+    "runtimeFingerprint": "sha256:97d9cdf902986357f9446796478525f1b61c0f37162387a042121c310ee4d3c7"
   },
-  "boundary": "Release 2026.10.11.8 successfully produced technical candidate ed8645bb137cea5449251dc562e51100ed113592 does not establish NZQA/provider G1–G8 approval, competence certification, accreditation or assessment authority; all provider gates remain pending-external.",
+  "boundary": "Release 2026.10.11.9 source 4116eda8950b65c337f22c7f0f981822e200569d has not established NZQA/provider G1–G8 approval, competence certification, accreditation or assessment authority; all eight provider gates remain pending-external. Provisional producer not yet successful.",
   "requiredGates": [
     {
       "id": "G1-provider",
@@ -57,8 +57,8 @@
   "evidence": null,
   "validationRule": "Validated requires genuine provider-owned evidence for all eight gates, public-safe evidence references, exact release/candidate binding, and separate reviewed promotion of the canonical external-validation status. Automation must not manufacture completion.",
   "previousCandidate": {
-    "release": "2026.10.11.7",
-    "sourceSha": "efcacc7256846abd7d1dbe1fae2d21e5d88acb92",
-    "runtimeFingerprint": "sha256:77d528e2a527adcbf7e436e0669355ac9a4df24c8c2eae2982c68387156bd374"
+    "release": "2026.10.11.8",
+    "sourceSha": "ed8645bb137cea5449251dc562e51100ed113592",
+    "runtimeFingerprint": "sha256:2b6b69065d4f2f1a466e05495a1e1272337386651760ac5448017a8621d706c9"
   }
 }
