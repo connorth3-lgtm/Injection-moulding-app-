@@ -156,7 +156,7 @@
     "artifactDigest": "sha256:315cf075dbf15ecffcf0ed7f4de90011fdd54e966acc97e2d949cfd1a79ae13c",
     "artifactExpiresAt": "2027-01-09T18:21:15Z"
   },
-  "candidateStatus": "HOLD — 2026.10.11.9 provisional retained candidate artifact 11713955923, source 4116eda8950b65c337f22c7f0f981822e200569d, producer 38169457705 FAILED. Owner-approved visual ref is not QA PASS. Require fresh exact-head browser/producer checks; all external device, human, SME and provider approvals remain HOLD.",
+  "candidateStatus": "HOLD — 2026.10.11.9 provisional retained candidate artifact 11713955923, source 4116eda8950b65c337f22c7f0f981822e200569d, producer 38169457705 FAILED (producer success is NOT established). Owner-approved visual ref is not QA PASS. Require fresh exact-head browser/producer checks; all external device, human, SME and provider approvals remain HOLD.",
   "previousPreviousCandidate": {
     "release": "2026.10.09.5",
     "sourceSha": "581e08e58f0b9ec3c7a3501f9a3a71d47ed2c184",
