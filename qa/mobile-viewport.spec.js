@@ -308,7 +308,8 @@ test('UI audit contract: one page title, compact header actions, useful Home, de
 
   await openPracticeHub(page);
   await expect(page.locator('body[data-mm-view="scenarios"] .topbar>div:first-child')).toBeHidden();
-  expect(await page.locator('#scenarios .mm-hub-grid').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length)).toBe(2);
+  // Approved image-led activity list uses a single readable mobile column.
+  expect(await page.locator('#scenarios .mm-hub-grid').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length)).toBe(1);
 
   await openLearnHub(page);
   await page.getByRole('button',{name:/Continue lesson/i}).first().click();
