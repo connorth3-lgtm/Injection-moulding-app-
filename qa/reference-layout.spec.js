@@ -34,6 +34,12 @@ for(const width of [320,360,390,412]){
     await page.evaluate(()=>switchView('path'));
     await expect(page.locator('#path .mm-reference-title')).toHaveText('Learn');
     await expect(page.locator('#path .mm-reference-list-card')).toHaveCount(9);
+    const illustratedCourses=page.locator('#path .mm-reference-list-card');
+    await expect(illustratedCourses.nth(1)).toContainText('Machines, controls and the moulding cycle');
+    await expect(illustratedCourses.nth(2)).toContainText('Polymers, properties and material selection');
+    await expect(illustratedCourses.nth(3)).toContainText('Tooling, runners, gates and cooling');
+    await expect(illustratedCourses.nth(4)).toContainText('Establishing and verifying process settings');
+    expect(await illustratedCourses.nth(2).locator('.mm-reference-photo').getAttribute('data-mm-photo-index')).toBe('3');
     await expect(page.locator('#path [data-mm-lesson-catalog]')).toHaveCount(1);
     await page.locator('#path .mm-reference-learn-search').fill('injection');
     await expect(page.locator('#path [data-mm-catalog-query]')).toHaveValue('injection');
@@ -48,7 +54,13 @@ for(const width of [320,360,390,412]){
     const first=page.locator('#materials .mm-material-index-card[data-mm-material-index-type="exact-grade"]').first();
     await expect(first).toBeVisible();
     await expect(first.locator('.mm-reference-material-art')).toBeVisible();
+    const summary=first.locator('summary.mm-material-index-summary');
+    // The original core has a ::after arrow AND the illustrated card adds one
+    // explicit arrow. Mobile screenshots exposed both rendering simultaneously.
+    expect(await summary.evaluate(el=>getComputedStyle(el,'::after').content)).toBe('none');
+    await expect(first.locator('.mm-material-index-expand')).toBeVisible();
     await first.locator('summary').click();
+    await expect(first.locator('.mm-material-index-expand')).toBeVisible();
     await expect(first.locator('.mm-reference-diagrams .mm-reference-photo')).toHaveCount(3);
     const gradeTiles=await first.locator('.mm-reference-diagrams .mm-reference-photo').evaluateAll(nodes=>nodes.map(el=>Number(el.dataset.mmPhotoIndex)));
     const gradeThumbnail=Number(await first.locator('.mm-reference-material-art').getAttribute('data-mm-photo-index'));
