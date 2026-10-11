@@ -1,11 +1,11 @@
-/* MouldMaster learner UI polish — 2026.10.11.7
+/* MouldMaster learner UI polish — 2026.10.11.8
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.10.11.7';
+const VERSION='2026.10.11.8';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -650,7 +650,7 @@ function boot(){
   document.addEventListener('click',event=>{
     if(event.target?.closest?.('.mm-material-index-card summary,.mobile-nav,[data-mm-registry-menu]'))refresh();
   });
-  window.MM_REFERENCE_LAYOUT=Object.freeze({version:'2026.10.11.7',refresh});
+  window.MM_REFERENCE_LAYOUT=Object.freeze({version:'2026.10.11.8',refresh});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
