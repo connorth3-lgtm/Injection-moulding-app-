@@ -55,6 +55,7 @@ let state=loadState();
 const initialLoadedLearnerToken=resolvedLearnerToken();
 let installed=false;
 let dashboardRegistered=false;
+let missionMoreRegistered=false;
 let unbindView=null;
 let hydratedLearnerToken=null;
 let hydrationTimer=null;
@@ -439,8 +440,23 @@ function executeCommand(row){
 }
 function setSurface(id){synchronizeLearnerState();state.surface=String(id||'').trim()||'unknown';saveState();render()}
 function bindShell(){
-  if(unbindView)return;
   const shell=window.MM_APP_SHELL;
+  // Removing the persistent status bar must not strand its touch-only
+  // evidence/search actions. The existing More registry owns their access.
+  if(!missionMoreRegistered&&shell?.navigation?.register){
+    shell.navigation.register({
+      id:'mission-evidence',label:'Mission evidence',icon:'▤',
+      description:'Review saved evidence from your learning mission.',
+      desktop:false,mobileMore:true,order:64,action:()=>toggleDrawer(true)
+    });
+    shell.navigation.register({
+      id:'mission-commands',label:'Mission commands',icon:'⌕',
+      description:'Find mission tools and learning actions.',
+      desktop:false,mobileMore:true,order:65,action:openPalette
+    });
+    missionMoreRegistered=true;
+  }
+  if(unbindView)return;
   if(shell?.events?.onViewChange){
     unbindView=shell.events.onViewChange(id=>setSurface(id));
     for(const id of ['dashboard','lesson'])shell.events.onRender?.(id,()=>setSurface(id));
