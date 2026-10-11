@@ -78,7 +78,24 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
         return {focusBottom:focus.bottom,bookTop:book.top,bookBottom:book.bottom,toolsTop:tools.top,navTop:nav.top};
       });
       expect(firstViewport.bookTop).toBeGreaterThanOrEqual(firstViewport.focusBottom-1);
-      expect(firstViewport.bookBottom).toBeLessThanOrEqual(firstViewport.navTop+2);
+      // The approved photo-led Home adds an illustrated welcome above the real
+      // focus/Book cards. On short phones the Book may need a short scroll;
+      // it must remain reachable above the fixed bottom navigation.
+      await page.evaluate(()=>{
+        const book=document.querySelector('#dashboard [data-mm-home-book]');
+        const nav=document.querySelector('.mobile-nav');
+        const offset=book.getBoundingClientRect().bottom-nav.getBoundingClientRect().top+12;
+        if(offset<=0)return;
+        const main=document.querySelector('main.main')||document.querySelector('.main');
+        if(main&&main.scrollHeight>main.clientHeight)main.scrollTop+=offset;
+        if(document.scrollingElement)document.scrollingElement.scrollTop+=offset;
+      });
+      await expect(homeBook.getByRole('button',{name:/Open Book|Keep Reading/})).toBeVisible();
+      const bookAfterScroll=await page.evaluate(()=>({
+        bookBottom:document.querySelector('#dashboard [data-mm-home-book]').getBoundingClientRect().bottom,
+        navTop:document.querySelector('.mobile-nav').getBoundingClientRect().top
+      }));
+      expect(bookAfterScroll.bookBottom).toBeLessThanOrEqual(bookAfterScroll.navTop+2);
       expect(firstViewport.toolsTop).toBeGreaterThanOrEqual(firstViewport.bookBottom-1);
       await expect(page.locator('#continueBtn')).toBeHidden();
       await expect(page.locator('#dashboard .mm-home-core-hero')).toBeHidden();
