@@ -548,6 +548,10 @@ function materials(){
       guide.append(summary,explanation,slot);
       catalogue.insertAdjacentElement('afterend',guide);
     }
+    // The former standalone learning intro belongs to the same optional
+    // general-reference area, not below the supplier-grade catalogue.
+    const intro=Array.from(root.children).find(el=>el.id==='mmMaterialLearningAnchor');
+    if(intro&&intro.parentElement!==guide)guide.querySelector('[data-mm-family-science-content]')?.prepend(intro);
     guide.querySelector('[data-mm-family-science-content]')?.appendChild(legacy);
   }
   catalogue.querySelectorAll('.mm-material-family-card:not([data-mm-reference-illustrated])').forEach(card=>{
