@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.11.3",
+  "release": "2026.10.11.4",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.11.3.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.11.4.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 379,
   "candidate": {
-    "release": "2026.10.11.3",
-    "sourceSha": "0c93cfeddc60f50c9f7e5d567fb041592a47d2c6",
-    "runtimeFingerprint": "sha256:c5942fcd791077c81171c359e5c8480f23c0c2855d93affb9673162b57bcf50d"
+    "release": "2026.10.11.4",
+    "sourceSha": "74fc27dd1bfcbdd2f3de9d980fdcc05973b9cd8d",
+    "runtimeFingerprint": "sha256:fdad0252a57e72234ac42532765d0bf9a790ad40e0d4b75746d6502bf993c974"
   },
-  "boundary": "Genuine provider G1–G8 external evidence remains pending for 2026.10.11.3; successfully retained technical candidate 0c93cfeddc60f50c9f7e5d567fb041592a47d2c6 with fingerprint sha256:c5942fcd791077c81171c359e5c8480f23c0c2855d93affb9673162b57bcf50d is not accreditation, assessment authority or production/machine-control permission.",
+  "boundary": "Release 2026.10.11.4 technical candidate 74fc27dd1bfcbdd2f3de9d980fdcc05973b9cd8d does not establish any NZQA/provider G1–G8 external gates, accreditation or assessment authority.",
   "requiredGates": [
     {
       "id": "G1-provider",
@@ -58,7 +58,7 @@
   "validationRule": "Validated requires genuine provider-owned evidence for all eight gates, public-safe evidence references, exact release/candidate binding, and separate reviewed promotion of the canonical external-validation status. Automation must not manufacture completion.",
   "previousCandidate": {
     "release": "2026.10.11.3",
-    "sourceSha": "62cbc79224b133f5953d26b09547001e73961481",
-    "runtimeFingerprint": "sha256:85daf719b86418fbc94610973f173a058455ecc0bec2e9bf53320da6e2f08306"
+    "sourceSha": "0c93cfeddc60f50c9f7e5d567fb041592a47d2c6",
+    "runtimeFingerprint": "sha256:c5942fcd791077c81171c359e5c8480f23c0c2855d93affb9673162b57bcf50d"
   }
 }
