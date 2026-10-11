@@ -29,13 +29,19 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
     await expect(page.locator('[data-mm-material-coverage]')).toContainText('13 countries');
     await expect(page.locator('[data-mm-material-coverage]')).toContainText('32 polymer families');
     await expect(page.locator('[data-mm-material-coverage]')).toContainText('201 comparison-ready observations');
-    await expect(page.locator('[data-mm-material-grade]')).toHaveCount(24);
+    await expect(page.locator('[data-mm-exact-results] [data-mm-material-grade]')).toHaveCount(24);
+    await expect(page.locator('[data-mm-exact-results]')).toBeHidden();
+    await page.locator('[data-mm-all-material-filters] > summary').click();
+    await page.locator('[data-mm-all-material-type]').selectOption('exact-grade');
+    await page.locator('[data-mm-all-material-filters] > summary').click();
 
-    const search=page.locator('[data-mm-exact-query]');
+    const search=page.locator('[data-mm-all-material-query]');
     await search.fill('NH-1033');
-    const card=page.locator('[data-mm-material-grade="mat-lotte-infino-nh-1033"]');
+    const card=page.locator('[data-mm-material-index-result="grade:mat-lotte-infino-nh-1033"]');
     await expect(card).toBeVisible();
-    await expect(page.locator('[data-mm-material-grade]')).toHaveCount(1);
+    await card.locator('summary').first().click();
+    await expect(card).toBeVisible();
+    await expect(page.locator('[data-mm-all-material-results] [data-mm-material-index-type="exact-grade"]')).toHaveCount(1);
     await expect(card).toContainText('Melt Flow Index · 35 g/10min');
     await expect(card).toContainText('ISO 1133 · 220°C · 10 kg');
 
@@ -66,9 +72,11 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
     await expect(card.getByRole('button',{name:'Start Mould Master case'})).toBeVisible();
 
     await search.fill('GP5206F');
-    const lgCard=page.locator('[data-mm-material-grade="mat-lgchem-lupoy-gp5206f"]');
+    const lgCard=page.locator('[data-mm-material-index-result="grade:mat-lgchem-lupoy-gp5206f"]');
     await expect(lgCard).toBeVisible();
-    await expect(page.locator('[data-mm-material-grade]')).toHaveCount(1);
+    await lgCard.locator('summary').first().click();
+    await expect(lgCard).toBeVisible();
+    await expect(page.locator('[data-mm-all-material-results] [data-mm-material-index-type="exact-grade"]')).toHaveCount(1);
     await expect(lgCard).toContainText('LG Chem · LUPOY · GP5206F');
     await expect(lgCard).toContainText('Melt Flow Rate · 3 g/10min');
     await expect(lgCard).toContainText('ISO 1133 · 250°C · 2.16 kg');
@@ -102,9 +110,11 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
     await expect(lgCard.getByRole('button',{name:'Start Mould Master case'})).toBeVisible();
 
     await search.fill('FG2025');
-    const kepCard=page.locator('[data-mm-material-grade="mat-kepital-fg2025"]');
+    const kepCard=page.locator('[data-mm-material-index-result="grade:mat-kepital-fg2025"]');
     await expect(kepCard).toBeVisible();
-    await expect(page.locator('[data-mm-material-grade]')).toHaveCount(1);
+    await kepCard.locator('summary').first().click();
+    await expect(kepCard).toBeVisible();
+    await expect(page.locator('[data-mm-all-material-results] [data-mm-material-index-type="exact-grade"]')).toHaveCount(1);
     await expect(kepCard).toContainText('Korea Polyacetal (KPAC) · KEPITAL · FG2025');
     await expect(kepCard).toContainText('Mould Shrinkage · 0.7 %');
     await expect(kepCard).toContainText('ISO 294-4 · 2.0 mm · flow direction');
