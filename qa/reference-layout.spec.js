@@ -40,6 +40,8 @@ for(const width of [320,360,390,412]){
 
     await page.evaluate(()=>switchView('materials'));
     await expect(page.locator('#materials .mm-reference-materials-title')).toHaveText('Materials');
+    await expect(page.locator('#materials .mm-reference-materials-title')).toHaveCount(1);
+    await expect(page.locator('#materials .mm-material-all-index-head h3')).toHaveText('Materials');
     await expect(page.locator('#materials [data-mm-all-material-index]')).toHaveCount(1);
     await expect(page.locator('#materials [data-mm-all-material-query]')).toBeVisible();
     await expect(page.locator('#materials [data-mm-exact-query]')).toBeHidden();
