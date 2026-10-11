@@ -66,6 +66,7 @@ for(const width of [320,360,390,412]){
     await page.locator('.mobile-nav > button').filter({hasText:'More'}).click();
     await expect(page.locator('#modal .mm-more-disclosure')).toHaveCount(6);
     await expect(page.locator('#modal .mm-reference-more-extra')).toHaveCount(2);
+    await expect(page.locator('#modal .mm-reference-more-extra').filter({hasText:'About'}).locator('a')).toHaveAttribute('href','./support.html#mmPwa');
     await expect(page.locator('#modal [data-mm-registry-menu="mission-evidence"]')).toHaveCount(1);
     const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
     expect(overflow).toBeLessThanOrEqual(2);
