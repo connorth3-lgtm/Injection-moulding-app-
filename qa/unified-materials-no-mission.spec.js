@@ -47,6 +47,11 @@ for(const width of [320,360,390,412]){
     await expect(cat.locator('[data-mm-compare-a]')).toHaveValue('mat-lgchem-lupoy-gp5206f');
     await result.getByRole('button',{name:'Change assistant'}).click();
     await expect(cat.locator('[data-mm-change-before]')).toHaveValue('mat-lgchem-lupoy-gp5206f');
+    const other=await cat.locator('[data-mm-change-after] option').evaluateAll(options=>
+      options.map(o=>o.value).find(v=>v&&v!=='mat-lgchem-lupoy-gp5206f'));
+    expect(other,'a distinct published grade is available to compare').toBeTruthy();
+    await cat.locator('[data-mm-change-after]').selectOption(other);
+    await expect(cat.locator('[data-mm-run-material-change]')).toBeEnabled();
     const widthDiff=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
     expect(widthDiff).toBeLessThanOrEqual(2);
   });
