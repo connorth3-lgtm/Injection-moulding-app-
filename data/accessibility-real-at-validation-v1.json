@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.11.8",
-  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.11.8.md",
-  "sourceSha": "ed8645bb137cea5449251dc562e51100ed113592",
-  "runtimeFingerprint": "sha256:2b6b69065d4f2f1a466e05495a1e1272337386651760ac5448017a8621d706c9",
+  "release": "2026.10.11.9",
+  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.11.9.md",
+  "sourceSha": "d572ee13d8f2f09139882ff1a271e855284f6e3c",
+  "runtimeFingerprint": "sha256:97d9cdf902986357f9446796478525f1b61c0f37162387a042121c310ee4d3c7",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.11.8 is bound to successful producer candidate ed8645bb137cea5449251dc562e51100ed113592, fingerprint sha256:2b6b69065d4f2f1a466e05495a1e1272337386651760ac5448017a8621d706c9; NVDA and VoiceOver tasks and physical Android spoken audio remain pending until actual device/human evidence is recorded.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.11.9 binds to successful retained technical candidate d572ee13d8f2f09139882ff1a271e855284f6e3c, fingerprint sha256:97d9cdf902986357f9446796478525f1b61c0f37162387a042121c310ee4d3c7; all real NVDA/VoiceOver and physical Android audible Read Aloud checks remain pending until independent human/device evidence is recorded.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -306,9 +306,9 @@
     "textZoom200Percent": true
   },
   "previousCandidate": {
-    "release": "2026.10.11.7",
-    "sourceSha": "efcacc7256846abd7d1dbe1fae2d21e5d88acb92",
-    "runtimeFingerprint": "sha256:77d528e2a527adcbf7e436e0669355ac9a4df24c8c2eae2982c68387156bd374"
+    "release": "2026.10.11.8",
+    "sourceSha": "ed8645bb137cea5449251dc562e51100ed113592",
+    "runtimeFingerprint": "sha256:2b6b69065d4f2f1a466e05495a1e1272337386651760ac5448017a8621d706c9"
   },
   "technicalCandidateStatus": "retained-exact-head-producer-verified"
 }

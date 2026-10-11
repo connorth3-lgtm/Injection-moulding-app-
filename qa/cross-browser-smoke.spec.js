@@ -37,7 +37,7 @@ test('core shell and exact-grade Materials work without layout overflow',async({
   await openApp(page);
   await openMaterials(page);
   await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible({timeout:30000});
-  await expect(page.locator('[data-mm-all-material-results] [data-mm-material-index-result]').first()).toBeVisible();
+  await expect(page.locator('[data-mm-all-material-results] [data-mm-family-open="PP"]')).toBeVisible();
   await expect(page.locator('[data-mm-exact-results]')).toBeHidden();
   const geometry=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,client:document.documentElement.clientWidth}));
   expect(geometry.scroll).toBeLessThanOrEqual(geometry.client+2);

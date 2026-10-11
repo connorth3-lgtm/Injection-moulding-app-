@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.11.8`**.
+Current governed web candidate: **`2026.10.11.9`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Automated contract release 2026.10.11.8 source ed8645bb137cea5449251dc562e51100ed113592: verified producer run 38163449886, retained artifact 11711246457, public runtime fingerprint sha256:2b6b69065d4f2f1a466e05495a1e1272337386651760ac5448017a8621d706c9. Owner-approved strict visual baseline, browser suite and Question Quality 50-Pass succeeded; all seven external evidence streams remain HOLD. |
-| Behavioral / browser | **pass** | Behavioral browser QA release 2026.10.11.8 source ed8645bb137cea5449251dc562e51100ed113592: strict 12-pixel visual regression, substantive Chromium/WebKit, cross-browser compatibility, reachability, five reliability shards and Android first-tap Read Aloud automated regression passed. This does NOT establish audible Android device playback, physical-device or independent real AT validation. |
+| Static / contract | **pass** | Automated contract release 2026.10.11.9 source d572ee13d8f2f09139882ff1a271e855284f6e3c: verified producer run 38172783245, retained artifact 11713839913, public-runtime fingerprint sha256:97d9cdf902986357f9446796478525f1b61c0f37162387a042121c310ee4d3c7. Owner-approved .9 strict 12-pixel family-folders visuals, substantive Chromium/WebKit, cross-browser, reachability, reliability and Question Quality 50-Pass passed. All seven external human/device/provider evidence streams remain HOLD. |
+| Behavioral / browser | **pass** | Behavioral browser QA release 2026.10.11.9 source d572ee13d8f2f09139882ff1a271e855284f6e3c: strict 12-pixel visual comparison for 4 viewports and 13 surfaces, substantive Chromium/WebKit, cross-browser reachability and five reliability shards passed, including sourced PP polymer-folder access. This is not proof of actual physical Android Read Aloud sound, real assistive technology or independent device testing. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |

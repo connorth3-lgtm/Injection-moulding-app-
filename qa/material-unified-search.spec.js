@@ -68,6 +68,47 @@ test('360px Materials entry leads with its single search and collapsible grade t
   expect(geometry.page).toBeLessThanOrEqual(geometry.viewport+1);
 });
 
+test('family-first Materials groups all PP grades in one illustrated folder without losing search or evidence',async({page})=>{
+  await openMaterials(page);
+  const root=page.locator('#mmExactMaterialCatalog');
+  const results=root.locator('[data-mm-all-material-results]');
+  const familyCards=results.locator('[data-mm-family-open]');
+  const counts=await page.evaluate(()=>window.MM_MATERIAL_SEARCH.facets().then(f=>({
+    names:f.families,pp:f.counts.families.PP,all:Object.values(f.counts.families).reduce((a,b)=>a+b,0)
+  })));
+  expect(counts.pp).toBe(95);
+  await expect(familyCards).toHaveCount(counts.names.length);
+  await expect(results.locator('[data-mm-material-index-result]')).toHaveCount(0);
+  await expect(familyCards.first()).toHaveAttribute('data-mm-family-open','PP');
+  await expect(familyCards.first().locator('.mm-reference-family-art')).toBeVisible();
+  await familyCards.first().click();
+  await expect(root.locator('[data-mm-all-material-family]')).toHaveValue('PP');
+  await expect(root.locator('[data-mm-all-material-type]')).toHaveValue('exact-grade');
+  await expect(root.locator('[data-mm-all-material-status]')).toContainText('95 matching material records');
+  const uniqueIds=new Set();
+  const pageCount=Math.ceil(counts.pp/12);
+  for(let current=0;current<pageCount;current++){
+    const ids=await results.locator('[data-mm-material-index-result]').evaluateAll(cards=>cards.map(card=>card.dataset.mmMaterialIndexResult));
+    expect(ids.length).toBeGreaterThan(0);
+    ids.forEach(id=>uniqueIds.add(id));
+    if(current<pageCount-1){
+      await root.locator('[data-mm-all-material-page="next"]').click();
+      await expect(root.locator('[data-mm-all-material-status]')).toContainText(`page ${current+2} of ${pageCount}`);
+    }
+  }
+  expect(uniqueIds.size).toBe(counts.pp);
+  await root.locator('[data-mm-material-family-back]').click();
+  await expect(familyCards).toHaveCount(counts.names.length);
+  await expect(root.locator('[data-mm-all-material-family]')).toHaveValue('');
+  await root.locator('[data-mm-material-all-records]').click();
+  await expect(root.locator('[data-mm-all-material-status]')).toContainText('341 matching material records');
+  await expect(results.locator('[data-mm-material-index-result]')).not.toHaveCount(0);
+  await root.locator('[data-mm-material-family-back]').click();
+  await root.locator('[data-mm-all-material-query]').fill('GP5206F');
+  await expect(results).toContainText('LG Chem');
+  await expect(results.locator('[data-mm-family-open]')).toHaveCount(0);
+});
+
 test('Materials displays all results with filters collapsed and clears selections on mobile',async({page})=>{
   await openMaterials(page);
   const root=page.locator('#mmExactMaterialCatalog');
@@ -78,9 +119,13 @@ test('Materials displays all results with filters collapsed and clears selection
   const showAll=root.locator('[data-mm-all-material-clear]');
   await expect(filters).not.toHaveAttribute('open','');
   await expect(search).toBeVisible();
-  await expect(results.locator('[data-mm-material-index-result]')).not.toHaveCount(0);
-  await expect(status).toContainText('matching material records');
+  await expect(results.locator('[data-mm-family-open="PP"]')).toBeVisible();
+  await expect(results.locator('[data-mm-family-open="PP"]')).toContainText('95 published grades');
+  await expect(status).toContainText('polymer families');
   await expect(filters.locator('[data-mm-all-material-region]')).toBeHidden();
+  await results.locator('[data-mm-family-open="PP"]').click();
+  await expect(status).toContainText('95 matching material records');
+  await expect(filters.locator('[data-mm-all-material-family]')).toHaveValue('PP');
   const firstResult=results.locator('[data-mm-material-index-result]').first();
   await expect(firstResult).not.toHaveAttribute('open','');
   await expect(firstResult.locator(':scope > summary')).toBeVisible();
@@ -95,11 +140,14 @@ test('Materials displays all results with filters collapsed and clears selection
   await expect(filters.locator('[data-mm-all-material-region]')).toBeVisible();
   await expect(filters.locator('[data-mm-catalogue-boundary]')).toBeVisible();
   await filters.locator('[data-mm-all-material-type]').selectOption('exact-grade');
-  await expect(filters.locator('summary')).toContainText('1 active');
+  await expect(filters.locator('summary')).toContainText('2 active');
   await filters.locator('summary').click();
   await expect(filters).not.toHaveAttribute('open','');
   await expect(results.locator('[data-mm-material-index-type="exact-grade"]')).not.toHaveCount(0);
 
+  // Return from PP-only browsing before searching a grade in another family.
+  await root.locator('[data-mm-material-family-back]').click();
+  await expect(results.locator('[data-mm-family-open="PP"]')).toBeVisible();
   await search.fill('GP5206F');
   await expect(results).toContainText('LG Chem');
   await expect(showAll).toBeVisible();
@@ -108,7 +156,8 @@ test('Materials displays all results with filters collapsed and clears selection
   await expect(filters.locator('summary')).toContainText('Optional');
   await expect(filters.locator('[data-mm-all-material-type]')).toHaveValue('');
   await expect(showAll).toBeHidden();
-  await expect(results.locator('[data-mm-material-index-result]')).not.toHaveCount(0);
+  await expect(results.locator('[data-mm-family-open="PP"]')).toBeVisible();
+  await expect(results.locator('[data-mm-material-index-result]')).toHaveCount(0);
   const geometry=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,page:document.documentElement.scrollWidth}));
   expect(geometry.page).toBeLessThanOrEqual(geometry.viewport+1);
 });

@@ -1,11 +1,11 @@
-/* MouldMaster learner UI polish — 2026.10.11.8
+/* MouldMaster learner UI polish — 2026.10.11.9
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.10.11.8';
+const VERSION='2026.10.11.9';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -549,6 +549,18 @@ function materials(){
     heading.classList.add('mm-reference-materials-title');
   }
   root.querySelectorAll(':scope > .mm-reference-materials-title').forEach(extra=>extra.remove());
+  catalogue.querySelectorAll('.mm-material-family-card:not([data-mm-reference-illustrated])').forEach(card=>{
+    card.dataset.mmReferenceIllustrated='1';
+    const familyCode=card.dataset.mmFamilyOpen||'';
+    const materialTile=/(ABS|PC\/ABS)/.test(familyCode)?9:/^PC$/.test(familyCode)?10:
+      /^PP$/.test(familyCode)?11:/^(HDPE|LDPE|PE)$/.test(familyCode)?12:
+      /^PA\d+/.test(familyCode)?13:/^POM$/.test(familyCode)?14:
+      /^PET$/.test(familyCode)?15:/^PBT$/.test(familyCode)?16:
+      /^PMMA$/.test(familyCode)?17:/TPE|TPU|ELASTOMER|TPV/i.test(familyCode)?18:9;
+    const img=picture(materialArt(familyCode),'Illustrative polymer family texture',materialTile);
+    img.classList.add('mm-reference-family-art');
+    card.prepend(img);
+  });
   catalogue.querySelectorAll('.mm-material-index-card:not([data-mm-reference-illustrated])').forEach(card=>{
     card.dataset.mmReferenceIllustrated='1';
     const sum=card.querySelector('.mm-material-index-summary');
@@ -650,7 +662,7 @@ function boot(){
   document.addEventListener('click',event=>{
     if(event.target?.closest?.('.mm-material-index-card summary,.mobile-nav,[data-mm-registry-menu]'))refresh();
   });
-  window.MM_REFERENCE_LAYOUT=Object.freeze({version:'2026.10.11.8',refresh});
+  window.MM_REFERENCE_LAYOUT=Object.freeze({version:'2026.10.11.9',refresh});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();

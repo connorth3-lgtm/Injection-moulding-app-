@@ -149,7 +149,9 @@ async function expectMaterialDensity(page){
     const root=document.getElementById('materials');
     const catalogue=root.querySelector('#mmExactMaterialCatalog [data-mm-all-material-index]');
     const search=catalogue?.querySelector('[data-mm-all-material-query]');
-    const cards=[...catalogue.querySelectorAll('[data-mm-material-index-result]')];
+    // On the default Materials screen, families are the primary browse cards.
+    // Search or opening a family restores full exact-grade detail cards.
+    const cards=[...catalogue.querySelectorAll('[data-mm-family-open], [data-mm-material-index-result]')];
     const boxes=cards.slice(0,4).map(card=>card.getBoundingClientRect());
     const firstText=(cards[0]?.textContent||'').trim();
     const searchRect=search?.getBoundingClientRect();
