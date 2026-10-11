@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Retained 2026.10.11.7 candidate efcacc7256846abd7d1dbe1fae2d21e5d88acb92 and successfully produced artifact 11707578982 passed software browser QA but are NOT physical iOS/iPadOS or Android device evidence. Real install, offline restart, reboot, update, storage pressure and zoom remain pending. Real-AT validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
+  "boundary": "Retained 2026.10.11.7 candidate efcacc7256846abd7d1dbe1fae2d21e5d88acb92 and successfully produced artifact 11707578982 passed software browser QA but are NOT evidence of testing on physical iOS/iPadOS and Android devices. Real install, offline restart, reboot, update, storage pressure and zoom remain pending. Real-AT validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
