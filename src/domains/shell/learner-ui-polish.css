@@ -1711,3 +1711,34 @@ html.mm-reference-photo-ready .mm-reference-photo>.mm-reference-picture{
 @media(prefers-reduced-motion:reduce){
   .mm-reference-layout #dashboard .mm-reference-home-practice{transition:none!important}
 }
+
+/* Tablet must show actual learning content above the fold. Keep the
+   compact phone hero while reducing tablet hero + tool-strip combined height. */
+@media (min-width:701px) and (max-width:900px){
+  .mm-reference-layout #dashboard .mm-reference-home-hero{
+    min-height:205px!important;max-height:205px!important;
+    padding:13px!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-hero-words{
+    padding-bottom:48px!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-home-hero .mm-reference-hero-photo{
+    height:85%!important;top:18%!important;width:53%!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-tools{
+    margin:6px 0!important;display:flex;align-items:center;gap:9px;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-tools h3{
+    flex:0 0 auto;font-size:14px!important;margin:0!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-grid{
+    flex:1;gap:6px;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-tool{
+    min-height:48px!important;flex-direction:row;gap:5px;
+    padding:5px!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-icon{
+    font-size:18px!important;
+  }
+}
