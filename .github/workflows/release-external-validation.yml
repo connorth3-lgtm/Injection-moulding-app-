@@ -26,21 +26,28 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: '3.12'
+      # Keep the final protected status red when automated approval is red,
+      # but continue independent diagnostics so a HOLD cannot conceal faults.
       - name: Verify release-specific external validation boundaries
         run: python tools/verify_release_external_validation.py
       - name: Verify exact release validation packets
+        if: ${{ success() || failure() }}
         run: python qa_release_validation_packets.py
       - name: Verify live retained artifact and external tracker bindings
+        if: ${{ success() || failure() }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: >-
           python tools/verify_external_validation_live_bindings.py
           --repository "${{ github.repository }}"
       - name: Verify External Validation Wave 1 integrity
+        if: ${{ success() || failure() }}
         run: python qa_external_validation_wave1.py
       - name: Exercise native ruleset verifier contract
+        if: ${{ success() || failure() }}
         run: python tools/verify_main_ruleset.py --self-test
       - name: Verify live native main ruleset against canonical policy
+        if: ${{ success() || failure() }}
         env:
           GH_TOKEN: ${{ github.token }}
           GITHUB_TOKEN: ${{ github.token }}
