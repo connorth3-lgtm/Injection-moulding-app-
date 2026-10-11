@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Retained 2026.10.11.5 candidate 4ac98a464e20386ab88681f7787d0f61894cbca3, artifact 11688467885, is NOT physical iOS/iPadOS or Android validation. Install, offline restart, reboot, update, storage-pressure, safe-area and zoom are pending. Real AT remains separately governed; production, signing, provider and machine-control authority HOLD.",
+  "boundary": "Retained release 2026.10.11.5 candidate 4ac98a464e20386ab88681f7787d0f61894cbca3 and artifact 11688467885 are NOT evidence of testing on physical iOS/iPadOS and Android devices. Real device install, offline restart, reboot, update, storage-pressure and zoom remain pending. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
