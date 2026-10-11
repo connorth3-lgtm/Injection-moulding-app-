@@ -294,8 +294,10 @@ function render(){
   // normal hydration scheduler observes it. Never render another owner's data.
   synchronizeLearnerState();
   const host=root();if(!host)return;
-  host.innerHTML=contextMarkup()+timelineMarkup()+
-    `<div class="mm-mc-drawer ${state.drawerOpen?'open':''}" aria-hidden="${state.drawerOpen?'false':'true'}">${state.drawerOpen?evidenceMarkup():''}</div>`+
+  // Status strip, case/context grid and numbered mission timeline are retired
+  // from every route. Keep the evidence drawer, keyboard palette and scoped
+  // mission store mounted so saved progress and commands remain available.
+  host.innerHTML=`<div class="mm-mc-drawer ${state.drawerOpen?'open':''}" aria-hidden="${state.drawerOpen?'false':'true'}">${state.drawerOpen?evidenceMarkup():''}</div>`+
     `<div class="mm-mc-palette-host ${state.paletteOpen?'open':''}" aria-hidden="${state.paletteOpen?'false':'true'}">${state.paletteOpen?paletteMarkup():''}</div>`;
   bind(host);
   document.body.dataset.mmMissionMode=state.mode;
