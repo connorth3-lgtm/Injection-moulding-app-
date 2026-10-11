@@ -318,7 +318,16 @@ function wirePageNavigation(host){
 }
 function syncMaterialsUrl(){
   if(location.protocol==='file:')return;
-  const u=new URL(location.href);u.pathname=u.pathname.replace(/\/materials\.html$/,'/index.html');u.searchParams.set('view','materials');history.replaceState(null,'',u)
+  const u=new URL(location.href);u.pathname=u.pathname.replace(/\/materials\.html$/,'/index.html');u.searchParams.set('view','materials');history.replaceState(history.state,'',u)
+}
+function clearMaterialsStartupRoute(){
+  // A Materials deep link is valid on entry, but must not become a sticky
+  // launch destination after the learner navigates to another app view.
+  if(location.protocol==='file:')return;
+  const u=new URL(location.href);
+  if(u.searchParams.get('view')!=='materials')return;
+  u.searchParams.delete('view');
+  history.replaceState(history.state,'',u)
 }
 function openPage({focus='catalog',replaceUrl=true}={}){
   if(typeof window.switchView==='function')window.switchView('materials');
@@ -376,7 +385,7 @@ function bindMaterialsLifecycle(){
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
   const shell=window.MM_APP_SHELL;
   shell?.events?.onRender?.('materials',install);
-  shell?.events?.onViewChange?.(view=>{if(view==='materials'){syncMaterialsUrl();install()}});
+  shell?.events?.onViewChange?.(view=>{if(view==='materials'){syncMaterialsUrl();install()}else clearMaterialsStartupRoute()});
   window.addEventListener('mm:domains-ready',install,{once:true});
   if(new URLSearchParams(location.search).get('view')==='materials')requestAnimationFrame(()=>openPage({replaceUrl:false}));
 }
