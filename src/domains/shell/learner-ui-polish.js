@@ -533,7 +533,7 @@ function materials(){
   const resultHost=catalogue.querySelector('[data-mm-all-material-results]');
   if(resultHost&&!resultHost.dataset.mmReferenceObserved){
     resultHost.dataset.mmReferenceObserved='1';
-    new MutationObserver(refresh).observe(resultHost,{childList:true});
+    new window.MutationObserver(refresh).observe(resultHost,{childList:true});
   }
   root.dataset.mmReferenceMaterials='1';
 }
@@ -581,7 +581,7 @@ function boot(){
   const targets=['dashboard','path','materials','scenarios','modal'];
   for(const id of targets){
     const node=document.getElementById(id);if(!node)continue;
-    new MutationObserver(refresh).observe(node,{childList:true,subtree:false});
+    new window.MutationObserver(refresh).observe(node,{childList:true,subtree:false});
   }
   document.addEventListener('click',event=>{
     if(event.target?.closest?.('.mm-material-index-card summary,.mobile-nav,[data-mm-registry-menu]'))refresh();
