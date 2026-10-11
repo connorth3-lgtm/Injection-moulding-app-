@@ -350,7 +350,7 @@
     },
     "behavioralBrowser": {
       "status": "fail",
-      "meaning": "Exact-source visual, WebKit/Chromium, device viewport and reliability acceptance for new 2026.10.11.7 UI not yet verified. Prior release automation does not transfer; all independent external approvals HOLD."
+      "meaning": "Automated Chromium functional, WebKit, cross-browser, reachability and all five reliability groups passed on the retained .7 runtime source. Overall browser acceptance remains FAIL because strict visual comparisons detect the intentional illustrated redesign against approved .6; owner approval of the actual .7 captures remains HOLD. No physical-device, assistive-technology or external signoff is implied."
     },
     "externalHumanDevice": {
       "status": "hold",
