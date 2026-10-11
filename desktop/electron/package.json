@@ -239,6 +239,14 @@
         "to": "mouldmaster/assets/book-diagrams"
       },
       {
+        "from": "../../assets/mockup-home-machine.webp",
+        "to": "mouldmaster/assets/mockup-home-machine.webp"
+      },
+      {
+        "from": "../../assets/mockup-reference-tiles.webp",
+        "to": "mouldmaster/assets/mockup-reference-tiles.webp"
+      },
+      {
         "from": "../../runtime-domain-manifest.json",
         "to": "mouldmaster/runtime-domain-manifest.json"
       },
