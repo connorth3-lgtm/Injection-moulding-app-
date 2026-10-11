@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.11.5`**.
+Current governed web candidate: **`2026.10.11.6`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Successful producer run 38105229738 verified release 2026.10.11.5 source 0f94f35cbdc5965cfc4ac5b6413dc6ea3081f57e, retained artifact 11689291423, and runtime fingerprint sha256:ee4cfb09becaa0c912e0b23d9939f7abd44e648044d49ebebf6d5723165594a9 independently computed from actual public bytes; source integrity, browser/visual and question quality passed, while human/device/provider evidence remains HOLD. |
-| Behavioral / browser | **pass** | Mobile Browser QA for release 2026.10.11.5 source 0f94f35cbdc5965cfc4ac5b6413dc6ea3081f57e passed WebKit, Chromium reachability/substantive/visual, cross-browser and five reliability shards, alongside Question Quality 50-Pass. Physical iOS/Android, human AT, independent SME/NZQA provider, signing and production validation remain HOLD. |
+| Static / contract | **pass** | Successful exact-source release 2026.10.11.6 candidate producer run 38107428260 retained source 46337247aa9c334fb741c23704723b3f7688e6cf, artifact 11690278594, digest sha256:1ec5ede11d793f979ad4ec0823d1ead2b8bb766ff89e7b4b4e171e38e3b02426 and public runtime fingerprint sha256:4013679bf1b599d7b06abf9fca6f0b3a1e484537d095cfedc595347759574d6b, independently measured from 163 retained archive files. Technical automation succeeded; all independent external human/device/provider reviews remain HOLD. |
+| Behavioral / browser | **pass** | Exact-source Mobile Browser QA, Chromium, WebKit, visual, cross-browser, five 500-run reliability shards, and Question Quality 50-Pass succeeded for release 2026.10.11.6 source 46337247aa9c334fb741c23704723b3f7688e6cf. No physical Android/iOS, real AT, provider/NZQA, SME, Windows signing or production approval is inferred. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |

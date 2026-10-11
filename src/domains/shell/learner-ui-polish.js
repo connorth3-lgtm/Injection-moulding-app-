@@ -1,11 +1,11 @@
-/* MouldMaster learner UI polish — 2026.10.11.5
+/* MouldMaster learner UI polish — 2026.10.11.6
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.10.11.5';
+const VERSION='2026.10.11.6';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -37,8 +37,20 @@ function homeActivity(){
   return {recent:cases[0]||null}
 }
 function homeBalanceMarkup(){
-  return `<div class="mm-home-balance-copy"><span class="eyebrow">Moulding tools</span><h2>Diagnose or analyse</h2><p>Use specialist tools when the next step is evidence, not another lesson.</p></div><div class="mm-home-balance-grid"><button type="button" data-mm-home-action="mould-master"><span class="mm-home-balance-icon" aria-hidden="true">◆</span><span><b>Troubleshoot</b><small>Build an evidence-led Mould Master case.</small></span><span class="mm-home-action-arrow" aria-hidden="true">→</span></button><button type="button" data-mm-home-action="process-data"><span class="mm-home-balance-icon" aria-hidden="true">⌁</span><span><b>Analyse data</b><small>Read measured trends and recovery evidence.</small></span><span class="mm-home-action-arrow" aria-hidden="true">→</span></button></div><div data-mm-home-recent-slot hidden></div>`;
+  // The current lesson and Book already own the primary Home decisions.
+  // Keep advanced tools useful but visually quiet and user-collapsible.
+  return `<details class="mm-home-toolbox" data-mm-home-toolbox open>
+    <summary><span class="mm-home-toolbox-label"><b>Toolbox</b><small>Optional diagnostic and data tools</small></span><span class="mm-home-toolbox-hint">Show / hide <span aria-hidden="true">⌄</span></span></summary>
+    <div class="mm-home-toolbox-body">
+      <div class="mm-home-balance-grid">
+        <button type="button" data-mm-home-action="mould-master"><span class="mm-home-balance-icon" aria-hidden="true">◆</span><span><b>Troubleshoot</b><small>Build an evidence-led Mould Master case.</small></span><span class="mm-home-action-arrow" aria-hidden="true">→</span></button>
+        <button type="button" data-mm-home-action="process-data"><span class="mm-home-balance-icon" aria-hidden="true">⌁</span><span><b>Analyse data</b><small>Review measured trends and recovery evidence.</small></span><span class="mm-home-action-arrow" aria-hidden="true">→</span></button>
+      </div>
+      <div data-mm-home-recent-slot hidden></div>
+    </div>
+  </details>`;
 }
+
 function syncHomeBalanceContent(panel){
   const a=homeActivity();
   const slot=panel.querySelector('[data-mm-home-recent-slot]');

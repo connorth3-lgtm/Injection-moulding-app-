@@ -71,6 +71,46 @@ test('five mobile tabs start with actionable content instead of oversized introd
   await expect(page.locator('#modal .quick-action').first()).toBeVisible();
 });
 
+test('Home and More use collapsible, mobile-safe panels without losing actions',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  const home=page.locator('#dashboard');
+  const toolbox=home.locator('[data-mm-home-toolbox]');
+  await expect(home.locator('.mm-today-focus')).toBeVisible();
+  await expect(home.locator('[data-mm-home-book]')).toBeVisible();
+  await expect(toolbox).toBeVisible();
+  await expect(toolbox).toHaveAttribute('open','');
+  await expect(toolbox.getByRole('button',{name:/Troubleshoot/})).toBeVisible();
+  await toolbox.locator('summary').click();
+  await expect(toolbox).not.toHaveAttribute('open','');
+  await expect(toolbox.getByRole('button',{name:/Troubleshoot/})).toBeHidden();
+  await toolbox.locator('summary').click();
+  await expect(toolbox.getByRole('button',{name:/Analyse data/})).toBeVisible();
+
+  await page.locator('.mobile-nav > button').filter({hasText:'More'}).click();
+  const menu=page.locator('#modal .modal-card');
+  await expect(menu).toBeVisible();
+  for(const [section,id] of [
+    ['learning','book'],['references','reference-data'],
+    ['account','repair-app-files'],['mission','mission-evidence']
+  ]){
+    const disclosure=menu.locator(`[data-mm-more-section="${section}"]`);
+    await expect(disclosure).toHaveCount(1);
+    await expect(disclosure.locator(`[data-mm-registry-menu="${id}"]`)).toBeVisible();
+    await disclosure.locator('summary').click();
+    await expect(disclosure.locator(`[data-mm-registry-menu="${id}"]`)).toBeHidden();
+    await disclosure.locator('summary').click();
+    await expect(disclosure.locator(`[data-mm-registry-menu="${id}"]`)).toBeVisible();
+  }
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth)).toBeLessThanOrEqual(2);
+  await page.evaluate(()=>closeModal());
+  await page.locator('.mobile-nav > button').filter({hasText:'More'}).click();
+  await expect(menu.locator('[data-mm-more-section="learning"]')).toHaveCount(1);
+  await expect(menu.locator('[data-mm-registry-menu="mission-evidence"]')).toHaveCount(1);
+  await page.evaluate(()=>closeModal());
+  await expect(home.locator('[data-mm-home-toolbox]')).toBeVisible();
+});
+
 test('Home is one primary lesson decision plus Book resume and two non-duplicate specialist tools',async({page})=>{
   await page.setViewportSize({width:810,height:1080});
   await openApp(page);
