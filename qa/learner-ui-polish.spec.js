@@ -60,7 +60,7 @@ test('five mobile tabs start with actionable content instead of oversized introd
   await expect(page.locator('#materials [data-mm-all-material-query]')).toBeVisible();
   await expect(page.locator('#materials [data-mm-catalogue-boundary]')).toBeAttached();
   await expect(page.locator('#materials #mmMaterialsPageIntro')).toBeVisible();
-  await expect(page.locator('#materials [data-mm-all-material-results] [data-mm-material-index-result]').first()).toBeVisible();
+  await expect(page.locator('#materials [data-mm-all-material-results] [data-mm-family-open="PP"]')).toBeVisible();
   await expect(page.locator('#materials [data-mm-exact-query]')).toBeHidden();
   await expect(page.locator('#materials [data-mm-exact-results]')).toBeHidden();
 
