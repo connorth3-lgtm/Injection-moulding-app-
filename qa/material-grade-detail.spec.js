@@ -166,7 +166,7 @@ test('Singapore exact-grade material search exposes Mitsui Elastomers Singapore 
   // the public Materials screen has one visible searchable catalogue.
   await search.evaluate(el=>{el.value='Singapore';el.dispatchEvent(new Event('input',{bubbles:true}))});
   await expect(root).toHaveAttribute('data-mm-material-total','31');
-  await expect(root.locator('[data-mm-material-grade]')).toHaveCount(24);
+  // The hidden legacy exact-grade engine still paginates 24 rows; the unified\n  // visible catalogue includes inline exact-grade details and must not inflate it.\n  await expect(root.locator('[data-mm-exact-results] [data-mm-material-grade]')).toHaveCount(24);
   const status=root.locator('[data-mm-material-page-status]');
   await expect(status).toContainText('31 matching exact grades');
   await expect(status).toContainText('page 1 of 2');
