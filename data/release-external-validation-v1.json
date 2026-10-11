@@ -156,7 +156,7 @@
     "artifactDigest": "sha256:1ec5ede11d793f979ad4ec0823d1ead2b8bb766ff89e7b4b4e171e38e3b02426",
     "artifactExpiresAt": "2027-01-09T03:08:31Z"
   },
-  "candidateStatus": "Technical candidate 2026.10.11.7: runtime fingerprint sha256:53879bb5f2b60bfb7c6244b24bfd1f870b82efd747a3f948e395ba81401a3316 measured from retained artifact 11690679703, source ea42de1868e78b829de684c0ed9a671473e7b6e7. Producer and exact-head browser/visual gate results must be independently verified. All external reviews and physical Android/iOS tests HOLD.",
+  "candidateStatus": "HOLD — Technical candidate 2026.10.11.7: runtime fingerprint sha256:53879bb5f2b60bfb7c6244b24bfd1f870b82efd747a3f948e395ba81401a3316 measured from retained artifact 11690679703, source ea42de1868e78b829de684c0ed9a671473e7b6e7. Producer and exact-head browser/visual gate results must be independently verified. All external reviews and physical Android/iOS tests HOLD.",
   "previousPreviousCandidate": {
     "release": "2026.10.09.5",
     "sourceSha": "581e08e58f0b9ec3c7a3501f9a3a71d47ed2c184",
