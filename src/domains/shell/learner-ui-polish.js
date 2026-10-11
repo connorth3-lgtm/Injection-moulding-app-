@@ -327,6 +327,26 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 'use strict';
 if(window.MM_REFERENCE_LAYOUT)return;
 const ASSET='./assets/book-diagrams/';
+const PHOTO_ASSET='./assets/mockup-reference-tiles.webp';
+// The small photographs here are direct visual crops of the user-selected
+// five-screen mockup, not grade provenance or equipment evidence.
+const photoProbe=new Image();
+photoProbe.onload=()=>document.documentElement.classList.add('mm-reference-photo-ready');
+photoProbe.src=PHOTO_ASSET;
+const sourcePhotoTile={machine:0,cycle:1,controls:2,materials:3,mould:4,
+  process:5,defects:6,maintenance:7,cases:8,setup:19,quality:20,
+  diagnosing:21,training:24,challenges:23,selecting:25,thermal:26,evidence:27};
+function picture(key,description,index=sourcePhotoTile[key]??0){
+  const holder=document.createElement('span');
+  holder.className='mm-reference-photo';
+  holder.dataset.mmPhotoIndex=String(index);
+  holder.setAttribute('aria-hidden','true');
+  holder.style.backgroundImage='url("'+PHOTO_ASSET+'")';
+  holder.style.backgroundSize='700% 500%';
+  holder.style.backgroundPosition=(index%7)*100/6+'% '+Math.floor(index/7)*25+'%';
+  holder.appendChild(image(key,description)); // local engineering-diagram fallback
+  return holder;
+}
 const art={
   machine:'machine-mould-system-overview.svg',
   cycle:'cycle-timeline.svg',
@@ -372,20 +392,20 @@ function home(){
     const h=document.createElement('h2');h.textContent='Welcome to MouldMaster';
     const p=document.createElement('p');p.textContent='Practical knowledge for injection moulding.';
     words.append(h,p);
-    hero.append(words,image('machine','Diagram of an injection moulding machine and mould'));
+    hero.append(words,picture('machine','Reference image of injection moulding machine',28));
     const anchor=focus.closest('.mm-dashboard-slot')||focus;
     anchor.before(hero);
   }
   const book=root.querySelector('[data-mm-home-book]');
   if(book&&!book.querySelector('.mm-reference-book-art')){
-    const pic=image('materials','Polymer and processing reference diagram');
+    const pic=picture('materials','Reference Book thumbnail',29);
     pic.className+=' mm-reference-book-art';
     book.prepend(pic);
   }
   if(book&&!root.querySelector('.mm-reference-home-practice')){
     const practice=document.createElement('button');practice.type='button';
     practice.className='mm-reference-home-practice';
-    practice.append(image('setup','Plasticising sequence process illustration'));
+    practice.append(picture('setup','Practice example reference thumbnail',30));
     const wrap=document.createElement('span');wrap.className='mm-reference-home-practice-copy';
     const title=document.createElement('b');title.textContent='Continue practice';
     const desc=document.createElement('small');desc.textContent='Work a short evidence-led moulding decision';
@@ -429,7 +449,7 @@ function learn(){
     const b=document.createElement('b');b.textContent=title;
     const small=document.createElement('small');small.textContent=hints[i]||'Open the course and its lessons';
     const chevron=document.createElement('span');chevron.className='mm-reference-chevron';chevron.textContent='›';chevron.setAttribute('aria-hidden','true');
-    copy.append(b,small);button.append(image(learnArt[i],title+' concept diagram'),copy,chevron);
+    copy.append(b,small);button.append(picture(learnArt[i],title+' reference illustration',i),copy,chevron);
     button.addEventListener('click',()=>{
       group.open=true;group.scrollIntoView({block:'start',behavior:'smooth'});
       group.querySelector('summary')?.focus({preventScroll:true});
@@ -464,13 +484,13 @@ function practice(){
   sectionHeading('Practice',hub);
   const nav=document.createElement('nav');nav.className='mm-reference-practice-list';
   nav.setAttribute('aria-label','Illustrated practice activities');
-  practiceTiles.forEach(([title,desc,picture,action])=>{
+  practiceTiles.forEach(([title,desc,pictureKey,action],i)=>{
     const btn=document.createElement('button');btn.type='button';btn.className='mm-reference-list-card';
     const copy=document.createElement('span');copy.className='mm-reference-card-copy';
     const name=document.createElement('b');name.textContent=title;
     const small=document.createElement('small');small.textContent=desc;
     const arrow=document.createElement('span');arrow.className='mm-reference-chevron';arrow.textContent='›';arrow.setAttribute('aria-hidden','true');
-    copy.append(name,small);btn.append(image(picture,title+' training diagram'),copy,arrow);
+    copy.append(name,small);btn.append(picture(pictureKey,title+' reference thumbnail',19+i),copy,arrow);
     btn.addEventListener('click',()=>{
       const existing=hub.querySelector('[data-mm-hub-action="'+action+'"]');
       if(existing)existing.click();
@@ -511,7 +531,13 @@ function materials(){
     if(!sum)return;
     const title=card.querySelector('.mm-material-index-title')?.textContent||'';
     const family=card.querySelector('.mm-material-index-subtitle')?.textContent||'';
-    const img=image(materialArt(family+' '+title),'Polymer and material reference diagram');
+    const familyCode=(family+' '+title).toUpperCase();
+    const materialTile=/(ABS|PC\/ABS)/.test(familyCode)?9:/\bPC\b/.test(familyCode)?10:
+      /\bPP\b/.test(familyCode)?11:/\bPE\b/.test(familyCode)?12:
+      /\bPA\d*\b|NYLON/.test(familyCode)?13:/\bPOM\b/.test(familyCode)?14:
+      /\bPET\b/.test(familyCode)?15:/\bPBT\b/.test(familyCode)?16:
+      /\bPMMA\b/.test(familyCode)?17:/TPE|TPU|ELASTOMER/.test(familyCode)?18:9;
+    const img=picture(materialArt(family+' '+title),'Illustrative polymer texture from user reference',materialTile);
     img.classList.add('mm-reference-material-art');
     sum.prepend(img);
     const sourced=card.querySelector('[data-mm-unified-grade]');

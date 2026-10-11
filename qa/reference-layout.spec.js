@@ -68,6 +68,11 @@ test('reference diagrams load locally without external image dependencies',async
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
   await expect(page.locator('#scenarios .mm-reference-picture')).toHaveCount(9);
+  await page.waitForFunction(()=>document.documentElement.classList.contains('mm-reference-photo-ready'));
+  await expect(page.locator('#scenarios .mm-reference-photo')).toHaveCount(9);
+  const tiles=await page.locator('#scenarios .mm-reference-photo').evaluateAll(rows=>rows.map(node=>({tile:Number(node.dataset.mmPhotoIndex),background:getComputedStyle(node).backgroundImage})));
+  expect(tiles.map(x=>x.tile)).toEqual([19,20,21,22,23,24,25,26,27]);
+  expect(tiles.every(x=>x.background.includes('mockup-reference-tiles.webp'))).toBe(true);
   const images=await page.locator('#scenarios .mm-reference-picture').evaluateAll(rows=>
     rows.map(img=>({src:img.getAttribute('src'),loaded:img.complete&&img.naturalWidth>0})));
   expect(images.every(img=>img.src.startsWith('./assets/book-diagrams/')&&img.loaded)).toBeTruthy();
