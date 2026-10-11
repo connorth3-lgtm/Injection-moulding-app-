@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "release": "2026.10.11.8",
   "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.11.8.md",
-  "sourceSha": "9b969fff1b5493493c03049f9abb38c9fd90667d",
+  "sourceSha": "ed8645bb137cea5449251dc562e51100ed113592",
   "runtimeFingerprint": "sha256:2b6b69065d4f2f1a466e05495a1e1272337386651760ac5448017a8621d706c9",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.11.8 has preliminary candidate 9b969fff1b5493493c03049f9abb38c9fd90667d, fingerprint sha256:2b6b69065d4f2f1a466e05495a1e1272337386651760ac5448017a8621d706c9; the producer success is still pending and all real NVDA and VoiceOver tasks remain pending until independent human evidence is recorded.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.11.8 is bound to successful producer candidate ed8645bb137cea5449251dc562e51100ed113592, fingerprint sha256:2b6b69065d4f2f1a466e05495a1e1272337386651760ac5448017a8621d706c9; NVDA and VoiceOver tasks and physical Android spoken audio remain pending until actual device/human evidence is recorded.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
