@@ -4,8 +4,8 @@
   "validationIndex": "qa/EXTERNAL_VALIDATION_2026.10.11.8.md",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
-    "status": "fail",
-    "claim": "New 2026.10.11.8 illustrated/photo and Android speech candidate source 9b969fff1b5493493c03049f9abb38c9fd90667d has a retained artifact 11710723107, but producer run 38162935601 did not pass required exact-head Mobile Browser QA. Owner visually approved updated PR #615 screenshots; until fresh substantive browser and producer checks pass, automated technical release acceptance remains FAIL. All seven external human/device/provider streams HOLD."
+    "status": "pass",
+    "claim": "Exact-source release 2026.10.11.8 producer run 38163449886 completed successfully on ed8645bb137cea5449251dc562e51100ed113592, artifact 11711246457, published runtime fingerprint sha256:2b6b69065d4f2f1a466e05495a1e1272337386651760ac5448017a8621d706c9. Owner-approved 12-pixel illustrated .8 baseline, Chromium and WebKit substantive/visual, cross-browser, reachability, five reliability shards, Android first-tap Read Aloud regression and Question Quality 50-Pass all passed. This is software-controlled automation only; actual Android spoken audio/physical devices, human NVDA/VoiceOver, SMEs, signed Windows, NZQA/provider, learner pilot, production root and automatic machine-control remain HOLD."
   },
   "governance": {
     "status": "enforced",
@@ -24,7 +24,7 @@
     "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.10.11.8.md",
     "candidate": {
       "release": "2026.10.11.8",
-      "sourceSha": "9b969fff1b5493493c03049f9abb38c9fd90667d",
+      "sourceSha": "ed8645bb137cea5449251dc562e51100ed113592",
       "runtimeFingerprint": "sha256:2b6b69065d4f2f1a466e05495a1e1272337386651760ac5448017a8621d706c9"
     },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix.",
@@ -40,14 +40,14 @@
     "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.10.11.8.md",
     "currentCandidate": {
       "release": "2026.10.11.8",
-      "sourceSha": "9b969fff1b5493493c03049f9abb38c9fd90667d",
+      "sourceSha": "ed8645bb137cea5449251dc562e51100ed113592",
       "runtimeFingerprint": "sha256:2b6b69065d4f2f1a466e05495a1e1272337386651760ac5448017a8621d706c9",
-      "candidateRunId": 38162935601,
+      "candidateRunId": 38163449886,
       "candidateWorkflow": "Pre-merge Public Candidate",
-      "artifactId": 11710723107,
-      "artifactName": "physical-pwa-candidate-9b969fff1b5493493c03049f9abb38c9fd90667d",
-      "artifactDigest": "sha256:f3de64ca9c0997e77336407eda0a962f6b8098bebe240c502aa8998bf8b2e63c",
-      "artifactExpiresAt": "2027-01-09T18:13:54Z"
+      "artifactId": 11711246457,
+      "artifactName": "physical-pwa-candidate-ed8645bb137cea5449251dc562e51100ed113592",
+      "artifactDigest": "sha256:315cf075dbf15ecffcf0ed7f4de90011fdd54e966acc97e2d949cfd1a79ae13c",
+      "artifactExpiresAt": "2027-01-09T18:21:15Z"
     },
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release.",
     "previousCandidate": {
@@ -120,7 +120,7 @@
     "required": "Genuine provider ownership, stakeholder need, provider-approved design, authorised assessment/internal moderation, consent-to-assess/CMR confirmation, applicable national moderation, workplace evidence and provider-controlled review/change evidence for the exact governed release.",
     "candidate": {
       "release": "2026.10.11.8",
-      "sourceSha": "9b969fff1b5493493c03049f9abb38c9fd90667d",
+      "sourceSha": "ed8645bb137cea5449251dc562e51100ed113592",
       "runtimeFingerprint": "sha256:2b6b69065d4f2f1a466e05495a1e1272337386651760ac5448017a8621d706c9"
     },
     "previousCandidate": {
@@ -131,14 +131,14 @@
   },
   "webCandidate": {
     "release": "2026.10.11.8",
-    "sourceSha": "9b969fff1b5493493c03049f9abb38c9fd90667d",
+    "sourceSha": "ed8645bb137cea5449251dc562e51100ed113592",
     "runtimeFingerprint": "sha256:2b6b69065d4f2f1a466e05495a1e1272337386651760ac5448017a8621d706c9",
-    "candidateRunId": 38162935601,
+    "candidateRunId": 38163449886,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 11710723107,
-    "artifactName": "physical-pwa-candidate-9b969fff1b5493493c03049f9abb38c9fd90667d",
-    "artifactDigest": "sha256:f3de64ca9c0997e77336407eda0a962f6b8098bebe240c502aa8998bf8b2e63c",
-    "artifactExpiresAt": "2027-01-09T18:13:54Z"
+    "artifactId": 11711246457,
+    "artifactName": "physical-pwa-candidate-ed8645bb137cea5449251dc562e51100ed113592",
+    "artifactDigest": "sha256:315cf075dbf15ecffcf0ed7f4de90011fdd54e966acc97e2d949cfd1a79ae13c",
+    "artifactExpiresAt": "2027-01-09T18:21:15Z"
   },
   "candidatePolicy": {
     "previewBranchAuthoritative": false,
@@ -156,7 +156,7 @@
     "artifactDigest": "sha256:fb03634d8ab7813ff87cb37d3906f8f40de1713229c8e2f079a673d2cf90d48c",
     "artifactExpiresAt": "2027-01-09T16:24:20Z"
   },
-  "candidateStatus": "HOLD — PENDING automated acceptance for 2026.10.11.8: retained source 9b969fff1b5493493c03049f9abb38c9fd90667d, producer 38162935601 not successful; artifact 11710723107 technical evidence only. Strict approved screenshot comparison and required exact-head checks must pass before merge. All external streams remain HOLD.",
+  "candidateStatus": "TECHNICAL AUTOMATION PASS — Exact 2026.10.11.8 producer run 38163449886 successful, source ed8645bb137cea5449251dc562e51100ed113592, artifact 11711246457, fingerprint sha256:2b6b69065d4f2f1a466e05495a1e1272337386651760ac5448017a8621d706c9. Owner-approved updated visual baseline and exact-source browser/question gates pass. All seven external streams remain HOLD; protected PR-head checks must pass before merge; no production-root or machine-control authorization.",
   "previousPreviousCandidate": {
     "release": "2026.10.09.5",
     "sourceSha": "581e08e58f0b9ec3c7a3501f9a3a71d47ed2c184",
