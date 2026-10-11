@@ -436,8 +436,8 @@ function home(){
     const tiles=document.createElement('div');tiles.className='mm-reference-quick-grid';
     const options=[
       ['⌕','Material search',()=>{window.switchView?.('materials');requestAnimationFrame(()=>document.querySelector('#materials [data-mm-all-material-query]')?.focus({preventScroll:true}))}],
-      ['⚠','Defect guide',()=>{if(typeof window.MM_MOULD_MASTER_WORKSPACE?.open==='function')window.MM_MOULD_MASTER_WORKSPACE.open();else window.switchView?.('scenarios')}],
-      ['▥','Process basics',()=>{if(typeof window.MM_PRIMARY_HUBS?.openLearningPathDetail==='function')window.MM_PRIMARY_HUBS.openLearningPathDetail();else window.switchView?.('path')}],
+      ['⚠','Defect guide',()=>{window.switchView?.('scenarios');requestAnimationFrame(()=>document.querySelector('#scenarios [data-mm-hub-action="troubleshooting"]')?.click())}],
+      ['▥','Process basics',()=>{window.switchView?.('path');requestAnimationFrame(()=>document.querySelector('#path [data-mm-lesson-catalog]')?.scrollIntoView({behavior:'smooth',block:'start'}))}],
       ['▦','Unit converter',()=>openReferenceConverter()]
     ];
     for(const [symbol,label,run] of options){
@@ -607,6 +607,12 @@ function materials(){
     const tabs=legacy.querySelector(':scope > .mat-tabs');
     if(tabs)guide.insertAdjacentElement('afterend',tabs);
     guide.querySelector('[data-mm-family-science-content]')?.appendChild(legacy);
+    // When a learner opens a material lesson, lab, quiz or references using
+    // the existing tab routing, the teaching pane MUST NOT remain inside a
+    // collapsed family guide. Preserve the optional explorer default.
+    const currentTab=tabs?.querySelector('button.active')?.textContent?.trim()||'';
+    const lessonShown=!!legacy.querySelector('.mat-lesson');
+    if(lessonShown||(['Learn','Interactive labs','Knowledge check','Evidence & references'].includes(currentTab)))guide.open=true;
     const intro=root.querySelector('#mmMaterialLearningAnchor');
     if(intro&&intro.closest('[data-mm-family-science]'))guide.insertAdjacentElement('afterend',intro);
   }
