@@ -107,7 +107,10 @@ for(const width of [320,360,390,412]){
     await expect(first.locator('[data-mm-material-jump="compare"]')).toBeVisible();
     await first.locator('[data-mm-material-jump="learning"]').click();
     await expect(familyScience).toHaveAttribute('open','');
-    await expect(familyScience.locator('#mmMaterialLearningAnchor')).toBeVisible();
+    // The learning landing section stays visible outside the optional
+    // family-science disclosure, so lesson navigation is never hidden.
+    await expect(page.locator('#materials #mmMaterialLearningAnchor')).toBeVisible();
+    await expect(page.locator('#materials .mat-tabs')).toBeVisible();
 
     await page.evaluate(()=>switchView('scenarios'));
     await expect(page.locator('#scenarios .mm-reference-title')).toHaveText('Practice');
