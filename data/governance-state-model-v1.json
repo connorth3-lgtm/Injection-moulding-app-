@@ -346,7 +346,7 @@
   "currentAssuranceEvidence": {
     "staticContract": {
       "status": "pass",
-      "meaning": "Successful exact-source 2026.10.11.6 candidate producer run 38107428260 retained source 46337247aa9c334fb741c23704723b3f7688e6cf, artifact 11690278594, digest sha256:1ec5ede11d793f979ad4ec0823d1ead2b8bb766ff89e7b4b4e171e38e3b02426 and public runtime fingerprint sha256:4013679bf1b599d7b06abf9fca6f0b3a1e484537d095cfedc595347759574d6b, independently measured from 163 retained archive files. Technical automation succeeded; all independent external human/device/provider reviews remain HOLD."
+      "meaning": "Successful exact-source release 2026.10.11.6 candidate producer run 38107428260 retained source 46337247aa9c334fb741c23704723b3f7688e6cf, artifact 11690278594, digest sha256:1ec5ede11d793f979ad4ec0823d1ead2b8bb766ff89e7b4b4e171e38e3b02426 and public runtime fingerprint sha256:4013679bf1b599d7b06abf9fca6f0b3a1e484537d095cfedc595347759574d6b, independently measured from 163 retained archive files. Technical automation succeeded; all independent external human/device/provider reviews remain HOLD."
     },
     "behavioralBrowser": {
       "status": "pass",
