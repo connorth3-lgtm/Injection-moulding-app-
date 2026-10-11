@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.11.3`**.
+Current governed web candidate: **`2026.10.11.4`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Successful exact-source Pre-merge Public Candidate run 38089059338 retained web release 2026.10.11.3, source 0c93cfeddc60f50c9f7e5d567fb041592a47d2c6, artifact 11682829264, with public-runtime fingerprint sha256:c5942fcd791077c81171c359e5c8480f23c0c2855d93affb9673162b57bcf50d verified from the actual archived Pages bytes. This is technical source identity, not final protected-main release approval, human review, physical-device or production authorization. |
-| Behavioral / browser | **pass** | Mobile Browser QA (Chromium/WebKit, visual and reliability) and Question Quality 50-Pass passed for release 2026.10.11.3 exact candidate source 0c93cfeddc60f50c9f7e5d567fb041592a47d2c6. Book Materials visual owner acceptance, real devices and human AT/SME/provider validation remain separate HOLDs; protected-main checks still gate publication. |
+| Static / contract | **pass** | Successful exact-source producer run 38101688491 retained release 2026.10.11.4, source efb469f75efecf1cfbcd621c0de70560a4914501, artifact 11688116692 and public-runtime fingerprint sha256:fdad0252a57e72234ac42532765d0bf9a790ad40e0d4b75746d6502bf993c974 confirmed from the downloaded artifact. Required Mobile Browser QA and Question Quality 50-Pass passed on that source. Technical retention does not grant human, device, provider, production or protected-main authority. |
+| Behavioral / browser | **pass** | Mobile Browser QA (Chromium/WebKit, visual and five reliability shards) and Question Quality 50-Pass passed for release 2026.10.11.4 source efb469f75efecf1cfbcd621c0de70560a4914501. Real mobile hardware, iPad/200% zoom, assistive-technology/SME/provider review and protected-main publication remain separately held. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |

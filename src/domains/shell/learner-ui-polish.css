@@ -1,4 +1,4 @@
-/* MouldMaster learner UI polish — 2026.10.11.3 */
+/* MouldMaster learner UI polish — 2026.10.11.4 */
 
 /* Book: the evidence contract stays visible and accessible, but it no longer
    competes with the learner's chapter choice above the fold. */
@@ -285,7 +285,7 @@
   #dashboard .mm-home-book-actions button{width:100%!important;min-width:0!important;min-height:44px!important;padding:8px 9px!important;font-size:11.5px!important;white-space:nowrap!important}
 }
 
-/* Canonical Home hierarchy — 2026.10.11.3 */
+/* Canonical Home hierarchy — 2026.10.11.4 */
 /* Home keeps one dominant lesson decision, one persistent Book/Keep Reading surface,
    and two specialist shortcuts without duplicating Learn, Materials, Practice or Saved lessons. */
 #dashboard{
@@ -685,5 +685,64 @@
   }
   body:has(#mmBookView:not(.hidden)) #pageSubtitle {
     display:none!important
+  }
+}
+
+/* Mobile Materials: keep the exact-grade heading informative without pushing
+   the searchable catalogue behind a tall introductory block or fixed nav. */
+@media(max-width:700px){
+  #materials #mmExactMaterialCatalog{
+    padding:12px!important;
+  }
+  #materials #mmExactMaterialCatalog .mm-exact-head{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto!important;
+    align-items:start!important;
+    gap:6px 10px!important;
+  }
+  #materials #mmExactMaterialCatalog .mm-exact-head>div{
+    min-width:0!important;
+  }
+  #materials #mmExactMaterialCatalog .mm-exact-head h2{
+    font-size:clamp(22px,6vw,26px)!important;
+    line-height:1.14!important;
+    margin:3px 0 6px!important;
+    letter-spacing:-.025em!important;
+    overflow-wrap:normal!important;
+  }
+  #materials #mmExactMaterialCatalog .mm-exact-head p{
+    font-size:12px!important;
+    line-height:1.4!important;
+    margin:0 0 6px!important;
+  }
+  #materials #mmExactMaterialCatalog .mm-material-coverage{
+    font-size:11px!important;
+    line-height:1.35!important;
+  }
+  #materials #mmExactMaterialCatalog .mm-exact-head>.pill{
+    max-width:91px!important;
+    padding:6px 9px!important;
+    font-size:11px!important;
+    line-height:1.25!important;
+    text-align:center!important;
+    white-space:normal!important;
+  }
+  #materials #mmExactMaterialCatalog .mm-material-all-index{
+    margin:10px 0!important;
+    padding:11px!important;
+  }
+  #materials #mmExactMaterialCatalog .mm-material-all-index-head h3{
+    font-size:20px!important;
+    line-height:1.2!important;
+    margin:0 0 7px!important;
+  }
+  #materials #mmExactMaterialCatalog .mm-material-all-search input{
+    width:100%!important;
+    min-width:0!important;
+    min-height:44px!important;
+    font-size:16px!important;
+  }
+  #materials #mmExactMaterialCatalog .mm-material-all-filters>summary{
+    min-height:44px!important;
   }
 }
