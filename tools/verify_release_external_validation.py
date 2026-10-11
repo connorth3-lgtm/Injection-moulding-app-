@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 from qa_curriculum_semantic_review import canonical_lessons as canonical_curriculum_lessons, validate_contract as validate_curriculum_semantics
+from hold_candidate_packet_integrity import PACKETS as CURRENT_HOLD_PACKETS, validate_packets as verify_current_hold_packets
 
 CONTRACT = ROOT / "data" / "release-external-validation-v1.json"
 VERSION = ROOT / "version.json"
@@ -573,6 +574,14 @@ def main() -> None:
     validate_curriculum(data["curriculumSme"], contract_release)
     validate_learner(data["learnerOutcomes"], contract_release)
     validate_nzqa(data["nzqaProvider"], contract_release, web_candidate)
+
+    # This packet consistency check is independent of visual owner approval or
+    # the technical PASS gate. It must not be masked by the final HOLD failure.
+    if all(data[area]["status"] == "hold" for area in CURRENT_HOLD_PACKETS):
+        try:
+            verify_current_hold_packets(ROOT, data)
+        except ValueError as exc:
+            fail(str(exc))
 
     production = data["productionUse"]
     if production.get("status") != "advisory-only" or production.get("authority") != "no-automatic-machine-control":
