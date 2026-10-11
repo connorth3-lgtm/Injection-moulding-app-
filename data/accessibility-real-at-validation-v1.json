@@ -5,7 +5,7 @@
   "sourceSha": "efcacc7256846abd7d1dbe1fae2d21e5d88acb92",
   "runtimeFingerprint": "sha256:77d528e2a527adcbf7e436e0669355ac9a4df24c8c2eae2982c68387156bd374",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility checks do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.11.7 binds to successfully produced retained learner-runtime candidate efcacc7256846abd7d1dbe1fae2d21e5d88acb92, fingerprint sha256:77d528e2a527adcbf7e436e0669355ac9a4df24c8c2eae2982c68387156bd374; all NVDA and VoiceOver tasks remain pending until real human evidence exists.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.11.7 binds to successfully produced retained learner-runtime candidate efcacc7256846abd7d1dbe1fae2d21e5d88acb92, fingerprint sha256:77d528e2a527adcbf7e436e0669355ac9a4df24c8c2eae2982c68387156bd374; all NVDA and VoiceOver tasks remain pending until real human evidence exists.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
