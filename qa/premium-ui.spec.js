@@ -330,7 +330,8 @@ test('Materials comparison guides valid choices before running evidence work',as
   await page.setViewportSize({width:1024,height:900});
   await openApp(page);
   await page.waitForFunction(()=>Boolean(window.MM_MATERIAL_REGISTRY?.openPage));
-  await page.evaluate(()=>window.MM_MATERIAL_REGISTRY.openPage({replaceUrl:false}));
+  await page.evaluate(()=>window.MM_MATERIAL_REGISTRY.openPage({focus:'compare',replaceUrl:false}));
+  await expect(page.locator('#mmExactMaterialCatalog [data-mm-material-workflows]')).toHaveAttribute('open','');
   const a=page.locator('[data-mm-compare-a]'),b=page.locator('[data-mm-compare-b]');
   const run=page.locator('[data-mm-run-material-compare]');
   await expect(run).toBeDisabled();
@@ -481,11 +482,14 @@ test('Hidden Mission Control strip keeps scoped evidence and command search acce
     stage:'baseline',
     context:{machine:'IMM-07',mould:'MOULD-184',material:'PA66 GF30',part:'Housing A',caseId:'QA-MISSION-01'}
   }));
-  await expect(mc).toContainText('QA cavity-balance mission');
-  await expect(mc).toContainText('IMM-07');
-  await expect(mc).toContainText('MOULD-184');
-  await expect(mc).toContainText('PA66 GF30');
-  await expect(mc.locator('[data-mm-mc-stage]')).toHaveCount(8);
+  // No hidden duplicate mission-context DOM: verify the same private data
+  // using the preserved learner-scoped API, not a retired visible panel.
+  await expect(mc.locator('.mm-mc-context, .mm-mc-timeline, [data-mm-mc-stage]')).toHaveCount(0);
+  const state=await page.evaluate(()=>window.MM_MISSION_CONTROL.state());
+  expect(state.mission?.title).toBe('QA cavity-balance mission');
+  expect(state.mission?.context?.machine).toBe('IMM-07');
+  expect(state.mission?.context?.mould).toBe('MOULD-184');
+  expect(state.mission?.context?.material).toBe('PA66 GF30');
 
   await page.evaluate(()=>window.MM_MISSION_CONTROL.addEvidence({kind:'measured',text:'Cavity 4 mass lower than peer cavities across repeat shots.'}));
   await page.evaluate(()=>window.MM_MISSION_CONTROL.toggleDrawer(true));
@@ -501,8 +505,10 @@ test('Hidden Mission Control strip keeps scoped evidence and command search acce
   await page.keyboard.press('Escape');
 
   await page.evaluate(()=>window.switchView('materials'));
-  await expect(mc).toContainText('QA cavity-balance mission');
-  await expect(mc).toContainText('PA66 GF30');
+  const afterNav=await page.evaluate(()=>window.MM_MISSION_CONTROL.state());
+  expect(afterNav.mission?.title).toBe('QA cavity-balance mission');
+  expect(afterNav.mission?.context?.material).toBe('PA66 GF30');
+  await expect(mc.locator('.mm-mc-context, .mm-mc-timeline, [data-mm-mc-stage]')).toHaveCount(0);
   await page.evaluate(()=>window.MM_MISSION_CONTROL.setMode('engineer'));
   await expect(page.locator('body')).toHaveAttribute('data-mm-mission-mode','engineer');
 
@@ -529,11 +535,12 @@ test('Mission state persists through navigation and reload with no visible strip
 
   const mc=page.locator('#mmMissionControl');
   await expect(mc.locator('.mm-mc-context')).toBeHidden();
-  await expect(mc.locator('[data-mm-mc-stage]')).toHaveCount(8);
-  await expect(mc).toContainText('QA connected moulding mission');
-  await expect(mc).toContainText('IMM-07');
-  await expect(mc).toContainText('MOULD-184');
-  await expect(mc).toContainText('PA66 GF30');
+  await expect(mc.locator('[data-mm-mc-stage], .mm-mc-context, .mm-mc-timeline')).toHaveCount(0);
+  const initialState=await page.evaluate(()=>window.MM_MISSION_CONTROL.state());
+  expect(initialState.mission?.title).toBe('QA connected moulding mission');
+  expect(initialState.mission?.context?.machine).toBe('IMM-07');
+  expect(initialState.mission?.context?.mould).toBe('MOULD-184');
+  expect(initialState.mission?.context?.material).toBe('PA66 GF30');
   const insideMain=await mc.evaluate(el=>Boolean(el.closest('.main')));
   expect(insideMain).toBe(true);
 
@@ -554,8 +561,10 @@ test('Mission state persists through navigation and reload with no visible strip
   await page.evaluate(()=>window.MM_MISSION_CONTROL.setMode('engineer'));
   await expect(page.locator('body')).toHaveAttribute('data-mm-mission-mode','engineer');
   await page.evaluate(()=>window.switchView('materials'));
-  await expect(mc).toContainText('QA connected moulding mission');
-  await expect(mc).toContainText('PA66 GF30');
+  const switched=await page.evaluate(()=>window.MM_MISSION_CONTROL.state());
+  expect(switched.mission?.title).toBe('QA connected moulding mission');
+  expect(switched.mission?.context?.material).toBe('PA66 GF30');
+  await expect(mc.locator('.mm-mc-context, .mm-mc-timeline')).toHaveCount(0);
 
   await page.reload();
   await page.waitForFunction(()=>Boolean(window.MM_MISSION_CONTROL?.state));
@@ -563,8 +572,9 @@ test('Mission state persists through navigation and reload with no visible strip
   await expect(page.locator('#mmMissionControl .mm-mc-context')).toBeHidden();
   await page.evaluate(()=>window.switchView('materials'));
   await expect(page.locator('#mmMissionControl .mm-mc-context')).toBeHidden();
-  await expect(page.locator('#mmMissionControl')).toContainText('QA connected moulding mission');
+  await expect(page.locator('#mmMissionControl .mm-mc-context, #mmMissionControl .mm-mc-timeline')).toHaveCount(0);
   const persisted=await page.evaluate(()=>window.MM_MISSION_CONTROL.state());
+  expect(persisted.mission?.title).toBe('QA connected moulding mission');
   expect(persisted.mission?.context?.machine).toBe('IMM-07');
   expect(persisted.evidence?.length).toBeGreaterThanOrEqual(1);
 
