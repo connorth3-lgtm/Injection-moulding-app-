@@ -310,7 +310,7 @@
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
-    "technicalAutomation": "pass",
+    "technicalAutomation": "fail",
     "bookPublicationAuthorization": "authorized",
     "bookIndependentSme": "hold",
     "curriculumIndependentSme": "hold",
@@ -345,12 +345,12 @@
   "userFacingTerminologyBoundary": "Internal evidenceMaturity=verified must be displayed as 'Source evidence reviewed'. The word verified must not be used by itself in learner-facing Book assurance because independent human SME/device/learner validation is a separate namespace.",
   "currentAssuranceEvidence": {
     "staticContract": {
-      "status": "pass",
-      "meaning": "Successful exact-source producer run 38101688491 retained release 2026.10.11.4, source efb469f75efecf1cfbcd621c0de70560a4914501, artifact 11688116692 and public-runtime fingerprint sha256:fdad0252a57e72234ac42532765d0bf9a790ad40e0d4b75746d6502bf993c974 confirmed from the downloaded artifact. Required Mobile Browser QA and Question Quality 50-Pass passed on that source. Technical retention does not grant human, device, provider, production or protected-main authority."
+      "status": "fail",
+      "meaning": "New release 2026.10.11.5 source 4ac98a464e20386ab88681f7787d0f61894cbca3, artifact 11688467885 and producer run 38103464976 retained with measured runtime fingerprint sha256:0cb4b34cafdc9c5d95ad3de780471f4025097eccf35707d6e03d6b236dc9b5c8; producer technical gate is pending verification and all external reviews HOLD."
     },
     "behavioralBrowser": {
-      "status": "pass",
-      "meaning": "Mobile Browser QA (Chromium/WebKit, visual and five reliability shards) and Question Quality 50-Pass passed for release 2026.10.11.4 source efb469f75efecf1cfbcd621c0de70560a4914501. Real mobile hardware, iPad/200% zoom, assistive-technology/SME/provider review and protected-main publication remain separately held."
+      "status": "fail",
+      "meaning": "Exact-source WebKit, Chromium, five-shard reliability and visual browser suites for 2026.10.11.5 are pending; prior release successes do not transfer. External physical/human evidence HOLD."
     },
     "externalHumanDevice": {
       "status": "hold",

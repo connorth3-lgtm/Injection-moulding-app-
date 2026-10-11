@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Successful exact-source producer run 38101688491 retained release 2026.10.11.4, source efb469f75efecf1cfbcd621c0de70560a4914501, artifact 11688116692 and public-runtime fingerprint sha256:fdad0252a57e72234ac42532765d0bf9a790ad40e0d4b75746d6502bf993c974 confirmed from the downloaded artifact. Required Mobile Browser QA and Question Quality 50-Pass passed on that source. Technical retention does not grant human, device, provider, production or protected-main authority. |
-| Behavioral / browser | **pass** | Mobile Browser QA (Chromium/WebKit, visual and five reliability shards) and Question Quality 50-Pass passed for release 2026.10.11.4 source efb469f75efecf1cfbcd621c0de70560a4914501. Real mobile hardware, iPad/200% zoom, assistive-technology/SME/provider review and protected-main publication remain separately held. |
+| Static / contract | **fail** | New release 2026.10.11.5 source 4ac98a464e20386ab88681f7787d0f61894cbca3, artifact 11688467885 and producer run 38103464976 retained with measured runtime fingerprint sha256:0cb4b34cafdc9c5d95ad3de780471f4025097eccf35707d6e03d6b236dc9b5c8; producer technical gate is pending verification and all external reviews HOLD. |
+| Behavioral / browser | **fail** | Exact-source WebKit, Chromium, five-shard reliability and visual browser suites for 2026.10.11.5 are pending; prior release successes do not transfer. External physical/human evidence HOLD. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
