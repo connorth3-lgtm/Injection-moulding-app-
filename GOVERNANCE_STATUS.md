@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Successful producer run 38105229738 verified release 2026.10.11.5 source 0f94f35cbdc5965cfc4ac5b6413dc6ea3081f57e, retained artifact 11689291423, and runtime fingerprint sha256:ee4cfb09becaa0c912e0b23d9939f7abd44e648044d49ebebf6d5723165594a9 independently computed from actual public bytes; source integrity, browser/visual and question quality passed, while human/device/provider evidence remains HOLD. |
-| Behavioral / browser | **pass** | Mobile Browser QA for release 2026.10.11.5 source 0f94f35cbdc5965cfc4ac5b6413dc6ea3081f57e passed WebKit, Chromium reachability/substantive/visual, cross-browser and five reliability shards, alongside Question Quality 50-Pass. Physical iOS/Android, human AT, independent SME/NZQA provider, signing and production validation remain HOLD. |
+| Static / contract | **fail** | Release 2026.10.11.6 source a56351f926bc502c01c985c3ea84e0d308116157, retained artifact 11689744191 from producer run 38107200234 has measured public runtime fingerprint sha256:4013679bf1b599d7b06abf9fca6f0b3a1e484537d095cfedc595347759574d6b, but exact-source browser and producer quality completion must be verified separately. External evidence remains HOLD. |
+| Behavioral / browser | **fail** | Exact-source browser, accessibility, visual and reliability gates for release 2026.10.11.6 source a56351f926bc502c01c985c3ea84e0d308116157 are pending. Prior release results do not transfer. Real physical devices, assistive technology and provider evidence remain HOLD. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
