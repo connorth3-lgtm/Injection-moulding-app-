@@ -1,12 +1,12 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.11.9`**.
+Current governed web candidate: **`2026.10.11.10`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Automated contract release 2026.10.11.9 source d572ee13d8f2f09139882ff1a271e855284f6e3c: verified producer run 38172783245, retained artifact 11713839913, public-runtime fingerprint sha256:97d9cdf902986357f9446796478525f1b61c0f37162387a042121c310ee4d3c7. Owner-approved .9 strict 12-pixel family-folders visuals, substantive Chromium/WebKit, cross-browser, reachability, reliability and Question Quality 50-Pass passed. All seven external human/device/provider evidence streams remain HOLD. |
-| Behavioral / browser | **pass** | Behavioral browser QA release 2026.10.11.9 source d572ee13d8f2f09139882ff1a271e855284f6e3c: strict 12-pixel visual comparison for 4 viewports and 13 surfaces, substantive Chromium/WebKit, cross-browser reachability and five reliability shards passed, including sourced PP polymer-folder access. This is not proof of actual physical Android Read Aloud sound, real assistive technology or independent device testing. |
+| Static / contract | **fail** | The new 2026.10.11.10 learner-runtime candidate lacks successful exact-head technical automation and a retained release artifact; the previously successful 2026.10.11.9 candidate remains historical, not reusable proof. |
+| Behavioral / browser | **fail** | The redesigned 2026.10.11.10 app has not yet passed the required substantive Chromium/WebKit, four-viewport and 13-surface owner-reviewed visual baseline, cross-browser and reliability checks. No new visual approval is inferred from the older 2026.10.11.9 baseline. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
