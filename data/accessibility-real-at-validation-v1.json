@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.11.9",
-  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.11.9.md",
-  "sourceSha": "d572ee13d8f2f09139882ff1a271e855284f6e3c",
-  "runtimeFingerprint": "sha256:97d9cdf902986357f9446796478525f1b61c0f37162387a042121c310ee4d3c7",
+  "release": "2026.10.11.10",
+  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.11.10.md",
+  "sourceSha": null,
+  "runtimeFingerprint": null,
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.11.9 binds to successful retained technical candidate d572ee13d8f2f09139882ff1a271e855284f6e3c, fingerprint sha256:97d9cdf902986357f9446796478525f1b61c0f37162387a042121c310ee4d3c7; all real NVDA/VoiceOver and physical Android audible Read Aloud checks remain pending until independent human/device evidence is recorded.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.11.10 is a NEW unverified draft candidate: no retained exact-head artifact, source SHA or runtime fingerprint has been approved or bound. All NVDA/VoiceOver and physical Android audible Read Aloud checks remain pending with all seven external streams on HOLD. Previous 2026.10.11.9 retained technical candidate is historical only.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -306,9 +306,9 @@
     "textZoom200Percent": true
   },
   "previousCandidate": {
-    "release": "2026.10.11.8",
-    "sourceSha": "ed8645bb137cea5449251dc562e51100ed113592",
-    "runtimeFingerprint": "sha256:2b6b69065d4f2f1a466e05495a1e1272337386651760ac5448017a8621d706c9"
+    "release": "2026.10.11.9",
+    "sourceSha": "d572ee13d8f2f09139882ff1a271e855284f6e3c",
+    "runtimeFingerprint": "sha256:97d9cdf902986357f9446796478525f1b61c0f37162387a042121c310ee4d3c7"
   },
-  "technicalCandidateStatus": "retained-exact-head-producer-verified"
+  "technicalCandidateStatus": "unbound-technical-hold"
 }
