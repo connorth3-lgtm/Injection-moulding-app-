@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **fail** |
+| Technical automation | **pass** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | New candidate release 2026.10.11.7 source ba2790e83579e9ecd856fa3214e69b3199618edc, artifact 11694991722, fingerprint sha256:77d528e2a527adcbf7e436e0669355ac9a4df24c8c2eae2982c68387156bd374 retained. Exact-head Chromium functional, WebKit and reliability checks passed; strict visual regression is blocked on separate .7 owner baseline approval, and protected release gates remain red. External reviews HOLD. |
-| Behavioral / browser | **fail** | Automated Chromium functional, WebKit, cross-browser, reachability and all five reliability groups passed on the retained .7 runtime source. Overall browser acceptance remains FAIL because strict visual comparisons detect the intentional illustrated redesign against approved .6; owner approval of the actual .7 captures remains HOLD. No physical-device, assistive-technology or external signoff is implied. |
+| Static / contract | **pass** | Automated contract release 2026.10.11.7 source efcacc7256846abd7d1dbe1fae2d21e5d88acb92: verified producer run 38155318622, retained artifact 11707578982, public runtime fingerprint sha256:77d528e2a527adcbf7e436e0669355ac9a4df24c8c2eae2982c68387156bd374. Exact-head software tests and approved .7 visual baseline passed; all seven external evidence streams remain HOLD. |
+| Behavioral / browser | **pass** | Behavioral browser QA release 2026.10.11.7 source efcacc7256846abd7d1dbe1fae2d21e5d88acb92: strict 12-pixel visual regression, substantive Chromium/WebKit, cross-browser compatibility, reachability, all five reliability shards and Question Quality 50-Pass passed. This is not physical-device or independent human validation. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
