@@ -21,7 +21,7 @@ for marker in ['MM_MATERIAL_SEARCH_PAGINATION','index.searchPage','index.searchA
     need(marker in code,f'indexed material pagination marker missing: {marker}')
 need('style=' not in code,'material pagination must not emit inline style attributes')
 registry_code=text(registry)
-for marker in ['mmMaterialsPageIntro','Material library & engineering evidence','mmMaterialCompare','mmMaterialChange','mmMaterialLearningAnchor','openPage',"searchParams.set('view','materials')",'materials-page']:
+for marker in ['mmMaterialsPageIntro','Additional material tools','More material tools','data-mm-material-jump="compare"','data-mm-material-jump="change"','mmMaterialCompare','mmMaterialChange','mmMaterialLearningAnchor','openPage',"searchParams.set('view','materials')",'materials-page']:
     need(marker in registry_code,f'dedicated Materials page marker missing: {marker}')
 materials_page=text('materials.html')
 need('index.html?view=materials' in materials_page,'dedicated materials entry must resolve to canonical app Materials route')
@@ -43,6 +43,6 @@ index_code=text('src/domains/materials/material-search-index.js')
 for marker in ['searchAllPage','referenceDocuments','labDocuments','exactGradeDocument','window.MM_REFERENCE_DATA','window.MM_MATERIAL_BEHAVIOUR_LABS','window.MM_MATERIAL_PRACTICE_EXTENSIONS']:
     need(marker in index_code,f'unified material index marker missing: {marker}')
 unified=text(unified_spec)
-for marker in ['maximum moisture content','hydrolysis','formaldehyde','reference-material','material-lab','Show exact grade']:
+for marker in ['maximum moisture content','hydrolysis','formaldehyde','reference-material','material-lab','data-mm-unified-grade','Primary sources']:
     need(marker in unified,f'unified material search regression marker missing: {marker}')
 print('MouldMaster material search hardening QA passed (race-safe exact catalog plus unified published-material index, accessible pagination, Chromium/WebKit regression, offline core)')

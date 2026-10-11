@@ -17,6 +17,7 @@ async function openMaterials(page,width=412){
 test('exact-grade decision support exposes drying, shrinkage and condition-matched comparisons without ranking materials',async({page})=>{
   await openMaterials(page);
   const root=page.locator('#mmExactMaterialCatalog');
+  await root.locator('[data-mm-material-workflows] > summary').click();
   await expect(root.locator('[data-mm-material-decision]')).toBeVisible();
   await root.locator('[data-mm-compare-a]').selectOption('mat-lgchem-lupoy-gp1000l');
   await root.locator('[data-mm-compare-b]').selectOption('mat-lgchem-lupoy-gp1000ml');
@@ -55,6 +56,7 @@ test('exact-grade decision support exposes drying, shrinkage and condition-match
 test('decision support blocks direct numeric comparison when governed test conditions do not match',async({page})=>{
   await openMaterials(page,768);
   const root=page.locator('#mmExactMaterialCatalog');
+  await root.locator('[data-mm-material-workflows] > summary').click();
   await root.locator('[data-mm-compare-a]').selectOption('mat-lgchem-lupoy-gp5206f');
   await root.locator('[data-mm-compare-b]').selectOption('mat-lotte-infino-nh-1034r');
   await root.locator('[data-mm-run-material-compare]').click();
@@ -74,6 +76,7 @@ test('decision support blocks direct numeric comparison when governed test condi
 test('Material Change Assistant builds a sourced delta report without prescribing production settings',async({page})=>{
   await openMaterials(page,768);
   const root=page.locator('#mmExactMaterialCatalog');
+  await root.locator('[data-mm-material-workflows] > summary').click();
   const assistant=root.locator('[data-mm-material-change-assistant]');
   await expect(assistant).toBeVisible();
   await assistant.locator('[data-mm-change-before]').selectOption('mat-lgchem-lupoy-gp1000ml');

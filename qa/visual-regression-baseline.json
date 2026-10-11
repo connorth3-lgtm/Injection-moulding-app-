@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.11.6",
-  "commit": "3d483cea2a77b9419e46c1e1504a516350d1b182",
+  "release": "2026.10.11.7",
+  "commit": "91a0e07b50d939e238c145901491d2c65821c16d",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,6 +41,6 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "On 2026-10-11 the owner explicitly approved the actual PR #612 browser before/after screenshot comparisons for web/PWA 2026.10.11.6 (360x800 and 412x915 phones, 810x1080 tablet, 1440x900 desktop, including Home/Learn/Materials/Practice/More plus lesson, Book and listening) as the new visual baseline. Human approval was of the browser screenshots and the content-first design, NOT real Android/iPad physical, 200% zoom or human assistive technology testing. The protected-main comparison run 38108497341 retained full old/candidate/diff evidence as artifact 11690492015. The newly pinned immutable visual-baseline/2026.10.11.6 ref points to GitHub preview commit 3d483cea2a77b9419e46c1e1504a516350d1b182, tree 35a26d77e8ee5fecff691c3708e301ff14ddb42a, byte-identical to the staged protected-main source tree at e454e7ae850a6439db45bb6e990f8073b1f768ca. The only change in later PR candidate 84a5be55520daeef2aec7841def5f5c7686a0b30 is correcting a stale phone grid test; visual runtime assets match the approved baseline source. The prior visual-baseline/2026.10.11.3 commit remains separately pinned for audit history. Strict 12-pixel lock, four viewport sizes, all 13 surfaces, and exact PR-head protected-main gates remain unchanged. Seven external reviews, real physical device installation/offline/zoom, NVDA/VoiceOver, independent Book/curriculum SME, NZQA/provider G1-G8, Windows signing and production-root/machine-control authority remain HOLD until separately evidenced.",
-  "ref": "visual-baseline/2026.10.11.6"
+  "policy": "On 2026-10-12 (Pacific/Auckland), the owner expressly approved the actual illustrated five-tab browser screenshots for PR #613 as the 2026.10.11.7 visual design baseline, after prior review of the real Chromium before/current/diff captures (Mobile Browser QA run 38124953118, archived artifact 11696354899), not merely the generated mockup direction. Immutable reference visual-baseline/2026.10.11.7 is pinned to candidate commit 91a0e07b50d939e238c145901491d2c65821c16d, whose learner-facing browser runtime files match the owner-reviewed ba2790e83579e9ecd856fa3214e69b3199618edc design; only release documentation, evidence ledgers, tests and workflow configuration changed between them. Keep strict <=12 diff pixels, all 4 governed viewport sizes and 13 technical screenshot surfaces including lesson, assessment, Book and listening, so the baseline protects the complete browser layout; approval covers the illustrated five-tab visual redesign, not any uninspected technical data, external physical-device or assistive technology check. Retain visual-baseline/2026.10.11.6 immutable for audit. This design approval does not authorize production-root deployment, machine control, physical iOS/Android, human NVDA/VoiceOver, SME, NZQA/provider, learner-outcome or Windows signing validations. No status gate is to be marked PASS without separately successful exact-head automated checks.",
+  "ref": "visual-baseline/2026.10.11.7"
 }

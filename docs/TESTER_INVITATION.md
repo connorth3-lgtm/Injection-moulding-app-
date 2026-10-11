@@ -1,6 +1,6 @@
 # MouldMaster preview — invitation template
 
-> **Tester publication HOLD:** This is a draft handoff for 2026.10.11.6; it must not be sent to testers until protected-main release promotion, exact live Pages verification, all required software checks and the invitation-specific operator steps have passed. No physical device/AT/SME/NZQA evidence is implied.
+> **Tester publication HOLD:** This is a draft handoff for 2026.10.11.7; it must not be sent to testers until protected-main release promotion, exact live Pages verification, all required software checks and the invitation-specific operator steps have passed. No physical device/AT/SME/NZQA evidence is implied.
 
 
 **Internal use. Send only after completing [TESTER_HANDOFF.md](TESTER_HANDOFF.md) and passing its live deployment preflight.** Replace the date and reply route as appropriate. Do not send the template before the current hosted preview has been verified against the approved protected-main source.

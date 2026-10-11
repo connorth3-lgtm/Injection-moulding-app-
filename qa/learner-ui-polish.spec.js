@@ -59,8 +59,10 @@ test('five mobile tabs start with actionable content instead of oversized introd
   await expect(page.locator('#materials .mm-material-all-index-head h3')).toBeVisible();
   await expect(page.locator('#materials [data-mm-all-material-query]')).toBeVisible();
   await expect(page.locator('#materials [data-mm-catalogue-boundary]')).toBeAttached();
-  await expect(page.locator('#materials #mmMaterialsPageIntro [data-mm-material-jump="compare"]')).toBeVisible();
-  await expect(page.locator('#materials .mm-exact-grade').first()).toBeAttached();
+  await expect(page.locator('#materials #mmMaterialsPageIntro')).toBeVisible();
+  await expect(page.locator('#materials [data-mm-all-material-results] [data-mm-material-index-result]').first()).toBeVisible();
+  await expect(page.locator('#materials [data-mm-exact-query]')).toBeHidden();
+  await expect(page.locator('#materials [data-mm-exact-results]')).toBeHidden();
 
   await nav.getByRole('button',{name:'Practice'}).click();
   await expect(page.locator('#scenarios .mm-practice-hub>.mm-primary-hub-head')).toBeHidden();
@@ -137,7 +139,8 @@ test('Home is one primary lesson decision plus Book resume and two non-duplicate
   }));
   expect(tablet.dashboardWidth).toBeLessThanOrEqual(960.5);
   expect(tablet.outer).toBe(1);
-  expect(tablet.actions).toBe(2);
+  // The approved illustrated tablet layout flows Toolbox actions in one column.
+  expect(tablet.actions).toBe(1);
   expect(tablet.lessonBeforeBook).toBeTruthy();
   expect(tablet.bookBeforeTools).toBeTruthy();
 
@@ -164,7 +167,22 @@ test('Home is one primary lesson decision plus Book resume and two non-duplicate
   expect(phone.focused).toBe('mould-master');
   expect(phone.stable).toBe('1');
   expect(phone.bookTop).toBeGreaterThanOrEqual(phone.focusBottom-1);
-  expect(phone.bookBottom).toBeLessThanOrEqual(phone.navTop+2);
+  // Photo-led Home is taller than its text-only predecessor. Verify the
+  // Book card can be reached without hiding its CTA under fixed navigation.
+  await page.evaluate(()=>{
+    const book=document.querySelector('#dashboard [data-mm-home-book]');
+    const nav=document.querySelector('.mobile-nav');
+    const offset=book.getBoundingClientRect().bottom-nav.getBoundingClientRect().top+12;
+    if(offset<=0)return;
+    const main=document.querySelector('main.main')||document.querySelector('.main');
+    if(main&&main.scrollHeight>main.clientHeight)main.scrollTop+=offset;
+    if(document.scrollingElement)document.scrollingElement.scrollTop+=offset;
+  });
+  const usableBook=await page.evaluate(()=>({
+    bottom:document.querySelector('#dashboard [data-mm-home-book]').getBoundingClientRect().bottom,
+    nav:document.querySelector('.mobile-nav').getBoundingClientRect().top
+  }));
+  expect(usableBook.bottom).toBeLessThanOrEqual(usableBook.nav+2);
   expect(phone.toolsTop).toBeGreaterThanOrEqual(phone.bookBottom-1);
 
   await page.setViewportSize({width:1440,height:900});
@@ -604,9 +622,9 @@ test('Every primary tab omits Mission Control strip while mission data and keybo
   await expect(page.locator('#scenarios')).toBeVisible();
   await expect(mission.locator('.mm-mc-context')).toBeHidden();
   await expect(mission.locator('.mm-mc-timeline')).toBeHidden();
-  await expect(mission.locator('[data-mm-mc-stage]')).toHaveCount(8);
-  await expect(mission.locator('.mm-mc-context')).toContainText('Electric press');
-  await expect(mission.locator('.mm-mc-context')).toContainText('VA-01');
+  await expect(mission.locator('[data-mm-mc-stage]')).toHaveCount(0);
+  await expect(mission.locator('.mm-mc-context')).toHaveCount(0);
+  await expect(mission.locator('.mm-mc-timeline')).toHaveCount(0);
   expect((await page.evaluate(()=>window.MM_MISSION_CONTROL.state())).mission.context.caseId).toBe('VA-01');
   await page.evaluate(()=>switchView('dashboard'));
   await expect(mission.locator('.mm-mc-context')).toBeHidden();

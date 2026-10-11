@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "webRelease": "2026.10.11.6",
+  "webRelease": "2026.10.11.7",
   "status": "hold-exact-lesson-review",
   "mappingLevel": "authored exact-lesson to Book-module semantic match",
   "lessonAuthority": "MouldMaster_Core_App.html:window.MM_DATA.lessons",

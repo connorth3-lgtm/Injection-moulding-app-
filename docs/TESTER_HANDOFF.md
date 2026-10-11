@@ -1,6 +1,6 @@
 # MouldMaster — controlled tester handoff
 
-> **Tester publication HOLD:** This is a draft handoff for 2026.10.11.6; it must not be sent to testers until protected-main release promotion, exact live Pages verification, all required software checks and the invitation-specific operator steps have passed. No physical device/AT/SME/NZQA evidence is implied.
+> **Tester publication HOLD:** This is a draft handoff for 2026.10.11.7; it must not be sent to testers until protected-main release promotion, exact live Pages verification, all required software checks and the invitation-specific operator steps have passed. No physical device/AT/SME/NZQA evidence is implied.
 
 
 **Release family:** `2026.10.11.4`  

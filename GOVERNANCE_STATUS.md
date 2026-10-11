@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.11.6`**.
+Current governed web candidate: **`2026.10.11.7`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Successful exact-source release 2026.10.11.6 candidate producer run 38107428260 retained source 46337247aa9c334fb741c23704723b3f7688e6cf, artifact 11690278594, digest sha256:1ec5ede11d793f979ad4ec0823d1ead2b8bb766ff89e7b4b4e171e38e3b02426 and public runtime fingerprint sha256:4013679bf1b599d7b06abf9fca6f0b3a1e484537d095cfedc595347759574d6b, independently measured from 163 retained archive files. Technical automation succeeded; all independent external human/device/provider reviews remain HOLD. |
-| Behavioral / browser | **pass** | Exact-source Mobile Browser QA, Chromium, WebKit, visual, cross-browser, five 500-run reliability shards, and Question Quality 50-Pass succeeded for release 2026.10.11.6 source 46337247aa9c334fb741c23704723b3f7688e6cf. No physical Android/iOS, real AT, provider/NZQA, SME, Windows signing or production approval is inferred. |
+| Static / contract | **pass** | Automated contract release 2026.10.11.7 source efcacc7256846abd7d1dbe1fae2d21e5d88acb92: verified producer run 38155318622, retained artifact 11707578982, public runtime fingerprint sha256:77d528e2a527adcbf7e436e0669355ac9a4df24c8c2eae2982c68387156bd374. Exact-head software tests and approved .7 visual baseline passed; all seven external evidence streams remain HOLD. |
+| Behavioral / browser | **pass** | Behavioral browser QA release 2026.10.11.7 source efcacc7256846abd7d1dbe1fae2d21e5d88acb92: strict 12-pixel visual regression, substantive Chromium/WebKit, cross-browser compatibility, reachability, all five reliability shards and Question Quality 50-Pass passed. This is not physical-device or independent human validation. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
