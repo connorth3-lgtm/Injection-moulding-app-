@@ -518,8 +518,11 @@ def main() -> None:
         f"qa/EXTERNAL_VALIDATION_{contract_release}.md",
         "external-validation index",
     )
-    if (data.get("technicalAutomation") or {}).get("status") != "pass":
-        fail("technicalAutomation.status must be pass for this audited release record")
+    # Check exact-source candidate and external HOLD contracts even when the
+    # automation gate is red; a premature check masks stale evidence bindings.
+    technical_status = (data.get("technicalAutomation") or {}).get("status")
+    if technical_status not in {"pass", "fail"}:
+        fail("technicalAutomation.status must explicitly be pass or fail")
 
     web_candidate = validate_web_candidate(data, contract_release)
 
@@ -593,6 +596,8 @@ def main() -> None:
         name for name in ("accessibility", "pwaPhysicalDevices", "windowsDistribution", "bookSme", "curriculumSme", "learnerOutcomes", "nzqaProvider")
         if data[name]["status"] == "hold"
     ]
+    if technical_status != "pass":
+        fail("technicalAutomation.status must be pass for this audited release record; candidate identity and external HOLD contracts were checked but cannot override a red automation gate")
     print(
         f"Current release {expected_release}; external-evidence release {contract_release} boundary verified. "
         f"Automated contract state is PASS; evidence packets remain bound to their exact release; explicit HOLD areas: "
