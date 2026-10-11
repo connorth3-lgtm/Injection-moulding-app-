@@ -602,7 +602,7 @@ function more(){
   });
   for(const [title,detail,href] of [
     ['Support','Help, privacy and contact','./support.html'],
-    ['About','App version and safety information','./README.md']
+    ['About','App version and safety information','./support.html#mmPwa']
   ]){
     const details=document.createElement('details');details.className='mm-more-disclosure mm-reference-more-extra';
     const summary=document.createElement('summary');
@@ -611,7 +611,7 @@ function more(){
     const small=document.createElement('small');small.textContent=detail;
     copy.append(b,small);summary.append(copy);details.append(summary);
     const area=document.createElement('div');area.className='mm-more-disclosure-items';
-    const link=document.createElement('a');link.href=href;link.className='quick-action';link.textContent=title==='Support'?'Open support information':'Read about MouldMaster';
+    const link=document.createElement('a');link.href=href;link.className='quick-action';link.textContent=title==='Support'?'Open support information':'View app version and safety information';
     area.append(link);details.append(area);grid.append(details);
   }
 }
