@@ -41,26 +41,28 @@ test('compact desktop shell retains Materials and specialist More access',async(
   await expect(page.locator('#standards')).toBeVisible();
 });
 
-test('Book reading hides Mission Control strip without losing learner workspace',async({page})=>{
+test('Book reading and Practice both omit Mission Control strip without losing learner workspace',async({page})=>{
   await page.setViewportSize({width:1440,height:900});
   await openApp(page);
   const mission=page.locator('#mmMissionControl > .mm-mc-context');
   await expect(mission).toBeHidden();
   await page.evaluate(()=>switchView('scenarios'));
-  await expect(mission).toBeVisible();
+  await expect(mission).toBeHidden();
   await page.evaluate(()=>window.MMBook.open());
   await expect(page.locator('#mmBookView')).toBeVisible();
   await expect(mission).toBeHidden();
   await expect(page.locator('#pageSubtitle')).toBeHidden();
-  // The mission's overlays and learner data are untouched; hiding the strip
-  // is specific to the Book reading route, not a global app state change.
+  // The mission's overlays and learner data remain mounted while the shared
+  // status strip stays hidden on every app surface, not only in the Book.
   await expect(page.locator('#mmMissionControl .mm-mc-palette-host')).toBeAttached();
   await page.locator('#nav').getByRole('button',{name:'Home'}).click();
   await expect(page.locator('#dashboard')).toBeVisible();
   await expect(mission).toBeHidden();
-  await expect(page.locator('#pageSubtitle')).toBeVisible();
+  // The Home intro copy is deliberately removed; the actual lesson card remains.
+  await expect(page.locator('#pageSubtitle')).toBeHidden();
+  await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
   await page.evaluate(()=>switchView('scenarios'));
-  await expect(mission).toBeVisible();
+  await expect(mission).toBeHidden();
 });
 
 test('Book opens as 20 plain chapters with previous/next and optional end matter',async({page})=>{
@@ -470,7 +472,7 @@ test('Spatial Twin opens as a responsive evidence-led moulding world',async({pag
   await expect(page.locator('#mmVirtualApprenticeship')).toBeVisible();
 });
 
-test('Mission Control persists context, evidence and command search across app surfaces',async({page})=>{
+test('Hidden Mission Control strip keeps scoped evidence and command search accessible',async({page})=>{
   await page.setViewportSize({width:1440,height:900});
   await openApp(page);
   await page.waitForFunction(()=>Boolean(window.MM_MISSION_CONTROL?.startMission&&window.MM_APP_SHELL));
@@ -478,7 +480,7 @@ test('Mission Control persists context, evidence and command search across app s
   const mc=page.locator('#mmMissionControl');
   await expect(mc.locator('.mm-mc-context')).toBeHidden();
   await page.evaluate(()=>window.switchView('scenarios'));
-  await expect(mc).toBeVisible();
+  await expect(mc.locator('.mm-mc-context')).toBeHidden();
   await page.evaluate(()=>window.MM_MISSION_CONTROL.startMission({
     title:'QA cavity-balance mission',
     kind:'qa',
@@ -492,7 +494,7 @@ test('Mission Control persists context, evidence and command search across app s
   await expect(mc.locator('[data-mm-mc-stage]')).toHaveCount(8);
 
   await page.evaluate(()=>window.MM_MISSION_CONTROL.addEvidence({kind:'measured',text:'Cavity 4 mass lower than peer cavities across repeat shots.'}));
-  await mc.locator('[data-mm-mc-evidence]').click();
+  await page.evaluate(()=>window.MM_MISSION_CONTROL.toggleDrawer(true));
   await expect(mc.locator('.mm-mc-drawer')).toHaveClass(/open/);
   await expect(mc.locator('.mm-mc-evidence-row')).toContainText('Cavity 4 mass lower than peer cavities');
   await mc.locator('[data-mm-mc-drawer-close]').click();
@@ -511,14 +513,14 @@ test('Mission Control persists context, evidence and command search across app s
   await expect(page.locator('body')).toHaveAttribute('data-mm-mission-mode','engineer');
 
   await page.setViewportSize({width:390,height:844});
-  await expect(mc).toBeVisible();
+  await expect(mc.locator('.mm-mc-context')).toBeHidden();
   await assertNoHorizontalOverflow(page,'mission-control-390');
-  await expect(mc.locator('.mm-mc-timeline')).toBeVisible();
+  await expect(mc.locator('.mm-mc-timeline')).toBeHidden();
 });
 
 
 
-test('Mission Control persists context across the app and remains mobile-safe',async({page})=>{
+test('Mission state persists through navigation and reload with no visible strip',async({page})=>{
   await page.setViewportSize({width:1440,height:900});
   await openApp(page);
   await page.waitForFunction(()=>Boolean(window.MM_MISSION_CONTROL?.startMission&&window.MM_APP_SHELL?.finalized));
@@ -532,7 +534,7 @@ test('Mission Control persists context across the app and remains mobile-safe',a
   }));
 
   const mc=page.locator('#mmMissionControl');
-  await expect(mc).toBeVisible();
+  await expect(mc.locator('.mm-mc-context')).toBeHidden();
   await expect(mc.locator('[data-mm-mc-stage]')).toHaveCount(8);
   await expect(mc).toContainText('QA connected moulding mission');
   await expect(mc).toContainText('IMM-07');
@@ -542,12 +544,12 @@ test('Mission Control persists context across the app and remains mobile-safe',a
   expect(insideMain).toBe(true);
 
   await page.evaluate(()=>window.MM_MISSION_CONTROL.addEvidence({kind:'measured',text:'Cavity 4 mass is 0.8% below the known-good baseline.'}));
-  await mc.locator('[data-mm-mc-evidence]').click();
+  await page.evaluate(()=>window.MM_MISSION_CONTROL.toggleDrawer(true));
   await expect(mc.locator('.mm-mc-drawer')).toHaveClass(/open/);
   await expect(mc.locator('.mm-mc-evidence-row')).toContainText('Cavity 4 mass is 0.8% below the known-good baseline.');
   await mc.locator('[data-mm-mc-drawer-close]').click();
 
-  await mc.locator('[data-mm-mc-palette]').click();
+  await page.keyboard.press('Control+k');
   const query=mc.locator('[data-mm-mc-query]');
   await query.fill('gate seal');
   await expect(mc.locator('[data-mm-mc-results]')).toContainText('Search learning for “gate seal”');
@@ -566,13 +568,13 @@ test('Mission Control persists context across the app and remains mobile-safe',a
   await page.evaluate(()=>window.switchView('dashboard'));
   await expect(page.locator('#mmMissionControl .mm-mc-context')).toBeHidden();
   await page.evaluate(()=>window.switchView('materials'));
-  await expect(page.locator('#mmMissionControl')).toBeVisible();
+  await expect(page.locator('#mmMissionControl .mm-mc-context')).toBeHidden();
   await expect(page.locator('#mmMissionControl')).toContainText('QA connected moulding mission');
   const persisted=await page.evaluate(()=>window.MM_MISSION_CONTROL.state());
   expect(persisted.mission?.context?.machine).toBe('IMM-07');
   expect(persisted.evidence?.length).toBeGreaterThanOrEqual(1);
 
   await page.setViewportSize({width:390,height:844});
-  await expect(page.locator('#mmMissionControl')).toBeVisible();
+  await expect(page.locator('#mmMissionControl .mm-mc-context')).toBeHidden();
   await assertNoHorizontalOverflow(page,'mission-control-390');
 });
