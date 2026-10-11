@@ -367,4 +367,13 @@ test('Mission Control and Mission evidence strips stay off all mobile tabs witho
   await page.evaluate(()=>openMobileMenu());
   await expect(page.locator('#modal .modal-card')).toBeVisible();
   await expect(mc.locator('.mm-mc-context')).toBeHidden();
+  await page.locator('#modal [data-mm-registry-menu="mission-evidence"]').click();
+  await expect(mc.locator('.mm-mc-evidence-row')).toContainText('QA cavity mass balance check');
+  await page.keyboard.press('Escape');
+
+  await page.evaluate(()=>openMobileMenu());
+  await page.locator('#modal [data-mm-registry-menu="mission-commands"]').click();
+  await expect(mc.locator('.mm-mc-palette')).toBeVisible();
+  await expect(mc.locator('.mm-mc-context')).toBeHidden();
+  await page.keyboard.press('Escape');
 });
