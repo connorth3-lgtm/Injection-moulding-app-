@@ -1336,3 +1336,19 @@ html.mm-reference-photo-ready .mm-reference-photo>.mm-reference-picture{
 .mm-reference-layout #materials .mm-material-index-card > .mm-material-index-summary::marker{
   content:""!important;
 }
+/* The legacy core adds a second summary::after chevron. Keep only
+   the accessible, explicit .mm-material-index-expand arrow in this layout.
+   Core also hides that span on expanded cards; restore it here. */
+.mm-reference-layout #materials .mm-material-index-card > .mm-material-index-summary::after{
+  content:none!important;display:none!important;
+}
+.mm-reference-layout #materials .mm-material-index-card[open] .mm-material-index-expand{
+  display:block!important;
+}
+/* A failed optional photo must never show a broken-image icon over Home text. */
+.mm-reference-layout .mm-reference-home-hero>.mm-reference-hero-photo[hidden]{
+  display:none!important;
+}
+.mm-reference-layout .mm-reference-home-hero.mm-reference-hero-fallback{
+  background:linear-gradient(115deg,#051422 0%,#103046 65%,#205064 100%)!important;
+}
