@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.10.11.7';
-const CACHE_REVISION='core-retirement-machinefit-mobile-book-home-materials-lessons-r15-20261010';
+const CACHE_REVISION='core-retirement-machinefit-mobile-book-home-materials-lessons-photo-public-r16-20261012';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both
@@ -22,6 +22,8 @@ const CORE=[
   './manifest.webmanifest',
   './mouldmaster-192.png',
   './mouldmaster-512.png',
+  './assets/mockup-home-machine.webp',
+  './assets/mockup-reference-tiles.webp',
   './version.json',
   './reading-patch.css',
   './ui-shell.css',
