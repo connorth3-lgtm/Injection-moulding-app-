@@ -167,7 +167,22 @@ test('Home is one primary lesson decision plus Book resume and two non-duplicate
   expect(phone.focused).toBe('mould-master');
   expect(phone.stable).toBe('1');
   expect(phone.bookTop).toBeGreaterThanOrEqual(phone.focusBottom-1);
-  expect(phone.bookBottom).toBeLessThanOrEqual(phone.navTop+2);
+  // Photo-led Home is taller than its text-only predecessor. Verify the
+  // Book card can be reached without hiding its CTA under fixed navigation.
+  await page.evaluate(()=>{
+    const book=document.querySelector('#dashboard [data-mm-home-book]');
+    const nav=document.querySelector('.mobile-nav');
+    const offset=book.getBoundingClientRect().bottom-nav.getBoundingClientRect().top+12;
+    if(offset<=0)return;
+    const main=document.querySelector('main.main')||document.querySelector('.main');
+    if(main&&main.scrollHeight>main.clientHeight)main.scrollTop+=offset;
+    if(document.scrollingElement)document.scrollingElement.scrollTop+=offset;
+  });
+  const usableBook=await page.evaluate(()=>({
+    bottom:document.querySelector('#dashboard [data-mm-home-book]').getBoundingClientRect().bottom,
+    nav:document.querySelector('.mobile-nav').getBoundingClientRect().top
+  }));
+  expect(usableBook.bottom).toBeLessThanOrEqual(usableBook.nav+2);
   expect(phone.toolsTop).toBeGreaterThanOrEqual(phone.bookBottom-1);
 
   await page.setViewportSize({width:1440,height:900});
