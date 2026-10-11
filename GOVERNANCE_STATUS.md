@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **fail** |
+| Technical automation | **pass** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | HOLD: release 2026.10.11.8 source 9b969fff1b5493493c03049f9abb38c9fd90667d retained artifact 11710723107, producer 38162935601 is not accepted; staged physical and software candidate metadata is NOT proof of required exact-head test success, human/device approval or production authority. |
-| Behavioral / browser | **fail** | HOLD: release 2026.10.11.8 source 9b969fff1b5493493c03049f9abb38c9fd90667d visually approved PR #615 screenshots are pinned, but strict current-head Chromium/WebKit and full quality gates require independent success before promotion. Prior .7 passing results do not transfer. |
+| Static / contract | **pass** | Automated contract release 2026.10.11.8 source ed8645bb137cea5449251dc562e51100ed113592: successful producer 38163449886, retained artifact 11711246457, public-runtime fingerprint sha256:2b6b69065d4f2f1a466e05495a1e1272337386651760ac5448017a8621d706c9. Owner-approved strict visual baseline, browser suite and Question Quality 50-Pass succeeded; all seven external evidence streams remain HOLD. |
+| Behavioral / browser | **pass** | Behavioral browser QA release 2026.10.11.8 source ed8645bb137cea5449251dc562e51100ed113592: strict 12-pixel visual regression, substantive Chromium/WebKit, cross-browser compatibility, reachability, five reliability shards and Android first-tap Read Aloud automated regression passed. This does NOT establish audible Android device playback, physical-device or independent real AT validation. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
