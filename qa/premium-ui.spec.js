@@ -287,8 +287,9 @@ test('product hierarchy keeps Home focused and Materials catalogue dense',async(
   await page.waitForFunction(()=>Boolean(window.MM_MATERIAL_REGISTRY?.openPage));
   await page.evaluate(()=>window.MM_MATERIAL_REGISTRY.openPage({replaceUrl:false}));
   await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
-  const columns=await page.locator('#mmExactMaterialCatalog [data-mm-exact-results]').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length);
-  expect(columns).toBeGreaterThanOrEqual(3);
+  const columns=await page.locator('#mmExactMaterialCatalog [data-mm-all-material-results]').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length);
+  expect(columns).toBeGreaterThanOrEqual(2);
+  await expect(page.locator('#mmExactMaterialCatalog [data-mm-exact-results]')).toBeHidden();
 });
 
 test('mobile shell uses floating thumb-friendly navigation without overflow',async({page})=>{
@@ -368,35 +369,28 @@ test('390px Home keeps lesson, Book and specialist tools in canonical order',asy
   await assertNoHorizontalOverflow(page,'home-390-primary-actions');
 });
 
-test('mobile Materials keeps search controls sticky and touch sized',async({page})=>{
+test('mobile Materials uses one readable search and optional touch-sized filters',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   await page.waitForFunction(()=>Boolean(window.MM_MATERIAL_REGISTRY?.openPage));
   await page.evaluate(()=>window.MM_MATERIAL_REGISTRY.openPage({replaceUrl:false}));
-  const filters=page.locator('#mmExactMaterialCatalog .mm-exact-search');
-  await expect(filters).toBeVisible();
-  const readFilterContract=()=>page.evaluate(()=>{
-    const filters=document.querySelector('#mmExactMaterialCatalog .mm-exact-search');
-    const query=document.querySelector('[data-mm-exact-query]');
-    const manufacturer=document.querySelector('[data-mm-exact-manufacturer]');
-    if(!filters||!query||!manufacturer||!filters.isConnected)return null;
-    const style=getComputedStyle(filters),q=query.getBoundingClientRect(),m=manufacturer.getBoundingClientRect();
-    return {position:style.position,top:Number.parseFloat(style.top),queryHeight:q.height,manufacturerHeight:m.height};
-  });
-  await expect.poll(readFilterContract).toEqual({
-    position:'sticky',
-    top:expect.any(Number),
-    queryHeight:expect.any(Number),
-    manufacturerHeight:expect.any(Number)
-  });
-  const hydrated=await readFilterContract();
-  expect(hydrated?.top??-1).toBeGreaterThanOrEqual(0);
-  expect(hydrated?.queryHeight??0).toBeGreaterThanOrEqual(44);
-  expect(hydrated?.manufacturerHeight??0).toBeGreaterThanOrEqual(44);
-  await page.locator('[data-mm-exact-results]').evaluate(el=>el.scrollIntoView({block:'end'}));
-  await expect(filters).toBeVisible();
-  await expect.poll(async()=> (await readFilterContract())?.position||'').toBe('sticky');
-  await assertNoHorizontalOverflow(page,'materials-sticky-filters');
+  const catalog=page.locator('#mmExactMaterialCatalog');
+  const search=catalog.locator('[data-mm-all-material-query]');
+  const filters=catalog.locator('[data-mm-all-material-filters]');
+  await expect(search).toBeVisible();
+  await expect(catalog.locator('[data-mm-exact-query]')).toBeHidden();
+  await expect(catalog.locator('[data-mm-exact-results]')).toBeHidden();
+  await expect(filters).not.toHaveAttribute('open','');
+  const searchHeight=await search.evaluate(el=>el.getBoundingClientRect().height);
+  const summaryHeight=await filters.locator('summary').evaluate(el=>el.getBoundingClientRect().height);
+  expect(searchHeight).toBeGreaterThanOrEqual(44);
+  expect(summaryHeight).toBeGreaterThanOrEqual(44);
+  await filters.locator('summary').click();
+  await expect(filters.locator('[data-mm-all-material-manufacturer]')).toBeVisible();
+  await filters.locator('summary').click();
+  await search.fill('GP5206F');
+  await expect(catalog.locator('[data-mm-material-index-result="grade:mat-lgchem-lupoy-gp5206f"]')).toBeVisible();
+  await assertNoHorizontalOverflow(page,'materials-unified-search');
 });
 
 test('mobile evidence cards wrap long engineering metadata without horizontal overflow',async({page})=>{
