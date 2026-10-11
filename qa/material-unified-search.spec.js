@@ -57,7 +57,7 @@ test('360px Materials entry leads with its single search and collapsible grade t
   await expect(intro.locator('.mm-material-page-nav button')).toHaveCount(3);
   await expect(intro.locator('.mm-material-page-stat')).toHaveCount(0);
   await expect(root.locator('[data-mm-all-material-query]')).toBeInViewport();
-  await expect(root.getByRole('heading',{name:'All materials'})).toBeVisible();
+  await expect(root.getByRole('heading',{name:'Materials'})).toBeVisible();
   await expect(intro).not.toHaveAttribute('open','');
   await intro.locator('summary').click();
   await expect(intro.getByRole('button',{name:'Compare grades'})).toBeVisible();
@@ -249,7 +249,7 @@ test('multidimensional catalogue exposes application process and evidence browse
   const results=root.locator('[data-mm-all-material-results]');
   const boundary=root.locator('[data-mm-catalogue-boundary]');
 
-  await expect(root.getByRole('heading',{name:'All materials'})).toBeVisible();
+  await expect(root.getByRole('heading',{name:'Materials'})).toBeVisible();
   await expect(root.locator('[data-mm-all-material-index]')).toBeVisible();
   await expect(boundary).toContainText(/not suitability recommendations/i);
   await root.locator('[data-mm-all-material-filters] > summary').click();
