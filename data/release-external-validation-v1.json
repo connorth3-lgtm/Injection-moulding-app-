@@ -156,7 +156,7 @@
     "artifactDigest": "sha256:dc44475be8d0d99cc97141c51e21176a7b0721ca3868025413cd9ccf473c9425",
     "artifactExpiresAt": "2027-01-08T21:48:59Z"
   },
-  "candidateStatus": "HOLD — 2026.10.11.4 candidate artifact 11687532749 from run 38101085077 is retained but exact-head producer quality not yet verified; all seven external streams remain HOLD.",
+  "candidateStatus": "HOLD — new release 2026.10.11.4 candidate metadata retained, but producer success and exact-head browser/question quality are NOT independently verified. All seven external review streams and production remain HOLD.",
   "previousPreviousCandidate": {
     "release": "2026.10.09.5",
     "sourceSha": "581e08e58f0b9ec3c7a3501f9a3a71d47ed2c184",
