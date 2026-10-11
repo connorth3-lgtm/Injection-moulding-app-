@@ -4,8 +4,8 @@
   "validationIndex": "qa/EXTERNAL_VALIDATION_2026.10.11.9.md",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
-    "status": "fail",
-    "claim": "Owner approved .9 family-folder visuals in browser screenshot archive 11713302350; preliminary producer 38169457705 retained artifact 11713955923, source 4116eda8950b65c337f22c7f0f981822e200569d, fingerprint sha256:97d9cdf902986357f9446796478525f1b61c0f37162387a042121c310ee4d3c7, but FAILED exact-head quality checks. Technical automation remains FAIL until new exact-head strict visuals/Chromium/WebKit and a successful producer. All seven external HOLD streams, production-root and machine control remain withheld."
+    "status": "pass",
+    "claim": "Exact-source release 2026.10.11.9 technical automation passed: producer run 38172783245 completed SUCCESS on d572ee13d8f2f09139882ff1a271e855284f6e3c, artifact 11713839913, verified public-runtime fingerprint sha256:97d9cdf902986357f9446796478525f1b61c0f37162387a042121c310ee4d3c7. Owner-approved polymer-family visuals passed unchanged strict 12-pixel comparison, four viewports, 13 surfaces; substantive Chromium, WebKit, cross-browser, reachability, all five reliability shards and Question Quality 50-Pass succeeded. This is software QA only; actual Android audible Read Aloud, physical iOS/iPadOS and Android install/offline tests, real NVDA/VoiceOver, independent SMEs, Windows signing, learner efficacy, NZQA/provider G1–G8, production root and machine-control stay HOLD."
   },
   "governance": {
     "status": "enforced",
@@ -24,7 +24,7 @@
     "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.10.11.9.md",
     "candidate": {
       "release": "2026.10.11.9",
-      "sourceSha": "4116eda8950b65c337f22c7f0f981822e200569d",
+      "sourceSha": "d572ee13d8f2f09139882ff1a271e855284f6e3c",
       "runtimeFingerprint": "sha256:97d9cdf902986357f9446796478525f1b61c0f37162387a042121c310ee4d3c7"
     },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix.",
@@ -40,14 +40,14 @@
     "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.10.11.9.md",
     "currentCandidate": {
       "release": "2026.10.11.9",
-      "sourceSha": "4116eda8950b65c337f22c7f0f981822e200569d",
+      "sourceSha": "d572ee13d8f2f09139882ff1a271e855284f6e3c",
       "runtimeFingerprint": "sha256:97d9cdf902986357f9446796478525f1b61c0f37162387a042121c310ee4d3c7",
-      "candidateRunId": 38169457705,
+      "candidateRunId": 38172783245,
       "candidateWorkflow": "Pre-merge Public Candidate",
-      "artifactId": 11713955923,
-      "artifactName": "physical-pwa-candidate-4116eda8950b65c337f22c7f0f981822e200569d",
-      "artifactDigest": "sha256:f6f8883db46b57915769008259da0062f17463414ef8a7f5ea52e7557144de5c",
-      "artifactExpiresAt": "2027-01-09T19:46:53Z"
+      "artifactId": 11713839913,
+      "artifactName": "physical-pwa-candidate-d572ee13d8f2f09139882ff1a271e855284f6e3c",
+      "artifactDigest": "sha256:e91c370f6f051fea391186f16610b638e7b8915dc639e28539a283f6c951bd5a",
+      "artifactExpiresAt": "2027-01-09T20:34:33Z"
     },
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release.",
     "previousCandidate": {
@@ -120,7 +120,7 @@
     "required": "Genuine provider ownership, stakeholder need, provider-approved design, authorised assessment/internal moderation, consent-to-assess/CMR confirmation, applicable national moderation, workplace evidence and provider-controlled review/change evidence for the exact governed release.",
     "candidate": {
       "release": "2026.10.11.9",
-      "sourceSha": "4116eda8950b65c337f22c7f0f981822e200569d",
+      "sourceSha": "d572ee13d8f2f09139882ff1a271e855284f6e3c",
       "runtimeFingerprint": "sha256:97d9cdf902986357f9446796478525f1b61c0f37162387a042121c310ee4d3c7"
     },
     "previousCandidate": {
@@ -131,14 +131,14 @@
   },
   "webCandidate": {
     "release": "2026.10.11.9",
-    "sourceSha": "4116eda8950b65c337f22c7f0f981822e200569d",
+    "sourceSha": "d572ee13d8f2f09139882ff1a271e855284f6e3c",
     "runtimeFingerprint": "sha256:97d9cdf902986357f9446796478525f1b61c0f37162387a042121c310ee4d3c7",
-    "candidateRunId": 38169457705,
+    "candidateRunId": 38172783245,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 11713955923,
-    "artifactName": "physical-pwa-candidate-4116eda8950b65c337f22c7f0f981822e200569d",
-    "artifactDigest": "sha256:f6f8883db46b57915769008259da0062f17463414ef8a7f5ea52e7557144de5c",
-    "artifactExpiresAt": "2027-01-09T19:46:53Z"
+    "artifactId": 11713839913,
+    "artifactName": "physical-pwa-candidate-d572ee13d8f2f09139882ff1a271e855284f6e3c",
+    "artifactDigest": "sha256:e91c370f6f051fea391186f16610b638e7b8915dc639e28539a283f6c951bd5a",
+    "artifactExpiresAt": "2027-01-09T20:34:33Z"
   },
   "candidatePolicy": {
     "previewBranchAuthoritative": false,
@@ -156,7 +156,7 @@
     "artifactDigest": "sha256:315cf075dbf15ecffcf0ed7f4de90011fdd54e966acc97e2d949cfd1a79ae13c",
     "artifactExpiresAt": "2027-01-09T18:21:15Z"
   },
-  "candidateStatus": "HOLD — 2026.10.11.9 provisional retained candidate artifact 11713955923, source 4116eda8950b65c337f22c7f0f981822e200569d, producer 38169457705 FAILED (producer success is NOT established). Owner-approved visual ref is not QA PASS. Require fresh exact-head browser/producer checks; all external device, human, SME and provider approvals remain HOLD.",
+  "candidateStatus": "TECHNICAL AUTOMATION PASS — Verified producer run 38172783245 completed success on exact 2026.10.11.9 source d572ee13d8f2f09139882ff1a271e855284f6e3c, artifact 11713839913, runtime fingerprint sha256:97d9cdf902986357f9446796478525f1b61c0f37162387a042121c310ee4d3c7. Owner-approved strict polymer-family visual, Chromium/WebKit and Question Quality checks passed. All seven external independent reviews HOLD and production root/machine control remain prohibited. Protected exact-head checks must pass before PR merge.",
   "previousPreviousCandidate": {
     "release": "2026.10.09.5",
     "sourceSha": "581e08e58f0b9ec3c7a3501f9a3a71d47ed2c184",
