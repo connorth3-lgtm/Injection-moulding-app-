@@ -19,6 +19,29 @@ async function openApp(page){
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
 
+test('Materials deep link is intentional but does not become the Home relaunch route',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await seed(page,'material-relaunch-qa');
+  await page.goto(BASE+'?view=materials&qaToken=keep',{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED&&window.MM_MATERIAL_REGISTRY));
+  await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
+  await expect(page.locator('#materials')).toBeVisible();
+  await expect(page.locator('.mobile-nav > button[data-view="materials"]')).toHaveAttribute('aria-current','page');
+  expect(new URL(page.url()).searchParams.get('view')).toBe('materials');
+
+  await page.locator('.mobile-nav > button[data-view="dashboard"]').click();
+  await expect(page.locator('#dashboard')).toBeVisible();
+  const homeUrl=new URL(page.url());
+  expect(homeUrl.searchParams.has('view')).toBe(false);
+  expect(homeUrl.searchParams.get('qaToken')).toBe('keep');
+
+  await page.reload({waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED)&&!document.getElementById('mmBootstrap'));
+  await expect(page.locator('#dashboard')).toBeVisible();
+  await expect(page.locator('.mobile-nav > button[data-view="dashboard"]')).toHaveAttribute('aria-current','page');
+  expect(new URL(page.url()).searchParams.has('view')).toBe(false);
+});
+
 test('Home is one primary lesson decision plus Book resume and two non-duplicate specialist tools',async({page})=>{
   await page.setViewportSize({width:810,height:1080});
   await openApp(page);
