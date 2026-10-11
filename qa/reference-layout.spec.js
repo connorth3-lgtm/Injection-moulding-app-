@@ -51,6 +51,11 @@ for(const width of [320,360,390,412]){
     await expect(page.locator('#materials [data-mm-all-material-index]')).toHaveCount(1);
     await expect(page.locator('#materials [data-mm-all-material-query]')).toBeVisible();
     await expect(page.locator('#materials [data-mm-exact-query]')).toBeHidden();
+    const pp=page.locator('#materials [data-mm-family-open="PP"]');
+    await expect(pp).toBeVisible();
+    await expect(pp).toContainText('95 published grades');
+    await expect(pp.locator('.mm-reference-family-art')).toBeVisible();
+    await pp.click();
     const first=page.locator('#materials .mm-material-index-card[data-mm-material-index-type="exact-grade"]').first();
     await expect(first).toBeVisible();
     await expect(first.locator('.mm-reference-material-art')).toBeVisible();
