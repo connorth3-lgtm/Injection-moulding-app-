@@ -42,6 +42,16 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   await expect(host.locator('[data-mm-read="stop"]')).toBeVisible();
   await expect(host.locator('[data-mm-read="speed"]')).toHaveValue('1');
 
+  // Home's new image-led hero must not let the floating expanded reader
+  // obscure the lesson and Continue lesson action beneath it.
+  await expect.poll(()=>page.evaluate(()=>{
+    const focus=document.querySelector('#dashboard .mm-today-focus');
+    const panel=document.querySelector('.mm-read-aloud details[open]');
+    if(!focus||!panel)return false;
+    const a=focus.getBoundingClientRect(),b=panel.getBoundingClientRect();
+    return a.bottom<=b.top-10||a.top>=b.bottom+10;
+  })).toBeTruthy();
+
   const visibilityCheck=await page.evaluate(() => {
     const root=document.querySelector('.main')||document.querySelector('main')||document.body;
     const visible=document.createElement('p');visible.id='mmQaVisibleSpeech';visible.textContent='Read aloud visible sentinel sentence.';
