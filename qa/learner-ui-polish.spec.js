@@ -19,6 +19,98 @@ async function openApp(page){
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
 
+test('Materials deep link is intentional but does not become the Home relaunch route',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await seed(page,'material-relaunch-qa');
+  await page.goto(BASE+'?view=materials&qaToken=keep',{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED&&window.MM_MATERIAL_REGISTRY));
+  await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
+  await expect(page.locator('#materials')).toBeVisible();
+  await expect(page.locator('.mobile-nav > button[data-view="materials"]')).toHaveAttribute('aria-current','page');
+  expect(new URL(page.url()).searchParams.get('view')).toBe('materials');
+
+  await page.locator('.mobile-nav > button[data-view="dashboard"]').click();
+  await expect(page.locator('#dashboard')).toBeVisible();
+  const homeUrl=new URL(page.url());
+  expect(homeUrl.searchParams.has('view')).toBe(false);
+  expect(homeUrl.searchParams.get('qaToken')).toBe('keep');
+
+  await page.reload({waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED)&&!document.getElementById('mmBootstrap'));
+  await expect(page.locator('#dashboard')).toBeVisible();
+  await expect(page.locator('.mobile-nav > button[data-view="dashboard"]')).toHaveAttribute('aria-current','page');
+  expect(new URL(page.url()).searchParams.has('view')).toBe(false);
+});
+
+test('five mobile tabs start with actionable content instead of oversized introductions',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  const nav=page.locator('.mobile-nav');
+  await expect(page.locator('body[data-mm-view="dashboard"] .topbar>div:first-child')).toBeHidden();
+  await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
+  await expect(page.locator('#searchBtn')).toBeVisible();
+
+  await nav.getByRole('button',{name:'Learn'}).click();
+  await expect(page.locator('#path .mm-learn-hub>.mm-primary-hub-head')).toBeHidden();
+  await expect(page.locator('#path .mm-hub-continue [data-mm-hub-action="lesson"]')).toBeVisible();
+
+  await nav.getByRole('button',{name:'Materials'}).click();
+  await expect(page.locator('#materials #mmExactMaterialCatalog .mm-exact-head')).toBeHidden();
+  await expect(page.locator('#materials .mm-material-all-index-head h3')).toBeVisible();
+  await expect(page.locator('#materials [data-mm-all-material-query]')).toBeVisible();
+  await expect(page.locator('#materials [data-mm-catalogue-boundary]')).toBeAttached();
+  await expect(page.locator('#materials #mmMaterialsPageIntro [data-mm-material-jump="compare"]')).toBeVisible();
+  await expect(page.locator('#materials .mm-exact-grade').first()).toBeAttached();
+
+  await nav.getByRole('button',{name:'Practice'}).click();
+  await expect(page.locator('#scenarios .mm-practice-hub>.mm-primary-hub-head')).toBeHidden();
+  await expect(page.locator('#scenarios [data-mm-hub-action="troubleshooting"]')).toBeVisible();
+
+  await nav.getByRole('button',{name:'More'}).click();
+  await expect(page.locator('#modal .modal-card')).toBeVisible();
+  await expect(page.locator('#modal .quick-action').first()).toBeVisible();
+});
+
+test('Home and More use collapsible, mobile-safe panels without losing actions',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  const home=page.locator('#dashboard');
+  const toolbox=home.locator('[data-mm-home-toolbox]');
+  await expect(home.locator('.mm-today-focus')).toBeVisible();
+  await expect(home.locator('[data-mm-home-book]')).toBeVisible();
+  await expect(toolbox).toBeVisible();
+  await expect(toolbox).toHaveAttribute('open','');
+  await expect(toolbox.getByRole('button',{name:/Troubleshoot/})).toBeVisible();
+  await toolbox.locator('summary').click();
+  await expect(toolbox).not.toHaveAttribute('open','');
+  await expect(toolbox.getByRole('button',{name:/Troubleshoot/})).toBeHidden();
+  await toolbox.locator('summary').click();
+  await expect(toolbox.getByRole('button',{name:/Analyse data/})).toBeVisible();
+
+  await page.locator('.mobile-nav > button').filter({hasText:'More'}).click();
+  const menu=page.locator('#modal .modal-card');
+  await expect(menu).toBeVisible();
+  for(const [section,id] of [
+    ['learning','book'],['references','reference-data'],
+    ['account','repair-app-files'],['mission','mission-evidence']
+  ]){
+    const disclosure=menu.locator(`[data-mm-more-section="${section}"]`);
+    await expect(disclosure).toHaveCount(1);
+    await expect(disclosure.locator(`[data-mm-registry-menu="${id}"]`)).toBeVisible();
+    await disclosure.locator('summary').click();
+    await expect(disclosure.locator(`[data-mm-registry-menu="${id}"]`)).toBeHidden();
+    await disclosure.locator('summary').click();
+    await expect(disclosure.locator(`[data-mm-registry-menu="${id}"]`)).toBeVisible();
+  }
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth)).toBeLessThanOrEqual(2);
+  await page.evaluate(()=>closeModal());
+  await page.locator('.mobile-nav > button').filter({hasText:'More'}).click();
+  await expect(menu.locator('[data-mm-more-section="learning"]')).toHaveCount(1);
+  await expect(menu.locator('[data-mm-registry-menu="mission-evidence"]')).toHaveCount(1);
+  await page.evaluate(()=>closeModal());
+  await expect(home.locator('[data-mm-home-toolbox]')).toBeVisible();
+});
+
 test('Home is one primary lesson decision plus Book resume and two non-duplicate specialist tools',async({page})=>{
   await page.setViewportSize({width:810,height:1080});
   await openApp(page);
@@ -484,7 +576,7 @@ test('tablet bottom navigation keeps five touch targets on one row and clears th
   }
 });
 
-test('Home omits Mission Control panels but keeps mission data and Practice controls',async({page})=>{
+test('Every primary tab omits Mission Control strip while mission data and keyboard palette remain',async({page})=>{
   await page.setViewportSize({width:1440,height:900});
   await openApp(page);
   const mission=page.locator('#mmMissionControl');
@@ -508,23 +600,23 @@ test('Home omits Mission Control panels but keeps mission data and Practice cont
   expect(after.mission.context.caseId).toBe('VA-01');
   await page.evaluate(()=>switchView('scenarios'));
   await expect(page.locator('#scenarios')).toBeVisible();
-  await expect(mission.locator('.mm-mc-context')).toBeVisible();
-  await expect(mission.locator('.mm-mc-timeline')).toBeVisible();
+  await expect(mission.locator('.mm-mc-context')).toBeHidden();
+  await expect(mission.locator('.mm-mc-timeline')).toBeHidden();
   await expect(mission.locator('[data-mm-mc-stage]')).toHaveCount(8);
   await expect(mission.locator('.mm-mc-context')).toContainText('Electric press');
   await expect(mission.locator('.mm-mc-context')).toContainText('VA-01');
+  expect((await page.evaluate(()=>window.MM_MISSION_CONTROL.state())).mission.context.caseId).toBe('VA-01');
   await page.evaluate(()=>switchView('dashboard'));
   await expect(mission.locator('.mm-mc-context')).toBeHidden();
   await expect(mission.locator('.mm-mc-timeline')).toBeHidden();
-  // The keyboard command palette remains callable even though its Home strip
-  // is no longer part of the visible layout.
+  // The command palette remains reachable with the strip hidden globally.
   await page.keyboard.press('Control+k');
   await expect(mission.locator('.mm-mc-palette')).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(mission.locator('.mm-mc-palette')).toHaveCount(0);
 });
 
-test('mobile Home never shows Mission Control context or steps',async({page})=>{
+test('mobile Home and Practice never show Mission Control context or steps',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   await page.evaluate(()=>window.MM_MISSION_CONTROL.startMission({
@@ -537,7 +629,7 @@ test('mobile Home never shows Mission Control context or steps',async({page})=>{
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(2);
   await page.evaluate(()=>switchView('scenarios'));
-  await expect(page.locator('#mmMissionControl .mm-mc-context')).toBeVisible();
+  await expect(page.locator('#mmMissionControl .mm-mc-context')).toBeHidden();
 });
 
 test('stored First Shot badge never triggers retired automatic achievement celebration on Home',async({page})=>{

@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.11.3`**.
+Current governed web candidate: **`2026.10.11.6`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Successful exact-source Pre-merge Public Candidate run 38089059338 retained web release 2026.10.11.3, source 0c93cfeddc60f50c9f7e5d567fb041592a47d2c6, artifact 11682829264, with public-runtime fingerprint sha256:c5942fcd791077c81171c359e5c8480f23c0c2855d93affb9673162b57bcf50d verified from the actual archived Pages bytes. This is technical source identity, not final protected-main release approval, human review, physical-device or production authorization. |
-| Behavioral / browser | **pass** | Mobile Browser QA (Chromium/WebKit, visual and reliability) and Question Quality 50-Pass passed for release 2026.10.11.3 exact candidate source 0c93cfeddc60f50c9f7e5d567fb041592a47d2c6. Book Materials visual owner acceptance, real devices and human AT/SME/provider validation remain separate HOLDs; protected-main checks still gate publication. |
+| Static / contract | **pass** | Successful exact-source release 2026.10.11.6 candidate producer run 38107428260 retained source 46337247aa9c334fb741c23704723b3f7688e6cf, artifact 11690278594, digest sha256:1ec5ede11d793f979ad4ec0823d1ead2b8bb766ff89e7b4b4e171e38e3b02426 and public runtime fingerprint sha256:4013679bf1b599d7b06abf9fca6f0b3a1e484537d095cfedc595347759574d6b, independently measured from 163 retained archive files. Technical automation succeeded; all independent external human/device/provider reviews remain HOLD. |
+| Behavioral / browser | **pass** | Exact-source Mobile Browser QA, Chromium, WebKit, visual, cross-browser, five 500-run reliability shards, and Question Quality 50-Pass succeeded for release 2026.10.11.6 source 46337247aa9c334fb741c23704723b3f7688e6cf. No physical Android/iOS, real AT, provider/NZQA, SME, Windows signing or production approval is inferred. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
