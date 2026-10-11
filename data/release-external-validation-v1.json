@@ -156,7 +156,7 @@
     "artifactDigest": "sha256:1ec5ede11d793f979ad4ec0823d1ead2b8bb766ff89e7b4b4e171e38e3b02426",
     "artifactExpiresAt": "2027-01-09T03:08:31Z"
   },
-  "candidateStatus": "HOLD — Exact-source .7 candidate ba2790e83579e9ecd856fa3214e69b3199618edc, artifact 11694991722 from run 38120579486 with measured public-runtime fingerprint sha256:77d528e2a527adcbf7e436e0669355ac9a4df24c8c2eae2982c68387156bd374. Visual baseline still .6; strict browser visual and protected release checks are red. Physical-device, AT, SME, provider, Windows, learner outcome and production remain HOLD.",
+  "candidateStatus": "HOLD — Retained 2026.10.11.7 candidate source ba2790e83579e9ecd856fa3214e69b3199618edc, produced by Pre-merge Public Candidate producer run 38120579486. Artifact upload/retention success: 11694991722, public-runtime fingerprint sha256:77d528e2a527adcbf7e436e0669355ac9a4df24c8c2eae2982c68387156bd374. Producer artifact success is NOT technical-automation or release success: Chromium functional, WebKit, cross-browser, reachability and reliability passed, but the visual baseline remains approved .6 and strict visual/release checks remain red. Physical-device, AT, SME, provider, Windows, learner-outcome and production gates remain HOLD.",
   "previousPreviousCandidate": {
     "release": "2026.10.09.5",
     "sourceSha": "581e08e58f0b9ec3c7a3501f9a3a71d47ed2c184",
