@@ -447,12 +447,14 @@ function bindShell(){
     shell.navigation.register({
       id:'mission-evidence',label:'Mission evidence',icon:'▤',
       description:'Review saved evidence from your learning mission.',
-      desktop:false,mobileMore:true,order:64,action:()=>toggleDrawer(true)
+      desktop:false,mobileMore:true,order:64,
+      action:()=>{window.MM_APP_SHELL?.navigation?.setCustomActive?.('');toggleDrawer(true)}
     });
     shell.navigation.register({
       id:'mission-commands',label:'Mission commands',icon:'⌕',
       description:'Find mission tools and learning actions.',
-      desktop:false,mobileMore:true,order:65,action:openPalette
+      desktop:false,mobileMore:true,order:65,
+      action:()=>{window.MM_APP_SHELL?.navigation?.setCustomActive?.('');openPalette()}
     });
     missionMoreRegistered=true;
   }
