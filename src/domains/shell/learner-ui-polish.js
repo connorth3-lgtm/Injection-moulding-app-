@@ -423,8 +423,9 @@ function home(){
     const desc=document.createElement('small');desc.textContent='Work a short evidence-led moulding decision';
     wrap.append(title,desc);practice.append(wrap);
     practice.addEventListener('click',()=>window.switchView?.('scenarios'));
-    const anchor=book.closest('.mm-dashboard-slot')||book;
-    anchor.after(practice);
+    const toolbox=root.querySelector('[data-mm-home-toolbox] .mm-home-toolbox-body');
+    if(toolbox)toolbox.appendChild(practice);
+    else (book.closest('.mm-dashboard-slot')||book).after(practice);
   }
 }
 // Source-backed course names control the card copy. Catalogue order can
@@ -451,75 +452,50 @@ function learn(){
   const catalogue=hub?.querySelector('[data-mm-lesson-catalog]');
   if(!hub||!catalogue)return;
   sectionHeading('Learn',hub);
-  if(hub.querySelector('.mm-reference-learn-list'))return;
+  // Course shortcuts used to duplicate the real course accordions and search.
+  // Illustrate the existing, accessible course summaries instead.
+  hub.querySelector('.mm-reference-learn-list')?.remove();
   const groups=Array.from(catalogue.querySelectorAll('[data-mm-catalog-group]'));
-  const container=document.createElement('nav');
-  container.className='mm-reference-learn-list';
-  container.setAttribute('aria-label','Illustrated lesson categories');
-  const search=document.createElement('input');search.type='search';search.className='mm-reference-learn-search';
-  search.setAttribute('aria-label','Search lessons');search.placeholder='Search lessons…';
-  const searchWrap=document.createElement('label');searchWrap.className='mm-reference-learn-search-wrap';
-  searchWrap.append(search);container.append(searchWrap);
-  const cards=document.createElement('div');cards.className='mm-reference-list-cards';
-  groups.slice(0,9).forEach((group,i)=>{
-    const button=document.createElement('button');button.type='button';button.className='mm-reference-list-card';
-    const title=group.querySelector('.mm-catalog-group-name')?.textContent?.replace(/^\d+\.\s*/, '')||'Learning module';
-    const copy=document.createElement('span');copy.className='mm-reference-card-copy';
-    const b=document.createElement('b');b.textContent=title;
+  groups.slice(0,9).forEach(group=>{
+    const summary=group.querySelector(':scope > summary');
+    if(!summary||summary.querySelector('.mm-reference-course-art'))return;
+    const title=group.querySelector('.mm-catalog-group-name')?.textContent?.replace(/^\\d+\\.\\s*/, '')||'Learning module';
     const present=learnPresentation(title);
-    const small=document.createElement('small');small.textContent=present.hint;
-    const chevron=document.createElement('span');chevron.className='mm-reference-chevron';chevron.textContent='›';chevron.setAttribute('aria-hidden','true');
-    copy.append(b,small);button.append(picture(present.art,title+' reference illustration',present.tile),copy,chevron);
-    button.addEventListener('click',()=>{
-      group.open=true;group.scrollIntoView({block:'start',behavior:'smooth'});
-      group.querySelector('summary')?.focus({preventScroll:true});
-    });
-    cards.append(button);
+    const art=picture(present.art,'',present.tile);
+    art.classList.add('mm-reference-course-art');
+    art.alt='';
+    art.setAttribute('aria-hidden','true');
+    summary.classList.add('mm-unified-course-summary');
+    summary.prepend(art);
   });
-  container.append(cards);
-  search.addEventListener('input',()=>{
-    const field=catalogue.querySelector('[data-mm-catalog-query]');
-    if(!field)return;
-    field.value=search.value;
-    field.dispatchEvent(new Event('input',{bubbles:true}));
-    catalogue.open=true;
-  });
-  catalogue.before(container);
   hub.dataset.mmReferenceLearn='1';
 }
-const practiceTiles=[
- ['Process setup practice','Set parameters and see the results','setup','labs'],
- ['Defect identification','Identify and diagnose common defects','quality','troubleshooting'],
- ['Troubleshooting scenarios','Real-world problems to solve','diagnosing','troubleshooting'],
- ['Case studies','Work through complete moulding cases','cases','scenario-detail'],
- ['Parameter challenges','Optimise settings for different parts','challenges','process-data'],
- ['Mould design exercises','Explore tool design and features','training','labs'],
- ['Material selection','Choose the right material for the application','selecting','material-labs'],
- ['Maintenance scenarios','Keep production running','thermal','diagnostic-labs'],
- ['Mixed challenges','Test your overall knowledge','evidence','question-centre']
-];
 function practice(){
   const root=document.getElementById('scenarios'),hub=root?.querySelector('.mm-practice-hub');
-  if(!hub||hub.querySelector('.mm-reference-practice-list'))return;
+  if(!hub)return;
   sectionHeading('Practice',hub);
-  const nav=document.createElement('nav');nav.className='mm-reference-practice-list';
-  nav.setAttribute('aria-label','Illustrated practice activities');
-  practiceTiles.forEach(([title,desc,pictureKey,action],i)=>{
-    const btn=document.createElement('button');btn.type='button';btn.className='mm-reference-list-card';
-    const copy=document.createElement('span');copy.className='mm-reference-card-copy';
-    const name=document.createElement('b');name.textContent=title;
-    const small=document.createElement('small');small.textContent=desc;
-    const arrow=document.createElement('span');arrow.className='mm-reference-chevron';arrow.textContent='›';arrow.setAttribute('aria-hidden','true');
-    copy.append(name,small);btn.append(picture(pictureKey,title+' reference thumbnail',19+i),copy,arrow);
-    btn.addEventListener('click',()=>{
-      const existing=hub.querySelector('[data-mm-hub-action="'+action+'"]');
-      if(existing)existing.click();
-      else if(action==='material-labs')window.switchView?.('materials');
-      else hub.querySelector('[data-mm-hub-action="labs"]')?.click();
-    });
-    nav.append(btn);
+  // Keep one functional task chooser. The former nine illustrated shortcuts
+  // repeated its tasks and launched the same destinations a second time.
+  hub.querySelector('.mm-reference-practice-list')?.remove();
+  const artByAction={
+    troubleshooting:['quality',20],
+    'scenario-detail':['cases',22],
+    'process-data':['challenges',23],
+    labs:['setup',19],
+    'question-centre':['evidence',27]
+  };
+  hub.querySelectorAll('.mm-hub-section .mm-hub-grid > button[data-mm-hub-action]').forEach(button=>{
+    if(button.querySelector('.mm-reference-practice-art'))return;
+    const action=button.dataset.mmHubAction;
+    const artData=artByAction[action];
+    if(!artData)return;
+    const art=picture(artData[0],'',artData[1]);
+    art.classList.add('mm-reference-practice-art');
+    art.alt='';
+    art.setAttribute('aria-hidden','true');
+    button.classList.add('mm-unified-practice-card');
+    button.prepend(art);
   });
-  hub.insertBefore(nav,hub.querySelector('.mm-hub-continue')||hub.firstElementChild);
   hub.dataset.mmReferencePractice='1';
 }
 const familyArt=[
@@ -549,6 +525,28 @@ function materials(){
     heading.classList.add('mm-reference-materials-title');
   }
   root.querySelectorAll(':scope > .mm-reference-materials-title').forEach(extra=>extra.remove());
+  // Source-backed grade folders and the older conceptual family explorer now
+  // live in one Materials surface. Keep generic tendencies explicitly optional,
+  // distinct from supplier-specific grade data and never treat them as recipes.
+  const legacy=Array.from(root.children).find(el=>el.classList?.contains('mat-shell'));
+  if(legacy){
+    let guide=catalogue.parentElement?.querySelector('[data-mm-family-science]');
+    if(!guide){
+      guide=document.createElement('details');
+      guide.className='mm-family-science';
+      guide.dataset.mmFamilyScience='1';
+      const summary=document.createElement('summary');
+      summary.textContent='Polymer-family behaviour & learning (general reference)';
+      const explanation=document.createElement('p');
+      explanation.className='muted tiny';
+      explanation.textContent='Optional family-level guidance. Use exact supplier grades and source evidence above for any real decision.';
+      const slot=document.createElement('div');
+      slot.dataset.mmFamilyScienceContent='1';
+      guide.append(summary,explanation,slot);
+      catalogue.insertAdjacentElement('afterend',guide);
+    }
+    guide.querySelector('[data-mm-family-science-content]')?.appendChild(legacy);
+  }
   catalogue.querySelectorAll('.mm-material-family-card:not([data-mm-reference-illustrated])').forEach(card=>{
     card.dataset.mmReferenceIllustrated='1';
     const familyCode=card.dataset.mmFamilyOpen||'';
@@ -626,20 +624,20 @@ function more(){
     const b=group.querySelector('summary b'),small=group.querySelector('summary small');
     if(b)b.textContent=title;if(small)small.textContent=desc;
   });
-  for(const [title,detail,href] of [
-    ['Support','Help, privacy and contact','./support.html'],
-    ['About','App version and safety information','./support.html#mmPwa']
-  ]){
-    const details=document.createElement('details');details.className='mm-more-disclosure mm-reference-more-extra';
-    const summary=document.createElement('summary');
-    const copy=document.createElement('span');copy.className='mm-more-disclosure-name';
-    const b=document.createElement('b');b.textContent=title;
-    const small=document.createElement('small');small.textContent=detail;
-    copy.append(b,small);summary.append(copy);details.append(summary);
-    const area=document.createElement('div');area.className='mm-more-disclosure-items';
-    const link=document.createElement('a');link.href=href;link.className='quick-action';link.textContent=title==='Support'?'Open support information':'View app version and safety information';
-    area.append(link);details.append(area);grid.append(details);
+  // Keep Support and About under one destination, with both links intact.
+  const details=document.createElement('details');
+  details.className='mm-more-disclosure mm-reference-more-extra';
+  const summary=document.createElement('summary');
+  const copy=document.createElement('span');copy.className='mm-more-disclosure-name';
+  const title=document.createElement('b');title.textContent='Support & About';
+  const hint=document.createElement('small');hint.textContent='Help, app version, privacy and safety';
+  copy.append(title,hint);summary.append(copy);details.append(summary);
+  const area=document.createElement('div');area.className='mm-more-disclosure-items';
+  for(const [label,href] of [['Support & contact','./support.html'],['Version & safety information','./support.html#mmPwa']]){
+    const link=document.createElement('a');link.href=href;link.className='quick-action';link.textContent=label;
+    area.appendChild(link);
   }
+  details.append(area);grid.append(details);
 }
 let scheduled=false;
 function refresh(){
