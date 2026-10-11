@@ -8,10 +8,10 @@
   "issueNumber": 379,
   "candidate": {
     "release": "2026.10.11.6",
-    "sourceSha": "a56351f926bc502c01c985c3ea84e0d308116157",
+    "sourceSha": "46337247aa9c334fb741c23704723b3f7688e6cf",
     "runtimeFingerprint": "sha256:4013679bf1b599d7b06abf9fca6f0b3a1e484537d095cfedc595347759574d6b"
   },
-  "boundary": "Release 2026.10.11.6 technical candidate a56351f926bc502c01c985c3ea84e0d308116157 does not establish any NZQA/provider G1–G8 external gates, accreditation or assessment authority.",
+  "boundary": "Release 2026.10.11.6 technical candidate 46337247aa9c334fb741c23704723b3f7688e6cf does not establish any NZQA/provider G1–G8 external gates, accreditation or assessment authority.",
   "requiredGates": [
     {
       "id": "G1-provider",
