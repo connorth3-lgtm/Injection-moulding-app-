@@ -78,9 +78,13 @@ test('Materials displays all results with filters collapsed and clears selection
   const showAll=root.locator('[data-mm-all-material-clear]');
   await expect(filters).not.toHaveAttribute('open','');
   await expect(search).toBeVisible();
-  await expect(results.locator('[data-mm-material-index-result]')).not.toHaveCount(0);
-  await expect(status).toContainText('matching material records');
+  await expect(results.locator('[data-mm-family-open="PP"]')).toBeVisible();
+  await expect(results.locator('[data-mm-family-open="PP"]')).toContainText('95 published grades');
+  await expect(status).toContainText('polymer families');
   await expect(filters.locator('[data-mm-all-material-region]')).toBeHidden();
+  await results.locator('[data-mm-family-open="PP"]').click();
+  await expect(status).toContainText('95 matching material records');
+  await expect(filters.locator('[data-mm-all-material-family]')).toHaveValue('PP');
   const firstResult=results.locator('[data-mm-material-index-result]').first();
   await expect(firstResult).not.toHaveAttribute('open','');
   await expect(firstResult.locator(':scope > summary')).toBeVisible();
@@ -95,7 +99,7 @@ test('Materials displays all results with filters collapsed and clears selection
   await expect(filters.locator('[data-mm-all-material-region]')).toBeVisible();
   await expect(filters.locator('[data-mm-catalogue-boundary]')).toBeVisible();
   await filters.locator('[data-mm-all-material-type]').selectOption('exact-grade');
-  await expect(filters.locator('summary')).toContainText('1 active');
+  await expect(filters.locator('summary')).toContainText('2 active');
   await filters.locator('summary').click();
   await expect(filters).not.toHaveAttribute('open','');
   await expect(results.locator('[data-mm-material-index-type="exact-grade"]')).not.toHaveCount(0);
@@ -108,7 +112,8 @@ test('Materials displays all results with filters collapsed and clears selection
   await expect(filters.locator('summary')).toContainText('Optional');
   await expect(filters.locator('[data-mm-all-material-type]')).toHaveValue('');
   await expect(showAll).toBeHidden();
-  await expect(results.locator('[data-mm-material-index-result]')).not.toHaveCount(0);
+  await expect(results.locator('[data-mm-family-open="PP"]')).toBeVisible();
+  await expect(results.locator('[data-mm-material-index-result]')).toHaveCount(0);
   const geometry=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,page:document.documentElement.scrollWidth}));
   expect(geometry.page).toBeLessThanOrEqual(geometry.viewport+1);
 });
