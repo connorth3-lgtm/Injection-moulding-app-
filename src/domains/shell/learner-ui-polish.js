@@ -424,7 +424,9 @@ function home(){
     copy.append(label,description);practice.append(play,copy);
     practice.addEventListener('click',()=>window.switchView?.('scenarios'));
     const hero=root.querySelector('.mm-reference-home-hero');
-    (hero?.querySelector('.mm-reference-hero-words')||book||focus).appendChild(practice);
+    // Anchor the action to the hero, not its positioned copy wrapper:
+    // that wrapper previously made the absolute button overlap the headline.
+    (hero||book||focus).appendChild(practice);
   }
   if(!root.querySelector('.mm-reference-quick-tools')){
     const tools=document.createElement('section');
