@@ -422,7 +422,14 @@ function home(){
     const label=document.createElement('b');label.textContent='Continue practice →';
     const description=document.createElement('small');description.textContent='Work a shop-floor scenario';
     copy.append(label,description);practice.append(play,copy);
-    practice.addEventListener('click',()=>window.switchView?.('scenarios'));
+    practice.addEventListener('click',()=>{
+      window.switchView?.('scenarios');
+      // Continue practice is a direct workflow shortcut, not a redundant
+      // second link back to the Practice chooser.
+      if(!document.querySelector('#scenarios [data-mm-hub-action="scenario-detail"]'))
+        window.MM_PRIMARY_HUBS?.renderPracticeHub?.();
+      requestAnimationFrame(()=>document.querySelector('#scenarios [data-mm-hub-action="scenario-detail"]')?.click());
+    });
     const hero=root.querySelector('.mm-reference-home-hero');
     // Anchor the action to the hero, not its positioned copy wrapper:
     // that wrapper previously made the absolute button overlap the headline.
