@@ -310,7 +310,7 @@
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
-    "technicalAutomation": "fail",
+    "technicalAutomation": "pass",
     "bookPublicationAuthorization": "authorized",
     "bookIndependentSme": "hold",
     "curriculumIndependentSme": "hold",
@@ -345,12 +345,12 @@
   "userFacingTerminologyBoundary": "Internal evidenceMaturity=verified must be displayed as 'Source evidence reviewed'. The word verified must not be used by itself in learner-facing Book assurance because independent human SME/device/learner validation is a separate namespace.",
   "currentAssuranceEvidence": {
     "staticContract": {
-      "status": "fail",
-      "meaning": "HOLD: release 2026.10.11.4 source 74fc27dd1bfcbdd2f3de9d980fdcc05973b9cd8d, artifact 11687532749 and producer run 38101085077 retained as candidate metadata only. Producer quality checks are not independently verified; neither source identity nor this staged file implies external or production approval. Runtime fingerprint sha256:fdad0252a57e72234ac42532765d0bf9a790ad40e0d4b75746d6502bf993c974."
+      "status": "pass",
+      "meaning": "Successful exact-source producer run 38101688491 retained release 2026.10.11.4, source efb469f75efecf1cfbcd621c0de70560a4914501, artifact 11688116692 and public-runtime fingerprint sha256:fdad0252a57e72234ac42532765d0bf9a790ad40e0d4b75746d6502bf993c974 confirmed from the downloaded artifact. Required Mobile Browser QA and Question Quality 50-Pass passed on that source. Technical retention does not grant human, device, provider, production or protected-main authority."
     },
     "behavioralBrowser": {
-      "status": "fail",
-      "meaning": "HOLD: browser and question gates for release 2026.10.11.4 source 74fc27dd1bfcbdd2f3de9d980fdcc05973b9cd8d must pass on the exact candidate; previous release results do not transfer. Physical device, human and provider reviews remain HOLD."
+      "status": "pass",
+      "meaning": "Mobile Browser QA (Chromium/WebKit, visual and five reliability shards) and Question Quality 50-Pass passed for release 2026.10.11.4 source efb469f75efecf1cfbcd621c0de70560a4914501. Real mobile hardware, iPad/200% zoom, assistive-technology/SME/provider review and protected-main publication remain separately held."
     },
     "externalHumanDevice": {
       "status": "hold",
