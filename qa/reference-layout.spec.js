@@ -33,15 +33,17 @@ for(const width of [320,360,390,412]){
 
     await page.evaluate(()=>switchView('path'));
     await expect(page.locator('#path .mm-reference-title')).toHaveText('Learn');
-    await expect(page.locator('#path .mm-reference-list-card')).toHaveCount(9);
-    const illustratedCourses=page.locator('#path .mm-reference-list-card');
-    await expect(illustratedCourses.nth(1)).toContainText('Machines, controls and the moulding cycle');
-    await expect(illustratedCourses.nth(2)).toContainText('Polymers, properties and material selection');
-    await expect(illustratedCourses.nth(3)).toContainText('Tooling, runners, gates and cooling');
-    await expect(illustratedCourses.nth(4)).toContainText('Establishing and verifying process settings');
+    // One canonical lesson catalogue; course illustrations decorate its
+    // native disclosure summaries rather than a second nine-card navigation.
+    await expect(page.locator('#path .mm-reference-learn-list')).toHaveCount(0);
+    const illustratedCourses=page.locator('#path .mm-unified-course-summary');
+    await expect(illustratedCourses).toHaveCount(9);
+    await expect(illustratedCourses.nth(1)).toContainText('Machine');
+    await expect(illustratedCourses.nth(2)).toContainText('Materials');
+    await expect(illustratedCourses.nth(3)).toContainText('Mould');
     expect(await illustratedCourses.nth(2).locator('.mm-reference-photo').getAttribute('data-mm-photo-index')).toBe('3');
     await expect(page.locator('#path [data-mm-lesson-catalog]')).toHaveCount(1);
-    await page.locator('#path .mm-reference-learn-search').fill('injection');
+    await page.locator('#path [data-mm-catalog-query]').fill('injection');
     await expect(page.locator('#path [data-mm-catalog-query]')).toHaveValue('injection');
 
     await page.evaluate(()=>switchView('materials'));
@@ -51,6 +53,14 @@ for(const width of [320,360,390,412]){
     await expect(page.locator('#materials [data-mm-all-material-index]')).toHaveCount(1);
     await expect(page.locator('#materials [data-mm-all-material-query]')).toBeVisible();
     await expect(page.locator('#materials [data-mm-exact-query]')).toBeHidden();
+    // The old conceptual explorer is retained under the SAME Materials
+    // catalogue, available on demand, not a second competing page section.
+    const familyScience=page.locator('#materials #mmExactMaterialCatalog [data-mm-family-science]');
+    await expect(familyScience).toHaveCount(1);
+    await expect(familyScience).not.toHaveAttribute('open','');
+    await familyScience.locator('summary').click();
+    await expect(familyScience.locator('.mat-shell')).toBeVisible();
+    await familyScience.locator('summary').click();
     const pp=page.locator('#materials [data-mm-family-open="PP"]');
     await expect(pp).toBeVisible();
     await expect(pp).toContainText('95 published grades');
@@ -76,31 +86,36 @@ for(const width of [320,360,390,412]){
 
     await page.evaluate(()=>switchView('scenarios'));
     await expect(page.locator('#scenarios .mm-reference-title')).toHaveText('Practice');
-    await expect(page.locator('#scenarios .mm-reference-list-card')).toHaveCount(9);
-    await page.locator('#scenarios .mm-reference-list-card').filter({hasText:'Material selection'}).click();
-    await expect(page.locator('#materials')).toBeVisible();
+    await expect(page.locator('#scenarios .mm-reference-practice-list')).toHaveCount(0);
+    const activities=page.locator('#scenarios .mm-unified-practice-card');
+    await expect(activities).toHaveCount(5);
+    await expect(activities.locator('.mm-reference-photo')).toHaveCount(5);
+    await expect(activities.filter({hasText:'Question Centre'})).toHaveCount(1);
+    await activities.filter({hasText:'Question Centre'}).click();
+    await expect(page.locator('#scenarios .mm-question-centre')).toBeVisible();
+    await page.evaluate(()=>window.MM_PRIMARY_HUBS.renderPracticeHub());
 
     await page.locator('.mobile-nav > button').filter({hasText:'More'}).click();
-    await expect(page.locator('#modal .mm-more-disclosure')).toHaveCount(6);
-    await expect(page.locator('#modal .mm-reference-more-extra')).toHaveCount(2);
-    await expect(page.locator('#modal .mm-reference-more-extra').filter({hasText:'About'}).locator('a')).toHaveAttribute('href','./support.html#mmPwa');
+    await expect(page.locator('#modal .mm-more-disclosure')).toHaveCount(5);
+    await expect(page.locator('#modal .mm-reference-more-extra')).toHaveCount(1);
+    await expect(page.locator('#modal .mm-reference-more-extra a')).toHaveCount(2);
+    await expect(page.locator('#modal .mm-reference-more-extra a').nth(1)).toHaveAttribute('href','./support.html#mmPwa');
     await expect(page.locator('#modal [data-mm-registry-menu="mission-evidence"]')).toHaveCount(1);
     const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
     expect(overflow).toBeLessThanOrEqual(2);
   });
 }
 
-test('reference diagrams load locally without external image dependencies',async({page})=>{
+test('unified practice illustrations load locally without external dependencies',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
-  await expect(page.locator('#scenarios .mm-reference-picture')).toHaveCount(9);
+  await expect(page.locator('#scenarios .mm-reference-practice-art')).toHaveCount(5);
   await page.waitForFunction(()=>document.documentElement.classList.contains('mm-reference-photo-ready'));
-  await expect(page.locator('#scenarios .mm-reference-photo')).toHaveCount(9);
-  const tiles=await page.locator('#scenarios .mm-reference-photo').evaluateAll(rows=>rows.map(node=>({tile:Number(node.dataset.mmPhotoIndex),background:getComputedStyle(node).backgroundImage})));
-  expect(tiles.map(x=>x.tile)).toEqual([19,20,21,22,23,24,25,26,27]);
-  expect(tiles.every(x=>x.background.includes('mockup-reference-tiles.webp'))).toBe(true);
-  const images=await page.locator('#scenarios .mm-reference-picture').evaluateAll(rows=>
-    rows.map(img=>({src:img.getAttribute('src'),loaded:img.complete&&img.naturalWidth>0})));
-  expect(images.every(img=>img.src.startsWith('./assets/book-diagrams/')&&img.loaded)).toBeTruthy();
+  const tiles=await page.locator('#scenarios .mm-reference-practice-art.mm-reference-photo').evaluateAll(nodes=>nodes.map(el=>({
+    tile:Number(el.dataset.mmPhotoIndex),
+    background:getComputedStyle(el).backgroundImage
+  })));
+  expect(tiles.map(row=>row.tile)).toEqual([20,22,23,19,27]);
+  expect(tiles.every(row=>row.background.includes('mockup-reference-tiles.webp'))).toBe(true);
 });
