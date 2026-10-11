@@ -398,6 +398,12 @@ function home(){
     machinePhoto.className='mm-reference-hero-photo';
     machinePhoto.decoding='async';
     machinePhoto.loading='eager';
+    // A blocked/degraded image must not show the native broken-image glyph
+    // or cover the welcome copy. Keep the readable gradient hero instead.
+    machinePhoto.addEventListener('error',()=>{
+      machinePhoto.hidden=true;
+      hero.classList.add('mm-reference-hero-fallback');
+    },{once:true});
     hero.append(words,machinePhoto);
     const anchor=focus.closest('.mm-dashboard-slot')||focus;
     anchor.before(hero);
@@ -421,18 +427,25 @@ function home(){
     anchor.after(practice);
   }
 }
-const hints=[
- 'Fundamentals and key principles',
- 'Step by step through the moulding cycle',
- 'Components and operation',
- 'Polymer selection and behaviour',
- 'Tooling and design considerations',
- 'Setting and optimising parameters',
- 'Common issues and diagnosis',
- 'Keeping production equipment healthy',
- 'Real examples and evidence'
+// Source-backed course names control the card copy. Catalogue order can
+// change when a lesson/course is added; position-based copy mislabelled the
+// Materials, Mould Design and Process Setup cards on Android.
+const coursePresentation=[
+ [/^foundations$/i,'Fundamentals and key principles','machine',0],
+ [/^machine\s*(?:&|and)\s*controls$/i,'Machines, controls and the moulding cycle','controls',2],
+ [/^materials$/i,'Polymers, properties and material selection','materials',3],
+ [/^mould\s*design$/i,'Tooling, runners, gates and cooling','mould',4],
+ [/^process\s*setup$/i,'Establishing and verifying process settings','setup',19],
+ [/optimis|optimiz/i,'Monitoring and improving process repeatability','process',5],
+ [/troubleshoot|defect/i,'Identify defects and test likely causes','defects',6],
+ [/maintenan/i,'Equipment care and preventive maintenance','maintenance',7],
+ [/case\s*stud|quality|advanced/i,'Apply evidence to worked examples','cases',8]
 ];
-const learnArt=['machine','cycle','controls','materials','mould','process','defects','maintenance','cases'];
+function learnPresentation(title){
+  const row=coursePresentation.find(([pattern])=>pattern.test(title));
+  return row?{hint:row[1],art:row[2],tile:row[3]}:
+    {hint:'Open this course and its lessons',art:'training',tile:24};
+}
 function learn(){
   const root=document.getElementById('path'),hub=root?.querySelector('.mm-learn-hub');
   const catalogue=hub?.querySelector('[data-mm-lesson-catalog]');
@@ -453,9 +466,10 @@ function learn(){
     const title=group.querySelector('.mm-catalog-group-name')?.textContent?.replace(/^\d+\.\s*/, '')||'Learning module';
     const copy=document.createElement('span');copy.className='mm-reference-card-copy';
     const b=document.createElement('b');b.textContent=title;
-    const small=document.createElement('small');small.textContent=hints[i]||'Open the course and its lessons';
+    const present=learnPresentation(title);
+    const small=document.createElement('small');small.textContent=present.hint;
     const chevron=document.createElement('span');chevron.className='mm-reference-chevron';chevron.textContent='›';chevron.setAttribute('aria-hidden','true');
-    copy.append(b,small);button.append(picture(learnArt[i],title+' reference illustration',i),copy,chevron);
+    copy.append(b,small);button.append(picture(present.art,title+' reference illustration',present.tile),copy,chevron);
     button.addEventListener('click',()=>{
       group.open=true;group.scrollIntoView({block:'start',behavior:'smooth'});
       group.querySelector('summary')?.focus({preventScroll:true});
