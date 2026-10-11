@@ -599,11 +599,14 @@ function materials(){
       guide.append(summary,explanation,slot);
       catalogue.insertAdjacentElement('afterend',guide);
     }
-    // The former standalone learning intro belongs to the same optional
-    // general-reference area, not below the supplier-grade catalogue.
-    const intro=Array.from(root.children).find(el=>el.id==='mmMaterialLearningAnchor');
-    if(intro&&intro.parentElement!==guide)guide.querySelector('[data-mm-family-science-content]')?.prepend(intro);
+    // Keep the learning landmark and tab navigation visible. Only the
+    // explanatory family reference belongs inside the optional disclosure.
+    // Hiding these controls previously broke material lesson navigation.
+    const tabs=legacy.querySelector(':scope > .mat-tabs');
+    if(tabs)guide.insertAdjacentElement('afterend',tabs);
     guide.querySelector('[data-mm-family-science-content]')?.appendChild(legacy);
+    const intro=root.querySelector('#mmMaterialLearningAnchor');
+    if(intro&&intro.closest('[data-mm-family-science]'))guide.insertAdjacentElement('afterend',intro);
   }
   const selectedFamily=catalogue.querySelector('[data-mm-family-detail]:not([hidden])');
   if(selectedFamily){
@@ -708,7 +711,11 @@ function more(){
     copy.append(heading,description);summary.append(copy);details.append(summary);
     const area=document.createElement('div');area.className='mm-more-disclosure-items';
     const link=document.createElement('a');link.href=href;link.className='quick-action';link.textContent=label;
-    area.append(link);details.append(area);grid.append(details);
+    area.append(link);details.append(area);
+    // Ensure the first actionable Help link is visible at More entry, while
+    // other categories retain their native collapsible behaviour.
+    if(title==='Help & support')details.open=true;
+    grid.append(details);
   }
   const direct=Array.from(grid.querySelectorAll(':scope > .mm-reference-more-extra'));
   grid.prepend(...direct);
