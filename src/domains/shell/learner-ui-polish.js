@@ -5,7 +5,7 @@
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.10.11.9';
+const VERSION='2026.10.11.10';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -427,6 +427,9 @@ function home(){
     if(toolbox)toolbox.appendChild(practice);
     else (book.closest('.mm-dashboard-slot')||book).after(practice);
   }
+  const practiceAction=root.querySelector('.mm-reference-home-practice');
+  const toolsBody=root.querySelector('[data-mm-home-toolbox] .mm-home-toolbox-body');
+  if(practiceAction&&toolsBody&&practiceAction.parentElement!==toolsBody)toolsBody.appendChild(practiceAction);
 }
 // Source-backed course names control the card copy. Catalogue order can
 // change when a lesson/course is added; position-based copy mislabelled the
@@ -660,7 +663,7 @@ function boot(){
   document.addEventListener('click',event=>{
     if(event.target?.closest?.('.mm-material-index-card summary,.mobile-nav,[data-mm-registry-menu]'))refresh();
   });
-  window.MM_REFERENCE_LAYOUT=Object.freeze({version:'2026.10.11.9',refresh});
+  window.MM_REFERENCE_LAYOUT=Object.freeze({version:'2026.10.11.10',refresh});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
