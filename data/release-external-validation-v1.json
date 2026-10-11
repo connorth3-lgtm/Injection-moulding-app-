@@ -156,7 +156,7 @@
     "artifactDigest": "sha256:fb03634d8ab7813ff87cb37d3906f8f40de1713229c8e2f079a673d2cf90d48c",
     "artifactExpiresAt": "2027-01-09T16:24:20Z"
   },
-  "candidateStatus": "PENDING automated acceptance for 2026.10.11.8: retained source 9b969fff1b5493493c03049f9abb38c9fd90667d, producer 38162935601 not successful; artifact 11710723107 technical evidence only. Strict approved screenshot comparison and required exact-head checks must pass before merge. All external streams remain HOLD.",
+  "candidateStatus": "HOLD — PENDING automated acceptance for 2026.10.11.8: retained source 9b969fff1b5493493c03049f9abb38c9fd90667d, producer 38162935601 not successful; artifact 11710723107 technical evidence only. Strict approved screenshot comparison and required exact-head checks must pass before merge. All external streams remain HOLD.",
   "previousPreviousCandidate": {
     "release": "2026.10.09.5",
     "sourceSha": "581e08e58f0b9ec3c7a3501f9a3a71d47ed2c184",
