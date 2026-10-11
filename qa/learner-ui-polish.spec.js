@@ -56,7 +56,7 @@ test('five mobile tabs start with actionable content instead of oversized introd
 
   await nav.getByRole('button',{name:'Materials'}).click();
   await expect(page.locator('#materials #mmExactMaterialCatalog .mm-exact-head')).toBeHidden();
-  await expect(page.locator('#materials .mm-material-all-index-head')).toBeHidden();
+  await expect(page.locator('#materials .mm-material-all-index-head h3')).toBeVisible();
   await expect(page.locator('#materials [data-mm-all-material-query]')).toBeVisible();
   await expect(page.locator('#materials [data-mm-catalogue-boundary]')).toBeAttached();
   await expect(page.locator('#materials #mmMaterialsPageIntro [data-mm-material-jump="compare"]')).toBeVisible();
