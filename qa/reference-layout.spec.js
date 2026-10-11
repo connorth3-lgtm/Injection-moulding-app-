@@ -44,7 +44,10 @@ for(const width of [320,360,390,412]){
     await expect(first).toBeVisible();
     await expect(first.locator('.mm-reference-material-art')).toBeVisible();
     await first.locator('summary').click();
-    await expect(first.locator('.mm-reference-diagrams .mm-reference-picture')).toHaveCount(3);
+    await expect(first.locator('.mm-reference-diagrams .mm-reference-photo')).toHaveCount(3);
+    const gradeTiles=await first.locator('.mm-reference-diagrams .mm-reference-photo').evaluateAll(nodes=>nodes.map(el=>Number(el.dataset.mmPhotoIndex)));
+    expect(gradeTiles).toEqual([9,31,32]);
+    await expect(first.locator('.mm-reference-technical-diagrams .mm-reference-picture')).toHaveCount(3);
     await expect(first.locator('.mm-exact-sources')).toBeAttached();
     await expect(first.locator('[data-mm-material-jump="compare"]')).toBeVisible();
 

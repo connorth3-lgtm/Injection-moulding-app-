@@ -1281,3 +1281,28 @@ html.mm-reference-photo-ready .mm-reference-photo>.mm-reference-picture{
     width:64px;height:64px;
   }
 }
+
+/* Grade illustrations match the selected three-picture strip; technical SVG
+   diagrams remain available in a separate disclosure to avoid fake provenance. */
+.mm-reference-layout #materials .mm-reference-diagrams>.mm-reference-photo{
+  display:block;width:100%;height:80px;min-width:0;
+  border-radius:7px;background-color:#d7e5ee;
+}
+.mm-reference-layout #materials .mm-reference-technical-diagrams{
+  margin:10px 0;border:1px solid #254b62;border-radius:10px;
+  background:#082134;color:#ecf6ff;
+}
+.mm-reference-layout #materials .mm-reference-technical-diagrams>summary{
+  padding:11px 13px;cursor:pointer;min-height:44px;
+  font-weight:700;font-size:13px;
+}
+.mm-reference-layout #materials .mm-reference-technical-diagrams>summary:focus-visible{
+  outline:2px solid #53e2ce;outline-offset:2px;
+}
+.mm-reference-layout #materials .mm-reference-teaching-art{
+  padding:10px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;
+}
+.mm-reference-layout #materials .mm-reference-teaching-art>.mm-reference-picture{
+  width:100%;height:80px;object-fit:contain;background:#d8e8f4;
+  border-radius:7px;padding:3px;
+}

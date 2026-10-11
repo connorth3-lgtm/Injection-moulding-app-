@@ -543,15 +543,29 @@ function materials(){
     const sourced=card.querySelector('[data-mm-unified-grade]');
     if(sourced&&!sourced.querySelector('.mm-reference-diagrams')){
       const figure=document.createElement('figure');figure.className='mm-reference-diagrams';
-      const img1=image('materials','Polymer-family evidence relationship diagram');
-      const img2=image('process','Polymer rheology: shear and temperature diagram');
-      const img3=image('mould','Mould runner and gate flow-path diagram');
-      figure.append(img1,img2,img3);
+      figure.append(
+        picture('materials','Illustrative polymer pellets from selected design',9),
+        picture('process','Conceptual molecule diagram from selected design',31),
+        picture('mould','Illustrative moulded component from selected design',32)
+      );
       const note=document.createElement('figcaption');
-      note.textContent='Learning diagrams: conceptual only. Verify actual grade properties against the linked supplier sources.';
+      note.textContent='Reference illustrations only; none identify this supplier grade or establish its composition. Exact properties and applications require linked primary sources.';
       figure.append(note);
+      // Retain the real explanatory SVG diagrams separately. These teach
+      // mechanisms and must not be misrepresented as grade-specific evidence.
+      const teaching=document.createElement('details');
+      teaching.className='mm-reference-technical-diagrams';
+      const summary=document.createElement('summary');summary.textContent='Engineering diagrams and explanations';
+      const drawing=document.createElement('div');drawing.className='mm-reference-teaching-art';
+      drawing.append(
+        image('materials','Polymer-family evidence relationship diagram'),
+        image('process','Rheology: shear and temperature diagram'),
+        image('mould','Mould runner and gate flow-path diagram')
+      );
+      teaching.append(summary,drawing);
       const actions=sourced.querySelector('.mm-material-inline-actions');
-      actions?.before(figure)||sourced.append(figure);
+      if(actions){actions.before(figure);actions.before(teaching)}
+      else sourced.append(figure,teaching);
     }
   });
   // Search/pagination replaces result nodes asynchronously. Decorate new
