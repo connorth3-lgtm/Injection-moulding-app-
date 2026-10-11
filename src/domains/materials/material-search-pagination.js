@@ -90,7 +90,13 @@ function installAllIndex(root,index,query,revealExactGrade){
     const chosen=family.value;
     const showing=view==='results'&&!!chosen&&type.value==='exact-grade'&&facetsData?.families.includes(chosen);
     familyDetail.hidden=!showing;
-    if(!showing){host.hidden=false;familyInfo.hidden=true;return}
+    if(!showing){
+      host.hidden=false;familyInfo.hidden=true;
+      // Returning to global search must not strand the pager in a stale
+      // non-Grades tab state. The render pass owns page-count visibility.
+      pager.hidden=view==='families'||pager.dataset.mmHasPages!=='1';
+      return;
+    }
     const familyName=FAMILY_NAMES[chosen]||'Published polymer family';
     const count=facetsData.counts?.families?.[chosen]||0;
     const title=familyDetail.querySelector('[data-mm-family-title]');
@@ -223,13 +229,16 @@ function installAllIndex(root,index,query,revealExactGrade){
   for(const control of [allQuery,type,region,country,catalogueManufacturer,family,application,process,evidence]){
     control.addEventListener(control===allQuery?'input':'change',()=>{
       // Search and advanced facets use the full unified, sourced index.
-      if(!noActiveFilters())view='results';
+      // Clearing the final search/facet returns to the illustrated family
+      // folders unless the learner deliberately chose the all-records view.
+      if(noActiveFilters()&&view!=='all')view='families';
+      else if(!noActiveFilters()){view='results';familyView='grades';}
       render(true).catch(err=>console.warn('[MouldMaster unified material index]',err));
     });
   }
   clearAll.addEventListener('click',()=>{
     allQuery.value='';for(const control of filterControls)control.value='';
-    view='families';
+    familyView='grades';view='families';
     render(true).catch(err=>console.warn('[MouldMaster unified material index]',err));
   });
   previous.addEventListener('click',()=>{page=Math.max(1,page-1);render().catch(err=>console.warn('[MouldMaster unified material index]',err))});next.addEventListener('click',()=>{page+=1;render().catch(err=>console.warn('[MouldMaster unified material index]',err))});
