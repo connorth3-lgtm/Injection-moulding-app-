@@ -95,11 +95,14 @@ function installAllIndex(root,index,query,revealExactGrade){
       const action=button.dataset.mmMaterialJump||'';
       const target=document.getElementById(({compare:'mmMaterialCompare',change:'mmMaterialChange',learning:'mmMaterialLearningAnchor'})[action]);
       const workflows=root.querySelector('[data-mm-material-workflows]');
-      if(action==='compare')root.querySelector('[data-mm-compare-a]').value=id;
-      if(action==='change')root.querySelector('[data-mm-change-before]').value=id;
-      if(action==='compare'||action==='change'){
+      const selected=action==='compare'?root.querySelector('[data-mm-compare-a]')
+        :action==='change'?root.querySelector('[data-mm-change-before]'):null;
+      if(selected){
+        selected.value=id;
         workflows.open=true;
-        root.querySelector('[data-mm-compare-a]').dispatchEvent(new Event('change',{bubbles:true}));
+        // Notify the correct selector, so the comparison/delta action can
+        // re-evaluate its enabled state when the second grade is chosen.
+        selected.dispatchEvent(new Event('change',{bubbles:true}));
       }
       if(target)requestAnimationFrame(()=>target.scrollIntoView({behavior:'smooth',block:'start'}));
     }));
