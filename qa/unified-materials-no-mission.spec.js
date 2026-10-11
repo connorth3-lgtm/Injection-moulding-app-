@@ -19,7 +19,7 @@ for(const width of [320,360,390,412]){
     const cat=page.locator('#mmExactMaterialCatalog');
     await expect(cat).toBeVisible();
     await expect(cat.locator('[data-mm-all-material-index]')).toHaveCount(1);
-    await expect(cat.getByRole('heading',{name:'All materials'})).toBeVisible();
+    await expect(cat.getByRole('heading',{name:'Materials'})).toBeVisible();
     await expect(cat.locator('[data-mm-exact-query]')).toBeHidden();
     await expect(cat.locator('[data-mm-exact-manufacturer]')).toBeHidden();
     await expect(cat.locator('[data-mm-exact-results]')).toBeHidden();
