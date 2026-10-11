@@ -187,6 +187,48 @@ function makeMobileMoreButton(item){
   b.innerHTML=`<span class="icon" aria-hidden="true">${esc(item.icon||'•')}</span><b>${esc(item.label||item.id)}</b><small>${esc(item.description||'Open this tool.')}</small>`;b.setAttribute('aria-label',item.label||item.id);
   b.addEventListener('click',()=>{try{window.closeModal?.()}catch(_){}activeCustomId=item.id;safeCall(item.action);syncActiveState()});return b
 }
+/* Group existing More actions into real keyboard-accessible disclosures.
+   Reparent the original buttons, never clone them: actions, event listeners
+   and their learner-scoped state remain unchanged. */
+function organizeMobileMore(grid){
+  if(!grid?.isConnected||grid.dataset.mmMoreOrganized==='1')return;
+  const buttons=[...grid.querySelectorAll(':scope > .quick-action')];
+  if(!buttons.length)return;
+  const groups=[
+    {id:'learning',title:'Learning & progress',hint:'Book and your learning history',open:true},
+    {id:'references',title:'References',hint:'Published reference information',open:true},
+    {id:'account',title:'Account & support',hint:'Preferences and app help',open:true},
+    {id:'mission',title:'Mission tools',hint:'Saved evidence and command search',open:true}
+  ];
+  const slots=new Map();
+  for(const item of groups){
+    const details=document.createElement('details');
+    details.className='mm-more-disclosure';
+    details.dataset.mmMoreSection=item.id;
+    details.open=item.open;
+    const summary=document.createElement('summary');
+    summary.innerHTML=`<span class="mm-more-disclosure-name"><b>${esc(item.title)}</b><small>${esc(item.hint)}</small></span><span class="mm-more-disclosure-chevron" aria-hidden="true">⌄</span>`;
+    const body=document.createElement('div');
+    body.className='mm-more-disclosure-items';
+    details.append(summary,body);
+    slots.set(item.id,{details,body});
+  }
+  for(const button of buttons){
+    const id=button.dataset.mmRegistryMenu||'';
+    const handler=button.getAttribute('data-mm-onclick')||button.getAttribute('onclick')||'';
+    const area=id==='mission-evidence'||id==='mission-commands'?'mission'
+      :id==='repair-app-files'||/switchView\('profile'\)/.test(handler)?'account'
+      :id==='reference-data'||/switchView\('standards'\)/.test(handler)?'references'
+      :'learning';
+    slots.get(area).body.appendChild(button);
+  }
+  for(const item of groups){
+    const {details,body}=slots.get(item.id);
+    if(body.childElementCount)grid.appendChild(details);
+  }
+  grid.dataset.mmMoreOrganized='1';
+}
+
 function populateMobileMore(grid){
   // Bind this deferred update to the *original* More modal. A different
   // dialog may replace it before the next animation frame.
@@ -198,6 +240,7 @@ function populateMobileMore(grid){
     grid.querySelectorAll('[data-mm-registry-menu],[data-mm-diagnostic-menu],[data-mm-process-data-menu],[data-mm-material-menu],[data-mm-learning-insights-menu],[data-mm-reference-data-menu]').forEach(x=>x.remove());
     const items=[...navigationItems.values()].filter(x=>x.mobileMore!==false).sort((a,b)=>(a.order||50)-(b.order||50));
     for(const item of items)grid.appendChild(makeMobileMoreButton(item))
+    organizeMobileMore(grid);
   })
 }
 function visibleCoreView(){
