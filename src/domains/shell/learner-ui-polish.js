@@ -459,7 +459,7 @@ function learn(){
   groups.slice(0,9).forEach(group=>{
     const summary=group.querySelector(':scope > summary');
     if(!summary||summary.querySelector('.mm-reference-course-art'))return;
-    const title=group.querySelector('.mm-catalog-group-name')?.textContent?.replace(/^\\d+\\.\\s*/, '')||'Learning module';
+    const title=group.querySelector('.mm-catalog-group-name')?.textContent?.replace(/^[0-9]+[.] */, '')||'Learning module';
     const present=learnPresentation(title);
     const art=picture(present.art,'',present.tile);
     art.classList.add('mm-reference-course-art');
