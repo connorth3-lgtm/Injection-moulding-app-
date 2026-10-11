@@ -42,6 +42,35 @@ test('Materials deep link is intentional but does not become the Home relaunch r
   expect(new URL(page.url()).searchParams.has('view')).toBe(false);
 });
 
+test('five mobile tabs start with actionable content instead of oversized introductions',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  const nav=page.locator('.mobile-nav');
+  await expect(page.locator('body[data-mm-view="dashboard"] .topbar>div:first-child')).toBeHidden();
+  await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
+  await expect(page.locator('#searchBtn')).toBeVisible();
+
+  await nav.getByRole('button',{name:'Learn'}).click();
+  await expect(page.locator('#path .mm-learn-hub>.mm-primary-hub-head')).toBeHidden();
+  await expect(page.locator('#path .mm-hub-continue [data-mm-hub-action="lesson"]')).toBeVisible();
+
+  await nav.getByRole('button',{name:'Materials'}).click();
+  await expect(page.locator('#materials #mmExactMaterialCatalog .mm-exact-head')).toBeHidden();
+  await expect(page.locator('#materials .mm-material-all-index-head h3')).toBeVisible();
+  await expect(page.locator('#materials [data-mm-all-material-query]')).toBeVisible();
+  await expect(page.locator('#materials [data-mm-catalogue-boundary]')).toBeAttached();
+  await expect(page.locator('#materials #mmMaterialsPageIntro [data-mm-material-jump="compare"]')).toBeVisible();
+  await expect(page.locator('#materials .mm-exact-grade').first()).toBeAttached();
+
+  await nav.getByRole('button',{name:'Practice'}).click();
+  await expect(page.locator('#scenarios .mm-practice-hub>.mm-primary-hub-head')).toBeHidden();
+  await expect(page.locator('#scenarios [data-mm-hub-action="troubleshooting"]')).toBeVisible();
+
+  await nav.getByRole('button',{name:'More'}).click();
+  await expect(page.locator('#modal .modal-card')).toBeVisible();
+  await expect(page.locator('#modal .quick-action').first()).toBeVisible();
+});
+
 test('Home is one primary lesson decision plus Book resume and two non-duplicate specialist tools',async({page})=>{
   await page.setViewportSize({width:810,height:1080});
   await openApp(page);
@@ -507,7 +536,7 @@ test('tablet bottom navigation keeps five touch targets on one row and clears th
   }
 });
 
-test('Home omits Mission Control panels but keeps mission data and Practice controls',async({page})=>{
+test('Every primary tab omits Mission Control strip while mission data and keyboard palette remain',async({page})=>{
   await page.setViewportSize({width:1440,height:900});
   await openApp(page);
   const mission=page.locator('#mmMissionControl');
@@ -531,23 +560,23 @@ test('Home omits Mission Control panels but keeps mission data and Practice cont
   expect(after.mission.context.caseId).toBe('VA-01');
   await page.evaluate(()=>switchView('scenarios'));
   await expect(page.locator('#scenarios')).toBeVisible();
-  await expect(mission.locator('.mm-mc-context')).toBeVisible();
-  await expect(mission.locator('.mm-mc-timeline')).toBeVisible();
+  await expect(mission.locator('.mm-mc-context')).toBeHidden();
+  await expect(mission.locator('.mm-mc-timeline')).toBeHidden();
   await expect(mission.locator('[data-mm-mc-stage]')).toHaveCount(8);
   await expect(mission.locator('.mm-mc-context')).toContainText('Electric press');
   await expect(mission.locator('.mm-mc-context')).toContainText('VA-01');
+  expect((await page.evaluate(()=>window.MM_MISSION_CONTROL.state())).mission.context.caseId).toBe('VA-01');
   await page.evaluate(()=>switchView('dashboard'));
   await expect(mission.locator('.mm-mc-context')).toBeHidden();
   await expect(mission.locator('.mm-mc-timeline')).toBeHidden();
-  // The keyboard command palette remains callable even though its Home strip
-  // is no longer part of the visible layout.
+  // The command palette remains reachable with the strip hidden globally.
   await page.keyboard.press('Control+k');
   await expect(mission.locator('.mm-mc-palette')).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(mission.locator('.mm-mc-palette')).toHaveCount(0);
 });
 
-test('mobile Home never shows Mission Control context or steps',async({page})=>{
+test('mobile Home and Practice never show Mission Control context or steps',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   await page.evaluate(()=>window.MM_MISSION_CONTROL.startMission({
@@ -560,7 +589,7 @@ test('mobile Home never shows Mission Control context or steps',async({page})=>{
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(2);
   await page.evaluate(()=>switchView('scenarios'));
-  await expect(page.locator('#mmMissionControl .mm-mc-context')).toBeVisible();
+  await expect(page.locator('#mmMissionControl .mm-mc-context')).toBeHidden();
 });
 
 test('stored First Shot badge never triggers retired automatic achievement celebration on Home',async({page})=>{

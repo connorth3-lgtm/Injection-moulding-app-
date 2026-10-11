@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.11.4`**.
+Current governed web candidate: **`2026.10.11.5`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Successful exact-source producer run 38101688491 retained release 2026.10.11.4, source efb469f75efecf1cfbcd621c0de70560a4914501, artifact 11688116692 and public-runtime fingerprint sha256:fdad0252a57e72234ac42532765d0bf9a790ad40e0d4b75746d6502bf993c974 confirmed from the downloaded artifact. Required Mobile Browser QA and Question Quality 50-Pass passed on that source. Technical retention does not grant human, device, provider, production or protected-main authority. |
-| Behavioral / browser | **pass** | Mobile Browser QA (Chromium/WebKit, visual and five reliability shards) and Question Quality 50-Pass passed for release 2026.10.11.4 source efb469f75efecf1cfbcd621c0de70560a4914501. Real mobile hardware, iPad/200% zoom, assistive-technology/SME/provider review and protected-main publication remain separately held. |
+| Static / contract | **pass** | Successful producer run 38105229738 verified release 2026.10.11.5 source 0f94f35cbdc5965cfc4ac5b6413dc6ea3081f57e, retained artifact 11689291423, and runtime fingerprint sha256:ee4cfb09becaa0c912e0b23d9939f7abd44e648044d49ebebf6d5723165594a9 independently computed from actual public bytes; source integrity, browser/visual and question quality passed, while human/device/provider evidence remains HOLD. |
+| Behavioral / browser | **pass** | Mobile Browser QA for release 2026.10.11.5 source 0f94f35cbdc5965cfc4ac5b6413dc6ea3081f57e passed WebKit, Chromium reachability/substantive/visual, cross-browser and five reliability shards, alongside Question Quality 50-Pass. Physical iOS/Android, human AT, independent SME/NZQA provider, signing and production validation remain HOLD. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
