@@ -332,10 +332,12 @@ test('Materials comparison guides valid choices before running evidence work',as
   await page.setViewportSize({width:1024,height:900});
   await openApp(page);
   await page.waitForFunction(()=>Boolean(window.MM_MATERIAL_REGISTRY?.openPage));
-  await page.evaluate(()=>window.MM_MATERIAL_REGISTRY.openPage({replaceUrl:false}));
+  // Wait for the asynchronous Materials registry mount before opening the
+  // documented compare workflow. A synthetic summary click raced WebKit's
+  // first render, closing the details before the assertion could observe it.
+  await page.evaluate(async()=>window.MM_MATERIAL_REGISTRY.openPage({focus:'compare',replaceUrl:false}));
   const workflows=page.locator('#mmExactMaterialCatalog [data-mm-material-workflows]');
   await expect(workflows).toBeVisible();
-  if(!(await workflows.evaluate(el=>el.open)))await workflows.locator('summary').click();
   await expect(workflows).toHaveAttribute('open','');
   const a=page.locator('[data-mm-compare-a]'),b=page.locator('[data-mm-compare-b]');
   const run=page.locator('[data-mm-run-material-compare]');
