@@ -756,9 +756,19 @@ body[data-mm-view="materials"] .topbar>div:first-child,
 body[data-mm-view="scenarios"] .topbar>div:first-child,
 #path .mm-learn-hub>.mm-primary-hub-head,
 #scenarios .mm-practice-hub>.mm-primary-hub-head,
-#materials #mmExactMaterialCatalog .mm-exact-head,
-#materials #mmExactMaterialCatalog .mm-material-all-index-head{
+#materials #mmExactMaterialCatalog .mm-exact-head{
   display:none!important;
+}
+/* Keep the concise catalogue label as an accessible heading. It is not the
+   oversized Grade Library intro removed from the first screen. */
+#materials #mmExactMaterialCatalog .mm-material-all-index-head{
+  display:block!important;
+  margin:0 0 5px!important;
+}
+#materials #mmExactMaterialCatalog .mm-material-all-index-head h3{
+  font-size:16px!important;
+  line-height:1.25!important;
+  margin:0!important;
 }
 /* Home/Learn retain the small Search control; Materials/Practice no longer
    reserve a dead strip for a toolbar whose actions are already hidden. */
