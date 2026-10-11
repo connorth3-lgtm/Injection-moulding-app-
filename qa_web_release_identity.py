@@ -32,6 +32,17 @@ env=os.environ.copy();env['GITHUB_SHA']='0123456789abcdef0123456789abcdef0123456
 subprocess.run(['python','tools/build_pages_artifact.py'],cwd=ROOT,env=env,check=True)
 deployment=json.loads(text('.pages-dist/deployment.json'))
 manifest=json.loads(text('.pages-dist/pages-manifest.json'))
+# Local Playwright serves the whole repository, while Pages publishes only
+# allowlisted assets. Prove the reference photos reach both the offline cache
+# and the actual staged Pages artifact (the phone exposed this missing gate).
+core_assets=sw.split('const CORE=[',1)[1].split('];',1)[0]
+for rel in ('assets/mockup-home-machine.webp','assets/mockup-reference-tiles.webp'):
+    need(f"'./{rel}'" in core_assets,f'{rel} must install atomically with the core offline release')
+    asset=ROOT/'.pages-dist'/rel
+    need(asset.is_file() and asset.stat().st_size>500,f'illustrated learner Pages asset missing: {rel}')
+    record=manifest.get('assets',{}).get(rel,{})
+    need(record.get('bytes')==asset.stat().st_size and len(str(record.get('sha256','')))==64,
+         f'Pages asset fingerprint record missing: {rel}')
 for payload,label in [(deployment,'deployment'),(manifest,'pages manifest')]:
     need(payload.get('web_release')==web,f'{label} does not preserve canonical web_release')
     need(payload.get('source_sha')==env['GITHUB_SHA'],f'{label} does not preserve deployment source_sha provenance')

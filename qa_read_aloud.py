@@ -56,6 +56,19 @@ for marker in (
 ):
     need(marker in runtime, f"Read Aloud control/fallback missing: {marker}")
 
+# Android Chrome may advertise Web Speech with an empty device-voice list.
+# Playback MUST start in the original tap task instead of waiting on a timer.
+# A timeout cannot safely replay a lost mobile user activation.
+for marker in (
+    "const androidSpeech=/Android/i.test(navigator.userAgent||'');",
+    "if(androidSpeech){",
+    "beginSpeech();",
+    "waitForVoice(retry?700:1200).then(beginSpeech",
+    "Tap Listen again; check Android text-to-speech settings",
+):
+    need(marker in runtime, f"Android tap-to-speak guard missing: {marker}")
+need("await waitForVoice" not in runtime, "Android speech start must not block on voice discovery")
+
 # Dedicated long-session Listening mode must reuse the same speech-synthesis runtime,
 # consume authored lesson content only, provide durable playback controls, and avoid
 # implying that every browser/OS voice is processed entirely on-device.
@@ -102,4 +115,4 @@ for marker in (
     need(marker in privacy, f"Read Aloud privacy disclosure missing: {marker}")
 need("entirely on-device" in privacy, "voice-processing limitation disclosure missing")
 
-print("MouldMaster Read Aloud QA passed: speech-synthesis-only, delayed-device-voice-aware, long-session Listening enabled, offline/desktop-integrity wired, and privacy disclosed.")
+print("MouldMaster Read Aloud QA passed: speech-synthesis-only, Android first-tap/desktop delayed-voice aware, long-session Listening enabled, offline/desktop-integrity wired, and privacy disclosed.")

@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.11.7`**.
+Current governed web candidate: **`2026.10.11.8`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Automated contract release 2026.10.11.7 source efcacc7256846abd7d1dbe1fae2d21e5d88acb92: verified producer run 38155318622, retained artifact 11707578982, public runtime fingerprint sha256:77d528e2a527adcbf7e436e0669355ac9a4df24c8c2eae2982c68387156bd374. Exact-head software tests and approved .7 visual baseline passed; all seven external evidence streams remain HOLD. |
-| Behavioral / browser | **pass** | Behavioral browser QA release 2026.10.11.7 source efcacc7256846abd7d1dbe1fae2d21e5d88acb92: strict 12-pixel visual regression, substantive Chromium/WebKit, cross-browser compatibility, reachability, all five reliability shards and Question Quality 50-Pass passed. This is not physical-device or independent human validation. |
+| Static / contract | **pass** | Automated contract release 2026.10.11.8 source ed8645bb137cea5449251dc562e51100ed113592: verified producer run 38163449886, retained artifact 11711246457, public runtime fingerprint sha256:2b6b69065d4f2f1a466e05495a1e1272337386651760ac5448017a8621d706c9. Owner-approved strict visual baseline, browser suite and Question Quality 50-Pass succeeded; all seven external evidence streams remain HOLD. |
+| Behavioral / browser | **pass** | Behavioral browser QA release 2026.10.11.8 source ed8645bb137cea5449251dc562e51100ed113592: strict 12-pixel visual regression, substantive Chromium/WebKit, cross-browser compatibility, reachability, five reliability shards and Android first-tap Read Aloud automated regression passed. This does NOT establish audible Android device playback, physical-device or independent real AT validation. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |

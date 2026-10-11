@@ -17,7 +17,7 @@ const REQUIRED_MANIFEST_FILES=[
 ];
 
 const BASE_FILES=[
-  'index.html','manifest.webmanifest','mouldmaster-192.png','mouldmaster-512.png','version.json',
+  'index.html','manifest.webmanifest','mouldmaster-192.png','mouldmaster-512.png','assets/mockup-home-machine.webp','assets/mockup-reference-tiles.webp','version.json',
   'reading-patch.css','ui-shell.css','premium-ui.css','premium-dynamic.css','assessment-ux.css','mobile-lesson-fix.css','learner-ux-repair.css','reading-patch.js','read-aloud.js','training-upgrade.js','src/domains/learning/training-qa-fix.js',
   'assessment-100-pass.js','assessment-deep-dive.js','src/domains/assessment/assessment-answer-cue-fix.js','assessment-storage-scope.js','assessment-quality-suite.js',
   'assessment-stable-review-bridge.js','assessment-analytics-ui.js','src/domains/assessment/assessment-final-hardening.js','src/domains/shared/runtime-v2.js','assessment-runtime-v2.js','assessment-ux.js',

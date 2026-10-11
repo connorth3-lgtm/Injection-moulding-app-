@@ -48,7 +48,9 @@ test('Book reading and Practice both omit Mission Control strip without losing l
   await expect(mission).toBeHidden();
   await page.evaluate(()=>switchView('scenarios'));
   await expect(mission).toBeHidden();
-  await page.evaluate(async()=>{window.MMBook.open();await window.MMBook.load();});
+  // The shell can finish before Book has mounted its own view on a slow phone.
+  // Honour the Book runtime's ready promise before exercising open().
+  await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load();});
   await expect(page.locator('#mmBookView')).toBeVisible();
   await expect(mission).toBeHidden();
   await expect(page.locator('#pageSubtitle')).toBeHidden();

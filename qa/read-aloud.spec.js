@@ -126,6 +126,43 @@ test('Read Aloud waits for delayed Windows voices and selects the device voice b
   await expect(host.locator('.mm-read-status')).toHaveText('Reading');
 });
 
+test('Android empty voice list speaks within the original tap without waiting for voiceschanged', async ({ page }) => {
+  await page.setContent('<!doctype html><html lang="en"><body><main class="main"><h1>Android read aloud</h1><p>Android default voice starts on the first tap.</p></main></body></html>');
+  await page.evaluate(() => {
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
+    class QaSpeechSynthesisUtterance {constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
+    let inGesture=false;
+    document.addEventListener('click',event=>{
+      if(!event.target.closest?.('[data-mm-read="play"]'))return;
+      inGesture=true;
+      setTimeout(()=>{inGesture=false;},0);
+    },true);
+    const synth={
+      getVoices(){return [];}, // Android Chrome need not expose installed voices.
+      speak(utterance){
+        window.__mmAndroidSpoken=utterance.text;
+        window.__mmAndroidSpeechInsideGesture=inGesture;
+        window.__mmAndroidLanguage=utterance.lang;
+        queueMicrotask(()=>utterance.onstart?.());
+      },
+      cancel(){},pause(){},resume(){},addEventListener(){},removeEventListener(){}
+    };
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:QaSpeechSynthesisUtterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const host=page.locator('.mm-read-aloud');
+  await host.locator('details').evaluate(el=>{el.open=true;});
+  await host.locator('[data-mm-read="play"]').click();
+  // The reader speaks the first *visible text node* (h1) before the paragraph.
+  // The first-tap assertion must not require skipping the heading.
+  await expect.poll(()=>page.evaluate(()=>window.__mmAndroidSpoken||'')).toBe('Android read aloud');
+  expect(await page.evaluate(()=>window.__mmAndroidSpeechInsideGesture)).toBe(true);
+  expect(await page.evaluate(()=>window.__mmAndroidLanguage)).toBe('en');
+  await expect(host.locator('.mm-read-status')).toHaveText('Reading');
+  await host.locator('[data-mm-read="stop"]').click();
+});
+
 test('Listening tab builds a continuous lesson playlist and exposes long-session controls', async ({ page }) => {
   await page.setContent(`<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><div id="app"><aside><nav id="nav"><button data-view="path">Path</button></nav></aside><main id="mainContent" class="main"><section id="path" class="view"><p>Path content</p></section><header><div class="top-actions"></div></header></main></div></body></html>`);
   await page.evaluate(() => {

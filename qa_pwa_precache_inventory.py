@@ -49,7 +49,9 @@ def main() -> None:
     args = parser.parse_args()
     core, optional = inventory()
     all_files = core + optional
-    if args.check and (len(core), len(optional)) != (133, 23):
+    # Two photo assets are now intentional CORE files: Pages must publish both
+    # and the offline install must fetch them atomically with the shell.
+    if args.check and (len(core), len(optional)) != (135, 23):
         raise AssertionError("PWA first-install asset count changed; re-evaluate physical-device intake")
     print(f"Atomic PWA: {len(core)} CORE + {len(optional)} OPTIONAL = {len(all_files)} assets; "
           f"{sum(size for _, size in all_files):,} repository bytes, NOT network transfer/storage quota.")

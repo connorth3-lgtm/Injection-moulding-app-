@@ -1,0 +1,10 @@
+# Physical PWA device validation — 2026.10.11.8
+
+> **RETAINED 2026.10.11.8 TECHNICAL CANDIDATE — AUTOMATED QA PASS; ALL EXTERNAL REVIEWS HOLD.** [Exact-source producer run 38163449886](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/38163449886) retained artifact **11711246457**, source ed8645bb137cea5449251dc562e51100ed113592, digest sha256:315cf075dbf15ecffcf0ed7f4de90011fdd54e966acc97e2d949cfd1a79ae13c, expiry 2027-01-09T18:21:15Z, runtime fingerprint sha256:2b6b69065d4f2f1a466e05495a1e1272337386651760ac5448017a8621d706c9 independently measured from the Pages archive bytes. The exact source passed owner-approved 12-pixel visual regression, substantive Chromium/WebKit, cross-browser, reachability, five reliability shards, Android Read Aloud first-tap regression and Question Quality 50-Pass. This is SOFTWARE QA ONLY: actual Android audible playback, physical devices, human assistive technology, SME, provider, signing, learner outcome, production root and machine-control remain HOLD.
+
+
+**STATUS: HOLD — actual devices not tested or signed off.**
+
+Required physical iOS/iPadOS and Android install-as-app, offline restart, reboot, update recovery, storage pressure, safe-area navigation, tablet landscape/portrait, and actual iPad plus 200% zoom review. Earlier mobile Mission Control overlap screenshots are defect evidence, not acceptance of the .4 layout or a physical-device result.
+
+The retained .8 candidate and artifact above provide a reproducible test input, not physical device evidence; every actual iOS/iPadOS and Android test remains pending. Prior .5/.6 records are historical comparisons only. No rollout or production-root authority follows from automated CI.

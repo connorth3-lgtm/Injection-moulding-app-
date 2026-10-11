@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.11.7",
-  "commit": "91a0e07b50d939e238c145901491d2c65821c16d",
+  "release": "2026.10.11.8",
+  "commit": "925193672a3799d94e45fa0425fd8f926d11c5d0",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,6 +41,6 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "On 2026-10-12 (Pacific/Auckland), the owner expressly approved the actual illustrated five-tab browser screenshots for PR #613 as the 2026.10.11.7 visual design baseline, after prior review of the real Chromium before/current/diff captures (Mobile Browser QA run 38124953118, archived artifact 11696354899), not merely the generated mockup direction. Immutable reference visual-baseline/2026.10.11.7 is pinned to candidate commit 91a0e07b50d939e238c145901491d2c65821c16d, whose learner-facing browser runtime files match the owner-reviewed ba2790e83579e9ecd856fa3214e69b3199618edc design; only release documentation, evidence ledgers, tests and workflow configuration changed between them. Keep strict <=12 diff pixels, all 4 governed viewport sizes and 13 technical screenshot surfaces including lesson, assessment, Book and listening, so the baseline protects the complete browser layout; approval covers the illustrated five-tab visual redesign, not any uninspected technical data, external physical-device or assistive technology check. Retain visual-baseline/2026.10.11.6 immutable for audit. This design approval does not authorize production-root deployment, machine control, physical iOS/Android, human NVDA/VoiceOver, SME, NZQA/provider, learner-outcome or Windows signing validations. No status gate is to be marked PASS without separately successful exact-head automated checks.",
-  "ref": "visual-baseline/2026.10.11.7"
+  "policy": "On 2026-10-12 (Pacific/Auckland) the owner explicitly answered 'I do' to the request to approve actual PR #615 Chromium before/current/diff screenshots as the next visual baseline, archived in run 38161996646 visual artifact 11711100344. The approved change repairs missing preview WebP illustrations, wrong Learn labels, duplicate Materials arrows and Android first-tap speech. Immutable visual-baseline/2026.10.11.8 was created once at source 925193672a3799d94e45fa0425fd8f926d11c5d0, after bumping the unchanged UI changes to web release .8; release metadata/doc-only changes made after that exact screenshot-source reference do not change learner layout. Maintain <=12 diff pixels across 4 governed viewports and 13 surfaces; previous .7 and .6 visual references remain unchanged. This design screenshot approval is NOT a physical-device audio result, independent real NVDA/VoiceOver or Android validation, SME review, signed Windows, NZQA/provider approval, learner-pilot efficacy, production-root or machine-control authority. New source-specific candidate artifact/producer must complete all substantive browser, question and six required main-branch checks before merge.",
+  "ref": "visual-baseline/2026.10.11.8"
 }
