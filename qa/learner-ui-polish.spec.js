@@ -536,7 +536,7 @@ test('tablet bottom navigation keeps five touch targets on one row and clears th
   }
 });
 
-test('Home omits Mission Control panels but keeps mission data and Practice controls',async({page})=>{
+test('Every primary tab omits Mission Control strip while mission data and keyboard palette remain',async({page})=>{
   await page.setViewportSize({width:1440,height:900});
   await openApp(page);
   const mission=page.locator('#mmMissionControl');
@@ -560,23 +560,23 @@ test('Home omits Mission Control panels but keeps mission data and Practice cont
   expect(after.mission.context.caseId).toBe('VA-01');
   await page.evaluate(()=>switchView('scenarios'));
   await expect(page.locator('#scenarios')).toBeVisible();
-  await expect(mission.locator('.mm-mc-context')).toBeVisible();
-  await expect(mission.locator('.mm-mc-timeline')).toBeVisible();
+  await expect(mission.locator('.mm-mc-context')).toBeHidden();
+  await expect(mission.locator('.mm-mc-timeline')).toBeHidden();
   await expect(mission.locator('[data-mm-mc-stage]')).toHaveCount(8);
   await expect(mission.locator('.mm-mc-context')).toContainText('Electric press');
   await expect(mission.locator('.mm-mc-context')).toContainText('VA-01');
+  expect((await page.evaluate(()=>window.MM_MISSION_CONTROL.state())).mission.context.caseId).toBe('VA-01');
   await page.evaluate(()=>switchView('dashboard'));
   await expect(mission.locator('.mm-mc-context')).toBeHidden();
   await expect(mission.locator('.mm-mc-timeline')).toBeHidden();
-  // The keyboard command palette remains callable even though its Home strip
-  // is no longer part of the visible layout.
+  // The command palette remains reachable with the strip hidden globally.
   await page.keyboard.press('Control+k');
   await expect(mission.locator('.mm-mc-palette')).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(mission.locator('.mm-mc-palette')).toHaveCount(0);
 });
 
-test('mobile Home never shows Mission Control context or steps',async({page})=>{
+test('mobile Home and Practice never show Mission Control context or steps',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   await page.evaluate(()=>window.MM_MISSION_CONTROL.startMission({
@@ -589,7 +589,7 @@ test('mobile Home never shows Mission Control context or steps',async({page})=>{
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(2);
   await page.evaluate(()=>switchView('scenarios'));
-  await expect(page.locator('#mmMissionControl .mm-mc-context')).toBeVisible();
+  await expect(page.locator('#mmMissionControl .mm-mc-context')).toBeHidden();
 });
 
 test('stored First Shot badge never triggers retired automatic achievement celebration on Home',async({page})=>{
