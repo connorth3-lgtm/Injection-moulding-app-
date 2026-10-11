@@ -83,6 +83,9 @@ for(const width of [320,360,390,412]){
     await expect(first.locator('.mm-reference-technical-diagrams .mm-reference-picture')).toHaveCount(3);
     await expect(first.locator('.mm-exact-sources')).toBeAttached();
     await expect(first.locator('[data-mm-material-jump="compare"]')).toBeVisible();
+    await first.locator('[data-mm-material-jump="learning"]').click();
+    await expect(familyScience).toHaveAttribute('open','');
+    await expect(familyScience.locator('#mmMaterialLearningAnchor')).toBeVisible();
 
     await page.evaluate(()=>switchView('scenarios'));
     await expect(page.locator('#scenarios .mm-reference-title')).toHaveText('Practice');
