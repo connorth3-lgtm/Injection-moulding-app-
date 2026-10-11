@@ -66,6 +66,7 @@ async function expectReadableTiles(page,rootSelector,expectedCount=5){
   expect(result.maxHeight).toBeLessThanOrEqual(280);
   expect(result.maxWidth-result.minWidth).toBeLessThan(2);
   expect(result.overlap).toBe(false);
+}
 
 async function expectNarrowReadableTiles(page,rootSelector,expectedCount=5){
   const result=await page.evaluate(rootSelector=>{
