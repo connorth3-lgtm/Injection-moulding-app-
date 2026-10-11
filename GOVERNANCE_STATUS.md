@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | New candidate release 2026.10.11.7 source ea42de1868e78b829de684c0ed9a671473e7b6e7, artifact 11690679703, fingerprint sha256:53879bb5f2b60bfb7c6244b24bfd1f870b82efd747a3f948e395ba81401a3316 retained. Exact-head release gates pending verification and external reviews HOLD. |
+| Static / contract | **fail** | New candidate release 2026.10.11.7 source ba2790e83579e9ecd856fa3214e69b3199618edc, artifact 11694991722, fingerprint sha256:77d528e2a527adcbf7e436e0669355ac9a4df24c8c2eae2982c68387156bd374 retained. Exact-head Chromium functional, WebKit and reliability checks passed; strict visual regression is blocked on separate .7 owner baseline approval, and protected release gates remain red. External reviews HOLD. |
 | Behavioral / browser | **fail** | Exact-source visual, WebKit/Chromium, device viewport and reliability acceptance for new 2026.10.11.7 UI not yet verified. Prior release automation does not transfer; all independent external approvals HOLD. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
