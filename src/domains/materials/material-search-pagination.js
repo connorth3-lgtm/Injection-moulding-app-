@@ -150,6 +150,10 @@ function installAllIndex(root,index,query,revealExactGrade){
         // re-evaluate its enabled state when the second grade is chosen.
         selected.dispatchEvent(new Event('change',{bubbles:true}));
       }
+      if(action==='learning'){
+        const guide=root.querySelector('[data-mm-family-science]');
+        if(guide)guide.open=true;
+      }
       if(target)requestAnimationFrame(()=>target.scrollIntoView({behavior:'smooth',block:'start'}));
     }));
   }
