@@ -79,7 +79,6 @@ const CORE=[
   './src/domains/learning/book-data/book-authored-remaining-v1.json',
   './src/domains/learning/book-data/book-worked-engineering-cases-v1.json',
   './src/domains/learning/book-data/book-engineering-diagrams-v1.json',
-  './assets/mockup-reference-tiles.webp',
   './assets/book-diagrams/cavity-pressure-cycle.svg',
   './assets/book-diagrams/fountain-flow.svg',
   './assets/book-diagrams/gate-seal.svg',
