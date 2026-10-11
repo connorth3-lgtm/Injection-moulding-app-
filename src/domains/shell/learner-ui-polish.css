@@ -746,3 +746,39 @@
     min-height:44px!important;
   }
 }
+
+/* Content-first primary tabs: remove repeated introductory banners, not
+   the actionable cards, evidence, search, filters or navigation beneath them.
+   The More destination is a modal launcher rather than a separate hero page. */
+body[data-mm-view="dashboard"] .topbar>div:first-child,
+body[data-mm-view="path"] .topbar>div:first-child,
+body[data-mm-view="materials"] .topbar>div:first-child,
+body[data-mm-view="scenarios"] .topbar>div:first-child,
+#path .mm-learn-hub>.mm-primary-hub-head,
+#scenarios .mm-practice-hub>.mm-primary-hub-head,
+#materials #mmExactMaterialCatalog .mm-exact-head,
+#materials #mmExactMaterialCatalog .mm-material-all-index-head{
+  display:none!important;
+}
+/* Home/Learn retain the small Search control; Materials/Practice no longer
+   reserve a dead strip for a toolbar whose actions are already hidden. */
+body[data-mm-view="dashboard"] .topbar,
+body[data-mm-view="path"] .topbar{
+  min-height:0!important;
+  justify-content:flex-end!important;
+  margin-bottom:7px!important;
+  padding:0!important;
+}
+body[data-mm-view="materials"] .topbar,
+body[data-mm-view="scenarios"] .topbar{
+  display:none!important;
+}
+/* Let the actual first working surface lead after removing the heading. */
+#path .mm-learn-hub,
+#scenarios .mm-practice-hub{gap:12px!important;}
+#materials #mmExactMaterialCatalog .mm-material-all-index{
+  margin-top:0!important;
+}
+#materials #mmExactMaterialCatalog .mm-exact-search{
+  margin-top:8px!important;
+}
