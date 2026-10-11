@@ -389,8 +389,8 @@ function home(){
     hero.className='mm-reference-home-hero';
     hero.setAttribute('aria-label','MouldMaster welcome');
     const words=document.createElement('div');words.className='mm-reference-hero-words';
-    const h=document.createElement('h2');h.textContent='Welcome to MouldMaster';
-    const p=document.createElement('p');p.textContent='Practical knowledge for injection moulding.';
+    const h=document.createElement('h2');h.textContent='Welcome back';
+    const p=document.createElement('p');p.textContent='Build your injection moulding skills with structured learning, realistic practice and trusted materials guidance.';
     words.append(h,p);
     const machinePhoto=document.createElement('img');
     machinePhoto.src='./assets/mockup-home-machine.webp';
@@ -414,22 +414,68 @@ function home(){
     pic.className+=' mm-reference-book-art';
     book.prepend(pic);
   }
-  if(book&&!root.querySelector('.mm-reference-home-practice')){
+  if(!root.querySelector('.mm-reference-home-practice')){
     const practice=document.createElement('button');practice.type='button';
     practice.className='mm-reference-home-practice';
-    practice.append(picture('setup','Practice example reference thumbnail',30));
-    const wrap=document.createElement('span');wrap.className='mm-reference-home-practice-copy';
-    const title=document.createElement('b');title.textContent='Continue practice';
-    const desc=document.createElement('small');desc.textContent='Work a short evidence-led moulding decision';
-    wrap.append(title,desc);practice.append(wrap);
+    const play=document.createElement('span');play.className='mm-reference-play';play.textContent='▶';play.setAttribute('aria-hidden','true');
+    const copy=document.createElement('span');copy.className='mm-reference-home-practice-copy';
+    const label=document.createElement('b');label.textContent='Continue practice →';
+    const description=document.createElement('small');description.textContent='Work a shop-floor scenario';
+    copy.append(label,description);practice.append(play,copy);
     practice.addEventListener('click',()=>window.switchView?.('scenarios'));
-    const toolbox=root.querySelector('[data-mm-home-toolbox] .mm-home-toolbox-body');
-    if(toolbox)toolbox.appendChild(practice);
-    else (book.closest('.mm-dashboard-slot')||book).after(practice);
+    const hero=root.querySelector('.mm-reference-home-hero');
+    (hero?.querySelector('.mm-reference-hero-words')||book||focus).appendChild(practice);
   }
-  const practiceAction=root.querySelector('.mm-reference-home-practice');
-  const toolsBody=root.querySelector('[data-mm-home-toolbox] .mm-home-toolbox-body');
-  if(practiceAction&&toolsBody&&practiceAction.parentElement!==toolsBody)toolsBody.appendChild(practiceAction);
+  if(!root.querySelector('.mm-reference-quick-tools')){
+    const tools=document.createElement('section');
+    tools.className='mm-reference-quick-tools';
+    tools.setAttribute('aria-label','Quick tools');
+    const title=document.createElement('h3');title.textContent='Quick tools';
+    const tiles=document.createElement('div');tiles.className='mm-reference-quick-grid';
+    const options=[
+      ['⌕','Material search',()=>{window.switchView?.('materials');requestAnimationFrame(()=>document.querySelector('#materials [data-mm-all-material-query]')?.focus({preventScroll:true}))}],
+      ['⚠','Defect guide',()=>{if(typeof window.MM_MOULD_MASTER_WORKSPACE?.open==='function')window.MM_MOULD_MASTER_WORKSPACE.open();else window.switchView?.('scenarios')}],
+      ['▥','Process basics',()=>{if(typeof window.MM_PRIMARY_HUBS?.openLearningPathDetail==='function')window.MM_PRIMARY_HUBS.openLearningPathDetail();else window.switchView?.('path')}],
+      ['▦','Unit converter',()=>openReferenceConverter()]
+    ];
+    for(const [symbol,label,run] of options){
+      const button=document.createElement('button');button.type='button';button.className='mm-reference-quick-tool';
+      const icon=document.createElement('span');icon.className='mm-reference-quick-icon';icon.textContent=symbol;icon.setAttribute('aria-hidden','true');
+      const text=document.createElement('span');text.textContent=label;
+      button.append(icon,text);button.addEventListener('click',run);tiles.appendChild(button);
+    }
+    tools.append(title,tiles);
+    root.querySelector('.mm-reference-home-hero')?.insertAdjacentElement('afterend',tools);
+  }
+}
+function openReferenceConverter(){
+  let dialog=document.getElementById('mmReferenceUnitConverter');
+  if(!dialog){
+    dialog=document.createElement('dialog');
+    dialog.id='mmReferenceUnitConverter';
+    dialog.className='mm-reference-converter';
+    const heading=document.createElement('h2');heading.textContent='Unit converter';
+    const intro=document.createElement('p');intro.textContent='Basic physical-unit conversions only. Not a validated machine setting or production recipe.';
+    const select=document.createElement('select');select.setAttribute('aria-label','Conversion');
+    const conversions=[
+      ['Pressure: bar to MPa',v=>v/10,'MPa'],
+      ['Pressure: MPa to bar',v=>v*10,'bar'],
+      ['Length: mm to in',v=>v/25.4,'in'],
+      ['Length: in to mm',v=>v*25.4,'mm'],
+      ['Temperature: °C to °F',v=>v*9/5+32,'°F'],
+      ['Temperature: °F to °C',v=>(v-32)*5/9,'°C']
+    ];
+    for(const [label] of conversions){const option=document.createElement('option');option.value=String(select.options.length);option.textContent=label;select.appendChild(option)}
+    const input=document.createElement('input');input.type='number';input.step='any';input.placeholder='Enter a value';input.setAttribute('aria-label','Value to convert');
+    const result=document.createElement('output');result.setAttribute('aria-live','polite');result.textContent='Enter a value';
+    const update=()=>{const value=Number(input.value),kind=conversions[Number(select.value)||0];result.textContent=input.value.trim()&&Number.isFinite(value)?Number(kind[1](value).toPrecision(9))+' '+kind[2]:'Enter a valid number'};
+    input.addEventListener('input',update);select.addEventListener('change',update);
+    const close=document.createElement('button');close.type='button';close.textContent='Close';close.addEventListener('click',()=>dialog.close());
+    dialog.append(heading,intro,select,input,result,close);document.body.appendChild(dialog);
+  }
+  if(typeof dialog.showModal==='function')dialog.showModal();
+  else dialog.setAttribute('open','');
+  dialog.querySelector('input')?.focus();
 }
 // Source-backed course names control the card copy. Catalogue order can
 // change when a lesson/course is added; position-based copy mislabelled the
@@ -470,6 +516,11 @@ function learn(){
     art.setAttribute('aria-hidden','true');
     summary.classList.add('mm-unified-course-summary');
     summary.prepend(art);
+    if(!summary.querySelector('.mm-reference-course-desc')){
+      const desc=document.createElement('span');desc.className='mm-reference-course-desc';
+      desc.textContent=present.hint;
+      summary.querySelector('.mm-catalog-group-name')?.insertAdjacentElement('afterend',desc);
+    }
   });
   hub.dataset.mmReferenceLearn='1';
 }
@@ -631,20 +682,22 @@ function more(){
     const b=group.querySelector('summary b'),small=group.querySelector('summary small');
     if(b)b.textContent=title;if(small)small.textContent=desc;
   });
-  // Keep Support and About under one destination, with both links intact.
-  const details=document.createElement('details');
-  details.className='mm-more-disclosure mm-reference-more-extra';
-  const summary=document.createElement('summary');
-  const copy=document.createElement('span');copy.className='mm-more-disclosure-name';
-  const title=document.createElement('b');title.textContent='Support & About';
-  const hint=document.createElement('small');hint.textContent='Help, app version, privacy and safety';
-  copy.append(title,hint);summary.append(copy);details.append(summary);
-  const area=document.createElement('div');area.className='mm-more-disclosure-items';
-  for(const [label,href] of [['Support & contact','./support.html'],['Version & safety information','./support.html#mmPwa']]){
+  // Six top-level More destinations: four governed tool groups and distinct
+  // help/about disclosures. The exact links stay local to the application.
+  for(const [title,hint,label,href] of [
+    ['Help & support','Guides, FAQs and contact','Open support information','./support.html'],
+    ['About MouldMaster','Version, acknowledgements and safety','View app version and safety information','./support.html#mmPwa']
+  ]){
+    const details=document.createElement('details');details.className='mm-more-disclosure mm-reference-more-extra';
+    const summary=document.createElement('summary'),copy=document.createElement('span');
+    copy.className='mm-more-disclosure-name';
+    const heading=document.createElement('b');heading.textContent=title;
+    const description=document.createElement('small');description.textContent=hint;
+    copy.append(heading,description);summary.append(copy);details.append(summary);
+    const area=document.createElement('div');area.className='mm-more-disclosure-items';
     const link=document.createElement('a');link.href=href;link.className='quick-action';link.textContent=label;
-    area.appendChild(link);
+    area.append(link);details.append(area);grid.append(details);
   }
-  details.append(area);grid.append(details);
 }
 let scheduled=false;
 function refresh(){
