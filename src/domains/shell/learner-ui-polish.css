@@ -882,3 +882,94 @@ body[data-mm-view="scenarios"] .topbar{
   #dashboard .mm-home-toolbox-label b,
   #modal .mm-more-disclosure-name b{font-size:15px!important}
 }
+
+/* Unified Materials: one searchable catalogue; exact-grade evidence and all
+   actions are disclosed inside its indexed result, never in a second list. */
+#materials #mmExactMaterialCatalog .mm-exact-search,
+#materials #mmExactMaterialCatalog .mm-exact-results,
+#materials #mmExactMaterialCatalog [data-mm-material-page-status],
+#materials #mmExactMaterialCatalog [data-mm-material-pager]{
+  display:none!important;
+}
+#materials #mmExactMaterialCatalog{
+  display:block!important;
+  min-width:0!important;
+}
+#materials #mmExactMaterialCatalog .mm-material-all-index{
+  margin:0!important;
+  padding:12px!important;
+  border:0!important;
+  background:transparent!important;
+}
+#materials #mmExactMaterialCatalog .mm-material-all-index-head h3{
+  font-size:22px!important;
+  line-height:1.2!important;
+}
+#materials #mmExactMaterialCatalog .mm-material-index-card>.mm-material-index-detail{
+  padding:10px 8px 12px!important;
+}
+#materials #mmExactMaterialCatalog .mm-material-sourced-detail>.mm-exact-grade{
+  padding:8px 0!important;
+  margin:8px 0 0!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+#materials #mmExactMaterialCatalog .mm-material-sourced-detail>.mm-exact-grade>.eyebrow,
+#materials #mmExactMaterialCatalog .mm-material-sourced-detail>.mm-exact-grade>h3{
+  display:none!important;
+}
+#materials #mmExactMaterialCatalog .mm-material-inline-actions{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  gap:8px!important;
+  margin:10px 0 2px!important;
+}
+#materials #mmExactMaterialCatalog .mm-material-inline-actions>button{
+  margin:0!important;
+  min-height:44px!important;
+  flex:1 1 145px!important;
+}
+#materials #mmExactMaterialCatalog .mm-material-workflows,
+#materials #mmExactMaterialCatalog #mmMaterialsPageIntro{
+  margin-top:12px!important;
+  border:1px solid rgba(105,161,199,.3)!important;
+  border-radius:13px!important;
+  background:rgba(8,24,40,.85)!important;
+  overflow:hidden!important;
+}
+#materials #mmExactMaterialCatalog .mm-material-workflows>summary,
+#materials #mmExactMaterialCatalog #mmMaterialsPageIntro>summary{
+  cursor:pointer!important;
+  padding:12px 14px!important;
+  font-size:15px!important;
+  font-weight:700!important;
+  color:#e8f5ff!important;
+  min-height:48px!important;
+}
+#materials #mmExactMaterialCatalog .mm-material-workflows>summary:focus-visible,
+#materials #mmExactMaterialCatalog #mmMaterialsPageIntro>summary:focus-visible{
+  outline:2px solid #67e4cb!important;
+  outline-offset:-3px!important;
+}
+#materials #mmExactMaterialCatalog .mm-material-workflows>.mm-material-decision{
+  margin:0!important;
+  padding:12px!important;
+  border:0!important;
+}
+#materials #mmExactMaterialCatalog #mmMaterialsPageIntro .mm-material-page-nav{
+  padding:8px 12px 12px!important;
+}
+@media(max-width:700px){
+  #materials #mmExactMaterialCatalog .mm-material-all-index{
+    padding:4px!important;
+  }
+  #materials #mmExactMaterialCatalog .mm-material-inline-actions{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  #materials #mmExactMaterialCatalog .mm-material-index-detail .mm-exact-table-wrap{
+    max-width:100%!important;
+    overflow-x:auto!important;
+  }
+}
