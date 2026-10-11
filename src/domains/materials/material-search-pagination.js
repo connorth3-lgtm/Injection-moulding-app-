@@ -46,7 +46,7 @@ function renderAllResult(doc){
 function installAllIndex(root,index,query,revealExactGrade){
   if(root.querySelector('[data-mm-all-material-index]'))return;
   const section=document.createElement('section');section.className='mm-material-all-index';section.dataset.mmAllMaterialIndex='';
-  section.innerHTML=`<div class="mm-material-all-index-head"><h3>All materials</h3></div><div class="mm-material-all-search"><label>Find a material<input data-mm-all-material-query type="search" placeholder="Name, polymer, grade or property"></label><button type="button" class="secondary" data-mm-all-material-clear hidden>Show all materials</button></div><details class="mm-material-all-filters" data-mm-all-material-filters><summary><span>Filter materials</span><span data-mm-all-material-filter-count>Optional</span></summary><p class="mm-exact-boundary" data-mm-catalogue-boundary>Country means the manufacturer's country. Region is a browsing facet derived from manufacturer country; neither proves exact-grade manufacturing origin, plant origin or local availability. Application and process tags come from explicit published grade text for browsing only and are not suitability recommendations. Only published records appear; private staging records are excluded.</p><div class="mm-material-all-index-controls"><label>Region<select data-mm-all-material-region><option value="">All regions</option></select></label><label>Country<select data-mm-all-material-country><option value="">All countries</option></select></label><label>Manufacturer<select data-mm-all-material-manufacturer><option value="">All manufacturers</option></select></label><label>Polymer family<select data-mm-all-material-family><option value="">All polymer families</option></select></label><label>Application<select data-mm-all-material-application><option value="">All applications</option></select></label><label>Process<select data-mm-all-material-process><option value="">All processes</option></select></label><label>Evidence<select data-mm-all-material-evidence><option value="">All evidence</option></select></label><label>Result type<select data-mm-all-material-type><option value="">All published material data</option><option value="exact-grade">Exact grades</option><option value="reference-material">Family / reference</option><option value="material-lab">Material labs</option><option value="material-practice">Material practice</option></select></label></div></details><p class="mm-exact-boundary" data-mm-all-material-status role="status" aria-live="polite"></p><nav class="mm-material-family-toolbar" data-mm-material-family-toolbar aria-label="Material catalogue views"><button type="button" class="secondary" data-mm-material-family-back hidden>← All polymer families</button><button type="button" class="secondary" data-mm-material-all-records>Browse all records, labs and references</button></nav><div class="mm-material-all-results" data-mm-all-material-results></div><div class="mm-exact-actions" data-mm-all-material-pager><button type="button" class="secondary" data-mm-all-material-page="previous">Previous</button><button type="button" class="secondary" data-mm-all-material-page="next">Next</button></div>`;
+  section.innerHTML=`<div class="mm-material-all-index-head"><h3>All materials</h3></div><div class="mm-material-all-search"><label>Find a material<input data-mm-all-material-query type="search" placeholder="Name, polymer, grade or property"></label><button type="button" class="secondary" data-mm-all-material-clear hidden>Show all materials</button></div><details class="mm-material-all-filters" data-mm-all-material-filters><summary><span>Filter materials</span><span data-mm-all-material-filter-count>Optional</span></summary><p class="mm-exact-boundary" data-mm-catalogue-boundary>Country means the manufacturer's country. Region is a browsing facet derived from manufacturer country; neither proves exact-grade manufacturing origin, plant origin or local availability. Application and process tags come from explicit published grade text for browsing only and are not suitability recommendations. Only published records appear; private staging records are excluded.</p><div class="mm-material-all-index-controls"><label>Region<select data-mm-all-material-region><option value="">All regions</option></select></label><label>Country<select data-mm-all-material-country><option value="">All countries</option></select></label><label>Manufacturer<select data-mm-all-material-manufacturer><option value="">All manufacturers</option></select></label><label>Polymer family<select data-mm-all-material-family><option value="">All polymer families</option></select></label><label>Application<select data-mm-all-material-application><option value="">All applications</option></select></label><label>Process<select data-mm-all-material-process><option value="">All processes</option></select></label><label>Evidence<select data-mm-all-material-evidence><option value="">All evidence</option></select></label><label>Result type<select data-mm-all-material-type><option value="">All published material data</option><option value="exact-grade">Exact grades</option><option value="reference-material">Family / reference</option><option value="material-lab">Material labs</option><option value="material-practice">Material practice</option></select></label></div></details><p class="mm-exact-boundary" data-mm-all-material-status role="status" aria-live="polite"></p><section class="mm-material-family-detail" data-mm-family-detail hidden aria-label="Polymer family details"><header class="mm-family-detail-header"><div class="mm-family-detail-art" data-mm-family-detail-art aria-hidden="true"></div><div><span class="eyebrow">Polymer family</span><h3 data-mm-family-title></h3><p data-mm-family-count></p></div></header><nav class="mm-family-detail-tabs" data-mm-family-tabs aria-label="Family information"><button type="button" data-mm-family-view="overview" aria-pressed="false">Overview</button><button type="button" data-mm-family-view="grades" aria-pressed="true">Grades</button><button type="button" data-mm-family-view="properties" aria-pressed="false">Properties</button><button type="button" data-mm-family-view="applications" aria-pressed="false">Applications</button></nav><div class="mm-family-detail-info" data-mm-family-info hidden aria-live="polite"></div></section><nav class="mm-material-family-toolbar" data-mm-material-family-toolbar aria-label="Material catalogue views"><button type="button" class="secondary" data-mm-material-family-back hidden>← All polymer families</button><button type="button" class="secondary" data-mm-material-all-records>Browse all records, labs and references</button></nav><div class="mm-material-all-results" data-mm-all-material-results></div><div class="mm-exact-actions" data-mm-all-material-pager><button type="button" class="secondary" data-mm-all-material-page="previous">Previous</button><button type="button" class="secondary" data-mm-all-material-page="next">Next</button></div>`;
   // The unified searchable catalogue must be the first child in DOM order;
   // the previous indexed-grade engine remains mounted but hidden for deep links.
   root.prepend(section);
@@ -80,7 +80,48 @@ function installAllIndex(root,index,query,revealExactGrade){
     PEEK:'Polyether ether ketone',PPS:'Polyphenylene sulfide',
     LSR:'Liquid silicone rubber'
   };
-  let page=1,seq=0,facetsData=null,view='families';
+  let page=1,seq=0,facetsData=null,view='families',familyView='grades';
+  const familyDetail=section.querySelector('[data-mm-family-detail]');
+  const familyInfo=section.querySelector('[data-mm-family-info]');
+  const familyNotes={
+    PP:{overview:'Polypropylene is a semi-crystalline polymer family. Family-level behaviour varies with grade, fillers, formulation and process history.',properties:'General learning tendencies: often low density, good resistance to many chemicals, and shrinkage behaviour influenced by crystallinity and part geometry. Confirm each property against a current grade data sheet.',applications:'Examples discussed in polymer education include packaging, living hinges and components requiring chemical resistance. These are not grade recommendations; qualification depends on the actual application.'}
+  };
+  function syncFamilyTabs(){
+    const chosen=family.value;
+    const showing=view==='results'&&!!chosen&&type.value==='exact-grade'&&facetsData?.families.includes(chosen);
+    familyDetail.hidden=!showing;
+    if(!showing){host.hidden=false;familyInfo.hidden=true;return}
+    const familyName=FAMILY_NAMES[chosen]||'Published polymer family';
+    const count=facetsData.counts?.families?.[chosen]||0;
+    const title=familyDetail.querySelector('[data-mm-family-title]');
+    const tally=familyDetail.querySelector('[data-mm-family-count]');
+    if(title)title.textContent=chosen+' · '+familyName;
+    if(tally)tally.textContent=count+' published grade'+(count===1?'':'s')+' · sourced exact-grade records below';
+    familyDetail.dataset.mmFamilyCurrent=chosen;
+    const note=familyNotes[chosen];
+    const text=familyView==='overview'?(note?.overview||'A family groups materials with related polymer chemistry. Published grade properties can differ significantly.'):
+      familyView==='properties'?(note?.properties||'Inspect a published grade to see sourced property values, units, test conditions and limitations. No universal production properties apply to an entire family.'):
+      (note?.applications||'Application suitability requires an actual grade identity, current supplier documentation, component testing and applicable workplace requirements.');
+    familyInfo.replaceChildren();
+    if(familyView!=='grades'){
+      const paragraph=document.createElement('p');paragraph.textContent=text;
+      const boundary=document.createElement('small');boundary.textContent='Educational family information only — not a material-selection approval or a production setting.';
+      familyInfo.append(paragraph,boundary);
+    }
+    familyInfo.hidden=familyView==='grades';
+    host.hidden=familyView!=='grades';
+    pager.hidden=familyView!=='grades'||pager.dataset.mmHasPages!=='1';
+    familyDetail.querySelectorAll('[data-mm-family-view]').forEach(button=>{
+      const selected=button.dataset.mmFamilyView===familyView;
+      button.setAttribute('aria-pressed',String(selected));
+    });
+  }
+  familyDetail.querySelector('[data-mm-family-tabs]')?.addEventListener('click',event=>{
+    const button=event.target.closest('button[data-mm-family-view]');
+    if(!button||!familyDetail.contains(button))return;
+    familyView=button.dataset.mmFamilyView;
+    syncFamilyTabs();
+  });
   const noActiveFilters=()=>filterControls.every(control=>!control.value)&&!clean(allQuery.value);
   function familyFolders(){
     const familyCounts=facetsData?.counts?.families||{};
@@ -120,13 +161,15 @@ function installAllIndex(root,index,query,revealExactGrade){
       root.dataset.mmUnifiedMaterialIndex='1';
       root.dataset.mmUnifiedMaterialTotal=String(index.stats()?.documents||grades);
       updateFamilyNavigation();
+      syncFamilyTabs();
       return;
     }
     const selected=type.value?[type.value]:null;const result=await index.searchAllPage(allQuery.value||'',{types:selected,region:region.value||null,country:country.value||null,manufacturerId:catalogueManufacturer.value||null,polymerFamily:family.value||null,application:application.value||null,process:process.value||null,evidence:evidence.value||null,page,pageSize:ALL_PAGE_SIZE});if(mine!==seq)return;
     page=result.page;host.innerHTML=result.items.length?result.items.map(renderAllResult).join(''):'<div class="mm-exact-empty">No published material data match this search.</div>';
-    previous.disabled=!result.hasPrevious;next.disabled=!result.hasNext;pager.hidden=result.pageCount<=1;
+    previous.disabled=!result.hasPrevious;next.disabled=!result.hasNext;pager.hidden=result.pageCount<=1;pager.dataset.mmHasPages=result.pageCount>1?'1':'0';
     status.textContent=`${result.total} matching material records · page ${result.page} of ${result.pageCount}`;
     updateFamilyNavigation();
+    syncFamilyTabs();
     root.dataset.mmUnifiedMaterialIndex='1';root.dataset.mmUnifiedMaterialTotal=String(result.total);
     // One visible catalogue and one result card per published record.
     // Keep full exact-grade property/processing/source data in the expanded
@@ -165,11 +208,11 @@ function installAllIndex(root,index,query,revealExactGrade){
     const code=button.dataset.mmFamilyOpen;
     if(!facetsData?.families.includes(code))return;
     family.value=code;type.value='exact-grade';allQuery.value='';
-    view='results';render(true).catch(err=>console.warn('[MouldMaster family browse]',err));
+    familyView='grades';view='results';render(true).catch(err=>console.warn('[MouldMaster family browse]',err));
   });
   familiesBack.addEventListener('click',()=>{
     for(const control of filterControls)control.value='';
-    allQuery.value='';view='families';
+    allQuery.value='';familyView='grades';view='families';
     render(true).catch(err=>console.warn('[MouldMaster family browse]',err));
   });
   browseAll.addEventListener('click',()=>{
