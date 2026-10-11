@@ -205,6 +205,13 @@ function materials(){
       actions?.before(figure)||sourced.append(figure);
     }
   });
+  // Search/pagination replaces result nodes asynchronously. Decorate new
+  // source-backed rows as soon as the index has rendered them.
+  const resultHost=catalogue.querySelector('[data-mm-all-material-results]');
+  if(resultHost&&!resultHost.dataset.mmReferenceObserved){
+    resultHost.dataset.mmReferenceObserved='1';
+    new MutationObserver(refresh).observe(resultHost,{childList:true});
+  }
   root.dataset.mmReferenceMaterials='1';
 }
 function more(){
