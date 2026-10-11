@@ -392,7 +392,13 @@ function home(){
     const h=document.createElement('h2');h.textContent='Welcome to MouldMaster';
     const p=document.createElement('p');p.textContent='Practical knowledge for injection moulding.';
     words.append(h,p);
-    hero.append(words,picture('machine','Reference image of injection moulding machine',28));
+    const machinePhoto=document.createElement('img');
+    machinePhoto.src='./assets/mockup-home-machine.webp';
+    machinePhoto.alt=''; // decorative owner-selected machine image; heading gives context
+    machinePhoto.className='mm-reference-hero-photo';
+    machinePhoto.decoding='async';
+    machinePhoto.loading='eager';
+    hero.append(words,machinePhoto);
     const anchor=focus.closest('.mm-dashboard-slot')||focus;
     anchor.before(hero);
   }

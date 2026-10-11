@@ -1311,3 +1311,13 @@ html.mm-reference-photo-ready .mm-reference-photo>.mm-reference-picture{
   width:100%;height:80px;object-fit:contain;background:#d8e8f4;
   border-radius:7px;padding:3px;
 }
+
+
+/* Native-resolution crop of the selected reference's machine photograph.
+   Keep original text as selectable HTML, not baked into the imagery. */
+.mm-reference-layout .mm-reference-home-hero>.mm-reference-hero-photo{
+  position:absolute!important;z-index:1;right:-4px;top:0;
+  width:63%;height:100%;object-fit:cover;object-position:center;
+  opacity:.96;filter:contrast(1.06) saturate(.86);
+  display:block!important;pointer-events:none;
+}

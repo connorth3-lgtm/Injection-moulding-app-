@@ -23,6 +23,9 @@ for(const width of [320,360,390,412]){
     await page.setViewportSize({width,height:844});
     await openApp(page);
     await expect(page.locator('#dashboard .mm-reference-home-hero')).toBeVisible();
+    const machine=page.locator('#dashboard .mm-reference-hero-photo');
+    await expect(machine).toHaveAttribute('src','./assets/mockup-home-machine.webp');
+    await expect.poll(()=>machine.evaluate(img=>img.complete&&img.naturalWidth>=90)).toBe(true);
     await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
     await expect(page.locator('#dashboard .mm-reference-home-practice')).toBeVisible();
     await expect(page.locator('#mmMissionControl .mm-mc-context')).toHaveCount(0);
