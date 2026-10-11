@@ -154,7 +154,9 @@ test('Android empty voice list speaks within the original tap without waiting fo
   const host=page.locator('.mm-read-aloud');
   await host.locator('details').evaluate(el=>{el.open=true;});
   await host.locator('[data-mm-read="play"]').click();
-  await expect.poll(()=>page.evaluate(()=>window.__mmAndroidSpoken||'')).toContain('Android default voice starts on the first tap.');
+  // The reader speaks the first *visible text node* (h1) before the paragraph.
+  // The first-tap assertion must not require skipping the heading.
+  await expect.poll(()=>page.evaluate(()=>window.__mmAndroidSpoken||'')).toBe('Android read aloud');
   expect(await page.evaluate(()=>window.__mmAndroidSpeechInsideGesture)).toBe(true);
   expect(await page.evaluate(()=>window.__mmAndroidLanguage)).toBe('en');
   await expect(host.locator('.mm-read-status')).toHaveText('Reading');
