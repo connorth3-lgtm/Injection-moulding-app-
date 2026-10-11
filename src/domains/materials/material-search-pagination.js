@@ -41,7 +41,7 @@ function renderAllResult(doc){
   const contextMeta=cat?`<p class="mm-material-index-subtitle"><b>${esc(cat.region)}</b> · ${esc(cat.country)} · ${esc(cat.manufacturer)} · ${esc(cat.family)} · ${esc(cat.evidenceStage||'unknown evidence stage')}</p>`:'';
   const tags=cat?[...(cat.applications||[]),...(cat.processes||[]),...(cat.evidence||[])]:[];
   const tagHtml=tags.length?`<div class="mm-material-index-meta">${[...new Set(tags)].map(tag=>`<span class="pill">${esc(tag)}</span>`).join('')}</div>`:'';
-  return `<details class="mm-material-index-card" data-mm-material-index-result="${esc(doc.id)}" data-mm-material-index-type="${esc(doc.type)}"><summary class="mm-material-index-summary"><span class="mm-material-index-meta"><span class="pill">${esc(materialTypeLabel(doc.type))}</span>${sourceCount?`<span>${sourceCount} evidence source${sourceCount===1?'':'s'}</span>`:''}</span><strong class="mm-material-index-title">${esc(doc.title)}</strong>${catalogueMeta}<span class="mm-material-index-expand">View details</span></summary><div class="mm-material-index-detail">${contextMeta}${tagHtml}${doc.subtitle?`<p class="mm-material-index-subtitle">${esc(doc.subtitle)}</p>`:''}<p>${esc(resultSummary(doc))}</p>${doc.materialGradeId?`<button type="button" class="secondary" data-mm-index-grade="${esc(doc.materialGradeId)}">Show exact grade</button>`:''}</div></details>`;
+  return `<details class="mm-material-index-card" data-mm-material-index-result="${esc(doc.id)}" data-mm-material-index-type="${esc(doc.type)}"><summary class="mm-material-index-summary"><span class="mm-material-index-meta"><span class="pill">${esc(materialTypeLabel(doc.type))}</span>${sourceCount?`<span>${sourceCount} evidence source${sourceCount===1?'':'s'}</span>`:''}</span><strong class="mm-material-index-title">${esc(doc.title)}</strong>${catalogueMeta}<span class="mm-material-index-expand">View details</span></summary><div class="mm-material-index-detail">${contextMeta}${tagHtml}${doc.subtitle?`<p class="mm-material-index-subtitle">${esc(doc.subtitle)}</p>`:''}<p>${esc(resultSummary(doc))}</p>${doc.materialGradeId&&doc.payload?`<div class="mm-material-sourced-detail" data-mm-unified-grade>${renderGrade(doc.payload)}<div class="mm-material-inline-actions" role="group" aria-label="Actions for ${esc(doc.title)}"><button type="button" class="secondary" data-mm-material-jump="compare" data-mm-grade-action="${esc(doc.materialGradeId)}">Compare grades</button><button type="button" class="secondary" data-mm-material-jump="change" data-mm-grade-action="${esc(doc.materialGradeId)}">Change assistant</button><button type="button" class="ghost" data-mm-material-jump="learning" data-mm-grade-action="${esc(doc.materialGradeId)}">Material learning</button></div></div>`:''}</div></details>`;
 }
 function installAllIndex(root,index,query,revealExactGrade){
   if(root.querySelector('[data-mm-all-material-index]'))return;
@@ -75,7 +75,27 @@ function installAllIndex(root,index,query,revealExactGrade){
     previous.disabled=!result.hasPrevious;next.disabled=!result.hasNext;pager.hidden=result.pageCount<=1;
     status.textContent=`${result.total} matching material records · page ${result.page} of ${result.pageCount}`;
     root.dataset.mmUnifiedMaterialIndex='1';root.dataset.mmUnifiedMaterialTotal=String(result.total);
-    host.querySelectorAll('[data-mm-index-grade]').forEach(button=>button.addEventListener('click',()=>{const id=button.dataset.mmIndexGrade||'';revealExactGrade(id).catch(err=>console.warn('[MouldMaster exact grade navigation]',err));}));
+    // One visible catalogue and one result card per published record.
+    // Keep full exact-grade property/processing/source data in the expanded
+    // result rather than sending the learner to a second catalogue below.
+    host.querySelectorAll('[data-mm-exact-case]').forEach(button=>button.addEventListener('click',async()=>{
+      button.disabled=true;
+      try{await window.MM_MATERIAL_REGISTRY.startMouldMasterCase(button.dataset.mmExactCase)}
+      catch(err){console.error('[MouldMaster material case]',err);button.disabled=false}
+    }));
+    host.querySelectorAll('[data-mm-grade-action]').forEach(button=>button.addEventListener('click',()=>{
+      const id=button.dataset.mmGradeAction||'';
+      const action=button.dataset.mmMaterialJump||'';
+      const target=document.getElementById(({compare:'mmMaterialCompare',change:'mmMaterialChange',learning:'mmMaterialLearningAnchor'})[action]);
+      const workflows=root.querySelector('[data-mm-material-workflows]');
+      if(action==='compare')root.querySelector('[data-mm-compare-a]').value=id;
+      if(action==='change')root.querySelector('[data-mm-change-before]').value=id;
+      if(action==='compare'||action==='change'){
+        workflows.open=true;
+        root.querySelector('[data-mm-compare-a]').dispatchEvent(new Event('change',{bubbles:true}));
+      }
+      if(target)requestAnimationFrame(()=>target.scrollIntoView({behavior:'smooth',block:'start'}));
+    }));
   }
   for(const control of [allQuery,type,region,country,catalogueManufacturer,family,application,process,evidence])control.addEventListener(control===allQuery?'input':'change',()=>render(true).catch(err=>console.warn('[MouldMaster unified material index]',err)));
   clearAll.addEventListener('click',()=>{
