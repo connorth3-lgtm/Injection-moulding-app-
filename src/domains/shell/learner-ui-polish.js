@@ -605,6 +605,18 @@ function materials(){
     if(intro&&intro.parentElement!==guide)guide.querySelector('[data-mm-family-science-content]')?.prepend(intro);
     guide.querySelector('[data-mm-family-science-content]')?.appendChild(legacy);
   }
+  const selectedFamily=catalogue.querySelector('[data-mm-family-detail]:not([hidden])');
+  if(selectedFamily){
+    const code=selectedFamily.dataset.mmFamilyCurrent||'';
+    const art=selectedFamily.querySelector('[data-mm-family-detail-art]');
+    if(art&&art.dataset.mmFamilyArt!==code){
+      const tile=/^PP$/.test(code)?11:/^(HDPE|LDPE|PE)$/.test(code)?12:/^PC$/.test(code)?10:
+        /^PA/.test(code)?13:/^POM$/.test(code)?14:/^PET$/.test(code)?15:
+        /^PBT$/.test(code)?16:/^PMMA$/.test(code)?17:9;
+      art.replaceChildren(picture(materialArt(code),'',tile));
+      art.dataset.mmFamilyArt=code;
+    }
+  }
   catalogue.querySelectorAll('.mm-material-family-card:not([data-mm-reference-illustrated])').forEach(card=>{
     card.dataset.mmReferenceIllustrated='1';
     const familyCode=card.dataset.mmFamilyOpen||'';
@@ -698,6 +710,8 @@ function more(){
     const link=document.createElement('a');link.href=href;link.className='quick-action';link.textContent=label;
     area.append(link);details.append(area);grid.append(details);
   }
+  const direct=Array.from(grid.querySelectorAll(':scope > .mm-reference-more-extra'));
+  grid.prepend(...direct);
 }
 let scheduled=false;
 function refresh(){
