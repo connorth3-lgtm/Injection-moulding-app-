@@ -177,47 +177,77 @@
     updateButtons();
   }
 
-  async function speakCurrent(retry=0){
+  // Android Chrome can expose speechSynthesis while getVoices() stays empty.
+  // Delaying speak() until voiceschanged/timeout loses the tap activation needed
+  // by mobile TTS. Preserve Windows' delayed-voice path separately.
+  const androidSpeech=/Android/i.test(navigator.userAgent||'');
+  function speakCurrent(retry=0){
     if(!supported){setStatus('Read Aloud is not available in this browser/device.');updateButtons();return;}
     if(!units.length)(playlistMode?buildPlaylist():buildUnits());
     const unit=currentUnit();
     if(!unit){setStatus(playlistMode?'No lesson audio is available.':'No readable text is visible on this screen.');updateButtons();return;}
     const token=++speakToken;
     starting=true;speaking=false;paused=false;
-    setStatus(refreshVoice()?'Starting device voice…':'Loading device voice…');
+    setStatus(refreshVoice()?'Starting device voice…':androidSpeech?'Starting default device voice…':'Loading device voice…');
     updateButtons();
-    await waitForVoice(retry?700:1200);
-    if(token!==speakToken)return;
-    synth.cancel();
-    const utterance=new SpeechSynthesisUtterance(unit.text);
-    if(selectedVoice){utterance.voice=selectedVoice;utterance.lang=selectedVoice.lang||document.documentElement.lang||'en';}
-    else utterance.lang=document.documentElement.lang||'en';
-    utterance.rate=Number((playlistMode?listeningUI?.speed:ui?.speed)?.value||1);
-    let started=false;
-    const startTimer=setTimeout(()=>{
-      if(token!==speakToken||started)return;
-      synth.cancel();starting=false;speaking=false;paused=false;
-      if(retry<1){selectedVoice=null;setStatus('Retrying device voice…');updateButtons();speakCurrent(1);}
-      else{setStatus('Device voice did not start. Check Windows speech voices, then try again.');updateButtons();}
-    },2500);
-    utterance.onstart=()=>{
+    const beginSpeech=()=>{
       if(token!==speakToken)return;
-      clearTimeout(startTimer);started=true;starting=false;speaking=true;paused=false;
-      highlight(unit);setStatus(playlistMode?'Listening session playing':'Reading');updateButtons();
+      // Must run directly inside the original tap handler on Android, even
+      // with an empty voice list. The platform can pick its default voice.
+      synth.cancel();
+      const utterance=new SpeechSynthesisUtterance(unit.text);
+      if(selectedVoice){utterance.voice=selectedVoice;utterance.lang=selectedVoice.lang||document.documentElement.lang||'en';}
+      else utterance.lang=document.documentElement.lang||'en';
+      utterance.rate=Number((playlistMode?listeningUI?.speed:ui?.speed)?.value||1);
+      let started=false;
+      const startTimer=setTimeout(()=>{
+        if(token!==speakToken||started)return;
+        synth.cancel();starting=false;speaking=false;paused=false;
+        if(androidSpeech){
+          // Timer callbacks cannot recover a blocked mobile user gesture.
+          setStatus('Device voice did not start. Tap Listen again; check Android text-to-speech settings if it stays silent.');
+          updateButtons();
+        }else if(retry<1){
+          selectedVoice=null;setStatus('Retrying device voice…');updateButtons();speakCurrent(1);
+        }else{
+          setStatus('Device voice did not start. Check Windows speech voices, then try again.');updateButtons();
+        }
+      },androidSpeech?6000:2500);
+      utterance.onstart=()=>{
+        if(token!==speakToken)return;
+        clearTimeout(startTimer);started=true;starting=false;speaking=true;paused=false;
+        highlight(unit);setStatus(playlistMode?'Listening session playing':'Reading');updateButtons();
+      };
+      utterance.onend=()=>{
+        clearTimeout(startTimer);
+        if(token!==speakToken||!speaking)return;
+        if(index<units.length-1){index+=1;speakCurrent();}
+        else stop('Finished all lessons');
+      };
+      utterance.onerror=event=>{
+        clearTimeout(startTimer);
+        if(token!==speakToken)return;
+        if(event?.error==='canceled'||event?.error==='interrupted')return;
+        starting=false;
+        stop(androidSpeech&&event?.error==='not-allowed'
+          ?'Android blocked voice playback. Tap Listen to start audio.'
+          :`Speech playback could not continue${event?.error?`: ${event.error}`:''}.`);
+      };
+      try{synth.speak(utterance)}catch(err){
+        clearTimeout(startTimer);starting=false;
+        stop(androidSpeech?'Android voice could not start. Tap Listen again.':'Device voice could not be started.');
+        console.error('MouldMaster Read Aloud:',err);
+      }
     };
-    utterance.onend=()=>{
-      clearTimeout(startTimer);
-      if(token!==speakToken||!speaking)return;
-      if(index<units.length-1){index+=1;speakCurrent();}
-      else stop('Finished all lessons');
-    };
-    utterance.onerror=event=>{
-      clearTimeout(startTimer);
-      if(token!==speakToken)return;
-      if(event?.error==='canceled'||event?.error==='interrupted')return;
-      starting=false;stop(`Speech playback could not continue${event?.error?`: ${event.error}`:''}.`);
-    };
-    try{synth.speak(utterance)}catch(err){clearTimeout(startTimer);starting=false;stop('Device voice could not be started.');console.error('MouldMaster Read Aloud:',err);}
+    if(androidSpeech){
+      // No Promise, timeout or delayed voiceschanged listener before speak().
+      beginSpeech();
+    }else{
+      waitForVoice(retry?700:1200).then(beginSpeech,()=>{
+        if(token!==speakToken)return;
+        beginSpeech();
+      });
+    }
   }
 
   function start(){index=0;buildUnits();if(!units.length){setStatus('No readable text is visible on this screen.');updateButtons();return;}speakCurrent();}
