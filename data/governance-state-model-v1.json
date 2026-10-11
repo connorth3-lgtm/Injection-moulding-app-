@@ -310,7 +310,7 @@
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
-    "technicalAutomation": "fail",
+    "technicalAutomation": "pass",
     "bookPublicationAuthorization": "authorized",
     "bookIndependentSme": "hold",
     "curriculumIndependentSme": "hold",
@@ -345,12 +345,12 @@
   "userFacingTerminologyBoundary": "Internal evidenceMaturity=verified must be displayed as 'Source evidence reviewed'. The word verified must not be used by itself in learner-facing Book assurance because independent human SME/device/learner validation is a separate namespace.",
   "currentAssuranceEvidence": {
     "staticContract": {
-      "status": "fail",
-      "meaning": "New release 2026.10.11.5 source 4ac98a464e20386ab88681f7787d0f61894cbca3, artifact 11688467885 and producer run 38103464976 retained with measured runtime fingerprint sha256:0cb4b34cafdc9c5d95ad3de780471f4025097eccf35707d6e03d6b236dc9b5c8; producer technical gate is pending verification and all external reviews HOLD."
+      "status": "pass",
+      "meaning": "Verified successful exact-source 2026.10.11.5 producer run 38105229738 retained source 0f94f35cbdc5965cfc4ac5b6413dc6ea3081f57e, artifact 11689291423, SHA-256 ZIP digest and public runtime fingerprint sha256:ee4cfb09becaa0c912e0b23d9939f7abd44e648044d49ebebf6d5723165594a9 measured independently from actual runtime files; technical source/QA gates passed. Seven external reviews remain HOLD."
     },
     "behavioralBrowser": {
-      "status": "fail",
-      "meaning": "Exact-source WebKit, Chromium, five-shard reliability and visual browser suites for 2026.10.11.5 are pending; prior release successes do not transfer. External physical/human evidence HOLD."
+      "status": "pass",
+      "meaning": "Exact-source Mobile Browser QA passed WebKit, Chromium reachability/substantive/visual, cross-browser and five 500-run reliability shards; Question Quality 50-Pass passed for 0f94f35cbdc5965cfc4ac5b6413dc6ea3081f57e. This does not establish physical iOS/Android, real AT, SME/NZQA provider, Windows signing or production approval."
     },
     "externalHumanDevice": {
       "status": "hold",

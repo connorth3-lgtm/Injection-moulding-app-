@@ -4,8 +4,8 @@
   "validationIndex": "qa/EXTERNAL_VALIDATION_2026.10.11.5.md",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
-    "status": "fail",
-    "claim": "Release 2026.10.11.5 artifact from producer run 38103464976 retained; exact-head producer and Mobile Browser QA success NOT yet independently verified. All external validation streams and production remain HOLD."
+    "status": "pass",
+    "claim": "Successful exact-source producer run 38105229738 retained web/PWA release 2026.10.11.5, source 0f94f35cbdc5965cfc4ac5b6413dc6ea3081f57e, artifact 11689291423, digest sha256:4f3e6209fdbc6737ec78076b254c7759bac3420835412a978aa943c30be5a9a4, expiry 2027-01-09T02:27:49Z, and stable public-runtime fingerprint sha256:ee4cfb09becaa0c912e0b23d9939f7abd44e648044d49ebebf6d5723165594a9 independently computed from 163 actual ZIP public files, excluding deployment identity metadata. Exact-source Mobile Browser QA (WebKit, Chromium, visual and five 500-run reliability shards), Question Quality 50-Pass and PWA contract passed. All seven independent external reviews and protected-main release remain HOLD."
   },
   "governance": {
     "status": "enforced",
@@ -24,8 +24,8 @@
     "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.10.11.5.md",
     "candidate": {
       "release": "2026.10.11.5",
-      "sourceSha": "4ac98a464e20386ab88681f7787d0f61894cbca3",
-      "runtimeFingerprint": "sha256:0cb4b34cafdc9c5d95ad3de780471f4025097eccf35707d6e03d6b236dc9b5c8"
+      "sourceSha": "0f94f35cbdc5965cfc4ac5b6413dc6ea3081f57e",
+      "runtimeFingerprint": "sha256:ee4cfb09becaa0c912e0b23d9939f7abd44e648044d49ebebf6d5723165594a9"
     },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix.",
     "previousCandidate": {
@@ -40,14 +40,14 @@
     "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.10.11.5.md",
     "currentCandidate": {
       "release": "2026.10.11.5",
-      "sourceSha": "4ac98a464e20386ab88681f7787d0f61894cbca3",
-      "runtimeFingerprint": "sha256:0cb4b34cafdc9c5d95ad3de780471f4025097eccf35707d6e03d6b236dc9b5c8",
-      "candidateRunId": 38103464976,
+      "sourceSha": "0f94f35cbdc5965cfc4ac5b6413dc6ea3081f57e",
+      "runtimeFingerprint": "sha256:ee4cfb09becaa0c912e0b23d9939f7abd44e648044d49ebebf6d5723165594a9",
+      "candidateRunId": 38105229738,
       "candidateWorkflow": "Pre-merge Public Candidate",
-      "artifactId": 11688467885,
-      "artifactName": "physical-pwa-candidate-4ac98a464e20386ab88681f7787d0f61894cbca3",
-      "artifactDigest": "sha256:af7ce4ee69721b944d13574b2f3fcf8d4d1d55a610890fd8ad87029527397209",
-      "artifactExpiresAt": "2027-01-09T01:55:41Z"
+      "artifactId": 11689291423,
+      "artifactName": "physical-pwa-candidate-0f94f35cbdc5965cfc4ac5b6413dc6ea3081f57e",
+      "artifactDigest": "sha256:4f3e6209fdbc6737ec78076b254c7759bac3420835412a978aa943c30be5a9a4",
+      "artifactExpiresAt": "2027-01-09T02:27:49Z"
     },
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release.",
     "previousCandidate": {
@@ -120,8 +120,8 @@
     "required": "Genuine provider ownership, stakeholder need, provider-approved design, authorised assessment/internal moderation, consent-to-assess/CMR confirmation, applicable national moderation, workplace evidence and provider-controlled review/change evidence for the exact governed release.",
     "candidate": {
       "release": "2026.10.11.5",
-      "sourceSha": "4ac98a464e20386ab88681f7787d0f61894cbca3",
-      "runtimeFingerprint": "sha256:0cb4b34cafdc9c5d95ad3de780471f4025097eccf35707d6e03d6b236dc9b5c8"
+      "sourceSha": "0f94f35cbdc5965cfc4ac5b6413dc6ea3081f57e",
+      "runtimeFingerprint": "sha256:ee4cfb09becaa0c912e0b23d9939f7abd44e648044d49ebebf6d5723165594a9"
     },
     "previousCandidate": {
       "release": "2026.10.11.4",
@@ -131,14 +131,14 @@
   },
   "webCandidate": {
     "release": "2026.10.11.5",
-    "sourceSha": "4ac98a464e20386ab88681f7787d0f61894cbca3",
-    "runtimeFingerprint": "sha256:0cb4b34cafdc9c5d95ad3de780471f4025097eccf35707d6e03d6b236dc9b5c8",
-    "candidateRunId": 38103464976,
+    "sourceSha": "0f94f35cbdc5965cfc4ac5b6413dc6ea3081f57e",
+    "runtimeFingerprint": "sha256:ee4cfb09becaa0c912e0b23d9939f7abd44e648044d49ebebf6d5723165594a9",
+    "candidateRunId": 38105229738,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 11688467885,
-    "artifactName": "physical-pwa-candidate-4ac98a464e20386ab88681f7787d0f61894cbca3",
-    "artifactDigest": "sha256:af7ce4ee69721b944d13574b2f3fcf8d4d1d55a610890fd8ad87029527397209",
-    "artifactExpiresAt": "2027-01-09T01:55:41Z"
+    "artifactId": 11689291423,
+    "artifactName": "physical-pwa-candidate-0f94f35cbdc5965cfc4ac5b6413dc6ea3081f57e",
+    "artifactDigest": "sha256:4f3e6209fdbc6737ec78076b254c7759bac3420835412a978aa943c30be5a9a4",
+    "artifactExpiresAt": "2027-01-09T02:27:49Z"
   },
   "candidatePolicy": {
     "previewBranchAuthoritative": false,
@@ -156,7 +156,7 @@
     "artifactDigest": "sha256:1f3a828b70f26c13f0d6602dce8a6789d78f2863389acc0c8be9eb436c20009b",
     "artifactExpiresAt": "2027-01-09T01:23:44Z"
   },
-  "candidateStatus": "HOLD — new 2026.10.11.5 candidate metadata retained but exact-head producer gates unverified; seven external evidence streams remain HOLD.",
+  "candidateStatus": "Successful exact-source release 2026.10.11.5 candidate: producer run 38105229738, source 0f94f35cbdc5965cfc4ac5b6413dc6ea3081f57e, retained artifact 11689291423, runtime fingerprint sha256:ee4cfb09becaa0c912e0b23d9939f7abd44e648044d49ebebf6d5723165594a9. Verified Mobile Browser QA, Question Quality and PWA Contract passed. Human/physical-device and provider evidence streams remain HOLD. No protected-main or hosted Pages authorization granted.",
   "previousPreviousCandidate": {
     "release": "2026.10.09.5",
     "sourceSha": "581e08e58f0b9ec3c7a3501f9a3a71d47ed2c184",

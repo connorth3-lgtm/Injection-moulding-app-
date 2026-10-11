@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Retained release 2026.10.11.5 candidate 4ac98a464e20386ab88681f7787d0f61894cbca3 and artifact 11688467885 are NOT evidence of testing on physical iOS/iPadOS and Android devices. Real device install, offline restart, reboot, update, storage-pressure and zoom remain pending. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
+  "boundary": "Retained release 2026.10.11.5 candidate 0f94f35cbdc5965cfc4ac5b6413dc6ea3081f57e and artifact 11689291423 are NOT evidence of testing on physical iOS/iPadOS and Android devices. Real device install, offline restart, reboot, update, storage-pressure and zoom remain pending. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
@@ -44,14 +44,14 @@
   "release": "2026.10.11.5",
   "candidate": {
     "release": "2026.10.11.5",
-    "sourceSha": "4ac98a464e20386ab88681f7787d0f61894cbca3",
-    "runtimeFingerprint": "sha256:0cb4b34cafdc9c5d95ad3de780471f4025097eccf35707d6e03d6b236dc9b5c8",
-    "candidateRunId": 38103464976,
+    "sourceSha": "0f94f35cbdc5965cfc4ac5b6413dc6ea3081f57e",
+    "runtimeFingerprint": "sha256:ee4cfb09becaa0c912e0b23d9939f7abd44e648044d49ebebf6d5723165594a9",
+    "candidateRunId": 38105229738,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 11688467885,
-    "artifactName": "physical-pwa-candidate-4ac98a464e20386ab88681f7787d0f61894cbca3",
-    "artifactDigest": "sha256:af7ce4ee69721b944d13574b2f3fcf8d4d1d55a610890fd8ad87029527397209",
-    "artifactExpiresAt": "2027-01-09T01:55:41Z"
+    "artifactId": 11689291423,
+    "artifactName": "physical-pwa-candidate-0f94f35cbdc5965cfc4ac5b6413dc6ea3081f57e",
+    "artifactDigest": "sha256:4f3e6209fdbc6737ec78076b254c7759bac3420835412a978aa943c30be5a9a4",
+    "artifactExpiresAt": "2027-01-09T02:27:49Z"
   },
   "previousCandidate": {
     "release": "2026.10.11.4",
