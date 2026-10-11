@@ -1,12 +1,12 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.11.8`**.
+Current governed web candidate: **`2026.10.11.9`** (draft only, not approved or deployed).
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Automated contract release 2026.10.11.8 source ed8645bb137cea5449251dc562e51100ed113592: verified producer run 38163449886, retained artifact 11711246457, public runtime fingerprint sha256:2b6b69065d4f2f1a466e05495a1e1272337386651760ac5448017a8621d706c9. Owner-approved strict visual baseline, browser suite and Question Quality 50-Pass succeeded; all seven external evidence streams remain HOLD. |
-| Behavioral / browser | **pass** | Behavioral browser QA release 2026.10.11.8 source ed8645bb137cea5449251dc562e51100ed113592: strict 12-pixel visual regression, substantive Chromium/WebKit, cross-browser compatibility, reachability, five reliability shards and Android first-tap Read Aloud automated regression passed. This does NOT establish audible Android device playback, physical-device or independent real AT validation. |
+| Static / contract | **fail** | Release 2026.10.11.9 Materials family-card interface is intentionally NOT technical-release verified. Published .8 producer run 38163449886 and artifact 11711246457 are historical, not a .9 candidate. Exact .9 runtime fingerprint and protected source-specific producer are pending. |
+| Behavioral / browser | **fail** | Browser release assurance HOLD: updated family-folder screenshots differ materially from approved .8 12-pixel baseline. Substantive Chromium/WebKit tests are automated only; new .9 visual approval and complete exact-source producer are pending. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
