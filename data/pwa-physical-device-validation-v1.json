@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Retained 2026.10.11.9 provisional candidate 4116eda8950b65c337f22c7f0f981822e200569d (artifact 11713955923) is NOT evidence of testing on physical iOS/iPadOS and Android devices. Producer is not yet successful. Device install, actual Android Read Aloud, offline restart, reboot, update, storage pressure, zoom and navigation remain pending. Real assistive-technology review is separately governed by data/accessibility-real-at-validation-v1.json. All external human/provider, signing, production-root and automatic machine-control authority remain HOLD.",
+  "boundary": "Retained release 2026.10.11.9 candidate d572ee13d8f2f09139882ff1a271e855284f6e3c and successfully produced artifact 11713839913 passed governed software browser/visual/question QA but are NOT evidence of testing on physical iOS/iPadOS and Android devices. Real device install, actual Android audible Read Aloud, offline restart, reboot, update, storage pressure, zoom and navigation remain pending. Real assistive-technology review is separately governed by data/accessibility-real-at-validation-v1.json. External human/SME/provider, Windows signing, production root and automatic machine-control authority remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
@@ -44,14 +44,14 @@
   "release": "2026.10.11.9",
   "candidate": {
     "release": "2026.10.11.9",
-    "sourceSha": "4116eda8950b65c337f22c7f0f981822e200569d",
+    "sourceSha": "d572ee13d8f2f09139882ff1a271e855284f6e3c",
     "runtimeFingerprint": "sha256:97d9cdf902986357f9446796478525f1b61c0f37162387a042121c310ee4d3c7",
-    "candidateRunId": 38169457705,
+    "candidateRunId": 38172783245,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 11713955923,
-    "artifactName": "physical-pwa-candidate-4116eda8950b65c337f22c7f0f981822e200569d",
-    "artifactDigest": "sha256:f6f8883db46b57915769008259da0062f17463414ef8a7f5ea52e7557144de5c",
-    "artifactExpiresAt": "2027-01-09T19:46:53Z"
+    "artifactId": 11713839913,
+    "artifactName": "physical-pwa-candidate-d572ee13d8f2f09139882ff1a271e855284f6e3c",
+    "artifactDigest": "sha256:e91c370f6f051fea391186f16610b638e7b8915dc639e28539a283f6c951bd5a",
+    "artifactExpiresAt": "2027-01-09T20:34:33Z"
   },
   "previousCandidate": {
     "release": "2026.10.11.8",
