@@ -28,6 +28,16 @@ for(const width of [320,360,390,412]){
     await expect.poll(()=>machine.evaluate(img=>img.complete&&img.naturalWidth>=90)).toBe(true);
     await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
     await expect(page.locator('#dashboard .mm-reference-home-practice')).toBeVisible();
+    await expect(page.locator('#dashboard .mm-reference-home-hero h2')).toHaveText('Welcome back');
+    await expect(page.locator('#dashboard .mm-reference-quick-tool')).toHaveCount(4);
+    await page.locator('#dashboard .mm-reference-quick-tool').filter({hasText:'Unit converter'}).click();
+    const converter=page.locator('#mmReferenceUnitConverter');
+    await expect(converter).toBeVisible();
+    await converter.getByRole('combobox',{name:'Conversion'}).selectOption('0');
+    await converter.getByRole('spinbutton',{name:'Value to convert'}).fill('10');
+    await expect(converter.locator('output')).toHaveText('1 MPa');
+    await converter.getByRole('button',{name:'Close'}).click();
+    await expect(converter).toBeHidden();
     await expect(page.locator('#mmMissionControl .mm-mc-context')).toHaveCount(0);
     await expect(page.locator('#mmMissionControl .mm-mc-timeline')).toHaveCount(0);
 
@@ -66,6 +76,18 @@ for(const width of [320,360,390,412]){
     await expect(pp).toContainText('95 published grades');
     await expect(pp.locator('.mm-reference-family-art')).toBeVisible();
     await pp.click();
+    const detail=page.locator('#materials [data-mm-family-detail]');
+    await expect(detail).toBeVisible();
+    await expect(detail.locator('[data-mm-family-title]')).toContainText('PP · Polypropylene');
+    await expect(detail.locator('[data-mm-family-count]')).toContainText('95 published grades');
+    await detail.locator('[data-mm-family-view="overview"]').click();
+    await expect(detail.locator('[data-mm-family-info]')).toContainText('Polypropylene');
+    await detail.locator('[data-mm-family-view="properties"]').click();
+    await expect(detail.locator('[data-mm-family-info]')).toContainText('grade data sheet');
+    await detail.locator('[data-mm-family-view="applications"]').click();
+    await expect(detail.locator('[data-mm-family-info]')).toContainText('not grade recommendations');
+    await detail.locator('[data-mm-family-view="grades"]').click();
+    await expect(detail.locator('[data-mm-family-view="grades"]')).toHaveAttribute('aria-pressed','true');
     const first=page.locator('#materials .mm-material-index-card[data-mm-material-index-type="exact-grade"]').first();
     await expect(first).toBeVisible();
     await expect(first.locator('.mm-reference-material-art')).toBeVisible();
@@ -99,10 +121,12 @@ for(const width of [320,360,390,412]){
     await page.evaluate(()=>window.MM_PRIMARY_HUBS.renderPracticeHub());
 
     await page.locator('.mobile-nav > button').filter({hasText:'More'}).click();
-    await expect(page.locator('#modal .mm-more-disclosure')).toHaveCount(5);
-    await expect(page.locator('#modal .mm-reference-more-extra')).toHaveCount(1);
-    await expect(page.locator('#modal .mm-reference-more-extra a')).toHaveCount(2);
-    await expect(page.locator('#modal .mm-reference-more-extra a').nth(1)).toHaveAttribute('href','./support.html#mmPwa');
+    await expect(page.locator('#modal .mm-more-disclosure')).toHaveCount(6);
+    await expect(page.locator('#modal .mm-reference-more-extra')).toHaveCount(2);
+    await expect(page.locator('#modal .mm-reference-more-extra')).toHaveCount(2);
+    await expect(page.locator('#modal .mm-reference-more-extra').first()).toContainText('Help & support');
+    await expect(page.locator('#modal .mm-reference-more-extra').nth(1)).toContainText('About MouldMaster');
+    await expect(page.locator('#modal .mm-reference-more-extra').nth(1).locator('a')).toHaveAttribute('href','./support.html#mmPwa');
     await expect(page.locator('#modal [data-mm-registry-menu="mission-evidence"]')).toHaveCount(1);
     const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
     expect(overflow).toBeLessThanOrEqual(2);
