@@ -137,9 +137,37 @@ function scene(){return CASE_SCENES[currentCase().id]||CASE_SCENES['VA-02']}
 function phaseKey(){return PHASES[state.phase]?.[0]||'baseline'}
 function modeLabel(){return MODES.find(x=>x[0]===state.mode)?.[1]||'System'}
 function scopedStorage(){return window.MM_RUNTIME_V2?.storage||null}
+function learnerToken(){
+  const scoped=scopedStorage()?.learnerToken?.();
+  if(scoped!=null)return String(scoped);
+  // Boot-only fallback: do not share in-memory learning context if the
+  // learner-scope runtime has not finished attaching yet.
+  try{return typeof db!=='undefined'&&db?.activeUser!=null?String(db.activeUser):''}catch(_){return ''}
+}
+let stateOwner=learnerToken();
+function resetTwinState(){
+  state.caseIndex=0;state.mode='system';state.phase=0;state.selected='mould';
+}
+function ensureTwinOwner(){
+  const owner=learnerToken();
+  if(owner===stateOwner)return false;
+  stateOwner=owner;
+  resetTwinState();
+  return true;
+}
+function guardTwinInteraction(){
+  // A profile switch does not always force the old Spatial Twin DOM to
+  // unmount. Drop the first stale interaction and rebuild for the new
+  // learner rather than attributing it to the wrong profile.
+  if(!ensureTwinOwner())return false;
+  restoreState();
+  renderHost();
+  return true;
+}
 function saveState(){scopedStorage()?.set?.(STORAGE_KEY,{caseIndex:state.caseIndex,mode:state.mode,phase:state.phase,selected:state.selected})}
 function restoreState(){
-  const row=scopedStorage()?.get?.(STORAGE_KEY,null);if(!row||typeof row!=='object')return;
+  const row=scopedStorage()?.get?.(STORAGE_KEY,null);
+  if(!row||typeof row!=='object'){resetTwinState();return;}
   if(Number.isInteger(Number(row.caseIndex)))state.caseIndex=Math.max(0,Math.min(cases().length-1,Number(row.caseIndex)));
   if(MODES.some(x=>x[0]===row.mode))state.mode=row.mode;
   if(Number.isInteger(Number(row.phase)))state.phase=Math.max(0,Math.min(PHASES.length-1,Number(row.phase)));
@@ -292,14 +320,16 @@ function syncWorld(){
   const label=shell.querySelector('.mm-st-world-head .eyebrow');if(label)label.textContent=modeLabel()+' mode';
   const phase=shell.querySelector('.mm-st-world-head b');if(phase)phase.textContent=PHASES[state.phase][1];
 }
-function selectHotspot(id){if(!HOTSPOTS[id])return;state.selected=id;saveState();renderInspector();syncWorld()}
-function setMode(id){if(!MODES.some(x=>x[0]===id))return;state.mode=id;saveState();syncWorld()}
+function selectHotspot(id){if(guardTwinInteraction()||!HOTSPOTS[id])return;state.selected=id;saveState();renderInspector();syncWorld()}
+function setMode(id){if(guardTwinInteraction()||!MODES.some(x=>x[0]===id))return;state.mode=id;saveState();syncWorld()}
 function setPhase(value){
+  if(guardTwinInteraction())return;
   const n=Math.max(0,Math.min(PHASES.length-1,Number(value)||0));state.phase=n;saveState();renderSignals();syncWorld();
   const missionStage=['baseline','evidence','evidence','test','intervention','verification'][n]||'evidence';
   window.MM_MISSION_CONTROL?.setStage?.(missionStage)
 }
 function setCase(index){
+  if(guardTwinInteraction())return;
   const list=cases();if(!list.length)return;
   state.caseIndex=Math.max(0,Math.min(list.length-1,Number(index)||0));
   const focus=scene().focus||[];state.selected=focus[0]||'mould';state.phase=0;saveState();renderHost();syncMissionContext();
@@ -330,8 +360,18 @@ function install(){
 function open(options={}){
   if(typeof window.switchView==='function')window.switchView('simulator');
   if(!install())return false;
-  if(Number.isInteger(Number(options.caseIndex)))state.caseIndex=Math.max(0,Math.min(cases().length-1,Number(options.caseIndex)));
-  else restoreState();
+  // Restore the *active learner's* scoped state before applying an explicit
+  // case launch. A different case starts at its own known-good baseline.
+  ensureTwinOwner();
+  restoreState();
+  if(options.caseIndex!=null&&Number.isInteger(Number(options.caseIndex))){
+    const nextIndex=Math.max(0,Math.min(cases().length-1,Number(options.caseIndex)));
+    if(nextIndex!==state.caseIndex){
+      state.caseIndex=nextIndex;
+      state.phase=0;
+      state.selected=scene().focus?.[0]||'mould';
+    }
+  }
   if(options.mode&&MODES.some(x=>x[0]===options.mode))state.mode=options.mode;
   const host=byId('mmSpatialTwin');host.hidden=false;state.open=true;
   document.body?.setAttribute('data-mm-spatial-twin','1');
