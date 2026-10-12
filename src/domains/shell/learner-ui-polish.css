@@ -2983,3 +2983,101 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
     width:60px!important;height:60px!important;
   }
 }
+
+/* The live engineering simulator wraps ten relative sliders in four optional
+   disclosure groups, alongside measured baseline/current engineering fields.
+   Style those authored controls—not the removed core direct .form-grid. */
+.mm-reference-layout #simulator :is(
+  #mmSimMetricInputs,.mm-engineer-sim-groups,#mmSimPractice,#mmSimPartVisual,#mmSimEngineeringDetail
+){
+  box-sizing:border-box!important;min-width:0!important;
+  border:1px solid #b7d8e4!important;border-radius:14px!important;
+  background:#edf6f9!important;color:#11384b!important;
+}
+.mm-reference-layout #simulator :is(
+  #mmSimMetricInputs,.mm-engineer-sim-groups,#mmSimPractice,#mmSimPartVisual,#mmSimEngineeringDetail
+) :is(h3,p,li,.muted){
+  color:#274f64!important;line-height:1.53!important;
+}
+.mm-reference-layout #simulator :is(
+  .mm-engineer-sim-groups,#mmSimPractice,#mmSimPartVisual,#mmSimEngineeringDetail
+) > summary{
+  box-sizing:border-box!important;min-height:48px!important;
+  padding:11px 15px!important;border-radius:12px!important;
+  color:#0d4054!important;background:#d7eff1!important;
+  cursor:pointer!important;font-weight:750!important;
+}
+.mm-reference-layout #simulator :is(
+  .mm-engineer-sim-groups,#mmSimPractice,#mmSimPartVisual,#mmSimEngineeringDetail
+) > summary:is(:hover,:focus-visible){
+  background:#c0e7e7!important;color:#0c3444!important;
+}
+.mm-reference-layout #simulator #mmSimMetricInputs > .grid2{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:11px!important;
+}
+.mm-reference-layout #simulator #mmSimMetricInputs .content-block,
+.mm-reference-layout #simulator .mm-engineer-sim-groups .content-block{
+  min-width:0!important;border-radius:12px!important;
+  background:#e1eef4!important;border:1px solid #b9d6e2!important;
+  color:#173c50!important;
+}
+.mm-reference-layout #simulator :is(
+  #mmSimMetricInputs,.mm-engineer-sim-groups
+) .form-grid{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  align-items:stretch!important;gap:9px!important;
+}
+.mm-reference-layout #simulator :is(
+  #mmSimMetricInputs,.mm-engineer-sim-groups
+) .form-grid > label{
+  min-width:0!important;box-sizing:border-box!important;
+  border-radius:10px!important;border:1px solid #afcfdf!important;
+  padding:9px!important;background:#f4fafb!important;
+  color:#113c51!important;
+}
+.mm-reference-layout #simulator :is(
+  #mmSimMetricInputs,.mm-engineer-sim-groups
+) .form-grid > label > input,
+.mm-reference-layout #simulator #mmSimMetricInputs input{
+  max-width:100%!important;min-width:0!important;
+  box-sizing:border-box!important;min-height:44px!important;
+  color:#10374c!important;background:#fff!important;
+  border:1px solid #9bc0d0!important;border-radius:9px!important;
+}
+.mm-reference-layout #simulator .mm-engineer-sim-groups .range-row input[type=range]{
+  min-height:44px!important;accent-color:#008d9b!important;
+  background:transparent!important;
+}
+.mm-reference-layout #simulator #mmSimMetricInputs .hero-buttons button{
+  min-height:44px!important;white-space:normal!important;
+}
+.mm-reference-layout #simulator :is(#mmSimMetricStatus,#mmSimClampReadout,#mmSimFlowReadout){
+  color:#244e61!important;line-height:1.55!important;
+  overflow-wrap:anywhere!important;
+}
+.mm-reference-layout #simulator #mmSimMetricStatus[data-status="warn"]{
+  color:#9b3b12!important;
+}
+@media(max-width:900px){
+  .mm-reference-layout #simulator #mmSimMetricInputs>.grid2{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+}
+@media(max-width:600px){
+  .mm-reference-layout #simulator :is(
+    #mmSimMetricInputs,.mm-engineer-sim-groups
+  ) .form-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+}
+@media(forced-colors:active){
+  .mm-reference-layout #simulator :is(
+    #mmSimMetricInputs,.mm-engineer-sim-groups,#mmSimPractice,#mmSimPartVisual,#mmSimEngineeringDetail
+  ){
+    background:Canvas!important;color:CanvasText!important;
+    border:1px solid CanvasText!important;forced-color-adjust:auto!important;
+  }
+}
