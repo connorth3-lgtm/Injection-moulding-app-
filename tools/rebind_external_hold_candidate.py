@@ -47,7 +47,9 @@ def update_banner(text, candidate, path):
                  if line.startswith("> **RETAINED ") or line.startswith("> **PENDING ")]
     need(len(positions) == 1, f"{path}: missing or ambiguous technical-artifact banner")
     i = positions[0]
-    need(candidate["release"] in lines[i], f"{path}: active technical-artifact banner release stale")
+    need(lines[i].startswith(f'> **PENDING {candidate["release"]} ') or
+         lines[i].startswith(f'> **RETAINED {candidate["release"]} '),
+         f"{path}: active technical-artifact banner release stale")
     need(any("STATUS: HOLD" in line for line in lines[:12]),
          f"{path}: human/device review HOLD must be explicit")
     try:

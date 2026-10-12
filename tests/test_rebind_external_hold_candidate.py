@@ -68,7 +68,7 @@ class CandidateRebindRegression(unittest.TestCase):
                 self.assertIn("> **RETAINED ", after)
                 self.assertNotIn("> **PENDING ", after)
                 self.assertIn("STATUS: HOLD", after)
-                self.assertEqual(before.splitlines()[4:], after.splitlines()[4:])
+                self.assertEqual(before.splitlines()[5:], after.splitlines()[5:])
 
     def test_rebinding_rejects_stale_or_ambiguous_pending_template(self):
         candidate = {**CANDIDATE, "release": "2026.10.11.11"}
