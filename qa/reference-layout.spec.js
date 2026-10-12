@@ -138,7 +138,7 @@ for(const width of [320,360,390,412]){
     await familyScience.locator(':scope > summary').click();
     await expect(familyScience).not.toHaveAttribute('open','');
     await page.evaluate(()=>window.MM_REFERENCE_LAYOUT.refresh());
-    await study.getByRole('button',{name:'Learn',exact:true}).click();
+    await study.locator(':scope > .mat-tabs > button').first().click();
     await page.evaluate(()=>window.MM_REFERENCE_LAYOUT.refresh());
     await expect(familyScience).toHaveAttribute('open','');
     await expect(study.locator(':scope > .mat-tabs button')).toHaveCount(5);
@@ -332,3 +332,68 @@ test('More keeps six illustrated native disclosures, original actions and keyboa
   await page.locator('.mobile-nav > button').filter({hasText:'Practice'}).click();
   await expect(page.locator('#scenarios .mm-practice-hub')).toBeVisible();
 });
+
+for(const width of [360,810]){
+  test('approved deep-screen design keeps actual lesson, simulator and resource actions at '+width+'px',async({page})=>{
+    await page.setViewportSize({width,height:900});
+    await openApp(page);
+    await page.evaluate(()=>switchView('lesson'));
+    const lesson=page.locator('#lesson');
+    await expect(lesson.locator('.lesson-header-card > .mm-reference-deep-art')).toBeVisible();
+    await expect(lesson.locator('.lesson-body.mm-reference-deep-panel')).toBeVisible();
+    await expect(lesson.locator('.lesson-side.mm-reference-deep-panel')).toBeVisible();
+    await expect(lesson.locator('.lesson-body')).toHaveCSS('background-color','rgb(240, 247, 250)');
+    await lesson.locator('#lessonNotes').fill('Test setup notes — do not use as process settings.');
+    await lesson.getByRole('button',{name:'Save notes'}).click();
+    await expect(lesson.locator('.lesson-header-card > .mm-reference-deep-art')).toHaveCount(1);
+
+    await page.evaluate(()=>switchView('simulator'));
+    const simulator=page.locator('#simulator');
+    await expect(simulator.locator('.form-card > .mm-reference-deep-art')).toBeVisible();
+    await expect(simulator.locator('.output-panel > .mm-reference-deep-art')).toBeVisible();
+    await expect(simulator.locator('.form-grid > label')).toHaveCount(10);
+    await expect(simulator.locator('#simAdvice')).toContainText('baseline');
+    const sliders=simulator.locator('input[type="range"]');
+    await sliders.first().focus();
+    await sliders.first().press('ArrowRight');
+    await expect(simulator.locator('#sim_speed')).toHaveValue('56%');
+    await simulator.getByRole('button',{name:'Reset',exact:true}).click();
+    await expect(simulator.locator('#sim_speed')).toHaveValue('55%');
+    await expect(simulator.locator('.form-card > .mm-reference-deep-art')).toHaveCount(1);
+
+    await page.evaluate(()=>switchView('visuals'));
+    const visuals=page.locator('#visuals');
+    await expect(visuals.locator('.visual-wrap:first-child > .mm-reference-deep-art')).toBeVisible();
+    await visuals.getByRole('button',{name:'Filling',exact:true}).click();
+    await expect(visuals.locator('#phaseText')).toContainText('velocity control');
+
+    await page.evaluate(()=>switchView('glossary'));
+    const glossary=page.locator('#glossary');
+    await expect(glossary.locator('.section-head > .mm-reference-deep-art')).toBeVisible();
+    await glossary.locator('#glossarySearch').fill('pressure');
+    await expect(glossary.locator('.term:visible').first()).toBeVisible();
+
+    await page.evaluate(()=>switchView('defects'));
+    const defects=page.locator('#defects');
+    await expect(defects.locator('.section-head > .mm-reference-deep-art')).toBeVisible();
+    await expect(defects.locator('.defect-card.mm-reference-deep-panel').first()).toBeVisible();
+
+    await page.evaluate(()=>switchView('coach'));
+    await expect(page.locator('#coach .chat > .mm-reference-deep-art')).toBeVisible();
+    await expect(page.locator('#coach #coachInput')).toBeVisible();
+
+    await page.evaluate(()=>switchView('standards'));
+    await expect(page.locator('#standards .section-head > .mm-reference-deep-art')).toBeVisible();
+    await page.evaluate(()=>switchView('certificates'));
+    await expect(page.locator('#certificates .section-head > .mm-reference-deep-art')).toBeVisible();
+    await page.evaluate(()=>switchView('profile'));
+    await expect(page.locator('#profile .form-card:first-child > .mm-reference-deep-art')).toBeVisible();
+    await expect(page.locator('#profile #profileName')).toBeVisible();
+
+    await page.evaluate(()=>switchView('lesson'));
+    await expect(lesson.locator('#lessonNotes')).toHaveValue('Test setup notes — do not use as process settings.');
+    await expect(lesson.locator('.lesson-header-card > .mm-reference-deep-art')).toHaveCount(1);
+    const documentOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+    expect(documentOverflow).toBeLessThanOrEqual(2);
+  });
+}
