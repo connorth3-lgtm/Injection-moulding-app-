@@ -534,6 +534,36 @@ test('Virtual Apprenticeship prevents stale reviewed answers crossing local lear
   await expect(root.locator('#mmVaProgress')).toContainText('1/6 cases completed');
 });
 
+test('Virtual Apprenticeship warns and retries when local progress persistence fails',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_VIRTUAL_APPRENTICESHIP?.openCase&&window.MM_RUNTIME_V2?.storage?.set));
+  await page.evaluate(()=>window.MM_VIRTUAL_APPRENTICESHIP.openCase(0));
+  const root=page.locator('#mmVirtualApprenticeship');
+  for(const step of ['hypothesis','test','response','verify']){
+    await root.locator('[data-mm-va-step="'+step+'"] input[type="radio"]').first().check();
+  }
+  await page.evaluate(()=>{
+    const prior=Storage.prototype.setItem;
+    window.__mmRestoreAttemptStorage=()=>{Storage.prototype.setItem=prior;};
+    Storage.prototype.setItem=function(key,value){
+      if(String(key).includes('mm_virtual_apprenticeship_v1'))throw new DOMException('Quota unavailable','QuotaExceededError');
+      return prior.call(this,key,value);
+    };
+  });
+  await root.locator('#mmVaCheck').click();
+  await expect(root.locator('#mmVaResult [role="status"]')).toContainText('could not be saved');
+  await expect(root.locator('#mmVaProgress')).toContainText('0/6 cases completed');
+  await page.evaluate(()=>window.__mmRestoreAttemptStorage());
+  await root.locator('#mmVaCheck').click();
+  await expect(root.locator('#mmVaResult [role="status"]')).toHaveCount(0);
+  await expect(root.locator('#mmVaProgress')).toContainText('1/6 cases completed');
+  // Reviewing the same checked attempt again must not double-count it.
+  await root.locator('#mmVaCheck').click();
+  const row=await page.evaluate(()=>window.MM_RUNTIME_V2.storage.get('mm_virtual_apprenticeship_v1',null));
+  expect(row.attempts).toBe(1);
+});
+
 test('Virtual Apprenticeship case, coaching level and Reset preserve keyboard focus',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
