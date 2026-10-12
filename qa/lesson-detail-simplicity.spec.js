@@ -138,7 +138,29 @@ test('safety-specific boundary stays visible while technical detail is optional'
   await expect(essentials.locator('.mm-deep-v2-row')).toHaveCount(1);
   await expect(essentials.getByRole('heading',{name:'Watch out'})).toBeVisible();
   await expect(essentials).toContainText('Safety boundary');
+  // A previous reader style turned these safety labels dark blue on navy.
+  // Check actual foreground/background WCAG contrast, not just visibility.
+  const colourContrast=await essentials.evaluate(element=>{
+    const luminance=value=>{
+      const channels=(value.match(/[0-9.]+/g)||[]).slice(0,3).map(Number)
+        .map(v=>{const c=v/255;return c<=.04045?c/12.92:((c+.055)/1.055)**2.4;});
+      return channels[0]*.2126+channels[1]*.7152+channels[2]*.0722;
+    };
+    const foreground=luminance(getComputedStyle(element.querySelector('h4')).color);
+    const background=luminance(getComputedStyle(element).backgroundColor);
+    return (Math.max(foreground,background)+.05)/(Math.min(foreground,background)+.05);
+  });
+  expect(colourContrast).toBeGreaterThanOrEqual(4.5);
   const detail=deep.locator('details.mm-deep-v2-card');
+  const disclosureContrast=await detail.evaluate(element=>{
+    const rgb=v=>(v.match(/[0-9.]+/g)||[]).slice(0,3).map(Number);
+    const lum=v=>rgb(v).map(x=>x/255).map(c=>c<=.04045?c/12.92:((c+.055)/1.055)**2.4)
+      .reduce((sum,x,i)=>sum+x*[.2126,.7152,.0722][i],0);
+    const summary=element.querySelector(':scope > summary');
+    const fg=lum(getComputedStyle(summary).color),bg=lum(getComputedStyle(summary).backgroundColor);
+    return (Math.max(fg,bg)+.05)/(Math.min(fg,bg)+.05);
+  });
+  expect(disclosureContrast).toBeGreaterThanOrEqual(4.5);
   expect(await detail.evaluate(el=>el.open)).toBe(false);
   await detail.locator('summary').first().click();
   await expect(detail.locator('.mm-deep-v2-boundary')).toContainText('Safety boundary');
