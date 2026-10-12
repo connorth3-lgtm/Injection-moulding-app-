@@ -834,8 +834,24 @@ function syncGlobalLessonShortcut(){
     results.prepend(link);
   }
 }
+// The core can rerender search results without another input event. Observe
+// only the search modal, then reconcile idempotently after DOM mutation.
+// A global overlay observer would be both expensive and error-prone.
+let observedSearchModal=null,searchResultsObserver=null;
+function watchGlobalSearchResults(){
+  const modal=document.getElementById('modal');
+  if(!modal||modal===observedSearchModal)return;
+  searchResultsObserver?.disconnect();
+  observedSearchModal=modal;
+  searchResultsObserver=new MutationObserver(()=>{
+    if(!modal.querySelector('#globalSearch'))return;
+    requestAnimationFrame(syncGlobalLessonShortcut);
+  });
+  searchResultsObserver.observe(modal,{childList:true,subtree:true});
+}
 document.addEventListener('input',event=>{
   if(event.target?.id!=='globalSearch')return;
+  watchGlobalSearchResults();
   const ticket=++searchRefreshTicket;
   requestAnimationFrame(()=>{
     if(ticket===searchRefreshTicket)syncGlobalLessonShortcut();

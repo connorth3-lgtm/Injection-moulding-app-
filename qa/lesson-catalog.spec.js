@@ -294,7 +294,8 @@ test('global search keeps one Learn link after results rerender and uses the new
   await input.fill('gate');
   await expect(library).toHaveCount(1);
   await results.evaluate(node=>{node.innerHTML='<p class="muted">Re-rendering search results</p>'});
-  await input.dispatchEvent('input');
+  // A DOM update without another keystroke must not remove the only Learn
+  // shortcut: late core refreshes also need the exact current query.
   await expect(library).toHaveCount(1);
   await input.fill('');
   await expect(library).toHaveCount(0);

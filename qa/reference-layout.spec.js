@@ -515,7 +515,11 @@ for(const width of [390,810]){
       expect((await sourceLink.getAttribute('rel')||'').split(/\s+/)).toContain('noopener');
     }
     await page.locator('#materials .mat-tabs button').filter({hasText:'Material explorer'}).click();
-    await expect(page.locator('#materials [data-mm-all-material-index]')).toBeVisible();
+    // Native Material Explorer owns its curated grade filtering controls.
+    // The separate indexed exact-grade catalogue is not cloned into this
+    // nested mode, which must remain functional on phones and tablets.
+    await expect(page.locator('#materials .mat-explorer-controls')).toBeVisible();
+    await expect(page.locator('#materials .mat-material-grid .mat-material').first()).toBeVisible();
     expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
   });
 }
