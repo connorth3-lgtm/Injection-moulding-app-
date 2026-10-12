@@ -48,6 +48,39 @@ class CandidateRebindRegression(unittest.TestCase):
         self.assertIn("STATUS: HOLD", rewritten)
         self.assertIn("46 governed", rewritten)
 
+    def test_pending_release_packets_are_rebindable_without_claiming_approval(self):
+        # Synthetic provenance is only a unit-test fixture, NEVER repository evidence.
+        candidate = {**CANDIDATE, "release": "2026.10.11.11"}
+        paths = (
+            "qa/ACCESSIBILITY_REAL_AT_2026.10.11.11.md",
+            "qa/PWA_PHYSICAL_DEVICE_2026.10.11.11.md",
+            "certification/WINDOWS_SIGNING_READINESS_2026.10.11.11.md",
+            "qa/BOOK_SME_REVIEW_2026.10.11.11.md",
+            "qa/CURRICULUM_SME_REVIEW_2026.10.11.11.md",
+            "qa/LEARNER_PILOT_2026.10.11.11.md",
+            "qa/NZQA_EXTERNAL_VALIDATION_2026.10.11.11.md",
+        )
+        for path in paths:
+            with self.subTest(path=path):
+                before = (ROOT / path).read_text(encoding="utf-8")
+                self.assertIn("> **PENDING ", before)
+                after = update_banner(before, candidate, path)
+                self.assertIn("> **RETAINED ", after)
+                self.assertNotIn("> **PENDING ", after)
+                self.assertIn("STATUS: HOLD", after)
+                self.assertEqual(before.splitlines()[4:], after.splitlines()[4:])
+
+    def test_rebinding_rejects_stale_or_ambiguous_pending_template(self):
+        candidate = {**CANDIDATE, "release": "2026.10.11.11"}
+        original = (ROOT / "qa/PWA_PHYSICAL_DEVICE_2026.10.11.11.md").read_text()
+        with self.assertRaises(SystemExit):
+            update_banner(original.replace("PENDING 2026.10.11.11", "PENDING 2026.10.11.10"),
+                          candidate, "qa/PWA_PHYSICAL_DEVICE_2026.10.11.11.md")
+        with self.assertRaises(SystemExit):
+            update_banner(original.replace("\\n## Required independently reviewed evidence",
+                                           "\\n> **PENDING 2026.10.11.11 duplicate**\\n\\n## Required independently reviewed evidence"),
+                          candidate, "qa/PWA_PHYSICAL_DEVICE_2026.10.11.11.md")
+
     def test_staging_handles_multiple_files_without_partial_write(self):
         with tempfile.TemporaryDirectory() as temp:
             one, two = (Path(temp) / name for name in ("a.json", "b.md"))

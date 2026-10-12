@@ -255,6 +255,8 @@ def main() -> None:
         staged = external["webCandidate"]
         if staged is None:
             assert external["pwaPhysicalDevices"]["currentCandidate"] is None
+            assert external["accessibility"].get("candidate") is None, "unbound AT must not hold a placeholder candidate"
+            assert external["nzqaProvider"].get("candidate") is None, "unbound provider must not hold a placeholder candidate"
         else:
             assert isinstance(staged, dict)
             assert staged.get("release") == version.get("web_release")
@@ -263,6 +265,9 @@ def main() -> None:
             assert isinstance(staged.get("candidateRunId"), int) and staged["candidateRunId"] > 0
             assert isinstance(staged.get("artifactId"), int) and staged["artifactId"] > 0
             assert external["pwaPhysicalDevices"]["currentCandidate"] == staged
+            identity = {key: staged[key] for key in ("release", "sourceSha", "runtimeFingerprint")}
+            assert external["accessibility"].get("candidate") == identity
+            assert external["nzqaProvider"].get("candidate") == identity
             assert "producer" in external["candidateStatus"].lower()
             assert "success" in external["candidateStatus"].lower()
     else:
