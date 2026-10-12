@@ -226,6 +226,62 @@ test('iOS empty voice list starts speech within the original tap task',async({pa
   await expect(player.locator('.mm-read-status')).toHaveText('Reading');
 });
 
+test('In-place lesson text updates refresh the next sentence without replaying old text',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p id="lessonText">Unchanged heading sentence. Old second sentence.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:
+      'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
+    class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const synth={getVoices(){return[];},
+      speak(u){window.__mmRewriteSpoken=u.text;window.__mmRewriteSpeakCount=(window.__mmRewriteSpeakCount||0)+1;queueMicrotask(()=>u.onstart?.());},
+      cancel(){},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const reader=page.locator('.mm-read-aloud');
+  await reader.locator('details').evaluate(el=>{el.open=true});
+  const play=reader.locator('[data-mm-read="play"]');
+  await play.click();
+  await expect(play).toHaveText('Pause');
+  await reader.locator('[data-mm-read="stop"]').click();
+  await page.locator('#lessonText').evaluate(el=>{el.textContent='Unchanged heading sentence. Updated second sentence.';});
+  await reader.locator('[data-mm-read="next"]').click();
+  await expect(reader.locator('[data-mm-read="current"]')).toHaveText('Updated second sentence.');
+  expect(await page.evaluate(()=>window.__mmRewriteSpeakCount)).toBe(1);
+  await play.click();
+  await expect.poll(()=>page.evaluate(()=>window.__mmRewriteSpoken)).toBe('Updated second sentence.');
+});
+
+test('Throwing speech-utterance constructor leaves a restartable device player',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Recover after a device utterance failure.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:
+      'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
+    window.__mmFailSpeechCtor=true;
+    class Utterance{constructor(text=''){
+      if(window.__mmFailSpeechCtor)throw new Error('OS utterance provider failed');
+      this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;
+    }}
+    const synth={getVoices(){return[];},
+      speak(u){window.__mmCtorSpoken=u.text;queueMicrotask(()=>u.onstart?.());},
+      cancel(){},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const reader=page.locator('.mm-read-aloud');
+  await reader.locator('details').evaluate(el=>{el.open=true});
+  const play=reader.locator('[data-mm-read="play"]');
+  await play.click();
+  await expect(play).toHaveText('Listen');
+  await expect(reader.locator('.mm-read-status')).toHaveText('Device voice could not be prepared. Tap Listen again.');
+  await page.evaluate(()=>{window.__mmFailSpeechCtor=false});
+  await play.click();
+  await expect(play).toHaveText('Pause');
+  await expect.poll(()=>page.evaluate(()=>window.__mmCtorSpoken||'')).toContain('Recover after a device utterance failure.');
+});
+
 test('Switching screens after Stop refreshes the sentence queue before navigation and Play',async({page})=>{
   await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><section id="readingA"><p>Old page first sentence. Old page second sentence.</p></section><section id="readingB" hidden><p>New page first sentence. New page second sentence.</p></section></main></body></html>');
   await page.evaluate(()=>{
