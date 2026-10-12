@@ -86,8 +86,7 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   }else{
     await expect(capability).toHaveText('Unavailable');
     await expect(status).toHaveText('Read Aloud is not available in this browser/device.');
-    await host.locator('[data-mm-read="play"]').click();
-    await expect(status).toHaveText('Read Aloud is not available in this browser/device.');
+    await expect(host.locator('[data-mm-read="play"]')).toBeDisabled();
   }
   // The deployed stylesheet, not an unapproved inline style, provides the
   // actual high-contrast focus marker for Listening route arrival.
@@ -192,6 +191,37 @@ test('Android empty voice list speaks within the original tap without waiting fo
   expect(await page.evaluate(()=>window.__mmAndroidLanguage)).toBe('en');
   await expect(host.locator('.mm-read-status')).toHaveText('Reading');
   await host.locator('[data-mm-read="stop"]').click();
+});
+
+test('Speech interruption exits stale playing state and Stop ignores synchronous cancel errors',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><div class="top-actions"></div><main class="main"><p>Read aloud interruption recovery sentence.</p></main></body></html>');
+  await page.evaluate(()=>{
+    class QaUtterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const synth={
+      current:null,
+      getVoices(){return[{name:'QA Voice',lang:'en-NZ',default:true}];},
+      speak(utterance){this.current=utterance;queueMicrotask(()=>utterance.onstart?.());},
+      cancel(){const active=this.current;this.current=null;active?.onerror?.({error:'canceled'});},
+      pause(){},resume(){},addEventListener(){},removeEventListener(){}
+    };
+    window.__mmQaSpeech=synth;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:QaUtterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const player=page.locator('.mm-read-aloud');
+  await player.locator('details').evaluate(el=>{el.open=true;});
+  const play=player.locator('[data-mm-read="play"]');
+  await play.click();
+  await expect(play).toHaveText('Pause');
+  await page.evaluate(()=>window.__mmQaSpeech.current?.onerror?.({error:'interrupted'}));
+  await expect(player.locator('.mm-read-status')).toHaveText('Device interrupted playback. Press Listen to restart.');
+  await expect(play).toHaveText('Listen');
+  await play.click();
+  await expect(play).toHaveText('Pause');
+  await player.locator('[data-mm-read="stop"]').click();
+  await expect(player.locator('.mm-read-status')).toHaveText('Stopped');
+  await expect(play).toHaveText('Listen');
 });
 
 test('Unavailable speech provider disables both playback launchers without offering a broken action',async({page})=>{
