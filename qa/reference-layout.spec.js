@@ -140,10 +140,16 @@ for(const width of [320,360,390,412]){
     await page.evaluate(()=>window.MM_REFERENCE_LAYOUT.refresh());
     // Incidental rerenders must not override the learner's disclosure choice.
     await expect(familyScience).not.toHaveAttribute('open','');
-    await study.locator(':scope > .mat-tabs > button').first().click();
+    // The first button is now the real "All lessons" shortcut into Learn,
+    // not a family-science disclosure toggle. Enter an actual Materials mode.
+    await study.locator(':scope > .mat-tabs > button').filter({hasText:'Interactive labs'}).click();
     await page.evaluate(()=>window.MM_REFERENCE_LAYOUT.refresh());
     await expect(familyScience).toHaveAttribute('open','');
     await expect(study.locator(':scope > .mat-tabs button')).toHaveCount(5);
+    // All lessons must navigate to the shared Learn catalogue without creating
+    // a competing second catalogue within Materials.
+    await study.locator(':scope > .mat-tabs > button').filter({hasText:'All lessons'}).click();
+    await expect(page.locator('#path .mm-all-lessons')).toBeVisible();
 
     await page.evaluate(()=>switchView('scenarios'));
     await expect(page.locator('#scenarios .mm-reference-title')).toHaveText('Practice');
