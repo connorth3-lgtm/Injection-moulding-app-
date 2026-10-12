@@ -2,13 +2,11 @@
 
 Current governed web candidate: **`2026.10.11.11`**.
 
-**This current candidate is STAGING / FAIL-HOLD**. The successful retained `2026.10.11.10` artifact is historical and is not current-release evidence.
-
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -48,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **FAIL / pending 2026.10.11.11** | New mobile learner runtime is staged, without successfully retained 2026.10.11.11 exact-head artifact or external source/fingerprint bindings. 2026.10.11.10 technical evidence remains historical. |
-| Behavioral / browser | **FAIL / pending 2026.10.11.11** | Updated Learn/Materials visuals differ from approved immutable 2026.10.11.10 baseline. New 52-surface screenshot review and distinct owner-approved immutable 2026.10.11.11 baseline are required, retaining the strict 12-pixel tolerance. |
+| Static / contract | **fail** | Unverified 2026.10.11.11 changed browser release. No successful exact-head retained public candidate, real source-bound fingerprint or completed release validation. Prior 2026.10.11.10 artifact remains historical only. |
+| Behavioral / browser | **fail** | New 2026.10.11.11 Learn/Materials visual changes do not match immutable approved 2026.10.11.10 screen captures. Owner-approved new immutable 52-surface visual baseline and protected browser QA are still pending; strict threshold remains 12 pixels. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
