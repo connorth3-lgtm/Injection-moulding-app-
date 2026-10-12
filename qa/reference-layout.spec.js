@@ -469,3 +469,40 @@ test('Materials routes quiz, reference evidence, explorer and labs without stale
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(2);
 });
+
+for(const width of [390,810]){
+  test('real Materials labs, quiz and references share readable deep-screen controls at '+width+'px',async({page})=>{
+    await page.setViewportSize({width,height:900});
+    await openApp(page);
+    await page.evaluate(()=>switchView('materials'));
+
+    await page.locator('#materials .mat-tabs button').filter({hasText:'Interactive labs'}).click();
+    const labs=page.locator('#materials .mat-shell .mat-labs');
+    await expect(labs.locator(':scope > .mat-lab')).toHaveCount(4);
+    await expect(labs.locator('.mat-lab').first()).toHaveCSS('background-color','rgb(240, 247, 250)');
+    await expect(labs.locator('.mat-lab-output').first()).toHaveCSS('background-color','rgb(224, 239, 245)');
+    const rheology=labs.locator('#rheoShear');
+    await expect(rheology).toBeVisible();
+    await rheology.fill('64');
+    await expect(labs.locator('#rheoOut')).toContainText('Illustrative');
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
+
+    await page.locator('#materials .mat-tabs button').filter({hasText:'Knowledge check'}).click();
+    const quiz=page.locator('#materials .mat-quiz-card');
+    await expect(quiz).toBeVisible();
+    await expect(quiz.locator('.mat-q')).toHaveCount(18);
+    await expect(quiz.locator('.mat-q').first()).toHaveCSS('background-color','rgb(224, 239, 245)');
+    await quiz.locator('.mat-q label').first().click();
+    await expect(quiz.locator('.mat-q input[type=radio]:checked')).toHaveCount(1);
+    await expect(quiz.getByRole('button',{name:/Grade & review/i})).toBeVisible();
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
+
+    await page.locator('#materials .mat-tabs button').filter({hasText:'Evidence & references'}).click();
+    const refs=page.locator('#materials .mat-shell .standard-card');
+    await expect(refs.first()).toHaveCSS('background-color','rgb(240, 247, 250)');
+    await expect(refs.first().locator('a.standard-link')).toHaveAttribute('rel','noopener');
+    await page.locator('#materials .mat-tabs button').filter({hasText:'Material explorer'}).click();
+    await expect(page.locator('#materials [data-mm-all-material-index]')).toBeVisible();
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
+  });
+}
