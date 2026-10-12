@@ -496,7 +496,9 @@ for(const width of [390,810]){
     await expect(quiz.locator('.mat-q').first()).toHaveCSS('background-color','rgb(224, 239, 245)');
     await quiz.locator('.mat-q label').first().click();
     await expect(quiz.locator('.mat-q input[type=radio]:checked')).toHaveCount(1);
-    await expect(quiz.getByRole('button',{name:/Grade & review/i})).toBeVisible();
+    await quiz.getByRole('button',{name:/Grade & review/i}).click();
+    await expect(quiz.locator('#materialQuizResult')).toBeVisible();
+    await expect(quiz.locator('#materialQuizResult')).toHaveCSS('background-color','rgb(213, 238, 233)');
     expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
 
     await page.locator('#materials .mat-tabs button').filter({hasText:'Evidence & references'}).click();
