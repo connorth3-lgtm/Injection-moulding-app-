@@ -492,6 +492,70 @@ test('Spatial Twin opens as a responsive evidence-led moulding world',async({pag
   await expect(page.locator('#mmVirtualApprenticeship')).toBeVisible();
 });
 
+test('Spatial Twin isolates learner state and resets the timeline on a different case',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.addInitScript(()=>{
+    const learner=id=>({id,name:id,role:'learner',completed:[],bookmarks:[],notes:{},
+      examScores:{},certificates:[],currentLesson:1,lastSeen:'2026-10-13T00:00:00Z',
+      onboardingDone:true,experience:'Beginner',goal:'Learn the process',dailyMinutes:15,region:'ALL'});
+    localStorage.clear();
+    localStorage.setItem('mouldmasterProDB',JSON.stringify({
+      activeUser:'twin-a',users:{'twin-a':learner('twin-a'),'twin-b':learner('twin-b')}
+    }));
+  });
+  await page.goto(BASE,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED&&window.MM_SPATIAL_TWIN?.open&&window.MM_RUNTIME_V2?.storage?.learnerToken));
+  const twin=page.locator('#mmSpatialTwin');
+  await page.evaluate(()=>window.MM_SPATIAL_TWIN.open({caseIndex:1}));
+  await twin.locator('[data-mm-st-mode="pressure"]').click();
+  await twin.locator('[data-mm-st-phase="2"]').click();
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-mode','pressure');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-phase','fault');
+  await page.evaluate(()=>window.MM_SPATIAL_TWIN.open({caseIndex:2}));
+  await expect(twin.locator('[data-mm-st-case]')).toHaveValue('2');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-phase','baseline');
+
+  // A different local learner has a different scoped state: no inherited
+  // pressure mode, timeline position or case selection from learner A.
+  await page.evaluate(()=>switchUser('twin-b'));
+  await page.evaluate(()=>window.MM_SPATIAL_TWIN.open());
+  await expect(twin.locator('[data-mm-st-case]')).toHaveValue('0');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-mode','system');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-phase','baseline');
+  await twin.locator('[data-mm-st-mode="thermal"]').click();
+  await twin.locator('[data-mm-st-phase="3"]').click();
+  await page.evaluate(()=>switchUser('twin-a'));
+  await page.evaluate(()=>window.MM_SPATIAL_TWIN.open());
+  await expect(twin.locator('[data-mm-st-case]')).toHaveValue('2');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-mode','pressure');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-phase','baseline');
+});
+
+test('Spatial Twin ignores a stale old-profile hotspot event before rerender',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.addInitScript(()=>{
+    const learner=id=>({id,name:id,role:'learner',completed:[],bookmarks:[],notes:{},
+      examScores:{},certificates:[],currentLesson:1,lastSeen:'2026-10-13T00:00:00Z',
+      onboardingDone:true,experience:'Beginner',goal:'Learn the process',dailyMinutes:15,region:'ALL'});
+    localStorage.clear();
+    localStorage.setItem('mouldmasterProDB',JSON.stringify({
+      activeUser:'twin-a',users:{'twin-a':learner('twin-a'),'twin-b':learner('twin-b')}
+    }));
+  });
+  await page.goto(BASE,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED&&window.MM_SPATIAL_TWIN?.open&&window.MM_RUNTIME_V2?.storage?.learnerToken));
+  await page.evaluate(()=>window.MM_SPATIAL_TWIN.open({caseIndex:1}));
+  await page.evaluate(()=>{
+    const stale=document.querySelector('#mmSpatialTwin [data-mm-st-mode="pressure"]');
+    switchUser('twin-b');
+    stale.click();
+  });
+  await expect(page.locator('#mmSpatialTwin .mm-st-shell')).toHaveAttribute('data-mode','system');
+  await expect(page.locator('#mmSpatialTwin [data-mm-st-case]')).toHaveValue('0');
+  await page.evaluate(()=>window.MM_SPATIAL_TWIN.open());
+  await expect(page.locator('#mmSpatialTwin .mm-st-shell')).toHaveAttribute('data-mode','system');
+});
+
 test('Hidden Mission Control strip keeps scoped evidence and command search accessible',async({page})=>{
   await page.setViewportSize({width:1440,height:900});
   await openApp(page);
