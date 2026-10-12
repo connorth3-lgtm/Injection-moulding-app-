@@ -276,6 +276,37 @@ for(const width of [360,810]){
   });
 }
 
+test('Choosing another defect clears unrelated measurements, evidence and judgement',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.evaluate(()=>switchView('defects'));
+  const root=page.locator('#defects .mm-dx-workbench');
+  const choices=root.locator('[data-mm-dx-action="choose"]');
+  expect(await choices.count()).toBeGreaterThan(1);
+  await choices.first().click();
+  await root.locator('textarea[name="baseline"]').fill('First-defect known-good baseline');
+  await root.locator('textarea[name="observations"]').fill('First-defect measured sample');
+  await root.locator('[data-mm-dx-evidence="part"]').check();
+  await root.locator('[data-mm-dx-action="analyse"]').click();
+  const hypothesis=root.locator('[data-mm-dx-hypothesis]').first();
+  if(await hypothesis.count())await hypothesis.selectOption('support');
+  const oldReport=await page.evaluate(()=>window.MM_DIAGNOSTIC_WORKBENCH.report());
+  expect(oldReport.context.observations).toBe('First-defect measured sample');
+  expect(oldReport.evidenceReportedAvailable).toContain('part');
+  await choices.nth(1).click();
+  await expect(root.locator('textarea[name="baseline"]')).toHaveValue('');
+  await expect(root.locator('textarea[name="observations"]')).toHaveValue('');
+  await expect(root.locator('[data-mm-dx-evidence="part"]')).not.toBeChecked();
+  const nextReport=await page.evaluate(()=>window.MM_DIAGNOSTIC_WORKBENCH.report());
+  expect(nextReport.selectedDefect).not.toBe(oldReport.selectedDefect);
+  expect(nextReport.context.observations).toBe('');
+  expect(nextReport.context.baseline).toBe('');
+  expect(nextReport.evidenceReportedAvailable).toEqual([]);
+  expect(nextReport.hypotheses.every(row=>row.learnerAssessment==='unassessed')).toBe(true);
+  expect(nextReport.rootCauseVerified).toBe(false);
+  expect(nextReport.productionSetpointsAuthorized).toBe(false);
+});
+
 test('Diagnostic workbench keeps keyboard arrival across symptom, evidence, revision and reset',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
