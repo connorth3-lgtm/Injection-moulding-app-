@@ -6,8 +6,12 @@
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 379,
-  "candidate": null,
-  "boundary": "2026.10.11.10 is a draft UI redesign with NO retained exact-source candidate or independent provider G1–G8 approval. Every provider gate remains pending-external. Historical .9 source/fingerprint are not current evidence. No competence, accreditation, assessment or automatic machine-control authority is granted.",
+  "candidate": {
+    "release": "2026.10.11.10",
+    "sourceSha": "1a528632301232224fb6f9b2460c9a2863b92e81",
+    "runtimeFingerprint": "sha256:230170530d51afa8ac824e332905131e91f188945275c40b80fd768428c93424"
+  },
+  "boundary": "The release 2026.10.11.10 software candidate has a retained source/fingerprint, but NZQA/provider G1–G8 remain pending-external with no independent provider-controlled evidence. Software, visual and artifact verification do not grant assessment, accreditation, learner competence, production or machine-control authority.",
   "requiredGates": [
     {
       "id": "G1-provider",
