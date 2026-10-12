@@ -18,6 +18,11 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   await page.goto(APP, { waitUntil: 'domcontentloaded' });
 
   const host=page.locator('.mm-read-aloud');
+  // Book-only design: no global Read Aloud button on the Home tab.
+  await expect(host).toBeHidden();
+  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED&&window.MMBook?.open));
+  await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load()});
+  await expect(page.locator('#mmBookView')).toBeVisible();
   await expect(host).toBeVisible();
   await expect(host).toHaveAttribute('data-version','2026.10.04.2');
   await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.10.04.2');
@@ -42,25 +47,14 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   await expect(host.locator('[data-mm-read="stop"]')).toBeVisible();
   await expect(host.locator('[data-mm-read="speed"]')).toHaveValue('1');
 
-  // The expanded mobile player must live in normal layout, not float over
-  // Today’s focus. This prevents the race that broke both engine suites.
+  // Book player expands within Book chrome, not over the reading surface.
   await expect.poll(()=>host.locator('details').evaluate(el=>getComputedStyle(el).position)).toBe('relative');
-  await expect.poll(()=>host.locator('details').evaluate(el=>{
-    const rect=el.getBoundingClientRect();
-    const header=el.closest('.topbar')?.getBoundingClientRect();
-    // For position:relative, the CSS computed 'bottom' may correctly be 0px
-    // even when specified inset is auto. Assert real layout containment.
-    return Boolean(header&&rect.top>=header.top-2&&rect.bottom<=header.bottom+2);
-  })).toBeTruthy();
-
-  // Home's new image-led hero must not let the expanded reader
-  // obscure the lesson and Continue lesson action beneath it.
   await expect.poll(()=>page.evaluate(()=>{
-    const focus=document.querySelector('#dashboard .mm-today-focus');
-    const panel=document.querySelector('.mm-read-aloud details[open]');
-    if(!focus||!panel)return false;
-    const a=focus.getBoundingClientRect(),b=panel.getBoundingClientRect();
-    return a.bottom<=b.top-10||a.top>=b.bottom+10;
+    const book=document.getElementById('mmBookView');
+    const details=document.querySelector('.mm-read-aloud details[open]');
+    if(!book||!details)return false;
+    const content=book.getBoundingClientRect(),player=details.getBoundingClientRect();
+    return content.top>=player.bottom-2||content.bottom<=player.top+2;
   })).toBeTruthy();
 
   const visibilityCheck=await page.evaluate(() => {
@@ -74,6 +68,11 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   });
   expect(visibilityCheck.visible).toBeTruthy();
   expect(visibilityCheck.hidden).toBeFalsy();
+  // Leaving Book removes audio chrome from the entire main app.
+  await page.evaluate(()=>switchView('dashboard'));
+  await expect(host).toBeHidden();
+  await page.evaluate(()=>window.MMBook.open());
+  await expect(host).toBeVisible();
 
   const capability=host.locator('summary span');
   const status=host.locator('.mm-read-status');
