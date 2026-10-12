@@ -2916,3 +2916,70 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
     border:1px solid CanvasText!important;forced-color-adjust:auto!important;
   }
 }
+
+/* The current simplified lesson reader removes .lesson-header-card. Style its
+   real authored hero and sections without reviving obsolete navigation. */
+.mm-reference-layout #lesson.mm-simple-lesson .lesson-body.mm-reference-deep-panel{
+  border:0!important;background:transparent!important;box-shadow:none!important;
+  padding:0!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson .mm-simple-lesson-hero.mm-reference-deep-head{
+  border:1px solid #33758c!important;border-radius:17px!important;
+  padding:clamp(17px,2.6vw,25px)!important;
+  background:linear-gradient(125deg,#0d384e,#08263c)!important;
+  color:#f3faff!important;display:flow-root!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson .mm-simple-lesson-hero>.mm-reference-deep-art{
+  display:block!important;float:right!important;
+  width:90px!important;height:80px!important;
+  max-width:30%!important;margin:0 0 12px 15px!important;
+  overflow:hidden!important;border-radius:11px!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson .mm-simple-lesson-hero :is(h1,p){
+  color:#eff9ff!important;overflow-wrap:anywhere!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson .mm-simple-lesson-hero .mm-simple-lesson-meta,
+.mm-reference-layout #lesson.mm-simple-lesson .mm-simple-lesson-hero .mini-bar{
+  clear:both!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson .lesson-body>.content-block:not(.mm-simple-note-section),
+.mm-reference-layout #lesson.mm-simple-lesson .lesson-body>.mm-simple-section:not(.mm-simple-note-section),
+.mm-reference-layout #lesson.mm-simple-lesson .lesson-body>.callout:not(.mm-simple-note-section),
+.mm-reference-layout #lesson.mm-simple-lesson .lesson-body>.mm-next-card{
+  border:1px solid #b3d5e3!important;
+  background:#f0f7fa!important;color:#0c3348!important;
+  border-radius:15px!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson .lesson-body>.content-block :is(h2,h3,p,li),
+.mm-reference-layout #lesson.mm-simple-lesson .lesson-body>.mm-simple-section :is(h2,h3,p,li),
+.mm-reference-layout #lesson.mm-simple-lesson .lesson-body>.mm-next-card :is(h2,h3,p,li){
+  color:#173d50!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson .lesson-body .mm-simple-note-disclosure>summary{
+  min-height:48px!important;
+}
+.mm-reference-layout :is(#defects .mm-dx-hero,#coach .mm-dx-hero).mm-reference-deep-head{
+  display:flow-root!important;
+  background:linear-gradient(125deg,#0d384e,#08263c)!important;
+  border:1px solid #33758c!important;border-radius:17px!important;
+}
+.mm-reference-layout :is(#defects .mm-dx-hero,#coach .mm-dx-hero)>.mm-reference-deep-art{
+  float:right!important;display:block!important;width:85px!important;
+  height:78px!important;max-width:29%!important;
+  border-radius:11px!important;overflow:hidden!important;
+  margin:0 0 11px 13px!important;
+}
+.mm-reference-layout :is(#defects .mm-dx-hero,#coach .mm-dx-hero) :is(h1,p){
+  color:#f0faff!important;
+}
+.mm-reference-layout :is(#defects .mm-dx-hero,#coach .mm-dx-hero) .mm-dx-disclaimer{
+  clear:both!important;
+}
+@media(max-width:700px){
+  .mm-reference-layout #lesson.mm-simple-lesson .mm-simple-lesson-hero>.mm-reference-deep-art{
+    width:60px!important;height:60px!important;
+  }
+  .mm-reference-layout :is(#defects .mm-dx-hero,#coach .mm-dx-hero)>.mm-reference-deep-art{
+    width:60px!important;height:60px!important;
+  }
+}
