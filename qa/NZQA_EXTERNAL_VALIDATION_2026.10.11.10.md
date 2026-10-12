@@ -1,14 +1,18 @@
 # NZQA/provider G1–G8 readiness — 2026.10.11.10
 
-**STATUS: HOLD — pending real independent validation. This is an evidence-free staging packet for draft PR #617, not a completed test report, signoff, production authorization or proof of a retained candidate.**
+**STATUS: HOLD — independent human, physical-device, signing, expert, learner and provider evidence remains outstanding.** The technical source/fingerprint and retained artifact below prove only successful non-production software automation. They are not external validation, product deployment or production authority.
 
-## Candidate provenance
+> **RETAINED 2026.10.11.10 technical candidate: source `1a528632301232224fb6f9b2460c9a2863b92e81`, fingerprint `sha256:230170530d51afa8ac824e332905131e91f188945275c40b80fd768428c93424`, digest `sha256:03d990b80e1b10eeb7207fa8b84496edd45eec79447beaf43aead00d65e408f9`, artifact **11721888396**, expiry `2027-01-10T01:47:43Z`, successful producer [run 38193269649](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/38193269649); all independent validations HOLD.**
 
-- Learner-web candidate release: `2026.10.11.10` (DRAFT; exact source and runtime approval pending)
-- Exact final source SHA: **NOT BOUND**
-- Current artifact run, artifact ID, digest and expiry: **NOT BOUND**
-- Current runtime fingerprint: **NOT BOUND**
-- Prior `2026.10.11.9` evidence, source SHA and artifact remain **historical**; they are not valid evidence for this release.
+## Verified technical candidate only
+
+- Release: `2026.10.11.10` (non-production PR #617)
+- Source: `1a528632301232224fb6f9b2460c9a2863b92e81`
+- Producer: [run 38193269649](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/38193269649), completed successfully after Chromium/WebKit/visual and Question Quality gates
+- Retained artifact: `11721888396`, digest `sha256:03d990b80e1b10eeb7207fa8b84496edd45eec79447beaf43aead00d65e408f9`, expiry `2027-01-10T01:47:43Z`
+- Runtime fingerprint measured from actual public build: `sha256:230170530d51afa8ac824e332905131e91f188945275c40b80fd768428c93424`
+- Prior `2026.10.11.9` candidate and visual baseline remain historical and were not reused
+- All independent external gates, device/AT reviews, human SMEs, learner outcomes, provider requirements, production-root and machine control: **HOLD**
 
 ## Required future review
 
