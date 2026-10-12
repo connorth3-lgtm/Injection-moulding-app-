@@ -226,6 +226,35 @@ test('iOS empty voice list starts speech within the original tap task',async({pa
   await expect(player.locator('.mm-read-status')).toHaveText('Reading');
 });
 
+test('Throwing device cancellation and voice discovery cannot strand Read Aloud controls',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><div class="top-actions"></div><main class="main"><p>Safe reading after a device voice error.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:
+      'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
+    class QaUtterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const synth={
+      getVoices(){throw new Error('Device voice service unavailable');},
+      speak(utterance){window.__mmErrorSpeech=utterance.text;queueMicrotask(()=>utterance.onstart?.());},
+      cancel(){throw new Error('Device cancel service unavailable');},
+      pause(){},resume(){},addEventListener(){},removeEventListener(){}
+    };
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:QaUtterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const player=page.locator('.mm-read-aloud');
+  await player.locator('details').evaluate(el=>{el.open=true});
+  const play=player.locator('[data-mm-read="play"]');
+  await play.click();
+  await expect(play).toHaveText('Pause');
+  await expect.poll(()=>page.evaluate(()=>window.__mmErrorSpeech||'')).toContain('Safe reading');
+  await player.locator('[data-mm-read="stop"]').click();
+  await expect(player.locator('.mm-read-status')).toHaveText('Stopped');
+  await expect(play).toHaveText('Listen');
+  await play.click();
+  await expect(play).toHaveText('Pause');
+});
+
 test('Speech interruption exits stale playing state and Stop ignores synchronous cancel errors',async({page})=>{
   await page.setContent('<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><div class="top-actions"></div><main class="main"><p>Read aloud interruption recovery sentence.</p></main></body></html>');
   await page.evaluate(()=>{
