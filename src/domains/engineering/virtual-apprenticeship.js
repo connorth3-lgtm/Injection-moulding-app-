@@ -382,7 +382,12 @@ function renderResult(){
     const old=progress.completed[row.id]||{};
     progress.completed[row.id]={best:Math.max(Number(old.best||0),result.total),last:result.total,level:state.level,
       steps:Object.fromEntries(STEP_KEYS.map(key=>[key,result.dimensions[key].correct])),updated:new Date().toISOString()};
-    saveProgress(progress);state.attemptSaved=true;
+    state.attemptSaved=saveProgress(progress);
+    if(!state.attemptSaved){
+      const warning=make('p','tiny muted','This attempt could not be saved on this device. Check available storage, then press Review my reasoning again to retry.');
+      warning.setAttribute('role','status');
+      box.appendChild(warning);
+    }
   }
   const p=byId('mmVaProgress');if(p)p.textContent=progressSummary();
   for(const key of STEP_KEYS){const el=byId(`mmVaFeedback-${key}`);if(el)el.textContent=result.dimensions[key].feedback}
