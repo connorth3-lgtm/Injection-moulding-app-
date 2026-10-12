@@ -147,6 +147,7 @@
 
   function updateButtons(){
     if(ui){
+      ui.play.disabled=!supported;
       ui.play.textContent=starting?'Starting…':paused?'Resume':speaking?'Pause':'Listen';
       ui.play.setAttribute('aria-label',starting?'Starting read aloud':paused?'Resume read aloud':speaking?'Pause read aloud':'Start read aloud');
       ui.prev.disabled=!supported||!units.length||index<=0;
