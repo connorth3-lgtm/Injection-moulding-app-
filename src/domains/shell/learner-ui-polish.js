@@ -738,10 +738,9 @@ function materials(){
     const tabs=root.querySelector('.mm-material-study-tools > .mat-tabs')||legacy.querySelector(':scope > .mat-tabs');
     const teachingSlot=guide.querySelector('[data-mm-family-science-content]');
     if(teachingSlot&&legacy.parentElement!==teachingSlot)teachingSlot.appendChild(legacy);
-    // When a learner opens a material lesson, lab, quiz or references using
-    // the existing tab routing, the teaching pane MUST NOT remain inside a
-    // collapsed family guide. Preserve the optional explorer default.
-    const currentTab=tabs?.querySelector('button.active')?.textContent?.trim()||'';
+    // An active default "Learn" tab is NOT permission to reopen a disclosure
+    // the learner just closed. Only an actual lesson (or an explicit tab
+    // activation below) may reveal the optional family-science pane.
     const lessonShown=!!legacy.querySelector('.mat-lesson');
     const intro=root.querySelector('#mmMaterialLearningAnchor');
     // Combine the detached Material Science intro, five legacy mode buttons
@@ -760,7 +759,22 @@ function materials(){
     if(intro&&intro.parentElement!==study)study.appendChild(intro);
     if(tabs&&tabs.parentElement!==study)study.appendChild(tabs);
     if(guide.parentElement!==study)study.appendChild(guide);
-    if(lessonShown||(['Learn','Interactive labs','Knowledge check','Evidence & references'].includes(currentTab)))guide.open=true;
+    // Delegate from the stable study wrapper. Material tab renderers may
+    // replace their own buttons; do not attach a listener to ephemeral nodes.
+    // Let native <details> close/open gestures remain authoritative.
+    if(!study.dataset.mmReferenceModeRevealBound){
+      study.dataset.mmReferenceModeRevealBound='1';
+      study.addEventListener('click',event=>{
+        const button=event.target.closest?.('.mat-tabs > button');
+        if(!button||!study.contains(button))return;
+        const label=(button.textContent||'').trim();
+        if(['Learn','Interactive labs','Knowledge check','Evidence & references'].includes(label)){
+          const activeGuide=study.querySelector('[data-mm-family-science]');
+          if(activeGuide)activeGuide.open=true;
+        }
+      },true);
+    }
+    if(lessonShown)guide.open=true;
   }
   const selectedFamily=catalogue.querySelector('[data-mm-family-detail]:not([hidden])');
   if(selectedFamily){
