@@ -387,7 +387,7 @@ function renderResult(){
   const p=byId('mmVaProgress');if(p)p.textContent=progressSummary();
   for(const key of STEP_KEYS){const el=byId(`mmVaFeedback-${key}`);if(el)el.textContent=result.dimensions[key].feedback}
 }
-function resetCase(){if(guardLearnerInteraction())return;state.answers={};state.checked=false;state.attemptSaved=false;renderCase()}
+function resetCase(){if(guardLearnerInteraction())return;state.answers={};state.checked=false;state.attemptSaved=false;renderCase();focusApprenticeshipControl('#mmVaCaseSelect')}
 function syncMissionContext(stage='evidence'){
   const row=caseDef();
   window.MM_MISSION_CONTROL?.attachContext?.(
@@ -404,6 +404,11 @@ function openCase(index=0){
   const host=byId('mmVirtualApprenticeship');requestAnimationFrame(()=>host?.scrollIntoView?.({block:'start',behavior:'smooth'}));
   return true;
 }
+function focusApprenticeshipControl(selector){
+  // renderCase() replaces its entire subtree. Restore the active control
+  // after case/level changes so keyboard focus never drops to the body.
+  byId('mmVirtualApprenticeship')?.querySelector(selector)?.focus();
+}
 function renderCase(){
   ensureLearner();
   const host=byId('mmVirtualApprenticeship');if(!host)return;
@@ -412,9 +417,9 @@ function renderCase(){
   const spatialBar=make('div','hero-buttons');const spatial=make('button','secondary','Explore this case in Spatial Twin');spatial.type='button';spatial.addEventListener('click',()=>{if(guardLearnerInteraction())return;window.MM_SPATIAL_TWIN?.open?.({caseIndex:state.caseIndex})});spatialBar.appendChild(spatial);host.appendChild(spatialBar);
   const controls=make('div','grid2');
   const caseLabel=make('label','', 'Case');const caseSelect=document.createElement('select');caseSelect.id='mmVaCaseSelect';CASES.forEach((c,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=`${c.id} · ${c.title}`;o.selected=i===state.caseIndex;caseSelect.appendChild(o)});caseLabel.appendChild(caseSelect);
-  const levelLabel=make('label','', 'Coaching level');const levelSelect=document.createElement('select');for(const [id,v] of Object.entries(LEVELS)){const o=document.createElement('option');o.value=id;o.textContent=v.label;o.selected=id===state.level;levelSelect.appendChild(o)}levelLabel.appendChild(levelSelect);controls.append(caseLabel,levelLabel);host.appendChild(controls);
-  caseSelect.addEventListener('change',()=>{if(guardLearnerInteraction())return;state.caseIndex=Number(caseSelect.value)||0;state.answers={};state.checked=false;state.attemptSaved=false;renderCase();syncMissionContext('evidence')});
-  levelSelect.addEventListener('change',()=>{if(guardLearnerInteraction())return;state.level=levelSelect.value in LEVELS?levelSelect.value:'beginner';state.checked=false;state.attemptSaved=false;renderCase()});
+  const levelLabel=make('label','', 'Coaching level');const levelSelect=document.createElement('select');levelSelect.dataset.mmVaLevel='1';for(const [id,v] of Object.entries(LEVELS)){const o=document.createElement('option');o.value=id;o.textContent=v.label;o.selected=id===state.level;levelSelect.appendChild(o)}levelLabel.appendChild(levelSelect);controls.append(caseLabel,levelLabel);host.appendChild(controls);
+  caseSelect.addEventListener('change',()=>{if(guardLearnerInteraction())return;state.caseIndex=Number(caseSelect.value)||0;state.answers={};state.checked=false;state.attemptSaved=false;renderCase();syncMissionContext('evidence');focusApprenticeshipControl('#mmVaCaseSelect')});
+  levelSelect.addEventListener('change',()=>{if(guardLearnerInteraction())return;state.level=levelSelect.value in LEVELS?levelSelect.value:'beginner';state.checked=false;state.attemptSaved=false;renderCase();focusApprenticeshipControl('select[data-mm-va-level]')});
   renderFactoryCaseOne(host,row);
    const brief=make('div','callout');brief.append(make('b','', 'Shop-floor brief'),document.createElement('br'),document.createTextNode(row.brief));host.appendChild(brief);
   const evidence=make('div','content-block');evidence.append(make('h3','', 'Evidence board'),make('p','tiny muted',`Baseline: ${row.baseline}`));const table=make('div','table-wrap');const t=document.createElement('table');t.className='table';t.innerHTML='<thead><tr><th>Signal / context</th><th>Observed change</th></tr></thead>';const body=document.createElement('tbody');for(const [name,value] of row.observations){const tr=document.createElement('tr');const a=document.createElement('td');a.textContent=name;const b=document.createElement('td');b.textContent=value;tr.append(a,b);body.appendChild(tr)}t.appendChild(body);table.appendChild(t);evidence.appendChild(table);host.appendChild(evidence);
