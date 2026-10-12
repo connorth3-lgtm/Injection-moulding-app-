@@ -116,6 +116,8 @@ jobs:
       - name: Chromium approved visual regression lock
         id: visual
         if: matrix.task == 'visual'
+        env:
+          MM_VISUAL_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         continue-on-error: ${{ github.base_ref == 'preview' || github.ref_name == 'preview' }}
         run: npx playwright test qa/visual-regression.spec.js --config=playwright.config.cjs
       - name: Record preview visual-baseline HOLD
