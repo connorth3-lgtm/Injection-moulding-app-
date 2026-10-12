@@ -483,7 +483,9 @@ for(const width of [390,810]){
     await expect(labs.locator('.mat-lab-output').first()).toHaveCSS('background-color','rgb(224, 239, 245)');
     const rheology=labs.locator('#rheoShear');
     await expect(rheology).toBeVisible();
-    await rheology.fill('64');
+    await rheology.focus();
+    await rheology.press('ArrowRight');
+    await expect(rheology).toHaveValue('46');
     await expect(labs.locator('#rheoOut')).toContainText('Illustrative');
     expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
 
