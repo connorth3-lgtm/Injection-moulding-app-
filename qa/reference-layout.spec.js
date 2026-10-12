@@ -274,6 +274,9 @@ test('Practice nested labs, data diagnosis and assessments keep working illustra
   const dataChoice=data.locator('button.pd-choice').first();
   await expect(dataChoice).toBeVisible();
   expect((await dataChoice.boundingBox()).height).toBeGreaterThanOrEqual(44);
+  await expect(data.locator('.pd-case > .pd-panel').first()).toHaveCSS('background-color','rgb(239, 247, 250)');
+  await dataChoice.click();
+  await expect(data.locator('.pd-feedback')).toBeVisible();
   await expect(data.locator('[data-pd-home]')).toBeVisible();
   await data.locator('[data-pd-home]').click();
   await expect(data.locator('.pd-hero > .mm-reference-practice-tool-art')).toHaveCount(1);
@@ -291,6 +294,10 @@ test('Practice nested labs, data diagnosis and assessments keep working illustra
     const questionChoice=page.locator(root+' button'+(action==='diagnostic-labs'?'.dl-choice':'.ml-choice')).first();
     await expect(questionChoice).toBeVisible();
     expect((await questionChoice.boundingBox()).height).toBeGreaterThanOrEqual(44);
+    const panel=action==='diagnostic-labs'?'.dl-lab > .dl-panel':'.ml-lab > .ml-panel';
+    await expect(page.locator(root+' '+panel).first()).toHaveCSS('background-color','rgb(239, 247, 250)');
+    await questionChoice.click();
+    await expect(page.locator(root+' '+(action==='diagnostic-labs'?'.dl-feedback':'.ml-feedback'))).toBeVisible();
     await expect(page.locator(root+' '+back)).toBeVisible();
     await page.locator(root+' '+back).click();
     await expect(page.locator(root+' '+hero+' > .mm-reference-practice-tool-art')).toHaveCount(1);
