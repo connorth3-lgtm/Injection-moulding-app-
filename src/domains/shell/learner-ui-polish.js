@@ -893,12 +893,48 @@ function more(){
   grid.prepend(...direct);
   illustrateMore(grid);
 }
+/* Interior parity with the approved five-tab reference boards. Each target
+   already owns its content, commands and validation rules. Decorations are
+   local, noninteractive and idempotent across renderer replacements. */
+function deepViewPolish(){
+  const headers=[
+    ['#lesson .lesson-header-card','training',24],
+    ['#simulator .form-card','machine',0],
+    ['#simulator .output-panel','process',5],
+    ['#glossary .section-head','training',24],
+    ['#defects .section-head','quality',20],
+    ['#coach .chat','quality',20],
+    ['#standards .section-head','evidence',27],
+    ['#visuals .section-head','process',5],
+    ['#certificates .section-head','evidence',27],
+    ['#profile .form-card:first-child','training',24],
+    ['#instructor .section-head','cases',22]
+  ];
+  for(const [selector,subject,tile] of headers){
+    const node=document.querySelector(selector);
+    if(!node||node.querySelector(':scope > .mm-reference-deep-art'))continue;
+    const art=picture(subject,'',tile);
+    art.classList.add('mm-reference-deep-art');
+    art.setAttribute('aria-hidden','true');
+    node.classList.add('mm-reference-deep-head');
+    node.prepend(art);
+  }
+  for(const selector of [
+    '#lesson .lesson-body','#lesson .lesson-side',
+    '#glossary .term','#defects .defect-card',
+    '#profile .form-card','#simulator .form-card',
+    '#simulator .output-panel','#coach .chat',
+    '#coach .form-card','#instructor .table-wrap'
+  ]){
+    document.querySelectorAll(selector).forEach(el=>el.classList.add('mm-reference-deep-panel'));
+  }
+}
 let scheduled=false;
 function refresh(){
   if(scheduled)return;scheduled=true;
   requestAnimationFrame(()=>{
     scheduled=false;
-    try{home();learn();practice();practiceInside();materials();more()}catch(error){console.warn('[MouldMaster reference layout]',error)}
+    try{home();learn();practice();practiceInside();materials();more();deepViewPolish()}catch(error){console.warn('[MouldMaster reference layout]',error)}
   });
 }
 function boot(){
@@ -906,7 +942,7 @@ function boot(){
   refresh();
   window.MM_APP_SHELL?.events?.onViewChange?.(refresh);
   for(const name of ['dashboard','path','materials','scenarios'])window.MM_APP_SHELL?.events?.onRender?.(name,refresh);
-  const targets=['dashboard','path','materials','scenarios','simulator','modal'];
+  const targets=['dashboard','path','materials','scenarios','simulator','lesson','glossary','defects','coach','standards','visuals','certificates','profile','instructor','exams','modal'];
   for(const id of targets){
     const node=document.getElementById(id);if(!node)continue;
     new window.MutationObserver(refresh).observe(node,{childList:true,subtree:id==='modal'});
@@ -914,7 +950,7 @@ function boot(){
   document.addEventListener('click',event=>{
     if(event.target?.closest?.('.mm-material-index-card summary,.mobile-nav,[data-mm-registry-menu],#scenarios [data-mm-hub-action],#modal .mm-hub-picker-grid [data-mm-hub-action],#mmVirtualApprenticeship button[data-mm-onclick],#mmVirtualApprenticeship .hero-buttons button'))refresh();
   });
-  window.MM_REFERENCE_LAYOUT=Object.freeze({version:'2026.10.11.11',refresh});
+  window.MM_REFERENCE_LAYOUT=Object.freeze({version:'2026.10.13.1',refresh});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
