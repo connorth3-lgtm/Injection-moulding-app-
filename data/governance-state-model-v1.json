@@ -346,11 +346,11 @@
   "currentAssuranceEvidence": {
     "staticContract": {
       "status": "pass",
-      "meaning": "The 2026.10.11.10 software candidate is source-bound to successful Pre-merge Public Candidate run 38193269649, artifact 11721888396, expiry and digest with runtime fingerprint verified in the producer log. Passing this automated build does not imply deployed or human/device validation."
+      "meaning": "The non-production release 2026.10.11.10 technical candidate source 1a528632301232224fb6f9b2460c9a2863b92e81 was retained by successful producer run 38193269649 as artifact 11721888396 with measured runtime fingerprint sha256:230170530d51afa8ac824e332905131e91f188945275c40b80fd768428c93424. Successful source-bound software automation does not imply deployment or external human/device validation."
     },
     "behavioralBrowser": {
       "status": "pass",
-      "meaning": "Source 1a528632 successfully completed substantive Chromium, WebKit, Book-only owner-reviewed 52-surface strict 12px visual QA, cross-browser, Read Aloud, question quality and five reliability shards. Metadata reconciliation requires fresh exact-head protected CI before merge."
+      "meaning": "The owner-reviewed Book-only UI for release 2026.10.11.10 at source 1a528632301232224fb6f9b2460c9a2863b92e81 passed strict 52-surface 12px visual regression, substantive Chromium/WebKit, cross-browser navigation, Question Quality and reliability. Fresh current PR-head integrity and release QA are separately required."
     },
     "externalHumanDevice": {
       "status": "hold",
