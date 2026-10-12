@@ -138,6 +138,8 @@ for(const width of [320,360,390,412]){
     await familyScience.locator(':scope > summary').click();
     await expect(familyScience).not.toHaveAttribute('open','');
     await page.evaluate(()=>window.MM_REFERENCE_LAYOUT.refresh());
+    // Incidental rerenders must not override the learner's disclosure choice.
+    await expect(familyScience).not.toHaveAttribute('open','');
     await study.locator(':scope > .mat-tabs > button').first().click();
     await page.evaluate(()=>window.MM_REFERENCE_LAYOUT.refresh());
     await expect(familyScience).toHaveAttribute('open','');
