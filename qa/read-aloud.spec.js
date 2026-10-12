@@ -193,6 +193,39 @@ test('Android empty voice list speaks within the original tap without waiting fo
   await host.locator('[data-mm-read="stop"]').click();
 });
 
+test('iOS empty voice list starts speech within the original tap task',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><div class="top-actions"></div><main class="main"><p>iOS device voice starts from this lesson sentence.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile Safari/604.1'});
+    class QaUtterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
+    window.__mmIosInTap=false;
+    document.addEventListener('click',event=>{
+      if(!event.target.closest?.('[data-mm-read="play"]'))return;
+      window.__mmIosInTap=true;
+      setTimeout(()=>{window.__mmIosInTap=false;},0);
+    },true);
+    const synth={
+      getVoices(){return[];},
+      speak(utterance){
+        window.__mmIosSpoken=utterance.text;
+        window.__mmIosSpokeInTap=window.__mmIosInTap;
+        queueMicrotask(()=>utterance.onstart?.());
+      },
+      cancel(){},pause(){},resume(){},addEventListener(){},removeEventListener(){}
+    };
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:QaUtterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const player=page.locator('.mm-read-aloud');
+  await player.locator('details').evaluate(el=>{el.open=true;});
+  await player.locator('[data-mm-read="play"]').click();
+  await expect.poll(()=>page.evaluate(()=>window.__mmIosSpoken||'')).toContain('iOS device voice starts');
+  expect(await page.evaluate(()=>window.__mmIosSpokeInTap)).toBe(true);
+  await expect(player.locator('.mm-read-status')).toHaveText('Reading');
+});
+
 test('Speech interruption exits stale playing state and Stop ignores synchronous cancel errors',async({page})=>{
   await page.setContent('<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><div class="top-actions"></div><main class="main"><p>Read aloud interruption recovery sentence.</p></main></body></html>');
   await page.evaluate(()=>{
