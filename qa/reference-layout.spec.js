@@ -373,7 +373,8 @@ for(const width of [360,810]){
     const modelSliders=advanced.locator('.form-grid > label > .range-row > input[type="range"]');
     await expect(modelSliders).toHaveCount(10);
     await expect(simulator.locator('#mmSimMetricInputs')).toBeVisible();
-    await expect(simulator.locator('#simAdvice')).toContainText('baseline');
+    await expect(simulator.locator('#mmSimPrimaryFinding')).toContainText('training baseline');
+    await expect(simulator.locator('#simAdvice')).toContainText('What to verify next');
     const fillSlider=modelSliders.first();
     await expect(fillSlider).toHaveValue('50');
     await fillSlider.focus();
