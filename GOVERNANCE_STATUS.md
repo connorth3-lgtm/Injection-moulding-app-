@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **fail** |
+| Technical automation | **pass** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | The new 2026.10.11.10 learner-runtime candidate lacks successful exact-head technical automation and a retained release artifact; the previously successful 2026.10.11.9 candidate remains historical, not reusable proof. |
-| Behavioral / browser | **fail** | The redesigned 2026.10.11.10 app has not yet passed the required substantive Chromium/WebKit, four-viewport and 13-surface owner-reviewed visual baseline, cross-browser and reliability checks. No new visual approval is inferred from the older 2026.10.11.9 baseline. |
+| Static / contract | **pass** | The 2026.10.11.10 software candidate is source-bound to successful Pre-merge Public Candidate run 38193269649, artifact 11721888396, expiry and digest with runtime fingerprint verified in the producer log. Passing this automated build does not imply deployed or human/device validation. |
+| Behavioral / browser | **pass** | Source 1a528632 successfully completed substantive Chromium, WebKit, Book-only owner-reviewed 52-surface strict 12px visual QA, cross-browser, Read Aloud, question quality and five reliability shards. Metadata reconciliation requires fresh exact-head protected CI before merge. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
