@@ -276,6 +276,46 @@ for(const width of [360,810]){
   });
 }
 
+test('Diagnostic learning notes never leak across two local learner profiles',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.addInitScript(()=>{
+    const learner=(id)=>({id,name:id,role:'learner',completed:[],bookmarks:[],notes:{},
+      examScores:{},certificates:[],currentLesson:1,lastSeen:'2026-10-13T00:00:00Z',
+      onboardingDone:true,experience:'Beginner',goal:'Learn injection moulding',dailyMinutes:15,region:'ALL'});
+    localStorage.clear();
+    localStorage.setItem('mouldmasterProDB',JSON.stringify({
+      activeUser:'diagnostic-a',
+      users:{'diagnostic-a':learner('diagnostic-a'),'diagnostic-b':learner('diagnostic-b')}
+    }));
+  });
+  await page.goto(BASE,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED&&window.MM_DIAGNOSTIC_WORKBENCH)&&!document.getElementById('mmBootstrap'));
+  await page.evaluate(()=>switchView('defects'));
+  const root=page.locator('#defects .mm-dx-workbench');
+  await root.locator('[data-mm-dx-action="choose"]').first().click();
+  await root.locator('textarea[name="baseline"]').fill('Learner A controlled baseline');
+  await root.locator('[data-mm-dx-evidence="material"]').check();
+  expect((await page.evaluate(()=>window.MM_DIAGNOSTIC_WORKBENCH.report())).context.baseline)
+    .toBe('Learner A controlled baseline');
+
+  await page.evaluate(()=>switchUser('diagnostic-b'));
+  await page.waitForFunction(()=>JSON.parse(localStorage.getItem('mouldmasterProDB')||'{}').activeUser==='diagnostic-b');
+  await page.evaluate(()=>switchView('defects'));
+  await expect(root.locator('.mm-dx-empty')).toBeVisible();
+  const bReport=await page.evaluate(()=>window.MM_DIAGNOSTIC_WORKBENCH.report());
+  expect(bReport.selectedDefect).toBeNull();
+  expect(bReport.context.baseline).toBe('');
+  expect(bReport.evidenceReportedAvailable).toEqual([]);
+  await root.locator('[data-mm-dx-action="choose"]').first().click();
+  await expect(root.locator('textarea[name="baseline"]')).toHaveValue('');
+  await expect(root.locator('[data-mm-dx-evidence="material"]')).not.toBeChecked();
+
+  await page.evaluate(()=>switchUser('diagnostic-a'));
+  await page.waitForFunction(()=>JSON.parse(localStorage.getItem('mouldmasterProDB')||'{}').activeUser==='diagnostic-a');
+  await page.evaluate(()=>switchView('defects'));
+  await expect(root.locator('.mm-dx-empty')).toBeVisible();
+});
+
 test('Choosing another defect clears unrelated measurements, evidence and judgement',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
