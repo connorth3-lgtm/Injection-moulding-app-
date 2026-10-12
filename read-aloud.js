@@ -123,7 +123,8 @@
 
   function refreshVoice(){
     if(!supported||typeof synth.getVoices!=='function'){selectedVoice=null;return null;}
-    const voices=synth.getVoices()||[];
+    let voices=[];
+    try{voices=synth.getVoices()||[]}catch(_){selectedVoice=null;return null;}
     if(!voices.length){selectedVoice=null;return null;}
     const lang=String(document.documentElement.lang||navigator.language||'en').toLowerCase();
     const base=lang.split('-')[0];
@@ -168,11 +169,18 @@
     renderListeningState();
   }
 
+  function cancelDeviceSpeech(){
+    // Browser/OS voice providers may throw while being stopped. A failed
+    // cancel must never prevent the app controls from resetting safely.
+    if(!supported)return;
+    try{synth.cancel()}catch(_){}
+  }
+
   function stop(reason){
     // Invalidate active callbacks before cancel: some device voices dispatch
     // a synchronous cancellation error from synth.cancel().
     speakToken+=1;
-    if(supported)synth.cancel();
+    cancelDeviceSpeech();
     starting=false;speaking=false;paused=false;
     clearHighlight();
     if(ui)ui.current.hidden=true;
@@ -198,7 +206,7 @@
       if(token!==speakToken)return;
       // Must run directly inside the original tap handler on Android, even
       // with an empty voice list. The platform can pick its default voice.
-      synth.cancel();
+      cancelDeviceSpeech();
       const utterance=new SpeechSynthesisUtterance(unit.text);
       if(selectedVoice){utterance.voice=selectedVoice;utterance.lang=selectedVoice.lang||document.documentElement.lang||'en';}
       else utterance.lang=document.documentElement.lang||'en';
@@ -209,7 +217,7 @@
         // A platform may deliver a late onstart after timeout. Invalidate it
         // before canceling or retrying, including when cancel emits no error.
         speakToken+=1;
-        synth.cancel();starting=false;speaking=false;paused=false;
+        cancelDeviceSpeech();starting=false;speaking=false;paused=false;
         if(androidSpeech){
           // Timer callbacks cannot recover a blocked mobile user gesture.
           setStatus('Device voice did not start. Tap Listen again; check Android text-to-speech settings if it stays silent.');
