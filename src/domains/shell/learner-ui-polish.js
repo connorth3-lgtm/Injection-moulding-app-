@@ -5,7 +5,9 @@
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.10.13.1';
+const VERSION='2026.10.11.11';
+// Cache-bust stylesheet revisions without claiming a new governed app release.
+const STYLE_REV='2026.10.13.1';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -14,7 +16,7 @@ function ensureStyles(){
   if(document.querySelector('link[data-mm-learner-ui-polish]'))return;
   const link=document.createElement('link');
   link.rel='stylesheet';
-  link.href=`./src/domains/shell/learner-ui-polish.css?v=${encodeURIComponent(VERSION)}`;
+  link.href=`./src/domains/shell/learner-ui-polish.css?v=${encodeURIComponent(STYLE_REV)}`;
   link.dataset.mmLearnerUiPolish=VERSION;
   document.head.appendChild(link);
 }
