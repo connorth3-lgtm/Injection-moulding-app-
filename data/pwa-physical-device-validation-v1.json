@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "2026.10.11.11 changed learner UI has no retained current source/fingerprint artifact or approved visual baseline. 2026.10.11.10 candidate remains historical only. Physical iOS/iPadOS and Android testing, offline restart/reboot, update, storage recovery and audible Android Read Aloud are pending; all external evidence HOLD.",
+  "boundary": "New release 2026.10.11.11 awaits successfully retained exact-source public runtime and new visual approval. A pending contract is not physical validation: testing on physical iOS/iPadOS and Android devices for install, offline/reboot, updates, safe-area and storage recovery remains outstanding. Audible Android Read Aloud and human screen reader review are independently governed by data/accessibility-real-at-validation-v1.json. Prior 2026.10.11.10 evidence is historical; all independent external streams remain HOLD, production root and machine control unauthorized.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
@@ -42,17 +42,7 @@
   },
   "privacyBoundary": "Public contract metadata must not include learner names, customer/site identifiers, email addresses, private screenshots, raw process data, backup content, filesystem/user paths or other personal/proprietary evidence. Keep detailed device evidence outside the public repository and reference it only with a non-sensitive review identifier.",
   "release": "2026.10.11.11",
-  "candidate": {
-    "release": "2026.10.11.11",
-    "sourceSha": null,
-    "runtimeFingerprint": null,
-    "candidateRunId": null,
-    "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": null,
-    "artifactName": null,
-    "artifactDigest": null,
-    "artifactExpiresAt": null
-  },
+  "candidate": null,
   "previousCandidate": {
     "release": "2026.10.11.10",
     "sourceSha": "1a528632301232224fb6f9b2460c9a2863b92e81",

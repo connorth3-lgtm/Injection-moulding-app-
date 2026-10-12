@@ -38,17 +38,7 @@
     "status": "hold",
     "evidenceContract": "data/pwa-physical-device-validation-v1.json",
     "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.10.11.11.md",
-    "currentCandidate": {
-      "release": "2026.10.11.11",
-      "sourceSha": null,
-      "runtimeFingerprint": null,
-      "candidateRunId": null,
-      "candidateWorkflow": "Pre-merge Public Candidate",
-      "artifactId": null,
-      "artifactName": null,
-      "artifactDigest": null,
-      "artifactExpiresAt": null
-    },
+    "currentCandidate": null,
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release.",
     "previousCandidate": {
       "release": "2026.10.11.10",
@@ -129,17 +119,7 @@
       "runtimeFingerprint": "sha256:230170530d51afa8ac824e332905131e91f188945275c40b80fd768428c93424"
     }
   },
-  "webCandidate": {
-    "release": "2026.10.11.11",
-    "sourceSha": null,
-    "runtimeFingerprint": null,
-    "candidateRunId": null,
-    "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": null,
-    "artifactName": null,
-    "artifactDigest": null,
-    "artifactExpiresAt": null
-  },
+  "webCandidate": null,
   "candidatePolicy": {
     "previewBranchAuthoritative": false,
     "evidenceAuthority": "retained-exact-head-artifact",
@@ -156,7 +136,7 @@
     "artifactDigest": "sha256:03d990b80e1b10eeb7207fa8b84496edd45eec79447beaf43aead00d65e408f9",
     "artifactExpiresAt": "2027-01-10T01:47:43Z"
   },
-  "candidateStatus": "FAIL/HOLD: new 2026.10.11.11 learner UI requires new approved visual baseline, protected exact-head QA and successfully retained source-bound public artifact. 2026.10.11.10 evidence is historical only. All seven external workstreams HOLD.",
+  "candidateStatus": "HOLD: 2026.10.11.11 public candidate producer has not successfully retained a source-bound artifact; exact-head browser/visual gates and new approved immutable baseline pending, and all seven external workstreams remain HOLD. Previous 2026.10.11.10 retained candidate is historical only.",
   "previousPreviousCandidate": {
     "release": "2026.10.11.9",
     "sourceSha": "d572ee13d8f2f09139882ff1a271e855284f6e3c",

@@ -310,7 +310,7 @@
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
-    "technicalAutomation": "pass",
+    "technicalAutomation": "fail",
     "bookPublicationAuthorization": "authorized",
     "bookIndependentSme": "hold",
     "curriculumIndependentSme": "hold",
@@ -345,12 +345,12 @@
   "userFacingTerminologyBoundary": "Internal evidenceMaturity=verified must be displayed as 'Source evidence reviewed'. The word verified must not be used by itself in learner-facing Book assurance because independent human SME/device/learner validation is a separate namespace.",
   "currentAssuranceEvidence": {
     "staticContract": {
-      "status": "pass",
-      "meaning": "The non-production release 2026.10.11.10 technical candidate source 1a528632301232224fb6f9b2460c9a2863b92e81 was retained by successful producer run 38193269649 as artifact 11721888396 with measured runtime fingerprint sha256:230170530d51afa8ac824e332905131e91f188945275c40b80fd768428c93424. Successful source-bound software automation does not imply deployment or external human/device validation."
+      "status": "fail",
+      "meaning": "Unverified 2026.10.11.11 changed browser release. No successful exact-head retained public candidate, real source-bound fingerprint or completed release validation. Prior 2026.10.11.10 artifact remains historical only."
     },
     "behavioralBrowser": {
-      "status": "pass",
-      "meaning": "The owner-reviewed Book-only UI for release 2026.10.11.10 at source 1a528632301232224fb6f9b2460c9a2863b92e81 passed strict 52-surface 12px visual regression, substantive Chromium/WebKit, cross-browser navigation, Question Quality and reliability. Fresh current PR-head integrity and release QA are separately required."
+      "status": "fail",
+      "meaning": "New 2026.10.11.11 Learn/Materials visual changes do not match immutable approved 2026.10.11.10 screen captures. Owner-approved new immutable 52-surface visual baseline and protected browser QA are still pending; strict threshold remains 12 pixels."
     },
     "externalHumanDevice": {
       "status": "hold",
