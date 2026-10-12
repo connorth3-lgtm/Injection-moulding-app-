@@ -287,34 +287,6 @@ function syncReadAloudLabel(){
   const summary=document.querySelector('.mm-read-aloud details:not([open]) summary');
   if(summary&&!summary.getAttribute('aria-label'))summary.setAttribute('aria-label','Read aloud');
 }
-function revealFocusBelowReader(details){
-  // Native details can mount after the shell; capture-phase toggle is bound
-  // to document, not to a possibly absent speech panel.
-  if(!details.open||window.innerWidth>700)return;
-  const dashboard=document.getElementById('dashboard');
-  const focus=dashboard?.querySelector('.mm-today-focus');
-  if(!focus||dashboard.classList.contains('hidden'))return;
-  function adjust(attempt){
-    if(!details.open||dashboard.classList.contains('hidden')||attempt>4)return;
-    const card=focus.getBoundingClientRect(),dock=details.getBoundingClientRect();
-    if(!card.width||!dock.width||card.bottom<=dock.top-12||card.top>=dock.bottom+12)return;
-    if(attempt===0)focus.scrollIntoView({block:'start',inline:'nearest',behavior:'instant'});
-    else{
-      const amount=Math.ceil(card.bottom-dock.top+20);
-      const main=focus.closest('.main');
-      if(main&&main.scrollHeight>main.clientHeight+1&&/(auto|scroll)/.test(getComputedStyle(main).overflowY))
-        main.scrollTop+=amount;
-      else window.scrollBy({top:amount,behavior:'instant'});
-    }
-    requestAnimationFrame(()=>adjust(attempt+1));
-  }
-  requestAnimationFrame(()=>adjust(0));
-}
-function bindReadAloudObstructionGuard(){
-  document.addEventListener('toggle',event=>{
-    if(event.target?.matches?.('.mm-read-aloud details'))revealFocusBelowReader(event.target);
-  },true);
-}
 function run(){
   syncHomeBalance();
   syncBookDisclosure();
@@ -331,7 +303,6 @@ function schedule(){
 }
 function install(){
   ensureStyles();
-  bindReadAloudObstructionGuard();
   run();
   syncFirstRunModal();
   installFirstRunPolishHook();
