@@ -762,19 +762,31 @@ function materials(){
     // Delegate from the stable study wrapper. Material tab renderers may
     // replace their own buttons; do not attach a listener to ephemeral nodes.
     // Let native <details> close/open gestures remain authoritative.
-    if(!study.dataset.mmReferenceModeRevealBound){
-      study.dataset.mmReferenceModeRevealBound='1';
-      study.addEventListener('click',event=>{
+    if(!root.dataset.mmReferenceModeRevealBound){
+      root.dataset.mmReferenceModeRevealBound='1';
+      // Capture the learner's intent on the stable view before the core's
+      // synchronous material-tab renderer can replace descendants.
+      root.addEventListener('click',event=>{
         const button=event.target.closest?.('.mat-tabs > button');
-        if(!button||!study.contains(button))return;
+        if(!button||!root.contains(button))return;
         const label=(button.textContent||'').trim();
         if(['Learn','Interactive labs','Knowledge check','Evidence & references'].includes(label)){
-          const activeGuide=study.querySelector('[data-mm-family-science]');
+          root.dataset.mmReferenceRevealMode='1';
+          const activeGuide=root.querySelector('[data-mm-family-science]');
           if(activeGuide)activeGuide.open=true;
         }
       },true);
     }
-    if(lessonShown)guide.open=true;
+    // Consume one explicit navigation intent even if switching modes rebuilt
+    // the .mat-shell. Never reopen on an unrelated mutation/refresh.
+    if(root.dataset.mmReferenceRevealMode==='1'){
+      guide.open=true;
+      delete root.dataset.mmReferenceRevealMode;
+    }
+    if(lessonShown&&root.dataset.mmReferenceMaterialLessonSeen!=='1'){
+      guide.open=true;
+      root.dataset.mmReferenceMaterialLessonSeen='1';
+    }
   }
   const selectedFamily=catalogue.querySelector('[data-mm-family-detail]:not([hidden])');
   if(selectedFamily){
