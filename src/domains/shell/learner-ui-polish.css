@@ -2335,3 +2335,163 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
     width:56px!important;height:56px!important;
   }
 }
+
+/* Approved illustrated Practice concept: dark navigation, bright readable
+   task interiors. All existing button actions and governed results stay intact. */
+.mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:12px!important;align-items:stretch!important;
+}
+.mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>button:first-child{
+  grid-column:auto!important;
+}
+.mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice{
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:92px auto 1fr!important;
+  gap:8px!important;align-content:start!important;justify-items:center!important;
+  padding:13px!important;min-height:212px!important;
+  background:#f1f7fa!important;border-color:#bddeeb!important;color:#092b42!important;
+  text-align:center!important;
+}
+.mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice>.mm-reference-practice-art{
+  grid-column:1!important;grid-row:1!important;
+  width:min(100%,170px)!important;height:92px!important;
+  border-color:#d3e8f1!important;background-color:#dcecf2!important;
+}
+.mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice>b{
+  grid-column:1!important;grid-row:2!important;
+  color:#0b2940!important;font-size:16px!important;text-align:center!important;
+}
+.mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice>small{
+  grid-column:1!important;grid-row:3!important;color:#34536a!important;
+  font-size:12px!important;text-align:center!important;
+}
+.mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice:is(:hover,:focus-visible){
+  border-color:#007d98!important;background:#e0f3f2!important;
+}
+.mm-reference-layout #modal .mm-hub-picker-grid[data-mm-reference-practice-picker]>.mm-reference-practice-choice{
+  background:#f1f7fa!important;color:#092b42!important;border-color:#b6d9e7!important;
+}
+.mm-reference-layout #modal .mm-hub-picker-grid[data-mm-reference-practice-picker]>.mm-reference-practice-choice>b{
+  color:#0b2940!important;
+}
+.mm-reference-layout #modal .mm-hub-picker-grid[data-mm-reference-practice-picker]>.mm-reference-practice-choice>small{
+  color:#37556a!important;
+}
+.mm-reference-layout #modal .mm-hub-picker-grid[data-mm-reference-practice-picker]>.mm-reference-practice-choice:is(:hover,:focus-visible){
+  background:#dff3f1!important;border-color:#008b9a!important;
+}
+.mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario{
+  background:#f1f7fa!important;border-color:#a8d0df!important;
+  color:#13384b!important;
+}
+.mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario :is(h3,.eyebrow){
+  color:#092b42!important;
+}
+.mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario>p{
+  color:#34546a!important;
+}
+.mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario>.choice{
+  color:#113951!important;border-color:#8cbed0!important;
+  background:#e7f2f7!important;
+}
+.mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario>.choice:hover{
+  color:#092f40!important;background:#cfefea!important;border-color:#058e96!important;
+}
+.mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario>.feedback:not(.hidden){
+  color:#e9fefa!important;
+}
+.mm-reference-layout :is(#processDataLabs .pd-card,#diagnosticLabs .dl-card,#materialLabs .ml-card,#exams .exam-card){
+  background:#eff6fa!important;border:1px solid #b2d6e5!important;
+  color:#0e3148!important;
+}
+.mm-reference-layout :is(#processDataLabs .pd-card,#diagnosticLabs .dl-card,#materialLabs .ml-card,#exams .exam-card) :is(h2,h3,b){
+  color:#092d43!important;
+}
+.mm-reference-layout :is(#processDataLabs .pd-card,#diagnosticLabs .dl-card,#materialLabs .ml-card,#exams .exam-card) :is(p,small,.muted){
+  color:#35576e!important;
+}
+.mm-reference-layout :is(#processDataLabs .pd-card,#diagnosticLabs .dl-card,#materialLabs .ml-card,#exams .exam-card) :is(.pd-chip,.dl-chip,.ml-chip,.pill){
+  color:#123f54!important;background:#d8e9f1!important;border-color:#aacedd!important;
+}
+.mm-reference-layout :is(#processDataLabs .pd-card,#diagnosticLabs .dl-card,#materialLabs .ml-card,#exams .exam-card) button{
+  min-height:44px!important;white-space:normal!important;overflow-wrap:anywhere!important;
+}
+.mm-reference-layout #modal .mm-reference-more-card>summary{
+  display:grid!important;grid-template-columns:58px minmax(0,1fr) 22px!important;
+  gap:12px!important;align-items:center!important;min-height:82px!important;
+}
+.mm-reference-layout #modal .mm-reference-more-card>summary>.mm-reference-more-art{
+  display:block!important;grid-column:1!important;
+  width:58px!important;height:58px!important;border-radius:11px!important;
+  overflow:hidden!important;
+}
+.mm-reference-layout #modal .mm-reference-more-card>summary>.mm-more-disclosure-name{
+  grid-column:2!important;min-width:0!important;
+}
+.mm-reference-layout #modal .mm-reference-more-card>summary>.mm-more-disclosure-chevron{
+  grid-column:3!important;justify-self:end!important;
+}
+.mm-reference-layout #modal .mm-reference-more-extra>summary::after{
+  content:"⌄";grid-column:3;justify-self:end;color:#5fe0c6;font-size:20px;
+}
+.mm-reference-layout #modal .mm-reference-more-extra:not([open])>summary::after{
+  transform:rotate(-90deg);
+}
+.mm-reference-layout #modal .mm-reference-more-card{
+  background:linear-gradient(110deg,#0a293d,#071d30)!important;
+  border-color:#2c5872!important;
+}
+.mm-reference-layout #modal .mm-reference-more-card>summary:is(:hover,:focus-visible){
+  background:#10364a!important;
+}
+@media(min-width:701px) and (max-width:1100px){
+  .mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+@media(max-width:700px){
+  .mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  .mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice{
+    grid-template-columns:64px minmax(0,1fr)!important;
+    grid-template-rows:auto auto!important;
+    justify-items:stretch!important;min-height:104px!important;text-align:left!important;
+  }
+  .mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice>.mm-reference-practice-art{
+    grid-column:1!important;grid-row:1/span 2!important;width:64px!important;height:64px!important;
+  }
+  .mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice>b{
+    grid-column:2!important;grid-row:1!important;text-align:left!important;
+  }
+  .mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice>small{
+    grid-column:2!important;grid-row:2!important;text-align:left!important;
+  }
+}
+@media(max-width:360px){
+  .mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice{
+    grid-template-columns:56px minmax(0,1fr)!important;
+  }
+  .mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice>.mm-reference-practice-art{
+    width:56px!important;height:56px!important;
+  }
+  .mm-reference-layout #modal .mm-reference-more-card>summary{
+    grid-template-columns:50px minmax(0,1fr) 18px!important;gap:9px!important;
+  }
+  .mm-reference-layout #modal .mm-reference-more-card>summary>.mm-reference-more-art{
+    width:50px!important;height:50px!important;
+  }
+}
+@media(forced-colors:active){
+  .mm-reference-layout #scenarios .mm-question-centre .mm-reference-practice-choice,
+  .mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario,
+  .mm-reference-layout #modal .mm-reference-more-card{
+    border-color:CanvasText!important;forced-color-adjust:auto;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .mm-reference-layout #modal .mm-reference-more-extra>summary::after{
+    transition:none!important;
+  }
+}
