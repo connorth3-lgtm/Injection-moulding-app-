@@ -276,6 +276,34 @@ for(const width of [360,810]){
   });
 }
 
+test('Diagnostic workbench keeps keyboard arrival across symptom, evidence, revision and reset',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.evaluate(()=>switchView('defects'));
+  const workbench=page.locator('#defects .mm-dx-workbench');
+  await expect(workbench).toBeVisible();
+  const symptom=workbench.locator('[data-mm-dx-action="choose"]').first();
+  await symptom.focus();
+  await symptom.press('Enter');
+  const firstField=workbench.locator('.mm-dx-fields select').first();
+  await expect(firstField).toBeFocused();
+  await workbench.locator('textarea[name="observations"]').fill('Compare measured results with validated baseline.');
+  await workbench.locator('[data-mm-dx-action="analyse"]').focus();
+  await page.keyboard.press('Enter');
+  const analysisHeading=workbench.locator('.mm-dx-results .mm-dx-section-head h2');
+  await expect(analysisHeading).toBeFocused();
+  await expect(analysisHeading).toHaveCSS('outline-style','solid');
+  await workbench.locator('[data-mm-dx-action="back"]').focus();
+  await page.keyboard.press('Enter');
+  await expect(workbench.locator('.mm-dx-fields select').first()).toBeFocused();
+  await expect(workbench.locator('textarea[name="observations"]')).toHaveValue('Compare measured results with validated baseline.');
+  await workbench.locator('[data-mm-dx-action="analyse"]').click();
+  await workbench.locator('[data-mm-dx-action="reset"]').focus();
+  await page.keyboard.press('Enter');
+  await expect(workbench.locator('#mmDxSearch')).toBeFocused();
+  await expect(workbench.locator('.mm-dx-empty')).toBeVisible();
+});
+
 test('Practice nested labs, data diagnosis and assessments keep working illustrated landing headers',async({page})=>{
   test.setTimeout(90000);
   await page.setViewportSize({width:390,height:844});
