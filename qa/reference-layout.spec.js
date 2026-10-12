@@ -367,16 +367,20 @@ for(const width of [360,810]){
     await expect(simulator.locator('.output-panel > .mm-reference-deep-art')).toBeVisible();
     // The Virtual Apprenticeship and other embedded training widgets own
     // additional controls. Scope the count to the governed core simulator.
-    const coreControls=simulator.locator(':scope > .grid2 > .form-card > .form-grid');
-    await expect(coreControls.locator(':scope > label')).toHaveCount(10);
+    const advanced=simulator.locator(':scope > .grid2 > .form-card > .mm-engineer-sim-groups');
+    await expect(advanced.locator(':scope > summary')).toBeVisible();
+    await advanced.locator(':scope > summary').click();
+    const modelSliders=advanced.locator('.form-grid > label > .range-row > input[type="range"]');
+    await expect(modelSliders).toHaveCount(10);
+    await expect(simulator.locator('#mmSimMetricInputs')).toBeVisible();
     await expect(simulator.locator('#simAdvice')).toContainText('baseline');
-    const fillSlider=coreControls.locator('input[type="range"]').first();
+    const fillSlider=modelSliders.first();
     await expect(fillSlider).toHaveValue('50');
     await fillSlider.focus();
     await fillSlider.press('ArrowRight');
     await expect(fillSlider).toHaveValue('51');
     await simulator.getByRole('button',{name:'Reset to baseline',exact:true}).click();
-    await expect(simulator.locator(':scope > .grid2 > .form-card > .form-grid input[type="range"]').first()).toHaveValue('50');
+    await expect(simulator.locator('.mm-engineer-sim-groups input[type="range"]').first()).toHaveValue('50');
     await expect(simulator.locator('.form-card > .mm-reference-deep-art')).toHaveCount(1);
 
     await page.evaluate(()=>switchView('visuals'));
