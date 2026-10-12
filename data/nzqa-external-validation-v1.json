@@ -5,7 +5,7 @@
   "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.11.11.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
-  "issueNumber": null,
+  "issueNumber": 619,
   "candidate": {
     "release": "2026.10.11.11",
     "sourceSha": "b094479577ce0b52ed8da92baa94ca1239994254",
