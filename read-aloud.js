@@ -169,8 +169,10 @@
   }
 
   function stop(reason){
-    if(supported)synth.cancel();
+    // Invalidate active callbacks before cancel: some device voices dispatch
+    // a synchronous cancellation error from synth.cancel().
     speakToken+=1;
+    if(supported)synth.cancel();
     starting=false;speaking=false;paused=false;
     clearHighlight();
     if(ui)ui.current.hidden=true;
@@ -228,11 +230,16 @@
       utterance.onerror=event=>{
         clearTimeout(startTimer);
         if(token!==speakToken)return;
-        if(event?.error==='canceled'||event?.error==='interrupted')return;
+        // When this is the CURRENT utterance, interruption is a real
+        // device failure, not a cancellation from our own Stop button.
+        // Leave the player restartable instead of stuck displaying Pause.
+        const interrupted=event?.error==='canceled'||event?.error==='interrupted';
         starting=false;
-        stop(androidSpeech&&event?.error==='not-allowed'
-          ?'Android blocked voice playback. Tap Listen to start audio.'
-          :`Speech playback could not continue${event?.error?`: ${event.error}`:''}.`);
+        stop(interrupted
+          ? (playlistMode?'Device interrupted playback. Press Play to restart.':'Device interrupted playback. Press Listen to restart.')
+          : androidSpeech&&event?.error==='not-allowed'
+          ? 'Android blocked voice playback. Tap Listen to start audio.'
+          : `Speech playback could not continue${event?.error?`: ${event.error}`:''}.`);
       };
       try{synth.speak(utterance)}catch(err){
         clearTimeout(startTimer);starting=false;
