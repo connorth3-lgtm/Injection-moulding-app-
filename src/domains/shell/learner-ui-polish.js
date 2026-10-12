@@ -885,7 +885,7 @@ function boot(){
   refresh();
   window.MM_APP_SHELL?.events?.onViewChange?.(refresh);
   for(const name of ['dashboard','path','materials','scenarios'])window.MM_APP_SHELL?.events?.onRender?.(name,refresh);
-  const targets=['dashboard','path','materials','scenarios','modal'];
+  const targets=['dashboard','path','materials','scenarios','simulator','modal'];
   for(const id of targets){
     const node=document.getElementById(id);if(!node)continue;
     new window.MutationObserver(refresh).observe(node,{childList:true,subtree:id==='modal'});
