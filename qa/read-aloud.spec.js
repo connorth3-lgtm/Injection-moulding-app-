@@ -408,6 +408,31 @@ test('Throwing device cancellation and voice discovery cannot strand Read Aloud 
   await expect(play).toHaveText('Pause');
 });
 
+test('Completing a single-screen reading never claims the whole lesson library finished',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>One finished reading sentence.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:
+      'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
+    class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const synth={
+      current:null,getVoices(){return[];},
+      speak(utterance){this.current=utterance;queueMicrotask(()=>utterance.onstart?.());},
+      cancel(){this.current=null;},pause(){},resume(){},addEventListener(){},removeEventListener(){}
+    };
+    window.__mmEndSpeech=synth;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const reader=page.locator('.mm-read-aloud');
+  await reader.locator('details').evaluate(el=>{el.open=true});
+  await reader.locator('[data-mm-read="play"]').click();
+  await expect(reader.locator('[data-mm-read="play"]')).toHaveText('Pause');
+  await page.evaluate(()=>window.__mmEndSpeech.current?.onend?.());
+  await expect(reader.locator('.mm-read-status')).toHaveText('Finished reading');
+  await expect(reader.locator('[data-mm-read="play"]')).toHaveText('Listen');
+});
+
 test('Speech interruption exits stale playing state and Stop ignores synchronous cancel errors',async({page})=>{
   await page.setContent('<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><div class="top-actions"></div><main class="main"><p>Read aloud interruption recovery sentence.</p></main></body></html>');
   await page.evaluate(()=>{
