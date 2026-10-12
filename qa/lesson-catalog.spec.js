@@ -282,6 +282,7 @@ test('global search leads to Learn without displaying another list of lesson mat
   await expect(page.locator('#path .mm-all-lessons')).toBeVisible();
   await expect(page.locator('#path [data-mm-catalog-query]')).toHaveValue('polymer');
   await expect(page.locator('#path .mm-catalog-head h2')).toBeFocused();
+  await expect(page.locator('#path .mm-catalog-head h2')).toHaveCSS('outline-style','solid');
 });
 test('global search keeps one Learn link after results rerender and uses the newest query',async({page})=>{
   await ready(page);

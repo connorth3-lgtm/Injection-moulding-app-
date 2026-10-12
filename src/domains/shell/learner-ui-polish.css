@@ -3312,3 +3312,17 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
     padding:clamp(12px,3vw,19px)!important;
   }
 }
+
+/* Keyboard/screen-reader route arrival: the canonical Learn heading is
+   focused after deep navigation, so give that programmatic focus a visible
+   high-contrast marker on the dark catalogue header. */
+.mm-reference-layout #path .mm-all-lessons .mm-catalog-head h2:focus{
+  outline:3px solid #79f5e0!important;
+  outline-offset:4px!important;
+  border-radius:4px!important;
+}
+@media(forced-colors:active){
+  .mm-reference-layout #path .mm-all-lessons .mm-catalog-head h2:focus{
+    outline-color:Highlight!important;
+  }
+}
