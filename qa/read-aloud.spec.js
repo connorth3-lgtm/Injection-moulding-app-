@@ -226,6 +226,36 @@ test('iOS empty voice list starts speech within the original tap task',async({pa
   await expect(player.locator('.mm-read-status')).toHaveText('Reading');
 });
 
+test('Automatic sentence chaining stops when the lesson rewrites its visible text',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p id="lessonText">First continuing sentence. Outdated follow-up sentence.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:
+      'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
+    class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const synth={current:null,spoken:[],
+      getVoices(){return[];},
+      speak(u){this.current=u;this.spoken.push(u.text);queueMicrotask(()=>u.onstart?.());},
+      cancel(){},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    window.__mmChainSpeech=synth;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const reader=page.locator('.mm-read-aloud');
+  await reader.locator('details').evaluate(el=>{el.open=true});
+  const play=reader.locator('[data-mm-read="play"]');
+  await play.click();
+  await expect(play).toHaveText('Pause');
+  await page.locator('#lessonText').evaluate(el=>{el.textContent='First continuing sentence. Updated follow-up sentence.';});
+  await page.evaluate(()=>window.__mmChainSpeech.current?.onend?.());
+  await expect(reader.locator('.mm-read-status')).toHaveText('Stopped after screen changed');
+  await expect(play).toHaveText('Listen');
+  expect(await page.evaluate(()=>window.__mmChainSpeech.spoken)).toEqual(['First continuing sentence.']);
+  await play.click();
+  await expect(play).toHaveText('Pause');
+  expect(await page.evaluate(()=>window.__mmChainSpeech.spoken)).toEqual(['First continuing sentence.','First continuing sentence.']);
+});
+
 test('Hidden child text never remains a playable sentence under a visible parent',async({page})=>{
   await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Visible intro sentence. <span id="oldText">Old section sentence.</span><span id="newText" hidden>New visible section sentence.</span></p></main></body></html>');
   await page.evaluate(()=>{
