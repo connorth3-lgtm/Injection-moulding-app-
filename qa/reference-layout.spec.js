@@ -221,6 +221,20 @@ for(const width of [360,810]){
     const questionOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
     expect(questionOverflow).toBeLessThanOrEqual(2);
 
+    // The rotating shop-floor scenarios must retain their native answer
+    // buttons and feedback while sharing the illustrated inner-screen layout.
+    await questions.locator('[data-mm-hub-action="scenario-detail"]').click();
+    await expect(page.locator('#scenarios')).toHaveAttribute('data-mm-hub-mode','detail');
+    await expect(page.locator('#scenarios .mm-reference-practice-scenario-head > .mm-reference-practice-scenario-art')).toHaveCount(1);
+    const firstScenario=page.locator('#scenarios .scenario').first();
+    await expect(firstScenario).toBeVisible();
+    const firstChoice=firstScenario.locator('button.choice').first();
+    expect((await firstChoice.boundingBox()).height).toBeGreaterThanOrEqual(44);
+    await firstChoice.click();
+    await expect(firstScenario.locator('.feedback')).toBeVisible();
+    const scenarioOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
+    expect(scenarioOverflow).toBeLessThanOrEqual(2);
+
     await page.locator('#scenarios .mm-hub-detail-back button').click();
     await expect(page.locator('#scenarios .mm-practice-hub')).toBeVisible();
     await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="troubleshooting"]').click();
