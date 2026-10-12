@@ -1800,4 +1800,4 @@ html.mm-reference-photo-ready .mm-reference-photo>.mm-reference-picture{
    CSS :has() is supported by the Chrome/WebKit browser QA targets. */
 body .top-actions > .mm-read-aloud{display:none!important}
 body:has(#mmBookView:not(.hidden)) .top-actions > .mm-read-aloud{display:block!important}
-body:has(#mmBookView) #nav > [data-mm-listening-tab]{display:none!important}
+body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
