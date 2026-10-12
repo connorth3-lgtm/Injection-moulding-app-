@@ -1813,3 +1813,112 @@ body:has(#mmBookView:not(.hidden)) #app .top-actions > .mm-read-aloud details:no
   height:44px!important;min-height:44px!important;
 }
 body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
+
+/* Completion pass for the remaining mobile Learn / Materials cards.
+   Screenshots showed core courses 10–12 and Material Science 1–9 falling
+   back to oversized text-only cards below the illustrated first nine. */
+.mm-reference-layout #path .mm-catalog-group > summary.mm-unified-course-summary{
+  grid-template-columns:64px minmax(0,1fr)!important;
+  grid-template-rows:auto auto auto!important;
+  min-height:86px!important;
+  padding:10px 12px!important;
+  gap:3px 12px!important;
+  align-items:center!important;
+  border-radius:13px!important;
+}
+.mm-reference-layout #path .mm-unified-course-summary > .mm-reference-course-art{
+  grid-column:1!important;
+  grid-row:1 / span 3!important;
+  width:64px!important;height:64px!important;
+  border-radius:10px!important;
+}
+.mm-reference-layout #path .mm-catalog-material-track > summary,
+.mm-reference-layout #path .mm-catalog-specialist-track > summary{
+  border-color:rgba(81,153,187,.34)!important;
+}
+.mm-reference-layout #path .mm-unified-course-summary > .mm-catalog-group-name{
+  font-size:clamp(13px,3.8vw,16px)!important;
+  line-height:1.27!important;
+  overflow-wrap:anywhere!important;
+}
+.mm-reference-layout #path .mm-catalog-group > summary{
+  scroll-margin-bottom:140px;
+}
+.mm-reference-layout #materials .mm-material-study-tools{
+  display:grid;
+  gap:12px;
+  margin:14px 0 16px;
+  padding:14px;
+  border:1px solid rgba(83,157,182,.32);
+  border-radius:17px;
+  background:linear-gradient(160deg,#10253b,#071b2e);
+}
+.mm-reference-layout #materials .mm-material-study-tools #mmMaterialLearningAnchor{
+  margin:0!important;
+  padding:0 2px!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  background:transparent!important;
+}
+.mm-reference-layout #materials .mm-material-study-tools #mmMaterialLearningAnchor h2,
+.mm-reference-layout #materials .mm-material-study-tools #mmMaterialLearningAnchor h3{
+  margin:4px 0!important;
+  font-size:clamp(18px,5vw,22px)!important;
+  line-height:1.3!important;
+}
+.mm-reference-layout #materials .mm-material-study-tools #mmMaterialLearningAnchor p{
+  font-size:12px!important;line-height:1.5!important;
+}
+.mm-reference-layout #materials .mm-material-study-tools > .mat-tabs{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  width:100%!important;
+  gap:8px!important;
+  margin:0!important;
+  padding:0!important;
+}
+.mm-reference-layout #materials .mm-material-study-tools > .mat-tabs > button{
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:48px!important;
+  margin:0!important;
+  padding:8px 10px!important;
+  border:1px solid #355473!important;
+  border-radius:11px!important;
+  background:#10263e!important;
+  color:#d6e7f5!important;
+  font-size:clamp(12px,3.8vw,15px)!important;
+  font-weight:650!important;
+  line-height:1.3!important;
+  text-align:left!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere;
+}
+.mm-reference-layout #materials .mm-material-study-tools > .mat-tabs > button.active{
+  color:#ebfffb!important;
+  background:#123d43!important;
+  border-color:#50d8c3!important;
+}
+.mm-reference-layout #materials .mm-material-study-tools > .mat-tabs > button:last-child{
+  grid-column:1 / -1;
+}
+.mm-reference-layout #materials .mm-material-study-tools > .mm-family-science{
+  margin:2px 0 0!important;
+  background:#081d2e!important;
+}
+.mm-reference-layout #materials .mm-material-study-tools > .mm-family-science > summary{
+  font-size:clamp(13px,3.8vw,15px)!important;
+  min-height:48px!important;
+}
+@media(max-width:700px){
+  .mm-reference-layout #materials .mm-material-study-tools{
+    margin:12px 0 24px!important;
+    padding:12px!important;
+  }
+  .mm-reference-layout #path,
+  .mm-reference-layout #materials{
+    scroll-padding-bottom:calc(120px + env(safe-area-inset-bottom))!important;
+  }
+}
