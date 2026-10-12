@@ -226,6 +226,34 @@ test('iOS empty voice list starts speech within the original tap task',async({pa
   await expect(player.locator('.mm-read-status')).toHaveText('Reading');
 });
 
+test('Hidden child text never remains a playable sentence under a visible parent',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Visible intro sentence. <span id="oldText">Old section sentence.</span><span id="newText" hidden>New visible section sentence.</span></p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:
+      'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
+    class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const synth={getVoices(){return[];},speak(u){window.__mmHiddenSpoken=u.text;window.__mmHiddenCount=(window.__mmHiddenCount||0)+1;queueMicrotask(()=>u.onstart?.());},
+      cancel(){},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const reader=page.locator('.mm-read-aloud');
+  await reader.locator('details').evaluate(el=>{el.open=true});
+  await reader.locator('[data-mm-read="play"]').click();
+  await expect(reader.locator('[data-mm-read="play"]')).toHaveText('Pause');
+  await reader.locator('[data-mm-read="stop"]').click();
+  await page.evaluate(()=>{
+    document.getElementById('oldText').hidden=true;
+    document.getElementById('newText').hidden=false;
+  });
+  await reader.locator('[data-mm-read="next"]').click();
+  await expect(reader.locator('[data-mm-read="current"]')).toHaveText('New visible section sentence.');
+  expect(await page.evaluate(()=>window.__mmHiddenCount)).toBe(1);
+  await reader.locator('[data-mm-read="play"]').click();
+  await expect.poll(()=>page.evaluate(()=>window.__mmHiddenSpoken)).toBe('New visible section sentence.');
+});
+
 test('In-place lesson text updates refresh the next sentence without replaying old text',async({page})=>{
   await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p id="lessonText">Unchanged heading sentence. Old second sentence.</p></main></body></html>');
   await page.evaluate(()=>{
