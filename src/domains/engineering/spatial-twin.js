@@ -256,7 +256,7 @@ function renderHost(){
   const c=currentCase();
   host.innerHTML=`<div class="mm-st-shell" data-mode="${esc(state.mode)}" data-phase="${esc(phaseKey())}">
     <header class="mm-st-header">
-      <div><span class="eyebrow">MouldMaster Spatial Twin</span><h2>Explore the moulding system, not the menu</h2><p>Move through the cell, change evidence views and scrub the case timeline. This is an authored training visualisation, not a validated physics twin.</p></div>
+      <div><span class="eyebrow">MouldMaster Spatial Twin</span><h2 tabindex="-1">Explore the moulding system, not the menu</h2><p>Move through the cell, change evidence views and scrub the case timeline. This is an authored training visualisation, not a validated physics twin.</p></div>
       <button type="button" class="ghost" data-mm-st-close>Return to simulator</button>
     </header>
     ${contextMarkup()}
@@ -393,7 +393,11 @@ function open(options={}){
   const host=byId('mmSpatialTwin');host.hidden=false;state.open=true;
   document.body?.setAttribute('data-mm-spatial-twin','1');
   renderHost();saveState();syncMissionContext();
-  requestAnimationFrame(()=>{try{host.scrollIntoView({block:'start',behavior:'auto'})}catch(_){}})
+  requestAnimationFrame(()=>{
+    if(!host.isConnected||host.hidden||!host.getClientRects().length)return;
+    try{host.scrollIntoView({block:'start',behavior:'auto'})}catch(_){}
+    host.querySelector('.mm-st-header h2')?.focus({preventScroll:true});
+  })
   return true;
 }
 function close(){
