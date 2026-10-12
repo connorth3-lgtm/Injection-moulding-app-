@@ -281,6 +281,18 @@
     }
   }
 
+  function refreshStaleReading(){
+    if(playlistMode||!units.length)return;
+    const source=currentUnit()?.source;
+    if(activeRoot&&visible(activeRoot)&&source?.isConnected&&visible(source))return;
+    // Stopping does not erase sentence navigation. A view can be hidden or
+    // replaced while stopped, leaving an otherwise playable obsolete queue.
+    stop('Stopped after screen changed');
+    index=0;
+    buildUnits();
+    updateButtons();
+  }
+
   function start(){index=0;buildUnits();if(!units.length){setStatus('No readable text is visible on this screen.');updateButtons();return;}speakCurrent();}
 
   function startPlaylist(startLessonId){
@@ -292,6 +304,7 @@
 
   function toggle(){
     if(!supported){setStatus('Read Aloud is not available in this browser/device.');return;}
+    refreshStaleReading();
     if(starting){stop('Stopped');return;}
     if(paused){
       try{synth.resume()}catch(_){stop('Device voice could not resume. Start playback again.');return;}
@@ -346,6 +359,7 @@
   }
 
   function move(delta){
+    refreshStaleReading();
     if(!units.length)(playlistMode?buildPlaylist():buildUnits());
     if(!units.length)return;
     selectUnit(Math.max(0,Math.min(units.length-1,index+delta)));
