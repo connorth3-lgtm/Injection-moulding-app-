@@ -290,6 +290,25 @@ async function prepareSurface(page,surface){
   await normalizeCaptureState(page,surface);
 }
 
+async function settleScreenshotPointer(page,surface){
+  // Playwright's real mouse remains at the last clicked Book chapter row.
+  // Baseline and candidate contexts can then highlight different rows even
+  // when their content and layout are identical (28,760-pixel false drift on
+  // the 412x915 Book contents capture after the protected-main squash merge).
+  // Move BOTH pointers to the same inert viewport corner. Do not suppress
+  // :hover styles, crop screenshots, change the approved baseline or relax
+  // the 12-pixel tolerance.
+  await page.mouse.move(1,1);
+  await page.evaluate(()=>new Promise(resolve=>
+    requestAnimationFrame(()=>requestAnimationFrame(resolve))
+  ));
+  if(surface==='book-contents'){
+    // Verify the actual source of the prior mismatch has been neutralized.
+    // Keep real Book item hover styling enabled for interactive users.
+    await expect(page.locator('[data-mm-book-contents] [data-mm-book-chapter]:hover')).toHaveCount(0);
+  }
+}
+
 async function capture(page,file,surface){
   if(surface==='assessment'){
     return page.locator('#modal .modal-card').screenshot({path:file,animations:'disabled',caret:'hide'});
@@ -336,6 +355,8 @@ for(const viewport of manifest.viewports){
         const candidatePath=path.join(ARTIFACT_ROOT,`${stem}.png`);
         const baselinePath=path.join(ARTIFACT_ROOT,`${stem}-baseline.png`);
         const diffPath=path.join(ARTIFACT_ROOT,`${stem}-diff.png`);
+        await settleScreenshotPointer(candidate,surface);
+        await settleScreenshotPointer(baseline,surface);
         const candidateBuffer=await capture(candidate,candidatePath,surface);
         const baselineBuffer=await capture(baseline,baselinePath,surface);
         const diffPixels=await compare(baselineBuffer,candidateBuffer,diffPath);
