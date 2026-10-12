@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Release 2026.10.13.1 has no successfully verified retained source artifact. No physical-device iOS/iPadOS or Android install, offline, reboot, update, storage, zoom or audio validation has occurred. Production, signed distribution and machine-control authority remain HOLD.",
+  "boundary": "Release 2026.10.13.1 has no successfully verified retained exact-source candidate. A successful technical build would not demonstrate testing on physical iOS/iPadOS and Android devices. Real device install, offline restart/reboot, update, storage-pressure, safe area and text zoom remain pending. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, Windows signing, provider/accreditation and machine-control authority remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
