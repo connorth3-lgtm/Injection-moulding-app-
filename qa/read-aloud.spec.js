@@ -89,6 +89,13 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
     await host.locator('[data-mm-read="play"]').click();
     await expect(status).toHaveText('Read Aloud is not available in this browser/device.');
   }
+  // The deployed stylesheet, not an unapproved inline style, provides the
+  // actual high-contrast focus marker for Listening route arrival.
+  await page.evaluate(()=>window.MMReadAloud.openListening());
+  const heading=page.locator('#mmListeningView .mm-listening-hero h2');
+  await expect(heading).toBeVisible();
+  await expect(heading).toBeFocused();
+  await expect(heading).toHaveCSS('outline-style','solid');
 });
 
 test('Read Aloud supported-path controls execute the exact product runtime in a deterministic speech harness', async ({ page }) => {
@@ -207,7 +214,6 @@ test('Listening tab builds a continuous lesson playlist and exposes long-session
   await expect(view).toBeVisible();
   await expect(view).toContainText('Listen through MouldMaster lessons continuously');
   await expect(view.locator('.mm-listening-hero h2')).toBeFocused();
-  await expect(view.locator('.mm-listening-hero h2')).toHaveCSS('outline-style','solid');
   await view.locator('[data-mm-listening="play"]').click();
   await expect.poll(()=>page.evaluate(()=>window.__mmListeningSpoken||'')).toContain('Moulding basics');
   await expect(view.locator('[data-mm-listening-lesson]')).toContainText('Lesson 1');
