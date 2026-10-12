@@ -625,6 +625,18 @@ function practiceScenarioDetail(){
   head.classList.add('mm-reference-practice-scenario-head');
   head.prepend(art);
 }
+const observedPracticeToolRoots=new WeakSet();
+function observePracticeToolRoots(){
+  // Lab, process-data and assessment renderers replace their root children
+  // while learners move between questions. Reapply artwork without tracking
+  // every option/control mutation or risking a refresh loop.
+  for(const id of ['diagnosticLabs','materialLabs','processDataLabs','exams']){
+    const node=document.getElementById(id);
+    if(!node||observedPracticeToolRoots.has(node))continue;
+    observedPracticeToolRoots.add(node);
+    new window.MutationObserver(refresh).observe(node,{childList:true});
+  }
+}
 function practiceToolHeaders(){
   // Tool-owned renderers keep their evidence, answer, scoring and next-step
   // controls. Add only a decorative local photo to each real landing header.
@@ -645,6 +657,7 @@ function practiceToolHeaders(){
 }
 function practiceInside(){
   practiceScenarioDetail();
+  observePracticeToolRoots();
   practiceToolHeaders();
   // The Question Centre is rendered into the same Practice route but replaces
   // .mm-practice-hub. Decorate its five real options as they become available.
