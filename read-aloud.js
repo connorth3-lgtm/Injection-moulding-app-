@@ -180,10 +180,11 @@
     updateButtons();
   }
 
-  // Android Chrome can expose speechSynthesis while getVoices() stays empty.
-  // Delaying speak() until voiceschanged/timeout loses the tap activation needed
-  // by mobile TTS. Preserve Windows' delayed-voice path separately.
+  // Mobile browser speech may require the original user gesture even when
+  // getVoices() is empty. Keep desktop's delayed-voice path separate.
   const androidSpeech=/Android/i.test(navigator.userAgent||'');
+  const iosSpeech=/iPhone|iPad|iPod/i.test(navigator.userAgent||'')
+    ||(/Macintosh/i.test(navigator.userAgent||'')&&Number(navigator.maxTouchPoints||0)>1);
   function speakCurrent(retry=0){
     if(!supported){setStatus('Read Aloud is not available in this browser/device.');updateButtons();return;}
     if(!units.length)(playlistMode?buildPlaylist():buildUnits());
@@ -191,7 +192,7 @@
     if(!unit){setStatus(playlistMode?'No lesson audio is available.':'No readable text is visible on this screen.');updateButtons();return;}
     const token=++speakToken;
     starting=true;speaking=false;paused=false;
-    setStatus(refreshVoice()?'Starting device voice…':androidSpeech?'Starting default device voice…':'Loading device voice…');
+    setStatus(refreshVoice()?'Starting device voice…':(androidSpeech||iosSpeech)?'Starting default device voice…':'Loading device voice…');
     updateButtons();
     const beginSpeech=()=>{
       if(token!==speakToken)return;
@@ -205,17 +206,23 @@
       let started=false;
       const startTimer=setTimeout(()=>{
         if(token!==speakToken||started)return;
+        // A platform may deliver a late onstart after timeout. Invalidate it
+        // before canceling or retrying, including when cancel emits no error.
+        speakToken+=1;
         synth.cancel();starting=false;speaking=false;paused=false;
         if(androidSpeech){
           // Timer callbacks cannot recover a blocked mobile user gesture.
           setStatus('Device voice did not start. Tap Listen again; check Android text-to-speech settings if it stays silent.');
+          updateButtons();
+        }else if(iosSpeech){
+          setStatus('Device voice did not start. Tap Listen again; check iOS speech settings if it stays silent.');
           updateButtons();
         }else if(retry<1){
           selectedVoice=null;setStatus('Retrying device voice…');updateButtons();speakCurrent(1);
         }else{
           setStatus('Device voice did not start. Check Windows speech voices, then try again.');updateButtons();
         }
-      },androidSpeech?6000:2500);
+      },(androidSpeech||iosSpeech)?6000:2500);
       utterance.onstart=()=>{
         if(token!==speakToken)return;
         clearTimeout(startTimer);started=true;starting=false;speaking=true;paused=false;
@@ -249,6 +256,9 @@
     };
     if(androidSpeech){
       // No Promise, timeout or delayed voiceschanged listener before speak().
+      beginSpeech();
+    }else if(iosSpeech){
+      // iOS Safari can also require transient activation from this tap.
       beginSpeech();
     }else{
       waitForVoice(retry?700:1200).then(beginSpeech,()=>{
