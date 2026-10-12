@@ -79,7 +79,7 @@
     let node;
     while((node=walker.nextNode())){
       const source=sourceFor(node,root);
-      for(const sentence of sentenceParts(node.nodeValue))if(sentence.length>=2)out.push({text:sentence,source});
+      for(const sentence of sentenceParts(node.nodeValue))if(sentence.length>=2)out.push({text:sentence,source,node});
     }
     activeRoot=root;
     units=out.slice(0,1200);
@@ -295,11 +295,11 @@
   function refreshStaleReading(nextIndex=index){
     if(playlistMode||!units.length)return false;
     const stillCurrent=unit=>{
-      const source=unit?.source;
-      // Pages may replace text *inside the same element*, so connected and
-      // visible alone are insufficient to prove an old sentence is current.
-      return !!(source?.isConnected&&visible(source)&&
-        String(source.textContent||'').replace(/\s+/g,' ').includes(unit.text));
+      const source=unit?.source,node=unit?.node;
+      // The preferred source element can remain visible even when its child
+      // text is hidden or replaced. Revalidate the actual visible text node.
+      return !!(source?.isConnected&&visible(source)&&node?.isConnected&&
+        visible(node.parentElement)&&String(node.nodeValue||'').replace(/\s+/g,' ').includes(unit.text));
     };
     if(activeRoot&&visible(activeRoot)&&stillCurrent(currentUnit())&&
        (nextIndex===index||stillCurrent(units[nextIndex])))return false;
