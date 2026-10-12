@@ -61,6 +61,8 @@ for marker in (
 # A timeout cannot safely replay a lost mobile user activation.
 for marker in (
     "const androidSpeech=/Android/i.test(navigator.userAgent||'');",
+    "const iosSpeech=/iPhone|iPad|iPod/i.test(navigator.userAgent||'')",
+    "else if(iosSpeech){",
     "if(androidSpeech){",
     "beginSpeech();",
     "waitForVoice(retry?700:1200).then(beginSpeech",
