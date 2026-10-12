@@ -436,7 +436,7 @@ function createLessonCatalog(){
     const extra=specialists();
     const extraGroup=extra.length?`<details class="mm-catalog-group" data-mm-catalog-group><summary><span class="mm-catalog-group-name">Optional specialist lessons</span><span class="mm-catalog-group-meta">${extra.length} extras · separate progress</span></summary><div class="mm-catalog-rows">${extra.map(l=>`<button type="button" class="mm-catalog-lesson" data-mm-specialist-id="${esc(l.id)}" data-mm-catalog-item data-mm-catalog-type="specialist" data-mm-catalog-done="${specialistDone(l.id)?'1':'0'}" data-mm-catalog-text="${esc([l.id,l.title,l.level].join(' ').toLowerCase())}"><span class="mm-catalog-num">${esc(l.id)}</span><span class="mm-catalog-title">${esc(l.title)}</span><span class="mm-catalog-state">${specialistDone(l.id)?'✓ Done':'Open'}</span></button>`).join('')}</div></details>`:'';
     return `<section class="mm-all-lessons" data-mm-lesson-catalog aria-label="All lessons">
-      <div class="mm-catalog-head"><h2>All lessons</h2><p>${core().length} core · ${materialLessons().length} material science · ${extra.length} optional specialist lessons. All in one library, with separate progress.</p></div>
+      <div class="mm-catalog-head"><h2 tabindex="-1">All lessons</h2><p>${core().length} core · ${materialLessons().length} material science · ${extra.length} optional specialist lessons. All in one library, with separate progress.</p></div>
       <div class="mm-catalog-controls"><label><span>Find a lesson</span><input type="search" autocomplete="off" placeholder="Search topics or lessons" data-mm-catalog-query value="${esc(state.query)}"></label><label><span>Show</span><select data-mm-catalog-filter><option value="all"${state.filter==='all'?' selected':''}>All lessons</option><option value="todo"${state.filter==='todo'?' selected':''}>Not finished</option><option value="done"${state.filter==='done'?' selected':''}>Completed</option><option value="saved"${state.filter==='saved'?' selected':''}>Saved</option><option value="material"${state.filter==='material'?' selected':''}>Material science</option><option value="specialist"${state.filter==='specialist'?' selected':''}>Specialist</option></select></label></div>
       <p class="mm-catalog-results" aria-live="polite" data-mm-catalog-count></p>
       <div class="mm-catalog-groups">${groups}${materialGroups}${extraGroup}</div>
@@ -540,7 +540,12 @@ function createLessonCatalog(){
     else switchView('path');
     requestAnimationFrame(()=>{
       const library=document.querySelector('#path .mm-all-lessons');
-      library?.scrollIntoView?.({block:'start',behavior:'auto'});
+      // Move screen-reader/keyboard context to the new destination after
+      // programmatic navigation from Materials, global search, or lesson Back.
+      // preventScroll avoids undoing the intentional library position.
+      if(!library||!library.getClientRects().length)return;
+      library.scrollIntoView({block:'start',behavior:'auto'});
+      library.querySelector('.mm-catalog-head h2')?.focus({preventScroll:true});
     });
   }
   function mountLesson(){

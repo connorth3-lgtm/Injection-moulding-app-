@@ -95,6 +95,7 @@ test('the allowlisted Materials All lessons shortcut opens the single Learn cata
   await link.click();
   await expect(page.locator('#path')).toBeVisible();
   await expect(page.locator('#path .mm-all-lessons')).toBeVisible();
+  await expect(page.locator('#path .mm-catalog-head h2')).toBeFocused();
   await expect(page.locator('#materials')).toBeHidden();
   await expect(page.locator('#path [data-mm-lesson-catalog]')).toHaveCount(1);
 });
