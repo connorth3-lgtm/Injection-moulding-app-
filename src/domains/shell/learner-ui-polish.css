@@ -1800,4 +1800,16 @@ html.mm-reference-photo-ready .mm-reference-photo>.mm-reference-picture{
    CSS :has() is supported by the Chrome/WebKit browser QA targets. */
 body .top-actions > .mm-read-aloud{display:none!important}
 body:has(#mmBookView:not(.hidden)) .top-actions > .mm-read-aloud{display:block!important}
+/* The Book's single audio trigger remains a full touch target on mobile.
+   Legacy 40px compact-header constraints must not shrink it below 44px. */
+body:has(#mmBookView:not(.hidden)) #app .top-actions > .mm-read-aloud details:not([open]){
+  box-sizing:border-box!important;
+  width:44px!important;min-width:44px!important;
+  height:44px!important;min-height:44px!important;
+}
+body:has(#mmBookView:not(.hidden)) #app .top-actions > .mm-read-aloud details:not([open]) > summary{
+  box-sizing:border-box!important;
+  width:44px!important;min-width:44px!important;
+  height:44px!important;min-height:44px!important;
+}
 body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
