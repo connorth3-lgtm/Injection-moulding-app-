@@ -245,7 +245,7 @@
         clearTimeout(startTimer);
         if(token!==speakToken||!speaking)return;
         if(index<units.length-1){index+=1;speakCurrent();}
-        else stop('Finished all lessons');
+        else stop(playlistMode?'Finished all lessons':'Finished reading');
       };
       utterance.onerror=event=>{
         clearTimeout(startTimer);
