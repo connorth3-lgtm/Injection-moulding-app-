@@ -625,8 +625,27 @@ function practiceScenarioDetail(){
   head.classList.add('mm-reference-practice-scenario-head');
   head.prepend(art);
 }
+function practiceToolHeaders(){
+  // Tool-owned renderers keep their evidence, answer, scoring and next-step
+  // controls. Add only a decorative local photo to each real landing header.
+  for(const [selector,subject,tile] of [
+    ['#processDataLabs .pd-hero','process',23],
+    ['#diagnosticLabs .dl-hero','defects',20],
+    ['#materialLabs .ml-hero','materials',3],
+    ['#exams .section-head','training',24]
+  ]){
+    const head=document.querySelector(selector);
+    if(!head||head.querySelector(':scope > .mm-reference-practice-tool-art'))continue;
+    const art=picture(subject,'',tile);
+    art.classList.add('mm-reference-practice-tool-art');
+    art.setAttribute('aria-hidden','true');
+    head.classList.add('mm-reference-practice-tool-head');
+    head.prepend(art);
+  }
+}
 function practiceInside(){
   practiceScenarioDetail();
+  practiceToolHeaders();
   // The Question Centre is rendered into the same Practice route but replaces
   // .mm-practice-hub. Decorate its five real options as they become available.
   const questionGrid=document.querySelector('#scenarios .mm-question-centre .mm-hub-picker-grid');
