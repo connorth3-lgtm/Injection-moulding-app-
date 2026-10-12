@@ -1742,3 +1742,52 @@ html.mm-reference-photo-ready .mm-reference-photo>.mm-reference-picture{
     font-size:18px!important;
   }
 }
+/* Read Aloud mobile non-overlay expansion — release .10 deep repair.
+   The fixed bottom player visually covered Home's Today’s focus at 390x844.
+   Scroll-on-toggle proved racy across Chromium and WebKit, especially when
+   the speech panel was mounted late. Expanded controls must instead take up
+   real document height; the collapsed 44px header affordance stays unchanged.
+   Do not turn off the overlap assertion or mask a visual baseline diff. */
+@media (max-width:700px){
+  #app .topbar:has(.mm-read-aloud details[open]){
+    flex-wrap:wrap!important;
+    align-content:flex-start!important;
+    overflow:visible!important;
+  }
+  #app .top-actions:has(.mm-read-aloud details[open]){
+    flex:1 0 100%!important;
+    width:100%!important;
+    max-width:100%!important;
+    margin:0!important;
+    display:flex!important;
+    flex-wrap:wrap!important;
+    gap:8px!important;
+  }
+  #app .top-actions>.mm-read-aloud:has(details[open]){
+    flex:1 0 100%!important;
+    order:5!important;
+    width:100%!important;
+    max-width:100%!important;
+    position:relative!important;
+    z-index:auto!important;
+  }
+  #app .top-actions>.mm-read-aloud details[open]{
+    position:relative!important;
+    inset:auto!important;
+    top:auto!important;
+    right:auto!important;
+    bottom:auto!important;
+    left:auto!important;
+    display:block!important;
+    box-sizing:border-box!important;
+    width:100%!important;
+    max-width:100%!important;
+    max-height:none!important;
+    margin:0!important;
+  }
+  #app .top-actions>.mm-read-aloud details[open]>.mm-read-panel{
+    max-height:min(40svh,340px);
+    overflow-y:auto;
+    overscroll-behavior:contain;
+  }
+}
