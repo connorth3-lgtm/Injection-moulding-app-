@@ -194,6 +194,22 @@ test('Android empty voice list speaks within the original tap without waiting fo
   await host.locator('[data-mm-read="stop"]').click();
 });
 
+test('Unavailable speech provider disables both playback launchers without offering a broken action',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><div id="app"><nav id="nav"><button data-view="path">Path</button></nav><main id="mainContent" class="main"><section id="path" class="view"><p>Ordinary lesson content.</p></section><div class="top-actions"></div></main></div></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:null});
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:null});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const compact=page.locator('.mm-read-aloud');
+  await expect(compact.locator('[data-mm-read="play"]')).toBeDisabled();
+  await expect(compact.locator('summary')).toContainText('Unavailable');
+  await page.locator('[data-mm-listening-tab]').click();
+  const listening=page.locator('#mmListeningView');
+  await expect(listening.locator('[data-mm-listening="play"]')).toBeDisabled();
+  await expect(listening.locator('[data-mm-listening-status]')).toHaveText('Speech synthesis is unavailable');
+});
+
 test('Listening tab builds a continuous lesson playlist and exposes long-session controls', async ({ page }) => {
   await page.setContent(`<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><div id="app"><aside><nav id="nav"><button data-view="path">Path</button></nav></aside><main id="mainContent" class="main"><section id="path" class="view"><p>Path content</p></section><header><div class="top-actions"></div></header></main></div></body></html>`);
   await page.evaluate(() => {
