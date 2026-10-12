@@ -81,9 +81,9 @@ for(const width of [320,360,390,412]){
     const familyScience=page.locator('#materials #mmExactMaterialCatalog [data-mm-family-science]');
     await expect(familyScience).toHaveCount(1);
     await expect(familyScience).not.toHaveAttribute('open','');
-    await familyScience.locator('summary').click();
+    await familyScience.locator(':scope > summary').click();
     await expect(familyScience.locator('.mat-shell')).toBeVisible();
-    await familyScience.locator('summary').click();
+    await familyScience.locator(':scope > summary').click();
     const pp=page.locator('#materials [data-mm-family-open="PP"]');
     await expect(pp).toBeVisible();
     await expect(pp).toContainText('95 published grades');
@@ -109,7 +109,7 @@ for(const width of [320,360,390,412]){
     // explicit arrow. Mobile screenshots exposed both rendering simultaneously.
     expect(await summary.evaluate(el=>getComputedStyle(el,'::after').content)).toBe('none');
     await expect(first.locator('.mm-material-index-expand')).toBeVisible();
-    await first.locator('summary').click();
+    await summary.click();
     await expect(first.locator('.mm-material-index-expand')).toBeVisible();
     await expect(first.locator('.mm-reference-diagrams .mm-reference-photo')).toHaveCount(3);
     const gradeTiles=await first.locator('.mm-reference-diagrams .mm-reference-photo').evaluateAll(nodes=>nodes.map(el=>Number(el.dataset.mmPhotoIndex)));
@@ -135,7 +135,7 @@ for(const width of [320,360,390,412]){
     // The learning shell has already moved under the guide. A subsequent
     // refresh must still locate it and reveal an opened teaching mode, without
     // recreating its buttons or trapping the lesson behind a closed disclosure.
-    await familyScience.locator('summary').click();
+    await familyScience.locator(':scope > summary').click();
     await expect(familyScience).not.toHaveAttribute('open','');
     await page.evaluate(()=>window.MM_REFERENCE_LAYOUT.refresh());
     await study.getByRole('button',{name:'Learn',exact:true}).click();
@@ -156,6 +156,7 @@ for(const width of [320,360,390,412]){
 
     await page.locator('.mobile-nav > button').filter({hasText:'More'}).click();
     await expect(page.locator('#modal .mm-more-disclosure')).toHaveCount(6);
+    await expect(page.locator('#modal .mm-reference-more-card > summary > .mm-reference-more-art')).toHaveCount(6);
     await expect(page.locator('#modal .mm-reference-more-extra')).toHaveCount(2);
     await expect(page.locator('#modal .mm-reference-more-extra')).toHaveCount(2);
     await expect(page.locator('#modal .mm-reference-more-extra').first()).toContainText('Help & support');
@@ -209,6 +210,7 @@ for(const width of [360,810]){
     const labPicker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid[data-mm-reference-practice-picker="modal"]');
     await expect(labPicker.locator('button.mm-reference-practice-choice')).toHaveCount(3);
     await expect(labPicker.locator(':scope > button > .mm-reference-practice-art')).toHaveCount(3);
+    await expect(labPicker.locator('button').first()).toHaveCSS('color','rgb(9, 43, 66)');
     await labPicker.locator('[data-mm-hub-action="simulator"]').click();
     await expect(page.locator('#simulator')).toBeVisible();
     await expect(page.locator('#mmVirtualApprenticeship > .section-head > .mm-reference-practice-tool-art')).toBeVisible();
@@ -222,6 +224,12 @@ for(const width of [360,810]){
     await expect(questions).toBeVisible();
     await expect(questions.locator('.mm-hub-picker-grid[data-mm-reference-practice-picker="question-centre"] > .mm-reference-practice-choice')).toHaveCount(5);
     await expect(questions.locator('.mm-reference-practice-art')).toHaveCount(5);
+    const contrast=await questions.locator('.mm-reference-practice-choice').first().evaluate(el=>({
+      bg:getComputedStyle(el).backgroundColor,
+      text:getComputedStyle(el.querySelector('b')).color
+    }));
+    expect(contrast.bg).toBe('rgb(241, 247, 250)');
+    expect(contrast.text).toBe('rgb(11, 41, 64)');
     const questionOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
     expect(questionOverflow).toBeLessThanOrEqual(2);
 
