@@ -146,8 +146,9 @@ test('safety-specific boundary stays visible while technical detail is optional'
         .map(v=>{const c=v/255;return c<=.04045?c/12.92:((c+.055)/1.055)**2.4;});
       return channels[0]*.2126+channels[1]*.7152+channels[2]*.0722;
     };
+    const row=element.querySelector('.mm-deep-v2-row')||element;
     const foreground=luminance(getComputedStyle(element.querySelector('h4')).color);
-    const background=luminance(getComputedStyle(element).backgroundColor);
+    const background=luminance(getComputedStyle(row).backgroundColor);
     return (Math.max(foreground,background)+.05)/(Math.min(foreground,background)+.05);
   });
   expect(colourContrast).toBeGreaterThanOrEqual(4.5);
