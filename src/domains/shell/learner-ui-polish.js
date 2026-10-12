@@ -514,11 +514,35 @@ function learn(){
   // Illustrate the existing, accessible course summaries instead.
   hub.querySelector('.mm-reference-learn-list')?.remove();
   const groups=Array.from(catalogue.querySelectorAll('[data-mm-catalog-group]'));
-  groups.slice(0,9).forEach(group=>{
+  // All 12 core tracks, all nine Material Science chapters and the optional
+  // specialist track share the same image-led card. The previous first-nine
+  // slice left the bottom of the catalogue as large unillustrated boxes.
+  const materialTiles=[
+    ['materials',3],['materials',11],['process',5],
+    ['thermal',26],['materials',12],['mould',4],
+    ['quality',20],['evidence',27],['controls',2]
+  ];
+  groups.forEach((group,index)=>{
     const summary=group.querySelector(':scope > summary');
     if(!summary||summary.querySelector('.mm-reference-course-art'))return;
-    const title=group.querySelector('.mm-catalog-group-name')?.textContent?.replace(/^[0-9]+[.] */, '')||'Learning module';
-    const present=learnPresentation(title);
+    const fullTitle=group.querySelector('.mm-catalog-group-name')?.textContent||'Learning module';
+    const title=fullTitle.replace(/^[0-9]+[.] */, '');
+    const isMaterial=fullTitle.startsWith('Material science ·');
+    const isSpecialist=fullTitle.startsWith('Optional specialist');
+    const focus=materialTiles[Math.max(0,index-12)%materialTiles.length];
+    const present=isMaterial
+      ? {art:focus[0],tile:focus[1],hint:'Explore polymer behaviour and its evidence'}
+      :isSpecialist
+        ? {art:'training',tile:24,hint:'Optional advanced topics'}
+        :index===9
+          ? {art:'controls',tile:2,hint:'Sensors, automation and control'}
+          :index===10
+            ? {art:'mould',tile:4,hint:'Advanced tooling and simulation'}
+            :index===11
+              ? {art:'process',tile:5,hint:'Expert process engineering'}
+              :learnPresentation(title);
+    group.classList.toggle('mm-catalog-material-track',isMaterial);
+    group.classList.toggle('mm-catalog-specialist-track',isSpecialist);
     const art=picture(present.art,'',present.tile);
     art.classList.add('mm-reference-course-art');
     art.alt='';
@@ -621,7 +645,21 @@ function materials(){
     const lessonShown=!!legacy.querySelector('.mat-lesson');
     if(lessonShown||(['Learn','Interactive labs','Knowledge check','Evidence & references'].includes(currentTab)))guide.open=true;
     const intro=root.querySelector('#mmMaterialLearningAnchor');
-    if(intro&&intro.closest('[data-mm-family-science]'))guide.insertAdjacentElement('afterend',intro);
+    // Combine the detached Material Science intro, five legacy mode buttons
+    // and optional general-reference guide into one clear secondary panel.
+    // Preserve the *real* mode buttons and their event handlers; the guide
+    // only contains generic family science, never exact supplier-grade data.
+    let study=root.querySelector('.mm-material-study-tools');
+    if(!study){
+      study=document.createElement('section');
+      study.className='mm-material-study-tools';
+      study.setAttribute('aria-label','Material learning and tools');
+      catalogue.insertAdjacentElement('afterend',study);
+    }
+    if(intro)study.appendChild(intro);
+    if(tabs)study.appendChild(tabs);
+    study.appendChild(guide);
+    if(lessonShown||(['Learn','Interactive labs','Knowledge check','Evidence & references'].includes(currentTab)))guide.open=true;
   }
   const selectedFamily=catalogue.querySelector('[data-mm-family-detail]:not([hidden])');
   if(selectedFamily){
