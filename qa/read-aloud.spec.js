@@ -226,6 +226,81 @@ test('iOS empty voice list starts speech within the original tap task',async({pa
   await expect(player.locator('.mm-read-status')).toHaveText('Reading');
 });
 
+test('Changing narration speed while paused never resumes speech without Play',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>First spoken sentence. Second spoken sentence.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:
+      'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
+    class QaUtterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const synth={
+      getVoices(){return[];},
+      speak(utterance){window.__mmSpeedStarts=(window.__mmSpeedStarts||0)+1;window.__mmSpeedRate=utterance.rate;queueMicrotask(()=>utterance.onstart?.());},
+      cancel(){},pause(){window.__mmSpeedPaused=true;},resume(){window.__mmSpeedResumed=true;},
+      addEventListener(){},removeEventListener(){}
+    };
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:QaUtterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const player=page.locator('.mm-read-aloud');
+  await player.locator('details').evaluate(el=>{el.open=true});
+  const play=player.locator('[data-mm-read="play"]');
+  await play.click();
+  await expect(play).toHaveText('Pause');
+  expect(await page.evaluate(()=>window.__mmSpeedStarts)).toBe(1);
+  await play.click();
+  await expect(play).toHaveText('Resume');
+  await player.locator('[data-mm-read="speed"]').selectOption('1.25');
+  await expect(play).toHaveText('Resume');
+  await expect(player.locator('.mm-read-status')).toHaveText('Paused. Updated speed applies to the next sentence.');
+  expect(await page.evaluate(()=>window.__mmSpeedStarts)).toBe(1);
+  await play.click();
+  await expect(play).toHaveText('Pause');
+  expect(await page.evaluate(()=>window.__mmSpeedResumed)).toBe(true);
+  await player.locator('[data-mm-read="next"]').click();
+  await expect.poll(()=>page.evaluate(()=>window.__mmSpeedStarts)).toBe(2);
+  expect(await page.evaluate(()=>window.__mmSpeedRate)).toBe(1.25);
+});
+
+test('Throwing OS pause and resume recover to restartable narration controls',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Device pause and resume failure recovery.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:
+      'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
+    class QaUtterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
+    window.__mmFailPause=true;window.__mmFailResume=false;
+    const synth={
+      getVoices(){return[];},
+      speak(utterance){queueMicrotask(()=>utterance.onstart?.());},
+      cancel(){},
+      pause(){if(window.__mmFailPause)throw new Error('OS pause failed');},
+      resume(){if(window.__mmFailResume)throw new Error('OS resume failed');},
+      addEventListener(){},removeEventListener(){}
+    };
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:QaUtterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const player=page.locator('.mm-read-aloud');
+  await player.locator('details').evaluate(el=>{el.open=true});
+  const play=player.locator('[data-mm-read="play"]');
+  await play.click();
+  await expect(play).toHaveText('Pause');
+  await play.click();
+  await expect(play).toHaveText('Listen');
+  await expect(player.locator('.mm-read-status')).toHaveText('Device voice could not pause. Start playback again.');
+  await page.evaluate(()=>{window.__mmFailPause=false;window.__mmFailResume=true;});
+  await play.click();
+  await expect(play).toHaveText('Pause');
+  await play.click();
+  await expect(play).toHaveText('Resume');
+  await play.click();
+  await expect(play).toHaveText('Listen');
+  await expect(player.locator('.mm-read-status')).toHaveText('Device voice could not resume. Start playback again.');
+  await play.click();
+  await expect(play).toHaveText('Pause');
+});
+
 test('Throwing device cancellation and voice discovery cannot strand Read Aloud controls',async({page})=>{
   await page.setContent('<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><div class="top-actions"></div><main class="main"><p>Safe reading after a device voice error.</p></main></body></html>');
   await page.evaluate(()=>{
