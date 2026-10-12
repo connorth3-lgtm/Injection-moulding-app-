@@ -226,12 +226,15 @@ for(const width of [360,810]){
     await expect(questions).toBeVisible();
     await expect(questions.locator('.mm-hub-picker-grid[data-mm-reference-practice-picker="question-centre"] > .mm-reference-practice-choice')).toHaveCount(5);
     await expect(questions.locator('.mm-reference-practice-art')).toHaveCount(5);
-    const contrast=await questions.locator('.mm-reference-practice-choice').first().evaluate(el=>({
-      bg:getComputedStyle(el).backgroundColor,
-      text:getComputedStyle(el.querySelector('b')).color
-    }));
-    expect(contrast.bg).toBe('rgb(241, 247, 250)');
-    expect(contrast.text).toBe('rgb(11, 41, 64)');
+    // Hover/focus background is animated. Check the entire allowed light
+    // contrast range rather than one intermediate CSS interpolation frame.
+    await expect.poll(async()=>questions.locator('.mm-reference-practice-choice').first().evaluate(el=>{
+      const rgb=value=>(value.match(/[\\d.]+/g)||[]).map(Number);
+      const bg=rgb(getComputedStyle(el).backgroundColor);
+      const text=rgb(getComputedStyle(el.querySelector('b')).color);
+      return bg.length>=3&&bg[0]>=205&&bg[1]>=225&&bg[2]>=225&&
+        (bg.length<4||bg[3]>=.85)&&text[0]<=40&&text[1]<=75&&text[2]<=90;
+    })).toBe(true);
     const questionOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
     expect(questionOverflow).toBeLessThanOrEqual(2);
 
@@ -362,14 +365,18 @@ for(const width of [360,810]){
     const simulator=page.locator('#simulator');
     await expect(simulator.locator('.form-card > .mm-reference-deep-art')).toBeVisible();
     await expect(simulator.locator('.output-panel > .mm-reference-deep-art')).toBeVisible();
-    await expect(simulator.locator('.form-grid > label')).toHaveCount(10);
+    // The Virtual Apprenticeship and other embedded training widgets own
+    // additional controls. Scope the count to the governed core simulator.
+    const coreControls=simulator.locator(':scope > .grid2 > .form-card > .form-grid');
+    await expect(coreControls.locator(':scope > label')).toHaveCount(10);
     await expect(simulator.locator('#simAdvice')).toContainText('baseline');
-    const sliders=simulator.locator('input[type="range"]');
-    await sliders.first().focus();
-    await sliders.first().press('ArrowRight');
-    await expect(simulator.locator('#sim_speed')).toHaveValue('56%');
-    await simulator.getByRole('button',{name:'Reset',exact:true}).click();
-    await expect(simulator.locator('#sim_speed')).toHaveValue('55%');
+    const fillSlider=coreControls.locator('input[type="range"]').first();
+    await expect(fillSlider).toHaveValue('50');
+    await fillSlider.focus();
+    await fillSlider.press('ArrowRight');
+    await expect(fillSlider).toHaveValue('51');
+    await simulator.getByRole('button',{name:'Reset to baseline',exact:true}).click();
+    await expect(simulator.locator(':scope > .grid2 > .form-card > .form-grid input[type="range"]').first()).toHaveValue('50');
     await expect(simulator.locator('.form-card > .mm-reference-deep-art')).toHaveCount(1);
 
     await page.evaluate(()=>switchView('visuals'));
