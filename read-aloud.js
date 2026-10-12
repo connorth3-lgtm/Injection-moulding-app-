@@ -212,10 +212,21 @@
       // Must run directly inside the original tap handler on Android, even
       // with an empty voice list. The platform can pick its default voice.
       cancelDeviceSpeech();
-      const utterance=new SpeechSynthesisUtterance(unit.text);
-      if(selectedVoice){utterance.voice=selectedVoice;utterance.lang=selectedVoice.lang||document.documentElement.lang||'en';}
-      else utterance.lang=document.documentElement.lang||'en';
-      utterance.rate=Number((playlistMode?listeningUI?.speed:ui?.speed)?.value||1);
+      let utterance;
+      try{
+        utterance=new SpeechSynthesisUtterance(unit.text);
+        if(selectedVoice){utterance.voice=selectedVoice;utterance.lang=selectedVoice.lang||document.documentElement.lang||'en';}
+        else utterance.lang=document.documentElement.lang||'en';
+        utterance.rate=Number((playlistMode?listeningUI?.speed:ui?.speed)?.value||1);
+      }catch(err){
+        // Voice provider constructors and property setters can fail before
+        // synth.speak() runs. Do not leave the Play button stuck at Starting.
+        stop(androidSpeech||iosSpeech
+          ? 'Device voice could not be prepared. Tap Listen again.'
+          : 'Device voice could not be prepared. Try again.');
+        console.error('MouldMaster Read Aloud:',err);
+        return;
+      }
       let started=false;
       const startTimer=setTimeout(()=>{
         if(token!==speakToken||started)return;
@@ -281,16 +292,24 @@
     }
   }
 
-  function refreshStaleReading(){
-    if(playlistMode||!units.length)return;
-    const source=currentUnit()?.source;
-    if(activeRoot&&visible(activeRoot)&&source?.isConnected&&visible(source))return;
-    // Stopping does not erase sentence navigation. A view can be hidden or
-    // replaced while stopped, leaving an otherwise playable obsolete queue.
+  function refreshStaleReading(nextIndex=index){
+    if(playlistMode||!units.length)return false;
+    const stillCurrent=unit=>{
+      const source=unit?.source;
+      // Pages may replace text *inside the same element*, so connected and
+      // visible alone are insufficient to prove an old sentence is current.
+      return !!(source?.isConnected&&visible(source)&&
+        String(source.textContent||'').replace(/\\s+/g,' ').includes(unit.text));
+    };
+    if(activeRoot&&visible(activeRoot)&&stillCurrent(currentUnit())&&
+       (nextIndex===index||stillCurrent(units[nextIndex])))return false;
+    // A replaced, hidden or rewritten reading source must not be spoken from
+    // an old queue. Invalidate old OS callbacks, then rebuild visible text.
     stop('Stopped after screen changed');
     index=0;
     buildUnits();
     updateButtons();
+    return true;
   }
 
   function start(){index=0;buildUnits();if(!units.length){setStatus('No readable text is visible on this screen.');updateButtons();return;}speakCurrent();}
@@ -304,7 +323,8 @@
 
   function toggle(){
     if(!supported){setStatus('Read Aloud is not available in this browser/device.');return;}
-    refreshStaleReading();
+    const wasActive=starting||speaking||paused;
+    if(refreshStaleReading()&&wasActive)return;
     if(starting){stop('Stopped');return;}
     if(paused){
       try{synth.resume()}catch(_){stop('Device voice could not resume. Start playback again.');return;}
@@ -359,7 +379,7 @@
   }
 
   function move(delta){
-    refreshStaleReading();
+    if(units.length)refreshStaleReading(Math.max(0,Math.min(units.length-1,index+delta)));
     if(!units.length)(playlistMode?buildPlaylist():buildUnits());
     if(!units.length)return;
     selectUnit(Math.max(0,Math.min(units.length-1,index+delta)));
