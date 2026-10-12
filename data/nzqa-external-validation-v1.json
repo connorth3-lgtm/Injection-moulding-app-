@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.11.10",
+  "release": "2026.10.11.11",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.11.10.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.11.11.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
-  "issueNumber": 379,
+  "issueNumber": null,
   "candidate": {
-    "release": "2026.10.11.10",
-    "sourceSha": "1a528632301232224fb6f9b2460c9a2863b92e81",
-    "runtimeFingerprint": "sha256:230170530d51afa8ac824e332905131e91f188945275c40b80fd768428c93424"
+    "release": "2026.10.11.11",
+    "sourceSha": null,
+    "runtimeFingerprint": null
   },
-  "boundary": "The release 2026.10.11.10 software candidate has a retained source/fingerprint, but NZQA/provider G1–G8 remain pending-external with no independent provider-controlled evidence. Software, visual and artifact verification do not grant assessment, accreditation, learner competence, production or machine-control authority.",
+  "boundary": "New 2026.10.11.11 source and public candidate pending. 2026.10.11.10 and its tracker are historical. No provider G1–G8 external evidence, qualification, assessment/production approval or machine-control authority.",
   "requiredGates": [
     {
       "id": "G1-provider",
@@ -57,8 +57,9 @@
   "evidence": null,
   "validationRule": "Validated requires genuine provider-owned evidence for all eight gates, public-safe evidence references, exact release/candidate binding, and separate reviewed promotion of the canonical external-validation status. Automation must not manufacture completion.",
   "previousCandidate": {
-    "release": "2026.10.11.9",
-    "sourceSha": "d572ee13d8f2f09139882ff1a271e855284f6e3c",
-    "runtimeFingerprint": "sha256:97d9cdf902986357f9446796478525f1b61c0f37162387a042121c310ee4d3c7"
-  }
+    "release": "2026.10.11.10",
+    "sourceSha": "1a528632301232224fb6f9b2460c9a2863b92e81",
+    "runtimeFingerprint": "sha256:230170530d51afa8ac824e332905131e91f188945275c40b80fd768428c93424"
+  },
+  "previousIssueNumber": 379
 }

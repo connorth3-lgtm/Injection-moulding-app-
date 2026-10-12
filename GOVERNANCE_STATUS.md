@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.11.10`**.
+Current governed web candidate: **`2026.10.11.11` (STAGING — FAIL/HOLD)**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | The non-production release 2026.10.11.10 technical candidate source 1a528632301232224fb6f9b2460c9a2863b92e81 was retained by successful producer run 38193269649 as artifact 11721888396 with measured runtime fingerprint sha256:230170530d51afa8ac824e332905131e91f188945275c40b80fd768428c93424. Successful source-bound software automation does not imply deployment or external human/device validation. |
-| Behavioral / browser | **pass** | The owner-reviewed Book-only UI for release 2026.10.11.10 at source 1a528632301232224fb6f9b2460c9a2863b92e81 passed strict 52-surface 12px visual regression, substantive Chromium/WebKit, cross-browser navigation, Question Quality and reliability. Fresh current PR-head integrity and release QA are separately required. |
+| Static / contract | **FAIL / pending 2026.10.11.11** | New mobile learner runtime is staged, without successfully retained 2026.10.11.11 exact-head artifact or external source/fingerprint bindings. 2026.10.11.10 technical evidence remains historical. |
+| Behavioral / browser | **FAIL / pending 2026.10.11.11** | Updated Learn/Materials visuals differ from approved immutable 2026.10.11.10 baseline. New 52-surface screenshot review and distinct owner-approved immutable 2026.10.11.11 baseline are required, retaining the strict 12-pixel tolerance. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |

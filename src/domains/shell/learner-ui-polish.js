@@ -798,7 +798,7 @@ function boot(){
   document.addEventListener('click',event=>{
     if(event.target?.closest?.('.mm-material-index-card summary,.mobile-nav,[data-mm-registry-menu]'))refresh();
   });
-  window.MM_REFERENCE_LAYOUT=Object.freeze({version:'2026.10.11.10',refresh});
+  window.MM_REFERENCE_LAYOUT=Object.freeze({version:'2026.10.11.11',refresh});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
