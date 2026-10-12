@@ -288,9 +288,23 @@
   function toggle(){
     if(!supported){setStatus('Read Aloud is not available in this browser/device.');return;}
     if(starting){stop('Stopped');return;}
-    if(paused){synth.resume();paused=false;speaking=true;setStatus(playlistMode?'Listening session playing':'Reading');updateButtons();return;}
-    if(speaking){synth.pause();paused=true;speaking=false;setStatus('Paused');updateButtons();return;}
+    if(paused){
+      try{synth.resume()}catch(_){stop('Device voice could not resume. Start playback again.');return;}
+      paused=false;speaking=true;setStatus(playlistMode?'Listening session playing':'Reading');updateButtons();return;
+    }
+    if(speaking){
+      try{synth.pause()}catch(_){stop('Device voice could not pause. Start playback again.');return;}
+      paused=true;speaking=false;setStatus('Paused');updateButtons();return;
+    }
     start();
+  }
+
+  function changeSpeed(forPlaylist){
+    if(playlistMode!==forPlaylist)return;
+    // Editing the playback rate while paused must not resume narration.
+    // The new rate is applied when the next sentence is synthesized.
+    if(paused){setStatus('Paused. Updated speed applies to the next sentence.');updateButtons();return;}
+    if(speaking)speakCurrent();
   }
 
   function togglePlaylist(){
@@ -400,7 +414,7 @@
     view.querySelector('[data-mm-listening="forward"]').addEventListener('click',()=>move(1));
     view.querySelector('[data-mm-listening="prev-lesson"]').addEventListener('click',()=>jumpLesson(-1));
     view.querySelector('[data-mm-listening="next-lesson"]').addEventListener('click',()=>jumpLesson(1));
-    listeningUI.speed.addEventListener('change',()=>{if(playlistMode&&(speaking||paused)){paused=false;speaking=true;speakCurrent();}});
+    listeningUI.speed.addEventListener('change',()=>changeSpeed(true));
     renderListeningState();
   }
 
@@ -413,7 +427,7 @@
     const actions=document.querySelector('#app .top-actions,.top-actions');(actions||document.body).appendChild(host);
     ui={host,play:host.querySelector('[data-mm-read="play"]'),prev:host.querySelector('[data-mm-read="prev"]'),next:host.querySelector('[data-mm-read="next"]'),stop:host.querySelector('[data-mm-read="stop"]'),speed:host.querySelector('[data-mm-read="speed"]'),status:host.querySelector('.mm-read-status'),position:host.querySelector('[data-mm-read="position"]'),current:host.querySelector('[data-mm-read="current"]')};
     ui.play.addEventListener('click',toggle);ui.prev.addEventListener('click',()=>move(-1));ui.next.addEventListener('click',()=>move(1));ui.stop.addEventListener('click',()=>stop('Stopped'));
-    ui.speed.addEventListener('change',()=>{if(speaking||paused){paused=false;speaking=true;speakCurrent();}});
+    ui.speed.addEventListener('change',()=>changeSpeed(false));
     host.querySelector('details').addEventListener('toggle',event=>{if(event.target.open&&!starting&&!speaking&&!paused){buildUnits();setStatus(supported?'Ready':'Read Aloud is not available in this browser/device.');updateButtons();}});
     refreshVoice();if(supported&&!selectedVoice)setStatus('Device voice will load when playback starts.');updateButtons();
     createListeningTab();
@@ -430,7 +444,14 @@
   window.addEventListener('hashchange',()=>{if(!playlistMode)stop('Stopped after navigation')});
   window.addEventListener('popstate',()=>{if(!playlistMode)stop('Stopped after navigation')});
   window.addEventListener('pagehide',()=>stop('Stopped'));
-  document.addEventListener('visibilitychange',()=>{if(document.hidden&&speaking&&supported&&!playlistMode){synth.pause();paused=true;speaking=false;setStatus('Paused while app is hidden');updateButtons();}});
+  document.addEventListener('visibilitychange',()=>{
+    if(!document.hidden||!speaking||!supported||playlistMode)return;
+    try{synth.pause()}catch(_){
+      stop('Device voice could not pause while hidden. Start playback again.');
+      return;
+    }
+    paused=true;speaking=false;setStatus('Paused while app is hidden');updateButtons();
+  });
 
   const observer=new MutationObserver(()=>{if((speaking||paused)&&activeRoot&&!activeRoot.isConnected&&!playlistMode)stop('Stopped after screen changed');});
   observer.observe(document.documentElement,{subtree:true,childList:true});
