@@ -492,6 +492,48 @@ test('Spatial Twin opens as a responsive evidence-led moulding world',async({pag
   await expect(page.locator('#mmVirtualApprenticeship')).toBeVisible();
 });
 
+test('Virtual Apprenticeship prevents stale reviewed answers crossing local learner profiles',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.addInitScript(()=>{
+    const learner=id=>({id,name:id,role:'learner',completed:[],bookmarks:[],notes:{},
+      examScores:{},certificates:[],currentLesson:1,lastSeen:'2026-10-13T00:00:00Z',
+      onboardingDone:true,experience:'Beginner',goal:'Learn the process',dailyMinutes:15,region:'ALL'});
+    localStorage.clear();
+    localStorage.setItem('mouldmasterProDB',JSON.stringify({
+      activeUser:'apprentice-a',users:{
+        'apprentice-a':learner('apprentice-a'),'apprentice-b':learner('apprentice-b')
+      }
+    }));
+  });
+  await page.goto(BASE,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED&&window.MM_VIRTUAL_APPRENTICESHIP?.openCase&&window.MM_RUNTIME_V2?.storage?.learnerToken));
+  await page.evaluate(()=>window.MM_VIRTUAL_APPRENTICESHIP.openCase(1));
+  const root=page.locator('#mmVirtualApprenticeship');
+  const options=root.locator('[data-mm-va-step] input[type="radio"]');
+  await expect(options.first()).toBeVisible();
+  for(const step of ['hypothesis','test','response','verify']){
+    await root.locator('[data-mm-va-step="'+step+'"] input[type="radio"]').first().check();
+  }
+  await root.locator('#mmVaCheck').click();
+  await expect(root.locator('#mmVaResult')).toContainText('Reasoning quality:');
+  // The old DOM's Review action and radio elements are not trusted if the
+  // user changes between the event and the normal simulator rerender.
+  await page.evaluate(()=>{
+    const oldCheck=document.querySelector('#mmVaCheck');
+    switchUser('apprentice-b');
+    oldCheck.click();
+  });
+  await page.evaluate(()=>window.MM_VIRTUAL_APPRENTICESHIP.openCase(1));
+  await expect(root.locator('#mmVaResult')).toBeEmpty();
+  expect(await root.locator('[data-mm-va-step] input:checked').count()).toBe(0);
+  await expect(root.locator('#mmVaProgress')).toContainText('0/6 cases completed');
+  await page.evaluate(()=>switchUser('apprentice-a'));
+  await page.evaluate(()=>window.MM_VIRTUAL_APPRENTICESHIP.openCase(1));
+  await expect(root.locator('#mmVaResult')).toBeEmpty();
+  expect(await root.locator('[data-mm-va-step] input:checked').count()).toBe(0);
+  await expect(root.locator('#mmVaProgress')).toContainText('1/6 cases completed');
+});
+
 test('Spatial Twin isolates learner state and resets the timeline on a different case',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await page.addInitScript(()=>{
