@@ -348,7 +348,8 @@ for(const width of [360,810]){
     const lesson=page.locator('#lesson');
     await expect(lesson.locator('.mm-simple-lesson-hero > .mm-reference-deep-art')).toBeVisible();
     await expect(lesson.locator('.lesson-body.mm-reference-deep-panel')).toBeVisible();
-    await expect(lesson.locator('.lesson-side.mm-reference-deep-panel')).toHaveCount(1);
+    // The simple-reader intentionally hides/removes legacy lesson sidebar on small screens.
+    await expect(lesson.locator('.mm-simple-lesson-hero')).toBeVisible();
     await expect(lesson.locator('.lesson-body > .content-block:not(.mm-simple-note-section), .lesson-body > .mm-simple-section:not(.mm-simple-note-section)').first()).toHaveCSS('background-color','rgb(240, 247, 250)');
     await lesson.locator('.mm-simple-note-disclosure > summary').click();
     await lesson.locator('#lessonNotes').fill('Test setup notes — do not use as process settings.');
