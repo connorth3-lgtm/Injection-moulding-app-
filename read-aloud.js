@@ -299,7 +299,7 @@
       // Pages may replace text *inside the same element*, so connected and
       // visible alone are insufficient to prove an old sentence is current.
       return !!(source?.isConnected&&visible(source)&&
-        String(source.textContent||'').replace(/\\s+/g,' ').includes(unit.text));
+        String(source.textContent||'').replace(/\s+/g,' ').includes(unit.text));
     };
     if(activeRoot&&visible(activeRoot)&&stillCurrent(currentUnit())&&
        (nextIndex===index||stillCurrent(units[nextIndex])))return false;
