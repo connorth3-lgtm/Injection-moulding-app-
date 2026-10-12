@@ -431,3 +431,41 @@ for(const width of [360,810]){
     expect(documentOverflow).toBeLessThanOrEqual(2);
   });
 }
+
+test('Materials routes quiz, reference evidence, explorer and labs without stale guide state',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.evaluate(()=>switchView('materials'));
+  const material=page.locator('#materials');
+  const study=material.locator('.mm-material-study-tools');
+  const guide=study.locator('[data-mm-family-science]');
+  await expect(guide).toHaveCount(1);
+  await expect(guide).not.toHaveAttribute('open','');
+
+  await study.locator(':scope > .mat-tabs > button').filter({hasText:'Knowledge check'}).click();
+  const quiz=material.locator('.mat-quiz-card');
+  await expect(quiz).toBeVisible();
+  await expect(quiz.locator('.mat-q')).toHaveCount(18);
+  await expect(material.locator('[data-mm-family-science]')).toHaveCount(0);
+  await quiz.locator('.mat-q').first().locator('input[type="radio"]').first().check();
+  await quiz.getByRole('button',{name:'Grade & review'}).click();
+  await expect(quiz.locator('#materialQuizResult')).toBeVisible();
+  await expect(quiz.locator('#materialQuizReview .mat-review')).toHaveCount(18);
+
+  await material.locator('.mat-tabs > button').filter({hasText:'Evidence & references'}).click();
+  await expect(material.locator('.standard-card')).toHaveCount(6);
+  await expect(material.locator('.standard-card a[target="_blank"][rel="noopener"]').first()).toBeVisible();
+  await expect(material.locator('[data-mm-family-science]')).toHaveCount(0);
+
+  await material.locator('.mat-tabs > button').filter({hasText:'Material explorer'}).click();
+  await expect(material.locator('.mat-explorer-controls')).toBeVisible();
+  await material.locator('.mat-tabs > button').filter({hasText:'Interactive labs'}).click();
+  await expect(material.locator('.mat-labs')).toBeVisible();
+  await expect(material.locator('#rheoCurve svg')).toBeVisible();
+  await expect(material.locator('[data-mm-family-science]')).toHaveCount(0);
+
+  await material.locator('.mat-tabs > button').filter({hasText:'All lessons'}).click();
+  await expect(page.locator('#path .mm-all-lessons')).toBeVisible();
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(2);
+});
