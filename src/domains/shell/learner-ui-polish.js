@@ -612,7 +612,21 @@ function practice(){
   }
   hub.dataset.mmReferencePractice='1';
 }
+function practiceScenarioDetail(){
+  // Keep the original scenario evidence/answer buttons and authored feedback.
+  // One local illustration anchors the detail screen without duplicating every case.
+  const root=document.querySelector('#scenarios[data-mm-hub-mode="detail"]');
+  if(!root?.querySelector('.scenario'))return;
+  const head=root.querySelector(':scope > .section-head');
+  if(!head||head.classList.contains('mm-reference-practice-scenario-head'))return;
+  const art=picture('cases','',22);
+  art.classList.add('mm-reference-practice-scenario-art');
+  art.setAttribute('aria-hidden','true');
+  head.classList.add('mm-reference-practice-scenario-head');
+  head.prepend(art);
+}
 function practiceInside(){
+  practiceScenarioDetail();
   // The Question Centre is rendered into the same Practice route but replaces
   // .mm-practice-hub. Decorate its five real options as they become available.
   const questionGrid=document.querySelector('#scenarios .mm-question-centre .mm-hub-picker-grid');
