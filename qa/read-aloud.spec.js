@@ -226,6 +226,35 @@ test('iOS empty voice list starts speech within the original tap task',async({pa
   await expect(player.locator('.mm-read-status')).toHaveText('Reading');
 });
 
+test('Switching screens after Stop refreshes the sentence queue before navigation and Play',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><section id="readingA"><p>Old page first sentence. Old page second sentence.</p></section><section id="readingB" hidden><p>New page first sentence. New page second sentence.</p></section></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:
+      'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
+    class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const synth={getVoices(){return[];},speak(u){window.__mmPageSpeech=u.text;queueMicrotask(()=>u.onstart?.());},
+      cancel(){},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const reader=page.locator('.mm-read-aloud');
+  await reader.locator('details').evaluate(el=>{el.open=true});
+  await reader.locator('[data-mm-read="play"]').click();
+  await expect.poll(()=>page.evaluate(()=>window.__mmPageSpeech||'')).toBe('Old page first sentence.');
+  await reader.locator('[data-mm-read="stop"]').click();
+  await page.evaluate(()=>{
+    document.getElementById('readingA').hidden=true;
+    document.getElementById('readingB').hidden=false;
+  });
+  await reader.locator('[data-mm-read="next"]').click();
+  await expect(reader.locator('[data-mm-read="current"]')).toContainText('New page second sentence.');
+  await expect(reader.locator('[data-mm-read="play"]')).toHaveText('Listen');
+  expect(await page.evaluate(()=>window.__mmPageSpeech)).toBe('Old page first sentence.');
+  await reader.locator('[data-mm-read="play"]').click();
+  await expect.poll(()=>page.evaluate(()=>window.__mmPageSpeech)).toBe('New page second sentence.');
+});
+
 test('Sentence navigation while paused cues audio without restarting it until Listen',async({page})=>{
   await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>First navigation sentence. Second navigation sentence. Third navigation sentence.</p></main></body></html>');
   await page.evaluate(()=>{
