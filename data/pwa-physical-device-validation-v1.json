@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "The 2026.10.11.10 non-production software candidate is retained with exact-source artifact, expiry and fingerprint; this is NOT a physical-device validation. Testing on physical iOS/iPadOS and Android devices for installation, offline restart/reboot, update, zoom, storage pressure and audible Android Read Aloud remains pending. Real AT, independent SMEs, Windows signing, NZQA/provider, learner outcomes, production root and machine-control stay HOLD. The earlier 2026.10.11.9 candidate remains historical only.",
+  "boundary": "The 2026.10.11.10 non-production software candidate is retained with exact-source artifact, expiry and fingerprint; this is NOT a physical-device validation. Testing on physical iOS/iPadOS and Android devices for installation, offline restart/reboot, update, zoom, storage pressure and audible Android Read Aloud remains pending. Real AT, independent SMEs, Windows signing, NZQA/provider, learner outcomes, production root and machine-control stay HOLD. The earlier 2026.10.11.9 candidate remains historical only. Real assistive-technology validation remains independently governed by data/accessibility-real-at-validation-v1.json and is not implied by this retained candidate.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
