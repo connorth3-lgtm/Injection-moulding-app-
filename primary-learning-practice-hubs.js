@@ -299,7 +299,9 @@ function dxFocusAfterRender(root,selector){
   // Give keyboard/screen-reader users a connected destination rather
   // than leaving focus on the removed button or document body.
   if(!target.matches('a[href],button,input,select,textarea,[tabindex]'))target.tabIndex=-1;
-  target.focus({preventScroll:true});
+  // Keep the new focus target visible after the intake/results panel moves;
+  // preventScroll would strand keyboard focus off-screen on small phones.
+  target.focus();
 }
 function dxRender(view){
   const root=document.getElementById(view);if(!root)return;
