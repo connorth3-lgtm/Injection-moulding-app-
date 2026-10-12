@@ -693,7 +693,13 @@
     if(reader.moduleIds.includes('material-families'))void hydrateMaterialAtlas();
   }
   function restoreBookChrome(){if(!ui)return;ui.hero.hidden=false;ui.accuracy.hidden=false;}
-  function stopBookSpeech(){try{window.MMReadAloud?.stop?.();}catch(_){}}
+  function stopBookSpeech(){
+    try{window.MMReadAloud?.stop?.();}catch(_){}
+    // The Book owns the visible audio control. Do not reopen it expanded
+    // after returning to the main learning/practice tabs.
+    const player=document.querySelector('.mm-read-aloud details[open]');
+    if(player)player.open=false;
+  }
   function bookScrollTop(){const root=bookScrollRoot();return Math.max(0,isDocumentScrollRoot(root)?document.scrollingElement?.scrollTop||0:root.scrollTop||0);}
   function scrollBookReaderToTop(){
     requestAnimationFrame(()=>{
