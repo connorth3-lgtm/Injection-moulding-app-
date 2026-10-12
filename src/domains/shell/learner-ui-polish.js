@@ -5,7 +5,7 @@
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.10.11.11';
+const VERSION='2026.10.13.1';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
