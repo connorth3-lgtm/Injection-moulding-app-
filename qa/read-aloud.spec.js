@@ -216,3 +216,50 @@ test('Listening tab builds a continuous lesson playlist and exposes long-session
   await view.locator('[data-mm-listening="stop"]').click();
   await expect(view.locator('[data-mm-listening-status]')).toHaveText('Stopped');
 });
+
+
+test('Book verified listening starts Android device speech in the original tap and stops on Contents',async({page})=>{
+  await seedLearner(page);
+  await page.setViewportSize({width:390,height:844});
+  await page.addInitScript(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:
+      'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
+    class QaUtterance{
+      constructor(text=''){this.text=String(text);this.lang='';this.voice=null;this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}
+    }
+    document.addEventListener('click',event=>{
+      if(!event.target.closest?.('[data-mm-book-mode="listen"]'))return;
+      window.__mmBookOriginalTap=true;
+      setTimeout(()=>{window.__mmBookOriginalTap=false;},0);
+    },true);
+    const synth={
+      getVoices(){return[];},
+      speak(utterance){
+        window.__mmBookSpokenText=utterance.text;
+        window.__mmBookSpeechInTap=window.__mmBookOriginalTap===true;
+        queueMicrotask(()=>utterance.onstart?.());
+      },
+      cancel(){window.__mmBookCancelCount=(window.__mmBookCancelCount||0)+1;},
+      pause(){},resume(){},addEventListener(){},removeEventListener(){}
+    };
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:QaUtterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.goto(APP,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>Boolean(window.MMBook?.ready&&window.MMReadAloud?.supported&&window.MM_APP_SHELL_FINALIZED));
+  await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load();});
+  const listen=page.locator('#mmBookView [data-mm-book-mode="listen"]');
+  await expect(listen).toBeEnabled();
+  await listen.click();
+  await expect.poll(()=>page.evaluate(()=>window.__mmBookSpokenText||'')).not.toBe('');
+  expect(await page.evaluate(()=>window.__mmBookSpeechInTap)).toBe(true);
+  await expect(page.locator('#mmBookView [data-mm-book-reader]')).toBeVisible();
+  await expect(page.locator('#mmBookView .mm-book-reader-module').first()).toBeVisible();
+  const player=page.locator('.mm-read-aloud');
+  await expect(player.locator('details')).toHaveAttribute('open','');
+  await expect(player.locator('.mm-read-status')).toHaveText('Reading');
+  await page.locator('#mmBookView [data-mm-book-back]').first().click();
+  await expect(page.locator('#mmBookView [data-mm-book-contents]')).toBeVisible();
+  await expect(player.locator('details')).not.toHaveAttribute('open','');
+  await expect(player.locator('.mm-read-status')).toHaveText('Stopped');
+});
