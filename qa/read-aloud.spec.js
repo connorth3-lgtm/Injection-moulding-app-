@@ -206,6 +206,8 @@ test('Listening tab builds a continuous lesson playlist and exposes long-session
   const view=page.locator('#mmListeningView');
   await expect(view).toBeVisible();
   await expect(view).toContainText('Listen through MouldMaster lessons continuously');
+  await expect(view.locator('.mm-listening-hero h2')).toBeFocused();
+  await expect(view.locator('.mm-listening-hero h2')).toHaveCSS('outline-style','solid');
   await view.locator('[data-mm-listening="play"]').click();
   await expect.poll(()=>page.evaluate(()=>window.__mmListeningSpoken||'')).toContain('Moulding basics');
   await expect(view.locator('[data-mm-listening-lesson]')).toContainText('Lesson 1');
