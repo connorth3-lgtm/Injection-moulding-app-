@@ -358,3 +358,29 @@ test('Book listening return focuses the original Contents listening control',asy
   await expect(page.locator('#mmBookView [data-mm-book-contents]')).toBeVisible();
   await expect(listen).toBeFocused();
 });
+
+
+test('Book reader page turns stop old speech before showing the next chapter',async({page})=>{
+  await boot(page);
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r01'));
+  const book=page.locator('#mmBookView');
+  const reader=book.locator('[data-mm-book-reader]');
+  await expect(reader.locator('[data-mm-book-reader-chapter="r01"]')).toBeVisible();
+  const turn=reader.locator('[data-mm-book-page-turn]').first();
+  await expect(turn).toBeVisible();
+  await page.evaluate(()=>{
+    window.__mmBookSpeechStops=0;
+    window.MMReadAloud={
+      supported:true,
+      stop(){window.__mmBookSpeechStops++;}
+    };
+    const details=document.createElement('details');
+    details.className='mm-book-qa-audio';
+    details.innerHTML='<summary>Audio active</summary>';
+    details.open=true;
+    document.querySelector('.mm-read-aloud')?.appendChild(details);
+  });
+  await turn.click();
+  await expect(reader.locator('[data-mm-book-reader-chapter="r02"]')).toBeVisible();
+  expect(await page.evaluate(()=>window.__mmBookSpeechStops)).toBeGreaterThanOrEqual(1);
+});
