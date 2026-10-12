@@ -211,6 +211,10 @@ for(const width of [360,810]){
     await expect(labPicker.locator(':scope > button > .mm-reference-practice-art')).toHaveCount(3);
     await labPicker.locator('[data-mm-hub-action="simulator"]').click();
     await expect(page.locator('#simulator')).toBeVisible();
+    await expect(page.locator('#mmVirtualApprenticeship > .section-head > .mm-reference-practice-tool-art')).toBeVisible();
+    await page.locator('#mmVirtualApprenticeship .hero-buttons button').filter({hasText:'Explore this case in Spatial Twin'}).click();
+    await expect(page.locator('#mmSpatialTwin:not([hidden]) .mm-st-header .mm-reference-practice-tool-art')).toBeVisible();
+    await page.locator('#mmSpatialTwin [data-mm-st-close]').click();
 
     await page.evaluate(()=>switchView('scenarios'));
     await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="question-centre"]').click();
