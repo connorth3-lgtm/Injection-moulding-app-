@@ -346,13 +346,14 @@ for(const width of [360,810]){
     await openApp(page);
     await page.evaluate(()=>switchView('lesson'));
     const lesson=page.locator('#lesson');
-    await expect(lesson.locator('.lesson-header-card > .mm-reference-deep-art')).toBeVisible();
+    await expect(lesson.locator('.mm-simple-lesson-hero > .mm-reference-deep-art')).toBeVisible();
     await expect(lesson.locator('.lesson-body.mm-reference-deep-panel')).toBeVisible();
-    await expect(lesson.locator('.lesson-side.mm-reference-deep-panel')).toBeVisible();
-    await expect(lesson.locator('.lesson-body')).toHaveCSS('background-color','rgb(240, 247, 250)');
+    await expect(lesson.locator('.lesson-side.mm-reference-deep-panel')).toHaveCount(1);
+    await expect(lesson.locator('.lesson-body > .content-block:not(.mm-simple-note-section), .lesson-body > .mm-simple-section:not(.mm-simple-note-section)').first()).toHaveCSS('background-color','rgb(240, 247, 250)');
+    await lesson.locator('.mm-simple-note-disclosure > summary').click();
     await lesson.locator('#lessonNotes').fill('Test setup notes — do not use as process settings.');
     await lesson.getByRole('button',{name:'Save notes'}).click();
-    await expect(lesson.locator('.lesson-header-card > .mm-reference-deep-art')).toHaveCount(1);
+    await expect(lesson.locator('.mm-simple-lesson-hero > .mm-reference-deep-art')).toHaveCount(1);
 
     await page.evaluate(()=>switchView('simulator'));
     const simulator=page.locator('#simulator');
@@ -382,12 +383,12 @@ for(const width of [360,810]){
 
     await page.evaluate(()=>switchView('defects'));
     const defects=page.locator('#defects');
-    await expect(defects.locator('.section-head > .mm-reference-deep-art')).toBeVisible();
-    await expect(defects.locator('.defect-card.mm-reference-deep-panel').first()).toBeVisible();
+    await expect(defects.locator('.mm-dx-hero > .mm-reference-deep-art')).toBeVisible();
+    await expect(defects.locator('.mm-dx-pane.mm-reference-deep-panel').first()).toBeVisible();
 
     await page.evaluate(()=>switchView('coach'));
-    await expect(page.locator('#coach .chat > .mm-reference-deep-art')).toBeVisible();
-    await expect(page.locator('#coach #coachInput')).toBeVisible();
+    await expect(page.locator('#coach .mm-dx-hero > .mm-reference-deep-art')).toBeVisible();
+    await expect(page.locator('#coach .mm-dx-library .mm-dx-symptom').first()).toBeVisible();
 
     await page.evaluate(()=>switchView('standards'));
     await expect(page.locator('#standards .section-head > .mm-reference-deep-art')).toBeVisible();
@@ -399,7 +400,7 @@ for(const width of [360,810]){
 
     await page.evaluate(()=>switchView('lesson'));
     await expect(lesson.locator('#lessonNotes')).toHaveValue('Test setup notes — do not use as process settings.');
-    await expect(lesson.locator('.lesson-header-card > .mm-reference-deep-art')).toHaveCount(1);
+    await expect(lesson.locator('.mm-simple-lesson-hero > .mm-reference-deep-art')).toHaveCount(1);
     const documentOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
     expect(documentOverflow).toBeLessThanOrEqual(2);
   });
