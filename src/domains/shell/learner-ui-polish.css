@@ -3081,3 +3081,56 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
     border:1px solid CanvasText!important;forced-color-adjust:auto!important;
   }
 }
+
+/* Lesson safety and technical disclosures must not inherit dark-on-dark text
+   from the simplified reader's original navy card styling. Preserve all
+   authored boundary guidance while matching the approved light-paper system. */
+.mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 :is(
+  .mm-deep-v2-essentials,.mm-deep-v2-card,.mm-deep-v2-detail
+){
+  min-width:0!important;color:#14384c!important;
+  background:#f0f7fa!important;border:1px solid #b7d6e3!important;
+  border-radius:14px!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 .mm-deep-v2-essentials :is(
+  h2,h3,h4,p,li,b,strong
+),
+.mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 .mm-deep-v2-detail :is(
+  h2,h3,h4,p,li,b,strong
+){
+  color:#14384c!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 .mm-deep-v2-card>summary{
+  box-sizing:border-box!important;min-height:48px!important;
+  background:#d9edf3!important;color:#103d51!important;
+  border-radius:12px!important;padding:12px 15px!important;
+  cursor:pointer!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 .mm-deep-v2-card>summary :is(
+  b,strong,span
+){
+  color:#103d51!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 .mm-deep-v2-card>summary:is(:hover,:focus-visible){
+  background:#c6e9e7!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 .mm-deep-v2-boundary{
+  border:1px solid #a1cfda!important;border-radius:10px!important;
+  background:#d6eef2!important;color:#14384c!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 .mm-deep-v2-boundary :is(
+  p,b,strong,span
+){
+  color:#14384c!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 summary:focus-visible{
+  outline:3px solid #007e92!important;outline-offset:2px!important;
+}
+@media(forced-colors:active){
+  .mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 :is(
+    .mm-deep-v2-essentials,.mm-deep-v2-card,.mm-deep-v2-detail,.mm-deep-v2-boundary
+  ){
+    background:Canvas!important;color:CanvasText!important;
+    border:1px solid CanvasText!important;forced-color-adjust:auto!important;
+  }
+}
