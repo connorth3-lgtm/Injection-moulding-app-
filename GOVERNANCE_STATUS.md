@@ -1,6 +1,8 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.11.11` (STAGING — FAIL/HOLD)**.
+Current governed web candidate: **`2026.10.11.11`**.
+
+**This current candidate is STAGING / FAIL-HOLD**. The successful retained `2026.10.11.10` artifact is historical and is not current-release evidence.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
