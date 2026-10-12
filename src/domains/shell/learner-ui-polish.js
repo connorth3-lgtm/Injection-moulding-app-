@@ -630,7 +630,7 @@ function observePracticeToolRoots(){
   // Lab, process-data and assessment renderers replace their root children
   // while learners move between questions. Reapply artwork without tracking
   // every option/control mutation or risking a refresh loop.
-  for(const id of ['diagnosticLabs','materialLabs','processDataLabs','exams']){
+  for(const id of ['diagnosticLabs','materialLabs','processDataLabs','exams','mmVirtualApprenticeship','mmSpatialTwin']){
     const node=document.getElementById(id);
     if(!node||observedPracticeToolRoots.has(node))continue;
     observedPracticeToolRoots.add(node);
@@ -644,7 +644,9 @@ function practiceToolHeaders(){
     ['#processDataLabs .pd-hero','process',23],
     ['#diagnosticLabs .dl-hero','defects',20],
     ['#materialLabs .ml-hero','materials',3],
-    ['#exams .section-head','training',24]
+    ['#exams .section-head','training',24],
+    ['#mmVirtualApprenticeship > .section-head','cases',22],
+    ['#mmSpatialTwin .mm-st-header > div:first-child','machine',0]
   ]){
     const head=document.querySelector(selector);
     if(!head||head.querySelector(':scope > .mm-reference-practice-tool-art'))continue;
@@ -889,7 +891,7 @@ function boot(){
     new window.MutationObserver(refresh).observe(node,{childList:true,subtree:id==='modal'});
   }
   document.addEventListener('click',event=>{
-    if(event.target?.closest?.('.mm-material-index-card summary,.mobile-nav,[data-mm-registry-menu],#scenarios [data-mm-hub-action],#modal .mm-hub-picker-grid [data-mm-hub-action]'))refresh();
+    if(event.target?.closest?.('.mm-material-index-card summary,.mobile-nav,[data-mm-registry-menu],#scenarios [data-mm-hub-action],#modal .mm-hub-picker-grid [data-mm-hub-action],#mmVirtualApprenticeship button[data-mm-onclick],#mmVirtualApprenticeship .hero-buttons button'))refresh();
   });
   window.MM_REFERENCE_LAYOUT=Object.freeze({version:'2026.10.11.11',refresh});
 }
