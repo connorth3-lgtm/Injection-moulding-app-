@@ -143,12 +143,17 @@ for(const width of [320,360,390,412]){
     // The first button is now the real "All lessons" shortcut into Learn,
     // not a family-science disclosure toggle. Enter an actual Materials mode.
     await study.locator(':scope > .mat-tabs > button').filter({hasText:'Interactive labs'}).click();
+    // The original Materials router REPLACES the explorer with the standalone
+    // labs screen. The explorer's optional <details> correctly disappears; it
+    // is not supposed to reopen inside a no-longer-mounted catalogue.
+    await expect(page.locator('#materials .mat-labs')).toBeVisible();
+    await expect(page.locator('#materials [data-mm-family-science]')).toHaveCount(0);
+    await expect(page.locator('#materials .mat-tabs > button')).toHaveCount(5);
     await page.evaluate(()=>window.MM_REFERENCE_LAYOUT.refresh());
-    await expect(familyScience).toHaveAttribute('open','');
-    await expect(study.locator(':scope > .mat-tabs button')).toHaveCount(5);
+    await expect(page.locator('#materials .mat-labs')).toBeVisible();
     // All lessons must navigate to the shared Learn catalogue without creating
     // a competing second catalogue within Materials.
-    await study.locator(':scope > .mat-tabs > button').filter({hasText:'All lessons'}).click();
+    await page.locator('#materials .mat-tabs > button').filter({hasText:'All lessons'}).click();
     await expect(page.locator('#path .mm-all-lessons')).toBeVisible();
 
     await page.evaluate(()=>switchView('scenarios'));
