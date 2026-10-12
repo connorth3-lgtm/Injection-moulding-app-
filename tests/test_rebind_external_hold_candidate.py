@@ -99,8 +99,8 @@ class CandidateRebindRegression(unittest.TestCase):
             update_banner(pending.replace("PENDING 2026.10.11.11", "PENDING 2026.10.11.10"),
                           candidate, "qa/PWA_PHYSICAL_DEVICE_2026.10.11.11.md")
         with self.assertRaises(SystemExit):
-            update_banner(pending.replace("\\n## Required independently reviewed evidence",
-                                          "\\n> **PENDING 2026.10.11.11 duplicate**\\n\\n## Required independently reviewed evidence"),
+            update_banner(pending.replace(chr(10) + "## Required independently reviewed evidence",
+                                          chr(10) + "> **PENDING 2026.10.11.11 duplicate**" + chr(10) + chr(10) + "## Required independently reviewed evidence"),
                           candidate, "qa/PWA_PHYSICAL_DEVICE_2026.10.11.11.md")
 
     def test_staging_handles_multiple_files_without_partial_write(self):
