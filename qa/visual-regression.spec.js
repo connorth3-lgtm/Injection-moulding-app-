@@ -95,6 +95,21 @@ async function normalizeCaptureState(page,surface){
     // restore different scroll offsets (about 28 px in an otherwise identical
     // screenshot). Align both contexts on the same visible grade heading,
     // without changing any pixel-diff tolerance or app presentation.
+    if(surface==='book-contents'){
+      // Contents follows the Listening chapter in the same browser context.
+      // A restored chapter scroll position can survive the route transition
+      // until a later animation frame on narrow phone layouts. Set every
+      // actual scroll owner to the top on both candidate and approved baseline,
+      // without cropping, masking or relaxing the pixel comparison.
+      const book=document.getElementById('mmBookView');
+      if(!book||book.classList.contains('hidden'))throw new Error('Book contents route is missing');
+      const contents=book.querySelector('[data-mm-book-contents]');
+      if(!contents||contents.hidden)throw new Error('Book contents did not open');
+      for(let node=book;node&&node!==document.body;node=node.parentElement){
+        if(node.scrollTop)node.scrollTop=0;
+      }
+      window.scrollTo({top:0,left:0,behavior:'instant'});
+    }
     if(surface==='book-materials'){
       const grade=document.querySelector('[data-mm-book-catalog-grade]');
       if(!grade)throw new Error('Book materials visual anchor is missing');
