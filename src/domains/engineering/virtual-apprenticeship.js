@@ -406,7 +406,12 @@ function openCase(index=0){
   try{window.MM_SPATIAL_TWIN?.close?.()}catch(_){}
   if(typeof window.switchView==='function')window.switchView('simulator');
   install();renderCase();syncMissionContext('evidence');
-  const host=byId('mmVirtualApprenticeship');requestAnimationFrame(()=>host?.scrollIntoView?.({block:'start',behavior:'smooth'}));
+  const host=byId('mmVirtualApprenticeship');
+  requestAnimationFrame(()=>{
+    if(!host?.isConnected||!host.getClientRects().length)return;
+    host.scrollIntoView?.({block:'start',behavior:'auto'});
+    host.querySelector('.section-head h2')?.focus({preventScroll:true});
+  });
   return true;
 }
 function focusApprenticeshipControl(selector){
@@ -418,7 +423,8 @@ function renderCase(){
   ensureLearner();
   const host=byId('mmVirtualApprenticeship');if(!host)return;
   const row=caseDef();host.replaceChildren();
-  const head=make('div','section-head');const hcopy=make('div');hcopy.append(make('span','eyebrow','Virtual apprenticeship'),make('h2','',row.title),make('p','muted',row.focus));const pill=make('span','pill',`${row.id} · ${row.difficulty}`);head.append(hcopy,pill);host.appendChild(head);
+  const head=make('div','section-head');const hcopy=make('div');const heading=make('h2','',row.title);heading.tabIndex=-1;
+  hcopy.append(make('span','eyebrow','Virtual apprenticeship'),heading,make('p','muted',row.focus));const pill=make('span','pill',`${row.id} · ${row.difficulty}`);head.append(hcopy,pill);host.appendChild(head);
   const spatialBar=make('div','hero-buttons');const spatial=make('button','secondary','Explore this case in Spatial Twin');spatial.type='button';spatial.addEventListener('click',()=>{if(guardLearnerInteraction())return;window.MM_SPATIAL_TWIN?.open?.({caseIndex:state.caseIndex})});spatialBar.appendChild(spatial);host.appendChild(spatialBar);
   const controls=make('div','grid2');
   const caseLabel=make('label','', 'Case');const caseSelect=document.createElement('select');caseSelect.id='mmVaCaseSelect';CASES.forEach((c,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=`${c.id} · ${c.title}`;o.selected=i===state.caseIndex;caseSelect.appendChild(o)});caseLabel.appendChild(caseSelect);
