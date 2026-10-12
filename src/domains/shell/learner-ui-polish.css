@@ -2260,3 +2260,27 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
     border-color:CanvasText!important;forced-color-adjust:auto;
   }
 }
+
+/* Native lab question choices and back/next controls must be finger-sized too. */
+.mm-reference-layout :is(
+  #processDataLabs .pd-choice,#processDataLabs .pd-toolbar button,#processDataLabs .pd-actions button,
+  #diagnosticLabs .dl-choice,#diagnosticLabs .dl-toolbar button,#diagnosticLabs .dl-actions button,
+  #materialLabs .ml-choice,#materialLabs .ml-toolbar button,#materialLabs .ml-actions button
+){
+  box-sizing:border-box!important;min-height:44px!important;
+  white-space:normal!important;overflow-wrap:anywhere!important;
+  border-radius:10px!important;
+}
+.mm-reference-layout :is(
+  #processDataLabs .pd-choice,#diagnosticLabs .dl-choice,#materialLabs .ml-choice
+):focus-visible{
+  outline:2px solid #71e7dc!important;outline-offset:2px!important;
+}
+@media(max-width:700px){
+  .mm-reference-layout :is(#processDataLabs .pd-toolbar,#diagnosticLabs .dl-toolbar,#materialLabs .ml-toolbar){
+    gap:8px!important;
+  }
+  .mm-reference-layout :is(#processDataLabs .pd-toolbar button,#diagnosticLabs .dl-toolbar button,#materialLabs .ml-toolbar button){
+    flex:1 1 125px!important;
+  }
+}
