@@ -217,9 +217,18 @@ function dxClearCase(){
 }
 function dxEnsureLearner(){
   const id=dxLearnerId();
-  if(id===dxOwnerId)return;
+  if(id===dxOwnerId)return false;
   dxOwnerId=id;
   dxClearCase();
+  return true;
+}
+function dxGuardInteraction(view){
+  // A learner switch may happen without a fresh defect-view render. An old
+  // page's input, checkbox or export must never write into the new profile's
+  // blank learning case. Repaint first and ignore that stale event.
+  if(!dxEnsureLearner())return false;
+  dxRender(view);
+  return true;
 }
 function dxSelectSymptom(index){
   // Measurements, availability ticks and learner judgements belong to the
@@ -346,6 +355,7 @@ function dxRender(view){
     root.dataset.mmDxBound='1';
     root.addEventListener('click',event=>{
       const el=event.target.closest('[data-mm-dx-action]');if(!el||!root.contains(el))return;
+      if(dxGuardInteraction(view))return;
       const action=el.dataset.mmDxAction;
       if(action==='choose'){
         const index=Number(el.dataset.mmDxId);
@@ -371,6 +381,7 @@ function dxRender(view){
       }
     });
     root.addEventListener('input',event=>{
+      if(dxGuardInteraction(view))return;
       if(event.target.id==='mmDxSearch'){
         dxState.query=event.target.value;
         const term=dxState.query.trim().toLowerCase();
@@ -380,6 +391,7 @@ function dxRender(view){
       }
     });
     root.addEventListener('change',event=>{
+      if(dxGuardInteraction(view))return;
       if(event.target.matches('[data-mm-dx-evidence]')){
         const id=event.target.dataset.mmDxEvidence;
         dxState.evidence=event.target.checked?[...new Set([...dxState.evidence,id])]:dxState.evidence.filter(x=>x!==id);
