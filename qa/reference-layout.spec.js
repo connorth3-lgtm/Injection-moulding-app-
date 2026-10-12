@@ -132,6 +132,16 @@ for(const width of [320,360,390,412]){
     // one panel, without changing the actual learning/lab/compare actions.
     const modes=await study.locator(':scope > .mat-tabs button').evaluateAll(nodes=>nodes.map(n=>n.getBoundingClientRect()));
     expect(modes.every(b=>b.width>60&&b.height>=44)).toBe(true);
+    // The learning shell has already moved under the guide. A subsequent
+    // refresh must still locate it and reveal an opened teaching mode, without
+    // recreating its buttons or trapping the lesson behind a closed disclosure.
+    await familyScience.locator('summary').click();
+    await expect(familyScience).not.toHaveAttribute('open','');
+    await page.evaluate(()=>window.MM_REFERENCE_LAYOUT.refresh());
+    await study.getByRole('button',{name:'Learn',exact:true}).click();
+    await page.evaluate(()=>window.MM_REFERENCE_LAYOUT.refresh());
+    await expect(familyScience).toHaveAttribute('open','');
+    await expect(study.locator(':scope > .mat-tabs button')).toHaveCount(5);
 
     await page.evaluate(()=>switchView('scenarios'));
     await expect(page.locator('#scenarios .mm-reference-title')).toHaveText('Practice');
