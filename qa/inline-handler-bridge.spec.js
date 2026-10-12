@@ -98,3 +98,27 @@ test('the allowlisted Materials All lessons shortcut opens the single Learn cata
   await expect(page.locator('#materials')).toBeHidden();
   await expect(page.locator('#path [data-mm-lesson-catalog]')).toHaveCount(1);
 });
+
+test('Home lesson and daily-challenge actions remain expressly allowed under CSP',async({page})=>{
+  await openApp(page);
+  const state=await page.evaluate(()=>{
+    const names=['mmHubOpenLesson','openDailyChallenge'];
+    const calls=[];
+    const originals=Object.fromEntries(names.map(name=>[name,window[name]]));
+    const button=document.createElement('button');
+    document.body.appendChild(button);
+    try{
+      for(const name of names){
+        window[name]=()=>{calls.push(name)};
+        button.setAttribute('data-mm-onclick',name+'()');
+        button.click();
+      }
+      return{calls,allowed:names.map(name=>window.MM_INLINE_HANDLER_BRIDGE.allowedCalls.includes(name))};
+    }finally{
+      button.remove();
+      for(const name of names)window[name]=originals[name];
+    }
+  });
+  expect(state.allowed).toEqual([true,true]);
+  expect(state.calls).toEqual(['mmHubOpenLesson','openDailyChallenge']);
+});
