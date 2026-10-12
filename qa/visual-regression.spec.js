@@ -174,6 +174,20 @@ async function normalizeCaptureState(page,surface){
       if(main)main.scrollTop=0;
     }
   },{surface});
+  // The preceding Book reader navigation clicks leave the mouse at its last
+  // coordinates. On phone widths those coordinates can hover *different* TOC
+  // buttons in the independent candidate/baseline contexts (for example row
+  // 11 versus row 12). That generated a 28,760-pixel false visual drift on a
+  // post-merge push even though both pages had identical content. Reset the
+  // real input device on BOTH pages, rather than masking pixels or widening
+  // the approved 12-pixel tolerance. This also prevents stale hover in other
+  // captured surfaces without changing the app's hover accessibility.
+  await page.mouse.move(0,0);
+  if(surface==='book-contents'){
+    // Fail explicitly if CSS hover/focus remains on any chapter after cleanup.
+    // The same state is verified independently in each browser context.
+    await expect(page.locator('#mmBookView .mm-book-toc > li > button:hover, #mmBookView .mm-book-toc > li > button:focus-visible')).toHaveCount(0);
+  }
   // Text metrics and final layout must settle before strict pixel comparison.
   await page.evaluate(async()=>{
     await document.fonts.ready;
