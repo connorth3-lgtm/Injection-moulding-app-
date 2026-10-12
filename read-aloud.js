@@ -311,6 +311,10 @@
     const main=document.querySelector('#mainContent,.main,main');
     const view=listeningUI?.view;
     if(!main||!view)return;
+    // The core router may hide this custom view without dispatching a click
+    // (for example after a programmatic switchView()). Reconcile against
+    // the actual DOM before deciding the Listening tab is already open.
+    if(listeningOpen&&view.classList.contains('hidden'))listeningOpen=false;
     if(!listeningOpen){
       previousView=[...document.querySelectorAll('.view')].find(v=>!v.classList.contains('hidden'))||null;
       document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));
