@@ -320,6 +320,10 @@ function wirePageNavigation(host){
       const details=host.querySelector('[data-mm-material-workflows]');
       if(details)details.open=true;
     }
+    if(action==='learning'){
+      const guide=host.querySelector('[data-mm-family-science]');
+      if(guide)guide.open=true;
+    }
     document.getElementById(targets[action])?.scrollIntoView({behavior:'smooth',block:'start'});
   }))
 }

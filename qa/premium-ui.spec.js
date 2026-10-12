@@ -48,10 +48,15 @@ test('Book reading and Practice both omit Mission Control strip without losing l
   await expect(mission).toBeHidden();
   await page.evaluate(()=>switchView('scenarios'));
   await expect(mission).toBeHidden();
-  // The shell can finish before Book has mounted its own view on a slow phone.
-  // Honour the Book runtime's ready promise before exercising open().
-  await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load();});
+  // Exercise the REAL learner navigation path: Practice → Home → Open Book.
+  // Direct MMBook.open() skips the shell's custom-view synchronisation, and
+  // can race with an outstanding Practice view render under Chromium/WebKit.
+  await page.evaluate(async()=>{await window.MMBook.ready;switchView('dashboard')});
+  const bookAction=page.locator('#dashboard [data-mm-home-book-action="contents"]');
+  await expect(bookAction).toBeVisible();
+  await bookAction.click();
   await expect(page.locator('#mmBookView')).toBeVisible();
+  await page.evaluate(()=>window.MMBook.load());
   await expect(mission).toBeHidden();
   await expect(page.locator('#pageSubtitle')).toBeHidden();
   // The mission's overlays and learner data remain mounted while the shared

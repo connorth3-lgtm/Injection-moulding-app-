@@ -346,11 +346,11 @@
   "currentAssuranceEvidence": {
     "staticContract": {
       "status": "pass",
-      "meaning": "Automated contract release 2026.10.11.9 source d572ee13d8f2f09139882ff1a271e855284f6e3c: verified producer run 38172783245, retained artifact 11713839913, public-runtime fingerprint sha256:97d9cdf902986357f9446796478525f1b61c0f37162387a042121c310ee4d3c7. Owner-approved .9 strict 12-pixel family-folders visuals, substantive Chromium/WebKit, cross-browser, reachability, reliability and Question Quality 50-Pass passed. All seven external human/device/provider evidence streams remain HOLD."
+      "meaning": "The non-production release 2026.10.11.10 technical candidate source 1a528632301232224fb6f9b2460c9a2863b92e81 was retained by successful producer run 38193269649 as artifact 11721888396 with measured runtime fingerprint sha256:230170530d51afa8ac824e332905131e91f188945275c40b80fd768428c93424. Successful source-bound software automation does not imply deployment or external human/device validation."
     },
     "behavioralBrowser": {
       "status": "pass",
-      "meaning": "Behavioral browser QA release 2026.10.11.9 source d572ee13d8f2f09139882ff1a271e855284f6e3c: strict 12-pixel visual comparison for 4 viewports and 13 surfaces, substantive Chromium/WebKit, cross-browser reachability and five reliability shards passed, including sourced PP polymer-folder access. This is not proof of actual physical Android Read Aloud sound, real assistive technology or independent device testing."
+      "meaning": "The owner-reviewed Book-only UI for release 2026.10.11.10 at source 1a528632301232224fb6f9b2460c9a2863b92e81 passed strict 52-surface 12px visual regression, substantive Chromium/WebKit, cross-browser navigation, Question Quality and reliability. Fresh current PR-head integrity and release QA are separately required."
     },
     "externalHumanDevice": {
       "status": "hold",

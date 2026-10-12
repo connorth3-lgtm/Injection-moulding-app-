@@ -198,6 +198,12 @@ test('unified material index searches exact-grade processing evidence, family re
   const crossType=await page.evaluate(()=>window.MM_MATERIAL_SEARCH.searchAllPage('POM',{page:1,pageSize:100}));
   const crossTypes=[...new Set(crossType.items.map(item=>item.type))];
   expect(crossTypes.length).toBeGreaterThan(1);
+  // A fully cleared free-text search must return to the illustrated folder
+  // catalogue; previously it silently switched to 341 raw records.
+  await query.fill('');
+  await expect(status).toContainText('polymer families');
+  await expect(results.locator('[data-mm-family-open="PP"]')).toBeVisible();
+  await expect(results.locator('[data-mm-material-index-result]')).toHaveCount(0);
 
   const stats=await page.evaluate(()=>window.MM_MATERIAL_SEARCH.stats());
   expect(stats.documents).toBeGreaterThan(stats.grades);

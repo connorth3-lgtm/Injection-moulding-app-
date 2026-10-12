@@ -18,7 +18,7 @@ async function openHub(page,label,selector){
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
 
-async function expectReadableTiles(page,rootSelector,expectedCount=4){
+async function expectReadableTiles(page,rootSelector,expectedCount=5){
   const result=await page.evaluate(rootSelector=>{
     const root=document.querySelector(rootSelector);
     const grid=root.querySelector('.mm-hub-grid');
@@ -53,27 +53,22 @@ async function expectReadableTiles(page,rootSelector,expectedCount=4){
     };
   },rootSelector);
   expect(result.count).toBe(expectedCount);
-  expect(result.columns).toBe(2);
-  expect(result.display).toBe('flex');
-  expect(result.direction).toBe('column');
-  expect(result.align).toBe('flex-start');
+  // The illustrated task choices now occupy one scan-friendly mobile column
+  // instead of 2 cramped text-only columns plus a duplicate Question Centre.
+  expect(result.columns).toBe(1);
+  expect(result.display).toBe('grid');
   expect(result.textAlign).toBe('left');
   expect(result.whiteSpace).toBe('normal');
   expect(result.background).not.toBe('rgb(128, 128, 128)');
-  // Common phone widths keep two columns, but retain two lines of explanatory
-  // copy so similarly named learning/practice destinations remain distinguishable.
-  expect(result.eyebrowDisplay).toBe('none');
-  expect(result.titleDisplay).toBe('block');
+  expect(result.titleDisplay).not.toBe('none');
   expect(result.copyDisplay).not.toBe('none');
-  expect(result.actionDisplay).toBe('none');
-  expect(result.helperDisplay).toBe('none');
-  expect(result.minHeight).toBeGreaterThanOrEqual(118);
-  expect(result.maxHeight).toBeLessThanOrEqual(170);
+  expect(result.minHeight).toBeGreaterThanOrEqual(90);
+  expect(result.maxHeight).toBeLessThanOrEqual(280);
   expect(result.maxWidth-result.minWidth).toBeLessThan(2);
   expect(result.overlap).toBe(false);
 }
 
-async function expectNarrowReadableTiles(page,rootSelector,expectedCount=4){
+async function expectNarrowReadableTiles(page,rootSelector,expectedCount=5){
   const result=await page.evaluate(rootSelector=>{
     const root=document.querySelector(rootSelector);
     const grid=root.querySelector('.mm-hub-grid');
@@ -99,9 +94,9 @@ async function expectNarrowReadableTiles(page,rootSelector,expectedCount=4){
   expect(result.count).toBe(expectedCount);
   expect(result.columns).toBe(1);
   expect(result.copies.every(x=>x.display!=='none'&&x.height>0&&x.text.length>12)).toBeTruthy();
-  expect(result.minHeights.every(x=>x==='0px')).toBeTruthy();
-  expect(result.minHeight).toBeGreaterThanOrEqual(70);
-  expect(result.maxHeight).toBeLessThan(165);
+  expect(result.minHeights.every(x=>parseFloat(x)>=90)).toBeTruthy();
+  expect(result.minHeight).toBeGreaterThanOrEqual(90);
+  expect(result.maxHeight).toBeLessThan(280);
   expect(result.overflowX).toBeLessThanOrEqual(1);
   expect(result.overlap).toBe(false);
 }

@@ -6,6 +6,15 @@ import json
 ROOT = Path(__file__).resolve().parent
 
 
+def release_key(value: str) -> tuple[int, int, int, int]:
+    """Compare release components numerically (the .10 suffix follows .9)."""
+    parts = value.split(".")
+    if len(parts) != 4 or not all(part.isdigit() for part in parts):
+        raise AssertionError(f"invalid governed web release: {value!r}")
+    return tuple(int(part) for part in parts)
+
+
+
 def load(path: str) -> dict:
     target = ROOT / path
     if not target.is_file():
@@ -59,7 +68,7 @@ def main() -> None:
         evidence_release = str(binding.get("release") or "").strip()
         if not evidence_release:
             raise AssertionError(f"{label} binding has no release identity")
-        if evidence_release > release:
+        if release_key(evidence_release) > release_key(release):
             raise AssertionError(f"{label} binding targets a future release")
     if external.get("release") != release:
         for key in ("accessibility", "pwaPhysicalDevices", "windowsDistribution", "bookSme", "curriculumSme", "learnerOutcomes", "nzqaProvider"):

@@ -18,6 +18,11 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   await page.goto(APP, { waitUntil: 'domcontentloaded' });
 
   const host=page.locator('.mm-read-aloud');
+  // Book-only design: no global Read Aloud button on the Home tab.
+  await expect(host).toBeHidden();
+  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED&&window.MMBook?.open));
+  await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load()});
+  await expect(page.locator('#mmBookView')).toBeVisible();
   await expect(host).toBeVisible();
   await expect(host).toHaveAttribute('data-version','2026.10.04.2');
   await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.10.04.2');
@@ -42,6 +47,16 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   await expect(host.locator('[data-mm-read="stop"]')).toBeVisible();
   await expect(host.locator('[data-mm-read="speed"]')).toHaveValue('1');
 
+  // Book player expands within Book chrome, not over the reading surface.
+  await expect.poll(()=>host.locator('details').evaluate(el=>getComputedStyle(el).position)).toBe('relative');
+  await expect.poll(()=>page.evaluate(()=>{
+    const book=document.getElementById('mmBookView');
+    const details=document.querySelector('.mm-read-aloud details[open]');
+    if(!book||!details)return false;
+    const content=book.getBoundingClientRect(),player=details.getBoundingClientRect();
+    return content.top>=player.bottom-2||content.bottom<=player.top+2;
+  })).toBeTruthy();
+
   const visibilityCheck=await page.evaluate(() => {
     const root=document.querySelector('.main')||document.querySelector('main')||document.body;
     const visible=document.createElement('p');visible.id='mmQaVisibleSpeech';visible.textContent='Read aloud visible sentinel sentence.';
@@ -53,6 +68,15 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   });
   expect(visibilityCheck.visible).toBeTruthy();
   expect(visibilityCheck.hidden).toBeFalsy();
+  // Leaving Book removes audio chrome from the entire main app.
+  await page.evaluate(()=>switchView('dashboard'));
+  await expect(host).toBeHidden();
+  await page.evaluate(()=>window.MMBook.open());
+  await expect(host).toBeVisible();
+  // Book exit correctly stops speech and collapses the player; reopening
+  // it restores the product's Ready state before checking voice capability.
+  await host.locator('details').evaluate(el=>{el.open=true;});
+  await expect(host.locator('[data-mm-read="play"]')).toBeVisible();
 
   const capability=host.locator('summary span');
   const status=host.locator('.mm-read-status');

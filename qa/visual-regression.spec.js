@@ -198,16 +198,23 @@ async function prepareSurface(page,surface){
     const trace=page.locator('.mm-book-claim-trace').first();if(await trace.count())await trace.evaluate(el=>{el.open=true});
     await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
   }else if(surface==='listen-expanded'){
-    await page.evaluate(()=>switchView('dashboard'));
+    // The reader now belongs to Book, not the global learner dashboard.
+    // Preserve the 13th locked capture surface; capture Book audio instead.
+    await openBookContents(page);
     const host=page.locator('.mm-read-aloud');
     await expect(host).toBeVisible();
     await host.locator('details').evaluate(el=>{el.open=true});
     await expect(host.locator('[data-mm-read="play"]')).toBeVisible();
   }else if(surface==='listening'){
-    await page.waitForFunction(()=>typeof window.MMReadAloud?.openListening==='function');
-    await page.evaluate(()=>window.MMReadAloud.openListening());
-    await expect(page.locator('#mmListeningView')).toBeVisible();
-    await expect(page.locator('[data-mm-listening="play"]')).toBeVisible();
+    // Book-only listening: capture chapter reading with its speech panel,
+    // rather than a separate lesson-wide Listening destination.
+    await openBookContents(page,{expandIndex:true});
+    await page.locator('[data-mm-book-chapter]').first().click();
+    await expect(page.locator('#mmBookView [data-mm-book-reader]')).toBeVisible();
+    const reader=page.locator('.mm-read-aloud');
+    await expect(reader).toBeVisible();
+    await reader.locator('details').evaluate(el=>{el.open=true});
+    await expect(reader.locator('[data-mm-read="play"]')).toBeVisible();
   }else{
     throw new Error(`Unknown visual surface: ${surface}`);
   }

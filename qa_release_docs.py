@@ -11,7 +11,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
- 'web_release':'2026.10.11.9',
+ 'web_release':'2026.10.11.10',
  'android_release':'2026.08.26.2',
  'desktop_release':'2026.09.29.1',
  'content_version':'2026.08.26.1',
@@ -186,6 +186,16 @@ if visual.get('release')=='2026.10.09.4':
          and visual.get('commit')=='fa27bd16525f8cb216654ea524649a3a37a3195c'
          and visual.get('maxDiffPixels')==12,
          '2026.10.09.4 visual baseline must remain bound to approved fa27bd16 at 12px')
+elif visual.get('release')=='2026.10.11.10':
+    # The owner approved Book-only speech chrome AFTER the earlier .10
+    # baseline became immutable. Fail closed on this uniquely pinned
+    # successor, not a mutable or arbitrary suffix.
+    need(visual.get('ref')=='visual-baseline/2026.10.11.10-book-only'
+         and visual.get('commit')=='7b22514e45bb17068736f8e76d4c63862d726f8d'
+         and visual.get('maxDiffPixels')==12
+         and len(visual.get('viewports',[]))==4
+         and len(visual.get('surfaces',[]))==13,
+         '2026.10.11.10 Book-only visual successor must remain bound to approved 7b22514e with all 52 checks at 12px')
 else:
     need(visual.get('ref')==f"visual-baseline/{visual.get('release')}",
          'visual baseline must use the release-named retained ref')

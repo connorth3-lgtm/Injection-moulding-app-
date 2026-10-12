@@ -116,7 +116,11 @@ test('lesson has one clear ending and optional evidence stays out of the default
   expect(await measured.evaluate(el=>el.open)).toBe(false);
   await expect(measured.locator('> .mme-panel')).toBeHidden();
   await expect(measured.locator('summary')).toHaveText('Measured evidence');
+  // Audio is deliberately scoped to Book, not regular lesson pages.
   const listen=page.locator('.mm-read-aloud details:not([open]) summary');
+  await expect(listen).toBeHidden();
+  await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open()});
+  await expect(page.locator('#mmBookView')).toBeVisible();
   await expect(listen).toBeVisible();
   const listenBox=await listen.boundingBox();
   expect(listenBox?.width||999).toBeLessThanOrEqual(112);
