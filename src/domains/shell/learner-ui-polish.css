@@ -1791,3 +1791,13 @@ html.mm-reference-photo-ready .mm-reference-photo>.mm-reference-picture{
     overscroll-behavior:contain;
   }
 }
+
+/* Audio controls are a Book reader feature, not global app navigation.
+   Keep the native speech engine and Book's 'Listen to verified Book' action.
+   Hide the old header reader across Home, Learn, Materials, Practice, More,
+   and other learner views, then reveal only while Book is the active view.
+   No display:none on the Book reader itself; preserve its screen-reader text.
+   CSS :has() is supported by the Chrome/WebKit browser QA targets. */
+body .top-actions > .mm-read-aloud{display:none!important}
+body:has(#mmBookView:not(.hidden)) .top-actions > .mm-read-aloud{display:block!important}
+body:has(#mmBookView) #nav > [data-mm-listening-tab]{display:none!important}
