@@ -505,7 +505,7 @@ test('Virtual Apprenticeship prevents stale reviewed answers crossing local lear
       }
     }));
   });
-  await page.goto(BASE,{waitUntil:'domcontentloaded'});
+  await page.goto('/index.html',{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED&&window.MM_VIRTUAL_APPRENTICESHIP?.openCase&&window.MM_RUNTIME_V2?.storage?.learnerToken));
   await page.evaluate(()=>window.MM_VIRTUAL_APPRENTICESHIP.openCase(1));
   const root=page.locator('#mmVirtualApprenticeship');
@@ -611,7 +611,7 @@ test('Spatial Twin isolates learner state and resets the timeline on a different
       activeUser:'twin-a',users:{'twin-a':learner('twin-a'),'twin-b':learner('twin-b')}
     }));
   });
-  await page.goto(BASE,{waitUntil:'domcontentloaded'});
+  await page.goto('/index.html',{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED&&window.MM_SPATIAL_TWIN?.open&&window.MM_RUNTIME_V2?.storage?.learnerToken));
   const twin=page.locator('#mmSpatialTwin');
   await page.evaluate(()=>window.MM_SPATIAL_TWIN.open({caseIndex:1}));
@@ -658,7 +658,7 @@ test('Spatial Twin ignores a stale old-profile hotspot event before rerender',as
       activeUser:'twin-a',users:{'twin-a':learner('twin-a'),'twin-b':learner('twin-b')}
     }));
   });
-  await page.goto(BASE,{waitUntil:'domcontentloaded'});
+  await page.goto('/index.html',{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED&&window.MM_SPATIAL_TWIN?.open&&window.MM_RUNTIME_V2?.storage?.learnerToken));
   await page.evaluate(()=>window.MM_SPATIAL_TWIN.open({caseIndex:1}));
   await page.evaluate(()=>{
