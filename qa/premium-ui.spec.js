@@ -534,6 +534,42 @@ test('Virtual Apprenticeship prevents stale reviewed answers crossing local lear
   await expect(root.locator('#mmVaProgress')).toContainText('1/6 cases completed');
 });
 
+test('Virtual Apprenticeship case, coaching level and Reset preserve keyboard focus',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_VIRTUAL_APPRENTICESHIP?.openCase));
+  await page.evaluate(()=>window.MM_VIRTUAL_APPRENTICESHIP.openCase(0));
+  const root=page.locator('#mmVirtualApprenticeship');
+  const selector=root.locator('#mmVaCaseSelect');
+  await selector.focus();
+  await selector.selectOption('1');
+  await expect(selector).toBeFocused();
+  const level=root.locator('[data-mm-va-level]');
+  await level.focus();
+  const values=await level.locator('option').evaluateAll(els=>els.map(el=>el.value));
+  expect(values.length).toBeGreaterThan(1);
+  await level.selectOption(values[1]);
+  await expect(level).toBeFocused();
+  const reset=root.getByRole('button',{name:'Reset this case'});
+  await reset.focus();
+  await reset.press('Enter');
+  await expect(selector).toBeFocused();
+  await expect(root.locator('#mmVaResult')).toBeEmpty();
+});
+
+test('Spatial Twin case picker retains focus after rerendering the scene',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_SPATIAL_TWIN?.open));
+  await page.evaluate(()=>window.MM_SPATIAL_TWIN.open({caseIndex:0}));
+  const pick=page.locator('#mmSpatialTwin [data-mm-st-case]');
+  await pick.focus();
+  await pick.selectOption('1');
+  await expect(pick).toBeFocused();
+  await expect(pick).toHaveValue('1');
+  await expect(page.locator('#mmSpatialTwin .mm-st-shell')).toHaveAttribute('data-phase','baseline');
+});
+
 test('Spatial Twin isolates learner state and resets the timeline on a different case',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await page.addInitScript(()=>{
