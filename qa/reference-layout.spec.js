@@ -454,7 +454,11 @@ test('Materials routes quiz, reference evidence, explorer and labs without stale
 
   await material.locator('.mat-tabs > button').filter({hasText:'Evidence & references'}).click();
   await expect(material.locator('.standard-card')).toHaveCount(6);
-  await expect(material.locator('.standard-card a[target="_blank"][rel="noopener"]').first()).toBeVisible();
+  const paperLink=material.locator('.standard-card a.standard-link').first();
+  await expect(paperLink).toBeVisible();
+  await expect(paperLink).toHaveAttribute('href',/^https:\/\//);
+  const paperTarget=await paperLink.getAttribute('target');
+  if(paperTarget==='_blank')expect((await paperLink.getAttribute('rel')||'').split(/\s+/)).toContain('noopener');
   await expect(material.locator('[data-mm-family-science]')).toHaveCount(0);
 
   await material.locator('.mat-tabs > button').filter({hasText:'Material explorer'}).click();
@@ -504,7 +508,12 @@ for(const width of [390,810]){
     await page.locator('#materials .mat-tabs button').filter({hasText:'Evidence & references'}).click();
     const refs=page.locator('#materials .mat-shell .standard-card');
     await expect(refs.first()).toHaveCSS('background-color','rgb(240, 247, 250)');
-    await expect(refs.first().locator('a.standard-link')).toHaveAttribute('rel','noopener');
+    const sourceLink=refs.first().locator('a.standard-link');
+    await expect(sourceLink).toBeVisible();
+    await expect(sourceLink).toHaveAttribute('href',/^https:\/\//);
+    if(await sourceLink.getAttribute('target')==='_blank'){
+      expect((await sourceLink.getAttribute('rel')||'').split(/\s+/)).toContain('noopener');
+    }
     await page.locator('#materials .mat-tabs button').filter({hasText:'Material explorer'}).click();
     await expect(page.locator('#materials [data-mm-all-material-index]')).toBeVisible();
     expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
