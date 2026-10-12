@@ -2872,3 +2872,47 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
     forced-color-adjust:auto!important;
   }
 }
+
+/* Approved reference boards: the five real Practice launch cards and More's
+   original actions use high-contrast light tiles on the navy application shell. */
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-section .mm-reference-practice-choice{
+  border:1px solid #b9dbe8!important;border-radius:14px!important;
+  background:#f0f7fa!important;color:#10344a!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-section .mm-reference-practice-choice>b{
+  color:#0a3046!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-section .mm-reference-practice-choice>.eyebrow{
+  color:#047e8e!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-section .mm-reference-practice-choice>small{
+  color:#3b5c70!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-section .mm-reference-practice-choice>.mm-hub-tile-action{
+  color:#008b94!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-section .mm-reference-practice-choice:is(:hover,:focus-visible){
+  border-color:#0094a1!important;background:#dff2f0!important;
+}
+.mm-reference-layout #modal .mm-reference-more-card .mm-more-disclosure-items>.quick-action{
+  box-sizing:border-box!important;border:1px solid #b8d8e4!important;
+  border-radius:12px!important;background:#eff7fa!important;
+  color:#153a50!important;min-height:76px!important;
+  white-space:normal!important;overflow-wrap:anywhere!important;
+}
+.mm-reference-layout #modal .mm-reference-more-card .mm-more-disclosure-items>.quick-action :is(b,small){
+  color:#153a50!important;
+}
+.mm-reference-layout #modal .mm-reference-more-card .mm-more-disclosure-items>.quick-action small{
+  color:#456479!important;
+}
+.mm-reference-layout #modal .mm-reference-more-card .mm-more-disclosure-items>.quick-action:is(:hover,:focus-visible){
+  border-color:#058e9d!important;background:#d9f0ef!important;
+}
+@media(forced-colors:active){
+  .mm-reference-layout #scenarios .mm-practice-hub .mm-hub-section .mm-reference-practice-choice,
+  .mm-reference-layout #modal .mm-reference-more-card .mm-more-disclosure-items>.quick-action{
+    background:Canvas!important;color:CanvasText!important;
+    border:1px solid CanvasText!important;forced-color-adjust:auto!important;
+  }
+}
