@@ -3243,3 +3243,11 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
 .mm-reference-layout #materials .mat-shell .mat-lab input[type=range]{
   accent-color:#008a95!important;
 }
+
+/* Material knowledge-check result is otherwise a dark callout inheriting
+   ink from the new light parent card. Never leave grading text unreadable. */
+.mm-reference-layout #materials .mat-shell .mat-quiz-card #materialQuizResult.callout:not(.hidden){
+  background:#d5eee9!important;color:#103e4f!important;
+  border:1px solid #9bcac1!important;border-radius:11px!important;
+  line-height:1.55!important;
+}
