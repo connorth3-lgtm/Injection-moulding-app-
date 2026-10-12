@@ -333,6 +333,8 @@ function setCase(index){
   const list=cases();if(!list.length)return;
   state.caseIndex=Math.max(0,Math.min(list.length-1,Number(index)||0));
   const focus=scene().focus||[];state.selected=focus[0]||'mould';state.phase=0;saveState();renderHost();syncMissionContext();
+  // Replacing the case picker subtree otherwise strands keyboard focus.
+  byId('mmSpatialTwin')?.querySelector('[data-mm-st-case]')?.focus();
 }
 function syncMissionContext(){
   const c=currentCase(),s=scene();
