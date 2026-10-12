@@ -529,6 +529,14 @@ test('Spatial Twin isolates learner state and resets the timeline on a different
   await expect(twin.locator('[data-mm-st-case]')).toHaveValue('2');
   await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-mode','pressure');
   await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-phase','baseline');
+  // Core route changes must clear the global body marker, otherwise the
+  // Spatial Twin mobile width rules leak into unrelated Learn/Practice tabs.
+  await expect(page.locator('body')).toHaveAttribute('data-mm-spatial-twin','1');
+  await page.evaluate(()=>switchView('path'));
+  await expect(page.locator('body')).not.toHaveAttribute('data-mm-spatial-twin','1');
+  await page.evaluate(()=>switchView('simulator'));
+  await expect(twin).toBeHidden();
+  await expect(page.locator('#mmVirtualApprenticeship')).toBeVisible();
 });
 
 test('Spatial Twin ignores a stale old-profile hotspot event before rerender',async({page})=>{
