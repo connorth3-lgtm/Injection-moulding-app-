@@ -230,6 +230,20 @@ test('Listening tab builds a continuous lesson playlist and exposes long-session
   await expect.poll(()=>page.evaluate(()=>window.__mmListeningSpoken||'')).toContain('Material preparation');
   await expect(view.locator('[data-mm-listening-lesson]')).toContainText('Lesson 2');
   await expect(view.locator('[data-mm-listening-status]')).toHaveText('Listening session playing');
+  // A programmatic core view switch can hide the custom Listening screen
+  // without a nav click. Reopening must restore the real visible view,
+  // active tab and keyboard focus instead of trusting a stale boolean.
+  await page.evaluate(()=>{
+    document.getElementById('mmListeningView').classList.add('hidden');
+    document.getElementById('path').classList.remove('hidden');
+    document.querySelector('[data-mm-listening-tab]').classList.remove('active');
+  });
+  await tab.focus();
+  await tab.press('Enter');
+  await expect(view).toBeVisible();
+  await expect(view.locator('.mm-listening-hero h2')).toBeFocused();
+  await expect(tab).toHaveClass(/active/);
+  await expect(page.locator('#path')).toHaveClass(/hidden/);
 });
 
 
