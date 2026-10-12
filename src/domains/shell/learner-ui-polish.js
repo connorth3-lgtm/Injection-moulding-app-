@@ -774,6 +774,17 @@ function materials(){
           root.dataset.mmReferenceRevealMode='1';
           const activeGuide=root.querySelector('[data-mm-family-science]');
           if(activeGuide)activeGuide.open=true;
+          // The native tab handler replaces its material subtree during this
+          // same click. Reveal the *new* guide after dispatch, not just the
+          // soon-to-be-detached one. Passive refresh never sets this flag.
+          requestAnimationFrame(()=>{
+            const latestGuide=root.querySelector('[data-mm-family-science]');
+            if(root.dataset.mmReferenceRevealMode==='1'&&latestGuide){
+              latestGuide.open=true;
+              delete root.dataset.mmReferenceRevealMode;
+            }
+            refresh();
+          });
         }
       },true);
     }
