@@ -73,7 +73,7 @@ class CandidateRebindRegression(unittest.TestCase):
                 self.assertEqual(len(indices), 1)
                 i = indices[0]
                 lines[i] = ("> **PENDING 2026.10.11.11 synthetic unit-test fixture:** "
-                            "not real release evidence.\\n").replace("\\\\n", "\\n")
+                            "not real release evidence." + chr(10))
                 pending = "".join(lines)
                 after = update_banner(pending, candidate, path)
                 self.assertIn("> **RETAINED ", after)
@@ -93,7 +93,7 @@ class CandidateRebindRegression(unittest.TestCase):
         indices = [i for i, line in enumerate(lines[:12])
                    if line.startswith("> **RETAINED ")]
         self.assertEqual(len(indices), 1)
-        lines[indices[0]] = "> **PENDING 2026.10.11.11 synthetic unit-test fixture:** not approved.\\n".replace("\\\\n", "\\n")
+        lines[indices[0]] = "> **PENDING 2026.10.11.11 synthetic unit-test fixture:** not approved." + chr(10)
         pending = "".join(lines)
         with self.assertRaises(SystemExit):
             update_banner(pending.replace("PENDING 2026.10.11.11", "PENDING 2026.10.11.10"),
