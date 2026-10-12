@@ -23,6 +23,9 @@
   let ui=null;
   let listeningUI=null;
   let playlistMode=false;
+  // Navigation while paused/stopped selects the next unit without permission
+  // to start new speech. The next explicit Play consumes this selection.
+  let selectionPending=false;
   let listeningOpen=false;
   let previousView=null;
 
@@ -181,6 +184,7 @@
     // a synchronous cancellation error from synth.cancel().
     speakToken+=1;
     cancelDeviceSpeech();
+    selectionPending=false;
     starting=false;speaking=false;paused=false;
     clearHighlight();
     if(ui)ui.current.hidden=true;
@@ -194,6 +198,7 @@
   const iosSpeech=/iPhone|iPad|iPod/i.test(navigator.userAgent||'')
     ||(/Macintosh/i.test(navigator.userAgent||'')&&Number(navigator.maxTouchPoints||0)>1);
   function speakCurrent(retry=0){
+    selectionPending=false;
     if(!supported){setStatus('Read Aloud is not available in this browser/device.');updateButtons();return;}
     if(!units.length)(playlistMode?buildPlaylist():buildUnits());
     const unit=currentUnit();
@@ -296,6 +301,7 @@
       try{synth.pause()}catch(_){stop('Device voice could not pause. Start playback again.');return;}
       paused=true;speaking=false;setStatus('Paused');updateButtons();return;
     }
+    if(selectionPending&&!playlistMode){speakCurrent();return;}
     start();
   }
 
@@ -313,15 +319,37 @@
       if(!playlistMode){stop('Ready');startPlaylist();return;}
       toggle();return;
     }
-    // Stop preserves the last selected lesson for progress/navigation UI,
-    // but the shared one-screen toggle would otherwise call start(), reset
-    // playlistMode and narrate the Listening page's controls. Restart the
-    // actual lesson playlist from the learner's selected lesson instead.
+    // Next/Previous when stopped chooses the exact destination but does not
+    // initiate speech. Play should then speak that selection; ordinary Stop
+    // followed by Play still restarts at the selected lesson's beginning.
+    if(selectionPending&&playlistMode&&units.length){speakCurrent();return;}
     const selectedLesson=playlistMode?currentLessonUnit()?.lessonId:undefined;
     startPlaylist(selectedLesson);
   }
 
-  function move(delta){if(!units.length)(playlistMode?buildPlaylist():buildUnits());if(!units.length)return;index=Math.max(0,Math.min(units.length-1,index+delta));speaking=false;paused=false;speakCurrent();}
+  function selectUnit(nextIndex){
+    if(nextIndex===index)return;
+    const autoplay=speaking||starting;
+    index=nextIndex;
+    if(autoplay){
+      speaking=false;paused=false;speakCurrent();
+      return;
+    }
+    // A paused device still owns an utterance at the old position. Cancel it
+    // with a fresh token, then leave the new unit cued and not playing.
+    stop('Ready');
+    selectionPending=true;
+    const unit=currentUnit();
+    if(ui){ui.current.textContent=unit?.text||'';ui.current.hidden=!unit?.text;}
+    setStatus(playlistMode?'Lesson or sentence selected. Press Play to listen.':'Sentence selected. Press Listen to start.');
+    updateButtons();
+  }
+
+  function move(delta){
+    if(!units.length)(playlistMode?buildPlaylist():buildUnits());
+    if(!units.length)return;
+    selectUnit(Math.max(0,Math.min(units.length-1,index+delta)));
+  }
 
   function jumpLesson(delta){
     if(!playlistMode||!units.length)buildPlaylist();
@@ -332,7 +360,7 @@
     const nextPos=Math.max(0,Math.min(lessonIds.length-1,pos+delta));
     const target=lessonIds[nextPos];
     const found=units.findIndex(x=>String(x.lessonId)===String(target));
-    if(found>=0){index=found;speaking=false;paused=false;speakCurrent();}
+    if(found>=0)selectUnit(found);
   }
 
   function renderListeningState(){
