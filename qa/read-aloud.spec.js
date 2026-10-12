@@ -299,6 +299,14 @@ test('Throwing OS pause and resume recover to restartable narration controls',as
   await expect(player.locator('.mm-read-status')).toHaveText('Device voice could not resume. Start playback again.');
   await play.click();
   await expect(play).toHaveText('Pause');
+  // A background switch must also fail closed when the device refuses Pause.
+  await page.evaluate(()=>{
+    window.__mmFailPause=true;
+    Object.defineProperty(document,'hidden',{configurable:true,value:true});
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  await expect(play).toHaveText('Listen');
+  await expect(player.locator('.mm-read-status')).toHaveText('Device voice could not pause while hidden. Start playback again.');
 });
 
 test('Throwing device cancellation and voice discovery cannot strand Read Aloud controls',async({page})=>{
@@ -385,7 +393,7 @@ test('Listening tab builds a continuous lesson playlist and exposes long-session
       {id:2,title:'Material preparation',intro:'Drying depends on the material.',summary:'Use supplier evidence.',objectives:['Check drying requirements.'],keypoints:['Avoid assumptions.'],exercise:'Review a material sheet.'}
     ]};
     class QaSpeechSynthesisUtterance {constructor(text=''){this.text=String(text);this.lang='';this.voice=null;this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
-    const synth={getVoices(){return[{name:'QA Voice',lang:'en-NZ',default:true}];},speak(utterance){window.__mmListeningSpoken=utterance.text;window.__mmListeningRate=utterance.rate;queueMicrotask(()=>utterance.onstart?.());},cancel(){},pause(){window.__mmListeningPaused=true;},resume(){window.__mmListeningResumed=true;},addEventListener(){},removeEventListener(){}};
+    const synth={getVoices(){return[{name:'QA Voice',lang:'en-NZ',default:true}];},speak(utterance){window.__mmListeningSpeakCount=(window.__mmListeningSpeakCount||0)+1;window.__mmListeningSpoken=utterance.text;window.__mmListeningRate=utterance.rate;queueMicrotask(()=>utterance.onstart?.());},cancel(){},pause(){window.__mmListeningPaused=true;},resume(){window.__mmListeningResumed=true;},addEventListener(){},removeEventListener(){}};
     Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,writable:true,value:QaSpeechSynthesisUtterance});
     Object.defineProperty(window,'speechSynthesis',{configurable:true,writable:true,value:synth});
   });
@@ -404,6 +412,16 @@ test('Listening tab builds a continuous lesson playlist and exposes long-session
   await expect.poll(()=>page.evaluate(()=>window.__mmListeningRate)).toBe(1.25);
   await view.locator('[data-mm-listening="next-lesson"]').click();
   await expect(view.locator('[data-mm-listening-lesson]')).toContainText('Lesson 2');
+  // Long-session speed controls follow the same paused-user-intent rule.
+  const beforeSpeedEdit=await page.evaluate(()=>window.__mmListeningSpeakCount);
+  await view.locator('[data-mm-listening="play"]').click();
+  await expect(view.locator('[data-mm-listening="play"]')).toHaveText('Resume');
+  await view.locator('[data-mm-listening-speed]').selectOption('1.5');
+  await expect(view.locator('[data-mm-listening="play"]')).toHaveText('Resume');
+  await expect(view.locator('[data-mm-listening-status]')).toHaveText('Paused. Updated speed applies to the next sentence.');
+  expect(await page.evaluate(()=>window.__mmListeningSpeakCount)).toBe(beforeSpeedEdit);
+  await view.locator('[data-mm-listening="play"]').click();
+  await expect(view.locator('[data-mm-listening="play"]')).toHaveText('Pause');
   await view.locator('[data-mm-listening="stop"]').click();
   await expect(view.locator('[data-mm-listening-status]')).toHaveText('Stopped');
   // Stopping must not turn Play into one-screen narration of the controls.
