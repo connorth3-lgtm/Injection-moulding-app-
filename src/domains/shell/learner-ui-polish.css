@@ -3205,3 +3205,41 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
     forced-color-adjust:auto!important;
   }
 }
+
+/* Sub-panels and answer review must keep strong contrast on the new white
+   Materials cards. Original source used pale text on a dark sub-panel. */
+.mm-reference-layout #materials .mat-shell :is(.mat-lab-output,.mat-q,.mat-review){
+  border:1px solid #b7d6e3!important;border-radius:11px!important;
+  background:#e0eff5!important;color:#153d52!important;
+}
+.mm-reference-layout #materials .mat-shell :is(.mat-lab-output,.mat-q,.mat-review) :is(
+  b,strong,small,span,p,.muted
+){
+  color:#234e63!important;
+}
+.mm-reference-layout #materials .mat-shell .mat-q label{
+  min-height:44px!important;box-sizing:border-box!important;
+  display:flex!important;gap:9px!important;align-items:center!important;
+  background:#f9fcfd!important;border:1px solid #adcedb!important;
+  border-radius:9px!important;color:#133c51!important;
+}
+.mm-reference-layout #materials .mat-shell .mat-q label:has(input:checked){
+  background:#d5f1ed!important;border-color:#008a96!important;
+  color:#0d3b4e!important;
+}
+.mm-reference-layout #materials .mat-shell .mat-q label input[type=radio]{
+  flex:0 0 auto!important;min-height:20px!important;
+  accent-color:#007f91!important;
+}
+.mm-reference-layout #materials .mat-shell .mat-review.correct{
+  border-left:4px solid #077e69!important;
+}
+.mm-reference-layout #materials .mat-shell .mat-review.incorrect{
+  border-left:4px solid #a94f51!important;
+}
+.mm-reference-layout #materials .mat-shell .mat-lab label{
+  color:#1e485d!important;font-weight:650!important;
+}
+.mm-reference-layout #materials .mat-shell .mat-lab input[type=range]{
+  accent-color:#008a95!important;
+}
