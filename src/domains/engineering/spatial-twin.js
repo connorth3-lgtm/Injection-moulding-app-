@@ -357,7 +357,22 @@ function install(){
   if(!host){host=make('section','mm-spatial-twin');host.id='mmSpatialTwin';host.hidden=true;simulator.insertBefore(host,simulator.firstChild)}
   return true;
 }
+let routeWatchInstalled=false;
+function hideTwin(){
+  const host=byId('mmSpatialTwin');
+  if(host)host.hidden=true;
+  state.open=false;
+  document.body?.removeAttribute('data-mm-spatial-twin');
+}
+function watchNavigation(){
+  if(routeWatchInstalled||typeof window.MM_APP_SHELL?.events?.onViewChange!=='function')return;
+  window.MM_APP_SHELL.events.onViewChange(view=>{
+    if(view!=='simulator'&&state.open)hideTwin();
+  });
+  routeWatchInstalled=true;
+}
 function open(options={}){
+  watchNavigation();
   if(typeof window.switchView==='function')window.switchView('simulator');
   if(!install())return false;
   // Restore the *active learner's* scoped state before applying an explicit
@@ -380,8 +395,7 @@ function open(options={}){
   return true;
 }
 function close(){
-  const host=byId('mmSpatialTwin');if(host)host.hidden=true;state.open=false;
-  document.body?.removeAttribute('data-mm-spatial-twin');
+  hideTwin();
   try{window.renderSimulator?.()}catch(_){}
 }
 function openApprenticeship(){
@@ -390,7 +404,11 @@ function openApprenticeship(){
   if(typeof window.switchView==='function')window.switchView('simulator');
   const target=byId('mmVirtualApprenticeship');target?.scrollIntoView?.({block:'start',behavior:'smooth'});
 }
-function installWhenReady(){if(install())return;requestAnimationFrame(()=>install())}
+function installWhenReady(){
+  watchNavigation();
+  if(install())return;
+  requestAnimationFrame(()=>{watchNavigation();install()});
+}
 const api=Object.freeze({
   version:VERSION,modes:MODES,phases:PHASES,hotspots:HOTSPOTS,scenes:CASE_SCENES,
   open,close,install,setMode,setPhase,setCase,selectHotspot,
