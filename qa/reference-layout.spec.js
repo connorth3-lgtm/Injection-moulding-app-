@@ -52,7 +52,15 @@ for(const width of [320,360,390,412]){
     // native disclosure summaries rather than a second nine-card navigation.
     await expect(page.locator('#path .mm-reference-learn-list')).toHaveCount(0);
     const illustratedCourses=page.locator('#path .mm-unified-course-summary');
-    await expect(illustratedCourses).toHaveCount(9);
+    await expect(illustratedCourses).toHaveCount(22);
+    await expect(illustratedCourses.locator('.mm-reference-course-art')).toHaveCount(22);
+    // The formerly missed courses 10–12 and all Material Science chapters
+    // must have the SAME accessible, illustrated compact summary treatment.
+    await expect(illustratedCourses.nth(9)).toContainText('Automation & Sensors');
+    await expect(illustratedCourses.nth(10)).toContainText('Advanced Tooling');
+    await expect(illustratedCourses.nth(11)).toContainText('Expert Process Engineering');
+    await expect(page.locator('#path .mm-catalog-material-track')).toHaveCount(9);
+    await expect(illustratedCourses.last()).toContainText('Optional specialist');
     await expect(illustratedCourses.nth(1)).toContainText('Machine');
     await expect(illustratedCourses.nth(2)).toContainText('Materials');
     await expect(illustratedCourses.nth(3)).toContainText('Mould');
@@ -114,8 +122,26 @@ for(const width of [320,360,390,412]){
     await expect(familyScience).toHaveAttribute('open','');
     // The learning landing section stays visible outside the optional
     // family-science disclosure, so lesson navigation is never hidden.
-    await expect(page.locator('#materials #mmMaterialLearningAnchor')).toBeVisible();
-    await expect(page.locator('#materials .mat-tabs')).toBeVisible();
+    const study=page.locator('#materials .mm-material-study-tools');
+    await expect(study).toHaveCount(1);
+    await expect(study.locator('#mmMaterialLearningAnchor')).toBeVisible();
+    await expect(study.locator(':scope > .mat-tabs')).toBeVisible();
+    await expect(study.locator(':scope > .mat-tabs button')).toHaveCount(5);
+    await expect(study.locator('[data-mm-family-science]')).toHaveCount(1);
+    // Shortcuts, learning introduction and optional family guide belong to
+    // one panel, without changing the actual learning/lab/compare actions.
+    const modes=await study.locator(':scope > .mat-tabs button').evaluateAll(nodes=>nodes.map(n=>n.getBoundingClientRect()));
+    expect(modes.every(b=>b.width>60&&b.height>=44)).toBe(true);
+    // The learning shell has already moved under the guide. A subsequent
+    // refresh must still locate it and reveal an opened teaching mode, without
+    // recreating its buttons or trapping the lesson behind a closed disclosure.
+    await familyScience.locator('summary').click();
+    await expect(familyScience).not.toHaveAttribute('open','');
+    await page.evaluate(()=>window.MM_REFERENCE_LAYOUT.refresh());
+    await study.getByRole('button',{name:'Learn',exact:true}).click();
+    await page.evaluate(()=>window.MM_REFERENCE_LAYOUT.refresh());
+    await expect(familyScience).toHaveAttribute('open','');
+    await expect(study.locator(':scope > .mat-tabs button')).toHaveCount(5);
 
     await page.evaluate(()=>switchView('scenarios'));
     await expect(page.locator('#scenarios .mm-reference-title')).toHaveText('Practice');

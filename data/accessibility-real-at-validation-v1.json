@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.11.10",
-  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.11.10.md",
-  "sourceSha": "1a528632301232224fb6f9b2460c9a2863b92e81",
-  "runtimeFingerprint": "sha256:230170530d51afa8ac824e332905131e91f188945275c40b80fd768428c93424",
+  "release": "2026.10.11.11",
+  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.11.11.md",
+  "sourceSha": "b094479577ce0b52ed8da92baa94ca1239994254",
+  "runtimeFingerprint": "sha256:0ec09a2107209b4d04b1b501385f4dc6992ded09ec637639773f14d759f724f4",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Retained non-production software candidate 2026.10.11.10 is bound to exact source SHA and runtime fingerprint, but every NVDA/VoiceOver and physical Android audible Read Aloud test remains pending with named human/device evidence absent. Seven independent external validation streams remain HOLD; no production or machine-control authorization.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.11.11 is bound to exact retained learner-runtime candidate b094479577ce0b52ed8da92baa94ca1239994254; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -306,9 +306,9 @@
     "textZoom200Percent": true
   },
   "previousCandidate": {
-    "release": "2026.10.11.9",
-    "sourceSha": "d572ee13d8f2f09139882ff1a271e855284f6e3c",
-    "runtimeFingerprint": "sha256:97d9cdf902986357f9446796478525f1b61c0f37162387a042121c310ee4d3c7"
+    "release": "2026.10.11.10",
+    "sourceSha": "1a528632301232224fb6f9b2460c9a2863b92e81",
+    "runtimeFingerprint": "sha256:230170530d51afa8ac824e332905131e91f188945275c40b80fd768428c93424"
   },
-  "technicalCandidateStatus": "retained-software-candidate; real human AT pending"
+  "technicalCandidateStatus": "pending new public artifact and human AT review"
 }

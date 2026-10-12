@@ -1,4 +1,5 @@
 const fs=require('fs');
+const crypto=require('crypto');
 const path=require('path');
 const {PNG}=require('pngjs');
 const {test,expect}=require('@playwright/test');
@@ -7,6 +8,59 @@ const manifest=require('./visual-regression-baseline.json');
 const CANDIDATE_URL=process.env.MM_VISUAL_CANDIDATE_URL||'http://127.0.0.1:4173/index.html';
 const BASELINE_URL=process.env.MM_VISUAL_BASE_URL||'http://127.0.0.1:4174/index.html';
 const ARTIFACT_ROOT=path.join(process.cwd(),'qa-artifacts','visual-regression');
+const REVIEW_INDEX=path.join(ARTIFACT_ROOT,'review-manifest.json');
+const ACTUAL_SOURCE_SHA=process.env.MM_VISUAL_SOURCE_SHA||null;
+
+function recordReviewEvidence({viewport,surface,candidateBuffer,baselineBuffer,diffPixels}){
+  // Evidence only. Never infer human visual approval from successful pixel QA.
+  const stem=`${viewport.name}-${surface}`;
+  const record={
+    viewport:viewport.name,
+    width:viewport.width,
+    height:viewport.height,
+    surface,
+    candidateSourceSha:ACTUAL_SOURCE_SHA,
+    baselineSourceSha:manifest.commit,
+    baselineRelease:manifest.release,
+    maxDiffPixels:manifest.maxDiffPixels,
+    diffPixels,
+    comparisonPassed:diffPixels<=manifest.maxDiffPixels,
+    visualOwnerApproved:false,
+    files:{
+      candidate:`${stem}.png`,
+      baseline:`${stem}-baseline.png`,
+      diff:diffPixels>manifest.maxDiffPixels?`${stem}-diff.png`:null,
+    },
+    sha256:{
+      candidate:crypto.createHash('sha256').update(candidateBuffer).digest('hex'),
+      baseline:crypto.createHash('sha256').update(baselineBuffer).digest('hex'),
+    },
+  };
+  const previous=fs.existsSync(REVIEW_INDEX)?JSON.parse(fs.readFileSync(REVIEW_INDEX,'utf8')):null;
+  if(previous&&(
+    previous.baselineSourceSha!==manifest.commit||
+    previous.candidateSourceSha!==ACTUAL_SOURCE_SHA||
+    previous.baselineRelease!==manifest.release
+  ))throw new Error('Visual review index must not mix candidates or reference releases');
+  const records={...(previous?.surfaces||{}),[stem]:record};
+  const index={
+    schemaVersion:1,
+    purpose:'Unapproved CI screenshot comparison for owner review only',
+    candidateSourceSha:ACTUAL_SOURCE_SHA,
+    baselineSourceSha:manifest.commit,
+    baselineRelease:manifest.release,
+    baselineRef:manifest.ref,
+    maxDiffPixels:manifest.maxDiffPixels,
+    expectedCaptures:manifest.viewports.length*manifest.surfaces.length,
+    capturedSurfaces:Object.keys(records).length,
+    runId:process.env.GITHUB_RUN_ID||null,
+    visualOwnerApproved:false,
+    surfaces:Object.fromEntries(Object.entries(records).sort(([a],[b])=>a.localeCompare(b))),
+  };
+  fs.writeFileSync(REVIEW_INDEX+'.tmp',JSON.stringify(index,null,2)+'\n');
+  fs.renameSync(REVIEW_INDEX+'.tmp',REVIEW_INDEX);
+}
+
 
 test.use({serviceWorkers:'block'});
 
@@ -95,6 +149,21 @@ async function normalizeCaptureState(page,surface){
     // restore different scroll offsets (about 28 px in an otherwise identical
     // screenshot). Align both contexts on the same visible grade heading,
     // without changing any pixel-diff tolerance or app presentation.
+    if(surface==='book-contents'){
+      // Contents follows the Listening chapter in the same browser context.
+      // A restored chapter scroll position can survive the route transition
+      // until a later animation frame on narrow phone layouts. Set every
+      // actual scroll owner to the top on both candidate and approved baseline,
+      // without cropping, masking or relaxing the pixel comparison.
+      const book=document.getElementById('mmBookView');
+      if(!book||book.classList.contains('hidden'))throw new Error('Book contents route is missing');
+      const contents=book.querySelector('[data-mm-book-contents]');
+      if(!contents||contents.hidden)throw new Error('Book contents did not open');
+      for(let node=book;node&&node!==document.body;node=node.parentElement){
+        if(node.scrollTop)node.scrollTop=0;
+      }
+      window.scrollTo({top:0,left:0,behavior:'instant'});
+    }
     if(surface==='book-materials'){
       const grade=document.querySelector('[data-mm-book-catalog-grade]');
       if(!grade)throw new Error('Book materials visual anchor is missing');
@@ -270,6 +339,7 @@ for(const viewport of manifest.viewports){
         const candidateBuffer=await capture(candidate,candidatePath,surface);
         const baselineBuffer=await capture(baseline,baselinePath,surface);
         const diffPixels=await compare(baselineBuffer,candidateBuffer,diffPath);
+        recordReviewEvidence({viewport,surface,candidateBuffer,baselineBuffer,diffPixels});
         if(diffPixels>manifest.maxDiffPixels)drifts.push({surface:stem,diffPixels});
       }
       expect(drifts,drifts.map(({surface,diffPixels})=>

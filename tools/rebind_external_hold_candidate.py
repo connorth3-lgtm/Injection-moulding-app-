@@ -40,8 +40,18 @@ def update_banner(text, candidate, path):
     """Replace only the release-specific artifact banner, retaining review evidence."""
     lines = text.splitlines(keepends=True)
     need(bool(lines) and candidate["release"] in lines[0], f"{path}: release heading stale")
-    positions = [i for i, line in enumerate(lines[:12]) if line.startswith("> **RETAINED ")]
-    need(len(positions) == 1, f"{path}: missing or ambiguous retained-artifact banner")
+    # Pre-retention packets are honest PENDING templates; after a real artifact
+    # exists this explicit rebind transaction promotes the banner identity only,
+    # never the independent human/device review status. Reject ambiguity/staleness.
+    positions = [i for i, line in enumerate(lines[:12])
+                 if line.startswith("> **RETAINED ") or line.startswith("> **PENDING ")]
+    need(len(positions) == 1, f"{path}: missing or ambiguous technical-artifact banner")
+    i = positions[0]
+    need(lines[i].startswith(f'> **PENDING {candidate["release"]} ') or
+         lines[i].startswith(f'> **RETAINED {candidate["release"]} '),
+         f"{path}: active technical-artifact banner release stale")
+    need(any("STATUS: HOLD" in line for line in lines[:12]),
+         f"{path}: human/device review HOLD must be explicit")
     try:
         validate_packet(text, path, candidate, candidate["release"])
         return text

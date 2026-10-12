@@ -1,11 +1,11 @@
-/* MouldMaster learner UI polish — 2026.10.11.10
+/* MouldMaster learner UI polish — 2026.10.11.11
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.10.11.10';
+const VERSION='2026.10.11.11';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -514,11 +514,35 @@ function learn(){
   // Illustrate the existing, accessible course summaries instead.
   hub.querySelector('.mm-reference-learn-list')?.remove();
   const groups=Array.from(catalogue.querySelectorAll('[data-mm-catalog-group]'));
-  groups.slice(0,9).forEach(group=>{
+  // All 12 core tracks, all nine Material Science chapters and the optional
+  // specialist track share the same image-led card. The previous first-nine
+  // slice left the bottom of the catalogue as large unillustrated boxes.
+  const materialTiles=[
+    ['materials',3],['materials',11],['process',5],
+    ['thermal',26],['materials',12],['mould',4],
+    ['quality',20],['evidence',27],['controls',2]
+  ];
+  groups.forEach((group,index)=>{
     const summary=group.querySelector(':scope > summary');
     if(!summary||summary.querySelector('.mm-reference-course-art'))return;
-    const title=group.querySelector('.mm-catalog-group-name')?.textContent?.replace(/^[0-9]+[.] */, '')||'Learning module';
-    const present=learnPresentation(title);
+    const fullTitle=group.querySelector('.mm-catalog-group-name')?.textContent||'Learning module';
+    const title=fullTitle.replace(/^[0-9]+[.] */, '');
+    const isMaterial=fullTitle.startsWith('Material science ·');
+    const isSpecialist=fullTitle.startsWith('Optional specialist');
+    const focus=materialTiles[Math.max(0,index-12)%materialTiles.length];
+    const present=isMaterial
+      ? {art:focus[0],tile:focus[1],hint:'Explore polymer behaviour and its evidence'}
+      :isSpecialist
+        ? {art:'training',tile:24,hint:'Optional advanced topics'}
+        :index===9
+          ? {art:'controls',tile:2,hint:'Sensors, automation and control'}
+          :index===10
+            ? {art:'mould',tile:4,hint:'Advanced tooling and simulation'}
+            :index===11
+              ? {art:'process',tile:5,hint:'Expert process engineering'}
+              :learnPresentation(title);
+    group.classList.toggle('mm-catalog-material-track',isMaterial);
+    group.classList.toggle('mm-catalog-specialist-track',isSpecialist);
     const art=picture(present.art,'',present.tile);
     art.classList.add('mm-reference-course-art');
     art.alt='';
@@ -591,7 +615,10 @@ function materials(){
   // Source-backed grade folders and the older conceptual family explorer now
   // live in one Materials surface. Keep generic tendencies explicitly optional,
   // distinct from supplier-specific grade data and never treat them as recipes.
-  const legacy=Array.from(root.children).find(el=>el.classList?.contains('mat-shell'));
+  // The real learning pane moves inside the optional guide after first render.
+  // Discover it there too: repeated navigation and tab changes must still
+  // reopen the guide when teaching content becomes active.
+  const legacy=root.querySelector('.mat-shell');
   if(legacy){
     let guide=catalogue.parentElement?.querySelector('[data-mm-family-science]');
     if(!guide){
@@ -611,17 +638,32 @@ function materials(){
     // Keep the learning landmark and tab navigation visible. Only the
     // explanatory family reference belongs inside the optional disclosure.
     // Hiding these controls previously broke material lesson navigation.
-    const tabs=legacy.querySelector(':scope > .mat-tabs');
-    if(tabs)guide.insertAdjacentElement('afterend',tabs);
-    guide.querySelector('[data-mm-family-science-content]')?.appendChild(legacy);
+    const tabs=root.querySelector('.mm-material-study-tools > .mat-tabs')||legacy.querySelector(':scope > .mat-tabs');
+    const teachingSlot=guide.querySelector('[data-mm-family-science-content]');
+    if(teachingSlot&&legacy.parentElement!==teachingSlot)teachingSlot.appendChild(legacy);
     // When a learner opens a material lesson, lab, quiz or references using
     // the existing tab routing, the teaching pane MUST NOT remain inside a
     // collapsed family guide. Preserve the optional explorer default.
     const currentTab=tabs?.querySelector('button.active')?.textContent?.trim()||'';
     const lessonShown=!!legacy.querySelector('.mat-lesson');
-    if(lessonShown||(['Learn','Interactive labs','Knowledge check','Evidence & references'].includes(currentTab)))guide.open=true;
     const intro=root.querySelector('#mmMaterialLearningAnchor');
-    if(intro&&intro.closest('[data-mm-family-science]'))guide.insertAdjacentElement('afterend',intro);
+    // Combine the detached Material Science intro, five legacy mode buttons
+    // and optional general-reference guide into one clear secondary panel.
+    // Preserve the *real* mode buttons and their event handlers; the guide
+    // only contains generic family science, never exact supplier-grade data.
+    let study=root.querySelector('.mm-material-study-tools');
+    if(!study){
+      study=document.createElement('section');
+      study.className='mm-material-study-tools';
+      study.setAttribute('aria-label','Material learning and tools');
+      catalogue.insertAdjacentElement('afterend',study);
+    }
+    // Do not reparent focused controls on every refresh. Native buttons keep
+    // their listeners and keyboard focus through material result rerenders.
+    if(intro&&intro.parentElement!==study)study.appendChild(intro);
+    if(tabs&&tabs.parentElement!==study)study.appendChild(tabs);
+    if(guide.parentElement!==study)study.appendChild(guide);
+    if(lessonShown||(['Learn','Interactive labs','Knowledge check','Evidence & references'].includes(currentTab)))guide.open=true;
   }
   const selectedFamily=catalogue.querySelector('[data-mm-family-detail]:not([hidden])');
   if(selectedFamily){
@@ -756,7 +798,7 @@ function boot(){
   document.addEventListener('click',event=>{
     if(event.target?.closest?.('.mm-material-index-card summary,.mobile-nav,[data-mm-registry-menu]'))refresh();
   });
-  window.MM_REFERENCE_LAYOUT=Object.freeze({version:'2026.10.11.10',refresh});
+  window.MM_REFERENCE_LAYOUT=Object.freeze({version:'2026.10.11.11',refresh});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
