@@ -199,6 +199,35 @@ const dxState={selected:-1,query:'',phase:'intake',form:{
   when:'unknown',distribution:'unknown',change:'unknown',baseline:'',observations:'',
   comparison:'',reflection:''
 },evidence:[],hypotheses:{}};
+function dxLearnerId(){
+  // The diagnostic case exists only in memory, but the same app can switch
+  // local learner profiles without reloading the browser.
+  try{return typeof user!=='undefined'&&user?.id!=null?String(user.id):''}catch(_){return ''}
+}
+let dxOwnerId=dxLearnerId();
+function dxClearEvidence(){
+  dxState.evidence=[];
+  dxState.hypotheses={};
+  dxState.form={when:'unknown',distribution:'unknown',change:'unknown',
+    baseline:'',observations:'',comparison:'',reflection:''};
+}
+function dxClearCase(){
+  dxState.selected=-1;dxState.phase='intake';dxState.query='';
+  dxClearEvidence();
+}
+function dxEnsureLearner(){
+  const id=dxLearnerId();
+  if(id===dxOwnerId)return;
+  dxOwnerId=id;
+  dxClearCase();
+}
+function dxSelectSymptom(index){
+  // Measurements, availability ticks and learner judgements belong to the
+  // specific investigated symptom; never silently reuse them for another.
+  if(dxState.selected!==index)dxClearEvidence();
+  dxState.selected=index;
+  dxState.phase='intake';
+}
 function dxDefects(){return Array.isArray(D?.defects)?D.defects:[]}
 function dxFormValue(key){return esc(dxState.form[key]||'')}
 function dxSelect(key,label,values){
@@ -250,6 +279,7 @@ function dxHypothesisRows(defect){
   }).join('');
 }
 function dxReportData(){
+  dxEnsureLearner();
   const defect=dxDefects()[dxState.selected];
   return {
     schema:'mm-diagnostic-learning-case-v1',
@@ -304,6 +334,7 @@ function dxFocusAfterRender(root,selector){
   target.focus();
 }
 function dxRender(view){
+  dxEnsureLearner();
   const root=document.getElementById(view);if(!root)return;
   root.dataset.mmDxMode='unified';
   root.innerHTML='<div class="mm-dx-workbench"><header class="mm-dx-hero"><span class="eyebrow">Practice · Unified diagnostic workbench</span>'+
@@ -319,7 +350,7 @@ function dxRender(view){
       if(action==='choose'){
         const index=Number(el.dataset.mmDxId);
         if(!Number.isInteger(index)||!dxDefects()[index])return;
-        dxState.selected=index;dxState.phase='intake';dxState.hypotheses={};dxRender(view);
+        dxSelectSymptom(index);dxRender(view);
         dxFocusAfterRender(root,'.mm-dx-fields select');
       }else if(action==='analyse'){
         dxState.phase='analysis';dxRender(view);
@@ -328,10 +359,7 @@ function dxRender(view){
         dxState.phase='intake';dxRender(view);
         dxFocusAfterRender(root,'.mm-dx-fields select');
       }else if(action==='reset'){
-        dxState.selected=-1;dxState.phase='intake';dxState.query='';
-        dxState.hypotheses={};dxState.evidence=[];
-        dxState.form={when:'unknown',distribution:'unknown',change:'unknown',
-          baseline:'',observations:'',comparison:'',reflection:''};
+        dxClearCase();
         dxRender(view);
         dxFocusAfterRender(root,'#mmDxSearch');
       }else if(action==='export'){
@@ -366,7 +394,8 @@ function dxRender(view){
   if(query&&dxState.query)query.dispatchEvent(new Event('input',{bubbles:true}));
 }
 function dxOpen(index){
-  if(Number.isInteger(index)&&dxDefects()[index]){dxState.selected=index;dxState.phase='intake'}
+  dxEnsureLearner();
+  if(Number.isInteger(index)&&dxDefects()[index])dxSelectSymptom(index);
   try{window.closeModal?.()}catch(_){}
   switchView('defects');
 }
