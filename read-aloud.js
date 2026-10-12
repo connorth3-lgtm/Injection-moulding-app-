@@ -200,6 +200,10 @@
   function speakCurrent(retry=0){
     selectionPending=false;
     if(!supported){setStatus('Read Aloud is not available in this browser/device.');updateButtons();return;}
+    // Automatic sentence chaining also needs source validation. A lesson
+    // might rewrite its content while narration is running; continuing the
+    // cached queue would speak outdated, now-hidden or replaced text.
+    if(!playlistMode&&units.length&&refreshStaleReading())return;
     if(!units.length)(playlistMode?buildPlaylist():buildUnits());
     const unit=currentUnit();
     if(!unit){setStatus(playlistMode?'No lesson audio is available.':'No readable text is visible on this screen.');updateButtons();return;}
