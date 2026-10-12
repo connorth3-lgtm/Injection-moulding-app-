@@ -226,6 +226,76 @@ test('iOS empty voice list starts speech within the original tap task',async({pa
   await expect(player.locator('.mm-read-status')).toHaveText('Reading');
 });
 
+test('Sentence navigation while paused cues audio without restarting it until Listen',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>First navigation sentence. Second navigation sentence. Third navigation sentence.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:
+      'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
+    class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const voice={current:null,started:0,
+      getVoices(){return[];},
+      speak(u){this.current=u;this.started++;window.__mmNavSpeech=u.text;queueMicrotask(()=>u.onstart?.());},
+      cancel(){this.current=null;},pause(){},resume(){},addEventListener(){},removeEventListener(){}
+    };
+    window.__mmNavVoice=voice;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:voice});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const player=page.locator('.mm-read-aloud');
+  await player.locator('details').evaluate(el=>{el.open=true});
+  const play=player.locator('[data-mm-read="play"]');
+  await play.click();
+  await expect(play).toHaveText('Pause');
+  await expect.poll(()=>page.evaluate(()=>window.__mmNavSpeech)).toContain('First navigation sentence.');
+  await play.click();
+  await expect(play).toHaveText('Resume');
+  await player.locator('[data-mm-read="next"]').click();
+  await expect(play).toHaveText('Listen');
+  await expect(player.locator('.mm-read-status')).toHaveText('Sentence selected. Press Listen to start.');
+  expect(await page.evaluate(()=>window.__mmNavVoice.started)).toBe(1);
+  await expect(player.locator('[data-mm-read="current"]')).toContainText('Second navigation sentence.');
+  await play.click();
+  await expect.poll(()=>page.evaluate(()=>window.__mmNavSpeech)).toContain('Second navigation sentence.');
+  await expect.poll(()=>page.evaluate(()=>window.__mmNavVoice.started)).toBe(2);
+});
+
+test('Listening navigation while stopped is silent and Play starts selected lesson',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><nav id="nav"><button data-view="path">Learn</button></nav><main id="mainContent" class="main"><section id="path" class="view">Learn</section></main></body></html>');
+  await page.evaluate(()=>{
+    window.MM_DATA={lessons:[
+      {id:1,title:'First lesson',intro:'First lesson detail.'},
+      {id:2,title:'Second lesson',intro:'Second lesson detail.'}
+    ]};
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:
+      'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
+    class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const voice={started:0,getVoices(){return[];},
+      speak(u){this.started++;window.__mmJumpSpeech=u.text;queueMicrotask(()=>u.onstart?.());},
+      cancel(){},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    window.__mmJumpVoice=voice;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:voice});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  await page.locator('[data-mm-listening-tab]').click();
+  const player=page.locator('#mmListeningView');
+  await player.locator('[data-mm-listening="next-lesson"]').click();
+  await expect(player.locator('[data-mm-listening-lesson]')).toContainText('Lesson 2');
+  expect(await page.evaluate(()=>window.__mmJumpVoice.started)).toBe(0);
+  await expect(player.locator('[data-mm-listening-status]')).toHaveText('Lesson or sentence selected. Press Play to listen.');
+  await player.locator('[data-mm-listening="play"]').click();
+  await expect.poll(()=>page.evaluate(()=>window.__mmJumpSpeech)).toContain('Second lesson');
+  expect(await page.evaluate(()=>window.__mmJumpVoice.started)).toBe(1);
+  await player.locator('[data-mm-listening="stop"]').click();
+  await player.locator('[data-mm-listening="prev-lesson"]').click();
+  expect(await page.evaluate(()=>window.__mmJumpVoice.started)).toBe(1);
+  await expect(player.locator('[data-mm-listening-lesson]')).toContainText('Lesson 1');
+  await player.locator('[data-mm-listening="play"]').click();
+  await expect.poll(()=>page.evaluate(()=>window.__mmJumpSpeech)).toContain('First lesson');
+  expect(await page.evaluate(()=>window.__mmJumpVoice.started)).toBe(2);
+});
+
 test('Changing narration speed while paused never resumes speech without Play',async({page})=>{
   await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>First spoken sentence. Second spoken sentence.</p></main></body></html>');
   await page.evaluate(()=>{
