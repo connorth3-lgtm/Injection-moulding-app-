@@ -557,33 +557,80 @@ function learn(){
   });
   hub.dataset.mmReferenceLearn='1';
 }
+// Use the same user-selected photographic atlas as Learn/Materials for real
+// Practice controls, including the screens *inside* each task. All artwork is
+// decorative: action routing, learner evidence and scoring remain source-owned.
+const practiceArtwork={
+  troubleshooting:['quality',20],
+  'scenario-detail':['cases',22],
+  'process-data':['challenges',23],
+  labs:['setup',19],
+  'question-centre':['evidence',27],
+  daily:['cases',22],
+  'diagnostic-labs':['defects',6],
+  'diagnostic-workbench':['diagnosing',21],
+  'mould-master':['cases',8],
+  'spatial-twin':['machine',0],
+  simulator:['setup',19],
+  'material-labs':['materials',3],
+  assessments:['training',24],
+  'measured-decisions':['process',5]
+};
+function practiceChoiceArt(button){
+  if(button.querySelector(':scope > .mm-reference-practice-art'))return;
+  const artData=practiceArtwork[button.dataset.mmHubAction];
+  if(!artData)return;
+  const art=picture(artData[0],'',artData[1]);
+  art.classList.add('mm-reference-practice-art');
+  art.setAttribute('aria-hidden','true');
+  button.classList.add('mm-reference-practice-choice');
+  button.prepend(art);
+}
 function practice(){
   const root=document.getElementById('scenarios'),hub=root?.querySelector('.mm-practice-hub');
   if(!hub)return;
   sectionHeading('Practice',hub);
-  // Keep one functional task chooser. The former nine illustrated shortcuts
-  // repeated its tasks and launched the same destinations a second time.
+  // Keep the one functional chooser: decorate existing buttons rather than
+  // making duplicate shortcuts or replacing their click/focus listeners.
   hub.querySelector('.mm-reference-practice-list')?.remove();
-  const artByAction={
-    troubleshooting:['quality',20],
-    'scenario-detail':['cases',22],
-    'process-data':['challenges',23],
-    labs:['setup',19],
-    'question-centre':['evidence',27]
-  };
-  hub.querySelectorAll('.mm-hub-section .mm-hub-grid > button[data-mm-hub-action]').forEach(button=>{
-    if(button.querySelector('.mm-reference-practice-art'))return;
-    const action=button.dataset.mmHubAction;
-    const artData=artByAction[action];
-    if(!artData)return;
-    const art=picture(artData[0],'',artData[1]);
-    art.classList.add('mm-reference-practice-art');
-    art.alt='';
-    art.setAttribute('aria-hidden','true');
+  hub.querySelectorAll('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-hub-grid > button[data-mm-hub-action]').forEach(button=>{
     button.classList.add('mm-unified-practice-card');
-    button.prepend(art);
+    practiceChoiceArt(button);
   });
+  // Recommendation actions may change as learning evidence changes. Their
+  // native destinations must remain independent and the treatment idempotent.
+  hub.querySelectorAll('.mm-hub-section[aria-label="More recommended practice"] .mm-hub-grid > button[data-mm-hub-action]').forEach(practiceChoiceArt);
+  const featured=hub.querySelector('.mm-hub-continue');
+  if(featured&&!featured.querySelector(':scope > .mm-reference-practice-feature-art')){
+    const action=featured.querySelector('[data-mm-hub-action]')?.dataset.mmHubAction||'daily';
+    const [subject,tile]=practiceArtwork[action]||practiceArtwork.daily;
+    const art=picture(subject,'',tile);
+    art.classList.add('mm-reference-practice-feature-art');
+    art.setAttribute('aria-hidden','true');
+    featured.classList.add('mm-reference-practice-feature');
+    featured.prepend(art);
+  }
   hub.dataset.mmReferencePractice='1';
+}
+function practiceInside(){
+  // The Question Centre is rendered into the same Practice route but replaces
+  // .mm-practice-hub. Decorate its five real options as they become available.
+  const questionGrid=document.querySelector('#scenarios .mm-question-centre .mm-hub-picker-grid');
+  if(questionGrid){
+    questionGrid.dataset.mmReferencePracticePicker='question-centre';
+    questionGrid.querySelectorAll(':scope > button[data-mm-hub-action]').forEach(practiceChoiceArt);
+  }
+  // Lab chooser is modal-owned. Decorate only a Practice picker, never More,
+  // search, onboarding or Learn-resource modal controls.
+  const modal=document.querySelector('#modal:not(.hidden) .modal-card');
+  const practicePicker=modal?.querySelector('.mm-hub-picker-grid');
+  const context=modal?.querySelector('.eyebrow')?.textContent?.trim()||'';
+  if(practicePicker&&context.startsWith('Practice')){
+    practicePicker.dataset.mmReferencePracticePicker='modal';
+    practicePicker.querySelectorAll(':scope > button[data-mm-hub-action]').forEach(practiceChoiceArt);
+  }
+  // No changes to the diagnostic evidence intake, hypothesis labels, or
+  // generated report; CSS supplies the same card/field treatment in that view.
 }
 const familyArt=[
  [/(\bABS\b|ABS\/|PC\/ABS)/i,'materials'],
@@ -782,7 +829,7 @@ function refresh(){
   if(scheduled)return;scheduled=true;
   requestAnimationFrame(()=>{
     scheduled=false;
-    try{home();learn();practice();materials();more()}catch(error){console.warn('[MouldMaster reference layout]',error)}
+    try{home();learn();practice();practiceInside();materials();more()}catch(error){console.warn('[MouldMaster reference layout]',error)}
   });
 }
 function boot(){
@@ -793,10 +840,10 @@ function boot(){
   const targets=['dashboard','path','materials','scenarios','modal'];
   for(const id of targets){
     const node=document.getElementById(id);if(!node)continue;
-    new window.MutationObserver(refresh).observe(node,{childList:true,subtree:false});
+    new window.MutationObserver(refresh).observe(node,{childList:true,subtree:id==='modal'});
   }
   document.addEventListener('click',event=>{
-    if(event.target?.closest?.('.mm-material-index-card summary,.mobile-nav,[data-mm-registry-menu]'))refresh();
+    if(event.target?.closest?.('.mm-material-index-card summary,.mobile-nav,[data-mm-registry-menu],#scenarios [data-mm-hub-action],#modal .mm-hub-picker-grid [data-mm-hub-action]'))refresh();
   });
   window.MM_REFERENCE_LAYOUT=Object.freeze({version:'2026.10.11.11',refresh});
 }

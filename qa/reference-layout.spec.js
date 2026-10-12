@@ -180,3 +180,56 @@ test('unified practice illustrations load locally without external dependencies'
   expect(tiles.map(row=>row.tile)).toEqual([20,22,23,19,27]);
   expect(tiles.every(row=>row.background.includes('mockup-reference-tiles.webp'))).toBe(true);
 });
+
+for(const width of [360,810]){
+  test('Practice entry cards and inner tools share one accessible illustrated design at '+width+'px',async({page})=>{
+    await page.setViewportSize({width,height:900});
+    await openApp(page);
+    await page.evaluate(()=>switchView('scenarios'));
+    const hub=page.locator('#scenarios .mm-practice-hub');
+    await expect(hub).toBeVisible();
+    const activities=hub.locator('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-reference-practice-choice');
+    await expect(activities).toHaveCount(5);
+    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(5);
+    const recommended=hub.locator('.mm-reference-practice-feature');
+    await expect(recommended.locator(':scope > .mm-reference-practice-feature-art')).toHaveCount(1);
+    await page.evaluate(()=>{window.MM_REFERENCE_LAYOUT.refresh();window.MM_REFERENCE_LAYOUT.refresh()});
+    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(5);
+    const sizing=await activities.evaluateAll(nodes=>({
+      overflow:Math.max(0,document.documentElement.scrollWidth-innerWidth),
+      touch:nodes.every(el=>el.getBoundingClientRect().height>=44),
+      descriptions:nodes.every(el=>el.querySelector('small')?.getBoundingClientRect().height>0),
+      actions:nodes.every(el=>el.querySelector('.mm-hub-tile-action')?.getBoundingClientRect().height>0)
+    }));
+    expect(sizing.overflow).toBeLessThanOrEqual(2);
+    expect(sizing.touch&&sizing.descriptions&&sizing.actions).toBe(true);
+
+    // Actual Lab button and modal action listeners must survive decoration.
+    await hub.locator('[data-mm-hub-action="labs"]').click();
+    const labPicker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid[data-mm-reference-practice-picker="modal"]');
+    await expect(labPicker.locator('button.mm-reference-practice-choice')).toHaveCount(3);
+    await expect(labPicker.locator(':scope > button > .mm-reference-practice-art')).toHaveCount(3);
+    await labPicker.locator('[data-mm-hub-action="simulator"]').click();
+    await expect(page.locator('#simulator')).toBeVisible();
+
+    await page.evaluate(()=>switchView('scenarios'));
+    await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="question-centre"]').click();
+    const questions=page.locator('#scenarios .mm-question-centre');
+    await expect(questions).toBeVisible();
+    await expect(questions.locator('.mm-hub-picker-grid[data-mm-reference-practice-picker="question-centre"] > .mm-reference-practice-choice')).toHaveCount(5);
+    await expect(questions.locator('.mm-reference-practice-art')).toHaveCount(5);
+    const questionOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
+    expect(questionOverflow).toBeLessThanOrEqual(2);
+
+    await page.locator('#scenarios .mm-hub-detail-back button').click();
+    await expect(page.locator('#scenarios .mm-practice-hub')).toBeVisible();
+    await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="troubleshooting"]').click();
+    await expect(page.locator('#defects .mm-dx-workbench')).toBeVisible();
+    await expect(page.locator('#defects .mm-dx-library .mm-dx-symptom').first()).toBeVisible();
+    await page.locator('#defects .mm-dx-library .mm-dx-symptom').first().click();
+    await expect(page.locator('#defects .mm-dx-evidence')).toBeVisible();
+    await expect(page.locator('#defects .mm-dx-main-action')).toBeVisible();
+    // Presentation upgrade is never approval of the diagnostic results.
+    await expect(page.locator('#defects .mm-dx-disclaimer')).toContainText('No automatic');
+  });
+}
