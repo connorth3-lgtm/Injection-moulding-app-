@@ -1,10 +1,18 @@
 # Real assistive-technology validation — 2026.10.11.10
 
-**STATUS: HOLD — no technical candidate has been retained for this release, no human/device AT testing has been recorded, and no signoff is implied.** This is the NEW .10 release-specific task packet for PR #617, not a copy of the previous .9 candidate's technical or human evidence.
+**STATUS: HOLD — independent human, physical-device, signing, expert, learner and provider evidence remains outstanding.** The technical source/fingerprint and retained artifact below prove only successful non-production software automation. They are not external validation, product deployment or production authority.
 
-The public app is currently .9. PR #617 has a redesigned mobile Home, Learn, Materials, Practice and More interface. Before real AT validation may begin, its exact-source public runtime must pass protected technical/browser QA, receive a separately approved .10 visual baseline and bind to a retained new artifact, source SHA and runtime fingerprint. Those identities are **not yet known** and must not be inferred from previous releases or a mutable preview URL.
+> **RETAINED 2026.10.11.10 technical candidate: source `1a528632301232224fb6f9b2460c9a2863b92e81`, fingerprint `sha256:230170530d51afa8ac824e332905131e91f188945275c40b80fd768428c93424`, digest `sha256:03d990b80e1b10eeb7207fa8b84496edd45eec79447beaf43aead00d65e408f9`, artifact **11721888396**, expiry `2027-01-10T01:47:43Z`, successful producer [run 38193269649](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/38193269649); all independent validations HOLD.**
 
-Human reviewers and physical devices must independently test NVDA/Firefox Windows, NVDA/Chromium Windows, VoiceOver/Safari macOS and VoiceOver/Safari iOS, including keyboard focus and live announcements. A separate physical-device workstream must verify audible Android Read Aloud, install/update/offline/restart and zoom. Each review requires dated, device/source-bound task evidence and a named reviewer before any row can be marked validated. All task statuses in `data/accessibility-real-at-validation-v1.json` remain **pending** and all seven external validation workstreams remain **HOLD**.
+## Verified technical candidate only
+
+- Release: `2026.10.11.10` (non-production PR #617)
+- Source: `1a528632301232224fb6f9b2460c9a2863b92e81`
+- Producer: [run 38193269649](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/38193269649), completed successfully after Chromium/WebKit/visual and Question Quality gates
+- Retained artifact: `11721888396`, digest `sha256:03d990b80e1b10eeb7207fa8b84496edd45eec79447beaf43aead00d65e408f9`, expiry `2027-01-10T01:47:43Z`
+- Runtime fingerprint measured from actual public build: `sha256:230170530d51afa8ac824e332905131e91f188945275c40b80fd768428c93424`
+- Prior `2026.10.11.9` candidate and visual baseline remain historical and were not reused
+- All independent external gates, device/AT reviews, human SMEs, learner outcomes, provider requirements, production-root and machine control: **HOLD**
 
 ## Canonical assistive-technology task matrix (all untested)
 
