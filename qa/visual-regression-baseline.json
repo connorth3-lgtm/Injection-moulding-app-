@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.11.9",
-  "commit": "4116eda8950b65c337f22c7f0f981822e200569d",
+  "release": "2026.10.11.10",
+  "commit": "d3b5fba1f53b187fcf1ee8e3337138e8fc99c60b",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,6 +41,6 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "On 2026-10-12 Pacific/Auckland the owner expressly responded 'Deep fix all and I approve' after being shown the actual browser-rendered .9 family-folder screenshot artifact from Mobile Browser QA run 38169457933, artifact 11713302350. The owner approved the new illustrated polymer-family Materials folders, keeping all 95 PP grades under one Polypropylene family. The immutable visual-baseline/2026.10.11.9 ref was pinned once at source 4116eda8950b65c337f22c7f0f981822e200569d and the strict 12-diff-pixel allowance, four viewports and all 13 surfaces stay unchanged. Separate .6, .7 and .8 baseline references are historical and unmodified. This is only approval of the updated visual design, not authorization for physical Android audible Read Aloud, phone offline install/restart, human NVDA/VoiceOver, SME, learner pilot, NZQA/provider or signed Windows validations. Production-root and machine-control remain HOLD. A new source-bound successful candidate, exact-head comprehensive CI and checked Pages deploy remain prerequisites.",
-  "ref": "visual-baseline/2026.10.11.9"
+  "policy": "On 2026-10-12 Pacific/Auckland, the owner approved real browser-rendered before-and-after screenshots for the Home/Learn/Materials/Practice/More redesign on mobile, then approved the remaining changed mobile/tablet/desktop comparison sheet, and explicitly replied 'Fix and yes' after viewing the corrected 412x915 Read Aloud screenshot. The approved reference is immutable branch visual-baseline/2026.10.11.10 pinned exactly to d3b5fba1f53b187fcf1ee8e3337138e8fc99c60b prior to this manifest-only approval change. Actual Chromium candidate/baseline/diff captures are available in Mobile Browser QA run 38186511959, artifact 11719379779; the previously approved displayed 24 changed viewport/surface captures include the corrected expanded Read Aloud state. The other 28 capture slots were reported unchanged. Previous immutable visual-baseline/2026.10.11.9 at 4116eda8950b65c337f22c7f0f981822e200569d and earlier historical baselines remain untouched. The strict maxDiffPixels 12, four viewports, all 13 surfaces, comparison harness and candidate vs source-bound baseline verification remain unchanged. This approval covers QA visual appearance only: human/physical real AT, Android/iPadOS install/read-aloud, independent SME, learner outcomes, NZQA/provider, signed Windows, retained exact-head release provenance, production-root publishing and machine-control remain HOLD until separately evidenced.",
+  "ref": "visual-baseline/2026.10.11.10"
 }
