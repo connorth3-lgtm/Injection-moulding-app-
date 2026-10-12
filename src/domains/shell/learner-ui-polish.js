@@ -836,9 +836,29 @@ function materials(){
   }
   root.dataset.mmReferenceMaterials='1';
 }
+function illustrateMore(grid){
+  // This is the original six-section More menu. Decorate its existing native
+  // disclosure headings, never clone action buttons or rewrite their handlers.
+  const photos={learning:['training',24],references:['controls',2],
+    account:['evidence',27],mission:['machine',0],
+    help:['quality',20],about:['materials',3]};
+  grid.querySelectorAll(':scope > .mm-more-disclosure').forEach(group=>{
+    const heading=group.querySelector(':scope > summary');
+    if(!heading||heading.querySelector(':scope > .mm-reference-more-art'))return;
+    const section=group.dataset.mmMoreSection||
+      (group.querySelector('summary b')?.textContent?.includes('Help')?'help':'about');
+    const [subject,tile]=photos[section]||photos.learning;
+    const art=picture(subject,'',tile);
+    art.classList.add('mm-reference-more-art');
+    art.setAttribute('aria-hidden','true');
+    heading.prepend(art);
+    group.classList.add('mm-reference-more-card');
+  });
+}
 function more(){
   const grid=document.querySelector('#modal .grid2[data-mm-more-organized="1"]');
-  if(!grid||grid.dataset.mmReferenceMore==='1')return;
+  if(!grid)return;
+  if(grid.dataset.mmReferenceMore==='1'){illustrateMore(grid);return;}
   grid.dataset.mmReferenceMore='1';
   const mapped=[['learning','Resources','Guides, charts and learning materials'],
     ['references','Tools','Calculators and technical references'],
@@ -871,6 +891,7 @@ function more(){
   }
   const direct=Array.from(grid.querySelectorAll(':scope > .mm-reference-more-extra'));
   grid.prepend(...direct);
+  illustrateMore(grid);
 }
 let scheduled=false;
 function refresh(){
