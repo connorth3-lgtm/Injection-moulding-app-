@@ -229,7 +229,7 @@ for(const width of [360,810]){
     // Hover/focus background is animated. Check the entire allowed light
     // contrast range rather than one intermediate CSS interpolation frame.
     await expect.poll(async()=>questions.locator('.mm-reference-practice-choice').first().evaluate(el=>{
-      const rgb=value=>(value.match(/[\\d.]+/g)||[]).map(Number);
+      const rgb=value=>(value.match(/[0-9.]+/g)||[]).map(Number);
       const bg=rgb(getComputedStyle(el).backgroundColor);
       const text=rgb(getComputedStyle(el.querySelector('b')).color);
       return bg.length>=3&&bg[0]>=205&&bg[1]>=225&&bg[2]>=225&&
