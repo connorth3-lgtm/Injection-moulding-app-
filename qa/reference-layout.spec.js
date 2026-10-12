@@ -305,3 +305,30 @@ test('Practice nested labs, data diagnosis and assessments keep working illustra
   await startExam.click();
   await expect(page.locator('#modal:not(.hidden) #examQuestions .question').first()).toBeVisible();
 });
+
+test('More keeps six illustrated native disclosures, original actions and keyboard access',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.locator('.mobile-nav > button').filter({hasText:'More'}).click();
+  const groups=page.locator('#modal .mm-reference-more-card');
+  await expect(groups).toHaveCount(6);
+  await expect(groups.locator(':scope > summary > .mm-reference-more-art')).toHaveCount(6);
+  const registryActions=await page.locator('#modal [data-mm-registry-menu]').count();
+  await page.evaluate(()=>{window.MM_REFERENCE_LAYOUT.refresh();window.MM_REFERENCE_LAYOUT.refresh()});
+  await expect(groups.locator(':scope > summary > .mm-reference-more-art')).toHaveCount(6);
+  expect(await page.locator('#modal [data-mm-registry-menu]').count()).toBe(registryActions);
+  const about=page.locator('#modal .mm-reference-more-extra').filter({hasText:'About MouldMaster'});
+  await expect(about).not.toHaveAttribute('open','');
+  const header=about.locator(':scope > summary');
+  await header.focus();
+  await header.press('Enter');
+  await expect(about).toHaveAttribute('open','');
+  await expect(about.locator('a[href="./support.html#mmPwa"]')).toBeVisible();
+  await header.press('Enter');
+  await expect(about).not.toHaveAttribute('open','');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
+  await page.evaluate(()=>window.closeModal?.());
+  await expect(page.locator('#modal .modal-card')).toBeHidden();
+  await page.locator('.mobile-nav > button').filter({hasText:'Practice'}).click();
+  await expect(page.locator('#scenarios .mm-practice-hub')).toBeVisible();
+});
