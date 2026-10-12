@@ -372,7 +372,7 @@
     ui={host,play:host.querySelector('[data-mm-read="play"]'),prev:host.querySelector('[data-mm-read="prev"]'),next:host.querySelector('[data-mm-read="next"]'),stop:host.querySelector('[data-mm-read="stop"]'),speed:host.querySelector('[data-mm-read="speed"]'),status:host.querySelector('.mm-read-status'),position:host.querySelector('[data-mm-read="position"]'),current:host.querySelector('[data-mm-read="current"]')};
     ui.play.addEventListener('click',toggle);ui.prev.addEventListener('click',()=>move(-1));ui.next.addEventListener('click',()=>move(1));ui.stop.addEventListener('click',()=>stop('Stopped'));
     ui.speed.addEventListener('change',()=>{if(speaking||paused){paused=false;speaking=true;speakCurrent();}});
-    host.querySelector('details').addEventListener('toggle',event=>{if(event.target.open&&!speaking&&!paused){buildUnits();setStatus(supported?'Ready':'Read Aloud is not available in this browser/device.');updateButtons();}});
+    host.querySelector('details').addEventListener('toggle',event=>{if(event.target.open&&!starting&&!speaking&&!paused){buildUnits();setStatus(supported?'Ready':'Read Aloud is not available in this browser/device.');updateButtons();}});
     refreshVoice();if(supported&&!selectedVoice)setStatus('Device voice will load when playback starts.');updateButtons();
     createListeningTab();
   }
