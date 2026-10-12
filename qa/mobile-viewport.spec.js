@@ -294,7 +294,8 @@ test('UI audit contract: one page title, compact header actions, useful Home, de
   expect(searchBox.width).toBeLessThanOrEqual(48);
   expect(searchBox.height).toBeGreaterThanOrEqual(44);
   const listen=page.locator('.mm-read-aloud');
-  await expect(listen).toBeVisible();
+  // Only Book surfaces expose the speech player; main tabs stay compact.
+  await expect(listen).toBeHidden();
   expect(await listen.evaluate(el=>el.parentElement?.classList.contains('top-actions'))).toBeTruthy();
 
   await openLearnHub(page);
@@ -323,6 +324,12 @@ test('UI audit contract: one page title, compact header actions, useful Home, de
     return !(a.right<=lesson.left||a.left>=lesson.right||a.bottom<=lesson.top||a.top>=lesson.bottom);
   });
   expect(overlap).toBeFalsy();
+  await expect(listen).toBeHidden();
+  await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open()});
+  await expect(page.locator('#mmBookView')).toBeVisible();
+  await expect(listen).toBeVisible();
+  await page.evaluate(()=>switchView('dashboard'));
+  await expect(listen).toBeHidden();
 });
 
 test('Mission Control and Mission evidence strips stay off all mobile tabs without losing stored evidence',async({page})=>{
