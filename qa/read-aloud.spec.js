@@ -45,7 +45,13 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   // The expanded mobile player must live in normal layout, not float over
   // Today’s focus. This prevents the race that broke both engine suites.
   await expect.poll(()=>host.locator('details').evaluate(el=>getComputedStyle(el).position)).toBe('relative');
-  await expect.poll(()=>host.locator('details').evaluate(el=>getComputedStyle(el).bottom)).toBe('auto');
+  await expect.poll(()=>host.locator('details').evaluate(el=>{
+    const rect=el.getBoundingClientRect();
+    const header=el.closest('.topbar')?.getBoundingClientRect();
+    // For position:relative, the CSS computed 'bottom' may correctly be 0px
+    // even when specified inset is auto. Assert real layout containment.
+    return Boolean(header&&rect.top>=header.top-2&&rect.bottom<=header.bottom+2);
+  })).toBeTruthy();
 
   // Home's new image-led hero must not let the expanded reader
   // obscure the lesson and Continue lesson action beneath it.
