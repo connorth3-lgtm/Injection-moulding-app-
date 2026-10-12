@@ -284,35 +284,36 @@ function syncDataResetLink(){
   }
 }
 function syncReadAloudLabel(){
-  const host=document.querySelector('.mm-read-aloud details:not([open]) summary');
-  if(host&&!host.getAttribute('aria-label'))host.setAttribute('aria-label','Read aloud');
-  const panel=document.querySelector('.mm-read-aloud details');
-  if(!panel||panel.dataset.mmHomeFocusScrollBound==='1')return;
-  panel.dataset.mmHomeFocusScrollBound='1';
-  // On narrow phones the optional Read Aloud panel docks above bottom
-  // navigation. The redesigned Home hero makes Today's focus sit behind
-  // that dock. When the reader explicitly expands it, reveal the focus
-  // card in the page scroll rather than obscuring its lesson controls.
-  panel.addEventListener('toggle',()=>{
-    if(!panel.open||window.innerWidth>700)return;
-    const dashboard=document.getElementById('dashboard');
-    const focus=dashboard?.querySelector('.mm-today-focus');
-    if(!focus||dashboard.classList.contains('hidden'))return;
-    requestAnimationFrame(()=>{
-      if(!panel.open||dashboard.classList.contains('hidden'))return;
-      const rect=focus.getBoundingClientRect(),dock=panel.getBoundingClientRect();
-      if(rect.bottom<=dock.top-12||rect.top>=dock.bottom+12)return;
-      focus.scrollIntoView({block:'start',inline:'nearest',behavior:'instant'});
-      requestAnimationFrame(()=>{
-        if(!panel.open)return;
-        const visible=focus.getBoundingClientRect(),overlay=panel.getBoundingClientRect();
-        const overlap=visible.bottom-overlay.top+12;
-        if(overlap<=0)return;
-        const scroller=focus.closest('.main')||document.scrollingElement;
-        scroller?.scrollBy({top:Math.ceil(overlap),behavior:'instant'});
-      });
-    });
-  });
+  const summary=document.querySelector('.mm-read-aloud details:not([open]) summary');
+  if(summary&&!summary.getAttribute('aria-label'))summary.setAttribute('aria-label','Read aloud');
+}
+function revealFocusBelowReader(details){
+  // Native details can mount after the shell; capture-phase toggle is bound
+  // to document, not to a possibly absent speech panel.
+  if(!details.open||window.innerWidth>700)return;
+  const dashboard=document.getElementById('dashboard');
+  const focus=dashboard?.querySelector('.mm-today-focus');
+  if(!focus||dashboard.classList.contains('hidden'))return;
+  function adjust(attempt){
+    if(!details.open||dashboard.classList.contains('hidden')||attempt>4)return;
+    const card=focus.getBoundingClientRect(),dock=details.getBoundingClientRect();
+    if(!card.width||!dock.width||card.bottom<=dock.top-12||card.top>=dock.bottom+12)return;
+    if(attempt===0)focus.scrollIntoView({block:'start',inline:'nearest',behavior:'instant'});
+    else{
+      const amount=Math.ceil(card.bottom-dock.top+20);
+      const main=focus.closest('.main');
+      if(main&&main.scrollHeight>main.clientHeight+1&&/(auto|scroll)/.test(getComputedStyle(main).overflowY))
+        main.scrollTop+=amount;
+      else window.scrollBy({top:amount,behavior:'instant'});
+    }
+    requestAnimationFrame(()=>adjust(attempt+1));
+  }
+  requestAnimationFrame(()=>adjust(0));
+}
+function bindReadAloudObstructionGuard(){
+  document.addEventListener('toggle',event=>{
+    if(event.target?.matches?.('.mm-read-aloud details'))revealFocusBelowReader(event.target);
+  },true);
 }
 function run(){
   syncHomeBalance();
@@ -330,6 +331,7 @@ function schedule(){
 }
 function install(){
   ensureStyles();
+  bindReadAloudObstructionGuard();
   run();
   syncFirstRunModal();
   installFirstRunPolishHook();
