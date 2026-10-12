@@ -2495,3 +2495,278 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
     transition:none!important;
   }
 }
+
+/* 2026-10-13 — approved cross-tab deep-screen visual system.
+   Only decorate existing controlled learning/application surfaces. The
+   simulator remains synthetic education; no asserted physical prediction. */
+.mm-reference-layout{
+  --mm-deep-paper:#f0f7fa;
+  --mm-deep-ink:#092e45;
+  --mm-deep-secondary:#37566a;
+  --mm-deep-edge:#b3d5e3;
+  --mm-deep-teal:#13c8c8;
+}
+.mm-reference-layout :is(
+  #lesson .lesson-header-card,
+  #simulator .form-card,
+  #simulator .output-panel,
+  #coach .chat,
+  #profile .form-card:first-child
+).mm-reference-deep-head{
+  min-width:0!important;
+  display:flow-root!important;
+  border-radius:17px!important;
+  border:1px solid #2d6b83!important;
+  background:linear-gradient(128deg,#0d384e,#092237 80%)!important;
+  color:#f2faff!important;
+}
+.mm-reference-layout :is(
+  #lesson .lesson-header-card,
+  #simulator .form-card,
+  #simulator .output-panel,
+  #coach .chat,
+  #profile .form-card:first-child
+)>.mm-reference-deep-art{
+  display:block!important;float:right!important;
+  width:92px!important;height:82px!important;
+  max-width:30%!important;margin:0 0 12px 15px!important;
+  border-radius:12px!important;overflow:hidden!important;
+}
+.mm-reference-layout :is(
+  #glossary .section-head,
+  #defects .section-head,
+  #standards .section-head,
+  #visuals .section-head,
+  #certificates .section-head,
+  #instructor .section-head
+).mm-reference-deep-head{
+  min-width:0!important;align-items:center!important;
+  padding:12px 14px!important;gap:12px!important;
+  border-radius:15px!important;
+  border:1px solid #27627d!important;
+  background:linear-gradient(120deg,#0c344a,#072035)!important;
+}
+.mm-reference-layout :is(
+  #glossary .section-head,
+  #defects .section-head,
+  #standards .section-head,
+  #visuals .section-head,
+  #certificates .section-head,
+  #instructor .section-head
+)>.mm-reference-deep-art{
+  display:block!important;width:68px!important;height:68px!important;
+  flex:0 0 68px!important;border-radius:11px!important;
+  overflow:hidden!important;
+}
+.mm-reference-layout .mm-reference-deep-head :is(h2,h3){
+  color:#f6fbff!important;overflow-wrap:anywhere!important;
+}
+.mm-reference-layout .mm-reference-deep-head :is(p,.muted){
+  color:#c2dbe9!important;line-height:1.5!important;
+}
+.mm-reference-layout #lesson .lesson-header-card>.lesson-meta,
+.mm-reference-layout #lesson .lesson-header-card>.mini-bar{
+  clear:both!important;
+}
+.mm-reference-layout #lesson .lesson-header-card h2{
+  font-size:clamp(22px,3.5vw,34px)!important;
+  line-height:1.17!important;
+}
+.mm-reference-layout #lesson .lesson-breadcrumb{
+  min-height:44px!important;align-items:center!important;
+  color:#bed8e7!important;
+}
+.mm-reference-layout #lesson .lesson-breadcrumb button{
+  min-height:44px!important;padding:8px!important;
+  border-radius:9px!important;color:#75eee0!important;
+}
+.mm-reference-layout #lesson .lesson-layout{
+  grid-template-columns:minmax(0,1fr) minmax(240px,310px)!important;
+  align-items:start!important;
+}
+.mm-reference-layout #lesson :is(.lesson-body,.lesson-side).mm-reference-deep-panel{
+  min-width:0!important;border:1px solid var(--mm-deep-edge)!important;
+  background:var(--mm-deep-paper)!important;color:var(--mm-deep-ink)!important;
+  border-radius:16px!important;
+}
+.mm-reference-layout #lesson .lesson-body :is(h2,h3,h4),
+.mm-reference-layout #lesson .lesson-side :is(h2,h3,h4){
+  color:var(--mm-deep-ink)!important;
+}
+.mm-reference-layout #lesson .lesson-body :is(p,li),
+.mm-reference-layout #lesson .lesson-side :is(p,.muted){
+  color:var(--mm-deep-secondary)!important;
+}
+.mm-reference-layout #lesson .lesson-body .content-block{
+  border-bottom:1px solid #d1e4eb!important;
+  padding-bottom:17px!important;margin-bottom:16px!important;
+}
+.mm-reference-layout #lesson .lesson-body .content-block:last-of-type{
+  border-bottom:0!important;
+}
+.mm-reference-layout #lesson .lesson-body .callout{
+  background:#dbeff1!important;color:#18495a!important;
+  border-left-color:#00aeb5!important;
+}
+.mm-reference-layout #lesson .lesson-body .note-area{
+  box-sizing:border-box!important;min-height:100px!important;
+  color:#102f43!important;background:#fff!important;
+  border-color:#95becf!important;
+}
+.mm-reference-layout #lesson .lesson-side .lesson-list button{
+  box-sizing:border-box!important;min-height:44px!important;
+  background:#e1edf3!important;color:#214358!important;
+  border:1px solid #bbd5e2!important;
+  white-space:normal!important;text-align:left!important;
+}
+.mm-reference-layout #lesson .lesson-side .lesson-list button.active{
+  border-color:#078d95!important;background:#c7efeb!important;
+  color:#0b4e55!important;
+}
+.mm-reference-layout #lesson .lesson-actions-sticky{
+  flex-wrap:wrap!important;
+}
+.mm-reference-layout #lesson .lesson-actions-sticky button{
+  min-height:44px!important;white-space:normal!important;
+}
+.mm-reference-layout #simulator>.grid2{
+  display:grid!important;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr)!important;
+  gap:14px!important;align-items:start!important;
+}
+.mm-reference-layout #simulator .form-card>.form-grid{
+  clear:both!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:13px!important;
+}
+.mm-reference-layout #simulator .form-grid>label{
+  min-width:0!important;display:grid!important;gap:7px!important;
+  border:1px solid #b6d8e4!important;border-radius:12px!important;
+  background:var(--mm-deep-paper)!important;color:var(--mm-deep-ink)!important;
+  padding:11px!important;font-size:13px!important;font-weight:650!important;
+}
+.mm-reference-layout #simulator .range-row{
+  grid-template-columns:minmax(0,1fr) 78px!important;gap:9px!important;
+}
+.mm-reference-layout #simulator .range-row input[type=range]{
+  min-width:0!important;accent-color:#00b5b7!important;
+}
+.mm-reference-layout #simulator .range-row input[readonly]{
+  box-sizing:border-box!important;min-width:0!important;width:100%!important;
+  color:var(--mm-deep-ink)!important;background:#fff!important;
+  border:1px solid var(--mm-deep-edge)!important;text-align:center!important;
+}
+.mm-reference-layout #simulator .output-panel .part-visual{
+  clear:both!important;border-radius:12px!important;
+  border:1px solid #417188!important;background:#092033!important;
+}
+.mm-reference-layout #simulator #simAdvice{
+  color:#d3f5ef!important;background:#123a47!important;
+  border-left-color:#44ddcc!important;line-height:1.55!important;
+}
+.mm-reference-layout #simulator .hero-buttons{
+  clear:both!important;gap:9px!important;
+}
+.mm-reference-layout #simulator .hero-buttons button{
+  min-height:44px!important;white-space:normal!important;
+}
+.mm-reference-layout #glossary .glossary-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;
+}
+.mm-reference-layout #glossary .term.mm-reference-deep-panel,
+.mm-reference-layout #defects .defect-card.mm-reference-deep-panel{
+  min-width:0!important;border:1px solid var(--mm-deep-edge)!important;
+  border-radius:14px!important;background:var(--mm-deep-paper)!important;
+  color:var(--mm-deep-ink)!important;
+}
+.mm-reference-layout #glossary .term b,
+.mm-reference-layout #defects .defect-card :is(h3,b){
+  color:#0c4659!important;
+}
+.mm-reference-layout #glossary .term p,
+.mm-reference-layout #defects .defect-card p{
+  color:var(--mm-deep-secondary)!important;line-height:1.55!important;
+}
+.mm-reference-layout #defects .defect-card button{
+  min-height:44px!important;
+}
+.mm-reference-layout #profile .form-card.mm-reference-deep-panel{
+  min-width:0!important;padding:20px!important;
+  border:1px solid #34718b!important;border-radius:16px!important;
+}
+.mm-reference-layout #profile .form-card:first-child>.mm-reference-deep-art{
+  margin-bottom:17px!important;
+}
+.mm-reference-layout #profile :is(input,select){
+  box-sizing:border-box!important;min-height:44px!important;max-width:100%!important;
+}
+.mm-reference-layout #coach .chat .chat-log,
+.mm-reference-layout #coach .chat .chat-form{
+  clear:both!important;
+}
+.mm-reference-layout :is(#standards,#visuals,#certificates,#instructor) .card{
+  min-width:0!important;border-radius:15px!important;
+}
+.mm-reference-layout :is(#standards,#visuals,#certificates,#instructor) :is(button,input,select){
+  min-height:44px!important;box-sizing:border-box!important;
+}
+.mm-reference-layout #modal .modal-card{
+  border-radius:18px!important;
+}
+.mm-reference-layout #modal :is(.question,.option,.answer-row){
+  min-width:0!important;border-radius:11px!important;
+}
+.mm-reference-layout #modal .option{
+  min-height:44px!important;display:flex!important;align-items:center!important;
+  gap:9px!important;white-space:normal!important;
+}
+.mm-reference-layout #modal .option input{
+  flex:0 0 auto!important;
+}
+.mm-reference-layout :is(#simulator,#lesson,#profile,#glossary,#defects,#standards,#visuals,#certificates,#instructor) :is(button,a,input,select,textarea):focus-visible{
+  outline:2px solid #30dacd!important;outline-offset:3px!important;
+}
+@media(max-width:960px){
+  .mm-reference-layout #lesson .lesson-layout,
+  .mm-reference-layout #simulator>.grid2{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  .mm-reference-layout #lesson .lesson-side{position:static!important}
+}
+@media(max-width:700px){
+  .mm-reference-layout #glossary .glossary-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  .mm-reference-layout #simulator .form-card>.form-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  .mm-reference-layout #lesson .lesson-body{padding:16px!important}
+  .mm-reference-layout :is(
+    #glossary .section-head,#defects .section-head,#standards .section-head,
+    #visuals .section-head,#certificates .section-head,#instructor .section-head
+  ).mm-reference-deep-head{flex-wrap:wrap!important;}
+  .mm-reference-layout #glossary .section-head input,
+  .mm-reference-layout #defects .section-head input{
+    width:100%!important;max-width:none!important;min-height:44px!important;
+  }
+  .mm-reference-layout #lesson .lesson-actions-sticky{
+    bottom:calc(var(--mm-mobile-nav-height,70px) + 8px)!important;
+  }
+}
+@media(max-width:360px){
+  .mm-reference-layout .mm-reference-deep-head>.mm-reference-deep-art{
+    width:56px!important;height:56px!important;
+  }
+  .mm-reference-layout #simulator .range-row{
+    grid-template-columns:minmax(0,1fr) 70px!important;
+  }
+}
+@media(forced-colors:active){
+  .mm-reference-layout .mm-reference-deep-head,
+  .mm-reference-layout .mm-reference-deep-panel{
+    border:1px solid CanvasText!important;forced-color-adjust:auto!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .mm-reference-layout #lesson .lesson-actions-sticky{
+    scroll-behavior:auto!important;
+  }
+}
