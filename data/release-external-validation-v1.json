@@ -22,11 +22,7 @@
     "status": "hold",
     "evidenceContract": "data/accessibility-real-at-validation-v1.json",
     "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.10.11.11.md",
-    "candidate": {
-      "release": "2026.10.11.11",
-      "sourceSha": null,
-      "runtimeFingerprint": null
-    },
+    "candidate": null,
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix.",
     "previousCandidate": {
       "release": "2026.10.11.10",
@@ -108,11 +104,7 @@
     "evidenceContract": "data/nzqa-external-validation-v1.json",
     "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.11.11.md",
     "required": "Genuine provider ownership, stakeholder need, provider-approved design, authorised assessment/internal moderation, consent-to-assess/CMR confirmation, applicable national moderation, workplace evidence and provider-controlled review/change evidence for the exact governed release.",
-    "candidate": {
-      "release": "2026.10.11.11",
-      "sourceSha": null,
-      "runtimeFingerprint": null
-    },
+    "candidate": null,
     "previousCandidate": {
       "release": "2026.10.11.10",
       "sourceSha": "1a528632301232224fb6f9b2460c9a2863b92e81",

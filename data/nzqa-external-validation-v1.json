@@ -6,11 +6,7 @@
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": null,
-  "candidate": {
-    "release": "2026.10.11.11",
-    "sourceSha": null,
-    "runtimeFingerprint": null
-  },
+  "candidate": null,
   "boundary": "New 2026.10.11.11 source and public candidate pending. 2026.10.11.10 and its tracker are historical. No provider G1–G8 external evidence, qualification, assessment/production approval or machine-control authority.",
   "requiredGates": [
     {
