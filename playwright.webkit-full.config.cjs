@@ -3,7 +3,7 @@ const {defineConfig,devices}=require('@playwright/test');
 module.exports=defineConfig({
   testDir:'./qa',
   testMatch:[
-    /mobile-viewport\.spec\.js/,
+    /mobile-viewport\.spec\.js/,/reference-layout\.spec\.js/,
     /lesson-catalog\.spec\.js/,/lesson-detail-simplicity\.spec\.js/,
     /learner-ux-repair\.spec\.js/,
     /learn-practice-mobile-style\.spec\.js/,
