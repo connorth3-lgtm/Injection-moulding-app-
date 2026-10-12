@@ -292,6 +292,15 @@ function dxAnalysis(){
     '<button type="button" class="secondary" data-mm-dx-action="export">Export learning case JSON</button>'+
     '<button type="button" class="secondary" data-mm-dx-action="reset">Start another case</button></div></section>';
 }
+function dxFocusAfterRender(root,selector){
+  const target=root.querySelector(selector);
+  if(!target)return;
+  // The workbench rerenders native controls after every transition.
+  // Give keyboard/screen-reader users a connected destination rather
+  // than leaving focus on the removed button or document body.
+  if(!target.matches('a[href],button,input,select,textarea,[tabindex]'))target.tabIndex=-1;
+  target.focus({preventScroll:true});
+}
 function dxRender(view){
   const root=document.getElementById(view);if(!root)return;
   root.dataset.mmDxMode='unified';
@@ -309,15 +318,20 @@ function dxRender(view){
         const index=Number(el.dataset.mmDxId);
         if(!Number.isInteger(index)||!dxDefects()[index])return;
         dxState.selected=index;dxState.phase='intake';dxState.hypotheses={};dxRender(view);
+        dxFocusAfterRender(root,'.mm-dx-fields select');
       }else if(action==='analyse'){
         dxState.phase='analysis';dxRender(view);
-      }else if(action==='back'){dxState.phase='intake';dxRender(view)}
-      else if(action==='reset'){
+        dxFocusAfterRender(root,'.mm-dx-results .mm-dx-section-head h2');
+      }else if(action==='back'){
+        dxState.phase='intake';dxRender(view);
+        dxFocusAfterRender(root,'.mm-dx-fields select');
+      }else if(action==='reset'){
         dxState.selected=-1;dxState.phase='intake';dxState.query='';
         dxState.hypotheses={};dxState.evidence=[];
         dxState.form={when:'unknown',distribution:'unknown',change:'unknown',
           baseline:'',observations:'',comparison:'',reflection:''};
         dxRender(view);
+        dxFocusAfterRender(root,'#mmDxSearch');
       }else if(action==='export'){
         const data=JSON.stringify(dxReportData(),null,2);
         const file=new Blob([data],{type:'application/json'});
