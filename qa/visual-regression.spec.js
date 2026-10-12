@@ -198,7 +198,9 @@ async function prepareSurface(page,surface){
     const trace=page.locator('.mm-book-claim-trace').first();if(await trace.count())await trace.evaluate(el=>{el.open=true});
     await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
   }else if(surface==='listen-expanded'){
-    await page.evaluate(()=>switchView('dashboard'));
+    // The reader now belongs to Book, not the global learner dashboard.
+    // Preserve the 13th locked capture surface; capture Book audio instead.
+    await openBookContents(page);
     const host=page.locator('.mm-read-aloud');
     await expect(host).toBeVisible();
     await host.locator('details').evaluate(el=>{el.open=true});
