@@ -83,3 +83,18 @@ test('delegated bridge handles calls, this.value and the Enter condition without
   expect(result.hasEval).toBe(false);
   expect(result.hasFunctionConstructor).toBe(false);
 });
+
+test('the allowlisted Materials All lessons shortcut opens the single Learn catalogue',async({page})=>{
+  await openApp(page);
+  await page.evaluate(()=>switchView('materials'));
+  const materials=page.locator('#materials');
+  const link=materials.locator('.mm-material-study-tools > .mat-tabs > button').filter({hasText:'All lessons'});
+  await expect(link).toBeVisible();
+  await expect(link).toHaveAttribute('data-mm-onclick','mmHubOpenMaterialLessons()');
+  expect(await page.evaluate(()=>window.MM_INLINE_HANDLER_BRIDGE.allowedCalls.includes('mmHubOpenMaterialLessons'))).toBe(true);
+  await link.click();
+  await expect(page.locator('#path')).toBeVisible();
+  await expect(page.locator('#path .mm-all-lessons')).toBeVisible();
+  await expect(page.locator('#materials')).toBeHidden();
+  await expect(page.locator('#path [data-mm-lesson-catalog]')).toHaveCount(1);
+});
