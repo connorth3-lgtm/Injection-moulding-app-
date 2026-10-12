@@ -180,3 +180,56 @@ test('unified practice illustrations load locally without external dependencies'
   expect(tiles.map(row=>row.tile)).toEqual([20,22,23,19,27]);
   expect(tiles.every(row=>row.background.includes('mockup-reference-tiles.webp'))).toBe(true);
 });
+
+// Exercise every primary mobile tab independently of the visual golden files.
+// The same pointer/focus/overflow checks apply to Home, Learn, Materials,
+// Practice and More at all four approved narrow viewport widths.
+for(const width of [320,360,390,412]){
+  test('all five mobile tabs keep consistent navigation and no stale hover at '+width+'px',async({page})=>{
+    test.setTimeout(90000);
+    await page.setViewportSize({width,height:844});
+    await openApp(page);
+    const tabs=[
+      ['Home','#dashboard','#dashboard .mm-reference-home-hero'],
+      ['Learn','#path','#path .mm-reference-title'],
+      ['Materials','#materials','#materials .mm-reference-materials-title'],
+      ['Practice','#scenarios','#scenarios .mm-reference-title'],
+    ];
+    for(const [name,root,landmark] of tabs){
+      const button=page.locator('.mobile-nav > button').filter({hasText:name});
+      await expect(button).toHaveCount(1);
+      await button.click();
+      await expect(page.locator(root)).toBeVisible();
+      await expect(page.locator(landmark)).toBeVisible();
+      await expect(button).toHaveAttribute('aria-current','page');
+      const hitbox=await button.boundingBox();
+      expect(hitbox,name+' navigation tap target').not.toBeNull();
+      expect(hitbox.width).toBeGreaterThanOrEqual(44);
+      expect(hitbox.height).toBeGreaterThanOrEqual(44);
+      // A stale pointer over tab items must not carry into another capture.
+      await page.mouse.move(1,1);
+      await expect(page.locator(root+' :is(button, a[href], summary, [role="button"]):hover')).toHaveCount(0);
+      const overflow=await page.evaluate(()=>
+        document.documentElement.scrollWidth-document.documentElement.clientWidth
+      );
+      expect(overflow,name+' must not overflow horizontally').toBeLessThanOrEqual(2);
+    }
+    const more=page.locator('.mobile-nav > button').filter({hasText:'More'});
+    await expect(more).toHaveCount(1);
+    await more.click();
+    await expect(page.locator('#modal .mm-more-disclosure')).toHaveCount(6);
+    await expect(page.getByRole('heading',{name:'More'})).toBeVisible();
+    const hitbox=await more.boundingBox();
+    expect(hitbox).not.toBeNull();
+    expect(hitbox.width).toBeGreaterThanOrEqual(44);
+    expect(hitbox.height).toBeGreaterThanOrEqual(44);
+    await page.mouse.move(1,1);
+    await expect(page.locator('#modal :is(button, a[href], summary, [role="button"]):hover')).toHaveCount(0);
+    const overflow=await page.evaluate(()=>
+      document.documentElement.scrollWidth-document.documentElement.clientWidth
+    );
+    expect(overflow,'More must not overflow horizontally').toBeLessThanOrEqual(2);
+    await page.evaluate(()=>window.closeModal?.());
+    await expect(page.locator('#modal .modal-card')).toBeHidden();
+  });
+}
