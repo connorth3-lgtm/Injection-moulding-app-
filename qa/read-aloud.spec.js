@@ -215,6 +215,13 @@ test('Listening tab builds a continuous lesson playlist and exposes long-session
   await expect(view.locator('[data-mm-listening-lesson]')).toContainText('Lesson 2');
   await view.locator('[data-mm-listening="stop"]').click();
   await expect(view.locator('[data-mm-listening-status]')).toHaveText('Stopped');
+  // Stopping must not turn Play into one-screen narration of the controls.
+  // Restart the selected lesson from the canonical course playlist.
+  await page.evaluate(()=>{window.__mmListeningSpoken='';});
+  await view.locator('[data-mm-listening="play"]').click();
+  await expect.poll(()=>page.evaluate(()=>window.__mmListeningSpoken||'')).toContain('Material preparation');
+  await expect(view.locator('[data-mm-listening-lesson]')).toContainText('Lesson 2');
+  await expect(view.locator('[data-mm-listening-status]')).toHaveText('Listening session playing');
 });
 
 

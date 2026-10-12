@@ -268,9 +268,17 @@
   }
 
   function togglePlaylist(){
-    if(!playlistMode&&!speaking&&!paused){startPlaylist();return;}
-    if(!playlistMode){stop('Ready');startPlaylist();return;}
-    toggle();
+    if(starting){stop('Stopped');return;}
+    if(speaking||paused){
+      if(!playlistMode){stop('Ready');startPlaylist();return;}
+      toggle();return;
+    }
+    // Stop preserves the last selected lesson for progress/navigation UI,
+    // but the shared one-screen toggle would otherwise call start(), reset
+    // playlistMode and narrate the Listening page's controls. Restart the
+    // actual lesson playlist from the learner's selected lesson instead.
+    const selectedLesson=playlistMode?currentLessonUnit()?.lessonId:undefined;
+    startPlaylist(selectedLesson);
   }
 
   function move(delta){if(!units.length)(playlistMode?buildPlaylist():buildUnits());if(!units.length)return;index=Math.max(0,Math.min(units.length-1,index+delta));speaking=false;paused=false;speakCurrent();}
