@@ -42,7 +42,12 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   await expect(host.locator('[data-mm-read="stop"]')).toBeVisible();
   await expect(host.locator('[data-mm-read="speed"]')).toHaveValue('1');
 
-  // Home's new image-led hero must not let the floating expanded reader
+  // The expanded mobile player must live in normal layout, not float over
+  // Today’s focus. This prevents the race that broke both engine suites.
+  await expect.poll(()=>host.locator('details').evaluate(el=>getComputedStyle(el).position)).toBe('relative');
+  await expect.poll(()=>host.locator('details').evaluate(el=>getComputedStyle(el).bottom)).toBe('auto');
+
+  // Home's new image-led hero must not let the expanded reader
   // obscure the lesson and Continue lesson action beneath it.
   await expect.poll(()=>page.evaluate(()=>{
     const focus=document.querySelector('#dashboard .mm-today-focus');
