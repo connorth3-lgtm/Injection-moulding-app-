@@ -905,7 +905,7 @@ function deepViewPolish(){
     ['#defects .section-head','quality',20],
     ['#coach .chat','quality',20],
     ['#standards .section-head','evidence',27],
-    ['#visuals .section-head','process',5],
+    ['#visuals .visual-wrap:first-child','process',5],
     ['#certificates .section-head','evidence',27],
     ['#profile .form-card:first-child','training',24],
     ['#instructor .section-head','cases',22]
