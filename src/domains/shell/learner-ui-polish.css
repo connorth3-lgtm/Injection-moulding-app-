@@ -3251,3 +3251,21 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
   border:1px solid #9bcac1!important;border-radius:11px!important;
   line-height:1.55!important;
 }
+
+/* Safety/evidence rows may have their own older navy background. Make the
+   actual row surface match the contrast-tested parent. */
+.mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 .mm-deep-v2-row{
+  background:#f0f7fa!important;color:#14384c!important;
+  border-color:#b7d6e3!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 .mm-deep-v2-row :is(
+  h2,h3,h4,p,li,b,strong,span
+){
+  color:#14384c!important;
+}
+@media(forced-colors:active){
+  .mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 .mm-deep-v2-row{
+    background:Canvas!important;color:CanvasText!important;
+    border-color:CanvasText!important;
+  }
+}
