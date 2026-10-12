@@ -759,41 +759,11 @@ function materials(){
     if(intro&&intro.parentElement!==study)study.appendChild(intro);
     if(tabs&&tabs.parentElement!==study)study.appendChild(tabs);
     if(guide.parentElement!==study)study.appendChild(guide);
-    // Delegate from the stable study wrapper. Material tab renderers may
-    // replace their own buttons; do not attach a listener to ephemeral nodes.
-    // Let native <details> close/open gestures remain authoritative.
-    if(!root.dataset.mmReferenceModeRevealBound){
-      root.dataset.mmReferenceModeRevealBound='1';
-      // Capture the learner's intent on the stable view before the core's
-      // synchronous material-tab renderer can replace descendants.
-      root.addEventListener('click',event=>{
-        const button=event.target.closest?.('.mat-tabs > button');
-        if(!button||!root.contains(button))return;
-        const label=(button.textContent||'').trim();
-        if(['Learn','Interactive labs','Knowledge check','Evidence & references'].includes(label)){
-          root.dataset.mmReferenceRevealMode='1';
-          const activeGuide=root.querySelector('[data-mm-family-science]');
-          if(activeGuide)activeGuide.open=true;
-          // The native tab handler replaces its material subtree during this
-          // same click. Reveal the *new* guide after dispatch, not just the
-          // soon-to-be-detached one. Passive refresh never sets this flag.
-          requestAnimationFrame(()=>{
-            const latestGuide=root.querySelector('[data-mm-family-science]');
-            if(root.dataset.mmReferenceRevealMode==='1'&&latestGuide){
-              latestGuide.open=true;
-              delete root.dataset.mmReferenceRevealMode;
-            }
-            refresh();
-          });
-        }
-      },true);
-    }
-    // Consume one explicit navigation intent even if switching modes rebuilt
-    // the .mat-shell. Never reopen on an unrelated mutation/refresh.
-    if(root.dataset.mmReferenceRevealMode==='1'){
-      guide.open=true;
-      delete root.dataset.mmReferenceRevealMode;
-    }
+    // Preserve native disclosure state. The application owns the Material
+    // mode buttons: Labs, Knowledge check and References replace the explorer
+    // screen, while All lessons opens the shared Learn catalogue. None should
+    // programmatically reopen a now-detached family guide on incidental DOM
+    // mutations. A genuinely opened material lesson may reveal it once.
     if(lessonShown&&root.dataset.mmReferenceMaterialLessonSeen!=='1'){
       guide.open=true;
       root.dataset.mmReferenceMaterialLessonSeen='1';
