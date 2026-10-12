@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "release": "2026.10.11.10",
   "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.11.10.md",
-  "sourceSha": null,
-  "runtimeFingerprint": null,
+  "sourceSha": "1a528632301232224fb6f9b2460c9a2863b92e81",
+  "runtimeFingerprint": "sha256:230170530d51afa8ac824e332905131e91f188945275c40b80fd768428c93424",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.11.10 is a NEW unverified draft candidate: no retained exact-head artifact, source SHA or runtime fingerprint has been approved or bound. All NVDA/VoiceOver and physical Android audible Read Aloud checks remain pending with all seven external streams on HOLD. Previous 2026.10.11.9 retained technical candidate is historical only.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Retained non-production software candidate 2026.10.11.10 is bound to exact source SHA and runtime fingerprint, but every NVDA/VoiceOver and physical Android audible Read Aloud test remains pending with named human/device evidence absent. Seven independent external validation streams remain HOLD; no production or machine-control authorization.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -310,5 +310,5 @@
     "sourceSha": "d572ee13d8f2f09139882ff1a271e855284f6e3c",
     "runtimeFingerprint": "sha256:97d9cdf902986357f9446796478525f1b61c0f37162387a042121c310ee4d3c7"
   },
-  "technicalCandidateStatus": "unbound-technical-hold"
+  "technicalCandidateStatus": "retained-software-candidate; real human AT pending"
 }
