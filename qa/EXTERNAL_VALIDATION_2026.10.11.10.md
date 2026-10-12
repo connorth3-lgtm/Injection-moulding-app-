@@ -1,8 +1,10 @@
 # MouldMaster 2026.10.11.10 — external validation staging index
 
-**Status: HOLD — not authorized for release or tester handoff.** This page is a staging index for draft PR #617 and is not a test result, a review signature, a successful retained candidate or permission to deploy the redesigned UI.
+**Status: HOLD — independent real-device, human expert, provider, learner and production validations are not approved.** The source-bound NON-PRODUCTION technical build is verified, but does not grant any external or production authority.
 
-The approved *design reference* is not an approval of actual browser-rendered .10 screenshots. The current .10 exact-head build still requires passing technical/browser checks, a newly captured and reviewed visual baseline, a successful retained public-runtime candidate and coherent release-specific validation packets. Do not copy the previous 2026.10.11.9 artifact, fingerprint, source SHA or evidence records into current .10 fields.
+**Current retained technical candidate:** Release `2026.10.11.10`, exact source `1a528632301232224fb6f9b2460c9a2863b92e81`, runtime fingerprint `sha256:230170530d51afa8ac824e332905131e91f188945275c40b80fd768428c93424`; producer [run 38193269649](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/38193269649), real retained artifact **11721888396**, digest `sha256:03d990b80e1b10eeb7207fa8b84496edd45eec79447beaf43aead00d65e408f9`, expiry `2027-01-10T01:47:43Z`.
+
+The source passed browser Chromium/WebKit, strict 52-screen owner-approved Book-only visual QA, Question Quality and the exact-head candidate producer's protected technical quality checks. Public web deployment is a separate protected-main task, not implied by this retained archive. Prior `.9` technical candidate remains historical.
 
 ## External workstreams (all HOLD)
 
