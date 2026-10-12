@@ -564,6 +564,22 @@ test('Virtual Apprenticeship warns and retries when local progress persistence f
   expect(row.attempts).toBe(1);
 });
 
+test('Opening nested simulator learning screens moves keyboard context to their headings',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_VIRTUAL_APPRENTICESHIP?.openCase&&window.MM_SPATIAL_TWIN?.open));
+  await page.evaluate(()=>switchView('scenarios'));
+  await page.evaluate(()=>window.MM_VIRTUAL_APPRENTICESHIP.openCase(1));
+  const heading=page.locator('#mmVirtualApprenticeship .section-head h2');
+  await expect(heading).toBeVisible();
+  await expect(heading).toBeFocused();
+  await page.evaluate(()=>switchView('scenarios'));
+  await page.evaluate(()=>window.MM_SPATIAL_TWIN.open({caseIndex:1}));
+  const twinHeading=page.locator('#mmSpatialTwin .mm-st-header h2');
+  await expect(twinHeading).toBeVisible();
+  await expect(twinHeading).toBeFocused();
+});
+
 test('Virtual Apprenticeship case, coaching level and Reset preserve keyboard focus',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
