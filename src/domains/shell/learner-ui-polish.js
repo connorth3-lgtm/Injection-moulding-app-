@@ -615,7 +615,10 @@ function materials(){
   // Source-backed grade folders and the older conceptual family explorer now
   // live in one Materials surface. Keep generic tendencies explicitly optional,
   // distinct from supplier-specific grade data and never treat them as recipes.
-  const legacy=Array.from(root.children).find(el=>el.classList?.contains('mat-shell'));
+  // The real learning pane moves inside the optional guide after first render.
+  // Discover it there too: repeated navigation and tab changes must still
+  // reopen the guide when teaching content becomes active.
+  const legacy=root.querySelector('.mat-shell');
   if(legacy){
     let guide=catalogue.parentElement?.querySelector('[data-mm-family-science]');
     if(!guide){
@@ -635,15 +638,14 @@ function materials(){
     // Keep the learning landmark and tab navigation visible. Only the
     // explanatory family reference belongs inside the optional disclosure.
     // Hiding these controls previously broke material lesson navigation.
-    const tabs=legacy.querySelector(':scope > .mat-tabs');
-    if(tabs)guide.insertAdjacentElement('afterend',tabs);
-    guide.querySelector('[data-mm-family-science-content]')?.appendChild(legacy);
+    const tabs=root.querySelector('.mm-material-study-tools > .mat-tabs')||legacy.querySelector(':scope > .mat-tabs');
+    const teachingSlot=guide.querySelector('[data-mm-family-science-content]');
+    if(teachingSlot&&legacy.parentElement!==teachingSlot)teachingSlot.appendChild(legacy);
     // When a learner opens a material lesson, lab, quiz or references using
     // the existing tab routing, the teaching pane MUST NOT remain inside a
     // collapsed family guide. Preserve the optional explorer default.
     const currentTab=tabs?.querySelector('button.active')?.textContent?.trim()||'';
     const lessonShown=!!legacy.querySelector('.mat-lesson');
-    if(lessonShown||(['Learn','Interactive labs','Knowledge check','Evidence & references'].includes(currentTab)))guide.open=true;
     const intro=root.querySelector('#mmMaterialLearningAnchor');
     // Combine the detached Material Science intro, five legacy mode buttons
     // and optional general-reference guide into one clear secondary panel.
@@ -656,9 +658,11 @@ function materials(){
       study.setAttribute('aria-label','Material learning and tools');
       catalogue.insertAdjacentElement('afterend',study);
     }
-    if(intro)study.appendChild(intro);
-    if(tabs)study.appendChild(tabs);
-    study.appendChild(guide);
+    // Do not reparent focused controls on every refresh. Native buttons keep
+    // their listeners and keyboard focus through material result rerenders.
+    if(intro&&intro.parentElement!==study)study.appendChild(intro);
+    if(tabs&&tabs.parentElement!==study)study.appendChild(tabs);
+    if(guide.parentElement!==study)study.appendChild(guide);
     if(lessonShown||(['Learn','Interactive labs','Knowledge check','Evidence & references'].includes(currentTab)))guide.open=true;
   }
   const selectedFamily=catalogue.querySelector('[data-mm-family-detail]:not([hidden])');
