@@ -247,3 +247,43 @@ for(const width of [360,810]){
     await expect(page.locator('#defects .mm-dx-disclaimer')).toContainText('No automatic');
   });
 }
+
+test('Practice nested labs, data diagnosis and assessments keep working illustrated landing headers',async({page})=>{
+  test.setTimeout(90000);
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+
+  await page.evaluate(()=>switchView('scenarios'));
+  await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="process-data"]').click();
+  const data=page.locator('#processDataLabs');
+  await expect(data.locator('.pd-hero > .mm-reference-practice-tool-art')).toBeVisible();
+  await expect(data.locator('[data-pd-start]').first()).toBeVisible();
+  await data.locator('[data-pd-start]').first().click();
+  await expect(data.locator('[data-pd-home]')).toBeVisible();
+  await data.locator('[data-pd-home]').click();
+  await expect(data.locator('.pd-hero > .mm-reference-practice-tool-art')).toHaveCount(1);
+
+  for(const [action,root,hero,start,back] of [
+    ['diagnostic-labs','#diagnosticLabs','.dl-hero','[data-dl-start]','[data-dl-home]'],
+    ['material-labs','#materialLabs','.ml-hero','[data-ml-start]','[data-ml-home]']
+  ]){
+    await page.evaluate(()=>switchView('scenarios'));
+    await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="question-centre"]').click();
+    await page.locator('#scenarios .mm-question-centre [data-mm-hub-action="'+action+'"]').click();
+    await expect(page.locator(root+' '+hero+' > .mm-reference-practice-tool-art')).toBeVisible();
+    await expect(page.locator(root+' '+start).first()).toBeVisible();
+    await page.locator(root+' '+start).first().click();
+    await expect(page.locator(root+' '+back)).toBeVisible();
+    await page.locator(root+' '+back).click();
+    await expect(page.locator(root+' '+hero+' > .mm-reference-practice-tool-art')).toHaveCount(1);
+  }
+
+  await page.evaluate(()=>switchView('scenarios'));
+  await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="question-centre"]').click();
+  await page.locator('#scenarios .mm-question-centre [data-mm-hub-action="assessments"]').click();
+  await expect(page.locator('#exams .section-head > .mm-reference-practice-tool-art')).toBeVisible();
+  const startExam=page.locator('#exams .exam-card button').first();
+  await expect(startExam).toBeVisible();
+  await startExam.click();
+  await expect(page.locator('#modal:not(.hidden) #examQuestions .question').first()).toBeVisible();
+});
