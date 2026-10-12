@@ -73,6 +73,10 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   await expect(host).toBeHidden();
   await page.evaluate(()=>window.MMBook.open());
   await expect(host).toBeVisible();
+  // Book exit correctly stops speech and collapses the player; reopening
+  // it restores the product's Ready state before checking voice capability.
+  await host.locator('details').evaluate(el=>{el.open=true;});
+  await expect(host.locator('[data-mm-read="play"]')).toBeVisible();
 
   const capability=host.locator('summary span');
   const status=host.locator('.mm-read-status');
