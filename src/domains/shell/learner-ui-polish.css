@@ -2801,3 +2801,74 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
     grid-template-columns:minmax(0,1fr)!important;
   }
 }
+
+/* Actual data/diagnostic/material lab step pages: the previously upgraded
+   landing cards now have the same readable paper-panel inner hierarchy. */
+.mm-reference-layout :is(
+  #processDataLabs .pd-case>.pd-panel,
+  #diagnosticLabs .dl-lab>.dl-panel,
+  #materialLabs .ml-lab>.ml-panel
+){
+  box-sizing:border-box!important;min-width:0!important;
+  padding:clamp(13px,2.8vw,19px)!important;
+  border-radius:15px!important;border:1px solid #b4d6e2!important;
+  background:#eff7fa!important;color:#0c3045!important;
+}
+.mm-reference-layout :is(
+  #processDataLabs .pd-case>.pd-panel,
+  #diagnosticLabs .dl-lab>.dl-panel,
+  #materialLabs .ml-lab>.ml-panel
+) :is(h2,h3,.pd-question,.dl-question,.ml-q){
+  color:#0a3147!important;overflow-wrap:anywhere!important;
+}
+.mm-reference-layout :is(
+  #processDataLabs .pd-case>.pd-panel,
+  #diagnosticLabs .dl-lab>.dl-panel,
+  #materialLabs .ml-lab>.ml-panel
+) :is(p,.muted){
+  color:#37596a!important;line-height:1.53!important;
+}
+.mm-reference-layout :is(#processDataLabs .pd-choice,#diagnosticLabs .dl-choice,#materialLabs .ml-choice){
+  text-align:left!important;min-height:48px!important;
+  white-space:normal!important;overflow-wrap:anywhere!important;
+}
+.mm-reference-layout :is(#processDataLabs .pd-table-wrap,#diagnosticLabs .dl-evidence,#materialLabs .ml-evidence){
+  max-width:100%!important;min-width:0!important;
+  overflow-x:auto!important;
+}
+.mm-reference-layout :is(#processDataLabs .pd-stage,#diagnosticLabs .dl-stage,#materialLabs .ml-stage){
+  color:#176376!important;
+}
+.mm-reference-layout :is(#processDataLabs .pd-summary,#diagnosticLabs .dl-summary,#materialLabs .ml-summary){
+  border:1px solid #b4d6e2!important;border-radius:15px!important;
+  background:#eff7fa!important;color:#0a3147!important;
+}
+.mm-reference-layout :is(#processDataLabs .pd-summary,#diagnosticLabs .dl-summary,#materialLabs .ml-summary) :is(h2,p,.muted,strong){
+  color:#154357!important;
+}
+.mm-reference-layout #mmSpatialTwin .mm-st-modebar button,
+.mm-reference-layout #mmSpatialTwin .mm-st-navlist button,
+.mm-reference-layout #mmSpatialTwin .mm-st-casebar select,
+.mm-reference-layout #mmSpatialTwin .mm-st-header button{
+  box-sizing:border-box!important;min-height:44px!important;
+  border-radius:9px!important;
+}
+.mm-reference-layout #mmSpatialTwin :is(button,select):focus-visible{
+  outline:2px solid #6ae6d7!important;outline-offset:2px!important;
+}
+@media(max-width:700px){
+  .mm-reference-layout :is(#processDataLabs .pd-case,#diagnosticLabs .dl-lab,#materialLabs .ml-lab){
+    min-width:0!important;max-width:100%!important;
+  }
+}
+@media(forced-colors:active){
+  .mm-reference-layout :is(
+    #processDataLabs .pd-case>.pd-panel,
+    #diagnosticLabs .dl-lab>.dl-panel,
+    #materialLabs .ml-lab>.ml-panel
+  ){
+    border:1px solid CanvasText!important;
+    background:Canvas!important;color:CanvasText!important;
+    forced-color-adjust:auto!important;
+  }
+}
