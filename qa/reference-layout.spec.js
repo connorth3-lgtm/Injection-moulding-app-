@@ -316,6 +316,45 @@ test('Diagnostic learning notes never leak across two local learner profiles',as
   await expect(root.locator('.mm-dx-empty')).toBeVisible();
 });
 
+test('Diagnostic controls discard stale events immediately after a learner change',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.addInitScript(()=>{
+    const learner=id=>({id,name:id,role:'learner',completed:[],bookmarks:[],notes:{},
+      examScores:{},certificates:[],currentLesson:1,lastSeen:'2026-10-13T00:00:00Z',
+      onboardingDone:true,experience:'Beginner',goal:'Learn injection moulding',
+      dailyMinutes:15,region:'ALL'});
+    localStorage.clear();
+    localStorage.setItem('mouldmasterProDB',JSON.stringify({
+      activeUser:'diagnostic-a',users:{
+        'diagnostic-a':learner('diagnostic-a'),'diagnostic-b':learner('diagnostic-b')
+      }
+    }));
+  });
+  await page.goto(BASE,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED&&window.MM_DIAGNOSTIC_WORKBENCH)&&!document.getElementById('mmBootstrap'));
+  await page.evaluate(()=>switchView('defects'));
+  const root=page.locator('#defects .mm-dx-workbench');
+  await root.locator('[data-mm-dx-action="choose"]').first().click();
+  await root.locator('textarea[name="observations"]').fill('Learner A should not be transferred');
+  await root.locator('[data-mm-dx-evidence="part"]').check();
+  // Trigger the old connected element's input synchronously after switching
+  // users, before a navigation/render pass has refreshed the diagnostic pane.
+  // A delayed observer alone cannot protect this same-task event.
+  await page.evaluate(()=>{
+    const stale=document.querySelector('#defects textarea[name="observations"]');
+    switchUser('diagnostic-b');
+    stale.value='stale cross-profile event';
+    stale.dispatchEvent(new Event('input',{bubbles:true}));
+  });
+  const report=await page.evaluate(()=>window.MM_DIAGNOSTIC_WORKBENCH.report());
+  expect(report.selectedDefect).toBeNull();
+  expect(report.context.observations).toBe('');
+  expect(report.evidenceReportedAvailable).toEqual([]);
+  await page.evaluate(()=>switchView('defects'));
+  await expect(root.locator('.mm-dx-empty')).toBeVisible();
+  await expect(root.locator('textarea[name="observations"]')).toHaveCount(0);
+});
+
 test('Choosing another defect clears unrelated measurements, evidence and judgement',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
