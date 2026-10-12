@@ -807,24 +807,43 @@ removeProfileLessonGrid();
 
 // Global search still finds defects. It no longer duplicates a second
 // searchable list of lessons: a single contextual link opens Learn filtered.
-document.addEventListener('input',event=>{
-  if(event.target?.id!=='globalSearch')return;
-  const query=String(event.target.value||'').trim();
-  requestAnimationFrame(()=>{
-    const modal=document.getElementById('modal');
-    const results=modal?.querySelector('#searchResults');
-    if(!results||!modal.contains(event.target))return;
-    const matches=results.querySelectorAll('button.search-item[data-mm-onclick*="goLesson("]');
-    matches.forEach(el=>el.remove());
-    results.querySelector('[data-mm-global-lesson-library]')?.remove();
-    if(query.length<2)return;
-    const link=document.createElement('button');
+// Core/menu refreshes can replace the results asynchronously. Reconcile
+// against the currently connected input/results, not a detached event target.
+let searchRefreshTicket=0;
+function syncGlobalLessonShortcut(){
+  const modal=document.getElementById('modal');
+  const input=modal?.querySelector('#globalSearch');
+  const results=modal?.querySelector('#searchResults');
+  if(!input||!results||modal.classList.contains('hidden'))return;
+  const query=String(input.value||'').trim();
+  results.querySelectorAll('button.search-item[data-mm-onclick*="goLesson("]').forEach(el=>el.remove());
+  const links=Array.from(results.querySelectorAll('[data-mm-global-lesson-library]'));
+  let link=links.shift();
+  links.forEach(el=>el.remove());
+  if(query.length<2){link?.remove();return}
+  if(!link){
+    link=document.createElement('button');
     link.type='button';link.className='search-item';
     link.dataset.mmGlobalLessonLibrary='1';
     link.textContent='Search all lessons in Learn →';
-    link.addEventListener('click',()=>{window.closeModal?.();lessonCatalog.open({query})});
+    link.addEventListener('click',()=>{
+      const current=String(document.getElementById('globalSearch')?.value||'').trim();
+      window.closeModal?.();
+      lessonCatalog.open({query:current});
+    });
     results.prepend(link);
+  }
+}
+document.addEventListener('input',event=>{
+  if(event.target?.id!=='globalSearch')return;
+  const ticket=++searchRefreshTicket;
+  requestAnimationFrame(()=>{
+    if(ticket===searchRefreshTicket)syncGlobalLessonShortcut();
   });
+  // Idempotent retry protects against a late results subtree replacement.
+  setTimeout(()=>{
+    if(ticket===searchRefreshTicket)syncGlobalLessonShortcut();
+  },80);
 });
 
 function configureMore(){
