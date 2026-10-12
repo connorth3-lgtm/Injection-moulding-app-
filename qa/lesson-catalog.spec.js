@@ -282,6 +282,29 @@ test('global search leads to Learn without displaying another list of lesson mat
   await expect(page.locator('#path .mm-all-lessons')).toBeVisible();
   await expect(page.locator('#path [data-mm-catalog-query]')).toHaveValue('polymer');
 });
+test('global search keeps one Learn link after results rerender and uses the newest query',async({page})=>{
+  await ready(page);
+  await page.evaluate(()=>openSearch());
+  const input=page.locator('#globalSearch');
+  const results=page.locator('#searchResults');
+  const library=results.locator('[data-mm-global-lesson-library]');
+  await input.fill('polymer');
+  await expect(library).toHaveCount(1);
+  // The core rerenders search results and can replace the shortcut on input.
+  await input.fill('gate');
+  await expect(library).toHaveCount(1);
+  await results.evaluate(node=>{node.innerHTML='<p class="muted">Re-rendering search results</p>'});
+  await input.dispatchEvent('input');
+  await expect(library).toHaveCount(1);
+  await input.fill('');
+  await expect(library).toHaveCount(0);
+  await input.fill('viscosity');
+  await expect(library).toHaveCount(1);
+  await expect(results.locator('button[data-mm-onclick*="goLesson("]')).toHaveCount(0);
+  await library.click();
+  await expect(page.locator('#path .mm-all-lessons')).toBeVisible();
+  await expect(page.locator('#path [data-mm-catalog-query]')).toHaveValue('viscosity');
+});
 test('catalogue stays within a 360px mobile viewport',async({page})=>{
   await page.setViewportSize({width:360,height:800});
   await ready(page);
