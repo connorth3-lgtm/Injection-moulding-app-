@@ -900,12 +900,13 @@ function more(){
    local, noninteractive and idempotent across renderer replacements. */
 function deepViewPolish(){
   const headers=[
+    ['#lesson .mm-simple-lesson-hero','training',24],
     ['#lesson .lesson-header-card','training',24],
     ['#simulator .form-card','machine',0],
     ['#simulator .output-panel','process',5],
     ['#glossary .section-head','training',24],
-    ['#defects .section-head','quality',20],
-    ['#coach .chat','quality',20],
+    ['#defects .mm-dx-hero','quality',20],
+    ['#coach .mm-dx-hero','quality',20],
     ['#standards .section-head','evidence',27],
     ['#visuals .visual-wrap:first-child','process',5],
     ['#certificates .section-head','evidence',27],
@@ -923,7 +924,7 @@ function deepViewPolish(){
   }
   for(const selector of [
     '#lesson .lesson-body','#lesson .lesson-side',
-    '#glossary .term','#defects .defect-card',
+    '#glossary .term','#defects .mm-dx-pane','#coach .mm-dx-pane',
     '#profile .form-card','#simulator .form-card',
     '#simulator .output-panel','#coach .chat',
     '#coach .form-card','#instructor .table-wrap'
