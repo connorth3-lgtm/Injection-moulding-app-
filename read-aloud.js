@@ -343,7 +343,18 @@
   function toggle(){
     if(!supported){setStatus('Read Aloud is not available in this browser/device.');return;}
     const wasActive=starting||speaking||paused;
-    if(refreshStaleReading()&&wasActive)return;
+    // A stopped Book Listen tap may replace a previous Contents queue with a
+    // 20-chapter reader. Revalidating that idle queue, then calling start(),
+    // traverses the entire new reader twice before mobile speak() sees the tap.
+    // Only revalidate when playback is active or a user-cued sentence exists;
+    // a fresh start already rebuilds the visible source exactly once.
+    if((wasActive||selectionPending)&&refreshStaleReading()){
+      if(wasActive)return;
+      // A stale cued sentence has been replaced with the current source.
+      // Use that rebuilt queue immediately instead of traversing it again.
+      if(!units.length){setStatus('No readable text is visible on this screen.');updateButtons();return;}
+      speakCurrent();return;
+    }
     if(starting){stop('Stopped');return;}
     if(paused){
       try{synth.resume()}catch(_){stop('Device voice could not resume. Start playback again.');return;}
