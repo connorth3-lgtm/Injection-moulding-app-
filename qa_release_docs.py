@@ -11,7 +11,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
- 'web_release':'2026.10.11.11',
+ 'web_release':'2026.10.13.1',
  'android_release':'2026.08.26.2',
  'desktop_release':'2026.09.29.1',
  'content_version':'2026.08.26.1',
@@ -196,6 +196,23 @@ elif visual.get('release')=='2026.10.11.10':
          and len(visual.get('viewports',[]))==4
          and len(visual.get('surfaces',[]))==13,
          '2026.10.11.10 Book-only visual successor must remain bound to approved 7b22514e with all 52 checks at 12px')
+elif visual.get('release')=='2026.10.13.1':
+    # Owner inspected the 52-source-screenshot approval pack: 16 changed
+    # captures across the four viewports and 36 unchanged. Pin the exact
+    # source commit BEFORE the approval metadata and manifest were edited.
+    # A future runtime redesign requires a fresh owner visual decision and
+    # separately named immutable ref, not a moved pin or raised tolerance.
+    need(visual.get('ref')=='visual-baseline/2026.10.13.1'
+         and visual.get('commit')=='9a4b4776b171cf7cc413f6d67d351cd5207b9ee2'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and '52' in text('qa/VISUAL_REVIEW_2026.10.13.1_PR623.md'),
+         '2026.10.13.1 owner visual baseline must remain on exact approved 9a4b477 with 52 checks at 12px')
 else:
     need(visual.get('ref')==f"visual-baseline/{visual.get('release')}",
          'visual baseline must use the release-named retained ref')
@@ -235,6 +252,11 @@ need('human' in accessibility_contract.get('boundary','').lower(),
 
 # Sharing the hosted preview is a separate fail-closed release operation.
 # The local check is fast and offline; the live URL check is operator-only.
+# Exercise the missing/malformed/stale candidate distinctions before the live
+# handoff contract (which correctly remains red while webCandidate is unbound).
+subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', 'tests',
+                '-p', 'test_tester_handoff_candidate_boundaries.py', '-v'],
+               cwd=ROOT, check=True)
 subprocess.run([sys.executable, str(ROOT / 'qa_tester_handoff.py')], cwd=ROOT, check=True)
 subprocess.run([sys.executable, str(ROOT / 'qa_tester_handoff_publication.py')], cwd=ROOT, check=True)
 

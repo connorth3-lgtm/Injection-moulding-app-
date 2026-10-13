@@ -346,11 +346,11 @@
   "currentAssuranceEvidence": {
     "staticContract": {
       "status": "pass",
-      "meaning": "PASS: release 2026.10.11.11 source b094479577ce0b52ed8da92baa94ca1239994254 successful exact-source producer run 38203211015 retained artifact 11726450727, verified public-runtime fingerprint sha256:0ec09a2107209b4d04b1b501385f4dc6992ded09ec637639773f14d759f724f4, live digest sha256:ce8e4f0993f21b81a7251f388d15f658db7bcf75f0243d9c3e4f11a4b413872e, expiry 2027-01-10T04:17:58Z. Independent SHA-256 verification matched 166/166 public assets; software and contract checks are rerun against the bound release. External human/device validation remains HOLD."
+      "meaning": "PASS: release 2026.10.13.1 source df600852152c30b6151c391e330f77e4a78f1ff8 run 38336952892 artifact 11785282763 fingerprint sha256:9ce8e0f6806ad0edd159288b60f14874ff4ab589e06ab795f69e55e4fb51fdfe is source-bound to successful protected quality-gated producer and retained artifact. This is software-controlled proof only; independent device, human, provider and production validation remain HOLD."
     },
     "behavioralBrowser": {
       "status": "pass",
-      "meaning": "PASS: release 2026.10.11.11 source b094479577ce0b52ed8da92baa94ca1239994254 passed Mobile Browser QA run 38203210650 with owner-approved immutable Learn illustration comparison of 52/52 surfaces, 12-pixel threshold unchanged, Chromium substantive, WebKit, cross-browser, 500 reliability runs and Question Quality 50-Pass run 38203210720. Human, physical device and provider validation remain HOLD."
+      "meaning": "PASS: release 2026.10.13.1 source df600852152c30b6151c391e330f77e4a78f1ff8 passed owner-approved 52-surface Chromium visual QA, Chromium substantive/reachability, WebKit, cross-browser, 500 reliability runs and Question Quality 50-Pass. Independent real-device, accessibility and SME evidence remains HOLD."
     },
     "externalHumanDevice": {
       "status": "hold",

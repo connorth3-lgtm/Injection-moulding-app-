@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.10.11.11';
+const CACHE_VERSION='2026.10.13.1';
 const CACHE_REVISION='core-retirement-machinefit-mobile-book-home-materials-lessons-photo-public-r17-20261012';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 

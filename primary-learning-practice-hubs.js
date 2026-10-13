@@ -199,6 +199,44 @@ const dxState={selected:-1,query:'',phase:'intake',form:{
   when:'unknown',distribution:'unknown',change:'unknown',baseline:'',observations:'',
   comparison:'',reflection:''
 },evidence:[],hypotheses:{}};
+function dxLearnerId(){
+  // The diagnostic case exists only in memory, but the same app can switch
+  // local learner profiles without reloading the browser.
+  try{return typeof user!=='undefined'&&user?.id!=null?String(user.id):''}catch(_){return ''}
+}
+let dxOwnerId=dxLearnerId();
+function dxClearEvidence(){
+  dxState.evidence=[];
+  dxState.hypotheses={};
+  dxState.form={when:'unknown',distribution:'unknown',change:'unknown',
+    baseline:'',observations:'',comparison:'',reflection:''};
+}
+function dxClearCase(){
+  dxState.selected=-1;dxState.phase='intake';dxState.query='';
+  dxClearEvidence();
+}
+function dxEnsureLearner(){
+  const id=dxLearnerId();
+  if(id===dxOwnerId)return false;
+  dxOwnerId=id;
+  dxClearCase();
+  return true;
+}
+function dxGuardInteraction(view){
+  // A learner switch may happen without a fresh defect-view render. An old
+  // page's input, checkbox or export must never write into the new profile's
+  // blank learning case. Repaint first and ignore that stale event.
+  if(!dxEnsureLearner())return false;
+  dxRender(view);
+  return true;
+}
+function dxSelectSymptom(index){
+  // Measurements, availability ticks and learner judgements belong to the
+  // specific investigated symptom; never silently reuse them for another.
+  if(dxState.selected!==index)dxClearEvidence();
+  dxState.selected=index;
+  dxState.phase='intake';
+}
 function dxDefects(){return Array.isArray(D?.defects)?D.defects:[]}
 function dxFormValue(key){return esc(dxState.form[key]||'')}
 function dxSelect(key,label,values){
@@ -250,6 +288,7 @@ function dxHypothesisRows(defect){
   }).join('');
 }
 function dxReportData(){
+  dxEnsureLearner();
   const defect=dxDefects()[dxState.selected];
   return {
     schema:'mm-diagnostic-learning-case-v1',
@@ -292,7 +331,19 @@ function dxAnalysis(){
     '<button type="button" class="secondary" data-mm-dx-action="export">Export learning case JSON</button>'+
     '<button type="button" class="secondary" data-mm-dx-action="reset">Start another case</button></div></section>';
 }
+function dxFocusAfterRender(root,selector){
+  const target=root.querySelector(selector);
+  if(!target)return;
+  // The workbench rerenders native controls after every transition.
+  // Give keyboard/screen-reader users a connected destination rather
+  // than leaving focus on the removed button or document body.
+  if(!target.matches('a[href],button,input,select,textarea,[tabindex]'))target.tabIndex=-1;
+  // Keep the new focus target visible after the intake/results panel moves;
+  // preventScroll would strand keyboard focus off-screen on small phones.
+  target.focus();
+}
 function dxRender(view){
+  dxEnsureLearner();
   const root=document.getElementById(view);if(!root)return;
   root.dataset.mmDxMode='unified';
   root.innerHTML='<div class="mm-dx-workbench"><header class="mm-dx-hero"><span class="eyebrow">Practice · Unified diagnostic workbench</span>'+
@@ -304,20 +355,23 @@ function dxRender(view){
     root.dataset.mmDxBound='1';
     root.addEventListener('click',event=>{
       const el=event.target.closest('[data-mm-dx-action]');if(!el||!root.contains(el))return;
+      if(dxGuardInteraction(view))return;
       const action=el.dataset.mmDxAction;
       if(action==='choose'){
         const index=Number(el.dataset.mmDxId);
         if(!Number.isInteger(index)||!dxDefects()[index])return;
-        dxState.selected=index;dxState.phase='intake';dxState.hypotheses={};dxRender(view);
+        dxSelectSymptom(index);dxRender(view);
+        dxFocusAfterRender(root,'.mm-dx-fields select');
       }else if(action==='analyse'){
         dxState.phase='analysis';dxRender(view);
-      }else if(action==='back'){dxState.phase='intake';dxRender(view)}
-      else if(action==='reset'){
-        dxState.selected=-1;dxState.phase='intake';dxState.query='';
-        dxState.hypotheses={};dxState.evidence=[];
-        dxState.form={when:'unknown',distribution:'unknown',change:'unknown',
-          baseline:'',observations:'',comparison:'',reflection:''};
+        dxFocusAfterRender(root,'.mm-dx-results .mm-dx-section-head h2');
+      }else if(action==='back'){
+        dxState.phase='intake';dxRender(view);
+        dxFocusAfterRender(root,'.mm-dx-fields select');
+      }else if(action==='reset'){
+        dxClearCase();
         dxRender(view);
+        dxFocusAfterRender(root,'#mmDxSearch');
       }else if(action==='export'){
         const data=JSON.stringify(dxReportData(),null,2);
         const file=new Blob([data],{type:'application/json'});
@@ -327,6 +381,7 @@ function dxRender(view){
       }
     });
     root.addEventListener('input',event=>{
+      if(dxGuardInteraction(view))return;
       if(event.target.id==='mmDxSearch'){
         dxState.query=event.target.value;
         const term=dxState.query.trim().toLowerCase();
@@ -336,6 +391,7 @@ function dxRender(view){
       }
     });
     root.addEventListener('change',event=>{
+      if(dxGuardInteraction(view))return;
       if(event.target.matches('[data-mm-dx-evidence]')){
         const id=event.target.dataset.mmDxEvidence;
         dxState.evidence=event.target.checked?[...new Set([...dxState.evidence,id])]:dxState.evidence.filter(x=>x!==id);
@@ -350,7 +406,8 @@ function dxRender(view){
   if(query&&dxState.query)query.dispatchEvent(new Event('input',{bubbles:true}));
 }
 function dxOpen(index){
-  if(Number.isInteger(index)&&dxDefects()[index]){dxState.selected=index;dxState.phase='intake'}
+  dxEnsureLearner();
+  if(Number.isInteger(index)&&dxDefects()[index])dxSelectSymptom(index);
   try{window.closeModal?.()}catch(_){}
   switchView('defects');
 }
@@ -436,7 +493,7 @@ function createLessonCatalog(){
     const extra=specialists();
     const extraGroup=extra.length?`<details class="mm-catalog-group" data-mm-catalog-group><summary><span class="mm-catalog-group-name">Optional specialist lessons</span><span class="mm-catalog-group-meta">${extra.length} extras · separate progress</span></summary><div class="mm-catalog-rows">${extra.map(l=>`<button type="button" class="mm-catalog-lesson" data-mm-specialist-id="${esc(l.id)}" data-mm-catalog-item data-mm-catalog-type="specialist" data-mm-catalog-done="${specialistDone(l.id)?'1':'0'}" data-mm-catalog-text="${esc([l.id,l.title,l.level].join(' ').toLowerCase())}"><span class="mm-catalog-num">${esc(l.id)}</span><span class="mm-catalog-title">${esc(l.title)}</span><span class="mm-catalog-state">${specialistDone(l.id)?'✓ Done':'Open'}</span></button>`).join('')}</div></details>`:'';
     return `<section class="mm-all-lessons" data-mm-lesson-catalog aria-label="All lessons">
-      <div class="mm-catalog-head"><h2>All lessons</h2><p>${core().length} core · ${materialLessons().length} material science · ${extra.length} optional specialist lessons. All in one library, with separate progress.</p></div>
+      <div class="mm-catalog-head"><h2 tabindex="-1">All lessons</h2><p>${core().length} core · ${materialLessons().length} material science · ${extra.length} optional specialist lessons. All in one library, with separate progress.</p></div>
       <div class="mm-catalog-controls"><label><span>Find a lesson</span><input type="search" autocomplete="off" placeholder="Search topics or lessons" data-mm-catalog-query value="${esc(state.query)}"></label><label><span>Show</span><select data-mm-catalog-filter><option value="all"${state.filter==='all'?' selected':''}>All lessons</option><option value="todo"${state.filter==='todo'?' selected':''}>Not finished</option><option value="done"${state.filter==='done'?' selected':''}>Completed</option><option value="saved"${state.filter==='saved'?' selected':''}>Saved</option><option value="material"${state.filter==='material'?' selected':''}>Material science</option><option value="specialist"${state.filter==='specialist'?' selected':''}>Specialist</option></select></label></div>
       <p class="mm-catalog-results" aria-live="polite" data-mm-catalog-count></p>
       <div class="mm-catalog-groups">${groups}${materialGroups}${extraGroup}</div>
@@ -540,7 +597,12 @@ function createLessonCatalog(){
     else switchView('path');
     requestAnimationFrame(()=>{
       const library=document.querySelector('#path .mm-all-lessons');
-      library?.scrollIntoView?.({block:'start',behavior:'auto'});
+      // Move screen-reader/keyboard context to the new destination after
+      // programmatic navigation from Materials, global search, or lesson Back.
+      // preventScroll avoids undoing the intentional library position.
+      if(!library||!library.getClientRects().length)return;
+      library.scrollIntoView({block:'start',behavior:'auto'});
+      library.querySelector('.mm-catalog-head h2')?.focus({preventScroll:true});
     });
   }
   function mountLesson(){
@@ -807,24 +869,59 @@ removeProfileLessonGrid();
 
 // Global search still finds defects. It no longer duplicates a second
 // searchable list of lessons: a single contextual link opens Learn filtered.
-document.addEventListener('input',event=>{
-  if(event.target?.id!=='globalSearch')return;
-  const query=String(event.target.value||'').trim();
-  requestAnimationFrame(()=>{
-    const modal=document.getElementById('modal');
-    const results=modal?.querySelector('#searchResults');
-    if(!results||!modal.contains(event.target))return;
-    const matches=results.querySelectorAll('button.search-item[data-mm-onclick*="goLesson("]');
-    matches.forEach(el=>el.remove());
-    results.querySelector('[data-mm-global-lesson-library]')?.remove();
-    if(query.length<2)return;
-    const link=document.createElement('button');
+// Core/menu refreshes can replace the results asynchronously. Reconcile
+// against the currently connected input/results, not a detached event target.
+let searchRefreshTicket=0;
+function syncGlobalLessonShortcut(){
+  const modal=document.getElementById('modal');
+  const input=modal?.querySelector('#globalSearch');
+  const results=modal?.querySelector('#searchResults');
+  if(!input||!results||modal.classList.contains('hidden'))return;
+  const query=String(input.value||'').trim();
+  results.querySelectorAll('button.search-item[data-mm-onclick*="goLesson("]').forEach(el=>el.remove());
+  const links=Array.from(results.querySelectorAll('[data-mm-global-lesson-library]'));
+  let link=links.shift();
+  links.forEach(el=>el.remove());
+  if(query.length<2){link?.remove();return}
+  if(!link){
+    link=document.createElement('button');
     link.type='button';link.className='search-item';
     link.dataset.mmGlobalLessonLibrary='1';
     link.textContent='Search all lessons in Learn →';
-    link.addEventListener('click',()=>{window.closeModal?.();lessonCatalog.open({query})});
+    link.addEventListener('click',()=>{
+      const current=String(document.getElementById('globalSearch')?.value||'').trim();
+      window.closeModal?.();
+      lessonCatalog.open({query:current});
+    });
     results.prepend(link);
+  }
+}
+// The core can rerender search results without another input event. Observe
+// only the search modal, then reconcile idempotently after DOM mutation.
+// A global overlay observer would be both expensive and error-prone.
+let observedSearchModal=null,searchResultsObserver=null;
+function watchGlobalSearchResults(){
+  const modal=document.getElementById('modal');
+  if(!modal||modal===observedSearchModal)return;
+  searchResultsObserver?.disconnect();
+  observedSearchModal=modal;
+  searchResultsObserver=new MutationObserver(()=>{
+    if(!modal.querySelector('#globalSearch'))return;
+    requestAnimationFrame(syncGlobalLessonShortcut);
   });
+  searchResultsObserver.observe(modal,{childList:true,subtree:true});
+}
+document.addEventListener('input',event=>{
+  if(event.target?.id!=='globalSearch')return;
+  watchGlobalSearchResults();
+  const ticket=++searchRefreshTicket;
+  requestAnimationFrame(()=>{
+    if(ticket===searchRefreshTicket)syncGlobalLessonShortcut();
+  });
+  // Idempotent retry protects against a late results subtree replacement.
+  setTimeout(()=>{
+    if(ticket===searchRefreshTicket)syncGlobalLessonShortcut();
+  },80);
 });
 
 function configureMore(){

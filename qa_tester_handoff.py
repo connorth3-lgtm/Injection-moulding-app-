@@ -59,7 +59,12 @@ def verify_local() -> tuple[str, str]:
 
     ledger = load("data/release-external-validation-v1.json")
     need(ledger.get("release") == release, "external-validation release is stale")
-    candidate = ledger.get("webCandidate") or {}
+    candidate = ledger.get("webCandidate")
+    # A release with no accepted producer is not an *old* candidate. Keep
+    # this handoff blocked, but identify the missing successful artifact
+    # clearly instead of misdirecting maintainers to stale release metadata.
+    need(isinstance(candidate, dict) and bool(candidate),
+         "accepted exact-source candidate is missing (webCandidate unbound); handoff remains HOLD")
     need(candidate.get("release") == release, "candidate release is stale")
     need(re.fullmatch(r"[0-9a-f]{40}", str(candidate.get("sourceSha") or "")) is not None,
          "retained source SHA is missing/invalid")

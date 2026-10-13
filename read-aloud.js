@@ -23,6 +23,9 @@
   let ui=null;
   let listeningUI=null;
   let playlistMode=false;
+  // Navigation while paused/stopped selects the next unit without permission
+  // to start new speech. The next explicit Play consumes this selection.
+  let selectionPending=false;
   let listeningOpen=false;
   let previousView=null;
 
@@ -76,7 +79,7 @@
     let node;
     while((node=walker.nextNode())){
       const source=sourceFor(node,root);
-      for(const sentence of sentenceParts(node.nodeValue))if(sentence.length>=2)out.push({text:sentence,source});
+      for(const sentence of sentenceParts(node.nodeValue))if(sentence.length>=2)out.push({text:sentence,source,node});
     }
     activeRoot=root;
     units=out.slice(0,1200);
@@ -123,7 +126,8 @@
 
   function refreshVoice(){
     if(!supported||typeof synth.getVoices!=='function'){selectedVoice=null;return null;}
-    const voices=synth.getVoices()||[];
+    let voices=[];
+    try{voices=synth.getVoices()||[]}catch(_){selectedVoice=null;return null;}
     if(!voices.length){selectedVoice=null;return null;}
     const lang=String(document.documentElement.lang||navigator.language||'en').toLowerCase();
     const base=lang.split('-')[0];
@@ -147,6 +151,7 @@
 
   function updateButtons(){
     if(ui){
+      ui.play.disabled=!supported;
       ui.play.textContent=starting?'Starting…':paused?'Resume':speaking?'Pause':'Listen';
       ui.play.setAttribute('aria-label',starting?'Starting read aloud':paused?'Resume read aloud':speaking?'Pause read aloud':'Start read aloud');
       ui.prev.disabled=!supported||!units.length||index<=0;
@@ -167,9 +172,19 @@
     renderListeningState();
   }
 
+  function cancelDeviceSpeech(){
+    // Browser/OS voice providers may throw while being stopped. A failed
+    // cancel must never prevent the app controls from resetting safely.
+    if(!supported)return;
+    try{synth.cancel()}catch(_){}
+  }
+
   function stop(reason){
-    if(supported)synth.cancel();
+    // Invalidate active callbacks before cancel: some device voices dispatch
+    // a synchronous cancellation error from synth.cancel().
     speakToken+=1;
+    cancelDeviceSpeech();
+    selectionPending=false;
     starting=false;speaking=false;paused=false;
     clearHighlight();
     if(ui)ui.current.hidden=true;
@@ -177,42 +192,65 @@
     updateButtons();
   }
 
-  // Android Chrome can expose speechSynthesis while getVoices() stays empty.
-  // Delaying speak() until voiceschanged/timeout loses the tap activation needed
-  // by mobile TTS. Preserve Windows' delayed-voice path separately.
+  // Mobile browser speech may require the original user gesture even when
+  // getVoices() is empty. Keep desktop's delayed-voice path separate.
   const androidSpeech=/Android/i.test(navigator.userAgent||'');
+  const iosSpeech=/iPhone|iPad|iPod/i.test(navigator.userAgent||'')
+    ||(/Macintosh/i.test(navigator.userAgent||'')&&Number(navigator.maxTouchPoints||0)>1);
   function speakCurrent(retry=0){
+    selectionPending=false;
     if(!supported){setStatus('Read Aloud is not available in this browser/device.');updateButtons();return;}
+    // Automatic sentence chaining also needs source validation. A lesson
+    // might rewrite its content while narration is running; continuing the
+    // cached queue would speak outdated, now-hidden or replaced text.
+    if(!playlistMode&&units.length&&refreshStaleReading())return;
     if(!units.length)(playlistMode?buildPlaylist():buildUnits());
     const unit=currentUnit();
     if(!unit){setStatus(playlistMode?'No lesson audio is available.':'No readable text is visible on this screen.');updateButtons();return;}
     const token=++speakToken;
     starting=true;speaking=false;paused=false;
-    setStatus(refreshVoice()?'Starting device voice…':androidSpeech?'Starting default device voice…':'Loading device voice…');
+    setStatus(refreshVoice()?'Starting device voice…':(androidSpeech||iosSpeech)?'Starting default device voice…':'Loading device voice…');
     updateButtons();
     const beginSpeech=()=>{
       if(token!==speakToken)return;
       // Must run directly inside the original tap handler on Android, even
       // with an empty voice list. The platform can pick its default voice.
-      synth.cancel();
-      const utterance=new SpeechSynthesisUtterance(unit.text);
-      if(selectedVoice){utterance.voice=selectedVoice;utterance.lang=selectedVoice.lang||document.documentElement.lang||'en';}
-      else utterance.lang=document.documentElement.lang||'en';
-      utterance.rate=Number((playlistMode?listeningUI?.speed:ui?.speed)?.value||1);
+      cancelDeviceSpeech();
+      let utterance;
+      try{
+        utterance=new SpeechSynthesisUtterance(unit.text);
+        if(selectedVoice){utterance.voice=selectedVoice;utterance.lang=selectedVoice.lang||document.documentElement.lang||'en';}
+        else utterance.lang=document.documentElement.lang||'en';
+        utterance.rate=Number((playlistMode?listeningUI?.speed:ui?.speed)?.value||1);
+      }catch(err){
+        // Voice provider constructors and property setters can fail before
+        // synth.speak() runs. Do not leave the Play button stuck at Starting.
+        stop(androidSpeech||iosSpeech
+          ? 'Device voice could not be prepared. Tap Listen again.'
+          : 'Device voice could not be prepared. Try again.');
+        console.error('MouldMaster Read Aloud:',err);
+        return;
+      }
       let started=false;
       const startTimer=setTimeout(()=>{
         if(token!==speakToken||started)return;
-        synth.cancel();starting=false;speaking=false;paused=false;
+        // A platform may deliver a late onstart after timeout. Invalidate it
+        // before canceling or retrying, including when cancel emits no error.
+        speakToken+=1;
+        cancelDeviceSpeech();starting=false;speaking=false;paused=false;
         if(androidSpeech){
           // Timer callbacks cannot recover a blocked mobile user gesture.
           setStatus('Device voice did not start. Tap Listen again; check Android text-to-speech settings if it stays silent.');
+          updateButtons();
+        }else if(iosSpeech){
+          setStatus('Device voice did not start. Tap Listen again; check iOS speech settings if it stays silent.');
           updateButtons();
         }else if(retry<1){
           selectedVoice=null;setStatus('Retrying device voice…');updateButtons();speakCurrent(1);
         }else{
           setStatus('Device voice did not start. Check Windows speech voices, then try again.');updateButtons();
         }
-      },androidSpeech?6000:2500);
+      },(androidSpeech||iosSpeech)?6000:2500);
       utterance.onstart=()=>{
         if(token!==speakToken)return;
         clearTimeout(startTimer);started=true;starting=false;speaking=true;paused=false;
@@ -222,16 +260,21 @@
         clearTimeout(startTimer);
         if(token!==speakToken||!speaking)return;
         if(index<units.length-1){index+=1;speakCurrent();}
-        else stop('Finished all lessons');
+        else stop(playlistMode?'Finished all lessons':'Finished reading');
       };
       utterance.onerror=event=>{
         clearTimeout(startTimer);
         if(token!==speakToken)return;
-        if(event?.error==='canceled'||event?.error==='interrupted')return;
+        // When this is the CURRENT utterance, interruption is a real
+        // device failure, not a cancellation from our own Stop button.
+        // Leave the player restartable instead of stuck displaying Pause.
+        const interrupted=event?.error==='canceled'||event?.error==='interrupted';
         starting=false;
-        stop(androidSpeech&&event?.error==='not-allowed'
-          ?'Android blocked voice playback. Tap Listen to start audio.'
-          :`Speech playback could not continue${event?.error?`: ${event.error}`:''}.`);
+        stop(interrupted
+          ? (playlistMode?'Device interrupted playback. Press Play to restart.':'Device interrupted playback. Press Listen to restart.')
+          : androidSpeech&&event?.error==='not-allowed'
+          ? 'Android blocked voice playback. Tap Listen to start audio.'
+          : `Speech playback could not continue${event?.error?`: ${event.error}`:''}.`);
       };
       try{synth.speak(utterance)}catch(err){
         clearTimeout(startTimer);starting=false;
@@ -242,12 +285,35 @@
     if(androidSpeech){
       // No Promise, timeout or delayed voiceschanged listener before speak().
       beginSpeech();
+    }else if(iosSpeech){
+      // iOS Safari can also require transient activation from this tap.
+      beginSpeech();
     }else{
       waitForVoice(retry?700:1200).then(beginSpeech,()=>{
         if(token!==speakToken)return;
         beginSpeech();
       });
     }
+  }
+
+  function refreshStaleReading(nextIndex=index){
+    if(playlistMode||!units.length)return false;
+    const stillCurrent=unit=>{
+      const source=unit?.source,node=unit?.node;
+      // The preferred source element can remain visible even when its child
+      // text is hidden or replaced. Revalidate the actual visible text node.
+      return !!(source?.isConnected&&visible(source)&&node?.isConnected&&
+        visible(node.parentElement)&&String(node.nodeValue||'').replace(/\s+/g,' ').includes(unit.text));
+    };
+    if(activeRoot&&visible(activeRoot)&&stillCurrent(currentUnit())&&
+       (nextIndex===index||stillCurrent(units[nextIndex])))return false;
+    // A replaced, hidden or rewritten reading source must not be spoken from
+    // an old queue. Invalidate old OS callbacks, then rebuild visible text.
+    stop('Stopped after screen changed');
+    index=0;
+    buildUnits();
+    updateButtons();
+    return true;
   }
 
   function start(){index=0;buildUnits();if(!units.length){setStatus('No readable text is visible on this screen.');updateButtons();return;}speakCurrent();}
@@ -261,19 +327,67 @@
 
   function toggle(){
     if(!supported){setStatus('Read Aloud is not available in this browser/device.');return;}
+    const wasActive=starting||speaking||paused;
+    if(refreshStaleReading()&&wasActive)return;
     if(starting){stop('Stopped');return;}
-    if(paused){synth.resume();paused=false;speaking=true;setStatus(playlistMode?'Listening session playing':'Reading');updateButtons();return;}
-    if(speaking){synth.pause();paused=true;speaking=false;setStatus('Paused');updateButtons();return;}
+    if(paused){
+      try{synth.resume()}catch(_){stop('Device voice could not resume. Start playback again.');return;}
+      paused=false;speaking=true;setStatus(playlistMode?'Listening session playing':'Reading');updateButtons();return;
+    }
+    if(speaking){
+      try{synth.pause()}catch(_){stop('Device voice could not pause. Start playback again.');return;}
+      paused=true;speaking=false;setStatus('Paused');updateButtons();return;
+    }
+    if(selectionPending&&!playlistMode){speakCurrent();return;}
     start();
   }
 
-  function togglePlaylist(){
-    if(!playlistMode&&!speaking&&!paused){startPlaylist();return;}
-    if(!playlistMode){stop('Ready');startPlaylist();return;}
-    toggle();
+  function changeSpeed(forPlaylist){
+    if(playlistMode!==forPlaylist)return;
+    // Editing the playback rate while paused must not resume narration.
+    // The new rate is applied when the next sentence is synthesized.
+    if(paused){setStatus('Paused. Updated speed applies to the next sentence.');updateButtons();return;}
+    if(speaking)speakCurrent();
   }
 
-  function move(delta){if(!units.length)(playlistMode?buildPlaylist():buildUnits());if(!units.length)return;index=Math.max(0,Math.min(units.length-1,index+delta));speaking=false;paused=false;speakCurrent();}
+  function togglePlaylist(){
+    if(starting){stop('Stopped');return;}
+    if(speaking||paused){
+      if(!playlistMode){stop('Ready');startPlaylist();return;}
+      toggle();return;
+    }
+    // Next/Previous when stopped chooses the exact destination but does not
+    // initiate speech. Play should then speak that selection; ordinary Stop
+    // followed by Play still restarts at the selected lesson's beginning.
+    if(selectionPending&&playlistMode&&units.length){speakCurrent();return;}
+    const selectedLesson=playlistMode?currentLessonUnit()?.lessonId:undefined;
+    startPlaylist(selectedLesson);
+  }
+
+  function selectUnit(nextIndex){
+    if(nextIndex===index)return;
+    const autoplay=speaking||starting;
+    index=nextIndex;
+    if(autoplay){
+      speaking=false;paused=false;speakCurrent();
+      return;
+    }
+    // A paused device still owns an utterance at the old position. Cancel it
+    // with a fresh token, then leave the new unit cued and not playing.
+    stop('Ready');
+    selectionPending=true;
+    const unit=currentUnit();
+    if(ui){ui.current.textContent=unit?.text||'';ui.current.hidden=!unit?.text;}
+    setStatus(playlistMode?'Lesson or sentence selected. Press Play to listen.':'Sentence selected. Press Listen to start.');
+    updateButtons();
+  }
+
+  function move(delta){
+    if(units.length)refreshStaleReading(Math.max(0,Math.min(units.length-1,index+delta)));
+    if(!units.length)(playlistMode?buildPlaylist():buildUnits());
+    if(!units.length)return;
+    selectUnit(Math.max(0,Math.min(units.length-1,index+delta)));
+  }
 
   function jumpLesson(delta){
     if(!playlistMode||!units.length)buildPlaylist();
@@ -284,7 +398,7 @@
     const nextPos=Math.max(0,Math.min(lessonIds.length-1,pos+delta));
     const target=lessonIds[nextPos];
     const found=units.findIndex(x=>String(x.lessonId)===String(target));
-    if(found>=0){index=found;speaking=false;paused=false;speakCurrent();}
+    if(found>=0)selectUnit(found);
   }
 
   function renderListeningState(){
@@ -303,6 +417,14 @@
     const main=document.querySelector('#mainContent,.main,main');
     const view=listeningUI?.view;
     if(!main||!view)return;
+    // Switching from a Book or single-screen reader to the course Listening
+    // screen must release its old device utterance first. The Listening
+    // playlist has its own explicit Play action and cannot inherit playback.
+    if(!playlistMode&&(starting||speaking||paused))stop('Ready');
+    // The core router may hide this custom view without dispatching a click
+    // (for example after a programmatic switchView()). Reconcile against
+    // the actual DOM before deciding the Listening tab is already open.
+    if(listeningOpen&&view.classList.contains('hidden'))listeningOpen=false;
     if(!listeningOpen){
       previousView=[...document.querySelectorAll('.view')].find(v=>!v.classList.contains('hidden'))||null;
       document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));
@@ -312,7 +434,11 @@
       listeningUI.nav.classList.add('active');
       const title=document.getElementById('pageTitle');const subtitle=document.getElementById('pageSubtitle');
       if(title)title.textContent='Listening';if(subtitle)subtitle.textContent='Continuous lesson audio for longer study sessions.';
-      renderListeningState();window.scrollTo({top:0,behavior:'smooth'});
+      renderListeningState();
+      window.scrollTo({top:0,behavior:'auto'});
+      // The Listening tab is a custom view. Send keyboard/screen-reader
+      // focus to its heading after hiding the previous view.
+      view.querySelector('.mm-listening-hero h2')?.focus({preventScroll:true});
     }
   }
 
@@ -348,7 +474,7 @@
 
     const view=document.createElement('section');
     view.id='mmListeningView';view.className='view hidden mm-listening-view';
-    view.innerHTML=`<section class="card mm-listening-hero"><span class="eyebrow">Long-session audio learning</span><h2>Listen through MouldMaster lessons continuously</h2><p>Start once and move through the lesson library hands-free. Playback uses your browser or operating-system speech service. MouldMaster does not request microphone access, record audio, or upload lesson text through MouldMaster servers; voice-provider processing depends on your device, browser and selected voice.</p></section><section class="card mm-listening-player"><div class="mm-listening-now"><span class="eyebrow">Now listening</span><h3 data-mm-listening-lesson>Lesson library ready</h3><p class="mm-listening-current" data-mm-listening-current>Press Play to start continuous listening from the lesson library.</p></div><div class="mm-listening-controls"><button type="button" data-mm-listening="prev-lesson">⏮ Previous lesson</button><button type="button" data-mm-listening="back">◀ Sentence</button><button type="button" class="play" data-mm-listening="play">Play</button><button type="button" data-mm-listening="forward">Sentence ▶</button><button type="button" data-mm-listening="next-lesson">Next lesson ⏭</button></div><div class="mm-listening-options"><p class="mm-read-status" data-mm-listening-status role="status" aria-live="polite">${supported?'Ready':'Speech synthesis is unavailable'}</p><label>Speed <select class="mm-read-speed" data-mm-listening-speed aria-label="Listening speed">${SPEEDS.map(v=>`<option value="${v}"${v===1?' selected':''}>${v}×</option>`).join('')}</select></label><button type="button" class="ghost" data-mm-listening="stop">Stop</button><strong data-mm-listening-progress-text>0 lessons</strong></div><div class="mm-listening-progress" aria-hidden="true"><span data-mm-listening-bar></span></div><div class="mm-listening-privacy"><b>Designed for long sessions:</b> Listening mode continues when this app tab is in the background where the browser/device permits it. Normal one-screen Read Aloud still pauses when the app is hidden.</div></section>`;
+    view.innerHTML=`<section class="card mm-listening-hero"><span class="eyebrow">Long-session audio learning</span><h2 tabindex="-1">Listen through MouldMaster lessons continuously</h2><p>Start once and move through the lesson library hands-free. Playback uses your browser or operating-system speech service. MouldMaster does not request microphone access, record audio, or upload lesson text through MouldMaster servers; voice-provider processing depends on your device, browser and selected voice.</p></section><section class="card mm-listening-player"><div class="mm-listening-now"><span class="eyebrow">Now listening</span><h3 data-mm-listening-lesson>Lesson library ready</h3><p class="mm-listening-current" data-mm-listening-current>Press Play to start continuous listening from the lesson library.</p></div><div class="mm-listening-controls"><button type="button" data-mm-listening="prev-lesson">⏮ Previous lesson</button><button type="button" data-mm-listening="back">◀ Sentence</button><button type="button" class="play" data-mm-listening="play">Play</button><button type="button" data-mm-listening="forward">Sentence ▶</button><button type="button" data-mm-listening="next-lesson">Next lesson ⏭</button></div><div class="mm-listening-options"><p class="mm-read-status" data-mm-listening-status role="status" aria-live="polite">${supported?'Ready':'Speech synthesis is unavailable'}</p><label>Speed <select class="mm-read-speed" data-mm-listening-speed aria-label="Listening speed">${SPEEDS.map(v=>`<option value="${v}"${v===1?' selected':''}>${v}×</option>`).join('')}</select></label><button type="button" class="ghost" data-mm-listening="stop">Stop</button><strong data-mm-listening-progress-text>0 lessons</strong></div><div class="mm-listening-progress" aria-hidden="true"><span data-mm-listening-bar></span></div><div class="mm-listening-privacy"><b>Designed for long sessions:</b> Listening mode continues when this app tab is in the background where the browser/device permits it. Normal one-screen Read Aloud still pauses when the app is hidden.</div></section>`;
     main.appendChild(view);
     listeningUI={view,nav:navButton,play:view.querySelector('[data-mm-listening="play"]'),stop:view.querySelector('[data-mm-listening="stop"]'),speed:view.querySelector('[data-mm-listening-speed]'),status:view.querySelector('[data-mm-listening-status]'),lesson:view.querySelector('[data-mm-listening-lesson]'),current:view.querySelector('[data-mm-listening-current]'),progress:view.querySelector('[data-mm-listening-progress-text]'),bar:view.querySelector('[data-mm-listening-bar]')};
     navButton.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();openListening();});
@@ -358,7 +484,7 @@
     view.querySelector('[data-mm-listening="forward"]').addEventListener('click',()=>move(1));
     view.querySelector('[data-mm-listening="prev-lesson"]').addEventListener('click',()=>jumpLesson(-1));
     view.querySelector('[data-mm-listening="next-lesson"]').addEventListener('click',()=>jumpLesson(1));
-    listeningUI.speed.addEventListener('change',()=>{if(playlistMode&&(speaking||paused)){paused=false;speaking=true;speakCurrent();}});
+    listeningUI.speed.addEventListener('change',()=>changeSpeed(true));
     renderListeningState();
   }
 
@@ -371,8 +497,8 @@
     const actions=document.querySelector('#app .top-actions,.top-actions');(actions||document.body).appendChild(host);
     ui={host,play:host.querySelector('[data-mm-read="play"]'),prev:host.querySelector('[data-mm-read="prev"]'),next:host.querySelector('[data-mm-read="next"]'),stop:host.querySelector('[data-mm-read="stop"]'),speed:host.querySelector('[data-mm-read="speed"]'),status:host.querySelector('.mm-read-status'),position:host.querySelector('[data-mm-read="position"]'),current:host.querySelector('[data-mm-read="current"]')};
     ui.play.addEventListener('click',toggle);ui.prev.addEventListener('click',()=>move(-1));ui.next.addEventListener('click',()=>move(1));ui.stop.addEventListener('click',()=>stop('Stopped'));
-    ui.speed.addEventListener('change',()=>{if(speaking||paused){paused=false;speaking=true;speakCurrent();}});
-    host.querySelector('details').addEventListener('toggle',event=>{if(event.target.open&&!speaking&&!paused){buildUnits();setStatus(supported?'Ready':'Read Aloud is not available in this browser/device.');updateButtons();}});
+    ui.speed.addEventListener('change',()=>changeSpeed(false));
+    host.querySelector('details').addEventListener('toggle',event=>{if(event.target.open&&!starting&&!speaking&&!paused){buildUnits();setStatus(supported?'Ready':'Read Aloud is not available in this browser/device.');updateButtons();}});
     refreshVoice();if(supported&&!selectedVoice)setStatus('Device voice will load when playback starts.');updateButtons();
     createListeningTab();
   }
@@ -388,7 +514,14 @@
   window.addEventListener('hashchange',()=>{if(!playlistMode)stop('Stopped after navigation')});
   window.addEventListener('popstate',()=>{if(!playlistMode)stop('Stopped after navigation')});
   window.addEventListener('pagehide',()=>stop('Stopped'));
-  document.addEventListener('visibilitychange',()=>{if(document.hidden&&speaking&&supported&&!playlistMode){synth.pause();paused=true;speaking=false;setStatus('Paused while app is hidden');updateButtons();}});
+  document.addEventListener('visibilitychange',()=>{
+    if(!document.hidden||!speaking||!supported||playlistMode)return;
+    try{synth.pause()}catch(_){
+      stop('Device voice could not pause while hidden. Start playback again.');
+      return;
+    }
+    paused=true;speaking=false;setStatus('Paused while app is hidden');updateButtons();
+  });
 
   const observer=new MutationObserver(()=>{if((speaking||paused)&&activeRoot&&!activeRoot.isConnected&&!playlistMode)stop('Stopped after screen changed');});
   observer.observe(document.documentElement,{subtree:true,childList:true});

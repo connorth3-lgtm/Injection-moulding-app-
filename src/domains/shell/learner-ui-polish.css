@@ -1,4 +1,4 @@
-/* MouldMaster learner UI polish — 2026.10.11.11 */
+/* MouldMaster learner UI polish — 2026.10.13.1 */
 
 /* Book: the evidence contract stays visible and accessible, but it no longer
    competes with the learner's chapter choice above the fold. */
@@ -285,7 +285,7 @@
   #dashboard .mm-home-book-actions button{width:100%!important;min-width:0!important;min-height:44px!important;padding:8px 9px!important;font-size:11.5px!important;white-space:nowrap!important}
 }
 
-/* Canonical Home hierarchy — 2026.10.11.11 */
+/* Canonical Home hierarchy — 2026.10.13.1 */
 /* Home keeps one dominant lesson decision, one persistent Book/Keep Reading surface,
    and two specialist shortcuts without duplicating Learn, Materials, Practice or Saved lessons. */
 #dashboard{
@@ -1920,5 +1920,1409 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
   .mm-reference-layout #path,
   .mm-reference-layout #materials{
     scroll-padding-bottom:calc(120px + env(safe-area-inset-bottom))!important;
+  }
+}
+
+/* Practice parity with the approved Learn/Materials card system.
+   Illustrate the existing task choices, recommendations and *inner* Question
+   Centre/Lab pickers. All underlying buttons and assessment rules are retained. */
+.mm-reference-layout #scenarios .mm-reference-practice-feature{
+  display:grid!important;grid-template-columns:76px minmax(0,1fr)!important;
+  gap:10px 13px!important;align-items:center!important;
+  padding:15px!important;border:1px solid #256b85!important;
+  border-radius:16px!important;
+  background:linear-gradient(130deg,#0b354c,#072037 72%,#061a2c)!important;
+  box-shadow:0 9px 22px rgba(0,9,24,.18)!important;
+}
+.mm-reference-layout #scenarios .mm-reference-practice-feature>.mm-reference-practice-feature-art{
+  display:block!important;grid-column:1!important;grid-row:1!important;
+  width:76px;height:76px;border-radius:12px;overflow:hidden;
+}
+.mm-reference-layout #scenarios .mm-reference-practice-feature>.mm-hub-continue-copy{
+  grid-column:2!important;grid-row:1!important;min-width:0!important;
+}
+.mm-reference-layout #scenarios .mm-reference-practice-feature .mm-hub-continue-copy h2{
+  color:#f4fbff!important;font-size:clamp(17px,4vw,22px)!important;
+  line-height:1.2!important;overflow-wrap:anywhere;
+}
+.mm-reference-layout #scenarios .mm-reference-practice-feature .mm-hub-continue-copy p{
+  color:#c5ddec!important;font-size:12px!important;line-height:1.5!important;
+}
+.mm-reference-layout #scenarios .mm-reference-practice-feature>.mm-hub-continue-action{
+  grid-column:1/-1!important;grid-row:2!important;
+  box-sizing:border-box!important;min-height:48px!important;width:100%!important;
+  background:#006be3!important;color:#fff!important;border-color:#2b9cec!important;
+  border-radius:11px!important;font-weight:750!important;white-space:normal!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-section-head h2,
+.mm-reference-layout #scenarios .mm-question-centre-card>h2{
+  color:#f1f8ff!important;font-size:clamp(18px,4.5vw,23px)!important;line-height:1.2;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-grid{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:10px!important;min-width:0;
+}
+.mm-reference-layout #scenarios .mm-reference-practice-choice{
+  box-sizing:border-box!important;display:grid!important;
+  grid-template-columns:68px minmax(0,1fr)!important;
+  grid-template-rows:repeat(4,auto)!important;align-content:center!important;
+  gap:4px 12px!important;align-items:center!important;text-align:left!important;
+  width:100%!important;min-width:0!important;min-height:108px!important;
+  padding:12px!important;margin:0!important;
+  border:1px solid #285775!important;border-radius:14px!important;
+  background:linear-gradient(125deg,#0a293f,#071c2c)!important;
+  color:#eaf7ff!important;box-shadow:none!important;
+}
+.mm-reference-layout #scenarios .mm-reference-practice-choice>.mm-reference-practice-art{
+  display:block!important;grid-column:1!important;grid-row:1 / span 4!important;
+  width:68px!important;height:68px!important;
+  overflow:hidden;border-radius:10px!important;
+}
+.mm-reference-layout #scenarios .mm-reference-practice-choice>.eyebrow,
+.mm-reference-layout #scenarios .mm-reference-practice-choice>b,
+.mm-reference-layout #scenarios .mm-reference-practice-choice>small,
+.mm-reference-layout #scenarios .mm-reference-practice-choice>.mm-hub-tile-action{
+  display:block!important;grid-column:2!important;min-width:0!important;
+  width:auto!important;margin:0!important;overflow-wrap:anywhere!important;
+  text-align:left!important;
+}
+.mm-reference-layout #scenarios .mm-reference-practice-choice>.eyebrow{
+  grid-row:1!important;font-size:10px!important;color:#81dcd5!important;letter-spacing:.05em;
+}
+.mm-reference-layout #scenarios .mm-reference-practice-choice>b{
+  grid-row:2!important;font-size:clamp(14px,3.8vw,18px)!important;line-height:1.22!important;
+}
+.mm-reference-layout #scenarios .mm-reference-practice-choice>small{
+  grid-row:3!important;color:#c0d3e3!important;
+  font-size:12px!important;line-height:1.42!important;
+  -webkit-line-clamp:unset!important;line-clamp:unset!important;max-height:none!important;
+  overflow:visible!important;
+}
+.mm-reference-layout #scenarios .mm-reference-practice-choice>.mm-hub-tile-action{
+  grid-row:4!important;font-size:11px!important;color:#59e6d8!important;
+  padding-top:4px!important;line-height:1.35!important;font-weight:750!important;
+}
+.mm-reference-layout #scenarios .mm-reference-practice-choice:hover,
+.mm-reference-layout #scenarios .mm-reference-practice-choice:focus-visible,
+.mm-reference-layout #modal .mm-hub-picker-grid[data-mm-reference-practice-picker]>.mm-reference-practice-choice:hover,
+.mm-reference-layout #modal .mm-hub-picker-grid[data-mm-reference-practice-picker]>.mm-reference-practice-choice:focus-visible{
+  border-color:#57e4d9!important;background:#103a4c!important;
+  outline-offset:2px;
+}
+.mm-reference-layout #scenarios .mm-question-centre-card{
+  border:1px solid #285c7a!important;border-radius:16px!important;
+  background:linear-gradient(145deg,#0b2a41,#071e32)!important;
+}
+.mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:10px!important;
+}
+.mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice{
+  grid-template-rows:repeat(2,auto)!important;
+  min-height:105px!important;
+}
+.mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice>b{
+  grid-row:1!important;
+}
+.mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice>small{
+  grid-row:2!important;
+}
+.mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>button:first-child{
+  grid-column:1/-1!important;
+}
+.mm-reference-layout #modal .mm-hub-picker-grid[data-mm-reference-practice-picker]{
+  display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:9px!important;
+}
+.mm-reference-layout #modal .mm-hub-picker-grid[data-mm-reference-practice-picker]>.mm-reference-practice-choice{
+  display:grid!important;box-sizing:border-box!important;
+  grid-template-columns:68px minmax(0,1fr)!important;grid-template-rows:auto auto!important;
+  gap:4px 12px!important;align-items:center!important;
+  min-width:0!important;width:100%!important;min-height:92px!important;
+  margin:0!important;padding:12px!important;text-align:left!important;
+  border-radius:13px!important;border:1px solid #285775!important;
+  background:linear-gradient(125deg,#0b2a42,#071e2f)!important;color:#f1f8ff!important;
+}
+.mm-reference-layout #modal .mm-hub-picker-grid[data-mm-reference-practice-picker]>.mm-reference-practice-choice>.mm-reference-practice-art{
+  display:block!important;grid-column:1!important;grid-row:1 / span 2!important;
+  width:68px!important;height:68px!important;overflow:hidden;border-radius:10px;
+}
+.mm-reference-layout #modal .mm-hub-picker-grid[data-mm-reference-practice-picker]>.mm-reference-practice-choice>b{
+  grid-column:2!important;grid-row:1!important;margin:0!important;
+  min-width:0;font-size:16px!important;line-height:1.2!important;
+}
+.mm-reference-layout #modal .mm-hub-picker-grid[data-mm-reference-practice-picker]>.mm-reference-practice-choice>small{
+  grid-column:2!important;grid-row:2!important;margin:0!important;
+  font-size:12px!important;line-height:1.45!important;color:#c3d8e9!important;overflow-wrap:anywhere;
+}
+/* Nested practice workbenches: evidence and forms remain editable and intact. */
+.mm-reference-layout #defects .mm-dx-hero,
+.mm-reference-layout #coach .mm-dx-hero{
+  background:linear-gradient(125deg,#0e394c,#092539 72%,#071b2d)!important;
+  border-color:#33728b!important;border-radius:17px!important;
+}
+.mm-reference-layout #defects .mm-dx-pane,
+.mm-reference-layout #coach .mm-dx-pane{
+  border-color:#28546d!important;background:#091e32!important;border-radius:15px!important;
+}
+.mm-reference-layout #defects .mm-dx-symptom,
+.mm-reference-layout #coach .mm-dx-symptom{
+  min-height:54px!important;border-color:#28536c!important;
+  border-radius:11px!important;background:#0c293d!important;
+}
+.mm-reference-layout #defects .mm-dx-symptom.is-selected,
+.mm-reference-layout #coach .mm-dx-symptom.is-selected{
+  border-color:#5ee0d2!important;background:#0f4147!important;
+}
+.mm-reference-layout #defects .mm-dx-field :is(select,input,textarea),
+.mm-reference-layout #coach .mm-dx-field :is(select,input,textarea){
+  box-sizing:border-box!important;min-height:44px!important;border-radius:10px!important;
+  background:#0c2a40!important;border-color:#37617a!important;color:#eff8ff!important;
+}
+.mm-reference-layout #scenarios .mm-hub-detail-back{
+  background:#0b293d!important;border-color:#2e5e78!important;border-radius:13px!important;
+}
+@media(max-width:700px){
+  .mm-reference-layout #scenarios .mm-practice-hub .mm-hub-grid,
+  .mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  .mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>button:first-child{
+    grid-column:auto!important;
+  }
+  .mm-reference-layout #scenarios .mm-reference-practice-feature{
+    grid-template-columns:64px minmax(0,1fr)!important;gap:9px 11px!important;
+  }
+  .mm-reference-layout #scenarios .mm-reference-practice-feature>.mm-reference-practice-feature-art{
+    width:64px;height:64px;
+  }
+  .mm-reference-layout #scenarios .mm-reference-practice-choice{
+    grid-template-columns:64px minmax(0,1fr)!important;
+    min-height:96px!important;padding:11px!important;
+  }
+  .mm-reference-layout #scenarios .mm-reference-practice-choice>.mm-reference-practice-art{
+    width:64px!important;height:64px!important;
+  }
+}
+@media(max-width:360px){
+  .mm-reference-layout #scenarios .mm-reference-practice-choice,
+  .mm-reference-layout #modal .mm-hub-picker-grid[data-mm-reference-practice-picker]>.mm-reference-practice-choice{
+    grid-template-columns:56px minmax(0,1fr)!important;
+    gap:3px 9px!important;padding:10px!important;
+  }
+  .mm-reference-layout #scenarios .mm-reference-practice-choice>.mm-reference-practice-art,
+  .mm-reference-layout #modal .mm-hub-picker-grid[data-mm-reference-practice-picker]>.mm-reference-practice-choice>.mm-reference-practice-art{
+    width:56px!important;height:56px!important;
+  }
+}
+@media(forced-colors:active){
+  .mm-reference-layout #scenarios .mm-reference-practice-choice,
+  .mm-reference-layout #modal .mm-hub-picker-grid[data-mm-reference-practice-picker]>.mm-reference-practice-choice{
+    border:1px solid CanvasText!important;forced-color-adjust:auto;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .mm-reference-layout #scenarios .mm-reference-practice-choice,
+  .mm-reference-layout #modal .mm-hub-picker-grid[data-mm-reference-practice-picker]>.mm-reference-practice-choice{
+    transition:none!important;
+  }
+}
+
+/* Practice → shop-floor scenarios is a real inner screen, not a second hub.
+   Preserve authored prompts, answer handlers, feedback and scenario rotation. */
+.mm-reference-layout #scenarios[data-mm-hub-mode="detail"]>.mm-reference-practice-scenario-head{
+  display:grid!important;grid-template-columns:72px minmax(0,1fr)!important;
+  align-items:center!important;gap:8px 14px!important;min-width:0;
+  padding:15px!important;margin-bottom:12px!important;
+  border:1px solid #285f7a!important;border-radius:16px!important;
+  background:linear-gradient(130deg,#0d364c,#071e31)!important;
+}
+.mm-reference-layout #scenarios .mm-reference-practice-scenario-art{
+  display:block!important;grid-column:1!important;grid-row:1/span 2!important;
+  width:72px!important;height:72px!important;border-radius:12px!important;
+  overflow:hidden;
+}
+.mm-reference-layout #scenarios .mm-reference-practice-scenario-head>div{
+  grid-column:2!important;grid-row:1!important;min-width:0!important;
+}
+.mm-reference-layout #scenarios .mm-reference-practice-scenario-head h2{
+  color:#f4fbff!important;font-size:clamp(19px,4vw,25px)!important;
+  line-height:1.24!important;margin:0 0 3px!important;
+}
+.mm-reference-layout #scenarios .mm-reference-practice-scenario-head p{
+  color:#c1d8e8!important;line-height:1.45!important;margin:0!important;
+}
+.mm-reference-layout #scenarios .mm-reference-practice-scenario-head>.pill{
+  grid-column:2!important;grid-row:2!important;justify-self:start!important;
+  white-space:normal!important;
+}
+.mm-reference-layout #scenarios[data-mm-hub-mode="detail"]>.grid2{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  align-items:start!important;gap:12px!important;min-width:0!important;
+}
+.mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario{
+  box-sizing:border-box!important;min-width:0!important;padding:17px!important;
+  border:1px solid #2b5973!important;border-radius:15px!important;
+  background:linear-gradient(145deg,#0a2a3e,#071d30)!important;
+  box-shadow:none!important;overflow-wrap:anywhere;
+}
+.mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario h3{
+  color:#f0f8ff!important;font-size:18px!important;line-height:1.3!important;
+}
+.mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario>p{
+  color:#c3d7e7!important;font-size:14px!important;line-height:1.55!important;
+}
+.mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario>.choice{
+  display:block!important;box-sizing:border-box!important;width:100%!important;
+  min-height:44px!important;margin:8px 0!important;padding:11px 13px!important;
+  border:1px solid #356783!important;border-radius:11px!important;
+  background:#102f43!important;color:#f0f8ff!important;text-align:left!important;
+  white-space:normal!important;overflow-wrap:anywhere!important;
+}
+.mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario>.choice:hover{
+  border-color:#5fe4d6!important;background:#174258!important;
+}
+.mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario>.choice:focus-visible{
+  outline:2px solid #71e7dc!important;outline-offset:2px!important;
+}
+.mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario>.feedback:not(.hidden){
+  margin-top:11px!important;padding:13px!important;border-radius:11px!important;
+  border:1px solid #428b91!important;background:#103e46!important;
+  color:#ecfbfa!important;line-height:1.55!important;
+}
+@media(max-width:700px){
+  .mm-reference-layout #scenarios[data-mm-hub-mode="detail"]>.grid2{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  .mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario{
+    padding:14px!important;
+  }
+}
+@media(max-width:360px){
+  .mm-reference-layout #scenarios[data-mm-hub-mode="detail"]>.mm-reference-practice-scenario-head{
+    grid-template-columns:58px minmax(0,1fr)!important;gap:7px 10px!important;
+    padding:12px!important;
+  }
+  .mm-reference-layout #scenarios .mm-reference-practice-scenario-art{
+    width:58px!important;height:58px!important;
+  }
+}
+@media(forced-colors:active){
+  .mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario,
+  .mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario>.choice{
+    border-color:CanvasText!important;forced-color-adjust:auto;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario>.choice{
+    transition:none!important;
+  }
+}
+
+/* Practice tool landing pages: inherited scoring/renderers stay authoritative. */
+.mm-reference-layout :is(#processDataLabs .pd-hero,#diagnosticLabs .dl-hero,#materialLabs .ml-hero,#exams .section-head).mm-reference-practice-tool-head{
+  box-sizing:border-box!important;min-width:0!important;
+  border:1px solid #2a6983!important;border-radius:16px!important;
+  background:linear-gradient(130deg,#0b354c,#071e31)!important;
+  color:#eaf7ff!important;overflow:hidden;
+}
+.mm-reference-layout :is(#processDataLabs .pd-hero,#diagnosticLabs .dl-hero,#materialLabs .ml-hero,#exams .section-head).mm-reference-practice-tool-head>.mm-reference-practice-tool-art{
+  display:block!important;float:left!important;width:76px!important;
+  height:76px!important;margin:0 13px 9px 0!important;
+  border-radius:11px!important;overflow:hidden!important;flex-shrink:0!important;
+}
+.mm-reference-layout :is(#processDataLabs .pd-hero,#diagnosticLabs .dl-hero,#materialLabs .ml-hero,#exams .section-head).mm-reference-practice-tool-head :is(h2,h3){
+  color:#f0f8ff!important;overflow-wrap:anywhere!important;
+}
+.mm-reference-layout :is(#processDataLabs .pd-hero,#diagnosticLabs .dl-hero,#materialLabs .ml-hero,#exams .section-head).mm-reference-practice-tool-head p{
+  color:#c4dbe9!important;line-height:1.5!important;
+}
+.mm-reference-layout #exams .section-head.mm-reference-practice-tool-head{
+  display:flex!important;align-items:center!important;gap:12px!important;
+  padding:15px!important;
+}
+.mm-reference-layout #exams .section-head.mm-reference-practice-tool-head>.mm-reference-practice-tool-art{
+  float:none!important;margin:0!important;
+}
+.mm-reference-layout :is(#processDataLabs .pd-card,#diagnosticLabs .dl-card,#materialLabs .ml-card,#exams .exam-card){
+  min-width:0!important;border-radius:15px!important;border-color:#2b5671!important;
+}
+.mm-reference-layout :is(#processDataLabs button[data-pd-start],#diagnosticLabs button[data-dl-start],#materialLabs button[data-ml-start],#exams .exam-card button){
+  box-sizing:border-box!important;min-height:44px!important;white-space:normal!important;
+  overflow-wrap:anywhere!important;border-radius:10px!important;
+}
+@media(max-width:400px){
+  .mm-reference-layout :is(#processDataLabs .pd-hero,#diagnosticLabs .dl-hero,#materialLabs .ml-hero,#exams .section-head).mm-reference-practice-tool-head>.mm-reference-practice-tool-art{
+    width:58px!important;height:58px!important;margin-right:10px!important;
+  }
+}
+@media(forced-colors:active){
+  .mm-reference-layout :is(#processDataLabs .pd-hero,#diagnosticLabs .dl-hero,#materialLabs .ml-hero,#exams .section-head).mm-reference-practice-tool-head{
+    border-color:CanvasText!important;forced-color-adjust:auto;
+  }
+}
+
+/* Native lab question choices and back/next controls must be finger-sized too. */
+.mm-reference-layout :is(
+  #processDataLabs .pd-choice,#processDataLabs .pd-toolbar button,#processDataLabs .pd-actions button,
+  #diagnosticLabs .dl-choice,#diagnosticLabs .dl-toolbar button,#diagnosticLabs .dl-actions button,
+  #materialLabs .ml-choice,#materialLabs .ml-toolbar button,#materialLabs .ml-actions button
+){
+  box-sizing:border-box!important;min-height:44px!important;
+  white-space:normal!important;overflow-wrap:anywhere!important;
+  border-radius:10px!important;
+}
+.mm-reference-layout :is(
+  #processDataLabs .pd-choice,#diagnosticLabs .dl-choice,#materialLabs .ml-choice
+):focus-visible{
+  outline:2px solid #71e7dc!important;outline-offset:2px!important;
+}
+@media(max-width:700px){
+  .mm-reference-layout :is(#processDataLabs .pd-toolbar,#diagnosticLabs .dl-toolbar,#materialLabs .ml-toolbar){
+    gap:8px!important;
+  }
+  .mm-reference-layout :is(#processDataLabs .pd-toolbar button,#diagnosticLabs .dl-toolbar button,#materialLabs .ml-toolbar button){
+    flex:1 1 125px!important;
+  }
+}
+
+/* Simulator and Spatial Twin remain governed training tools, with the
+   same local illustrative header rather than duplicated launch buttons. */
+.mm-reference-layout #mmVirtualApprenticeship>.section-head.mm-reference-practice-tool-head{
+  display:grid!important;grid-template-columns:72px minmax(0,1fr)!important;
+  gap:7px 13px!important;align-items:center!important;padding:14px!important;
+  border:1px solid #2b6984!important;border-radius:14px!important;
+  background:linear-gradient(130deg,#0b354c,#071e31)!important;
+}
+.mm-reference-layout #mmVirtualApprenticeship>.section-head.mm-reference-practice-tool-head>.mm-reference-practice-tool-art{
+  grid-column:1!important;grid-row:1/span 2!important;
+  display:block!important;width:72px!important;height:72px!important;
+  margin:0!important;float:none!important;border-radius:11px!important;
+}
+.mm-reference-layout #mmVirtualApprenticeship>.section-head.mm-reference-practice-tool-head>div{
+  grid-column:2!important;grid-row:1!important;min-width:0!important;
+}
+.mm-reference-layout #mmVirtualApprenticeship>.section-head.mm-reference-practice-tool-head>.pill{
+  grid-column:2!important;grid-row:2!important;justify-self:start!important;
+  white-space:normal!important;
+}
+.mm-reference-layout #mmVirtualApprenticeship>.section-head.mm-reference-practice-tool-head h2{
+  color:#f1f8ff!important;font-size:clamp(18px,4vw,24px)!important;
+  overflow-wrap:anywhere!important;
+}
+.mm-reference-layout #mmVirtualApprenticeship>.section-head.mm-reference-practice-tool-head p{
+  color:#bed8e8!important;line-height:1.45!important;
+}
+.mm-reference-layout #mmSpatialTwin .mm-st-header>div.mm-reference-practice-tool-head{
+  min-width:0!important;display:flow-root!important;
+}
+.mm-reference-layout #mmSpatialTwin .mm-st-header>div.mm-reference-practice-tool-head>.mm-reference-practice-tool-art{
+  display:block!important;float:left!important;width:68px!important;
+  height:68px!important;margin:0 12px 8px 0!important;
+  border-radius:11px!important;overflow:hidden!important;
+}
+.mm-reference-layout #mmSpatialTwin .mm-st-header h2{overflow-wrap:anywhere!important}
+.mm-reference-layout #mmVirtualApprenticeship .hero-buttons button{
+  min-height:44px!important;white-space:normal!important;
+}
+@media(max-width:360px){
+  .mm-reference-layout #mmVirtualApprenticeship>.section-head.mm-reference-practice-tool-head{
+    grid-template-columns:56px minmax(0,1fr)!important;gap:7px 10px!important;
+  }
+  .mm-reference-layout #mmVirtualApprenticeship>.section-head.mm-reference-practice-tool-head>.mm-reference-practice-tool-art{
+    width:56px!important;height:56px!important;
+  }
+  .mm-reference-layout #mmSpatialTwin .mm-st-header>div.mm-reference-practice-tool-head>.mm-reference-practice-tool-art{
+    width:56px!important;height:56px!important;
+  }
+}
+
+/* Approved illustrated Practice concept: dark navigation, bright readable
+   task interiors. All existing button actions and governed results stay intact. */
+.mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:12px!important;align-items:stretch!important;
+}
+.mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>button:first-child{
+  grid-column:auto!important;
+}
+.mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice{
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:92px auto 1fr!important;
+  gap:8px!important;align-content:start!important;justify-items:center!important;
+  padding:13px!important;min-height:212px!important;
+  background:#f1f7fa!important;border-color:#bddeeb!important;color:#092b42!important;
+  text-align:center!important;
+}
+.mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice>.mm-reference-practice-art{
+  grid-column:1!important;grid-row:1!important;
+  width:min(100%,170px)!important;height:92px!important;
+  border-color:#d3e8f1!important;background-color:#dcecf2!important;
+}
+.mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice>b{
+  grid-column:1!important;grid-row:2!important;
+  color:#0b2940!important;font-size:16px!important;text-align:center!important;
+}
+.mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice>small{
+  grid-column:1!important;grid-row:3!important;color:#34536a!important;
+  font-size:12px!important;text-align:center!important;
+}
+.mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice:is(:hover,:focus-visible){
+  border-color:#007d98!important;background:#e0f3f2!important;
+}
+.mm-reference-layout #modal .mm-hub-picker-grid[data-mm-reference-practice-picker]>.mm-reference-practice-choice{
+  background:#f1f7fa!important;color:#092b42!important;border-color:#b6d9e7!important;
+}
+.mm-reference-layout #modal .mm-hub-picker-grid[data-mm-reference-practice-picker]>.mm-reference-practice-choice>b{
+  color:#0b2940!important;
+}
+.mm-reference-layout #modal .mm-hub-picker-grid[data-mm-reference-practice-picker]>.mm-reference-practice-choice>small{
+  color:#37556a!important;
+}
+.mm-reference-layout #modal .mm-hub-picker-grid[data-mm-reference-practice-picker]>.mm-reference-practice-choice:is(:hover,:focus-visible){
+  background:#dff3f1!important;border-color:#008b9a!important;
+}
+.mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario{
+  background:#f1f7fa!important;border-color:#a8d0df!important;
+  color:#13384b!important;
+}
+.mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario :is(h3,.eyebrow){
+  color:#092b42!important;
+}
+.mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario>p{
+  color:#34546a!important;
+}
+.mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario>.choice{
+  color:#113951!important;border-color:#8cbed0!important;
+  background:#e7f2f7!important;
+}
+.mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario>.choice:hover{
+  color:#092f40!important;background:#cfefea!important;border-color:#058e96!important;
+}
+.mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario>.feedback:not(.hidden){
+  color:#e9fefa!important;
+}
+.mm-reference-layout :is(#processDataLabs .pd-card,#diagnosticLabs .dl-card,#materialLabs .ml-card,#exams .exam-card){
+  background:#eff6fa!important;border:1px solid #b2d6e5!important;
+  color:#0e3148!important;
+}
+.mm-reference-layout :is(#processDataLabs .pd-card,#diagnosticLabs .dl-card,#materialLabs .ml-card,#exams .exam-card) :is(h2,h3,b){
+  color:#092d43!important;
+}
+.mm-reference-layout :is(#processDataLabs .pd-card,#diagnosticLabs .dl-card,#materialLabs .ml-card,#exams .exam-card) :is(p,small,.muted){
+  color:#35576e!important;
+}
+.mm-reference-layout :is(#processDataLabs .pd-card,#diagnosticLabs .dl-card,#materialLabs .ml-card,#exams .exam-card) :is(.pd-chip,.dl-chip,.ml-chip,.pill){
+  color:#123f54!important;background:#d8e9f1!important;border-color:#aacedd!important;
+}
+.mm-reference-layout :is(#processDataLabs .pd-card,#diagnosticLabs .dl-card,#materialLabs .ml-card,#exams .exam-card) button{
+  min-height:44px!important;white-space:normal!important;overflow-wrap:anywhere!important;
+}
+.mm-reference-layout #modal .mm-reference-more-card>summary{
+  display:grid!important;grid-template-columns:58px minmax(0,1fr) 22px!important;
+  gap:12px!important;align-items:center!important;min-height:82px!important;
+}
+.mm-reference-layout #modal .mm-reference-more-card>summary>.mm-reference-more-art{
+  display:block!important;grid-column:1!important;
+  width:58px!important;height:58px!important;border-radius:11px!important;
+  overflow:hidden!important;
+}
+.mm-reference-layout #modal .mm-reference-more-card>summary>.mm-more-disclosure-name{
+  grid-column:2!important;min-width:0!important;
+}
+.mm-reference-layout #modal .mm-reference-more-card>summary>.mm-more-disclosure-chevron{
+  grid-column:3!important;justify-self:end!important;
+}
+.mm-reference-layout #modal .mm-reference-more-extra>summary::after{
+  content:"⌄";grid-column:3;justify-self:end;color:#5fe0c6;font-size:20px;
+}
+.mm-reference-layout #modal .mm-reference-more-extra:not([open])>summary::after{
+  transform:rotate(-90deg);
+}
+.mm-reference-layout #modal .mm-reference-more-card{
+  background:linear-gradient(110deg,#0a293d,#071d30)!important;
+  border-color:#2c5872!important;
+}
+.mm-reference-layout #modal .mm-reference-more-card>summary:is(:hover,:focus-visible){
+  background:#10364a!important;
+}
+@media(min-width:701px) and (max-width:1100px){
+  .mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+@media(max-width:700px){
+  .mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  .mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice{
+    grid-template-columns:64px minmax(0,1fr)!important;
+    grid-template-rows:auto auto!important;
+    justify-items:stretch!important;min-height:104px!important;text-align:left!important;
+  }
+  .mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice>.mm-reference-practice-art{
+    grid-column:1!important;grid-row:1/span 2!important;width:64px!important;height:64px!important;
+  }
+  .mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice>b{
+    grid-column:2!important;grid-row:1!important;text-align:left!important;
+  }
+  .mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice>small{
+    grid-column:2!important;grid-row:2!important;text-align:left!important;
+  }
+}
+@media(max-width:360px){
+  .mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice{
+    grid-template-columns:56px minmax(0,1fr)!important;
+  }
+  .mm-reference-layout #scenarios .mm-question-centre .mm-hub-picker-grid>.mm-reference-practice-choice>.mm-reference-practice-art{
+    width:56px!important;height:56px!important;
+  }
+  .mm-reference-layout #modal .mm-reference-more-card>summary{
+    grid-template-columns:50px minmax(0,1fr) 18px!important;gap:9px!important;
+  }
+  .mm-reference-layout #modal .mm-reference-more-card>summary>.mm-reference-more-art{
+    width:50px!important;height:50px!important;
+  }
+}
+@media(forced-colors:active){
+  .mm-reference-layout #scenarios .mm-question-centre .mm-reference-practice-choice,
+  .mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario,
+  .mm-reference-layout #modal .mm-reference-more-card{
+    border-color:CanvasText!important;forced-color-adjust:auto;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .mm-reference-layout #modal .mm-reference-more-extra>summary::after{
+    transition:none!important;
+  }
+}
+
+/* 2026-10-13 — approved cross-tab deep-screen visual system.
+   Only decorate existing controlled learning/application surfaces. The
+   simulator remains synthetic education; no asserted physical prediction. */
+.mm-reference-layout{
+  --mm-deep-paper:#f0f7fa;
+  --mm-deep-ink:#092e45;
+  --mm-deep-secondary:#37566a;
+  --mm-deep-edge:#b3d5e3;
+  --mm-deep-teal:#13c8c8;
+}
+.mm-reference-layout :is(
+  #lesson .lesson-header-card,
+  #simulator .form-card,
+  #simulator .output-panel,
+  #coach .chat,
+  #profile .form-card:first-child
+).mm-reference-deep-head{
+  min-width:0!important;
+  display:flow-root!important;
+  border-radius:17px!important;
+  border:1px solid #2d6b83!important;
+  background:linear-gradient(128deg,#0d384e,#092237 80%)!important;
+  color:#f2faff!important;
+}
+.mm-reference-layout :is(
+  #lesson .lesson-header-card,
+  #simulator .form-card,
+  #simulator .output-panel,
+  #coach .chat,
+  #profile .form-card:first-child
+)>.mm-reference-deep-art{
+  display:block!important;float:right!important;
+  width:92px!important;height:82px!important;
+  max-width:30%!important;margin:0 0 12px 15px!important;
+  border-radius:12px!important;overflow:hidden!important;
+}
+.mm-reference-layout :is(
+  #glossary .section-head,
+  #defects .section-head,
+  #standards .section-head,
+  #visuals .section-head,
+  #certificates .section-head,
+  #instructor .section-head
+).mm-reference-deep-head{
+  min-width:0!important;align-items:center!important;
+  padding:12px 14px!important;gap:12px!important;
+  border-radius:15px!important;
+  border:1px solid #27627d!important;
+  background:linear-gradient(120deg,#0c344a,#072035)!important;
+}
+.mm-reference-layout :is(
+  #glossary .section-head,
+  #defects .section-head,
+  #standards .section-head,
+  #visuals .section-head,
+  #certificates .section-head,
+  #instructor .section-head
+)>.mm-reference-deep-art{
+  display:block!important;width:68px!important;height:68px!important;
+  flex:0 0 68px!important;border-radius:11px!important;
+  overflow:hidden!important;
+}
+.mm-reference-layout .mm-reference-deep-head :is(h2,h3){
+  color:#f6fbff!important;overflow-wrap:anywhere!important;
+}
+.mm-reference-layout .mm-reference-deep-head :is(p,.muted){
+  color:#c2dbe9!important;line-height:1.5!important;
+}
+.mm-reference-layout #lesson .lesson-header-card>.lesson-meta,
+.mm-reference-layout #lesson .lesson-header-card>.mini-bar{
+  clear:both!important;
+}
+.mm-reference-layout #lesson .lesson-header-card h2{
+  font-size:clamp(22px,3.5vw,34px)!important;
+  line-height:1.17!important;
+}
+.mm-reference-layout #lesson .lesson-breadcrumb{
+  min-height:44px!important;align-items:center!important;
+  color:#bed8e7!important;
+}
+.mm-reference-layout #lesson .lesson-breadcrumb button{
+  min-height:44px!important;padding:8px!important;
+  border-radius:9px!important;color:#75eee0!important;
+}
+.mm-reference-layout #lesson .lesson-layout{
+  grid-template-columns:minmax(0,1fr) minmax(240px,310px)!important;
+  align-items:start!important;
+}
+.mm-reference-layout #lesson :is(.lesson-body,.lesson-side).mm-reference-deep-panel{
+  min-width:0!important;border:1px solid var(--mm-deep-edge)!important;
+  background:var(--mm-deep-paper)!important;color:var(--mm-deep-ink)!important;
+  border-radius:16px!important;
+}
+.mm-reference-layout #lesson .lesson-body :is(h2,h3,h4),
+.mm-reference-layout #lesson .lesson-side :is(h2,h3,h4){
+  color:var(--mm-deep-ink)!important;
+}
+.mm-reference-layout #lesson .lesson-body :is(p,li),
+.mm-reference-layout #lesson .lesson-side :is(p,.muted){
+  color:var(--mm-deep-secondary)!important;
+}
+.mm-reference-layout #lesson .lesson-body .content-block{
+  border-bottom:1px solid #d1e4eb!important;
+  padding-bottom:17px!important;margin-bottom:16px!important;
+}
+.mm-reference-layout #lesson .lesson-body .content-block:last-of-type{
+  border-bottom:0!important;
+}
+.mm-reference-layout #lesson .lesson-body .callout{
+  background:#dbeff1!important;color:#18495a!important;
+  border-left-color:#00aeb5!important;
+}
+.mm-reference-layout #lesson .lesson-body .note-area{
+  box-sizing:border-box!important;min-height:100px!important;
+  color:#102f43!important;background:#fff!important;
+  border-color:#95becf!important;
+}
+.mm-reference-layout #lesson .lesson-side .lesson-list button{
+  box-sizing:border-box!important;min-height:44px!important;
+  background:#e1edf3!important;color:#214358!important;
+  border:1px solid #bbd5e2!important;
+  white-space:normal!important;text-align:left!important;
+}
+.mm-reference-layout #lesson .lesson-side .lesson-list button.active{
+  border-color:#078d95!important;background:#c7efeb!important;
+  color:#0b4e55!important;
+}
+.mm-reference-layout #lesson .lesson-actions-sticky{
+  flex-wrap:wrap!important;
+}
+.mm-reference-layout #lesson .lesson-actions-sticky button{
+  min-height:44px!important;white-space:normal!important;
+}
+.mm-reference-layout #simulator>.grid2{
+  display:grid!important;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr)!important;
+  gap:14px!important;align-items:start!important;
+}
+.mm-reference-layout #simulator .form-card>.form-grid{
+  clear:both!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:13px!important;
+}
+.mm-reference-layout #simulator .form-grid>label{
+  min-width:0!important;display:grid!important;gap:7px!important;
+  border:1px solid #b6d8e4!important;border-radius:12px!important;
+  background:var(--mm-deep-paper)!important;color:var(--mm-deep-ink)!important;
+  padding:11px!important;font-size:13px!important;font-weight:650!important;
+}
+.mm-reference-layout #simulator .range-row{
+  grid-template-columns:minmax(0,1fr) 78px!important;gap:9px!important;
+}
+.mm-reference-layout #simulator .range-row input[type=range]{
+  min-width:0!important;accent-color:#00b5b7!important;
+}
+.mm-reference-layout #simulator .range-row input[readonly]{
+  box-sizing:border-box!important;min-width:0!important;width:100%!important;
+  color:var(--mm-deep-ink)!important;background:#fff!important;
+  border:1px solid var(--mm-deep-edge)!important;text-align:center!important;
+}
+.mm-reference-layout #simulator .output-panel .part-visual{
+  clear:both!important;border-radius:12px!important;
+  border:1px solid #417188!important;background:#092033!important;
+}
+.mm-reference-layout #simulator #simAdvice{
+  color:#d3f5ef!important;background:#123a47!important;
+  border-left-color:#44ddcc!important;line-height:1.55!important;
+}
+.mm-reference-layout #simulator .hero-buttons{
+  clear:both!important;gap:9px!important;
+}
+.mm-reference-layout #simulator .hero-buttons button{
+  min-height:44px!important;white-space:normal!important;
+}
+.mm-reference-layout #glossary .glossary-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;
+}
+.mm-reference-layout #glossary .term.mm-reference-deep-panel,
+.mm-reference-layout #defects .defect-card.mm-reference-deep-panel{
+  min-width:0!important;border:1px solid var(--mm-deep-edge)!important;
+  border-radius:14px!important;background:var(--mm-deep-paper)!important;
+  color:var(--mm-deep-ink)!important;
+}
+.mm-reference-layout #glossary .term b,
+.mm-reference-layout #defects .defect-card :is(h3,b){
+  color:#0c4659!important;
+}
+.mm-reference-layout #glossary .term p,
+.mm-reference-layout #defects .defect-card p{
+  color:var(--mm-deep-secondary)!important;line-height:1.55!important;
+}
+.mm-reference-layout #defects .defect-card button{
+  min-height:44px!important;
+}
+.mm-reference-layout #profile .form-card.mm-reference-deep-panel{
+  min-width:0!important;padding:20px!important;
+  border:1px solid #34718b!important;border-radius:16px!important;
+}
+.mm-reference-layout #profile .form-card:first-child>.mm-reference-deep-art{
+  margin-bottom:17px!important;
+}
+.mm-reference-layout #profile :is(input,select){
+  box-sizing:border-box!important;min-height:44px!important;max-width:100%!important;
+}
+.mm-reference-layout #coach .chat .chat-log,
+.mm-reference-layout #coach .chat .chat-form{
+  clear:both!important;
+}
+.mm-reference-layout :is(#standards,#visuals,#certificates,#instructor) .card{
+  min-width:0!important;border-radius:15px!important;
+}
+.mm-reference-layout :is(#standards,#visuals,#certificates,#instructor) :is(button,input,select){
+  min-height:44px!important;box-sizing:border-box!important;
+}
+.mm-reference-layout #modal .modal-card{
+  border-radius:18px!important;
+}
+.mm-reference-layout #modal :is(.question,.option,.answer-row){
+  min-width:0!important;border-radius:11px!important;
+}
+.mm-reference-layout #modal .option{
+  min-height:44px!important;display:flex!important;align-items:center!important;
+  gap:9px!important;white-space:normal!important;
+}
+.mm-reference-layout #modal .option input{
+  flex:0 0 auto!important;
+}
+.mm-reference-layout :is(#simulator,#lesson,#profile,#glossary,#defects,#standards,#visuals,#certificates,#instructor) :is(button,a,input,select,textarea):focus-visible{
+  outline:2px solid #30dacd!important;outline-offset:3px!important;
+}
+@media(max-width:960px){
+  .mm-reference-layout #lesson .lesson-layout,
+  .mm-reference-layout #simulator>.grid2{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  .mm-reference-layout #lesson .lesson-side{position:static!important}
+}
+@media(max-width:700px){
+  .mm-reference-layout #glossary .glossary-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  .mm-reference-layout #simulator .form-card>.form-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  .mm-reference-layout #lesson .lesson-body{padding:16px!important}
+  .mm-reference-layout :is(
+    #glossary .section-head,#defects .section-head,#standards .section-head,
+    #visuals .section-head,#certificates .section-head,#instructor .section-head
+  ).mm-reference-deep-head{flex-wrap:wrap!important;}
+  .mm-reference-layout #glossary .section-head input,
+  .mm-reference-layout #defects .section-head input{
+    width:100%!important;max-width:none!important;min-height:44px!important;
+  }
+  .mm-reference-layout #lesson .lesson-actions-sticky{
+    bottom:calc(var(--mm-mobile-nav-height,70px) + 8px)!important;
+  }
+}
+@media(max-width:360px){
+  .mm-reference-layout .mm-reference-deep-head>.mm-reference-deep-art{
+    width:56px!important;height:56px!important;
+  }
+  .mm-reference-layout #simulator .range-row{
+    grid-template-columns:minmax(0,1fr) 70px!important;
+  }
+}
+@media(forced-colors:active){
+  .mm-reference-layout .mm-reference-deep-head,
+  .mm-reference-layout .mm-reference-deep-panel{
+    border:1px solid CanvasText!important;forced-color-adjust:auto!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .mm-reference-layout #lesson .lesson-actions-sticky{
+    scroll-behavior:auto!important;
+  }
+}
+
+/* The actual cycle illustration lives in .visual-wrap, not a fictitious
+   heading. Retain its authored SVG, phase buttons and explanations. */
+.mm-reference-layout #visuals .visual-wrap:first-child.mm-reference-deep-head{
+  display:flow-root!important;min-width:0!important;padding:19px!important;
+  border:1px solid #2f6980!important;border-radius:16px!important;
+  background:linear-gradient(130deg,#0e3448,#092035)!important;
+}
+.mm-reference-layout #visuals .visual-wrap:first-child>.mm-reference-deep-art{
+  display:block!important;float:right!important;width:82px!important;
+  height:78px!important;max-width:28%!important;margin:0 0 11px 12px!important;
+  border-radius:10px!important;overflow:hidden!important;
+}
+.mm-reference-layout #visuals .visual-wrap:first-child :is(.machine-scene,.phase-tabs,.callout){
+  clear:both!important;
+}
+.mm-reference-layout #visuals .phase-tabs{
+  display:flex!important;flex-wrap:wrap!important;gap:8px!important;
+}
+.mm-reference-layout #visuals .phase-tabs button{
+  box-sizing:border-box!important;min-height:44px!important;
+  white-space:normal!important;border-radius:10px!important;
+}
+.mm-reference-layout #visuals .visual-wrap{
+  min-width:0!important;border-radius:16px!important;
+}
+@media(max-width:700px){
+  .mm-reference-layout #visuals>.grid2{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+}
+
+/* Actual data/diagnostic/material lab step pages: the previously upgraded
+   landing cards now have the same readable paper-panel inner hierarchy. */
+.mm-reference-layout :is(
+  #processDataLabs .pd-case>.pd-panel,
+  #diagnosticLabs .dl-lab>.dl-panel,
+  #materialLabs .ml-lab>.ml-panel
+){
+  box-sizing:border-box!important;min-width:0!important;
+  padding:clamp(13px,2.8vw,19px)!important;
+  border-radius:15px!important;border:1px solid #b4d6e2!important;
+  background:#eff7fa!important;color:#0c3045!important;
+}
+.mm-reference-layout :is(
+  #processDataLabs .pd-case>.pd-panel,
+  #diagnosticLabs .dl-lab>.dl-panel,
+  #materialLabs .ml-lab>.ml-panel
+) :is(h2,h3,.pd-question,.dl-question,.ml-q){
+  color:#0a3147!important;overflow-wrap:anywhere!important;
+}
+.mm-reference-layout :is(
+  #processDataLabs .pd-case>.pd-panel,
+  #diagnosticLabs .dl-lab>.dl-panel,
+  #materialLabs .ml-lab>.ml-panel
+) :is(p,.muted){
+  color:#37596a!important;line-height:1.53!important;
+}
+.mm-reference-layout :is(#processDataLabs .pd-choice,#diagnosticLabs .dl-choice,#materialLabs .ml-choice){
+  text-align:left!important;min-height:48px!important;
+  white-space:normal!important;overflow-wrap:anywhere!important;
+}
+.mm-reference-layout :is(#processDataLabs .pd-table-wrap,#diagnosticLabs .dl-evidence,#materialLabs .ml-evidence){
+  max-width:100%!important;min-width:0!important;
+  overflow-x:auto!important;
+}
+.mm-reference-layout :is(#processDataLabs .pd-stage,#diagnosticLabs .dl-stage,#materialLabs .ml-stage){
+  color:#176376!important;
+}
+.mm-reference-layout :is(#processDataLabs .pd-summary,#diagnosticLabs .dl-summary,#materialLabs .ml-summary){
+  border:1px solid #b4d6e2!important;border-radius:15px!important;
+  background:#eff7fa!important;color:#0a3147!important;
+}
+.mm-reference-layout :is(#processDataLabs .pd-summary,#diagnosticLabs .dl-summary,#materialLabs .ml-summary) :is(h2,p,.muted,strong){
+  color:#154357!important;
+}
+.mm-reference-layout #mmSpatialTwin .mm-st-modebar button,
+.mm-reference-layout #mmSpatialTwin .mm-st-navlist button,
+.mm-reference-layout #mmSpatialTwin .mm-st-casebar select,
+.mm-reference-layout #mmSpatialTwin .mm-st-header button{
+  box-sizing:border-box!important;min-height:44px!important;
+  border-radius:9px!important;
+}
+.mm-reference-layout #mmSpatialTwin :is(button,select):focus-visible{
+  outline:2px solid #6ae6d7!important;outline-offset:2px!important;
+}
+@media(max-width:700px){
+  .mm-reference-layout :is(#processDataLabs .pd-case,#diagnosticLabs .dl-lab,#materialLabs .ml-lab){
+    min-width:0!important;max-width:100%!important;
+  }
+}
+@media(forced-colors:active){
+  .mm-reference-layout :is(
+    #processDataLabs .pd-case>.pd-panel,
+    #diagnosticLabs .dl-lab>.dl-panel,
+    #materialLabs .ml-lab>.ml-panel
+  ){
+    border:1px solid CanvasText!important;
+    background:Canvas!important;color:CanvasText!important;
+    forced-color-adjust:auto!important;
+  }
+}
+
+/* Approved reference boards: the five real Practice launch cards and More's
+   original actions use high-contrast light tiles on the navy application shell. */
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-section .mm-reference-practice-choice{
+  border:1px solid #b9dbe8!important;border-radius:14px!important;
+  background:#f0f7fa!important;color:#10344a!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-section .mm-reference-practice-choice>b{
+  color:#0a3046!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-section .mm-reference-practice-choice>.eyebrow{
+  color:#047e8e!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-section .mm-reference-practice-choice>small{
+  color:#3b5c70!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-section .mm-reference-practice-choice>.mm-hub-tile-action{
+  color:#008b94!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-section .mm-reference-practice-choice:is(:hover,:focus-visible){
+  border-color:#0094a1!important;background:#dff2f0!important;
+}
+.mm-reference-layout #modal .mm-reference-more-card .mm-more-disclosure-items>.quick-action{
+  box-sizing:border-box!important;border:1px solid #b8d8e4!important;
+  border-radius:12px!important;background:#eff7fa!important;
+  color:#153a50!important;min-height:76px!important;
+  white-space:normal!important;overflow-wrap:anywhere!important;
+}
+.mm-reference-layout #modal .mm-reference-more-card .mm-more-disclosure-items>.quick-action :is(b,small){
+  color:#153a50!important;
+}
+.mm-reference-layout #modal .mm-reference-more-card .mm-more-disclosure-items>.quick-action small{
+  color:#456479!important;
+}
+.mm-reference-layout #modal .mm-reference-more-card .mm-more-disclosure-items>.quick-action:is(:hover,:focus-visible){
+  border-color:#058e9d!important;background:#d9f0ef!important;
+}
+@media(forced-colors:active){
+  .mm-reference-layout #scenarios .mm-practice-hub .mm-hub-section .mm-reference-practice-choice,
+  .mm-reference-layout #modal .mm-reference-more-card .mm-more-disclosure-items>.quick-action{
+    background:Canvas!important;color:CanvasText!important;
+    border:1px solid CanvasText!important;forced-color-adjust:auto!important;
+  }
+}
+
+/* The current simplified lesson reader removes .lesson-header-card. Style its
+   real authored hero and sections without reviving obsolete navigation. */
+.mm-reference-layout #lesson.mm-simple-lesson .lesson-body.mm-reference-deep-panel{
+  border:0!important;background:transparent!important;box-shadow:none!important;
+  padding:0!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson .mm-simple-lesson-hero.mm-reference-deep-head{
+  border:1px solid #33758c!important;border-radius:17px!important;
+  padding:clamp(17px,2.6vw,25px)!important;
+  background:linear-gradient(125deg,#0d384e,#08263c)!important;
+  color:#f3faff!important;display:flow-root!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson .mm-simple-lesson-hero>.mm-reference-deep-art{
+  display:block!important;float:right!important;
+  width:90px!important;height:80px!important;
+  max-width:30%!important;margin:0 0 12px 15px!important;
+  overflow:hidden!important;border-radius:11px!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson .mm-simple-lesson-hero :is(h1,p){
+  color:#eff9ff!important;overflow-wrap:anywhere!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson .mm-simple-lesson-hero .mm-simple-lesson-meta,
+.mm-reference-layout #lesson.mm-simple-lesson .mm-simple-lesson-hero .mini-bar{
+  clear:both!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson .lesson-body>.content-block:not(.mm-simple-note-section),
+.mm-reference-layout #lesson.mm-simple-lesson .lesson-body>.mm-simple-section:not(.mm-simple-note-section),
+.mm-reference-layout #lesson.mm-simple-lesson .lesson-body>.callout:not(.mm-simple-note-section),
+.mm-reference-layout #lesson.mm-simple-lesson .lesson-body>.mm-next-card{
+  border:1px solid #b3d5e3!important;
+  background:#f0f7fa!important;color:#0c3348!important;
+  border-radius:15px!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson .lesson-body>.content-block :is(h2,h3,p,li),
+.mm-reference-layout #lesson.mm-simple-lesson .lesson-body>.mm-simple-section :is(h2,h3,p,li),
+.mm-reference-layout #lesson.mm-simple-lesson .lesson-body>.mm-next-card :is(h2,h3,p,li){
+  color:#173d50!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson .lesson-body .mm-simple-note-disclosure>summary{
+  min-height:48px!important;
+}
+.mm-reference-layout :is(#defects .mm-dx-hero,#coach .mm-dx-hero).mm-reference-deep-head{
+  display:flow-root!important;
+  background:linear-gradient(125deg,#0d384e,#08263c)!important;
+  border:1px solid #33758c!important;border-radius:17px!important;
+}
+.mm-reference-layout :is(#defects .mm-dx-hero,#coach .mm-dx-hero)>.mm-reference-deep-art{
+  float:right!important;display:block!important;width:85px!important;
+  height:78px!important;max-width:29%!important;
+  border-radius:11px!important;overflow:hidden!important;
+  margin:0 0 11px 13px!important;
+}
+.mm-reference-layout :is(#defects .mm-dx-hero,#coach .mm-dx-hero) :is(h1,p){
+  color:#f0faff!important;
+}
+.mm-reference-layout :is(#defects .mm-dx-hero,#coach .mm-dx-hero) .mm-dx-disclaimer{
+  clear:both!important;
+}
+@media(max-width:700px){
+  .mm-reference-layout #lesson.mm-simple-lesson .mm-simple-lesson-hero>.mm-reference-deep-art{
+    width:60px!important;height:60px!important;
+  }
+  .mm-reference-layout :is(#defects .mm-dx-hero,#coach .mm-dx-hero)>.mm-reference-deep-art{
+    width:60px!important;height:60px!important;
+  }
+}
+
+/* The live engineering simulator wraps ten relative sliders in four optional
+   disclosure groups, alongside measured baseline/current engineering fields.
+   Style those authored controls—not the removed core direct .form-grid. */
+.mm-reference-layout #simulator :is(
+  #mmSimMetricInputs,.mm-engineer-sim-groups,#mmSimPractice,#mmSimPartVisual,#mmSimEngineeringDetail
+){
+  box-sizing:border-box!important;min-width:0!important;
+  border:1px solid #b7d8e4!important;border-radius:14px!important;
+  background:#edf6f9!important;color:#11384b!important;
+}
+.mm-reference-layout #simulator :is(
+  #mmSimMetricInputs,.mm-engineer-sim-groups,#mmSimPractice,#mmSimPartVisual,#mmSimEngineeringDetail
+) :is(h3,p,li,.muted){
+  color:#274f64!important;line-height:1.53!important;
+}
+.mm-reference-layout #simulator :is(
+  .mm-engineer-sim-groups,#mmSimPractice,#mmSimPartVisual,#mmSimEngineeringDetail
+) > summary{
+  box-sizing:border-box!important;min-height:48px!important;
+  padding:11px 15px!important;border-radius:12px!important;
+  color:#0d4054!important;background:#d7eff1!important;
+  cursor:pointer!important;font-weight:750!important;
+}
+.mm-reference-layout #simulator :is(
+  .mm-engineer-sim-groups,#mmSimPractice,#mmSimPartVisual,#mmSimEngineeringDetail
+) > summary:is(:hover,:focus-visible){
+  background:#c0e7e7!important;color:#0c3444!important;
+}
+.mm-reference-layout #simulator #mmSimMetricInputs > .grid2{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:11px!important;
+}
+.mm-reference-layout #simulator #mmSimMetricInputs .content-block,
+.mm-reference-layout #simulator .mm-engineer-sim-groups .content-block{
+  min-width:0!important;border-radius:12px!important;
+  background:#e1eef4!important;border:1px solid #b9d6e2!important;
+  color:#173c50!important;
+}
+.mm-reference-layout #simulator :is(
+  #mmSimMetricInputs,.mm-engineer-sim-groups
+) .form-grid{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  align-items:stretch!important;gap:9px!important;
+}
+.mm-reference-layout #simulator :is(
+  #mmSimMetricInputs,.mm-engineer-sim-groups
+) .form-grid > label{
+  min-width:0!important;box-sizing:border-box!important;
+  border-radius:10px!important;border:1px solid #afcfdf!important;
+  padding:9px!important;background:#f4fafb!important;
+  color:#113c51!important;
+}
+.mm-reference-layout #simulator :is(
+  #mmSimMetricInputs,.mm-engineer-sim-groups
+) .form-grid > label > input,
+.mm-reference-layout #simulator #mmSimMetricInputs input{
+  max-width:100%!important;min-width:0!important;
+  box-sizing:border-box!important;min-height:44px!important;
+  color:#10374c!important;background:#fff!important;
+  border:1px solid #9bc0d0!important;border-radius:9px!important;
+}
+.mm-reference-layout #simulator .mm-engineer-sim-groups .range-row input[type=range]{
+  min-height:44px!important;accent-color:#008d9b!important;
+  background:transparent!important;
+}
+.mm-reference-layout #simulator #mmSimMetricInputs .hero-buttons button{
+  min-height:44px!important;white-space:normal!important;
+}
+.mm-reference-layout #simulator :is(#mmSimMetricStatus,#mmSimClampReadout,#mmSimFlowReadout){
+  color:#244e61!important;line-height:1.55!important;
+  overflow-wrap:anywhere!important;
+}
+.mm-reference-layout #simulator #mmSimMetricStatus[data-status="warn"]{
+  color:#9b3b12!important;
+}
+@media(max-width:900px){
+  .mm-reference-layout #simulator #mmSimMetricInputs>.grid2{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+}
+@media(max-width:600px){
+  .mm-reference-layout #simulator :is(
+    #mmSimMetricInputs,.mm-engineer-sim-groups
+  ) .form-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+}
+@media(forced-colors:active){
+  .mm-reference-layout #simulator :is(
+    #mmSimMetricInputs,.mm-engineer-sim-groups,#mmSimPractice,#mmSimPartVisual,#mmSimEngineeringDetail
+  ){
+    background:Canvas!important;color:CanvasText!important;
+    border:1px solid CanvasText!important;forced-color-adjust:auto!important;
+  }
+}
+
+/* Lesson safety and technical disclosures must not inherit dark-on-dark text
+   from the simplified reader's original navy card styling. Preserve all
+   authored boundary guidance while matching the approved light-paper system. */
+.mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 :is(
+  .mm-deep-v2-essentials,.mm-deep-v2-card,.mm-deep-v2-detail
+){
+  min-width:0!important;color:#14384c!important;
+  background:#f0f7fa!important;border:1px solid #b7d6e3!important;
+  border-radius:14px!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 .mm-deep-v2-essentials :is(
+  h2,h3,h4,p,li,b,strong
+),
+.mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 .mm-deep-v2-detail :is(
+  h2,h3,h4,p,li,b,strong
+){
+  color:#14384c!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 .mm-deep-v2-card>summary{
+  box-sizing:border-box!important;min-height:48px!important;
+  background:#d9edf3!important;color:#103d51!important;
+  border-radius:12px!important;padding:12px 15px!important;
+  cursor:pointer!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 .mm-deep-v2-card>summary :is(
+  b,strong,span
+){
+  color:#103d51!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 .mm-deep-v2-card>summary:is(:hover,:focus-visible){
+  background:#c6e9e7!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 .mm-deep-v2-boundary{
+  border:1px solid #a1cfda!important;border-radius:10px!important;
+  background:#d6eef2!important;color:#14384c!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 .mm-deep-v2-boundary :is(
+  p,b,strong,span
+){
+  color:#14384c!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 summary:focus-visible{
+  outline:3px solid #007e92!important;outline-offset:2px!important;
+}
+@media(forced-colors:active){
+  .mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 :is(
+    .mm-deep-v2-essentials,.mm-deep-v2-card,.mm-deep-v2-detail,.mm-deep-v2-boundary
+  ){
+    background:Canvas!important;color:CanvasText!important;
+    border:1px solid CanvasText!important;forced-color-adjust:auto!important;
+  }
+}
+
+/* The native Materials Labs, Knowledge Check and References modes replace
+   the grade explorer completely. Carry approved paper cards into those real
+   screen renderers without cloning controls or supplier-grade evidence. */
+.mm-reference-layout #materials .mat-shell>.mat-tabs{
+  display:flex!important;flex-wrap:wrap!important;gap:7px!important;
+  max-width:100%!important;margin-bottom:14px!important;
+}
+.mm-reference-layout #materials .mat-shell>.mat-tabs button{
+  min-height:44px!important;white-space:normal!important;
+  text-align:center!important;overflow-wrap:anywhere!important;
+  border-radius:10px!important;flex:1 1 132px!important;
+}
+.mm-reference-layout #materials .mat-shell>.mat-hero{
+  min-width:0!important;border-radius:16px!important;
+  border:1px solid #337087!important;
+  background:linear-gradient(125deg,#103d51,#09243a)!important;
+  color:#f1fbff!important;
+}
+.mm-reference-layout #materials .mat-shell>.mat-hero :is(h2,h3,p,.muted){
+  color:#e0f1fa!important;overflow-wrap:anywhere!important;
+}
+.mm-reference-layout #materials .mat-shell :is(
+  .mat-labs>.card,.mat-quiz-card,.standard-card
+){
+  box-sizing:border-box!important;min-width:0!important;
+  border:1px solid #b6d7e2!important;border-radius:15px!important;
+  background:#f0f7fa!important;color:#133a50!important;
+}
+.mm-reference-layout #materials .mat-shell :is(
+  .mat-labs>.card,.mat-quiz-card,.standard-card
+) :is(h2,h3,h4,p,li,b,strong,.muted,small){
+  color:#234e63!important;line-height:1.52!important;
+}
+.mm-reference-layout #materials .mat-shell :is(
+  .mat-labs>.card,.mat-quiz-card,.standard-card
+) :is(input[type=number],input[type=text],select,textarea){
+  box-sizing:border-box!important;max-width:100%!important;
+  min-height:44px!important;background:#fff!important;
+  color:#123c51!important;border:1px solid #9bbecd!important;
+}
+.mm-reference-layout #materials .mat-shell :is(
+  .mat-labs>.card,.mat-quiz-card,.standard-card
+) button{
+  box-sizing:border-box!important;min-height:44px!important;
+  white-space:normal!important;overflow-wrap:anywhere!important;
+}
+.mm-reference-layout #materials .mat-shell .mat-labs{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:12px!important;
+}
+.mm-reference-layout #materials .mat-shell :is(a,button,input,select,summary):focus-visible{
+  outline:3px solid #008b9d!important;outline-offset:2px!important;
+}
+@media(max-width:700px){
+  .mm-reference-layout #materials .mat-shell .mat-labs{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  .mm-reference-layout #materials .mat-shell>.mat-tabs button{
+    flex:1 1 130px!important;
+  }
+}
+@media(forced-colors:active){
+  .mm-reference-layout #materials .mat-shell :is(
+    .mat-labs>.card,.mat-quiz-card,.standard-card
+  ){
+    border:1px solid CanvasText!important;
+    background:Canvas!important;color:CanvasText!important;
+    forced-color-adjust:auto!important;
+  }
+}
+
+/* Sub-panels and answer review must keep strong contrast on the new white
+   Materials cards. Original source used pale text on a dark sub-panel. */
+.mm-reference-layout #materials .mat-shell :is(.mat-lab-output,.mat-q,.mat-review){
+  border:1px solid #b7d6e3!important;border-radius:11px!important;
+  background:#e0eff5!important;color:#153d52!important;
+}
+.mm-reference-layout #materials .mat-shell :is(.mat-lab-output,.mat-q,.mat-review) :is(
+  b,strong,small,span,p,.muted
+){
+  color:#234e63!important;
+}
+.mm-reference-layout #materials .mat-shell .mat-q label{
+  min-height:44px!important;box-sizing:border-box!important;
+  display:flex!important;gap:9px!important;align-items:center!important;
+  background:#f9fcfd!important;border:1px solid #adcedb!important;
+  border-radius:9px!important;color:#133c51!important;
+}
+.mm-reference-layout #materials .mat-shell .mat-q label:has(input:checked){
+  background:#d5f1ed!important;border-color:#008a96!important;
+  color:#0d3b4e!important;
+}
+.mm-reference-layout #materials .mat-shell .mat-q label input[type=radio]{
+  flex:0 0 auto!important;min-height:20px!important;
+  accent-color:#007f91!important;
+}
+.mm-reference-layout #materials .mat-shell .mat-review.correct{
+  border-left:4px solid #077e69!important;
+}
+.mm-reference-layout #materials .mat-shell .mat-review.incorrect{
+  border-left:4px solid #a94f51!important;
+}
+.mm-reference-layout #materials .mat-shell .mat-lab label{
+  color:#1e485d!important;font-weight:650!important;
+}
+.mm-reference-layout #materials .mat-shell .mat-lab input[type=range]{
+  accent-color:#008a95!important;
+}
+
+/* Material knowledge-check result is otherwise a dark callout inheriting
+   ink from the new light parent card. Never leave grading text unreadable. */
+.mm-reference-layout #materials .mat-shell .mat-quiz-card #materialQuizResult.callout:not(.hidden){
+  background:#d5eee9!important;color:#103e4f!important;
+  border:1px solid #9bcac1!important;border-radius:11px!important;
+  line-height:1.55!important;
+}
+
+/* Safety/evidence rows may have their own older navy background. Make the
+   actual row surface match the contrast-tested parent. */
+.mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 .mm-deep-v2-row{
+  background:#f0f7fa!important;color:#14384c!important;
+  border-color:#b7d6e3!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 .mm-deep-v2-row :is(
+  h2,h3,h4,p,li,b,strong,span
+){
+  color:#14384c!important;
+}
+@media(forced-colors:active){
+  .mm-reference-layout #lesson.mm-simple-lesson #mmLessonDeepV2 .mm-deep-v2-row{
+    background:Canvas!important;color:CanvasText!important;
+    border-color:CanvasText!important;
+  }
+}
+
+/* Mobile Materials quiz results: long authored answer explanations must not
+   force the implicit CSS grid track wider than the viewport after grading.
+   Wrap content rather than clipping, hiding, or truncating evidence. */
+.mm-reference-layout #materials .mat-shell{
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  grid-template-columns:minmax(0,1fr)!important;
+}
+.mm-reference-layout #materials .mat-shell :is(
+  .mat-quiz-card,#materialQuizQuestions,#materialQuizReview,
+  #materialQuizResult,.mat-q,.mat-review,.mat-ref,.mat-disclaimer
+){
+  box-sizing:border-box!important;
+  min-width:0!important;
+  max-width:100%!important;
+  overflow-wrap:anywhere!important;
+  word-break:normal!important;
+  white-space:normal!important;
+}
+.mm-reference-layout #materials .mat-shell :is(
+  .mat-quiz-card,.mat-q,.mat-review,#materialQuizReview
+) :is(b,strong,small,span,p,label){
+  min-width:0!important;
+  max-width:100%!important;
+  overflow-wrap:anywhere!important;
+  white-space:normal!important;
+}
+.mm-reference-layout #materials .mat-shell .mat-q label{
+  flex-wrap:wrap!important;
+  align-items:flex-start!important;
+}
+.mm-reference-layout #materials .mat-shell .mat-q label input[type=radio]{
+  min-width:20px!important;
+  flex:0 0 20px!important;
+}
+@media(max-width:700px){
+  .mm-reference-layout #materials .mat-shell .mat-quiz-card{
+    padding:clamp(12px,3vw,19px)!important;
+  }
+}
+
+/* Keyboard/screen-reader route arrival: the canonical Learn heading is
+   focused after deep navigation, so give that programmatic focus a visible
+   high-contrast marker on the dark catalogue header. */
+.mm-reference-layout #path .mm-all-lessons .mm-catalog-head h2:focus{
+  outline:3px solid #79f5e0!important;
+  outline-offset:4px!important;
+  border-radius:4px!important;
+}
+@media(forced-colors:active){
+  .mm-reference-layout #path .mm-all-lessons .mm-catalog-head h2:focus{
+    outline-color:Highlight!important;
   }
 }

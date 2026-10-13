@@ -237,22 +237,64 @@ function tutorPlan(row,result){
     book:[...new Set(recommended)].map(id=>({id,title:BOOK_INDEX[id]})),
     guidance:gaps.length?'Read the source context for each missed reasoning step, then retry the case.':'The authored reasoning chain is sound. Repeat with fresh evidence; a perfect training answer is not proof of workplace competence.'};
 }
+function validReviewedAttempt(value){
+  if(!value||typeof value!=='object'||Array.isArray(value))return false;
+  // JSON imports may contain objects with broken valueOf/toString methods:
+  // Number(object) can throw, so reject non-primitive grades before coercion.
+  const raw=value.best;
+  const best=typeof raw==='number'||typeof raw==='string'?Number(raw):NaN;
+  return typeof value.updated==='string'&&Number.isFinite(Date.parse(value.updated))&&
+    Number.isSafeInteger(best)&&best>=0&&best<=STEP_KEYS.length;
+}
 function competencyRecord(){
   const completed=loadProgress().completed||{};
   return FACTORY_TRACK.map(item=>{
-    const row=completed[item.caseId]||{},steps=row.steps||{};
-    return {caseId:item.caseId,role:item.role,skill:item.skill,best:Number(row.best)||0,
-      reviewed:!!row.updated,reasoning:Object.fromEntries(STEP_KEYS.map(k=>[k,steps[k]===true])),
+    const raw=Object.prototype.hasOwnProperty.call(completed,item.caseId)?completed[item.caseId]:null;
+    const row=validReviewedAttempt(raw)?raw:null;
+    const steps=row?.steps&&typeof row.steps==='object'&&!Array.isArray(row.steps)?row.steps:{};
+    return {caseId:item.caseId,role:item.role,skill:item.skill,best:row?Number(row.best):0,
+      reviewed:!!row,reasoning:Object.fromEntries(STEP_KEYS.map(k=>[k,steps[k]===true])),
       boundary:'Local formative practice, not accredited or workplace competence'};
   });
 }
 function bookButton(host,chapter){
   const b=make('button','secondary','Book: '+chapter.title);b.type='button';
   const token=scopedStorage()?.learnerToken?.()||null;
+  function activeRequest(request){
+    return b.isConnected&&host.isConnected&&
+      byId('mmVirtualApprenticeship')?.contains(b)&&
+      (!token||token===scopedStorage()?.learnerToken?.())&&
+      Number(host.dataset.mmVaBookRequest||0)===request;
+  }
+  function reportUnavailable(request){
+    if(!activeRequest(request))return;
+    host.dataset.bookUnavailable='1';
+    if(host.querySelector('[data-mm-va-book-unavailable]'))return;
+    const note=make('p','tiny muted','This Book chapter could not be opened. Use the Book tab or try again later.');
+    note.dataset.mmVaBookUnavailable='1';
+    note.setAttribute('role','status');
+    host.appendChild(note);
+  }
+  function clearUnavailable(request){
+    if(!activeRequest(request))return;
+    delete host.dataset.bookUnavailable;
+    host.querySelector('[data-mm-va-book-unavailable]')?.remove();
+  }
   b.addEventListener('click',()=>{
+    if(guardLearnerInteraction(b))return;
     if(token&&token!==scopedStorage()?.learnerToken?.())return;
-    if(window.MMBook?.openChapter)void Promise.resolve(window.MMBook.openChapter(chapter.id)).catch(()=>{host.dataset.bookUnavailable='1'});
-    else host.dataset.bookUnavailable='1';
+    // All links in a Book recommendation panel share one request sequence.
+    // Late failures from an earlier click cannot overwrite a later success.
+    const request=Number(host.dataset.mmVaBookRequest||0)+1;
+    host.dataset.mmVaBookRequest=String(request);
+    const openChapter=window.MMBook?.openChapter;
+    if(typeof openChapter!=='function'){reportUnavailable(request);return;}
+    try{
+      void Promise.resolve(openChapter.call(window.MMBook,chapter.id)).then(
+        result=>{if(result===false)reportUnavailable(request);else clearUnavailable(request)},
+        ()=>reportUnavailable(request)
+      );
+    }catch(_){reportUnavailable(request)}
   });
   return b;
 }
@@ -286,7 +328,44 @@ function esc(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;
 function byId(id){return document.getElementById(id)}
 function make(tag,className,text){const el=document.createElement(tag);if(className)el.className=className;if(text!=null)el.textContent=text;return el}
 function scopedStorage(){return window.MM_RUNTIME_V2?.storage||null}
-function loadProgress(){const row=scopedStorage()?.get(STORAGE_KEY,{schema:1,completed:{},attempts:0});return row&&typeof row==='object'?row:{schema:1,completed:{},attempts:0}}
+function learnerToken(){
+  const token=scopedStorage()?.learnerToken?.();
+  if(token!=null)return String(token);
+  try{return typeof db!=='undefined'&&db?.activeUser!=null?String(db.activeUser):''}catch(_){return ''}
+}
+let stateOwner=learnerToken();
+function ensureLearner(){
+  const token=learnerToken();
+  if(token===stateOwner)return false;
+  stateOwner=token;
+  state.caseIndex=0;state.level='beginner';state.answers={};
+  state.checked=false;state.attemptSaved=false;
+  return true;
+}
+function guardLearnerInteraction(control){
+  if(ensureLearner()){
+    // The previous learner's DOM may still have active controls when a
+    // profile changes. Replace it before any grading or persistence action.
+    renderCase();
+    return true;
+  }
+  // Rerendering a case or coaching level detaches the prior button/input
+  // nodes. They can still receive scripted events and must never modify the
+  // currently mounted learner's answers, grades or simulator.
+  const host=byId('mmVirtualApprenticeship');
+  return !!control&&(!control.isConnected||!host?.contains(control));
+}
+function loadProgress(){
+  const fallback={schema:1,completed:{},attempts:0};
+  const row=scopedStorage()?.get(STORAGE_KEY,fallback);
+  if(!row||typeof row!=='object'||Array.isArray(row))return fallback;
+  // Corrupt or legacy-shaped local storage must not crash Review or let a
+  // non-map completion value become writable case evidence.
+  const completed=row.completed&&typeof row.completed==='object'&&!Array.isArray(row.completed)?row.completed:{};
+  const rawAttempts=row.attempts;
+  const attempts=typeof rawAttempts==='number'||typeof rawAttempts==='string'?Number(rawAttempts):NaN;
+  return {...row,completed,attempts:Number.isSafeInteger(attempts)&&attempts>=0?attempts:0};
+}
 function saveProgress(progress){return scopedStorage()?.set(STORAGE_KEY,progress)===true}
 function scoreReasoning(caseDef,answers){
   const dimensions={};let total=0;
@@ -312,8 +391,13 @@ function applyCaseToSimulator(caseRow=caseDef()){
   return true;
 }
 function progressSummary(){
-  const p=loadProgress(),done=Object.keys(p.completed||{}).length,best=Math.max(0,...Object.values(p.completed||{}).map(x=>Number(x?.best||0)));
-  return `${done}/${CASES.length} cases completed · best reasoning score ${best}/${STEP_KEYS.length}`;
+  const p=loadProgress(),completed=p.completed&&typeof p.completed==='object'&&!Array.isArray(p.completed)?p.completed:{};
+  // This counter represents only the six authored cases, not arbitrary
+  // keys from older/corrupted scoped progress or unrelated programmes.
+  const rows=CASES.filter(c=>Object.prototype.hasOwnProperty.call(completed,c.id))
+    .map(c=>completed[c.id]).filter(validReviewedAttempt);
+  const best=Math.max(0,...rows.map(x=>Number(x.best)));
+  return `${rows.length}/${CASES.length} cases completed · best reasoning score ${best}/${STEP_KEYS.length}`;
 }
 function radioGroup(step,row){
   const wrap=make('fieldset','content-block');wrap.dataset.mmVaStep=step;
@@ -323,7 +407,7 @@ function radioGroup(step,row){
     const option=make('label','choice');
     const input=document.createElement('input');input.type='radio';input.name=`mm-va-${step}`;input.value=id;input.checked=state.answers[step]===id;
     const span=make('span','',label);option.append(input,span);list.appendChild(option);
-    input.addEventListener('change',()=>{state.answers[step]=id;state.checked=false;state.attemptSaved=false;renderResult();const missionStage={hypothesis:'hypothesis',test:'test',response:'intervention',verify:'verification'}[step]||'evidence';syncMissionContext(missionStage);renderFeedback(step);updateCheckButton()});
+    input.addEventListener('change',()=>{if(guardLearnerInteraction(input))return;state.answers[step]=id;state.checked=false;state.attemptSaved=false;renderResult();const missionStage={hypothesis:'hypothesis',test:'test',response:'intervention',verify:'verification'}[step]||'evidence';syncMissionContext(missionStage);renderFeedback(step);updateCheckButton()});
   }
   wrap.appendChild(list);
   const feedback=make('div','tiny muted');feedback.id=`mmVaFeedback-${step}`;feedback.setAttribute('aria-live','polite');wrap.appendChild(feedback);
@@ -340,6 +424,7 @@ function renderFeedback(step){
 }
 function updateCheckButton(){const b=byId('mmVaCheck');if(b)b.disabled=!STEP_KEYS.every(key=>state.answers[key])}
 function renderResult(){
+  if(ensureLearner()){renderCase();return;}
   const box=byId('mmVaResult');if(!box)return;
   if(!state.checked){box.replaceChildren();return}
   const row=caseDef(),result=scoreReasoning(row,state.answers),heading=make('h3','',`Reasoning quality: ${result.total}/${result.max}`);
@@ -357,15 +442,21 @@ function renderResult(){
   const boundary=make('p','tiny muted','Training result only. A high score does not authorise a real machine, mould, material, maintenance, safeguarding or production change.');box.appendChild(boundary);
   if(!state.attemptSaved){
     const progress=loadProgress();progress.attempts=Number(progress.attempts||0)+1;progress.completed=progress.completed||{};
-    const old=progress.completed[row.id]||{};
-    progress.completed[row.id]={best:Math.max(Number(old.best||0),result.total),last:result.total,level:state.level,
+    const old=progress.completed[row.id];
+    const previousBest=validReviewedAttempt(old)?Number(old.best):0;
+    progress.completed[row.id]={best:Math.max(previousBest,result.total),last:result.total,level:state.level,
       steps:Object.fromEntries(STEP_KEYS.map(key=>[key,result.dimensions[key].correct])),updated:new Date().toISOString()};
-    saveProgress(progress);state.attemptSaved=true;
+    state.attemptSaved=saveProgress(progress);
+    if(!state.attemptSaved){
+      const warning=make('p','tiny muted','This attempt could not be saved on this device. Check available storage, then press Review my reasoning again to retry.');
+      warning.setAttribute('role','status');
+      box.appendChild(warning);
+    }
   }
   const p=byId('mmVaProgress');if(p)p.textContent=progressSummary();
   for(const key of STEP_KEYS){const el=byId(`mmVaFeedback-${key}`);if(el)el.textContent=result.dimensions[key].feedback}
 }
-function resetCase(){state.answers={};state.checked=false;state.attemptSaved=false;renderCase()}
+function resetCase(control){if(guardLearnerInteraction(control))return;state.answers={};state.checked=false;state.attemptSaved=false;renderCase();focusApprenticeshipControl('#mmVaCaseSelect')}
 function syncMissionContext(stage='evidence'){
   const row=caseDef();
   window.MM_MISSION_CONTROL?.attachContext?.(
@@ -374,30 +465,43 @@ function syncMissionContext(stage='evidence'){
   )
 }
 function openCase(index=0){
+  ensureLearner();
   state.caseIndex=Math.max(0,Math.min(CASES.length-1,Number(index)||0));state.answers={};state.checked=false;state.attemptSaved=false;
   try{window.MM_SPATIAL_TWIN?.close?.()}catch(_){}
   if(typeof window.switchView==='function')window.switchView('simulator');
   install();renderCase();syncMissionContext('evidence');
-  const host=byId('mmVirtualApprenticeship');requestAnimationFrame(()=>host?.scrollIntoView?.({block:'start',behavior:'smooth'}));
+  const host=byId('mmVirtualApprenticeship');
+  requestAnimationFrame(()=>{
+    if(!host?.isConnected||!host.getClientRects().length)return;
+    host.scrollIntoView?.({block:'start',behavior:'auto'});
+    host.querySelector('.section-head h2')?.focus({preventScroll:true});
+  });
   return true;
 }
+function focusApprenticeshipControl(selector){
+  // renderCase() replaces its entire subtree. Restore the active control
+  // after case/level changes so keyboard focus never drops to the body.
+  byId('mmVirtualApprenticeship')?.querySelector(selector)?.focus();
+}
 function renderCase(){
+  ensureLearner();
   const host=byId('mmVirtualApprenticeship');if(!host)return;
   const row=caseDef();host.replaceChildren();
-  const head=make('div','section-head');const hcopy=make('div');hcopy.append(make('span','eyebrow','Virtual apprenticeship'),make('h2','',row.title),make('p','muted',row.focus));const pill=make('span','pill',`${row.id} · ${row.difficulty}`);head.append(hcopy,pill);host.appendChild(head);
-  const spatialBar=make('div','hero-buttons');const spatial=make('button','secondary','Explore this case in Spatial Twin');spatial.type='button';spatial.addEventListener('click',()=>window.MM_SPATIAL_TWIN?.open?.({caseIndex:state.caseIndex}));spatialBar.appendChild(spatial);host.appendChild(spatialBar);
+  const head=make('div','section-head');const hcopy=make('div');const heading=make('h2','',row.title);heading.tabIndex=-1;
+  hcopy.append(make('span','eyebrow','Virtual apprenticeship'),heading,make('p','muted',row.focus));const pill=make('span','pill',`${row.id} · ${row.difficulty}`);head.append(hcopy,pill);host.appendChild(head);
+  const spatialBar=make('div','hero-buttons');const spatial=make('button','secondary','Explore this case in Spatial Twin');spatial.type='button';spatial.addEventListener('click',()=>{if(guardLearnerInteraction(spatial))return;window.MM_SPATIAL_TWIN?.open?.({caseIndex:state.caseIndex})});spatialBar.appendChild(spatial);host.appendChild(spatialBar);
   const controls=make('div','grid2');
   const caseLabel=make('label','', 'Case');const caseSelect=document.createElement('select');caseSelect.id='mmVaCaseSelect';CASES.forEach((c,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=`${c.id} · ${c.title}`;o.selected=i===state.caseIndex;caseSelect.appendChild(o)});caseLabel.appendChild(caseSelect);
-  const levelLabel=make('label','', 'Coaching level');const levelSelect=document.createElement('select');for(const [id,v] of Object.entries(LEVELS)){const o=document.createElement('option');o.value=id;o.textContent=v.label;o.selected=id===state.level;levelSelect.appendChild(o)}levelLabel.appendChild(levelSelect);controls.append(caseLabel,levelLabel);host.appendChild(controls);
-  caseSelect.addEventListener('change',()=>{state.caseIndex=Number(caseSelect.value)||0;state.answers={};state.checked=false;state.attemptSaved=false;renderCase();syncMissionContext('evidence')});
-  levelSelect.addEventListener('change',()=>{state.level=levelSelect.value in LEVELS?levelSelect.value:'beginner';state.checked=false;state.attemptSaved=false;renderCase()});
+  const levelLabel=make('label','', 'Coaching level');const levelSelect=document.createElement('select');levelSelect.dataset.mmVaLevel='1';for(const [id,v] of Object.entries(LEVELS)){const o=document.createElement('option');o.value=id;o.textContent=v.label;o.selected=id===state.level;levelSelect.appendChild(o)}levelLabel.appendChild(levelSelect);controls.append(caseLabel,levelLabel);host.appendChild(controls);
+  caseSelect.addEventListener('change',()=>{if(guardLearnerInteraction(caseSelect))return;state.caseIndex=Number(caseSelect.value)||0;state.answers={};state.checked=false;state.attemptSaved=false;renderCase();syncMissionContext('evidence');focusApprenticeshipControl('#mmVaCaseSelect')});
+  levelSelect.addEventListener('change',()=>{if(guardLearnerInteraction(levelSelect))return;state.level=levelSelect.value in LEVELS?levelSelect.value:'beginner';state.checked=false;/* Coaching mode alone is not a new response attempt. */renderCase();focusApprenticeshipControl('select[data-mm-va-level]')});
   renderFactoryCaseOne(host,row);
    const brief=make('div','callout');brief.append(make('b','', 'Shop-floor brief'),document.createElement('br'),document.createTextNode(row.brief));host.appendChild(brief);
   const evidence=make('div','content-block');evidence.append(make('h3','', 'Evidence board'),make('p','tiny muted',`Baseline: ${row.baseline}`));const table=make('div','table-wrap');const t=document.createElement('table');t.className='table';t.innerHTML='<thead><tr><th>Signal / context</th><th>Observed change</th></tr></thead>';const body=document.createElement('tbody');for(const [name,value] of row.observations){const tr=document.createElement('tr');const a=document.createElement('td');a.textContent=name;const b=document.createElement('td');b.textContent=value;tr.append(a,b);body.appendChild(tr)}t.appendChild(body);table.appendChild(t);evidence.appendChild(table);host.appendChild(evidence);
-  const bridge=make('div','hero-buttons');const load=make('button','secondary','Load case directions into process simulator');load.type='button';load.addEventListener('click',()=>applyCaseToSimulator(row));const status=make('span','tiny muted','Authored case evidence is separate from physical prediction.');status.id='mmVaBridgeStatus';bridge.append(load,status);host.appendChild(bridge);
+  const bridge=make('div','hero-buttons');const load=make('button','secondary','Load case directions into process simulator');load.type='button';load.addEventListener('click',()=>{if(guardLearnerInteraction(load))return;applyCaseToSimulator(row)});const status=make('span','tiny muted','Authored case evidence is separate from physical prediction.');status.id='mmVaBridgeStatus';bridge.append(load,status);host.appendChild(bridge);
   const investigation=make('div','content-block');investigation.append(make('h3','', 'Your investigation'),make('p','muted','Commit to a mechanism, choose the most discriminating next evidence, select one controlled response, then define verification.'));
   for(const key of STEP_KEYS)investigation.appendChild(radioGroup(key,row[key]));host.appendChild(investigation);
-  const actions=make('div','hero-buttons');const check=make('button','primary','Review my reasoning');check.type='button';check.id='mmVaCheck';check.disabled=!STEP_KEYS.every(key=>state.answers[key]);check.addEventListener('click',()=>{state.checked=true;renderResult()});const again=make('button','ghost','Reset this case');again.type='button';again.addEventListener('click',resetCase);actions.append(check,again);host.appendChild(actions);
+  const actions=make('div','hero-buttons');const check=make('button','primary','Review my reasoning');check.type='button';check.id='mmVaCheck';check.disabled=!STEP_KEYS.every(key=>state.answers[key]);check.addEventListener('click',()=>{if(guardLearnerInteraction(check))return;state.checked=true;renderResult()});const again=make('button','ghost','Reset this case');again.type='button';again.addEventListener('click',()=>resetCase(again));actions.append(check,again);host.appendChild(actions);
   const result=make('div','content-block');result.id='mmVaResult';result.setAttribute('aria-live','polite');host.appendChild(result);
   const progress=make('p','tiny muted',progressSummary());progress.id='mmVaProgress';host.appendChild(progress);
   host.appendChild(make('p','legal-note','Safety boundary: this virtual apprenticeship teaches evidence-led reasoning. It does not simulate validated machine physics, prescribe production settings, bypass safeguards, or authorise machine/mould/material/maintenance/production changes.'));

@@ -1,11 +1,13 @@
-/* MouldMaster learner UI polish — 2026.10.11.11
+/* MouldMaster learner UI polish — 2026.10.13.1
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.10.11.11';
+const VERSION='2026.10.13.1';
+// Cache-bust stylesheet revisions without claiming a new governed app release.
+const STYLE_REV='2026.10.13.1';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -14,7 +16,7 @@ function ensureStyles(){
   if(document.querySelector('link[data-mm-learner-ui-polish]'))return;
   const link=document.createElement('link');
   link.rel='stylesheet';
-  link.href=`./src/domains/shell/learner-ui-polish.css?v=${encodeURIComponent(VERSION)}`;
+  link.href=`./src/domains/shell/learner-ui-polish.css?v=${encodeURIComponent(STYLE_REV)}`;
   link.dataset.mmLearnerUiPolish=VERSION;
   document.head.appendChild(link);
 }
@@ -557,33 +559,128 @@ function learn(){
   });
   hub.dataset.mmReferenceLearn='1';
 }
+// Use the same user-selected photographic atlas as Learn/Materials for real
+// Practice controls, including the screens *inside* each task. All artwork is
+// decorative: action routing, learner evidence and scoring remain source-owned.
+const practiceArtwork={
+  troubleshooting:['quality',20],
+  'scenario-detail':['cases',22],
+  'process-data':['challenges',23],
+  labs:['setup',19],
+  'question-centre':['evidence',27],
+  daily:['cases',22],
+  'diagnostic-labs':['defects',6],
+  'diagnostic-workbench':['diagnosing',21],
+  'mould-master':['cases',8],
+  'spatial-twin':['machine',0],
+  simulator:['setup',19],
+  'material-labs':['materials',3],
+  assessments:['training',24],
+  'measured-decisions':['process',5]
+};
+function practiceChoiceArt(button){
+  if(button.querySelector(':scope > .mm-reference-practice-art'))return;
+  const artData=practiceArtwork[button.dataset.mmHubAction];
+  if(!artData)return;
+  const art=picture(artData[0],'',artData[1]);
+  art.classList.add('mm-reference-practice-art');
+  art.setAttribute('aria-hidden','true');
+  button.classList.add('mm-reference-practice-choice');
+  button.prepend(art);
+}
 function practice(){
   const root=document.getElementById('scenarios'),hub=root?.querySelector('.mm-practice-hub');
   if(!hub)return;
   sectionHeading('Practice',hub);
-  // Keep one functional task chooser. The former nine illustrated shortcuts
-  // repeated its tasks and launched the same destinations a second time.
+  // Keep the one functional chooser: decorate existing buttons rather than
+  // making duplicate shortcuts or replacing their click/focus listeners.
   hub.querySelector('.mm-reference-practice-list')?.remove();
-  const artByAction={
-    troubleshooting:['quality',20],
-    'scenario-detail':['cases',22],
-    'process-data':['challenges',23],
-    labs:['setup',19],
-    'question-centre':['evidence',27]
-  };
-  hub.querySelectorAll('.mm-hub-section .mm-hub-grid > button[data-mm-hub-action]').forEach(button=>{
-    if(button.querySelector('.mm-reference-practice-art'))return;
-    const action=button.dataset.mmHubAction;
-    const artData=artByAction[action];
-    if(!artData)return;
-    const art=picture(artData[0],'',artData[1]);
-    art.classList.add('mm-reference-practice-art');
-    art.alt='';
-    art.setAttribute('aria-hidden','true');
+  hub.querySelectorAll('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-hub-grid > button[data-mm-hub-action]').forEach(button=>{
     button.classList.add('mm-unified-practice-card');
-    button.prepend(art);
+    practiceChoiceArt(button);
   });
+  // Recommendation actions may change as learning evidence changes. Their
+  // native destinations must remain independent and the treatment idempotent.
+  hub.querySelectorAll('.mm-hub-section[aria-label="More recommended practice"] .mm-hub-grid > button[data-mm-hub-action]').forEach(practiceChoiceArt);
+  const featured=hub.querySelector('.mm-hub-continue');
+  if(featured&&!featured.querySelector(':scope > .mm-reference-practice-feature-art')){
+    const action=featured.querySelector('[data-mm-hub-action]')?.dataset.mmHubAction||'daily';
+    const [subject,tile]=practiceArtwork[action]||practiceArtwork.daily;
+    const art=picture(subject,'',tile);
+    art.classList.add('mm-reference-practice-feature-art');
+    art.setAttribute('aria-hidden','true');
+    featured.classList.add('mm-reference-practice-feature');
+    featured.prepend(art);
+  }
   hub.dataset.mmReferencePractice='1';
+}
+function practiceScenarioDetail(){
+  // Keep the original scenario evidence/answer buttons and authored feedback.
+  // One local illustration anchors the detail screen without duplicating every case.
+  const root=document.querySelector('#scenarios[data-mm-hub-mode="detail"]');
+  if(!root?.querySelector('.scenario'))return;
+  const head=root.querySelector(':scope > .section-head');
+  if(!head||head.classList.contains('mm-reference-practice-scenario-head'))return;
+  const art=picture('cases','',22);
+  art.classList.add('mm-reference-practice-scenario-art');
+  art.setAttribute('aria-hidden','true');
+  head.classList.add('mm-reference-practice-scenario-head');
+  head.prepend(art);
+}
+const observedPracticeToolRoots=new WeakSet();
+function observePracticeToolRoots(){
+  // Lab, process-data and assessment renderers replace their root children
+  // while learners move between questions. Reapply artwork without tracking
+  // every option/control mutation or risking a refresh loop.
+  for(const id of ['diagnosticLabs','materialLabs','processDataLabs','exams','mmVirtualApprenticeship','mmSpatialTwin']){
+    const node=document.getElementById(id);
+    if(!node||observedPracticeToolRoots.has(node))continue;
+    observedPracticeToolRoots.add(node);
+    new window.MutationObserver(refresh).observe(node,{childList:true});
+  }
+}
+function practiceToolHeaders(){
+  // Tool-owned renderers keep their evidence, answer, scoring and next-step
+  // controls. Add only a decorative local photo to each real landing header.
+  for(const [selector,subject,tile] of [
+    ['#processDataLabs .pd-hero','process',23],
+    ['#diagnosticLabs .dl-hero','defects',20],
+    ['#materialLabs .ml-hero','materials',3],
+    ['#exams .section-head','training',24],
+    ['#mmVirtualApprenticeship > .section-head','cases',22],
+    ['#mmSpatialTwin .mm-st-header > div:first-child','machine',0]
+  ]){
+    const head=document.querySelector(selector);
+    if(!head||head.querySelector(':scope > .mm-reference-practice-tool-art'))continue;
+    const art=picture(subject,'',tile);
+    art.classList.add('mm-reference-practice-tool-art');
+    art.setAttribute('aria-hidden','true');
+    head.classList.add('mm-reference-practice-tool-head');
+    head.prepend(art);
+  }
+}
+function practiceInside(){
+  practiceScenarioDetail();
+  observePracticeToolRoots();
+  practiceToolHeaders();
+  // The Question Centre is rendered into the same Practice route but replaces
+  // .mm-practice-hub. Decorate its five real options as they become available.
+  const questionGrid=document.querySelector('#scenarios .mm-question-centre .mm-hub-picker-grid');
+  if(questionGrid){
+    questionGrid.dataset.mmReferencePracticePicker='question-centre';
+    questionGrid.querySelectorAll(':scope > button[data-mm-hub-action]').forEach(practiceChoiceArt);
+  }
+  // Lab chooser is modal-owned. Decorate only a Practice picker, never More,
+  // search, onboarding or Learn-resource modal controls.
+  const modal=document.querySelector('#modal:not(.hidden) .modal-card');
+  const practicePicker=modal?.querySelector('.mm-hub-picker-grid');
+  const context=modal?.querySelector('.eyebrow')?.textContent?.trim()||'';
+  if(practicePicker&&context.startsWith('Practice')){
+    practicePicker.dataset.mmReferencePracticePicker='modal';
+    practicePicker.querySelectorAll(':scope > button[data-mm-hub-action]').forEach(practiceChoiceArt);
+  }
+  // No changes to the diagnostic evidence intake, hypothesis labels, or
+  // generated report; CSS supplies the same card/field treatment in that view.
 }
 const familyArt=[
  [/(\bABS\b|ABS\/|PC\/ABS)/i,'materials'],
@@ -641,10 +738,9 @@ function materials(){
     const tabs=root.querySelector('.mm-material-study-tools > .mat-tabs')||legacy.querySelector(':scope > .mat-tabs');
     const teachingSlot=guide.querySelector('[data-mm-family-science-content]');
     if(teachingSlot&&legacy.parentElement!==teachingSlot)teachingSlot.appendChild(legacy);
-    // When a learner opens a material lesson, lab, quiz or references using
-    // the existing tab routing, the teaching pane MUST NOT remain inside a
-    // collapsed family guide. Preserve the optional explorer default.
-    const currentTab=tabs?.querySelector('button.active')?.textContent?.trim()||'';
+    // An active default "Learn" tab is NOT permission to reopen a disclosure
+    // the learner just closed. Only an actual lesson (or an explicit tab
+    // activation below) may reveal the optional family-science pane.
     const lessonShown=!!legacy.querySelector('.mat-lesson');
     const intro=root.querySelector('#mmMaterialLearningAnchor');
     // Combine the detached Material Science intro, five legacy mode buttons
@@ -663,7 +759,15 @@ function materials(){
     if(intro&&intro.parentElement!==study)study.appendChild(intro);
     if(tabs&&tabs.parentElement!==study)study.appendChild(tabs);
     if(guide.parentElement!==study)study.appendChild(guide);
-    if(lessonShown||(['Learn','Interactive labs','Knowledge check','Evidence & references'].includes(currentTab)))guide.open=true;
+    // Preserve native disclosure state. The application owns the Material
+    // mode buttons: Labs, Knowledge check and References replace the explorer
+    // screen, while All lessons opens the shared Learn catalogue. None should
+    // programmatically reopen a now-detached family guide on incidental DOM
+    // mutations. A genuinely opened material lesson may reveal it once.
+    if(lessonShown&&root.dataset.mmReferenceMaterialLessonSeen!=='1'){
+      guide.open=true;
+      root.dataset.mmReferenceMaterialLessonSeen='1';
+    }
   }
   const selectedFamily=catalogue.querySelector('[data-mm-family-detail]:not([hidden])');
   if(selectedFamily){
@@ -741,9 +845,29 @@ function materials(){
   }
   root.dataset.mmReferenceMaterials='1';
 }
+function illustrateMore(grid){
+  // This is the original six-section More menu. Decorate its existing native
+  // disclosure headings, never clone action buttons or rewrite their handlers.
+  const photos={learning:['training',24],references:['controls',2],
+    account:['evidence',27],mission:['machine',0],
+    help:['quality',20],about:['materials',3]};
+  grid.querySelectorAll(':scope > .mm-more-disclosure').forEach(group=>{
+    const heading=group.querySelector(':scope > summary');
+    if(!heading||heading.querySelector(':scope > .mm-reference-more-art'))return;
+    const section=group.dataset.mmMoreSection||
+      (group.querySelector('summary b')?.textContent?.includes('Help')?'help':'about');
+    const [subject,tile]=photos[section]||photos.learning;
+    const art=picture(subject,'',tile);
+    art.classList.add('mm-reference-more-art');
+    art.setAttribute('aria-hidden','true');
+    heading.prepend(art);
+    group.classList.add('mm-reference-more-card');
+  });
+}
 function more(){
   const grid=document.querySelector('#modal .grid2[data-mm-more-organized="1"]');
-  if(!grid||grid.dataset.mmReferenceMore==='1')return;
+  if(!grid)return;
+  if(grid.dataset.mmReferenceMore==='1'){illustrateMore(grid);return;}
   grid.dataset.mmReferenceMore='1';
   const mapped=[['learning','Resources','Guides, charts and learning materials'],
     ['references','Tools','Calculators and technical references'],
@@ -776,13 +900,51 @@ function more(){
   }
   const direct=Array.from(grid.querySelectorAll(':scope > .mm-reference-more-extra'));
   grid.prepend(...direct);
+  illustrateMore(grid);
+}
+/* Interior parity with the approved five-tab reference boards. Each target
+   already owns its content, commands and validation rules. Decorations are
+   local, noninteractive and idempotent across renderer replacements. */
+function deepViewPolish(){
+  const headers=[
+    ['#lesson .mm-simple-lesson-hero','training',24],
+    ['#lesson .lesson-header-card','training',24],
+    ['#simulator .form-card','machine',0],
+    ['#simulator .output-panel','process',5],
+    ['#glossary .section-head','training',24],
+    ['#defects .mm-dx-hero','quality',20],
+    ['#coach .mm-dx-hero','quality',20],
+    ['#standards .section-head','evidence',27],
+    ['#visuals .visual-wrap:first-child','process',5],
+    ['#certificates .section-head','evidence',27],
+    ['#profile .form-card:first-child','training',24],
+    ['#instructor .section-head','cases',22]
+  ];
+  for(const [selector,subject,tile] of headers){
+    const node=document.querySelector(selector);
+    if(!node||node.querySelector(':scope > .mm-reference-deep-art'))continue;
+    const art=picture(subject,'',tile);
+    art.classList.add('mm-reference-deep-art');
+    art.setAttribute('aria-hidden','true');
+    node.classList.add('mm-reference-deep-head');
+    node.prepend(art);
+  }
+  for(const selector of [
+    '#lesson .lesson-body','#lesson .lesson-side',
+    '#glossary .term','#defects .mm-dx-pane','#coach .mm-dx-pane',
+    '#profile .form-card','#simulator .form-card',
+    '#simulator .output-panel','#coach .chat',
+    '#coach .form-card','#instructor .table-wrap'
+  ]){
+    document.querySelectorAll(selector).forEach(el=>el.classList.add('mm-reference-deep-panel'));
+  }
 }
 let scheduled=false;
 function refresh(){
   if(scheduled)return;scheduled=true;
   requestAnimationFrame(()=>{
     scheduled=false;
-    try{home();learn();practice();materials();more()}catch(error){console.warn('[MouldMaster reference layout]',error)}
+    try{home();learn();practice();practiceInside();materials();more();deepViewPolish()}catch(error){console.warn('[MouldMaster reference layout]',error)}
   });
 }
 function boot(){
@@ -790,15 +952,15 @@ function boot(){
   refresh();
   window.MM_APP_SHELL?.events?.onViewChange?.(refresh);
   for(const name of ['dashboard','path','materials','scenarios'])window.MM_APP_SHELL?.events?.onRender?.(name,refresh);
-  const targets=['dashboard','path','materials','scenarios','modal'];
+  const targets=['dashboard','path','materials','scenarios','simulator','lesson','glossary','defects','coach','standards','visuals','certificates','profile','instructor','exams','modal'];
   for(const id of targets){
     const node=document.getElementById(id);if(!node)continue;
-    new window.MutationObserver(refresh).observe(node,{childList:true,subtree:false});
+    new window.MutationObserver(refresh).observe(node,{childList:true,subtree:id==='modal'});
   }
   document.addEventListener('click',event=>{
-    if(event.target?.closest?.('.mm-material-index-card summary,.mobile-nav,[data-mm-registry-menu]'))refresh();
+    if(event.target?.closest?.('.mm-material-index-card summary,.mobile-nav,[data-mm-registry-menu],#scenarios [data-mm-hub-action],#modal .mm-hub-picker-grid [data-mm-hub-action],#mmVirtualApprenticeship button[data-mm-onclick],#mmVirtualApprenticeship .hero-buttons button'))refresh();
   });
-  window.MM_REFERENCE_LAYOUT=Object.freeze({version:'2026.10.11.11',refresh});
+  window.MM_REFERENCE_LAYOUT=Object.freeze({version:'2026.10.13.1',refresh});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();

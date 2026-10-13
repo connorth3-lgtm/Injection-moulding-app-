@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.11.11",
-  "commit": "10c21dd1c0f3132179c5532470c2847463ebcf4c",
+  "release": "2026.10.13.1",
+  "commit": "9a4b4776b171cf7cc413f6d67d351cd5207b9ee2",
   "browser": "chromium via @playwright/test 1.55.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,6 +41,6 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "Owner confirmed 'Yes merge' on 2026-10-12 NZDT after being specifically asked to approve only the four Learn illustration changes at exact candidate source 10c21dd1c0f3132179c5532470c2847463ebcf4c for release 2026.10.11.11 as the basis for a new immutable visual baseline. The owner had been shown the actual 4-viewport baseline/proposed/diff image comparisons, with SHA-256-indexed 52-surface evidence in Chromium QA run 38201412526, artifact 11726076866 (expires 2026-10-26T03:55:29Z): 48 unchanged comparisons pass; Learn drift is 3504/4169/4295/4902 pixels respectively at 360x800, 412x915, 810x1080, 1440x900. The owner decision is limited to these inspected illustrations, not separate independent reviewer, real AT, device, SME, NZQA/provider or production validation. The new immutable comparison branch visual-baseline/2026.10.11.11 is pinned to approved source 10c21dd1c0f3132179c5532470c2847463ebcf4c BEFORE this manifest update; the previously approved .10 baseline branches and 12-pixel tolerance remain intact. Every one of 4 viewports by 13 surfaces must still pass against this exact source; CI checks branch-ref immutability by matching the manifest commit. The audit is in PR #618; all required technical/provenance/human/physical/provider release checks remain enforceable and distinct HOLDs until independently verified.",
-  "ref": "visual-baseline/2026.10.11.11"
+  "policy": "On 2026-10-13 NZDT the owner replied 'I approve' to the complete PR #623 visual review pack: 52 actual Chromium screenshots spanning four exact viewports and thirteen governed screens, plus before/after comparisons for the 16 screenshots that differed from the previous approved 2026.10.11.11 baseline. Practice at 412x915 had already been approved after the actual standalone screenshot was shown; the owner's later confirmation approved the remaining 15 changed comparisons. The prior 36 comparisons were already within the old 12-pixel tolerance. All 52 candidate PNG hashes were checked against the exact CI review-manifest.json (zero mismatches) from Mobile Browser QA run 38334515939, retained artifact 11784248566 (SHA256 sha256:e46036d3b2186e8a289f16ee9494d557e523c0935d0a493b45bf447131d7ef0b, expires 2026-10-27T02:02:03Z), candidate source 9a4b4776b171cf7cc413f6d67d351cd5207b9ee2. The new immutable branch visual-baseline/2026.10.13.1 was created directly at that exact reviewed source BEFORE this manifest change, and checked identical to its source SHA. Earlier approved visual-baseline/2026.10.11.11 and all historical branches are untouched. The strict maxDiffPixels=12, Chromium Playwright image capture, all four viewports and 13 surfaces remain unchanged. This is scoped visual design approval and an immutable screenshot comparison reference, NOT an accepted retained web release candidate, a physical PWA or real assistive-technology test, Book/curriculum SME signoff, learner efficacy, Windows signing, NZQA/provider accreditation or production authority. PR #623 and all governed release/external validation remain HOLD until separately verified. See qa/VISUAL_REVIEW_2026.10.13.1_PR623.md and issue #624.",
+  "ref": "visual-baseline/2026.10.13.1"
 }

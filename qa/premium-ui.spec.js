@@ -492,6 +492,443 @@ test('Spatial Twin opens as a responsive evidence-led moulding world',async({pag
   await expect(page.locator('#mmVirtualApprenticeship')).toBeVisible();
 });
 
+test('Apprenticeship Book links show retryable failure for missing, throwing and rejecting chapters',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><main id="simulator"></main></body></html>');
+  await page.evaluate(()=>{
+    window.switchView=()=>{};
+    window.MMBook={openChapter(){throw new Error('Book service unavailable')}};
+  });
+  await page.addScriptTag({path:'src/domains/engineering/virtual-apprenticeship.js'});
+  await page.evaluate(()=>window.MM_VIRTUAL_APPRENTICESHIP.openCase(1));
+  const factory=page.locator('[data-mm-factory-case="1"]');
+  const button=factory.getByRole('button',{name:'Book: Cavity-pressure evidence',exact:true});
+  await expect(button).toBeVisible();
+  await button.click();
+  await expect(factory.locator('[data-mm-va-book-unavailable][role="status"]'))
+    .toHaveText('This Book chapter could not be opened. Use the Book tab or try again later.');
+  await button.click();
+  await expect(factory.locator('[data-mm-va-book-unavailable]')).toHaveCount(1);
+  await page.evaluate(()=>{window.MMBook.openChapter=()=>Promise.reject(new Error('Manifest unreachable'));});
+  await button.click();
+  await expect(factory.locator('[data-mm-va-book-unavailable]')).toHaveCount(1);
+  await page.evaluate(()=>{delete window.MMBook.openChapter;});
+  await button.click();
+  await expect(factory.locator('[data-mm-va-book-unavailable]')).toHaveCount(1);
+  await page.evaluate(()=>{window.MMBook.openChapter=()=>Promise.resolve(true);});
+  await button.click();
+  // A successful retry must clear the obsolete error state, not leave a
+  // misleading permanent warning on the learner's Book recommendation.
+  await expect(button).toBeEnabled();
+  await expect(factory.locator('[data-mm-va-book-unavailable]')).toHaveCount(0);
+  await expect(factory).not.toHaveAttribute('data-book-unavailable','1');
+});
+
+test('An older rejected Book chapter promise cannot undo a later successful retry',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><main id="simulator"></main></body></html>');
+  await page.evaluate(()=>{
+    window.switchView=()=>{};
+    window.MMBook={openChapter(){return new Promise((resolve,reject)=>{
+      window.__mmStaleBookReject=reject;
+    })}};
+  });
+  await page.addScriptTag({path:'src/domains/engineering/virtual-apprenticeship.js'});
+  await page.evaluate(()=>window.MM_VIRTUAL_APPRENTICESHIP.openCase(1));
+  const factory=page.locator('[data-mm-factory-case="1"]');
+  const first=factory.getByRole('button',{name:'Book: Cavity-pressure evidence',exact:true});
+  const second=factory.getByRole('button',{name:'Book: Multi-cavity balance',exact:true});
+  await first.click();
+  await page.evaluate(()=>{window.MMBook.openChapter=()=>Promise.resolve(true);});
+  await second.click();
+  await page.evaluate(()=>window.__mmStaleBookReject(new Error('Outdated failed load')));
+  await expect(factory.locator('[data-mm-va-book-unavailable]')).toHaveCount(0);
+  await expect(factory).not.toHaveAttribute('data-book-unavailable','1');
+});
+
+test('Detached Virtual Apprenticeship controls cannot grade or change a newer case',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_VIRTUAL_APPRENTICESHIP?.openCase));
+  await page.evaluate(()=>window.MM_VIRTUAL_APPRENTICESHIP.openCase(0));
+  const root=page.locator('#mmVirtualApprenticeship');
+  for(const step of ['hypothesis','test','response','verify']){
+    await root.locator('[data-mm-va-step="'+step+'"] input[type="radio"]').first().check();
+  }
+  await expect(root.locator('#mmVaCheck')).toBeEnabled();
+  await page.evaluate(()=>{
+    const oldReview=document.getElementById('mmVaCheck');
+    const oldCase=document.getElementById('mmVaCaseSelect');
+    const oldRadio=document.querySelector('[data-mm-va-step="hypothesis"] input[type="radio"]');
+    window.MM_VIRTUAL_APPRENTICESHIP.openCase(1);
+    oldReview.click();
+    oldCase.value='2';
+    oldCase.dispatchEvent(new Event('change',{bubbles:true}));
+    oldRadio.checked=true;
+    oldRadio.dispatchEvent(new Event('change',{bubbles:true}));
+  });
+  await expect(root.locator('#mmVaCaseSelect')).toHaveValue('1');
+  await expect(root.locator('#mmVaResult')).toBeEmpty();
+  await expect(root.locator('#mmVaProgress')).toContainText('0/6 cases completed');
+  expect(await root.locator('[data-mm-va-step] input:checked').count()).toBe(0);
+});
+
+test('Detached Spatial Twin scene controls cannot modify or close the new case',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_SPATIAL_TWIN?.open));
+  await page.evaluate(()=>window.MM_SPATIAL_TWIN.open({caseIndex:1}));
+  await page.evaluate(()=>{
+    const host=document.getElementById('mmSpatialTwin');
+    const staleClose=host.querySelector('[data-mm-st-close]');
+    const staleMode=host.querySelector('[data-mm-st-mode="thermal"]');
+    const stalePhase=host.querySelector('[data-mm-st-phase="4"]');
+    const staleCase=host.querySelector('[data-mm-st-case]');
+    window.MM_SPATIAL_TWIN.open({caseIndex:2,mode:'system'});
+    staleMode.click();stalePhase.click();staleClose.click();
+    staleCase.value='3';
+    staleCase.dispatchEvent(new Event('change',{bubbles:true}));
+  });
+  const twin=page.locator('#mmSpatialTwin');
+  await expect(twin).toBeVisible();
+  await expect(twin.locator('[data-mm-st-case]')).toHaveValue('2');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-mode','system');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-phase','baseline');
+});
+
+test('Virtual Apprenticeship prevents stale reviewed answers crossing local learner profiles',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.addInitScript(()=>{
+    const learner=id=>({id,name:id,role:'learner',completed:[],bookmarks:[],notes:{},
+      examScores:{},certificates:[],currentLesson:1,lastSeen:'2026-10-13T00:00:00Z',
+      onboardingDone:true,experience:'Beginner',goal:'Learn the process',dailyMinutes:15,region:'ALL'});
+    localStorage.clear();
+    localStorage.setItem('mouldmasterProDB',JSON.stringify({
+      activeUser:'apprentice-a',users:{
+        'apprentice-a':learner('apprentice-a'),'apprentice-b':learner('apprentice-b')
+      }
+    }));
+  });
+  await page.goto('/index.html',{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED&&window.MM_VIRTUAL_APPRENTICESHIP?.openCase&&window.MM_RUNTIME_V2?.storage?.learnerToken));
+  await page.evaluate(()=>window.MM_VIRTUAL_APPRENTICESHIP.openCase(1));
+  const root=page.locator('#mmVirtualApprenticeship');
+  const options=root.locator('[data-mm-va-step] input[type="radio"]');
+  await expect(options.first()).toBeVisible();
+  for(const step of ['hypothesis','test','response','verify']){
+    await root.locator('[data-mm-va-step="'+step+'"] input[type="radio"]').first().check();
+  }
+  await root.locator('#mmVaCheck').click();
+  await expect(root.locator('#mmVaResult')).toContainText('Reasoning quality:');
+  // The old DOM's Review action and radio elements are not trusted if the
+  // user changes between the event and the normal simulator rerender.
+  await page.evaluate(()=>{
+    const oldCheck=document.querySelector('#mmVaCheck');
+    switchUser('apprentice-b');
+    oldCheck.click();
+  });
+  await page.evaluate(()=>window.MM_VIRTUAL_APPRENTICESHIP.openCase(1));
+  await expect(root.locator('#mmVaResult')).toBeEmpty();
+  expect(await root.locator('[data-mm-va-step] input:checked').count()).toBe(0);
+  await expect(root.locator('#mmVaProgress')).toContainText('0/6 cases completed');
+  await page.evaluate(()=>switchUser('apprentice-a'));
+  await page.evaluate(()=>window.MM_VIRTUAL_APPRENTICESHIP.openCase(1));
+  await expect(root.locator('#mmVaResult')).toBeEmpty();
+  expect(await root.locator('[data-mm-va-step] input:checked').count()).toBe(0);
+  await expect(root.locator('#mmVaProgress')).toContainText('1/6 cases completed');
+});
+
+test('Apprenticeship rejects noncoercible imported progress and safely saves a new attempt',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_VIRTUAL_APPRENTICESHIP?.openCase&&window.MM_RUNTIME_V2?.storage?.set));
+  await page.evaluate(()=>{
+    const broken={toString:null,valueOf:null};
+    window.MM_RUNTIME_V2.storage.set('mm_virtual_apprenticeship_v1',{
+      schema:1,attempts:broken,completed:{
+        'VA-01':{best:broken,last:4,updated:'2026-10-13T00:00:00.000Z'}
+      }
+    });
+    window.MM_VIRTUAL_APPRENTICESHIP.openCase(0);
+  });
+  const root=page.locator('#mmVirtualApprenticeship');
+  await expect(root.locator('#mmVaProgress')).toHaveText('0/6 cases completed · best reasoning score 0/4');
+  for(const step of ['hypothesis','test','response','verify']){
+    await root.locator('[data-mm-va-step="'+step+'"] input[type="radio"]').first().check();
+  }
+  await root.locator('#mmVaCheck').click();
+  await expect(root.locator('#mmVaResult')).toContainText('Reasoning quality:');
+  const restored=await page.evaluate(()=>window.MM_RUNTIME_V2.storage.get('mm_virtual_apprenticeship_v1',null));
+  expect(restored.attempts).toBe(1);
+  expect(Number.isInteger(restored.completed['VA-01'].best)).toBe(true);
+  await expect(root.locator('#mmVaProgress')).toContainText('1/6 cases completed');
+});
+
+test('Malformed apprenticeship completion storage is repaired before saving reviewed answers',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_VIRTUAL_APPRENTICESHIP?.openCase&&window.MM_RUNTIME_V2?.storage?.set));
+  await page.evaluate(()=>{
+    window.MM_RUNTIME_V2.storage.set('mm_virtual_apprenticeship_v1',{
+      schema:1,completed:'malformed previous data',attempts:'unknown'
+    });
+    window.MM_VIRTUAL_APPRENTICESHIP.openCase(0);
+  });
+  const root=page.locator('#mmVirtualApprenticeship');
+  await expect(root.locator('#mmVaProgress')).toContainText('0/6 cases completed');
+  for(const step of ['hypothesis','test','response','verify']){
+    await root.locator('[data-mm-va-step="'+step+'"] input[type="radio"]').first().check();
+  }
+  await root.locator('#mmVaCheck').click();
+  await expect(root.locator('#mmVaResult')).toContainText('Reasoning quality:');
+  const record=await page.evaluate(()=>window.MM_RUNTIME_V2.storage.get('mm_virtual_apprenticeship_v1',null));
+  expect(record.attempts).toBe(1);
+  expect(record.completed['VA-01']).toBeTruthy();
+  await expect(root.locator('#mmVaProgress')).toContainText('1/6 cases completed');
+});
+
+test('Virtual Apprenticeship progress excludes unknown and malformed stored case keys',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_VIRTUAL_APPRENTICESHIP?.openCase&&window.MM_RUNTIME_V2?.storage?.set));
+  await page.evaluate(()=>{
+    window.MM_RUNTIME_V2.storage.set('mm_virtual_apprenticeship_v1',{
+      schema:1,completed:{
+        'VA-01':{best:2,last:2,updated:'2026-10-13'},
+        'VA-99':{best:4,updated:'2026-10-13'},
+        'legacy-other-course':{best:4,updated:'2026-10-13'},
+        'VA-02':'corrupted',
+        'VA-03':{best:4,last:4},
+        'VA-04':{best:'invalid',updated:'not a date'}
+      },attempts:1
+    });
+    window.MM_VIRTUAL_APPRENTICESHIP.openCase(0);
+  });
+  await expect(page.locator('#mmVirtualApprenticeship #mmVaProgress'))
+    .toHaveText('1/6 cases completed · best reasoning score 2/4');
+  const competency=await page.evaluate(()=>window.MM_VIRTUAL_APPRENTICESHIP.competencyRecord());
+  expect(competency.filter(row=>row.reviewed).map(row=>row.caseId)).toEqual(['VA-01']);
+  expect(competency.find(row=>row.caseId==='VA-03').best).toBe(0);
+  expect(competency.find(row=>row.caseId==='VA-04').best).toBe(0);
+});
+
+test('Changing only apprenticeship coaching level does not double-count a reviewed attempt',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_VIRTUAL_APPRENTICESHIP?.openCase&&window.MM_RUNTIME_V2?.storage?.get));
+  await page.evaluate(()=>window.MM_VIRTUAL_APPRENTICESHIP.openCase(0));
+  const root=page.locator('#mmVirtualApprenticeship');
+  for(const step of ['hypothesis','test','response','verify']){
+    await root.locator('[data-mm-va-step="'+step+'"] input[type="radio"]').first().check();
+  }
+  await root.locator('#mmVaCheck').click();
+  const attempts=()=>page.evaluate(()=>window.MM_RUNTIME_V2.storage.get('mm_virtual_apprenticeship_v1',null)?.attempts||0);
+  expect(await attempts()).toBe(1);
+  const level=root.locator('[data-mm-va-level]');
+  await level.selectOption('advanced');
+  await expect(level).toHaveValue('advanced');
+  // Review the unchanged choices in another coaching style: they are
+  // still the original four answers, not another completed attempt.
+  await root.locator('#mmVaCheck').click();
+  expect(await attempts()).toBe(1);
+  await root.locator('[data-mm-va-step="hypothesis"] input[type="radio"]').nth(1).check();
+  await root.locator('#mmVaCheck').click();
+  expect(await attempts()).toBe(2);
+});
+
+test('Virtual Apprenticeship warns and retries when local progress persistence fails',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_VIRTUAL_APPRENTICESHIP?.openCase&&window.MM_RUNTIME_V2?.storage?.set));
+  await page.evaluate(()=>window.MM_VIRTUAL_APPRENTICESHIP.openCase(0));
+  const root=page.locator('#mmVirtualApprenticeship');
+  for(const step of ['hypothesis','test','response','verify']){
+    await root.locator('[data-mm-va-step="'+step+'"] input[type="radio"]').first().check();
+  }
+  await page.evaluate(()=>{
+    const prior=Storage.prototype.setItem;
+    window.__mmRestoreAttemptStorage=()=>{Storage.prototype.setItem=prior;};
+    Storage.prototype.setItem=function(key,value){
+      if(String(key).includes('mm_virtual_apprenticeship_v1'))throw new DOMException('Quota unavailable','QuotaExceededError');
+      return prior.call(this,key,value);
+    };
+  });
+  await root.locator('#mmVaCheck').click();
+  await expect(root.locator('#mmVaResult [role="status"]')).toContainText('could not be saved');
+  await expect(root.locator('#mmVaProgress')).toContainText('0/6 cases completed');
+  await page.evaluate(()=>window.__mmRestoreAttemptStorage());
+  await root.locator('#mmVaCheck').click();
+  await expect(root.locator('#mmVaResult [role="status"]')).toHaveCount(0);
+  await expect(root.locator('#mmVaProgress')).toContainText('1/6 cases completed');
+  // Reviewing the same checked attempt again must not double-count it.
+  await root.locator('#mmVaCheck').click();
+  const row=await page.evaluate(()=>window.MM_RUNTIME_V2.storage.get('mm_virtual_apprenticeship_v1',null));
+  expect(row.attempts).toBe(1);
+});
+
+test('Opening nested simulator learning screens moves keyboard context to their headings',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_VIRTUAL_APPRENTICESHIP?.openCase&&window.MM_SPATIAL_TWIN?.open));
+  await page.evaluate(()=>switchView('scenarios'));
+  await page.evaluate(()=>window.MM_VIRTUAL_APPRENTICESHIP.openCase(1));
+  const heading=page.locator('#mmVirtualApprenticeship .section-head h2');
+  await expect(heading).toBeVisible();
+  await expect(heading).toBeFocused();
+  await page.evaluate(()=>switchView('scenarios'));
+  await page.evaluate(()=>window.MM_SPATIAL_TWIN.open({caseIndex:1}));
+  const twinHeading=page.locator('#mmSpatialTwin .mm-st-header h2');
+  await expect(twinHeading).toBeVisible();
+  await expect(twinHeading).toBeFocused();
+});
+
+test('Virtual Apprenticeship case, coaching level and Reset preserve keyboard focus',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_VIRTUAL_APPRENTICESHIP?.openCase));
+  await page.evaluate(()=>window.MM_VIRTUAL_APPRENTICESHIP.openCase(0));
+  const root=page.locator('#mmVirtualApprenticeship');
+  const selector=root.locator('#mmVaCaseSelect');
+  await selector.focus();
+  await selector.selectOption('1');
+  await expect(selector).toBeFocused();
+  const level=root.locator('[data-mm-va-level]');
+  await level.focus();
+  const values=await level.locator('option').evaluateAll(els=>els.map(el=>el.value));
+  expect(values.length).toBeGreaterThan(1);
+  await level.selectOption(values[1]);
+  await expect(level).toBeFocused();
+  const reset=root.getByRole('button',{name:'Reset this case'});
+  await reset.focus();
+  await reset.press('Enter');
+  await expect(selector).toBeFocused();
+  await expect(root.locator('#mmVaResult')).toBeEmpty();
+});
+
+test('Spatial Twin case picker retains focus after rerendering the scene',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_SPATIAL_TWIN?.open));
+  await page.evaluate(()=>window.MM_SPATIAL_TWIN.open({caseIndex:0}));
+  const pick=page.locator('#mmSpatialTwin [data-mm-st-case]');
+  await pick.focus();
+  await pick.selectOption('1');
+  await expect(pick).toBeFocused();
+  await expect(pick).toHaveValue('1');
+  await expect(page.locator('#mmSpatialTwin .mm-st-shell')).toHaveAttribute('data-phase','baseline');
+});
+
+test('Spatial Twin restores malformed or partial scoped state without old scene residue',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_SPATIAL_TWIN?.open&&window.MM_RUNTIME_V2?.storage?.set));
+  const twin=page.locator('#mmSpatialTwin');
+  await page.evaluate(()=>window.MM_SPATIAL_TWIN.open({caseIndex:1,mode:'pressure'}));
+  await twin.locator('[data-mm-st-phase="4"]').click();
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-phase','intervention');
+  await page.evaluate(()=>{
+    window.MM_RUNTIME_V2.storage.set('mm_spatial_twin_v1',{
+      caseIndex:2,mode:'untrusted',phase:'bad-value',selected:'constructor'
+    });
+    window.MM_SPATIAL_TWIN.open();
+  });
+  await expect(twin.locator('[data-mm-st-case]')).toHaveValue('2');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-mode','system');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-phase','baseline');
+  await expect(twin.locator('[data-mm-st-inspector] h3')).not.toBeEmpty();
+  await page.evaluate(()=>window.MM_SPATIAL_TWIN.selectHotspot('__proto__'));
+  await expect(twin.locator('[data-mm-st-inspector] h3')).not.toBeEmpty();
+  // Malformed JSON objects can throw on implicit coercion. The read path
+  // must reject them rather than crash or retain the previous scene.
+  await page.evaluate(()=>{
+    const broken={toString:null,valueOf:null};
+    window.MM_RUNTIME_V2.storage.set('mm_spatial_twin_v1',{
+      caseIndex:broken,mode:'thermal',phase:broken,selected:broken
+    });
+    window.MM_SPATIAL_TWIN.open();
+  });
+  await expect(twin.locator('[data-mm-st-case]')).toHaveValue('0');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-phase','baseline');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-mode','thermal');
+  await page.evaluate(()=>{
+    window.MM_RUNTIME_V2.storage.set('mm_spatial_twin_v1',[]);
+    window.MM_SPATIAL_TWIN.open();
+  });
+  await expect(twin.locator('[data-mm-st-case]')).toHaveValue('0');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-mode','system');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-phase','baseline');
+});
+
+test('Spatial Twin isolates learner state and resets the timeline on a different case',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.addInitScript(()=>{
+    const learner=id=>({id,name:id,role:'learner',completed:[],bookmarks:[],notes:{},
+      examScores:{},certificates:[],currentLesson:1,lastSeen:'2026-10-13T00:00:00Z',
+      onboardingDone:true,experience:'Beginner',goal:'Learn the process',dailyMinutes:15,region:'ALL'});
+    localStorage.clear();
+    localStorage.setItem('mouldmasterProDB',JSON.stringify({
+      activeUser:'twin-a',users:{'twin-a':learner('twin-a'),'twin-b':learner('twin-b')}
+    }));
+  });
+  await page.goto('/index.html',{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED&&window.MM_SPATIAL_TWIN?.open&&window.MM_RUNTIME_V2?.storage?.learnerToken));
+  const twin=page.locator('#mmSpatialTwin');
+  await page.evaluate(()=>window.MM_SPATIAL_TWIN.open({caseIndex:1}));
+  await twin.locator('[data-mm-st-mode="pressure"]').click();
+  await twin.locator('[data-mm-st-phase="2"]').click();
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-mode','pressure');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-phase','fault');
+  await page.evaluate(()=>window.MM_SPATIAL_TWIN.open({caseIndex:2}));
+  await expect(twin.locator('[data-mm-st-case]')).toHaveValue('2');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-phase','baseline');
+
+  // A different local learner has a different scoped state: no inherited
+  // pressure mode, timeline position or case selection from learner A.
+  await page.evaluate(()=>switchUser('twin-b'));
+  await page.evaluate(()=>window.MM_SPATIAL_TWIN.open());
+  await expect(twin.locator('[data-mm-st-case]')).toHaveValue('0');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-mode','system');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-phase','baseline');
+  await twin.locator('[data-mm-st-mode="thermal"]').click();
+  await twin.locator('[data-mm-st-phase="3"]').click();
+  await page.evaluate(()=>switchUser('twin-a'));
+  await page.evaluate(()=>window.MM_SPATIAL_TWIN.open());
+  await expect(twin.locator('[data-mm-st-case]')).toHaveValue('2');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-mode','pressure');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-phase','baseline');
+  // Core route changes must clear the global body marker, otherwise the
+  // Spatial Twin mobile width rules leak into unrelated Learn/Practice tabs.
+  await expect(page.locator('body')).toHaveAttribute('data-mm-spatial-twin','1');
+  await page.evaluate(()=>switchView('path'));
+  await expect(page.locator('body')).not.toHaveAttribute('data-mm-spatial-twin','1');
+  await page.evaluate(()=>switchView('simulator'));
+  await expect(twin).toBeHidden();
+  await expect(page.locator('#mmVirtualApprenticeship')).toBeVisible();
+});
+
+test('Spatial Twin ignores a stale old-profile hotspot event before rerender',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.addInitScript(()=>{
+    const learner=id=>({id,name:id,role:'learner',completed:[],bookmarks:[],notes:{},
+      examScores:{},certificates:[],currentLesson:1,lastSeen:'2026-10-13T00:00:00Z',
+      onboardingDone:true,experience:'Beginner',goal:'Learn the process',dailyMinutes:15,region:'ALL'});
+    localStorage.clear();
+    localStorage.setItem('mouldmasterProDB',JSON.stringify({
+      activeUser:'twin-a',users:{'twin-a':learner('twin-a'),'twin-b':learner('twin-b')}
+    }));
+  });
+  await page.goto('/index.html',{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED&&window.MM_SPATIAL_TWIN?.open&&window.MM_RUNTIME_V2?.storage?.learnerToken));
+  await page.evaluate(()=>window.MM_SPATIAL_TWIN.open({caseIndex:1}));
+  await page.evaluate(()=>{
+    const stale=document.querySelector('#mmSpatialTwin [data-mm-st-mode="pressure"]');
+    switchUser('twin-b');
+    stale.click();
+  });
+  await expect(page.locator('#mmSpatialTwin .mm-st-shell')).toHaveAttribute('data-mode','system');
+  await expect(page.locator('#mmSpatialTwin [data-mm-st-case]')).toHaveValue('0');
+  await page.evaluate(()=>window.MM_SPATIAL_TWIN.open());
+  await expect(page.locator('#mmSpatialTwin .mm-st-shell')).toHaveAttribute('data-mode','system');
+});
+
 test('Hidden Mission Control strip keeps scoped evidence and command search accessible',async({page})=>{
   await page.setViewportSize({width:1440,height:900});
   await openApp(page);

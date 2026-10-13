@@ -137,13 +137,50 @@ function scene(){return CASE_SCENES[currentCase().id]||CASE_SCENES['VA-02']}
 function phaseKey(){return PHASES[state.phase]?.[0]||'baseline'}
 function modeLabel(){return MODES.find(x=>x[0]===state.mode)?.[1]||'System'}
 function scopedStorage(){return window.MM_RUNTIME_V2?.storage||null}
+function learnerToken(){
+  const scoped=scopedStorage()?.learnerToken?.();
+  if(scoped!=null)return String(scoped);
+  // Boot-only fallback: do not share in-memory learning context if the
+  // learner-scope runtime has not finished attaching yet.
+  try{return typeof db!=='undefined'&&db?.activeUser!=null?String(db.activeUser):''}catch(_){return ''}
+}
+let stateOwner=learnerToken();
+function resetTwinState(){
+  state.caseIndex=0;state.mode='system';state.phase=0;state.selected='mould';
+}
+function ensureTwinOwner(){
+  const owner=learnerToken();
+  if(owner===stateOwner)return false;
+  stateOwner=owner;
+  resetTwinState();
+  return true;
+}
+function guardTwinInteraction(){
+  // A profile switch does not always force the old Spatial Twin DOM to
+  // unmount. Drop the first stale interaction and rebuild for the new
+  // learner rather than attributing it to the wrong profile.
+  if(!ensureTwinOwner())return false;
+  restoreState();
+  renderHost();
+  return true;
+}
 function saveState(){scopedStorage()?.set?.(STORAGE_KEY,{caseIndex:state.caseIndex,mode:state.mode,phase:state.phase,selected:state.selected})}
 function restoreState(){
-  const row=scopedStorage()?.get?.(STORAGE_KEY,null);if(!row||typeof row!=='object')return;
-  if(Number.isInteger(Number(row.caseIndex)))state.caseIndex=Math.max(0,Math.min(cases().length-1,Number(row.caseIndex)));
+  const row=scopedStorage()?.get?.(STORAGE_KEY,null);
+  // A partial or malformed scoped record must not inherit fields left in
+  // memory from another case or from an earlier restoration.
+  resetTwinState();
+  if(!row||typeof row!=='object'||Array.isArray(row))return;
+  const caseIndex=typeof row.caseIndex==='number'||typeof row.caseIndex==='string'?Number(row.caseIndex):NaN;
+  if(Number.isSafeInteger(caseIndex)&&caseIndex>=0)
+    state.caseIndex=Math.min(Math.max(0,cases().length-1),caseIndex);
+  state.selected=scene().focus?.[0]||'mould';
   if(MODES.some(x=>x[0]===row.mode))state.mode=row.mode;
-  if(Number.isInteger(Number(row.phase)))state.phase=Math.max(0,Math.min(PHASES.length-1,Number(row.phase)));
-  if(HOTSPOTS[row.selected])state.selected=row.selected;
+  const phase=typeof row.phase==='number'||typeof row.phase==='string'?Number(row.phase):NaN;
+  if(Number.isSafeInteger(phase)&&phase>=0)
+    state.phase=Math.min(PHASES.length-1,phase);
+  // Inherited keys such as "constructor" or "__proto__" are not hotspots.
+  if(typeof row.selected==='string'&&Object.prototype.hasOwnProperty.call(HOTSPOTS,row.selected))state.selected=row.selected;
 }
 function make(tag,className,text){const el=document.createElement(tag);if(className)el.className=className;if(text!=null)el.textContent=text;return el}
 function svgMarkup(){
@@ -228,7 +265,7 @@ function renderHost(){
   const c=currentCase();
   host.innerHTML=`<div class="mm-st-shell" data-mode="${esc(state.mode)}" data-phase="${esc(phaseKey())}">
     <header class="mm-st-header">
-      <div><span class="eyebrow">MouldMaster Spatial Twin</span><h2>Explore the moulding system, not the menu</h2><p>Move through the cell, change evidence views and scrub the case timeline. This is an authored training visualisation, not a validated physics twin.</p></div>
+      <div><span class="eyebrow">MouldMaster Spatial Twin</span><h2 tabindex="-1">Explore the moulding system, not the menu</h2><p>Move through the cell, change evidence views and scrub the case timeline. This is an authored training visualisation, not a validated physics twin.</p></div>
       <button type="button" class="ghost" data-mm-st-close>Return to simulator</button>
     </header>
     ${contextMarkup()}
@@ -292,17 +329,21 @@ function syncWorld(){
   const label=shell.querySelector('.mm-st-world-head .eyebrow');if(label)label.textContent=modeLabel()+' mode';
   const phase=shell.querySelector('.mm-st-world-head b');if(phase)phase.textContent=PHASES[state.phase][1];
 }
-function selectHotspot(id){if(!HOTSPOTS[id])return;state.selected=id;saveState();renderInspector();syncWorld()}
-function setMode(id){if(!MODES.some(x=>x[0]===id))return;state.mode=id;saveState();syncWorld()}
+function selectHotspot(id){if(guardTwinInteraction()||typeof id!=='string'||!Object.prototype.hasOwnProperty.call(HOTSPOTS,id))return;state.selected=id;saveState();renderInspector();syncWorld()}
+function setMode(id){if(guardTwinInteraction()||!MODES.some(x=>x[0]===id))return;state.mode=id;saveState();syncWorld()}
 function setPhase(value){
+  if(guardTwinInteraction())return;
   const n=Math.max(0,Math.min(PHASES.length-1,Number(value)||0));state.phase=n;saveState();renderSignals();syncWorld();
   const missionStage=['baseline','evidence','evidence','test','intervention','verification'][n]||'evidence';
   window.MM_MISSION_CONTROL?.setStage?.(missionStage)
 }
 function setCase(index){
+  if(guardTwinInteraction())return;
   const list=cases();if(!list.length)return;
   state.caseIndex=Math.max(0,Math.min(list.length-1,Number(index)||0));
   const focus=scene().focus||[];state.selected=focus[0]||'mould';state.phase=0;saveState();renderHost();syncMissionContext();
+  // Replacing the case picker subtree otherwise strands keyboard focus.
+  byId('mmSpatialTwin')?.querySelector('[data-mm-st-case]')?.focus();
 }
 function syncMissionContext(){
   const c=currentCase(),s=scene();
@@ -312,14 +353,17 @@ function syncMissionContext(){
   )
 }
 function bind(host){
-  host.querySelector('[data-mm-st-close]')?.addEventListener('click',close);
-  host.querySelector('[data-mm-st-case]')?.addEventListener('change',e=>setCase(e.target.value));
-  host.querySelectorAll('[data-mm-st-mode]').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mmStMode)));
-  host.querySelectorAll('[data-mm-st-select]').forEach(b=>b.addEventListener('click',()=>selectHotspot(b.dataset.mmStSelect)));
-  host.querySelectorAll('[data-mm-st-hotspot]').forEach(b=>b.addEventListener('click',()=>selectHotspot(b.dataset.mmStHotspot)));
-  host.querySelectorAll('[data-mm-st-phase]').forEach(b=>b.addEventListener('click',()=>setPhase(b.dataset.mmStPhase)));
-  host.querySelector('[data-mm-st-range]')?.addEventListener('input',e=>setPhase(e.target.value));
-  host.querySelector('[data-mm-st-apprentice]')?.addEventListener('click',openApprenticeship);
+  // Each case switch reconstructs the scene. Detached controls keep their
+  // listener closures, but cannot act on the current case or learner.
+  const live=el=>!!(el?.isConnected&&host.contains(el));
+  host.querySelector('[data-mm-st-close]')?.addEventListener('click',e=>{if(live(e.currentTarget))close()});
+  host.querySelector('[data-mm-st-case]')?.addEventListener('change',e=>{if(live(e.currentTarget))setCase(e.currentTarget.value)});
+  host.querySelectorAll('[data-mm-st-mode]').forEach(b=>b.addEventListener('click',()=>{if(live(b))setMode(b.dataset.mmStMode)}));
+  host.querySelectorAll('[data-mm-st-select]').forEach(b=>b.addEventListener('click',()=>{if(live(b))selectHotspot(b.dataset.mmStSelect)}));
+  host.querySelectorAll('[data-mm-st-hotspot]').forEach(b=>b.addEventListener('click',()=>{if(live(b))selectHotspot(b.dataset.mmStHotspot)}));
+  host.querySelectorAll('[data-mm-st-phase]').forEach(b=>b.addEventListener('click',()=>{if(live(b))setPhase(b.dataset.mmStPhase)}));
+  host.querySelector('[data-mm-st-range]')?.addEventListener('input',e=>{if(live(e.currentTarget))setPhase(e.currentTarget.value)});
+  host.querySelector('[data-mm-st-apprentice]')?.addEventListener('click',e=>{if(live(e.currentTarget))openApprenticeship()});
 }
 function install(){
   const simulator=byId('simulator');if(!simulator)return false;
@@ -327,21 +371,49 @@ function install(){
   if(!host){host=make('section','mm-spatial-twin');host.id='mmSpatialTwin';host.hidden=true;simulator.insertBefore(host,simulator.firstChild)}
   return true;
 }
+let routeWatchInstalled=false;
+function hideTwin(){
+  const host=byId('mmSpatialTwin');
+  if(host)host.hidden=true;
+  state.open=false;
+  document.body?.removeAttribute('data-mm-spatial-twin');
+}
+function watchNavigation(){
+  if(routeWatchInstalled||typeof window.MM_APP_SHELL?.events?.onViewChange!=='function')return;
+  window.MM_APP_SHELL.events.onViewChange(view=>{
+    if(view!=='simulator'&&state.open)hideTwin();
+  });
+  routeWatchInstalled=true;
+}
 function open(options={}){
+  watchNavigation();
   if(typeof window.switchView==='function')window.switchView('simulator');
   if(!install())return false;
-  if(Number.isInteger(Number(options.caseIndex)))state.caseIndex=Math.max(0,Math.min(cases().length-1,Number(options.caseIndex)));
-  else restoreState();
+  // Restore the *active learner's* scoped state before applying an explicit
+  // case launch. A different case starts at its own known-good baseline.
+  ensureTwinOwner();
+  restoreState();
+  if(options.caseIndex!=null&&Number.isInteger(Number(options.caseIndex))){
+    const nextIndex=Math.max(0,Math.min(cases().length-1,Number(options.caseIndex)));
+    if(nextIndex!==state.caseIndex){
+      state.caseIndex=nextIndex;
+      state.phase=0;
+      state.selected=scene().focus?.[0]||'mould';
+    }
+  }
   if(options.mode&&MODES.some(x=>x[0]===options.mode))state.mode=options.mode;
   const host=byId('mmSpatialTwin');host.hidden=false;state.open=true;
   document.body?.setAttribute('data-mm-spatial-twin','1');
   renderHost();saveState();syncMissionContext();
-  requestAnimationFrame(()=>{try{host.scrollIntoView({block:'start',behavior:'auto'})}catch(_){}})
+  requestAnimationFrame(()=>{
+    if(!host.isConnected||host.hidden||!host.getClientRects().length)return;
+    try{host.scrollIntoView({block:'start',behavior:'auto'})}catch(_){}
+    host.querySelector('.mm-st-header h2')?.focus({preventScroll:true});
+  })
   return true;
 }
 function close(){
-  const host=byId('mmSpatialTwin');if(host)host.hidden=true;state.open=false;
-  document.body?.removeAttribute('data-mm-spatial-twin');
+  hideTwin();
   try{window.renderSimulator?.()}catch(_){}
 }
 function openApprenticeship(){
@@ -350,7 +422,11 @@ function openApprenticeship(){
   if(typeof window.switchView==='function')window.switchView('simulator');
   const target=byId('mmVirtualApprenticeship');target?.scrollIntoView?.({block:'start',behavior:'smooth'});
 }
-function installWhenReady(){if(install())return;requestAnimationFrame(()=>install())}
+function installWhenReady(){
+  watchNavigation();
+  if(install())return;
+  requestAnimationFrame(()=>{watchNavigation();install()});
+}
 const api=Object.freeze({
   version:VERSION,modes:MODES,phases:PHASES,hotspots:HOTSPOTS,scenes:CASE_SCENES,
   open,close,install,setMode,setPhase,setCase,selectHotspot,

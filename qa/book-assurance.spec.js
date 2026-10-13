@@ -73,6 +73,17 @@ test('Book defers governed payloads and heavy material evidence until requested'
   await expect(page.locator('[data-mm-book-regional-row]')).toHaveCount(24);
 });
 
+test('Book chapter navigation reports true only for a verified successful open',async({page})=>{
+  await openApp(page);
+  const missing=await page.evaluate(()=>window.MMBook.openChapter('not-a-real-book-chapter'));
+  expect(missing).toBe(false);
+  await expect(page.locator('#mmBookView')).toBeVisible();
+  await expect(page.locator('#mmBookView [data-mm-book-contents]')).not.toBeHidden();
+  const valid=await page.evaluate(()=>window.MMBook.openChapter('diagnostic-method'));
+  expect(valid).toBe(true);
+  await expect(page.locator('#mmBookView [data-mm-book-reader]')).toContainText(/diagnostic/i);
+});
+
 test('Book open fails closed and governed retry can recover from a transient manifest error',async({page})=>{
   await page.addInitScript(()=>{
     window.__mmBookUnhandled=[];
@@ -85,7 +96,10 @@ test('Book open fails closed and governed retry can recover from a transient man
     return route.continue();
   });
   await openApp(page);
-  await page.evaluate(()=>window.MMBook.open());
+  // The public chapter API must preserve fail-closed visual feedback while
+  // returning false to callers instead of swallowing a manifest failure.
+  const failed=await page.evaluate(()=>window.MMBook.openChapter('diagnostic-method'));
+  expect(failed).toBe(false);
   await expect(page.locator('[data-mm-book-summary]')).toContainText('could not be verified');
   await expect(page.locator('[data-mm-book-failure]')).toContainText('Book unavailable');
   expect(await page.evaluate(()=>window.MMBook.getManifest())).toBeNull();
@@ -96,6 +110,8 @@ test('Book open fails closed and governed retry can recover from a transient man
   await expect(page.locator('[data-mm-book-failure]')).toHaveCount(0);
   await expect(page.locator('[data-mm-book-summary]')).toContainText('20 reader chapters');
   expect(manifestAttempts).toBeGreaterThanOrEqual(2);
+  const succeeded=await page.evaluate(()=>window.MMBook.openChapter('diagnostic-method'));
+  expect(succeeded).toBe(true);
   await page.waitForTimeout(100);
   expect(await page.evaluate(()=>window.__mmBookUnhandled)).toEqual([]);
 });

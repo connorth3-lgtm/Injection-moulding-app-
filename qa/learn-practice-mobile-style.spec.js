@@ -33,7 +33,7 @@ async function expectReadableTiles(page,rootSelector,expectedCount=5){
     const boxes=tiles.map(x=>x.getBoundingClientRect());
     return {
       count:tiles.length,
-      columns:getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length,
+      columns:new Set(tiles.map(x=>Math.round(x.getBoundingClientRect().left))).size,
       display:tile.display,
       direction:tile.flexDirection,
       align:tile.alignItems,
@@ -82,7 +82,7 @@ async function expectNarrowReadableTiles(page,rootSelector,expectedCount=5){
     const minHeights=tiles.map(x=>getComputedStyle(x).minHeight);
     return {
       count:tiles.length,
-      columns:getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length,
+      columns:new Set(tiles.map(x=>Math.round(x.getBoundingClientRect().left))).size,
       copies,
       minHeights,
       maxHeight:Math.max(...boxes.map(x=>x.height)),
