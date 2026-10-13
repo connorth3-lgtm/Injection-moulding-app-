@@ -584,6 +584,29 @@ test('Virtual Apprenticeship prevents stale reviewed answers crossing local lear
   await expect(root.locator('#mmVaProgress')).toContainText('1/6 cases completed');
 });
 
+test('Malformed apprenticeship completion storage is repaired before saving reviewed answers',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_VIRTUAL_APPRENTICESHIP?.openCase&&window.MM_RUNTIME_V2?.storage?.set));
+  await page.evaluate(()=>{
+    window.MM_RUNTIME_V2.storage.set('mm_virtual_apprenticeship_v1',{
+      schema:1,completed:'malformed previous data',attempts:'unknown'
+    });
+    window.MM_VIRTUAL_APPRENTICESHIP.openCase(0);
+  });
+  const root=page.locator('#mmVirtualApprenticeship');
+  await expect(root.locator('#mmVaProgress')).toContainText('0/6 cases completed');
+  for(const step of ['hypothesis','test','response','verify']){
+    await root.locator('[data-mm-va-step="'+step+'"] input[type="radio"]').first().check();
+  }
+  await root.locator('#mmVaCheck').click();
+  await expect(root.locator('#mmVaResult')).toContainText('Reasoning quality:');
+  const record=await page.evaluate(()=>window.MM_RUNTIME_V2.storage.get('mm_virtual_apprenticeship_v1',null));
+  expect(record.attempts).toBe(1);
+  expect(record.completed['VA-01']).toBeTruthy();
+  await expect(root.locator('#mmVaProgress')).toContainText('1/6 cases completed');
+});
+
 test('Virtual Apprenticeship progress excludes unknown and malformed stored case keys',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
