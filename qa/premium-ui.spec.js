@@ -636,6 +636,32 @@ test('Virtual Apprenticeship prevents stale reviewed answers crossing local lear
   await expect(root.locator('#mmVaProgress')).toContainText('1/6 cases completed');
 });
 
+test('Apprenticeship rejects noncoercible imported progress and safely saves a new attempt',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_VIRTUAL_APPRENTICESHIP?.openCase&&window.MM_RUNTIME_V2?.storage?.set));
+  await page.evaluate(()=>{
+    const broken={toString:null,valueOf:null};
+    window.MM_RUNTIME_V2.storage.set('mm_virtual_apprenticeship_v1',{
+      schema:1,attempts:broken,completed:{
+        'VA-01':{best:broken,last:4,updated:'2026-10-13T00:00:00.000Z'}
+      }
+    });
+    window.MM_VIRTUAL_APPRENTICESHIP.openCase(0);
+  });
+  const root=page.locator('#mmVirtualApprenticeship');
+  await expect(root.locator('#mmVaProgress')).toHaveText('0/6 cases completed · best reasoning score 0/4');
+  for(const step of ['hypothesis','test','response','verify']){
+    await root.locator('[data-mm-va-step="'+step+'"] input[type="radio"]').first().check();
+  }
+  await root.locator('#mmVaCheck').click();
+  await expect(root.locator('#mmVaResult')).toContainText('Reasoning quality:');
+  const restored=await page.evaluate(()=>window.MM_RUNTIME_V2.storage.get('mm_virtual_apprenticeship_v1',null));
+  expect(restored.attempts).toBe(1);
+  expect(Number.isInteger(restored.completed['VA-01'].best)).toBe(true);
+  await expect(root.locator('#mmVaProgress')).toContainText('1/6 cases completed');
+});
+
 test('Malformed apprenticeship completion storage is repaired before saving reviewed answers',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
@@ -810,6 +836,18 @@ test('Spatial Twin restores malformed or partial scoped state without old scene 
   await expect(twin.locator('[data-mm-st-inspector] h3')).not.toBeEmpty();
   await page.evaluate(()=>window.MM_SPATIAL_TWIN.selectHotspot('__proto__'));
   await expect(twin.locator('[data-mm-st-inspector] h3')).not.toBeEmpty();
+  // Malformed JSON objects can throw on implicit coercion. The read path
+  // must reject them rather than crash or retain the previous scene.
+  await page.evaluate(()=>{
+    const broken={toString:null,valueOf:null};
+    window.MM_RUNTIME_V2.storage.set('mm_spatial_twin_v1',{
+      caseIndex:broken,mode:'thermal',phase:broken,selected:broken
+    });
+    window.MM_SPATIAL_TWIN.open();
+  });
+  await expect(twin.locator('[data-mm-st-case]')).toHaveValue('0');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-phase','baseline');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-mode','thermal');
   await page.evaluate(()=>{
     window.MM_RUNTIME_V2.storage.set('mm_spatial_twin_v1',[]);
     window.MM_SPATIAL_TWIN.open();
