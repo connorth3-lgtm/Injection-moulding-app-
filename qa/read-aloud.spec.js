@@ -757,8 +757,21 @@ test('Book verified listening starts Android device speech in the original tap a
   await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load();});
   const listen=page.locator('#mmBookView [data-mm-book-mode="listen"]');
   await expect(listen).toBeEnabled();
+  // Reproduce the real Book navigation path: a prior Contents queue still
+  // exists while idle. The original Android gesture must not rebuild the
+  // 20-chapter reader once for stale cleanup and then again for Play.
+  await page.evaluate(()=>{
+    if(!window.MMReadAloud.refresh().length)throw Error('Book Contents should contain readable text');
+    window.__mmBookQueueWalks=0;
+    const nativeWalker=document.createTreeWalker.bind(document);
+    document.createTreeWalker=function(root,...args){
+      if(root?.matches?.('[data-mm-book-reader]'))window.__mmBookQueueWalks+=1;
+      return nativeWalker(root,...args);
+    };
+  });
   await listen.click();
   await expect.poll(()=>page.evaluate(()=>window.__mmBookSpokenText||'')).not.toBe('');
+  expect(await page.evaluate(()=>window.__mmBookQueueWalks)).toBe(1);
   expect(await page.evaluate(()=>window.__mmBookSpeechInTap)).toBe(true);
   await expect(page.locator('#mmBookView [data-mm-book-reader]')).toBeVisible();
   await expect(page.locator('#mmBookView .mm-book-reader-module').first()).toBeVisible();
