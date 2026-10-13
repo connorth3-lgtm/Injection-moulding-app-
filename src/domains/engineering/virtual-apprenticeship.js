@@ -249,11 +249,24 @@ function competencyRecord(){
 function bookButton(host,chapter){
   const b=make('button','secondary','Book: '+chapter.title);b.type='button';
   const token=scopedStorage()?.learnerToken?.()||null;
+  function reportUnavailable(){
+    if(!b.isConnected||!host.isConnected)return;
+    host.dataset.bookUnavailable='1';
+    if(host.querySelector('[data-mm-va-book-unavailable]'))return;
+    const note=make('p','tiny muted','This Book chapter could not be opened. Use the Book tab or try again later.');
+    note.dataset.mmVaBookUnavailable='1';
+    note.setAttribute('role','status');
+    host.appendChild(note);
+  }
   b.addEventListener('click',()=>{
     if(!b.isConnected||!byId('mmVirtualApprenticeship')?.contains(b))return;
     if(token&&token!==scopedStorage()?.learnerToken?.())return;
-    if(window.MMBook?.openChapter)void Promise.resolve(window.MMBook.openChapter(chapter.id)).catch(()=>{host.dataset.bookUnavailable='1'});
-    else host.dataset.bookUnavailable='1';
+    const openChapter=window.MMBook?.openChapter;
+    if(typeof openChapter!=='function'){reportUnavailable();return;}
+    // Evaluating the call can throw synchronously, before Promise.resolve()
+    // can install a rejection handler. Both failure paths remain retryable.
+    try{void Promise.resolve(openChapter.call(window.MMBook,chapter.id)).catch(reportUnavailable)}
+    catch(_){reportUnavailable()}
   });
   return b;
 }
