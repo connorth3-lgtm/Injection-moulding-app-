@@ -768,3 +768,84 @@ test('Book verified listening starts Android device speech in the original tap a
   await expect(player.locator('details')).not.toHaveAttribute('open','');
   await expect(player.locator('.mm-read-status')).toHaveText('Stopped');
 });
+
+
+test('Book audio speaks Book chapter prose instead of a visible scenario or exam card',async({page})=>{
+  await page.setContent(`<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body>
+    <div class="top-actions"></div><main class="main">
+      <section class="exam-card"><p>Wrong exam prompt must never be spoken.</p></section>
+      <section class="scenario"><p>Wrong scenario panel must never be spoken.</p></section>
+      <section id="mmBookView" class="view"><section data-mm-book-contents hidden><h2>Contents only</h2></section>
+        <section data-mm-book-reader><button type="button" data-mm-book-back>Book contents</button>
+          <article class="mm-book-reader-chapter"><h2>Correct Book chapter heading.</h2>
+            <p>Correct governed Book prose follows this heading.</p>
+          </article>
+        </section>
+      </section>
+    </main>
+  </body></html>`);
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:
+      'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
+    class SpeechUtterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const device={
+      getVoices(){return[];},cancel(){},pause(){},resume(){},
+      addEventListener(){},removeEventListener(){},
+      speak(utterance){window.__mmBookTargetSpoken=utterance.text;queueMicrotask(()=>utterance.onstart?.());}
+    };
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:SpeechUtterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:device});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const player=page.locator('.mm-read-aloud');
+  await player.locator('details').evaluate(el=>{el.open=true;});
+  await player.locator('[data-mm-read="play"]').click();
+  await expect.poll(()=>page.evaluate(()=>window.__mmBookTargetSpoken||'')).toBe('Correct Book chapter heading.');
+  await expect(player.locator('[data-mm-read="current"]')).toHaveText('Correct Book chapter heading.');
+  await page.evaluate(()=>window.MMReadAloud.stop());
+  const result=await page.evaluate(()=>window.MMReadAloud.refresh().map(u=>u.text));
+  expect(result).toContain('Correct governed Book prose follows this heading.');
+  expect(result).not.toContain('Wrong exam prompt must never be spoken.');
+  expect(result).not.toContain('Wrong scenario panel must never be spoken.');
+  expect(result).not.toContain('Book contents');
+});
+
+test('Book continuous listening retains late chapters beyond the generic 1200 sentence limit',async({page})=>{
+  await page.setContent(`<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body>
+    <div class="top-actions"></div><main class="main">
+      <section id="mmBookView" class="view"><section data-mm-book-contents hidden></section>
+        <section data-mm-book-reader><article class="mm-book-reader-chapter" id="bookAudioLong"></article></section>
+      </section>
+    </main>
+  </body></html>`);
+  await page.evaluate(()=>{
+    const host=document.getElementById('bookAudioLong');
+    const chunk=document.createDocumentFragment();
+    for(let i=0;i<1210;i++){
+      const p=document.createElement('p');
+      p.textContent=i===1209?'Final source-reviewed Book chapter sentence.':`Book narration sentence ${i} is visible.`;
+      chunk.appendChild(p);
+    }
+    host.appendChild(chunk);
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const units=await page.evaluate(()=>window.MMReadAloud.refresh().map(u=>u.text));
+  expect(units).toHaveLength(1210);
+  expect(units[0]).toBe('Book narration sentence 0 is visible.');
+  expect(units.at(-1)).toBe('Final source-reviewed Book chapter sentence.');
+});
+
+test('Book Contents narration does not pick an unrelated screen when the reader is hidden',async({page})=>{
+  await page.setContent(`<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body>
+    <div class="top-actions"></div><main class="main">
+      <section class="scenario"><p>Wrong training screen should be ignored.</p></section>
+      <section id="mmBookView" class="view"><section data-mm-book-contents>
+        <h2>Book Contents heading.</h2><p>Choose a reader chapter from the Book.</p></section>
+        <section data-mm-book-reader hidden><p>Invisible previous Book chapter.</p></section>
+      </section>
+    </main>
+  </body></html>`);
+  await page.addScriptTag({path:'read-aloud.js'});
+  const units=await page.evaluate(()=>window.MMReadAloud.refresh().map(u=>u.text));
+  expect(units).toEqual(['Book Contents heading.','Choose a reader chapter from the Book.']);
+});
