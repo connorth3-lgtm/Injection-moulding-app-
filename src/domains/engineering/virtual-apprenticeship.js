@@ -239,7 +239,10 @@ function tutorPlan(row,result){
 }
 function validReviewedAttempt(value){
   if(!value||typeof value!=='object'||Array.isArray(value))return false;
-  const best=Number(value.best);
+  // JSON imports may contain objects with broken valueOf/toString methods:
+  // Number(object) can throw, so reject non-primitive grades before coercion.
+  const raw=value.best;
+  const best=typeof raw==='number'||typeof raw==='string'?Number(raw):NaN;
   return typeof value.updated==='string'&&Number.isFinite(Date.parse(value.updated))&&
     Number.isSafeInteger(best)&&best>=0&&best<=STEP_KEYS.length;
 }
@@ -359,7 +362,8 @@ function loadProgress(){
   // Corrupt or legacy-shaped local storage must not crash Review or let a
   // non-map completion value become writable case evidence.
   const completed=row.completed&&typeof row.completed==='object'&&!Array.isArray(row.completed)?row.completed:{};
-  const attempts=Number(row.attempts);
+  const rawAttempts=row.attempts;
+  const attempts=typeof rawAttempts==='number'||typeof rawAttempts==='string'?Number(rawAttempts):NaN;
   return {...row,completed,attempts:Number.isSafeInteger(attempts)&&attempts>=0?attempts:0};
 }
 function saveProgress(progress){return scopedStorage()?.set(STORAGE_KEY,progress)===true}
@@ -438,8 +442,9 @@ function renderResult(){
   const boundary=make('p','tiny muted','Training result only. A high score does not authorise a real machine, mould, material, maintenance, safeguarding or production change.');box.appendChild(boundary);
   if(!state.attemptSaved){
     const progress=loadProgress();progress.attempts=Number(progress.attempts||0)+1;progress.completed=progress.completed||{};
-    const old=progress.completed[row.id]||{};
-    progress.completed[row.id]={best:Math.max(Number(old.best||0),result.total),last:result.total,level:state.level,
+    const old=progress.completed[row.id];
+    const previousBest=validReviewedAttempt(old)?Number(old.best):0;
+    progress.completed[row.id]={best:Math.max(previousBest,result.total),last:result.total,level:state.level,
       steps:Object.fromEntries(STEP_KEYS.map(key=>[key,result.dimensions[key].correct])),updated:new Date().toISOString()};
     state.attemptSaved=saveProgress(progress);
     if(!state.attemptSaved){
