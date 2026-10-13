@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS: release 2026.10.13.1 source df600852152c30b6151c391e330f77e4a78f1ff8 run 38336952892 artifact 11785282763 fingerprint sha256:9ce8e0f6806ad0edd159288b60f14874ff4ab589e06ab795f69e55e4fb51fdfe is source-bound to successful protected quality-gated producer and retained artifact. This is software-controlled proof only; independent device, human, provider and production validation remain HOLD. |
-| Behavioral / browser | **pass** | PASS: release 2026.10.13.1 source df600852152c30b6151c391e330f77e4a78f1ff8 passed owner-approved 52-surface Chromium visual QA, Chromium substantive/reachability, WebKit, cross-browser, 500 reliability runs and Question Quality 50-Pass. Independent real-device, accessibility and SME evidence remains HOLD. |
+| Static / contract | **fail** | HOLD: release 2026.10.13.2 has not completed a successful exact-head candidate producer with matching accepted retained source/artifact fingerprint. The 2026.10.13.1 producer remains historical; no source, human, device or production approval is implied. |
+| Behavioral / browser | **fail** | HOLD: 2026.10.13.2 has passing targeted Read Aloud synthetic Chromium speech tests, but release validation and strict visual QA have failures. Exact-source complete browser, visual, candidate and release gates must succeed; prior green 2026.10.13.1 workflows do not transfer. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
