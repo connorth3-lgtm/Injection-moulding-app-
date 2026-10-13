@@ -71,6 +71,18 @@ for marker in (
     need(marker in runtime, f"Android tap-to-speak guard missing: {marker}")
 need("await waitForVoice" not in runtime, "Android speech start must not block on voice discovery")
 
+# Book is a custom view alongside the course/exam cards. Its visible reader
+# must win over generic selectors, and long Book sessions cannot inherit the
+# ordinary 1200-segment limit. Neither guarantee is established by button-only
+# browser smoke tests; actual spoken text is covered by read-aloud.spec.js.
+for marker in (
+    "document.getElementById('mmBookView')",
+    "book.querySelector('[data-mm-book-reader]')",
+    "book.querySelector('[data-mm-book-contents]')",
+    "bookReader?20000:1200",
+):
+    need(marker in runtime, f"Book voice-target/late-chapter regression guard missing: {marker}")
+
 # Dedicated long-session Listening mode must reuse the same speech-synthesis runtime,
 # consume authored lesson content only, provide durable playback controls, and avoid
 # implying that every browser/OS voice is processed entirely on-device.

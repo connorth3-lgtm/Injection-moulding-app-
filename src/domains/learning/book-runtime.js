@@ -757,7 +757,10 @@
     // Android Web Speech may require transient activation from the ORIGINAL
     // Book listening tap. A requestAnimationFrame click can be silent because
     // user activation has expired. All verified text is already in the DOM.
-    reader.refresh?.();details.open=true;play.click();
+    // Play itself builds the current Book queue. Pre-refreshing the entire
+    // twenty-chapter DOM first traversed every sentence twice and could use
+    // up Android/iOS's transient speech-activation window before speak().
+    details.open=true;play.click();
     emitBookRender('listening');}
   function openBook(){if(!ui)return;if(open)flushReadingPosition({notify:true});clearTimeout(resumeScrollTimer);resumeScrollTimer=0;activeReadingPosition=null;activeReadingScopeKey=null;bookIntentEpoch++;previousView=[...document.querySelectorAll('.view')].find(v=>!v.classList.contains('hidden')&&v!==ui.view)||previousView;document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));ui.view.classList.remove('hidden');restoreBookChrome();open=true;setBookInstantScroll(true);document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('active'));ui.nav.classList.add('active');const title=document.getElementById('pageTitle'),subtitle=document.getElementById('pageSubtitle');if(title)title.textContent='Book';if(subtitle)subtitle.textContent='Evidence-governed injection moulding reference — 20 reader chapters preserve 46 module-level claim and source boundaries.';contentsScrollY=0;contentsWindowScrollY=0;pendingContentsScroll=null;showContents({restoreScroll:false});scrollBookTo(0);emitBookRender('contents');if(!manifest){ui.summary.textContent='Loading governed Book content on demand…';ui.smeStatus.textContent='Independent human SME review status loads with the Book content.';void ensureManifest().catch(()=>{});}}
   async function openChapter(id){

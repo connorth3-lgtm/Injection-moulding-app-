@@ -49,6 +49,17 @@
   }
 
   function chooseRoot(){
+    // Book is a custom view inside the app's main content, not an exam or
+    // scenario. Prioritise its visible reader before generic course widgets;
+    // otherwise Read Aloud can pick a scenario card and never read the Book.
+    const book=document.getElementById('mmBookView');
+    if(book&&visible(book)){
+      const reader=book.querySelector('[data-mm-book-reader]');
+      if(reader&&visible(reader))return reader;
+      const contents=book.querySelector('[data-mm-book-contents]');
+      if(contents&&visible(contents))return contents;
+      return book;
+    }
     const candidates=['#lesson article.lesson-body','.exam-card','.scenario','.visual-wrap','.defect-card','main.main','.main','main'];
     for(const selector of candidates){
       const found=[...document.querySelectorAll(selector)].find(el=>visible(el)&&String(el.innerText||'').trim().length>20);
@@ -82,7 +93,11 @@
       for(const sentence of sentenceParts(node.nodeValue))if(sentence.length>=2)out.push({text:sentence,source,node});
     }
     activeRoot=root;
-    units=out.slice(0,1200);
+    // The source-reviewed Book's Listen mode spans 20 reader chapters.
+    // Applying the normal one-screen 1200-sentence bound silently cuts off
+    // later chapters. Keep a separate bounded Book capacity instead.
+    const bookReader=!!(root.closest?.('#mmBookView')||root.id==='mmBookView');
+    units=out.slice(0,bookReader?20000:1200);
     index=Math.min(index,Math.max(0,units.length-1));
     return units;
   }
@@ -328,7 +343,18 @@
   function toggle(){
     if(!supported){setStatus('Read Aloud is not available in this browser/device.');return;}
     const wasActive=starting||speaking||paused;
-    if(refreshStaleReading()&&wasActive)return;
+    // A stopped Book Listen tap may replace a previous Contents queue with a
+    // 20-chapter reader. Revalidating that idle queue, then calling start(),
+    // traverses the entire new reader twice before mobile speak() sees the tap.
+    // Only revalidate when playback is active or a user-cued sentence exists;
+    // a fresh start already rebuilds the visible source exactly once.
+    if((wasActive||selectionPending)&&refreshStaleReading()){
+      if(wasActive)return;
+      // A stale cued sentence has been replaced with the current source.
+      // Use that rebuilt queue immediately instead of traversing it again.
+      if(!units.length){setStatus('No readable text is visible on this screen.');updateButtons();return;}
+      speakCurrent();return;
+    }
     if(starting){stop('Stopped');return;}
     if(paused){
       try{synth.resume()}catch(_){stop('Device voice could not resume. Start playback again.');return;}

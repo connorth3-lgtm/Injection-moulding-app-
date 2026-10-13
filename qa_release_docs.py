@@ -11,7 +11,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
- 'web_release':'2026.10.13.1',
+  'web_release':'2026.10.13.2',
  'android_release':'2026.08.26.2',
  'desktop_release':'2026.09.29.1',
  'content_version':'2026.08.26.1',
@@ -196,6 +196,23 @@ elif visual.get('release')=='2026.10.11.10':
          and len(visual.get('viewports',[]))==4
          and len(visual.get('surfaces',[]))==13,
          '2026.10.11.10 Book-only visual successor must remain bound to approved 7b22514e with all 52 checks at 12px')
+elif visual.get('release')=='2026.10.13.2':
+    # Owner explicitly approved ONLY the six visible Book Listen progress-counter
+    # differences (28/28/38/34/38/34px) shown in the exact-source 52-capture
+    # PR #626 review. The previous immutable .1 branch and all strict visual
+    # limits are retained. A new design would need a new visual decision.
+    need(visual.get('ref')=='visual-baseline/2026.10.13.2'
+         and visual.get('commit')=='602d597fa4575c9302e3ad9799fb3c58faa67965'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and '11792713708' in text('qa/VISUAL_REVIEW_2026.10.13.2_PR626.md')
+         and 'STATUS: OWNER VISUAL APPROVAL' in text('qa/VISUAL_REVIEW_2026.10.13.2_PR626.md'),
+         '2026.10.13.2 owner visual baseline must remain on the exact approved 602d597 source with all 52 captures at 12px')
 elif visual.get('release')=='2026.10.13.1':
     # Owner inspected the 52-source-screenshot approval pack: 16 changed
     # captures across the four viewports and 36 unchanged. Pin the exact
