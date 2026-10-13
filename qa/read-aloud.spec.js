@@ -804,6 +804,9 @@ test('Book audio speaks Book chapter prose instead of a visible scenario or exam
   await player.locator('[data-mm-read="play"]').click();
   await expect.poll(()=>page.evaluate(()=>window.__mmBookTargetSpoken||'')).toBe('Correct Book chapter heading.');
   await expect(player.locator('[data-mm-read="current"]')).toHaveText('Correct Book chapter heading.');
+  // The visible player counter is part of the regression: unrelated exam and
+  // scenario prose must not inflate Book progress or the speaking queue.
+  await expect(player.locator('[data-mm-read="position"]')).toHaveText('1 / 2');
   await page.evaluate(()=>window.MMReadAloud.stop());
   const result=await page.evaluate(()=>window.MMReadAloud.refresh().map(u=>u.text));
   expect(result).toContain('Correct governed Book prose follows this heading.');
