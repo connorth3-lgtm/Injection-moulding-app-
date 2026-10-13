@@ -669,13 +669,19 @@ test('Virtual Apprenticeship progress excludes unknown and malformed stored case
         'VA-01':{best:2,last:2,updated:'2026-10-13'},
         'VA-99':{best:4,updated:'2026-10-13'},
         'legacy-other-course':{best:4,updated:'2026-10-13'},
-        'VA-02':'corrupted'
+        'VA-02':'corrupted',
+        'VA-03':{best:4,last:4},
+        'VA-04':{best:'invalid',updated:'not a date'}
       },attempts:1
     });
     window.MM_VIRTUAL_APPRENTICESHIP.openCase(0);
   });
   await expect(page.locator('#mmVirtualApprenticeship #mmVaProgress'))
     .toHaveText('1/6 cases completed · best reasoning score 2/4');
+  const competency=await page.evaluate(()=>window.MM_VIRTUAL_APPRENTICESHIP.competencyRecord());
+  expect(competency.filter(row=>row.reviewed).map(row=>row.caseId)).toEqual(['VA-01']);
+  expect(competency.find(row=>row.caseId==='VA-03').best).toBe(0);
+  expect(competency.find(row=>row.caseId==='VA-04').best).toBe(0);
 });
 
 test('Changing only apprenticeship coaching level does not double-count a reviewed attempt',async({page})=>{
