@@ -332,8 +332,8 @@ function ensurePreviewStatus(){
   // Only the hosted non-production learner preview gets this persistent label.
   // The desktop app and local dev server must not inherit a web release claim.
   if(!/\/preview\/(?:|.*)$/.test(location.pathname))return;
-  const subtitle=document.getElementById('pageSubtitle');
-  if(!subtitle||document.getElementById('mmPreviewStatus'))return;
+  const bar=document.querySelector('#app .topbar,.topbar');
+  if(!bar||document.getElementById('mmPreviewStatus'))return;
   const badge=document.createElement('p');
   badge.id='mmPreviewStatus';
   badge.className='mm-preview-status';
@@ -342,7 +342,7 @@ function ensurePreviewStatus(){
   link.textContent='NON-PRODUCTION PREVIEW · Educational / advisory use only';
   link.setAttribute('aria-label','Non-production preview: educational and advisory use only. Read privacy and limits');
   badge.appendChild(link);
-  subtitle.insertAdjacentElement('afterend',badge);
+  // The title/subtitle container is deliberately hidden on several mobile\n  // routes. Keep this independent status label in the visible topbar.\n  bar.appendChild(badge);
 }
 const ASSET='./assets/book-diagrams/';
 const PHOTO_ASSET='./assets/mockup-reference-tiles.webp';

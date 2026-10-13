@@ -68,6 +68,8 @@ test('public preview status is shown only for a preview URL, not local desktop p
   await expect(page.locator('#mmPreviewStatus')).toBeVisible();
   await expect(page.locator('#mmPreviewStatus a')).toHaveAttribute('href','./privacy.html');
   await expect(page.locator('#mmPreviewStatus')).toContainText('NON-PRODUCTION PREVIEW');
+  await page.evaluate(()=>window.switchView('path'));
+  await expect(page.locator('#mmPreviewStatus')).toBeVisible();
 });
 test('Read Aloud integrates with the real shell, docks in the header without covering learner content, and scopes itself to visible learner text', async ({ page }) => {
   await seedLearner(page);
