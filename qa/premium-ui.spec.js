@@ -492,6 +492,35 @@ test('Spatial Twin opens as a responsive evidence-led moulding world',async({pag
   await expect(page.locator('#mmVirtualApprenticeship')).toBeVisible();
 });
 
+test('Apprenticeship Book links show retryable failure for missing, throwing and rejecting chapters',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><main id="simulator"></main></body></html>');
+  await page.evaluate(()=>{
+    window.switchView=()=>{};
+    window.MMBook={openChapter(){throw new Error('Book service unavailable')}};
+  });
+  await page.addScriptTag({path:'src/domains/engineering/virtual-apprenticeship.js'});
+  await page.evaluate(()=>window.MM_VIRTUAL_APPRENTICESHIP.openCase(1));
+  const factory=page.locator('[data-mm-factory-case="1"]');
+  const button=factory.getByRole('button',{name:'Book: Cavity pressure',exact:false});
+  await expect(button).toBeVisible();
+  await button.click();
+  await expect(factory.locator('[data-mm-va-book-unavailable][role="status"]'))
+    .toHaveText('This Book chapter could not be opened. Use the Book tab or try again later.');
+  await button.click();
+  await expect(factory.locator('[data-mm-va-book-unavailable]')).toHaveCount(1);
+  await page.evaluate(()=>{window.MMBook.openChapter=()=>Promise.reject(new Error('Manifest unreachable'));});
+  await button.click();
+  await expect(factory.locator('[data-mm-va-book-unavailable]')).toHaveCount(1);
+  await page.evaluate(()=>{delete window.MMBook.openChapter;});
+  await button.click();
+  await expect(factory.locator('[data-mm-va-book-unavailable]')).toHaveCount(1);
+  await page.evaluate(()=>{window.MMBook.openChapter=()=>Promise.resolve(true);});
+  await button.click();
+  // A later retry remains operable without cloning warnings.
+  await expect(button).toBeEnabled();
+  await expect(factory.locator('[data-mm-va-book-unavailable]')).toHaveCount(1);
+});
+
 test('Detached Virtual Apprenticeship controls cannot grade or change a newer case',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
