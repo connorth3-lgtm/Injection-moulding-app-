@@ -310,7 +310,7 @@
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
-    "technicalAutomation": "fail",
+    "technicalAutomation": "pass",
     "bookPublicationAuthorization": "authorized",
     "bookIndependentSme": "hold",
     "curriculumIndependentSme": "hold",
@@ -345,12 +345,12 @@
   "userFacingTerminologyBoundary": "Internal evidenceMaturity=verified must be displayed as 'Source evidence reviewed'. The word verified must not be used by itself in learner-facing Book assurance because independent human SME/device/learner validation is a separate namespace.",
   "currentAssuranceEvidence": {
     "staticContract": {
-      "status": "fail",
-      "meaning": "HOLD: release 2026.10.13.1 source df600852152c30b6151c391e330f77e4a78f1ff8 artifact 11785282763 and producer 38336952892 are staged as technical metadata only; producer success and quality are NOT independently verified. No source, human, device or production approval is implied."
+      "status": "pass",
+      "meaning": "PASS: release 2026.10.13.1 source df600852152c30b6151c391e330f77e4a78f1ff8 run 38336952892 artifact 11785282763 fingerprint sha256:9ce8e0f6806ad0edd159288b60f14874ff4ab589e06ab795f69e55e4fb51fdfe is source-bound to successful protected quality-gated producer and retained artifact. This is software-controlled proof only; independent device, human, provider and production validation remain HOLD."
     },
     "behavioralBrowser": {
-      "status": "fail",
-      "meaning": "HOLD: browser and question gates for release 2026.10.13.1 source df600852152c30b6151c391e330f77e4a78f1ff8 must be independently verified on the staged candidate; prior green workflows do not transfer to a different exact source."
+      "status": "pass",
+      "meaning": "PASS: release 2026.10.13.1 source df600852152c30b6151c391e330f77e4a78f1ff8 passed owner-approved 52-surface Chromium visual QA, Chromium substantive/reachability, WebKit, cross-browser, 500 reliability runs and Question Quality 50-Pass. Independent real-device, accessibility and SME evidence remains HOLD."
     },
     "externalHumanDevice": {
       "status": "hold",
