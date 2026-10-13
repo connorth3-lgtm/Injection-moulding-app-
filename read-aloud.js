@@ -417,6 +417,10 @@
     const main=document.querySelector('#mainContent,.main,main');
     const view=listeningUI?.view;
     if(!main||!view)return;
+    // Switching from a Book or single-screen reader to the course Listening
+    // screen must release its old device utterance first. The Listening
+    // playlist has its own explicit Play action and cannot inherit playback.
+    if(!playlistMode&&(starting||speaking||paused))stop('Ready');
     // The core router may hide this custom view without dispatching a click
     // (for example after a programmatic switchView()). Reconcile against
     // the actual DOM before deciding the Listening tab is already open.
