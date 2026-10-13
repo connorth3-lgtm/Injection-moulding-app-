@@ -81,7 +81,7 @@ test('Book chapter navigation reports true only for a verified successful open',
   await expect(page.locator('#mmBookView [data-mm-book-contents]')).not.toBeHidden();
   const valid=await page.evaluate(()=>window.MMBook.openChapter('diagnostic-method'));
   expect(valid).toBe(true);
-  await expect(page.locator('#mmBookView .mm-book-reader')).toContainText('diagnostic', {ignoreCase:true});
+  await expect(page.locator('#mmBookView [data-mm-book-reader]')).toContainText(/diagnostic/i);
 });
 
 test('Book open fails closed and governed retry can recover from a transient manifest error',async({page})=>{
