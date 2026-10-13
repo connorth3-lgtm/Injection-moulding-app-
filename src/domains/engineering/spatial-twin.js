@@ -167,11 +167,20 @@ function guardTwinInteraction(){
 function saveState(){scopedStorage()?.set?.(STORAGE_KEY,{caseIndex:state.caseIndex,mode:state.mode,phase:state.phase,selected:state.selected})}
 function restoreState(){
   const row=scopedStorage()?.get?.(STORAGE_KEY,null);
-  if(!row||typeof row!=='object'){resetTwinState();return;}
-  if(Number.isInteger(Number(row.caseIndex)))state.caseIndex=Math.max(0,Math.min(cases().length-1,Number(row.caseIndex)));
+  // A partial or malformed scoped record must not inherit fields left in
+  // memory from another case or from an earlier restoration.
+  resetTwinState();
+  if(!row||typeof row!=='object'||Array.isArray(row))return;
+  const caseIndex=Number(row.caseIndex);
+  if(Number.isSafeInteger(caseIndex)&&caseIndex>=0)
+    state.caseIndex=Math.min(Math.max(0,cases().length-1),caseIndex);
+  state.selected=scene().focus?.[0]||'mould';
   if(MODES.some(x=>x[0]===row.mode))state.mode=row.mode;
-  if(Number.isInteger(Number(row.phase)))state.phase=Math.max(0,Math.min(PHASES.length-1,Number(row.phase)));
-  if(HOTSPOTS[row.selected])state.selected=row.selected;
+  const phase=Number(row.phase);
+  if(Number.isSafeInteger(phase)&&phase>=0)
+    state.phase=Math.min(PHASES.length-1,phase);
+  // Inherited keys such as "constructor" or "__proto__" are not hotspots.
+  if(Object.prototype.hasOwnProperty.call(HOTSPOTS,row.selected))state.selected=row.selected;
 }
 function make(tag,className,text){const el=document.createElement(tag);if(className)el.className=className;if(text!=null)el.textContent=text;return el}
 function svgMarkup(){
@@ -320,7 +329,7 @@ function syncWorld(){
   const label=shell.querySelector('.mm-st-world-head .eyebrow');if(label)label.textContent=modeLabel()+' mode';
   const phase=shell.querySelector('.mm-st-world-head b');if(phase)phase.textContent=PHASES[state.phase][1];
 }
-function selectHotspot(id){if(guardTwinInteraction()||!HOTSPOTS[id])return;state.selected=id;saveState();renderInspector();syncWorld()}
+function selectHotspot(id){if(guardTwinInteraction()||!Object.prototype.hasOwnProperty.call(HOTSPOTS,id))return;state.selected=id;saveState();renderInspector();syncWorld()}
 function setMode(id){if(guardTwinInteraction()||!MODES.some(x=>x[0]===id))return;state.mode=id;saveState();syncWorld()}
 function setPhase(value){
   if(guardTwinInteraction())return;
