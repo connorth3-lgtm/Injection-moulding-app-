@@ -501,7 +501,7 @@ test('Apprenticeship Book links show retryable failure for missing, throwing and
   await page.addScriptTag({path:'src/domains/engineering/virtual-apprenticeship.js'});
   await page.evaluate(()=>window.MM_VIRTUAL_APPRENTICESHIP.openCase(1));
   const factory=page.locator('[data-mm-factory-case="1"]');
-  const button=factory.getByRole('button',{name:'Book: Cavity pressure',exact:false});
+  const button=factory.getByRole('button',{name:'Book: Cavity-pressure evidence',exact:true});
   await expect(button).toBeVisible();
   await button.click();
   await expect(factory.locator('[data-mm-va-book-unavailable][role="status"]'))
