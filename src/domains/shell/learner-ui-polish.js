@@ -342,7 +342,9 @@ function ensurePreviewStatus(){
   link.textContent='NON-PRODUCTION PREVIEW · Educational / advisory use only';
   link.setAttribute('aria-label','Non-production preview: educational and advisory use only. Read privacy and limits');
   badge.appendChild(link);
-  // The title/subtitle container is deliberately hidden on several mobile\n  // routes. Keep this independent status label in the visible topbar.\n  bar.appendChild(badge);
+  // The title/subtitle container is deliberately hidden on several mobile
+  // routes. Keep this independent status label in the visible topbar.
+  bar.appendChild(badge);
 }
 const ASSET='./assets/book-diagrams/';
 const PHOTO_ASSET='./assets/mockup-reference-tiles.webp';
