@@ -12,22 +12,6 @@ const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
 
-function ensurePreviewStatus(){
-  // Only the hosted non-production learner preview gets this persistent label.
-  // The desktop app and local dev server must not inherit a web release claim.
-  if(!/\/preview\/(?:|.*)$/.test(location.pathname))return;
-  const subtitle=document.getElementById('pageSubtitle');
-  if(!subtitle||document.getElementById('mmPreviewStatus'))return;
-  const badge=document.createElement('p');
-  badge.id='mmPreviewStatus';
-  badge.className='mm-preview-status';
-  const link=document.createElement('a');
-  link.href='./privacy.html';
-  link.textContent='NON-PRODUCTION PREVIEW · Educational / advisory use only';
-  link.setAttribute('aria-label','Non-production preview: educational and advisory use only. Read privacy and limits');
-  badge.appendChild(link);
-  subtitle.insertAdjacentElement('afterend',badge);
-}
 function ensureStyles(){
   if(document.querySelector('link[data-mm-learner-ui-polish]'))return;
   const link=document.createElement('link');
@@ -344,6 +328,22 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 (function(){
 'use strict';
 if(window.MM_REFERENCE_LAYOUT)return;
+function ensurePreviewStatus(){
+  // Only the hosted non-production learner preview gets this persistent label.
+  // The desktop app and local dev server must not inherit a web release claim.
+  if(!/\/preview\/(?:|.*)$/.test(location.pathname))return;
+  const subtitle=document.getElementById('pageSubtitle');
+  if(!subtitle||document.getElementById('mmPreviewStatus'))return;
+  const badge=document.createElement('p');
+  badge.id='mmPreviewStatus';
+  badge.className='mm-preview-status';
+  const link=document.createElement('a');
+  link.href='./privacy.html';
+  link.textContent='NON-PRODUCTION PREVIEW · Educational / advisory use only';
+  link.setAttribute('aria-label','Non-production preview: educational and advisory use only. Read privacy and limits');
+  badge.appendChild(link);
+  subtitle.insertAdjacentElement('afterend',badge);
+}
 const ASSET='./assets/book-diagrams/';
 const PHOTO_ASSET='./assets/mockup-reference-tiles.webp';
 // The small photographs here are direct visual crops of the user-selected
