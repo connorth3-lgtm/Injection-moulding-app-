@@ -290,24 +290,43 @@ async function prepareSurface(page,surface){
   await normalizeCaptureState(page,surface);
 }
 
+// Every governed visual surface must share identical pointer normalization.
+// Real hover styles remain enabled for users: only automation mouse position
+// is reset before both screenshots, and interactive hover is asserted absent.
+const CAPTURE_SURFACE_ROOTS=Object.freeze({
+  home:'#dashboard',
+  learn:'#path',
+  materials:'#materials',
+  practice:'#scenarios',
+  lesson:'#lesson',
+  more:'#modal',
+  assessment:'#modal',
+  'listen-expanded':'#mmBookView',
+  listening:'#mmBookView',
+  'book-contents':'#mmBookView',
+  'book-materials':'#mmBookView',
+  'book-late':'#mmBookView',
+  'book-trace':'#mmBookView',
+});
+
 async function settleScreenshotPointer(page,surface){
-  // Playwright's real mouse remains at the last clicked Book chapter row.
-  // Baseline and candidate contexts can then highlight different rows even
-  // when their content and layout are identical (28,760-pixel false drift on
-  // the 412x915 Book contents capture after the protected-main squash merge).
-  // Move BOTH pointers to the same inert viewport corner. Do not suppress
-  // :hover styles, crop screenshots, change the approved baseline or relax
-  // the 12-pixel tolerance.
+  const root=CAPTURE_SURFACE_ROOTS[surface];
+  if(!root)throw new Error(`No pointer-normalization coverage for visual surface ${surface}`);
+  // A prior click can leave the pointer over a different course, grade,
+  // chapter, practice card, or modal control in candidate and baseline.
+  // This produced 28,760 spurious diff pixels in a post-merge Book capture.
   await page.mouse.move(1,1);
   await page.evaluate(()=>new Promise(resolve=>
     requestAnimationFrame(()=>requestAnimationFrame(resolve))
   ));
-  if(surface==='book-contents'){
-    // Verify the actual source of the prior mismatch has been neutralized.
-    // Keep real Book item hover styling enabled for interactive users.
-    await expect(page.locator('[data-mm-book-contents] [data-mm-book-chapter]:hover')).toHaveCount(0);
-  }
+  // Check ALL tabs and Book/lesson/assessment screens, not only Book contents.
+  // Never hide :hover CSS or relax any locked pixel-diff threshold.
+  const controls=page.locator(
+    root+' :is(button, a[href], summary, [role="button"], [role="tab"], [data-mm-book-chapter]):hover'
+  );
+  await expect(controls,`Interactive hover persisted on ${surface} after pointer reset`).toHaveCount(0);
 }
+
 
 async function capture(page,file,surface){
   if(surface==='assessment'){
