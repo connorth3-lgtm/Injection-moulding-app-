@@ -314,7 +314,16 @@ function guardLearnerInteraction(control){
   const host=byId('mmVirtualApprenticeship');
   return !!control&&(!control.isConnected||!host?.contains(control));
 }
-function loadProgress(){const row=scopedStorage()?.get(STORAGE_KEY,{schema:1,completed:{},attempts:0});return row&&typeof row==='object'?row:{schema:1,completed:{},attempts:0}}
+function loadProgress(){
+  const fallback={schema:1,completed:{},attempts:0};
+  const row=scopedStorage()?.get(STORAGE_KEY,fallback);
+  if(!row||typeof row!=='object'||Array.isArray(row))return fallback;
+  // Corrupt or legacy-shaped local storage must not crash Review or let a
+  // non-map completion value become writable case evidence.
+  const completed=row.completed&&typeof row.completed==='object'&&!Array.isArray(row.completed)?row.completed:{};
+  const attempts=Number(row.attempts);
+  return {...row,completed,attempts:Number.isSafeInteger(attempts)&&attempts>=0?attempts:0};
+}
 function saveProgress(progress){return scopedStorage()?.set(STORAGE_KEY,progress)===true}
 function scoreReasoning(caseDef,answers){
   const dimensions={};let total=0;
