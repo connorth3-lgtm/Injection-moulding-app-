@@ -492,6 +492,56 @@ test('Spatial Twin opens as a responsive evidence-led moulding world',async({pag
   await expect(page.locator('#mmVirtualApprenticeship')).toBeVisible();
 });
 
+test('Detached Virtual Apprenticeship controls cannot grade or change a newer case',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_VIRTUAL_APPRENTICESHIP?.openCase));
+  await page.evaluate(()=>window.MM_VIRTUAL_APPRENTICESHIP.openCase(0));
+  const root=page.locator('#mmVirtualApprenticeship');
+  for(const step of ['hypothesis','test','response','verify']){
+    await root.locator('[data-mm-va-step="'+step+'"] input[type="radio"]').first().check();
+  }
+  await expect(root.locator('#mmVaCheck')).toBeEnabled();
+  await page.evaluate(()=>{
+    const oldReview=document.getElementById('mmVaCheck');
+    const oldCase=document.getElementById('mmVaCaseSelect');
+    const oldRadio=document.querySelector('[data-mm-va-step="hypothesis"] input[type="radio"]');
+    window.MM_VIRTUAL_APPRENTICESHIP.openCase(1);
+    oldReview.click();
+    oldCase.value='2';
+    oldCase.dispatchEvent(new Event('change',{bubbles:true}));
+    oldRadio.checked=true;
+    oldRadio.dispatchEvent(new Event('change',{bubbles:true}));
+  });
+  await expect(root.locator('#mmVaCaseSelect')).toHaveValue('1');
+  await expect(root.locator('#mmVaResult')).toBeEmpty();
+  await expect(root.locator('#mmVaProgress')).toContainText('0/6 cases completed');
+  expect(await root.locator('[data-mm-va-step] input:checked').count()).toBe(0);
+});
+
+test('Detached Spatial Twin scene controls cannot modify or close the new case',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_SPATIAL_TWIN?.open));
+  await page.evaluate(()=>window.MM_SPATIAL_TWIN.open({caseIndex:1}));
+  await page.evaluate(()=>{
+    const host=document.getElementById('mmSpatialTwin');
+    const staleClose=host.querySelector('[data-mm-st-close]');
+    const staleMode=host.querySelector('[data-mm-st-mode="thermal"]');
+    const stalePhase=host.querySelector('[data-mm-st-phase="4"]');
+    const staleCase=host.querySelector('[data-mm-st-case]');
+    window.MM_SPATIAL_TWIN.open({caseIndex:2,mode:'system'});
+    staleMode.click();stalePhase.click();staleClose.click();
+    staleCase.value='3';
+    staleCase.dispatchEvent(new Event('change',{bubbles:true}));
+  });
+  const twin=page.locator('#mmSpatialTwin');
+  await expect(twin).toBeVisible();
+  await expect(twin.locator('[data-mm-st-case]')).toHaveValue('2');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-mode','system');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-phase','baseline');
+});
+
 test('Virtual Apprenticeship prevents stale reviewed answers crossing local learner profiles',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await page.addInitScript(()=>{
