@@ -584,6 +584,30 @@ test('Virtual Apprenticeship prevents stale reviewed answers crossing local lear
   await expect(root.locator('#mmVaProgress')).toContainText('1/6 cases completed');
 });
 
+test('Changing only apprenticeship coaching level does not double-count a reviewed attempt',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_VIRTUAL_APPRENTICESHIP?.openCase&&window.MM_RUNTIME_V2?.storage?.get));
+  await page.evaluate(()=>window.MM_VIRTUAL_APPRENTICESHIP.openCase(0));
+  const root=page.locator('#mmVirtualApprenticeship');
+  for(const step of ['hypothesis','test','response','verify']){
+    await root.locator('[data-mm-va-step="'+step+'"] input[type="radio"]').first().check();
+  }
+  await root.locator('#mmVaCheck').click();
+  const attempts=()=>page.evaluate(()=>window.MM_RUNTIME_V2.storage.get('mm_virtual_apprenticeship_v1',null)?.attempts||0);
+  expect(await attempts()).toBe(1);
+  const level=root.locator('[data-mm-va-level]');
+  await level.selectOption('advanced');
+  await expect(level).toHaveValue('advanced');
+  // Review the unchanged choices in another coaching style: they are
+  // still the original four answers, not another completed attempt.
+  await root.locator('#mmVaCheck').click();
+  expect(await attempts()).toBe(1);
+  await root.locator('[data-mm-va-step="hypothesis"] input[type="radio"]').nth(1).check();
+  await root.locator('#mmVaCheck').click();
+  expect(await attempts()).toBe(2);
+});
+
 test('Virtual Apprenticeship warns and retries when local progress persistence fails',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
