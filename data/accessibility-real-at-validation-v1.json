@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.13.2",
-  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.13.2.md",
-  "sourceSha": "fccf672921cec36a07f93bc95b40e63e774331b9",
-  "runtimeFingerprint": "sha256:5b00e17a1d8afe3848d08f7e8ba057409a2f0ca6cb69c753cc4b1d56b8255afc",
+  "release": "2026.10.13.3",
+  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.13.3.md",
+  "sourceSha": null,
+  "runtimeFingerprint": null,
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.13.2 is bound to exact retained learner-runtime candidate fccf672921cec36a07f93bc95b40e63e774331b9; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
+  "boundary": "Automated browser and accessibility regressions cannot substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.13.3 has no accepted technical candidate yet; previous 2026.10.13.2 source identity is historical. Human NVDA/VoiceOver and actual physical iOS/Android audible Book TTS remain pending.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -306,9 +306,9 @@
     "textZoom200Percent": true
   },
   "previousCandidate": {
-    "release": "2026.10.13.1",
-    "sourceSha": "df600852152c30b6151c391e330f77e4a78f1ff8",
-    "runtimeFingerprint": "sha256:9ce8e0f6806ad0edd159288b60f14874ff4ab589e06ab795f69e55e4fb51fdfe"
+    "release": "2026.10.13.2",
+    "sourceSha": "fccf672921cec36a07f93bc95b40e63e774331b9",
+    "runtimeFingerprint": "sha256:5b00e17a1d8afe3848d08f7e8ba057409a2f0ca6cb69c753cc4b1d56b8255afc"
   },
-  "technicalCandidateStatus": "pending exact-source artifact and human AT review"
+  "technicalCandidateStatus": "pending successful exact-source artifact and genuine human assistive-technology review"
 }

@@ -1,12 +1,12 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.13.2`**.
+Current governed web candidate: **`2026.10.13.3`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS: release 2026.10.13.2 source fccf672921cec36a07f93bc95b40e63e774331b9 run 38361000101 artifact 11795250344 fingerprint sha256:5b00e17a1d8afe3848d08f7e8ba057409a2f0ca6cb69c753cc4b1d56b8255afc is source-bound to successful protected quality-gated producer and retained artifact. This is software-controlled proof only; independent device, human, provider and production validation remain HOLD. |
-| Behavioral / browser | **pass** | PASS: release 2026.10.13.2 source fccf672921cec36a07f93bc95b40e63e774331b9 passed owner-approved 52-surface Chromium visual QA, Chromium substantive/reachability, WebKit, cross-browser, 500 reliability runs and Question Quality 50-Pass. Independent real-device, accessibility and SME evidence remains HOLD. |
+| Static / contract | **fail** | HOLD: release 2026.10.13.3 changes public runtime, styling and privacy with no successful current-source retained producer. Previous 2026.10.13.2 run 38361000101 and artifact 11795250344 are historical only. External reviews remain HOLD. |
+| Behavioral / browser | **fail** | HOLD: release 2026.10.13.3 needs a new owner-reviewed immutable 52-screen visual baseline, exact-head Chromium/WebKit, five reliability shards and Question Quality 50-Pass. Earlier 2026.10.13.2 browser results do not transfer. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
