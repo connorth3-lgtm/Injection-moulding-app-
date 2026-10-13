@@ -584,6 +584,25 @@ test('Virtual Apprenticeship prevents stale reviewed answers crossing local lear
   await expect(root.locator('#mmVaProgress')).toContainText('1/6 cases completed');
 });
 
+test('Virtual Apprenticeship progress excludes unknown and malformed stored case keys',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_VIRTUAL_APPRENTICESHIP?.openCase&&window.MM_RUNTIME_V2?.storage?.set));
+  await page.evaluate(()=>{
+    window.MM_RUNTIME_V2.storage.set('mm_virtual_apprenticeship_v1',{
+      schema:1,completed:{
+        'VA-01':{best:2,last:2,updated:'2026-10-13'},
+        'VA-99':{best:4,updated:'2026-10-13'},
+        'legacy-other-course':{best:4,updated:'2026-10-13'},
+        'VA-02':'corrupted'
+      },attempts:1
+    });
+    window.MM_VIRTUAL_APPRENTICESHIP.openCase(0);
+  });
+  await expect(page.locator('#mmVirtualApprenticeship #mmVaProgress'))
+    .toHaveText('1/6 cases completed · best reasoning score 2/4');
+});
+
 test('Changing only apprenticeship coaching level does not double-count a reviewed attempt',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
