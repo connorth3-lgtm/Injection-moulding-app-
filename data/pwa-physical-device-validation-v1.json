@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Release 2026.10.13.2 is in evidence-free candidate staging: no accepted successful producer or current physical runtime candidate is bound. The historical 2026.10.13.1 candidate is preserved separately, not transferred. Physical iOS/iPadOS and Android devices still require real install, offline restart, reboot, update, storage-pressure, zoom and audible Book TTS testing. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
+  "boundary": "Release 2026.10.13.2 is in evidence-free candidate staging: no accepted successful producer or current physical runtime candidate is bound. The historical 2026.10.13.1 candidate is preserved separately, not transferred. physical iOS/iPadOS and Android devices still require real install, offline restart, reboot, update, storage-pressure, zoom and audible Book TTS testing. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
