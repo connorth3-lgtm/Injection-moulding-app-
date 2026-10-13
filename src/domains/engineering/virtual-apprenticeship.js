@@ -249,8 +249,14 @@ function competencyRecord(){
 function bookButton(host,chapter){
   const b=make('button','secondary','Book: '+chapter.title);b.type='button';
   const token=scopedStorage()?.learnerToken?.()||null;
-  function reportUnavailable(){
-    if(!b.isConnected||!host.isConnected)return;
+  function activeRequest(request){
+    return b.isConnected&&host.isConnected&&
+      byId('mmVirtualApprenticeship')?.contains(b)&&
+      (!token||token===scopedStorage()?.learnerToken?.())&&
+      Number(host.dataset.mmVaBookRequest||0)===request;
+  }
+  function reportUnavailable(request){
+    if(!activeRequest(request))return;
     host.dataset.bookUnavailable='1';
     if(host.querySelector('[data-mm-va-book-unavailable]'))return;
     const note=make('p','tiny muted','This Book chapter could not be opened. Use the Book tab or try again later.');
@@ -258,15 +264,26 @@ function bookButton(host,chapter){
     note.setAttribute('role','status');
     host.appendChild(note);
   }
+  function clearUnavailable(request){
+    if(!activeRequest(request))return;
+    delete host.dataset.bookUnavailable;
+    host.querySelector('[data-mm-va-book-unavailable]')?.remove();
+  }
   b.addEventListener('click',()=>{
-    if(!b.isConnected||!byId('mmVirtualApprenticeship')?.contains(b))return;
+    if(guardLearnerInteraction(b))return;
     if(token&&token!==scopedStorage()?.learnerToken?.())return;
+    // All links in a Book recommendation panel share one request sequence.
+    // Late failures from an earlier click cannot overwrite a later success.
+    const request=Number(host.dataset.mmVaBookRequest||0)+1;
+    host.dataset.mmVaBookRequest=String(request);
     const openChapter=window.MMBook?.openChapter;
-    if(typeof openChapter!=='function'){reportUnavailable();return;}
-    // Evaluating the call can throw synchronously, before Promise.resolve()
-    // can install a rejection handler. Both failure paths remain retryable.
-    try{void Promise.resolve(openChapter.call(window.MMBook,chapter.id)).catch(reportUnavailable)}
-    catch(_){reportUnavailable()}
+    if(typeof openChapter!=='function'){reportUnavailable(request);return;}
+    try{
+      void Promise.resolve(openChapter.call(window.MMBook,chapter.id)).then(
+        result=>{if(result===false)reportUnavailable(request);else clearUnavailable(request)},
+        ()=>reportUnavailable(request)
+      );
+    }catch(_){reportUnavailable(request)}
   });
   return b;
 }
