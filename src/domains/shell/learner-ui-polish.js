@@ -12,6 +12,22 @@ const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
 
+function ensurePreviewStatus(){
+  // Only the hosted non-production learner preview gets this persistent label.
+  // The desktop app and local dev server must not inherit a web release claim.
+  if(!/\/preview\/(?:|.*)$/.test(location.pathname))return;
+  const subtitle=document.getElementById('pageSubtitle');
+  if(!subtitle||document.getElementById('mmPreviewStatus'))return;
+  const badge=document.createElement('p');
+  badge.id='mmPreviewStatus';
+  badge.className='mm-preview-status';
+  const link=document.createElement('a');
+  link.href='./privacy.html';
+  link.textContent='NON-PRODUCTION PREVIEW · Educational / advisory use only';
+  link.setAttribute('aria-label','Non-production preview: educational and advisory use only. Read privacy and limits');
+  badge.appendChild(link);
+  subtitle.insertAdjacentElement('afterend',badge);
+}
 function ensureStyles(){
   if(document.querySelector('link[data-mm-learner-ui-polish]'))return;
   const link=document.createElement('link');
@@ -944,10 +960,11 @@ function refresh(){
   if(scheduled)return;scheduled=true;
   requestAnimationFrame(()=>{
     scheduled=false;
-    try{home();learn();practice();practiceInside();materials();more();deepViewPolish()}catch(error){console.warn('[MouldMaster reference layout]',error)}
+    try{ensurePreviewStatus();home();learn();practice();practiceInside();materials();more();deepViewPolish()}catch(error){console.warn('[MouldMaster reference layout]',error)}
   });
 }
 function boot(){
+  ensurePreviewStatus();
   document.documentElement.classList.add('mm-reference-layout');
   refresh();
   window.MM_APP_SHELL?.events?.onViewChange?.(refresh);
