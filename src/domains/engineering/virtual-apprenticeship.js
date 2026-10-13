@@ -340,8 +340,13 @@ function applyCaseToSimulator(caseRow=caseDef()){
   return true;
 }
 function progressSummary(){
-  const p=loadProgress(),done=Object.keys(p.completed||{}).length,best=Math.max(0,...Object.values(p.completed||{}).map(x=>Number(x?.best||0)));
-  return `${done}/${CASES.length} cases completed · best reasoning score ${best}/${STEP_KEYS.length}`;
+  const p=loadProgress(),completed=p.completed&&typeof p.completed==='object'&&!Array.isArray(p.completed)?p.completed:{};
+  // This counter represents only the six authored cases, not arbitrary
+  // keys from older/corrupted scoped progress or unrelated programmes.
+  const rows=CASES.filter(c=>Object.prototype.hasOwnProperty.call(completed,c.id))
+    .map(c=>completed[c.id]).filter(x=>x&&typeof x==='object'&&!Array.isArray(x));
+  const best=Math.max(0,...rows.map(x=>Math.max(0,Math.min(STEP_KEYS.length,Number(x.best)||0))));
+  return `${rows.length}/${CASES.length} cases completed · best reasoning score ${best}/${STEP_KEYS.length}`;
 }
 function radioGroup(step,row){
   const wrap=make('fieldset','content-block');wrap.dataset.mmVaStep=step;
