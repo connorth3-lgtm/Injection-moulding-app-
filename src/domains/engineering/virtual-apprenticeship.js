@@ -237,12 +237,20 @@ function tutorPlan(row,result){
     book:[...new Set(recommended)].map(id=>({id,title:BOOK_INDEX[id]})),
     guidance:gaps.length?'Read the source context for each missed reasoning step, then retry the case.':'The authored reasoning chain is sound. Repeat with fresh evidence; a perfect training answer is not proof of workplace competence.'};
 }
+function validReviewedAttempt(value){
+  if(!value||typeof value!=='object'||Array.isArray(value))return false;
+  const best=Number(value.best);
+  return typeof value.updated==='string'&&Number.isFinite(Date.parse(value.updated))&&
+    Number.isSafeInteger(best)&&best>=0&&best<=STEP_KEYS.length;
+}
 function competencyRecord(){
   const completed=loadProgress().completed||{};
   return FACTORY_TRACK.map(item=>{
-    const row=completed[item.caseId]||{},steps=row.steps||{};
-    return {caseId:item.caseId,role:item.role,skill:item.skill,best:Number(row.best)||0,
-      reviewed:!!row.updated,reasoning:Object.fromEntries(STEP_KEYS.map(k=>[k,steps[k]===true])),
+    const raw=Object.prototype.hasOwnProperty.call(completed,item.caseId)?completed[item.caseId]:null;
+    const row=validReviewedAttempt(raw)?raw:null;
+    const steps=row?.steps&&typeof row.steps==='object'&&!Array.isArray(row.steps)?row.steps:{};
+    return {caseId:item.caseId,role:item.role,skill:item.skill,best:row?Number(row.best):0,
+      reviewed:!!row,reasoning:Object.fromEntries(STEP_KEYS.map(k=>[k,steps[k]===true])),
       boundary:'Local formative practice, not accredited or workplace competence'};
   });
 }
@@ -383,8 +391,8 @@ function progressSummary(){
   // This counter represents only the six authored cases, not arbitrary
   // keys from older/corrupted scoped progress or unrelated programmes.
   const rows=CASES.filter(c=>Object.prototype.hasOwnProperty.call(completed,c.id))
-    .map(c=>completed[c.id]).filter(x=>x&&typeof x==='object'&&!Array.isArray(x));
-  const best=Math.max(0,...rows.map(x=>Math.max(0,Math.min(STEP_KEYS.length,Number(x.best)||0))));
+    .map(c=>completed[c.id]).filter(validReviewedAttempt);
+  const best=Math.max(0,...rows.map(x=>Number(x.best)));
   return `${rows.length}/${CASES.length} cases completed · best reasoning score ${best}/${STEP_KEYS.length}`;
 }
 function radioGroup(step,row){
