@@ -5,7 +5,7 @@
   "sourceSha": null,
   "runtimeFingerprint": null,
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions cannot substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.13.3 has no accepted technical candidate yet; previous 2026.10.13.2 source identity is historical. Human NVDA/VoiceOver and actual physical iOS/Android audible Book TTS remain pending.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.13.3 has no accepted technical candidate yet; previous 2026.10.13.2 source identity is historical. Human NVDA/VoiceOver and actual physical iOS/Android audible Book TTS remain pending.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
