@@ -6,8 +6,12 @@
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 619,
-  "candidate": null,
-  "boundary": "Release 2026.10.13.2 has no accepted successful exact-head technical candidate. Earlier 2026.10.13.1 producer metadata is historical and does not establish any of NZQA/provider G1–G8 external gates, assessment or accreditation authority. All remain HOLD.",
+  "candidate": {
+    "release": "2026.10.13.2",
+    "sourceSha": "fccf672921cec36a07f93bc95b40e63e774331b9",
+    "runtimeFingerprint": "sha256:5b00e17a1d8afe3848d08f7e8ba057409a2f0ca6cb69c753cc4b1d56b8255afc"
+  },
+  "boundary": "Release 2026.10.13.2 technical candidate fccf672921cec36a07f93bc95b40e63e774331b9 does not establish any of NZQA/provider G1–G8 external gates or assessment/accreditation authority.",
   "requiredGates": [
     {
       "id": "G1-provider",
