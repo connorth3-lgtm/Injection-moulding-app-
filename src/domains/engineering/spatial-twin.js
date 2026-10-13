@@ -171,16 +171,16 @@ function restoreState(){
   // memory from another case or from an earlier restoration.
   resetTwinState();
   if(!row||typeof row!=='object'||Array.isArray(row))return;
-  const caseIndex=Number(row.caseIndex);
+  const caseIndex=typeof row.caseIndex==='number'||typeof row.caseIndex==='string'?Number(row.caseIndex):NaN;
   if(Number.isSafeInteger(caseIndex)&&caseIndex>=0)
     state.caseIndex=Math.min(Math.max(0,cases().length-1),caseIndex);
   state.selected=scene().focus?.[0]||'mould';
   if(MODES.some(x=>x[0]===row.mode))state.mode=row.mode;
-  const phase=Number(row.phase);
+  const phase=typeof row.phase==='number'||typeof row.phase==='string'?Number(row.phase):NaN;
   if(Number.isSafeInteger(phase)&&phase>=0)
     state.phase=Math.min(PHASES.length-1,phase);
   // Inherited keys such as "constructor" or "__proto__" are not hotspots.
-  if(Object.prototype.hasOwnProperty.call(HOTSPOTS,row.selected))state.selected=row.selected;
+  if(typeof row.selected==='string'&&Object.prototype.hasOwnProperty.call(HOTSPOTS,row.selected))state.selected=row.selected;
 }
 function make(tag,className,text){const el=document.createElement(tag);if(className)el.className=className;if(text!=null)el.textContent=text;return el}
 function svgMarkup(){
@@ -329,7 +329,7 @@ function syncWorld(){
   const label=shell.querySelector('.mm-st-world-head .eyebrow');if(label)label.textContent=modeLabel()+' mode';
   const phase=shell.querySelector('.mm-st-world-head b');if(phase)phase.textContent=PHASES[state.phase][1];
 }
-function selectHotspot(id){if(guardTwinInteraction()||!Object.prototype.hasOwnProperty.call(HOTSPOTS,id))return;state.selected=id;saveState();renderInspector();syncWorld()}
+function selectHotspot(id){if(guardTwinInteraction()||typeof id!=='string'||!Object.prototype.hasOwnProperty.call(HOTSPOTS,id))return;state.selected=id;saveState();renderInspector();syncWorld()}
 function setMode(id){if(guardTwinInteraction()||!MODES.some(x=>x[0]===id))return;state.mode=id;saveState();syncWorld()}
 function setPhase(value){
   if(guardTwinInteraction())return;
