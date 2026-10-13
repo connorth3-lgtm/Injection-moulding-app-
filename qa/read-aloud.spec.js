@@ -40,6 +40,25 @@ test('expanded tablet Book speech controls occupy layout instead of overlaying r
   expect(result.bookTop).toBeGreaterThanOrEqual(result.playerBottom-2);
   expect(result.bodyWidth).toBeLessThanOrEqual(result.viewportWidth+2);
 });
+test('mobile bottom sheet leaves scroll clearance for Book chapter text and controls',async({page})=>{
+  await seedLearner(page);
+  await page.setViewportSize({width:360,height:800});
+  await page.goto(APP);
+  await page.waitForFunction(()=>window.MMBook?.open&&window.MM_APP_SHELL_FINALIZED);
+  await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load();});
+  const details=page.locator('.mm-read-aloud details');
+  await details.evaluate(el=>{el.open=true});
+  await expect(details).toBeVisible();
+  const geometry=await page.evaluate(()=>{
+    const panel=document.querySelector('.mm-read-aloud details');
+    const book=document.getElementById('mmBookView');
+    const rect=panel.getBoundingClientRect();
+    return {clearance:parseFloat(getComputedStyle(book).paddingBottom)||0,panelHeight:rect.height,viewportHeight:innerHeight,width:document.documentElement.scrollWidth,viewportWidth:innerWidth};
+  });
+  expect(geometry.clearance).toBeGreaterThanOrEqual(235);
+  expect(geometry.panelHeight).toBeLessThan(geometry.viewportHeight-75);
+  expect(geometry.width).toBeLessThanOrEqual(geometry.viewportWidth+2);
+});
 test('public preview status is shown only for a preview URL, not local desktop paths', async ({page}) => {
   await seedLearner(page);
   await page.goto(APP);

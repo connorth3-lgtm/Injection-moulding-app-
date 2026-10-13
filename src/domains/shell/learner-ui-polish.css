@@ -3339,3 +3339,16 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
   .top-actions:has(.mm-read-aloud details[open]){flex-wrap:wrap!important;align-items:flex-start!important;justify-content:flex-end!important}
   .mm-read-aloud details[open]{position:relative!important;inset:auto!important;max-width:min(360px,calc(100vw - 24px))!important;box-shadow:none!important;z-index:9!important}
 }
+
+/* Mobile Listen remains a collapsible sheet; leave a scrollable run-out below
+   the Book content so no final paragraph/control is trapped beneath it. */
+@media(max-width:700px){
+  body:has(.mm-read-aloud details[open]) #mmBookView:not(.hidden){
+    padding-bottom:clamp(240px,42svh,380px)!important;
+  }
+  .mm-read-aloud details[open]{
+    max-height:calc(100dvh - var(--mm-mobile-nav-clearance,104px) - env(safe-area-inset-bottom) - 52px)!important;
+    overflow-y:auto!important;
+    overscroll-behavior:contain;
+  }
+}
