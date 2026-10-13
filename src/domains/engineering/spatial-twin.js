@@ -344,14 +344,17 @@ function syncMissionContext(){
   )
 }
 function bind(host){
-  host.querySelector('[data-mm-st-close]')?.addEventListener('click',close);
-  host.querySelector('[data-mm-st-case]')?.addEventListener('change',e=>setCase(e.target.value));
-  host.querySelectorAll('[data-mm-st-mode]').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mmStMode)));
-  host.querySelectorAll('[data-mm-st-select]').forEach(b=>b.addEventListener('click',()=>selectHotspot(b.dataset.mmStSelect)));
-  host.querySelectorAll('[data-mm-st-hotspot]').forEach(b=>b.addEventListener('click',()=>selectHotspot(b.dataset.mmStHotspot)));
-  host.querySelectorAll('[data-mm-st-phase]').forEach(b=>b.addEventListener('click',()=>setPhase(b.dataset.mmStPhase)));
-  host.querySelector('[data-mm-st-range]')?.addEventListener('input',e=>setPhase(e.target.value));
-  host.querySelector('[data-mm-st-apprentice]')?.addEventListener('click',openApprenticeship);
+  // Each case switch reconstructs the scene. Detached controls keep their
+  // listener closures, but cannot act on the current case or learner.
+  const live=el=>!!(el?.isConnected&&host.contains(el));
+  host.querySelector('[data-mm-st-close]')?.addEventListener('click',e=>{if(live(e.currentTarget))close()});
+  host.querySelector('[data-mm-st-case]')?.addEventListener('change',e=>{if(live(e.currentTarget))setCase(e.currentTarget.value)});
+  host.querySelectorAll('[data-mm-st-mode]').forEach(b=>b.addEventListener('click',()=>{if(live(b))setMode(b.dataset.mmStMode)}));
+  host.querySelectorAll('[data-mm-st-select]').forEach(b=>b.addEventListener('click',()=>{if(live(b))selectHotspot(b.dataset.mmStSelect)}));
+  host.querySelectorAll('[data-mm-st-hotspot]').forEach(b=>b.addEventListener('click',()=>{if(live(b))selectHotspot(b.dataset.mmStHotspot)}));
+  host.querySelectorAll('[data-mm-st-phase]').forEach(b=>b.addEventListener('click',()=>{if(live(b))setPhase(b.dataset.mmStPhase)}));
+  host.querySelector('[data-mm-st-range]')?.addEventListener('input',e=>{if(live(e.currentTarget))setPhase(e.currentTarget.value)});
+  host.querySelector('[data-mm-st-apprentice]')?.addEventListener('click',e=>{if(live(e.currentTarget))openApprenticeship()});
 }
 function install(){
   const simulator=byId('simulator');if(!simulator)return false;
