@@ -58,7 +58,9 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   })).toBeTruthy();
 
   const visibilityCheck=await page.evaluate(() => {
-    const root=document.querySelector('.main')||document.querySelector('main')||document.body;
+    // The Book has an explicit narration boundary: insert the visible probe
+    // inside Contents, not in a sibling shell panel outside the Book.
+    const root=document.querySelector('#mmBookView [data-mm-book-contents]')||document.querySelector('.main')||document.body;
     const visible=document.createElement('p');visible.id='mmQaVisibleSpeech';visible.textContent='Read aloud visible sentinel sentence.';
     const hidden=document.createElement('p');hidden.id='mmQaHiddenSpeech';hidden.hidden=true;hidden.textContent='Read aloud hidden sentinel sentence.';
     root.append(visible,hidden);
