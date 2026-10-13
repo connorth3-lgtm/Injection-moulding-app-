@@ -7,7 +7,7 @@
 if(window.MM_LEARNER_UI_POLISH)return;
 const VERSION='2026.10.13.3';
 // Cache-bust stylesheet revisions without claiming a new governed app release.
-const STYLE_REV='2026.10.13.1';
+const STYLE_REV='2026.10.13.3';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
