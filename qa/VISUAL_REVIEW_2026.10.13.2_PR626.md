@@ -1,6 +1,6 @@
 # PR #626 — Book narration visual review for proposed web release 2026.10.13.2
 
-**STATUS: PENDING OWNER VISUAL INSPECTION — NOT APPROVED, NOT MERGED.** This is a reproducible screenshot-review request, not an authorization to repin an immutable screenshot baseline or waive the unchanged 12-pixel gate.
+**STATUS: OWNER VISUAL APPROVAL — SIX BOOK COUNTER DIFFERENCES ONLY; PROTECTED CI/RELEASE STILL HOLD.** On 2026-10-13 NZDT, after the assistant presented the six actual Book-progress before/after visual comparisons and explicitly asked whether to approve them for a new baseline, the owner responded **“I approve.”** This is a narrowly scoped visual decision, not approval of any unrelated screenshots, real-device audio, human evidence or bypass of the unchanged 12-pixel gate. PR #626 remains unmerged.
 
 ## Exact evidence and provenance
 
@@ -25,13 +25,15 @@
 
 The intended Book code correction chooses `#mmBookView [data-mm-book-reader]` or its visible Contents ahead of scenario and exam text. It therefore changes the actual counted speaking units. Altering the new count to match the old screenshot would reintroduce misleading feedback and conceal an important Book-specific behavior change.
 
-## Decision to be made by owner after inspecting actual images
+## Owner's scoped decision and controlled baseline promotion
 
-- [ ] Download artifact **11792713708**, open all **six** `candidate`, `baseline` and `diff` PNG triplets and confirm no unintended layout, clipped controls, readability or mobile safe-area impact.
-- [ ] Review the unchanged other **46** comparisons against the signed manifest and reject any unrelated drift.
-- [ ] Explicitly approve the observed **six** functional Book progress-counter differences in PR discussion with this run ID, source SHA and artifact ID, or request correction. Previous broad approvals are **not** being interpreted as inspection of these new screenshots.
-- [ ] **Only after approval**, create a new release-named immutable baseline ref for 2026.10.13.2 pinned to the actual reviewed source and commit a manifest tied to that ref while preserving all 4 viewports, 13 surfaces and `maxDiffPixels=12`.
-- [ ] Independently rerun exact-head Chromium visual QA, substantive Chromium, WebKit, cross-browser, reliability, Question Quality 50-Pass and producer/release gates; a passing visual review alone does not confer general deployment approval.
+- [x] **Owner approval:** Six visible Book progress-counter changes approved in this conversation on 2026-10-13 NZDT after the screenshot comparison sheet was presented. Approval is for the six differences listed above **only**, on exact reviewed candidate source `602d597fa4575c9302e3ad9799fb3c58faa67965`, CI visual run **38355787572**, retained screenshot artifact **11792713708**.
+- [x] **Evidence integrity:** All **52** viewport/surface image pairs were captured in that retained visual artifact; 46 comparisons stayed within the existing 12-pixel tolerance, six recorded the approved counter-only differences; all **104** baseline/candidate PNG hashes matched the manifest. This reports automated image-bytes integrity, not a claim that a human individually opened every PNG in the ZIP.
+- [x] **Immutable reference:** Created `visual-baseline/2026.10.13.2` at exact reviewed source `602d597fa4575c9302e3ad9799fb3c58faa67965`, verified with GitHub compare (`identical`, 0 ahead, 0 behind) **before** updating the baseline manifest. The prior `visual-baseline/2026.10.13.1` is untouched.
+- [x] **Strict visual manifest:** `qa/visual-regression-baseline.json` points only to the new exact pinned reference; all four viewports, 13 surfaces, and `maxDiffPixels=12` remain unchanged. `qa_release_docs.py` adds a special exact-source guard so the owner approval cannot be stretched to a later runtime redesign.
+- [ ] **Fresh exact-head CI and release candidate:** rerun visual Chromium + substantive Chromium/WebKit/cross/reliability + question quality, obtain a successful exact-runtime retained public candidate producer and independently verify its provenance. No retrospective run becomes PASS from this owner's screenshot approval.
+
+**Reviewer scope:** The approved progress counts are expected to change from 1/43 or 1/45 to 1/23 on expanded Book Listen; and from 1/170 to 1/149 on the tablet/desktop Book Listening capture. No additional shift, obscured control, cropped body or other visual change is authorised.
 
 ## Separate provenance and human/device HOLDs
 
