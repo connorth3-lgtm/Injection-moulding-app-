@@ -250,6 +250,7 @@ function bookButton(host,chapter){
   const b=make('button','secondary','Book: '+chapter.title);b.type='button';
   const token=scopedStorage()?.learnerToken?.()||null;
   b.addEventListener('click',()=>{
+    if(!b.isConnected||!byId('mmVirtualApprenticeship')?.contains(b))return;
     if(token&&token!==scopedStorage()?.learnerToken?.())return;
     if(window.MMBook?.openChapter)void Promise.resolve(window.MMBook.openChapter(chapter.id)).catch(()=>{host.dataset.bookUnavailable='1'});
     else host.dataset.bookUnavailable='1';
@@ -300,12 +301,18 @@ function ensureLearner(){
   state.checked=false;state.attemptSaved=false;
   return true;
 }
-function guardLearnerInteraction(){
-  if(!ensureLearner())return false;
-  // The previous learner's DOM may still have active controls when a profile
-  // changes. Replace it and discard the stale event before grading or saving.
-  renderCase();
-  return true;
+function guardLearnerInteraction(control){
+  if(ensureLearner()){
+    // The previous learner's DOM may still have active controls when a
+    // profile changes. Replace it before any grading or persistence action.
+    renderCase();
+    return true;
+  }
+  // Rerendering a case or coaching level detaches the prior button/input
+  // nodes. They can still receive scripted events and must never modify the
+  // currently mounted learner's answers, grades or simulator.
+  const host=byId('mmVirtualApprenticeship');
+  return !!control&&(!control.isConnected||!host?.contains(control));
 }
 function loadProgress(){const row=scopedStorage()?.get(STORAGE_KEY,{schema:1,completed:{},attempts:0});return row&&typeof row==='object'?row:{schema:1,completed:{},attempts:0}}
 function saveProgress(progress){return scopedStorage()?.set(STORAGE_KEY,progress)===true}
@@ -344,7 +351,7 @@ function radioGroup(step,row){
     const option=make('label','choice');
     const input=document.createElement('input');input.type='radio';input.name=`mm-va-${step}`;input.value=id;input.checked=state.answers[step]===id;
     const span=make('span','',label);option.append(input,span);list.appendChild(option);
-    input.addEventListener('change',()=>{if(guardLearnerInteraction())return;state.answers[step]=id;state.checked=false;state.attemptSaved=false;renderResult();const missionStage={hypothesis:'hypothesis',test:'test',response:'intervention',verify:'verification'}[step]||'evidence';syncMissionContext(missionStage);renderFeedback(step);updateCheckButton()});
+    input.addEventListener('change',()=>{if(guardLearnerInteraction(input))return;state.answers[step]=id;state.checked=false;state.attemptSaved=false;renderResult();const missionStage={hypothesis:'hypothesis',test:'test',response:'intervention',verify:'verification'}[step]||'evidence';syncMissionContext(missionStage);renderFeedback(step);updateCheckButton()});
   }
   wrap.appendChild(list);
   const feedback=make('div','tiny muted');feedback.id=`mmVaFeedback-${step}`;feedback.setAttribute('aria-live','polite');wrap.appendChild(feedback);
@@ -392,7 +399,7 @@ function renderResult(){
   const p=byId('mmVaProgress');if(p)p.textContent=progressSummary();
   for(const key of STEP_KEYS){const el=byId(`mmVaFeedback-${key}`);if(el)el.textContent=result.dimensions[key].feedback}
 }
-function resetCase(){if(guardLearnerInteraction())return;state.answers={};state.checked=false;state.attemptSaved=false;renderCase();focusApprenticeshipControl('#mmVaCaseSelect')}
+function resetCase(control){if(guardLearnerInteraction(control))return;state.answers={};state.checked=false;state.attemptSaved=false;renderCase();focusApprenticeshipControl('#mmVaCaseSelect')}
 function syncMissionContext(stage='evidence'){
   const row=caseDef();
   window.MM_MISSION_CONTROL?.attachContext?.(
@@ -425,19 +432,19 @@ function renderCase(){
   const row=caseDef();host.replaceChildren();
   const head=make('div','section-head');const hcopy=make('div');const heading=make('h2','',row.title);heading.tabIndex=-1;
   hcopy.append(make('span','eyebrow','Virtual apprenticeship'),heading,make('p','muted',row.focus));const pill=make('span','pill',`${row.id} · ${row.difficulty}`);head.append(hcopy,pill);host.appendChild(head);
-  const spatialBar=make('div','hero-buttons');const spatial=make('button','secondary','Explore this case in Spatial Twin');spatial.type='button';spatial.addEventListener('click',()=>{if(guardLearnerInteraction())return;window.MM_SPATIAL_TWIN?.open?.({caseIndex:state.caseIndex})});spatialBar.appendChild(spatial);host.appendChild(spatialBar);
+  const spatialBar=make('div','hero-buttons');const spatial=make('button','secondary','Explore this case in Spatial Twin');spatial.type='button';spatial.addEventListener('click',()=>{if(guardLearnerInteraction(spatial))return;window.MM_SPATIAL_TWIN?.open?.({caseIndex:state.caseIndex})});spatialBar.appendChild(spatial);host.appendChild(spatialBar);
   const controls=make('div','grid2');
   const caseLabel=make('label','', 'Case');const caseSelect=document.createElement('select');caseSelect.id='mmVaCaseSelect';CASES.forEach((c,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=`${c.id} · ${c.title}`;o.selected=i===state.caseIndex;caseSelect.appendChild(o)});caseLabel.appendChild(caseSelect);
   const levelLabel=make('label','', 'Coaching level');const levelSelect=document.createElement('select');levelSelect.dataset.mmVaLevel='1';for(const [id,v] of Object.entries(LEVELS)){const o=document.createElement('option');o.value=id;o.textContent=v.label;o.selected=id===state.level;levelSelect.appendChild(o)}levelLabel.appendChild(levelSelect);controls.append(caseLabel,levelLabel);host.appendChild(controls);
-  caseSelect.addEventListener('change',()=>{if(guardLearnerInteraction())return;state.caseIndex=Number(caseSelect.value)||0;state.answers={};state.checked=false;state.attemptSaved=false;renderCase();syncMissionContext('evidence');focusApprenticeshipControl('#mmVaCaseSelect')});
-  levelSelect.addEventListener('change',()=>{if(guardLearnerInteraction())return;state.level=levelSelect.value in LEVELS?levelSelect.value:'beginner';state.checked=false;state.attemptSaved=false;renderCase();focusApprenticeshipControl('select[data-mm-va-level]')});
+  caseSelect.addEventListener('change',()=>{if(guardLearnerInteraction(caseSelect))return;state.caseIndex=Number(caseSelect.value)||0;state.answers={};state.checked=false;state.attemptSaved=false;renderCase();syncMissionContext('evidence');focusApprenticeshipControl('#mmVaCaseSelect')});
+  levelSelect.addEventListener('change',()=>{if(guardLearnerInteraction(levelSelect))return;state.level=levelSelect.value in LEVELS?levelSelect.value:'beginner';state.checked=false;state.attemptSaved=false;renderCase();focusApprenticeshipControl('select[data-mm-va-level]')});
   renderFactoryCaseOne(host,row);
    const brief=make('div','callout');brief.append(make('b','', 'Shop-floor brief'),document.createElement('br'),document.createTextNode(row.brief));host.appendChild(brief);
   const evidence=make('div','content-block');evidence.append(make('h3','', 'Evidence board'),make('p','tiny muted',`Baseline: ${row.baseline}`));const table=make('div','table-wrap');const t=document.createElement('table');t.className='table';t.innerHTML='<thead><tr><th>Signal / context</th><th>Observed change</th></tr></thead>';const body=document.createElement('tbody');for(const [name,value] of row.observations){const tr=document.createElement('tr');const a=document.createElement('td');a.textContent=name;const b=document.createElement('td');b.textContent=value;tr.append(a,b);body.appendChild(tr)}t.appendChild(body);table.appendChild(t);evidence.appendChild(table);host.appendChild(evidence);
-  const bridge=make('div','hero-buttons');const load=make('button','secondary','Load case directions into process simulator');load.type='button';load.addEventListener('click',()=>{if(guardLearnerInteraction())return;applyCaseToSimulator(row)});const status=make('span','tiny muted','Authored case evidence is separate from physical prediction.');status.id='mmVaBridgeStatus';bridge.append(load,status);host.appendChild(bridge);
+  const bridge=make('div','hero-buttons');const load=make('button','secondary','Load case directions into process simulator');load.type='button';load.addEventListener('click',()=>{if(guardLearnerInteraction(load))return;applyCaseToSimulator(row)});const status=make('span','tiny muted','Authored case evidence is separate from physical prediction.');status.id='mmVaBridgeStatus';bridge.append(load,status);host.appendChild(bridge);
   const investigation=make('div','content-block');investigation.append(make('h3','', 'Your investigation'),make('p','muted','Commit to a mechanism, choose the most discriminating next evidence, select one controlled response, then define verification.'));
   for(const key of STEP_KEYS)investigation.appendChild(radioGroup(key,row[key]));host.appendChild(investigation);
-  const actions=make('div','hero-buttons');const check=make('button','primary','Review my reasoning');check.type='button';check.id='mmVaCheck';check.disabled=!STEP_KEYS.every(key=>state.answers[key]);check.addEventListener('click',()=>{if(guardLearnerInteraction())return;state.checked=true;renderResult()});const again=make('button','ghost','Reset this case');again.type='button';again.addEventListener('click',resetCase);actions.append(check,again);host.appendChild(actions);
+  const actions=make('div','hero-buttons');const check=make('button','primary','Review my reasoning');check.type='button';check.id='mmVaCheck';check.disabled=!STEP_KEYS.every(key=>state.answers[key]);check.addEventListener('click',()=>{if(guardLearnerInteraction(check))return;state.checked=true;renderResult()});const again=make('button','ghost','Reset this case');again.type='button';again.addEventListener('click',()=>resetCase(again));actions.append(check,again);host.appendChild(actions);
   const result=make('div','content-block');result.id='mmVaResult';result.setAttribute('aria-live','polite');host.appendChild(result);
   const progress=make('p','tiny muted',progressSummary());progress.id='mmVaProgress';host.appendChild(progress);
   host.appendChild(make('p','legal-note','Safety boundary: this virtual apprenticeship teaches evidence-led reasoning. It does not simulate validated machine physics, prescribe production settings, bypass safeguards, or authorise machine/mould/material/maintenance/production changes.'));
