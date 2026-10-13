@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Release 2026.10.13.3 has no accepted current candidate. Historical 2026.10.13.2 retained source/artifact is separate. Physical iOS/iPadOS and Android devices still require real install, offline restart, reboot, update, storage-pressure, screen-lock, zoom and audible Book TTS testing. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
+  "boundary": "Release 2026.10.13.3 has no accepted current candidate. Historical 2026.10.13.2 retained source/artifact is separate. Testing on physical iOS/iPadOS and Android devices still requires real install, offline restart, reboot, update, storage-pressure, screen-lock, zoom and audible Book TTS testing. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
