@@ -516,9 +516,32 @@ test('Apprenticeship Book links show retryable failure for missing, throwing and
   await expect(factory.locator('[data-mm-va-book-unavailable]')).toHaveCount(1);
   await page.evaluate(()=>{window.MMBook.openChapter=()=>Promise.resolve(true);});
   await button.click();
-  // A later retry remains operable without cloning warnings.
+  // A successful retry must clear the obsolete error state, not leave a
+  // misleading permanent warning on the learner's Book recommendation.
   await expect(button).toBeEnabled();
-  await expect(factory.locator('[data-mm-va-book-unavailable]')).toHaveCount(1);
+  await expect(factory.locator('[data-mm-va-book-unavailable]')).toHaveCount(0);
+  await expect(factory).not.toHaveAttribute('data-book-unavailable','1');
+});
+
+test('An older rejected Book chapter promise cannot undo a later successful retry',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><main id="simulator"></main></body></html>');
+  await page.evaluate(()=>{
+    window.switchView=()=>{};
+    window.MMBook={openChapter(){return new Promise((resolve,reject)=>{
+      window.__mmStaleBookReject=reject;
+    })}};
+  });
+  await page.addScriptTag({path:'src/domains/engineering/virtual-apprenticeship.js'});
+  await page.evaluate(()=>window.MM_VIRTUAL_APPRENTICESHIP.openCase(1));
+  const factory=page.locator('[data-mm-factory-case="1"]');
+  const first=factory.getByRole('button',{name:'Book: Cavity-pressure evidence',exact:true});
+  const second=factory.getByRole('button',{name:'Book: Multi-cavity balance',exact:true});
+  await first.click();
+  await page.evaluate(()=>{window.MMBook.openChapter=()=>Promise.resolve(true);});
+  await second.click();
+  await page.evaluate(()=>window.__mmStaleBookReject(new Error('Outdated failed load')));
+  await expect(factory.locator('[data-mm-va-book-unavailable]')).toHaveCount(0);
+  await expect(factory).not.toHaveAttribute('data-book-unavailable','1');
 });
 
 test('Detached Virtual Apprenticeship controls cannot grade or change a newer case',async({page})=>{
