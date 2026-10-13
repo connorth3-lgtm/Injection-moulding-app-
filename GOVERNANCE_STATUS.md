@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | HOLD: release 2026.10.13.1 has no successful accepted exact-source retained public artifact or runtime fingerprint. Prior 2026.10.11.11 technical evidence cannot transfer; no human/device/production approval is implied. |
-| Behavioral / browser | **fail** | HOLD: release 2026.10.13.1 needs current Chromium, WebKit, mobile, 50-pass question and owner-reviewed 52-surface visual evidence on its final source. Earlier release checks do not transfer. |
+| Static / contract | **fail** | HOLD: release 2026.10.13.1 source df600852152c30b6151c391e330f77e4a78f1ff8 artifact 11785282763 and producer 38336952892 are staged as technical metadata only; producer success and quality are NOT independently verified. No source, human, device or production approval is implied. |
+| Behavioral / browser | **fail** | HOLD: browser and question gates for release 2026.10.13.1 source df600852152c30b6151c391e330f77e4a78f1ff8 must be independently verified on the staged candidate; prior green workflows do not transfer to a different exact source. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |

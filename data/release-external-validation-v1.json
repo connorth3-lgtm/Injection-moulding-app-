@@ -5,7 +5,7 @@
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
     "status": "fail",
-    "claim": "Release 2026.10.13.1 has no verified successful exact-source retained artifact or owner-reviewed new immutable 52-surface visual baseline. Prior 2026.10.11.11 evidence is historical and not transferable."
+    "claim": "New candidate metadata staged, but producer success and exact-head quality remain unverified. Independent validation is HOLD."
   },
   "governance": {
     "status": "enforced",
@@ -22,7 +22,11 @@
     "status": "hold",
     "evidenceContract": "data/accessibility-real-at-validation-v1.json",
     "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.10.13.1.md",
-    "candidate": null,
+    "candidate": {
+      "release": "2026.10.13.1",
+      "sourceSha": "df600852152c30b6151c391e330f77e4a78f1ff8",
+      "runtimeFingerprint": "sha256:9ce8e0f6806ad0edd159288b60f14874ff4ab589e06ab795f69e55e4fb51fdfe"
+    },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix.",
     "previousCandidate": {
       "release": "2026.10.11.11",
@@ -34,7 +38,17 @@
     "status": "hold",
     "evidenceContract": "data/pwa-physical-device-validation-v1.json",
     "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.10.13.1.md",
-    "currentCandidate": null,
+    "currentCandidate": {
+      "release": "2026.10.13.1",
+      "sourceSha": "df600852152c30b6151c391e330f77e4a78f1ff8",
+      "runtimeFingerprint": "sha256:9ce8e0f6806ad0edd159288b60f14874ff4ab589e06ab795f69e55e4fb51fdfe",
+      "candidateRunId": 38336952892,
+      "candidateWorkflow": "Pre-merge Public Candidate",
+      "artifactId": 11785282763,
+      "artifactName": "physical-pwa-candidate-df600852152c30b6151c391e330f77e4a78f1ff8",
+      "artifactDigest": "sha256:a8a6a2ca2555f762736b7193319efaba172056bda64e39e9dad9d4480e093a9a",
+      "artifactExpiresAt": "2027-01-11T02:27:19Z"
+    },
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release.",
     "previousCandidate": {
       "release": "2026.10.11.11",
@@ -104,14 +118,28 @@
     "evidenceContract": "data/nzqa-external-validation-v1.json",
     "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.13.1.md",
     "required": "Genuine provider ownership, stakeholder need, provider-approved design, authorised assessment/internal moderation, consent-to-assess/CMR confirmation, applicable national moderation, workplace evidence and provider-controlled review/change evidence for the exact governed release.",
-    "candidate": null,
+    "candidate": {
+      "release": "2026.10.13.1",
+      "sourceSha": "df600852152c30b6151c391e330f77e4a78f1ff8",
+      "runtimeFingerprint": "sha256:9ce8e0f6806ad0edd159288b60f14874ff4ab589e06ab795f69e55e4fb51fdfe"
+    },
     "previousCandidate": {
       "release": "2026.10.11.11",
       "sourceSha": "b094479577ce0b52ed8da92baa94ca1239994254",
       "runtimeFingerprint": "sha256:0ec09a2107209b4d04b1b501385f4dc6992ded09ec637639773f14d759f724f4"
     }
   },
-  "webCandidate": null,
+  "webCandidate": {
+    "release": "2026.10.13.1",
+    "sourceSha": "df600852152c30b6151c391e330f77e4a78f1ff8",
+    "runtimeFingerprint": "sha256:9ce8e0f6806ad0edd159288b60f14874ff4ab589e06ab795f69e55e4fb51fdfe",
+    "candidateRunId": 38336952892,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 11785282763,
+    "artifactName": "physical-pwa-candidate-df600852152c30b6151c391e330f77e4a78f1ff8",
+    "artifactDigest": "sha256:a8a6a2ca2555f762736b7193319efaba172056bda64e39e9dad9d4480e093a9a",
+    "artifactExpiresAt": "2027-01-11T02:27:19Z"
+  },
   "candidatePolicy": {
     "previewBranchAuthoritative": false,
     "evidenceAuthority": "retained-exact-head-artifact",
@@ -128,7 +156,7 @@
     "artifactDigest": "sha256:ce8e4f0993f21b81a7251f388d15f658db7bcf75f0243d9c3e4f11a4b413872e",
     "artifactExpiresAt": "2027-01-10T04:17:58Z"
   },
-  "candidateStatus": "HOLD — 2026.10.13.1 source has no verified successful exact-source producer or reviewed screenshot baseline; all seven external streams remain HOLD.",
+  "candidateStatus": "HOLD — new candidate producer success NOT independently verified; seven external streams remain HOLD.",
   "previousPreviousCandidate": {
     "release": "2026.10.11.9",
     "sourceSha": "d572ee13d8f2f09139882ff1a271e855284f6e3c",

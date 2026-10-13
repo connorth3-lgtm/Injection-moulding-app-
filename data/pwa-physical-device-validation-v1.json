@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Release 2026.10.13.1 has no successfully verified retained exact-source candidate. A successful technical build would not demonstrate testing on physical iOS/iPadOS and Android devices. Real device install, offline restart/reboot, update, storage-pressure, safe area and text zoom remain pending. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, Windows signing, provider/accreditation and machine-control authority remain HOLD.",
+  "boundary": "Retained release 2026.10.13.1 candidate df600852152c30b6151c391e330f77e4a78f1ff8 and artifact 11785282763 are NOT evidence of testing on physical iOS/iPadOS and Android devices. Real device install, offline restart, reboot, update, storage-pressure and zoom remain pending. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
@@ -42,7 +42,17 @@
   },
   "privacyBoundary": "Public contract metadata must not include learner names, customer/site identifiers, email addresses, private screenshots, raw process data, backup content, filesystem/user paths or other personal/proprietary evidence. Keep detailed device evidence outside the public repository and reference it only with a non-sensitive review identifier.",
   "release": "2026.10.13.1",
-  "candidate": null,
+  "candidate": {
+    "release": "2026.10.13.1",
+    "sourceSha": "df600852152c30b6151c391e330f77e4a78f1ff8",
+    "runtimeFingerprint": "sha256:9ce8e0f6806ad0edd159288b60f14874ff4ab589e06ab795f69e55e4fb51fdfe",
+    "candidateRunId": 38336952892,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 11785282763,
+    "artifactName": "physical-pwa-candidate-df600852152c30b6151c391e330f77e4a78f1ff8",
+    "artifactDigest": "sha256:a8a6a2ca2555f762736b7193319efaba172056bda64e39e9dad9d4480e093a9a",
+    "artifactExpiresAt": "2027-01-11T02:27:19Z"
+  },
   "previousCandidate": {
     "release": "2026.10.11.11",
     "sourceSha": "b094479577ce0b52ed8da92baa94ca1239994254",
