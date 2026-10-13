@@ -3330,3 +3330,12 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
     outline-color:Highlight!important;
   }
 }
+
+/* Never cover Book prose with expanded tablet/desktop Listen controls.
+   These external stylesheet overrides preserve the fixed audited CSP hashes
+   for the unchanged runtime-created Read Aloud <style> element. */
+@media(min-width:701px){
+  .topbar:has(.mm-read-aloud details[open]){flex-wrap:wrap!important;align-items:flex-start!important}
+  .top-actions:has(.mm-read-aloud details[open]){flex-wrap:wrap!important;align-items:flex-start!important;justify-content:flex-end!important}
+  .mm-read-aloud details[open]{position:relative!important;inset:auto!important;max-width:min(360px,calc(100vw - 24px))!important;box-shadow:none!important;z-index:9!important}
+}
