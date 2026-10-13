@@ -784,6 +784,35 @@ test('Spatial Twin case picker retains focus after rerendering the scene',async(
   await expect(page.locator('#mmSpatialTwin .mm-st-shell')).toHaveAttribute('data-phase','baseline');
 });
 
+test('Spatial Twin restores malformed or partial scoped state without old scene residue',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.waitForFunction(()=>Boolean(window.MM_SPATIAL_TWIN?.open&&window.MM_RUNTIME_V2?.storage?.set));
+  const twin=page.locator('#mmSpatialTwin');
+  await page.evaluate(()=>window.MM_SPATIAL_TWIN.open({caseIndex:1,mode:'pressure'}));
+  await twin.locator('[data-mm-st-phase="4"]').click();
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-phase','intervention');
+  await page.evaluate(()=>{
+    window.MM_RUNTIME_V2.storage.set('mm_spatial_twin_v1',{
+      caseIndex:2,mode:'untrusted',phase:'bad-value',selected:'constructor'
+    });
+    window.MM_SPATIAL_TWIN.open();
+  });
+  await expect(twin.locator('[data-mm-st-case]')).toHaveValue('2');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-mode','system');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-phase','baseline');
+  await expect(twin.locator('[data-mm-st-inspector] h3')).not.toBeEmpty();
+  await page.evaluate(()=>window.MM_SPATIAL_TWIN.selectHotspot('__proto__'));
+  await expect(twin.locator('[data-mm-st-inspector] h3')).not.toBeEmpty();
+  await page.evaluate(()=>{
+    window.MM_RUNTIME_V2.storage.set('mm_spatial_twin_v1',[]);
+    window.MM_SPATIAL_TWIN.open();
+  });
+  await expect(twin.locator('[data-mm-st-case]')).toHaveValue('0');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-mode','system');
+  await expect(twin.locator('.mm-st-shell')).toHaveAttribute('data-phase','baseline');
+});
+
 test('Spatial Twin isolates learner state and resets the timeline on a different case',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await page.addInitScript(()=>{
