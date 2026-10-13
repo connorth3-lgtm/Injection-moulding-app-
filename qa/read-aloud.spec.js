@@ -403,6 +403,43 @@ test('Sentence navigation while paused cues audio without restarting it until Li
   await expect.poll(()=>page.evaluate(()=>window.__mmNavVoice.started)).toBe(2);
 });
 
+test('Entering Listening stops active single-screen audio without autoplaying a lesson',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><div id="app"><nav id="nav"><button data-view="path">Learn</button></nav><main id="mainContent" class="main"><section id="path" class="view"><p>Current Book paragraph is speaking from the compact reader.</p></section><div class="top-actions"></div></main></div></body></html>');
+  await page.evaluate(()=>{
+    window.MM_DATA={lessons:[
+      {id:1,title:'First handoff lesson',intro:'First learner lesson.'},
+      {id:2,title:'Second handoff lesson',intro:'Second learner lesson.'}
+    ]};
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:
+      'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
+    class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const synth={started:0,canceled:0,current:null,getVoices(){return[];},
+      speak(u){this.current=u;this.started++;window.__mmHandoffLastSpoken=u.text;queueMicrotask(()=>u.onstart?.());},
+      cancel(){this.canceled++;this.current=null;},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    window.__mmHandoffSynth=synth;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const compact=page.locator('.mm-read-aloud');
+  await compact.locator('details').evaluate(el=>{el.open=true});
+  const listen=compact.locator('[data-mm-read="play"]');
+  await listen.click();
+  await expect(listen).toHaveText('Pause');
+  await expect.poll(()=>page.evaluate(()=>window.__mmHandoffLastSpoken)).toContain('Current Book paragraph');
+  const countBefore=await page.evaluate(()=>window.__mmHandoffSynth.started);
+  await page.locator('[data-mm-listening-tab]').click();
+  await expect(page.locator('#mmListeningView')).toBeVisible();
+  await expect(listen).toHaveText('Listen');
+  await expect.poll(()=>page.evaluate(()=>window.__mmHandoffSynth.current===null)).toBeTruthy();
+  await page.locator('#mmListeningView [data-mm-listening="next-lesson"]').click();
+  await expect(page.locator('#mmListeningView [data-mm-listening-lesson]')).toContainText('Second handoff lesson');
+  expect(await page.evaluate(()=>window.__mmHandoffSynth.started)).toBe(countBefore);
+  await page.locator('#mmListeningView [data-mm-listening="play"]').click();
+  await expect.poll(()=>page.evaluate(()=>window.__mmHandoffLastSpoken)).toContain('Second handoff lesson');
+  expect(await page.evaluate(()=>window.__mmHandoffSynth.started)).toBe(countBefore+1);
+});
+
 test('Listening navigation while stopped is silent and Play starts selected lesson',async({page})=>{
   await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><nav id="nav"><button data-view="path">Learn</button></nav><main id="mainContent" class="main"><section id="path" class="view">Learn</section></main></body></html>');
   await page.evaluate(()=>{
