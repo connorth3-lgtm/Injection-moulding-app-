@@ -392,3 +392,41 @@ for(const viewport of manifest.viewports){
     });
   }
 }
+
+/* The hosted-only non-production label must be photographed for review even
+   though localhost screenshots intentionally have no /preview/ URL. These four
+   SUPPLEMENTAL captures do not count as (or alter) the immutable 52-surface
+   visual matrix, its 12px threshold, or any owner's approval. */
+test('preview status evidence is supplemental to the unchanged locked 52-screen matrix',async({browser})=>{
+  test.setTimeout(120000);
+  fs.mkdirSync(ARTIFACT_ROOT,{recursive:true});
+  const records=[];
+  for(const viewport of manifest.viewports){
+    const context=await browser.newContext({viewport:{width:viewport.width,height:viewport.height},serviceWorkers:'block'});
+    try{
+      const page=await context.newPage();
+      await openApp(page,CANDIDATE_URL,'visual-preview-'+viewport.name,{candidate:true});
+      await page.evaluate(()=>{
+        history.replaceState(null,'','/preview/');
+        window.MM_REFERENCE_LAYOUT.refresh();
+      });
+      const notice=page.locator('#mmPreviewStatus');
+      await expect(notice).toBeVisible();
+      await expect(notice).toContainText('NON-PRODUCTION PREVIEW');
+      await expect(notice.locator('a')).toHaveAttribute('href','./privacy.html');
+      await page.mouse.move(1,1);
+      const filename=viewport.name+'-preview-disclosure.png';
+      const buffer=await page.screenshot({path:path.join(ARTIFACT_ROOT,filename),animations:'disabled',caret:'hide'});
+      records.push({viewport:viewport.name,width:viewport.width,height:viewport.height,file:filename,sha256:crypto.createHash('sha256').update(buffer).digest('hex')});
+    }finally{await context.close();}
+  }
+  fs.writeFileSync(path.join(ARTIFACT_ROOT,'preview-disclosure-manifest.json'),JSON.stringify({
+    schemaVersion:1,
+    purpose:'Supplemental hosted-preview-only visual evidence: requires separate owner inspection',
+    candidateSourceSha:ACTUAL_SOURCE_SHA,
+    visualOwnerApproved:false,
+    existingLockedCaptures:manifest.viewports.length*manifest.surfaces.length,
+    lockedMaxDiffPixels:manifest.maxDiffPixels,
+    captures:records,
+  },null,2)+'\n');
+});

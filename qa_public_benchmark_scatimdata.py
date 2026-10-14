@@ -62,7 +62,7 @@ if WORKFLOW.exists():
         "MouldMaster Public Measured Benchmark — scatimdata AVAPS",
         "qa_public_benchmark_scatimdata.py",
         "run_public_benchmark_scatimdata_avaps.py",
-        "actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+        "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9",
         "rm -rf .benchmark-work",
     ]:
         need(marker in wf, f"AVAPS workflow missing marker: {marker}")
