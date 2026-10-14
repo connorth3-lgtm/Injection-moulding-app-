@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "release": "2026.10.13.3",
   "commit": "352bf204ae77779d548bc77dcf8b0a63db2a84e1",
-  "browser": "chromium via @playwright/test 1.55.0",
+  "browser": "chromium via @playwright/test 1.63.0",
   "maxDiffPixels": 12,
   "viewports": [
     {
@@ -42,5 +42,16 @@
     "book-trace"
   ],
   "policy": "On 2026-10-14 NZDT, after the assistant furnished links to the exact-source PR #627 final six Book Listen before/current/diff screenshots, four hosted-preview status screenshots and complete evidence package, the project owner explicitly replied \"I approve\". This is narrowly scoped owner visual design approval for the 2026.10.13.3 candidate source 352bf204ae77779d548bc77dcf8b0a63db2a84e1 only, and specifically for the six above-threshold Book Listen differences (phone 360 listening 54963px; phone 412 listening 79856px; tablet 810 listen-expanded 96094px, listening 138290px; desktop 1440 listen-expanded 177523px, listening 158820px) and four supplemental hosted-preview disclaimer screenshots (phone 360, phone 412, tablet 810, desktop 1440). Review evidence: exact-head Mobile Browser QA run 38479538480, visual artifact 11857112997; 52 locked Chromium screenshot comparisons from four viewports × 13 screens; 46 unchanged pixel-for-pixel; all 104 locked before/current PNG SHA256s plus all four supplemental PNG SHA256s verified (108/108). The previous visual-baseline/2026.10.13.2 remains immutable at approved 602d597fa4575c9302e3ad9799fb3c58faa67965. The new immutable visual-baseline/2026.10.13.3 ref was created directly at exactly 352bf204ae77779d548bc77dcf8b0a63db2a84e1; compare returned identical ahead=0 behind=0. Strict maxDiffPixels=12, all 52 unmasked captures, all four viewports and all thirteen surfaces retained. These baseline differences are approved for screenshot comparison only: this approval is NOT a successful exact-source candidate producer, approved non-production deployment, real audible Android/iOS, physical PWA test, NVDA/VoiceOver human AT validation, Windows signing, Book or curriculum SME review, learner outcomes, NZQA/provider accreditation, production recipe or automatic machine control. All seven independent external human/device/provider HOLDs remain intact. Never move this baseline without a separate new owner decision and independent immutable successor. See qa/VISUAL_REVIEW_2026.10.13.3_PR627.md and PR #627.",
-  "ref": "visual-baseline/2026.10.13.3"
+  "ref": "visual-baseline/2026.10.13.3",
+  "referenceCaptureToolchain": {
+    "framework": "@playwright/test",
+    "version": "1.63.0",
+    "browser": "chromium",
+    "referenceSourceSha": "352bf204ae77779d548bc77dcf8b0a63db2a84e1"
+  },
+  "currentComparisonToolchain": {
+    "framework": "@playwright/test",
+    "version": "1.63.0",
+    "browser": "chromium"
+  }
 }

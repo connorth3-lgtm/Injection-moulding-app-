@@ -54,6 +54,10 @@ All seven remain `hold` in `data/release-external-validation-v1.json`. Their sou
 
 Changing either public file without a newly versioned cache and source-bound, successful candidate would break the current 166-asset manifest/retained runtime fingerprint. This consolidation makes **no** public runtime changes. Future release work requires user-facing screenshot approval if visual appearance changes, 52-surface/12px strict gate, successful source-bound producer, and all protected checks.
 
+## P3 tooling-label metadata — FIXED in this documentation-only PR
+
+The previously stale `qa/visual-regression-baseline.json.browser` label claimed Playwright `1.55.0` even though both the pinned reviewed screenshot source and current comparison runner use `@playwright/test 1.63.0`. This PR corrects that metadata label and separately records `referenceCaptureToolchain` and `currentComparisonToolchain`. Release docs QA now checks them against `package.json`. **The immutable visual-baseline ref, approved source SHA, all 52 surfaces and strict 12px threshold remain exactly unchanged.** No screenshot comparison was silently accepted or regenerated.
+
 ## Historical duplicate issue disposition
 
 #624 concerns a once-blocked PR #623 that later merged and is superseded by #627. #379 is an older provider-candidate tracker replaced by the still-open #619. #625 is a historical-release audit: cross-link to #632 and retain its evidence; close only if its actual outstanding work is represented here and in the independently open acceptance trackers.
