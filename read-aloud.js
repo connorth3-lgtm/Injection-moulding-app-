@@ -228,6 +228,9 @@
     updateButtons();
     const beginSpeech=()=>{
       if(token!==speakToken)return;
+      // Windows voices may arrive after the initial tap. Never start
+      // single-screen Book/lesson speech when that tab has since hidden.
+      if(document.hidden&&!playlistMode){stop('Stopped because the app was hidden before speech started');return;}
       // Must run directly inside the original tap handler on Android, even
       // with an empty voice list. The platform can pick its default voice.
       cancelDeviceSpeech();
@@ -268,6 +271,9 @@
       },(androidSpeech||iosSpeech)?6000:2500);
       utterance.onstart=()=>{
         if(token!==speakToken)return;
+        // An OS voice can acknowledge a queued utterance after visibility
+        // changed. Invalidate the utterance rather than claiming playback.
+        if(document.hidden&&!playlistMode){stop('Stopped because the app was hidden before speech started');return;}
         clearTimeout(startTimer);started=true;starting=false;speaking=true;paused=false;
         highlight(unit);setStatus(playlistMode?'Listening session playing':'Reading');updateButtons();
       };
@@ -470,6 +476,10 @@
 
   function leaveListening(){
     if(!listeningOpen)return;
+    // Backgrounding this tab is a deliberate long-session use case, but
+    // navigating *within* the app to another screen ends that session.
+    // Do not let unseen lesson audio follow a learner into an assessment.
+    if(playlistMode&&(starting||speaking||paused))stop('Stopped after leaving Listening');
     listeningOpen=false;
     listeningUI?.view?.classList.add('hidden');
     listeningUI?.nav?.classList.remove('active');
@@ -502,6 +512,11 @@
     view.id='mmListeningView';view.className='view hidden mm-listening-view';
     view.innerHTML=`<section class="card mm-listening-hero"><span class="eyebrow">Long-session audio learning</span><h2 tabindex="-1">Listen through MouldMaster lessons continuously</h2><p>Start once and move through the lesson library hands-free. Playback uses your browser or operating-system speech service. MouldMaster does not request microphone access, record audio, or upload lesson text through MouldMaster servers; voice-provider processing depends on your device, browser and selected voice.</p></section><section class="card mm-listening-player"><div class="mm-listening-now"><span class="eyebrow">Now listening</span><h3 data-mm-listening-lesson>Lesson library ready</h3><p class="mm-listening-current" data-mm-listening-current>Press Play to start continuous listening from the lesson library.</p></div><div class="mm-listening-controls"><button type="button" data-mm-listening="prev-lesson">⏮ Previous lesson</button><button type="button" data-mm-listening="back">◀ Sentence</button><button type="button" class="play" data-mm-listening="play">Play</button><button type="button" data-mm-listening="forward">Sentence ▶</button><button type="button" data-mm-listening="next-lesson">Next lesson ⏭</button></div><div class="mm-listening-options"><p class="mm-read-status" data-mm-listening-status role="status" aria-live="polite">${supported?'Ready':'Speech synthesis is unavailable'}</p><label>Speed <select class="mm-read-speed" data-mm-listening-speed aria-label="Listening speed">${SPEEDS.map(v=>`<option value="${v}"${v===1?' selected':''}>${v}×</option>`).join('')}</select></label><button type="button" class="ghost" data-mm-listening="stop">Stop</button><strong data-mm-listening-progress-text>0 lessons</strong></div><div class="mm-listening-progress" aria-hidden="true"><span data-mm-listening-bar></span></div><div class="mm-listening-privacy"><b>Designed for long sessions:</b> Listening mode continues when this app tab is in the background where the browser/device permits it. Normal one-screen Read Aloud still pauses when the app is hidden.</div></section>`;
     main.appendChild(view);
+    // Core routing can hide custom views without a nav click. Treat that
+    // transition as leaving Listening so hidden queues never keep speaking.
+    new MutationObserver(()=>{
+      if(listeningOpen&&view.classList.contains('hidden'))leaveListening();
+    }).observe(view,{attributes:true,attributeFilter:['class']});
     listeningUI={view,nav:navButton,play:view.querySelector('[data-mm-listening="play"]'),stop:view.querySelector('[data-mm-listening="stop"]'),speed:view.querySelector('[data-mm-listening-speed]'),status:view.querySelector('[data-mm-listening-status]'),lesson:view.querySelector('[data-mm-listening-lesson]'),current:view.querySelector('[data-mm-listening-current]'),progress:view.querySelector('[data-mm-listening-progress-text]'),bar:view.querySelector('[data-mm-listening-bar]')};
     navButton.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();openListening();});
     view.querySelector('[data-mm-listening="play"]').addEventListener('click',togglePlaylist);
@@ -541,7 +556,11 @@
   window.addEventListener('popstate',()=>{if(!playlistMode)stop('Stopped after navigation')});
   window.addEventListener('pagehide',()=>stop('Stopped'));
   document.addEventListener('visibilitychange',()=>{
-    if(!document.hidden||!speaking||!supported||playlistMode)return;
+    if(!document.hidden||!supported||playlistMode)return;
+    // A desktop voice can be waiting for a voiceschanged callback; the
+    // previous speaking-only guard missed this delayed-start privacy race.
+    if(starting){stop('Stopped because the app was hidden before speech started');return;}
+    if(!speaking)return;
     try{synth.pause()}catch(_){
       stop('Device voice could not pause while hidden. Start playback again.');
       return;
