@@ -101,6 +101,8 @@ test('privacy notice distinguishes Book screen reading from continuous backgroun
   expect(text).toContain('Book\'s one-screen Read Aloud');
   expect(text).toContain('complete canonical lesson library');
   expect(text).toContain('may continue speaking when this app is in the background');
+  expect(text).toContain('Last updated: 15 October 2026');
+  expect(text).toContain('Leaving the continuous Listening screen for another section of MouldMaster stops its active playlist.');
   expect(text).toContain('Use Pause or Stop');
   expect(text).not.toContain('Playback stops on app navigation and is paused when the app is hidden.');
 });
