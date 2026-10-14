@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "release": "2026.10.15.1",
   "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.15.1.md",
-  "sourceSha": null,
-  "runtimeFingerprint": null,
+  "sourceSha": "397e0a024eb88f9636a8b161155c5dce6af6316b",
+  "runtimeFingerprint": "sha256:ca0603729d78845b2551e15be74351abc75456932f9ac20b8394e730a81d2022",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Successor release 2026.10.15.1 has no accepted producer; old 2026.10.13.3 source 77fe83877de37cd5ce92cee7f4a1bc87a10965b7 is historical only. Human NVDA and VoiceOver reviews remain PENDING.",
+  "boundary": "Successful source-bound technical 2026.10.15.1 producer 397e0a024eb88f9636a8b161155c5dce6af6316b is not direct NVDA/VoiceOver human testing. All assistive-technology tasks remain pending until independently documented real reviews.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -310,5 +310,5 @@
     "sourceSha": "77fe83877de37cd5ce92cee7f4a1bc87a10965b7",
     "runtimeFingerprint": "sha256:923ae7d11d5438fde3149d7e4712fc8ebe81b8d44975d4e8d06162385a60143e"
   },
-  "technicalCandidateStatus": "pending new exact-source technical producer; human NVDA/VoiceOver HOLD unchanged"
+  "technicalCandidateStatus": "successful exact-source producer retained; real human NVDA/VoiceOver review pending"
 }

@@ -3,9 +3,9 @@
   "masterIssue": 632,
   "release": "2026.10.15.1",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": null,
-  "scope": "Successor release 2026.10.15.1 staged in draft; previous 2026.10.13.3 publicly verified. All field acceptances HOLD.",
-  "approvalBoundary": "Technical preview is PASS; physical, human, Windows signing, professional and provider approval are not granted",
+  "candidateSourceSha": "397e0a024eb88f9636a8b161155c5dce6af6316b",
+  "scope": "Unmerged 2026.10.15.1 technical producer accepted by automatic checks; protected-main merge, public deployment and all seven external reviews still HOLD.",
+  "approvalBoundary": "Successful source-bound technical automation only; physical, AT, Windows signing, SME, learner and NZQA/provider approvals not granted.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,

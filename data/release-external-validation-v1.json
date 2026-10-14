@@ -4,8 +4,8 @@
   "validationIndex": "qa/EXTERNAL_VALIDATION_2026.10.15.1.md",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
-    "status": "fail",
-    "claim": "HOLD: changed successor 2026.10.15.1 narration/runtime bytes are not validated by retained 2026.10.13.3 producer 38523473535; a new exact-source successful producer artifact and browser QA are required. Seven separate human/device/provider HOLDS remain open."
+    "status": "pass",
+    "claim": "PASS — verified exact-source 2026.10.15.1 Pre-merge Public Candidate run 38616968698 on 397e0a024eb88f9636a8b161155c5dce6af6316b, unexpired artifact 11920452430, ZIP digest sha256:d333d3123cc2efeac15cfa086224d589f10672ffa2be38b2f6acb5335e18d870, independently computed public-runtime fingerprint sha256:ca0603729d78845b2551e15be74351abc75456932f9ac20b8394e730a81d2022. 166/166 public-manifest assets SHA256/byte lengths validated, 165 runtime files fingerprinted. Mobile Browser QA 38616968633 succeeded with strict 52-screenshot 12px visual, Chromium substantive/reachability, WebKit, cross-browser, and five 100-run reliability shards; Read Aloud QA and Question Quality 50-Pass passed. Seven independent human/device/provider streams remain HOLD."
   },
   "governance": {
     "status": "enforced",
@@ -22,7 +22,11 @@
     "status": "hold",
     "evidenceContract": "data/accessibility-real-at-validation-v1.json",
     "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.10.15.1.md",
-    "candidate": null,
+    "candidate": {
+      "release": "2026.10.15.1",
+      "sourceSha": "397e0a024eb88f9636a8b161155c5dce6af6316b",
+      "runtimeFingerprint": "sha256:ca0603729d78845b2551e15be74351abc75456932f9ac20b8394e730a81d2022"
+    },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix.",
     "previousCandidate": {
       "release": "2026.10.13.3",
@@ -34,7 +38,17 @@
     "status": "hold",
     "evidenceContract": "data/pwa-physical-device-validation-v1.json",
     "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.10.15.1.md",
-    "currentCandidate": null,
+    "currentCandidate": {
+      "release": "2026.10.15.1",
+      "sourceSha": "397e0a024eb88f9636a8b161155c5dce6af6316b",
+      "runtimeFingerprint": "sha256:ca0603729d78845b2551e15be74351abc75456932f9ac20b8394e730a81d2022",
+      "candidateRunId": 38616968698,
+      "candidateWorkflow": "Pre-merge Public Candidate",
+      "artifactId": 11920452430,
+      "artifactName": "physical-pwa-candidate-397e0a024eb88f9636a8b161155c5dce6af6316b",
+      "artifactDigest": "sha256:d333d3123cc2efeac15cfa086224d589f10672ffa2be38b2f6acb5335e18d870",
+      "artifactExpiresAt": "2027-01-12T18:39:14Z"
+    },
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release.",
     "previousCandidate": {
       "release": "2026.10.13.3",
@@ -104,14 +118,28 @@
     "evidenceContract": "data/nzqa-external-validation-v1.json",
     "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.15.1.md",
     "required": "Genuine provider ownership, stakeholder need, provider-approved design, authorised assessment/internal moderation, consent-to-assess/CMR confirmation, applicable national moderation, workplace evidence and provider-controlled review/change evidence for the exact governed release.",
-    "candidate": null,
+    "candidate": {
+      "release": "2026.10.15.1",
+      "sourceSha": "397e0a024eb88f9636a8b161155c5dce6af6316b",
+      "runtimeFingerprint": "sha256:ca0603729d78845b2551e15be74351abc75456932f9ac20b8394e730a81d2022"
+    },
     "previousCandidate": {
       "release": "2026.10.13.3",
       "sourceSha": "77fe83877de37cd5ce92cee7f4a1bc87a10965b7",
       "runtimeFingerprint": "sha256:923ae7d11d5438fde3149d7e4712fc8ebe81b8d44975d4e8d06162385a60143e"
     }
   },
-  "webCandidate": null,
+  "webCandidate": {
+    "release": "2026.10.15.1",
+    "sourceSha": "397e0a024eb88f9636a8b161155c5dce6af6316b",
+    "runtimeFingerprint": "sha256:ca0603729d78845b2551e15be74351abc75456932f9ac20b8394e730a81d2022",
+    "candidateRunId": 38616968698,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 11920452430,
+    "artifactName": "physical-pwa-candidate-397e0a024eb88f9636a8b161155c5dce6af6316b",
+    "artifactDigest": "sha256:d333d3123cc2efeac15cfa086224d589f10672ffa2be38b2f6acb5335e18d870",
+    "artifactExpiresAt": "2027-01-12T18:39:14Z"
+  },
   "candidatePolicy": {
     "previewBranchAuthoritative": false,
     "evidenceAuthority": "retained-exact-head-artifact",
@@ -128,7 +156,7 @@
     "artifactDigest": "sha256:eaaae71d5c233bec5833dfe4f34c4f65df7cf820e01a9f6ce59d661fa10788f5",
     "artifactExpiresAt": "2027-01-12T06:39:17Z"
   },
-  "candidateStatus": "HOLD — new 2026.10.15.1 candidate is not accepted or published. Existing 2026.10.13.3 producer remains historical only. Seven human/device/provider HOLDS unchanged.",
+  "candidateStatus": "TECHNICAL AUTOMATION PASS — release 2026.10.15.1 successful retained source 397e0a024eb88f9636a8b161155c5dce6af6316b producer 38616968698, artifact 11920452430 with fingerprint sha256:ca0603729d78845b2551e15be74351abc75456932f9ac20b8394e730a81d2022; seven external HOLD streams unchanged.",
   "previousPreviousCandidate": {
     "release": "2026.10.11.9",
     "sourceSha": "d572ee13d8f2f09139882ff1a271e855284f6e3c",

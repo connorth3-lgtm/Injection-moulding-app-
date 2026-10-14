@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **fail** |
+| Technical automation | **pass** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | HOLD: 2026.10.15.1 edited browser assets have no successful retained same-source release producer; prior 2026.10.13.3 producer is historical and cannot certify new bytes. Seven external field workstreams stay HOLD. |
-| Behavioral / browser | **fail** | HOLD: 2026.10.15.1 exact-head Chromium/WebKit, 52-surface 12px visual and reliability evidence must be rerun on new browser assets. No physical/device/human approvals are implied. |
+| Static / contract | **pass** | PASS: 2026.10.15.1 exact source 397e0a024eb88f9636a8b161155c5dce6af6316b retained successful producer 38616968698, artifact 11920452430, runtime fingerprint sha256:ca0603729d78845b2551e15be74351abc75456932f9ac20b8394e730a81d2022 and all 166 public asset lengths/SHA256s verified. No real-world human/device/provider authorizations implied. |
+| Behavioral / browser | **pass** | PASS: 2026.10.15.1 source 397e0a024eb88f9636a8b161155c5dce6af6316b succeeded Chromium substantive, strict 52-capture 12px visual, WebKit, cross-browser, five 100-run reliability shards, Read Aloud QA and Question Quality 50-Pass. Seven independent external HOLDs remain. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
