@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS: release 2026.10.13.3 source 77fe83877de37cd5ce92cee7f4a1bc87a10965b7 accepted from successful exact-source producer run 38523473535, retained artifact 11874731686, runtime fingerprint sha256:923ae7d11d5438fde3149d7e4712fc8ebe81b8d44975d4e8d06162385a60143e, and full SHA256 verification of 166 public manifest assets. This is software-controlled proof only; seven independent external human/device/provider streams HOLD. |
-| Behavioral / browser | **pass** | PASS: release 2026.10.13.3 exact-source 77fe83877de37cd5ce92cee7f4a1bc87a10965b7 passed owner-approved 52-surface Chromium visual QA at 12px, Chromium substantive/reachability, WebKit, cross-browser, 500 reliability runs and Question Quality 50-Pass. Actual audible devices, human assistive technology, SME, signed distribution, learner and provider evidence remain HOLD. |
+| Static / contract | **fail** | HOLD: 2026.10.15.1 edited browser assets have no successful retained same-source release producer; prior 2026.10.13.3 producer is historical and cannot certify new bytes. Seven external field workstreams stay HOLD. |
+| Behavioral / browser | **fail** | HOLD: 2026.10.15.1 exact-head Chromium/WebKit, 52-surface 12px visual and reliability evidence must be rerun on new browser assets. No physical/device/human approvals are implied. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |

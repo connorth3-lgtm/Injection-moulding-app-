@@ -1,17 +1,13 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.13.3",
+  "release": "2026.10.15.1",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.13.3.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.15.1.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 619,
-  "candidate": {
-    "release": "2026.10.13.3",
-    "sourceSha": "77fe83877de37cd5ce92cee7f4a1bc87a10965b7",
-    "runtimeFingerprint": "sha256:923ae7d11d5438fde3149d7e4712fc8ebe81b8d44975d4e8d06162385a60143e"
-  },
-  "boundary": "Release 2026.10.13.3 technical candidate 77fe83877de37cd5ce92cee7f4a1bc87a10965b7 does not establish any of NZQA/provider G1–G8 external gates or assessment/accreditation authority.",
+  "candidate": null,
+  "boundary": "Successor release 2026.10.15.1 is not technically accepted, and previous 2026.10.13.3 source 77fe83877de37cd5ce92cee7f4a1bc87a10965b7 does not certify new bytes or establish provider/NZQA G1–G8, assessment or accreditation authority.",
   "requiredGates": [
     {
       "id": "G1-provider",
@@ -57,9 +53,9 @@
   "evidence": null,
   "validationRule": "Validated requires genuine provider-owned evidence for all eight gates, public-safe evidence references, exact release/candidate binding, and separate reviewed promotion of the canonical external-validation status. Automation must not manufacture completion.",
   "previousCandidate": {
-    "release": "2026.10.13.2",
-    "sourceSha": "fccf672921cec36a07f93bc95b40e63e774331b9",
-    "runtimeFingerprint": "sha256:5b00e17a1d8afe3848d08f7e8ba057409a2f0ca6cb69c753cc4b1d56b8255afc"
+    "release": "2026.10.13.3",
+    "sourceSha": "77fe83877de37cd5ce92cee7f4a1bc87a10965b7",
+    "runtimeFingerprint": "sha256:923ae7d11d5438fde3149d7e4712fc8ebe81b8d44975d4e8d06162385a60143e"
   },
   "previousIssueNumber": 379
 }
