@@ -333,12 +333,15 @@ else:
 visual_package = json.loads(text('package.json'))
 visual_version = visual_package.get('devDependencies',{}).get('@playwright/test')
 need(bool(visual_version), 'pinned Playwright QA dependency is missing')
-need(visual.get('browser') == f'chromium via @playwright/test {visual_version}',
-     'current visual comparison runner label disagrees with pinned Playwright dependency')
-need(visual.get('referenceCaptureToolchain') == {
-         'framework':'@playwright/test', 'version': visual_version,
+# The immutable screenshot reference was captured using Playwright 1.63.0.
+# Current PR tooling can advance without rewriting the historical approval.
+approved_capture = visual.get('referenceCaptureToolchain') or {}
+need(approved_capture == {
+         'framework':'@playwright/test', 'version':'1.63.0',
          'browser':'chromium', 'referenceSourceSha':visual.get('commit')},
      'historical approved screenshot capture provenance missing/stale')
+need(visual.get('browser') == "chromium via @playwright/test 1.63.0",
+     'historical approved screenshot toolchain label was rewritten')
 need(visual.get('currentComparisonToolchain') == {
          'framework':'@playwright/test', 'version':visual_version,
          'browser':'chromium'},
