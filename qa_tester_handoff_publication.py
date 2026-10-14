@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Synthetic GitHub API contract fixtures: no network, no release authorization."""
-from qa_tester_handoff import check_publication_provenance
+from qa_tester_handoff import check_publication_provenance, verify_quick_start_document_link
 
 SHA = "a" * 40
 OTHER = "b" * 40
@@ -45,4 +45,29 @@ rejects(BRANCH, [], SHA, "malformed")
 rejects(BRANCH, {"workflow_runs": {}}, SHA, "malformed")
 rejects([], {"workflow_runs": [SUCCESS]}, SHA, "invalid")
 rejects(BRANCH, {"workflow_runs": [SUCCESS]}, "not-a-commit", "invalid")
+# The invitation's documentation link must never drift onto the stale
+# preview Git branch (which is independent of the hosted /preview/ URL).
+CURRENT_GUIDE = "https://github.com/connorth3-lgtm/Injection-moulding-app-/blob/main/docs/TESTER_QUICK_START.md"
+verify_quick_start_document_link(f"Read [tester quick-start guide]({CURRENT_GUIDE}).")
+for bad in (
+    CURRENT_GUIDE.replace("/blob/main/", "/blob/preview/"),
+    CURRENT_GUIDE.replace("/blob/main/", "/blob/unknown/"),
+    "",
+):
+    try:
+        verify_quick_start_document_link(f"Read [tester quick-start guide]({bad}).")
+    except AssertionError as exc:
+        assert "protected-main quick-start" in str(exc)
+    else:
+        raise AssertionError("stale quick-start documentation link was accepted")
+try:
+    verify_quick_start_document_link(
+        f"Read [tester quick-start guide]({CURRENT_GUIDE}). "
+        "[older guide](https://github.com/connorth3-lgtm/Injection-moulding-app-/blob/preview/docs/TESTER_QUICK_START.md)"
+    )
+except AssertionError as exc:
+    assert "unpromoted preview" in str(exc)
+else:
+    raise AssertionError("invitation mixed protected-main and stale-preview quick-start links")
+
 print("Tester handoff publication-provenance QA passed: 1 success and 18 negative synthetic GitHub fixtures. No external testing signoff claimed.")

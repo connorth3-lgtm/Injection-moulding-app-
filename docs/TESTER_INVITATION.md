@@ -18,7 +18,7 @@ This is an **early, non-production learning preview**, not accredited training, 
 **Preview link (only after it has been verified by the inviter):**  
 https://connorth3-lgtm.github.io/Injection-moulding-app-/preview/
 
-A short [tester quick-start guide](https://github.com/connorth3-lgtm/Injection-moulding-app-/blob/preview/docs/TESTER_QUICK_START.md) explains the suggested route. About 15–20 minutes of your feedback is useful; there is no need to complete every module.
+A short [tester quick-start guide](https://github.com/connorth3-lgtm/Injection-moulding-app-/blob/main/docs/TESTER_QUICK_START.md) explains the suggested route. About 15–20 minutes of your feedback is useful; there is no need to complete every module.
 
 Please use a made-up learner profile and fictional training examples. Do not enter or send personal details, production data, confidential machine settings or customer information. Progress is stored locally in your browser/device, not in an online account. Read the [privacy notice](https://connorth3-lgtm.github.io/Injection-moulding-app-/preview/privacy.html) before use. If you see a broken page or no **Non-production preview** notice, stop and tell us.
 

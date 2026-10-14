@@ -47,6 +47,15 @@ def load(relative: str) -> dict:
     return value
 
 
+def verify_quick_start_document_link(invitation: str) -> None:
+    """Never hand testers an out-of-date guide from the separate preview Git branch."""
+    current = "https://github.com/connorth3-lgtm/Injection-moulding-app-/blob/main/docs/TESTER_QUICK_START.md"
+    need(f"]({current})" in invitation,
+         "tester invitation must link to protected-main quick-start documentation")
+    need("/blob/preview/docs/TESTER_QUICK_START.md" not in invitation,
+         "tester invitation must not link to the unpromoted preview Git branch")
+
+
 def verify_local() -> tuple[str, str]:
     version = load("version.json")
     release = str(version.get("web_release") or "")
@@ -114,6 +123,8 @@ def verify_local() -> tuple[str, str]:
         "P0", "P1", "P2", "P3", "SECURITY.md", "release", "HOLD",
     ):
         need(marker in texts["triage"], f"triage protocol is missing: {marker}")
+
+    verify_quick_start_document_link(texts["invitation"])
 
     issue = read(".github/ISSUE_TEMPLATE/learner-problem.yml")
     support = read("support.html")
