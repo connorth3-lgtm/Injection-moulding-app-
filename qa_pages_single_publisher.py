@@ -49,7 +49,7 @@ for required in (
     "tools/verify_pages_hold.py",
     '--expected-source-sha "${{ github.sha }}"',
     "Retain exact preview candidate",
-    "actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+    "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9",
     "main is the sole live Pages publisher",
 ):
     need(required in preview_workflow, f"preview candidate safeguard missing: {required}")
