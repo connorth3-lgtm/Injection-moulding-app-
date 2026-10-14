@@ -1,8 +1,8 @@
 # Windows signing and distribution — 2026.10.15.1
 
-**STATUS: HOLD — independent human/device/provider review remains outstanding. This successor's technical producer is still PENDING; historical .3 success does not establish external approval.**
+**STATUS: HOLD — independent human/device/provider review remains outstanding. A successful source-bound technical producer has been retained, but no independent external approval exists.**
 
-> **PENDING 2026.10.15.1 SUCCESSOR SOURCE — ALL SEVEN INDEPENDENT REVIEWS HOLD.** This new learner runtime includes navigation and visibility safety changes. Previous 2026.10.13.3 producer run 38523473535 and artifact 11874731686 are HISTORICAL ONLY and cannot certify changed 2026.10.15.1 assets. New exact-source successful producer, fingerprint, digest, expiry, browser validation and protected merge are PENDING. Independent human, physical device, Windows signing, Book/curriculum SME, learner and provider approvals are NOT established.
+> **RETAINED 2026.10.15.1 TECHNICAL ARTIFACT — ALL SEVEN INDEPENDENT REVIEWS HOLD.** [Exact-source producer run 38616968698](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/38616968698) retained artifact **11920452430**, source 397e0a024eb88f9636a8b161155c5dce6af6316b, fingerprint sha256:ca0603729d78845b2551e15be74351abc75456932f9ac20b8394e730a81d2022, digest sha256:d333d3123cc2efeac15cfa086224d589f10672ffa2be38b2f6acb5335e18d870, expiry 2027-01-12T18:39:14Z. Verified 166/166 asset SHA256 and sizes, plus independent runtime fingerprint. Physical iOS/Android audible speech, NVDA/VoiceOver, Windows signing, Book and curriculum SMEs, learner outcomes, NZQA/provider G1–G8 and production authority remain HOLD.
 
 ## Required independently reviewed evidence
 
