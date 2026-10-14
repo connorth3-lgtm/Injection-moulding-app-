@@ -1,8 +1,8 @@
 # MouldMaster 2026.10.13.3 — external validation staging index
 
-**STATUS: TECHNICAL AUTOMATION HOLD / FAIL; SEVEN INDEPENDENT EXTERNAL HOLD STREAMS.**
+**STATUS: TECHNICAL AUTOMATION PASS / SEVEN INDEPENDENT EXTERNAL HOLD STREAMS.** Source-matched 2026.10.13.3 public runtime is proven by successful [Pre-merge Public Candidate run 38523473535](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/38523473535), retained artifact **11874731686**, digest **sha256:eaaae71d5c233bec5833dfe4f34c4f65df7cf820e01a9f6ce59d661fa10788f5**, expiry 2027-01-12T06:39:17Z; exact source **77fe83877de37cd5ce92cee7f4a1bc87a10965b7** and runtime fingerprint **sha256:923ae7d11d5438fde3149d7e4712fc8ebe81b8d44975d4e8d06162385a60143e**.
 
-This privacy/preview/Book Listen layout repair changes the learner-visible runtime for 2026.10.13.3. The previously successful 2026.10.13.2 candidate is historical software evidence, **not an accepted 2026.10.13.3 producer**. There is no retained current-source candidate or runtime fingerprint yet, and no owner approval for the new screenshot differences. All seven independent validation workstreams are still HOLD, without invented testers, provider signoff or completion.
+The previously successful 2026.10.13.2 candidate is historical and was **not reused** for changed .3 learner assets. The approved .3 source passed all 52 strict 12px Chromium visual captures with the new immutable `visual-baseline/2026.10.13.3` pinned to 352bf204ae77779d548bc77dcf8b0a63db2a84e1. The owner explicitly approved six updated Book Listen and four supplementary preview notice screenshots on 14 October 2026 NZDT; the old .2 baseline remains immutable. Software-only protected checks still govern merger; no human/device/provider or production approval is implied. All seven independent streams below remain HOLD.
 
 ## Seven release-specific external HOLD workstreams
 
@@ -14,6 +14,6 @@ This privacy/preview/Book Listen layout repair changes the learner-visible runti
 - `qa/LEARNER_PILOT_2026.10.13.3.md` — **HOLD**, release-specific human/device/provider review pending
 - `qa/NZQA_EXTERNAL_VALIDATION_2026.10.13.3.md` — **HOLD**, release-specific human/device/provider review pending
 
-The immutable previously approved visual reference remains `visual-baseline/2026.10.13.2` at exact SHA `602d597fa4575c9302e3ad9799fb3c58faa67965`, with the unchanged four-viewports by thirteen-screens (52 captures) and `maxDiffPixels=12`. Expanded tablet Book controls and the new preview status label require fresh captured screenshots and an explicit owner visual decision before any new immutable baseline is created. Do not relax, mask, skip, or automatically repin the visual gate.
+The owner-approved immutable `visual-baseline/2026.10.13.3` is fixed at `352bf204ae77779d548bc77dcf8b0a63db2a84e1`, with four viewports × thirteen surfaces (52 captures) and unchanged `maxDiffPixels=12`. Current SHA 77fe83877de37cd5ce92cee7f4a1bc87a10965b7 passed the exact-source Chromium visual comparison without waiver, mask or skipped image. The historical `.2` visual branch remains intact. Independent reviews are HOLD.
 
 Physical iOS/Android audible Book text-to-speech, offline install/reboot/update and real NVDA/VoiceOver, signed Windows distribution, Book and curriculum SME reviews, longitudinal learner outcomes and provider G1–G8 accreditation evidence require genuine separate verification. The production root, live tester invitations, production recipes and automatic machine control remain on HOLD. Protected squash merge requires fresh exact-head QA, successful current-source candidate retention, external evidence HOLD accuracy, and new visual owner approval.

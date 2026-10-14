@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **fail** |
+| Technical automation | **pass** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | HOLD: release 2026.10.13.3 changes public runtime, styling and privacy with no successful current-source retained producer. Previous 2026.10.13.2 run 38361000101 and artifact 11795250344 are historical only. External reviews remain HOLD. |
-| Behavioral / browser | **fail** | HOLD: release 2026.10.13.3 needs a new owner-reviewed immutable 52-screen visual baseline, exact-head Chromium/WebKit, five reliability shards and Question Quality 50-Pass. Earlier 2026.10.13.2 browser results do not transfer. |
+| Static / contract | **pass** | PASS: release 2026.10.13.3 source 77fe83877de37cd5ce92cee7f4a1bc87a10965b7 accepted from successful exact-source producer run 38523473535, retained artifact 11874731686, runtime fingerprint sha256:923ae7d11d5438fde3149d7e4712fc8ebe81b8d44975d4e8d06162385a60143e, and full SHA256 verification of 166 public manifest assets. This is software-controlled proof only; seven independent external human/device/provider streams HOLD. |
+| Behavioral / browser | **pass** | PASS: release 2026.10.13.3 exact-source 77fe83877de37cd5ce92cee7f4a1bc87a10965b7 passed owner-approved 52-surface Chromium visual QA at 12px, Chromium substantive/reachability, WebKit, cross-browser, 500 reliability runs and Question Quality 50-Pass. Actual audible devices, human assistive technology, SME, signed distribution, learner and provider evidence remain HOLD. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |

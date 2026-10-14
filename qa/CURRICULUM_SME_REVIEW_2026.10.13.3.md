@@ -1,8 +1,8 @@
 # Independent curriculum expert review — 2026.10.13.3
 
-**STATUS: HOLD — independent human/device/provider review remains outstanding. No accepted 2026.10.13.3 technical producer and no external approval exist.**
+**STATUS: HOLD — independent human/device/provider review remains outstanding. A successful source-bound technical producer has been retained, but no independent external approval exists.**
 
-> **PENDING 2026.10.13.3 TECHNICAL ARTIFACT — SOURCE NOT YET ACCEPTED; INDEPENDENT REVIEWS HOLD.** The previous 2026.10.13.2 build and its retained artifact are historical evidence only, not proof of the changed 2026.10.13.3 Book narration. A real successful exact-head candidate, matching runtime fingerprint, retained artifact and automated QA must be independently verified before current-source rebinding. None of this establishes physical device, human AT, Windows signing, SME, learner, provider or production authorization.
+> **RETAINED 2026.10.13.3 TECHNICAL ARTIFACT — INDEPENDENT REVIEWS HOLD.** [Exact-source producer run 38523473535](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/38523473535) created artifact **11874731686**, source 77fe83877de37cd5ce92cee7f4a1bc87a10965b7, digest sha256:eaaae71d5c233bec5833dfe4f34c4f65df7cf820e01a9f6ce59d661fa10788f5, expiry 2027-01-12T06:39:17Z, and public-runtime fingerprint sha256:923ae7d11d5438fde3149d7e4712fc8ebe81b8d44975d4e8d06162385a60143e. Producer quality was independently verified. The retained artifact does not establish any human, real-device, Windows signing, provider, accreditation or production authorization.
 
 ## Required independently reviewed evidence
 
