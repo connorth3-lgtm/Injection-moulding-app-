@@ -325,4 +325,8 @@ except ValueError:
 else:
     raise AssertionError('stale source in current Windows HOLD banner was accepted')
 
+# Consolidated audit tracking stays source-bound without inferring that the
+# seven external human/device/provider reviews have passed.
+subprocess.run([sys.executable, str(ROOT / 'tools/qa_consolidated_audit.py')],
+               cwd=ROOT, check=True)
 print('MouldMaster release/documentation coherence QA passed')

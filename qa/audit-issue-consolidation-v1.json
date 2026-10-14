@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "masterIssue": 632,
+  "release": "2026.10.13.3",
+  "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
+  "candidateSourceSha": "77fe83877de37cd5ce92cee7f4a1bc87a10965b7",
+  "scope": "Current repository issue consolidation only; no release/runtime/provenance change",
+  "approvalBoundary": "Technical preview is PASS; physical, human, Windows signing, professional and provider approval are not granted",
+  "issueGroups": {
+    "externalHolds": {
+      "pwaPhysicalDevices": 325,
+      "accessibility": 362,
+      "windowsDistribution": 328,
+      "bookSme": 326,
+      "curriculumSme": 327,
+      "learnerOutcomes": 329,
+      "nzqaProvider": 619
+    },
+    "evidenceAndUX": [
+      520,
+      512,
+      582,
+      589,
+      521,
+      278,
+      430,
+      428,
+      334,
+      335,
+      336
+    ],
+    "supersededTrackers": [
+      625,
+      624,
+      379
+    ]
+  },
+  "nextVersionedReleaseOnly": {
+    "privacyRevision": "pending-governed-release",
+    "publicationDateMetadata": "pending-governed-release",
+    "reason": "Changing currently SHA-bound /preview/privacy.html or /preview/version.json in place would invalidate manifest asset checks and retained candidate fingerprint"
+  },
+  "productionAuthority": "advisory-only",
+  "humanEvidenceStatus": "hold",
+  "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
+  "lastReviewedDate": "2026-10-15"
+}
