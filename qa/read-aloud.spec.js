@@ -12,6 +12,65 @@ async function seedLearner(page){
   });
 }
 
+test('privacy notice distinguishes Book screen reading from continuous background Listening', async ({page}) => {
+  await page.goto('http://127.0.0.1:4173/privacy.html');
+  const text=await page.locator('body').innerText();
+  expect(text).toContain('Book\'s one-screen Read Aloud');
+  expect(text).toContain('complete canonical lesson library');
+  expect(text).toContain('may continue speaking when this app is in the background');
+  expect(text).toContain('Use Pause or Stop');
+  expect(text).not.toContain('Playback stops on app navigation and is paused when the app is hidden.');
+});
+test('expanded tablet Book speech controls occupy layout instead of overlaying reading', async ({page}) => {
+  await seedLearner(page);
+  await page.setViewportSize({width:810,height:1080});
+  await page.goto(APP);
+  await page.waitForFunction(()=>window.MMBook?.open&&window.MM_APP_SHELL_FINALIZED);
+  await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load();});
+  const player=page.locator('.mm-read-aloud details');
+  await player.evaluate(el=>{el.open=true;});
+  await expect(player).toBeVisible();
+  const result=await page.evaluate(()=>{
+    const d=document.querySelector('.mm-read-aloud details');
+    const v=document.querySelector('#mmBookView');
+    const p=d.getBoundingClientRect(),b=v.getBoundingClientRect();
+    return {position:getComputedStyle(d).position,playerBottom:p.bottom,bookTop:b.top,playerWidth:p.width,bodyWidth:document.documentElement.scrollWidth,viewportWidth:innerWidth};
+  });
+  expect(result.position).toBe('relative');
+  expect(result.bookTop).toBeGreaterThanOrEqual(result.playerBottom-2);
+  expect(result.bodyWidth).toBeLessThanOrEqual(result.viewportWidth+2);
+});
+test('mobile bottom sheet leaves scroll clearance for Book chapter text and controls',async({page})=>{
+  await seedLearner(page);
+  await page.setViewportSize({width:360,height:800});
+  await page.goto(APP);
+  await page.waitForFunction(()=>window.MMBook?.open&&window.MM_APP_SHELL_FINALIZED);
+  await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load();});
+  const details=page.locator('.mm-read-aloud details');
+  await details.evaluate(el=>{el.open=true});
+  await expect(details).toBeVisible();
+  const geometry=await page.evaluate(()=>{
+    const panel=document.querySelector('.mm-read-aloud details');
+    const book=document.getElementById('mmBookView');
+    const rect=panel.getBoundingClientRect();
+    return {clearance:parseFloat(getComputedStyle(book).paddingBottom)||0,panelHeight:rect.height,viewportHeight:innerHeight,width:document.documentElement.scrollWidth,viewportWidth:innerWidth};
+  });
+  expect(geometry.clearance).toBeGreaterThanOrEqual(235);
+  expect(geometry.panelHeight).toBeLessThan(geometry.viewportHeight-75);
+  expect(geometry.width).toBeLessThanOrEqual(geometry.viewportWidth+2);
+});
+test('public preview status is shown only for a preview URL, not local desktop paths', async ({page}) => {
+  await seedLearner(page);
+  await page.goto(APP);
+  await page.waitForFunction(()=>window.MM_REFERENCE_LAYOUT?.refresh);
+  await expect(page.locator('#mmPreviewStatus')).toHaveCount(0);
+  await page.evaluate(()=>{history.replaceState(null,'','/preview/');window.MM_REFERENCE_LAYOUT.refresh()});
+  await expect(page.locator('#mmPreviewStatus')).toBeVisible();
+  await expect(page.locator('#mmPreviewStatus a')).toHaveAttribute('href','./privacy.html');
+  await expect(page.locator('#mmPreviewStatus')).toContainText('NON-PRODUCTION PREVIEW');
+  await page.evaluate(()=>window.switchView('path'));
+  await expect(page.locator('#mmPreviewStatus')).toBeVisible();
+});
 test('Read Aloud integrates with the real shell, docks in the header without covering learner content, and scopes itself to visible learner text', async ({ page }) => {
   await seedLearner(page);
   await page.setViewportSize({ width: 390, height: 844 });
