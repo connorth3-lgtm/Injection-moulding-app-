@@ -12,6 +12,89 @@ async function seedLearner(page){
   });
 }
 
+test('Delayed one-screen speech cannot start after the tab hides', async ({page}) => {
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Private visible lesson narration must not start later in a hidden tab.</p></main></body></html>');
+  await page.evaluate(()=>{
+    class Voice{constructor(text=''){this.text=text;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const speech={starts:0,cancels:0,getVoices(){return[];},speak(){this.starts++;},
+      cancel(){this.cancels++;},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    window.__hiddenStartVoice=speech;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Voice});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:speech});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const host=page.locator('.mm-read-aloud');
+  await host.locator('details').evaluate(el=>{el.open=true});
+  await host.locator('[data-mm-read="play"]').click();
+  await expect(host.locator('[data-mm-read="play"]')).toHaveText('Starting…');
+  await page.evaluate(()=>{
+    Object.defineProperty(document,'hidden',{configurable:true,value:true});
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  await expect(host.locator('.mm-read-status')).toHaveText('Stopped because the app was hidden before speech started');
+  await expect(host.locator('[data-mm-read="play"]')).toHaveText('Listen');
+  // The original voiceschanged/timeout continuation must remain invalidated.
+  await page.waitForTimeout(1300);
+  expect(await page.evaluate(()=>window.__hiddenStartVoice.starts)).toBe(0);
+});
+
+test('Late OS onstart after the tab hides cancels single-screen speech', async ({page}) => {
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>One-screen speech cannot become audible after its page has hidden.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
+    class Voice{constructor(text=''){this.text=text;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const speech={starts:0,cancels:0,getVoices(){return[];},speak(u){this.starts++;this.last=u;},
+      cancel(){this.cancels++;},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    window.__lateStartVoice=speech;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Voice});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:speech});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const host=page.locator('.mm-read-aloud');
+  await host.locator('details').evaluate(el=>{el.open=true});
+  await host.locator('[data-mm-read="play"]').click();
+  await expect(host.locator('[data-mm-read="play"]')).toHaveText('Starting…');
+  await page.evaluate(()=>{
+    Object.defineProperty(document,'hidden',{configurable:true,value:true});
+    window.__lateStartVoice.last.onstart?.();
+  });
+  await expect(host.locator('[data-mm-read="play"]')).toHaveText('Listen');
+  await expect(host.locator('.mm-read-status')).toHaveText('Stopped because the app was hidden before speech started');
+  expect(await page.evaluate(()=>window.__lateStartVoice.cancels)).toBeGreaterThan(0);
+});
+
+test('Leaving Listening via navigation or core programmatic hide cancels its lesson audio', async ({page}) => {
+  await page.setContent('<!doctype html><html lang="en"><body><div id="app"><nav id="nav"><button data-view="path">Learn</button></nav><div class="top-actions"></div><main id="mainContent" class="main"><section id="path" class="view"><p>Other lesson index.</p></section></main></div></body></html>');
+  await page.evaluate(()=>{
+    window.MM_DATA={lessons:[{id:1,title:'Moulding basics',intro:'Learner-initiated long session audio.'}]};
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
+    class Voice{constructor(text=''){this.text=text;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const speech={starts:0,cancels:0,getVoices(){return[];},speak(u){this.starts++;queueMicrotask(()=>u.onstart?.());},
+      cancel(){this.cancels++;},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    window.__leaveListeningSynth=speech;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Voice});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:speech});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const tab=page.locator('[data-mm-listening-tab]');
+  const listen=page.locator('#mmListeningView');
+  await tab.click();
+  await listen.locator('[data-mm-listening="play"]').click();
+  await expect(listen.locator('[data-mm-listening="play"]')).toHaveText('Pause');
+  const firstCancels=await page.evaluate(()=>window.__leaveListeningSynth.cancels);
+  await page.locator('#nav button[data-view="path"]').click();
+  await expect(listen).toBeHidden();
+  await expect(listen.locator('[data-mm-listening-status]')).toHaveText('Stopped after leaving Listening');
+  expect(await page.evaluate(()=>window.__leaveListeningSynth.cancels)).toBeGreaterThan(firstCancels);
+  await tab.click();
+  await listen.locator('[data-mm-listening="play"]').click();
+  await expect(listen.locator('[data-mm-listening="play"]')).toHaveText('Pause');
+  const prior=await page.evaluate(()=>window.__leaveListeningSynth.cancels);
+  await page.evaluate(()=>document.getElementById('mmListeningView').classList.add('hidden'));
+  await expect(listen.locator('[data-mm-listening-status]')).toHaveText('Stopped after leaving Listening');
+  expect(await page.evaluate(()=>window.__leaveListeningSynth.cancels)).toBeGreaterThan(prior);
+});
+
 test('privacy notice distinguishes Book screen reading from continuous background Listening', async ({page}) => {
   await page.goto('http://127.0.0.1:4173/privacy.html');
   const text=await page.locator('body').innerText();
