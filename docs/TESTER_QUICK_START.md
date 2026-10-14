@@ -1,9 +1,9 @@
 # MouldMaster Academy — private preview tester quick start
 
-> **Tester publication HOLD:** This is a draft handoff for 2026.10.13.3; it must not be sent to testers until protected-main release promotion, exact live Pages verification, all required software checks and the invitation-specific operator steps have passed. No physical device/AT/SME/NZQA evidence is implied.
+> **Tester publication HOLD:** This is a draft handoff for 2026.10.15.1; it must not be sent to testers until protected-main release promotion, exact live Pages verification, all required software checks and the invitation-specific operator steps have passed. No physical device/AT/SME/NZQA evidence is implied.
 
 
-**Non-production learning preview · web release 2026.10.13.3 · not a machine-control tool**
+**Non-production learning preview · web release 2026.10.15.1 · not a machine-control tool**
 
 Thanks for helping test MouldMaster. You are reviewing the *learning experience*, not approving machine settings, certifications, qualifications, professional competence, or production procedures. The preview is not an externally validated public release.
 
