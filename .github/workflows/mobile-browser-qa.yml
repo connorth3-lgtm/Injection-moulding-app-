@@ -36,9 +36,12 @@ jobs:
           BASE="$(python3 tools/github_workflow_baseline.py --workflow mobile-browser-qa.yml --target "$TARGET")"
           python3 tools/ci_impact.py --base "$BASE" --head "$TARGET"
 
+  # On protected-main PRs, never skip the real matrix merely because the
+  # changed-file classifier sees docs/QA-only updates. The strict aggregate
+  # mobile-browser gate correctly rejects a skip-only PR; keep it enforced.
   browser-chromium:
     needs: impact
-    if: needs.impact.outputs.browser == 'true'
+    if: needs.impact.outputs.browser == 'true' || (github.event_name == 'pull_request' && github.base_ref == 'main')
     strategy:
       fail-fast: false
       matrix:
@@ -146,7 +149,7 @@ jobs:
 
   browser-webkit:
     needs: impact
-    if: needs.impact.outputs.browser == 'true'
+    if: needs.impact.outputs.browser == 'true' || (github.event_name == 'pull_request' && github.base_ref == 'main')
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
@@ -184,7 +187,7 @@ jobs:
 
   browser-cross:
     needs: impact
-    if: needs.impact.outputs.browser == 'true'
+    if: needs.impact.outputs.browser == 'true' || (github.event_name == 'pull_request' && github.base_ref == 'main')
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -220,7 +223,7 @@ jobs:
 
   app-500-reliability:
     needs: impact
-    if: needs.impact.outputs.browser == 'true'
+    if: needs.impact.outputs.browser == 'true' || (github.event_name == 'pull_request' && github.base_ref == 'main')
     strategy:
       fail-fast: false
       matrix:

@@ -325,6 +325,16 @@ except ValueError:
 else:
     raise AssertionError('stale source in current Windows HOLD banner was accepted')
 
+# Protected-main PRs must run real Chromium/WebKit/cross-browser/reliability
+# evidence even when only docs or QA scripts change. Skip-only cannot satisfy
+# strict branch protection; do not weaken the aggregate fail-closed gate.
+mobile_qa_workflow = text('.github/workflows/mobile-browser-qa.yml')
+full_browser_pr_rule = "if: needs.impact.outputs.browser == 'true' || (github.event_name == 'pull_request' && github.base_ref == 'main')"
+need(mobile_qa_workflow.count(full_browser_pr_rule) == 4,
+     'all four protected-main browser job groups must execute for docs/QA-only PRs')
+need('skip-only browser workflow cannot pass' in mobile_qa_workflow,
+     'strict protected-main browser skip-only rejection has been removed')
+
 # Consolidated audit tracking stays source-bound without inferring that the
 # seven external human/device/provider reviews have passed.
 subprocess.run([sys.executable, str(ROOT / 'tools/qa_consolidated_audit.py')],
