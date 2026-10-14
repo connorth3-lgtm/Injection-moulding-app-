@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.10.13.3",
+  "release": "2026.10.15.1",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "77fe83877de37cd5ce92cee7f4a1bc87a10965b7",
-  "scope": "Current repository issue consolidation only; no release/runtime/provenance change",
-  "approvalBoundary": "Technical preview is PASS; physical, human, Windows signing, professional and provider approval are not granted",
+  "candidateSourceSha": "397e0a024eb88f9636a8b161155c5dce6af6316b",
+  "scope": "Unmerged 2026.10.15.1 technical producer accepted by automatic checks; protected-main merge, public deployment and all seven external reviews still HOLD.",
+  "approvalBoundary": "Successful source-bound technical automation only; physical, AT, Windows signing, SME, learner and NZQA/provider approvals not granted.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -43,5 +43,9 @@
   "productionAuthority": "advisory-only",
   "humanEvidenceStatus": "hold",
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
-  "lastReviewedDate": "2026-10-15"
+  "lastReviewedDate": "2026-10-15",
+  "previousVerifiedCandidate": {
+    "release": "2026.10.13.3",
+    "sourceSha": "77fe83877de37cd5ce92cee7f4a1bc87a10965b7"
+  }
 }

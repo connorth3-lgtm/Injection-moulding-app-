@@ -1,9 +1,9 @@
 # MouldMaster — controlled tester handoff
 
-> **Tester publication HOLD:** This is a draft handoff for 2026.10.13.3; it must not be sent to testers until protected-main release promotion, exact live Pages verification, all required software checks and the invitation-specific operator steps have passed. No physical device/AT/SME/NZQA evidence is implied.
+> **Tester publication HOLD:** This is a draft handoff for 2026.10.15.1; it must not be sent to testers until protected-main release promotion, exact live Pages verification, all required software checks and the invitation-specific operator steps have passed. No physical device/AT/SME/NZQA evidence is implied.
 
 
-**Release family:** `2026.10.13.3`  
+**Release family:** `2026.10.15.1`  
 **Status:** PREPARED, **not cleared to circulate** until the protected-main hosted preview and human checks below are verified.
 
 This is an owner-facing rollout playbook for a **small, voluntary, non-production usability cohort**. It is **not** production-root launch approval, physical-device authorization, formal real-AT testing, a learner-outcomes study, NZQA/provider approval or machine-control authorisation.
