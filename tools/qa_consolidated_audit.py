@@ -47,12 +47,25 @@ def validate(source: dict, report: str, release: dict, ledger: dict) -> None:
          "release identity out of sync")
     need(source.get("publishedMergeSha") == "89fe3e24c11c3eb660953870fce7e819280c55df",
          "audited original main merge source must remain immutable history")
-    candidate = ledger.get("webCandidate") or {}
-    need(source.get("candidateSourceSha") == candidate.get("sourceSha")
-         and re.fullmatch(r"[0-9a-f]{40}", str(candidate.get("sourceSha") or "")) is not None,
-         "source-bound verified producer candidate absent/stale")
-    need((ledger.get("technicalAutomation") or {}).get("status") == "pass",
-         "technical automation has not been proven")
+    candidate = ledger.get("webCandidate")
+    technical = (ledger.get("technicalAutomation") or {}).get("status")
+    if candidate is None:
+        # A new release must stage as technical FAIL/HOLD until the *new*
+        # producer exists. This is not a permission to merge an unbound build:
+        # the normal release external validator still rejects webCandidate=null.
+        need(technical == "fail" and source.get("candidateSourceSha") is None,
+             "unverified successor must remain fail-closed")
+        previous = source.get("previousVerifiedCandidate") or {}
+        retained = ledger.get("previousCandidate") or {}
+        need(previous.get("release") == retained.get("release")
+             and previous.get("sourceSha") == retained.get("sourceSha")
+             and re.fullmatch(r"[0-9a-f]{40}", str(retained.get("sourceSha") or "")) is not None,
+             "historical previous producer cannot be forged or presented as current")
+    else:
+        need(source.get("candidateSourceSha") == candidate.get("sourceSha")
+             and re.fullmatch(r"[0-9a-f]{40}", str(candidate.get("sourceSha") or "")) is not None,
+             "source-bound verified producer candidate absent/stale")
+        need(technical == "pass", "technical automation has not been proven")
     need((ledger.get("productionUse") or {}).get("status") == source.get("productionAuthority") == "advisory-only",
          "production release HOLD must not be silently lifted")
     groups = source.get("issueGroups") or {}
