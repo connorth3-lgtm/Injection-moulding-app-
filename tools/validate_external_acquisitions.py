@@ -15,6 +15,8 @@ import json
 import math
 from pathlib import Path
 
+MAX_PRIVATE_ROWS = 500_000
+
 SCHEMAS = {
     "334": "black-speck-intervention-recovery-template.csv",
     "335": "hot-runner-synchronised-trace-template.csv",
@@ -194,7 +196,7 @@ def validate(issue: str, header: list[str], rows: list[dict]) -> dict:
     require(issue in SCHEMAS, "unknown external acquisition issue")
     verify_header(header, issue)
     require(bool(rows), "header-only is an intake template, not acquired evidence")
-    require(len(rows) <= 500_000, "unexpectedly large local CSV intake")
+    require(len(rows) <= MAX_PRIVATE_ROWS, "unexpectedly large local CSV intake")
     require(all(isinstance(row,dict) and None not in row and
                 set(row) == set(header) and all(v is not None for v in row.values())
                 for row in rows), "malformed or extra-field CSV data")
@@ -204,6 +206,24 @@ def validate(issue: str, header: list[str], rows: list[dict]) -> dict:
     summary = CHECKS[issue](rows)
     return {"issue":f"#{issue}","structural_state":"candidate-for-independent-human-provenance-review",
             "external_evidence_acquired":False, "production_control_authorized":False,**summary}
+
+
+def read_bounded_private_rows(reader, *, limit: int = MAX_PRIVATE_ROWS) -> list[dict]:
+    """Consume a private CSV only up to its structural safety cap.
+
+    A CSV reader can yield an unbounded stream. Check the cap *during* reading,
+    before allocating one large list or inspecting private source data. The
+    first excess record fails closed; neither row contents nor identifiers
+    appear in the error or CI logs.
+    """
+    require(isinstance(limit, int) and 0 < limit <= MAX_PRIVATE_ROWS,
+            "invalid private CSV row safety cap")
+    rows = []
+    for row in reader:
+        require(len(rows) < limit,
+                f"private CSV exceeds the {limit}-row safety cap")
+        rows.append(row)
+    return rows
 
 
 def resolve_private_input(input_path: Path) -> Path:
@@ -236,7 +256,7 @@ def main() -> None:
         reader = csv.DictReader(f)
         header = reader.fieldnames or []
         verify_header(header,args.issue)
-        rows=list(reader)
+        rows=read_bounded_private_rows(reader)
     print(json.dumps(validate(args.issue,header,rows),sort_keys=True))
 
 
