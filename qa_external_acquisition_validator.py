@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import csv
 import io
+from itertools import repeat
 from pathlib import Path
 from tools.validate_external_acquisitions import (
     validate, EvidenceStructureError, SCHEMAS, TEMPLATE_DIR, resolve_private_input,
+    read_bounded_private_rows, MAX_PRIVATE_ROWS,
 )
 
 
@@ -107,5 +109,23 @@ except EvidenceStructureError as exc:
     assert "outside the public repository" in str(exc)
 else:
     raise AssertionError("public repository path was erroneously accepted")
+
+# The private CSV limit must be enforced *as bytes are parsed*, rather than
+# reading an arbitrarily large source to memory before validate() runs.
+# An infinite synthetic stream must halt exactly at the first excess row.
+assert MAX_PRIVATE_ROWS == 500_000
+assert len(read_bounded_private_rows(iter(black),limit=4)) == 4
+try:
+    read_bounded_private_rows(repeat(dict(black[0])),limit=4)
+except EvidenceStructureError as exc:
+    assert "row safety cap" in str(exc) and "rec-" not in str(exc)
+else:
+    raise AssertionError("unbounded private CSV intake erroneously succeeded")
+try:
+    read_bounded_private_rows(iter(black),limit=MAX_PRIVATE_ROWS+1)
+except EvidenceStructureError as exc:
+    assert "invalid private CSV row safety cap" in str(exc)
+else:
+    raise AssertionError("intake accepted a larger cap than the governed limit")
 
 print("Private acquisition structural checks passed: positive and negative synthetic fixtures for #334/#335/#336; no real evidence is claimed.")
