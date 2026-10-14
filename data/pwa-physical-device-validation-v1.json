@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Proposed 2026.10.15.1 successor has no accepted artifact. Prior 2026.10.13.3 source 77fe83877de37cd5ce92cee7f4a1bc87a10965b7 is historical and NOT evidence of testing 2026.10.15.1 on physical iOS/iPadOS or Android. Actual audible playback, install, offline reboot, atomic update and storage-pressure tests remain PENDING. Physical and human AT, signing, provider and production authority stay HOLD.",
+  "boundary": "Proposed 2026.10.15.1 successor has no accepted artifact. Prior 2026.10.13.3 producer is historical and NOT evidence of testing on physical iOS/iPadOS and Android devices. Physical install, audible speech, offline/reboot, atomic update, low-storage, accessibility zoom and return focus are PENDING. Real assistive-technology evidence is separately governed by data/accessibility-real-at-validation-v1.json. Physical-device automation cannot substitute for actual named human/device observations. Signing, provider and machine-control authority remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
