@@ -1,6 +1,6 @@
 # Independent curriculum expert review — 2026.10.15.1
 
-**STATUS: HOLD — independent human/device/provider review remains outstanding. A successful source-bound technical producer has been retained, but no independent external approval exists.**
+**STATUS: HOLD — independent human/device/provider review remains outstanding. This successor's technical producer is still PENDING; historical .3 success does not establish external approval.**
 
 > **PENDING 2026.10.15.1 SUCCESSOR SOURCE — ALL SEVEN INDEPENDENT REVIEWS HOLD.** This new learner runtime includes navigation and visibility safety changes. Previous 2026.10.13.3 producer run 38523473535 and artifact 11874731686 are HISTORICAL ONLY and cannot certify changed 2026.10.15.1 assets. New exact-source successful producer, fingerprint, digest, expiry, browser validation and protected merge are PENDING. Independent human, physical device, Windows signing, Book/curriculum SME, learner and provider approvals are NOT established.
 
