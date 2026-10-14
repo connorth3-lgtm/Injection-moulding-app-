@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Retained 2026.10.15.1 artifact 11920452430 on source 397e0a024eb88f9636a8b161155c5dce6af6316b proves technical build only, NOT physical iOS/iPadOS/Android audible narration, installed PWA, offline reboot, update or storage pressure. Real physical, assistive technology, signed Windows, provider and production authorisation stay PENDING/HOLD.",
+  "boundary": "Retained 2026.10.15.1 artifact 11920452430 source 397e0a024eb88f9636a8b161155c5dce6af6316b is only automation evidence, NOT actual testing on physical iOS/iPadOS and Android devices. Real physical iOS/iPadOS and Android devices must be tested by genuine reviewers before validation; browser-based contract QA cannot substitute. Real assistive-technology evidence is separately governed by data/accessibility-real-at-validation-v1.json. Audible playback, offline restart, cache upgrades, signed Windows, provider, root production and automatic-machine-control authority remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
