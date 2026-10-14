@@ -1,13 +1,13 @@
-/* MouldMaster learner UI polish — 2026.10.13.2
+/* MouldMaster learner UI polish — 2026.10.15.1
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.10.13.2';
+const VERSION='2026.10.15.1';
 // Cache-bust stylesheet revisions without claiming a new governed app release.
-const STYLE_REV='2026.10.13.1';
+const STYLE_REV='2026.10.15.1';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -328,6 +328,24 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 (function(){
 'use strict';
 if(window.MM_REFERENCE_LAYOUT)return;
+function ensurePreviewStatus(){
+  // Only the hosted non-production learner preview gets this persistent label.
+  // The desktop app and local dev server must not inherit a web release claim.
+  if(!/\/preview\/(?:|.*)$/.test(location.pathname))return;
+  const bar=document.querySelector('#app .topbar,.topbar');
+  if(!bar||document.getElementById('mmPreviewStatus'))return;
+  const badge=document.createElement('p');
+  badge.id='mmPreviewStatus';
+  badge.className='mm-preview-status';
+  const link=document.createElement('a');
+  link.href='./privacy.html';
+  link.textContent='NON-PRODUCTION PREVIEW · Educational / advisory use only';
+  link.setAttribute('aria-label','Non-production preview: educational and advisory use only. Read privacy and limits');
+  badge.appendChild(link);
+  // The title/subtitle container is deliberately hidden on several mobile
+  // routes. Keep this independent status label in the visible topbar.
+  bar.appendChild(badge);
+}
 const ASSET='./assets/book-diagrams/';
 const PHOTO_ASSET='./assets/mockup-reference-tiles.webp';
 // The small photographs here are direct visual crops of the user-selected
@@ -944,10 +962,11 @@ function refresh(){
   if(scheduled)return;scheduled=true;
   requestAnimationFrame(()=>{
     scheduled=false;
-    try{home();learn();practice();practiceInside();materials();more();deepViewPolish()}catch(error){console.warn('[MouldMaster reference layout]',error)}
+    try{ensurePreviewStatus();home();learn();practice();practiceInside();materials();more();deepViewPolish()}catch(error){console.warn('[MouldMaster reference layout]',error)}
   });
 }
 function boot(){
+  ensurePreviewStatus();
   document.documentElement.classList.add('mm-reference-layout');
   refresh();
   window.MM_APP_SHELL?.events?.onViewChange?.(refresh);

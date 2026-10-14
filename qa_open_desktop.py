@@ -231,7 +231,7 @@ for marker in [
     "contents: read",
     "contents: write",
     "Retain exact staged desktop release handoff",
-    "actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c",
+    "actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333",
     "Verify staged release handoff identity and hashes",
     "persist-credentials: false",
     "Recheck governed current-main source before release write",

@@ -11,7 +11,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
-  'web_release':'2026.10.13.2',
+  'web_release':'2026.10.15.1',
  'android_release':'2026.08.26.2',
  'desktop_release':'2026.09.29.1',
  'content_version':'2026.08.26.1',
@@ -196,6 +196,22 @@ elif visual.get('release')=='2026.10.11.10':
          and len(visual.get('viewports',[]))==4
          and len(visual.get('surfaces',[]))==13,
          '2026.10.11.10 Book-only visual successor must remain bound to approved 7b22514e with all 52 checks at 12px')
+elif visual.get('release')=='2026.10.13.3':
+    # Owner explicitly approved only the six Book Listen layout and four preview
+    # notice screenshots from PR #627 exact SHA 352bf204ae77779d548bc77dcf8b0a63db2a84e1.
+    # Preserve the 52 locked viewports/surfaces and the 12px pixel limit.
+    need(visual.get('ref')=='visual-baseline/2026.10.13.3'
+         and visual.get('commit')=='352bf204ae77779d548bc77dcf8b0a63db2a84e1'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and '11857112997' in text('qa/VISUAL_REVIEW_2026.10.13.3_PR627.md')
+         and 'STATUS: OWNER VISUAL APPROVAL' in text('qa/VISUAL_REVIEW_2026.10.13.3_PR627.md'),
+         '2026.10.13.3 owner approved visual baseline must be immutable at exact 352bf204ae77779d548bc77dcf8b0a63db2a84e1 with all 52 captures and 12px')
 elif visual.get('release')=='2026.10.13.2':
     # Owner explicitly approved ONLY the six visible Book Listen progress-counter
     # differences (28/28/38/34/38/34px) shown in the exact-source 52-capture
@@ -309,4 +325,34 @@ except ValueError:
 else:
     raise AssertionError('stale source in current Windows HOLD banner was accepted')
 
+# Protected-main PRs must run real Chromium/WebKit/cross-browser/reliability
+# evidence even when only docs or QA scripts change. Skip-only cannot satisfy
+# strict branch protection; do not weaken the aggregate fail-closed gate.
+# Historical baseline source and comparison environment use the pinned
+# @playwright/test dependency, not the stale 1.55.0 label from older captures.
+visual_package = json.loads(text('package.json'))
+visual_version = visual_package.get('devDependencies',{}).get('@playwright/test')
+need(bool(visual_version), 'pinned Playwright QA dependency is missing')
+need(visual.get('browser') == f'chromium via @playwright/test {visual_version}',
+     'current visual comparison runner label disagrees with pinned Playwright dependency')
+need(visual.get('referenceCaptureToolchain') == {
+         'framework':'@playwright/test', 'version': visual_version,
+         'browser':'chromium', 'referenceSourceSha':visual.get('commit')},
+     'historical approved screenshot capture provenance missing/stale')
+need(visual.get('currentComparisonToolchain') == {
+         'framework':'@playwright/test', 'version':visual_version,
+         'browser':'chromium'},
+     'current visual comparison tooling provenance missing/stale')
+
+mobile_qa_workflow = text('.github/workflows/mobile-browser-qa.yml')
+full_browser_pr_rule = "if: needs.impact.outputs.browser == 'true' || (github.event_name == 'pull_request' && github.base_ref == 'main')"
+need(mobile_qa_workflow.count(full_browser_pr_rule) == 4,
+     'all four protected-main browser job groups must execute for docs/QA-only PRs')
+need('skip-only browser workflow cannot pass' in mobile_qa_workflow,
+     'strict protected-main browser skip-only rejection has been removed')
+
+# Consolidated audit tracking stays source-bound without inferring that the
+# seven external human/device/provider reviews have passed.
+subprocess.run([sys.executable, str(ROOT / 'tools/qa_consolidated_audit.py')],
+               cwd=ROOT, check=True)
 print('MouldMaster release/documentation coherence QA passed')

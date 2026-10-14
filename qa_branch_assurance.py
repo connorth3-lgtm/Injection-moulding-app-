@@ -84,7 +84,7 @@ need("contents: write" not in workflow, "assurance workflow must remain read-onl
 need("pages: write" not in workflow, "assurance workflow must not publish")
 need("pull-requests: write" not in workflow, "assurance workflow must not mutate pull requests")
 need("Upload branch assurance diagnostics" in workflow, "assurance diagnostics are not retained")
-need("actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a" in workflow, "assurance artifact uploader is not pinned")
+need("actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9" in workflow, "assurance artifact uploader is not pinned")
 need("branch-assurance-report.md" in workflow and "branch-assurance-report.json" in workflow, "assurance report artifact paths are incomplete")
 
 run = subprocess.run(

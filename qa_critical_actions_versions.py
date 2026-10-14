@@ -13,10 +13,10 @@ WORKFLOWS = sorted(
 
 PINNED = {
     "checkout": "3d3c42e5aac5ba805825da76410c181273ba90b1",
-    "setup-node": "820762786026740c76f36085b0efc47a31fe5020",
+    "setup-node": "949feb2413d6458794dcd2491c4babbbce0c15c1",
     "setup-python": "5fda3b95a4ea91299a34e894583c3862153e4b97",
-    "upload-artifact": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
-    "download-artifact": "3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c",
+    "upload-artifact": "cf430e030ddbb5b0abf93d22962f4752f3646cd9",
+    "download-artifact": "9000827ccba6bdab643e8b6fd33ac0654aef8333",
 }
 ANNOTATED_MAJOR = {
     "checkout": 7,
