@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.13.2",
+  "release": "2026.10.15.1",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.13.2.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.15.1.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 619,
   "candidate": {
-    "release": "2026.10.13.2",
-    "sourceSha": "fccf672921cec36a07f93bc95b40e63e774331b9",
-    "runtimeFingerprint": "sha256:5b00e17a1d8afe3848d08f7e8ba057409a2f0ca6cb69c753cc4b1d56b8255afc"
+    "release": "2026.10.15.1",
+    "sourceSha": "397e0a024eb88f9636a8b161155c5dce6af6316b",
+    "runtimeFingerprint": "sha256:ca0603729d78845b2551e15be74351abc75456932f9ac20b8394e730a81d2022"
   },
-  "boundary": "Release 2026.10.13.2 technical candidate fccf672921cec36a07f93bc95b40e63e774331b9 does not establish any of NZQA/provider G1–G8 external gates or assessment/accreditation authority.",
+  "boundary": "Technical source-bound 2026.10.15.1 candidate 397e0a024eb88f9636a8b161155c5dce6af6316b does not establish provider G1–G8, NZQA/accreditation, assessment or consent-to-assess authority. All independent provider checks remain pending-external.",
   "requiredGates": [
     {
       "id": "G1-provider",
@@ -57,9 +57,9 @@
   "evidence": null,
   "validationRule": "Validated requires genuine provider-owned evidence for all eight gates, public-safe evidence references, exact release/candidate binding, and separate reviewed promotion of the canonical external-validation status. Automation must not manufacture completion.",
   "previousCandidate": {
-    "release": "2026.10.13.1",
-    "sourceSha": "df600852152c30b6151c391e330f77e4a78f1ff8",
-    "runtimeFingerprint": "sha256:9ce8e0f6806ad0edd159288b60f14874ff4ab589e06ab795f69e55e4fb51fdfe"
+    "release": "2026.10.13.3",
+    "sourceSha": "77fe83877de37cd5ce92cee7f4a1bc87a10965b7",
+    "runtimeFingerprint": "sha256:923ae7d11d5438fde3149d7e4712fc8ebe81b8d44975d4e8d06162385a60143e"
   },
   "previousIssueNumber": 379
 }

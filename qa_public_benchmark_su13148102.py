@@ -25,7 +25,7 @@ for bad in ['git add','git commit','git push','read_pickle','pickle.load']:
     need(bad not in t,f'forbidden operation: {bad}')
 if W.exists():
     w=W.read_text(encoding='utf-8')
-    for marker in ['MouldMaster Public Measured Benchmark — Sustainability 8102 supplement','qa_public_benchmark_su13148102.py','run_public_benchmark_su13148102.py','actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a']:
+    for marker in ['MouldMaster Public Measured Benchmark — Sustainability 8102 supplement','qa_public_benchmark_su13148102.py','run_public_benchmark_su13148102.py','actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9']:
         need(marker in w,f'workflow marker missing: {marker}')
     for bad in ['*.csv','*.zip','publisher/**']:
         need(bad not in w,f'workflow must not upload raw data: {bad}')

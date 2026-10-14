@@ -44,7 +44,7 @@ for marker in (
     "source_fp=",
     "staged_fp=",
     'test "$source_fp" = "$staged_fp"',
-    "uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+    "uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9",
     "name: physical-pwa-candidate-${{ github.sha }}",
     "path: physical-pwa-candidate",
     "retention-days: 30",

@@ -12,6 +12,151 @@ async function seedLearner(page){
   });
 }
 
+test('Delayed one-screen speech cannot start after the tab hides', async ({page}) => {
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Private visible lesson narration must not start later in a hidden tab.</p></main></body></html>');
+  await page.evaluate(()=>{
+    class Voice{constructor(text=''){this.text=text;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const speech={starts:0,cancels:0,getVoices(){return[];},speak(){this.starts++;},
+      cancel(){this.cancels++;},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    window.__hiddenStartVoice=speech;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Voice});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:speech});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const host=page.locator('.mm-read-aloud');
+  await host.locator('details').evaluate(el=>{el.open=true});
+  await host.locator('[data-mm-read="play"]').click();
+  await expect(host.locator('[data-mm-read="play"]')).toHaveText('Starting…');
+  await page.evaluate(()=>{
+    Object.defineProperty(document,'hidden',{configurable:true,value:true});
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  await expect(host.locator('.mm-read-status')).toHaveText('Stopped because the app was hidden before speech started');
+  await expect(host.locator('[data-mm-read="play"]')).toHaveText('Listen');
+  // The original voiceschanged/timeout continuation must remain invalidated.
+  await page.waitForTimeout(1300);
+  expect(await page.evaluate(()=>window.__hiddenStartVoice.starts)).toBe(0);
+});
+
+test('Late OS onstart after the tab hides cancels single-screen speech', async ({page}) => {
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>One-screen speech cannot become audible after its page has hidden.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
+    class Voice{constructor(text=''){this.text=text;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const speech={starts:0,cancels:0,getVoices(){return[];},speak(u){this.starts++;this.last=u;},
+      cancel(){this.cancels++;},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    window.__lateStartVoice=speech;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Voice});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:speech});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const host=page.locator('.mm-read-aloud');
+  await host.locator('details').evaluate(el=>{el.open=true});
+  await host.locator('[data-mm-read="play"]').click();
+  await expect(host.locator('[data-mm-read="play"]')).toHaveText('Starting…');
+  await page.evaluate(()=>{
+    Object.defineProperty(document,'hidden',{configurable:true,value:true});
+    window.__lateStartVoice.last.onstart?.();
+  });
+  await expect(host.locator('[data-mm-read="play"]')).toHaveText('Listen');
+  await expect(host.locator('.mm-read-status')).toHaveText('Stopped because the app was hidden before speech started');
+  expect(await page.evaluate(()=>window.__lateStartVoice.cancels)).toBeGreaterThan(0);
+});
+
+test('Leaving Listening via navigation or core programmatic hide cancels its lesson audio', async ({page}) => {
+  await page.setContent('<!doctype html><html lang="en"><body><div id="app"><nav id="nav"><button data-view="path">Learn</button></nav><div class="top-actions"></div><main id="mainContent" class="main"><section id="path" class="view"><p>Other lesson index.</p></section></main></div></body></html>');
+  await page.evaluate(()=>{
+    window.MM_DATA={lessons:[{id:1,title:'Moulding basics',intro:'Learner-initiated long session audio.'}]};
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
+    class Voice{constructor(text=''){this.text=text;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const speech={starts:0,cancels:0,getVoices(){return[];},speak(u){this.starts++;queueMicrotask(()=>u.onstart?.());},
+      cancel(){this.cancels++;},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    window.__leaveListeningSynth=speech;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Voice});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:speech});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const tab=page.locator('[data-mm-listening-tab]');
+  const listen=page.locator('#mmListeningView');
+  await tab.click();
+  await listen.locator('[data-mm-listening="play"]').click();
+  await expect(listen.locator('[data-mm-listening="play"]')).toHaveText('Pause');
+  const firstCancels=await page.evaluate(()=>window.__leaveListeningSynth.cancels);
+  await page.locator('#nav button[data-view="path"]').click();
+  // Minimal harness has no canonical .hidden stylesheet; assert route class.
+  await expect(listen).toHaveClass(/hidden/);
+  await expect(listen.locator('[data-mm-listening-status]')).toHaveText('Stopped after leaving Listening');
+  expect(await page.evaluate(()=>window.__leaveListeningSynth.cancels)).toBeGreaterThan(firstCancels);
+  await tab.click();
+  await listen.locator('[data-mm-listening="play"]').click();
+  await expect(listen.locator('[data-mm-listening="play"]')).toHaveText('Pause');
+  const prior=await page.evaluate(()=>window.__leaveListeningSynth.cancels);
+  await page.evaluate(()=>document.getElementById('mmListeningView').classList.add('hidden'));
+  await expect(listen.locator('[data-mm-listening-status]')).toHaveText('Stopped after leaving Listening');
+  expect(await page.evaluate(()=>window.__leaveListeningSynth.cancels)).toBeGreaterThan(prior);
+});
+
+test('privacy notice distinguishes Book screen reading from continuous background Listening', async ({page}) => {
+  await page.goto('http://127.0.0.1:4173/privacy.html');
+  const text=await page.locator('body').innerText();
+  expect(text).toContain('Book\'s one-screen Read Aloud');
+  expect(text).toContain('complete canonical lesson library');
+  expect(text).toContain('may continue speaking when this app is in the background');
+  expect(text).toContain('Last updated: 15 October 2026');
+  expect(text).toContain('Leaving the continuous Listening screen for another section of MouldMaster stops its active playlist.');
+  expect(text).toContain('Use Pause or Stop');
+  expect(text).not.toContain('Playback stops on app navigation and is paused when the app is hidden.');
+});
+test('expanded tablet Book speech controls occupy layout instead of overlaying reading', async ({page}) => {
+  await seedLearner(page);
+  await page.setViewportSize({width:810,height:1080});
+  await page.goto(APP);
+  await page.waitForFunction(()=>window.MMBook?.open&&window.MM_APP_SHELL_FINALIZED);
+  await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load();});
+  const player=page.locator('.mm-read-aloud details');
+  await player.evaluate(el=>{el.open=true;});
+  await expect(player).toBeVisible();
+  const result=await page.evaluate(()=>{
+    const d=document.querySelector('.mm-read-aloud details');
+    const v=document.querySelector('#mmBookView');
+    const p=d.getBoundingClientRect(),b=v.getBoundingClientRect();
+    return {position:getComputedStyle(d).position,playerBottom:p.bottom,bookTop:b.top,playerWidth:p.width,bodyWidth:document.documentElement.scrollWidth,viewportWidth:innerWidth};
+  });
+  expect(result.position).toBe('relative');
+  expect(result.bookTop).toBeGreaterThanOrEqual(result.playerBottom-2);
+  expect(result.bodyWidth).toBeLessThanOrEqual(result.viewportWidth+2);
+});
+test('mobile bottom sheet leaves scroll clearance for Book chapter text and controls',async({page})=>{
+  await seedLearner(page);
+  await page.setViewportSize({width:360,height:800});
+  await page.goto(APP);
+  await page.waitForFunction(()=>window.MMBook?.open&&window.MM_APP_SHELL_FINALIZED);
+  await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load();});
+  const details=page.locator('.mm-read-aloud details');
+  await details.evaluate(el=>{el.open=true});
+  await expect(details).toBeVisible();
+  const geometry=await page.evaluate(()=>{
+    const panel=document.querySelector('.mm-read-aloud details');
+    const book=document.getElementById('mmBookView');
+    const rect=panel.getBoundingClientRect();
+    return {clearance:parseFloat(getComputedStyle(book).paddingBottom)||0,panelHeight:rect.height,viewportHeight:innerHeight,width:document.documentElement.scrollWidth,viewportWidth:innerWidth};
+  });
+  expect(geometry.clearance).toBeGreaterThanOrEqual(235);
+  expect(geometry.panelHeight).toBeLessThan(geometry.viewportHeight-75);
+  expect(geometry.width).toBeLessThanOrEqual(geometry.viewportWidth+2);
+});
+test('public preview status is shown only for a preview URL, not local desktop paths', async ({page}) => {
+  await seedLearner(page);
+  await page.goto(APP);
+  await page.waitForFunction(()=>window.MM_REFERENCE_LAYOUT?.refresh);
+  await expect(page.locator('#mmPreviewStatus')).toHaveCount(0);
+  await page.evaluate(()=>{history.replaceState(null,'','/preview/');window.MM_REFERENCE_LAYOUT.refresh()});
+  await expect(page.locator('#mmPreviewStatus')).toBeVisible();
+  await expect(page.locator('#mmPreviewStatus a')).toHaveAttribute('href','./privacy.html');
+  await expect(page.locator('#mmPreviewStatus')).toContainText('NON-PRODUCTION PREVIEW');
+  await page.evaluate(()=>window.switchView('path'));
+  await expect(page.locator('#mmPreviewStatus')).toBeVisible();
+});
 test('Read Aloud integrates with the real shell, docks in the header without covering learner content, and scopes itself to visible learner text', async ({ page }) => {
   await seedLearner(page);
   await page.setViewportSize({ width: 390, height: 844 });
@@ -24,8 +169,8 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load()});
   await expect(page.locator('#mmBookView')).toBeVisible();
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.10.04.2');
-  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.10.04.2');
+  await expect(host).toHaveAttribute('data-version','2026.10.15.1');
+  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.10.15.1');
   await expect(host.locator('summary')).toContainText('Listen');
 
   const placement=await page.evaluate(()=>{
@@ -113,7 +258,7 @@ test('Read Aloud supported-path controls execute the exact product runtime in a 
   await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.supported===true)).toBeTruthy();
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.10.04.2');
+  await expect(host).toHaveAttribute('data-version','2026.10.15.1');
   await host.locator('details').evaluate(el=>{el.open=true;});
 
   const visibilityCheck=await page.evaluate(() => {
