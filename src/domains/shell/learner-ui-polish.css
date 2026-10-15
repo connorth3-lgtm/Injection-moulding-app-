@@ -3974,3 +3974,33 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
   outline:2px solid Highlight!important;color:HighlightText!important;
  }
 }
+
+/* Follow-on visual parity: formerly white More/Resources interior tiles now
+   use the same high-contrast navy-blue palette as Learn and the other subtabs.
+   Preserve each canonical button/link and the original 44px+ hit targets. */
+.mm-reference-layout #modal .mm-reference-more-card .mm-more-disclosure-items>.quick-action,
+.mm-reference-layout #modal .mm-reference-more-extra .mm-more-disclosure-items>.quick-action{
+  background:linear-gradient(145deg,#164669,#0b314e)!important;
+  color:#effaff!important;
+  border:1px solid #4e8cac!important;
+  border-radius:12px!important;
+  min-height:76px!important;
+  overflow-wrap:anywhere!important;
+  box-shadow:inset 0 1px 0 rgba(145,224,239,.11)!important;
+}
+.mm-reference-layout #modal .mm-reference-more-card .mm-more-disclosure-items>.quick-action :is(b,small),
+.mm-reference-layout #modal .mm-reference-more-extra .mm-more-disclosure-items>.quick-action :is(b,small){color:#edfaff!important;}
+.mm-reference-layout #modal .mm-reference-more-card .mm-more-disclosure-items>.quick-action small,
+.mm-reference-layout #modal .mm-reference-more-extra .mm-more-disclosure-items>.quick-action small{color:#c4dfeb!important;}
+.mm-reference-layout #modal .mm-reference-more-card .mm-more-disclosure-items>.quick-action:is(:hover,:focus-visible),
+.mm-reference-layout #modal .mm-reference-more-extra .mm-more-disclosure-items>.quick-action:is(:hover,:focus-visible){
+  background:#1c597b!important;border-color:#89f2e1!important;
+}
+.mm-reference-layout #modal .mm-more-disclosure-items>.quick-action:focus-visible{
+  outline:3px solid #8bf9e5!important;outline-offset:2px!important;
+}
+@media(forced-colors:active){
+ .mm-reference-layout #modal .mm-reference-more-card .mm-more-disclosure-items>.quick-action{
+   background:Canvas!important;color:CanvasText!important;border:1px solid CanvasText!important;
+ }
+}
