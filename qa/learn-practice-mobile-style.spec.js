@@ -506,6 +506,9 @@ test('Materials guided learning does not precede or replace the required exact-g
   await page.evaluate(()=>switchView('materials'));
   const index=page.locator('#mmExactMaterialCatalog');
   await expect(index.locator('[data-mm-all-material-index]')).toBeVisible();
+  // The reference guide is mounted on a later animation frame in WebKit.
+  // Require the actual page state before testing the deterministic first-child contract.
+  await expect(index.locator(':scope > .mm-material-journey')).toHaveCount(1);
   const structure=await index.evaluate(root=>({
     firstIsIndex:root.firstElementChild?.hasAttribute('data-mm-all-material-index')===true,
     guideCount:root.querySelectorAll(':scope > .mm-material-journey').length,
