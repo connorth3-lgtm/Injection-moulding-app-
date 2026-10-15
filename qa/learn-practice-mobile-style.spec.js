@@ -536,3 +536,39 @@ test('mobile Practice source-owned choices occupy one readable column at 360 and
     expect(metrics.overflow).toBeLessThanOrEqual(2);
   }
 });
+
+test('Practice adds five unscored worked fault reviews with mechanisms, verification and original-tool launches',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.evaluate(()=>switchView('scenarios'));
+  const cases=page.locator('#scenarios #mmPracticeCases .mm-practice-case');
+  await expect(cases).toHaveCount(5);
+  await expect(page.locator('#scenarios #mmPracticeCases')).toContainText('not five more governed scenarios');
+  await cases.first().locator('summary').click();
+  await expect(cases.first()).toHaveAttribute('open','');
+  for(const label of ['Observe the evidence','Compare plausible causes','Verify safely','Common mistake to avoid'])
+    await expect(cases.first()).toContainText(label);
+  expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts().total)).toBe(169);
+  await cases.first().locator('[data-mm-hub-action="diagnostic-workbench"]').click();
+  await expect(page.locator('#defects')).toBeVisible();
+});
+test('Resources to Materials closes the chooser and leaves source-backed grade search usable',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.evaluate(()=>switchView('path'));
+  await page.locator('#path [data-mm-hub-action="learn-resources"]').click();
+  await expect(page.locator('#modal:not(.hidden) .mm-learning-resource-chooser')).toBeVisible();
+  await page.locator('#modal .mm-learning-resource-chooser [data-mm-hub-action="materials"]').click();
+  await expect(page.locator('#modal')).toHaveClass(/hidden/);
+  await expect(page.locator('#materials [data-mm-all-material-query]')).toBeVisible();
+  await expect(page.locator('#mmExactMaterialCatalog').locator(':scope > [data-mm-all-material-index]')).toHaveCount(1);
+});
+test('Practice scenario review back restores accessible keyboard focus on its entry action',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.evaluate(()=>switchView('scenarios'));
+  await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="scenario-detail"]').click();
+  await expect(page.locator('#scenarios .mm-hub-detail-back')).toBeVisible();
+  await page.locator('#scenarios .mm-hub-detail-back button').click();
+  await expect(page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="scenario-detail"]')).toBeFocused();
+});

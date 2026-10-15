@@ -3764,3 +3764,51 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
  .exam-card,.dl-card,.ml-card,.pd-card,.mm-st-panel
  ){background:Canvas!important;color:CanvasText!important;border:1px solid CanvasText!important;}
 }
+
+
+/* Five unscored practice reviews — evidence-first and readable on a phone. */
+.mm-reference-layout #scenarios .mm-practice-cases{
+  display:grid;gap:12px;min-width:0;width:100%;box-sizing:border-box;
+  padding:18px;border:1px solid #397d9e;border-radius:18px;
+  background:linear-gradient(140deg,#103c5e,#09283f);color:#edf8ff;
+}
+.mm-reference-layout #scenarios .mm-practice-cases-head .eyebrow{color:#8ef5dd!important;}
+.mm-reference-layout #scenarios .mm-practice-cases-head h2{
+  color:#f4fbff;font-size:clamp(20px,4vw,27px);margin:5px 0 8px;line-height:1.22;
+}
+.mm-reference-layout #scenarios .mm-practice-cases-head p{margin:0;color:#c2dfee;font-size:14px;line-height:1.55;}
+.mm-reference-layout #scenarios .mm-practice-case-list{display:grid;gap:8px;}
+.mm-reference-layout #scenarios .mm-practice-case{border:1px solid #387897;border-radius:13px;background:#0b304c;overflow:hidden;}
+.mm-reference-layout #scenarios .mm-practice-case>summary{
+  min-height:62px;display:grid;grid-template-columns:55px minmax(0,1fr);
+  align-items:center;column-gap:9px;row-gap:3px;padding:11px 13px;cursor:pointer;
+  color:#f1fbff;list-style:none;
+}
+.mm-reference-layout #scenarios .mm-practice-case>summary::-webkit-details-marker{display:none;}
+.mm-reference-layout #scenarios .mm-practice-case-number{grid-row:1/span 2;color:#9cefe4;font-size:12px;font-weight:850;}
+.mm-reference-layout #scenarios .mm-practice-case>summary>strong{grid-column:2;font-size:15px;line-height:1.35;}
+.mm-reference-layout #scenarios .mm-practice-case-disclosure{grid-column:2;color:#b2d5e7;font-size:12px;}
+.mm-reference-layout #scenarios .mm-practice-case>summary:focus-visible,
+.mm-reference-layout #scenarios .mm-practice-case-launch:focus-visible{outline:3px solid #a2f9e8;outline-offset:-3px;}
+.mm-reference-layout #scenarios .mm-practice-case-body{display:grid;gap:12px;padding:14px 15px;border-top:1px solid #397897;background:#103956;}
+.mm-reference-layout #scenarios .mm-practice-case-body>div{display:grid;gap:5px;min-width:0;}
+.mm-reference-layout #scenarios .mm-practice-case-body b{color:#92f1e1;font-size:13px;}
+.mm-reference-layout #scenarios .mm-practice-case-body p{color:#d2e9f4;margin:0;font-size:13px;line-height:1.57;}
+.mm-reference-layout #scenarios .mm-practice-case-body .mm-practice-case-situation{font-size:14px;color:#f0f9ff;font-weight:650;}
+.mm-reference-layout #scenarios .mm-practice-case-body .mm-practice-case-caution{
+  padding:12px;border-left:3px solid #84e2cd;background:#09283f;border-radius:8px;
+}
+.mm-reference-layout #scenarios .mm-practice-case-launch{
+  display:block;box-sizing:border-box;min-height:48px;width:100%;padding:11px 14px;
+  text-align:center;white-space:normal;overflow-wrap:anywhere;border-radius:11px;
+  border:1px solid #9df9e9;background:linear-gradient(110deg,#6de4d0,#4dcabb);
+  color:#082d36;font-size:14px;font-weight:830;
+}
+.mm-reference-layout #scenarios .mm-practice-cases>.mm-learn-safety-note{
+  margin:0;color:#afd3e4;line-height:1.55;font-size:12px;
+}
+@media(max-width:500px){
+ .mm-reference-layout #scenarios .mm-practice-cases{padding:12px;}
+ .mm-reference-layout #scenarios .mm-practice-case>summary{padding:10px 11px;}
+ .mm-reference-layout #scenarios .mm-practice-case-body{padding:11px;}
+}
