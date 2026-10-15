@@ -301,3 +301,58 @@ test('Core dashboard survives a clobbered legacy currentLesson name without rese
   expect(result.storageUnchanged).toBe(true);
   await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
 });
+
+for(const width of [360,412]){
+ test('Learn studio owns Arena, all five real question modes and six independent answer checks at '+width+'px',async({page})=>{
+  await page.setViewportSize({width,height:900});
+  await openApp(page);
+  await page.evaluate(()=>switchView('path'));
+  const learn=page.locator('#path .mm-learn-hub');
+  await expect(learn.locator('#mmLearnArena')).toBeVisible();
+  await expect(learn.locator('#mmLearnQuestions .mm-hub-picker-grid > button')).toHaveCount(5);
+  await expect(learn.locator('#mmLearnQuestions')).toContainText('169 governed prompts');
+  await expect(learn.locator('#mmLearnReasoning .mm-learn-reasoning-item')).toHaveCount(6);
+  await expect(learn.locator('#mmLearnCourses [data-mm-catalog-group]')).toHaveCount(22);
+  await expect(learn.locator('#mmLearnCourses [data-mm-catalog-item]')).toHaveCount(176);
+  const first=learn.locator('#mmLearnReasoning .mm-learn-reasoning-item').first();
+  await first.locator('summary').click();
+  await expect(first).toHaveAttribute('open','');
+  await expect(first).toContainText('Suggested answer');
+  await expect(first).toContainText('Why it matters');
+  const checks=await page.evaluate(()=>({total:window.MM_QUESTION_CENTRE.counts().total,scroll:document.documentElement.scrollWidth-innerWidth}));
+  expect(checks.total).toBe(169);
+  expect(checks.scroll).toBeLessThanOrEqual(2);
+  await page.evaluate(()=>window.MM_PRIMARY_HUBS.renderLearnHub());
+  await expect(page.locator('#path #mmLearnQuestions')).toHaveCount(1);
+  await expect(page.locator('#path #mmLearnArena')).toHaveCount(1);
+ });
+}
+test('Learn Arena boss round keeps source-owned feedback and the scenario return goes back to Learn',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await openApp(page);
+ await page.evaluate(()=>switchView('path'));
+ await page.locator('#path [data-mm-hub-action="boss-round"]').click();
+ const boss=page.locator('#modal:not(.hidden)');
+ await expect(boss).toContainText('Boss round');
+ await expect(boss.locator('button.choice')).toHaveCount(3);
+ await page.keyboard.press('Escape');
+ await page.evaluate(()=>window.closeModal?.());
+ await page.locator('#path [data-mm-hub-action="learn-scenarios"]').click();
+ await expect(page.locator('#scenarios .scenario')).toHaveCount(40);
+ await page.locator('#scenarios .mm-hub-detail-back button').click();
+ await expect(page.locator('#path .mm-learn-hub')).toBeVisible();
+ await expect(page.locator('#path [data-mm-hub-action="learn-scenarios"]')).toBeFocused();
+});
+test('Learn Question Centre lanes invoke canonical assessments and preserve scoped counts',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await openApp(page);
+ await page.evaluate(()=>switchView('path'));
+ await page.locator('#path #mmLearnQuestions [data-mm-hub-action="assessments"]').click();
+ await expect(page.locator('#exams')).toBeVisible();
+ await expect(page.locator('#exams')).toContainText('knowledge');
+ await page.evaluate(()=>switchView('path'));
+ await page.locator('#path #mmLearnQuestions [data-mm-hub-action="scenario-detail"]').click();
+ await expect(page.locator('#scenarios .scenario')).toHaveCount(40);
+ await page.locator('#scenarios .mm-hub-detail-back button').click();
+ await expect(page.locator('#path #mmLearnQuestions')).toBeVisible();
+});

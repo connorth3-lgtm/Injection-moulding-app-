@@ -575,6 +575,11 @@ function learn(){
       summary.querySelector('.mm-catalog-group-name')?.insertAdjacentElement('afterend',desc);
     }
   });
+  const learnQuestionGrid=hub.querySelector('.mm-learn-question-centre .mm-hub-picker-grid');
+  if(learnQuestionGrid){
+    learnQuestionGrid.dataset.mmReferenceLearnQuestions='1';
+    learnQuestionGrid.querySelectorAll(':scope > button[data-mm-hub-action]').forEach(practiceChoiceArt);
+  }
   hub.dataset.mmReferenceLearn='1';
 }
 // Use the same user-selected photographic atlas as Learn/Materials for real

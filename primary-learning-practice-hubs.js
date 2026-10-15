@@ -150,7 +150,7 @@ function nextScenarioIndex(){
   writePracticeRotation(next);
   return next;
 }
-function bind(root){root?.querySelectorAll('[data-mm-hub-action]').forEach(button=>button.addEventListener('click',()=>runAction(button.dataset.mmHubAction)))}
+function bind(root){root?.querySelectorAll('[data-mm-hub-action]').forEach(button=>button.addEventListener('click',()=>runAction(button.dataset.mmHubAction,root.id==='path'?'learn':'practice')))}
 function safeOpen(apiName,fallback){
   const api=window[apiName];
   if(api&&typeof api.open==='function')return api.open();
@@ -432,8 +432,10 @@ window.MM_DIAGNOSTIC_WORKBENCH=Object.freeze({
   noProductionControl:true
 });
 
-function runAction(action){
+function runAction(action,source='practice'){
   switch(action){
+    case 'boss-round': return typeof startBossRound==='function'?startBossRound():openScenarioDetail();
+    case 'learn-scenarios': switchView('scenarios');return openScenarioDetail(nextScenarioIndex(),'Learn');
     case 'lesson': return openCurrentLesson();
     case 'path-detail': return lessonCatalog.open({filter:'all'});
     case 'materials': return switchView('materials');
@@ -450,7 +452,7 @@ function runAction(action){
     case 'coach': return dxOpen();
     case 'diagnostic-labs': closePicker(); return safeOpen('MM_DIAGNOSTIC_LABS',()=>switchView('scenarios'));
     case 'process-data': return safeOpen('MM_PROCESS_DATA_DIAGNOSTICS');
-    case 'scenario-detail': closePicker(); return openScenarioDetail(nextScenarioIndex());
+    case 'scenario-detail': closePicker();if(source==='learn')switchView('scenarios');return openScenarioDetail(nextScenarioIndex(),source==='learn'?'Learn':'Practice');
     case 'labs': return openPicker('labs');
     case 'spatial-twin': closePicker(); return safeOpen('MM_SPATIAL_TWIN',()=>switchView('simulator'));
     case 'simulator': closePicker(); return switchView('simulator');
@@ -633,6 +635,53 @@ window.addEventListener('mm:specialist-progress-change',()=>lessonCatalog.refres
 // Refresh any Learn page opened during bootstrap once owned progress can migrate.
 window.addEventListener('mm:domains-ready',()=>lessonCatalog.refreshSpecialistProgress());
 
+const LEARN_REASONING_REVIEWS=Object.freeze([
+  {
+    "id": "LR-01",
+    "topic": "Cushion stability",
+    "question": "Cushion varies from shot to shot. What evidence should you check before adjusting the process?",
+    "answer": "Review cushion and transfer traces, repeatability and feed consistency against a known-good baseline.",
+    "explanation": "A changing cushion is a signal, not a diagnosis; inconsistent feeding, transfer behaviour and measurement need to be distinguished before choosing a controlled check."
+  },
+  {
+    "id": "LR-02",
+    "topic": "Silver streaks",
+    "question": "Silver streaks appear after a resin change. Does appearance alone prove wet material?",
+    "answer": "No. Check the exact grade and handling/drying evidence, then compare defect location and process history.",
+    "explanation": "Moisture is one possible mechanism, but gas, shear and contamination can look similar. Supplier-specific documentation and discriminating observations matter."
+  },
+  {
+    "id": "LR-03",
+    "topic": "Single-cavity flash",
+    "question": "Only one cavity flashes in a multi-cavity mould. What is the strongest first investigation?",
+    "answer": "Compare that cavity’s local parting, venting, balance and tool condition with unaffected cavities.",
+    "explanation": "A cavity-specific symptom calls for local evidence before a global pressure or clamp adjustment that may disguise the underlying issue."
+  },
+  {
+    "id": "LR-04",
+    "topic": "Short shots",
+    "question": "Short shots appear immediately after a material change. What do you establish first?",
+    "answer": "Verify actual grade, supply condition and fill/transfer evidence against an applicable qualified baseline.",
+    "explanation": "Different materials may flow differently; do not transfer previous settings without reviewing supplier limits, actual traces and local safety procedures."
+  },
+  {
+    "id": "LR-05",
+    "topic": "Sink marks",
+    "question": "A thick section shows sink. Which evidence helps separate packing from geometry and cooling?",
+    "answer": "Review part wall thickness, gate-seal/packing evidence and local cooling history together.",
+    "explanation": "Sink cannot reliably be solved from appearance alone; increased packing may not help once the gate is sealed and can introduce other effects."
+  },
+  {
+    "id": "LR-06",
+    "topic": "Warpage investigation",
+    "question": "Dimensions vary after ejection. What evidence is useful before choosing a corrective trial?",
+    "answer": "Compare part geometry, local cooling, orientation, ejection conditions and measured dimensional trends.",
+    "explanation": "Warpage may reflect interacting thermal, shrinkage and mechanical causes. Keep a traceable hypothesis and verify changes under approved procedures."
+  }
+]);
+function learnReasoningMarkup(){
+  return LEARN_REASONING_REVIEWS.map(item=>`<details class="mm-learn-reasoning-item"><summary><span class="mm-learn-reasoning-topic">${esc(item.id)} · ${esc(item.topic)}</span><strong>${esc(item.question)}</strong><span class="mm-learn-reveal">Reveal explanation ↓</span></summary><div class="mm-learn-reasoning-answer"><b>Suggested answer</b><p>${esc(item.answer)}</p><b>Why it matters</b><p>${esc(item.explanation)}</p></div></details>`).join('');
+}
 function learnHubMarkup(){
   const c=lessonContext();
   const lesson=c?.lesson;const course=c?.course;
@@ -640,7 +689,20 @@ function learnHubMarkup(){
   return `<div class="mm-primary-hub mm-learn-hub">
     <header class="mm-primary-hub-head"><span class="eyebrow">Learn</span><h1>Lessons</h1><p>Core, material science and specialist lessons in one place.</p></header>
     <section class="mm-hub-continue mm-primary-hub-card" aria-label="Continue learning"><div class="mm-hub-continue-copy"><span class="eyebrow">Continue</span><h2>${esc(lesson?.title||'Your next lesson')}</h2><p>${lessonLine}</p><div class="mm-hub-progress"><div class="mini-bar" aria-hidden="true"><span style="width:${c?.overall||0}%"></span></div><strong>${c?.overall||0}% complete</strong></div></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="lesson">Continue lesson →</button></section>
-    ${lessonCatalog.markup()}
+    <nav class="mm-learn-jump" aria-label="Learn section shortcuts"><a href="#mmLearnArena">Troubleshooting</a><a href="#mmLearnQuestions">Questions</a><a href="#mmLearnReasoning">Answers</a><a href="#mmLearnCourses">All lessons</a></nav>
+    <section class="mm-learn-studio" aria-label="Learn through troubleshooting and questions">
+      <div class="mm-learn-studio-head"><span class="eyebrow">Learning studio</span><h2>Learn it. Test it. Explain it.</h2><p>Move from a lesson to an evidence-led decision, then check the reasoning. Existing progress, scoring and safety rules stay with their original learning tools.</p></div>
+      <article class="mm-learn-arena mm-primary-hub-card" id="mmLearnArena" aria-labelledby="mmLearnArenaTitle">
+        <div class="mm-learn-arena-copy"><span class="eyebrow">Troubleshooting Arena · 40 scenarios</span><h3 id="mmLearnArenaTitle">Think like a process detective.</h3><p>Work from evidence instead of guessing. A three-scenario boss round uses the original source-owned answers and feedback.</p></div>
+        <div class="mm-learn-arena-counts" aria-label="Your local arena progress"><div><strong>${Math.max(0,Math.floor(Number(user?.fun?.scenarioCorrect)||0))}</strong><span>Scenarios solved</span></div><div><strong>${Math.max(0,Math.floor(Number(user?.fun?.bossWins)||0))}</strong><span>Boss wins</span></div></div>
+        <div class="mm-learn-arena-actions"><button type="button" class="primary mm-learn-boss" data-mm-hub-action="boss-round">♛ Start 3-scenario boss round</button><button type="button" class="secondary mm-learn-scenarios" data-mm-hub-action="learn-scenarios">Explore all 40 scenarios →</button></div>
+      </article>
+      <section id="mmLearnQuestions" class="mm-learn-question-centre mm-primary-hub-card mm-question-centre-card" aria-label="Five canonical question modes">
+        ${questionCentreMarkup()}
+      </section>
+    </section>
+    <section class="mm-learn-reasoning" id="mmLearnReasoning" aria-labelledby="mmLearnReasoningHeading"><div class="mm-learn-reasoning-head"><span class="eyebrow">Six new optional learning checks</span><h2 id="mmLearnReasoningHeading">Understand the answer</h2><p>Reveal a reasoned answer to common moulding decisions. These six unscored teaching prompts are <strong>not</strong> part of the 169 governed question bank, formal assessment or evidence of competence.</p></div><div class="mm-learn-reasoning-list">${learnReasoningMarkup()}</div><p class="mm-learn-safety-note">Educational scenarios only. Use current supplier instructions, approved site procedures and authorised human review for real equipment.</p></section>
+    <section class="mm-learn-courses" id="mmLearnCourses" aria-labelledby="mmLearnCoursesHeading"><div class="mm-learn-courses-head"><span class="eyebrow">Your learning library</span><h2 id="mmLearnCoursesHeading">Courses and lessons</h2><p>One searchable catalogue of core, material-science and specialist lessons. Your existing local progress is unchanged.</p></div>${lessonCatalog.markup()}</section>
     <div class="mm-catalog-extra"><button class="secondary" type="button" data-mm-hub-action="learn-resources">Visuals & glossary →</button></div>
   </div>`;
 }
@@ -764,14 +826,19 @@ function renderLearnHub(){const root=document.getElementById('path');if(!root)re
 function renderPracticeHub(){const root=document.getElementById('scenarios');if(!root)return;root.dataset.mmHubMode='hub';root.innerHTML=practiceHubMarkup();bind(root);window.MM_APP_SHELL?.navigation?.setCustomActive?.('')}
 function detailBack(root,label,back){
   const bar=document.createElement('div');bar.className='mm-hub-detail-back';bar.innerHTML=`<button type="button">← ${esc(back)}</button><span>${esc(label)}</span>`;
-  bar.querySelector('button').addEventListener('click',()=>back==='Learn'?renderLearnHub():renderPracticeHub());root.prepend(bar);
+  bar.querySelector('button').addEventListener('click',()=>{
+    if(back==='Learn'){
+      switchView('path');
+      requestAnimationFrame(()=>document.querySelector('#path [data-mm-hub-action="learn-scenarios"]')?.focus({preventScroll:true}));
+    }else renderPracticeHub();
+  });root.prepend(bar);
 }
 function openLearningPathDetail(){return lessonCatalog.open({filter:'all'})}
-function openScenarioDetail(index=null){
+function openScenarioDetail(index=null,backTo='Practice'){
   const root=document.getElementById('scenarios');if(!root)return;
   root.dataset.mmHubMode='detail';
   originalRenderScenarios();
-  detailBack(root,'Troubleshooting Arena','Practice');
+  detailBack(root,'Troubleshooting Arena',backTo);
   if(!Number.isInteger(index)){window.scrollTo({top:0,behavior:'smooth'});return}
   requestAnimationFrame(()=>{
     const cards=Array.from(root.querySelectorAll('.scenario,.mm-scenario-card,[data-scenario-id]'));
