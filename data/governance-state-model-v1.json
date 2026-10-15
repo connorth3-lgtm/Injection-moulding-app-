@@ -310,7 +310,7 @@
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
-    "technicalAutomation": "pass",
+    "technicalAutomation": "fail",
     "bookPublicationAuthorization": "authorized",
     "bookIndependentSme": "hold",
     "curriculumIndependentSme": "hold",
@@ -345,12 +345,12 @@
   "userFacingTerminologyBoundary": "Internal evidenceMaturity=verified must be displayed as 'Source evidence reviewed'. The word verified must not be used by itself in learner-facing Book assurance because independent human SME/device/learner validation is a separate namespace.",
   "currentAssuranceEvidence": {
     "staticContract": {
-      "status": "pass",
-      "meaning": "PASS: release 2026.10.15.1 source 397e0a024eb88f9636a8b161155c5dce6af6316b retained successful Pre-merge Public Candidate run 38616968698, artifact 11920452430, fingerprint sha256:ca0603729d78845b2551e15be74351abc75456932f9ac20b8394e730a81d2022; all 166 public-manifest SHA256/byte lengths verified. Only technical provenance, seven human/device/provider HOLDs remain."
+      "status": "fail",
+      "meaning": "HOLD: release 2026.10.15.2 technical candidate producer verification pending; previous 2026.10.15.1 evidence applies only to older runtime bytes."
     },
     "behavioralBrowser": {
-      "status": "pass",
-      "meaning": "PASS: release 2026.10.15.1 source 397e0a024eb88f9636a8b161155c5dce6af6316b passed strict 52-surface/12px Chromium visual, Chromium substantive/reachability, WebKit, cross-browser, five 100-run reliability shards, Read Aloud and Question Quality. Physical audio, human AT, signed Windows, SME, outcomes and NZQA/provider remain HOLD."
+      "status": "fail",
+      "meaning": "HOLD: exact-head Chromium/WebKit and strict 52-screen visual QA for 2026.10.15.2 not yet independently verified."
     },
     "externalHumanDevice": {
       "status": "hold",
