@@ -3529,3 +3529,155 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
 .mm-reference-layout #path .mm-learn-reasoning-chapter .mm-learn-reasoning-answer>b{display:block;color:#a0f6e4!important;}
 .mm-reference-layout #path .mm-learn-reasoning-chapter .mm-learn-reasoning-answer>p{margin:5px 0 13px!important;}
 @media(max-width:460px){.mm-reference-layout #path .mm-learn-reasoning-chapter-title{padding:12px;}.mm-reference-layout #path .mm-learn-reasoning-chapter-title h4{font-size:15px;}.mm-reference-layout #path .mm-learn-chapter-count{font-size:10px;padding:5px 7px;}}
+
+
+/* Connected 2026 Learn / Practice / Materials / Resources: blue learning system. */
+/* Canonical module content, question scores, local evidence and supplier records remain unchanged. */
+.mm-reference-layout #path .mm-learn-capstone{
+  margin-top:18px;padding:18px;border:1px solid #3c8bad;border-radius:16px;
+  background:linear-gradient(145deg,#0c3b61,#0d2d49);color:#f3faff;
+}
+.mm-reference-layout #path .mm-learn-capstone h3{font-size:20px;line-height:1.24;margin:6px 0 8px;color:#f5fbff;}
+.mm-reference-layout #path .mm-learn-capstone header>p{font-size:13px;line-height:1.55;margin:0 0 15px;color:#c7dfea;}
+.mm-reference-layout #path .mm-learn-capstone-steps{display:grid;gap:8px;}
+.mm-reference-layout #path .mm-learn-capstone-steps>details{
+  border:1px solid #3c7998;border-radius:11px;background:rgba(5,25,43,.52);overflow:hidden;
+}
+.mm-reference-layout #path .mm-learn-capstone-steps>details>summary{
+  display:grid;grid-template-columns:38px minmax(0,1fr);gap:1px 10px;align-items:center;
+  min-height:58px;cursor:pointer;padding:10px 13px;color:#f7fdff;
+}
+.mm-reference-layout #path .mm-learn-capstone-steps>details>summary>span{
+  grid-row:1/span 2;display:grid;place-items:center;width:34px;height:34px;
+  background:#246a8b;border-radius:10px;font-weight:900;color:#baf9ee;
+}
+.mm-reference-layout #path .mm-learn-capstone-steps>details>summary>b{grid-column:2;font-size:14px;}
+.mm-reference-layout #path .mm-learn-capstone-steps>details>summary>small{
+  grid-column:2;color:#a7d2e6;font-size:12px;
+}
+.mm-reference-layout #path .mm-learn-capstone-steps>details>p{
+  border-top:1px solid #356985;padding:12px 14px;margin:0;
+  font-size:13px;line-height:1.6;color:#d6edfa;
+}
+.mm-reference-layout #path .mm-learn-capstone-steps summary:focus-visible{outline:3px solid #90f2e5;outline-offset:-3px;}
+.mm-reference-layout #scenarios .mm-practice-diagnose-journey{
+  margin:0 0 15px;padding:18px;border:1px solid #2d7b9a;border-radius:17px;
+  background:linear-gradient(140deg,#0c3655,#0b273e);color:#f6fdff;
+}
+.mm-reference-layout #scenarios .mm-practice-diagnose-head .eyebrow{color:#82e9d8!important;}
+.mm-reference-layout #scenarios .mm-practice-diagnose-head h2{
+  margin:6px 0 7px;font-size:clamp(23px,3vw,29px);line-height:1.2;color:#fff;
+}
+.mm-reference-layout #scenarios .mm-practice-diagnose-head p{margin:0;color:#bfdae9;font-size:13px;line-height:1.52;}
+.mm-reference-layout #scenarios .mm-practice-diagnose-stages{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:15px;
+}
+.mm-reference-layout #scenarios .mm-practice-diagnose-stages>div{
+  display:grid;gap:6px;padding:13px;border:1px solid #377b9c;
+  border-radius:11px;background:#13446a;
+}
+.mm-reference-layout #scenarios .mm-practice-diagnose-stages strong{
+  color:#95f4e4;font-size:12px;line-height:1.2;
+}
+.mm-reference-layout #scenarios .mm-practice-diagnose-stages span{
+  color:#d4eaf7;font-size:12px;line-height:1.4;
+}
+#modal .mm-diagnose-chooser .mm-diagnose-step-strip{
+  display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 16px;
+}
+#modal .mm-diagnose-chooser .mm-diagnose-step-strip>span{
+  display:flex;align-items:center;gap:7px;padding:7px 12px;
+  border:1px solid #38738d;border-radius:99px;background:#123a55;color:#d8edf8;
+  font-size:12px;font-weight:700;
+}
+#modal .mm-diagnose-chooser .mm-diagnose-step-strip b{
+  display:grid;place-items:center;width:22px;height:22px;
+  border-radius:50%;background:#5cdcc8;color:#063440;
+}
+#modal .mm-learning-resource-chooser>.eyebrow{color:#7ee9d6!important;}
+#modal .mm-learning-resource-chooser h2{color:#f0f9ff;margin:5px 0 7px;}
+#modal .mm-learning-resource-chooser .mm-hub-picker-grid{
+  display:grid;grid-template-columns:minmax(0,1fr);gap:9px;margin:15px 0;
+}
+#modal .mm-learning-resource-chooser .mm-hub-picker-grid>button{
+  display:grid!important;gap:5px!important;text-align:left!important;
+  width:100%!important;min-width:0!important;min-height:80px!important;
+  padding:13px 15px!important;border:1px solid #397b9c!important;
+  border-radius:14px!important;background:linear-gradient(125deg,#104468,#0a324f)!important;
+  color:#e8faff!important;
+}
+#modal .mm-learning-resource-chooser .mm-hub-picker-grid>button>b{color:#fbfeff!important;font-size:15px;}
+#modal .mm-learning-resource-chooser .mm-hub-picker-grid>button>small{color:#c1dded!important;font-size:12px;line-height:1.45;}
+#modal .mm-learning-resource-chooser .mm-hub-picker-grid>button:focus-visible{
+  outline:3px solid #83eee0!important;outline-offset:2px;
+}
+.mm-reference-layout #materials .mm-material-journey{
+  display:grid;gap:14px;margin:0 0 16px;padding:19px;
+  border:1px solid #388bad;border-radius:18px;
+  background:linear-gradient(145deg,#0d4162,#0b2f4b);color:#f1fbff;
+}
+.mm-reference-layout #materials .mm-material-journey>header .eyebrow{color:#8cf2dd!important;}
+.mm-reference-layout #materials .mm-material-journey>header h2{
+  color:#fff;font-size:clamp(23px,3.8vw,31px);line-height:1.16;
+  margin:5px 0 9px;
+}
+.mm-reference-layout #materials .mm-material-journey>header p{
+  margin:0;color:#c9e1ef;font-size:13px;line-height:1.52;
+}
+.mm-reference-layout #materials .mm-material-journey-actions{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;
+}
+.mm-reference-layout #materials .mm-material-journey-actions button{
+  display:grid!important;gap:7px!important;align-content:start;min-width:0!important;
+  min-height:104px!important;padding:13px!important;text-align:left!important;
+  border:1px solid #4b92b2!important;border-radius:13px!important;
+  background:#124e73!important;color:#f3fcff!important;
+}
+.mm-reference-layout #materials .mm-material-journey-actions button strong{
+  font-size:14px!important;line-height:1.2;color:#9df8e7;
+}
+.mm-reference-layout #materials .mm-material-journey-actions button span{
+  font-size:12px!important;line-height:1.45;color:#d5eafa;
+}
+.mm-reference-layout #materials .mm-material-journey button:focus-visible,
+.mm-reference-layout #materials .mm-material-journey summary:focus-visible{
+  outline:3px solid #a4ffec!important;outline-offset:2px;
+}
+.mm-reference-layout #materials .mm-material-journey-reasoning{
+  border:1px solid #3f7c9f;border-radius:12px;
+  background:rgba(5,32,54,.5);overflow:hidden;
+}
+.mm-reference-layout #materials .mm-material-journey-reasoning>summary{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  cursor:pointer;min-height:48px;padding:11px 13px;color:#f1ffff;font-weight:760;font-size:14px;
+}
+.mm-reference-layout #materials .mm-material-journey-reasoning>summary span{font-size:11px;color:#b9e0ef;font-weight:500;}
+.mm-reference-layout #materials .mm-material-journey-questions{
+  padding:5px 12px 12px;display:grid;gap:6px;
+}
+.mm-reference-layout #materials .mm-material-journey-questions>details{
+  border:1px solid #346b8b;border-radius:9px;background:#103b5b;
+}
+.mm-reference-layout #materials .mm-material-journey-questions summary{
+  cursor:pointer;min-height:44px;padding:10px 12px;color:#f4fdff;font-size:13px;font-weight:650;line-height:1.45;
+}
+.mm-reference-layout #materials .mm-material-journey-questions p{
+  margin:0;padding:10px 12px 13px;border-top:1px solid #326987;
+  color:#cfe8f7;line-height:1.55;font-size:12px;
+}
+.mm-reference-layout #materials .mm-material-journey .mm-learn-safety-note{
+  margin:0;padding:0 13px 12px;color:#a9d7eb;font-size:12px;line-height:1.5;
+}
+.mm-reference-layout #modal .mm-learning-resource-shortcut{
+  width:100%;min-height:44px;padding:10px 12px;text-align:left;
+  background:#155174;color:#edfbff;border:1px solid #3488a6;border-radius:10px;
+  font-weight:780;
+}
+@media(max-width:700px){
+  .mm-reference-layout #scenarios .mm-practice-diagnose-journey,
+  .mm-reference-layout #materials .mm-material-journey{padding:13px;border-radius:15px;}
+  .mm-reference-layout #scenarios .mm-practice-diagnose-stages,
+  .mm-reference-layout #materials .mm-material-journey-actions{grid-template-columns:minmax(0,1fr);}
+  .mm-reference-layout #scenarios .mm-practice-diagnose-stages>div{padding:10px 12px;}
+  .mm-reference-layout #materials .mm-material-journey-actions button{min-height:78px!important;}
+}
