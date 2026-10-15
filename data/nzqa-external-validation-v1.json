@@ -6,8 +6,12 @@
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 619,
-  "candidate": null,
-  "boundary": "Release 2026.10.15.3 redesigned Learn technical candidate is not yet accepted. NZQA/provider G1–G8 remain pending-external; no accreditation, formal assessment, workplace competence or machine-control authority has been granted.",
+  "candidate": {
+    "release": "2026.10.15.3",
+    "sourceSha": "d827fb7d9d0e73486b49fc27f29a5ccdff092f36",
+    "runtimeFingerprint": "sha256:80ed59be26c4c6e7906ca4abeb55b5df1df0cbaa94390749427ff6cc991d6d3f"
+  },
+  "boundary": "Release 2026.10.15.3 technical candidate d827fb7d9d0e73486b49fc27f29a5ccdff092f36 does not establish any of NZQA/provider G1–G8 external gates or assessment/accreditation authority.",
   "requiredGates": [
     {
       "id": "G1-provider",

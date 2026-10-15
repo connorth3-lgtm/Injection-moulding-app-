@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "release": "2026.10.15.3",
   "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.15.3.md",
-  "sourceSha": null,
-  "runtimeFingerprint": null,
+  "sourceSha": "d827fb7d9d0e73486b49fc27f29a5ccdff092f36",
+  "runtimeFingerprint": "sha256:80ed59be26c4c6e7906ca4abeb55b5df1df0cbaa94390749427ff6cc991d6d3f",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. New Learn studio 2026.10.15.3 is awaiting its own exact-head producer and owner-reviewed visuals. NVDA and VoiceOver remain pending with no human acceptance evidence.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.15.3 is bound to exact retained learner-runtime candidate d827fb7d9d0e73486b49fc27f29a5ccdff092f36; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
