@@ -476,3 +476,60 @@ test('Safety teaching and the four-checkpoint capstone remain unscored and have 
   await expect(capstone).toContainText('known-good baseline');
   expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts().total)).toBe(169);
 });
+
+test('all canonical interior routes receive the shared responsive visual skin without duplicate UI controls',async({page})=>{
+  await page.setViewportSize({width:412,height:915});
+  await openApp(page);
+  const result=await page.evaluate(()=>({
+    states:['lesson','glossary','visuals','simulator','defects','coach','standards','certificates','profile','instructor','exams','diagnosticLabs','materialLabs','processDataLabs','mmVirtualApprenticeship','mmSpatialTwin','mmMaterialCompare','mmMaterialChange','mmBookView']
+      .map(id=>({id,exists:!!document.getElementById(id),skinned:document.getElementById(id)?.classList.contains('mm-reference-subtab')||false})),
+    overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth
+  }));
+  expect(result.states.filter(x=>x.exists).length).toBeGreaterThanOrEqual(10);
+  expect(result.states.filter(x=>x.exists&& !x.skinned)).toEqual([]);
+  expect(result.overflow).toBeLessThanOrEqual(2);
+  await page.evaluate(()=>switchView('exams'));
+  const exam=page.locator('#exams');
+  await expect(exam).toBeVisible();
+  await expect(exam.locator('.mm-practice-tool-return')).toHaveCount(1);
+  await page.evaluate(()=>switchView('path'));
+  await page.evaluate(()=>switchView('exams'));
+  await expect(exam.locator('.mm-practice-tool-return')).toHaveCount(1);
+});
+
+test('Materials guided learning does not precede or replace the required exact-grade catalogue',async({page})=>{
+  await page.setViewportSize({width:412,height:915});
+  await openApp(page);
+  await page.evaluate(()=>switchView('materials'));
+  const index=page.locator('#mmExactMaterialCatalog');
+  await expect(index.locator('[data-mm-all-material-index]')).toBeVisible();
+  const structure=await index.evaluate(root=>({
+    firstIsIndex:root.firstElementChild?.hasAttribute('data-mm-all-material-index')===true,
+    guideCount:root.querySelectorAll(':scope > .mm-material-journey').length,
+    indexCount:root.querySelectorAll(':scope > [data-mm-all-material-index]').length
+  }));
+  expect(structure).toEqual({firstIsIndex:true,guideCount:1,indexCount:1});
+  await page.evaluate(()=>switchView('path'));
+  await page.evaluate(()=>switchView('materials'));
+  await expect(index.locator(':scope > .mm-material-journey')).toHaveCount(1);
+  await expect(index.locator(':scope > [data-mm-all-material-index]')).toHaveCount(1);
+  await expect(page.locator('#materials [data-mm-all-material-query]')).toBeVisible();
+});
+
+test('mobile Practice source-owned choices occupy one readable column at 360 and 412 pixels',async({page})=>{
+  await openApp(page);
+  for(const width of [360,412]){
+    await page.setViewportSize({width,height:850});
+    await page.evaluate(()=>switchView('scenarios'));
+    await expect(page.locator('#scenarios .mm-practice-hub')).toBeVisible();
+    const metrics=await page.locator('#scenarios .mm-practice-hub .mm-hub-section:not([aria-label="More recommended practice"]) .mm-hub-grid').first().evaluate(root=>{
+      const tiles=[...root.querySelectorAll(':scope > button.mm-hub-tile')];
+      return {columns:new Set(tiles.map(x=>Math.round(x.getBoundingClientRect().left))).size,
+        cards:tiles.length,
+        overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
+    });
+    expect(metrics.cards).toBe(5);
+    expect(metrics.columns).toBe(1);
+    expect(metrics.overflow).toBeLessThanOrEqual(2);
+  }
+});
