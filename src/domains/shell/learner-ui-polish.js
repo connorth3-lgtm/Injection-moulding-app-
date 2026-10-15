@@ -1098,7 +1098,11 @@ function refresh(){
   if(scheduled)return;scheduled=true;
   requestAnimationFrame(()=>{
     scheduled=false;
-    try{ensurePreviewStatus();home();learn();practice();practiceInside();materials();more();deepViewPolish()}catch(error){console.warn('[MouldMaster reference layout]',error)}
+    // Apply the shared shell before source-owned modules, then after their render.
+    // One optional/late-loaded tool must not prevent unrelated tab/subtab skinning.
+    for(const decorate of [deepViewPolish,ensurePreviewStatus,home,learn,practice,practiceInside,materials,more,deepViewPolish]){
+      try{decorate()}catch(error){console.warn('[MouldMaster reference layout]',decorate.name,error)}
+    }
   });
 }
 function boot(){
