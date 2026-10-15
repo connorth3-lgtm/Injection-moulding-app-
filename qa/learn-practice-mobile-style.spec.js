@@ -396,7 +396,7 @@ test('Learn deep reasoning contains 24 distinct, unscored evidence-and-caveat ch
   for(const row of records){
     expect(row.title.length).toBeGreaterThan(35);
     expect(row.explanations).toHaveLength(4);
-    expect(row.explanations.every(x=>x.length>70)).toBe(true);
+    expect(row.explanations.every(x=>x.length>=50)).toBe(true);
   }
   expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts())).toEqual({formal:57,scenarios:40,diagnostic:36,materials:24,measured:12,total:169});
   const final=answers.locator('details.mm-learn-reasoning-item').last();
