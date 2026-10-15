@@ -637,3 +637,25 @@ test('guided Practice preserves previous-step review and changing case resets hy
   await expect(page.locator('#scenarios .mm-practice-case')).toHaveCount(5);
   expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts().total)).toBe(169);
 });
+
+
+test('More subtab interior links and buttons use the approved blue learning palette',async({page})=>{
+  await page.setViewportSize({width:412,height:915});
+  await openApp(page);
+  await page.locator('.mobile-nav > button').filter({hasText:'More'}).click();
+  const more=page.locator('#modal:not(.hidden) .mm-reference-more-card');
+  await expect(more).toHaveCount(6);
+  const expanded=page.locator('#modal .mm-reference-more-card[data-mm-more-section="learning"]');
+  await expanded.locator(':scope > summary').click();
+  const tiles=page.locator('#modal .mm-reference-more-card .mm-more-disclosure-items > .quick-action:visible');
+  await expect(tiles.first()).toBeVisible();
+  const results=await tiles.evaluateAll(els=>els.map(el=>({
+    background:getComputedStyle(el).backgroundImage,
+    color:getComputedStyle(el).color,
+    minHeight:el.getBoundingClientRect().height
+  })));
+  expect(results.length).toBeGreaterThan(1);
+  expect(results.every(v=>v.background.includes('linear-gradient'))).toBe(true);
+  expect(results.every(v=>v.color==='rgb(239, 250, 255)')).toBe(true);
+  expect(results.every(v=>v.minHeight>=44)).toBe(true);
+});
