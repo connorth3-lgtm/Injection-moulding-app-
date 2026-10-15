@@ -334,7 +334,9 @@ test('Learn Arena boss round keeps source-owned feedback and the scenario return
  await page.locator('#path [data-mm-hub-action="boss-round"]').click();
  const boss=page.locator('#modal:not(.hidden)');
  await expect(boss).toContainText('Boss round');
- await expect(boss.locator('button.choice')).toHaveCount(3);
+ await expect(boss.locator('button.choice').first()).toBeVisible();
+ await boss.locator('button.choice').first().click();
+ await expect(boss.locator('#bossFeedback')).toBeVisible();
  await page.keyboard.press('Escape');
  await page.evaluate(()=>window.closeModal?.());
  await page.locator('#path [data-mm-hub-action="learn-scenarios"]').click();
@@ -350,7 +352,11 @@ test('Learn Question Centre lanes invoke canonical assessments and preserve scop
  await page.locator('#path #mmLearnQuestions [data-mm-hub-action="assessments"]').click();
  await expect(page.locator('#exams')).toBeVisible();
  await expect(page.locator('#exams')).toContainText('knowledge');
- await page.evaluate(()=>switchView('path'));
+ const learnReturn=page.locator('#exams .mm-practice-tool-return .mm-practice-tool-back');
+ await expect(learnReturn).toHaveText('← Back to Learn');
+ await learnReturn.click();
+ await expect(page.locator('#path .mm-learn-hub')).toBeVisible();
+ await expect(page.locator('#path #mmLearnQuestions [data-mm-hub-action="assessments"]')).toBeFocused();
  await page.locator('#path #mmLearnQuestions [data-mm-hub-action="scenario-detail"]').click();
  await expect(page.locator('#scenarios .scenario')).toHaveCount(40);
  await page.locator('#scenarios .mm-hub-detail-back button').click();
