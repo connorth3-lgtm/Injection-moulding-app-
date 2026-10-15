@@ -572,3 +572,65 @@ test('Practice scenario review back restores accessible keyboard focus on its en
   await page.locator('#scenarios .mm-hub-detail-back button').click();
   await expect(page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="scenario-detail"]')).toBeFocused();
 });
+
+
+for(const width of [360,412]){
+  test('five-stage guided Practice supports evidence choices and remains mobile-readable at '+width+'px',async({page})=>{
+    await page.setViewportSize({width,height:865});
+    await openApp(page);
+    await page.evaluate(()=>switchView('scenarios'));
+    const root=page.locator('#scenarios #mmPracticeGuided');
+    await expect(root).toBeVisible();
+    await expect(root.locator('.mm-practice-guided-selector button')).toHaveCount(5);
+    await expect(root.locator('.mm-practice-guided-progress > li')).toHaveCount(5);
+    await expect(root.locator('.mm-practice-guided-context')).toContainText('Step 1 of 5');
+    await expect(root.locator('[data-mm-guided-next]')).toBeDisabled();
+    await root.locator('[data-mm-guided-choice="0"]').click();
+    await expect(root.locator('.mm-practice-guided-feedback')).toContainText('stronger evidence-led choice');
+    await expect(root.locator('.mm-practice-guided-feedback')).toContainText('Stronger response:');
+    await root.locator('[data-mm-guided-choice="1"]').click();
+    await expect(root.locator('.mm-practice-guided-feedback')).toContainText('Evidence-led choice');
+    await expect(root.locator('[data-mm-guided-choice="1"]')).toHaveAttribute('aria-pressed','true');
+    for(let i=1;i<5;i++){
+      await root.locator('[data-mm-guided-next]').click();
+      await expect(root.locator('.mm-practice-guided-context')).toContainText('Step '+(i+1)+' of 5');
+      await expect(root.locator('.mm-practice-guided-context h3')).toBeFocused();
+      if(i===3)await expect(root).toContainText('Hypothetical training evidence:');
+      await root.locator('[data-mm-guided-choice="'+((i+1)%3)+'"]').click();
+      await expect(root.locator('.mm-practice-guided-feedback')).toContainText('Evidence-led choice');
+    }
+    await expect(root.locator('.mm-practice-guided-finish')).toContainText('All five decisions reviewed');
+    await expect(root.locator('.mm-practice-guided-finish')).toContainText('not a competency result');
+    expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts().total)).toBe(169);
+    const sizes=await page.evaluate(()=>({
+      overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
+      width:window.innerWidth,
+      btn:document.querySelector('#mmPracticeGuided [data-mm-guided-tool]')?.getBoundingClientRect().height
+    }));
+    expect(sizes.overflow).toBeLessThanOrEqual(2);
+    expect(sizes.btn).toBeGreaterThanOrEqual(44);
+    await root.locator('[data-mm-guided-tool]').click();
+    await expect(page.locator('#defects')).toBeVisible();
+  });
+}
+test('guided Practice preserves previous-step review and changing case resets hypothetical evidence',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.evaluate(()=>switchView('scenarios'));
+  const root=page.locator('#scenarios #mmPracticeGuided');
+  await root.locator('[data-mm-guided-case="PC-04"]').click();
+  await expect(root.locator('.mm-practice-guided-context')).toContainText('Case PC-04');
+  await expect(root.locator('[data-mm-guided-case="PC-04"]')).toHaveAttribute('aria-pressed','true');
+  await root.locator('[data-mm-guided-choice="1"]').click();
+  await root.locator('[data-mm-guided-next]').click();
+  await root.locator('[data-mm-guided-prev]').click();
+  await expect(root.locator('[data-mm-guided-choice="1"]')).toHaveAttribute('aria-pressed','true');
+  await expect(root.locator('.mm-practice-guided-feedback')).toBeVisible();
+  await page.locator('#scenarios .mm-practice-case').last().locator('[data-mm-guided-case]').click();
+  await expect(root.locator('.mm-practice-guided-context')).toContainText('Case PC-05');
+  await expect(root.locator('.mm-practice-guided-context')).toContainText('Step 1 of 5');
+  await expect(root.locator('[data-mm-guided-next]')).toBeDisabled();
+  await expect(root).toContainText('hot-runner');
+  await expect(page.locator('#scenarios .mm-practice-case')).toHaveCount(5);
+  expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts().total)).toBe(169);
+});
