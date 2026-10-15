@@ -11,7 +11,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
-  'web_release':'2026.10.15.2',
+  'web_release':'2026.10.15.3',
  'android_release':'2026.08.26.2',
  'desktop_release':'2026.09.29.1',
  'content_version':'2026.08.26.1',
@@ -337,11 +337,16 @@ need(bool(visual_version), 'pinned Playwright QA dependency is missing')
 # Current PR tooling can advance without rewriting the historical approval.
 approved_capture = visual.get('referenceCaptureToolchain') or {}
 need(approved_capture == {
-         'framework':'@playwright/test', 'version':'1.63.0',
+         'framework':'@playwright/test', 'version':'1.64.0',
          'browser':'chromium', 'referenceSourceSha':visual.get('commit')},
-     'historical approved screenshot capture provenance missing/stale')
-need(visual.get('browser') == "chromium via @playwright/test 1.63.0",
-     'historical approved screenshot toolchain label was rewritten')
+     'owner-approved current screenshot capture provenance missing/stale')
+need(visual.get('browser') == "chromium via @playwright/test 1.64.0",
+     'owner-approved current screenshot toolchain label was rewritten')
+need(visual.get('ref')=='visual-baseline/2026.10.15.3' and
+     visual.get('commit')=='82b1677caecb50c95c5395166317132447851e5b' and
+     'visual-baseline/2026.10.13.3' in visual.get('policy','') and
+     '352bf204ae77779d548bc77dcf8b0a63db2a84e1' in visual.get('policy',''),
+     'new baseline must retain independently approved predecessor provenance')
 need(visual.get('currentComparisonToolchain') == {
          'framework':'@playwright/test', 'version':visual_version,
          'browser':'chromium'},

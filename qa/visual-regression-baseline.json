@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.13.3",
-  "commit": "352bf204ae77779d548bc77dcf8b0a63db2a84e1",
-  "browser": "chromium via @playwright/test 1.63.0",
+  "release": "2026.10.15.3",
+  "commit": "82b1677caecb50c95c5395166317132447851e5b",
+  "browser": "chromium via @playwright/test 1.64.0",
   "maxDiffPixels": 12,
   "viewports": [
     {
@@ -41,13 +41,13 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "On 2026-10-14 NZDT, after the assistant furnished links to the exact-source PR #627 final six Book Listen before/current/diff screenshots, four hosted-preview status screenshots and complete evidence package, the project owner explicitly replied \"I approve\". This is narrowly scoped owner visual design approval for the 2026.10.13.3 candidate source 352bf204ae77779d548bc77dcf8b0a63db2a84e1 only, and specifically for the six above-threshold Book Listen differences (phone 360 listening 54963px; phone 412 listening 79856px; tablet 810 listen-expanded 96094px, listening 138290px; desktop 1440 listen-expanded 177523px, listening 158820px) and four supplemental hosted-preview disclaimer screenshots (phone 360, phone 412, tablet 810, desktop 1440). Review evidence: exact-head Mobile Browser QA run 38479538480, visual artifact 11857112997; 52 locked Chromium screenshot comparisons from four viewports × 13 screens; 46 unchanged pixel-for-pixel; all 104 locked before/current PNG SHA256s plus all four supplemental PNG SHA256s verified (108/108). The previous visual-baseline/2026.10.13.2 remains immutable at approved 602d597fa4575c9302e3ad9799fb3c58faa67965. The new immutable visual-baseline/2026.10.13.3 ref was created directly at exactly 352bf204ae77779d548bc77dcf8b0a63db2a84e1; compare returned identical ahead=0 behind=0. Strict maxDiffPixels=12, all 52 unmasked captures, all four viewports and all thirteen surfaces retained. These baseline differences are approved for screenshot comparison only: this approval is NOT a successful exact-source candidate producer, approved non-production deployment, real audible Android/iOS, physical PWA test, NVDA/VoiceOver human AT validation, Windows signing, Book or curriculum SME review, learner outcomes, NZQA/provider accreditation, production recipe or automatic machine control. All seven independent external human/device/provider HOLDs remain intact. Never move this baseline without a separate new owner decision and independent immutable successor. See qa/VISUAL_REVIEW_2026.10.13.3_PR627.md and PR #627.",
-  "ref": "visual-baseline/2026.10.13.3",
+  "policy": "On 2026-10-16 NZDT, after the user was shown actual PR #638 source-linked before/current/diff screenshot imagery and expressly invited to approve the actual 82b1677 screenshots for a new immutable visual baseline, they replied 'I approve'. This is owner approval of the visual redesign only for the exact reviewed source 82b1677caecb50c95c5395166317132447851e5b. It is not approval of an image-generation mockup or another commit, nor is it proof the owner individually opened all 52 PNGs. The user was shown the 412px actual-source Learn/Practice/More contact sheet and linked to the complete raw screenshot archive and evidence manifest. The exact-source Chromium Mobile Browser QA run 38789094072, artifact 11998504802, SHA256 51f62328b10c897818015e08ee574c9092cae7e999ceb649b7729325ccd105af, includes 52/52 unmasked captures, with 12 intentional drift screens across Learn, Practice and More at all 4 viewports, and 40 other captures within the locked 12px tolerance. Four supplemental preview status screenshots are distinct from the 52. Baseline ref visual-baseline/2026.10.15.3 was created at precisely that reviewed commit, verified identical (ahead=0, behind=0); old visual-baseline/2026.10.13.3 remains unchanged at 352bf204ae77779d548bc77dcf8b0a63db2a84e1. No viewport, surface, masking, pixel threshold or screenshot assertion was relaxed. This visual approval does NOT grant a successful exact-source producer artifact, a tester invitation, device/AT/signing/SME/learner/NZQA evidence or any production/machine-control authority. Seven independent external streams remain HOLD and production advisory-only. Source qa/VISUAL_REVIEW_2026.10.15.3_PR638.md documents the exact preview, owner scope and follow-up evidence requirements.",
+  "ref": "visual-baseline/2026.10.15.3",
   "referenceCaptureToolchain": {
     "framework": "@playwright/test",
-    "version": "1.63.0",
+    "version": "1.64.0",
     "browser": "chromium",
-    "referenceSourceSha": "352bf204ae77779d548bc77dcf8b0a63db2a84e1"
+    "referenceSourceSha": "82b1677caecb50c95c5395166317132447851e5b"
   },
   "currentComparisonToolchain": {
     "framework": "@playwright/test",
