@@ -412,7 +412,7 @@ test('Practice connects the existing troubleshooting tools in one three-stage le
   const root=page.locator('#scenarios .mm-practice-hub');
   const steps=root.locator('.mm-practice-diagnose-stages > div');
   await expect(steps).toHaveCount(3);
-  await expect(root.locator('.mm-hub-section .mm-hub-grid > button')).toHaveCount(5);
+  await expect(root.locator('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-hub-grid > button')).toHaveCount(5);
   await expect(steps.first()).toContainText('Observe');
   await expect(steps.last()).toContainText('Verify');
   await root.locator('[data-mm-hub-action="troubleshooting"]').click();
