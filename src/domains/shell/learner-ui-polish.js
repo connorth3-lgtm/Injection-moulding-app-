@@ -697,22 +697,33 @@ function practiceSubpageNavigation(){
   ];
   for(const [selector,origin,label] of tools){
     const root=document.querySelector(selector);
-    if(!root||root.querySelector(':scope > .mm-practice-tool-return'))continue;
+    if(!root)continue;
+    const existing=root.querySelector(':scope > .mm-practice-tool-return');
+    const originAction=window.MM_PRIMARY_HUBS?.learnToolOrigin?.();
+    if(existing){
+      const text=existing.querySelector('.mm-practice-tool-back');
+      if(text)text.textContent=originAction?'← Back to Learn':'← Back to Practice';
+      continue;
+    }
     // No duplicate controls after tool-owned re-renders or app navigation.
     const nav=document.createElement('nav');
     nav.className='mm-practice-tool-return';
     nav.setAttribute('aria-label','Practice navigation');
     const back=document.createElement('button');
     back.type='button';back.className='mm-practice-tool-back';
-    back.textContent='← Back to Practice';
+    back.textContent=originAction?'← Back to Learn':'← Back to Practice';
     const current=document.createElement('span');
     current.className='mm-practice-tool-current';
     current.textContent=label;
     back.addEventListener('click',()=>{
-      window.switchView?.('scenarios');
+      const learnOrigin=window.MM_PRIMARY_HUBS?.learnToolOrigin?.();
+      window.switchView?.(learnOrigin?'path':'scenarios');
+      window.MM_PRIMARY_HUBS?.clearLearnToolOrigin?.();
       window.requestAnimationFrame(()=>{
-        const card=document.querySelector('#scenarios .mm-practice-hub [data-mm-hub-action="'+origin+'"]');
-        card?.focus();
+        const action=learnOrigin||origin;
+        const selector=learnOrigin?'#path .mm-learn-hub':'#scenarios .mm-practice-hub';
+        const card=document.querySelector(selector+' [data-mm-hub-action="'+action+'"]');
+        card?.focus({preventScroll:true});
       });
     });
     nav.append(back,current);
