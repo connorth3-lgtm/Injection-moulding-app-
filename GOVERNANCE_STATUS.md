@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS: release 2026.10.15.1 source 397e0a024eb88f9636a8b161155c5dce6af6316b retained successful Pre-merge Public Candidate run 38616968698, artifact 11920452430, fingerprint sha256:ca0603729d78845b2551e15be74351abc75456932f9ac20b8394e730a81d2022; all 166 public-manifest SHA256/byte lengths verified. Only technical provenance, seven human/device/provider HOLDs remain. |
-| Behavioral / browser | **pass** | PASS: release 2026.10.15.1 source 397e0a024eb88f9636a8b161155c5dce6af6316b passed strict 52-surface/12px Chromium visual, Chromium substantive/reachability, WebKit, cross-browser, five 100-run reliability shards, Read Aloud and Question Quality. Physical audio, human AT, signed Windows, SME, outcomes and NZQA/provider remain HOLD. |
+| Static / contract | **fail** | HOLD: release 2026.10.15.2 technical candidate producer verification pending; previous 2026.10.15.1 evidence applies only to older runtime bytes. |
+| Behavioral / browser | **fail** | HOLD: exact-head Chromium/WebKit and strict 52-screen visual QA for 2026.10.15.2 not yet independently verified. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
