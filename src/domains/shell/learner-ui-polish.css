@@ -3812,3 +3812,165 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
  .mm-reference-layout #scenarios .mm-practice-case>summary{padding:10px 11px;}
  .mm-reference-layout #scenarios .mm-practice-case-body{padding:11px;}
 }
+
+
+/* Five-stage connected troubleshooting: no duplicate scoring or source evidence. */
+.mm-reference-layout #scenarios .mm-practice-guided{
+  display:grid;gap:15px;min-width:0;box-sizing:border-box;width:100%;
+  margin:15px 0;padding:19px;border:1px solid #3d89aa;border-radius:18px;
+  background:linear-gradient(148deg,#0d395a,#082b45 60%,#0b253d);
+  color:#ecf9ff;
+}
+.mm-reference-layout #scenarios .mm-practice-guided .eyebrow{color:#8af4df!important;}
+.mm-reference-layout #scenarios .mm-practice-guided-intro h2{
+  font-size:clamp(23px,4vw,29px);line-height:1.17;
+  margin:7px 0 10px;color:#f7fdff;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-intro p{
+  color:#c5ddeb;margin:0;font-size:14px;line-height:1.54;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-selector{
+  display:flex;gap:8px;max-width:100%;overflow-x:auto;
+  scrollbar-width:thin;scrollbar-color:#5298b7 transparent;
+  padding:2px 1px 8px;overscroll-behavior-x:contain;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-selector button{
+  flex:0 0 auto;max-width:235px;min-height:44px;
+  padding:8px 12px;border:1px solid #417f9e;border-radius:25px;
+  color:#d1eaf6;background:#113f5f;font-size:12px;
+  font-weight:750;line-height:1.35;white-space:normal;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-selector button[aria-pressed="true"]{
+  border-color:#8cf4e3;background:#2b7791;color:#f6ffff;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-progress{
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+  list-style:none;gap:6px;padding:0;margin:0;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-progress>li{
+  min-width:0;display:grid;gap:5px;place-items:center;text-align:center;
+  padding:10px 4px;border:1px solid #3e7190;
+  background:#103b5a;border-radius:11px;color:#b6d7e8;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-progress>li>span{
+  display:grid;place-items:center;width:26px;height:26px;
+  border:1px solid #4a8dae;border-radius:50%;
+  color:#cfedf6;font-size:12px;font-weight:850;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-progress>li>small{
+  font-size:10px;line-height:1.25;color:inherit;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-progress>li.is-current{
+  background:#1a5978;border-color:#83e8d9;color:#f6fdff;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-progress>li.is-reviewed{
+  border-color:#528d9e;color:#b5f6e8;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-progress>li.is-current>span{
+  border-color:#affbea;color:#092f3b;background:#80ebda;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-content{
+  padding:16px;border:1px solid #3c7a9b;border-radius:15px;
+  background:linear-gradient(120deg,#0e3451,#082842);
+}
+.mm-reference-layout #scenarios .mm-practice-guided-context h3{
+  margin:7px 0 8px;color:#f2fbff;font-size:clamp(20px,3.7vw,25px);
+  line-height:1.2;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-context p{
+  font-size:14px;color:#d7e9f4;line-height:1.57;margin:0 0 12px;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-context .mm-practice-guided-instruction{
+  color:#abe8e0;font-weight:740;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-finding{
+  padding:12px;border-radius:10px;border-left:3px solid #76e5d2;
+  background:#163e59;color:#eaf6ff!important;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-choices{
+  display:grid;grid-template-columns:minmax(0,1fr);gap:8px;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-choice{
+  width:100%;min-width:0;min-height:55px;display:grid!important;
+  grid-template-columns:28px minmax(0,1fr);gap:11px;align-items:start!important;
+  padding:12px!important;border:1px solid #477f9e!important;
+  border-radius:12px!important;text-align:left!important;white-space:normal!important;
+  background:#103e5b!important;color:#eaf7ff!important;
+  font-size:13px!important;font-weight:650!important;line-height:1.47!important;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-choice>span:first-child{
+  display:grid;place-items:center;border-radius:8px;
+  width:28px;height:28px;background:#22668a;color:#e0f8ff;
+  font-weight:850;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-choice[aria-pressed="true"]{
+  border-color:#a9fff0!important;background:#246181!important;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-choice[aria-pressed="true"]>span:first-child{
+  background:#7ee7d5;color:#063b47;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-feedback{
+  margin-top:12px;padding:13px 14px;border:1px solid #458d9e;
+  border-radius:12px;background:#103b4f;color:#e2f6f8;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-feedback strong{color:#98f7e5;}
+.mm-reference-layout #scenarios .mm-practice-guided-feedback p{
+  font-size:13px;line-height:1.55;color:#d0e8f3;margin:7px 0 0;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-nudge{
+  color:#b6d8e7;font-size:12px;line-height:1.5;margin:11px 0;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-controls{
+  display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+  justify-content:space-between;margin-top:15px;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-controls>button,
+.mm-reference-layout #scenarios .mm-practice-guided-finish button{
+  box-sizing:border-box;min-height:48px!important;min-width:118px;
+  padding:10px 15px!important;border-radius:11px!important;
+  white-space:normal!important;overflow-wrap:anywhere;
+  background:#235873!important;color:#f3fcff!important;
+  border:1px solid #468da7!important;font-weight:750!important;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-controls>button.primary,
+.mm-reference-layout #scenarios .mm-practice-guided-finish button{
+  border-color:#8af6e4!important;background:#62dac7!important;
+  color:#052f39!important;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-controls>button:disabled{
+  opacity:.46!important;cursor:not-allowed;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-finish{
+  display:grid;gap:10px;flex:1;
+}
+.mm-reference-layout #scenarios .mm-practice-guided-finish strong{color:#9af4e4;}
+.mm-reference-layout #scenarios .mm-practice-guided-finish p{
+  color:#cae5f1;font-size:13px;line-height:1.55;margin:0;
+}
+.mm-reference-layout #scenarios .mm-practice-guided>.mm-learn-safety-note{
+  margin:0;color:#abcbdc;font-size:12px;line-height:1.55;
+}
+.mm-reference-layout #scenarios .mm-practice-case-start{
+  width:100%;min-height:44px;padding:10px 13px;
+  border-radius:11px;border:1px solid #4b9fbc;
+  color:#e3f7ff;background:#154b6b;font-weight:800;
+}
+.mm-reference-layout #scenarios .mm-practice-guided :is(button,h3):focus-visible,
+.mm-reference-layout #scenarios .mm-practice-case-start:focus-visible{
+  outline:3px solid #8dffeb!important;outline-offset:2px!important;
+}
+@media(max-width:490px){
+ .mm-reference-layout #scenarios .mm-practice-guided{padding:12px;gap:12px;}
+ .mm-reference-layout #scenarios .mm-practice-guided-content{padding:12px;}
+ .mm-reference-layout #scenarios .mm-practice-guided-progress{gap:4px;}
+ .mm-reference-layout #scenarios .mm-practice-guided-progress>li{
+   padding:9px 2px;min-height:54px;
+ }
+ .mm-reference-layout #scenarios .mm-practice-guided-progress>li>small{font-size:9px;}
+ .mm-reference-layout #scenarios .mm-practice-guided-controls>button{flex:1;}
+}
+@media(forced-colors:active){
+ .mm-reference-layout #scenarios .mm-practice-guided-choice[aria-pressed="true"]{
+  outline:2px solid Highlight!important;color:HighlightText!important;
+ }
+}
