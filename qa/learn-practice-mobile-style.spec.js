@@ -646,7 +646,8 @@ test('More subtab interior links and buttons use the approved blue learning pale
   const more=page.locator('#modal:not(.hidden) .mm-reference-more-card');
   await expect(more).toHaveCount(6);
   const expanded=page.locator('#modal .mm-reference-more-card[data-mm-more-section="learning"]');
-  await expanded.locator(':scope > summary').click();
+  // The source-owned More menu can restore the open state. Expand only if closed.
+  if(!(await expanded.evaluate(el=>el.open)))await expanded.locator(':scope > summary').click();
   const tiles=page.locator('#modal .mm-reference-more-card .mm-more-disclosure-items > .quick-action:visible');
   await expect(tiles.first()).toBeVisible();
   const results=await tiles.evaluateAll(els=>els.map(el=>({
