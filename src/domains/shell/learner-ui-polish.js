@@ -770,9 +770,41 @@ function materialArt(label){
   for(const [matcher,pic] of familyArt)if(matcher.test(label))return pic;
   return 'materials';
 }
+/* The grade registry owns factual exact-grade data; this educational guide only
+   connects the pre-existing real lessons, native labs and registry. */
+function mountMaterialJourney(root,catalogue){
+  if(!root||!catalogue||root.querySelector('.mm-material-journey'))return;
+  const journey=document.createElement('section');
+  journey.className='mm-material-journey';
+  journey.setAttribute('aria-labelledby','mmMaterialJourneyTitle');
+  journey.innerHTML=`<header><span class="eyebrow">Guided material learning</span><h2 id="mmMaterialJourneyTitle">From resin choice to evidence</h2><p>One learning route connects your material lessons, resin-behaviour questions and exact-grade records. General teaching is not a supplier recipe.</p></header>
+  <div class="mm-material-journey-actions">
+    <button type="button" data-mm-material-journey="lessons"><strong>01 · Learn</strong><span>Study polymer families and moisture behaviour</span></button>
+    <button type="button" data-mm-material-journey="labs"><strong>02 · Test</strong><span>Use the existing resin behaviour labs</span></button>
+    <button type="button" data-mm-material-journey="grades"><strong>03 · Verify</strong><span>Check actual supplier-backed grade evidence</span></button>
+  </div>
+  <details class="mm-material-journey-reasoning"><summary>Five material decisions explained <span>Expand teaching notes ↓</span></summary>
+    <div class="mm-material-journey-questions">
+      <details><summary>Moisture: can dryer settings prove the resin is dry?</summary><p>No. Compare the exact supplier's procedure with handling history and, where applicable, a validated moisture measurement. Dryer displays alone do not prove pellet condition.</p></details>
+      <details><summary>Degradation: what evidence distinguishes heat history from contamination?</summary><p>Review grade identity, residence time, process trace history, visual defect location and controlled inspection. A dark spot alone cannot identify the mechanism.</p></details>
+      <details><summary>Regrind: does a higher regrind percentage always mean a worse part?</summary><p>No. Use the approved material/regrind limits, blend and handling evidence, and representative part results. An association is not a qualified material limit.</p></details>
+      <details><summary>Material substitution: is a matching family name enough?</summary><p>No. Compare the exact grade, property requirements, additives, supplier guidance and customer approval requirements. A family label is not a grade equivalence certificate.</p></details>
+      <details><summary>Part quality: why compare cavities and measurement conditions?</summary><p>Geometry, cooling and local flow balance affect part response, while measurement timing and conditioning change reported dimensions. Use cavity-labelled, comparable samples.</p></details>
+    </div>
+    <p class="mm-learn-safety-note">Optional, unscored teaching. Real process and grade decisions require current manufacturer documents, competent human review and site procedures.</p>
+  </details>`;
+  journey.querySelectorAll('[data-mm-material-journey]').forEach(button=>button.addEventListener('click',()=>{
+    const action=button.dataset.mmMaterialJourney;
+    if(action==='lessons')window.MM_LESSON_CATALOG?.open?.({filter:'material'});
+    if(action==='labs')window.MM_MATERIAL_BEHAVIOUR_LABS?.open?.();
+    if(action==='grades')catalogue.scrollIntoView?.({block:'start',behavior:'smooth'});
+  }));
+  catalogue.insertAdjacentElement('beforebegin',journey);
+}
 function materials(){
   const root=document.getElementById('materials'),catalogue=root?.querySelector('[data-mm-all-material-index]');
   if(!root||!catalogue)return;
+  mountMaterialJourney(root,catalogue);
   // One visible heading belongs to the consolidated catalogue itself.
   // Never add a separate Materials hero above the catalogue.
   const heading=catalogue.querySelector('.mm-material-all-index-head h3');
@@ -941,7 +973,7 @@ function more(){
   if(!grid)return;
   if(grid.dataset.mmReferenceMore==='1'){illustrateMore(grid);return;}
   grid.dataset.mmReferenceMore='1';
-  const mapped=[['learning','Resources','Guides, charts and learning materials'],
+  const mapped=[['learning','Resources','Visuals, glossary, Book and grade references'],
     ['references','Tools','Calculators and technical references'],
     ['account','Settings & account','Preferences, profile and support'],
     ['mission','Mission tools','Saved evidence and command search']];
@@ -950,6 +982,17 @@ function more(){
     const b=group.querySelector('summary b'),small=group.querySelector('summary small');
     if(b)b.textContent=title;if(small)small.textContent=desc;
   });
+  // Add one canonical launch to the pre-existing Resources group; do not
+  // duplicate its individual source-owned navigation actions or remove them.
+  const resources=grid.querySelector('[data-mm-more-section="learning"] .mm-more-disclosure-items');
+  if(resources&&!resources.querySelector('[data-mm-learning-resource-shortcut]')){
+    const browse=document.createElement('button');
+    browse.type='button';browse.className='quick-action mm-learning-resource-shortcut';
+    browse.dataset.mmLearningResourceShortcut='1';
+    browse.textContent='Browse Learning Resources →';
+    browse.addEventListener('click',()=>window.MM_PRIMARY_HUBS?.openLearningResources?.());
+    resources.prepend(browse);
+  }
   // Six top-level More destinations: four governed tool groups and distinct
   // help/about disclosures. The exact links stay local to the application.
   for(const [title,hint,label,href] of [
