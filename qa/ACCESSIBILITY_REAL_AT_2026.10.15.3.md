@@ -2,7 +2,7 @@
 
 **STATUS: HOLD — 2026.10.15.3 Learn redesign requires a new exact-source producer and owner-approved visual review; no independent human/device/provider acceptance has occurred.**
 
-> **PENDING 2026.10.15.3 TECHNICAL ARTIFACT — ALL SEVEN INDEPENDENT REVIEWS HOLD.** Previous 2026.10.15.2 producer 38671000203 and source f9de4baaa6421184b61c40ea1932015743b6a503 remain historical only. No new source-bound artifact, fingerprint, digest, expiry or physical/human approval is asserted.
+> **RETAINED 2026.10.15.3 TECHNICAL ARTIFACT — INDEPENDENT REVIEWS HOLD.** [Exact-source producer run 38791607720](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/38791607720) created artifact **11999364412**, source d827fb7d9d0e73486b49fc27f29a5ccdff092f36, digest sha256:9a6367509cc93cf83924de4069570754d8fc510771dc82ce6d39bbe25cfef948, expiry 2027-01-13T19:09:45Z, and public-runtime fingerprint sha256:80ed59be26c4c6e7906ca4abeb55b5df1df0cbaa94390749427ff6cc991d6d3f. Producer quality independently verified as successful. The retained artifact does not establish any human, real-device, Windows signing, provider, accreditation or production authorization.
 
 ## Required independently reviewed evidence
 
