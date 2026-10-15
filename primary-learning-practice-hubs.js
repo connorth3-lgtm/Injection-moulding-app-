@@ -1434,7 +1434,9 @@ function bindPracticeGuided(root){
       const id=trigger.dataset.mmGuidedCase;
       if(!PRACTICE_GUIDED_CASES.some(x=>x.id===id))return;
       practiceGuidedState={id,step:0,answers:{}};
+      learnToolOrigin=null;
       practiceGuidedRender(root,'#mmPracticeGuidedStepTitle');
+      if(trigger.closest('.mm-practice-case'))requestAnimationFrame(()=>root.querySelector('#mmPracticeGuided')?.scrollIntoView?.({block:'start',behavior:'smooth'}));
     }else if(trigger.hasAttribute('data-mm-guided-choice')){
       const selected=Number(trigger.dataset.mmGuidedChoice);
       if(!Number.isInteger(selected)||selected<0||selected>2)return;
@@ -1450,6 +1452,7 @@ function bindPracticeGuided(root){
     }else if(trigger.hasAttribute('data-mm-guided-tool')){
       if(practiceGuidedState.step!==4||!Number.isInteger(practiceGuidedState.answers[4]))return;
       const caseReview=PRACTICE_CASE_REVIEWS.find(x=>x.id===practiceGuidedState.id);
+      learnToolOrigin=null;
       if(caseReview)runAction(caseReview.action,'practice');
     }
   });
