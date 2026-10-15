@@ -462,6 +462,7 @@ function runAction(action,source='practice'){
     case 'defects': return dxOpen();
     case 'coach': return dxOpen();
     case 'diagnostic-labs': closePicker(); return safeOpen('MM_DIAGNOSTIC_LABS',()=>switchView('scenarios'));
+    case 'case-process-data':
     case 'process-data': return safeOpen('MM_PROCESS_DATA_DIAGNOSTICS');
     case 'scenario-detail': closePicker();if(source==='learn')switchView('scenarios');return openScenarioDetail(nextScenarioIndex(),source==='learn'?'Learn':'Practice');
     case 'labs': return openPicker('labs');
@@ -1212,7 +1213,7 @@ const PRACTICE_CASE_REVIEWS=Object.freeze([
     "reason": "Thermal gradients, differential shrinkage, ejection and measurement conditions can interact. Stable nominal settings do not demonstrate stable part response.",
     "verify": "Use comparable cavity-labelled and time-tagged measurements under an agreed quality plan; review cooling and process actuals together.",
     "avoid": "Do not claim a process improvement from unmatched measurements or a single acceptable part.",
-    "action": "process-data",
+    "action": "case-process-data",
     "button": "Inspect process-data evidence"
   },
   {
