@@ -724,3 +724,23 @@ for(const width of [320,360,390,412]){
     await expect(page.locator('#modal .modal-card')).toBeHidden();
   });
 }
+
+// Practice includes Spatial Twin in its Labs chooser. Its nested simulator
+// must keep the same keyboard-accessible return path as the other tools.
+test('Practice Spatial Twin restores Labs-card focus from its own subpage',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.evaluate(()=>switchView('scenarios'));
+  const hub=page.locator('#scenarios .mm-practice-hub');
+  const labs=hub.locator('[data-mm-hub-action="labs"]');
+  await labs.click();
+  const picker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid');
+  await picker.locator('[data-mm-hub-action="spatial-twin"]').click();
+  const twin=page.locator('#mmSpatialTwin');
+  await expect(twin).toBeVisible();
+  const nav=twin.locator(':scope > .mm-practice-tool-return');
+  await expect(nav).toHaveCount(1);
+  await nav.getByRole('button',{name:/Back to Practice/}).click();
+  await expect(hub).toBeVisible();
+  await expect(labs).toBeFocused();
+});

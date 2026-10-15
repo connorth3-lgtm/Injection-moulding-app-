@@ -687,7 +687,8 @@ function practiceSubpageNavigation(){
     ['#diagnosticLabs','labs','Diagnostic labs'],
     ['#materialLabs','labs','Material labs'],
     ['#exams','question-centre','Knowledge checks'],
-    ['#mmVirtualApprenticeship','labs','Virtual apprenticeship']
+    ['#mmVirtualApprenticeship','labs','Virtual apprenticeship'],
+    ['#mmSpatialTwin','labs','Spatial twin']
   ];
   for(const [selector,origin,label] of tools){
     const root=document.querySelector(selector);
