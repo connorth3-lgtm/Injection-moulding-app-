@@ -1383,5 +1383,5 @@ if(typeof currentView==='string'){
 }
 window.MM_APP_SHELL?.navigation?.sync?.();
 window.MM_QUESTION_CENTRE=Object.freeze({version:VERSION,open:openQuestionCentreDetail,counts:questionCentreCounts,scope:'Learner-facing consolidated launcher only; governed question sources, scoring, outcome-review status and evidence remain in their canonical subsystems.'});
-window.MM_PRIMARY_HUBS={version:VERSION,renderLearnHub,renderPracticeHub,openCurrentLesson,openLearningPathDetail,openScenarioDetail,nextScenarioIndex,learnerPracticePlan,learnToolOrigin:()=>learnToolOrigin,clearLearnToolOrigin:()=>{learnToolOrigin=null;}};
+window.MM_PRIMARY_HUBS={version:VERSION,renderLearnHub,renderPracticeHub,openCurrentLesson,openLearningPathDetail,openScenarioDetail,nextScenarioIndex,learnerPracticePlan,openLearningResources:()=>openPicker('learn-resources'),learnToolOrigin:()=>learnToolOrigin,clearLearnToolOrigin:()=>{learnToolOrigin=null;}};
 })();
