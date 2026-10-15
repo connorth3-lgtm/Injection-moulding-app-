@@ -700,18 +700,29 @@ function learnHubMarkup(){
     <header class="mm-primary-hub-head"><span class="eyebrow">Learn</span><h1>Lessons</h1><p>Core, material science and specialist lessons in one place.</p></header>
     <section class="mm-hub-continue mm-primary-hub-card" aria-label="Continue learning"><div class="mm-hub-continue-copy"><span class="eyebrow">Continue</span><h2>${esc(lesson?.title||'Your next lesson')}</h2><p>${lessonLine}</p><div class="mm-hub-progress"><div class="mini-bar" aria-hidden="true"><span style="width:${c?.overall||0}%"></span></div><strong>${c?.overall||0}% complete</strong></div></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="lesson">Continue lesson →</button></section>
     <nav class="mm-learn-jump" aria-label="Learn section shortcuts"><a href="#mmLearnArena">Troubleshooting</a><a href="#mmLearnQuestions">Questions</a><a href="#mmLearnReasoning">Answers</a><a href="#mmLearnCourses">All lessons</a></nav>
-    <section class="mm-learn-studio" aria-label="Learn through troubleshooting and questions">
-      <div class="mm-learn-studio-head"><span class="eyebrow">Learning studio</span><h2>Learn it. Test it. Explain it.</h2><p>Move from a lesson to an evidence-led decision, then check the reasoning. Existing progress, scoring and safety rules stay with their original learning tools.</p></div>
+    <section class="mm-learn-master-lesson" aria-labelledby="mmLearnMasterHeading">
+      <header class="mm-learn-studio-head mm-learn-master-intro"><span class="eyebrow">One complete interactive lesson</span><h2 id="mmLearnMasterHeading">From the fault to the evidence</h2><p>One connected lesson in three stages: diagnose a real-world situation, practise your decisions, and understand why the answer fits the evidence.</p><div class="mm-learn-master-meta">3 connected stages · 169 governed prompts · 6 unscored explanations</div></header>
+      <div class="mm-learn-studio" aria-label="Three stages of the combined lesson">
+      <section class="mm-learn-step mm-learn-step-arena" aria-labelledby="mmLearnArenaStep">
+        <div class="mm-learn-step-head"><span class="mm-learn-step-num" aria-hidden="true">01</span><div><span class="eyebrow">Investigate</span><h3 id="mmLearnArenaStep">Read the evidence</h3></div></div>
       <article class="mm-learn-arena mm-primary-hub-card" id="mmLearnArena" aria-labelledby="mmLearnArenaTitle">
         <div class="mm-learn-arena-copy"><span class="eyebrow">Troubleshooting Arena · 40 scenarios</span><h3 id="mmLearnArenaTitle">Think like a process detective.</h3><p>Work from evidence instead of guessing. A three-scenario boss round uses the original source-owned answers and feedback.</p></div>
         <div class="mm-learn-arena-counts" aria-label="Your local arena progress"><div><strong>${Math.max(0,Math.floor(Number(user?.fun?.scenarioCorrect)||0))}</strong><span>Scenarios solved</span></div><div><strong>${Math.max(0,Math.floor(Number(user?.fun?.bossWins)||0))}</strong><span>Boss wins</span></div></div>
         <div class="mm-learn-arena-actions"><button type="button" class="primary mm-learn-boss" data-mm-hub-action="boss-round">♛ Start 3-scenario boss round</button><button type="button" class="secondary mm-learn-scenarios" data-mm-hub-action="learn-scenarios">Explore all 40 scenarios →</button></div>
       </article>
-      <section id="mmLearnQuestions" class="mm-learn-question-centre mm-primary-hub-card mm-question-centre-card" aria-label="Five canonical question modes">
-        ${questionCentreMarkup()}
+      </section>
+      <section class="mm-learn-step mm-learn-step-questions" aria-labelledby="mmLearnQuestionStep">
+        <div class="mm-learn-step-head"><span class="mm-learn-step-num" aria-hidden="true">02</span><div><span class="eyebrow">Practise</span><h3 id="mmLearnQuestionStep">Make the strongest decision</h3></div></div>
+        <section id="mmLearnQuestions" class="mm-learn-question-centre mm-primary-hub-card mm-question-centre-card" aria-label="Five governed question modes in one continuous lesson">
+          ${questionCentreMarkup(true)}
+        </section>
+      </section>
+      </div>
+      <section class="mm-learn-step mm-learn-step-reasoning" aria-labelledby="mmLearnReasoningStep">
+        <div class="mm-learn-step-head"><span class="mm-learn-step-num" aria-hidden="true">03</span><div><span class="eyebrow">Reflect</span><h3 id="mmLearnReasoningStep">Explain your reasoning</h3></div></div>
+        <section class="mm-learn-reasoning" id="mmLearnReasoning" aria-labelledby="mmLearnReasoningHeading"><div class="mm-learn-reasoning-head"><span class="eyebrow">Six new optional learning checks</span><h2 id="mmLearnReasoningHeading">Understand the answer</h2><p>Reveal a reasoned answer to common moulding decisions. These six unscored teaching prompts are <strong>not</strong> part of the 169 governed question bank, formal assessment or evidence of competence.</p></div><div class="mm-learn-reasoning-list">${learnReasoningMarkup()}</div><p class="mm-learn-safety-note">Educational scenarios only. Use current supplier instructions, approved site procedures and authorised human review for real equipment.</p></section>
       </section>
     </section>
-    <section class="mm-learn-reasoning" id="mmLearnReasoning" aria-labelledby="mmLearnReasoningHeading"><div class="mm-learn-reasoning-head"><span class="eyebrow">Six new optional learning checks</span><h2 id="mmLearnReasoningHeading">Understand the answer</h2><p>Reveal a reasoned answer to common moulding decisions. These six unscored teaching prompts are <strong>not</strong> part of the 169 governed question bank, formal assessment or evidence of competence.</p></div><div class="mm-learn-reasoning-list">${learnReasoningMarkup()}</div><p class="mm-learn-safety-note">Educational scenarios only. Use current supplier instructions, approved site procedures and authorised human review for real equipment.</p></section>
     <section class="mm-learn-courses" id="mmLearnCourses" aria-labelledby="mmLearnCoursesHeading"><div class="mm-learn-courses-head"><span class="eyebrow">Your learning library</span><h2 id="mmLearnCoursesHeading">Courses and lessons</h2><p>One searchable catalogue of core, material-science and specialist lessons. Your existing local progress is unchanged.</p></div>${lessonCatalog.markup()}</section>
     <div class="mm-catalog-extra"><button class="secondary" type="button" data-mm-hub-action="learn-resources">Visuals & glossary →</button></div>
   </div>`;
@@ -792,9 +803,9 @@ function questionCentreCounts(){
  const measured=window.MM_REAL_MEASURED_ASSESSMENT?.decisionCount||12;
  return {formal,scenarios,diagnostic,materials,measured,total:formal+scenarios+diagnostic+materials+measured};
 }
-function questionCentreMarkup(){
+function questionCentreMarkup(embeddedLesson=false){
  const q=questionCentreCounts();
- return `<span class="eyebrow">${q.total} governed prompts</span><h2>Choose how you want to be questioned</h2><p class="muted">Most governed question-based learning is collected here. Formal checks and low-stakes practice keep their existing scoring and evidence boundaries.</p><div class="mm-hub-picker-grid">
+ return `<span class="eyebrow">${q.total} governed prompts</span><h2>${embeddedLesson?'One lesson, five ways to think':'Choose how you want to be questioned'}</h2><p class="muted">${embeddedLesson?'Follow these five connected decision topics from technical knowledge through shop-floor, diagnostic, material and measured-evidence practice. Choose a topic to open its original questions and feedback.':'Most governed question-based learning is collected here. Formal checks and low-stakes practice keep their existing scoring and evidence boundaries.'}</p><div class="mm-hub-picker-grid">
  <button type="button" data-mm-hub-action="assessments"><b>Formal knowledge checks</b><small>30 approved technical + 27 regional-safety bank items. Attempts use the governed level/region blueprint: 10 questions in one jurisdiction or 16 in Compare All.</small></button>
  <button type="button" data-mm-hub-action="scenario-detail"><b>Shop-floor scenarios</b><small>${q.scenarios} evidence-first decisions with immediate feedback.</small></button>
  <button type="button" data-mm-hub-action="diagnostic-labs"><b>Diagnostic questions</b><small>${q.diagnostic} guided fault-isolation decisions across the diagnostic labs.</small></button>

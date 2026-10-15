@@ -311,6 +311,16 @@ for(const width of [360,412]){
   await expect(learn.locator('#mmLearnArena')).toBeVisible();
   await expect(learn.locator('#mmLearnQuestions .mm-hub-picker-grid > button')).toHaveCount(5);
   await expect(learn.locator('#mmLearnQuestions')).toContainText('169 governed prompts');
+  const combined=learn.locator('.mm-learn-master-lesson');
+  await expect(combined).toHaveCount(1);
+  await expect(combined.locator(':scope > .mm-learn-studio > .mm-learn-step')).toHaveCount(2);
+  await expect(combined.locator(':scope > .mm-learn-step')).toHaveCount(1);
+  await expect(combined).toContainText('One lesson, five ways to think');
+  await expect(combined).toContainText('3 connected stages');
+  const palette=await learn.locator('#mmLearnQuestions .mm-hub-picker-grid > button').evaluateAll(nodes=>nodes.map(button=>({background:getComputedStyle(button).backgroundColor,title:getComputedStyle(button.querySelector('b')).color,copy:getComputedStyle(button.querySelector('small')).color}))); 
+  expect(palette).toHaveLength(5);
+  expect(palette.every(row=>row.background==='rgba(0, 0, 0, 0)'||row.background.startsWith('rgb(')&&!row.background.includes('237, 247, 250'))).toBe(true);
+  expect(palette.every(row=>row.title!=='rgb(16, 50, 71)')).toBe(true);
   await expect(learn.locator('#mmLearnReasoning .mm-learn-reasoning-item')).toHaveCount(6);
   await expect(learn.locator('#mmLearnCourses [data-mm-catalog-group]')).toHaveCount(22);
   await expect(learn.locator('#mmLearnCourses [data-mm-catalog-item]')).toHaveCount(176);
