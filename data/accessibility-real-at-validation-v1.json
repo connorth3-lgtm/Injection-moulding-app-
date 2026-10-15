@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.15.1",
-  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.15.1.md",
-  "sourceSha": "397e0a024eb88f9636a8b161155c5dce6af6316b",
-  "runtimeFingerprint": "sha256:ca0603729d78845b2551e15be74351abc75456932f9ac20b8394e730a81d2022",
+  "release": "2026.10.15.2",
+  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.15.2.md",
+  "sourceSha": "f9de4baaa6421184b61c40ea1932015743b6a503",
+  "runtimeFingerprint": "sha256:b55db63ab83a06a0225babb40152b81a77b1efa509b5baea7c79ebdd349eb536",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Successful source-bound technical release 2026.10.15.1 on source 397e0a024eb88f9636a8b161155c5dce6af6316b is not independent NVDA/VoiceOver hands-on validation. All four real assistive-technology platform combinations and task-level reviews remain pending with no human approval evidence.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.15.2 binds only to exact technical producer candidate f9de4baaa6421184b61c40ea1932015743b6a503, fingerprint sha256:b55db63ab83a06a0225babb40152b81a77b1efa509b5baea7c79ebdd349eb536; independent human NVDA/VoiceOver testing remains pending, no human or physical-device pass.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -306,9 +306,9 @@
     "textZoom200Percent": true
   },
   "previousCandidate": {
-    "release": "2026.10.13.3",
-    "sourceSha": "77fe83877de37cd5ce92cee7f4a1bc87a10965b7",
-    "runtimeFingerprint": "sha256:923ae7d11d5438fde3149d7e4712fc8ebe81b8d44975d4e8d06162385a60143e"
+    "release": "2026.10.15.1",
+    "sourceSha": "397e0a024eb88f9636a8b161155c5dce6af6316b",
+    "runtimeFingerprint": "sha256:ca0603729d78845b2551e15be74351abc75456932f9ac20b8394e730a81d2022"
   },
-  "technicalCandidateStatus": "successful exact-source producer retained; real human NVDA/VoiceOver review pending"
+  "technicalCandidateStatus": "Retained exact-source technical producer 38671000203 successful; independent human NVDA/VoiceOver review HOLD"
 }

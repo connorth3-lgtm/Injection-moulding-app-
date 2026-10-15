@@ -346,11 +346,11 @@
   "currentAssuranceEvidence": {
     "staticContract": {
       "status": "pass",
-      "meaning": "PASS: release 2026.10.15.1 source 397e0a024eb88f9636a8b161155c5dce6af6316b retained successful Pre-merge Public Candidate run 38616968698, artifact 11920452430, fingerprint sha256:ca0603729d78845b2551e15be74351abc75456932f9ac20b8394e730a81d2022; all 166 public-manifest SHA256/byte lengths verified. Only technical provenance, seven human/device/provider HOLDs remain."
+      "meaning": "PASS: release 2026.10.15.2 source f9de4baaa6421184b61c40ea1932015743b6a503 completed exact-source producer run 38671000203, retained artifact 11943512723, digest sha256:8541bcabc5cbee8360e84c86c8b1f94ec965957c29b43ddc1f9bfaf1f967cc2d, expiry 2027-01-13T02:26:33Z, and measured public-runtime fingerprint sha256:b55db63ab83a06a0225babb40152b81a77b1efa509b5baea7c79ebdd349eb536. Software provenance only; seven independent external human/device/provider reviews HOLD."
     },
     "behavioralBrowser": {
       "status": "pass",
-      "meaning": "PASS: release 2026.10.15.1 source 397e0a024eb88f9636a8b161155c5dce6af6316b passed strict 52-surface/12px Chromium visual, Chromium substantive/reachability, WebKit, cross-browser, five 100-run reliability shards, Read Aloud and Question Quality. Physical audio, human AT, signed Windows, SME, outcomes and NZQA/provider remain HOLD."
+      "meaning": "PASS: release 2026.10.15.2 source f9de4baaa6421184b61c40ea1932015743b6a503 completed Mobile Browser QA 38671000207 (approved strict 52-screenshot 12px visual, substantive Chromium/WebKit, cross-browser, reachability and five 100-run reliability shards), plus Question Quality and Read Aloud QA. No physical-device, human SME or provider approval."
     },
     "externalHumanDevice": {
       "status": "hold",

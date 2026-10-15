@@ -1,13 +1,13 @@
-/* MouldMaster learner UI polish — 2026.10.15.1
+/* MouldMaster learner UI polish — 2026.10.15.2
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.10.15.1';
+const VERSION='2026.10.15.2';
 // Cache-bust stylesheet revisions without claiming a new governed app release.
-const STYLE_REV='2026.10.15.1';
+const STYLE_REV='2026.10.15.2';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -677,8 +677,46 @@ function practiceToolHeaders(){
     head.prepend(art);
   }
 }
+// A consistent Practice exit on inner learning tools. This only adds an
+// accessible navigation control; source-owned evidence/scoring views remain
+// untouched and their native in-tool Back buttons retain their meanings.
+function practiceSubpageNavigation(){
+  const tools=[
+    ['#defects','troubleshooting','Troubleshooting'],
+    ['#processDataLabs','process-data','Process data'],
+    ['#diagnosticLabs','labs','Diagnostic labs'],
+    ['#materialLabs','labs','Material labs'],
+    ['#exams','question-centre','Knowledge checks'],
+    ['#mmVirtualApprenticeship','labs','Virtual apprenticeship'],
+    ['#mmSpatialTwin','labs','Spatial twin']
+  ];
+  for(const [selector,origin,label] of tools){
+    const root=document.querySelector(selector);
+    if(!root||root.querySelector(':scope > .mm-practice-tool-return'))continue;
+    // No duplicate controls after tool-owned re-renders or app navigation.
+    const nav=document.createElement('nav');
+    nav.className='mm-practice-tool-return';
+    nav.setAttribute('aria-label','Practice navigation');
+    const back=document.createElement('button');
+    back.type='button';back.className='mm-practice-tool-back';
+    back.textContent='← Back to Practice';
+    const current=document.createElement('span');
+    current.className='mm-practice-tool-current';
+    current.textContent=label;
+    back.addEventListener('click',()=>{
+      window.switchView?.('scenarios');
+      window.requestAnimationFrame(()=>{
+        const card=document.querySelector('#scenarios .mm-practice-hub [data-mm-hub-action="'+origin+'"]');
+        card?.focus();
+      });
+    });
+    nav.append(back,current);
+    root.prepend(nav);
+  }
+}
 function practiceInside(){
   practiceScenarioDetail();
+  practiceSubpageNavigation();
   observePracticeToolRoots();
   practiceToolHeaders();
   // The Question Centre is rendered into the same Practice route but replaces

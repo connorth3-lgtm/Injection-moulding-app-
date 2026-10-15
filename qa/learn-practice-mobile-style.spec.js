@@ -232,6 +232,9 @@ test('Unified diagnostic evidence controls remain single-column and readable at 
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
   await page.locator('#scenarios [data-mm-hub-action="troubleshooting"]').click();
+  const picker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid');
+  await expect(picker.locator('button')).toHaveCount(3);
+  await picker.locator('[data-mm-hub-action="diagnostic-workbench"]').click();
   const root=page.locator('#defects');
   await root.locator('[data-mm-dx-action="choose"]').first().click();
   const labels=root.locator('.mm-dx-check');

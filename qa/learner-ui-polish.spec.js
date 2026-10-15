@@ -517,6 +517,9 @@ test('Defect Finder and Troubleshooting Coach share an evidence-gated offline ca
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
   await page.locator('#scenarios [data-mm-hub-action="troubleshooting"]').click();
+  const picker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid');
+  await expect(picker.locator('button')).toHaveCount(3);
+  await picker.locator('[data-mm-hub-action="diagnostic-workbench"]').click();
   const root=page.locator('#defects');
   await expect(root.getByRole('heading',{name:'Defect Finder + Troubleshooting Coach'})).toBeVisible();
   await expect(page.locator('#modal')).toHaveClass(/hidden/);

@@ -3,7 +3,7 @@
 .topbar .mm-preview-status{flex:0 0 100%!important;grid-column:1/-1!important;grid-row:auto!important;width:100%!important;display:block!important;margin:3px 0 0!important;font-size:10px!important;line-height:1.3!important;font-weight:750!important;letter-spacing:.045em!important}
 .topbar .mm-preview-status a{color:#93f0df!important;text-decoration:underline!important;text-underline-offset:2px!important}
 .topbar .mm-preview-status a:focus-visible{outline:2px solid #55d6be!important;outline-offset:3px!important;border-radius:3px}
-/* MouldMaster learner UI polish — 2026.10.15.1 */
+/* MouldMaster learner UI polish — 2026.10.15.2 */
 
 /* Book: the evidence contract stays visible and accessible, but it no longer
    competes with the learner's chapter choice above the fold. */
@@ -290,7 +290,7 @@
   #dashboard .mm-home-book-actions button{width:100%!important;min-width:0!important;min-height:44px!important;padding:8px 9px!important;font-size:11.5px!important;white-space:nowrap!important}
 }
 
-/* Canonical Home hierarchy — 2026.10.15.1 */
+/* Canonical Home hierarchy — 2026.10.15.2 */
 /* Home keeps one dominant lesson decision, one persistent Book/Keep Reading surface,
    and two specialist shortcuts without duplicating Learn, Materials, Practice or Saved lessons. */
 #dashboard{
@@ -3352,4 +3352,39 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
     overflow-y:auto!important;
     overscroll-behavior:contain;
   }
+}
+
+/* Practice tool subpages keep their own learning workflows but share a clear,
+   keyboard-accessible return path and title treatment with the main hub.
+   Do not restyle any protected hub screenshot or override activity answers. */
+.mm-reference-layout .mm-practice-tool-return{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  gap:8px;min-width:0;margin:0 0 12px;padding:9px 12px;
+  border:1px solid #2e5e78;border-radius:13px;
+  background:#0b293d;color:#d6ebf5;
+}
+.mm-reference-layout .mm-practice-tool-return .mm-practice-tool-back{
+  box-sizing:border-box;min-height:44px;max-width:100%;padding:8px 12px;
+  background:#102e45;color:#eaf8ff;border:1px solid #3d7895;
+  border-radius:10px;font-size:14px;line-height:1.3;font-weight:700;
+  white-space:normal;text-align:left;
+}
+.mm-reference-layout .mm-practice-tool-return .mm-practice-tool-back:hover{
+  background:#17435a;border-color:#62e1d3;
+}
+.mm-reference-layout .mm-practice-tool-return .mm-practice-tool-back:focus-visible{
+  outline:3px solid #6ae4d7;outline-offset:2px;
+}
+.mm-reference-layout .mm-practice-tool-return .mm-practice-tool-current{
+  min-width:0;color:#a7d8e4;font-size:13px;font-weight:650;
+  overflow-wrap:anywhere;
+}
+@media(max-width:380px){
+ .mm-reference-layout .mm-practice-tool-return{align-items:flex-start;}
+}
+@media(forced-colors:active){
+ .mm-reference-layout .mm-practice-tool-return,
+ .mm-reference-layout .mm-practice-tool-return .mm-practice-tool-back{
+   border:1px solid CanvasText;background:Canvas;color:CanvasText;
+ }
 }

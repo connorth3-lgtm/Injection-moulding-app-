@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.10.15.1",
+  "release": "2026.10.15.2",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "397e0a024eb88f9636a8b161155c5dce6af6316b",
-  "scope": "Unmerged 2026.10.15.1 technical producer accepted by automatic checks; protected-main merge, public deployment and all seven external reviews still HOLD.",
-  "approvalBoundary": "Successful source-bound technical automation only; physical, AT, Windows signing, SME, learner and NZQA/provider approvals not granted.",
+  "candidateSourceSha": "f9de4baaa6421184b61c40ea1932015743b6a503",
+  "scope": "Exact-source 2026.10.15.2 technical producer 38671000203 successful on f9de4baaa6421184b61c40ea1932015743b6a503; full protected PR-head release validation and deployment still pending.",
+  "approvalBoundary": "Software source candidate PASS only; seven independent human/device/provider streams and production use remain HOLD.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -45,7 +45,7 @@
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
   "lastReviewedDate": "2026-10-15",
   "previousVerifiedCandidate": {
-    "release": "2026.10.13.3",
-    "sourceSha": "77fe83877de37cd5ce92cee7f4a1bc87a10965b7"
+    "release": "2026.10.15.1",
+    "sourceSha": "397e0a024eb88f9636a8b161155c5dce6af6316b"
   }
 }
