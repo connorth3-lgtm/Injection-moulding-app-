@@ -626,7 +626,10 @@ test('guided Practice preserves previous-step review and changing case resets hy
   await root.locator('[data-mm-guided-prev]').click();
   await expect(root.locator('[data-mm-guided-choice="1"]')).toHaveAttribute('aria-pressed','true');
   await expect(root.locator('.mm-practice-guided-feedback')).toBeVisible();
-  await page.locator('#scenarios .mm-practice-case').last().locator('[data-mm-guided-case]').click();
+  const workedCase=page.locator('#scenarios .mm-practice-case').last();
+  await workedCase.locator(':scope > summary').click();
+  await expect(workedCase).toHaveAttribute('open','');
+  await workedCase.locator('[data-mm-guided-case]').click();
   await expect(root.locator('.mm-practice-guided-context')).toContainText('Case PC-05');
   await expect(root.locator('.mm-practice-guided-context')).toContainText('Step 1 of 5');
   await expect(root.locator('[data-mm-guided-next]')).toBeDisabled();
