@@ -677,8 +677,45 @@ function practiceToolHeaders(){
     head.prepend(art);
   }
 }
+// A consistent Practice exit on inner learning tools. This only adds an
+// accessible navigation control; source-owned evidence/scoring views remain
+// untouched and their native in-tool Back buttons retain their meanings.
+function practiceSubpageNavigation(){
+  const tools=[
+    ['#defects','troubleshooting','Troubleshooting'],
+    ['#processDataLabs','process-data','Process data'],
+    ['#diagnosticLabs','labs','Diagnostic labs'],
+    ['#materialLabs','labs','Material labs'],
+    ['#exams','question-centre','Knowledge checks'],
+    ['#mmVirtualApprenticeship','labs','Virtual apprenticeship']
+  ];
+  for(const [selector,origin,label] of tools){
+    const root=document.querySelector(selector);
+    if(!root||root.querySelector(':scope > .mm-practice-tool-return'))continue;
+    // No duplicate controls after tool-owned re-renders or app navigation.
+    const nav=document.createElement('nav');
+    nav.className='mm-practice-tool-return';
+    nav.setAttribute('aria-label','Practice navigation');
+    const back=document.createElement('button');
+    back.type='button';back.className='mm-practice-tool-back';
+    back.textContent='← Back to Practice';
+    const current=document.createElement('span');
+    current.className='mm-practice-tool-current';
+    current.textContent=label;
+    back.addEventListener('click',()=>{
+      window.switchView?.('scenarios');
+      window.requestAnimationFrame(()=>{
+        const card=document.querySelector('#scenarios .mm-practice-hub [data-mm-hub-action="'+origin+'"]');
+        card?.focus();
+      });
+    });
+    nav.append(back,current);
+    root.prepend(nav);
+  }
+}
 function practiceInside(){
   practiceScenarioDetail();
+  practiceSubpageNavigation();
   observePracticeToolRoots();
   practiceToolHeaders();
   // The Question Centre is rendered into the same Practice route but replaces

@@ -443,7 +443,7 @@ function runAction(action){
     case 'glossary': closePicker(); return switchView('glossary');
     case 'saved': closePicker(); return lessonCatalog.open({filter:'saved'});
     case 'daily': return openDaily();
-    case 'troubleshooting': return dxOpen();
+    case 'troubleshooting': return openPicker('troubleshooting');
     case 'mould-master': closePicker(); return safeOpen('MM_MOULD_MASTER_WORKSPACE',()=>switchView('defects'));
     case 'diagnostic-workbench': return dxOpen();
     case 'defects': return dxOpen();

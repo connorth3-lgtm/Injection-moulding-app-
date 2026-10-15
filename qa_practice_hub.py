@@ -113,7 +113,7 @@ for required in (
     "No cause confirmed.",
     "Evidence gaps to resolve",
     "data-mm-dx-hypothesis",
-    "case 'troubleshooting': return dxOpen();",
+    "case 'troubleshooting': return openPicker('troubleshooting');",
     "case 'diagnostic-workbench': return dxOpen();",
     "renderDefects=renderUnifiedDefects",
     "renderCoach=renderUnifiedCoach",

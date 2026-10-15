@@ -266,13 +266,20 @@ for(const width of [360,810]){
     await page.locator('#scenarios .mm-hub-detail-back button').click();
     await expect(page.locator('#scenarios .mm-practice-hub')).toBeVisible();
     await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="troubleshooting"]').click();
+    const troubleshootPicker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid[data-mm-reference-practice-picker="modal"]');
+    await expect(troubleshootPicker.locator('button')).toHaveCount(3);
+    await troubleshootPicker.locator('[data-mm-hub-action="diagnostic-workbench"]').click();
     await expect(page.locator('#defects .mm-dx-workbench')).toBeVisible();
+    await expect(page.locator('#defects > .mm-practice-tool-return')).toBeVisible();
     await expect(page.locator('#defects .mm-dx-library .mm-dx-symptom').first()).toBeVisible();
     await page.locator('#defects .mm-dx-library .mm-dx-symptom').first().click();
     await expect(page.locator('#defects .mm-dx-evidence')).toBeVisible();
     await expect(page.locator('#defects .mm-dx-main-action')).toBeVisible();
     // Presentation upgrade is never approval of the diagnostic results.
     await expect(page.locator('#defects .mm-dx-disclaimer')).toContainText('No automatic');
+    await page.locator('#defects .mm-practice-tool-back').click();
+    await expect(hub).toBeVisible();
+    await expect(hub.locator('[data-mm-hub-action="troubleshooting"]')).toBeFocused();
   });
 }
 
@@ -423,6 +430,7 @@ test('Practice nested labs, data diagnosis and assessments keep working illustra
   await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="process-data"]').click();
   const data=page.locator('#processDataLabs');
   await expect(data.locator('.pd-hero > .mm-reference-practice-tool-art')).toBeVisible();
+  await expect(data.locator(':scope > .mm-practice-tool-return')).toHaveCount(1);
   await expect(data.locator('[data-pd-start]').first()).toBeVisible();
   await data.locator('[data-pd-start]').first().click();
   const dataChoice=data.locator('button.pd-choice').first();
@@ -443,6 +451,7 @@ test('Practice nested labs, data diagnosis and assessments keep working illustra
     await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="question-centre"]').click();
     await page.locator('#scenarios .mm-question-centre [data-mm-hub-action="'+action+'"]').click();
     await expect(page.locator(root+' '+hero+' > .mm-reference-practice-tool-art')).toBeVisible();
+    await expect(page.locator(root+' > .mm-practice-tool-return')).toHaveCount(1);
     await expect(page.locator(root+' '+start).first()).toBeVisible();
     await page.locator(root+' '+start).first().click();
     const questionChoice=page.locator(root+' button'+(action==='diagnostic-labs'?'.dl-choice':'.ml-choice')).first();
@@ -461,6 +470,7 @@ test('Practice nested labs, data diagnosis and assessments keep working illustra
   await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="question-centre"]').click();
   await page.locator('#scenarios .mm-question-centre [data-mm-hub-action="assessments"]').click();
   await expect(page.locator('#exams .section-head > .mm-reference-practice-tool-art')).toBeVisible();
+  await expect(page.locator('#exams > .mm-practice-tool-return')).toHaveCount(1);
   const startExam=page.locator('#exams .exam-card button').first();
   await expect(startExam).toBeVisible();
   await startExam.click();
