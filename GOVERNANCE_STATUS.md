@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS: release 2026.10.15.2 source f9de4baaa6421184b61c40ea1932015743b6a503 completed exact-source producer run 38671000203, retained artifact 11943512723, digest sha256:8541bcabc5cbee8360e84c86c8b1f94ec965957c29b43ddc1f9bfaf1f967cc2d, expiry 2027-01-13T02:26:33Z, and measured public-runtime fingerprint sha256:b55db63ab83a06a0225babb40152b81a77b1efa509b5baea7c79ebdd349eb536. Software provenance only; seven independent external human/device/provider reviews HOLD. |
-| Behavioral / browser | **pass** | PASS: release 2026.10.15.2 source f9de4baaa6421184b61c40ea1932015743b6a503 completed Mobile Browser QA 38671000207 (approved strict 52-screenshot 12px visual, substantive Chromium/WebKit, cross-browser, reachability and five 100-run reliability shards), plus Question Quality and Read Aloud QA. No physical-device, human SME or provider approval. |
+| Static / contract | **fail** | HOLD: release 2026.10.15.3 learner runtime differs from 2026.10.15.2; new exact-source producer, fingerprint and reviewed visual baseline are not established. |
+| Behavioral / browser | **fail** | HOLD: proposed 2026.10.15.3 Learn studio must pass full Chromium/WebKit and 52-screen/12px visual owner review; no earlier-release QA can validate changed bytes. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
