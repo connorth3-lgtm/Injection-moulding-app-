@@ -317,18 +317,25 @@ for(const width of [360,412]){
   await expect(combined.locator(':scope > .mm-learn-step')).toHaveCount(1);
   await expect(combined).toContainText('One lesson, five ways to think');
   await expect(combined).toContainText('3 connected stages');
+  await expect(combined).toContainText('24 unscored explanations');
   const palette=await learn.locator('#mmLearnQuestions .mm-hub-picker-grid > button').evaluateAll(nodes=>nodes.map(button=>({background:getComputedStyle(button).backgroundColor,title:getComputedStyle(button.querySelector('b')).color,copy:getComputedStyle(button.querySelector('small')).color}))); 
   expect(palette).toHaveLength(5);
   expect(palette.every(row=>row.background==='rgba(0, 0, 0, 0)'||row.background.startsWith('rgb(')&&!row.background.includes('237, 247, 250'))).toBe(true);
   expect(palette.every(row=>row.title!=='rgb(16, 50, 71)')).toBe(true);
-  await expect(learn.locator('#mmLearnReasoning .mm-learn-reasoning-item')).toHaveCount(6);
+  await expect(learn.locator('#mmLearnReasoning .mm-learn-reasoning-item')).toHaveCount(24);
+  await expect(learn.locator('#mmLearnReasoning .mm-learn-reasoning-chapter')).toHaveCount(6);
+  await expect(learn.locator('#mmLearnReasoning')).toContainText('24 optional learning checks');
+  const chapterCounts=await learn.locator('#mmLearnReasoning .mm-learn-reasoning-chapter').evaluateAll(nodes=>nodes.map(node=>node.querySelectorAll('details.mm-learn-reasoning-item').length));
+  expect(chapterCounts).toEqual([4,4,4,4,4,4]);
   await expect(learn.locator('#mmLearnCourses [data-mm-catalog-group]')).toHaveCount(22);
   await expect(learn.locator('#mmLearnCourses [data-mm-catalog-item]')).toHaveCount(176);
   const first=learn.locator('#mmLearnReasoning .mm-learn-reasoning-item').first();
   await first.locator('summary').click();
   await expect(first).toHaveAttribute('open','');
   await expect(first).toContainText('Suggested answer');
-  await expect(first).toContainText('Why it matters');
+  await expect(first).toContainText('Why that is plausible');
+  await expect(first).toContainText('Evidence to verify');
+  await expect(first).toContainText('Common mistake to avoid');
   const checks=await page.evaluate(()=>({total:window.MM_QUESTION_CENTRE.counts().total,scroll:document.documentElement.scrollWidth-innerWidth}));
   expect(checks.total).toBe(169);
   expect(checks.scroll).toBeLessThanOrEqual(2);
@@ -371,4 +378,29 @@ test('Learn Question Centre lanes invoke canonical assessments and preserve scop
  await expect(page.locator('#scenarios .scenario')).toHaveCount(40);
  await page.locator('#scenarios .mm-hub-detail-back button').click();
  await expect(page.locator('#path #mmLearnQuestions')).toBeVisible();
+});
+
+test('Learn deep reasoning contains 24 distinct, unscored evidence-and-caveat checks without altering canonical assessment counts',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.evaluate(()=>switchView('path'));
+  const answers=page.locator('#path #mmLearnReasoning');
+  const records=await answers.locator('details.mm-learn-reasoning-item').evaluateAll(nodes=>nodes.map(node=>({
+    title:node.querySelector('summary strong')?.textContent||'',
+    reference:node.querySelector('.mm-learn-reasoning-topic')?.textContent||'',
+    explanations:[...node.querySelectorAll('.mm-learn-reasoning-answer p')].map(p=>p.textContent||'')
+  })));
+  expect(records).toHaveLength(24);
+  expect(new Set(records.map(item=>item.reference)).size).toBe(24);
+  expect(new Set(records.map(item=>item.title)).size).toBe(24);
+  for(const row of records){
+    expect(row.title.length).toBeGreaterThan(35);
+    expect(row.explanations).toHaveLength(4);
+    expect(row.explanations.every(x=>x.length>70)).toBe(true);
+  }
+  expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts())).toEqual({formal:57,scenarios:40,diagnostic:36,materials:24,measured:12,total:169});
+  const final=answers.locator('details.mm-learn-reasoning-item').last();
+  await final.locator('summary').click();
+  await expect(final).toHaveAttribute('open','');
+  await expect(final).toContainText('Common mistake to avoid');
 });

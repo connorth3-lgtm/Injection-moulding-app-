@@ -645,52 +645,297 @@ window.addEventListener('mm:specialist-progress-change',()=>lessonCatalog.refres
 // Refresh any Learn page opened during bootstrap once owned progress can migrate.
 window.addEventListener('mm:domains-ready',()=>lessonCatalog.refreshSpecialistProgress());
 
+// Optional learner-facing explanations. Unscored, not part of any governed assessment bank.
+// The original six LR identifiers are stable and the new eighteen are additive.
 const LEARN_REASONING_REVIEWS=Object.freeze([
   {
     "id": "LR-01",
+    "chapter": "Cycle signals",
     "topic": "Cushion stability",
     "question": "Cushion varies from shot to shot. What evidence should you check before adjusting the process?",
     "answer": "Review cushion and transfer traces, repeatability and feed consistency against a known-good baseline.",
-    "explanation": "A changing cushion is a signal, not a diagnosis; inconsistent feeding, transfer behaviour and measurement need to be distinguished before choosing a controlled check."
+    "explanation": "A changing cushion is a signal, not a diagnosis; inconsistent feeding, transfer behaviour and measurement need to be distinguished before choosing a controlled check.",
+    "evidence": "Compare consecutive screw-position, transfer and final-cushion values, recovery timing, part mass and instrument reliability.",
+    "pitfall": "Do not add material or change hold pressure from cushion variation alone."
   },
   {
     "id": "LR-02",
+    "chapter": "Material evidence",
     "topic": "Silver streaks",
     "question": "Silver streaks appear after a resin change. Does appearance alone prove wet material?",
     "answer": "No. Check the exact grade and handling/drying evidence, then compare defect location and process history.",
-    "explanation": "Moisture is one possible mechanism, but gas, shear and contamination can look similar. Supplier-specific documentation and discriminating observations matter."
+    "explanation": "Moisture is one possible mechanism, but gas, shear and contamination can look similar. Supplier-specific documentation and discriminating observations matter.",
+    "evidence": "Confirm grade identity, handling history, applicable dryer records and locations of streaking across cavities.",
+    "pitfall": "Do not diagnose wet resin from appearance or apply another grade's drying schedule."
   },
   {
     "id": "LR-03",
+    "chapter": "Tool and flow balance",
     "topic": "Single-cavity flash",
     "question": "Only one cavity flashes in a multi-cavity mould. What is the strongest first investigation?",
     "answer": "Compare that cavity’s local parting, venting, balance and tool condition with unaffected cavities.",
-    "explanation": "A cavity-specific symptom calls for local evidence before a global pressure or clamp adjustment that may disguise the underlying issue."
+    "explanation": "A cavity-specific symptom calls for local evidence before a global pressure or clamp adjustment that may disguise the underlying issue.",
+    "evidence": "Compare flash position and severity by cavity, parting faces, balance trends and approved tool-inspection records.",
+    "pitfall": "Avoid raising clamp force or reducing global fill settings before distinguishing local tool effects."
   },
   {
     "id": "LR-04",
+    "chapter": "Filling and transfer",
     "topic": "Short shots",
     "question": "Short shots appear immediately after a material change. What do you establish first?",
     "answer": "Verify actual grade, supply condition and fill/transfer evidence against an applicable qualified baseline.",
-    "explanation": "Different materials may flow differently; do not transfer previous settings without reviewing supplier limits, actual traces and local safety procedures."
+    "explanation": "Different materials may flow differently; do not transfer previous settings without reviewing supplier limits, actual traces and local safety procedures.",
+    "evidence": "Review resin identification, dryer and feed history, shot consistency, transfer traces and part fill pattern.",
+    "pitfall": "Do not copy the previous resin's process recipe or raise pressure without discriminating evidence."
   },
   {
     "id": "LR-05",
+    "chapter": "Dimensional quality",
     "topic": "Sink marks",
     "question": "A thick section shows sink. Which evidence helps separate packing from geometry and cooling?",
     "answer": "Review part wall thickness, gate-seal/packing evidence and local cooling history together.",
-    "explanation": "Sink cannot reliably be solved from appearance alone; increased packing may not help once the gate is sealed and can introduce other effects."
+    "explanation": "Sink cannot reliably be solved from appearance alone; increased packing may not help once the gate is sealed and can introduce other effects.",
+    "evidence": "Compare time- and cavity-tagged defect location, wall-section geometry, part mass, hold trace and cooling behaviour.",
+    "pitfall": "Avoid extending hold indefinitely when the gate may already be sealed."
   },
   {
     "id": "LR-06",
+    "chapter": "Dimensional quality",
     "topic": "Warpage investigation",
     "question": "Dimensions vary after ejection. What evidence is useful before choosing a corrective trial?",
     "answer": "Compare part geometry, local cooling, orientation, ejection conditions and measured dimensional trends.",
-    "explanation": "Warpage may reflect interacting thermal, shrinkage and mechanical causes. Keep a traceable hypothesis and verify changes under approved procedures."
+    "explanation": "Warpage may reflect interacting thermal, shrinkage and mechanical causes. Keep a traceable hypothesis and verify changes under approved procedures.",
+    "evidence": "Check agreed measurement timing, cavity labels, temperature balance and part-support/conditioning method.",
+    "pitfall": "Do not infer a single temperature or packing cause from one distorted sample."
+  },
+  {
+    "id": "LR-07",
+    "chapter": "Cycle signals",
+    "topic": "Pressure trace drift",
+    "question": "Peak injection pressure rises while measured fill time stays similar. What is the next investigation?",
+    "answer": "Compare pressure and screw-position trends at equivalent process phases, then test plausible changes in flow resistance, temperature, resin and sensing.",
+    "explanation": "Similar fill time does not prove the same viscosity, pressure path or measurement validity; pressure can change for several independent reasons.",
+    "evidence": "Collect synchronized pressure, screw-position, fill-time and temperature traces and confirm sensor calibration.",
+    "pitfall": "Do not treat a higher peak alone as proof of wet resin, a blocked gate or a machine fault."
+  },
+  {
+    "id": "LR-08",
+    "chapter": "Cycle signals",
+    "topic": "Recovery-time shift",
+    "question": "Screw recovery time lengthens but part mass initially stays steady. What should you compare?",
+    "answer": "Review recovery-time trends with feed condition, screw-speed actuals and material/temperature records before a controlled investigation.",
+    "explanation": "Plasticising performance can drift before a visible part defect, and recovery signals do not identify the cause by themselves.",
+    "evidence": "Compare several cycles, hopper supply, material lot, melt-temperature evidence and authorised screw actuals.",
+    "pitfall": "Do not compensate by increasing screw speed without checking material and equipment limits."
+  },
+  {
+    "id": "LR-09",
+    "chapter": "Cycle signals",
+    "topic": "Transfer-position repeatability",
+    "question": "V/P transfer position fluctuates between otherwise similar cycles. Which evidence makes this meaningful?",
+    "answer": "Correlate the transfer trigger, screw position, fill pressure, injection time and shot mass on a shot-by-shot basis.",
+    "explanation": "A change in trigger logic, check-ring sealing or position measurement can imitate a process-instability signal.",
+    "evidence": "Confirm whether transfer uses position, pressure or time, then compare matched actual traces.",
+    "pitfall": "Do not assume a worn check ring or replace equipment from one fluctuating display."
+  },
+  {
+    "id": "LR-10",
+    "chapter": "Material evidence",
+    "topic": "Unexpected brittleness",
+    "question": "Parts become brittle after a supplier lot change. What would you verify before changing the moulding cycle?",
+    "answer": "Confirm the exact grade and lot, test/conditioning method, resin handling and part structure against controlled references.",
+    "explanation": "Brittleness may relate to contamination, degradation, processing, geometry or the way samples were conditioned and tested.",
+    "evidence": "Review incoming certificates, actual grade, approved property test results, dryness history and material-change log.",
+    "pitfall": "Do not declare the supplier lot defective without a repeatable controlled comparison."
+  },
+  {
+    "id": "LR-11",
+    "chapter": "Material evidence",
+    "topic": "Black specks after changeover",
+    "question": "Black specks show up after a colour change. What is the strongest evidence-led approach?",
+    "answer": "Check purge/changeover history and the material path while comparing speck location, frequency and thermal history.",
+    "explanation": "Residual colour, contamination and thermally degraded deposits have different implications despite similar appearance.",
+    "evidence": "Compare first/late shots, purge records, feed and granulate observations under approved inspection procedures.",
+    "pitfall": "Do not expose the barrel or hot runner for inspection outside manufacturer and site isolation procedures."
+  },
+  {
+    "id": "LR-12",
+    "chapter": "Material evidence",
+    "topic": "Regrind variability",
+    "question": "Part weight becomes less consistent after increasing regrind content. What should be investigated?",
+    "answer": "Compare the approved blend ratio, feed uniformity, contamination risk, moisture condition and particle-size distribution.",
+    "explanation": "Regrind can alter material handling and feed repeatability, but a correlation is not yet evidence of one specific failure mechanism.",
+    "evidence": "Review approved material limits, feed mixture logs and cavity/shot weight trends under a controlled blend study.",
+    "pitfall": "Do not exceed supplier or quality-system regrind limits to chase an apparent process benefit."
+  },
+  {
+    "id": "LR-13",
+    "chapter": "Tool and flow balance",
+    "topic": "Weld-line shift",
+    "question": "A weld line moves on the part without an obvious change in dimensions. What do you check?",
+    "answer": "Compare fill-front balance, gate and runner behaviour, local mould thermal condition and venting evidence.",
+    "explanation": "The weld-line location reflects flow-front meeting conditions; strength and appearance need separate evidence.",
+    "evidence": "Compare marked weld positions by cavity, short-shot studies if safely authorised, and relevant flow/thermal traces.",
+    "pitfall": "Do not assume cosmetic improvement guarantees weld strength."
+  },
+  {
+    "id": "LR-14",
+    "chapter": "Tool and flow balance",
+    "topic": "End-of-fill burn marks",
+    "question": "Burn marks appear at the end of a flow path. What is the first reasoning step?",
+    "answer": "Test whether air entrapment or vent restriction is supported, while also considering residence/shear degradation.",
+    "explanation": "A dark mark does not uniquely identify trapped air; the process and location distinguish competing mechanisms.",
+    "evidence": "Compare flow-end location, vent maintenance records, fill-pressure progression and melt history.",
+    "pitfall": "Do not manually clear vents or modify tooling without an authorised safe isolation process."
+  },
+  {
+    "id": "LR-15",
+    "chapter": "Tool and flow balance",
+    "topic": "Cavity-weight imbalance",
+    "question": "One cavity repeatedly produces heavier parts than others. What evidence can separate tool balance from measurement noise?",
+    "answer": "Collect cavity-labelled part weights with matched machine traces, then investigate runner/gate balance and cavity pressure where available.",
+    "explanation": "A global setpoint applies to all cavities, while local geometry, thermal or gate behaviour may differ.",
+    "evidence": "Check repeated cavity-labelled samples, gauge repeatability, runner changes and local tool condition.",
+    "pitfall": "Do not fix a cavity-local imbalance by simultaneously adjusting several global parameters."
+  },
+  {
+    "id": "LR-16",
+    "chapter": "Filling and transfer",
+    "topic": "Screw bottoms out",
+    "question": "The screw reaches its forward travel limit during hold. What should be checked before altering pack settings?",
+    "answer": "Check shot-size/cushion actuals, filling-transfer behaviour, non-return valve evidence and material feed consistency.",
+    "explanation": "If sufficient melt reserve is unavailable, hold-pressure commands may not translate into intended cavity packing.",
+    "evidence": "Compare cushion and shot-position traces with part mass and approved machine limits.",
+    "pitfall": "Do not continue production with uncontrolled end-of-travel behaviour or override equipment safeguards."
+  },
+  {
+    "id": "LR-17",
+    "chapter": "Filling and transfer",
+    "topic": "Short shot versus venting",
+    "question": "A short shot repeats at the same flow-end area. What observations distinguish insufficient delivered melt from a local flow restriction?",
+    "answer": "Correlate overall shot/cushion stability with the local fill pattern, venting and gate/runner evidence.",
+    "explanation": "An apparently short-filled area can reflect flow-front freezing, air trapping or inadequate melt delivery, not just insufficient pressure.",
+    "evidence": "Review cavity-specific fill position, pressure-time data, vent/tool condition and approved short-shot evidence.",
+    "pitfall": "Do not assume a larger shot or pressure is universally the right corrective step."
+  },
+  {
+    "id": "LR-18",
+    "chapter": "Filling and transfer",
+    "topic": "Intermittent ejection marks",
+    "question": "Scuffs appear on some parts during ejection. What should be measured first?",
+    "answer": "Compare scuff position, ejection timing, part temperature and cavity tooling condition by cycle.",
+    "explanation": "Damage at ejection may relate to cooling, draft, ejector condition, adhesion or part geometry.",
+    "evidence": "Review repeatable cavity labels, ejection-force signals where available and authorised visual tool inspection.",
+    "pitfall": "Do not reach into a guarded mould to reproduce the mark."
+  },
+  {
+    "id": "LR-19",
+    "chapter": "Dimensional quality",
+    "topic": "Conditioning effects",
+    "question": "Parts measure differently immediately after moulding and after a day. What must a fair comparison control?",
+    "answer": "Define specimen conditioning, measurement method, ambient conditions and elapsed time after moulding.",
+    "explanation": "Shrinkage and moisture/temperature equilibration can change measurements independent of a newly changed machine setting.",
+    "evidence": "Record sample age, environment, orientation, cavity and calibrated gauge method.",
+    "pitfall": "Do not compare unmatched measurement ages and claim the process drifted."
+  },
+  {
+    "id": "LR-20",
+    "chapter": "Dimensional quality",
+    "topic": "Voids versus external sink",
+    "question": "A thick rib shows a cosmetic depression while internal voids are suspected. How do you investigate?",
+    "answer": "Use approved nondestructive or destructive inspection to distinguish internal voiding from surface sink, alongside gate/hold/cooling evidence.",
+    "explanation": "Internal void formation and visible sink may reflect different responses to volumetric shrinkage and packing effectiveness.",
+    "evidence": "Compare section geometry, safe inspection results, gate-seal evidence and cavity-labelled part mass.",
+    "pitfall": "Do not assume extra hold pressure resolves a defect once the gate has frozen."
+  },
+  {
+    "id": "LR-21",
+    "chapter": "Scientific validation",
+    "topic": "Quality versus machine pressure",
+    "question": "Cavity pressure and machine hydraulic pressure tell different stories. Which is closer to direct evidence of cavity conditions?",
+    "answer": "Where validated and available, a calibrated cavity-pressure trace provides more local evidence; interpret it with location, fill stage and quality measurements.",
+    "explanation": "Machine pressure is upstream of the flow path, so its variation does not always represent local cavity behaviour.",
+    "evidence": "Check the sensor's position, calibration, trace alignment and correlation to each sampled part.",
+    "pitfall": "Do not treat either trace as self-sufficient proof of product quality."
+  },
+  {
+    "id": "LR-22",
+    "chapter": "Scientific validation",
+    "topic": "One-factor trials",
+    "question": "A trial changes melt temperature, hold pressure and cooling time together and yield improves. What can you conclude?",
+    "answer": "The combined trial coincided with better samples; the effect of each individual change is not identifiable without a suitable study.",
+    "explanation": "Uncontrolled simultaneous changes confound causal interpretation, even when the result looks promising.",
+    "evidence": "Use a documented designed experiment or a suitably controlled, approved sequence with baseline and response criteria.",
+    "pitfall": "Do not claim a specific parameter caused the improvement from a confounded trial."
+  },
+  {
+    "id": "LR-23",
+    "chapter": "Scientific validation",
+    "topic": "Limited sample evidence",
+    "question": "Five consecutive parts pass after adjustment. Is that enough to prove a stable process?",
+    "answer": "No. A short pass run is preliminary; establish repeatability across relevant cavities, time and expected variation.",
+    "explanation": "Startup and limited-run results may miss warm-up changes, tool imbalance, lot effects and later instability.",
+    "evidence": "Review agreed sampling plans, dimensional variation, reject patterns, trace capability and qualified process windows.",
+    "pitfall": "Do not promote a short training trial as validated production capability."
+  },
+  {
+    "id": "LR-24",
+    "chapter": "Scientific validation",
+    "topic": "Baseline renewal",
+    "question": "A new material lot is introduced under a previously qualified recipe. When should the baseline be questioned?",
+    "answer": "When measured actuals or quality differ, first verify grade/lot equivalence and measurement setup, then assess whether a controlled requalification is required.",
+    "explanation": "An unchanged recipe is not proof of unchanged process response; baseline relevance depends on resin, machine, mould and conditions.",
+    "evidence": "Compare trace overlays, material records, cavity-labelled part outputs and applicable quality-system change controls.",
+    "pitfall": "Do not silently overwrite approved baselines or declare equivalence from nominal setpoints."
+  }
+]);
+const LEARN_REASONING_CHAPTERS=Object.freeze([
+  {
+    "id": "LC-1",
+    "label": "Cycle signals",
+    "title": "Read machine and cycle evidence",
+    "short": "Signals"
+  },
+  {
+    "id": "LC-2",
+    "label": "Material evidence",
+    "title": "Test material and handling hypotheses",
+    "short": "Materials"
+  },
+  {
+    "id": "LC-3",
+    "label": "Tool and flow balance",
+    "title": "Separate mould and flow mechanisms",
+    "short": "Tooling"
+  },
+  {
+    "id": "LC-4",
+    "label": "Filling and transfer",
+    "title": "Diagnose filling and transfer",
+    "short": "Filling"
+  },
+  {
+    "id": "LC-5",
+    "label": "Dimensional quality",
+    "title": "Investigate part-quality outcomes",
+    "short": "Quality"
+  },
+  {
+    "id": "LC-6",
+    "label": "Scientific validation",
+    "title": "Prove the result with controlled evidence",
+    "short": "Validation"
   }
 ]);
 function learnReasoningMarkup(){
-  return LEARN_REASONING_REVIEWS.map(item=>`<details class="mm-learn-reasoning-item"><summary><span class="mm-learn-reasoning-topic">${esc(item.id)} · ${esc(item.topic)}</span><strong>${esc(item.question)}</strong><span class="mm-learn-reveal">Reveal explanation ↓</span></summary><div class="mm-learn-reasoning-answer"><b>Suggested answer</b><p>${esc(item.answer)}</p><b>Why it matters</b><p>${esc(item.explanation)}</p></div></details>`).join('');
+  return LEARN_REASONING_CHAPTERS.map(chapter=>{
+    const questions=LEARN_REASONING_REVIEWS.filter(item=>item.chapter===chapter.label);
+    return `<section class="mm-learn-reasoning-chapter" aria-labelledby="mmLearnChapter-${esc(chapter.id)}">
+      <header class="mm-learn-reasoning-chapter-title"><div><span class="eyebrow">${esc(chapter.short)} · unscored teaching</span><h4 id="mmLearnChapter-${esc(chapter.id)}">${esc(chapter.title)}</h4></div><span class="mm-learn-chapter-count">${questions.length} questions</span></header>
+      ${questions.map(item=>`<details class="mm-learn-reasoning-item"><summary><span class="mm-learn-reasoning-topic">${esc(item.id)} · ${esc(item.topic)}</span><strong>${esc(item.question)}</strong><span class="mm-learn-reveal">Reveal the reasoning ↓</span></summary>
+        <div class="mm-learn-reasoning-answer"><b>Suggested answer</b><p>${esc(item.answer)}</p><b>Why that is plausible</b><p>${esc(item.explanation)}</p><b>Evidence to verify</b><p>${esc(item.evidence)}</p><b>Common mistake to avoid</b><p>${esc(item.pitfall)}</p></div></details>`).join('')}
+    </section>`;
+  }).join('');
 }
 function learnHubMarkup(){
   const c=lessonContext();
@@ -701,7 +946,7 @@ function learnHubMarkup(){
     <section class="mm-hub-continue mm-primary-hub-card" aria-label="Continue learning"><div class="mm-hub-continue-copy"><span class="eyebrow">Continue</span><h2>${esc(lesson?.title||'Your next lesson')}</h2><p>${lessonLine}</p><div class="mm-hub-progress"><div class="mini-bar" aria-hidden="true"><span style="width:${c?.overall||0}%"></span></div><strong>${c?.overall||0}% complete</strong></div></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="lesson">Continue lesson →</button></section>
     <nav class="mm-learn-jump" aria-label="Learn section shortcuts"><a href="#mmLearnArena">Troubleshooting</a><a href="#mmLearnQuestions">Questions</a><a href="#mmLearnReasoning">Answers</a><a href="#mmLearnCourses">All lessons</a></nav>
     <section class="mm-learn-master-lesson" aria-labelledby="mmLearnMasterHeading">
-      <header class="mm-learn-studio-head mm-learn-master-intro"><span class="eyebrow">One complete interactive lesson</span><h2 id="mmLearnMasterHeading">From the fault to the evidence</h2><p>One connected lesson in three stages: diagnose a real-world situation, practise your decisions, and understand why the answer fits the evidence.</p><div class="mm-learn-master-meta">3 connected stages · 169 governed prompts · 6 unscored explanations</div></header>
+      <header class="mm-learn-studio-head mm-learn-master-intro"><span class="eyebrow">One complete interactive lesson</span><h2 id="mmLearnMasterHeading">From the fault to the evidence</h2><p>One connected lesson in three stages: diagnose a real-world situation, practise your decisions, and understand why the answer fits the evidence.</p><div class="mm-learn-master-meta">3 connected stages · 169 governed prompts · 24 unscored explanations</div></header>
       <div class="mm-learn-studio" aria-label="Three stages of the combined lesson">
       <section class="mm-learn-step mm-learn-step-arena" aria-labelledby="mmLearnArenaStep">
         <div class="mm-learn-step-head"><span class="mm-learn-step-num" aria-hidden="true">01</span><div><span class="eyebrow">Investigate</span><h3 id="mmLearnArenaStep">Read the evidence</h3></div></div>
@@ -720,7 +965,7 @@ function learnHubMarkup(){
       </div>
       <section class="mm-learn-step mm-learn-step-reasoning" aria-labelledby="mmLearnReasoningStep">
         <div class="mm-learn-step-head"><span class="mm-learn-step-num" aria-hidden="true">03</span><div><span class="eyebrow">Reflect</span><h3 id="mmLearnReasoningStep">Explain your reasoning</h3></div></div>
-        <section class="mm-learn-reasoning" id="mmLearnReasoning" aria-labelledby="mmLearnReasoningHeading"><div class="mm-learn-reasoning-head"><span class="eyebrow">Six new optional learning checks</span><h2 id="mmLearnReasoningHeading">Understand the answer</h2><p>Reveal a reasoned answer to common moulding decisions. These six unscored teaching prompts are <strong>not</strong> part of the 169 governed question bank, formal assessment or evidence of competence.</p></div><div class="mm-learn-reasoning-list">${learnReasoningMarkup()}</div><p class="mm-learn-safety-note">Educational scenarios only. Use current supplier instructions, approved site procedures and authorised human review for real equipment.</p></section>
+        <section class="mm-learn-reasoning" id="mmLearnReasoning" aria-labelledby="mmLearnReasoningHeading"><div class="mm-learn-reasoning-head"><span class="eyebrow">24 optional learning checks · 6 topics</span><h2 id="mmLearnReasoningHeading">Understand the answer</h2><p>Go deeper with 24 realistic questions across cycle evidence, materials, tooling, filling, part quality and validation. Each reveals a suggested answer, the underlying reasoning, evidence to verify and a common mistake to avoid. These unscored teaching prompts are <strong>not</strong> part of the 169 governed question bank, formal assessment or evidence of competence.</p></div><div class="mm-learn-reasoning-list">${learnReasoningMarkup()}</div><p class="mm-learn-safety-note">Educational scenarios only. Use current supplier instructions, approved site procedures and authorised human review for real equipment.</p></section>
       </section>
     </section>
     <section class="mm-learn-courses" id="mmLearnCourses" aria-labelledby="mmLearnCoursesHeading"><div class="mm-learn-courses-head"><span class="eyebrow">Your learning library</span><h2 id="mmLearnCoursesHeading">Courses and lessons</h2><p>One searchable catalogue of core, material-science and specialist lessons. Your existing local progress is unchanged.</p></div>${lessonCatalog.markup()}</section>
