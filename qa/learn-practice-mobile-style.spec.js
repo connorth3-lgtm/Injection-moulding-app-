@@ -452,7 +452,7 @@ test('Learning Resources consolidates four source-owned destinations without cre
   await expect(modal).toBeVisible();
   const controls=modal.locator('.mm-hub-picker-grid > button');
   await expect(controls).toHaveCount(4);
-  for(const action of ['visuals','glossary','book','materials'])await expect(controls.locator('[data-mm-hub-action="'+action+'"]')).toHaveCount(1);
+  for(const action of ['visuals','glossary','book','materials'])await expect(modal.locator('.mm-hub-picker-grid > button[data-mm-hub-action="'+action+'"]')).toHaveCount(1);
   const before=await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts().total);
   expect(before).toBe(169);
   await modal.locator('[data-mm-hub-action="glossary"]').click();
