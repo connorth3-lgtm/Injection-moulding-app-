@@ -480,6 +480,9 @@ test('Safety teaching and the four-checkpoint capstone remain unscored and have 
 test('all canonical interior routes receive the shared responsive visual skin without duplicate UI controls',async({page})=>{
   await page.setViewportSize({width:412,height:915});
   await openApp(page);
+  // The reference decoration runs on the next animation frame after shell load.
+  // Wait for its real root marker instead of accepting an unfinished render.
+  await page.waitForFunction(()=>document.getElementById('lesson')?.classList.contains('mm-reference-subtab'));
   const result=await page.evaluate(()=>({
     states:['lesson','glossary','visuals','simulator','defects','coach','standards','certificates','profile','instructor','exams','diagnosticLabs','materialLabs','processDataLabs','mmVirtualApprenticeship','mmSpatialTwin','mmMaterialCompare','mmMaterialChange','mmBookView']
       .map(id=>({id,exists:!!document.getElementById(id),skinned:document.getElementById(id)?.classList.contains('mm-reference-subtab')||false})),
