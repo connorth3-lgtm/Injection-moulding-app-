@@ -153,6 +153,7 @@ function nextScenarioIndex(){
 let learnToolOrigin=null;
 const LEARN_TOOL_ACTIONS=new Set(['assessments','diagnostic-labs','material-labs','measured-decisions','process-data','troubleshooting','scenario-detail','learn-scenarios']);
 function bind(root){
+  if(root?.id==='scenarios')bindPracticeGuided(root);
   const source=root?.id==='path'?'learn':root?.id==='scenarios'?'practice':'modal';
   root?.querySelectorAll('[data-mm-hub-action]').forEach(button=>button.addEventListener('click',()=>{
     const action=button.dataset.mmHubAction;
@@ -1243,11 +1244,215 @@ function practiceCaseReviewMarkup(){
           <div><b>2 · Compare plausible causes</b><p>${esc(item.reason)}</p></div>
           <div><b>3 · Verify safely</b><p>${esc(item.verify)}</p></div>
           <div class="mm-practice-case-caution"><b>Common mistake to avoid</b><p>${esc(item.avoid)}</p></div>
+          <button type="button" class="mm-practice-case-start" data-mm-guided-case="${esc(item.id)}">Try this five-step guided case →</button>
           <button type="button" class="mm-practice-case-launch" data-mm-hub-action="${esc(item.action)}">${esc(item.button)} →</button>
         </div>
       </details>`).join('')}</div>
     <p class="mm-learn-safety-note">Training only. Use site isolation procedures, competent supervision, verified supplier documentation and approved quality/change control for any physical intervention.</p>
   </section>`;
+}
+// One continuous five-stage teaching workflow. Not graded, stored, or machine-connected.
+// Hypothetical findings are explicitly labelled; all physical actions remain site-controlled.
+const PRACTICE_GUIDED_CASES=Object.freeze([
+  {
+    "id": "PC-01",
+    "observation": "The new lot and variable cushion coincide with occasional short shots; actual shot and cavity evidence still needs confirming.",
+    "assumption": "The resin is definitely wet and should be dried hotter.",
+    "mechanisms": "Compare material feeding, shot delivery, transfer behaviour and measurement repeatability before assigning a cause.",
+    "premature": "Cushion variation proves a faulty non-return valve.",
+    "safeCheck": "Under authorised supervision, align repeated cushion, recovery, transfer and cavity-labelled weight observations with the approved resin records.",
+    "unsafeCheck": "Immediately raise hold pressure and increase dryer temperature without a controlled plan.",
+    "finding": "Training example: matched traces show variable screw recovery as cushion varies; no verified pellet moisture test is available.",
+    "interpretation": "The traces support further investigation of feed/recovery repeatability; they do not establish moisture or component failure.",
+    "overclaim": "These signals prove the new resin lot is wet and the check ring has failed.",
+    "verify": "After an authorised corrective trial, compare representative shot and cavity measurements with the approved baseline and acceptance criteria before requesting human release.",
+    "why": [
+      "Describe changing symptoms without treating temporal coincidence as causation.",
+      "Screw and part signals can vary through several mechanisms; evidence must discriminate.",
+      "A controlled comparison is safer and more informative than changing several setpoints.",
+      "The hypothetical traces narrow the investigation but are not a root-cause certificate.",
+      "Representative data, documented changes and authorised approval are needed beyond one good part."
+    ]
+  },
+  {
+    "id": "PC-02",
+    "observation": "Flash repeats on one named cavity at a consistent location; unaffected cavities remain within the observed visual standard.",
+    "assumption": "The whole machine has insufficient clamp force.",
+    "mechanisms": "Compare local tool parting condition, venting, balance and cavity-specific flow before global machine explanations.",
+    "premature": "Any flash means packing pressure is universally too high.",
+    "safeCheck": "With authorised tool inspection, compare cavity-labelled flash and quality records with parting/vent maintenance and tool-balance evidence.",
+    "unsafeCheck": "Increase clamp force and reach into the guarded mould to watch the parting line.",
+    "finding": "Training example: defect maps show flash on the same cavity edge while matched-cycle pressures are similar across the other parts.",
+    "interpretation": "The cavity-local pattern strengthens a tool/balance hypothesis and justifies qualified local inspection, not a blind global adjustment.",
+    "overclaim": "This proves the entire machine clamp is undersized.",
+    "verify": "Document a safe local investigation, repeat cavity-labelled inspections and quality measurements against acceptance limits, then seek authorised tool/process sign-off.",
+    "why": [
+      "Cavity labels and defect location are observations; clamp failure is a hypothesis.",
+      "Localised defects require local-vs-global discrimination.",
+      "Mould guarding and tool inspection are specialist safety boundaries.",
+      "A repeatable cavity-specific pattern suggests where to inspect but does not prove one fault.",
+      "Tooling/quality sign-off needs representative evidence and safe review."
+    ]
+  },
+  {
+    "id": "PC-03",
+    "observation": "Silver streaks are visible after a batch change; no actual resin-moisture measurement is provided.",
+    "assumption": "Streaks prove the supplier delivered a wet lot.",
+    "mechanisms": "Distinguish moisture, gas, thermal/shear effects and contamination using handling and pattern evidence.",
+    "premature": "The appearance proves one correct drying temperature.",
+    "safeCheck": "Review exact-grade supplier instructions, traceable dryer/feed records and approved moisture or contamination checks under site procedure.",
+    "unsafeCheck": "Use the drying schedule from another resin and raise barrel temperatures to eliminate streaks.",
+    "finding": "Training example: streaking is seen on multiple cavities, while dryer records have a missing time interval and moisture remains unmeasured.",
+    "interpretation": "The gap in dryer history justifies verifying material condition; without a suitable test, wet resin is still unproven.",
+    "overclaim": "Missing dryer records prove hydrolysis occurred in every cavity.",
+    "verify": "Record exact-grade verification and before/after cavity-labelled defect rates in a controlled material trial before qualified product-release review.",
+    "why": [
+      "Appearance alone cannot diagnose moisture or supplier quality.",
+      "Look-alike defects require discriminating material and process observations.",
+      "Grade-specific limits and authorised tests are non-negotiable.",
+      "Missing records increase uncertainty; they are not a positive moisture measurement.",
+      "A controlled material trial and appropriate acceptance evidence are required."
+    ]
+  },
+  {
+    "id": "PC-04",
+    "observation": "A measured dimension changes after ejection and differs by cavity; nominal machine settings appear unchanged.",
+    "assumption": "Warpage proves melt temperature needs increasing.",
+    "mechanisms": "Compare local cooling, shrinkage, geometry, ejection and sample conditioning or measurement timing.",
+    "premature": "The machine recipe is unchanged, so the parts cannot be drifting.",
+    "safeCheck": "Use a consistent, calibrated gauge and agreed conditioning interval for cavity-labelled samples while reviewing approved process actuals.",
+    "unsafeCheck": "Change melt temperature, packing and cooling together, then compare one part from each condition.",
+    "finding": "Training example: some of the apparent drift reduces when samples are measured at matched ages, but cavity-to-cavity differences remain.",
+    "interpretation": "Measurement timing explains part of the reported change, with residual cavity variation still needing investigation.",
+    "overclaim": "All warpage was caused solely by gauge timing, so tooling and cooling are qualified.",
+    "verify": "Repeat dimension and quality measurements across cavities, agreed timing and expected operating variation; complete site quality/change-control approval.",
+    "why": [
+      "Timing, cavity and method must be controlled to compare dimensions.",
+      "A stable recipe is not proof of a stable part.",
+      "Consistent measurement conditions distinguish process changes from test variation.",
+      "Removing one measurement confound does not eliminate all physical sources.",
+      "Verification needs representative samples, a validated gauge and quality sign-off."
+    ]
+  },
+  {
+    "id": "PC-05",
+    "observation": "A hot-runner appears obstructed and a proposal is made to loosen a heated fitting while operating conditions are uncertain.",
+    "assumption": "The emergency stop ensures the nozzle contains no stored pressure or heat.",
+    "mechanisms": "Recognise thermal, mechanical, electrical and retained-pressure hazards before diagnosing an obstruction.",
+    "premature": "An idle screw display proves the hot runner is safe to open.",
+    "safeCheck": "Stop the proposed intervention; refer to competent personnel for equipment-specific isolation and maintenance guidance before any investigation.",
+    "unsafeCheck": "Loosen the hot fitting carefully while another worker watches the controller.",
+    "finding": "Training example: the machine is stopped, but a sensor still indicates elevated tool temperature and pressure isolation has not been verified.",
+    "interpretation": "The cell remains an unsafe intervention state until qualified people verify all required energy controls.",
+    "overclaim": "No mechanical movement means the blocked fitting can now be opened.",
+    "verify": "Only an authorised maintenance review can document safe isolation and return-to-service checks under the maker's and site's rules.",
+    "why": [
+      "The unsafe proposal is the immediate fault in the decision process.",
+      "Stopping motion does not eliminate heat or stored pressure.",
+      "No live dismantling or bypass can be justified by this teaching case.",
+      "The training signals require stop/escalate, not a repair instruction.",
+      "Return to service needs qualified maintenance and site-specific authorisation."
+    ]
+  }
+]);
+const PRACTICE_GUIDED_STEPS=Object.freeze([
+  {title:'Identify the fault',prompt:'Which statement reports the symptom without asserting an unverified cause?'},
+  {title:'Compare possible causes',prompt:'Which comparison best separates the plausible mechanisms?'},
+  {title:'Choose a safe test',prompt:'Which authorised evidence check is the strongest next action?'},
+  {title:'Interpret the result',prompt:'What can be concluded from this hypothetical finding?'},
+  {title:'Verify corrective action',prompt:'Which evidence would justify closing this training investigation?'}
+]);
+let practiceGuidedState={id:'PC-01',step:0,answers:{}};
+function practiceGuidedDefinition(){return PRACTICE_GUIDED_CASES.find(item=>item.id===practiceGuidedState.id)||PRACTICE_GUIDED_CASES[0];}
+function practiceGuidedOptions(item,step){
+  const triples=[
+    [item.observation,item.assumption,'The correct fix is to change multiple setpoints now.'],
+    [item.mechanisms,item.premature,'Unchanged nominal settings rule out other mechanisms.'],
+    [item.safeCheck,item.unsafeCheck,'Run an undocumented adjustment and judge the next part by eye.'],
+    [item.interpretation,item.overclaim,'A single hypothetical reading certifies the whole production process.'],
+    [item.verify,'One visibly improved part is enough to approve production.','Skip the site quality and change-control requirements to save time.']
+  ];
+  // Keep correct answers at different positions; selection is never scored.
+  const best=(step+1)%3;
+  const options=[null,null,null];options[best]=triples[step][0];
+  const remaining=[triples[step][1],triples[step][2]];let pos=0;
+  for(let i=0;i<options.length;i++)if(options[i]===null)options[i]=remaining[pos++];
+  return {options,best};
+}
+function practiceGuidedStepMarkup(){
+  const item=practiceGuidedDefinition(),step=practiceGuidedState.step;
+  const descriptor=PRACTICE_GUIDED_STEPS[step];
+  const {options,best}=practiceGuidedOptions(item,step);
+  const selected=practiceGuidedState.answers[step];
+  const reviewed=Number.isInteger(selected);
+  const finished=step===PRACTICE_GUIDED_STEPS.length-1&&reviewed;
+  return `<div class="mm-practice-guided-content">
+    <header class="mm-practice-guided-context"><span class="eyebrow">Case ${esc(item.id)} · Step ${step+1} of 5</span>
+      <h3 id="mmPracticeGuidedStepTitle" tabindex="-1">${esc(descriptor.title)}</h3>
+      <p>${esc(step===0?(PRACTICE_CASE_REVIEWS.find(x=>x.id===item.id)?.situation||'Read the observed fault.'):descriptor.prompt)}</p>
+      ${step===0?`<p class="mm-practice-guided-instruction">${esc(descriptor.prompt)}</p>`:''}
+      ${step===3?`<p class="mm-practice-guided-finding"><strong>Hypothetical training evidence:</strong> ${esc(item.finding.replace(/^Training example:\s*/,''))}</p>`:''}
+    </header>
+    <div class="mm-practice-guided-choices" role="group" aria-label="Possible next decisions">${options.map((label,index)=>`<button type="button" class="mm-practice-guided-choice${reviewed&&index===selected?' is-picked':''}" data-mm-guided-choice="${index}" aria-pressed="${index===selected?'true':'false'}"><span>${String.fromCharCode(65+index)}</span><span>${esc(label)}</span></button>`).join('')}</div>
+    ${reviewed?`<div class="mm-practice-guided-feedback" role="status" aria-live="polite"><strong>${selected===best?'Evidence-led choice':'Compare with the stronger evidence-led choice'}</strong><p>${esc(item.why[step])}</p>${selected!==best?`<p><b>Stronger response:</b> ${esc(options[best])}</p>`:''}</div>`:'<p class="mm-practice-guided-nudge" aria-live="polite">Select a response to reveal the reasoning. No score is recorded.</p>'}
+    <div class="mm-practice-guided-controls">
+      <button type="button" data-mm-guided-prev ${step===0?'disabled':''}>← Previous</button>
+      ${!finished?`<button type="button" class="primary" data-mm-guided-next ${reviewed?'':'disabled'}>${step===PRACTICE_GUIDED_STEPS.length-1?'Review decision':'Next step'} →</button>`:
+      `<div class="mm-practice-guided-finish" role="status"><strong>All five decisions reviewed</strong><p>Practice only — not a competency result, validated production recovery or equipment approval.</p><button type="button" data-mm-guided-tool>Continue in the existing ${esc((PRACTICE_CASE_REVIEWS.find(x=>x.id===item.id)?.button||'diagnostic tool').replace(/^Open /,'').replace(/^Practise /,'').toLowerCase())} →</button></div>`}
+    </div>
+  </div>`;
+}
+function practiceGuidedMarkup(){
+  return `<section class="mm-practice-guided" id="mmPracticeGuided" aria-labelledby="mmPracticeGuidedTitle">
+    <header class="mm-practice-guided-intro"><span class="eyebrow">Guided diagnostic practice · five linked decisions</span>
+      <h2 id="mmPracticeGuidedTitle">Solve one fault from start to finish</h2>
+      <p>Identify the fault → compare causes → choose a safe test → interpret evidence → verify the result. Practise reasoning before opening the original tool; these five training cases do not affect scores or machine settings.</p>
+    </header>
+    <div class="mm-practice-guided-selector" role="group" aria-label="Choose a training fault">
+      ${PRACTICE_CASE_REVIEWS.map(item=>`<button type="button" data-mm-guided-case="${esc(item.id)}" aria-pressed="${item.id===practiceGuidedState.id?'true':'false'}">${esc(item.topic)}</button>`).join('')}
+    </div>
+    <ol class="mm-practice-guided-progress" aria-label="Five troubleshooting steps">
+      ${PRACTICE_GUIDED_STEPS.map((step,i)=>`<li class="${i===practiceGuidedState.step?'is-current':''}${i<practiceGuidedState.step?' is-reviewed':''}" ${i===practiceGuidedState.step?'aria-current="step"':''}><span>${i+1}</span><small>${esc(step.title)}</small></li>`).join('')}
+    </ol>
+    <div data-mm-practice-guided-body>${practiceGuidedStepMarkup()}</div>
+    <p class="mm-learn-safety-note">Session-only, unscored teaching. No data is sent to equipment or recorded as formal evidence. Follow approved procedures and competent oversight on real machinery.</p>
+  </section>`;
+}
+function practiceGuidedRender(root,focus){
+  const section=root?.querySelector('#mmPracticeGuided');if(!section)return;
+  const temp=document.createElement('div');temp.innerHTML=practiceGuidedMarkup();
+  section.replaceWith(temp.firstElementChild);
+  if(focus)requestAnimationFrame(()=>root.querySelector(focus)?.focus({preventScroll:true}));
+}
+function bindPracticeGuided(root){
+  if(!root||root.dataset.mmGuidedBound==='1')return;
+  root.dataset.mmGuidedBound='1';
+  root.addEventListener('click',event=>{
+    const trigger=event.target?.closest?.('[data-mm-guided-case],[data-mm-guided-choice],[data-mm-guided-prev],[data-mm-guided-next],[data-mm-guided-tool]');
+    if(!trigger||!root.contains(trigger)||!root.querySelector('#mmPracticeGuided'))return;
+    if(trigger.hasAttribute('data-mm-guided-case')){
+      const id=trigger.dataset.mmGuidedCase;
+      if(!PRACTICE_GUIDED_CASES.some(x=>x.id===id))return;
+      practiceGuidedState={id,step:0,answers:{}};
+      practiceGuidedRender(root,'#mmPracticeGuidedStepTitle');
+    }else if(trigger.hasAttribute('data-mm-guided-choice')){
+      const selected=Number(trigger.dataset.mmGuidedChoice);
+      if(!Number.isInteger(selected)||selected<0||selected>2)return;
+      practiceGuidedState.answers[practiceGuidedState.step]=selected;
+      practiceGuidedRender(root,`[data-mm-guided-choice="${selected}"]`);
+    }else if(trigger.hasAttribute('data-mm-guided-prev')){
+      if(practiceGuidedState.step>0)practiceGuidedState.step--;
+      practiceGuidedRender(root,'#mmPracticeGuidedStepTitle');
+    }else if(trigger.hasAttribute('data-mm-guided-next')){
+      if(!Number.isInteger(practiceGuidedState.answers[practiceGuidedState.step]))return;
+      if(practiceGuidedState.step<PRACTICE_GUIDED_STEPS.length-1)practiceGuidedState.step++;
+      practiceGuidedRender(root,'#mmPracticeGuidedStepTitle');
+    }else if(trigger.hasAttribute('data-mm-guided-tool')){
+      if(practiceGuidedState.step!==4||!Number.isInteger(practiceGuidedState.answers[4]))return;
+      const caseReview=PRACTICE_CASE_REVIEWS.find(x=>x.id===practiceGuidedState.id);
+      if(caseReview)runAction(caseReview.action,'practice');
+    }
+  });
 }
 function practiceHubMarkup(){
   let done=false;try{done=typeof dailyDone==='function'&&dailyDone()}catch(_){}
@@ -1259,6 +1464,7 @@ function practiceHubMarkup(){
     ${recommendedPracticeMarkup(plan,done)}
     ${practicePlanRows(plan)}
     <section class="mm-practice-diagnose-journey" aria-label="Three-step diagnostic workflow"><div class="mm-practice-diagnose-head"><span class="eyebrow">Connected troubleshooting</span><h2>One problem. One evidence trail.</h2><p>Choose a real learning tool for the stage you need. Its native feedback, score and evidence stay independent.</p></div><div class="mm-practice-diagnose-stages"><div><strong>01 · Observe</strong><span>Describe the defect, location and baseline</span></div><div><strong>02 · Isolate</strong><span>Compare material, machine and mould causes</span></div><div><strong>03 · Verify</strong><span>Choose a discriminating check and record the result</span></div></div></section>
+    ${practiceGuidedMarkup()}
     ${practiceCaseReviewMarkup()}
     <section class="mm-hub-section"><div class="mm-hub-section-head"><h2>Choose by the job you want to practise</h2><p>Practice is for learning; assessments stay separate.</p></div><div class="mm-hub-grid">
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="troubleshooting"><span class="eyebrow">Find the cause · 5–15 min</span><b>Diagnose a moulding problem</b><small>Start from a defect, separate plausible mechanisms and choose the next discriminating check.</small><span class="mm-hub-tile-action">Choose troubleshooting practice →</span></button>
