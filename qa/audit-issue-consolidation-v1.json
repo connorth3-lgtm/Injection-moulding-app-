@@ -3,9 +3,9 @@
   "masterIssue": 632,
   "release": "2026.10.15.3",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": null,
-  "scope": "New 2026.10.15.3 Learn studio awaiting exact-head producer, immutable 52-screen visual-owner review and protected checks. Successful 2026.10.15.2 artifact is historical only.",
-  "approvalBoundary": "Technical automation FAIL; all seven independent human/device/provider reviews HOLD, production advisory-only and tester no-send",
+  "candidateSourceSha": "d827fb7d9d0e73486b49fc27f29a5ccdff092f36",
+  "scope": "Successful retained exact-source 2026.10.15.3 learner runtime d827fb7d9d0e73486b49fc27f29a5ccdff092f36 has owner-approved immutable 52-screen/12px visual baseline, passing full Mobile Browser QA and Question Quality. Technical candidate artifact 11999364412 is software provenance only; external validation remains independently HOLD.",
+  "approvalBoundary": "Technical automation PASS for the verified .3 candidate only; all seven independent human/device/provider reviews HOLD, production advisory-only, tester no-send.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -43,7 +43,7 @@
   "productionAuthority": "advisory-only",
   "humanEvidenceStatus": "hold",
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
-  "lastReviewedDate": "2026-10-15",
+  "lastReviewedDate": "2026-10-16",
   "previousVerifiedCandidate": {
     "release": "2026.10.15.2",
     "sourceSha": "f9de4baaa6421184b61c40ea1932015743b6a503"
