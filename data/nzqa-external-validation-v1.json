@@ -6,8 +6,12 @@
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 619,
-  "candidate": null,
-  "boundary": "Proposed 2026.10.15.2 exact-source runtime has not passed technical retention; NZQA/provider G1–G8 independent validation pending. No accreditation, assessment, site or automatic machine-control authorisation.",
+  "candidate": {
+    "release": "2026.10.15.2",
+    "sourceSha": "f9de4baaa6421184b61c40ea1932015743b6a503",
+    "runtimeFingerprint": "sha256:b55db63ab83a06a0225babb40152b81a77b1efa509b5baea7c79ebdd349eb536"
+  },
+  "boundary": "Retained 2026.10.15.2 technical candidate f9de4baaa6421184b61c40ea1932015743b6a503 does not establish any NZQA/provider G1–G8 external gates, authorised assessment, accreditation or production-machine authority.",
   "requiredGates": [
     {
       "id": "G1-provider",

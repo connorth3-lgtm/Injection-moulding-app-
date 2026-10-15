@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Proposed 2026.10.15.2 has no accepted technical candidate yet. Real physical iOS/iPadOS and Android devices must be tested by genuine reviewers for install, offline reboot and update. Real assistive technology is separately tracked in data/accessibility-real-at-validation-v1.json; seven external streams, production root and machine control remain HOLD.",
+  "boundary": "Retained 2026.10.15.2 artifact 11943512723 source f9de4baaa6421184b61c40ea1932015743b6a503 is ONLY technical automation evidence, not tests on real physical iOS/iPadOS and Android devices. Actual install, offline reboot, update recovery, zoom and device audio are pending. Real assistive-technology testing belongs to data/accessibility-real-at-validation-v1.json. Seven independent reviews, Windows signing, accreditation, production/root and automatic machine control remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
@@ -42,7 +42,17 @@
   },
   "privacyBoundary": "Public contract metadata must not include learner names, customer/site identifiers, email addresses, private screenshots, raw process data, backup content, filesystem/user paths or other personal/proprietary evidence. Keep detailed device evidence outside the public repository and reference it only with a non-sensitive review identifier.",
   "release": "2026.10.15.2",
-  "candidate": null,
+  "candidate": {
+    "release": "2026.10.15.2",
+    "sourceSha": "f9de4baaa6421184b61c40ea1932015743b6a503",
+    "runtimeFingerprint": "sha256:b55db63ab83a06a0225babb40152b81a77b1efa509b5baea7c79ebdd349eb536",
+    "candidateRunId": 38671000203,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 11943512723,
+    "artifactName": "physical-pwa-candidate-f9de4baaa6421184b61c40ea1932015743b6a503",
+    "artifactDigest": "sha256:8541bcabc5cbee8360e84c86c8b1f94ec965957c29b43ddc1f9bfaf1f967cc2d",
+    "artifactExpiresAt": "2027-01-13T02:26:33Z"
+  },
   "previousCandidate": {
     "release": "2026.10.15.1",
     "sourceSha": "397e0a024eb88f9636a8b161155c5dce6af6316b",

@@ -1,23 +1,21 @@
 # MouldMaster 2026.10.15.2 — external-validation staging index
 
-**STATUS: TECHNICAL AUTOMATION FAIL / SEVEN INDEPENDENT EXTERNAL HOLD STREAMS.** The Practice UI parity successor requires a new exact-head runtime producer. The prior 2026.10.15.1 candidate 397e0a024eb88f9636a8b161155c5dce6af6316b is historical only; it is not approval for changed runtime bytes. No candidate artifact has been verified for this release.
+**STATUS: EXACT-SOURCE TECHNICAL PRODUCER PASS / ALL SEVEN EXTERNAL REVIEWS HOLD.** The [successful Pre-merge Public Candidate run 38671000203](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/38671000203) retained artifact **11943512723**, source f9de4baaa6421184b61c40ea1932015743b6a503, digest sha256:8541bcabc5cbee8360e84c86c8b1f94ec965957c29b43ddc1f9bfaf1f967cc2d, expiry 2027-01-13T02:26:33Z, and measured public-runtime fingerprint sha256:b55db63ab83a06a0225babb40152b81a77b1efa509b5baea7c79ebdd349eb536. Exact-head [Mobile Browser QA 38671000207](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/38671000207), including unchanged strict 52-screen/12px visual baseline, substantive Chromium and WebKit, reachability/cross-browser and all five 100-run reliability shards, plus Question Quality 50-Pass succeeded. Prior 2026.10.15.1 evidence is historical and never reused for changed runtime bytes.
 
-## Seven release-specific independent HOLD streams
+## Seven independent review packets — all HOLD
 
-- `qa/ACCESSIBILITY_REAL_AT_2026.10.15.2.md` — **HOLD** (accessibility)
-- `qa/PWA_PHYSICAL_DEVICE_2026.10.15.2.md` — **HOLD** (pwaPhysicalDevices)
-- `certification/WINDOWS_SIGNING_READINESS_2026.10.15.2.md` — **HOLD** (windowsDistribution)
-- `qa/BOOK_SME_REVIEW_2026.10.15.2.md` — **HOLD** (bookSme)
-- `qa/CURRICULUM_SME_REVIEW_2026.10.15.2.md` — **HOLD** (curriculumSme)
-- `qa/LEARNER_PILOT_2026.10.15.2.md` — **HOLD** (learnerOutcomes)
-- `qa/NZQA_EXTERNAL_VALIDATION_2026.10.15.2.md` — **HOLD** (nzqaProvider)
+- `qa/ACCESSIBILITY_REAL_AT_2026.10.15.2.md` — **HOLD**, accessibility
+- `qa/PWA_PHYSICAL_DEVICE_2026.10.15.2.md` — **HOLD**, pwaPhysicalDevices
+- `certification/WINDOWS_SIGNING_READINESS_2026.10.15.2.md` — **HOLD**, windowsDistribution
+- `qa/BOOK_SME_REVIEW_2026.10.15.2.md` — **HOLD**, bookSme
+- `qa/CURRICULUM_SME_REVIEW_2026.10.15.2.md` — **HOLD**, curriculumSme
+- `qa/LEARNER_PILOT_2026.10.15.2.md` — **HOLD**, learnerOutcomes
+- `qa/NZQA_EXTERNAL_VALIDATION_2026.10.15.2.md` — **HOLD**, nzqaProvider
 
-## Mandatory checks before review/merge
+## Mandatory completion boundary
 
-1. New successful exact-source producer, artifact digest and expiry, independent public-runtime fingerprint, validated manifest and verified browser/question checks.
-2. Preserve the immutable 52-screen/12px visual baseline and require explicit approval for any mismatch.
-3. Rebind all seven packets to verified successful metadata; never substitute previous-release technical or external approvals.
-4. All protected exact-final-HEAD workflows must succeed before intentional owner squash merge.
-5. Reconfirm Pages protected-main publication and run the separate issue #512 operator tester preflight. Invitations remain STOP / no-send.
+1. Rebind seven visible independent HOLD packet banners to the proven artifact above, without representing technical QA as physical-device or human acceptance.
+2. Recheck external live bindings (including NZQA tracker #619) and all protected exact-head QA workflows; owner review before any governed squash merge.
+3. Verify published protected-main exact SHA on hosted `/preview/` after intentional merge and run separate operator issue #512 tester first-run acceptance before any invitations. Tester invitations remain **STOP / no-send**.
 
-**No real physical-device, assistive technology, signed Windows, human Book/curriculum SME, learner outcomes, NZQA/provider, production-root, accreditation or machine-control approval is implied.**
+No physical iOS/Android, NVDA/VoiceOver, Windows signing, Book/curriculum SME, learner-outcome, NZQA/provider G1–G8, accreditation, production-root or automatic-machine-control authority has been granted.

@@ -3,9 +3,9 @@
   "masterIssue": 632,
   "release": "2026.10.15.2",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": null,
-  "scope": "Unmerged 2026.10.15.2 successor staging: no accepted new producer, candidate fingerprint or published runtime. Previous 2026.10.15.1 artifacts only historical.",
-  "approvalBoundary": "Technical automation FAIL until exact-source success; seven independent human/device/provider streams HOLD, advisory-only",
+  "candidateSourceSha": "f9de4baaa6421184b61c40ea1932015743b6a503",
+  "scope": "Exact-source 2026.10.15.2 technical producer 38671000203 successful on f9de4baaa6421184b61c40ea1932015743b6a503; full protected PR-head release validation and deployment still pending.",
+  "approvalBoundary": "Software source candidate PASS only; seven independent human/device/provider streams and production use remain HOLD.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
