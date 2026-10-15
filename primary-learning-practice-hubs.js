@@ -887,6 +887,86 @@ const LEARN_REASONING_REVIEWS=Object.freeze([
     "explanation": "An unchanged recipe is not proof of unchanged process response; baseline relevance depends on resin, machine, mould and conditions.",
     "evidence": "Compare trace overlays, material records, cavity-labelled part outputs and applicable quality-system change controls.",
     "pitfall": "Do not silently overwrite approved baselines or declare equivalence from nominal setpoints."
+  },
+  {
+    "id": "LR-25",
+    "chapter": "Safety decisions",
+    "topic": "Guarded access",
+    "question": "An operator wants to clear a stuck part through an open guard while the machine remains energised. What is the first safe decision?",
+    "answer": "Do not enter the hazard zone; stop and use authorised site isolation and safe intervention by trained personnel.",
+    "explanation": "A guard opening or emergency stop may not release stored hydraulic, pneumatic, thermal or mechanical energy.",
+    "evidence": "Review the equipment state, isolation procedure, interlocks, stored energy and authorisation with competent personnel.",
+    "pitfall": "Never equate a guard opening or emergency stop with verified isolation."
+  },
+  {
+    "id": "LR-26",
+    "chapter": "Safety decisions",
+    "topic": "Hot material blockage",
+    "question": "Someone suggests loosening a hot nozzle to clear a blockage. What would be a safe next step?",
+    "answer": "Stop the proposed intervention and escalate to qualified staff using manufacturer instructions and local hazard controls.",
+    "explanation": "Pressurised molten polymer, heated components and trapped material can produce serious burns and uncontrolled discharge.",
+    "evidence": "Confirm equipment identity, pressure and temperature state, site procedures and appropriate authorised maintenance.",
+    "pitfall": "Do not loosen heated or pressurised equipment or improvise clearing tools."
+  },
+  {
+    "id": "LR-27",
+    "chapter": "Safety decisions",
+    "topic": "Unexpected mould movement",
+    "question": "A mould moves unexpectedly during setup. Should a worker move closer to repeat the trial?",
+    "answer": "No. Stop the trial, secure the cell using approved procedures and report the abnormal movement for competent review.",
+    "explanation": "Unexpected motion may indicate a control or energy hazard, and repeating the event increases exposure without safe evidence.",
+    "evidence": "Preserve alarm/event records, setup conditions, operator observations and service history for safe investigation.",
+    "pitfall": "Never bypass guarding or deliberately reproduce an unpredictable motion hazard."
+  },
+  {
+    "id": "LR-28",
+    "chapter": "Safety decisions",
+    "topic": "Dryer overexposure",
+    "question": "A hygroscopic polymer remained in a heated dryer much longer than planned. How should the lot be handled?",
+    "answer": "Hold the affected lot under quality procedure and review exact-grade guidance and possible degradation before any reuse.",
+    "explanation": "Displayed dryer temperature does not establish actual resin condition, and prolonged heating can alter material properties.",
+    "evidence": "Check supplier documentation, actual residence history, alarms, material condition and site ventilation requirements.",
+    "pitfall": "Do not increase dryer heat or resume production because the display resembles a familiar setting."
+  },
+  {
+    "id": "LR-29",
+    "chapter": "Scientific evidence and validation",
+    "topic": "Sensor disagreement",
+    "question": "Two pressure sensors report different values during fill. What evidence would make comparison meaningful?",
+    "answer": "Verify sampling time, sensor position, calibration, units and signal mapping against the same machine-cycle events.",
+    "explanation": "Sensors at different locations measure different pressure conditions; misaligned clocks can imitate contradictions.",
+    "evidence": "Collect calibrated and time-aligned traces, sensor documentation and cavity-labelled part data.",
+    "pitfall": "Do not change machine settings to force unlike pressure signals to match."
+  },
+  {
+    "id": "LR-30",
+    "chapter": "Scientific evidence and validation",
+    "topic": "Controlled recovery",
+    "question": "A proposed recovery trial changes one parameter. What makes the outcome defensible?",
+    "answer": "Record baseline, hypothesis, authorised change, response metrics, acceptance criteria and repeated comparisons.",
+    "explanation": "A one-factor trial reduces confounding only if measurement variation, sampling and competing mechanisms are understood.",
+    "evidence": "Keep before-and-after actuals, parameter revision, cavity-labelled samples, sample plan and rollback conditions.",
+    "pitfall": "Do not treat a short successful trial as approval of a new production recipe."
+  },
+  {
+    "id": "LR-31",
+    "chapter": "Scientific evidence and validation",
+    "topic": "Capability evidence",
+    "question": "A stable-looking process chart is presented as proof of capability. What evidence is still required?",
+    "answer": "Verify measurement-system suitability and specification limits, then assess sufficient process samples and appropriate capability methods.",
+    "explanation": "A narrow-looking graph does not show tolerance compliance, gauge validity or sustained performance across conditions.",
+    "evidence": "Review gauge repeatability, part specifications, cavity and time coverage, and site quality-signoff requirements.",
+    "pitfall": "Do not claim capability based on a synthetic trend or convenience sample."
+  },
+  {
+    "id": "LR-32",
+    "chapter": "Scientific evidence and validation",
+    "topic": "Material substitution approval",
+    "question": "A replacement polymer grade produces acceptable first articles under old settings. Is the recipe already validated?",
+    "answer": "No. Follow approved material change control and exact-grade guidance, then collect the prescribed qualification evidence.",
+    "explanation": "Early acceptable parts do not demonstrate material equivalence, long-term stability or customer acceptance.",
+    "evidence": "Review grade identification, technical data, qualification plan, sampled part properties and required human sign-off.",
+    "pitfall": "Never silently replace an approved material or qualify a process by appearance alone."
   }
 ]);
 const LEARN_REASONING_CHAPTERS=Object.freeze([
@@ -925,6 +1005,18 @@ const LEARN_REASONING_CHAPTERS=Object.freeze([
     "label": "Scientific validation",
     "title": "Prove the result with controlled evidence",
     "short": "Validation"
+  },
+  {
+    "id": "LC-7",
+    "label": "Safety decisions",
+    "title": "Recognise hazards and choose a safe next step",
+    "short": "Safety"
+  },
+  {
+    "id": "LC-8",
+    "label": "Scientific evidence and validation",
+    "title": "Prove a recovery with defensible evidence",
+    "short": "Validation"
   }
 ]);
 function learnReasoningMarkup(){
@@ -944,9 +1036,9 @@ function learnHubMarkup(){
   return `<div class="mm-primary-hub mm-learn-hub">
     <header class="mm-primary-hub-head"><span class="eyebrow">Learn</span><h1>Lessons</h1><p>Core, material science and specialist lessons in one place.</p></header>
     <section class="mm-hub-continue mm-primary-hub-card" aria-label="Continue learning"><div class="mm-hub-continue-copy"><span class="eyebrow">Continue</span><h2>${esc(lesson?.title||'Your next lesson')}</h2><p>${lessonLine}</p><div class="mm-hub-progress"><div class="mini-bar" aria-hidden="true"><span style="width:${c?.overall||0}%"></span></div><strong>${c?.overall||0}% complete</strong></div></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="lesson">Continue lesson →</button></section>
-    <nav class="mm-learn-jump" aria-label="Learn section shortcuts"><a href="#mmLearnArena">Troubleshooting</a><a href="#mmLearnQuestions">Questions</a><a href="#mmLearnReasoning">Answers</a><a href="#mmLearnCourses">All lessons</a></nav>
+    <nav class="mm-learn-jump" aria-label="Learn section shortcuts"><a href="#mmLearnArena">Troubleshooting</a><a href="#mmLearnQuestions">Questions</a><a href="#mmLearnReasoning">Answers & safety</a><a href="#mmLearnCourses">All lessons</a></nav>
     <section class="mm-learn-master-lesson" aria-labelledby="mmLearnMasterHeading">
-      <header class="mm-learn-studio-head mm-learn-master-intro"><span class="eyebrow">One complete interactive lesson</span><h2 id="mmLearnMasterHeading">From the fault to the evidence</h2><p>One connected lesson in three stages: diagnose a real-world situation, practise your decisions, and understand why the answer fits the evidence.</p><div class="mm-learn-master-meta">3 connected stages · 169 governed prompts · 24 unscored explanations</div></header>
+      <header class="mm-learn-studio-head mm-learn-master-intro"><span class="eyebrow">One complete interactive lesson</span><h2 id="mmLearnMasterHeading">From the fault to the evidence</h2><p>One connected lesson in three stages: diagnose a real-world situation, practise your decisions, and understand why the answer fits the evidence.</p><div class="mm-learn-master-meta">3 connected stages · 169 governed prompts · 32 unscored explanations</div></header>
       <div class="mm-learn-studio" aria-label="Three stages of the combined lesson">
       <section class="mm-learn-step mm-learn-step-arena" aria-labelledby="mmLearnArenaStep">
         <div class="mm-learn-step-head"><span class="mm-learn-step-num" aria-hidden="true">01</span><div><span class="eyebrow">Investigate</span><h3 id="mmLearnArenaStep">Read the evidence</h3></div></div>
@@ -965,11 +1057,16 @@ function learnHubMarkup(){
       </div>
       <section class="mm-learn-step mm-learn-step-reasoning" aria-labelledby="mmLearnReasoningStep">
         <div class="mm-learn-step-head"><span class="mm-learn-step-num" aria-hidden="true">03</span><div><span class="eyebrow">Reflect</span><h3 id="mmLearnReasoningStep">Explain your reasoning</h3></div></div>
-        <section class="mm-learn-reasoning" id="mmLearnReasoning" aria-labelledby="mmLearnReasoningHeading"><div class="mm-learn-reasoning-head"><span class="eyebrow">24 optional learning checks · 6 topics</span><h2 id="mmLearnReasoningHeading">Understand the answer</h2><p>Go deeper with 24 realistic questions across cycle evidence, materials, tooling, filling, part quality and validation. Each reveals a suggested answer, the underlying reasoning, evidence to verify and a common mistake to avoid. These unscored teaching prompts are <strong>not</strong> part of the 169 governed question bank, formal assessment or evidence of competence.</p></div><div class="mm-learn-reasoning-list">${learnReasoningMarkup()}</div><p class="mm-learn-safety-note">Educational scenarios only. Use current supplier instructions, approved site procedures and authorised human review for real equipment.</p></section>
+        <section class="mm-learn-reasoning" id="mmLearnReasoning" aria-labelledby="mmLearnReasoningHeading"><div class="mm-learn-reasoning-head"><span class="eyebrow">32 optional learning checks · 8 topics</span><h2 id="mmLearnReasoningHeading">Understand the answer</h2><p>Go deeper with 32 realistic questions across cycle evidence, materials, tooling, filling, part quality, safety and scientific validation. Each reveals a suggested answer, the underlying reasoning, evidence to verify and a common mistake to avoid. These unscored teaching prompts are <strong>not</strong> part of the 169 governed question bank, formal assessment or evidence of competence.</p></div><div class="mm-learn-reasoning-list">${learnReasoningMarkup()}</div><p class="mm-learn-safety-note">Educational scenarios only. Use current supplier instructions, approved site procedures and authorised human review for real equipment.</p></section>
+      <section class="mm-learn-capstone" id="mmLearnCapstone" aria-labelledby="mmLearnCapstoneTitle"><header><span class="eyebrow">Final case · unscored</span><h3 id="mmLearnCapstoneTitle">One case. Four evidence checkpoints.</h3><p>A new polymer lot arrives. Silver streaks and variable cushion appear during trial shots. Work through this hypothetical case before choosing another activity.</p></header><div class="mm-learn-capstone-steps">
+<details><summary><span>01</span><b>Characterise the change</b><small>What is known versus suspected?</small></summary><p>Separate observed streaks and shot variability from assumptions about wet resin. Compare cavity-labelled parts, timestamps and a suitable known-good baseline.</p></details>
+<details><summary><span>02</span><b>Gather discriminating evidence</b><small>What would distinguish mechanisms?</small></summary><p>Confirm grade and lot, dryer and feed evidence, transfer/cushion traces and cavity distribution. Ask whether variation tracks material, tool or machine signals.</p></details>
+<details><summary><span>03</span><b>Choose a safe check</b><small>What must be authorised?</small></summary><p>Follow site-specific safety procedures; agree one documented hypothesis and acceptance metric with competent personnel. Never bypass a guard or reuse another grade's drying recipe.</p></details>
+<details><summary><span>04</span><b>Verify the recovery</b><small>When is the investigation complete?</small></summary><p>Record before/after actuals, representative cavity-labelled quality and measurement confidence. Formal process approval requires the site's change-control evidence and human review.</p></details></div><p class="mm-learn-safety-note">Training only; this case has no machine-control or workplace competency authority.</p></section>
       </section>
     </section>
     <section class="mm-learn-courses" id="mmLearnCourses" aria-labelledby="mmLearnCoursesHeading"><div class="mm-learn-courses-head"><span class="eyebrow">Your learning library</span><h2 id="mmLearnCoursesHeading">Courses and lessons</h2><p>One searchable catalogue of core, material-science and specialist lessons. Your existing local progress is unchanged.</p></div>${lessonCatalog.markup()}</section>
-    <div class="mm-catalog-extra"><button class="secondary" type="button" data-mm-hub-action="learn-resources">Visuals & glossary →</button></div>
+    <div class="mm-catalog-extra"><button class="secondary" type="button" data-mm-hub-action="learn-resources">Open Learning Resources →</button></div>
   </div>`;
 }
 
