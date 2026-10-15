@@ -799,7 +799,7 @@ function mountMaterialJourney(root,catalogue){
     if(action==='labs')window.MM_MATERIAL_BEHAVIOUR_LABS?.open?.();
     if(action==='grades')catalogue.scrollIntoView?.({block:'start',behavior:'smooth'});
   }));
-  catalogue.insertAdjacentElement('beforebegin',journey);
+  catalogue.insertAdjacentElement('afterend',journey);
 }
 function materials(){
   const root=document.getElementById('materials'),catalogue=root?.querySelector('[data-mm-all-material-index]');
@@ -1021,6 +1021,36 @@ function more(){
    already owns its content, commands and validation rules. Decorations are
    local, noninteractive and idempotent across renderer replacements. */
 function deepViewPolish(){
+  // Source-owned interior views share one visual language. Mark only stable
+  // host roots; no control, tab, answer or evidence node is cloned or moved.
+  // This covers the native Book, Learn, Materials, Practice and More subviews.
+  const interiors=[
+    ['lesson','Learn · lesson'],
+    ['visuals','Resources · process visuals'],
+    ['glossary','Resources · glossary'],
+    ['simulator','Practice · simulation'],
+    ['defects','Practice · diagnosis'],
+    ['coach','Practice · coaching'],
+    ['standards','Resources · standards'],
+    ['certificates','More · achievements'],
+    ['profile','More · profile'],
+    ['instructor','More · instructor tools'],
+    ['exams','Learn · knowledge checks'],
+    ['diagnosticLabs','Practice · diagnostic labs'],
+    ['materialLabs','Materials · learning labs'],
+    ['processDataLabs','Practice · data diagnosis'],
+    ['mmVirtualApprenticeship','Practice · apprenticeship'],
+    ['mmSpatialTwin','Practice · spatial twin'],
+    ['mmMaterialCompare','Materials · comparison'],
+    ['mmMaterialChange','Materials · change assistant'],
+    ['mmBookView','Resources · Book']
+  ];
+  for(const [id,description] of interiors){
+    const root=document.getElementById(id);
+    if(!root)continue;
+    root.classList.add('mm-reference-subtab');
+    root.dataset.mmReferenceSection=description;
+  }
   const headers=[
     ['#lesson .mm-simple-lesson-hero','training',24],
     ['#lesson .lesson-header-card','training',24],
@@ -1033,7 +1063,10 @@ function deepViewPolish(){
     ['#visuals .visual-wrap:first-child','process',5],
     ['#certificates .section-head','evidence',27],
     ['#profile .form-card:first-child','training',24],
-    ['#instructor .section-head','cases',22]
+    ['#instructor .section-head','cases',22],
+    ['#mmMaterialCompare .section-head','materials',3],
+    ['#mmMaterialChange .section-head','materials',12],
+    ['#mmBookView .mm-book-reader-header','training',24]
   ];
   for(const [selector,subject,tile] of headers){
     const node=document.querySelector(selector);
@@ -1049,7 +1082,13 @@ function deepViewPolish(){
     '#glossary .term','#defects .mm-dx-pane','#coach .mm-dx-pane',
     '#profile .form-card','#simulator .form-card',
     '#simulator .output-panel','#coach .chat',
-    '#coach .form-card','#instructor .table-wrap'
+    '#coach .form-card','#instructor .table-wrap',
+    '#exams .exam-card','#processDataLabs .pd-card',
+    '#diagnosticLabs .dl-card','#materialLabs .ml-card',
+    '#mmMaterialCompare .card','#mmMaterialChange .card',
+    '#standards .card','#certificates .card',
+    '#visuals .visual-wrap','#mmVirtualApprenticeship .card',
+    '#mmSpatialTwin .mm-st-panel'
   ]){
     document.querySelectorAll(selector).forEach(el=>el.classList.add('mm-reference-deep-panel'));
   }
@@ -1068,7 +1107,7 @@ function boot(){
   refresh();
   window.MM_APP_SHELL?.events?.onViewChange?.(refresh);
   for(const name of ['dashboard','path','materials','scenarios'])window.MM_APP_SHELL?.events?.onRender?.(name,refresh);
-  const targets=['dashboard','path','materials','scenarios','simulator','lesson','glossary','defects','coach','standards','visuals','certificates','profile','instructor','exams','modal'];
+  const targets=['dashboard','path','materials','scenarios','simulator','lesson','glossary','defects','coach','standards','visuals','certificates','profile','instructor','exams','diagnosticLabs','materialLabs','processDataLabs','mmVirtualApprenticeship','mmSpatialTwin','mmMaterialCompare','mmMaterialChange','mmBookView','modal'];
   for(const id of targets){
     const node=document.getElementById(id);if(!node)continue;
     new window.MutationObserver(refresh).observe(node,{childList:true,subtree:id==='modal'});
