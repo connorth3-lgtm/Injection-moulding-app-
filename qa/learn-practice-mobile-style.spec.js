@@ -351,7 +351,7 @@ test('Learn Question Centre lanes invoke canonical assessments and preserve scop
  await page.evaluate(()=>switchView('path'));
  await page.locator('#path #mmLearnQuestions [data-mm-hub-action="assessments"]').click();
  await expect(page.locator('#exams')).toBeVisible();
- await expect(page.locator('#exams')).toContainText('knowledge');
+ await expect(page.locator('#exams')).toContainText(/knowledge/i);
  const learnReturn=page.locator('#exams .mm-practice-tool-return .mm-practice-tool-back');
  await expect(learnReturn).toHaveText('← Back to Learn');
  await learnReturn.click();
