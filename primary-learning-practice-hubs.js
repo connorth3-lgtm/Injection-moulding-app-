@@ -150,7 +150,17 @@ function nextScenarioIndex(){
   writePracticeRotation(next);
   return next;
 }
-function bind(root){root?.querySelectorAll('[data-mm-hub-action]').forEach(button=>button.addEventListener('click',()=>runAction(button.dataset.mmHubAction,root.id==='path'?'learn':'practice')))}
+let learnToolOrigin=null;
+const LEARN_TOOL_ACTIONS=new Set(['assessments','diagnostic-labs','material-labs','measured-decisions','process-data','troubleshooting','scenario-detail','learn-scenarios']);
+function bind(root){
+  const source=root?.id==='path'?'learn':root?.id==='scenarios'?'practice':'modal';
+  root?.querySelectorAll('[data-mm-hub-action]').forEach(button=>button.addEventListener('click',()=>{
+    const action=button.dataset.mmHubAction;
+    if(source==='learn'&&LEARN_TOOL_ACTIONS.has(action))learnToolOrigin=action;
+    else if(source==='practice')learnToolOrigin=null;
+    runAction(action,source==='learn'?'learn':'practice');
+  }));
+}
 function safeOpen(apiName,fallback){
   const api=window[apiName];
   if(api&&typeof api.open==='function')return api.open();
@@ -829,6 +839,7 @@ function detailBack(root,label,back){
   bar.querySelector('button').addEventListener('click',()=>{
     if(back==='Learn'){
       switchView('path');
+      learnToolOrigin=null;
       requestAnimationFrame(()=>document.querySelector('#path [data-mm-hub-action="learn-scenarios"]')?.focus({preventScroll:true}));
     }else renderPracticeHub();
   });root.prepend(bar);
@@ -1017,5 +1028,5 @@ if(typeof currentView==='string'){
 }
 window.MM_APP_SHELL?.navigation?.sync?.();
 window.MM_QUESTION_CENTRE=Object.freeze({version:VERSION,open:openQuestionCentreDetail,counts:questionCentreCounts,scope:'Learner-facing consolidated launcher only; governed question sources, scoring, outcome-review status and evidence remain in their canonical subsystems.'});
-window.MM_PRIMARY_HUBS={version:VERSION,renderLearnHub,renderPracticeHub,openCurrentLesson,openLearningPathDetail,openScenarioDetail,nextScenarioIndex,learnerPracticePlan};
+window.MM_PRIMARY_HUBS={version:VERSION,renderLearnHub,renderPracticeHub,openCurrentLesson,openLearningPathDetail,openScenarioDetail,nextScenarioIndex,learnerPracticePlan,learnToolOrigin:()=>learnToolOrigin,clearLearnToolOrigin:()=>{learnToolOrigin=null;}};
 })();
