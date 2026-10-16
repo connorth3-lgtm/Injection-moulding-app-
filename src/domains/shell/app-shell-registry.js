@@ -195,13 +195,13 @@ function organizeMobileMore(grid){
   const buttons=[...grid.querySelectorAll(':scope > .quick-action')];
   if(!buttons.length)return;
   const groups=[
-    // More is a navigation menu, not an automatically expanded document.
-    // Start closed: Android users can choose a category without scrolling through
-    // several screens of expanded actions. Native <details> remains keyboard-safe.
-    {id:'learning',title:'Learning & progress',hint:'Book and your learning history',open:false},
-    {id:'references',title:'References',hint:'Published reference information',open:false},
-    {id:'account',title:'Account & support',hint:'Preferences and app help',open:false},
-    {id:'mission',title:'Mission tools',hint:'Saved evidence and command search',open:false}
+    // Preserve the approved expanded desktop/tablet More interface. On a
+    // narrow Android/phone viewport, show category summaries first so the
+    // menu is compact while each original destination remains one tap away.
+    {id:'learning',title:'Learning & progress',hint:'Book and your learning history',open:!window.matchMedia('(max-width:700px)').matches},
+    {id:'references',title:'References',hint:'Published reference information',open:!window.matchMedia('(max-width:700px)').matches},
+    {id:'account',title:'Account & support',hint:'Preferences and app help',open:!window.matchMedia('(max-width:700px)').matches},
+    {id:'mission',title:'Mission tools',hint:'Saved evidence and command search',open:!window.matchMedia('(max-width:700px)').matches}
   ];
   const slots=new Map();
   for(const item of groups){
