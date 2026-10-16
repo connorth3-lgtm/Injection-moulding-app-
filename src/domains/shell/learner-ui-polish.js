@@ -1008,9 +1008,8 @@ function more(){
     const area=document.createElement('div');area.className='mm-more-disclosure-items';
     const link=document.createElement('a');link.href=href;link.className='quick-action';link.textContent=label;
     area.append(link);details.append(area);
-    // Ensure the first actionable Help link is visible at More entry, while
-    // other categories retain their native collapsible behaviour.
-    if(title==='Help & support')details.open=true;
+    // Treat Help and About as compact, discoverable groups like the other
+    // More destinations. Opening Help is an explicit user decision.
     grid.append(details);
   }
   const direct=Array.from(grid.querySelectorAll(':scope > .mm-reference-more-extra'));

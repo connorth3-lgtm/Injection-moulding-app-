@@ -663,3 +663,53 @@ test('More subtab interior links and buttons use the approved blue learning pale
   expect(results.every(v=>v.color==='rgb(239, 250, 255)')).toBe(true);
   expect(results.every(v=>v.minHeight>=44)).toBe(true);
 });
+
+
+test('Android More groups are compact until explicitly opened; links stay reachable',async({page})=>{
+  await page.setViewportSize({width:360,height:800});
+  await openApp(page);
+  await page.locator('.mobile-nav > button').filter({hasText:'More'}).click();
+  const items=page.locator('#modal:not(.hidden) .mm-more-disclosure');
+  await expect(items).toHaveCount(6);
+  await expect.poll(()=>items.evaluateAll(nodes=>nodes.map(n=>n.open))).toEqual([false,false,false,false,false,false]);
+  const resources=page.locator('#modal .mm-more-disclosure[data-mm-more-section="learning"]');
+  await resources.locator(':scope > summary').click();
+  await expect(resources).toHaveAttribute('open','');
+  await expect(resources.locator('[data-mm-learning-resource-shortcut]')).toBeVisible();
+  const compact=await page.locator('#modal .mm-reference-more-card > summary').first().evaluate(el=>({
+    height:el.getBoundingClientRect().height,
+    icon:getComputedStyle(el,'::before').display,
+  }));
+  expect(compact.height).toBeLessThan(110);
+  expect(compact.icon).toBe('none');
+  await resources.locator(':scope > summary').click();
+  await expect(resources).not.toHaveAttribute('open','');
+  const support=page.locator('#modal .mm-reference-more-extra').first();
+  await support.locator(':scope > summary').click();
+  await expect(support.locator('a')).toBeVisible();
+  await expect(support.locator('a')).toHaveAttribute('href','./support.html');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth)).toBeLessThanOrEqual(2);
+});
+test('small Android Practice stages scroll horizontally with legible full labels and original questions',async({page})=>{
+  await page.setViewportSize({width:360,height:800});
+  await openApp(page);
+  await page.evaluate(()=>switchView('scenarios'));
+  const progress=page.locator('#scenarios .mm-practice-guided-progress');
+  await expect(progress.locator(':scope > li')).toHaveCount(5);
+  const values=await progress.evaluate(el=>({
+    inner:el.clientWidth,scroll:el.scrollWidth,
+    font:getComputedStyle(el.querySelector('li small')).fontSize,
+    labels:[...el.querySelectorAll('li small')].map(n=>n.textContent.trim()),
+    overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth
+  }));
+  expect(values.scroll).toBeGreaterThan(values.inner);
+  expect(values.font).toBe('11px');
+  expect(values.labels).toEqual([
+    'Identify the fault','Compare possible causes','Choose a safe test',
+    'Interpret the result','Verify corrective action'
+  ]);
+  expect(values.overflow).toBeLessThanOrEqual(2);
+  expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts().total)).toBe(169);
+  await progress.evaluate(el=>el.scrollLeft=el.scrollWidth);
+  await expect(progress.locator('li').last()).toContainText('Verify corrective action');
+});

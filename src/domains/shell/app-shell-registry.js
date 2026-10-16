@@ -195,10 +195,13 @@ function organizeMobileMore(grid){
   const buttons=[...grid.querySelectorAll(':scope > .quick-action')];
   if(!buttons.length)return;
   const groups=[
-    {id:'learning',title:'Learning & progress',hint:'Book and your learning history',open:true},
-    {id:'references',title:'References',hint:'Published reference information',open:true},
-    {id:'account',title:'Account & support',hint:'Preferences and app help',open:true},
-    {id:'mission',title:'Mission tools',hint:'Saved evidence and command search',open:true}
+    // More is a navigation menu, not an automatically expanded document.
+    // Start closed: Android users can choose a category without scrolling through
+    // several screens of expanded actions. Native <details> remains keyboard-safe.
+    {id:'learning',title:'Learning & progress',hint:'Book and your learning history',open:false},
+    {id:'references',title:'References',hint:'Published reference information',open:false},
+    {id:'account',title:'Account & support',hint:'Preferences and app help',open:false},
+    {id:'mission',title:'Mission tools',hint:'Saved evidence and command search',open:false}
   ];
   const slots=new Map();
   for(const item of groups){
