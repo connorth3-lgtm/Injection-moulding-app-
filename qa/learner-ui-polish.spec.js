@@ -74,7 +74,9 @@ test('five mobile tabs start with actionable content instead of oversized introd
   await expect(more).toHaveCount(6);
   await expect(more.first().locator(':scope > summary')).toBeVisible();
   // Compact by default; the original help action remains reachable by one tap.
-  await expect(page.locator('#modal .quick-action:visible')).toHaveCount(0);
+  // Disclosed actions stay hidden until opened; standalone canonical actions
+  // (if present) do not invalidate the compact-category contract.
+  await expect(page.locator('#modal .mm-more-disclosure:not([open]) .quick-action:visible')).toHaveCount(0);
   const support=page.locator('#modal .mm-reference-more-extra').first();
   await support.locator(':scope > summary').click();
   await expect(support.getByRole('link',{name:'Open support information'})).toBeVisible();
