@@ -713,3 +713,31 @@ test('small Android Practice stages scroll horizontally with legible full labels
   await progress.evaluate(el=>el.scrollLeft=el.scrollWidth);
   await expect(progress.locator('li').last()).toContainText('Verify corrective action');
 });
+
+
+test('Android focus scrolls content above the measured bottom navigation',async({page})=>{
+  for(const width of [360,390,412]){
+    await page.setViewportSize({width,height:800});
+    if(!page.url().includes('/index.html'))await openApp(page);
+    for(const [view,selector] of [
+      ['path','#path .mm-hub-continue [data-mm-hub-action="lesson"]'],
+      ['materials','#materials .mm-material-journey-actions button'],
+      ['scenarios','#scenarios .mm-practice-guided-controls button']
+    ]){
+      await page.evaluate(name=>switchView(name),view);
+      const control=page.locator(selector).first();
+      await expect(control).toBeVisible();
+      await control.evaluate(el=>el.scrollIntoView({block:'end',inline:'nearest',behavior:'instant'}));
+      const metrics=await page.evaluate(selector=>{
+        const target=document.querySelector(selector);
+        const nav=document.querySelector('.mobile-nav');
+        const a=target?.getBoundingClientRect(),n=nav?.getBoundingClientRect();
+        return {controlBottom:a?.bottom,navTop:n?.top,navBottom:n?.bottom,
+          windowHeight:window.innerHeight,overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
+      },selector);
+      expect(metrics.controlBottom, `${width}px ${view} action is not obscured`).toBeLessThanOrEqual(metrics.navTop-4);
+      expect(metrics.navBottom).toBeLessThanOrEqual(metrics.windowHeight+2);
+      expect(metrics.overflow).toBeLessThanOrEqual(2);
+    }
+  }
+});
