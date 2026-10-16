@@ -15,6 +15,15 @@ async function openApp(page,width,learningAwards=[]){
 }
 async function mobileHub(page,name){await page.locator('.mobile-nav > button').filter({hasText:name}).click()}
 async function mobileMore(page){await page.locator('.mobile-nav > button').filter({hasText:'More'}).click();await expect(page.locator('#modal .modal-card')).toBeVisible()}
+async function revealMoreAction(page,action){
+  // A More destination is reachable through a visible native disclosure,
+  // not required to be permanently visible inside a collapsed category.
+  const group=action.locator('xpath=ancestor::details[contains(@class,"mm-more-disclosure")][1]');
+  await expect(group.locator(':scope > summary')).toBeVisible();
+  if(!(await group.evaluate(node=>node.open)))await group.locator(':scope > summary').click();
+  await expect(action).toBeVisible({timeout:10000});
+}
+
 async function closeModal(page){const b=page.getByRole('button',{name:/^close$/i}).first();if(await b.isVisible().catch(()=>false))await b.click();await expect(page.locator('#modal')).toHaveClass(/hidden/)}
 async function expectVisible(page,selector){await expect(page.locator(selector)).toBeVisible({timeout:10000})}
 async function expectNoHorizontalOverflow(page,label){const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth+1);expect(overflow,label+' must not introduce horizontal page overflow').toBeFalsy()}
@@ -66,8 +75,8 @@ for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name
   });
   test('Book is discoverable and opens through visible UI',async({page})=>{
    await openApp(page,viewport.width);
-   if(viewport.width<=900){await mobileMore(page);const book=page.locator('[data-mm-registry-menu="book"]');await expect(book).toBeVisible();await book.click()}
-   else {const more=page.locator('#nav [data-mm-desktop-more-tools]');await expect(more).toBeVisible();await more.click();const book=page.locator('[data-mm-registry-menu="book"]');await expect(book).toBeVisible();await book.click()}
+   if(viewport.width<=900){await mobileMore(page);const book=page.locator('[data-mm-registry-menu="book"]');await revealMoreAction(page,book);await book.click()}
+   else {const more=page.locator('#nav [data-mm-desktop-more-tools]');await expect(more).toBeVisible();await more.click();const book=page.locator('[data-mm-registry-menu="book"]');await revealMoreAction(page,book);await book.click()}
    await expectVisible(page,'#mmBookView');
   });
   test('Measured Data catalog is reachable through visible Practice and Process Data controls',async({page})=>{
@@ -97,8 +106,8 @@ for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name
 
   test('Book and assessment surfaces survive zoom and preserve focus recovery',async({page})=>{
    await openApp(page,viewport.width);await page.evaluate(()=>{document.documentElement.style.fontSize='200%'});
-   if(viewport.width<=900){await mobileMore(page);const trigger=page.locator('.mobile-nav > button').filter({hasText:'More'});await closeModal(page);await expect(trigger).toBeFocused();await mobileMore(page);const book=page.locator('[data-mm-registry-menu="book"]');await expect(book).toBeVisible();await book.click()}
-   else {const more=page.locator('#nav [data-mm-desktop-more-tools]');await expect(more).toBeVisible();await more.click();const book=page.locator('[data-mm-registry-menu="book"]');await expect(book).toBeVisible();await book.click()}
+   if(viewport.width<=900){await mobileMore(page);const trigger=page.locator('.mobile-nav > button').filter({hasText:'More'});await closeModal(page);await expect(trigger).toBeFocused();await mobileMore(page);const book=page.locator('[data-mm-registry-menu="book"]');await revealMoreAction(page,book);await book.click()}
+   else {const more=page.locator('#nav [data-mm-desktop-more-tools]');await expect(more).toBeVisible();await more.click();const book=page.locator('[data-mm-registry-menu="book"]');await revealMoreAction(page,book);await book.click()}
    await expectVisible(page,'#mmBookView');await expectNoHorizontalOverflow(page,'Book at 200% text scaling');
    await openAssessmentsFromQuestionCentre(page,viewport.width);await expectNoHorizontalOverflow(page,'Assessments at 200% text scaling');
   });
@@ -106,7 +115,7 @@ for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name
    await openApp(page,viewport.width);
    if(viewport.width<=900){
     await expect(page.locator('#mm-src-open')).toBeHidden();await expect(page.locator('#mmrd-open')).toBeHidden();
-    await mobileMore(page);await expect(page.locator('[data-mm-registry-menu="reference-data"]')).toBeVisible();
+    await mobileMore(page);await revealMoreAction(page,page.locator('[data-mm-registry-menu="reference-data"]'));
    }else{
     await expect(page.locator('#mmrd-open')).toBeVisible();await expect(page.locator('#mm-src-open')).toBeHidden();
     await expect(page.locator('#mm-src-open')).toHaveAttribute('aria-hidden','true');await expect(page.locator('#mm-src-open')).toHaveAttribute('tabindex','-1');
@@ -126,12 +135,12 @@ for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name
    await openApp(page,viewport.width);
    if(viewport.width<=900){
     await mobileMore(page);
-    for(const id of ['book','learning-insights','repair-app-files'])await expect(page.locator('[data-mm-registry-menu="'+id+'"]')).toBeVisible();
+    for(const id of ['book','learning-insights','repair-app-files'])await revealMoreAction(page,page.locator('[data-mm-registry-menu="'+id+'"]'));
     await closeModal(page);await mobileHub(page,'Practice');
     for(const action of ['troubleshooting','process-data','labs'])await expect(page.locator('#scenarios [data-mm-hub-action="'+action+'"]')).toBeVisible();
    }else{
     const more=page.locator('#nav [data-mm-desktop-more-tools]');await expect(more).toBeVisible();await more.click();await expect(page.locator('#modal .modal-card')).toBeVisible();
-    for(const name of ['Standards & safety','Profile & data'])await expect(page.locator('#modal .quick-action').filter({hasText:name})).toBeVisible();
+    for(const name of ['Standards & safety','Profile & data'])await revealMoreAction(page,page.locator('#modal .quick-action').filter({hasText:name}));
     for(const name of ['Process simulator','Defect finder','Troubleshooting coach','Knowledge checks'])await expect(page.locator('#modal .quick-action').filter({hasText:name})).toHaveCount(0);
     await closeModal(page);
     const practice=page.locator('#nav button[data-view="scenarios"]');await expect(practice).toBeVisible();await practice.click();await expectVisible(page,'#scenarios .mm-practice-hub');

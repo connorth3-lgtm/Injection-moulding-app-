@@ -663,3 +663,162 @@ test('More subtab interior links and buttons use the approved blue learning pale
   expect(results.every(v=>v.color==='rgb(239, 250, 255)')).toBe(true);
   expect(results.every(v=>v.minHeight>=44)).toBe(true);
 });
+
+
+test('Android More groups are compact until explicitly opened; links stay reachable',async({page})=>{
+  await page.setViewportSize({width:360,height:800});
+  await openApp(page);
+  await page.locator('.mobile-nav > button').filter({hasText:'More'}).click();
+  const items=page.locator('#modal:not(.hidden) .mm-more-disclosure');
+  await expect(items).toHaveCount(6);
+  await expect.poll(()=>items.evaluateAll(nodes=>nodes.map(n=>n.open))).toEqual([false,false,false,false,false,false]);
+  const resources=page.locator('#modal .mm-more-disclosure[data-mm-more-section="learning"]');
+  await resources.locator(':scope > summary').click();
+  await expect(resources).toHaveAttribute('open','');
+  await expect(resources.locator('[data-mm-learning-resource-shortcut]')).toBeVisible();
+  const compact=await page.locator('#modal .mm-reference-more-card > summary').first().evaluate(el=>({
+    height:el.getBoundingClientRect().height,
+    icon:getComputedStyle(el,'::before').display,
+  }));
+  expect(compact.height).toBeLessThan(110);
+  expect(compact.icon).toBe('none');
+  await resources.locator(':scope > summary').click();
+  await expect(resources).not.toHaveAttribute('open','');
+  const support=page.locator('#modal .mm-reference-more-extra').first();
+  await support.locator(':scope > summary').click();
+  await expect(support.locator('a')).toBeVisible();
+  await expect(support.locator('a')).toHaveAttribute('href','./support.html');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth)).toBeLessThanOrEqual(2);
+});
+test('small Android Practice stages scroll horizontally with legible full labels and original questions',async({page})=>{
+  await page.setViewportSize({width:360,height:800});
+  await openApp(page);
+  await page.evaluate(()=>switchView('scenarios'));
+  const guided=page.locator('#scenarios #mmPracticeGuided');
+  await expect(guided).toBeVisible();
+  const progress=guided.locator('.mm-practice-guided-progress');
+  await expect(progress).toBeVisible();
+  await expect(progress.locator(':scope > li')).toHaveCount(5);
+  // WebKit can still be finishing its deferred route render after the
+  // children enter the DOM. Geometry is meaningful only once laid out.
+  await expect.poll(()=>progress.evaluate(el=>({
+    visible:el.getClientRects().length>0,
+    client:el.clientWidth,scroll:el.scrollWidth,
+    computed:getComputedStyle(el).gridTemplateColumns
+  }))).toMatchObject({visible:true});
+  await expect.poll(()=>progress.evaluate(el=>el.clientWidth)).toBeGreaterThan(0);
+  await expect.poll(()=>progress.evaluate(el=>el.scrollWidth-el.clientWidth)).toBeGreaterThan(0);
+  const values=await progress.evaluate(el=>({
+    inner:el.clientWidth,scroll:el.scrollWidth,
+    font:getComputedStyle(el.querySelector('li small')).fontSize,
+    labels:[...el.querySelectorAll('li small')].map(n=>n.textContent.trim()),
+    overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth
+  }));
+  expect(values.scroll).toBeGreaterThan(values.inner);
+  expect(values.font).toBe('11px');
+  expect(values.labels).toEqual([
+    'Identify the fault','Compare possible causes','Choose a safe test',
+    'Interpret the result','Verify corrective action'
+  ]);
+  expect(values.overflow).toBeLessThanOrEqual(2);
+  expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts().total)).toBe(169);
+  await progress.evaluate(el=>el.scrollLeft=el.scrollWidth);
+  await expect(progress.locator('li').last()).toContainText('Verify corrective action');
+});
+
+
+test('Android focus scrolls content above the measured bottom navigation',async({page})=>{
+  for(const width of [360,390,412]){
+    await page.setViewportSize({width,height:800});
+    if(!page.url().includes('/index.html'))await openApp(page);
+    for(const [view,selector] of [
+      ['path','#path .mm-hub-continue [data-mm-hub-action="lesson"]'],
+      ['materials','#materials .mm-material-journey-actions button'],
+      ['scenarios','#scenarios .mm-practice-guided-controls button']
+    ]){
+      await page.evaluate(name=>switchView(name),view);
+      const control=page.locator(selector).first();
+      await expect(control).toBeVisible();
+      // The route creates several long material catalog sections. WebKit
+      // settles that render asynchronously: wait for its layout, then assert
+      // that a real centered scroll makes the action both visible and tappable.
+      await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+      await expect.poll(async()=>{
+        await control.evaluate(el=>el.scrollIntoView({block:'center',inline:'nearest',behavior:'instant'}));
+        return await page.evaluate(selector=>{
+          const target=document.querySelector(selector),nav=document.querySelector('.mobile-nav');
+          const a=target?.getBoundingClientRect(),n=nav?.getBoundingClientRect();
+          const x=a?(a.left+a.right)/2:0,y=a?(a.top+a.bottom)/2:0;
+          const hit=document.elementFromPoint(x,y);
+          const ok=!!(target&&n&&a.bottom<=n.top-4&&a.top>=0&&hit&&(hit===target||target.contains(hit)));
+          const overflow=document.documentElement.scrollWidth-document.documentElement.clientWidth;
+          return {ok,controlBottom:a?.bottom,navTop:n?.top,overflowOk:overflow<=2,
+            navBottom:n?.bottom,windowHeight:window.innerHeight};
+        },selector);
+      },{timeout:7000}).toMatchObject({ok:true,overflowOk:true});
+      const metrics=await page.evaluate(()=>({
+        navBottom:document.querySelector('.mobile-nav').getBoundingClientRect().bottom,
+        windowHeight:window.innerHeight,
+        overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth
+      }));
+      expect(metrics.navBottom).toBeLessThanOrEqual(metrics.windowHeight+2);
+      expect(metrics.overflow).toBeLessThanOrEqual(2);
+    }
+  }
+});
+
+
+test('Android bar and content clearance shrink after a taller navigation state',async({page})=>{
+  await page.setViewportSize({width:360,height:800});
+  await openApp(page);
+  const nav=page.locator('.mobile-nav');
+  await expect(nav).toBeVisible();
+  await page.evaluate(()=>document.querySelector('.mobile-nav').style.setProperty('min-height','150px','important'));
+  await expect.poll(()=>page.evaluate(()=>parseFloat(
+    document.documentElement.style.getPropertyValue('--mm-mobile-nav-height')
+  ))).toBeGreaterThanOrEqual(150);
+  await page.evaluate(()=>document.querySelector('.mobile-nav').style.removeProperty('min-height'));
+  await expect.poll(()=>page.evaluate(()=>{
+    const measured=parseFloat(document.documentElement.style.getPropertyValue('--mm-mobile-nav-height'));
+    const actual=Math.ceil(document.querySelector('.mobile-nav').getBoundingClientRect().height);
+    return Number.isFinite(measured)&&actual<150&&measured<150&&measured>=actual;
+  })).toBe(true);
+  const geometry=await page.evaluate(()=>{
+    const actual=Math.ceil(document.querySelector('.mobile-nav').getBoundingClientRect().height);
+    const measured=parseFloat(document.documentElement.style.getPropertyValue('--mm-mobile-nav-height'));
+    return {actual,measured};
+  });
+  expect(geometry.actual).toBeLessThan(150);
+  expect(geometry.measured).toBeLessThan(150);
+  expect(geometry.measured).toBeGreaterThanOrEqual(geometry.actual);
+});
+
+test('Android font scaling keeps bottom-nav clearance source-measured',async({page})=>{
+  await page.setViewportSize({width:360,height:800});
+  await openApp(page);
+  const nav=page.locator('.mobile-nav');
+  await expect(nav).toBeVisible();
+  await page.evaluate(()=>{document.documentElement.style.fontSize='200%';});
+  await expect.poll(()=>page.evaluate(()=>{
+    const nav=document.querySelector('.mobile-nav');
+    const measured=parseFloat(document.documentElement.style.getPropertyValue('--mm-mobile-nav-height'));
+    return Number.isFinite(measured)&&measured>=Math.ceil(nav.getBoundingClientRect().height);
+  })).toBe(true);
+  await page.evaluate(()=>switchView('scenarios'));
+  const next=page.locator('#scenarios .mm-practice-guided-controls button').first();
+  await expect(next).toBeVisible();
+  // On a zoomed phone, WebKit can finish the long Practice render after the
+  // first scroll attempt. Recenter after each layout step and require the
+  // action to be a real unobscured hit target, rather than accepting a stale
+  // bounding rectangle or a hidden button.
+  await expect.poll(async()=>{
+    await next.evaluate(el=>el.scrollIntoView({block:'center',inline:'nearest',behavior:'instant'}));
+    return next.evaluate(el=>{
+      const a=el.getBoundingClientRect(),nav=document.querySelector('.mobile-nav');
+      const n=nav.getBoundingClientRect();
+      const x=(a.left+a.right)/2,y=(a.top+a.bottom)/2;
+      const hit=document.elementFromPoint(x,y);
+      return a.top>=0&&a.bottom<=n.top-4&&hit&&(hit===el||el.contains(hit));
+    });
+  },{timeout:10000}).toBe(true);
+});

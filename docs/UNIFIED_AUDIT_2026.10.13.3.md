@@ -1,4 +1,4 @@
-# Unified MouldMaster audit and acceptance — 15 October 2026
+# Unified MouldMaster audit and acceptance — 17 October 2026
 
 **Single current audit tracker: [issue #632](https://github.com/connorth3-lgtm/Injection-moulding-app-/issues/632).** This document consolidates status; it does not merge different people's evidence or imply that an issue is closed. Each original issue retains its own history. The machine-readable issue map is in `qa/audit-issue-consolidation-v1.json` and is checked by the release documentation suite.
 
@@ -6,12 +6,14 @@
 
 | Fact | Audited evidence |
 | --- | --- |
-| Protected `main` | `89fe3e24c11c3eb660953870fce7e819280c55df`, squash merge [PR #627](https://github.com/connorth3-lgtm/Injection-moulding-app-/pull/627) |
-| Preview | `2026.10.13.3`, published under `/preview/`, independently checked from `deployment.json` |
-| Retained producer source | `77fe83877de37cd5ce92cee7f4a1bc87a10965b7` |
-| Candidate | successful run `38523473535`, artifact `11874731686` |
-| Technical QA | 27/27 exact-head protected PR workflows passed |
-| Visual lock | approved immutable `visual-baseline/2026.10.13.3`, 52 captures, maximum 12 differing pixels |
+| Last independently verified protected `main` | `ef4c4f6cfc53b912f5fbe953f551b030a8c8a318`, historical PR #638 squash merge; **not the new Android PR** |
+| Historical original audited merge | `89fe3e24c11c3eb660953870fce7e819280c55df` from PR #627; immutable historical record |
+| Last verified hosted preview | `2026.10.15.3` under `/preview/` from issue #512; **do not claim 2026.10.16.1 is live before new main deploy** |
+| Current governed PR release | `2026.10.16.1`, pending owner-authorized protected-main merge |
+| Retained public candidate source | `e336f656351afa4eeaaae0940969bea881ae9b68` |
+| Genuine producer | successful [run 38864931906](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/38864931906), retained artifact `12030806569` |
+| Technical evidence | same-source Mobile Browser QA `38864931666` and Question Quality 50-Pass `38864931729` succeeded; latest-head protected merge checks must be independently green |
+| Visual lock | owner-approved immutable `visual-baseline/2026.10.16.1` at `04628e13a6c9a9517bef22bae6c12a456896f299`, 52 unmasked captures and maximum 12 differing pixels |
 | Root release | production HOLD, advisory-only; no machine-control/accreditation authorization |
 | External acceptance | seven independent human/device/provider workstreams HOLD |
 

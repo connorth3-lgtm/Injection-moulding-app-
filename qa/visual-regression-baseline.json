@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.15.3",
-  "commit": "82b1677caecb50c95c5395166317132447851e5b",
+  "release": "2026.10.16.1",
+  "commit": "04628e13a6c9a9517bef22bae6c12a456896f299",
   "browser": "chromium via @playwright/test 1.64.0",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,13 +41,13 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "On 2026-10-16 NZDT, after the user was shown actual PR #638 source-linked before/current/diff screenshot imagery and expressly invited to approve the actual 82b1677 screenshots for a new immutable visual baseline, they replied 'I approve'. This is owner approval of the visual redesign only for the exact reviewed source 82b1677caecb50c95c5395166317132447851e5b. It is not approval of an image-generation mockup or another commit, nor is it proof the owner individually opened all 52 PNGs. The user was shown the 412px actual-source Learn/Practice/More contact sheet and linked to the complete raw screenshot archive and evidence manifest. The exact-source Chromium Mobile Browser QA run 38789094072, artifact 11998504802, SHA256 51f62328b10c897818015e08ee574c9092cae7e999ceb649b7729325ccd105af, includes 52/52 unmasked captures, with 12 intentional drift screens across Learn, Practice and More at all 4 viewports, and 40 other captures within the locked 12px tolerance. Four supplemental preview status screenshots are distinct from the 52. Baseline ref visual-baseline/2026.10.15.3 was created at precisely that reviewed commit, verified identical (ahead=0, behind=0); old visual-baseline/2026.10.13.3 remains unchanged at 352bf204ae77779d548bc77dcf8b0a63db2a84e1. No viewport, surface, masking, pixel threshold or screenshot assertion was relaxed. This visual approval does NOT grant a successful exact-source producer artifact, a tester invitation, device/AT/signing/SME/learner/NZQA evidence or any production/machine-control authority. Seven independent external streams remain HOLD and production advisory-only. Source qa/VISUAL_REVIEW_2026.10.15.3_PR638.md documents the exact preview, owner scope and follow-up evidence requirements.",
-  "ref": "visual-baseline/2026.10.15.3",
+  "policy": "Visual approval for exact-source PR #639 screenshots only: after viewing three before/after comparisons and being asked if the compact phone More layout and small Practice change were approved, the owner replied \"Yes that's better\" on 2026-10-16 NZDT. The reviewed source is 04628e13a6c9a9517bef22bae6c12a456896f299; Mobile Browser QA run 38846976380, artifact 12023269036 (digest sha256:bf52e4488c878e4d1a0357eaa67b61aebb65455500f66d2e5d2e5286cfbd3ed6). Its screenshot manifest records 52 full, unmasked images at four viewports across thirteen surfaces, with three approved intentional drifts (phone-360x800-more 83431; phone-412x915-more 134974; phone-412x915-practice 7540) and 49 remaining screens within unchanged maxDiffPixels=12. The owner reviewed the presented three comparisons, not necessarily all 52 raw images. Approved capture image SHA256 values and full provenance are in qa/VISUAL_REVIEW_2026.10.16.1_PR639.md. This newly created visual-baseline/2026.10.16.1 ref is locked to actual reviewed source 04628e13a6c9a9517bef22bae6c12a456896f299; the historical visual-baseline/2026.10.15.3 ref remains unchanged at 82b1677caecb50c95c5395166317132447851e5b. All 52 surfaces and maxDiffPixels=12 retain strict protection with no masking. The pre-approval CI screenshot record correctly retains visualOwnerApproved=false; later owner approval is recorded separately. Visual approval is not release/merge approval, a technical producer pass, physical PWA or human NVDA/VoiceOver/SME, signing, learner/provider/NZQA evidence, accreditation or production authority. All seven external streams HOLD.",
+  "ref": "visual-baseline/2026.10.16.1",
   "referenceCaptureToolchain": {
     "framework": "@playwright/test",
     "version": "1.64.0",
     "browser": "chromium",
-    "referenceSourceSha": "82b1677caecb50c95c5395166317132447851e5b"
+    "referenceSourceSha": "04628e13a6c9a9517bef22bae6c12a456896f299"
   },
   "currentComparisonToolchain": {
     "framework": "@playwright/test",

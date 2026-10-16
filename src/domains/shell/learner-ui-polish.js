@@ -1,13 +1,13 @@
-/* MouldMaster learner UI polish — 2026.10.15.3
+/* MouldMaster learner UI polish — 2026.10.16.1
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.10.15.3';
+const VERSION='2026.10.16.1';
 // Cache-bust stylesheet revisions without claiming a new governed app release.
-const STYLE_REV='2026.10.15.3';
+const STYLE_REV='2026.10.16.1';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -1008,9 +1008,9 @@ function more(){
     const area=document.createElement('div');area.className='mm-more-disclosure-items';
     const link=document.createElement('a');link.href=href;link.className='quick-action';link.textContent=label;
     area.append(link);details.append(area);
-    // Ensure the first actionable Help link is visible at More entry, while
-    // other categories retain their native collapsible behaviour.
-    if(title==='Help & support')details.open=true;
+    // The approved wide-screen reference has Help expanded. Narrow-screen
+    // More keeps it closed until the learner deliberately opens that group.
+    if(title==='Help & support'&&window.matchMedia('(min-width:701px)').matches)details.open=true;
     grid.append(details);
   }
   const direct=Array.from(grid.querySelectorAll(':scope > .mm-reference-more-extra'));
