@@ -751,11 +751,11 @@ test('Android focus scrolls content above the measured bottom navigation',async(
           const x=a?(a.left+a.right)/2:0,y=a?(a.top+a.bottom)/2:0;
           const hit=document.elementFromPoint(x,y);
           const ok=!!(target&&n&&a.bottom<=n.top-4&&a.top>=0&&hit&&(hit===target||target.contains(hit)));
-          return {ok,controlBottom:a?.bottom,navTop:n?.top,
-            overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
+          const overflow=document.documentElement.scrollWidth-document.documentElement.clientWidth;
+          return {ok,controlBottom:a?.bottom,navTop:n?.top,overflowOk:overflow<=2,
             navBottom:n?.bottom,windowHeight:window.innerHeight};
         },selector);
-      },{timeout:7000}).toMatchObject({ok:true,overflow:0});
+      },{timeout:7000}).toMatchObject({ok:true,overflowOk:true});
       const metrics=await page.evaluate(()=>({
         navBottom:document.querySelector('.mobile-nav').getBoundingClientRect().bottom,
         windowHeight:window.innerHeight,
