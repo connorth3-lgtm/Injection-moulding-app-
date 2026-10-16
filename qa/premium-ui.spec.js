@@ -36,6 +36,9 @@ test('compact desktop shell retains Materials and specialist More access',async(
   // button hierarchy or changed routing contract is added to the app shell.
   await nav.locator('button[data-mm-desktop-more-tools]').click();
   await expect(page.locator('#modal')).toBeVisible();
+  const references=page.locator('#modal [data-mm-more-section="references"]');
+  await expect(references.locator(':scope > summary')).toBeVisible();
+  await references.locator(':scope > summary').click();
   await expect(page.locator('#modal').getByRole('button',{name:'Standards & safety'})).toBeVisible();
   await page.locator('#modal').getByRole('button',{name:'Standards & safety'}).click();
   await expect(page.locator('#standards')).toBeVisible();
