@@ -364,7 +364,9 @@ test('primary IA keeps Materials singular and every major destination reachable'
   for(const [section,label] of [['references','Standards & safety'],['account','Profile & data']]){
     const disclosure=page.locator(`#modal [data-mm-more-section="${section}"]`);
     await expect(disclosure.locator(':scope > summary')).toBeVisible();
-    await disclosure.locator(':scope > summary').click();
+    // Wide-screen More is deliberately expanded (approved baseline). Open a
+    // category only if it is closed, then prove the original action is visible.
+    if(!(await disclosure.evaluate(el=>el.open)))await disclosure.locator(':scope > summary').click();
     await expect(disclosure.getByRole('button',{name:new RegExp(label,'i')})).toBeVisible();
   }
   for(const label of ['Process simulator','Defect finder','Troubleshooting coach','Knowledge checks','Mould Master','Data diagnosis']){
