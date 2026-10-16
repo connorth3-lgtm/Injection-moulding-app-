@@ -342,11 +342,34 @@ need(approved_capture == {
      'owner-approved current screenshot capture provenance missing/stale')
 need(visual.get('browser') == "chromium via @playwright/test 1.64.0",
      'owner-approved current screenshot toolchain label was rewritten')
-need(visual.get('ref')=='visual-baseline/2026.10.15.3' and
-     visual.get('commit')=='82b1677caecb50c95c5395166317132447851e5b' and
-     'visual-baseline/2026.10.13.3' in visual.get('policy','') and
-     '352bf204ae77779d548bc77dcf8b0a63db2a84e1' in visual.get('policy',''),
-     'new baseline must retain independently approved predecessor provenance')
+# The 2026.10.16.1 phone-only successor was separately reviewed by the
+# owner from the actual three source-linked before/after screenshots. Lock the
+# exact reviewed ref/source/artifact and preserve the previous .15.3 record:
+# no blanket automatic approval, hidden pixels or pixel tolerance increase.
+review_new=text('qa/VISUAL_REVIEW_2026.10.16.1_PR639.md')
+review_predecessor=text('qa/VISUAL_REVIEW_2026.10.15.3_PR638.md')
+need(visual.get('release')=='2026.10.16.1'
+     and visual.get('ref')=='visual-baseline/2026.10.16.1'
+     and visual.get('commit')=='04628e13a6c9a9517bef22bae6c12a456896f299'
+     and visual.get('maxDiffPixels')==12
+     and [v.get('name') for v in visual.get('viewports',[])]==[
+         'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+     and visual.get('surfaces')==[
+         'home','learn','materials','practice','lesson','more','assessment',
+         'listen-expanded','listening','book-contents','book-materials',
+         'book-late','book-trace']
+     and 'visual-baseline/2026.10.15.3' in visual.get('policy','')
+     and '82b1677caecb50c95c5395166317132447851e5b' in visual.get('policy','')
+     and '12023269036' in visual.get('policy','')
+     and 'bf52e4488c878e4d1a0357eaa67b61aebb65455500f66d2e5d2e5286cfbd3ed6' in visual.get('policy','')
+     and 'Yes that' in visual.get('policy','')
+     and 'STATUS: OWNER VISUAL APPROVAL' in review_new
+     and '04628e13a6c9a9517bef22bae6c12a456896f299' in review_new
+     and '12023269036' in review_new
+     and 'visual-baseline/2026.10.13.3' in review_predecessor
+     and '82b1677caecb50c95c5395166317132447851e5b' in review_predecessor
+     and '352bf204ae77779d548bc77dcf8b0a63db2a84e1' in review_predecessor,
+     'new baseline must retain exact approved source and independently approved predecessor provenance')
 need(visual.get('currentComparisonToolchain') == {
          'framework':'@playwright/test', 'version':visual_version,
          'browser':'chromium'},
