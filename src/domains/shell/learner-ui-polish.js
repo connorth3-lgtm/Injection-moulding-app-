@@ -1008,8 +1008,9 @@ function more(){
     const area=document.createElement('div');area.className='mm-more-disclosure-items';
     const link=document.createElement('a');link.href=href;link.className='quick-action';link.textContent=label;
     area.append(link);details.append(area);
-    // Treat Help and About as compact, discoverable groups like the other
-    // More destinations. Opening Help is an explicit user decision.
+    // The approved wide-screen reference has Help expanded. Narrow-screen
+    // More keeps it closed until the learner deliberately opens that group.
+    if(title==='Help & support'&&window.matchMedia('(min-width:701px)').matches)details.open=true;
     grid.append(details);
   }
   const direct=Array.from(grid.querySelectorAll(':scope > .mm-reference-more-extra'));
