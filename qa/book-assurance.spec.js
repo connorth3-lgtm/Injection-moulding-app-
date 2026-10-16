@@ -155,6 +155,9 @@ test('Book ignores a delayed chapter load after switching back to Home',async({p
     await page.evaluate(()=>window.switchView('dashboard'));
     await expect(page.locator('#dashboard')).toBeVisible();
     await expect(page.locator('#mmBookView')).toBeHidden();
+    // Navigation must remove Book-only scroll chrome immediately, even
+    // before the deliberately delayed publication request can finish.
+    expect(await page.evaluate(()=>document.documentElement.classList.contains('mm-book-instant-scroll'))).toBe(false);
     unblockRequest();
     await page.waitForFunction(()=>Boolean(window.MMBook.getManifest()));
     await expect(page.locator('#mmBookView [data-mm-book-reader-chapter]')).toHaveCount(0);
