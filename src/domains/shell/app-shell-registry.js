@@ -404,6 +404,14 @@ function renderLessonCanonical(){
 function switchViewCanonical(id){
   // Runtime V2's BEFORE hook already saves Book before invoking this handler.
   activeCustomId='';const r=captured.switchView.apply(this,arguments);
+  // The Book runtime normally clears its temporary scroll override on the
+  // onViewChange event. If a delayed chapter fetch races that event, make the
+  // presentation cleanup deterministic once the Book surface is hidden.
+  // Reading progress and speech lifecycle remain owned by MMBook.
+  if(id!=='book'&&document.getElementById('mmBookView')?.classList.contains('hidden')){
+    document.documentElement.classList.remove('mm-book-instant-scroll');
+    document.body?.classList.remove('mm-book-instant-scroll');
+  }
   // Cancel the core's smooth scroll on workspace changes: the previous page can
   // remain clipped while short views render, particularly on mobile WebKit.
   window.scrollTo({top:0,behavior:'instant'});
