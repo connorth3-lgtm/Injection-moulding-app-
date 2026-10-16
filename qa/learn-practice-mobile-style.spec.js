@@ -739,15 +739,28 @@ test('Android focus scrolls content above the measured bottom navigation',async(
       await page.evaluate(name=>switchView(name),view);
       const control=page.locator(selector).first();
       await expect(control).toBeVisible();
-      await control.evaluate(el=>el.scrollIntoView({block:'end',inline:'nearest',behavior:'instant'}));
-      const metrics=await page.evaluate(selector=>{
-        const target=document.querySelector(selector);
-        const nav=document.querySelector('.mobile-nav');
-        const a=target?.getBoundingClientRect(),n=nav?.getBoundingClientRect();
-        return {controlBottom:a?.bottom,navTop:n?.top,navBottom:n?.bottom,
-          windowHeight:window.innerHeight,overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
-      },selector);
-      expect(metrics.controlBottom, `${width}px ${view} action is not obscured`).toBeLessThanOrEqual(metrics.navTop-4);
+      // The route creates several long material catalog sections. WebKit
+      // settles that render asynchronously: wait for its layout, then assert
+      // that a real centered scroll makes the action both visible and tappable.
+      await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+      await expect.poll(async()=>{
+        await control.evaluate(el=>el.scrollIntoView({block:'center',inline:'nearest',behavior:'instant'}));
+        return await page.evaluate(selector=>{
+          const target=document.querySelector(selector),nav=document.querySelector('.mobile-nav');
+          const a=target?.getBoundingClientRect(),n=nav?.getBoundingClientRect();
+          const x=a?(a.left+a.right)/2:0,y=a?(a.top+a.bottom)/2:0;
+          const hit=document.elementFromPoint(x,y);
+          const ok=!!(target&&n&&a.bottom<=n.top-4&&a.top>=0&&hit&&(hit===target||target.contains(hit)));
+          return {ok,controlBottom:a?.bottom,navTop:n?.top,
+            overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
+            navBottom:n?.bottom,windowHeight:window.innerHeight};
+        },selector);
+      },{timeout:7000}).toMatchObject({ok:true,overflow:0});
+      const metrics=await page.evaluate(()=>({
+        navBottom:document.querySelector('.mobile-nav').getBoundingClientRect().bottom,
+        windowHeight:window.innerHeight,
+        overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth
+      }));
       expect(metrics.navBottom).toBeLessThanOrEqual(metrics.windowHeight+2);
       expect(metrics.overflow).toBeLessThanOrEqual(2);
     }
