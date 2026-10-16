@@ -4108,3 +4108,55 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
     scroll-behavior:auto!important;
   }
 }
+
+
+/* 2026-10-17 physical Android review: 32 optional Learn checks should not
+   force users past eight full lists before reaching their lesson catalogue.
+   Each chapter is a native keyboard/screen-reader disclosure; child answers
+   remain source-owned details and the existing 169-question bank is untouched. */
+.mm-reference-layout #path .mm-learn-reasoning-chapter>summary.mm-learn-reasoning-chapter-title{
+  cursor:pointer;list-style:none;min-height:64px;
+  border-bottom:0;align-items:center;
+}
+.mm-reference-layout #path .mm-learn-reasoning-chapter>summary::-webkit-details-marker{display:none;}
+.mm-reference-layout #path .mm-learn-reasoning-chapter[open]>summary{
+  border-bottom:1px solid #397497;
+}
+.mm-reference-layout #path .mm-learn-reasoning-chapter>summary:focus-visible{
+  outline:3px solid #9efbe8;outline-offset:-3px;border-radius:12px;
+}
+.mm-reference-layout #path .mm-learn-chapter-toggle{
+  display:inline-block;flex:0 0 14px;text-align:center;
+  font-size:22px;line-height:1;color:#a9f4e7;transition:transform .14s ease;
+}
+.mm-reference-layout #path .mm-learn-reasoning-chapter[open] .mm-learn-chapter-toggle{
+  transform:rotate(180deg);
+}
+@media(max-width:700px){
+  .mm-reference-layout #path .mm-learn-reasoning-chapter>summary{
+    gap:8px;padding:12px!important;
+  }
+  .mm-reference-layout #path .mm-learn-reasoning-chapter-title>div{
+    min-width:0;flex:1;
+  }
+  .mm-reference-layout #path .mm-learn-chapter-count{
+    white-space:nowrap;flex:0 0 auto;
+  }
+  /* Opaque visual safe zone underneath the floating five-tab bar. A
+     scrollable document still exists behind it; footer clearance/scroll
+     margins keep every native control reachable ABOVE the bar. */
+  html.mm-app-shell-registry body::after{
+    content:"";position:fixed;left:0;right:0;bottom:0;
+    height:calc(var(--mm-mobile-nav-height,70px) + 28px + env(safe-area-inset-bottom));
+    z-index:39;pointer-events:none;
+    background:linear-gradient(to bottom,rgba(6,16,28,0),#06101c 14px,#06101c);
+  }
+  html.mm-app-shell-registry .mobile-nav{z-index:40!important;}
+  .mm-reference-layout #path :is(
+    .mm-learn-reasoning-chapter>summary,.mm-learn-reasoning-item>summary,
+    .mm-catalog-extra button,.mm-learn-jump a
+  ){scroll-margin-bottom:calc(var(--mm-mobile-content-clearance,110px) + 18px);}
+}
+@media(prefers-reduced-motion:reduce){
+  .mm-reference-layout #path .mm-learn-chapter-toggle{transition:none;}
+}

@@ -329,7 +329,14 @@ for(const width of [360,412]){
   expect(chapterCounts).toEqual([4,4,4,4,4,4,4,4]);
   await expect(learn.locator('#mmLearnCourses [data-mm-catalog-group]')).toHaveCount(22);
   await expect(learn.locator('#mmLearnCourses [data-mm-catalog-item]')).toHaveCount(176);
-  const first=learn.locator('#mmLearnReasoning .mm-learn-reasoning-item').first();
+  const reasoningChapters=learn.locator('#mmLearnReasoning details.mm-learn-reasoning-chapter');
+  await expect(reasoningChapters).toHaveCount(8);
+  for(const chapter of await reasoningChapters.all())await expect(chapter).not.toHaveAttribute('open','');
+  const compactList=await learn.locator('#mmLearnReasoning .mm-learn-reasoning-list').evaluate(node=>node.getBoundingClientRect().height);
+  expect(compactList).toBeLessThan(1000);
+  await reasoningChapters.first().locator(':scope > summary').click();
+  await expect(reasoningChapters.first()).toHaveAttribute('open','');
+  const first=reasoningChapters.first().locator('.mm-learn-reasoning-item').first();
   await first.locator('summary').click();
   await expect(first).toHaveAttribute('open','');
   await expect(first).toContainText('Suggested answer');
@@ -344,6 +351,37 @@ for(const width of [360,412]){
   await expect(page.locator('#path #mmLearnArena')).toHaveCount(1);
  });
 }
+test('Android Learn disclosures shorten the long reading path without trapping lessons below the five-tab bar',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await openApp(page);
+ await openHub(page,'Learn','#path .mm-learn-hub');
+ const chapters=page.locator('#path #mmLearnReasoning details.mm-learn-reasoning-chapter');
+ await expect(chapters).toHaveCount(8);
+ await expect(page.locator('#path #mmLearnReasoning details.mm-learn-reasoning-item')).toHaveCount(32);
+ expect(await chapters.evaluateAll(nodes=>nodes.every(node=>!node.open))).toBe(true);
+ const initialHeight=await page.locator('#path #mmLearnReasoning .mm-learn-reasoning-list').evaluate(node=>node.getBoundingClientRect().height);
+ await chapters.nth(6).locator(':scope > summary').click();
+ await expect(chapters.nth(6).locator('details.mm-learn-reasoning-item').first().locator('summary')).toBeVisible();
+ const expandedHeight=await page.locator('#path #mmLearnReasoning .mm-learn-reasoning-list').evaluate(node=>node.getBoundingClientRect().height);
+ expect(expandedHeight).toBeGreaterThan(initialHeight+220);
+ await chapters.nth(6).locator(':scope > summary').click();
+ await expect(chapters.nth(6)).not.toHaveAttribute('open','');
+ const footer=page.locator('#path .mm-catalog-extra [data-mm-hub-action="learn-resources"]');
+ await footer.scrollIntoViewIfNeeded();
+ await page.evaluate(()=>window.scrollTo(0,document.documentElement.scrollHeight));
+ const safe=await page.evaluate(()=>{
+   const nav=document.querySelector('.mobile-nav').getBoundingClientRect();
+   const footer=document.querySelector('#path .mm-catalog-extra button').getBoundingClientRect();
+   const screen=getComputedStyle(document.body,'::after');
+   return {navTop:nav.top,footerBottom:footer.bottom,scrimHeight:parseFloat(screen.height),scrimEvents:screen.pointerEvents,overflow:document.documentElement.scrollWidth-innerWidth};
+ });
+ expect(safe.footerBottom).toBeLessThanOrEqual(safe.navTop+2);
+ expect(safe.scrimHeight).toBeGreaterThan(70);
+ expect(safe.scrimEvents).toBe('none');
+ expect(safe.overflow).toBeLessThanOrEqual(2);
+ expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts().total)).toBe(169);
+});
+
 test('Learn Arena boss round keeps source-owned feedback and the scenario return goes back to Learn',async({page})=>{
  await page.setViewportSize({width:390,height:844});
  await openApp(page);
@@ -399,7 +437,10 @@ test('Learn deep reasoning contains 32 distinct, unscored evidence-and-caveat ch
     expect(row.explanations.every(x=>x.length>=50)).toBe(true);
   }
   expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts())).toEqual({formal:57,scenarios:40,diagnostic:36,materials:24,measured:12,total:169});
-  const final=answers.locator('details.mm-learn-reasoning-item').last();
+  const lastChapter=answers.locator('details.mm-learn-reasoning-chapter').last();
+  await expect(lastChapter).not.toHaveAttribute('open','');
+  await lastChapter.locator(':scope > summary').click();
+  const final=lastChapter.locator('details.mm-learn-reasoning-item').last();
   await final.locator('summary').click();
   await expect(final).toHaveAttribute('open','');
   await expect(final).toContainText('Common mistake to avoid');

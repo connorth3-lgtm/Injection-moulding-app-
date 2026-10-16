@@ -1025,11 +1025,15 @@ const LEARN_REASONING_CHAPTERS=Object.freeze([
 function learnReasoningMarkup(){
   return LEARN_REASONING_CHAPTERS.map(chapter=>{
     const questions=LEARN_REASONING_REVIEWS.filter(item=>item.chapter===chapter.label);
-    return `<section class="mm-learn-reasoning-chapter" aria-labelledby="mmLearnChapter-${esc(chapter.id)}">
-      <header class="mm-learn-reasoning-chapter-title"><div><span class="eyebrow">${esc(chapter.short)} · unscored teaching</span><h4 id="mmLearnChapter-${esc(chapter.id)}">${esc(chapter.title)}</h4></div><span class="mm-learn-chapter-count">${questions.length} questions</span></header>
+    // Physical Android feedback: the 32 optional prompts must be discoverable
+    // without making users scroll through all of them to reach All lessons.
+    // Native nested details preserve every authored question, answer, and
+    // keyboard/screen-reader affordance; all eight groups begin collapsed.
+    return `<details class="mm-learn-reasoning-chapter" aria-labelledby="mmLearnChapter-${esc(chapter.id)}">
+      <summary class="mm-learn-reasoning-chapter-title"><div><span class="eyebrow">${esc(chapter.short)} · unscored teaching</span><h4 id="mmLearnChapter-${esc(chapter.id)}">${esc(chapter.title)}</h4></div><span class="mm-learn-chapter-count">${questions.length} questions</span><span class="mm-learn-chapter-toggle" aria-hidden="true">⌄</span></summary>
       ${questions.map(item=>`<details class="mm-learn-reasoning-item"><summary><span class="mm-learn-reasoning-topic">${esc(item.id)} · ${esc(item.topic)}</span><strong>${esc(item.question)}</strong><span class="mm-learn-reveal">Reveal the reasoning ↓</span></summary>
         <div class="mm-learn-reasoning-answer"><b>Suggested answer</b><p>${esc(item.answer)}</p><b>Why that is plausible</b><p>${esc(item.explanation)}</p><b>Evidence to verify</b><p>${esc(item.evidence)}</p><b>Common mistake to avoid</b><p>${esc(item.pitfall)}</p></div></details>`).join('')}
-    </section>`;
+    </details>`;
   }).join('');
 }
 function learnHubMarkup(){
