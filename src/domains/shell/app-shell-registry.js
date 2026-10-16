@@ -21,6 +21,7 @@ const renderListeners=new Map();
 let finalized=false;
 let activeCustomId='';
 let mobileNavObserver=null;
+let mobileNavSizeObserver=null;
 let mobileNavNormalizing=false;
 let geometryQueued=false;
 let dashboardComposeQueued=false;
@@ -53,6 +54,18 @@ function syncMobileGeometry(){
     const h=Math.ceil(nav.getBoundingClientRect().height);
     if(h>0)document.documentElement.style.setProperty('--mm-mobile-nav-height',`${h}px`)
   })
+}
+function observeMobileNavSize(){
+  const nav=document.querySelector('.mobile-nav');
+  if(!nav)return;
+  // Android's system font setting can increase the actual five-tab height
+  // without firing a window resize. Keep content clearance source-measured.
+  if(!mobileNavSizeObserver&&typeof ResizeObserver==='function'){
+    mobileNavSizeObserver=new ResizeObserver(syncMobileGeometry);
+    mobileNavSizeObserver.observe(nav);
+  }
+  if(document.fonts?.ready)document.fonts.ready.then(syncMobileGeometry).catch(()=>{});
+  window.visualViewport?.addEventListener('resize',syncMobileGeometry,{passive:true});
 }
 function canonicalMoreButton(button){const handler=button.getAttribute('data-mm-onclick')||button.getAttribute('onclick')||'';return !button.dataset.view&&(handler.includes('openMobileMenu')||/\bMore\b/i.test(button.textContent||''))}
 function ensureMaterialsMobileTab(){
@@ -436,7 +449,7 @@ function finalize(){
   openMobileMenu=openMobileMenuCanonical;window.openMobileMenu=openMobileMenuCanonical;
   window.__MM_DIAGNOSTIC_MORE_PATCH__=true;window.__MM_PROCESS_DATA_MORE_PATCH__=true;window.__MM_MATERIAL_MORE_PATCH__=true;window.__MM_REFERENCE_DATA_MORE_PATCH__=true;window.__MM_LEARNING_INSIGHTS_MORE__=true;
   finalized=true;
-  syncNavigation();window.addEventListener('resize',syncMobileGeometry,{passive:true});
+  syncNavigation();observeMobileNavSize();window.addEventListener('resize',syncMobileGeometry,{passive:true});
   try{if(typeof currentView==='string'&&currentView==='dashboard')renderDashboardCanonical();else if(currentView==='lesson')renderLessonCanonical();else syncActiveState()}catch(e){console.warn('[MouldMaster shell] initial canonical render failed',e)}
 }
 
