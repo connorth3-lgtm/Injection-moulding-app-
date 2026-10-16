@@ -778,10 +778,11 @@ test('Android bar and content clearance shrink after a taller navigation state',
     document.documentElement.style.getPropertyValue('--mm-mobile-nav-height')
   ))).toBeGreaterThanOrEqual(150);
   await page.evaluate(()=>document.querySelector('.mobile-nav').style.removeProperty('min-height'));
-  await expect.poll(()=>page.evaluate(()=>({
-    measured:parseFloat(document.documentElement.style.getPropertyValue('--mm-mobile-nav-height')),
-    actual:Math.ceil(document.querySelector('.mobile-nav').getBoundingClientRect().height)
-  }))).toEqual(expect.objectContaining({measured:expect.any(Number),actual:expect.any(Number)}));
+  await expect.poll(()=>page.evaluate(()=>{
+    const measured=parseFloat(document.documentElement.style.getPropertyValue('--mm-mobile-nav-height'));
+    const actual=Math.ceil(document.querySelector('.mobile-nav').getBoundingClientRect().height);
+    return Number.isFinite(measured)&&actual<150&&measured<150&&measured>=actual;
+  })).toBe(true);
   const geometry=await page.evaluate(()=>{
     const actual=Math.ceil(document.querySelector('.mobile-nav').getBoundingClientRect().height);
     const measured=parseFloat(document.documentElement.style.getPropertyValue('--mm-mobile-nav-height'));
