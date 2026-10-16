@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS: release 2026.10.15.3 source d827fb7d9d0e73486b49fc27f29a5ccdff092f36 completed successful exact-source producer run 38791607720, retained artifact 11999364412, digest sha256:9a6367509cc93cf83924de4069570754d8fc510771dc82ce6d39bbe25cfef948, expiry 2027-01-13T19:09:45Z, and measured public-runtime fingerprint sha256:80ed59be26c4c6e7906ca4abeb55b5df1df0cbaa94390749427ff6cc991d6d3f. Software provenance only; seven independent external human/device/provider streams HOLD. |
-| Behavioral / browser | **pass** | PASS: release 2026.10.15.3 source d827fb7d9d0e73486b49fc27f29a5ccdff092f36 completed exact-source Mobile Browser QA 38791607812 (approved strict 52-screenshot 12px visual, substantive Chromium/WebKit, cross-browser, reachability and five 100-run reliability shards), plus Question Quality 38791607780. No physical-device, human SME or provider approval. |
+| Static / contract | **fail** | FAIL / HOLD: release 2026.10.16.1 has no accepted exact-source producer artifact or approved successor visual baseline. Prior 2026.10.15.3 provenance remains historical; independent external reviews HOLD. |
+| Behavioral / browser | **fail** | FAIL / HOLD: release 2026.10.16.1 browser visual baseline approval and candidate retention are incomplete. Prior 2026.10.15.3 successful browser evidence cannot transfer to changed runtime bytes. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
