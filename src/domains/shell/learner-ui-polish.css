@@ -4030,11 +4030,14 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
 @media(max-width:700px){
   .mm-reference-layout #modal .grid2[data-mm-more-organized="1"]{
     min-width:0!important;gap:9px!important;
-    /* The last expanded link must scroll above the measured five-tab bar. */
-    padding-bottom:calc(var(--mm-mobile-content-clearance,110px) + 20px)!important;
+    /* Collapsed More must stay compact; expanded groups need room above nav. */
+    padding-bottom:max(12px,env(safe-area-inset-bottom))!important;
   }
   .mm-reference-layout #modal .mm-reference-more-card{
     margin:0!important;border-radius:14px!important;overflow:hidden!important;
+  }
+  .mm-reference-layout #modal .grid2[data-mm-more-organized="1"]:has(.mm-more-disclosure[open]){
+    padding-bottom:calc(var(--mm-mobile-content-clearance,110px) + 16px)!important;
   }
   .mm-reference-layout #modal .modal-card{
     scroll-padding-bottom:calc(var(--mm-mobile-content-clearance,110px) + 12px)!important;
