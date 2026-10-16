@@ -411,7 +411,12 @@ test('Mission Control and Mission evidence strips stay off all mobile tabs witho
   await page.keyboard.press('Escape');
 
   await page.evaluate(()=>openMobileMenu());
-  await page.locator('#modal [data-mm-registry-menu="mission-commands"]').click();
+  const commandsGroup=page.locator('#modal [data-mm-more-section="mission"]');
+  await expect(commandsGroup.locator(':scope > summary')).toBeVisible();
+  if(!(await commandsGroup.evaluate(el=>el.open)))await commandsGroup.locator(':scope > summary').click();
+  const commands=commandsGroup.locator('[data-mm-registry-menu="mission-commands"]');
+  await expect(commands).toBeVisible();
+  await commands.click();
   await expect(page.locator('body')).toHaveAttribute('data-mm-view','dashboard');
   await expect(mc.locator('.mm-mc-palette')).toBeVisible();
   await expect(mc.locator('.mm-mc-context')).toBeHidden();
