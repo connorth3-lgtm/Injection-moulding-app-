@@ -70,7 +70,14 @@ test('five mobile tabs start with actionable content instead of oversized introd
 
   await nav.getByRole('button',{name:'More'}).click();
   await expect(page.locator('#modal .modal-card')).toBeVisible();
-  await expect(page.locator('#modal .quick-action').first()).toBeVisible();
+  const more=page.locator('#modal .mm-more-disclosure');
+  await expect(more).toHaveCount(6);
+  await expect(more.first().locator(':scope > summary')).toBeVisible();
+  // Compact by default; the original help action remains reachable by one tap.
+  await expect(page.locator('#modal .quick-action:visible')).toHaveCount(0);
+  const support=page.locator('#modal .mm-reference-more-extra').first();
+  await support.locator(':scope > summary').click();
+  await expect(support.getByRole('link',{name:'Open support information'})).toBeVisible();
 });
 
 test('Home and More use collapsible, mobile-safe panels without losing actions',async({page})=>{
@@ -98,11 +105,12 @@ test('Home and More use collapsible, mobile-safe panels without losing actions',
   ]){
     const disclosure=menu.locator(`[data-mm-more-section="${section}"]`);
     await expect(disclosure).toHaveCount(1);
-    await expect(disclosure.locator(`[data-mm-registry-menu="${id}"]`)).toBeVisible();
-    await disclosure.locator('summary').click();
+    await expect(disclosure).not.toHaveAttribute('open','');
     await expect(disclosure.locator(`[data-mm-registry-menu="${id}"]`)).toBeHidden();
-    await disclosure.locator('summary').click();
+    await disclosure.locator(':scope > summary').click();
     await expect(disclosure.locator(`[data-mm-registry-menu="${id}"]`)).toBeVisible();
+    await disclosure.locator(':scope > summary').click();
+    await expect(disclosure.locator(`[data-mm-registry-menu="${id}"]`)).toBeHidden();
   }
   expect(await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth)).toBeLessThanOrEqual(2);
   await page.evaluate(()=>closeModal());
@@ -350,8 +358,12 @@ test('primary IA keeps Materials singular and every major destination reachable'
   await expect(page.locator('#modal .modal-card')).toBeVisible();
   await expect(page.locator('#modal .modal-card h2')).toHaveText('More');
   await expect(page.locator('#modal .quick-action').filter({hasText:/^Materials$/i})).toHaveCount(0);
-  for(const label of ['Standards & safety','Profile & data']){
-    await expect(page.locator('#modal').getByRole('button',{name:new RegExp(label,'i')})).toBeVisible();
+  // Each destination is still reachable through its visible compact category.
+  for(const [section,label] of [['references','Standards & safety'],['account','Profile & data']]){
+    const disclosure=page.locator(`#modal [data-mm-more-section="${section}"]`);
+    await expect(disclosure.locator(':scope > summary')).toBeVisible();
+    await disclosure.locator(':scope > summary').click();
+    await expect(disclosure.getByRole('button',{name:new RegExp(label,'i')})).toBeVisible();
   }
   for(const label of ['Process simulator','Defect finder','Troubleshooting coach','Knowledge checks','Mould Master','Data diagnosis']){
     await expect(page.locator('#modal').getByRole('button',{name:new RegExp(label,'i')})).toHaveCount(0);
