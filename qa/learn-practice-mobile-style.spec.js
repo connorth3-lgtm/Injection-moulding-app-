@@ -768,6 +768,30 @@ test('Android focus scrolls content above the measured bottom navigation',async(
 });
 
 
+test('Android bar and content clearance shrink after a taller navigation state',async({page})=>{
+  await page.setViewportSize({width:360,height:800});
+  await openApp(page);
+  const nav=page.locator('.mobile-nav');
+  await expect(nav).toBeVisible();
+  await page.evaluate(()=>document.querySelector('.mobile-nav').style.setProperty('min-height','150px','important'));
+  await expect.poll(()=>page.evaluate(()=>parseFloat(
+    document.documentElement.style.getPropertyValue('--mm-mobile-nav-height')
+  ))).toBeGreaterThanOrEqual(150);
+  await page.evaluate(()=>document.querySelector('.mobile-nav').style.removeProperty('min-height'));
+  await expect.poll(()=>page.evaluate(()=>({
+    measured:parseFloat(document.documentElement.style.getPropertyValue('--mm-mobile-nav-height')),
+    actual:Math.ceil(document.querySelector('.mobile-nav').getBoundingClientRect().height)
+  }))).toEqual(expect.objectContaining({measured:expect.any(Number),actual:expect.any(Number)}));
+  const geometry=await page.evaluate(()=>{
+    const actual=Math.ceil(document.querySelector('.mobile-nav').getBoundingClientRect().height);
+    const measured=parseFloat(document.documentElement.style.getPropertyValue('--mm-mobile-nav-height'));
+    return {actual,measured};
+  });
+  expect(geometry.actual).toBeLessThan(150);
+  expect(geometry.measured).toBeLessThan(150);
+  expect(geometry.measured).toBeGreaterThanOrEqual(geometry.actual);
+});
+
 test('Android font scaling keeps bottom-nav clearance source-measured',async({page})=>{
   await page.setViewportSize({width:360,height:800});
   await openApp(page);
