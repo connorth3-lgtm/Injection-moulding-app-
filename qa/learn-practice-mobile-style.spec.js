@@ -753,3 +753,27 @@ test('Android focus scrolls content above the measured bottom navigation',async(
     }
   }
 });
+
+
+test('Android font scaling keeps bottom-nav clearance source-measured',async({page})=>{
+  await page.setViewportSize({width:360,height:800});
+  await openApp(page);
+  const nav=page.locator('.mobile-nav');
+  await expect(nav).toBeVisible();
+  await page.evaluate(()=>{document.documentElement.style.fontSize='200%';});
+  await expect.poll(()=>page.evaluate(()=>{
+    const nav=document.querySelector('.mobile-nav');
+    const measured=parseFloat(document.documentElement.style.getPropertyValue('--mm-mobile-nav-height'));
+    return Number.isFinite(measured)&&measured>=Math.ceil(nav.getBoundingClientRect().height);
+  })).toBe(true);
+  await page.evaluate(()=>switchView('scenarios'));
+  const next=page.locator('#scenarios .mm-practice-guided-controls button').first();
+  await expect(next).toBeVisible();
+  await next.evaluate(el=>el.scrollIntoView({block:'end',behavior:'instant'}));
+  const clearance=await page.evaluate(()=>{
+    const navTop=document.querySelector('.mobile-nav').getBoundingClientRect().top;
+    const controlBottom=document.querySelector('#scenarios .mm-practice-guided-controls button').getBoundingClientRect().bottom;
+    return navTop-controlBottom;
+  });
+  expect(clearance).toBeGreaterThanOrEqual(4);
+});
