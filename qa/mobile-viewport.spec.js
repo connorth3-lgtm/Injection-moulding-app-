@@ -240,6 +240,13 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await expect(page.locator('[data-mm-registry-menu="learning-insights"]')).toHaveCount(1);
       await expect(page.locator('[data-mm-registry-menu="repair-app-files"]')).toHaveCount(1);
       const insights=page.locator('[data-mm-registry-menu="learning-insights"]');
+      const learning=page.locator('#modal [data-mm-more-section="learning"]');
+      await expect(learning.locator(':scope > summary')).toBeVisible();
+      // Keyboard users must open the native disclosure before its links can
+      // receive focus. Focusing a hidden child programmatically isn't access.
+      await learning.locator(':scope > summary').focus();
+      if(!(await learning.evaluate(el=>el.open)))await page.keyboard.press('Enter');
+      await expect(insights).toBeVisible();
       await insights.focus();
       await page.keyboard.press('Enter');
       await expect(page.locator('#learningInsights')).toBeVisible();
@@ -395,6 +402,9 @@ test('Mission Control and Mission evidence strips stay off all mobile tabs witho
   await page.evaluate(()=>openMobileMenu());
   await expect(page.locator('#modal .modal-card')).toBeVisible();
   await expect(mc.locator('.mm-mc-context')).toBeHidden();
+  const mission=page.locator('#modal [data-mm-more-section="mission"]');
+  await expect(mission.locator(':scope > summary')).toBeVisible();
+  if(!(await mission.evaluate(el=>el.open)))await mission.locator(':scope > summary').click();
   await page.locator('#modal [data-mm-registry-menu="mission-evidence"]').click();
   await expect(page.locator('body')).toHaveAttribute('data-mm-view','dashboard');
   await expect(mc.locator('.mm-mc-evidence-row')).toContainText('QA cavity mass balance check');
