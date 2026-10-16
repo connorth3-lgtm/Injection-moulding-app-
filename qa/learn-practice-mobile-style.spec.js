@@ -694,8 +694,20 @@ test('small Android Practice stages scroll horizontally with legible full labels
   await page.setViewportSize({width:360,height:800});
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
-  const progress=page.locator('#scenarios .mm-practice-guided-progress');
+  const guided=page.locator('#scenarios #mmPracticeGuided');
+  await expect(guided).toBeVisible();
+  const progress=guided.locator('.mm-practice-guided-progress');
+  await expect(progress).toBeVisible();
   await expect(progress.locator(':scope > li')).toHaveCount(5);
+  // WebKit can still be finishing its deferred route render after the
+  // children enter the DOM. Geometry is meaningful only once laid out.
+  await expect.poll(()=>progress.evaluate(el=>({
+    visible:el.getClientRects().length>0,
+    client:el.clientWidth,scroll:el.scrollWidth,
+    computed:getComputedStyle(el).gridTemplateColumns
+  }))).toMatchObject({visible:true});
+  await expect.poll(()=>progress.evaluate(el=>el.clientWidth)).toBeGreaterThan(0);
+  await expect.poll(()=>progress.evaluate(el=>el.scrollWidth-el.clientWidth)).toBeGreaterThan(0);
   const values=await progress.evaluate(el=>({
     inner:el.clientWidth,scroll:el.scrollWidth,
     font:getComputedStyle(el.querySelector('li small')).fontSize,
