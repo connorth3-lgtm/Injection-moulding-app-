@@ -807,11 +807,18 @@ test('Android font scaling keeps bottom-nav clearance source-measured',async({pa
   await page.evaluate(()=>switchView('scenarios'));
   const next=page.locator('#scenarios .mm-practice-guided-controls button').first();
   await expect(next).toBeVisible();
-  await next.evaluate(el=>el.scrollIntoView({block:'end',behavior:'instant'}));
-  const clearance=await page.evaluate(()=>{
-    const navTop=document.querySelector('.mobile-nav').getBoundingClientRect().top;
-    const controlBottom=document.querySelector('#scenarios .mm-practice-guided-controls button').getBoundingClientRect().bottom;
-    return navTop-controlBottom;
-  });
-  expect(clearance).toBeGreaterThanOrEqual(4);
+  // On a zoomed phone, WebKit can finish the long Practice render after the
+  // first scroll attempt. Recenter after each layout step and require the
+  // action to be a real unobscured hit target, rather than accepting a stale
+  // bounding rectangle or a hidden button.
+  await expect.poll(async()=>{
+    await next.evaluate(el=>el.scrollIntoView({block:'center',inline:'nearest',behavior:'instant'}));
+    return next.evaluate(el=>{
+      const a=el.getBoundingClientRect(),nav=document.querySelector('.mobile-nav');
+      const n=nav.getBoundingClientRect();
+      const x=(a.left+a.right)/2,y=(a.top+a.bottom)/2;
+      const hit=document.elementFromPoint(x,y);
+      return a.top>=0&&a.bottom<=n.top-4&&hit&&(hit===el||el.contains(hit));
+    });
+  },{timeout:10000}).toBe(true);
 });
