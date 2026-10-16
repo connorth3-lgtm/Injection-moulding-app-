@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **fail** |
+| Technical automation | **pass** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | FAIL / HOLD: release 2026.10.16.1 has no accepted exact-source producer artifact or approved successor visual baseline. Prior 2026.10.15.3 provenance remains historical; independent external reviews HOLD. |
-| Behavioral / browser | **fail** | FAIL / HOLD: release 2026.10.16.1 browser visual baseline approval and candidate retention are incomplete. Prior 2026.10.15.3 successful browser evidence cannot transfer to changed runtime bytes. |
+| Static / contract | **pass** | PASS: release 2026.10.16.1 source e336f656351afa4eeaaae0940969bea881ae9b68 completed successful exact-source producer run 38864931906, retained artifact 12030806569, digest sha256:957f7a0b2e16aab3fd4b59fe86706b637a440593081152748fc18c8332cd32e7, expiry 2027-01-14T07:04:41Z, and measured public-runtime fingerprint sha256:3677de439e76c94b69ebeef13dd92904cd6b30818b88a5434fcbe3755529ec27. Technical source provenance only; seven independent external reviews HOLD. |
+| Behavioral / browser | **pass** | PASS: release 2026.10.16.1 source e336f656351afa4eeaaae0940969bea881ae9b68 completed exact-source Mobile Browser QA 38864931666 with approved strict 52-screenshot/12px visual, substantive Chromium/WebKit, cross-browser, reachability and five 100-run reliability shards, plus Question Quality 38864931729. No physical-device or human SME/provider approval. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |

@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "release": "2026.10.16.1",
   "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.16.1.md",
-  "sourceSha": null,
-  "runtimeFingerprint": null,
+  "sourceSha": "e336f656351afa4eeaaae0940969bea881ae9b68",
+  "runtimeFingerprint": "sha256:3677de439e76c94b69ebeef13dd92904cd6b30818b88a5434fcbe3755529ec27",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.16.1 has no accepted retained artifact; all NVDA and VoiceOver tasks remain pending. Earlier 2026.10.15.3 technical evidence is historical only.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.16.1 is bound to exact retained learner-runtime candidate e336f656351afa4eeaaae0940969bea881ae9b68; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -310,5 +310,5 @@
     "sourceSha": "d827fb7d9d0e73486b49fc27f29a5ccdff092f36",
     "runtimeFingerprint": "sha256:80ed59be26c4c6e7906ca4abeb55b5df1df0cbaa94390749427ff6cc991d6d3f"
   },
-  "technicalCandidateStatus": "unbound"
+  "technicalCandidateStatus": "exact retained successful public producer — independent real AT review pending"
 }

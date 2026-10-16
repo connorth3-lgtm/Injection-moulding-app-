@@ -310,7 +310,7 @@
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
-    "technicalAutomation": "fail",
+    "technicalAutomation": "pass",
     "bookPublicationAuthorization": "authorized",
     "bookIndependentSme": "hold",
     "curriculumIndependentSme": "hold",
@@ -345,12 +345,12 @@
   "userFacingTerminologyBoundary": "Internal evidenceMaturity=verified must be displayed as 'Source evidence reviewed'. The word verified must not be used by itself in learner-facing Book assurance because independent human SME/device/learner validation is a separate namespace.",
   "currentAssuranceEvidence": {
     "staticContract": {
-      "status": "fail",
-      "meaning": "FAIL / HOLD: release 2026.10.16.1 has no accepted exact-source producer artifact or approved successor visual baseline. Prior 2026.10.15.3 provenance remains historical; independent external reviews HOLD."
+      "status": "pass",
+      "meaning": "PASS: release 2026.10.16.1 source e336f656351afa4eeaaae0940969bea881ae9b68 completed successful exact-source producer run 38864931906, retained artifact 12030806569, digest sha256:957f7a0b2e16aab3fd4b59fe86706b637a440593081152748fc18c8332cd32e7, expiry 2027-01-14T07:04:41Z, and measured public-runtime fingerprint sha256:3677de439e76c94b69ebeef13dd92904cd6b30818b88a5434fcbe3755529ec27. Technical source provenance only; seven independent external reviews HOLD."
     },
     "behavioralBrowser": {
-      "status": "fail",
-      "meaning": "FAIL / HOLD: release 2026.10.16.1 browser visual baseline approval and candidate retention are incomplete. Prior 2026.10.15.3 successful browser evidence cannot transfer to changed runtime bytes."
+      "status": "pass",
+      "meaning": "PASS: release 2026.10.16.1 source e336f656351afa4eeaaae0940969bea881ae9b68 completed exact-source Mobile Browser QA 38864931666 with approved strict 52-screenshot/12px visual, substantive Chromium/WebKit, cross-browser, reachability and five 100-run reliability shards, plus Question Quality 38864931729. No physical-device or human SME/provider approval."
     },
     "externalHumanDevice": {
       "status": "hold",

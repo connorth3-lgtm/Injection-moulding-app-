@@ -6,8 +6,12 @@
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 619,
-  "candidate": null,
-  "boundary": "Release 2026.10.16.1 has no accepted retained artifact. NZQA/provider G1–G8, consent, assessment and accreditation remain pending and unapproved. Older 2026.10.15.3 candidate does not verify changed runtime bytes.",
+  "candidate": {
+    "release": "2026.10.16.1",
+    "sourceSha": "e336f656351afa4eeaaae0940969bea881ae9b68",
+    "runtimeFingerprint": "sha256:3677de439e76c94b69ebeef13dd92904cd6b30818b88a5434fcbe3755529ec27"
+  },
+  "boundary": "Release 2026.10.16.1 technical candidate e336f656351afa4eeaaae0940969bea881ae9b68 does not establish any of NZQA/provider G1–G8 external gates or assessment/accreditation authority. Genuine provider review remains pending-external.",
   "requiredGates": [
     {
       "id": "G1-provider",

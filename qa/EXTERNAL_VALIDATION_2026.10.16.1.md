@@ -1,6 +1,6 @@
 # MouldMaster 2026.10.16.1 — Android layout repair external-validation staging
 
-**STATUS: TECHNICAL AUTOMATION FAIL / ALL SEVEN INDEPENDENT EXTERNAL REVIEWS HOLD.** This version changes mobile More, Practice and navigation clearance; it has no successful accepted current technical candidate. The changed phone visuals were owner-approved only for actual source 04628e13a6c9a9517bef22bae6c12a456896f299, recorded in `qa/VISUAL_REVIEW_2026.10.16.1_PR639.md`.
+**STATUS: TECHNICAL AUTOMATION PASS / ALL SEVEN INDEPENDENT EXTERNAL REVIEWS HOLD.** This version updates the mobile More, Practice and navigation clearance. A real successful retained technical artifact 12030806569 was produced by exact-source run 38864931906 on e336f656351afa4eeaaae0940969bea881ae9b68 with fingerprint sha256:3677de439e76c94b69ebeef13dd92904cd6b30818b88a5434fcbe3755529ec27, digest sha256:957f7a0b2e16aab3fd4b59fe86706b637a440593081152748fc18c8332cd32e7, expiry 2027-01-14T07:04:41Z; Mobile Browser QA 38864931666 and Question Quality 38864931729 succeeded. This is software evidence only. The changed phone visuals were owner-approved only for actual source 04628e13a6c9a9517bef22bae6c12a456896f299, recorded in `qa/VISUAL_REVIEW_2026.10.16.1_PR639.md`.
 
 ## Release-specific independent HOLD streams
 
@@ -15,7 +15,7 @@
 ## Required release gates
 
 1. Complete exact-head substantive Chromium/WebKit, question quality, reachability and 500-run reliability tests. Retain the strict 52-screen/12px comparison; retain the owner-approved immutable `visual-baseline/2026.10.16.1` at exact reviewed source `04628e13a6c9a9517bef22bae6c12a456896f299` and rerun strict screenshot QA.
-2. Obtain a successful exact-source Pre-merge Public Candidate artifact. Record its authentic SHA, digest, runtime fingerprint, run and expiry before rebinding this ledger and seven review packets using the existing validated tool.
+2. Exact-source Pre-merge Public Candidate run 38864931906 and artifact 12030806569 completed successfully and are bound to the seven external HOLD packets. Verify the real live producer/artifact digest, expiry, public bytes and NZQA issue #619; do not treat technical retention as external approval.
 3. Keep physical PWA, NVDA/VoiceOver, Windows signing, Book and curriculum SME, learner outcomes and NZQA/provider checks at HOLD until actual human/device evidence exists. Preserve the separate protected-main owner merge decision.
 4. No tester invites, published change, validated recipe, machine-control, efficacy, signing or accreditation claim from this staging state.
 
