@@ -4012,10 +4012,14 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
 @media(max-width:700px){
   .mm-reference-layout #modal .grid2[data-mm-more-organized="1"]{
     min-width:0!important;gap:9px!important;
-    padding-bottom:calc(32px + env(safe-area-inset-bottom))!important;
+    /* The last expanded link must scroll above the measured five-tab bar. */
+    padding-bottom:calc(var(--mm-mobile-content-clearance,110px) + 20px)!important;
   }
   .mm-reference-layout #modal .mm-reference-more-card{
     margin:0!important;border-radius:14px!important;overflow:hidden!important;
+  }
+  .mm-reference-layout #modal .modal-card{
+    scroll-padding-bottom:calc(var(--mm-mobile-content-clearance,110px) + 12px)!important;
   }
   .mm-reference-layout #modal .mm-reference-more-card>summary{
     grid-template-columns:46px minmax(0,1fr) 22px!important;
@@ -4064,6 +4068,11 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
   }
   .mm-reference-layout #materials .mm-material-journey-actions button span{
     line-height:1.35!important;
+  }
+  /* Give native scroll-to-focus the same breathing room on both possible
+     scroll hosts; do not enlarge individual learning cards. */
+  .mm-reference-layout :is(.main,#mainContent){
+    scroll-padding-bottom:calc(var(--mm-mobile-content-clearance,110px) + 16px)!important;
   }
   /* Fixed navigation is intended, but anchor/focus movements should never
      align a learner control underneath it. Main scrolling retains its own
