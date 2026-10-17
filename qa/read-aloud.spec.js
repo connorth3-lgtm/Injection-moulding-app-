@@ -1027,6 +1027,10 @@ for(const phone of ['Android','iPhone']){
       Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
     },phone);
     await page.addScriptTag({path:'read-aloud.js'});
+    // Phone player is collapsed until the learner opens the Listen panel.
+    // The sound test is inside that panel and must be visibly actionable.
+    await page.locator('.mm-read-aloud summary').click();
+    await expect(page.locator('.mm-read-aloud details')).toHaveAttribute('open','');
     await page.locator('.mm-read-aloud [data-mm-read="test"]').click();
     await expect.poll(()=>page.evaluate(()=>window.__phoneTestVoiceText||'')).toBe('MouldMaster sound test. You should hear this sentence.');
     await expect(page.locator('.mm-read-aloud .mm-read-status')).toContainText('Sound test finished');
