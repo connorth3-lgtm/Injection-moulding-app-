@@ -4898,3 +4898,45 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
     border:1px solid CanvasText!important;
   }
 }
+
+
+/* Final Materials parity: the useful catalogue leads, not repeated banners. */
+.mm-reference-layout #path .mm-hub-continue{
+  order:-2!important;gap:7px!important;
+}
+.mm-reference-layout #path .mm-hub-continue-copy .eyebrow{
+  color:#7fedd9!important;font-size:10px!important;
+}
+.mm-reference-layout #path .mm-learn-courses{
+  order:-1!important;
+}
+.mm-reference-layout #path .mm-all-lessons .mm-catalog-head{
+  margin:0 0 10px!important;
+}
+.mm-reference-layout #path .mm-all-lessons .mm-catalog-head h2{
+  color:#f1f9ff!important;font-size:19px!important;
+}
+.mm-reference-layout #path .mm-all-lessons .mm-catalog-head p{
+  color:#a9cddb!important;line-height:1.43!important;
+}
+.mm-reference-layout #scenarios .mm-hub-continue{order:0!important}
+.mm-reference-layout #scenarios .mm-practice-hub>.mm-hub-section{order:-2!important}
+.mm-reference-layout #scenarios .mm-hub-section-head h2{
+  font-size:19px!important;color:#f1f9ff!important;
+}
+.mm-reference-layout #scenarios .mm-hub-section-head p{
+  color:#afcedb!important;
+}
+@media(max-width:700px){
+  .mm-reference-layout #path .mm-hub-continue{
+    grid-template-columns:minmax(0,1fr) 132px!important;
+    align-items:center!important;
+  }
+  .mm-reference-layout #path .mm-hub-continue h2{font-size:16px!important}
+  .mm-reference-layout #path .mm-hub-continue-action{
+    grid-column:2!important;grid-row:1!important;
+    min-height:56px!important;padding:8px!important;font-size:12px!important;
+  }
+  .mm-reference-layout #path .mm-hub-progress{font-size:11px!important}
+  .mm-reference-layout #scenarios .mm-hub-section-head{margin:0 0 8px!important}
+}
