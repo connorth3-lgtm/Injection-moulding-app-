@@ -735,10 +735,16 @@
     contentsWindowScrollY=saved.windowTop;
     pendingContentsScroll=null;
   }
-  function showReaderChapter(id){
+  function showReaderChapter(id,{preserveEditionPosition=false}={}){
     const reader=allReaderChapters().find(x=>x.id===id);if(!reader||!ui)return;
+    // Changing reading edition must not overwrite a real learner bookmark with chapter-top.
+    const editionSnapshot=preserveEditionPosition&&activeReadingPosition?.kind==='reader-chapter'&&activeReadingPosition.id===id&&resumeStorageKey()===activeReadingScopeKey
+      ?(flushReadingPosition({notify:false}),{...activeReadingPosition}):null;
     bookIntentEpoch++;rememberContentsBeforeReading();stopBookSpeech();contentsFocus={kind:'reader-chapter',id};restoreBookChrome();ui.hero.hidden=true;ui.accuracy.hidden=true;const back='<button type="button" class="ghost" data-mm-book-back>← Book contents</button>';
-    ui.reader.innerHTML=`${back}${readerChapterHtml(reader)}`;ui.contents.hidden=true;ui.reader.hidden=false;bindBack();ui.reader.querySelector('[data-mm-book-read-toggle]')?.addEventListener('click',event=>{const value=event.currentTarget.dataset.mmBookReadToggle;if(!['guided','complete'].includes(value))return;readerDisplayMode=value;showReaderChapter(id);});ui.reader.querySelector('[data-mm-book-listen-chapter]')?.addEventListener('click',()=>{if(ui.audioChapter)ui.audioChapter.value=id;startVerifiedListening({resume:false});});ui.reader.querySelectorAll('[data-mm-book-page-turn]').forEach(button=>button.addEventListener('click',()=>showReaderChapter(button.dataset.mmBookPageTurn)));bindMaterialPagination(ui.reader);bindBookScrollRoot();rememberReadingPosition('reader-chapter',id,reader.title,0);scrollBookReaderToTop();emitBookRender('reader-chapter',id);
+    ui.reader.innerHTML=`${back}${readerChapterHtml(reader)}`;ui.contents.hidden=true;ui.reader.hidden=false;bindBack();ui.reader.querySelector('[data-mm-book-read-toggle]')?.addEventListener('click',event=>{const value=event.currentTarget.dataset.mmBookReadToggle;if(!['guided','complete'].includes(value))return;readerDisplayMode=value;showReaderChapter(id,{preserveEditionPosition:true});});ui.reader.querySelector('[data-mm-book-listen-chapter]')?.addEventListener('click',()=>{if(ui.audioChapter)ui.audioChapter.value=id;startVerifiedListening({resume:false});});ui.reader.querySelectorAll('[data-mm-book-page-turn]').forEach(button=>button.addEventListener('click',()=>showReaderChapter(button.dataset.mmBookPageTurn)));bindMaterialPagination(ui.reader);bindBookScrollRoot();
+    if(editionSnapshot)void restoreReadingPosition(editionSnapshot,bookIntentEpoch);
+    else{rememberReadingPosition('reader-chapter',id,reader.title,0);scrollBookReaderToTop();}
+    emitBookRender('reader-chapter',id);
     if(reader.moduleIds.includes('material-families'))void hydrateMaterialAtlas();
   }
   function restoreBookChrome(){if(!ui)return;ui.hero.hidden=false;ui.accuracy.hidden=false;}
