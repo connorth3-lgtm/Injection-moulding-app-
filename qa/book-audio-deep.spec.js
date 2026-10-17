@@ -90,3 +90,19 @@ test('first-read Book keeps expert-review boundary visible and full original sec
   await original.locator('summary').first().click();
   await expect(original).toContainText('What transfer means');
 });
+
+test('switching from guided first-read to full original reader reveals omitted source prose without changing module evidence',async({page})=>{
+  await openBook(page);
+  await page.locator('#mmBookView [data-mm-book-reader-chapter-open="r06"]').click();
+  const root=page.locator('#mmBookView [data-mm-book-reader]');
+  await expect(root.locator('[data-mm-book-read-toggle]')).toHaveText('Read complete original text');
+  await expect(root.locator('[data-mm-book-reader-module="vp-transfer"] h4').filter({hasText:'What transfer means'})).toHaveCount(0);
+  await root.locator('[data-mm-book-read-toggle]').click();
+  await expect(root.locator('[data-mm-book-read-toggle]')).toHaveText('Switch to guided reading');
+  await expect(root.locator('[data-mm-book-reader-module="vp-transfer"] h4').filter({hasText:'What transfer means'})).toHaveCount(1);
+  await expect(root.locator('.mm-book-full-source-inline')).toHaveCount(0);
+  await expect(root.locator('.mm-book-reader-assurance')).toContainText('Independent human SME review pending');
+  await root.locator('[data-mm-book-read-toggle]').click();
+  await expect(root.locator('[data-mm-book-reader-module="vp-transfer"] h4').filter({hasText:'What transfer means'})).toHaveCount(0);
+  await expect(root.locator('.mm-book-full-source-inline').first()).toBeVisible();
+});
