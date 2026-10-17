@@ -1072,7 +1072,7 @@ function lessonReasoningMarkup(lessonId){
    <details class="mm-lesson-reasoning-group"><summary><span><span class="eyebrow">Optional · unscored lesson check</span><strong>Check your understanding</strong><small>${questions.length} evidence-based question${questions.length===1?'':'s'} for this lesson</small></span><span aria-hidden="true" class="mm-lesson-reasoning-chevron">⌄</span></summary>
    <div class="mm-lesson-reasoning-questions">
    ${questions.map(q=>`<details class="mm-lesson-reasoning-question" data-mm-lesson-reasoning-question="${esc(q.id)}"><summary><span class="mm-lesson-reasoning-topic">${esc(q.topic)}</span><strong>${esc(q.question)}</strong><small>Reveal the reasoning ↓</small></summary><div class="mm-lesson-reasoning-answer"><b>Suggested answer</b><p>${esc(q.answer)}</p><b>Why that is plausible</b><p>${esc(q.explanation)}</p><b>Evidence to verify</b><p>${esc(q.evidence)}</p><b>Common mistake to avoid</b><p>${esc(q.pitfall)}</p></div></details>`).join('')}
-   <p class="mm-learn-safety-note">Teaching only. These questions do not contribute to the 169 governed assessment prompts, completion, scoring, competence or machine-control authority. Use supplier guidance and approved site procedures for real equipment.</p></div></details></section>`;
+   <p class="mm-learn-safety-note">Teaching only. These optional questions are teaching only. They do not affect the 169 governed assessment prompts, completion, scoring or competence records, and they do not authorise equipment operation. Use supplier guidance and approved site procedures for real equipment.</p></div></details></section>`;
 }
 function mountLessonReasoning(root){
   if(!root?.querySelector('.lesson-body'))return;
