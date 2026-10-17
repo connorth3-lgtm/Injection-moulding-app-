@@ -4241,3 +4241,325 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
 @media(prefers-reduced-motion:reduce){
   .mm-reference-layout #lesson .mm-lesson-reasoning-chevron{transition:none;}
 }
+
+
+/* PR #640 — Materials-style information hierarchy across the learner app.
+   The Materials index is the visual reference: navy panels, thin blue edges,
+   a clear title, an honest summary, a useful fact, and one obvious next step.
+   Do not hide lesson prose, governed choices, safety warnings or real actions. */
+.mm-reference-layout{
+  --mm-tidy-surface:#101f34;
+  --mm-tidy-row:#082237;
+  --mm-tidy-edge:#2f5972;
+  --mm-tidy-ink:#edf7ff;
+  --mm-tidy-muted:#b7cddd;
+  --mm-tidy-detail:#7fe8d4;
+}
+.mm-reference-layout :is(#dashboard,#path .mm-learn-hub,#scenarios .mm-practice-hub,#lesson){
+  min-width:0;overflow-wrap:break-word;
+}
+.mm-reference-layout #path .mm-tidy-overview,
+.mm-reference-layout #scenarios .mm-tidy-overview{
+  display:grid;grid-template-columns:minmax(0,1fr);gap:11px;
+  box-sizing:border-box;min-width:0;padding:16px;
+  border:1px solid var(--mm-tidy-edge);border-radius:16px;
+  background:var(--mm-tidy-surface);color:var(--mm-tidy-ink);
+}
+.mm-reference-layout .mm-tidy-overview .eyebrow{
+  display:block;color:var(--mm-tidy-detail)!important;letter-spacing:.085em;
+  font-size:10px!important;line-height:1.3;
+}
+.mm-reference-layout .mm-tidy-overview h2{
+  color:var(--mm-tidy-ink)!important;margin:4px 0 5px!important;
+  font-size:clamp(19px,3.5vw,24px)!important;line-height:1.2!important;
+}
+.mm-reference-layout .mm-tidy-overview p{
+  color:var(--mm-tidy-muted)!important;font-size:13px!important;
+  line-height:1.45!important;margin:0!important;max-width:72ch;
+}
+.mm-reference-layout .mm-tidy-facts{
+  display:flex;flex-wrap:wrap;gap:7px;min-width:0;
+}
+.mm-reference-layout .mm-tidy-facts>span{
+  display:inline-flex;align-items:center;gap:5px;min-width:0;
+  padding:6px 9px;border:1px solid #315b74;border-radius:9px;
+  background:var(--mm-tidy-row);font-size:12px;line-height:1.3;
+  color:var(--mm-tidy-muted);white-space:normal;
+}
+.mm-reference-layout .mm-tidy-facts strong{color:var(--mm-tidy-detail);font-variant-numeric:tabular-nums}
+.mm-reference-layout #dashboard .mm-reference-title{
+  font-size:clamp(20px,3vw,24px)!important;line-height:1.2!important;
+  margin:0 0 9px!important;color:var(--mm-tidy-ink)!important;
+}
+.mm-reference-layout #dashboard .mm-reference-quick-tools h3,
+.mm-reference-layout #path .mm-learn-courses-head h2,
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-section-head h2{
+  color:var(--mm-tidy-ink)!important;font-size:18px!important;
+  line-height:1.26!important;letter-spacing:-.01em;
+}
+.mm-reference-layout #dashboard .mm-reference-quick-tool{
+  display:grid!important;grid-template-columns:38px minmax(0,1fr)!important;
+  grid-template-rows:auto!important;align-items:center!important;
+  justify-content:stretch!important;text-align:left!important;
+  gap:9px!important;padding:10px!important;min-height:78px!important;
+  background:var(--mm-tidy-row)!important;
+  border:1px solid var(--mm-tidy-edge)!important;border-radius:13px!important;
+  box-shadow:none!important;
+}
+.mm-reference-layout #dashboard .mm-reference-quick-icon{
+  display:grid;place-items:center;font-size:23px!important;
+  width:38px;height:38px;border-radius:10px;background:#10374b;
+}
+.mm-reference-layout #dashboard .mm-reference-quick-copy{
+  display:grid;align-content:center;gap:4px;min-width:0;
+}
+.mm-reference-layout #dashboard .mm-reference-quick-copy b{
+  display:block;color:#f2faff!important;font-size:13px!important;line-height:1.25!important;
+}
+.mm-reference-layout #dashboard .mm-reference-quick-copy small{
+  display:block;color:var(--mm-tidy-muted)!important;
+  font-size:11px!important;line-height:1.32!important;white-space:normal;
+}
+.mm-reference-layout #dashboard .mm-today-focus,
+.mm-reference-layout #dashboard .mm-home-book,
+.mm-reference-layout #dashboard .mm-home-toolbox{
+  border:1px solid var(--mm-tidy-edge)!important;
+  border-radius:15px!important;box-shadow:none!important;
+}
+.mm-reference-layout #dashboard .mm-today-focus{
+  background:#0c304b!important;
+}
+.mm-reference-layout #dashboard .mm-today-focus p,
+.mm-reference-layout #dashboard .mm-home-book :is(p,small){
+  line-height:1.45!important;
+}
+.mm-reference-layout #dashboard .mm-home-toolbox{
+  background:var(--mm-tidy-surface)!important;
+}
+.mm-reference-layout #path .mm-hub-continue,
+.mm-reference-layout #scenarios .mm-reference-practice-feature{
+  background:#0b2c46!important;border:1px solid var(--mm-tidy-edge)!important;
+  border-radius:15px!important;box-shadow:none!important;
+}
+.mm-reference-layout #path .mm-learn-jump a{
+  border-radius:10px;background:var(--mm-tidy-row)!important;
+  border-color:var(--mm-tidy-edge)!important;color:#e4f5fd!important;
+  text-decoration:none;min-height:44px!important;white-space:normal;
+}
+.mm-reference-layout #path .mm-learn-master-lesson{
+  border:1px solid var(--mm-tidy-edge)!important;border-radius:16px!important;
+  background:var(--mm-tidy-surface)!important;box-shadow:none!important;
+}
+.mm-reference-layout #path .mm-learn-master-intro{
+  padding:1px 1px 11px!important;
+}
+.mm-reference-layout #path .mm-learn-master-intro h2{
+  font-size:clamp(19px,3.5vw,24px)!important;margin:5px 0 7px!important;
+}
+.mm-reference-layout #path .mm-learn-master-intro p{
+  color:var(--mm-tidy-muted)!important;font-size:13px!important;line-height:1.45!important;
+}
+.mm-reference-layout #path .mm-learn-master-meta{
+  margin-top:9px!important;color:#8ee9d7!important;line-height:1.45!important;
+}
+.mm-reference-layout #path .mm-learn-step{
+  padding:15px 0 17px!important;border-color:#2d4e65!important;
+}
+.mm-reference-layout #path .mm-learn-step-head{
+  gap:10px!important;margin:0 0 12px!important;
+}
+.mm-reference-layout #path .mm-learn-step-num{
+  flex:0 0 34px!important;height:34px!important;border-radius:9px!important;
+  background:#113d56!important;color:var(--mm-tidy-detail)!important;
+}
+.mm-reference-layout #path .mm-learn-step-head h3{
+  font-size:17px!important;line-height:1.25!important;
+}
+.mm-reference-layout #path .mm-learn-arena h3{
+  font-size:clamp(19px,3.5vw,23px)!important;line-height:1.22!important;margin:4px 0 6px!important;
+}
+.mm-reference-layout #path .mm-learn-arena p{
+  color:var(--mm-tidy-muted)!important;font-size:13px!important;
+}
+.mm-reference-layout #path .mm-learn-arena-counts>div{
+  min-width:0!important;padding:10px!important;border-radius:10px!important;
+  border-color:var(--mm-tidy-edge)!important;background:var(--mm-tidy-row)!important;
+}
+.mm-reference-layout #path .mm-learn-arena-counts strong{font-size:23px!important}
+.mm-reference-layout #path .mm-learn-arena-counts span{line-height:1.3!important;text-align:center}
+.mm-reference-layout #path .mm-learn-master-lesson .mm-learn-question-centre .mm-hub-picker-grid{
+  border-color:var(--mm-tidy-edge)!important;border-radius:13px!important;
+  background:var(--mm-tidy-row)!important;
+}
+.mm-reference-layout #path .mm-learn-master-lesson .mm-learn-question-centre .mm-hub-picker-grid>button{
+  min-height:84px!important;padding:11px!important;gap:4px 10px!important;
+}
+.mm-reference-layout #path .mm-learn-master-lesson .mm-learn-question-centre .mm-hub-picker-grid>button b{
+  font-size:14px!important;line-height:1.32!important;
+}
+.mm-reference-layout #path .mm-learn-master-lesson .mm-learn-question-centre .mm-hub-picker-grid>button small{
+  font-size:12px!important;line-height:1.4!important;white-space:normal!important;
+}
+.mm-reference-layout #path .mm-learn-master-lesson .mm-learn-question-centre .mm-hub-picker-grid>button .mm-reference-practice-art{
+  width:52px!important;height:52px!important;
+}
+.mm-reference-layout #path .mm-learn-capstone{
+  border-color:var(--mm-tidy-edge)!important;border-radius:13px!important;
+}
+.mm-reference-layout #path .mm-learn-capstone h3{
+  font-size:18px!important;
+}
+.mm-reference-layout #scenarios .mm-practice-diagnose-journey,
+.mm-reference-layout #scenarios .mm-practice-guided,
+.mm-reference-layout #scenarios .mm-practice-cases{
+  border:1px solid var(--mm-tidy-edge)!important;
+  border-radius:15px!important;background:var(--mm-tidy-surface)!important;
+  box-shadow:none!important;
+}
+.mm-reference-layout #scenarios .mm-practice-diagnose-head h2,
+.mm-reference-layout #scenarios .mm-practice-guided-intro h2,
+.mm-reference-layout #scenarios .mm-practice-cases-head h2{
+  font-size:clamp(17px,3.5vw,22px)!important;line-height:1.25!important;
+}
+.mm-reference-layout #scenarios .mm-practice-diagnose-head p,
+.mm-reference-layout #scenarios .mm-practice-guided-intro p,
+.mm-reference-layout #scenarios .mm-practice-cases-head p{
+  font-size:13px!important;line-height:1.48!important;color:var(--mm-tidy-muted)!important;
+}
+.mm-reference-layout #scenarios .mm-practice-diagnose-stages>div{
+  border:1px solid var(--mm-tidy-edge)!important;
+  border-radius:11px!important;background:var(--mm-tidy-row)!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-grid>.mm-hub-tile{
+  border:1px solid var(--mm-tidy-edge)!important;border-radius:13px!important;
+  background:var(--mm-tidy-row)!important;box-shadow:none!important;
+  min-height:102px!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-grid>.mm-hub-tile :is(b,small){
+  white-space:normal!important;overflow:visible!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson .mm-simple-lesson-hero.mm-reference-deep-head{
+  border-color:var(--mm-tidy-edge)!important;border-radius:15px!important;
+  background:#0b3049!important;box-shadow:none!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson .lesson-body>.mm-simple-section:not(.mm-simple-note-section),
+.mm-reference-layout #lesson.mm-simple-lesson .lesson-body>.content-block:not(.mm-simple-note-section),
+.mm-reference-layout #lesson.mm-simple-lesson .lesson-body>.mm-next-card{
+  border-radius:13px!important;box-shadow:none!important;
+}
+.mm-reference-layout #lesson .mm-lesson-reasoning{
+  border-radius:14px!important;border-color:var(--mm-tidy-edge)!important;
+  background:#0b304b!important;
+}
+.mm-reference-layout #lesson .mm-lesson-reasoning-question{
+  border-color:var(--mm-tidy-edge)!important;
+  background:var(--mm-tidy-row)!important;
+}
+.mm-reference-layout #modal .mm-more-disclosure,
+.mm-reference-layout #modal .mm-reference-more-card{
+  border-radius:13px!important;box-shadow:none!important;
+}
+.mm-reference-layout #modal .mm-reference-more-card .mm-more-disclosure-items>.quick-action{
+  min-height:70px!important;border-radius:10px!important;
+}
+@media(min-width:701px){
+  .mm-reference-layout #path .mm-tidy-overview,
+  .mm-reference-layout #scenarios .mm-tidy-overview{
+    grid-template-columns:minmax(0,1.4fr) minmax(240px,.8fr);align-items:center;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+@media(max-width:700px){
+  .mm-reference-layout #dashboard .mm-reference-home-hero{
+    min-height:195px!important;padding:13px!important;
+    background:#092b43!important;box-shadow:none!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-hero-words{
+    padding-bottom:63px!important;max-width:72%!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-home-hero h2{
+    font-size:21px!important;margin:0 0 5px!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-home-hero p{
+    font-size:12px!important;line-height:1.42!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-home-hero .mm-reference-hero-photo{
+    width:53%!important;height:70%!important;right:-10%!important;top:20%!important;
+    opacity:.7!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-home-hero .mm-reference-home-practice{
+    min-height:49px!important;bottom:10px!important;left:10px!important;
+    right:10px!important;width:calc(100% - 20px)!important;
+    border-radius:10px!important;padding:7px 10px!important;box-shadow:none!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-home-practice .mm-reference-play{
+    width:29px;height:29px;flex-basis:29px;font-size:12px!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-tools{
+    margin:11px 0!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-tool{
+    min-height:78px!important;padding:9px!important;
+    grid-template-columns:31px minmax(0,1fr)!important;gap:7px!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-icon{
+    width:31px;height:31px;font-size:19px!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-copy b{font-size:12px!important}
+  .mm-reference-layout #dashboard .mm-reference-quick-copy small{font-size:10.5px!important}
+  .mm-reference-layout #dashboard .mm-today-focus{
+    padding:13px!important;gap:9px!important;
+  }
+  .mm-reference-layout #dashboard .mm-today-focus h2{font-size:20px!important}
+  .mm-reference-layout #path .mm-learn-jump{
+    display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:6px!important;
+  }
+  .mm-reference-layout #path .mm-learn-jump a{
+    padding:7px 5px!important;font-size:11px!important;
+    text-align:center;line-height:1.3!important;
+  }
+  .mm-reference-layout #path .mm-learn-master-lesson{
+    padding:12px!important;
+  }
+  .mm-reference-layout #path .mm-learn-master-lesson .mm-learn-question-centre .mm-hub-picker-grid>button{
+    grid-template-columns:52px minmax(0,1fr)!important;
+    min-height:80px!important;
+  }
+  .mm-reference-layout #scenarios .mm-practice-diagnose-journey,
+  .mm-reference-layout #scenarios .mm-practice-guided,
+  .mm-reference-layout #scenarios .mm-practice-cases{
+    padding:12px!important;gap:10px!important;
+  }
+  .mm-reference-layout #scenarios .mm-practice-hub .mm-hub-grid>.mm-hub-tile{
+    padding:12px!important;
+  }
+  .mm-reference-layout #lesson.mm-simple-lesson .mm-simple-lesson-hero.mm-reference-deep-head{
+    padding:15px!important;
+  }
+  .mm-reference-layout #lesson.mm-simple-lesson .mm-simple-lesson-hero h1{
+    font-size:clamp(23px,6vw,30px)!important;
+  }
+}
+@media(max-width:370px){
+  .mm-reference-layout #dashboard .mm-reference-home-hero{min-height:225px!important}
+  .mm-reference-layout #dashboard .mm-reference-hero-words{max-width:80%!important}
+  .mm-reference-layout .mm-tidy-facts>span{font-size:11px;padding:6px 7px}
+}
+@media(forced-colors:active){
+  .mm-reference-layout :is(#path,#scenarios) .mm-tidy-overview,
+  .mm-reference-layout #dashboard .mm-reference-quick-tool,
+  .mm-reference-layout #path .mm-learn-master-lesson,
+  .mm-reference-layout #scenarios :is(.mm-practice-diagnose-journey,.mm-practice-guided,.mm-practice-cases){
+    background:Canvas!important;color:CanvasText!important;border:1px solid CanvasText!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .mm-reference-layout #dashboard .mm-reference-quick-tool,
+  .mm-reference-layout #path .mm-learn-jump a{transition:none!important}
+}
