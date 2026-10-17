@@ -208,9 +208,9 @@ for(const width of [360,412]){
 
   await page.evaluate(()=>switchView('path'));
   const learn=page.locator('#path .mm-learn-hub');
-  await expect(learn.locator('.mm-tidy-overview')).toBeVisible();
-  await expect(learn.locator('.mm-tidy-facts>span')).toHaveCount(3);
-  await expect(learn.locator('.mm-tidy-facts')).toContainText('176');
+  await expect(learn.locator('#mmLearnCourses .mm-catalog-head')).toBeVisible();
+  await expect(learn.locator('#mmLearnCourses .mm-catalog-head')).toContainText('120 core');
+  await expect(learn.locator('#mmLearnCourses .mm-catalog-head')).toContainText('36 material science');
   await expect(learn.locator('#mmLearnQuestions .mm-hub-picker-grid>button')).toHaveCount(5);
   await expect(learn.locator('#mmLearnCourses [data-mm-catalog-item]')).toHaveCount(176);
   await expect(learn.locator('#mmLearnCourses [data-mm-catalog-query]')).toBeVisible();
@@ -226,8 +226,8 @@ for(const width of [360,412]){
 
   await page.evaluate(()=>switchView('scenarios'));
   const practice=page.locator('#scenarios .mm-practice-hub');
-  await expect(practice.locator('.mm-tidy-overview')).toBeVisible();
-  await expect(practice.locator('.mm-tidy-facts')).toContainText('40');
+  await expect(practice.locator('.mm-hub-section-head')).toContainText('40 scenarios');
+  await expect(practice.locator('.mm-hub-section-head')).toContainText('169 governed prompts');
   await expect(practice.locator('.mm-practice-guided')).toBeVisible();
   await expect(practice.locator('.mm-hub-grid>.mm-hub-tile')).toHaveCount(5);
   const practiceOrder=await page.evaluate(()=>({
