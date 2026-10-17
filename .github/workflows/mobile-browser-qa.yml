@@ -138,6 +138,14 @@ jobs:
       - name: Chromium substantive regression suite
         if: matrix.task == 'substantive'
         run: npx playwright test --config=playwright.substantive.config.cjs
+      # Owner review uses the actual mapped lesson section, not a Learn-top
+      # picture. This separate evidence never changes the immutable visual
+      # baseline or grants owner approval.
+      - name: Capture source-linked in-lesson visual review
+        if: always() && matrix.task == 'substantive'
+        env:
+          MM_LESSON_REVIEW_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: npx playwright test qa/learn-practice-mobile-style.spec.js --config=playwright.config.cjs --grep "all 32 unscored source questions map"
       - name: Upload Chromium QA artifacts
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
