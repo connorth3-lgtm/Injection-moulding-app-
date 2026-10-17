@@ -623,6 +623,7 @@ function createLessonCatalog(){
   function mountLesson(){
     const root=document.getElementById('lesson');
     if(!root||!root.querySelector('.lesson-body'))return;
+    mountLessonReasoning(root);
     root.querySelector('.mm-lessons-drawer')?.remove();
     root.querySelector('.lesson-side')?.remove();
     root.classList.add('mm-unified-lesson');
@@ -1022,6 +1023,68 @@ const LEARN_REASONING_CHAPTERS=Object.freeze([
     "short": "Validation"
   }
 ]);
+// Editorial crosswalk: one relevant, existing core lesson per source-authored
+// reflection. The 120-lesson curriculum and 169 governed assessment prompts
+// are immutable here. These 32 original answers remain *unscored* teaching.
+const LEARN_REASONING_TO_CORE_LESSON=Object.freeze({
+  'LR-01':46,
+  'LR-02':54,
+  'LR-03':39,
+  'LR-04':51,
+  'LR-05':53,
+  'LR-06':58,
+  'LR-07':65,
+  'LR-08':48,
+  'LR-09':45,
+  'LR-10':59,
+  'LR-11':30,
+  'LR-12':29,
+  'LR-13':56,
+  'LR-14':55,
+  'LR-15':64,
+  'LR-16':47,
+  'LR-17':34,
+  'LR-18':37,
+  'LR-19':60,
+  'LR-20':105,
+  'LR-21':94,
+  'LR-22':82,
+  'LR-23':76,
+  'LR-24':112,
+  'LR-25':6,
+  'LR-26':41,
+  'LR-27':15,
+  'LR-28':28,
+  'LR-29':75,
+  'LR-30':89,
+  'LR-31':73,
+  'LR-32':80
+});
+function learnReasoningForLesson(lessonId){
+  const id=Number(lessonId);
+  if(!Number.isInteger(id)||id<1||id>120)return [];
+  return LEARN_REASONING_REVIEWS.filter(q=>LEARN_REASONING_TO_CORE_LESSON[q.id]===id);
+}
+function lessonReasoningMarkup(lessonId){
+  const questions=learnReasoningForLesson(lessonId);
+  if(!questions.length)return '';
+  return `<section class="mm-lesson-reasoning" id="mmLessonReasoning" data-mm-lesson-reasoning-id="${Number(lessonId)}" aria-label="Lesson understanding checks">
+   <details class="mm-lesson-reasoning-group"><summary><span><span class="eyebrow">Optional · unscored lesson check</span><strong>Check your understanding</strong><small>${questions.length} evidence-based question${questions.length===1?'':'s'} for this lesson</small></span><span aria-hidden="true" class="mm-lesson-reasoning-chevron">⌄</span></summary>
+   <div class="mm-lesson-reasoning-questions">
+   ${questions.map(q=>`<details class="mm-lesson-reasoning-question" data-mm-lesson-reasoning-question="${esc(q.id)}"><summary><span class="mm-lesson-reasoning-topic">${esc(q.topic)}</span><strong>${esc(q.question)}</strong><small>Reveal the reasoning ↓</small></summary><div class="mm-lesson-reasoning-answer"><b>Suggested answer</b><p>${esc(q.answer)}</p><b>Why that is plausible</b><p>${esc(q.explanation)}</p><b>Evidence to verify</b><p>${esc(q.evidence)}</p><b>Common mistake to avoid</b><p>${esc(q.pitfall)}</p></div></details>`).join('')}
+   <p class="mm-learn-safety-note">Teaching only. These questions do not contribute to the 169 governed assessment prompts, completion, scoring, competence or machine-control authority. Use supplier guidance and approved site procedures for real equipment.</p></div></details></section>`;
+}
+function mountLessonReasoning(root){
+  if(!root?.querySelector('.lesson-body'))return;
+  const id=Number(lessonContext()?.lesson?.id);
+  const previous=root.querySelector('#mmLessonReasoning');
+  if(previous&&Number(previous.dataset.mmLessonReasoningId)===id)return;
+  previous?.remove();
+  const markup=lessonReasoningMarkup(id);if(!markup)return;
+  const anchor=root.querySelector('#mmCurriculumPractice')||root.querySelector('#mmNotes');
+  if(anchor)anchor.insertAdjacentHTML('beforebegin',markup);
+  else root.querySelector('.lesson-body').insertAdjacentHTML('beforeend',markup);
+}
 function learnReasoningMarkup(){
   return LEARN_REASONING_CHAPTERS.map(chapter=>{
     const questions=LEARN_REASONING_REVIEWS.filter(item=>item.chapter===chapter.label);
@@ -1043,9 +1106,9 @@ function learnHubMarkup(){
   return `<div class="mm-primary-hub mm-learn-hub">
     <header class="mm-primary-hub-head"><span class="eyebrow">Learn</span><h1>Lessons</h1><p>Core, material science and specialist lessons in one place.</p></header>
     <section class="mm-hub-continue mm-primary-hub-card" aria-label="Continue learning"><div class="mm-hub-continue-copy"><span class="eyebrow">Continue</span><h2>${esc(lesson?.title||'Your next lesson')}</h2><p>${lessonLine}</p><div class="mm-hub-progress"><div class="mini-bar" aria-hidden="true"><span style="width:${c?.overall||0}%"></span></div><strong>${c?.overall||0}% complete</strong></div></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="lesson">Continue lesson →</button></section>
-    <nav class="mm-learn-jump" aria-label="Learn section shortcuts"><a href="#mmLearnArena">Troubleshooting</a><a href="#mmLearnQuestions">Questions</a><a href="#mmLearnReasoning">Extra questions</a><a href="#mmLearnCourses">All lessons</a></nav>
+    <nav class="mm-learn-jump" aria-label="Learn section shortcuts"><a href="#mmLearnArena">Troubleshooting</a><a href="#mmLearnQuestions">Questions</a><a href="#mmLearnCourses">All lessons</a><a href="#mmLearnCourses">Lesson library</a></nav>
     <section class="mm-learn-master-lesson" aria-labelledby="mmLearnMasterHeading">
-      <header class="mm-learn-studio-head mm-learn-master-intro"><span class="eyebrow">One complete interactive lesson</span><h2 id="mmLearnMasterHeading">From the fault to the evidence</h2><p>One connected lesson in three stages: diagnose a real-world situation, practise your decisions, and understand why the answer fits the evidence.</p><div class="mm-learn-master-meta">3 connected stages · 169 governed prompts · 32 unscored explanations</div></header>
+      <header class="mm-learn-studio-head mm-learn-master-intro"><span class="eyebrow">One complete interactive lesson</span><h2 id="mmLearnMasterHeading">From the fault to the evidence</h2><p>One connected lesson in three stages: diagnose a real-world situation, practise your decisions, and understand why the answer fits the evidence.</p><div class="mm-learn-master-meta">3 connected stages · 169 governed prompts · 32 optional questions inside their relevant core lessons</div></header>
       <div class="mm-learn-studio" aria-label="Three stages of the combined lesson">
       <section class="mm-learn-step mm-learn-step-arena" aria-labelledby="mmLearnArenaStep">
         <div class="mm-learn-step-head"><span class="mm-learn-step-num" aria-hidden="true">01</span><div><span class="eyebrow">Investigate</span><h3 id="mmLearnArenaStep">Read the evidence</h3></div></div>
@@ -1154,22 +1217,13 @@ function questionCentreCounts(){
 }
 function questionCentreMarkup(embeddedLesson=false){
  const q=questionCentreCounts();
- // The extra source-authored explanations live in the same existing
- // Question Centre, separate from the five governed scoring mechanisms.
- const optionalId=embeddedLesson?'mmLearnReasoning':'mmPracticeReasoning';
- const optional=`<details class="mm-question-centre-optional" id="${optionalId}">
- <summary class="mm-question-centre-optional-trigger"><span><b>32 extra learning questions</b><small>Unscored explanations · eight topics · evidence and safety</small></span><span class="mm-question-centre-optional-chevron" aria-hidden="true">⌄</span></summary>
- <div class="mm-question-centre-optional-content"><p><strong>32 optional learning checks · 8 topics.</strong> Review suggested answers, reasoning, evidence and mistakes. These are unscored teaching prompts, <strong>not</strong> part of the 169 governed questions, formal assessment or evidence of competence.</p>
- <div class="mm-learn-reasoning-list">${learnReasoningMarkup()}</div>
- <p class="mm-learn-safety-note">Educational scenarios only. Use current supplier instructions, approved site procedures and authorised human review for real equipment.</p>
- </div></details>`;
  return `<span class="eyebrow">${q.total} governed prompts</span><h2>${embeddedLesson?'One lesson, five ways to think':'Choose how you want to be questioned'}</h2><p class="muted">${embeddedLesson?'Follow these five connected decision topics from technical knowledge through shop-floor, diagnostic, material and measured-evidence practice. Choose a topic to open its original questions and feedback.':'Most governed question-based learning is collected here. Formal checks and low-stakes practice keep their existing scoring and evidence boundaries.'}</p><div class="mm-hub-picker-grid">
  <button type="button" data-mm-hub-action="assessments"><b>Formal knowledge checks</b><small>30 approved technical + 27 regional-safety bank items. Attempts use the governed level/region blueprint: 10 questions in one jurisdiction or 16 in Compare All.</small></button>
  <button type="button" data-mm-hub-action="scenario-detail"><b>Shop-floor scenarios</b><small>${q.scenarios} evidence-first decisions with immediate feedback.</small></button>
  <button type="button" data-mm-hub-action="diagnostic-labs"><b>Diagnostic questions</b><small>${q.diagnostic} guided fault-isolation decisions across the diagnostic labs.</small></button>
  <button type="button" data-mm-hub-action="material-labs"><b>Material questions</b><small>${q.materials} resin/evidence decisions across the material labs.</small></button>
  <button type="button" data-mm-hub-action="measured-decisions"><b>Measured-evidence decisions</b><small>${q.measured} decisions grounded in audited measured-data contracts.</small></button>
- </div><p class="tiny muted" style="margin-top:12px">${q.total} governed question/decision prompts across these five modes. Book chapter self-checks and lesson exercises stay with the teaching they belong to.</p>${optional}`;
+ </div><p class="tiny muted" style="margin-top:12px">${q.total} governed question/decision prompts across these five modes. Book chapter self-checks, the 32 optional reasoning questions and lesson exercises stay with the core lessons they belong to.</p>`;
 }
 function openQuestionCentreDetail(){
   const root=document.getElementById('scenarios');if(!root)return;
