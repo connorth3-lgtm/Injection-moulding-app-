@@ -188,8 +188,17 @@ for(const width of [360,412]){
     return {columns:new Set(nodes.map(n=>Math.round(n.getBoundingClientRect().left))).size,
       readable:nodes.every(n=>n.querySelector('small')?.getBoundingClientRect().height>0)};
   });
-  expect(homeLayout.columns).toBe(2);
+  // Match the Materials catalogue: full-width action rows on mobile.
+  expect(homeLayout.columns).toBe(1);
   expect(homeLayout.readable).toBe(true);
+  const homeOrder=await page.evaluate(()=>({
+    hero:document.querySelector('#dashboard .mm-reference-home-hero').getBoundingClientRect().top,
+    shortcut:document.querySelector('#dashboard .mm-reference-home-practice').getBoundingClientRect().top,
+    focus:document.querySelector('#dashboard .mm-today-focus').getBoundingClientRect().top,
+    tools:document.querySelector('#dashboard .mm-reference-quick-tools').getBoundingClientRect().top
+  }));
+  expect(homeOrder.shortcut).toBeGreaterThan(homeOrder.hero);
+  expect(homeOrder.tools).toBeGreaterThan(homeOrder.focus);
   if(width===412){
     const fs=require('node:fs');fs.mkdirSync('qa-artifacts',{recursive:true});
     await page.screenshot({path:'qa-artifacts/pr640-tidy-home-412x915.png',animations:'disabled'});
@@ -202,6 +211,15 @@ for(const width of [360,412]){
   await expect(learn.locator('.mm-tidy-facts')).toContainText('176');
   await expect(learn.locator('#mmLearnQuestions .mm-hub-picker-grid>button')).toHaveCount(5);
   await expect(learn.locator('#mmLearnCourses [data-mm-catalog-item]')).toHaveCount(176);
+  await expect(learn.locator('#mmLearnCourses [data-mm-catalog-query]')).toBeVisible();
+  const learnOrder=await page.evaluate(()=>({
+    library:document.querySelector('#mmLearnCourses').getBoundingClientRect().top,
+    arena:document.querySelector('#mmLearnArena').getBoundingClientRect().top
+  }));
+  expect(learnOrder.library).toBeLessThan(learnOrder.arena);
+  await learn.locator('[data-mm-catalog-query]').fill('cushion');
+  await expect(learn.locator('[data-mm-catalog-count]')).toContainText('lesson');
+  await learn.locator('[data-mm-catalog-query]').fill('');
   if(width===412)await page.screenshot({path:'qa-artifacts/pr640-tidy-learn-412x915.png',animations:'disabled'});
 
   await page.evaluate(()=>switchView('scenarios'));
@@ -210,6 +228,15 @@ for(const width of [360,412]){
   await expect(practice.locator('.mm-tidy-facts')).toContainText('40');
   await expect(practice.locator('.mm-practice-guided')).toBeVisible();
   await expect(practice.locator('.mm-hub-grid>.mm-hub-tile')).toHaveCount(5);
+  const practiceOrder=await page.evaluate(()=>({
+    tools:document.querySelector('#scenarios #mmPracticeToolResults').getBoundingClientRect().top,
+    guided:document.querySelector('#scenarios .mm-practice-guided').getBoundingClientRect().top
+  }));
+  expect(practiceOrder.tools).toBeLessThan(practiceOrder.guided);
+  await practice.locator('[data-mm-practice-query]').fill('process data');
+  await expect(practice.locator('#mmPracticeToolResults>button:visible')).toHaveCount(1);
+  await expect(practice.locator('[data-mm-practice-count]')).toHaveText('1 tool shown');
+  await practice.locator('[data-mm-practice-query]').fill('');
   if(width===412)await page.screenshot({path:'qa-artifacts/pr640-tidy-practice-412x915.png',animations:'disabled'});
 
   await page.evaluate(()=>switchView('materials'));
