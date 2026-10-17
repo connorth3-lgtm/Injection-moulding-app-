@@ -329,6 +329,14 @@ for(const width of [360,412]){
   expect(chapterCounts).toEqual([4,4,4,4,4,4,4,4]);
   await expect(learn.locator('#mmLearnCourses [data-mm-catalog-group]')).toHaveCount(22);
   await expect(learn.locator('#mmLearnCourses [data-mm-catalog-item]')).toHaveCount(176);
+  // The 32 unscored explanations live INSIDE the existing Question Centre,
+  // not as a separate third-stage scroll wall.
+  const optional=learn.locator('#mmLearnQuestions #mmLearnReasoning');
+  await expect(optional).toHaveCount(1);
+  await expect(learn.locator('.mm-learn-step-reasoning .mm-learn-reasoning')).toHaveCount(0);
+  await expect(optional).not.toHaveAttribute('open','');
+  await optional.locator(':scope > summary').click();
+  await expect(optional).toHaveAttribute('open','');
   const reasoningChapters=learn.locator('#mmLearnReasoning details.mm-learn-reasoning-chapter');
   await expect(reasoningChapters).toHaveCount(8);
   for(const chapter of await reasoningChapters.all())await expect(chapter).not.toHaveAttribute('open','');
@@ -355,7 +363,13 @@ test('Android Learn disclosures shorten the long reading path without trapping l
  await page.setViewportSize({width:390,height:844});
  await openApp(page);
  await openHub(page,'Learn','#path .mm-learn-hub');
- const chapters=page.locator('#path #mmLearnReasoning details.mm-learn-reasoning-chapter');
+ const optional=page.locator('#path #mmLearnQuestions #mmLearnReasoning');
+ await expect(optional).toHaveCount(1);
+ await expect(optional).not.toHaveAttribute('open','');
+ await expect(page.locator('#path .mm-learn-step-reasoning .mm-learn-reasoning')).toHaveCount(0);
+ await expect(optional.locator(':scope > summary')).toContainText('32 extra learning questions');
+ await optional.locator(':scope > summary').click();
+ const chapters=optional.locator('details.mm-learn-reasoning-chapter');
  await expect(chapters).toHaveCount(8);
  await expect(page.locator('#path #mmLearnReasoning details.mm-learn-reasoning-item')).toHaveCount(32);
  expect(await chapters.evaluateAll(nodes=>nodes.every(node=>!node.open))).toBe(true);
@@ -437,6 +451,9 @@ test('Learn deep reasoning contains 32 distinct, unscored evidence-and-caveat ch
     expect(row.explanations.every(x=>x.length>=50)).toBe(true);
   }
   expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts())).toEqual({formal:57,scenarios:40,diagnostic:36,materials:24,measured:12,total:169});
+  await expect(answers).not.toHaveAttribute('open','');
+  await answers.locator(':scope > summary').click();
+  await expect(answers).toHaveAttribute('open','');
   const lastChapter=answers.locator('details.mm-learn-reasoning-chapter').last();
   await expect(lastChapter).not.toHaveAttribute('open','');
   await lastChapter.locator(':scope > summary').click();
@@ -444,6 +461,34 @@ test('Learn deep reasoning contains 32 distinct, unscored evidence-and-caveat ch
   await final.locator('summary').click();
   await expect(final).toHaveAttribute('open','');
   await expect(final).toContainText('Common mistake to avoid');
+});
+
+test('Practice Question Centre offers the same 32 unscored checks without increasing governed scoring',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await openApp(page);
+ await page.evaluate(()=>window.MM_QUESTION_CENTRE.open());
+ const centre=page.locator('#scenarios .mm-question-centre-card');
+ await expect(centre).toBeVisible();
+ await expect(centre.locator('.mm-hub-picker-grid > button')).toHaveCount(5);
+ const extras=centre.locator('#mmPracticeReasoning');
+ await expect(extras).toHaveCount(1);
+ await expect(extras).not.toHaveAttribute('open','');
+ await extras.locator(':scope > summary').focus();
+ await page.keyboard.press('Enter');
+ await expect(extras).toHaveAttribute('open','');
+ const chapters=extras.locator('details.mm-learn-reasoning-chapter');
+ await expect(chapters).toHaveCount(8);
+ await chapters.first().locator(':scope > summary').click();
+ const answer=chapters.first().locator('details.mm-learn-reasoning-item').first();
+ await answer.locator('summary').click();
+ await expect(answer).toContainText('Evidence to verify');
+ await expect(answer).toContainText('Common mistake to avoid');
+ await expect(page.locator('#scenarios .mm-question-centre-card details.mm-learn-reasoning-item')).toHaveCount(32);
+ await expect(centre).toContainText('not part of the 169 governed questions');
+ expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts())).toEqual({formal:57,scenarios:40,diagnostic:36,materials:24,measured:12,total:169});
+ await extras.locator(':scope > summary').click();
+ await expect(extras).not.toHaveAttribute('open','');
+ await expect(centre.locator('.mm-hub-picker-grid > button')).toHaveCount(5);
 });
 
 test('Practice connects the existing troubleshooting tools in one three-stage learning path',async({page})=>{
