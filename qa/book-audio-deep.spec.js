@@ -31,7 +31,7 @@ test('complete Book narration includes the 53 disclosed source sections, chapter
   const book=page.locator('#mmBookView');
   await expect(book.locator('[data-mm-book-audio-chapter="r06"] h4').filter({hasText:'What transfer means'})).toHaveCount(1);
   await expect(book.locator('[data-mm-book-audio-chapter]')).toHaveCount(20);
-  await expect(book.locator('.mm-book-reader-assurance')).toHaveCount(0); // listening is governed but separate from reading chrome
+  await expect(book.locator('[data-mm-book-audio-chapter] .mm-book-reader-assurance')).toHaveCount(20); // all spoken chapters preserve source and SME limitations
   const player=page.locator('.mm-read-aloud');
   await expect(player.locator('[data-mm-book-audio-controls]')).toBeVisible();
   await expect(player.locator('[data-mm-book-audio-chapter]')).toHaveValue('r06');
