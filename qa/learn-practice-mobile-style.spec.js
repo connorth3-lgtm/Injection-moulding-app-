@@ -198,7 +198,9 @@ for(const width of [360,412]){
     tools:document.querySelector('#dashboard .mm-reference-quick-tools').getBoundingClientRect().top
   }));
   expect(homeOrder.shortcut).toBeGreaterThan(homeOrder.hero);
-  expect(homeOrder.tools).toBeGreaterThan(homeOrder.focus);
+  // A Materials-style utility list is intentionally available above the
+  // long-form current-lesson panel; the saved lesson remains further down.
+  expect(homeOrder.tools).toBeLessThan(homeOrder.focus);
   if(width===412){
     const fs=require('node:fs');fs.mkdirSync('qa-artifacts',{recursive:true});
     await page.screenshot({path:'qa-artifacts/pr640-tidy-home-412x915.png',animations:'disabled'});
