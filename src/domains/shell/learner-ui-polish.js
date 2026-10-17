@@ -481,6 +481,16 @@ function home(){
     const focusAnchor=focus.closest('.mm-dashboard-slot')||focus;
     focusAnchor.insertAdjacentElement('afterend',tools);
   }
+  // Keep the learner's Book / Keep Reading action directly after today's
+  // lesson. The optional quick-tool tiles previously occupied four rows
+  // between them, pushing Book below the bottom navigation on small phones.
+  const focusSlot=focus.closest('.mm-dashboard-slot')||focus;
+  const bookSlot=book?.closest('.mm-dashboard-slot')||book;
+  if(bookSlot&&focusSlot&&bookSlot.parentElement===focusSlot.parentElement&&focusSlot.nextElementSibling!==bookSlot)
+    focusSlot.insertAdjacentElement('afterend',bookSlot);
+  const quickTools=root.querySelector('.mm-reference-quick-tools');
+  if(bookSlot&&quickTools&&bookSlot.parentElement===quickTools.parentElement&&bookSlot.nextElementSibling!==quickTools)
+    bookSlot.insertAdjacentElement('afterend',quickTools);
 }
 function openReferenceConverter(){
   let dialog=document.getElementById('mmReferenceUnitConverter');
