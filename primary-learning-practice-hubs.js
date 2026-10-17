@@ -1043,7 +1043,7 @@ function learnHubMarkup(){
   return `<div class="mm-primary-hub mm-learn-hub">
     <header class="mm-primary-hub-head"><span class="eyebrow">Learn</span><h1>Lessons</h1><p>Core, material science and specialist lessons in one place.</p></header>
     <section class="mm-hub-continue mm-primary-hub-card" aria-label="Continue learning"><div class="mm-hub-continue-copy"><span class="eyebrow">Continue</span><h2>${esc(lesson?.title||'Your next lesson')}</h2><p>${lessonLine}</p><div class="mm-hub-progress"><div class="mini-bar" aria-hidden="true"><span style="width:${c?.overall||0}%"></span></div><strong>${c?.overall||0}% complete</strong></div></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="lesson">Continue lesson →</button></section>
-    <nav class="mm-learn-jump" aria-label="Learn section shortcuts"><a href="#mmLearnArena">Troubleshooting</a><a href="#mmLearnQuestions">Questions</a><a href="#mmLearnReasoning">Answers & safety</a><a href="#mmLearnCourses">All lessons</a></nav>
+    <nav class="mm-learn-jump" aria-label="Learn section shortcuts"><a href="#mmLearnArena">Troubleshooting</a><a href="#mmLearnQuestions">Questions</a><a href="#mmLearnReasoning">Extra questions</a><a href="#mmLearnCourses">All lessons</a></nav>
     <section class="mm-learn-master-lesson" aria-labelledby="mmLearnMasterHeading">
       <header class="mm-learn-studio-head mm-learn-master-intro"><span class="eyebrow">One complete interactive lesson</span><h2 id="mmLearnMasterHeading">From the fault to the evidence</h2><p>One connected lesson in three stages: diagnose a real-world situation, practise your decisions, and understand why the answer fits the evidence.</p><div class="mm-learn-master-meta">3 connected stages · 169 governed prompts · 32 unscored explanations</div></header>
       <div class="mm-learn-studio" aria-label="Three stages of the combined lesson">
@@ -1064,7 +1064,7 @@ function learnHubMarkup(){
       </div>
       <section class="mm-learn-step mm-learn-step-reasoning" aria-labelledby="mmLearnReasoningStep">
         <div class="mm-learn-step-head"><span class="mm-learn-step-num" aria-hidden="true">03</span><div><span class="eyebrow">Reflect</span><h3 id="mmLearnReasoningStep">Explain your reasoning</h3></div></div>
-        <section class="mm-learn-reasoning" id="mmLearnReasoning" aria-labelledby="mmLearnReasoningHeading"><div class="mm-learn-reasoning-head"><span class="eyebrow">32 optional learning checks · 8 topics</span><h2 id="mmLearnReasoningHeading">Understand the answer</h2><p>Go deeper with 32 realistic questions across cycle evidence, materials, tooling, filling, part quality, safety and scientific validation. Each reveals a suggested answer, the underlying reasoning, evidence to verify and a common mistake to avoid. These unscored teaching prompts are <strong>not</strong> part of the 169 governed question bank, formal assessment or evidence of competence.</p></div><div class="mm-learn-reasoning-list">${learnReasoningMarkup()}</div><p class="mm-learn-safety-note">Educational scenarios only. Use current supplier instructions, approved site procedures and authorised human review for real equipment.</p></section>
+        <!-- Optional teaching checks live in the existing Question Centre above. -->
       <section class="mm-learn-capstone" id="mmLearnCapstone" aria-labelledby="mmLearnCapstoneTitle"><header><span class="eyebrow">Final case · unscored</span><h3 id="mmLearnCapstoneTitle">One case. Four evidence checkpoints.</h3><p>A new polymer lot arrives. Silver streaks and variable cushion appear during trial shots. Work through this hypothetical case before choosing another activity.</p></header><div class="mm-learn-capstone-steps">
 <details><summary><span>01</span><b>Characterise the change</b><small>What is known versus suspected?</small></summary><p>Separate observed streaks and shot variability from assumptions about wet resin. Compare cavity-labelled parts, timestamps and a suitable known-good baseline.</p></details>
 <details><summary><span>02</span><b>Gather discriminating evidence</b><small>What would distinguish mechanisms?</small></summary><p>Confirm grade and lot, dryer and feed evidence, transfer/cushion traces and cavity distribution. Ask whether variation tracks material, tool or machine signals.</p></details>
@@ -1154,13 +1154,22 @@ function questionCentreCounts(){
 }
 function questionCentreMarkup(embeddedLesson=false){
  const q=questionCentreCounts();
+ // The extra source-authored explanations live in the same existing
+ // Question Centre, separate from the five governed scoring mechanisms.
+ const optionalId=embeddedLesson?'mmLearnReasoning':'mmPracticeReasoning';
+ const optional=`<details class="mm-question-centre-optional" id="${optionalId}">
+ <summary class="mm-question-centre-optional-trigger"><span><b>32 extra learning questions</b><small>Unscored explanations · eight topics · evidence and safety</small></span><span class="mm-question-centre-optional-chevron" aria-hidden="true">⌄</span></summary>
+ <div class="mm-question-centre-optional-content"><p><strong>32 optional learning checks · 8 topics.</strong> Review suggested answers, reasoning, evidence and mistakes. These are unscored teaching prompts, <strong>not</strong> part of the 169 governed questions, formal assessment or evidence of competence.</p>
+ <div class="mm-learn-reasoning-list">${learnReasoningMarkup()}</div>
+ <p class="mm-learn-safety-note">Educational scenarios only. Use current supplier instructions, approved site procedures and authorised human review for real equipment.</p>
+ </div></details>`;
  return `<span class="eyebrow">${q.total} governed prompts</span><h2>${embeddedLesson?'One lesson, five ways to think':'Choose how you want to be questioned'}</h2><p class="muted">${embeddedLesson?'Follow these five connected decision topics from technical knowledge through shop-floor, diagnostic, material and measured-evidence practice. Choose a topic to open its original questions and feedback.':'Most governed question-based learning is collected here. Formal checks and low-stakes practice keep their existing scoring and evidence boundaries.'}</p><div class="mm-hub-picker-grid">
  <button type="button" data-mm-hub-action="assessments"><b>Formal knowledge checks</b><small>30 approved technical + 27 regional-safety bank items. Attempts use the governed level/region blueprint: 10 questions in one jurisdiction or 16 in Compare All.</small></button>
  <button type="button" data-mm-hub-action="scenario-detail"><b>Shop-floor scenarios</b><small>${q.scenarios} evidence-first decisions with immediate feedback.</small></button>
  <button type="button" data-mm-hub-action="diagnostic-labs"><b>Diagnostic questions</b><small>${q.diagnostic} guided fault-isolation decisions across the diagnostic labs.</small></button>
  <button type="button" data-mm-hub-action="material-labs"><b>Material questions</b><small>${q.materials} resin/evidence decisions across the material labs.</small></button>
  <button type="button" data-mm-hub-action="measured-decisions"><b>Measured-evidence decisions</b><small>${q.measured} decisions grounded in audited measured-data contracts.</small></button>
- </div><p class="tiny muted" style="margin-top:12px">${q.total} governed question/decision prompts across these five modes. Book chapter self-checks and lesson exercises stay with the teaching they belong to.</p>`;
+ </div><p class="tiny muted" style="margin-top:12px">${q.total} governed question/decision prompts across these five modes. Book chapter self-checks and lesson exercises stay with the teaching they belong to.</p>${optional}`;
 }
 function openQuestionCentreDetail(){
   const root=document.getElementById('scenarios');if(!root)return;
