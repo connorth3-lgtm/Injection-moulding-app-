@@ -116,7 +116,11 @@ test('lesson has one clear ending and optional evidence stays out of the default
   expect(await measured.evaluate(el=>el.open)).toBe(false);
   await expect(measured.locator('> .mme-panel')).toBeHidden();
   await expect(measured.locator('summary')).toHaveText('Measured evidence');
+  // Learner lesson chrome intentionally hides generic narration; the
+  // source-reviewed Book owns speech controls and mobile activation.
   const listen=page.locator('.mm-read-aloud details:not([open]) summary');
+  await expect(listen).toBeHidden();
+  await page.evaluate(()=>window.MMBook.open());
   await expect(listen).toBeVisible();
   const listenBox=await listen.boundingBox();
   expect(listenBox?.width||999).toBeLessThanOrEqual(112);
