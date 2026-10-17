@@ -4661,7 +4661,7 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
    to start within the first phone viewport. */
 .mm-reference-layout #dashboard .mm-today-focus{
   padding:12px!important;margin:0 0 10px!important;
-  border-radius:13px!important;
+  border-radius:20px!important;
 }
 .mm-reference-layout #dashboard .mm-today-focus h2{
   font-size:18px!important;line-height:1.23!important;
