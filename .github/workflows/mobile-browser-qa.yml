@@ -61,17 +61,6 @@ jobs:
         with:
           node-version: '22'
           package-manager-cache: false
-      - name: Static shell, workspace and measured-evidence QA
-        if: matrix.task == 'substantive'
-        run: |
-          python qa_app_shell_registry.py
-          python qa_mould_master_workspace.py
-          python qa_measured_evidence_integration.py
-          python qa_measured_evidence_decision_workflows.py
-          python qa_read_aloud.py
-          python qa_delayed_transfer_reviews.py
-          python qa_webkit_regression.py
-          python qa_accessibility_real_at_contract.py
       - name: Install pinned Chromium
         run: |
           npm ci --no-audit --fund=false
@@ -107,6 +96,21 @@ jobs:
             sleep 1
           done
           exit 1
+      # Install the browser and start the candidate server *before* the
+      # fail-closed static evidence gate. A static HOLD must still fail this
+      # job, but its always() screenshot-capture step needs Playwright and
+      # the local server to be present for independent owner review.
+      - name: Static shell, workspace and measured-evidence QA
+        if: matrix.task == 'substantive'
+        run: |
+          python qa_app_shell_registry.py
+          python qa_mould_master_workspace.py
+          python qa_measured_evidence_integration.py
+          python qa_measured_evidence_decision_workflows.py
+          python qa_read_aloud.py
+          python qa_delayed_transfer_reviews.py
+          python qa_webkit_regression.py
+          python qa_accessibility_real_at_contract.py
       - name: Start visual baseline server
         if: matrix.task == 'visual'
         run: |
