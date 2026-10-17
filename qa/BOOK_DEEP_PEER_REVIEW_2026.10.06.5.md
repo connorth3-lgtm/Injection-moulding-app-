@@ -173,3 +173,8 @@ The main remaining quality opportunity is independent human evaluation and real 
 A 2026-10-06 research-plugin pass used SciSpace to compare key Book themes with peer-reviewed injection-moulding literature. The external search supported the Book's treatment of cavity-pressure monitoring, multi-factor warpage/shrinkage, weld-line mechanism/design interaction, moisture/hydrolysis boundaries and data-driven process development. Consensus search quota was exhausted for the connected account; Scite and Elicit MCP access were unavailable under their connected plan levels, so those services were not represented as completed evidence checks.
 
 This plugin-assisted review does not replace the governed source ledgers or independent human SME review. It is corroborative peer-review evidence only.
+
+
+## 2026-10-18 inventory clarification (historical review, not a new approval)
+
+The diagram counts **21** in this original peer-review narrative identify the historical review phase; they are not a present-day inventory claim. The current governed Book diagram ledger and publication authorization list **25** exact-identity teaching diagrams. The current Book content release is still `2026.10.06.5`; this clarification does not amend the historical technical conclusions, source evidence, diagram ledger, authorizations or SME review records. **Independent human SME approval remains HOLD.** For current diagram counts use `data/book-engineering-diagrams-v1.json` and `data/book-publication-authorization-v1.json`.
