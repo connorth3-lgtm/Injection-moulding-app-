@@ -4220,10 +4220,13 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
   display:block;color:#a2f2de;font-size:14px;
 }
 .mm-reference-layout #lesson .mm-lesson-reasoning-answer>p{
-  margin:5px 0 12px;font-size:14px;line-height:1.58;color:#d7eaf4;
+  /* The reference-layout lesson rule sets *all* lesson paragraphs to dark
+     text with !important for light cards. This nested card is dark: override
+     that inherited high-priority semantic rule explicitly for legibility. */
+  margin:5px 0 12px;font-size:14px;line-height:1.58;color:#d7eaf4!important;
 }
 .mm-reference-layout #lesson .mm-lesson-reasoning-questions>.mm-learn-safety-note{
-  font-size:12px;line-height:1.55;color:#b9d5e6;
+  font-size:12px;line-height:1.55;color:#b9d5e6!important;
 }
 .mm-reference-layout #lesson .mm-lesson-reasoning :is(summary):focus-visible{
   outline:3px solid #a3ffe8;outline-offset:-4px;border-radius:10px;

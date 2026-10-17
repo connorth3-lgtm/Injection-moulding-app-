@@ -423,6 +423,23 @@ test('all 32 unscored source questions map to distinct existing core lessons wit
     // Capture the first integrated LESSON question, not the top of Learn.
     // This is unapproved, exact-source review evidence and never a baseline.
     if(id===46){
+      // Regression from the real Android visual capture: the legacy
+      // reference lesson palette forces dark text with !important on all p
+      // elements. These answers sit on a dark card and need AA contrast.
+      const contrast=await page.evaluate(()=>{
+        const container=document.querySelector('#lesson #mmLessonReasoning');
+        const targets=[...container.querySelectorAll('.mm-lesson-reasoning-answer>p'),container.querySelector('.mm-lesson-reasoning-questions>.mm-learn-safety-note')].filter(Boolean);
+        const components=color=>[...color.matchAll(/[\\d.]+/g)].slice(0,3).map(m=>Number(m[0]));
+        const luminance=rgb=>rgb.map(v=>{let c=v/255;return c<=.04045?c/12.92:Math.pow((c+.055)/1.055,2.4)}).reduce((sum,v,i)=>sum+v*[.2126,.7152,.0722][i],0);
+        const background=[7,30,48]; // rgba(5,25,41,.82) over #0e344f
+        return targets.map(node=>{
+          const foreground=components(getComputedStyle(node).color);
+          const a=luminance(foreground),b=luminance(background);
+          return {text:node.textContent.trim().slice(0,60),ratio:(Math.max(a,b)+.05)/(Math.min(a,b)+.05)};
+        });
+      });
+      expect(contrast.length).toBe(5);
+      expect(contrast.every(row=>row.ratio>=4.5)).toBe(true);
       const fs=require('node:fs');
       fs.mkdirSync('qa-artifacts',{recursive:true});
       await check.scrollIntoViewIfNeeded();
