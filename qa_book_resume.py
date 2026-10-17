@@ -39,7 +39,14 @@ for marker in [
     "for(let node=start;node&&node!==document.body;node=node.parentElement)",
     "bindBookScrollRoot()",
     "bindMaterialPagination(ui.reader);bindBookScrollRoot();",
-    "ui.reader.hidden=false;bindBack();ui.reader.querySelectorAll('[data-mm-book-page-turn]').forEach(button=>button.addEventListener('click',()=>showReaderChapter(button.dataset.mmBookPageTurn)));bindMaterialPagination(ui.reader);bindBookScrollRoot();rememberReadingPosition('reader-chapter'",
+    "ui.reader.hidden=false;bindBack();",
+    "ui.reader.querySelector('[data-mm-book-read-toggle]')?.addEventListener('click'",
+    "ui.reader.querySelector('[data-mm-book-listen-chapter]')?.addEventListener('click'",
+    "ui.reader.querySelectorAll('[data-mm-book-page-turn]').forEach(button=>button.addEventListener('click',()=>showReaderChapter(button.dataset.mmBookPageTurn)))",
+    "bindMaterialPagination(ui.reader);bindBookScrollRoot();",
+    "rememberReadingPosition('reader-chapter'",
+    "restoreReadingPosition(editionSnapshot,bookIntentEpoch)",
+    "showReaderChapter(id,{preserveEditionPosition:true})",
     "ui.reader.hidden=false;bindBack();bindBookScrollRoot();rememberReadingPosition('chapter'",
     "scrollBookBy(delta)",
     "const atEnd=scrollHeight>0&&scrollTop+clientHeight>=scrollHeight-3",
@@ -94,6 +101,9 @@ for marker in [
     "including the saved Book reading position",
     "mm:book-resume-change",
     "MMBook?.clearResume",
+    "BOOK_AUDIO_PREFIX='mm_book_audio_v1::'",
+    "scope.storageKey(BOOK_AUDIO_PREFIX,scope.tokenFor(id))",
+    "MMBook?.clearAudioResume",
 ]:
     need(marker in training,f"learner reset Book ownership missing: {marker}")
 
@@ -101,8 +111,13 @@ for marker in [
     "Book Keep Reading position",
     "Book reading position",
     "reset only the active learner",
+    "Book listening position",
+    "mm_book_audio_v1::",
 ]:
     need(marker in storage,f"storage ownership matrix missing Book resume contract: {marker}")
+
+for marker in ("clearAudioResume","key!==activeAudioScopeKey","getAudioResume:readAudioResume,clearAudioResume"):
+    need(marker in book,f"Book listening cursor reset or cross-learner completion safeguard missing: {marker}")
 
 print("Book Keep Reading QA passed: learner-scoped persistence, reliable flush/restore, stale-record containment, Home lifecycle safety and learner reset ownership.")
 

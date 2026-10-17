@@ -10,7 +10,7 @@ module.exports=defineConfig({
     /material-grade-detail\.spec\.js/,/material-decision-support\.spec\.js/,
     /material-search-scale\.spec\.js/,/material-unified-search\.spec\.js/,
     /measured-evidence-decision\.spec\.js/,
-    /read-aloud\.spec\.js/,
+    /read-aloud\.spec\.js/,/book-audio-deep\.spec\.js/,
     /engineering-case-store\.spec\.js/,
     /inline-handler-bridge\.spec\.js/,
     /inline-style-csp\.spec\.js/,
