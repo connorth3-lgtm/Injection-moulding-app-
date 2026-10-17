@@ -32,6 +32,14 @@ async function openLearnHub(page){
   await expect(page.locator('#path .mm-learn-hub')).toBeVisible();
   await expectOnlyCurrent(page,'Learn');
 }
+async function visibleMoreAction(page,id){
+  const action=page.locator('#modal [data-mm-registry-menu="'+id+'"]');
+  const disclosure=action.locator('xpath=ancestor::details[1]');
+  if(await disclosure.count()&&await disclosure.getAttribute('open')===null)
+    await disclosure.locator('summary').first().click();
+  await expect(action).toBeVisible();
+  return action;
+}
 async function scrollAppToBottom(page){
   await page.evaluate(()=>{
     const main=document.querySelector('main.main')||document.querySelector('.main');
@@ -219,7 +227,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await expect(page.locator('[data-mm-registry-menu="book"]')).toHaveCount(1);
       await expect(page.locator('[data-mm-registry-menu="learning-insights"]')).toHaveCount(1);
       await expect(page.locator('[data-mm-registry-menu="repair-app-files"]')).toHaveCount(1);
-      const insights=page.locator('[data-mm-registry-menu="learning-insights"]');
+      const insights=await visibleMoreAction(page,'learning-insights');
       await insights.focus();
       await page.keyboard.press('Enter');
       await expect(page.locator('#learningInsights')).toBeVisible();
@@ -277,6 +285,10 @@ test('UI audit contract: one page title, compact header actions, useful Home, de
   expect(searchBox.width).toBeLessThanOrEqual(48);
   expect(searchBox.height).toBeGreaterThanOrEqual(44);
   const listen=page.locator('.mm-read-aloud');
+  // Generic top-bar speech is deliberately hidden outside Book, to keep the
+  // reading experience tied to a source-reviewed chapter and explicit tap.
+  await expect(listen).toBeHidden();
+  await page.evaluate(()=>window.MMBook.open());
   await expect(listen).toBeVisible();
   expect(await listen.evaluate(el=>el.parentElement?.classList.contains('top-actions'))).toBeTruthy();
 
@@ -367,13 +379,13 @@ test('Mission Control and Mission evidence strips stay off all mobile tabs witho
   await page.evaluate(()=>openMobileMenu());
   await expect(page.locator('#modal .modal-card')).toBeVisible();
   await expect(mc.locator('.mm-mc-context')).toBeHidden();
-  await page.locator('#modal [data-mm-registry-menu="mission-evidence"]').click();
+  await (await visibleMoreAction(page,'mission-evidence')).click();
   await expect(page.locator('body')).toHaveAttribute('data-mm-view','dashboard');
   await expect(mc.locator('.mm-mc-evidence-row')).toContainText('QA cavity mass balance check');
   await page.keyboard.press('Escape');
 
   await page.evaluate(()=>openMobileMenu());
-  await page.locator('#modal [data-mm-registry-menu="mission-commands"]').click();
+  await (await visibleMoreAction(page,'mission-commands')).click();
   await expect(page.locator('body')).toHaveAttribute('data-mm-view','dashboard');
   await expect(mc.locator('.mm-mc-palette')).toBeVisible();
   await expect(mc.locator('.mm-mc-context')).toBeHidden();
