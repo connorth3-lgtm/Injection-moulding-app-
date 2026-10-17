@@ -21,6 +21,7 @@ const renderListeners=new Map();
 let finalized=false;
 let activeCustomId='';
 let mobileNavObserver=null;
+let mobileNavSizeObserver=null;
 let mobileNavNormalizing=false;
 let geometryQueued=false;
 let dashboardComposeQueued=false;
@@ -53,6 +54,18 @@ function syncMobileGeometry(){
     const h=Math.ceil(nav.getBoundingClientRect().height);
     if(h>0)document.documentElement.style.setProperty('--mm-mobile-nav-height',`${h}px`)
   })
+}
+function observeMobileNavSize(){
+  const nav=document.querySelector('.mobile-nav');
+  if(!nav)return;
+  // Android's system font setting can increase the actual five-tab height
+  // without firing a window resize. Keep content clearance source-measured.
+  if(!mobileNavSizeObserver&&typeof ResizeObserver==='function'){
+    mobileNavSizeObserver=new ResizeObserver(syncMobileGeometry);
+    mobileNavSizeObserver.observe(nav);
+  }
+  if(document.fonts?.ready)document.fonts.ready.then(syncMobileGeometry).catch(()=>{});
+  window.visualViewport?.addEventListener('resize',syncMobileGeometry,{passive:true});
 }
 function canonicalMoreButton(button){const handler=button.getAttribute('data-mm-onclick')||button.getAttribute('onclick')||'';return !button.dataset.view&&(handler.includes('openMobileMenu')||/\bMore\b/i.test(button.textContent||''))}
 function ensureMaterialsMobileTab(){
@@ -195,10 +208,13 @@ function organizeMobileMore(grid){
   const buttons=[...grid.querySelectorAll(':scope > .quick-action')];
   if(!buttons.length)return;
   const groups=[
-    {id:'learning',title:'Learning & progress',hint:'Book and your learning history',open:true},
-    {id:'references',title:'References',hint:'Published reference information',open:true},
-    {id:'account',title:'Account & support',hint:'Preferences and app help',open:true},
-    {id:'mission',title:'Mission tools',hint:'Saved evidence and command search',open:true}
+    // Preserve the approved expanded desktop/tablet More interface. On a
+    // narrow Android/phone viewport, show category summaries first so the
+    // menu is compact while each original destination remains one tap away.
+    {id:'learning',title:'Learning & progress',hint:'Book and your learning history',open:!window.matchMedia('(max-width:700px)').matches},
+    {id:'references',title:'References',hint:'Published reference information',open:!window.matchMedia('(max-width:700px)').matches},
+    {id:'account',title:'Account & support',hint:'Preferences and app help',open:!window.matchMedia('(max-width:700px)').matches},
+    {id:'mission',title:'Mission tools',hint:'Saved evidence and command search',open:!window.matchMedia('(max-width:700px)').matches}
   ];
   const slots=new Map();
   for(const item of groups){
@@ -388,6 +404,14 @@ function renderLessonCanonical(){
 function switchViewCanonical(id){
   // Runtime V2's BEFORE hook already saves Book before invoking this handler.
   activeCustomId='';const r=captured.switchView.apply(this,arguments);
+  // The Book runtime normally clears its temporary scroll override on the
+  // onViewChange event. If a delayed chapter fetch races that event, make the
+  // presentation cleanup deterministic once the Book surface is hidden.
+  // Reading progress and speech lifecycle remain owned by MMBook.
+  if(id!=='book'&&document.getElementById('mmBookView')?.classList.contains('hidden')){
+    document.documentElement.classList.remove('mm-book-instant-scroll');
+    document.body?.classList.remove('mm-book-instant-scroll');
+  }
   // Cancel the core's smooth scroll on workspace changes: the previous page can
   // remain clipped while short views render, particularly on mobile WebKit.
   window.scrollTo({top:0,behavior:'instant'});
@@ -433,7 +457,7 @@ function finalize(){
   openMobileMenu=openMobileMenuCanonical;window.openMobileMenu=openMobileMenuCanonical;
   window.__MM_DIAGNOSTIC_MORE_PATCH__=true;window.__MM_PROCESS_DATA_MORE_PATCH__=true;window.__MM_MATERIAL_MORE_PATCH__=true;window.__MM_REFERENCE_DATA_MORE_PATCH__=true;window.__MM_LEARNING_INSIGHTS_MORE__=true;
   finalized=true;
-  syncNavigation();window.addEventListener('resize',syncMobileGeometry,{passive:true});
+  syncNavigation();observeMobileNavSize();window.addEventListener('resize',syncMobileGeometry,{passive:true});
   try{if(typeof currentView==='string'&&currentView==='dashboard')renderDashboardCanonical();else if(currentView==='lesson')renderLessonCanonical();else syncActiveState()}catch(e){console.warn('[MouldMaster shell] initial canonical render failed',e)}
 }
 

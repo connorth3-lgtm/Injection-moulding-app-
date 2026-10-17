@@ -4975,3 +4975,20 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
     width:54px!important;height:54px!important;
   }
 }
+
+/* Preview-branch compatibility: the legacy preview modal stylesheet can
+   override the integrated learner More palette. Keep the actual native
+   control hit targets and visible high-contrast blue instead of overriding
+   the older global modal or deleting its other tools. */
+#modal .mm-reference-more-card .mm-more-disclosure-items>.quick-action,
+#modal .mm-reference-more-extra .mm-more-disclosure-items>.quick-action{
+  background-image:linear-gradient(145deg,#164669,#0b314e)!important;
+  color:#effaff!important;
+  min-height:48px!important;
+}
+@media(forced-colors:active){
+  #modal .mm-reference-more-card .mm-more-disclosure-items>.quick-action,
+  #modal .mm-reference-more-extra .mm-more-disclosure-items>.quick-action{
+    background-image:none!important;color:CanvasText!important;
+  }
+}

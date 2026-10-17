@@ -978,6 +978,12 @@ function more(){
   if(!grid)return;
   if(grid.dataset.mmReferenceMore==='1'){illustrateMore(grid);return;}
   grid.dataset.mmReferenceMore='1';
+  // The older preview shell opens its four native More groups by default.
+  // On a narrow touch screen, close them only on first decoration; subsequent
+  // user-expanded state must remain owned by each native disclosure.
+  if(window.matchMedia?.('(max-width:700px)').matches){
+    grid.querySelectorAll(':scope > .mm-more-disclosure').forEach(group=>{group.open=false;});
+  }
   const mapped=[['learning','Resources','Visuals, glossary, Book and grade references'],
     ['references','Tools','Calculators and technical references'],
     ['account','Settings & account','Preferences, profile and support'],
