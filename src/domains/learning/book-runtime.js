@@ -788,7 +788,7 @@
   }
   function readerListeningChapterHtml(reader,options={}){
     const modules=reader.moduleIds.map(id=>allChapters().find(ch=>ch.id===id)).filter(ch=>ch?.state==='verified');if(!modules.length)return '';
-    return `<article class="mm-book-reader-chapter" data-mm-book-audio-chapter="${esc(reader.id)}"><span class="eyebrow">Reader chapter · source-reviewed modules</span><h2>${esc(reader.title)}</h2><p class="mm-book-reader-assurance">Source evidence reviewed. Independent human subject-matter expert review remains pending. This is educational reference content; current material, machine, mould and site requirements control actual production.</p><p>${esc(reader.goal)}</p>${modules.map(ch=>readerListeningModuleHtml(ch,options)).join('')}</article>`;
+    return `<article class="mm-book-reader-chapter" data-mm-book-audio-chapter="${esc(reader.id)}"><h2>${esc(reader.title)}</h2><p class="mm-book-reader-assurance">Source evidence reviewed. Independent human subject-matter expert review remains pending. This is educational reference content; current material, machine, mould and site requirements control actual production.</p><p>${esc(reader.goal)}</p>${modules.map(ch=>readerListeningModuleHtml(ch,options)).join('')}</article>`;
   }
   function startVerifiedListening({resume=false}={}){
     if(!ui)return;
