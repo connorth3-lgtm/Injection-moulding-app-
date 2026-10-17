@@ -101,6 +101,9 @@ for marker in [
     "including the saved Book reading position",
     "mm:book-resume-change",
     "MMBook?.clearResume",
+    "BOOK_AUDIO_PREFIX='mm_book_audio_v1::'",
+    "scope.storageKey(BOOK_AUDIO_PREFIX,scope.tokenFor(id))",
+    "MMBook?.clearAudioResume",
 ]:
     need(marker in training,f"learner reset Book ownership missing: {marker}")
 
@@ -108,8 +111,13 @@ for marker in [
     "Book Keep Reading position",
     "Book reading position",
     "reset only the active learner",
+    "Book listening position",
+    "mm_book_audio_v1::",
 ]:
     need(marker in storage,f"storage ownership matrix missing Book resume contract: {marker}")
+
+for marker in ("clearAudioResume","key!==activeAudioScopeKey","getAudioResume:readAudioResume,clearAudioResume"):
+    need(marker in book,f"Book listening cursor reset or cross-learner completion safeguard missing: {marker}")
 
 print("Book Keep Reading QA passed: learner-scoped persistence, reliable flush/restore, stale-record containment, Home lifecycle safety and learner reset ownership.")
 
