@@ -7,7 +7,7 @@
 if(window.MM_LEARNER_UI_POLISH)return;
 const VERSION='2026.10.17.1';
 // Cache-bust stylesheet revisions without claiming a new governed app release.
-const STYLE_REV='2026.10.16.1';
+const STYLE_REV='2026.10.17.1-pr640-tidy';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -462,16 +462,19 @@ function home(){
     const title=document.createElement('h3');title.textContent='Quick tools';
     const tiles=document.createElement('div');tiles.className='mm-reference-quick-grid';
     const options=[
-      ['⌕','Material search',()=>{window.switchView?.('materials');requestAnimationFrame(()=>document.querySelector('#materials [data-mm-all-material-query]')?.focus({preventScroll:true}))}],
-      ['⚠','Defect guide',()=>{window.switchView?.('scenarios');requestAnimationFrame(()=>document.querySelector('#scenarios [data-mm-hub-action="troubleshooting"]')?.click())}],
-      ['▥','Process basics',()=>{window.switchView?.('path');requestAnimationFrame(()=>document.querySelector('#path [data-mm-lesson-catalog]')?.scrollIntoView({behavior:'smooth',block:'start'}))}],
-      ['▦','Unit converter',()=>openReferenceConverter()]
+      ['⌕','Material search','Search grades and properties',()=>{window.switchView?.('materials');requestAnimationFrame(()=>document.querySelector('#materials [data-mm-all-material-query]')?.focus({preventScroll:true}))}],
+      ['⚠','Defect guide','Find evidence-led causes',()=>{window.switchView?.('scenarios');requestAnimationFrame(()=>document.querySelector('#scenarios [data-mm-hub-action="troubleshooting"]')?.click())}],
+      ['▥','Process basics','Browse the core lessons',()=>{window.switchView?.('path');requestAnimationFrame(()=>document.querySelector('#path [data-mm-lesson-catalog]')?.scrollIntoView({behavior:'smooth',block:'start'}))}],
+      ['▦','Unit converter','Pressure, length and temperature',()=>openReferenceConverter()]
     ];
-    for(const [symbol,label,run] of options){
+    for(const [symbol,label,description,run] of options){
       const button=document.createElement('button');button.type='button';button.className='mm-reference-quick-tool';
       const icon=document.createElement('span');icon.className='mm-reference-quick-icon';icon.textContent=symbol;icon.setAttribute('aria-hidden','true');
-      const text=document.createElement('span');text.textContent=label;
-      button.append(icon,text);button.addEventListener('click',run);tiles.appendChild(button);
+      const copy=document.createElement('span');copy.className='mm-reference-quick-copy';
+      const text=document.createElement('b');text.textContent=label;
+      const detail=document.createElement('small');detail.textContent=description;
+      copy.append(text,detail);
+      button.append(icon,copy);button.addEventListener('click',run);tiles.appendChild(button);
     }
     tools.append(title,tiles);
     root.querySelector('.mm-reference-home-hero')?.insertAdjacentElement('afterend',tools);
