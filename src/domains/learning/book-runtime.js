@@ -817,16 +817,15 @@
     const listening=allReaderChapters().map(reader=>readerListeningChapterHtml(reader,{complete:mode!=='streamlined',examples:mode==='examples'})).filter(Boolean);
     if(!listening.length)return;
     const reader=window.MMReadAloud,details=document.querySelector('.mm-read-aloud details'),play=document.querySelector('.mm-read-aloud [data-mm-read="play"]');
-    if(!reader?.supported||!details||!play){ui.summary.textContent='Source-reviewed Book text is available to read, but device speech synthesis is unavailable.';return;}if(!ui.reader.hidden)flushReadingPosition({notify:true});rememberContentsBeforeReading();contentsFocus={kind:'listen'};clearTimeout(resumeScrollTimer);resumeScrollTimer=0;activeReadingPosition=null;activeReadingScopeKey=null;reader.stop?.();const back='<button type="button" class="ghost" data-mm-book-back>← Book contents</button>';ui.reader.innerHTML=`${back}${listening.join('')}`;ui.contents.hidden=true;ui.hero.hidden=true;ui.accuracy.hidden=true;ui.reader.hidden=false;bindBack();bindBookScrollRoot();scrollBookReaderToTop();
-    // Android Web Speech may require transient activation from the ORIGINAL
-    // Book listening tap. A requestAnimationFrame click can be silent because
-    // user activation has expired. All verified text is already in the DOM.
-    // Play itself builds the current Book queue. Pre-refreshing the entire
-    // twenty-chapter DOM first traversed every sentence twice and could use
-    // up Android/iOS's transient speech-activation window before speak().
+    if(!reader?.supported||!details||!play||typeof reader.startBookFromGesture!=='function'){ui.summary.textContent='Source-reviewed Book text is available to read, but the current device speech engine is unavailable or out of date. Reload before trying audio.';return;}if(!ui.reader.hidden)flushReadingPosition({notify:true});rememberContentsBeforeReading();contentsFocus={kind:'listen'};clearTimeout(resumeScrollTimer);resumeScrollTimer=0;activeReadingPosition=null;activeReadingScopeKey=null;reader.stop?.();const back='<button type="button" class="ghost" data-mm-book-back>← Book contents</button>';ui.reader.innerHTML=`${back}${listening.join('')}`;ui.contents.hidden=true;ui.hero.hidden=true;ui.accuracy.hidden=true;ui.reader.hidden=false;bindBack();bindBookScrollRoot();scrollBookReaderToTop();
+    // The original Book Listen tap must call speech directly. A synthetic
+    // play.click() can fail strict mobile user-activation checks even when it
+    // occurs before the handler returns. Never defer to an animation frame.
     const chapterId=saved?.chapterId||ui.audioChapter?.value||'r01';
     reader.queueBookStart?.({chapterId,unitIndex:saved?.unitIndex||0});
-    details.open=true;play.click();
+    details.open=true;
+    const started=reader.startBookFromGesture();
+    if(!started)ui.summary.textContent='No readable Book audio was found. Try the Test phone sound button or reload the Book.';
     emitBookRender('listening');}
   function openBook(){if(!ui)return;if(open)flushReadingPosition({notify:true});clearTimeout(resumeScrollTimer);resumeScrollTimer=0;activeReadingPosition=null;activeReadingScopeKey=null;bookIntentEpoch++;previousView=[...document.querySelectorAll('.view')].find(v=>!v.classList.contains('hidden')&&v!==ui.view)||previousView;document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));ui.view.classList.remove('hidden');restoreBookChrome();open=true;setBookInstantScroll(true);document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('active'));ui.nav.classList.add('active');const title=document.getElementById('pageTitle'),subtitle=document.getElementById('pageSubtitle');if(title)title.textContent='Book';if(subtitle)subtitle.textContent='Evidence-governed injection moulding reference — 20 reader chapters preserve 46 module-level claim and source boundaries.';contentsScrollY=0;contentsWindowScrollY=0;pendingContentsScroll=null;showContents({restoreScroll:false});scrollBookTo(0);emitBookRender('contents');if(!manifest){ui.summary.textContent='Loading governed Book content on demand…';ui.smeStatus.textContent='Independent human SME review status loads with the Book content.';void ensureManifest().catch(()=>{});}}
   async function openChapter(id){
