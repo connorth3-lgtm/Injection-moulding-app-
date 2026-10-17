@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.10.16.1';
-const CACHE_REVISION='android-mobile-more-practice-nav-r20-20261016';
+const CACHE_REVISION='book-reading-audio-depth-fix-20261018';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both
