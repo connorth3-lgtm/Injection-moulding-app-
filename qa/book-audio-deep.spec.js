@@ -67,9 +67,10 @@ test('book narration progresses to saved chapter without automatically restartin
   await page.locator('#mmBookView [data-mm-book-mode="listen"]').click();
   await expect.poll(()=>page.evaluate(()=>window.MMBook.getAudioResume()?.chapterId)).toBe('r03');
   await page.evaluate(()=>{
-    const row=JSON.parse(localStorage.getItem('mouldmasterProDB'));
-    row.activeUser='audio-deep-b';
-    localStorage.setItem('mouldmasterProDB',JSON.stringify(row));
+    const before=window.MM_LEARNER_SCOPE.token();
+    if(typeof db==='undefined'||!db)throw Error('Test requires loaded learner database');
+    db.activeUser='audio-deep-b';
+    if(window.MM_LEARNER_SCOPE.token()===before)throw Error('Learner scope failed to switch');
     window.dispatchEvent(new CustomEvent('mm:book-audio-position',{detail:{chapterId:'r12',unitIndex:6}}));
   });
   // Scope implementations vary in how they respond to an active-user change;
