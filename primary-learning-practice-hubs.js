@@ -1103,8 +1103,6 @@ function learnHubMarkup(){
   const c=lessonContext();
   const lesson=c?.lesson;const course=c?.course;
   const lessonLine=course?`${esc(course.name)} · Lesson ${(c.position||0)+1} of ${course.lessonIds.length}`:'Your current lesson';
-  const totals=lessonCatalog.counts();
-  const lessonTotal=totals.core+totals.material+totals.specialist;
   return `<div class="mm-primary-hub mm-learn-hub">
     <header class="mm-primary-hub-head"><span class="eyebrow">Learn</span><h1>Lessons</h1><p>Core, material science and specialist lessons in one place.</p></header>
     <section class="mm-hub-continue mm-primary-hub-card" aria-label="Continue learning"><div class="mm-hub-continue-copy"><span class="eyebrow">Continue</span><h2>${esc(lesson?.title||'Your next lesson')}</h2><p>${lessonLine}</p><div class="mm-hub-progress"><div class="mini-bar" aria-hidden="true"><span style="width:${c?.overall||0}%"></span></div><strong>${c?.overall||0}% complete</strong></div></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="lesson">Continue lesson →</button></section>
