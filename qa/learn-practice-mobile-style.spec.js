@@ -443,7 +443,15 @@ test('all 32 unscored source questions map to distinct existing core lessons wit
       const fs=require('node:fs');
       fs.mkdirSync('qa-artifacts',{recursive:true});
       await check.scrollIntoViewIfNeeded();
-      await page.screenshot({path:'qa-artifacts/pr640-core-lesson-46-integrated-open-390x844.png'});
+      await page.screenshot({path:'qa-artifacts/pr640-core-lesson-46-integrated-open-390x844.png',animations:'disabled'});
+      await section.screenshot({path:'qa-artifacts/pr640-core-lesson-46-answer-expanded.png',animations:'disabled'});
+    }
+    if(id===54){
+      const fs=require('node:fs');
+      fs.mkdirSync('qa-artifacts',{recursive:true});
+      await section.screenshot({path:'qa-artifacts/pr640-core-lesson-54-answer-expanded.png',animations:'disabled'});
+      await check.locator('summary').scrollIntoViewIfNeeded();
+      await page.screenshot({path:'qa-artifacts/pr640-core-lesson-54-integrated-open-390x844.png',animations:'disabled'});
     }
     // Re-enter via the real public catalogue path instead of invoking the
     // intentionally private mountLesson() closure. An actual revisit must
@@ -457,6 +465,16 @@ test('all 32 unscored source questions map to distinct existing core lessons wit
     await expect(page.locator('#lesson [data-mm-lesson-reasoning-question="'+qaId+'"]')).toHaveCount(1);
     await page.evaluate(()=>window.MM_LESSON_CATALOG.open());
   }
+  // Provenance travels with the real screenshot artifact; neither screenshots
+  // nor this manifest constitute the owner's approval.
+  const fs=require('node:fs');
+  fs.mkdirSync('qa-artifacts',{recursive:true});
+  fs.writeFileSync('qa-artifacts/pr640-lesson-review-source.json',JSON.stringify({
+    release:'2026.10.17.1',sourceSha:process.env.MM_LESSON_REVIEW_SHA||null,
+    viewport:{width:390,height:844},lessonIds:[46,54],
+    visualOwnerApproved:false,visualBaselineChanged:false,
+    source:'actual Playwright Chromium in-lesson captures'
+  },null,2)+'\n');
   // Unrelated core lessons get no empty or duplicate teaching block.
   const first=page.locator('#path [data-mm-lesson-id="1"]');
   if(!(await first.locator('xpath=ancestor::*[@data-mm-catalog-group]').evaluate(el=>el.open)))await first.locator('xpath=ancestor::*[@data-mm-catalog-group]').locator(':scope > summary').click();
