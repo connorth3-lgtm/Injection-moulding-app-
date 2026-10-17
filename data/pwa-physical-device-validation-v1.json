@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Release 2026.10.17.1 has no physically tested Android/iOS/iPadOS PWA artifact; offline/install/reboot/update, Read Aloud, zoom, safe-area and actual device tests pending. Prior 2026.10.16.1 technical source historic only.",
+  "boundary": "Automated app/browser QA cannot demonstrate physical iOS/iPadOS and Android devices passing real offline install/update/reboot, speaker/audio, zoom, safe-area and long-reading checks for release 2026.10.17.1. All real-device evidence remains pending. Real NVDA/VoiceOver assistive-technology acceptance is governed separately in data/accessibility-real-at-validation-v1.json, and a previous-release technical artifact cannot be reused as current device evidence. No production authorization.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,

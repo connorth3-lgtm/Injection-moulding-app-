@@ -128,7 +128,7 @@
     "artifactDigest": "sha256:957f7a0b2e16aab3fd4b59fe86706b637a440593081152748fc18c8332cd32e7",
     "artifactExpiresAt": "2027-01-14T07:04:41Z"
   },
-  "candidateStatus": "TECHNICAL FAIL — new source-linked producer/artifact/visual approval pending; seven independent human/device/provider validations HOLD; production and tester invitations not authorised.",
+  "candidateStatus": "HOLD — technical FAIL for 2026.10.17.1; accepted exact-source producer/artifact/fingerprint missing, new owner visual approval required; seven independent external streams remain HOLD, no release or tester invitation.",
   "previousPreviousCandidate": {
     "release": "2026.10.15.2",
     "sourceSha": "f9de4baaa6421184b61c40ea1932015743b6a503",
