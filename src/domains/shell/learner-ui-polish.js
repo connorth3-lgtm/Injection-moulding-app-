@@ -7,7 +7,7 @@
 if(window.MM_LEARNER_UI_POLISH)return;
 const VERSION='2026.10.17.1';
 // Cache-bust stylesheet revisions without claiming a new governed app release.
-const STYLE_REV='2026.10.17.1-pr640-tidy';
+const STYLE_REV='2026.10.17.1-pr640-materials-parity';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -453,7 +453,8 @@ function home(){
     const hero=root.querySelector('.mm-reference-home-hero');
     // Anchor the action to the hero, not its positioned copy wrapper:
     // that wrapper previously made the absolute button overlap the headline.
-    (hero||book||focus).appendChild(practice);
+    if(hero)hero.insertAdjacentElement('afterend',practice);
+    else (book||focus).insertAdjacentElement('beforebegin',practice);
   }
   if(!root.querySelector('.mm-reference-quick-tools')){
     const tools=document.createElement('section');
@@ -477,7 +478,8 @@ function home(){
       button.append(icon,copy);button.addEventListener('click',run);tiles.appendChild(button);
     }
     tools.append(title,tiles);
-    root.querySelector('.mm-reference-home-hero')?.insertAdjacentElement('afterend',tools);
+    const focusAnchor=focus.closest('.mm-dashboard-slot')||focus;
+    focusAnchor.insertAdjacentElement('afterend',tools);
   }
 }
 function openReferenceConverter(){
