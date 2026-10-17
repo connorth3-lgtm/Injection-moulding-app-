@@ -366,7 +366,7 @@ need("window.addEventListener('mm:domains-ready',installBookSearch,{once:true})"
 need("window.__MM_BOOK_SEARCH_BOUND__===VERSION" in book_runtime, 'Book search binding must be idempotent for the current Book runtime')
 need('function verifiedChapterHtml(chapter,options={})' in book_runtime, 'verified chapter renderer missing')
 need("if(chapter.state==='verified')ui.reader.innerHTML=`${back}${verifiedChapterHtml(chapter)}`" in book_runtime, 'Book read surface no longer uses governed verified renderer')
-need('function readerListeningModuleHtml(chapter)' in book_runtime and 'function readerListeningChapterHtml(reader)' in book_runtime and 'allReaderChapters().map(readerListeningChapterHtml)' in book_runtime, 'Book listen surface must follow condensed reader sections while excluding technical-review modules')
+need('function readerListeningModuleHtml(chapter,options={})' in book_runtime and 'function readerListeningChapterHtml(reader,options={})' in book_runtime and 'allReaderChapters().map(reader=>readerListeningChapterHtml(reader,' in book_runtime and 'readerSections(chapter)' in book_runtime and "chapter?.state!=='verified'" in book_runtime, 'Book audio must keep all three governed modes, source review exclusion, and the original streamlined reader filter')
 need("ui.listen.addEventListener('click',startVerifiedListening)" in book_runtime, 'Book listening control is not bound')
 need('style="' not in book_runtime and "style='" not in book_runtime, 'Book runtime reintroduced inline HTML style attributes')
 for marker in ('READER_SECTION_OMISSIONS','READER_SUPPLEMENT_SECTIONS','readerSections','readerSupplementHtml','readerModuleEvidenceHtml','mm-book-reader-governance','mm-book-inline-evidence'):
