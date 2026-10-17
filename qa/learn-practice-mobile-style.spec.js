@@ -338,12 +338,9 @@ test('Android Learn bottom navigation does not trap the last learning-resource a
  const safe=await page.evaluate(()=>{
    const nav=document.querySelector('.mobile-nav').getBoundingClientRect();
    const footer=document.querySelector('#path .mm-catalog-extra button').getBoundingClientRect();
-   const screen=getComputedStyle(document.body,'::after');
-   return {navTop:nav.top,footerBottom:footer.bottom,scrimHeight:parseFloat(screen.height),scrimEvents:screen.pointerEvents,overflow:document.documentElement.scrollWidth-innerWidth};
+   return {navTop:nav.top,footerBottom:footer.bottom,overflow:document.documentElement.scrollWidth-innerWidth};
  });
  expect(safe.footerBottom).toBeLessThanOrEqual(safe.navTop+2);
- expect(safe.scrimHeight).toBeGreaterThan(70);
- expect(safe.scrimEvents).toBe('none');
  expect(safe.overflow).toBeLessThanOrEqual(2);
  expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts().total)).toBe(169);
 });

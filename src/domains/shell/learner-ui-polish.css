@@ -4142,16 +4142,8 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
   .mm-reference-layout #path .mm-learn-chapter-count{
     white-space:nowrap;flex:0 0 auto;
   }
-  /* Opaque visual safe zone underneath the floating five-tab bar. A
-     scrollable document still exists behind it; footer clearance/scroll
-     margins keep every native control reachable ABOVE the bar. */
-  html.mm-app-shell-registry body::after{
-    content:"";position:fixed;left:0;right:0;bottom:0;
-    height:calc(var(--mm-mobile-nav-height,70px) + 28px + env(safe-area-inset-bottom));
-    z-index:39;pointer-events:none;
-    background:linear-gradient(to bottom,rgba(6,16,28,0),#06101c 14px,#06101c);
-  }
-  html.mm-app-shell-registry .mobile-nav{z-index:40!important;}
+  /* Keep the existing measured bottom-nav clearance. Never mask other
+     screens with a global fixed overlay merely to hide partial content. */
   .mm-reference-layout #path :is(
     .mm-learn-reasoning-chapter>summary,.mm-learn-reasoning-item>summary,
     .mm-catalog-extra button,.mm-learn-jump a
