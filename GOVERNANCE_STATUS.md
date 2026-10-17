@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | HOLD: 2026.10.17.1 current runtime candidate unbound; no new successful exact-source producer; all seven external streams HOLD. Previously verified 2026.10.16.1 artifact historic only. |
-| Behavioral / browser | **fail** | Draft 2026.10.17.1 Chromium/WebKit and 500-case reliability pass but owner visual approval and successful entire exact-head Mobile Browser QA missing; seven human/device/provider streams HOLD. |
+| Static / contract | **fail** | Release 2026.10.17.1 candidate has no successful exact-source producer, artifact or public runtime fingerprint; old 2026.10.16.1 technical run 38864931906 is historical only; seven independent workstreams HOLD. |
+| Behavioral / browser | **fail** | Draft core-lesson 2026.10.17.1 substantive Chromium/WebKit, cross-browser, reachability and 500-case reliability passed, but the strict 52-screen visual comparison awaits new owner approval and full exact-head mobile-browser verification. No approval bypass. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
