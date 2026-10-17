@@ -155,3 +155,16 @@ test('completion callback after learner switch cannot erase another learner audi
   expect(state.a.chapterId).toBe('r08');
   expect(state.b.chapterId).toBe('r12');
 });
+
+test('phone Book narration starts directly from the original tap, not a synthetic Play click',async({page})=>{
+  await openBook(page);
+  await page.locator('[data-mm-book-audio-start]').selectOption('r04');
+  await page.evaluate(()=>{
+    const play=document.querySelector('.mm-read-aloud [data-mm-read="play"]');
+    play.click=()=>{window.__syntheticPlayAttempt=true;};
+  });
+  await page.locator('#mmBookView [data-mm-book-mode="listen"]').click();
+  await expect.poll(()=>page.evaluate(()=>window.__bookAudioLast||'')).toContain('Rheology, Moisture and Thermal History');
+  expect(await page.evaluate(()=>window.__syntheticPlayAttempt===true)).toBe(false);
+  await expect(page.locator('.mm-read-aloud [data-mm-book-audio-chapter]')).toHaveValue('r04');
+});
