@@ -4946,3 +4946,32 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
    This is essential for specialist Done/Todo privacy and keyboard navigation. */
 .mm-reference-layout #path .mm-catalog-lesson[hidden],
 .mm-reference-layout #path .mm-catalog-group[hidden]{display:none!important;}
+
+/* PR640 tablet home density contract: keep the existing training focus visible
+   before the first screen fold on 810px compact-navigation tablets while
+   retaining full text, 44px controls and Materials-style actionable rows. */
+@media (min-width:701px) and (max-width:900px){
+  .mm-reference-layout #dashboard .mm-reference-home-hero{
+    min-height:100px!important;
+    padding:10px 13px!important;
+    margin-bottom:6px!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-home-practice{
+    min-height:58px!important;
+    margin:0 0 6px!important;
+    padding:7px 10px!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-tools{
+    margin:6px 0 8px!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-grid{
+    gap:6px!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-tool{
+    min-height:70px!important;
+    padding:6px 9px 6px 6px!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-icon{
+    width:54px!important;height:54px!important;
+  }
+}
