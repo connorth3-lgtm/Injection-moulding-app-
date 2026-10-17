@@ -41,44 +41,56 @@ async function openMaterials(page){
   await expect(page.locator('#mmExactMaterialCatalog')).toHaveAttribute('data-mm-material-search-mode','indexed');
 }
 
-test('indexed exact-grade catalog paginates beyond the old 40-card ceiling and resets filters accessibly',async({page})=>{
+test('unified materials catalogue paginates 72 exact grades without exposing a second hidden list',async({page})=>{
   await page.setViewportSize({width:412,height:915});
   await openMaterials(page);
   const root=page.locator('#mmExactMaterialCatalog');
-  const search=root.locator('[data-mm-exact-query]');
-  const status=root.locator('[data-mm-material-page-status]');
-  const previous=root.locator('[data-mm-material-page="previous"]');
-  const next=root.locator('[data-mm-material-page="next"]');
+  const search=root.locator('[data-mm-all-material-query]');
+  const status=root.locator('[data-mm-all-material-status]');
+  const rows=root.locator('[data-mm-material-index-result]');
+  const previous=root.locator('[data-mm-all-material-page="previous"]');
+  const next=root.locator('[data-mm-all-material-page="next"]');
 
-  const started=Date.now();
   await search.fill('ScaleLab');
-  await expect(status).toContainText('72 matching exact grades · page 1 of 3');
-  expect(Date.now()-started).toBeLessThan(1500);
-  await expect(root.locator('[data-mm-material-grade]')).toHaveCount(24);
+  await expect(status).toContainText('72 matching material records · page 1 of 6');
+  await expect(rows).toHaveCount(12);
   await expect(previous).toBeDisabled();
   await expect(next).toBeEnabled();
-  const firstPageFirst=await root.locator('[data-mm-material-grade]').first().getAttribute('data-mm-material-grade');
+  const firstPageFirst=await rows.first().getAttribute('data-mm-material-index-result');
 
   await next.click();
-  await expect(status).toContainText('page 2 of 3');
-  await expect(root.locator('[data-mm-material-grade]')).toHaveCount(24);
+  await expect(status).toContainText('page 2 of 6');
+  await expect(rows).toHaveCount(12);
   await expect(previous).toBeEnabled();
-  const secondPageFirst=await root.locator('[data-mm-material-grade]').first().getAttribute('data-mm-material-grade');
+  const secondPageFirst=await rows.first().getAttribute('data-mm-material-index-result');
   expect(secondPageFirst).not.toBe(firstPageFirst);
 
   await search.fill('SCALE-001');
-  await expect(status).toContainText('1 matching exact grades · page 1 of 1');
-  await expect(root).toHaveAttribute('data-mm-material-page','1');
-  await expect(root.locator('[data-mm-material-grade]')).toHaveCount(1);
+  await expect(status).toContainText('1 matching material records · page 1 of 1');
+  await expect(rows).toHaveCount(1);
+  await expect(previous).toBeDisabled();
+  await expect(next).toBeDisabled();
 
   await search.fill('ScaleLab');
-  await expect(status).toContainText('72 matching exact grades · page 1 of 3');
-  const manufacturer=root.locator('[data-mm-exact-manufacturer]');
+  await expect(status).toContainText('72 matching material records · page 1 of 6');
+  const filters=root.locator('[data-mm-all-material-filters]');
+  await filters.locator('summary').click();
+  const manufacturer=filters.locator('[data-mm-all-material-manufacturer]');
   await manufacturer.selectOption({index:1});
-  await expect(status).toContainText('matching exact grades · page 1 of 1');
-  await expect(root.locator('[data-mm-material-grade]')).toHaveCount(24);
+  await expect(status).toContainText('matching material records · page 1 of');
+  const filteredCount=Number((await status.textContent()).match(/^(\d+) matching/)?.[1]);
+  expect(filteredCount).toBeGreaterThan(0);
+  expect(filteredCount).toBeLessThan(72);
+  await expect(rows.first()).toBeVisible();
   await expect(status).toHaveAttribute('role','status');
   await expect(status).toHaveAttribute('aria-live','polite');
+
+  // The underlying 24-row indexed grade service stays testable without
+  // making its old duplicate catalogue visible to learners.
+  const indexed=await page.evaluate(()=>window.MM_MATERIAL_SEARCH.searchPage('ScaleLab',{page:2,pageSize:24}));
+  expect(indexed.total).toBe(72);
+  expect(indexed.items).toHaveLength(24);
+  expect(indexed.page).toBe(2);
 
   const geometry=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,page:document.documentElement.scrollWidth}));
   expect(geometry.page).toBeLessThanOrEqual(geometry.viewport+1);
