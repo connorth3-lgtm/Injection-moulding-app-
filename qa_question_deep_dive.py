@@ -107,7 +107,13 @@ need(policy.get('centralisesDiscovery') is True and policy.get('duplicatesQuesti
 hub=text('primary-learning-practice-hubs.js')
 for marker in ['window.MM_QUESTION_CENTRE=Object.freeze','function openQuestionCentreDetail()','mm-question-centre','Formal knowledge checks','Shop-floor scenarios','Diagnostic questions','Material questions','Measured-evidence decisions','${q.total} governed question/decision prompts']:
     need(marker in hub,f'Question Centre learner launcher missing: {marker}')
-need('Book chapter self-checks and lesson exercises stay with the teaching they belong to.' in hub,'Question Centre must preserve teaching-context questions outside the consolidated launcher')
+need('Book chapter self-checks, the 32 optional reasoning questions and lesson exercises stay with the core lessons they belong to.' in hub
+     and 'window.MM_LESSON_REASONING=Object.freeze' in hub
+     and 'function mountLessonReasoning(root)' in hub
+     and 'mountLessonReasoning(root);' in hub
+     and 'id="mmLessonReasoning"' in hub
+     and '${optional}' not in hub,
+     'Question Centre must preserve all optional teaching questions within mapped core lessons, without duplicating them inside the consolidated launcher')
 need("case 'question-centre': return openQuestionCentreDetail();" in hub,'Question Centre action must open the dedicated Practice surface rather than a transient modal')
 need("scope:'Learner-facing consolidated launcher only" in hub,'Question Centre governance boundary must state discovery-only consolidation')
 

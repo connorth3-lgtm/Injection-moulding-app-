@@ -1,12 +1,12 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.16.1`**.
+Current governed web candidate: **`2026.10.17.1`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS: release 2026.10.16.1 source e336f656351afa4eeaaae0940969bea881ae9b68 completed successful exact-source producer run 38864931906, retained artifact 12030806569, digest sha256:957f7a0b2e16aab3fd4b59fe86706b637a440593081152748fc18c8332cd32e7, expiry 2027-01-14T07:04:41Z, and measured public-runtime fingerprint sha256:3677de439e76c94b69ebeef13dd92904cd6b30818b88a5434fcbe3755529ec27. Technical source provenance only; seven independent external reviews HOLD. |
-| Behavioral / browser | **pass** | PASS: release 2026.10.16.1 source e336f656351afa4eeaaae0940969bea881ae9b68 completed exact-source Mobile Browser QA 38864931666 with approved strict 52-screenshot/12px visual, substantive Chromium/WebKit, cross-browser, reachability and five 100-run reliability shards, plus Question Quality 38864931729. No physical-device or human SME/provider approval. |
+| Static / contract | **fail** | Release 2026.10.17.1 candidate has no successful exact-source producer, artifact or public runtime fingerprint; old 2026.10.16.1 technical run 38864931906 is historical only; seven independent workstreams HOLD. |
+| Behavioral / browser | **fail** | Draft core-lesson 2026.10.17.1 substantive Chromium/WebKit, cross-browser, reachability and 500-case reliability passed, but the strict 52-screen visual comparison awaits new owner approval and full exact-head mobile-browser verification. No approval bypass. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
