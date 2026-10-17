@@ -1012,3 +1012,24 @@ test('Book Contents narration does not pick an unrelated screen when the reader 
   const units=await page.evaluate(()=>window.MMReadAloud.refresh().map(u=>u.text));
   expect(units).toEqual(['Book Contents heading.','Choose a reader chapter from the Book.']);
 });
+
+for(const phone of ['Android','iPhone']){
+  test(`Phone sound diagnostic starts its short TTS sample on the original ${phone} tap`,async({page})=>{
+    await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Phone sound diagnostic does not need a Book content queue.</p></main></body></html>');
+    await page.evaluate(phone=>{
+      const ua=phone==='Android'?'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/130.0 Mobile Safari/537.36':'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Safari/604.1';
+      Object.defineProperty(navigator,'userAgent',{configurable:true,value:ua});
+      class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.voice=null;this.onstart=null;this.onend=null;this.onerror=null;}}
+      const synth={getVoices(){return[];},cancel(){this.cancels=(this.cancels||0)+1;},
+        speak(u){window.__phoneTestVoiceText=u.text;window.__phoneTestVoiceRate=u.rate;window.__phoneTestGesture=navigator.userActivation?.isActive??true;queueMicrotask(()=>{u.onstart?.();u.onend?.();});},
+        pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+      Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+      Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+    },phone);
+    await page.addScriptTag({path:'read-aloud.js'});
+    await page.locator('.mm-read-aloud [data-mm-read="test"]').click();
+    await expect.poll(()=>page.evaluate(()=>window.__phoneTestVoiceText||'')).toBe('MouldMaster sound test. You should hear this sentence.');
+    await expect(page.locator('.mm-read-aloud .mm-read-status')).toContainText('Sound test finished');
+    expect(await page.evaluate(()=>window.__phoneTestVoiceRate)).toBe(1);
+  });
+}
