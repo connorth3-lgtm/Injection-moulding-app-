@@ -631,12 +631,12 @@
   function verifiedChapterHtml(chapter,options={}){const sections=Array.isArray(chapter.sections)?chapter.sections:[],includeTechnicalMaterial=options.includeTechnicalMaterial!==false;return `<article class="mm-book-verified-chapter" data-mm-book-verified-chapter="${esc(chapter.id)}"><span class="eyebrow">Source evidence reviewed</span><h2 data-mm-book-anchor="chapter:${esc(chapter.id)}">${esc(chapter.title)}</h2><p><b>Applicability:</b> ${esc(chapter.applicability||'See attached evidence and controlling documentation.')}</p>${sections.map((s,index)=>`<section><h3 data-mm-book-anchor="chapter:${esc(chapter.id)}:section:${index}">${esc(s.title||'')}</h3>${proseHtml(s.text)}</section>`).join('')}${diagramHtml(chapter)}${workedCaseHtml(chapter)}${includeTechnicalMaterial?materialAtlasHtml(chapter):''}${sourceHtml(chapter)}${claimTraceHtml(chapter)}</article>`;}
   // Reading prose comes first; the source/SME records are preserved in chapter
   // notes instead of repeated as technical badges between paragraphs.
-  function readerModuleHtml(chapter){
+  function readerModuleHtml(chapter,options={}){
     const sections=readerSections(chapter),verified=chapter.state==='verified';
     const caution=!verified?`<p class="mm-book-review-warning"><strong>${esc(stateLabel(chapter.state))} — independent technical approval not established.</strong></p>`:'';
     const boundary=!verified&&chapter.reviewBoundary?`<p><strong>Review boundary:</strong> ${esc(chapter.reviewBoundary)}</p>`:'';
     const scope=`<aside class="mm-book-scope-note"><p><strong>Applicability:</strong> ${esc(chapter.applicability||'See governed module scope.')}</p>${boundary}</aside>`;
-    return `<section class="mm-book-reader-module" data-mm-book-reader-module="${esc(chapter.id)}"><h3 data-mm-book-anchor="module:${esc(chapter.id)}">${esc(chapter.title)}</h3>${caution}${scope}${sections.map((s,index)=>`<section><h4 data-mm-book-anchor="module:${esc(chapter.id)}:section:${index}">${esc(s.title||'')}</h4>${proseHtml(s.text)}</section>`).join('')}${readerSupplementHtml(chapter)}${(READER_SECTION_OMISSIONS[chapter.id]||[]).length?`<details class="mm-book-full-source-inline"><summary>Read all original source sections · ${(READER_SECTION_OMISSIONS[chapter.id]||[]).length} additional sections</summary>${readerOmittedSectionsHtml(chapter)}</details>`:''}${diagramHtml(chapter,{readerMode:true})}${workedCaseHtml(chapter,{readerMode:true})}${chapter.id==='material-families'?materialAtlasHtml(chapter):''}</section>`;
+    return `<section class="mm-book-reader-module" data-mm-book-reader-module="${esc(chapter.id)}"><h3 data-mm-book-anchor="module:${esc(chapter.id)}">${esc(chapter.title)}</h3>${caution}${scope}${sections.map((s,index)=>`<section><h4 data-mm-book-anchor="module:${esc(chapter.id)}:section:${index}">${esc(s.title||'')}</h4>${proseHtml(s.text)}</section>`).join('')}${readerSupplementHtml(chapter)}${(READER_SECTION_OMISSIONS[chapter.id]||[]).length?`<details class="mm-book-full-source-inline"><summary>Read all original source sections · ${(READER_SECTION_OMISSIONS[chapter.id]||[]).length} additional sections</summary>${readerOmittedSectionsHtml(chapter)}</details>`:''}${diagramHtml(chapter,{readerMode:true})}${workedCaseHtml(chapter,{readerMode:true,audioExpanded:options.priorityCases===true})}${chapter.id==='material-families'?materialAtlasHtml(chapter):''}</section>`;
   }
   function readerPageTurn(reader){
     const rows=allReaderChapters(),index=rows.findIndex(row=>row.id===reader.id);
@@ -660,13 +660,15 @@
       ${readerReferencesHtml(reader,modules)}
       <details class="mm-book-reader-guide"><summary>Reading guide & terminology</summary><p><strong>Chapter thread:</strong> ${esc(reader.readingThread)}</p>${readerKeyTermsHtml(reader)}${reader.sequencePrompt?`<p>${esc(reader.sequencePrompt)}</p>`:''}</details>
     </details>`;
+    const priorityCases=['r07','r10','r11','r15'].includes(reader.id);
     const study=`<details class="mm-book-reader-study"><summary>Study questions (optional)</summary>${readerLearningHtml(reader)}</details>`;
     return `<article class="mm-book-reader-chapter mm-book-prose" data-mm-book-reader-chapter="${esc(reader.id)}">
       <p class="mm-book-chapter-number">Chapter ${n}</p>
       <h2 data-mm-book-anchor="reader:${esc(reader.id)}">${esc(reader.title)}</h2>
       <p class="mm-book-chapter-lede">${esc(reader.goal)}</p>
       <p class="mm-book-reader-assurance" role="note"><strong>Source evidence reviewed · Independent human SME review pending · Educational reference only.</strong> Machine, material, mould and site instructions remain controlling.</p>
-      ${modules.map(readerModuleHtml).join('')}
+      ${priorityCases?'<p class="mm-book-example-intro"><strong>Learn through worked evidence:</strong> relevant synthetic examples open automatically in this shorter chapter. Calculations remain illustrative, not production settings.</p>':''}
+      ${modules.map(ch=>readerModuleHtml(ch,{priorityCases})).join('')}
       ${study}${notes}${readerPageTurn(reader)}
     </article>`;
   }
