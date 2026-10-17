@@ -429,7 +429,7 @@ test('all 32 unscored source questions map to distinct existing core lessons wit
       const contrast=await page.evaluate(()=>{
         const container=document.querySelector('#lesson #mmLessonReasoning');
         const targets=[...container.querySelectorAll('.mm-lesson-reasoning-answer>p'),container.querySelector('.mm-lesson-reasoning-questions>.mm-learn-safety-note')].filter(Boolean);
-        const components=color=>[...color.matchAll(/[\\d.]+/g)].slice(0,3).map(m=>Number(m[0]));
+        const components=color=>color.slice(color.indexOf('(')+1,color.indexOf(')')).split(',').slice(0,3).map(v=>Number(v.trim()));
         const luminance=rgb=>rgb.map(v=>{let c=v/255;return c<=.04045?c/12.92:Math.pow((c+.055)/1.055,2.4)}).reduce((sum,v,i)=>sum+v*[.2126,.7152,.0722][i],0);
         const background=[7,30,48]; // rgba(5,25,41,.82) over #0e344f
         return targets.map(node=>{
