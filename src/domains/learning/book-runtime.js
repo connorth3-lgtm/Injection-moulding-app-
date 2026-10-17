@@ -82,6 +82,18 @@
       return row;
     }catch(_){return null}
   }
+  function clearAudioResume(){
+    // A scoped learner reset must end playback BEFORE deleting the old cursor:
+    // otherwise the next onstart event could write the just-cleared bookmark.
+    window.MMReadAloud?.stop?.();
+    activeAudioScopeKey=null;
+    const key=audioStorageKey();if(!key)return false;
+    try{
+      localStorage.removeItem(key);
+      if(localStorage.getItem(key)!=null)return false;
+      refreshAudioContinue();return true;
+    }catch(_){return false}
+  }
   function refreshAudioContinue(){
     if(!ui?.listenContinue)return;
     const saved=readAudioResume();ui.listenContinue.hidden=!saved;
@@ -96,7 +108,7 @@
     const mode=ui.audioMode?.value||'complete';
     try{localStorage.setItem(key,JSON.stringify({schema:1,bookRelease:VERSION,chapterId:d.chapterId,unitIndex:d.unitIndex,mode}));refreshAudioContinue();}catch(_){}
   });
-  window.addEventListener('mm:book-audio-complete',()=>{const key=audioStorageKey();if(!key)return;try{localStorage.removeItem(key);refreshAudioContinue();}catch(_){}});
+  window.addEventListener('mm:book-audio-complete',()=>{const key=audioStorageKey();if(!key||key!==activeAudioScopeKey)return;try{localStorage.removeItem(key);refreshAudioContinue();}catch(_){}});
   function resumeStorageKey(){
     const scope=window.MM_LEARNER_SCOPE;
     if(!scope?.storageKey||!scope?.token)return null;
@@ -861,6 +873,6 @@
   window.addEventListener('click',event=>{const target=event.target?.closest?.('nav button,[data-view],[data-page]');if(!target||target.dataset.mmBookTab||ui?.view?.contains(target))return;if(open)leaveBook();},true);
   let ready;
   bindBookSearchInput();
-  window.MMBook=Object.freeze({version:VERSION,open:openBook,prepareRouteExit,openResume,getResume,clearResume,resumeStorageKey,getAudioResume:readAudioResume,openChapter,openReaderChapter:async id=>{openBook();const intent=bookIntentEpoch,learnerKey=resumeStorageKey();try{await ensureManifest();if(open&&intent===bookIntentEpoch&&resumeStorageKey()===learnerKey&&!ui.view.classList.contains('hidden'))showReaderChapter(id);}catch(_){}},search:searchBook,load:ensureManifest,loadMaterials:ensureMaterialData,getManifest:()=>manifest,getReaderArchitecture:()=>readerArchitecture,getEditorialExpansionReview:()=>editorialExpansionReview,getPublicationAuthorization:()=>publicationAuthorization,getSmeReview:()=>bookSmeReview,getQualificationReview:()=>qualificationReview,getWorkedCases:()=>workedCaseLedger,getEvidenceEnrichment:()=>evidenceEnrichmentLedger,getClaimEvidenceReference:()=>claimEvidenceReference,getEngineeringDiagrams:()=>diagramLedger,getMaterialAtlas:()=>materialAtlas,getMaterialCatalog:()=>materialCatalog,getMaterialRegionalEvidence:()=>materialRegionalEvidence,getEvidenceIdentity:evidenceIdentity,getIntegrityMap:()=>integrityMap?{...integrityMap}:null,verifiedChapters,startVerifiedListening,get ready(){return ready;}});
+  window.MMBook=Object.freeze({version:VERSION,open:openBook,prepareRouteExit,openResume,getResume,clearResume,resumeStorageKey,getAudioResume:readAudioResume,clearAudioResume,openChapter,openReaderChapter:async id=>{openBook();const intent=bookIntentEpoch,learnerKey=resumeStorageKey();try{await ensureManifest();if(open&&intent===bookIntentEpoch&&resumeStorageKey()===learnerKey&&!ui.view.classList.contains('hidden'))showReaderChapter(id);}catch(_){}},search:searchBook,load:ensureManifest,loadMaterials:ensureMaterialData,getManifest:()=>manifest,getReaderArchitecture:()=>readerArchitecture,getEditorialExpansionReview:()=>editorialExpansionReview,getPublicationAuthorization:()=>publicationAuthorization,getSmeReview:()=>bookSmeReview,getQualificationReview:()=>qualificationReview,getWorkedCases:()=>workedCaseLedger,getEvidenceEnrichment:()=>evidenceEnrichmentLedger,getClaimEvidenceReference:()=>claimEvidenceReference,getEngineeringDiagrams:()=>diagramLedger,getMaterialAtlas:()=>materialAtlas,getMaterialCatalog:()=>materialCatalog,getMaterialRegionalEvidence:()=>materialRegionalEvidence,getEvidenceIdentity:evidenceIdentity,getIntegrityMap:()=>integrityMap?{...integrityMap}:null,verifiedChapters,startVerifiedListening,get ready(){return ready;}});
   ready=document.readyState==='loading'?new Promise(resolve=>document.addEventListener('DOMContentLoaded',()=>resolve(init()),{once:true})).then(x=>x):init();
 })();
