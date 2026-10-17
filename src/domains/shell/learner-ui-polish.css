@@ -4941,3 +4941,8 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
   .mm-reference-layout #path .mm-hub-progress{font-size:11px!important}
   .mm-reference-layout #scenarios .mm-hub-section-head{margin:0 0 8px!important}
 }
+
+/* Filtered lessons are genuinely hidden, despite Materials-parity grid skin.
+   This is essential for specialist Done/Todo privacy and keyboard navigation. */
+.mm-reference-layout #path .mm-catalog-lesson[hidden],
+.mm-reference-layout #path .mm-catalog-group[hidden]{display:none!important;}
