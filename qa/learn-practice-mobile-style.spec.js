@@ -423,8 +423,16 @@ test('all 32 unscored source questions map to distinct existing core lessons wit
     await expect(check).toContainText('Why that is plausible');
     await expect(check).toContainText('Evidence to verify');
     await expect(check).toContainText('Common mistake to avoid');
-    await page.evaluate(()=>window.MM_LESSON_CATALOG.mountLesson());
+    // Re-enter via the real public catalogue path instead of invoking the
+    // intentionally private mountLesson() closure. An actual revisit must
+    // produce exactly one mapped teaching section with no duplicate prompts.
+    await page.evaluate(()=>window.MM_LESSON_CATALOG.open());
+    const revisit=page.locator('#path [data-mm-lesson-id="'+id+'"]');
+    const group=revisit.locator('xpath=ancestor::*[@data-mm-catalog-group]');
+    if(!(await group.evaluate(el=>el.open)))await group.locator(':scope > summary').click();
+    await revisit.click();
     await expect(page.locator('#lesson #mmLessonReasoning')).toHaveCount(1);
+    await expect(page.locator('#lesson [data-mm-lesson-reasoning-question="'+qaId+'"]')).toHaveCount(1);
     await page.evaluate(()=>window.MM_LESSON_CATALOG.open());
   }
   // Unrelated core lessons get no empty or duplicate teaching block.
@@ -504,16 +512,29 @@ test('Safety teaching and the four-checkpoint capstone remain unscored and have 
   await openApp(page);
   await page.evaluate(()=>switchView('path'));
   const master=page.locator('#path .mm-learn-master-lesson');
-  const safety=master.locator('.mm-learn-reasoning-chapter').nth(6);
-  const validation=master.locator('.mm-learn-reasoning-chapter').nth(7);
-  await expect(safety).toContainText('Recognise hazards');
-  await expect(validation).toContainText('defensible evidence');
-  await expect(safety.locator('details.mm-learn-reasoning-item')).toHaveCount(4);
+  // The previous eight-chapter safety list was intentionally retired.
+  // Verify its actual safety prompt in the relevant canonical core lesson.
+  await expect(master.locator('.mm-learn-reasoning-chapter')).toHaveCount(0);
   const capstone=master.locator('#mmLearnCapstone');
   await expect(capstone).toBeVisible();
   await expect(capstone.locator('.mm-learn-capstone-steps > details')).toHaveCount(4);
   await capstone.locator('.mm-learn-capstone-steps > details').first().locator('summary').click();
   await expect(capstone).toContainText('known-good baseline');
+  await page.evaluate(()=>window.MM_LESSON_CATALOG.open());
+  const safetyLesson=page.locator('#path [data-mm-lesson-id="6"]');
+  const safetyCourse=safetyLesson.locator('xpath=ancestor::*[@data-mm-catalog-group]');
+  if(!(await safetyCourse.evaluate(el=>el.open)))await safetyCourse.locator(':scope > summary').click();
+  await safetyLesson.click();
+  const safety=page.locator('#lesson #mmLessonReasoning');
+  await expect(safety).toHaveAttribute('data-mm-lesson-reasoning-id','6');
+  await expect(safety.locator('[data-mm-lesson-reasoning-question="LR-25"]')).toHaveCount(1);
+  await safety.locator('.mm-lesson-reasoning-group > summary').click();
+  const question=safety.locator('.mm-lesson-reasoning-question');
+  await question.locator('summary').click();
+  await expect(question).toContainText('open guard');
+  await expect(question).toContainText('Common mistake to avoid');
+  await expect(safety).toContainText('They do not affect the 169 governed assessment prompts');
+  await expect(safety.locator('button,[data-mm-onclick]')).toHaveCount(0);
   expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts().total)).toBe(169);
 });
 
