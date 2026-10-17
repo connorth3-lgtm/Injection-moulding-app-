@@ -423,6 +423,14 @@ test('all 32 unscored source questions map to distinct existing core lessons wit
     await expect(check).toContainText('Why that is plausible');
     await expect(check).toContainText('Evidence to verify');
     await expect(check).toContainText('Common mistake to avoid');
+    // Capture the first integrated LESSON question, not the top of Learn.
+    // This is unapproved, exact-source review evidence and never a baseline.
+    if(id===46){
+      const fs=require('node:fs');
+      fs.mkdirSync('qa-artifacts',{recursive:true});
+      await check.scrollIntoViewIfNeeded();
+      await page.screenshot({path:'qa-artifacts/pr640-core-lesson-46-integrated-open-390x844.png'});
+    }
     // Re-enter via the real public catalogue path instead of invoking the
     // intentionally private mountLesson() closure. An actual revisit must
     // produce exactly one mapped teaching section with no duplicate prompts.
