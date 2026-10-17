@@ -109,3 +109,19 @@ html.mm-ios-webkit body{min-height:100dvh;min-height:-webkit-fill-available;-web
     min-height:0!important;
   }
 }
+
+
+/* Book first-read, evidence disclosure and complete-audio controls — 2026-10-18. */
+#mmBookView .mm-book-audio-setup{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:10px 14px;margin:12px 0 16px;align-items:end}
+#mmBookView .mm-book-audio-setup label{display:grid;gap:6px;font-weight:700;color:inherit}
+#mmBookView .mm-book-audio-setup select{width:100%;min-width:0;max-width:100%;min-height:44px;border-radius:9px;padding:8px 10px;background:#12243a;color:#f5f9ff;border:1px solid #3b5575}
+#mmBookView .mm-book-audio-setup p{grid-column:1/-1;margin:0;font-size:.88rem;line-height:1.45}
+#mmBookView .mm-book-hero-actions{display:flex;flex-wrap:wrap;gap:10px}
+#mmBookView .mm-book-hero-actions button{min-height:44px}
+#mmBookView .mm-book-reader-assurance{border-left:3px solid #e0b865;background:rgba(224,184,101,.08);border-radius:6px;padding:10px 12px;margin:12px 0 20px;line-height:1.5}
+#mmBookView .mm-book-full-source-inline{border:1px solid #3b5575;border-radius:10px;margin:12px 0 18px;padding:10px 12px}
+#mmBookView .mm-book-full-source-inline>summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center}
+#mmBookView .mm-book-full-source-inline .mm-book-reader-source-sections{padding:10px 2px;border:0}
+#mmBookView .mm-book-full-source-inline section{margin-block:10px 18px}
+#mmBookView .mm-book-full-source-inline h5{margin-block:12px 6px;font-size:1rem}
+@media(max-width:700px){#mmBookView .mm-book-audio-setup{grid-template-columns:1fr}#mmBookView .mm-book-hero-actions button{width:100%}}
