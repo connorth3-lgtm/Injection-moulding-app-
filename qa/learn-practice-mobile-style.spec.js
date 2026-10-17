@@ -316,6 +316,8 @@ for(const width of [360,412]){
   await expect(learn.locator('.mm-learn-reasoning-item, .mm-learn-reasoning-chapter')).toHaveCount(0);
   const master=learn.locator('.mm-learn-master-lesson');
   await expect(master).toContainText('32 optional questions inside their relevant core lessons');
+  await expect(master.locator('.mm-learn-studio > .mm-learn-step')).toHaveCount(3);
+  await expect(master.locator('.mm-learn-studio > .mm-learn-step-reasoning #mmLearnCapstone')).toHaveCount(1);
   await expect(master.locator('.mm-learn-capstone-steps > details')).toHaveCount(4);
   await expect(learn.locator('#mmLearnCourses [data-mm-catalog-group]')).toHaveCount(22);
   await expect(learn.locator('#mmLearnCourses [data-mm-catalog-item]')).toHaveCount(176);
@@ -453,6 +455,26 @@ test('all 32 unscored source questions map to distinct existing core lessons wit
       await check.locator('summary').scrollIntoViewIfNeeded();
       await page.screenshot({path:'qa-artifacts/pr640-core-lesson-54-integrated-open-390x844.png',animations:'disabled'});
     }
+    if(id===46||id===54){
+      // Verify that the entire safety notice is reachable ABOVE fixed mobile
+      // navigation after ordinary scrolling. A cropped first screenshot is
+      // not evidence that the final lines can be read on a real phone.
+      const notice=section.locator('.mm-lesson-reasoning-questions > .mm-learn-safety-note');
+      await notice.evaluate(node=>node.scrollIntoView({block:'center',behavior:'instant'}));
+      const placement=await page.evaluate(()=>{
+        const text=document.querySelector('#lesson #mmLessonReasoning .mm-learn-safety-note').getBoundingClientRect();
+        const nav=document.querySelector('.mobile-nav').getBoundingClientRect();
+        return {top:text.top,bottom:text.bottom,navTop:nav.top,
+          overflowX:document.documentElement.scrollWidth-window.innerWidth};
+      });
+      expect(placement.top).toBeGreaterThanOrEqual(0);
+      expect(placement.bottom+12).toBeLessThanOrEqual(placement.navTop);
+      expect(placement.overflowX).toBeLessThanOrEqual(2);
+      await page.screenshot({
+        path:'qa-artifacts/pr640-core-lesson-'+id+'-safety-above-nav-390x844.png',
+        animations:'disabled'
+      });
+    }
     // Re-enter via the real public catalogue path instead of invoking the
     // intentionally private mountLesson() closure. An actual revisit must
     // produce exactly one mapped teaching section with no duplicate prompts.
@@ -472,6 +494,7 @@ test('all 32 unscored source questions map to distinct existing core lessons wit
   fs.writeFileSync('qa-artifacts/pr640-lesson-review-source.json',JSON.stringify({
     release:'2026.10.17.1',sourceSha:process.env.MM_LESSON_REVIEW_SHA||null,
     viewport:{width:390,height:844},lessonIds:[46,54],
+    safetyNoticeAboveFixedNavChecked:true,
     visualOwnerApproved:false,visualBaselineChanged:false,
     source:'actual Playwright Chromium in-lesson captures'
   },null,2)+'\n');
