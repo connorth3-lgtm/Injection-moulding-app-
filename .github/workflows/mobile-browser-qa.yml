@@ -61,17 +61,6 @@ jobs:
         with:
           node-version: '22'
           package-manager-cache: false
-      - name: Static shell, workspace and measured-evidence QA
-        if: matrix.task == 'substantive'
-        run: |
-          python qa_app_shell_registry.py
-          python qa_mould_master_workspace.py
-          python qa_measured_evidence_integration.py
-          python qa_measured_evidence_decision_workflows.py
-          python qa_read_aloud.py
-          python qa_delayed_transfer_reviews.py
-          python qa_webkit_regression.py
-          python qa_accessibility_real_at_contract.py
       - name: Install pinned Chromium
         run: |
           npm ci --no-audit --fund=false
@@ -107,6 +96,21 @@ jobs:
             sleep 1
           done
           exit 1
+      # Install the browser and start the candidate server *before* the
+      # fail-closed static evidence gate. A static HOLD must still fail this
+      # job, but its always() screenshot-capture step needs Playwright and
+      # the local server to be present for independent owner review.
+      - name: Static shell, workspace and measured-evidence QA
+        if: matrix.task == 'substantive'
+        run: |
+          python qa_app_shell_registry.py
+          python qa_mould_master_workspace.py
+          python qa_measured_evidence_integration.py
+          python qa_measured_evidence_decision_workflows.py
+          python qa_read_aloud.py
+          python qa_delayed_transfer_reviews.py
+          python qa_webkit_regression.py
+          python qa_accessibility_real_at_contract.py
       - name: Start visual baseline server
         if: matrix.task == 'visual'
         run: |
@@ -138,6 +142,14 @@ jobs:
       - name: Chromium substantive regression suite
         if: matrix.task == 'substantive'
         run: npx playwright test --config=playwright.substantive.config.cjs
+      # Owner review uses the actual mapped lesson section, not a Learn-top
+      # picture. This separate evidence never changes the immutable visual
+      # baseline or grants owner approval.
+      - name: Capture source-linked in-lesson visual review
+        if: always() && matrix.task == 'substantive'
+        env:
+          MM_LESSON_REVIEW_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: npx playwright test qa/learn-practice-mobile-style.spec.js --config=playwright.config.cjs --grep "all 32 unscored source questions map"
       - name: Upload Chromium QA artifacts
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

@@ -5,7 +5,7 @@
 (function(){
   'use strict';
 
-  const VERSION='2026.10.15.1';
+  const VERSION='2026.10.18.1';
   const synth=window.speechSynthesis;
   const supported=!!(synth&&window.SpeechSynthesisUtterance);
   const SPEEDS=[0.75,1,1.25,1.5];
@@ -17,6 +17,7 @@
   let paused=false;
   let starting=false;
   let selectedVoice=null;
+  let preferredVoiceId='';
   let speakToken=0;
   let activeSource=null;
   let activeRoot=null;
@@ -28,6 +29,8 @@
   let selectionPending=false;
   let listeningOpen=false;
   let previousView=null;
+  let queuedBookStart=null;
+  let bookChapterCache=[];
 
   function visible(el){
     if(!el||!el.isConnected||el.closest(EXCLUDED))return false;
@@ -93,6 +96,17 @@
       for(const sentence of sentenceParts(node.nodeValue))if(sentence.length>=2)out.push({text:sentence,source,node});
     }
     activeRoot=root;
+    const chapterCounts=new Map(),chapters=new Map();
+    for(const unit of out){
+      const article=unit.source?.closest?.('[data-mm-book-audio-chapter]');
+      if(!article)continue;
+      const chapterId=article.dataset.mmBookAudioChapter;
+      unit.bookChapterId=chapterId;
+      unit.bookSentenceIndex=chapterCounts.get(chapterId)||0;
+      chapterCounts.set(chapterId,unit.bookSentenceIndex+1);
+      if(!chapters.has(chapterId))chapters.set(chapterId,{id:chapterId,title:article.querySelector('h2')?.textContent?.trim()||chapterId});
+    }
+    bookChapterCache=[...chapters.values()];
     // The source-reviewed Book's Listen mode spans 20 reader chapters.
     // Applying the normal one-screen 1200-sentence bound silently cuts off
     // later chapters. Keep a separate bounded Book capacity instead.
@@ -136,6 +150,7 @@
   function setStatus(text){
     if(ui){ui.status.textContent=text;ui.position.textContent=units.length?`${Math.min(index+1,units.length)} / ${units.length}`:'0 / 0';}
     if(listeningUI){listeningUI.status.textContent=text;}
+    refreshBookControls();
     renderListeningState();
   }
 
@@ -144,9 +159,18 @@
     let voices=[];
     try{voices=synth.getVoices()||[]}catch(_){selectedVoice=null;return null;}
     if(!voices.length){selectedVoice=null;return null;}
+    if(ui?.voice){
+      const sig=voices.map(v=>`${v.voiceURI||v.name}:${v.lang}`).join('|');
+      if(ui.voice.dataset.signature!==sig){
+        const auto=document.createElement('option');auto.value='';auto.textContent='Automatic device voice';
+        const opts=voices.map(v=>{const item=document.createElement('option');item.value=v.voiceURI||`${v.name}:${v.lang}`;item.textContent=`${v.name} (${v.lang||'unknown language'})`;return item;});
+        ui.voice.replaceChildren(auto,...opts);ui.voice.dataset.signature=sig;
+      }
+      ui.voice.value=preferredVoiceId;
+    }
     const lang=String(document.documentElement.lang||navigator.language||'en').toLowerCase();
     const base=lang.split('-')[0];
-    selectedVoice=voices.find(v=>String(v.lang||'').toLowerCase()===lang)
+    selectedVoice=voices.find(v=>(v.voiceURI||`${v.name}:${v.lang}`)===preferredVoiceId)||voices.find(v=>String(v.lang||'').toLowerCase()===lang)
       ||voices.find(v=>String(v.lang||'').toLowerCase().split('-')[0]===base)
       ||voices.find(v=>v.default)||voices[0]||null;
     return selectedVoice;
@@ -182,7 +206,13 @@
 
   function highlight(unit){
     clearHighlight();
-    if(unit?.source&&visible(unit.source)){activeSource=unit.source;activeSource.classList.add('mm-read-source-active');}
+    if(unit?.source&&visible(unit.source)){
+      activeSource=unit.source;activeSource.classList.add('mm-read-source-active');
+      if(ui?.follow?.checked&&unit.bookChapterId){
+        const expected=activeSource;
+        requestAnimationFrame(()=>{if(activeSource===expected&&visible(expected))expected.scrollIntoView({block:'center',behavior:'auto'});});
+      }
+    }
     if(ui){ui.current.textContent=unit?.text||'';ui.current.hidden=!unit?.text;}
     renderListeningState();
   }
@@ -275,13 +305,18 @@
         // changed. Invalidate the utterance rather than claiming playback.
         if(document.hidden&&!playlistMode){stop('Stopped because the app was hidden before speech started');return;}
         clearTimeout(startTimer);started=true;starting=false;speaking=true;paused=false;
-        highlight(unit);setStatus(playlistMode?'Listening session playing':'Reading');updateButtons();
+        highlight(unit);
+        if(unit.bookChapterId)window.dispatchEvent(new CustomEvent('mm:book-audio-position',{detail:{chapterId:unit.bookChapterId,unitIndex:unit.bookSentenceIndex}}));
+        setStatus(playlistMode?'Listening session playing':'Reading');updateButtons();
       };
       utterance.onend=()=>{
         clearTimeout(startTimer);
         if(token!==speakToken||!speaking)return;
         if(index<units.length-1){index+=1;speakCurrent();}
-        else stop(playlistMode?'Finished all lessons':'Finished reading');
+        else {
+          if(unit.bookChapterId)window.dispatchEvent(new CustomEvent('mm:book-audio-complete'));
+          stop(playlistMode?'Finished all lessons':'Finished reading');
+        }
       };
       utterance.onerror=event=>{
         clearTimeout(startTimer);
@@ -337,7 +372,66 @@
     return true;
   }
 
-  function start(){index=0;buildUnits();if(!units.length){setStatus('No readable text is visible on this screen.');updateButtons();return;}speakCurrent();}
+  function start(){
+    index=0;buildUnits();
+    if(queuedBookStart){
+      const wanted=queuedBookStart;
+      const found=units.findIndex(u=>u.bookChapterId===wanted.chapterId&&u.bookSentenceIndex>=wanted.unitIndex);
+      if(found>=0)index=found;
+      else {const beginning=units.findIndex(u=>u.bookChapterId===wanted.chapterId);if(beginning>=0)index=beginning;}
+      queuedBookStart=null;
+    }
+    if(!units.length){setStatus('No readable text is visible on this screen.');updateButtons();return;}
+    speakCurrent();
+  }
+
+  function testDeviceSound(){
+    if(!supported){setStatus('Device speech is unavailable. Try a browser with text-to-speech support.');return;}
+    // This short sample is started by the actual tap on Test phone sound.
+    // It bypasses the Book's long text parsing and does not save a bookmark.
+    stop('Testing device voice…');
+    const token=++speakToken;
+    starting=true;
+    setStatus('Testing device voice…');
+    updateButtons();
+    let utterance;
+    try{
+      utterance=new SpeechSynthesisUtterance('MouldMaster sound test. You should hear this sentence.');
+      const voice=refreshVoice();
+      if(voice){utterance.voice=voice;utterance.lang=voice.lang||document.documentElement.lang||'en';}
+      else utterance.lang=document.documentElement.lang||navigator.language||'en';
+      utterance.rate=1;
+    }catch(_){
+      stop('Phone voice could not be prepared. Check text-to-speech settings.');
+      return;
+    }
+    let started=false;
+    const timer=setTimeout(()=>{
+      if(token!==speakToken||started)return;
+      stop('Phone voice did not start. Check text-to-speech settings and try again.');
+    },6000);
+    utterance.onstart=()=>{
+      if(token!==speakToken)return;
+      clearTimeout(timer);
+      started=true;starting=false;speaking=true;paused=false;
+      setStatus('Sound test started. If silent, turn up media volume and check the selected audio output.');
+      updateButtons();
+    };
+    utterance.onend=()=>{
+      clearTimeout(timer);
+      if(token===speakToken)stop('Sound test finished. If you heard nothing, check media volume and your phone text-to-speech voice.');
+    };
+    utterance.onerror=event=>{
+      clearTimeout(timer);
+      if(token===speakToken)stop('Phone speech failed'+(event?.error?': '+String(event.error).slice(0,60):'')+'. Check phone text-to-speech settings.');
+    };
+    // Never wait for voiceschanged, a promise or animation frame on mobile:
+    // speech synthesis should receive the real user activation immediately.
+    try{synth.speak(utterance)}catch(_){
+      clearTimeout(timer);
+      stop('Phone voice could not start. Check text-to-speech settings.');
+    }
+  }
 
   function startPlaylist(startLessonId){
     stop('Ready');
@@ -400,6 +494,7 @@
     if(nextIndex===index)return;
     const autoplay=speaking||starting;
     index=nextIndex;
+    refreshBookControls();
     if(autoplay){
       speaking=false;paused=false;speakCurrent();
       return;
@@ -421,6 +516,39 @@
     selectUnit(Math.max(0,Math.min(units.length-1,index+delta)));
   }
 
+  function refreshBookControls(){
+    if(!ui?.bookNav)return;
+    const active=bookChapterCache.length>0&&units.some(u=>!!u.bookChapterId);
+    ui.bookNav.hidden=!active;
+    if(!active)return;
+    const signature=bookChapterCache.map(c=>c.id).join('|');
+    if(ui.bookChapter.dataset.signature!==signature){
+      ui.bookChapter.replaceChildren(...bookChapterCache.map(c=>{const option=document.createElement('option');option.value=c.id;option.textContent=c.title;return option;}));
+      ui.bookChapter.dataset.signature=signature;
+    }
+    const id=currentUnit()?.bookChapterId;
+    if(id)ui.bookChapter.value=id;
+    const pos=bookChapterCache.findIndex(c=>c.id===id);
+    ui.bookPrev.disabled=pos<=0;ui.bookNext.disabled=pos<0||pos===bookChapterCache.length-1;
+  }
+  function startBookFromGesture(){
+    if(!supported)return false;
+    // Called directly from the Book's real Listen tap, not a synthetic
+    // HTMLElement.click(). This is critical for mobile speech permissions.
+    start();
+    return units.length>0;
+  }
+  function selectBookChapter(id){
+    if(!units.length||!bookChapterCache.some(c=>c.id===id))return false;
+    const at=units.findIndex(u=>u.bookChapterId===id);
+    if(at<0)return false;
+    selectUnit(at);return true;
+  }
+  function jumpBookChapter(delta){
+    const at=bookChapterCache.findIndex(c=>c.id===currentUnit()?.bookChapterId);
+    const target=bookChapterCache[Math.max(0,Math.min(bookChapterCache.length-1,at+delta))];
+    if(target)selectBookChapter(target.id);
+  }
   function jumpLesson(delta){
     if(!playlistMode||!units.length)buildPlaylist();
     const unit=currentLessonUnit();
@@ -490,7 +618,7 @@
     const style=document.createElement('style');
     style.id='mmReadAloudStyles';
     style.textContent=`
-      .mm-read-aloud{position:relative;z-index:9;width:auto;font:14px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;color:#edf5ff}.mm-read-aloud details{border:1px solid #3b5575;border-radius:12px;background:#0c1929;box-shadow:none;overflow:hidden}.mm-read-aloud details:not([open]){width:44px;height:44px;margin:0}.mm-read-aloud summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px;padding:8px 10px;cursor:pointer;font-weight:800;background:#12243a}.mm-read-aloud details:not([open]) summary{width:44px;min-width:44px;height:44px;min-height:44px;padding:0;justify-content:center;border-radius:12px}.mm-read-aloud details:not([open]) summary b{font-size:0}.mm-read-aloud details:not([open]) summary b::before{content:'🔊';font-size:18px;line-height:1}.mm-read-aloud details:not([open]) summary span{display:none}.mm-read-aloud details[open]{position:fixed;right:12px;top:72px;z-index:2147482000;width:min(360px,calc(100vw - 24px));box-shadow:0 12px 36px rgba(0,0,0,.35)}.mm-read-aloud summary::-webkit-details-marker{display:none}.mm-read-aloud summary span{color:#a9bdd6;font-size:12px;font-weight:600}.mm-read-panel{padding:12px;display:grid;gap:10px}.mm-read-controls{display:grid;grid-template-columns:1fr 1.35fr 1fr 1fr;gap:7px}.mm-read-controls button,.mm-read-speed{min-height:44px;border:1px solid #3c5878;border-radius:9px;background:#162b46;color:#f5f9ff;padding:8px}.mm-read-controls button:disabled{opacity:.45;cursor:not-allowed}.mm-read-play{background:#55d6be!important;color:#07131b!important;border-color:#55d6be!important;font-weight:850}.mm-read-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#b8c9dd;font-size:12px}.mm-read-meta label{display:flex;align-items:center;gap:6px;color:#b8c9dd}.mm-read-speed{width:auto;min-height:38px;padding:6px 8px;margin:0}.mm-read-status{margin:0;color:#cbd8e7}.mm-read-current{margin:0;padding:9px 10px;border-radius:9px;background:#192f4b;color:#fff;border-left:3px solid #55d6be;max-height:92px;overflow:auto}.mm-read-source-active{outline:3px solid #55d6be!important;outline-offset:4px!important;border-radius:4px}.mm-read-note{margin:0;color:#95abc4;font-size:11px}
+      .mm-book-audio-chapters{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px;border:1px solid #3c5878;border-radius:9px}.mm-book-audio-chapters[hidden]{display:none}.mm-book-audio-chapters label{display:flex;align-items:center;gap:6px;flex:1 1 160px}.mm-book-audio-chapters select{min-width:0;max-width:100%;background:#162b46;color:#f5f9ff;padding:8px;border:1px solid #3c5878;border-radius:7px}.mm-book-audio-chapters button{min-height:40px;min-width:44px;border-radius:8px;background:#162b46;color:#fff;border:1px solid #3c5878}.mm-book-audio-chapters .mm-book-audio-follow{flex:0 0 auto}.mm-read-aloud{position:relative;z-index:9;width:auto;font:14px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;color:#edf5ff}.mm-read-aloud details{border:1px solid #3b5575;border-radius:12px;background:#0c1929;box-shadow:none;overflow:hidden}.mm-read-aloud details:not([open]){width:44px;height:44px;margin:0}.mm-read-aloud summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px;padding:8px 10px;cursor:pointer;font-weight:800;background:#12243a}.mm-read-aloud details:not([open]) summary{width:44px;min-width:44px;height:44px;min-height:44px;padding:0;justify-content:center;border-radius:12px}.mm-read-aloud details:not([open]) summary b{font-size:0}.mm-read-aloud details:not([open]) summary b::before{content:'🔊';font-size:18px;line-height:1}.mm-read-aloud details:not([open]) summary span{display:none}.mm-read-aloud details[open]{position:fixed;right:12px;top:72px;z-index:2147482000;width:min(360px,calc(100vw - 24px));box-shadow:0 12px 36px rgba(0,0,0,.35)}.mm-read-aloud summary::-webkit-details-marker{display:none}.mm-read-aloud summary span{color:#a9bdd6;font-size:12px;font-weight:600}.mm-read-panel{padding:12px;display:grid;gap:10px}.mm-read-controls{display:grid;grid-template-columns:1fr 1.35fr 1fr 1fr;gap:7px}.mm-read-controls button,.mm-read-speed{min-height:44px;border:1px solid #3c5878;border-radius:9px;background:#162b46;color:#f5f9ff;padding:8px}.mm-read-controls button:disabled{opacity:.45;cursor:not-allowed}.mm-read-play{background:#55d6be!important;color:#07131b!important;border-color:#55d6be!important;font-weight:850}.mm-read-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#b8c9dd;font-size:12px}.mm-read-meta label{display:flex;align-items:center;gap:6px;color:#b8c9dd}.mm-read-speed{width:auto;min-height:38px;padding:6px 8px;margin:0}.mm-read-status{margin:0;color:#cbd8e7}.mm-read-current{margin:0;padding:9px 10px;border-radius:9px;background:#192f4b;color:#fff;border-left:3px solid #55d6be;max-height:92px;overflow:auto}.mm-read-source-active{outline:3px solid #55d6be!important;outline-offset:4px!important;border-radius:4px}.mm-read-note{margin:0;color:#95abc4;font-size:11px}
       .mm-listening-view{display:grid;gap:16px}.mm-listening-hero{padding:26px;background:radial-gradient(circle at 88% 0%,rgba(85,214,190,.18),transparent 36%),linear-gradient(145deg,#12243a,#0d1b2d)}.mm-listening-hero h2{margin:7px 0 8px;font-size:30px}.mm-listening-hero p{color:#b9cbe0;line-height:1.6;max-width:820px}.mm-listening-player{padding:22px;display:grid;gap:16px}.mm-listening-now{padding:18px;border-radius:14px;background:#0b1728;border:1px solid #304b69}.mm-listening-now h3{margin:4px 0 10px}.mm-listening-current{color:#dce8f6;line-height:1.65;min-height:52px}.mm-listening-controls{display:grid;grid-template-columns:1fr 1fr 1.4fr 1fr 1fr;gap:8px}.mm-listening-controls button{min-height:48px;border-radius:10px;border:1px solid #3b5879;background:#162b46;color:#f5f9ff}.mm-listening-controls .play{background:#55d6be;color:#07131b;font-weight:850;border-color:#55d6be}.mm-listening-options{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}.mm-listening-options label{display:flex;align-items:center;gap:8px}.mm-listening-progress{height:8px;background:#21324a;border-radius:999px;overflow:hidden}.mm-listening-progress span{display:block;height:100%;background:linear-gradient(90deg,#55d6be,#69a8ff);width:0}.mm-listening-privacy{padding:14px 16px;border-left:4px solid #55d6be;background:#10263a;border-radius:10px;color:#d5ece7;line-height:1.55}
       @media(max-width:700px){.mm-read-aloud details[open]{top:auto;right:8px;bottom:calc(var(--mm-mobile-nav-clearance,104px) + env(safe-area-inset-bottom) + 10px);width:calc(100vw - 16px)}.mm-read-controls{grid-template-columns:1fr 1fr 1fr 1fr}.mm-listening-controls{grid-template-columns:1fr 1fr}.mm-listening-controls .play{grid-column:1/-1;grid-row:1}.mm-listening-hero{padding:20px}}
       @media(prefers-reduced-motion:reduce){.mm-read-aloud *{scroll-behavior:auto!important}}
@@ -534,11 +662,15 @@
     addStyles();
     const host=document.createElement('aside');
     host.className='mm-read-aloud';host.setAttribute('aria-label','Read Aloud');host.dataset.version=VERSION;
-    host.innerHTML=`<details><summary title="Expand or collapse the Read Aloud controls"><b>🔊 Listen</b><span>${supported?'Device voice':'Unavailable'}</span></summary><div class="mm-read-panel"><div class="mm-read-controls"><button type="button" data-mm-read="prev" aria-label="Previous sentence">◀</button><button type="button" class="mm-read-play" data-mm-read="play">Listen</button><button type="button" data-mm-read="next" aria-label="Next sentence">▶</button><button type="button" data-mm-read="stop">Stop</button></div><div class="mm-read-meta"><p class="mm-read-status" role="status" aria-live="polite">${supported?'Ready':'Speech synthesis is unavailable'}</p><label>Speed <select class="mm-read-speed" data-mm-read="speed" aria-label="Read aloud speed">${SPEEDS.map(v=>`<option value="${v}"${v===1?' selected':''}>${v}×</option>`).join('')}</select></label><span data-mm-read="position">0 / 0</span></div><p class="mm-read-current" data-mm-read="current" aria-live="off" hidden></p><p class="mm-read-note">Uses your device/browser speech-synthesis service. MouldMaster does not request microphone access or record audio.</p></div></details>`;
+    host.innerHTML=`<details><summary title="Expand or collapse the Read Aloud controls"><b>🔊 Listen</b><span>${supported?'Device voice':'Unavailable'}</span></summary><div class="mm-read-panel"><div class="mm-read-controls"><button type="button" data-mm-read="prev" aria-label="Previous sentence">◀</button><button type="button" class="mm-read-play" data-mm-read="play">Listen</button><button type="button" data-mm-read="next" aria-label="Next sentence">▶</button><button type="button" data-mm-read="stop">Stop</button></div><button type="button" class="mm-read-speed" data-mm-read="test">Test phone sound</button><div class="mm-read-meta"><p class="mm-read-status" role="status" aria-live="polite">${supported?'Ready':'Speech synthesis is unavailable'}</p><label>Speed <select class="mm-read-speed" data-mm-read="speed" aria-label="Read aloud speed">${SPEEDS.map(v=>`<option value="${v}"${v===1?' selected':''}>${v}×</option>`).join('')}</select></label><label>Voice <select class="mm-read-speed" data-mm-read="voice" aria-label="Narration voice"><option value="">Automatic device voice</option></select></label><span data-mm-read="position">0 / 0</span></div><div class="mm-book-audio-chapters" data-mm-book-audio-controls hidden><button type="button" data-mm-book-audio-prev aria-label="Previous Book chapter">⏮</button><label>Book chapter <select data-mm-book-audio-chapter aria-label="Book audio chapter"></select></label><button type="button" data-mm-book-audio-next aria-label="Next Book chapter">⏭</button><label class="mm-book-audio-follow"><input type="checkbox" data-mm-book-audio-follow checked> Follow text</label></div><p class="mm-read-current" data-mm-read="current" aria-live="off" hidden></p><p class="mm-read-note">Uses your device/browser speech-synthesis service. MouldMaster does not request microphone access or record audio.</p></div></details>`;
     const actions=document.querySelector('#app .top-actions,.top-actions');(actions||document.body).appendChild(host);
-    ui={host,play:host.querySelector('[data-mm-read="play"]'),prev:host.querySelector('[data-mm-read="prev"]'),next:host.querySelector('[data-mm-read="next"]'),stop:host.querySelector('[data-mm-read="stop"]'),speed:host.querySelector('[data-mm-read="speed"]'),status:host.querySelector('.mm-read-status'),position:host.querySelector('[data-mm-read="position"]'),current:host.querySelector('[data-mm-read="current"]')};
-    ui.play.addEventListener('click',toggle);ui.prev.addEventListener('click',()=>move(-1));ui.next.addEventListener('click',()=>move(1));ui.stop.addEventListener('click',()=>stop('Stopped'));
+    ui={host,play:host.querySelector('[data-mm-read="play"]'),prev:host.querySelector('[data-mm-read="prev"]'),next:host.querySelector('[data-mm-read="next"]'),stop:host.querySelector('[data-mm-read="stop"]'),speed:host.querySelector('[data-mm-read="speed"]'),voice:host.querySelector('[data-mm-read="voice"]'),status:host.querySelector('.mm-read-status'),position:host.querySelector('[data-mm-read="position"]'),current:host.querySelector('[data-mm-read="current"]'),bookNav:host.querySelector('[data-mm-book-audio-controls]'),bookChapter:host.querySelector('[data-mm-book-audio-chapter]'),bookPrev:host.querySelector('[data-mm-book-audio-prev]'),bookNext:host.querySelector('[data-mm-book-audio-next]'),follow:host.querySelector('[data-mm-book-audio-follow]')};
+    ui.play.addEventListener('click',toggle);host.querySelector('[data-mm-read="test"]').addEventListener('click',testDeviceSound);ui.prev.addEventListener('click',()=>move(-1));ui.next.addEventListener('click',()=>move(1));ui.stop.addEventListener('click',()=>stop('Stopped'));
     ui.speed.addEventListener('change',()=>changeSpeed(false));
+    ui.voice.addEventListener('change',()=>{preferredVoiceId=ui.voice.value;refreshVoice();if(speaking&&!playlistMode)speakCurrent();});
+    ui.bookChapter.addEventListener('change',()=>selectBookChapter(ui.bookChapter.value));
+    ui.bookPrev.addEventListener('click',()=>jumpBookChapter(-1));
+    ui.bookNext.addEventListener('click',()=>jumpBookChapter(1));
     host.querySelector('details').addEventListener('toggle',event=>{if(event.target.open&&!starting&&!speaking&&!paused){buildUnits();setStatus(supported?'Ready':'Read Aloud is not available in this browser/device.');updateButtons();}});
     refreshVoice();if(supported&&!selectedVoice)setStatus('Device voice will load when playback starts.');updateButtons();
     createListeningTab();
@@ -571,6 +703,8 @@
   const observer=new MutationObserver(()=>{if((speaking||paused)&&activeRoot&&!activeRoot.isConnected&&!playlistMode)stop('Stopped after screen changed');});
   observer.observe(document.documentElement,{subtree:true,childList:true});
 
-  window.MMReadAloud={version:VERSION,supported,stop:()=>stop('Stopped'),refresh:()=>buildUnits(),startPlaylist,openListening,currentLessonId:()=>{try{return window.MM_DATA?.lessons?.find(l=>String(l.id)===String(window.currentLesson?.()?.id))?.id||null}catch(_){return null}}};
+  window.MMReadAloud={version:VERSION,supported,stop:()=>stop('Stopped'),refresh:()=>buildUnits(),startPlaylist,openListening,
+    queueBookStart:({chapterId,unitIndex=0}={})=>{if(!/^r(?:0[1-9]|1[0-9]|20)$/.test(String(chapterId||'')))return false;queuedBookStart={chapterId,unitIndex:Math.max(0,Math.min(20000,Math.floor(Number(unitIndex)||0)))};return true;},
+    selectBookChapter,startBookFromGesture,currentLessonId:()=>{try{return window.MM_DATA?.lessons?.find(l=>String(l.id)===String(window.currentLesson?.()?.id))?.id||null}catch(_){return null}}};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',createUI,{once:true});else createUI();
 })();

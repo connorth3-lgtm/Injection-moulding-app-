@@ -6,16 +6,15 @@
 
 | Fact | Audited evidence |
 | --- | --- |
-| Last independently verified protected `main` | `ef4c4f6cfc53b912f5fbe953f551b030a8c8a318`, historical PR #638 squash merge; **not the new Android PR** |
-| Historical original audited merge | `89fe3e24c11c3eb660953870fce7e819280c55df` from PR #627; immutable historical record |
-| Last verified hosted preview | `2026.10.15.3` under `/preview/` from issue #512; **do not claim 2026.10.16.1 is live before new main deploy** |
-| Current governed PR release | `2026.10.16.1`, pending owner-authorized protected-main merge |
-| Retained public candidate source | `e336f656351afa4eeaaae0940969bea881ae9b68` |
-| Genuine producer | successful [run 38864931906](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/38864931906), retained artifact `12030806569` |
-| Technical evidence | same-source Mobile Browser QA `38864931666` and Question Quality 50-Pass `38864931729` succeeded; latest-head protected merge checks must be independently green |
-| Visual lock | owner-approved immutable `visual-baseline/2026.10.16.1` at `04628e13a6c9a9517bef22bae6c12a456896f299`, 52 unmasked captures and maximum 12 differing pixels |
-| Root release | production HOLD, advisory-only; no machine-control/accreditation authorization |
-| External acceptance | seven independent human/device/provider workstreams HOLD |
+| Last verified hosted non-production preview | 2026.10.16.1 after protected PR #639 merge; `main` merge SHA `53712742aa8c82e400a264f4c0e4a38b864335c4`; **2026.10.17.1 is NOT yet live** |
+| Original audited historical merge | `89fe3e24c11c3eb660953870fce7e819280c55df` from PR #627 remains immutable provenance |
+| Current draft candidate family | `2026.10.17.1` on PR #640, explicit technical FAIL and visual owner approval outstanding |
+| Current retained public candidate | **NONE for 2026.10.17.1**; successful new source-bound producer, artifact hash, expiry and fingerprint missing |
+| Last authenticated prior producer | `2026.10.16.1` source `e336f656351afa4eeaaae0940969bea881ae9b68` and artifact `12030806569`; history only |
+| Browser automation | Draft substantive Chromium/WebKit, cross-browser, feature reachability and five 100-run reliability shards passed; strict new 52-screen/12px visual baseline unapproved |
+| Visual provenance | Previous immutable approved ref `visual-baseline/2026.10.16.1` pinned to `04628e13a6c9a9517bef22bae6c12a456896f299`; **do not move or auto-approve it** |
+| Root/production boundary | Production HOLD, educational/advisory only; no validated recipe, machine control or accreditation |
+| External acceptance | All seven human/device/provider workstreams remain HOLD |
 
 The web release, Android release and Windows desktop are **separate lanes**; a passing browser workflow cannot certify physical Android/iOS, signed Windows or a provider's program. Avoid describing preview as production.
 
