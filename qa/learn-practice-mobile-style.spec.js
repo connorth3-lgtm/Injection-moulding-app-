@@ -555,7 +555,7 @@ test('Safety teaching and the four-checkpoint capstone remain unscored and have 
   await question.locator('summary').click();
   await expect(question).toContainText('open guard');
   await expect(question).toContainText('Common mistake to avoid');
-  await expect(safety).toContainText('They do not affect the 169 governed assessment prompts');
+  await expect(safety).toContainText('These optional questions do not affect the 169 governed assessment prompts');
   await expect(safety.locator('button,[data-mm-onclick]')).toHaveCount(0);
   expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts().total)).toBe(169);
 });
