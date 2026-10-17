@@ -82,7 +82,7 @@ test('book narration progresses to saved chapter without automatically restartin
 
 test('first-read Book keeps expert-review boundary visible and full original sections adjacent to prose',async({page})=>{
   await openBook(page);
-  await page.locator('#mmBookView [data-mm-book-reader-chapter-open="r06"]').click();
+  await page.locator('#mmBookView .mm-book-toc [data-mm-book-reader-chapter-open="r06"]').click();
   const reader=page.locator('#mmBookView [data-mm-book-reader]');
   await expect(reader.locator('.mm-book-reader-assurance')).toContainText('Independent human SME review pending');
   const original=reader.locator('.mm-book-full-source-inline').first();
@@ -93,7 +93,7 @@ test('first-read Book keeps expert-review boundary visible and full original sec
 
 test('switching from guided first-read to full original reader reveals omitted source prose without changing module evidence',async({page})=>{
   await openBook(page);
-  await page.locator('#mmBookView [data-mm-book-reader-chapter-open="r06"]').click();
+  await page.locator('#mmBookView .mm-book-toc [data-mm-book-reader-chapter-open="r06"]').click();
   const root=page.locator('#mmBookView [data-mm-book-reader]');
   await expect(root.locator('[data-mm-book-read-toggle]')).toHaveText('Read complete original text');
   await expect(root.locator('[data-mm-book-reader-module="vp-transfer"] h4').filter({hasText:'What transfer means'})).toHaveCount(0);
@@ -109,7 +109,7 @@ test('switching from guided first-read to full original reader reveals omitted s
 
 test('reader chapter Listen action starts the chosen Book audio chapter on the original mobile tap',async({page})=>{
   await openBook(page);
-  await page.locator('#mmBookView [data-mm-book-reader-chapter-open="r06"]').click();
+  await page.locator('#mmBookView .mm-book-toc [data-mm-book-reader-chapter-open="r06"]').click();
   const reader=page.locator('#mmBookView [data-mm-book-reader]');
   await reader.locator('[data-mm-book-listen-chapter="r06"]').click();
   await expect(page.locator('.mm-read-aloud [data-mm-book-audio-chapter]')).toHaveValue('r06');
