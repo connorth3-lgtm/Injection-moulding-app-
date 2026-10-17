@@ -1110,6 +1110,7 @@ function learnHubMarkup(){
     <section class="mm-tidy-overview" aria-label="Learning at a glance"><div><span class="eyebrow">Learn · your library</span><h1>Find the lesson you need</h1><p>Start where you left off, explore a topic or search the full course library below.</p></div><div class="mm-tidy-facts" aria-label="Learning content"><span><strong>${lessonTotal}</strong> lessons</span><span><strong>169</strong> governed prompts</span><span><strong>${LEARN_REASONING_REVIEWS.length}</strong> optional lesson checks</span></div></section>
     <section class="mm-hub-continue mm-primary-hub-card" aria-label="Continue learning"><div class="mm-hub-continue-copy"><span class="eyebrow">Continue</span><h2>${esc(lesson?.title||'Your next lesson')}</h2><p>${lessonLine}</p><div class="mm-hub-progress"><div class="mini-bar" aria-hidden="true"><span style="width:${c?.overall||0}%"></span></div><strong>${c?.overall||0}% complete</strong></div></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="lesson">Continue lesson →</button></section>
     <nav class="mm-learn-jump" aria-label="Learn section shortcuts"><a href="#mmLearnArena">Troubleshooting</a><a href="#mmLearnQuestions">Questions</a><a href="#mmLearnCourses">All lessons</a></nav>
+    <section class="mm-learn-courses" id="mmLearnCourses" aria-labelledby="mmLearnCoursesHeading"><div class="mm-learn-courses-head"><span class="eyebrow">Browse lessons</span><h2 id="mmLearnCoursesHeading">Courses and lessons</h2><p>Search 120 core, 36 material-science and 20 specialist lessons. Expand a course to see every lesson.</p></div>${lessonCatalog.markup()}</section>
     <section class="mm-learn-master-lesson" aria-labelledby="mmLearnMasterHeading">
       <header class="mm-learn-studio-head mm-learn-master-intro"><span class="eyebrow">One complete interactive lesson</span><h2 id="mmLearnMasterHeading">From the fault to the evidence</h2><p>One connected lesson in three stages: diagnose a real-world situation, practise your decisions, and understand why the answer fits the evidence.</p><div class="mm-learn-master-meta">3 connected stages · 169 governed prompts · 32 optional questions inside their relevant core lessons</div></header>
       <div class="mm-learn-studio" aria-label="Three stages of the combined lesson">
@@ -1138,7 +1139,7 @@ function learnHubMarkup(){
       </section>
       </div>
     </section>
-    <section class="mm-learn-courses" id="mmLearnCourses" aria-labelledby="mmLearnCoursesHeading"><div class="mm-learn-courses-head"><span class="eyebrow">Your learning library</span><h2 id="mmLearnCoursesHeading">Courses and lessons</h2><p>One searchable catalogue of core, material-science and specialist lessons. Your existing local progress is unchanged.</p></div>${lessonCatalog.markup()}</section>
+
     <div class="mm-catalog-extra"><button class="secondary" type="button" data-mm-hub-action="learn-resources">Open Learning Resources →</button></div>
   </div>`;
 }
@@ -1537,20 +1538,35 @@ function practiceHubMarkup(){
     <section class="mm-tidy-overview" aria-label="Practice at a glance"><div><span class="eyebrow">Practice · choose your next check</span><h1>Work from evidence</h1><p>Choose a scenario, guided investigation or a question mode. Each tool keeps its own feedback and records.</p></div><div class="mm-tidy-facts" aria-label="Practice content"><span><strong>${scenarioCount}</strong> scenarios</span><span><strong>5</strong> question modes</span><span><strong>169</strong> governed prompts</span></div></section>
     ${recommendedPracticeMarkup(plan,done)}
     ${practicePlanRows(plan)}
-    <section class="mm-practice-diagnose-journey" aria-label="Three-step diagnostic workflow"><div class="mm-practice-diagnose-head"><span class="eyebrow">Connected troubleshooting</span><h2>One problem. One evidence trail.</h2><p>Choose a real learning tool for the stage you need. Its native feedback, score and evidence stay independent.</p></div><div class="mm-practice-diagnose-stages"><div><strong>01 · Observe</strong><span>Describe the defect, location and baseline</span></div><div><strong>02 · Isolate</strong><span>Compare material, machine and mould causes</span></div><div><strong>03 · Verify</strong><span>Choose a discriminating check and record the result</span></div></div></section>
-    ${practiceGuidedMarkup()}
-    ${practiceCaseReviewMarkup()}
-    <section class="mm-hub-section"><div class="mm-hub-section-head"><h2>Choose by the job you want to practise</h2><p>Practice is for learning; assessments stay separate.</p></div><div class="mm-hub-grid">
+    <section class="mm-hub-section"><div class="mm-hub-section-head"><span class="eyebrow">Browse practice</span><h2>Choose a learning tool</h2><p>Search by the job or decision you need to practise. Open a tool for its original evidence and feedback.</p></div><label class="mm-practice-search"><span>Find practice</span><input type="search" data-mm-practice-query autocomplete="off" placeholder="Search a tool or topic" aria-controls="mmPracticeToolResults"></label><p class="mm-practice-count" aria-live="polite" data-mm-practice-count>5 tools shown</p><div class="mm-hub-grid" id="mmPracticeToolResults">
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="troubleshooting"><span class="eyebrow">Find the cause · 5–15 min</span><b>Diagnose a moulding problem</b><small>Start from a defect, separate plausible mechanisms and choose the next discriminating check.</small><span class="mm-hub-tile-action">Choose troubleshooting practice →</span></button>
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="scenario-detail"><span class="eyebrow">Make a decision · about 5 min</span><b>Work a shop-floor scenario</b><small>Read the evidence and choose the strongest next action${scenarioCount?` across ${scenarioCount} scenarios`:''}. Each launch rotates the case.</small><span class="mm-hub-tile-action">Start next scenario →</span></button>
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="process-data"><span class="eyebrow">Read evidence · 10–20 min</span><b>Analyse process data</b><small>Prepare local data, verify signal meaning and compare a fault or recovery against a valid baseline.</small><span class="mm-hub-tile-action">Open data diagnosis →</span></button>
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="labs"><span class="eyebrow">Explore behaviour · 5–15 min</span><b>Use labs & simulators</b><small>Test process and material reasoning in a controlled training environment without changing a real machine.</small><span class="mm-hub-tile-action">Choose a lab or simulator →</span></button>
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="question-centre"><span class="eyebrow">Questions & checks · choose a mode</span><b>Question Centre</b><small>Formal checks, diagnostic and material questions, scenarios and measured-evidence decisions in one place. Lesson exercises and Book self-checks remain beside their teaching.</small><span class="mm-hub-tile-action">Open all question modes →</span></button>
     </div></section>
+    <section class="mm-practice-diagnose-journey" aria-label="Three-step diagnostic workflow"><div class="mm-practice-diagnose-head"><span class="eyebrow">Connected troubleshooting</span><h2>One problem. One evidence trail.</h2><p>Choose a real learning tool for the stage you need. Its native feedback, score and evidence stay independent.</p></div><div class="mm-practice-diagnose-stages"><div><strong>01 · Observe</strong><span>Describe the defect, location and baseline</span></div><div><strong>02 · Isolate</strong><span>Compare material, machine and mould causes</span></div><div><strong>03 · Verify</strong><span>Choose a discriminating check and record the result</span></div></div></section>
+    ${practiceGuidedMarkup()}
+    ${practiceCaseReviewMarkup()}
+
   </div>`;
 }
 function renderLearnHub(){const root=document.getElementById('path');if(!root)return;root.dataset.mmHubMode='hub';root.innerHTML=learnHubMarkup();bind(root);lessonCatalog.attach(root)}
-function renderPracticeHub(){const root=document.getElementById('scenarios');if(!root)return;root.dataset.mmHubMode='hub';root.innerHTML=practiceHubMarkup();bind(root);window.MM_APP_SHELL?.navigation?.setCustomActive?.('')}
+function renderPracticeHub(){
+  const root=document.getElementById('scenarios');if(!root)return;
+  root.dataset.mmHubMode='hub';root.innerHTML=practiceHubMarkup();bind(root);
+  const input=root.querySelector('[data-mm-practice-query]');
+  const count=root.querySelector('[data-mm-practice-count]');
+  input?.addEventListener('input',()=>{
+    const query=input.value.trim().toLowerCase();let shown=0;
+    root.querySelectorAll('#mmPracticeToolResults > button').forEach(button=>{
+      const match=!query||button.textContent.toLowerCase().includes(query);
+      button.hidden=!match;if(match)shown++;
+    });
+    if(count)count.textContent=shown?`${shown} tool${shown===1?'':'s'} shown`:'No matching tools. Try another search.';
+  });
+  window.MM_APP_SHELL?.navigation?.setCustomActive?.('');
+}
 function detailBack(root,label,back){
   const bar=document.createElement('div');bar.className='mm-hub-detail-back';bar.innerHTML=`<button type="button">← ${esc(back)}</button><span>${esc(label)}</span>`;
   bar.querySelector('button').addEventListener('click',()=>{
