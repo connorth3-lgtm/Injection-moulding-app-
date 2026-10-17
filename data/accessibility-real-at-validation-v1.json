@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.11.6",
-  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.11.6.md",
-  "sourceSha": "46337247aa9c334fb741c23704723b3f7688e6cf",
-  "runtimeFingerprint": "sha256:4013679bf1b599d7b06abf9fca6f0b3a1e484537d095cfedc595347759574d6b",
+  "release": "2026.10.17.1",
+  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.17.1.md",
+  "sourceSha": null,
+  "runtimeFingerprint": null,
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.11.6 is bound to exact retained learner-runtime candidate 46337247aa9c334fb741c23704723b3f7688e6cf; all real NVDA and VoiceOver tasks remain pending until genuine human evidence is recorded.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.17.1 is an unapproved exact-source draft with no accepted new producer or runtime fingerprint; human NVDA/VoiceOver and physical Android assistive-technology checks remain pending. The retained 2026.10.16.1 candidate cannot validate the new core-lesson interface.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -306,9 +306,9 @@
     "textZoom200Percent": true
   },
   "previousCandidate": {
-    "release": "2026.10.11.5",
-    "sourceSha": "0f94f35cbdc5965cfc4ac5b6413dc6ea3081f57e",
-    "runtimeFingerprint": "sha256:ee4cfb09becaa0c912e0b23d9939f7abd44e648044d49ebebf6d5723165594a9"
+    "release": "2026.10.16.1",
+    "sourceSha": "e336f656351afa4eeaaae0940969bea881ae9b68",
+    "runtimeFingerprint": "sha256:3677de439e76c94b69ebeef13dd92904cd6b30818b88a5434fcbe3755529ec27"
   },
-  "technicalCandidateStatus": "retained-exact-head-producer-verified"
+  "technicalCandidateStatus": "pending-new-exact-source-producer"
 }

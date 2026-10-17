@@ -21,8 +21,8 @@ version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
 package = json.loads((ROOT / "desktop/electron/package.json").read_text(encoding="utf-8"))
 integrity_generator = (ROOT / "desktop/electron/scripts/generate-integrity.cjs").read_text(encoding="utf-8")
 
-need(version.get("read_aloud_version") == "2026.10.04.2", "Read Aloud version marker mismatch")
-need("const VERSION='2026.10.04.2'" in runtime, "Read Aloud runtime version mismatch")
+need(version.get("read_aloud_version") == "2026.10.18.1", "Read Aloud version marker mismatch")
+need("const VERSION='2026.10.18.1'" in runtime, "Read Aloud runtime version mismatch")
 
 # The feature must be output-only speech synthesis. Microphone capture, recognition,
 # recording and application-controlled telemetry/network paths are forbidden here.
@@ -56,6 +56,33 @@ for marker in (
 ):
     need(marker in runtime, f"Read Aloud control/fallback missing: {marker}")
 
+# Android Chrome may advertise Web Speech with an empty device-voice list.
+# Playback MUST start in the original tap task instead of waiting on a timer.
+# A timeout cannot safely replay a lost mobile user activation.
+for marker in (
+    "const androidSpeech=/Android/i.test(navigator.userAgent||'');",
+    "const iosSpeech=/iPhone|iPad|iPod/i.test(navigator.userAgent||'')",
+    "else if(iosSpeech){",
+    "if(androidSpeech){",
+    "beginSpeech();",
+    "waitForVoice(retry?700:1200).then(beginSpeech",
+    "Tap Listen again; check Android text-to-speech settings",
+):
+    need(marker in runtime, f"Android tap-to-speak guard missing: {marker}")
+need("await waitForVoice" not in runtime, "Android speech start must not block on voice discovery")
+
+# Book is a custom view alongside the course/exam cards. Its visible reader
+# must win over generic selectors, and long Book sessions cannot inherit the
+# ordinary 1200-segment limit. Neither guarantee is established by button-only
+# browser smoke tests; actual spoken text is covered by read-aloud.spec.js.
+for marker in (
+    "document.getElementById('mmBookView')",
+    "book.querySelector('[data-mm-book-reader]')",
+    "book.querySelector('[data-mm-book-contents]')",
+    "bookReader?20000:1200",
+):
+    need(marker in runtime, f"Book voice-target/late-chapter regression guard missing: {marker}")
+
 # Dedicated long-session Listening mode must reuse the same speech-synthesis runtime,
 # consume authored lesson content only, provide durable playback controls, and avoid
 # implying that every browser/OS voice is processed entirely on-device.
@@ -80,6 +107,25 @@ for marker in (
     need(marker in runtime, f"Listening mode contract missing: {marker}")
 need("same local device voice" not in runtime, "Listening privacy copy must not imply all voice processing is local")
 
+# Book audio is chapter-aware, learner-scoped cursor events are emitted without
+# storage inside the voice engine, and presentation modes remain source-governed.
+for marker in (
+    'data-mm-book-audio-controls', 'data-mm-book-audio-chapter',
+    'data-mm-book-audio-follow', 'data-mm-read="voice"',
+    'queueBookStart', 'selectBookChapter', 'jumpBookChapter',
+    'mm:book-audio-position', 'mm:book-audio-complete',
+    'bookSentenceIndex', 'scrollIntoView',
+):
+    need(marker in runtime, f"Book audio deep-fix contract missing: {marker}")
+book = (ROOT / "src/domains/learning/book-runtime.js").read_text(encoding="utf-8")
+for marker in (
+    'BOOK_AUDIO_PREFIX', 'activeAudioScopeKey', 'getAudioResume:readAudioResume',
+    'Complete source text (all 46 modules)', 'Complete text and 27 worked examples',
+    'Shorter first-read text', 'Independent human SME review pending',
+    'Read all original source sections',
+):
+    need(marker in book, f"Book reading/listening transparency contract missing: {marker}")
+
 # Read Aloud/Listening must not know or alter assessment keying/storage internals.
 for forbidden in (
     "correctAnswer", "answerKey", "correctIndex", "selectedAnswer",
@@ -102,4 +148,4 @@ for marker in (
     need(marker in privacy, f"Read Aloud privacy disclosure missing: {marker}")
 need("entirely on-device" in privacy, "voice-processing limitation disclosure missing")
 
-print("MouldMaster Read Aloud QA passed: speech-synthesis-only, delayed-device-voice-aware, long-session Listening enabled, offline/desktop-integrity wired, and privacy disclosed.")
+print("MouldMaster Read Aloud QA passed: speech-synthesis-only, Android first-tap/desktop delayed-voice aware, long-session Listening enabled, offline/desktop-integrity wired, and privacy disclosed.")

@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.11.6`**.
+Current governed web candidate: **`2026.10.18.1`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Successful exact-source release 2026.10.11.6 candidate producer run 38107428260 retained source 46337247aa9c334fb741c23704723b3f7688e6cf, artifact 11690278594, digest sha256:1ec5ede11d793f979ad4ec0823d1ead2b8bb766ff89e7b4b4e171e38e3b02426 and public runtime fingerprint sha256:4013679bf1b599d7b06abf9fca6f0b3a1e484537d095cfedc595347759574d6b, independently measured from 163 retained archive files. Technical automation succeeded; all independent external human/device/provider reviews remain HOLD. |
-| Behavioral / browser | **pass** | Exact-source Mobile Browser QA, Chromium, WebKit, visual, cross-browser, five 500-run reliability shards, and Question Quality 50-Pass succeeded for release 2026.10.11.6 source 46337247aa9c334fb741c23704723b3f7688e6cf. No physical Android/iOS, real AT, provider/NZQA, SME, Windows signing or production approval is inferred. |
+| Static / contract | **pass** | PASS: release 2026.10.16.1 source e336f656351afa4eeaaae0940969bea881ae9b68 completed successful exact-source producer run 38864931906, retained artifact 12030806569, digest sha256:957f7a0b2e16aab3fd4b59fe86706b637a440593081152748fc18c8332cd32e7, expiry 2027-01-14T07:04:41Z, and measured public-runtime fingerprint sha256:3677de439e76c94b69ebeef13dd92904cd6b30818b88a5434fcbe3755529ec27. Technical source provenance only; seven independent external reviews HOLD. |
+| Behavioral / browser | **pass** | PASS: release 2026.10.16.1 source e336f656351afa4eeaaae0940969bea881ae9b68 completed exact-source Mobile Browser QA 38864931666 with approved strict 52-screenshot/12px visual, substantive Chromium/WebKit, cross-browser, reachability and five 100-run reliability shards, plus Question Quality 38864931729. No physical-device or human SME/provider approval. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |

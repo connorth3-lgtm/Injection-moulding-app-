@@ -1,11 +1,13 @@
-/* MouldMaster learner UI polish — 2026.10.11.6
+/* MouldMaster learner UI polish — 2026.10.18.1
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.10.11.6';
+const VERSION='2026.10.18.1';
+// Cache-bust stylesheet revisions without claiming a new governed app release.
+const STYLE_REV='2026.10.18.1-pr640-materials-parity';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -14,7 +16,7 @@ function ensureStyles(){
   if(document.querySelector('link[data-mm-learner-ui-polish]'))return;
   const link=document.createElement('link');
   link.rel='stylesheet';
-  link.href=`./src/domains/shell/learner-ui-polish.css?v=${encodeURIComponent(VERSION)}`;
+  link.href=`./src/domains/shell/learner-ui-polish.css?v=${encodeURIComponent(STYLE_REV)}`;
   link.dataset.mmLearnerUiPolish=VERSION;
   document.head.appendChild(link);
 }
@@ -284,8 +286,8 @@ function syncDataResetLink(){
   }
 }
 function syncReadAloudLabel(){
-  const host=document.querySelector('.mm-read-aloud details:not([open]) summary');
-  if(host&&!host.getAttribute('aria-label'))host.setAttribute('aria-label','Read aloud');
+  const summary=document.querySelector('.mm-read-aloud details:not([open]) summary');
+  if(summary&&!summary.getAttribute('aria-label'))summary.setAttribute('aria-label','Read aloud');
 }
 function run(){
   syncHomeBalance();
@@ -319,4 +321,810 @@ function install(){
   window.MM_LEARNER_UI_POLISH=Object.freeze({version:VERSION,refresh:schedule});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
+})();
+
+/* MouldMaster: illustrated mobile reference layout, user-approved visual direction.
+   Real lessons, source-backed materials and current case actions remain authoritative. */
+(function(){
+'use strict';
+if(window.MM_REFERENCE_LAYOUT)return;
+function ensurePreviewStatus(){
+  // Only the hosted non-production learner preview gets this persistent label.
+  // The desktop app and local dev server must not inherit a web release claim.
+  if(!/\/preview\/(?:|.*)$/.test(location.pathname))return;
+  const bar=document.querySelector('#app .topbar,.topbar');
+  if(!bar||document.getElementById('mmPreviewStatus'))return;
+  const badge=document.createElement('p');
+  badge.id='mmPreviewStatus';
+  badge.className='mm-preview-status';
+  const link=document.createElement('a');
+  link.href='./privacy.html';
+  link.textContent='NON-PRODUCTION PREVIEW · Educational / advisory use only';
+  link.setAttribute('aria-label','Non-production preview: educational and advisory use only. Read privacy and limits');
+  badge.appendChild(link);
+  // The title/subtitle container is deliberately hidden on several mobile
+  // routes. Keep this independent status label in the visible topbar.
+  bar.appendChild(badge);
+}
+const ASSET='./assets/book-diagrams/';
+const PHOTO_ASSET='./assets/mockup-reference-tiles.webp';
+// The small photographs here are direct visual crops of the user-selected
+// five-screen mockup, not grade provenance or equipment evidence.
+const photoProbe=new Image();
+photoProbe.onload=()=>document.documentElement.classList.add('mm-reference-photo-ready');
+photoProbe.src=PHOTO_ASSET;
+const sourcePhotoTile={machine:0,cycle:1,controls:2,materials:3,mould:4,
+  process:5,defects:6,maintenance:7,cases:8,setup:19,quality:20,
+  diagnosing:21,training:24,challenges:23,selecting:25,thermal:26,evidence:27};
+function picture(key,description,index=sourcePhotoTile[key]??0){
+  const holder=document.createElement('span');
+  holder.className='mm-reference-photo';
+  holder.dataset.mmPhotoIndex=String(index);
+  holder.setAttribute('aria-hidden','true');
+  holder.style.backgroundImage='url("'+PHOTO_ASSET+'")';
+  holder.style.backgroundSize='700% 500%';
+  holder.style.backgroundPosition=(index%7)*100/6+'% '+Math.floor(index/7)*25+'%';
+  holder.appendChild(image(key,description)); // local engineering-diagram fallback
+  return holder;
+}
+const art={
+  machine:'machine-mould-system-overview.svg',
+  cycle:'cycle-timeline.svg',
+  controls:'vp-transfer.svg',
+  materials:'polymer-family-evidence-map.svg',
+  mould:'runner-gate-flow-path.svg',
+  process:'rheology-shear-temperature.svg',
+  defects:'surface-defect-source-map.svg',
+  maintenance:'cooling-circuit-balance.svg',
+  cases:'diagnostic-hypothesis-tree.svg',
+  setup:'plasticising-sequence.svg',
+  quality:'shrinkage-warpage.svg',
+  diagnosing:'filling-boundary-pattern-map.svg',
+  challenges:'doe-interaction.svg',
+  training:'multicavity-balance.svg',
+  selecting:'polymer-family-evidence-map.svg',
+  thermal:'thermal-gradient-wall.svg',
+  evidence:'process-baseline-evidence-package.svg'
+};
+function image(key,description){
+  const img=document.createElement('img');
+  img.src=ASSET+(art[key]||art.machine);
+  img.alt=description||'Injection moulding engineering diagram';
+  img.loading='lazy';
+  img.decoding='async';
+  img.className='mm-reference-picture';
+  return img;
+}
+function sectionHeading(title,root){
+  if(!root||root.querySelector(':scope > .mm-reference-title'))return;
+  const h=document.createElement('h1');h.className='mm-reference-title';h.textContent=title;
+  root.prepend(h);
+}
+function home(){
+  const root=document.getElementById('dashboard'),focus=root?.querySelector('.mm-today-focus');
+  if(!root||!focus)return;
+  sectionHeading('Home',root);
+  if(!root.querySelector('.mm-reference-home-hero')){
+    const hero=document.createElement('section');
+    hero.className='mm-reference-home-hero';
+    hero.setAttribute('aria-label','MouldMaster welcome');
+    const words=document.createElement('div');words.className='mm-reference-hero-words';
+    const h=document.createElement('h2');h.textContent='Welcome back';
+    const p=document.createElement('p');p.textContent='Build your injection moulding skills with structured learning, realistic practice and trusted materials guidance.';
+    words.append(h,p);
+    const machinePhoto=document.createElement('img');
+    machinePhoto.src='./assets/mockup-home-machine.webp';
+    machinePhoto.alt=''; // decorative owner-selected machine image; heading gives context
+    machinePhoto.className='mm-reference-hero-photo';
+    machinePhoto.decoding='async';
+    machinePhoto.loading='eager';
+    // A blocked/degraded image must not show the native broken-image glyph
+    // or cover the welcome copy. Keep the readable gradient hero instead.
+    machinePhoto.addEventListener('error',()=>{
+      machinePhoto.hidden=true;
+      hero.classList.add('mm-reference-hero-fallback');
+    },{once:true});
+    hero.append(words,machinePhoto);
+    const anchor=focus.closest('.mm-dashboard-slot')||focus;
+    anchor.before(hero);
+  }
+  const book=root.querySelector('[data-mm-home-book]');
+  if(book&&!book.querySelector('.mm-reference-book-art')){
+    const pic=picture('materials','Reference Book thumbnail',29);
+    pic.className+=' mm-reference-book-art';
+    book.prepend(pic);
+  }
+  if(!root.querySelector('.mm-reference-home-practice')){
+    const practice=document.createElement('button');practice.type='button';
+    practice.className='mm-reference-home-practice';
+    const play=document.createElement('span');play.className='mm-reference-play';play.textContent='▶';play.setAttribute('aria-hidden','true');
+    const copy=document.createElement('span');copy.className='mm-reference-home-practice-copy';
+    const label=document.createElement('b');label.textContent='Continue practice →';
+    const description=document.createElement('small');description.textContent='Work a shop-floor scenario';
+    copy.append(label,description);practice.append(play,copy);
+    practice.addEventListener('click',()=>{
+      window.switchView?.('scenarios');
+      // Continue practice is a direct workflow shortcut, not a redundant
+      // second link back to the Practice chooser.
+      if(!document.querySelector('#scenarios [data-mm-hub-action="scenario-detail"]'))
+        window.MM_PRIMARY_HUBS?.renderPracticeHub?.();
+      requestAnimationFrame(()=>document.querySelector('#scenarios [data-mm-hub-action="scenario-detail"]')?.click());
+    });
+    const hero=root.querySelector('.mm-reference-home-hero');
+    // Anchor the action to the hero, not its positioned copy wrapper:
+    // that wrapper previously made the absolute button overlap the headline.
+    if(hero)hero.insertAdjacentElement('afterend',practice);
+    else (book||focus).insertAdjacentElement('beforebegin',practice);
+  }
+  if(!root.querySelector('.mm-reference-quick-tools')){
+    const tools=document.createElement('section');
+    tools.className='mm-reference-quick-tools';
+    tools.setAttribute('aria-label','Quick tools');
+    const title=document.createElement('h3');title.textContent='Quick tools';
+    const tiles=document.createElement('div');tiles.className='mm-reference-quick-grid';
+    const options=[
+      ['⌕','Material search','Search grades and properties',()=>{window.switchView?.('materials');requestAnimationFrame(()=>document.querySelector('#materials [data-mm-all-material-query]')?.focus({preventScroll:true}))}],
+      ['⚠','Defect guide','Find evidence-led causes',()=>{window.switchView?.('scenarios');requestAnimationFrame(()=>document.querySelector('#scenarios [data-mm-hub-action="troubleshooting"]')?.click())}],
+      ['▥','Process basics','Browse the core lessons',()=>{window.switchView?.('path');requestAnimationFrame(()=>document.querySelector('#path [data-mm-lesson-catalog]')?.scrollIntoView({behavior:'smooth',block:'start'}))}],
+      ['▦','Unit converter','Pressure, length and temperature',()=>openReferenceConverter()]
+    ];
+    for(const [symbol,label,description,run] of options){
+      const button=document.createElement('button');button.type='button';button.className='mm-reference-quick-tool';
+      const icon=document.createElement('span');icon.className='mm-reference-quick-icon';icon.textContent=symbol;icon.setAttribute('aria-hidden','true');
+      const copy=document.createElement('span');copy.className='mm-reference-quick-copy';
+      const text=document.createElement('b');text.textContent=label;
+      const detail=document.createElement('small');detail.textContent=description;
+      copy.append(text,detail);
+      button.append(icon,copy);button.addEventListener('click',run);tiles.appendChild(button);
+    }
+    tools.append(title,tiles);
+    const focusAnchor=focus.closest('.mm-dashboard-slot')||focus;
+    focusAnchor.insertAdjacentElement('afterend',tools);
+  }
+}
+function openReferenceConverter(){
+  let dialog=document.getElementById('mmReferenceUnitConverter');
+  if(!dialog){
+    dialog=document.createElement('dialog');
+    dialog.id='mmReferenceUnitConverter';
+    dialog.className='mm-reference-converter';
+    const heading=document.createElement('h2');heading.textContent='Unit converter';
+    const intro=document.createElement('p');intro.textContent='Basic physical-unit conversions only. Not a validated machine setting or production recipe.';
+    const select=document.createElement('select');select.setAttribute('aria-label','Conversion');
+    const conversions=[
+      ['Pressure: bar to MPa',v=>v/10,'MPa'],
+      ['Pressure: MPa to bar',v=>v*10,'bar'],
+      ['Length: mm to in',v=>v/25.4,'in'],
+      ['Length: in to mm',v=>v*25.4,'mm'],
+      ['Temperature: °C to °F',v=>v*9/5+32,'°F'],
+      ['Temperature: °F to °C',v=>(v-32)*5/9,'°C']
+    ];
+    for(const [label] of conversions){const option=document.createElement('option');option.value=String(select.options.length);option.textContent=label;select.appendChild(option)}
+    const input=document.createElement('input');input.type='number';input.step='any';input.placeholder='Enter a value';input.setAttribute('aria-label','Value to convert');
+    const result=document.createElement('output');result.setAttribute('aria-live','polite');result.textContent='Enter a value';
+    const update=()=>{const value=Number(input.value),kind=conversions[Number(select.value)||0];result.textContent=input.value.trim()&&Number.isFinite(value)?Number(kind[1](value).toPrecision(9))+' '+kind[2]:'Enter a valid number'};
+    input.addEventListener('input',update);select.addEventListener('change',update);
+    const close=document.createElement('button');close.type='button';close.textContent='Close';close.addEventListener('click',()=>dialog.close());
+    dialog.append(heading,intro,select,input,result,close);document.body.appendChild(dialog);
+  }
+  if(typeof dialog.showModal==='function')dialog.showModal();
+  else dialog.setAttribute('open','');
+  dialog.querySelector('input')?.focus();
+}
+// Source-backed course names control the card copy. Catalogue order can
+// change when a lesson/course is added; position-based copy mislabelled the
+// Materials, Mould Design and Process Setup cards on Android.
+const coursePresentation=[
+ [/^foundations$/i,'Fundamentals and key principles','machine',0],
+ [/^machine\s*(?:&|and)\s*controls$/i,'Machines, controls and the moulding cycle','controls',2],
+ [/^materials$/i,'Polymers, properties and material selection','materials',3],
+ [/^mould\s*design$/i,'Tooling, runners, gates and cooling','mould',4],
+ [/^process\s*setup$/i,'Establishing and verifying process settings','setup',19],
+ [/optimis|optimiz/i,'Monitoring and improving process repeatability','process',5],
+ [/troubleshoot|defect/i,'Identify defects and test likely causes','defects',6],
+ [/maintenan/i,'Equipment care and preventive maintenance','maintenance',7],
+ [/case\s*stud|quality|advanced/i,'Apply evidence to worked examples','cases',8]
+];
+function learnPresentation(title){
+  const row=coursePresentation.find(([pattern])=>pattern.test(title));
+  return row?{hint:row[1],art:row[2],tile:row[3]}:
+    {hint:'Open this course and its lessons',art:'training',tile:24};
+}
+function learn(){
+  const root=document.getElementById('path'),hub=root?.querySelector('.mm-learn-hub');
+  const catalogue=hub?.querySelector('[data-mm-lesson-catalog]');
+  if(!hub||!catalogue)return;
+  sectionHeading('Learn',hub);
+  // Course shortcuts used to duplicate the real course accordions and search.
+  // Illustrate the existing, accessible course summaries instead.
+  hub.querySelector('.mm-reference-learn-list')?.remove();
+  const groups=Array.from(catalogue.querySelectorAll('[data-mm-catalog-group]'));
+  // All 12 core tracks, all nine Material Science chapters and the optional
+  // specialist track share the same image-led card. The previous first-nine
+  // slice left the bottom of the catalogue as large unillustrated boxes.
+  const materialTiles=[
+    ['materials',3],['materials',11],['process',5],
+    ['thermal',26],['materials',12],['mould',4],
+    ['quality',20],['evidence',27],['controls',2]
+  ];
+  groups.forEach((group,index)=>{
+    const summary=group.querySelector(':scope > summary');
+    if(!summary||summary.querySelector('.mm-reference-course-art'))return;
+    const fullTitle=group.querySelector('.mm-catalog-group-name')?.textContent||'Learning module';
+    const title=fullTitle.replace(/^[0-9]+[.] */, '');
+    const isMaterial=fullTitle.startsWith('Material science ·');
+    const isSpecialist=fullTitle.startsWith('Optional specialist');
+    const focus=materialTiles[Math.max(0,index-12)%materialTiles.length];
+    const present=isMaterial
+      ? {art:focus[0],tile:focus[1],hint:'Explore polymer behaviour and its evidence'}
+      :isSpecialist
+        ? {art:'training',tile:24,hint:'Optional advanced topics'}
+        :index===9
+          ? {art:'controls',tile:2,hint:'Sensors, automation and control'}
+          :index===10
+            ? {art:'mould',tile:4,hint:'Advanced tooling and simulation'}
+            :index===11
+              ? {art:'process',tile:5,hint:'Expert process engineering'}
+              :learnPresentation(title);
+    group.classList.toggle('mm-catalog-material-track',isMaterial);
+    group.classList.toggle('mm-catalog-specialist-track',isSpecialist);
+    const art=picture(present.art,'',present.tile);
+    art.classList.add('mm-reference-course-art');
+    art.alt='';
+    art.setAttribute('aria-hidden','true');
+    summary.classList.add('mm-unified-course-summary');
+    summary.prepend(art);
+    if(!summary.querySelector('.mm-reference-course-desc')){
+      const desc=document.createElement('span');desc.className='mm-reference-course-desc';
+      desc.textContent=present.hint;
+      summary.querySelector('.mm-catalog-group-name')?.insertAdjacentElement('afterend',desc);
+    }
+  });
+  const learnQuestionGrid=hub.querySelector('.mm-learn-question-centre .mm-hub-picker-grid');
+  if(learnQuestionGrid){
+    learnQuestionGrid.dataset.mmReferenceLearnQuestions='1';
+    learnQuestionGrid.querySelectorAll(':scope > button[data-mm-hub-action]').forEach(practiceChoiceArt);
+  }
+  hub.dataset.mmReferenceLearn='1';
+}
+// Use the same user-selected photographic atlas as Learn/Materials for real
+// Practice controls, including the screens *inside* each task. All artwork is
+// decorative: action routing, learner evidence and scoring remain source-owned.
+const practiceArtwork={
+  troubleshooting:['quality',20],
+  'scenario-detail':['cases',22],
+  'process-data':['challenges',23],
+  labs:['setup',19],
+  'question-centre':['evidence',27],
+  daily:['cases',22],
+  'diagnostic-labs':['defects',6],
+  'diagnostic-workbench':['diagnosing',21],
+  'mould-master':['cases',8],
+  'spatial-twin':['machine',0],
+  simulator:['setup',19],
+  'material-labs':['materials',3],
+  assessments:['training',24],
+  'measured-decisions':['process',5]
+};
+function practiceChoiceArt(button){
+  if(button.querySelector(':scope > .mm-reference-practice-art'))return;
+  const artData=practiceArtwork[button.dataset.mmHubAction];
+  if(!artData)return;
+  const art=picture(artData[0],'',artData[1]);
+  art.classList.add('mm-reference-practice-art');
+  art.setAttribute('aria-hidden','true');
+  button.classList.add('mm-reference-practice-choice');
+  button.prepend(art);
+}
+function practice(){
+  const root=document.getElementById('scenarios'),hub=root?.querySelector('.mm-practice-hub');
+  if(!hub)return;
+  sectionHeading('Practice',hub);
+  // Keep the one functional chooser: decorate existing buttons rather than
+  // making duplicate shortcuts or replacing their click/focus listeners.
+  hub.querySelector('.mm-reference-practice-list')?.remove();
+  hub.querySelectorAll('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-hub-grid > button[data-mm-hub-action]').forEach(button=>{
+    button.classList.add('mm-unified-practice-card');
+    practiceChoiceArt(button);
+  });
+  // Recommendation actions may change as learning evidence changes. Their
+  // native destinations must remain independent and the treatment idempotent.
+  hub.querySelectorAll('.mm-hub-section[aria-label="More recommended practice"] .mm-hub-grid > button[data-mm-hub-action]').forEach(practiceChoiceArt);
+  const featured=hub.querySelector('.mm-hub-continue');
+  if(featured&&!featured.querySelector(':scope > .mm-reference-practice-feature-art')){
+    const action=featured.querySelector('[data-mm-hub-action]')?.dataset.mmHubAction||'daily';
+    const [subject,tile]=practiceArtwork[action]||practiceArtwork.daily;
+    const art=picture(subject,'',tile);
+    art.classList.add('mm-reference-practice-feature-art');
+    art.setAttribute('aria-hidden','true');
+    featured.classList.add('mm-reference-practice-feature');
+    featured.prepend(art);
+  }
+  hub.dataset.mmReferencePractice='1';
+}
+function practiceScenarioDetail(){
+  // Keep the original scenario evidence/answer buttons and authored feedback.
+  // One local illustration anchors the detail screen without duplicating every case.
+  const root=document.querySelector('#scenarios[data-mm-hub-mode="detail"]');
+  if(!root?.querySelector('.scenario'))return;
+  const head=root.querySelector(':scope > .section-head');
+  if(!head||head.classList.contains('mm-reference-practice-scenario-head'))return;
+  const art=picture('cases','',22);
+  art.classList.add('mm-reference-practice-scenario-art');
+  art.setAttribute('aria-hidden','true');
+  head.classList.add('mm-reference-practice-scenario-head');
+  head.prepend(art);
+}
+const observedPracticeToolRoots=new WeakSet();
+function observePracticeToolRoots(){
+  // Lab, process-data and assessment renderers replace their root children
+  // while learners move between questions. Reapply artwork without tracking
+  // every option/control mutation or risking a refresh loop.
+  for(const id of ['diagnosticLabs','materialLabs','processDataLabs','exams','mmVirtualApprenticeship','mmSpatialTwin']){
+    const node=document.getElementById(id);
+    if(!node||observedPracticeToolRoots.has(node))continue;
+    observedPracticeToolRoots.add(node);
+    new window.MutationObserver(refresh).observe(node,{childList:true});
+  }
+}
+function practiceToolHeaders(){
+  // Tool-owned renderers keep their evidence, answer, scoring and next-step
+  // controls. Add only a decorative local photo to each real landing header.
+  for(const [selector,subject,tile] of [
+    ['#processDataLabs .pd-hero','process',23],
+    ['#diagnosticLabs .dl-hero','defects',20],
+    ['#materialLabs .ml-hero','materials',3],
+    ['#exams .section-head','training',24],
+    ['#mmVirtualApprenticeship > .section-head','cases',22],
+    ['#mmSpatialTwin .mm-st-header > div:first-child','machine',0]
+  ]){
+    const head=document.querySelector(selector);
+    if(!head||head.querySelector(':scope > .mm-reference-practice-tool-art'))continue;
+    const art=picture(subject,'',tile);
+    art.classList.add('mm-reference-practice-tool-art');
+    art.setAttribute('aria-hidden','true');
+    head.classList.add('mm-reference-practice-tool-head');
+    head.prepend(art);
+  }
+}
+// A consistent Practice exit on inner learning tools. This only adds an
+// accessible navigation control; source-owned evidence/scoring views remain
+// untouched and their native in-tool Back buttons retain their meanings.
+function practiceSubpageNavigation(){
+  const tools=[
+    ['#defects','troubleshooting','Troubleshooting'],
+    ['#processDataLabs','process-data','Process data'],
+    ['#diagnosticLabs','labs','Diagnostic labs'],
+    ['#materialLabs','labs','Material labs'],
+    ['#exams','question-centre','Knowledge checks'],
+    ['#mmVirtualApprenticeship','labs','Virtual apprenticeship'],
+    ['#mmSpatialTwin','labs','Spatial twin']
+  ];
+  for(const [selector,origin,label] of tools){
+    const root=document.querySelector(selector);
+    if(!root)continue;
+    const existing=root.querySelector(':scope > .mm-practice-tool-return');
+    const originAction=window.MM_PRIMARY_HUBS?.learnToolOrigin?.();
+    if(existing){
+      const text=existing.querySelector('.mm-practice-tool-back');
+      if(text)text.textContent=originAction?'← Back to Learn':'← Back to Practice';
+      continue;
+    }
+    // No duplicate controls after tool-owned re-renders or app navigation.
+    const nav=document.createElement('nav');
+    nav.className='mm-practice-tool-return';
+    nav.setAttribute('aria-label','Practice navigation');
+    const back=document.createElement('button');
+    back.type='button';back.className='mm-practice-tool-back';
+    back.textContent=originAction?'← Back to Learn':'← Back to Practice';
+    const current=document.createElement('span');
+    current.className='mm-practice-tool-current';
+    current.textContent=label;
+    back.addEventListener('click',()=>{
+      const learnOrigin=window.MM_PRIMARY_HUBS?.learnToolOrigin?.();
+      window.switchView?.(learnOrigin?'path':'scenarios');
+      window.MM_PRIMARY_HUBS?.clearLearnToolOrigin?.();
+      window.requestAnimationFrame(()=>{
+        const action=learnOrigin||origin;
+        const selector=learnOrigin?'#path .mm-learn-hub':'#scenarios .mm-practice-hub';
+        const card=document.querySelector(selector+' [data-mm-hub-action="'+action+'"]');
+        card?.focus({preventScroll:true});
+      });
+    });
+    nav.append(back,current);
+    root.prepend(nav);
+  }
+}
+function practiceInside(){
+  practiceScenarioDetail();
+  practiceSubpageNavigation();
+  observePracticeToolRoots();
+  practiceToolHeaders();
+  // The Question Centre is rendered into the same Practice route but replaces
+  // .mm-practice-hub. Decorate its five real options as they become available.
+  const questionGrid=document.querySelector('#scenarios .mm-question-centre .mm-hub-picker-grid');
+  if(questionGrid){
+    questionGrid.dataset.mmReferencePracticePicker='question-centre';
+    questionGrid.querySelectorAll(':scope > button[data-mm-hub-action]').forEach(practiceChoiceArt);
+  }
+  // Lab chooser is modal-owned. Decorate only a Practice picker, never More,
+  // search, onboarding or Learn-resource modal controls.
+  const modal=document.querySelector('#modal:not(.hidden) .modal-card');
+  const practicePicker=modal?.querySelector('.mm-hub-picker-grid');
+  const context=modal?.querySelector('.eyebrow')?.textContent?.trim()||'';
+  if(practicePicker&&context.startsWith('Practice')){
+    practicePicker.dataset.mmReferencePracticePicker='modal';
+    practicePicker.querySelectorAll(':scope > button[data-mm-hub-action]').forEach(practiceChoiceArt);
+  }
+  // No changes to the diagnostic evidence intake, hypothesis labels, or
+  // generated report; CSS supplies the same card/field treatment in that view.
+}
+const familyArt=[
+ [/(\bABS\b|ABS\/|PC\/ABS)/i,'materials'],
+ [/\bPC\b/i,'controls'],
+ [/\bPP\b/i,'process'],
+ [/\bPE\b/i,'materials'],
+ [/\bPA\d*\b|NYLON/i,'mould'],
+ [/\bPOM\b/i,'thermal'],
+ [/\bPET\b/i,'quality'],
+ [/\bPBT\b/i,'evidence'],
+ [/\bPMMA\b/i,'process'],
+ [/TPU|TPE|ELASTOMER/i,'materials']
+];
+function materialArt(label){
+  for(const [matcher,pic] of familyArt)if(matcher.test(label))return pic;
+  return 'materials';
+}
+/* The grade registry owns factual exact-grade data; this educational guide only
+   connects the pre-existing real lessons, native labs and registry. */
+function mountMaterialJourney(root,catalogue){
+  if(!root||!catalogue||root.querySelector('.mm-material-journey'))return;
+  const journey=document.createElement('section');
+  journey.className='mm-material-journey';
+  journey.setAttribute('aria-labelledby','mmMaterialJourneyTitle');
+  journey.innerHTML=`<header><span class="eyebrow">Guided material learning</span><h2 id="mmMaterialJourneyTitle">From resin choice to evidence</h2><p>One learning route connects your material lessons, resin-behaviour questions and exact-grade records. General teaching is not a supplier recipe.</p></header>
+  <div class="mm-material-journey-actions">
+    <button type="button" data-mm-material-journey="lessons"><strong>01 · Learn</strong><span>Study polymer families and moisture behaviour</span></button>
+    <button type="button" data-mm-material-journey="labs"><strong>02 · Test</strong><span>Use the existing resin behaviour labs</span></button>
+    <button type="button" data-mm-material-journey="grades"><strong>03 · Verify</strong><span>Check actual supplier-backed grade evidence</span></button>
+  </div>
+  <details class="mm-material-journey-reasoning"><summary>Five material decisions explained <span>Expand teaching notes ↓</span></summary>
+    <div class="mm-material-journey-questions">
+      <details><summary>Moisture: can dryer settings prove the resin is dry?</summary><p>No. Compare the exact supplier's procedure with handling history and, where applicable, a validated moisture measurement. Dryer displays alone do not prove pellet condition.</p></details>
+      <details><summary>Degradation: what evidence distinguishes heat history from contamination?</summary><p>Review grade identity, residence time, process trace history, visual defect location and controlled inspection. A dark spot alone cannot identify the mechanism.</p></details>
+      <details><summary>Regrind: does a higher regrind percentage always mean a worse part?</summary><p>No. Use the approved material/regrind limits, blend and handling evidence, and representative part results. An association is not a qualified material limit.</p></details>
+      <details><summary>Material substitution: is a matching family name enough?</summary><p>No. Compare the exact grade, property requirements, additives, supplier guidance and customer approval requirements. A family label is not a grade equivalence certificate.</p></details>
+      <details><summary>Part quality: why compare cavities and measurement conditions?</summary><p>Geometry, cooling and local flow balance affect part response, while measurement timing and conditioning change reported dimensions. Use cavity-labelled, comparable samples.</p></details>
+    </div>
+    <p class="mm-learn-safety-note">Optional, unscored teaching. Real process and grade decisions require current manufacturer documents, competent human review and site procedures.</p>
+  </details>`;
+  journey.querySelectorAll('[data-mm-material-journey]').forEach(button=>button.addEventListener('click',()=>{
+    const action=button.dataset.mmMaterialJourney;
+    if(action==='lessons')window.MM_LESSON_CATALOG?.open?.({filter:'material'});
+    if(action==='labs')window.MM_MATERIAL_BEHAVIOUR_LABS?.open?.();
+    if(action==='grades')catalogue.scrollIntoView?.({block:'start',behavior:'smooth'});
+  }));
+  catalogue.insertAdjacentElement('afterend',journey);
+}
+function materials(){
+  const root=document.getElementById('materials'),catalogue=root?.querySelector('[data-mm-all-material-index]');
+  if(!root||!catalogue)return;
+  mountMaterialJourney(root,catalogue);
+  // One visible heading belongs to the consolidated catalogue itself.
+  // Never add a separate Materials hero above the catalogue.
+  const heading=catalogue.querySelector('.mm-material-all-index-head h3');
+  if(heading){
+    heading.textContent='Materials';
+    heading.classList.add('mm-reference-materials-title');
+  }
+  root.querySelectorAll(':scope > .mm-reference-materials-title').forEach(extra=>extra.remove());
+  // Source-backed grade folders and the older conceptual family explorer now
+  // live in one Materials surface. Keep generic tendencies explicitly optional,
+  // distinct from supplier-specific grade data and never treat them as recipes.
+  // The real learning pane moves inside the optional guide after first render.
+  // Discover it there too: repeated navigation and tab changes must still
+  // reopen the guide when teaching content becomes active.
+  const legacy=root.querySelector('.mat-shell');
+  if(legacy){
+    let guide=catalogue.parentElement?.querySelector('[data-mm-family-science]');
+    if(!guide){
+      guide=document.createElement('details');
+      guide.className='mm-family-science';
+      guide.dataset.mmFamilyScience='1';
+      const summary=document.createElement('summary');
+      summary.textContent='Polymer-family behaviour & learning (general reference)';
+      const explanation=document.createElement('p');
+      explanation.className='muted tiny';
+      explanation.textContent='Optional family-level guidance. Use exact supplier grades and source evidence above for any real decision.';
+      const slot=document.createElement('div');
+      slot.dataset.mmFamilyScienceContent='1';
+      guide.append(summary,explanation,slot);
+      catalogue.insertAdjacentElement('afterend',guide);
+    }
+    // Keep the learning landmark and tab navigation visible. Only the
+    // explanatory family reference belongs inside the optional disclosure.
+    // Hiding these controls previously broke material lesson navigation.
+    const tabs=root.querySelector('.mm-material-study-tools > .mat-tabs')||legacy.querySelector(':scope > .mat-tabs');
+    const teachingSlot=guide.querySelector('[data-mm-family-science-content]');
+    if(teachingSlot&&legacy.parentElement!==teachingSlot)teachingSlot.appendChild(legacy);
+    // An active default "Learn" tab is NOT permission to reopen a disclosure
+    // the learner just closed. Only an actual lesson (or an explicit tab
+    // activation below) may reveal the optional family-science pane.
+    const lessonShown=!!legacy.querySelector('.mat-lesson');
+    const intro=root.querySelector('#mmMaterialLearningAnchor');
+    // Combine the detached Material Science intro, five legacy mode buttons
+    // and optional general-reference guide into one clear secondary panel.
+    // Preserve the *real* mode buttons and their event handlers; the guide
+    // only contains generic family science, never exact supplier-grade data.
+    let study=root.querySelector('.mm-material-study-tools');
+    if(!study){
+      study=document.createElement('section');
+      study.className='mm-material-study-tools';
+      study.setAttribute('aria-label','Material learning and tools');
+      catalogue.insertAdjacentElement('afterend',study);
+    }
+    // Do not reparent focused controls on every refresh. Native buttons keep
+    // their listeners and keyboard focus through material result rerenders.
+    if(intro&&intro.parentElement!==study)study.appendChild(intro);
+    if(tabs&&tabs.parentElement!==study)study.appendChild(tabs);
+    if(guide.parentElement!==study)study.appendChild(guide);
+    // Preserve native disclosure state. The application owns the Material
+    // mode buttons: Labs, Knowledge check and References replace the explorer
+    // screen, while All lessons opens the shared Learn catalogue. None should
+    // programmatically reopen a now-detached family guide on incidental DOM
+    // mutations. A genuinely opened material lesson may reveal it once.
+    if(lessonShown&&root.dataset.mmReferenceMaterialLessonSeen!=='1'){
+      guide.open=true;
+      root.dataset.mmReferenceMaterialLessonSeen='1';
+    }
+  }
+  const selectedFamily=catalogue.querySelector('[data-mm-family-detail]:not([hidden])');
+  if(selectedFamily){
+    const code=selectedFamily.dataset.mmFamilyCurrent||'';
+    const art=selectedFamily.querySelector('[data-mm-family-detail-art]');
+    if(art&&art.dataset.mmFamilyArt!==code){
+      const tile=/^PP$/.test(code)?11:/^(HDPE|LDPE|PE)$/.test(code)?12:/^PC$/.test(code)?10:
+        /^PA/.test(code)?13:/^POM$/.test(code)?14:/^PET$/.test(code)?15:
+        /^PBT$/.test(code)?16:/^PMMA$/.test(code)?17:9;
+      art.replaceChildren(picture(materialArt(code),'',tile));
+      art.dataset.mmFamilyArt=code;
+    }
+  }
+  catalogue.querySelectorAll('.mm-material-family-card:not([data-mm-reference-illustrated])').forEach(card=>{
+    card.dataset.mmReferenceIllustrated='1';
+    const familyCode=card.dataset.mmFamilyOpen||'';
+    const materialTile=/(ABS|PC\/ABS)/.test(familyCode)?9:/^PC$/.test(familyCode)?10:
+      /^PP$/.test(familyCode)?11:/^(HDPE|LDPE|PE)$/.test(familyCode)?12:
+      /^PA\d+/.test(familyCode)?13:/^POM$/.test(familyCode)?14:
+      /^PET$/.test(familyCode)?15:/^PBT$/.test(familyCode)?16:
+      /^PMMA$/.test(familyCode)?17:/TPE|TPU|ELASTOMER|TPV/i.test(familyCode)?18:9;
+    const img=picture(materialArt(familyCode),'Illustrative polymer family texture',materialTile);
+    img.classList.add('mm-reference-family-art');
+    card.prepend(img);
+  });
+  catalogue.querySelectorAll('.mm-material-index-card:not([data-mm-reference-illustrated])').forEach(card=>{
+    card.dataset.mmReferenceIllustrated='1';
+    const sum=card.querySelector('.mm-material-index-summary');
+    if(!sum)return;
+    const title=card.querySelector('.mm-material-index-title')?.textContent||'';
+    const family=card.querySelector('.mm-material-index-subtitle')?.textContent||'';
+    const familyCode=(family+' '+title).toUpperCase();
+    const materialTile=/(ABS|PC\/ABS)/.test(familyCode)?9:/\bPC\b/.test(familyCode)?10:
+      /\bPP\b/.test(familyCode)?11:/\bPE\b/.test(familyCode)?12:
+      /\bPA\d*\b|NYLON/.test(familyCode)?13:/\bPOM\b/.test(familyCode)?14:
+      /\bPET\b/.test(familyCode)?15:/\bPBT\b/.test(familyCode)?16:
+      /\bPMMA\b/.test(familyCode)?17:/TPE|TPU|ELASTOMER/.test(familyCode)?18:9;
+    const img=picture(materialArt(family+' '+title),'Illustrative polymer texture from user reference',materialTile);
+    img.classList.add('mm-reference-material-art');
+    sum.prepend(img);
+    const sourced=card.querySelector('[data-mm-unified-grade]');
+    if(sourced&&!sourced.querySelector('.mm-reference-diagrams')){
+      const figure=document.createElement('figure');figure.className='mm-reference-diagrams';
+      figure.append(
+        picture('materials','Illustrative polymer pellets from selected design',materialTile),
+        picture('process','Conceptual molecule diagram from selected design',31),
+        picture('mould','Illustrative moulded component from selected design',32)
+      );
+      const note=document.createElement('figcaption');
+      note.textContent='Reference illustrations only; none identify this supplier grade or establish its composition. Exact properties and applications require linked primary sources.';
+      figure.append(note);
+      // Retain the real explanatory SVG diagrams separately. These teach
+      // mechanisms and must not be misrepresented as grade-specific evidence.
+      const teaching=document.createElement('details');
+      teaching.className='mm-reference-technical-diagrams';
+      const summary=document.createElement('summary');summary.textContent='Engineering diagrams and explanations';
+      const drawing=document.createElement('div');drawing.className='mm-reference-teaching-art';
+      drawing.append(
+        image('materials','Polymer-family evidence relationship diagram'),
+        image('process','Rheology: shear and temperature diagram'),
+        image('mould','Mould runner and gate flow-path diagram')
+      );
+      teaching.append(summary,drawing);
+      const actions=sourced.querySelector('.mm-material-inline-actions');
+      if(actions){actions.before(figure);actions.before(teaching)}
+      else sourced.append(figure,teaching);
+    }
+  });
+  // Search/pagination replaces result nodes asynchronously. Decorate new
+  // source-backed rows as soon as the index has rendered them.
+  const resultHost=catalogue.querySelector('[data-mm-all-material-results]');
+  if(resultHost&&!resultHost.dataset.mmReferenceObserved){
+    resultHost.dataset.mmReferenceObserved='1';
+    new window.MutationObserver(refresh).observe(resultHost,{childList:true});
+  }
+  root.dataset.mmReferenceMaterials='1';
+}
+function illustrateMore(grid){
+  // This is the original six-section More menu. Decorate its existing native
+  // disclosure headings, never clone action buttons or rewrite their handlers.
+  const photos={learning:['training',24],references:['controls',2],
+    account:['evidence',27],mission:['machine',0],
+    help:['quality',20],about:['materials',3]};
+  grid.querySelectorAll(':scope > .mm-more-disclosure').forEach(group=>{
+    const heading=group.querySelector(':scope > summary');
+    if(!heading||heading.querySelector(':scope > .mm-reference-more-art'))return;
+    const section=group.dataset.mmMoreSection||
+      (group.querySelector('summary b')?.textContent?.includes('Help')?'help':'about');
+    const [subject,tile]=photos[section]||photos.learning;
+    const art=picture(subject,'',tile);
+    art.classList.add('mm-reference-more-art');
+    art.setAttribute('aria-hidden','true');
+    heading.prepend(art);
+    group.classList.add('mm-reference-more-card');
+  });
+}
+function more(){
+  const grid=document.querySelector('#modal .grid2[data-mm-more-organized="1"]');
+  if(!grid)return;
+  if(grid.dataset.mmReferenceMore==='1'){illustrateMore(grid);return;}
+  grid.dataset.mmReferenceMore='1';
+  const mapped=[['learning','Resources','Visuals, glossary, Book and grade references'],
+    ['references','Tools','Calculators and technical references'],
+    ['account','Settings & account','Preferences, profile and support'],
+    ['mission','Mission tools','Saved evidence and command search']];
+  mapped.forEach(([id,title,desc])=>{
+    const group=grid.querySelector('[data-mm-more-section="'+id+'"]');if(!group)return;
+    const b=group.querySelector('summary b'),small=group.querySelector('summary small');
+    if(b)b.textContent=title;if(small)small.textContent=desc;
+  });
+  // Add one canonical launch to the pre-existing Resources group; do not
+  // duplicate its individual source-owned navigation actions or remove them.
+  const resources=grid.querySelector('[data-mm-more-section="learning"] .mm-more-disclosure-items');
+  if(resources&&!resources.querySelector('[data-mm-learning-resource-shortcut]')){
+    const browse=document.createElement('button');
+    browse.type='button';browse.className='quick-action mm-learning-resource-shortcut';
+    browse.dataset.mmLearningResourceShortcut='1';
+    browse.textContent='Browse Learning Resources →';
+    browse.addEventListener('click',()=>window.MM_PRIMARY_HUBS?.openLearningResources?.());
+    resources.prepend(browse);
+  }
+  // Six top-level More destinations: four governed tool groups and distinct
+  // help/about disclosures. The exact links stay local to the application.
+  for(const [title,hint,label,href] of [
+    ['Help & support','Guides, FAQs and contact','Open support information','./support.html'],
+    ['About MouldMaster','Version, acknowledgements and safety','View app version and safety information','./support.html#mmPwa']
+  ]){
+    const details=document.createElement('details');details.className='mm-more-disclosure mm-reference-more-extra';
+    const summary=document.createElement('summary'),copy=document.createElement('span');
+    copy.className='mm-more-disclosure-name';
+    const heading=document.createElement('b');heading.textContent=title;
+    const description=document.createElement('small');description.textContent=hint;
+    copy.append(heading,description);summary.append(copy);details.append(summary);
+    const area=document.createElement('div');area.className='mm-more-disclosure-items';
+    const link=document.createElement('a');link.href=href;link.className='quick-action';link.textContent=label;
+    area.append(link);details.append(area);
+    // The approved wide-screen reference has Help expanded. Narrow-screen
+    // More keeps it closed until the learner deliberately opens that group.
+    if(title==='Help & support'&&window.matchMedia('(min-width:701px)').matches)details.open=true;
+    grid.append(details);
+  }
+  const direct=Array.from(grid.querySelectorAll(':scope > .mm-reference-more-extra'));
+  grid.prepend(...direct);
+  illustrateMore(grid);
+}
+/* Interior parity with the approved five-tab reference boards. Each target
+   already owns its content, commands and validation rules. Decorations are
+   local, noninteractive and idempotent across renderer replacements. */
+function deepViewPolish(){
+  // Source-owned interior views share one visual language. Mark only stable
+  // host roots; no control, tab, answer or evidence node is cloned or moved.
+  // This covers the native Book, Learn, Materials, Practice and More subviews.
+  const interiors=[
+    ['lesson','Learn · lesson'],
+    ['visuals','Resources · process visuals'],
+    ['glossary','Resources · glossary'],
+    ['simulator','Practice · simulation'],
+    ['defects','Practice · diagnosis'],
+    ['coach','Practice · coaching'],
+    ['standards','Resources · standards'],
+    ['certificates','More · achievements'],
+    ['profile','More · profile'],
+    ['instructor','More · instructor tools'],
+    ['exams','Learn · knowledge checks'],
+    ['diagnosticLabs','Practice · diagnostic labs'],
+    ['materialLabs','Materials · learning labs'],
+    ['processDataLabs','Practice · data diagnosis'],
+    ['mmVirtualApprenticeship','Practice · apprenticeship'],
+    ['mmSpatialTwin','Practice · spatial twin'],
+    ['mmMaterialCompare','Materials · comparison'],
+    ['mmMaterialChange','Materials · change assistant'],
+    ['mmBookView','Resources · Book']
+  ];
+  for(const [id,description] of interiors){
+    const root=document.getElementById(id);
+    if(!root)continue;
+    root.classList.add('mm-reference-subtab');
+    root.dataset.mmReferenceSection=description;
+  }
+  const headers=[
+    ['#lesson .mm-simple-lesson-hero','training',24],
+    ['#lesson .lesson-header-card','training',24],
+    ['#simulator .form-card','machine',0],
+    ['#simulator .output-panel','process',5],
+    ['#glossary .section-head','training',24],
+    ['#defects .mm-dx-hero','quality',20],
+    ['#coach .mm-dx-hero','quality',20],
+    ['#standards .section-head','evidence',27],
+    ['#visuals .visual-wrap:first-child','process',5],
+    ['#certificates .section-head','evidence',27],
+    ['#profile .form-card:first-child','training',24],
+    ['#instructor .section-head','cases',22],
+    ['#mmMaterialCompare .section-head','materials',3],
+    ['#mmMaterialChange .section-head','materials',12],
+    ['#mmBookView .mm-book-reader-header','training',24]
+  ];
+  for(const [selector,subject,tile] of headers){
+    const node=document.querySelector(selector);
+    if(!node||node.querySelector(':scope > .mm-reference-deep-art'))continue;
+    const art=picture(subject,'',tile);
+    art.classList.add('mm-reference-deep-art');
+    art.setAttribute('aria-hidden','true');
+    node.classList.add('mm-reference-deep-head');
+    node.prepend(art);
+  }
+  for(const selector of [
+    '#lesson .lesson-body','#lesson .lesson-side',
+    '#glossary .term','#defects .mm-dx-pane','#coach .mm-dx-pane',
+    '#profile .form-card','#simulator .form-card',
+    '#simulator .output-panel','#coach .chat',
+    '#coach .form-card','#instructor .table-wrap',
+    '#exams .exam-card','#processDataLabs .pd-card',
+    '#diagnosticLabs .dl-card','#materialLabs .ml-card',
+    '#mmMaterialCompare .card','#mmMaterialChange .card',
+    '#standards .card','#certificates .card',
+    '#visuals .visual-wrap','#mmVirtualApprenticeship .card',
+    '#mmSpatialTwin .mm-st-panel'
+  ]){
+    document.querySelectorAll(selector).forEach(el=>el.classList.add('mm-reference-deep-panel'));
+  }
+}
+let scheduled=false;
+function refresh(){
+  if(scheduled)return;scheduled=true;
+  requestAnimationFrame(()=>{
+    scheduled=false;
+    // Apply the shared shell before source-owned modules, then after their render.
+    // One optional/late-loaded tool must not prevent unrelated tab/subtab skinning.
+    for(const decorate of [deepViewPolish,ensurePreviewStatus,home,learn,practice,practiceInside,materials,more,deepViewPolish]){
+      try{decorate()}catch(error){console.warn('[MouldMaster reference layout]',decorate.name,error)}
+    }
+  });
+}
+function boot(){
+  ensurePreviewStatus();
+  document.documentElement.classList.add('mm-reference-layout');
+  refresh();
+  window.MM_APP_SHELL?.events?.onViewChange?.(refresh);
+  for(const name of ['dashboard','path','materials','scenarios'])window.MM_APP_SHELL?.events?.onRender?.(name,refresh);
+  const targets=['dashboard','path','materials','scenarios','simulator','lesson','glossary','defects','coach','standards','visuals','certificates','profile','instructor','exams','diagnosticLabs','materialLabs','processDataLabs','mmVirtualApprenticeship','mmSpatialTwin','mmMaterialCompare','mmMaterialChange','mmBookView','modal'];
+  for(const id of targets){
+    const node=document.getElementById(id);if(!node)continue;
+    new window.MutationObserver(refresh).observe(node,{childList:true,subtree:id==='modal'});
+  }
+  document.addEventListener('click',event=>{
+    if(event.target?.closest?.('.mm-material-index-card summary,.mobile-nav,[data-mm-registry-menu],#scenarios [data-mm-hub-action],#modal .mm-hub-picker-grid [data-mm-hub-action],#mmVirtualApprenticeship button[data-mm-onclick],#mmVirtualApprenticeship .hero-buttons button'))refresh();
+  });
+  window.MM_REFERENCE_LAYOUT=Object.freeze({version:'2026.10.13.1',refresh});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
