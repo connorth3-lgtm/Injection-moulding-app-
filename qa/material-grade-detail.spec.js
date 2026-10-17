@@ -16,6 +16,21 @@ async function openApp(page){
 async function openMaterialsFromLearn(page){
   await page.locator('.mobile-nav > button').filter({hasText:'Materials'}).click();
 }
+async function showExactGrade(page,query,gradeId){
+  const root=page.locator('#mmExactMaterialCatalog');
+  // The current design has one visible All Materials list; each published
+  // grade's sourced evidence opens inside its selected native disclosure.
+  await root.locator('[data-mm-all-material-query]').fill(query);
+  const result=root.locator('[data-mm-material-index-result="grade:'+gradeId+'"]');
+  await expect(result).toBeVisible();
+  if(await result.getAttribute('open')===null)await result.locator('summary').click();
+  await result.getByRole('button',{name:'Show exact grade'}).click();
+  const grade=root.locator('[data-mm-material-grade="'+gradeId+'"]');
+  await expect(grade).toBeVisible();
+  await expect(grade).toHaveAttribute('data-mm-inline-grade','1');
+  await expect(grade).toBeFocused();
+  return grade;
+}
 
 for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'small-360x800',width:360,height:800}]){
   test(`${viewport.name}: exact LOTTE, LG Chem and KEPITAL grades keep property, processing and provenance context visible`,async({page})=>{
@@ -31,10 +46,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
     await expect(page.locator('[data-mm-material-coverage]')).toContainText('201 comparison-ready observations');
     await expect(page.locator('[data-mm-material-grade]')).toHaveCount(24);
 
-    const search=page.locator('[data-mm-exact-query]');
-    await search.fill('NH-1033');
-    const card=page.locator('[data-mm-material-grade="mat-lotte-infino-nh-1033"]');
-    await expect(card).toBeVisible();
+    const card=await showExactGrade(page,'NH-1033','mat-lotte-infino-nh-1033');
     await expect(page.locator('[data-mm-material-grade]')).toHaveCount(1);
     await expect(card).toContainText('Melt Flow Index · 35 g/10min');
     await expect(card).toContainText('ISO 1133 · 220°C · 10 kg');
@@ -65,9 +77,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
     await expect(sources.first()).toHaveAttribute('rel',/noopener/);
     await expect(card.getByRole('button',{name:'Start Mould Master case'})).toBeVisible();
 
-    await search.fill('GP5206F');
-    const lgCard=page.locator('[data-mm-material-grade="mat-lgchem-lupoy-gp5206f"]');
-    await expect(lgCard).toBeVisible();
+    const lgCard=await showExactGrade(page,'GP5206F','mat-lgchem-lupoy-gp5206f');
     await expect(page.locator('[data-mm-material-grade]')).toHaveCount(1);
     await expect(lgCard).toContainText('LG Chem · LUPOY · GP5206F');
     await expect(lgCard).toContainText('Melt Flow Rate · 3 g/10min');
@@ -101,9 +111,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
     await expect(lgSources.first()).toHaveAttribute('rel',/noopener/);
     await expect(lgCard.getByRole('button',{name:'Start Mould Master case'})).toBeVisible();
 
-    await search.fill('FG2025');
-    const kepCard=page.locator('[data-mm-material-grade="mat-kepital-fg2025"]');
-    await expect(kepCard).toBeVisible();
+    const kepCard=await showExactGrade(page,'FG2025','mat-kepital-fg2025');
     await expect(page.locator('[data-mm-material-grade]')).toHaveCount(1);
     await expect(kepCard).toContainText('Korea Polyacetal (KPAC) · KEPITAL · FG2025');
     await expect(kepCard).toContainText('Mould Shrinkage · 0.7 %');
@@ -151,18 +159,20 @@ test('Singapore exact-grade material search exposes Mitsui Elastomers Singapore 
   await openApp(page);
   await openMaterialsFromLearn(page);
   const root=page.locator('#mmExactMaterialCatalog');
-  const search=root.locator('[data-mm-exact-query]');
+  const search=root.locator('[data-mm-all-material-query]');
+  const filters=root.locator('[data-mm-all-material-filters]');
+  await filters.locator('summary').click();
+  await filters.locator('[data-mm-all-material-type]').selectOption('exact-grade');
   await search.fill('Singapore');
-  await expect(root).toHaveAttribute('data-mm-material-total','31');
-  await expect(root.locator('[data-mm-material-grade]')).toHaveCount(24);
-  const status=root.locator('[data-mm-material-page-status]');
-  await expect(status).toContainText('31 matching exact grades');
-  await expect(status).toContainText('page 1 of 2');
-  await expect(root).toContainText('TAFMER');
-  await expect(root).toContainText('Mitsui Elastomers Singapore');
-  await expect(root).toContainText('A-4070S');
-  await expect(root).toContainText('DF640');
-  await expect(root).toContainText('MA8510');
+  const status=root.locator('[data-mm-all-material-status]');
+  await expect(status).toContainText('matching material records');
+  await expect(root.locator('[data-mm-all-material-results]')).toContainText('Mitsui Elastomers Singapore');
+  // Each sourced product remains individually discoverable on the unified
+  // index, rather than silently existing in a hidden second catalogue.
+  for(const code of ['A-4070S','DF640','MA8510']){
+    await search.fill(code);
+    await expect(root.locator('[data-mm-all-material-results]')).toContainText(code);
+  }
   const geometry=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,page:document.documentElement.scrollWidth}));
   expect(geometry.page).toBeLessThanOrEqual(geometry.viewport+1);
 });
