@@ -37,7 +37,10 @@ test('core shell and exact-grade Materials work without layout overflow',async({
   await openApp(page);
   await openMaterials(page);
   await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible({timeout:30000});
-  await expect(page.locator('[data-mm-material-grade]').first()).toBeVisible();
+  // All Materials is the default discovery surface. The advanced exact-grade
+  // card list is intentionally hidden until the learner selects that view.
+  const catalog=page.locator('#mmExactMaterialCatalog [data-mm-all-material-index]');
+  await expect(catalog.locator('[data-mm-material-index-result] summary').first()).toBeVisible();
   const geometry=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,client:document.documentElement.clientWidth}));
   expect(geometry.scroll).toBeLessThanOrEqual(geometry.client+2);
   expect(errors).toEqual([]);
