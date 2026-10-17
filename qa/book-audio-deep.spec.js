@@ -116,3 +116,42 @@ test('reader chapter Listen action starts the chosen Book audio chapter on the o
   await expect.poll(()=>page.evaluate(()=>window.__bookAudioLast||'')).toContain('Transfer, Packing and Clamp Behaviour');
   await expect.poll(()=>page.evaluate(()=>window.MMBook.getAudioResume()?.chapterId)).toBe('r06');
 });
+
+test('clearing an audio bookmark stops speech and removes only the active learner cursor',async({page})=>{
+  await openBook(page);
+  await page.locator('[data-mm-book-audio-start]').selectOption('r05');
+  await page.locator('#mmBookView [data-mm-book-mode="listen"]').click();
+  await expect.poll(()=>page.evaluate(()=>window.MMBook.getAudioResume()?.chapterId)).toBe('r05');
+  const state=await page.evaluate(()=>{
+    const scope=window.MM_LEARNER_SCOPE,prefix='mm_book_audio_v1::';
+    const ownKey=scope.storageKey(prefix,scope.tokenFor('audio-deep-a'));
+    const otherKey=scope.storageKey(prefix,scope.tokenFor('audio-deep-b'));
+    const other={schema:1,bookRelease:window.MMBook.version,chapterId:'r11',unitIndex:9,mode:'examples'};
+    localStorage.setItem(otherKey,JSON.stringify(other));
+    const success=window.MMBook.clearAudioResume();
+    return {success,own:localStorage.getItem(ownKey),other:JSON.parse(localStorage.getItem(otherKey)||'null')};
+  });
+  expect(state.success).toBe(true);
+  expect(state.own).toBeNull();
+  expect(state.other.chapterId).toBe('r11');
+  await expect(page.locator('#mmBookView [data-mm-book-audio-continue]')).toBeHidden();
+});
+
+test('completion callback after learner switch cannot erase another learner audio bookmark',async({page})=>{
+  await openBook(page);
+  await page.locator('[data-mm-book-audio-start]').selectOption('r08');
+  await page.locator('#mmBookView [data-mm-book-mode="listen"]').click();
+  await expect.poll(()=>page.evaluate(()=>window.MMBook.getAudioResume()?.chapterId)).toBe('r08');
+  const state=await page.evaluate(()=>{
+    const scope=window.MM_LEARNER_SCOPE,prefix='mm_book_audio_v1::';
+    const first=scope.storageKey(prefix,scope.tokenFor('audio-deep-a'));
+    const second=scope.storageKey(prefix,scope.tokenFor('audio-deep-b'));
+    const preserved={schema:1,bookRelease:window.MMBook.version,chapterId:'r12',unitIndex:8,mode:'complete'};
+    localStorage.setItem(second,JSON.stringify(preserved));
+    db.activeUser='audio-deep-b';
+    window.dispatchEvent(new CustomEvent('mm:book-audio-complete'));
+    return {a:JSON.parse(localStorage.getItem(first)||'null'),b:JSON.parse(localStorage.getItem(second)||'null')};
+  });
+  expect(state.a.chapterId).toBe('r08');
+  expect(state.b.chapterId).toBe('r12');
+});
