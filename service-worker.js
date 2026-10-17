@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.10.16.1';
+const CACHE_VERSION='2026.10.18.1';
 const CACHE_REVISION='book-reading-audio-depth-fix-20261018';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
