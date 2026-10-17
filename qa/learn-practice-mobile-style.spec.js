@@ -171,6 +171,57 @@ async function expectMaterialDensity(page){
 
 test.use({viewport:{width:412,height:915}});
 
+// Materials is the owner's compact, information-rich pattern for the whole
+// learner experience; verify the new summary is informative, not a replacement
+// for technical content, and all four primary destinations still work.
+for(const width of [360,412]){
+ test('Materials-style compact hierarchy retains full primary-tab information at '+width+'px',async({page})=>{
+  await page.setViewportSize({width,height:915});
+  await openApp(page);
+  await page.waitForFunction(()=>document.documentElement.classList.contains('mm-reference-layout'));
+  const tools=page.locator('#dashboard .mm-reference-quick-tool');
+  await expect(tools).toHaveCount(4);
+  await expect(page.locator('#dashboard .mm-reference-quick-copy small')).toHaveCount(4);
+  await expect(tools.first()).toContainText('Search grades and properties');
+  const homeLayout=await page.evaluate(()=>{
+    const nodes=[...document.querySelectorAll('#dashboard .mm-reference-quick-tool')];
+    return {columns:new Set(nodes.map(n=>Math.round(n.getBoundingClientRect().left))).size,
+      readable:nodes.every(n=>n.querySelector('small')?.getBoundingClientRect().height>0)};
+  });
+  expect(homeLayout.columns).toBe(2);
+  expect(homeLayout.readable).toBe(true);
+  if(width===412){
+    const fs=require('node:fs');fs.mkdirSync('qa-artifacts',{recursive:true});
+    await page.screenshot({path:'qa-artifacts/pr640-tidy-home-412x915.png',animations:'disabled'});
+  }
+
+  await page.evaluate(()=>switchView('path'));
+  const learn=page.locator('#path .mm-learn-hub');
+  await expect(learn.locator('.mm-tidy-overview')).toBeVisible();
+  await expect(learn.locator('.mm-tidy-facts>span')).toHaveCount(3);
+  await expect(learn.locator('.mm-tidy-facts')).toContainText('176');
+  await expect(learn.locator('#mmLearnQuestions .mm-hub-picker-grid>button')).toHaveCount(5);
+  await expect(learn.locator('#mmLearnCourses [data-mm-catalog-item]')).toHaveCount(176);
+  if(width===412)await page.screenshot({path:'qa-artifacts/pr640-tidy-learn-412x915.png',animations:'disabled'});
+
+  await page.evaluate(()=>switchView('scenarios'));
+  const practice=page.locator('#scenarios .mm-practice-hub');
+  await expect(practice.locator('.mm-tidy-overview')).toBeVisible();
+  await expect(practice.locator('.mm-tidy-facts')).toContainText('40');
+  await expect(practice.locator('.mm-practice-guided')).toBeVisible();
+  await expect(practice.locator('.mm-hub-grid>.mm-hub-tile')).toHaveCount(5);
+  if(width===412)await page.screenshot({path:'qa-artifacts/pr640-tidy-practice-412x915.png',animations:'disabled'});
+
+  await page.evaluate(()=>switchView('materials'));
+  await expect(page.locator('#materials [data-mm-all-material-query]')).toBeVisible();
+  await expect(page.locator('#materials [data-mm-all-material-index]')).toBeVisible();
+  if(width===412)await page.screenshot({path:'qa-artifacts/pr640-tidy-materials-412x915.png',animations:'disabled'});
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
+  expect(overflow).toBeLessThanOrEqual(2);
+  expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts().total)).toBe(169);
+ });
+}
+
 test('Learn hub shows the unified compact lesson catalogue under strict CSP',async({page})=>{
   await openApp(page);
   await openHub(page,'Learn','#path .mm-learn-hub');
