@@ -1124,16 +1124,16 @@ function learnHubMarkup(){
           ${questionCentreMarkup(true)}
         </section>
       </section>
-      </div>
       <section class="mm-learn-step mm-learn-step-reasoning" aria-labelledby="mmLearnReasoningStep">
         <div class="mm-learn-step-head"><span class="mm-learn-step-num" aria-hidden="true">03</span><div><span class="eyebrow">Reflect</span><h3 id="mmLearnReasoningStep">Explain your reasoning</h3></div></div>
-        <!-- Optional teaching checks live in the existing Question Centre above. -->
+        <!-- The 32 optional teaching checks live in their matching core lessons; this is the separate unscored capstone. -->
       <section class="mm-learn-capstone" id="mmLearnCapstone" aria-labelledby="mmLearnCapstoneTitle"><header><span class="eyebrow">Final case · unscored</span><h3 id="mmLearnCapstoneTitle">One case. Four evidence checkpoints.</h3><p>A new polymer lot arrives. Silver streaks and variable cushion appear during trial shots. Work through this hypothetical case before choosing another activity.</p></header><div class="mm-learn-capstone-steps">
 <details><summary><span>01</span><b>Characterise the change</b><small>What is known versus suspected?</small></summary><p>Separate observed streaks and shot variability from assumptions about wet resin. Compare cavity-labelled parts, timestamps and a suitable known-good baseline.</p></details>
 <details><summary><span>02</span><b>Gather discriminating evidence</b><small>What would distinguish mechanisms?</small></summary><p>Confirm grade and lot, dryer and feed evidence, transfer/cushion traces and cavity distribution. Ask whether variation tracks material, tool or machine signals.</p></details>
 <details><summary><span>03</span><b>Choose a safe check</b><small>What must be authorised?</small></summary><p>Follow site-specific safety procedures; agree one documented hypothesis and acceptance metric with competent personnel. Never bypass a guard or reuse another grade's drying recipe.</p></details>
 <details><summary><span>04</span><b>Verify the recovery</b><small>When is the investigation complete?</small></summary><p>Record before/after actuals, representative cavity-labelled quality and measurement confidence. Formal process approval requires the site's change-control evidence and human review.</p></details></div><p class="mm-learn-safety-note">Training only; this case has no machine-control or workplace competency authority.</p></section>
       </section>
+      </div>
     </section>
     <section class="mm-learn-courses" id="mmLearnCourses" aria-labelledby="mmLearnCoursesHeading"><div class="mm-learn-courses-head"><span class="eyebrow">Your learning library</span><h2 id="mmLearnCoursesHeading">Courses and lessons</h2><p>One searchable catalogue of core, material-science and specialist lessons. Your existing local progress is unchanged.</p></div>${lessonCatalog.markup()}</section>
     <div class="mm-catalog-extra"><button class="secondary" type="button" data-mm-hub-action="learn-resources">Open Learning Resources →</button></div>
