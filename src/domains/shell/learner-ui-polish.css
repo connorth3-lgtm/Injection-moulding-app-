@@ -4320,14 +4320,17 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
   display:block;color:var(--mm-tidy-muted)!important;
   font-size:11px!important;line-height:1.32!important;white-space:normal;
 }
-.mm-reference-layout #dashboard .mm-today-focus,
 .mm-reference-layout #dashboard .mm-home-book,
 .mm-reference-layout #dashboard .mm-home-toolbox{
   border:1px solid var(--mm-tidy-edge)!important;
   border-radius:15px!important;box-shadow:none!important;
 }
+/* The primary lesson decision remains the elevated, unmistakable Home card;
+   secondary utilities stay flat as in the Materials catalogue. */
 .mm-reference-layout #dashboard .mm-today-focus{
-  background:#0c304b!important;
+  border:1px solid #366c88!important;border-radius:20px!important;
+  background:linear-gradient(150deg,#12405a,#0a2c44)!important;
+  box-shadow:0 9px 26px rgba(0,10,26,.2)!important;
 }
 .mm-reference-layout #dashboard .mm-today-focus p,
 .mm-reference-layout #dashboard .mm-home-book :is(p,small){
@@ -4557,6 +4560,12 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
   .mm-reference-layout #path .mm-learn-master-lesson,
   .mm-reference-layout #scenarios :is(.mm-practice-diagnose-journey,.mm-practice-guided,.mm-practice-cases){
     background:Canvas!important;color:CanvasText!important;border:1px solid CanvasText!important;
+  }
+}
+@media(forced-colors:active){
+  .mm-reference-layout #dashboard .mm-today-focus{
+    background:Canvas!important;color:CanvasText!important;
+    border:1px solid CanvasText!important;box-shadow:none!important;
   }
 }
 @media(prefers-reduced-motion:reduce){
