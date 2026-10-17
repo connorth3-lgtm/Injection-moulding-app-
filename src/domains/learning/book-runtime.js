@@ -68,6 +68,7 @@
   const BOOK_RESUME_PREFIX='mm_book_resume_v1::',LEGACY_BOOK_RESUME_KEY='mouldmasterBookResume:v1',BOOK_RESUME_SCHEMA=1;
   let activeReadingPosition=null,activeReadingScopeKey=null,resumeScrollTimer=0,boundBookScrollRoot=null;
   const BOOK_AUDIO_PREFIX='mm_book_audio_v1::';
+  let activeAudioScopeKey=null;
   function audioStorageKey(){
     const scope=window.MM_LEARNER_SCOPE;
     if(!scope?.storageKey||!scope?.token)return null;
@@ -90,7 +91,8 @@
   window.addEventListener('mm:book-audio-position',event=>{
     if(!open||!ui?.view||ui.view.classList.contains('hidden'))return;
     const d=event.detail||{},key=audioStorageKey();
-    if(!key||!/^r(?:0[1-9]|1[0-9]|20)$/.test(String(d.chapterId||''))||!Number.isInteger(d.unitIndex)||d.unitIndex<0||d.unitIndex>20000)return;
+    if(!key||key!==activeAudioScopeKey){window.MMReadAloud?.stop?.();return;}
+    if(!/^r(?:0[1-9]|1[0-9]|20)$/.test(String(d.chapterId||''))||!Number.isInteger(d.unitIndex)||d.unitIndex<0||d.unitIndex>20000)return;
     const mode=ui.audioMode?.value||'complete';
     try{localStorage.setItem(key,JSON.stringify({schema:1,bookRelease:VERSION,chapterId:d.chapterId,unitIndex:d.unitIndex,mode}));refreshAudioContinue();}catch(_){}
   });
@@ -787,6 +789,7 @@
   function startVerifiedListening({resume=false}={}){
     if(!ui)return;
     const saved=resume?readAudioResume():null;
+    activeAudioScopeKey=audioStorageKey();
     const mode=saved?.mode||ui.audioMode?.value||'complete';
     if(ui.audioMode)ui.audioMode.value=mode;
     const listening=allReaderChapters().map(reader=>readerListeningChapterHtml(reader,{complete:mode!=='streamlined',examples:mode==='examples'})).filter(Boolean);
@@ -840,7 +843,7 @@
     // Capture the live Book position before that DOM change resets scrollTop.
     if(open&&id!=='book'&&ui?.view&&!ui.view.classList.contains('hidden'))flushReadingPosition({notify:true});
   }
-  function leaveBook(){if(!open)return;bookIntentEpoch++;if(ui?.view&&!ui.view.classList.contains('hidden'))flushReadingPosition({notify:true});else{clearTimeout(resumeScrollTimer);resumeScrollTimer=0;}stopBookSpeech();open=false;ui?.view?.classList.add('hidden');ui?.nav?.classList.remove('active');setBookInstantScroll(false);}
+  function leaveBook(){if(!open)return;activeAudioScopeKey=null;bookIntentEpoch++;if(ui?.view&&!ui.view.classList.contains('hidden'))flushReadingPosition({notify:true});else{clearTimeout(resumeScrollTimer);resumeScrollTimer=0;}stopBookSpeech();open=false;ui?.view?.classList.add('hidden');ui?.nav?.classList.remove('active');setBookInstantScroll(false);}
   function searchBook(query){const q=String(query||'').trim().toLowerCase();if(q.length<2||!manifest)return[];const matches=allChapters().filter(ch=>[ch.title,ch.applicability,...(ch.sections||[]).flatMap(s=>[s.title,s.text])].join(' ').toLowerCase().includes(q));const materialHit=materialSearchIndex.catalog.some(text=>text.includes(q))||materialSearchIndex.regional.some(text=>text.includes(q));if(materialHit){const chapter=allChapters().find(ch=>ch.id==='material-families');if(chapter&&!matches.includes(chapter))matches.unshift(chapter);}return matches.slice(0,6);}
   const normalizeMaterialSearch=value=>String(value??'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
   async function coldMaterialSearchTerms(){if(materialSearchIndex.catalog.length||materialSearchIndex.regional.length)return [...materialSearchIndex.catalog,...materialSearchIndex.regional];if(!coldMaterialSearchPromise)coldMaterialSearchPromise=verifiedJson(MATERIAL_SEARCH_INDEX_PATH,MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1).then(data=>{const counts=data?.sourceCounts||{},entries=Array.isArray(data?.entries)?data.entries:[];if(data?.schemaVersion!==1||data?.release!=='2026.10.04.3'||counts.canonicalExactGrades!==260||counts.regionalEvidenceRows!==284||counts.total!==544||entries.length!==544)throw new Error('Book material search index identity check failed');const terms=entries.map(item=>String(item?.search||'').trim()).filter(Boolean);if(terms.length!==544)throw new Error('Book material search index coverage mismatch');return terms;}).catch(error=>{coldMaterialSearchPromise=null;throw error});return coldMaterialSearchPromise;}
