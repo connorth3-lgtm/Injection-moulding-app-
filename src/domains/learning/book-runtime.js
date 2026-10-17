@@ -64,7 +64,7 @@
     'black-specks':Object.freeze(['Separate continuous contamination from event-driven contamination'])
   });
   const READER_SUPPLEMENT_SECTIONS=Object.freeze({});
-  let manifest=null,manifestPromise=null,materialPromise=null,coldMaterialSearchPromise=null,publicationAuthorization=null,bookSmeReview=null,qualificationReview=null,highRiskReview=null,workedCaseLedger=null,workedCasesByChapter=new Map(),diagramLedger=null,diagramsByChapter=new Map(),evidenceEnrichmentLedger=null,claimEvidenceReference=null,claimEvidenceByChapter=new Map(),claimEvidenceClaimsByChapter=new Map(),readerArchitecture=null,editorialExpansionReview=null,materialAtlas=null,materialCatalog=null,materialRegionalEvidence=null,materialSearchIndex={catalog:[],regional:[]},integrityMap=null,ui=null,previousView=null,open=false,contentsScrollY=0,contentsWindowScrollY=0,pendingContentsScroll=null,contentsFocus=null,bookIntentEpoch=0;
+  let manifest=null,manifestPromise=null,materialPromise=null,coldMaterialSearchPromise=null,publicationAuthorization=null,bookSmeReview=null,qualificationReview=null,highRiskReview=null,workedCaseLedger=null,workedCasesByChapter=new Map(),diagramLedger=null,diagramsByChapter=new Map(),evidenceEnrichmentLedger=null,claimEvidenceReference=null,claimEvidenceByChapter=new Map(),claimEvidenceClaimsByChapter=new Map(),readerArchitecture=null,editorialExpansionReview=null,materialAtlas=null,materialCatalog=null,materialRegionalEvidence=null,materialSearchIndex={catalog:[],regional:[]},integrityMap=null,ui=null,previousView=null,open=false,contentsScrollY=0,contentsWindowScrollY=0,pendingContentsScroll=null,contentsFocus=null,bookIntentEpoch=0,readerDisplayMode='guided';
   const BOOK_RESUME_PREFIX='mm_book_resume_v1::',LEGACY_BOOK_RESUME_KEY='mouldmasterBookResume:v1',BOOK_RESUME_SCHEMA=1;
   let activeReadingPosition=null,activeReadingScopeKey=null,resumeScrollTimer=0,boundBookScrollRoot=null;
   const BOOK_AUDIO_PREFIX='mm_book_audio_v1::';
@@ -632,11 +632,11 @@
   // Reading prose comes first; the source/SME records are preserved in chapter
   // notes instead of repeated as technical badges between paragraphs.
   function readerModuleHtml(chapter,options={}){
-    const sections=readerSections(chapter),verified=chapter.state==='verified';
+    const sections=options.complete===true?(chapter.sections||[]):readerSections(chapter),verified=chapter.state==='verified';
     const caution=!verified?`<p class="mm-book-review-warning"><strong>${esc(stateLabel(chapter.state))} — independent technical approval not established.</strong></p>`:'';
     const boundary=!verified&&chapter.reviewBoundary?`<p><strong>Review boundary:</strong> ${esc(chapter.reviewBoundary)}</p>`:'';
     const scope=`<aside class="mm-book-scope-note"><p><strong>Applicability:</strong> ${esc(chapter.applicability||'See governed module scope.')}</p>${boundary}</aside>`;
-    return `<section class="mm-book-reader-module" data-mm-book-reader-module="${esc(chapter.id)}"><h3 data-mm-book-anchor="module:${esc(chapter.id)}">${esc(chapter.title)}</h3>${caution}${scope}${sections.map((s,index)=>`<section><h4 data-mm-book-anchor="module:${esc(chapter.id)}:section:${index}">${esc(s.title||'')}</h4>${proseHtml(s.text)}</section>`).join('')}${readerSupplementHtml(chapter)}${(READER_SECTION_OMISSIONS[chapter.id]||[]).length?`<details class="mm-book-full-source-inline"><summary>Read all original source sections · ${(READER_SECTION_OMISSIONS[chapter.id]||[]).length} additional sections</summary>${readerOmittedSectionsHtml(chapter)}</details>`:''}${diagramHtml(chapter,{readerMode:true})}${workedCaseHtml(chapter,{readerMode:true,audioExpanded:options.priorityCases===true})}${chapter.id==='material-families'?materialAtlasHtml(chapter):''}</section>`;
+    return `<section class="mm-book-reader-module" data-mm-book-reader-module="${esc(chapter.id)}"><h3 data-mm-book-anchor="module:${esc(chapter.id)}">${esc(chapter.title)}</h3>${caution}${scope}${sections.map((s,index)=>`<section><h4 data-mm-book-anchor="module:${esc(chapter.id)}:section:${index}">${esc(s.title||'')}</h4>${proseHtml(s.text)}</section>`).join('')}${options.complete===true?'':readerSupplementHtml(chapter)}${options.complete!==true&&(READER_SECTION_OMISSIONS[chapter.id]||[]).length?`<details class="mm-book-full-source-inline"><summary>Read all original source sections · ${(READER_SECTION_OMISSIONS[chapter.id]||[]).length} additional sections</summary>${readerOmittedSectionsHtml(chapter)}</details>`:''}${diagramHtml(chapter,{readerMode:true})}${workedCaseHtml(chapter,{readerMode:true,audioExpanded:options.priorityCases===true})}${chapter.id==='material-families'?materialAtlasHtml(chapter):''}</section>`;
   }
   function readerPageTurn(reader){
     const rows=allReaderChapters(),index=rows.findIndex(row=>row.id===reader.id);
@@ -661,14 +661,15 @@
       <details class="mm-book-reader-guide"><summary>Reading guide & terminology</summary><p><strong>Chapter thread:</strong> ${esc(reader.readingThread)}</p>${readerKeyTermsHtml(reader)}${reader.sequencePrompt?`<p>${esc(reader.sequencePrompt)}</p>`:''}</details>
     </details>`;
     const priorityCases=['r07','r10','r11','r15'].includes(reader.id);
+    const complete=readerDisplayMode==='complete';
     const study=`<details class="mm-book-reader-study"><summary>Study questions (optional)</summary>${readerLearningHtml(reader)}</details>`;
-    return `<article class="mm-book-reader-chapter mm-book-prose" data-mm-book-reader-chapter="${esc(reader.id)}">
+    return `<div class="mm-book-reading-mode" role="group" aria-label="Book reading detail"><span><b>Reading edition:</b> ${complete?'Complete original source text':'Guided first-read text'}</span><button type="button" class="ghost" data-mm-book-read-toggle="${complete?'guided':'complete'}">${complete?'Switch to guided reading':'Read complete original text'}</button></div><article class="mm-book-reader-chapter mm-book-prose" data-mm-book-reader-chapter="${esc(reader.id)}">
       <p class="mm-book-chapter-number">Chapter ${n}</p>
       <h2 data-mm-book-anchor="reader:${esc(reader.id)}">${esc(reader.title)}</h2>
       <p class="mm-book-chapter-lede">${esc(reader.goal)}</p>
       <p class="mm-book-reader-assurance" role="note"><strong>Source evidence reviewed · Independent human SME review pending · Educational reference only.</strong> Machine, material, mould and site instructions remain controlling.</p>
       ${priorityCases?'<p class="mm-book-example-intro"><strong>Learn through worked evidence:</strong> relevant synthetic examples open automatically in this shorter chapter. Calculations remain illustrative, not production settings.</p>':''}
-      ${modules.map(ch=>readerModuleHtml(ch,{priorityCases})).join('')}
+      ${modules.map(ch=>readerModuleHtml(ch,{priorityCases,complete})).join('')}
       ${study}${notes}${readerPageTurn(reader)}
     </article>`;
   }
@@ -725,7 +726,7 @@
   function showReaderChapter(id){
     const reader=allReaderChapters().find(x=>x.id===id);if(!reader||!ui)return;
     bookIntentEpoch++;rememberContentsBeforeReading();stopBookSpeech();contentsFocus={kind:'reader-chapter',id};restoreBookChrome();ui.hero.hidden=true;ui.accuracy.hidden=true;const back='<button type="button" class="ghost" data-mm-book-back>← Book contents</button>';
-    ui.reader.innerHTML=`${back}${readerChapterHtml(reader)}`;ui.contents.hidden=true;ui.reader.hidden=false;bindBack();ui.reader.querySelectorAll('[data-mm-book-page-turn]').forEach(button=>button.addEventListener('click',()=>showReaderChapter(button.dataset.mmBookPageTurn)));bindMaterialPagination(ui.reader);bindBookScrollRoot();rememberReadingPosition('reader-chapter',id,reader.title,0);scrollBookReaderToTop();emitBookRender('reader-chapter',id);
+    ui.reader.innerHTML=`${back}${readerChapterHtml(reader)}`;ui.contents.hidden=true;ui.reader.hidden=false;bindBack();ui.reader.querySelector('[data-mm-book-read-toggle]')?.addEventListener('click',event=>{const value=event.currentTarget.dataset.mmBookReadToggle;if(!['guided','complete'].includes(value))return;readerDisplayMode=value;showReaderChapter(id);});ui.reader.querySelectorAll('[data-mm-book-page-turn]').forEach(button=>button.addEventListener('click',()=>showReaderChapter(button.dataset.mmBookPageTurn)));bindMaterialPagination(ui.reader);bindBookScrollRoot();rememberReadingPosition('reader-chapter',id,reader.title,0);scrollBookReaderToTop();emitBookRender('reader-chapter',id);
     if(reader.moduleIds.includes('material-families'))void hydrateMaterialAtlas();
   }
   function restoreBookChrome(){if(!ui)return;ui.hero.hidden=false;ui.accuracy.hidden=false;}
