@@ -5,7 +5,7 @@
   "sourceSha": null,
   "runtimeFingerprint": null,
   "status": "pending-real-at-validation",
-  "boundary": "Release 2026.10.17.1 human NVDA/VoiceOver and physical Android AT checks pending. Retained 2026.10.16.1 producer does not validate new core-lesson UI.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.17.1 is an unapproved exact-source draft with no accepted new producer or runtime fingerprint; human NVDA/VoiceOver and physical Android assistive-technology checks remain pending. The retained 2026.10.16.1 candidate cannot validate the new core-lesson interface.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
