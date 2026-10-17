@@ -11,7 +11,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
- 'web_release':'2026.10.11.6',
+  'web_release':'2026.10.18.1',
  'android_release':'2026.08.26.2',
  'desktop_release':'2026.09.29.1',
  'content_version':'2026.08.26.1',
@@ -75,11 +75,11 @@ need(str(pkg.get('build',{}).get('buildNumber'))==release_parts[3],'desktop buil
 need(pkg.get('build',{}).get('buildVersion')=='.'.join(release_parts),'desktop buildVersion must match desktop_release')
 
 # Electron 44 is an explicit supported-platform decision, not just a package bump.
-need(pkg.get('devDependencies',{}).get('electron')=='44.5.1','desktop runtime must remain pinned to reviewed Electron 44.5.1')
-need(lock.get('packages',{}).get('',{}).get('devDependencies',{}).get('electron')=='44.5.1','desktop lock must resolve reviewed Electron 44.5.1')
+need(pkg.get('devDependencies',{}).get('electron')=='44.7.0','desktop runtime must remain pinned to reviewed Electron 44.7.0')
+need(lock.get('packages',{}).get('',{}).get('devDependencies',{}).get('electron')=='44.7.0','desktop lock must resolve reviewed Electron 44.7.0')
 electron_support=text('desktop/electron/ELECTRON_44_SUPPORT.md')
 for marker in [
- 'Electron `44.5.1`',
+ 'Electron `44.7.0`',
  'Windows 10/11, 64-bit only',
  'GitHub portable/NSIS validation lane is x64',
  'Microsoft Store MSIX lane packages x64 and arm64',
@@ -90,12 +90,12 @@ for marker in [
  'setLoginItemSettings',
  'ANGLE is statically linked',
  'https://www.electronjs.org/blog/electron-44-0',
- 'https://releases.electronjs.org/release/v44.5.1',
+ 'https://releases.electronjs.org/release/v44.7.0',
 ]:
     need(marker in electron_support,f'Electron 44 support policy missing marker: {marker}')
 
 desktop_readme=text('desktop/electron/README.md')
-for marker in ['Electron 44.5.1','Windows 10/11 64-bit','ELECTRON_44_SUPPORT.md','127.0.0.1:43139']:
+for marker in ['Electron 44.7.0','Windows 10/11 64-bit','ELECTRON_44_SUPPORT.md','127.0.0.1:43139']:
     need(marker in desktop_readme,f'desktop README Electron 44/stable-origin marker missing: {marker}')
 
 # The manual retirement guide is release evidence too. Keep its human test target
@@ -186,6 +186,66 @@ if visual.get('release')=='2026.10.09.4':
          and visual.get('commit')=='fa27bd16525f8cb216654ea524649a3a37a3195c'
          and visual.get('maxDiffPixels')==12,
          '2026.10.09.4 visual baseline must remain bound to approved fa27bd16 at 12px')
+elif visual.get('release')=='2026.10.11.10':
+    # The owner approved Book-only speech chrome AFTER the earlier .10
+    # baseline became immutable. Fail closed on this uniquely pinned
+    # successor, not a mutable or arbitrary suffix.
+    need(visual.get('ref')=='visual-baseline/2026.10.11.10-book-only'
+         and visual.get('commit')=='7b22514e45bb17068736f8e76d4c63862d726f8d'
+         and visual.get('maxDiffPixels')==12
+         and len(visual.get('viewports',[]))==4
+         and len(visual.get('surfaces',[]))==13,
+         '2026.10.11.10 Book-only visual successor must remain bound to approved 7b22514e with all 52 checks at 12px')
+elif visual.get('release')=='2026.10.13.3':
+    # Owner explicitly approved only the six Book Listen layout and four preview
+    # notice screenshots from PR #627 exact SHA 352bf204ae77779d548bc77dcf8b0a63db2a84e1.
+    # Preserve the 52 locked viewports/surfaces and the 12px pixel limit.
+    need(visual.get('ref')=='visual-baseline/2026.10.13.3'
+         and visual.get('commit')=='352bf204ae77779d548bc77dcf8b0a63db2a84e1'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and '11857112997' in text('qa/VISUAL_REVIEW_2026.10.13.3_PR627.md')
+         and 'STATUS: OWNER VISUAL APPROVAL' in text('qa/VISUAL_REVIEW_2026.10.13.3_PR627.md'),
+         '2026.10.13.3 owner approved visual baseline must be immutable at exact 352bf204ae77779d548bc77dcf8b0a63db2a84e1 with all 52 captures and 12px')
+elif visual.get('release')=='2026.10.13.2':
+    # Owner explicitly approved ONLY the six visible Book Listen progress-counter
+    # differences (28/28/38/34/38/34px) shown in the exact-source 52-capture
+    # PR #626 review. The previous immutable .1 branch and all strict visual
+    # limits are retained. A new design would need a new visual decision.
+    need(visual.get('ref')=='visual-baseline/2026.10.13.2'
+         and visual.get('commit')=='602d597fa4575c9302e3ad9799fb3c58faa67965'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and '11792713708' in text('qa/VISUAL_REVIEW_2026.10.13.2_PR626.md')
+         and 'STATUS: OWNER VISUAL APPROVAL' in text('qa/VISUAL_REVIEW_2026.10.13.2_PR626.md'),
+         '2026.10.13.2 owner visual baseline must remain on the exact approved 602d597 source with all 52 captures at 12px')
+elif visual.get('release')=='2026.10.13.1':
+    # Owner inspected the 52-source-screenshot approval pack: 16 changed
+    # captures across the four viewports and 36 unchanged. Pin the exact
+    # source commit BEFORE the approval metadata and manifest were edited.
+    # A future runtime redesign requires a fresh owner visual decision and
+    # separately named immutable ref, not a moved pin or raised tolerance.
+    need(visual.get('ref')=='visual-baseline/2026.10.13.1'
+         and visual.get('commit')=='9a4b4776b171cf7cc413f6d67d351cd5207b9ee2'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and '52' in text('qa/VISUAL_REVIEW_2026.10.13.1_PR623.md'),
+         '2026.10.13.1 owner visual baseline must remain on exact approved 9a4b477 with 52 checks at 12px')
 else:
     need(visual.get('ref')==f"visual-baseline/{visual.get('release')}",
          'visual baseline must use the release-named retained ref')
@@ -225,7 +285,105 @@ need('human' in accessibility_contract.get('boundary','').lower(),
 
 # Sharing the hosted preview is a separate fail-closed release operation.
 # The local check is fast and offline; the live URL check is operator-only.
+# Exercise the missing/malformed/stale candidate distinctions before the live
+# handoff contract (which correctly remains red while webCandidate is unbound).
+subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', 'tests',
+                '-p', 'test_tester_handoff_candidate_boundaries.py', '-v'],
+               cwd=ROOT, check=True)
 subprocess.run([sys.executable, str(ROOT / 'qa_tester_handoff.py')], cwd=ROOT, check=True)
 subprocess.run([sys.executable, str(ROOT / 'qa_tester_handoff_publication.py')], cwd=ROOT, check=True)
 
+# Current release-specific review packets must identify the same retained
+# candidate as the canonical ledger; historical mentions cannot satisfy them.
+from tools.hold_candidate_packet_integrity import (
+    PACKETS as CURRENT_HOLD_PACKETS,
+    candidate_identity as verify_hold_candidate_identity,
+    validate_packet as verify_hold_packet,
+    validate_packets as verify_all_hold_packets,
+)
+current_ledger=json.loads(text('data/release-external-validation-v1.json'))
+need(current_ledger.get('release')==V['web_release'],
+     'current external HOLD ledger release must agree with version.json')
+current_candidate=verify_hold_candidate_identity(current_ledger.get('webCandidate'),V['web_release'])
+if all((current_ledger.get(area) or {}).get('status')=='hold' for area in CURRENT_HOLD_PACKETS):
+    need(verify_all_hold_packets(ROOT,current_ledger)==len(CURRENT_HOLD_PACKETS),
+         'all seven current HOLD packets must have exact retained candidate provenance')
+else:
+    for area,(field,_) in CURRENT_HOLD_PACKETS.items():
+        if (current_ledger.get(area) or {}).get('status')=='hold':
+            packet_path=current_ledger[area][field]
+            verify_hold_packet(text(packet_path),packet_path,current_candidate,V['web_release'])
+# A previous candidate in the active banner must fail even if genuine.
+windows_packet=current_ledger['windowsDistribution']['readinessPacket']
+original_packet=text(windows_packet)
+corrupted=original_packet.replace(current_candidate['sourceSha'],'0'*40,1)
+need(corrupted!=original_packet,'current candidate SHA absent from Windows HOLD packet')
+try:
+    verify_hold_packet(corrupted,windows_packet,current_candidate,V['web_release'])
+except ValueError:
+    pass
+else:
+    raise AssertionError('stale source in current Windows HOLD banner was accepted')
+
+# Protected-main PRs must run real Chromium/WebKit/cross-browser/reliability
+# evidence even when only docs or QA scripts change. Skip-only cannot satisfy
+# strict branch protection; do not weaken the aggregate fail-closed gate.
+# Historical baseline source and comparison environment use the pinned
+# @playwright/test dependency, not the stale 1.55.0 label from older captures.
+visual_package = json.loads(text('package.json'))
+visual_version = visual_package.get('devDependencies',{}).get('@playwright/test')
+need(bool(visual_version), 'pinned Playwright QA dependency is missing')
+# The immutable screenshot reference was captured using Playwright 1.63.0.
+# Current PR tooling can advance without rewriting the historical approval.
+approved_capture = visual.get('referenceCaptureToolchain') or {}
+need(approved_capture == {
+         'framework':'@playwright/test', 'version':'1.64.0',
+         'browser':'chromium', 'referenceSourceSha':visual.get('commit')},
+     'owner-approved current screenshot capture provenance missing/stale')
+need(visual.get('browser') == "chromium via @playwright/test 1.64.0",
+     'owner-approved current screenshot toolchain label was rewritten')
+# The 2026.10.16.1 phone-only successor was separately reviewed by the
+# owner from the actual three source-linked before/after screenshots. Lock the
+# exact reviewed ref/source/artifact and preserve the previous .15.3 record:
+# no blanket automatic approval, hidden pixels or pixel tolerance increase.
+review_new=text('qa/VISUAL_REVIEW_2026.10.16.1_PR639.md')
+review_predecessor=text('qa/VISUAL_REVIEW_2026.10.15.3_PR638.md')
+need(visual.get('release')=='2026.10.16.1'
+     and visual.get('ref')=='visual-baseline/2026.10.16.1'
+     and visual.get('commit')=='04628e13a6c9a9517bef22bae6c12a456896f299'
+     and visual.get('maxDiffPixels')==12
+     and [v.get('name') for v in visual.get('viewports',[])]==[
+         'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+     and visual.get('surfaces')==[
+         'home','learn','materials','practice','lesson','more','assessment',
+         'listen-expanded','listening','book-contents','book-materials',
+         'book-late','book-trace']
+     and 'visual-baseline/2026.10.15.3' in visual.get('policy','')
+     and '82b1677caecb50c95c5395166317132447851e5b' in visual.get('policy','')
+     and '12023269036' in visual.get('policy','')
+     and 'bf52e4488c878e4d1a0357eaa67b61aebb65455500f66d2e5d2e5286cfbd3ed6' in visual.get('policy','')
+     and 'Yes that' in visual.get('policy','')
+     and 'STATUS: OWNER VISUAL APPROVAL' in review_new
+     and '04628e13a6c9a9517bef22bae6c12a456896f299' in review_new
+     and '12023269036' in review_new
+     and 'visual-baseline/2026.10.13.3' in review_predecessor
+     and '82b1677caecb50c95c5395166317132447851e5b' in review_predecessor
+     and '352bf204ae77779d548bc77dcf8b0a63db2a84e1' in review_predecessor,
+     'new baseline must retain exact approved source and independently approved predecessor provenance')
+need(visual.get('currentComparisonToolchain') == {
+         'framework':'@playwright/test', 'version':visual_version,
+         'browser':'chromium'},
+     'current visual comparison tooling provenance missing/stale')
+
+mobile_qa_workflow = text('.github/workflows/mobile-browser-qa.yml')
+full_browser_pr_rule = "if: needs.impact.outputs.browser == 'true' || (github.event_name == 'pull_request' && github.base_ref == 'main')"
+need(mobile_qa_workflow.count(full_browser_pr_rule) == 4,
+     'all four protected-main browser job groups must execute for docs/QA-only PRs')
+need('skip-only browser workflow cannot pass' in mobile_qa_workflow,
+     'strict protected-main browser skip-only rejection has been removed')
+
+# Consolidated audit tracking stays source-bound without inferring that the
+# seven external human/device/provider reviews have passed.
+subprocess.run([sys.executable, str(ROOT / 'tools/qa_consolidated_audit.py')],
+               cwd=ROOT, check=True)
 print('MouldMaster release/documentation coherence QA passed')

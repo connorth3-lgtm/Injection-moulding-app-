@@ -259,7 +259,8 @@ html.mm-book-instant-scroll,html.mm-book-instant-scroll body,html.mm-book-instan
 @media(max-width:700px){
   html{scroll-padding-bottom:calc(var(--mm-mobile-content-clearance) + 12px)!important}
   .main{padding-bottom:var(--mm-mobile-content-clearance)!important}
-  .mobile-nav{min-height:var(--mm-mobile-nav-height)!important;z-index:40!important}
+  /* Do not feed the measured height back into the nav's own minimum height:\n     font scaling up AND down must resize the bar without getting stuck tall. */
+  .mobile-nav{min-height:calc(70px + env(safe-area-inset-bottom))!important;z-index:40!important}
   .mobile-nav>button:not([data-view]):not([onclick*="openMobileMenu"]):not([data-mm-onclick*="openMobileMenu"]){display:none!important}
   body[data-mm-view="dashboard"] #continueBtn{display:none!important}
   .mm-mobile-actions{bottom:var(--mm-mobile-nav-height)!important;z-index:35!important;padding-bottom:9px!important}
@@ -678,3 +679,30 @@ button:disabled,[aria-disabled="true"]{
    below the compact topbar, and preserve a visible keyboard-focus destination. */
 #materials .mm-exact-grade{scroll-margin-top:88px}
 #materials .mm-exact-grade:focus{outline:2px solid #73ceff;outline-offset:3px}
+
+/* Book / Listening: keyboard route arrival needs an obvious focus target.
+   Keep this style in the external sheet rather than runtime <style> to retain
+   the strict generated CSP hash list and its deny-inline integrity check. */
+#mmListeningView .mm-listening-hero h2:focus{
+  outline:3px solid #79f5e0;
+  outline-offset:5px;
+  border-radius:5px;
+}
+@media(forced-colors:active){
+  #mmListeningView .mm-listening-hero h2:focus{outline-color:Highlight}
+}
+
+/* Diagnostic workbench: visible programmatic focus after an evidence-led
+   rerender, without changing the approved default visual layout. */
+#defects .mm-dx-results .mm-dx-section-head h2:focus,
+#coach .mm-dx-results .mm-dx-section-head h2:focus{
+  outline:3px solid #79f5e0;
+  outline-offset:4px;
+  border-radius:4px;
+}
+@media(forced-colors:active){
+  #defects .mm-dx-results .mm-dx-section-head h2:focus,
+  #coach .mm-dx-results .mm-dx-section-head h2:focus{
+    outline-color:Highlight;
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "masterIssue": 632,
+  "release": "2026.10.17.1",
+  "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
+  "candidateSourceSha": null,
+  "scope": "Draft 2026.10.17.1 PR #640 embeds 32 optional teaching checks across existing core lessons; no successful new release-producer, immutable owner-approved screenshots, public runtime fingerprint or artifact. Prior 2026.10.16.1 exact-source e336f656351afa4eeaaae0940969bea881ae9b68 is historical only.",
+  "approvalBoundary": "Current technical FAIL pending owner's specific visual review, exact-source public candidate, six required checks; external human/device/provider seven HOLD. Advisory only, no tester invitations/merge/publication.",
+  "issueGroups": {
+    "externalHolds": {
+      "pwaPhysicalDevices": 325,
+      "accessibility": 362,
+      "windowsDistribution": 328,
+      "bookSme": 326,
+      "curriculumSme": 327,
+      "learnerOutcomes": 329,
+      "nzqaProvider": 619
+    },
+    "evidenceAndUX": [
+      520,
+      512,
+      582,
+      589,
+      521,
+      278,
+      430,
+      428,
+      334,
+      335,
+      336
+    ],
+    "supersededTrackers": [
+      625,
+      624,
+      379
+    ]
+  },
+  "nextVersionedReleaseOnly": {
+    "privacyRevision": "pending-governed-release",
+    "publicationDateMetadata": "pending-governed-release",
+    "reason": "Changing currently SHA-bound /preview/privacy.html or /preview/version.json in place would invalidate manifest asset checks and retained candidate fingerprint"
+  },
+  "productionAuthority": "advisory-only",
+  "humanEvidenceStatus": "hold",
+  "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
+  "lastReviewedDate": "2026-10-17",
+  "previousVerifiedCandidate": {
+    "release": "2026.10.16.1",
+    "sourceSha": "e336f656351afa4eeaaae0940969bea881ae9b68"
+  }
+}

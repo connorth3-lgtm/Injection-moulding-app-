@@ -1,17 +1,13 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.11.6",
+  "release": "2026.10.17.1",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.11.6.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.17.1.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
-  "issueNumber": 379,
-  "candidate": {
-    "release": "2026.10.11.6",
-    "sourceSha": "46337247aa9c334fb741c23704723b3f7688e6cf",
-    "runtimeFingerprint": "sha256:4013679bf1b599d7b06abf9fca6f0b3a1e484537d095cfedc595347759574d6b"
-  },
-  "boundary": "Release 2026.10.11.6 technical candidate 46337247aa9c334fb741c23704723b3f7688e6cf does not establish any NZQA/provider G1–G8 external gates, accreditation or assessment authority.",
+  "issueNumber": 619,
+  "candidate": null,
+  "boundary": "No genuine G1–G8 external provider evidence or same-source accepted producer for 2026.10.17.1; all accreditation, assessment, moderation and learner competence claims remain HOLD. 2026.10.16.1 candidate historical only.",
   "requiredGates": [
     {
       "id": "G1-provider",
@@ -57,8 +53,9 @@
   "evidence": null,
   "validationRule": "Validated requires genuine provider-owned evidence for all eight gates, public-safe evidence references, exact release/candidate binding, and separate reviewed promotion of the canonical external-validation status. Automation must not manufacture completion.",
   "previousCandidate": {
-    "release": "2026.10.11.5",
-    "sourceSha": "0f94f35cbdc5965cfc4ac5b6413dc6ea3081f57e",
-    "runtimeFingerprint": "sha256:ee4cfb09becaa0c912e0b23d9939f7abd44e648044d49ebebf6d5723165594a9"
-  }
+    "release": "2026.10.16.1",
+    "sourceSha": "e336f656351afa4eeaaae0940969bea881ae9b68",
+    "runtimeFingerprint": "sha256:3677de439e76c94b69ebeef13dd92904cd6b30818b88a5434fcbe3755529ec27"
+  },
+  "previousIssueNumber": 379
 }
