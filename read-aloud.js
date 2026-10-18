@@ -22,6 +22,7 @@
   // Hold the current OS utterance strongly until completion or cancellation.
   // Some mobile Chromium speech providers stop mid-sentence if it is collected.
   let activeUtterance=null;
+  let appAudioTestContext=null;
   let activeSource=null;
   let activeRoot=null;
   let ui=null;
@@ -228,6 +229,12 @@
   }
 
   function stop(reason){
+    // A new playback action must also end any diagnostic tone, so its late
+    // completion callback cannot overwrite the new speech status.
+    if(appAudioTestContext){
+      const context=appAudioTestContext;appAudioTestContext=null;
+      try{void Promise.resolve(context.close()).catch(()=>{})}catch(_){}
+    }
     // Invalidate active callbacks before cancel: some device voices dispatch
     // a synchronous cancellation error from synth.cancel().
     speakToken+=1;
@@ -414,6 +421,49 @@
     }
     if(!units.length){setStatus('No readable text is visible on this screen.');updateButtons();return;}
     speakCurrent();
+  }
+
+  function testAppAudioOutput(){
+    // This checks the browser/PWA media output independently of Android TTS.
+    // Android may report speech onstart/onend without playing audible speech;
+    // these Web Audio beeps let the learner check routing with their own ears.
+    const AudioContextType=window.AudioContext||window.webkitAudioContext;
+    if(!AudioContextType){setStatus('App audio test is unavailable in this browser.');return;}
+    stop('Preparing app audio test…');
+    const token=++speakToken;
+    let context;
+    try{
+      context=new AudioContextType();appAudioTestContext=context;
+      const at=context.currentTime;
+      const tone=context.createOscillator(),volume=context.createGain();
+      tone.type='sine';
+      tone.frequency.setValueAtTime(540,at);
+      tone.frequency.setValueAtTime(780,at+0.36);
+      volume.gain.setValueAtTime(0.0001,at);
+      volume.gain.linearRampToValueAtTime(0.12,at+0.04);
+      volume.gain.setValueAtTime(0.12,at+0.23);
+      volume.gain.linearRampToValueAtTime(0.0001,at+0.29);
+      volume.gain.setValueAtTime(0.0001,at+0.36);
+      volume.gain.linearRampToValueAtTime(0.12,at+0.40);
+      volume.gain.setValueAtTime(0.12,at+0.59);
+      volume.gain.linearRampToValueAtTime(0.0001,at+0.65);
+      tone.connect(volume);volume.connect(context.destination);
+      tone.onended=()=>{
+        if(appAudioTestContext===context)appAudioTestContext=null;
+        try{void Promise.resolve(context.close()).catch(()=>{})}catch(_){}
+        if(token===speakToken)setStatus('App audio test finished. Did you hear two beeps? If yes but speech is silent, the Android speech service is the problem, not general app audio.');
+      };
+      tone.start(at);tone.stop(at+0.68);
+      // resume() is initiated inside the real tap for mobile audio permission.
+      try{void Promise.resolve(context.resume()).catch(()=>{
+        if(token===speakToken)stop('App media audio was blocked. Check media volume and Bluetooth audio routing.');
+      })}catch(_){stop('App media audio could not start. Check Bluetooth audio routing.');return;}
+      setStatus('App audio test: listen for two beeps through your selected audio output.');
+    }catch(_){
+      if(context){try{void Promise.resolve(context.close()).catch(()=>{})}catch(_){}}
+      appAudioTestContext=null;
+      setStatus('App audio test could not start. Check Bluetooth media audio routing.');
+    }
   }
 
   function testDeviceSound(){
@@ -696,10 +746,10 @@
     addStyles();
     const host=document.createElement('aside');
     host.className='mm-read-aloud';host.setAttribute('aria-label','Read Aloud');host.dataset.version=VERSION;
-    host.innerHTML=`<details><summary title="Expand or collapse the Read Aloud controls"><b>🔊 Listen</b><span>${supported?'Device voice':'Unavailable'}</span></summary><div class="mm-read-panel"><div class="mm-read-controls"><button type="button" data-mm-read="prev" aria-label="Previous sentence">◀</button><button type="button" class="mm-read-play" data-mm-read="play">Listen</button><button type="button" data-mm-read="next" aria-label="Next sentence">▶</button><button type="button" data-mm-read="stop">Stop</button></div><button type="button" class="mm-read-speed" data-mm-read="test">Test phone sound</button><div class="mm-read-meta"><p class="mm-read-status" role="status" aria-live="polite">${supported?'Ready':'Speech synthesis is unavailable'}</p><label>Speed <select class="mm-read-speed" data-mm-read="speed" aria-label="Read aloud speed">${SPEEDS.map(v=>`<option value="${v}"${v===1?' selected':''}>${v}×</option>`).join('')}</select></label><label>Voice <select class="mm-read-speed" data-mm-read="voice" aria-label="Narration voice"><option value="">Automatic device voice</option></select></label><span data-mm-read="position">0 / 0</span></div><div class="mm-book-audio-chapters" data-mm-book-audio-controls hidden><button type="button" data-mm-book-audio-prev aria-label="Previous Book chapter">⏮</button><label>Book chapter <select data-mm-book-audio-chapter aria-label="Book audio chapter"></select></label><button type="button" data-mm-book-audio-next aria-label="Next Book chapter">⏭</button><label class="mm-book-audio-follow"><input type="checkbox" data-mm-book-audio-follow checked> Follow text</label></div><p class="mm-read-current" data-mm-read="current" aria-live="off" hidden></p><p class="mm-read-note">Uses your device/browser speech-synthesis service. MouldMaster does not request microphone access or record audio.</p></div></details>`;
+    host.innerHTML=`<details><summary title="Expand or collapse the Read Aloud controls"><b>🔊 Listen</b><span>${supported?'Device voice':'Unavailable'}</span></summary><div class="mm-read-panel"><div class="mm-read-controls"><button type="button" data-mm-read="prev" aria-label="Previous sentence">◀</button><button type="button" class="mm-read-play" data-mm-read="play">Listen</button><button type="button" data-mm-read="next" aria-label="Next sentence">▶</button><button type="button" data-mm-read="stop">Stop</button></div><button type="button" class="mm-read-speed" data-mm-read="test">Test phone sound (voice)</button><button type="button" class="mm-read-speed" data-mm-read="audio-output">Test app audio (two beeps)</button><div class="mm-read-meta"><p class="mm-read-status" role="status" aria-live="polite">${supported?'Ready':'Speech synthesis is unavailable'}</p><label>Speed <select class="mm-read-speed" data-mm-read="speed" aria-label="Read aloud speed">${SPEEDS.map(v=>`<option value="${v}"${v===1?' selected':''}>${v}×</option>`).join('')}</select></label><label>Voice <select class="mm-read-speed" data-mm-read="voice" aria-label="Narration voice"><option value="">Automatic device voice</option></select></label><span data-mm-read="position">0 / 0</span></div><div class="mm-book-audio-chapters" data-mm-book-audio-controls hidden><button type="button" data-mm-book-audio-prev aria-label="Previous Book chapter">⏮</button><label>Book chapter <select data-mm-book-audio-chapter aria-label="Book audio chapter"></select></label><button type="button" data-mm-book-audio-next aria-label="Next Book chapter">⏭</button><label class="mm-book-audio-follow"><input type="checkbox" data-mm-book-audio-follow checked> Follow text</label></div><p class="mm-read-current" data-mm-read="current" aria-live="off" hidden></p><p class="mm-read-note">Uses your device/browser speech-synthesis service. MouldMaster does not request microphone access or record audio.</p></div></details>`;
     const actions=document.querySelector('#app .top-actions,.top-actions');(actions||document.body).appendChild(host);
     ui={host,play:host.querySelector('[data-mm-read="play"]'),prev:host.querySelector('[data-mm-read="prev"]'),next:host.querySelector('[data-mm-read="next"]'),stop:host.querySelector('[data-mm-read="stop"]'),speed:host.querySelector('[data-mm-read="speed"]'),voice:host.querySelector('[data-mm-read="voice"]'),status:host.querySelector('.mm-read-status'),position:host.querySelector('[data-mm-read="position"]'),current:host.querySelector('[data-mm-read="current"]'),bookNav:host.querySelector('[data-mm-book-audio-controls]'),bookChapter:host.querySelector('[data-mm-book-audio-chapter]'),bookPrev:host.querySelector('[data-mm-book-audio-prev]'),bookNext:host.querySelector('[data-mm-book-audio-next]'),follow:host.querySelector('[data-mm-book-audio-follow]')};
-    ui.play.addEventListener('click',toggle);host.querySelector('[data-mm-read="test"]').addEventListener('click',testDeviceSound);ui.prev.addEventListener('click',()=>move(-1));ui.next.addEventListener('click',()=>move(1));ui.stop.addEventListener('click',()=>stop('Stopped'));
+    ui.play.addEventListener('click',toggle);host.querySelector('[data-mm-read="test"]').addEventListener('click',testDeviceSound);host.querySelector('[data-mm-read="audio-output"]').addEventListener('click',testAppAudioOutput);ui.prev.addEventListener('click',()=>move(-1));ui.next.addEventListener('click',()=>move(1));ui.stop.addEventListener('click',()=>stop('Stopped'));
     ui.speed.addEventListener('change',()=>changeSpeed(false));
     ui.voice.addEventListener('change',()=>{preferredVoiceId=ui.voice.value;refreshVoice();if(speaking&&!playlistMode)speakCurrent();});
     ui.bookChapter.addEventListener('change',()=>selectBookChapter(ui.bookChapter.value));
