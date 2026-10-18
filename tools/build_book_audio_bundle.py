@@ -58,6 +58,42 @@ def list_items(lines: list[str], label: str, values: object) -> None:
 
 
 def audio_encode(source: Path, target: Path) -> tuple[float, int]:
+    if os.environ.get("MM_AUDIO_ENGINE") == "piper":
+        # Neural Piper TTS is markedly clearer than the legacy eSpeak voice.
+        # Run it entirely on this GitHub runner from a downloaded high-quality
+        # open voice model. No learner data and no Book text are sent to a
+        # hosted speech synthesis API.
+        model = os.environ.get("MM_PIPER_VOICE", "en_GB-cori-high")
+        model_dir = os.environ.get("MM_PIPER_DATA", "/tmp/mouldmaster-piper-voices")
+        wav = target.with_suffix(".wav")
+        try:
+            subprocess.run(
+                ["python3", "-m", "piper", "--model", model,
+                 "--data-dir", model_dir, "--input-file", str(source),
+                 "--sentence-silence", "0.20", "--length-scale", "1.05",
+                 "-f", str(wav)],
+                check=True, capture_output=True, timeout=900,
+            )
+            subprocess.run(
+                ["ffmpeg", "-nostdin", "-hide_banner", "-loglevel", "error",
+                 "-y", "-i", str(wav), "-ar", "24000", "-ac", "1",
+                 "-c:a", "libmp3lame", "-b:a", "64k", str(target)],
+                check=True, capture_output=True, timeout=180,
+            )
+        except subprocess.CalledProcessError as e:
+            raise RuntimeError(f"Neural speech failed: {e.stderr[-1200:] if e.stderr else e}") from e
+        finally:
+            wav.unlink(missing_ok=True)
+        probe = subprocess.run(
+            ["ffprobe", "-v", "error", "-show_entries", "format=duration",
+             "-of", "default=noprint_wrappers=1:nokey=1", str(target)],
+            check=True, capture_output=True, text=True,
+        )
+        duration = float(probe.stdout.strip())
+        if duration < 40 or target.stat().st_size < 16000:
+            raise RuntimeError(f"Invalid neural chapter recording {target}: {duration:.1f}s")
+        return duration, target.stat().st_size
+
     # Stream PCM into the MP3 encoder: never need to keep a multi-hour WAV file.
     speaker = subprocess.Popen(
         ["espeak", "-v", "en-gb", "-s", "145", "-p", "48", "-g", "8",
@@ -240,10 +276,16 @@ def main() -> None:
         })
         print(f"[{index:02d}/20] {reader['title']} "
               f"({duration / 60:.1f} min, {size / (1024*1024):.1f} MiB)", flush=True)
+        # The one-chapter audition requires a human clarity check first.
+        # The full audiobook run keeps all 20-chapter coverage assertions.
+        if os.environ.get("MM_AUDIO_SAMPLE_ONLY") == "1":
+            break
 
-    if sum(x["syntheticWorkedCases"] for x in titles) != 27 or sum(
-        x["diagramDescriptions"] for x in titles
-    ) != 25:
+    if os.environ.get("MM_AUDIO_SAMPLE_ONLY") != "1" and (
+        sum(x["syntheticWorkedCases"] for x in titles) != 27 or sum(
+            x["diagramDescriptions"] for x in titles
+        ) != 25
+    ):
         raise RuntimeError("Audiobook coverage changed: worked cases or diagrams are missing")
 
     with (DEST / "CHAPTER_INDEX.csv").open("w", newline="", encoding="utf-8") as handle:
