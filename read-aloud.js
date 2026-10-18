@@ -242,6 +242,16 @@
   const androidSpeech=/Android/i.test(navigator.userAgent||'');
   const iosSpeech=/iPhone|iPad|iPod/i.test(navigator.userAgent||'')
     ||(/Macintosh/i.test(navigator.userAgent||'')&&Number(navigator.maxTouchPoints||0)>1);
+  function utteranceVoice(){
+    if(!selectedVoice)return null;
+    // Some Android/iOS browsers expose installed voices that cannot actually
+    // play in their current OS speech provider. "Automatic device voice" must
+    // leave utterance.voice unset so the device chooses its working default.
+    // Only an explicit user voice choice may override that mobile default.
+    if(!androidSpeech&&!iosSpeech)return selectedVoice;
+    const id=selectedVoice.voiceURI||`${selectedVoice.name}:${selectedVoice.lang}`;
+    return preferredVoiceId&&preferredVoiceId===id?selectedVoice:null;
+  }
   function speakCurrent(retry=0){
     selectionPending=false;
     if(!supported){setStatus('Read Aloud is not available in this browser/device.');updateButtons();return;}
@@ -267,8 +277,9 @@
       let utterance;
       try{
         utterance=new SpeechSynthesisUtterance(unit.text);
-        if(selectedVoice){utterance.voice=selectedVoice;utterance.lang=selectedVoice.lang||document.documentElement.lang||'en';}
-        else utterance.lang=document.documentElement.lang||'en';
+        const voice=utteranceVoice();
+        if(voice){utterance.voice=voice;utterance.lang=voice.lang||document.documentElement.lang||'en';}
+        else utterance.lang=document.documentElement.lang||navigator.language||'en';
         utterance.rate=Number((playlistMode?listeningUI?.speed:ui?.speed)?.value||1);
       }catch(err){
         // Voice provider constructors and property setters can fail before
@@ -406,7 +417,8 @@
     let utterance;
     try{
       utterance=new SpeechSynthesisUtterance('MouldMaster sound test. You should hear this sentence.');
-      const voice=refreshVoice();
+      refreshVoice();
+      const voice=utteranceVoice();
       if(voice){utterance.voice=voice;utterance.lang=voice.lang||document.documentElement.lang||'en';}
       else utterance.lang=document.documentElement.lang||navigator.language||'en';
       utterance.rate=1;
