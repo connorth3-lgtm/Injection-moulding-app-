@@ -49,7 +49,7 @@ def update_banner(text, candidate, path):
     need(len(positions) == 1, f"{path}: missing or ambiguous artifact banner")
     i = positions[0]
     banner_release = re.match(
-        r"^> \\*\\*(?:PENDING|RETAINED) (\\d{4}\\.\\d{2}\\.\\d{2}\\.\\d+) (?:TECHNICAL )?ARTIFACT",
+        r"^> \*\*(?:PENDING|RETAINED) (\d{4}\.\d{2}\.\d{2}\.\d+) (?:TECHNICAL )?ARTIFACT",
         lines[i],
     )
     need(bool(banner_release) and banner_release.group(1) == candidate["release"],
