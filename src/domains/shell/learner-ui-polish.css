@@ -4992,3 +4992,42 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
     background-image:none!important;color:CanvasText!important;
   }
 }
+
+/* Compact Home at 360px and below: keep the Book CTA above fixed navigation.
+   Reduce chrome/whitespace, not tap-target size or source-reviewed text. */
+@media (max-width:370px){
+  .mm-reference-layout #dashboard .mm-today-focus{
+    padding:9px!important;
+    gap:5px!important;
+    margin-bottom:5px!important;
+  }
+  .mm-reference-layout #dashboard .mm-today-focus h2{
+    font-size:18px!important;
+    margin:2px 0 3px!important;
+  }
+  .mm-reference-layout #dashboard .mm-today-meta{
+    margin-top:3px!important;
+    gap:4px!important;
+  }
+  .mm-reference-layout #dashboard .mm-home-book{
+    gap:5px!important;
+    padding:8px 10px!important;
+    margin-bottom:5px!important;
+  }
+  .mm-reference-layout #dashboard [data-mm-home-book]{
+    min-height:100px!important;
+    padding-left:72px!important;
+  }
+  .mm-reference-layout #dashboard [data-mm-home-book] .mm-reference-book-art{
+    left:9px!important;
+    top:12px!important;
+    width:51px!important;
+    height:68px!important;
+  }
+  .mm-reference-layout #dashboard .mm-home-book-actions{
+    gap:5px!important;
+  }
+  .mm-reference-layout #dashboard .mm-home-book-actions button{
+    min-height:44px!important;
+  }
+}
