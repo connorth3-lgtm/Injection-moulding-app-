@@ -156,7 +156,7 @@
     "artifactDigest": "sha256:957f7a0b2e16aab3fd4b59fe86706b637a440593081152748fc18c8332cd32e7",
     "artifactExpiresAt": "2027-01-14T07:04:41Z"
   },
-  "candidateStatus": "HOLD — successful exact-source technical candidate retained; independent release acceptance and seven external streams remain HOLD.",
+  "candidateStatus": "HOLD — producer successfully retained an exact-source technical candidate; independently approved release acceptance and all seven external streams remain HOLD.",
   "previousPreviousCandidate": {
     "release": "2026.10.15.2",
     "sourceSha": "f9de4baaa6421184b61c40ea1932015743b6a503",
