@@ -24,17 +24,28 @@ integrity_generator = (ROOT / "desktop/electron/scripts/generate-integrity.cjs")
 need(version.get("read_aloud_version") == "2026.10.19.1", "Read Aloud version marker mismatch")
 need("const VERSION='2026.10.19.1'" in runtime, "Read Aloud runtime version mismatch")
 
-# The feature must be output-only speech synthesis. Microphone capture, recognition,
-# recording and application-controlled telemetry/network paths are forbidden here.
+# The feature must be output-only: speech synthesis plus an explicitly tapped,
+# oscillator-only two-beep media routing test. Microphone capture, recognition,
+# recording and application-controlled telemetry/network paths are forbidden.
 for marker in ("speechSynthesis", "SpeechSynthesisUtterance", "Intl.Segmenter"):
     need(marker in runtime, f"required speech/readability capability missing: {marker}")
 for forbidden in (
     "getUserMedia", "mediaDevices", "MediaRecorder", "SpeechRecognition",
-    "webkitSpeechRecognition", "AudioContext", "webkitAudioContext", "fetch(",
+    "webkitSpeechRecognition", "fetch(",
     "XMLHttpRequest", "sendBeacon", "WebSocket", "EventSource", "localStorage",
     "sessionStorage", "indexedDB",
 ):
     need(forbidden not in runtime, f"forbidden Read Aloud capability/path present: {forbidden}")
+
+# The one Web Audio exception is strictly an output-only diagnostic. It must
+# synthesize a tone through the speaker destination, never read an input stream.
+for marker in (
+    'function testAppAudioOutput(){', 'window.AudioContext||window.webkitAudioContext',
+    'context.createOscillator()', 'context.createGain()', 'volume.connect(context.destination)',
+    'data-mm-read="audio-output"', 'testAppAudioOutput', 'Did you hear two beeps?',
+):
+    need(marker in runtime, f"app audio output diagnostic boundary missing: {marker}")
+need(runtime.count('new AudioContextType()') == 1, 'Web Audio usage must remain a single oscillator-only output diagnostic')
 
 # Visible-content and navigation/privacy boundaries.
 for marker in (
