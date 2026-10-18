@@ -54,7 +54,7 @@ test('360px Materials entry keeps the catalogue search in the first screen witho
   await expect(intro.locator('.mm-material-page-nav button')).toHaveCount(3);
   await expect(intro.locator('.mm-material-page-stat')).toHaveCount(0);
   await expect(root.locator('[data-mm-all-material-query]')).toBeInViewport();
-  await expect(root.getByRole('heading',{name:'All materials'})).toBeVisible();
+  await expect(root.getByRole('heading',{name:'Materials'})).toBeVisible();
   await expect(intro.getByRole('button',{name:'Compare grades'})).toBeVisible();
   await expect(intro.getByRole('button',{name:'Change assistant'})).toBeVisible();
   await expect(intro.getByRole('button',{name:'Material learning'})).toBeVisible();
@@ -190,7 +190,10 @@ test('catalogue grade jump clears a stale exact-grade manufacturer filter',async
     items.map(el=>({value:el.value,label:el.textContent||''})));
   const other=options.find(option=>option.value&&!/LG Chem/i.test(option.label));
   expect(other,'a second published manufacturer is available').toBeTruthy();
-  await manufacturer.selectOption(other.value);
+  // The legacy exact-grade manufacturer control is intentionally hidden
+  // now that All Materials owns public filtering. Simulate a saved stale value
+  // to prove that Show exact grade cannot discard the requested grade.
+  await manufacturer.evaluate((control,value)=>{control.value=value;control.dispatchEvent(new Event('change',{bubbles:true}));},other.value);
   await expect(manufacturer).toHaveValue(other.value);
 
   await root.locator('[data-mm-all-material-query]').fill('GP5206F');
@@ -259,7 +262,7 @@ test('multidimensional catalogue exposes application process and evidence browse
   const results=root.locator('[data-mm-all-material-results]');
   const boundary=root.locator('[data-mm-catalogue-boundary]');
 
-  await expect(root.getByRole('heading',{name:'All materials'})).toBeVisible();
+  await expect(root.getByRole('heading',{name:'Materials'})).toBeVisible();
   await expect(root.locator('[data-mm-all-material-index]')).toBeVisible();
   await expect(boundary).toContainText(/not suitability recommendations/i);
   await root.locator('[data-mm-all-material-filters] > summary').click();

@@ -757,10 +757,15 @@
   }
   function bookScrollTop(){const root=bookScrollRoot();return Math.max(0,isDocumentScrollRoot(root)?document.scrollingElement?.scrollTop||0:root.scrollTop||0);}
   function scrollBookReaderToTop(){
+    // A deferred heading focus must never overtake a learner focusing Back or
+    // moving to another Book mode before the next animation frame.
+    const reader=ui?.reader,heading=reader?.querySelector('h2'),intent=bookIntentEpoch;
     requestAnimationFrame(()=>{
-      if(!ui?.reader)return;
-      scrollBookBy(ui.reader.getBoundingClientRect().top-bookViewportTop());
-      const heading=ui.reader.querySelector('h2');
+      if(!ui||!reader||ui.reader!==reader||reader.hidden||ui.view.classList.contains('hidden')||
+         intent!==bookIntentEpoch||reader.querySelector('h2')!==heading)return;
+      const active=document.activeElement;
+      if(active&&reader.contains(active)&&active!==heading)return;
+      scrollBookBy(reader.getBoundingClientRect().top-bookViewportTop());
       if(heading){heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}
     });
   }

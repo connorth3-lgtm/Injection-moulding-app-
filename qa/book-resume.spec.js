@@ -229,7 +229,7 @@ test('Book reading bookmark survives immediate Contents exit and Listening scrol
     panel.className='mm-read-aloud';
     panel.innerHTML='<details><summary>Speech test adapter</summary><button type="button" data-mm-read="play">Play</button></details>';
     document.body.prepend(panel);
-    window.MMReadAloud={supported:true,stop(){},refresh(){}};
+    window.MMReadAloud={supported:true,stop(){},refresh(){},queueBookStart(){},startBookFromGesture(){return true}};
     window.MMBook.startVerifiedListening();
   });
   await expect(page.locator('#mmBookView [data-mm-book-reader]')).toBeVisible();
@@ -347,14 +347,18 @@ test('Book listening return focuses the original Contents listening control',asy
     panel.className='mm-read-aloud';
     panel.innerHTML='<details><summary>Speech test adapter</summary><button type="button" data-mm-read="play">Play</button></details>';
     document.body.prepend(panel);
-    window.MMReadAloud={supported:true,stop(){},refresh(){}};
+    window.MMReadAloud={supported:true,stop(){},refresh(){},queueBookStart(){},startBookFromGesture(){return true}};
   });
   await listen.focus();
   await page.keyboard.press('Enter');
   await expect(page.locator('#mmBookView [data-mm-book-reader]')).toBeVisible();
   const back=page.locator('#mmBookView [data-mm-book-reader] > button[data-mm-book-back]').first();
+  await expect(back).toBeVisible();
   await back.focus();
-  await page.keyboard.press('Enter');
+  // A pending animation-frame focus must not steal the explicit Back control.
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  await expect(back).toBeFocused();
+  await back.press('Enter');
   await expect(page.locator('#mmBookView [data-mm-book-contents]')).toBeVisible();
   await expect(listen).toBeFocused();
 });

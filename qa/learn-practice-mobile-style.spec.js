@@ -879,7 +879,11 @@ test('Android More groups are compact until explicitly opened; links stay reacha
   await page.setViewportSize({width:360,height:800});
   await openApp(page);
   await page.locator('.mobile-nav > button').filter({hasText:'More'}).click();
-  const items=page.locator('#modal:not(.hidden) .mm-more-disclosure');
+  // More groups are assembled on the next animation frame. Do not read
+  // a transient five-group DOM while help/about disclosures are mounting.
+  const organized=page.locator('#modal:not(.hidden) .grid2[data-mm-more-organized="1"][data-mm-reference-more="1"]');
+  await expect(organized).toBeVisible();
+  const items=organized.locator(':scope > .mm-more-disclosure');
   await expect(items).toHaveCount(6);
   await expect.poll(()=>items.evaluateAll(nodes=>nodes.map(n=>n.open))).toEqual([false,false,false,false,false,false]);
   const resources=page.locator('#modal .mm-more-disclosure[data-mm-more-section="learning"]');

@@ -75,7 +75,7 @@ function installAllIndex(root,index,query,revealExactGrade){
     previous.disabled=!result.hasPrevious;next.disabled=!result.hasNext;pager.hidden=result.pageCount<=1;
     status.textContent=`${result.total} matching material records · page ${result.page} of ${result.pageCount}`;
     root.dataset.mmUnifiedMaterialIndex='1';root.dataset.mmUnifiedMaterialTotal=String(result.total);
-    host.querySelectorAll('[data-mm-index-grade]').forEach(button=>button.addEventListener('click',()=>{const id=button.dataset.mmIndexGrade||'';revealExactGrade(id).catch(err=>console.warn('[MouldMaster exact grade navigation]',err));}));
+    host.querySelectorAll('[data-mm-index-grade]').forEach(button=>button.addEventListener('click',()=>{const id=button.dataset.mmIndexGrade||'';revealExactGrade(id,button.closest('[data-mm-material-index-result]')).catch(err=>console.warn('[MouldMaster exact grade navigation]',err));}));
   }
   for(const control of [allQuery,type,region,country,catalogueManufacturer,family,application,process,evidence])control.addEventListener(control===allQuery?'input':'change',()=>render(true).catch(err=>console.warn('[MouldMaster unified material index]',err)));
   clearAll.addEventListener('click',()=>{
@@ -93,20 +93,29 @@ async function enhance(){
   await registry.installPanel();const root=document.getElementById('mmExactMaterialCatalog');if(!root||root.dataset.mmIndexedPagination==='1')return !!root;
   root.dataset.mmIndexedPagination='1';
   const query=replaceControl(root,'[data-mm-exact-query]'),manufacturer=replaceControl(root,'[data-mm-exact-manufacturer]'),host=root.querySelector('[data-mm-exact-results]');if(!query||!manufacturer||!host)return false;
-  installAllIndex(root,index,query,async id=>{
-    // A catalogue result is a navigation action, not just a search-box update.
-    // Wait for the indexed exact-grade render before revealing and focusing its
-    // evidence card; otherwise it remains below the fold on narrow screens.
-    // The all-materials catalogue is independent of the exact-grade panel's
-    // previous manufacturer selection. Clear that stale filter before jumping
-    // so a valid published grade cannot vanish from the destination results.
+  installAllIndex(root,index,query,async (id,resultCard)=>{
+    // The unified catalogue is the learner's only visible result list.
+    // Keep full sourced exact-grade evidence inside the selected disclosure:
+    // focusing the legacy (hidden) list left the Show exact grade action broken
+    // on phones, tablets and desktop screen readers.
+    if(!resultCard||!resultCard.isConnected||!resultCard.open)return;
+    const detail=resultCard.querySelector('.mm-material-index-detail');
+    if(!detail)return;
+    root.querySelectorAll('[data-mm-inline-grade]').forEach(previous=>previous.remove());
+    // A prior exact-grade manufacturer filter must never suppress a valid
+    // grade selected from the independent unified catalogue.
     manufacturer.value='';
     query.value=id;
     await render(true);
+    if(!resultCard.isConnected)return;
     const grade=host.querySelector('[data-mm-material-grade]');
     if(grade?.dataset.mmMaterialGrade!==id)return;
+    // Move, do not clone: the real grade's sourced links and case-launch
+    // handlers must continue working, with one rendered grade in the DOM.
+    grade.dataset.mmInlineGrade='1';
     grade.setAttribute('tabindex','-1');
-    grade.scrollIntoView({block:'start',behavior:'instant'});
+    detail.appendChild(grade);
+    grade.scrollIntoView({block:'nearest',behavior:'instant'});
     grade.focus({preventScroll:true});
   });
   const status=document.createElement('p');status.className='mm-exact-boundary';status.dataset.mmMaterialPageStatus='';status.setAttribute('role','status');status.setAttribute('aria-live','polite');

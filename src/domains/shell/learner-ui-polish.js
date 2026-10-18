@@ -1,13 +1,13 @@
-/* MouldMaster learner UI polish — 2026.10.18.1
+/* MouldMaster learner UI polish — 2026.10.18.2
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.10.18.1';
+const VERSION='2026.10.18.2';
 // Cache-bust stylesheet revisions without claiming a new governed app release.
-const STYLE_REV='2026.10.18.1-pr640-materials-parity';
+const STYLE_REV='2026.10.18.2-mobile-material-book-fixes';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
@@ -481,6 +481,16 @@ function home(){
     const focusAnchor=focus.closest('.mm-dashboard-slot')||focus;
     focusAnchor.insertAdjacentElement('afterend',tools);
   }
+  // Keep the learner's Book / Keep Reading action directly after today's
+  // lesson. The optional quick-tool tiles previously occupied four rows
+  // between them, pushing Book below the bottom navigation on small phones.
+  const focusSlot=focus.closest('.mm-dashboard-slot')||focus;
+  const bookSlot=book?.closest('.mm-dashboard-slot')||book;
+  if(bookSlot&&focusSlot&&bookSlot.parentElement===focusSlot.parentElement&&focusSlot.nextElementSibling!==bookSlot)
+    focusSlot.insertAdjacentElement('afterend',bookSlot);
+  const quickTools=root.querySelector('.mm-reference-quick-tools');
+  if(bookSlot&&quickTools&&bookSlot.parentElement===quickTools.parentElement&&bookSlot.nextElementSibling!==quickTools)
+    bookSlot.insertAdjacentElement('afterend',quickTools);
 }
 function openReferenceConverter(){
   let dialog=document.getElementById('mmReferenceUnitConverter');

@@ -32,6 +32,21 @@ async function openLearnHub(page){
   await expect(page.locator('#path .mm-learn-hub')).toBeVisible();
   await expectOnlyCurrent(page,'Learn');
 }
+async function visibleMoreAction(page,id){
+  // The shell populates More on the next animation frame. Wait for its
+  // organized, decorated native groups before opening a disclosure.
+  const grid=page.locator('#modal:not(.hidden) .grid2[data-mm-more-organized="1"][data-mm-reference-more="1"]');
+  await expect(grid).toBeVisible();
+  const action=grid.locator('[data-mm-registry-menu="'+id+'"]');
+  await expect(action).toHaveCount(1);
+  const disclosure=action.locator('xpath=ancestor::details[1]');
+  await expect(disclosure).toHaveCount(1);
+  if(await disclosure.getAttribute('open')===null)
+    await disclosure.locator(':scope > summary').click();
+  await expect(disclosure).toHaveAttribute('open','');
+  await expect(action).toBeVisible();
+  return action;
+}
 async function scrollAppToBottom(page){
   await page.evaluate(()=>{
     const main=document.querySelector('main.main')||document.querySelector('.main');
@@ -107,6 +122,11 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
 
       await openPracticeHub(page);
       await openPracticeAction(page,'troubleshooting');
+      // Troubleshooting opens a user-visible tool chooser first; the learner
+      // must select the diagnostic workbench rather than auto-routing.
+      const chooser=page.locator('#modal:not(.hidden) .mm-diagnose-chooser');
+      await expect(chooser).toBeVisible();
+      await chooser.locator('[data-mm-hub-action="diagnostic-workbench"]').click();
       await expect(page.locator('#defects').getByRole('heading',{name:'Defect Finder + Troubleshooting Coach'})).toBeVisible();
       await expect(page.locator('#defects [data-mm-dx-action="choose"]').first()).toBeVisible();
       await expect(page.locator('#modal')).toHaveClass(/hidden/);
@@ -219,7 +239,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await expect(page.locator('[data-mm-registry-menu="book"]')).toHaveCount(1);
       await expect(page.locator('[data-mm-registry-menu="learning-insights"]')).toHaveCount(1);
       await expect(page.locator('[data-mm-registry-menu="repair-app-files"]')).toHaveCount(1);
-      const insights=page.locator('[data-mm-registry-menu="learning-insights"]');
+      const insights=await visibleMoreAction(page,'learning-insights');
       await insights.focus();
       await page.keyboard.press('Enter');
       await expect(page.locator('#learningInsights')).toBeVisible();
@@ -277,6 +297,10 @@ test('UI audit contract: one page title, compact header actions, useful Home, de
   expect(searchBox.width).toBeLessThanOrEqual(48);
   expect(searchBox.height).toBeGreaterThanOrEqual(44);
   const listen=page.locator('.mm-read-aloud');
+  // Generic top-bar speech is deliberately hidden outside Book, to keep the
+  // reading experience tied to a source-reviewed chapter and explicit tap.
+  await expect(listen).toBeHidden();
+  await page.evaluate(()=>window.MMBook.open());
   await expect(listen).toBeVisible();
   expect(await listen.evaluate(el=>el.parentElement?.classList.contains('top-actions'))).toBeTruthy();
 
@@ -291,7 +315,8 @@ test('UI audit contract: one page title, compact header actions, useful Home, de
 
   await openPracticeHub(page);
   await expect(page.locator('body[data-mm-view="scenarios"] .topbar>div:first-child')).toBeHidden();
-  expect(await page.locator('#scenarios .mm-hub-grid').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length)).toBe(2);
+  // At phone width the practice hub deliberately uses one readable column.
+  expect(await page.locator('#scenarios .mm-hub-grid').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length)).toBe(1);
 
   await openLearnHub(page);
   await page.getByRole('button',{name:/Continue lesson/i}).first().click();
@@ -367,13 +392,13 @@ test('Mission Control and Mission evidence strips stay off all mobile tabs witho
   await page.evaluate(()=>openMobileMenu());
   await expect(page.locator('#modal .modal-card')).toBeVisible();
   await expect(mc.locator('.mm-mc-context')).toBeHidden();
-  await page.locator('#modal [data-mm-registry-menu="mission-evidence"]').click();
+  await (await visibleMoreAction(page,'mission-evidence')).click();
   await expect(page.locator('body')).toHaveAttribute('data-mm-view','dashboard');
   await expect(mc.locator('.mm-mc-evidence-row')).toContainText('QA cavity mass balance check');
   await page.keyboard.press('Escape');
 
   await page.evaluate(()=>openMobileMenu());
-  await page.locator('#modal [data-mm-registry-menu="mission-commands"]').click();
+  await (await visibleMoreAction(page,'mission-commands')).click();
   await expect(page.locator('body')).toHaveAttribute('data-mm-view','dashboard');
   await expect(mc.locator('.mm-mc-palette')).toBeVisible();
   await expect(mc.locator('.mm-mc-context')).toBeHidden();
