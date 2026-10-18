@@ -1,11 +1,11 @@
-/* MouldMaster Read Aloud + Listening — 2026.10.15.1
+/* MouldMaster Read Aloud + Listening — 2026.10.19.1
  * Learner-controlled text-to-speech using the browser/device speech-synthesis service.
  * No microphone access, recording, speech recognition, network upload, or learner-content storage.
  */
 (function(){
   'use strict';
 
-  const VERSION='2026.10.18.1';
+  const VERSION='2026.10.19.1';
   const synth=window.speechSynthesis;
   const supported=!!(synth&&window.SpeechSynthesisUtterance);
   const SPEEDS=[0.75,1,1.25,1.5];
@@ -311,7 +311,16 @@
       };
       utterance.onend=()=>{
         clearTimeout(startTimer);
-        if(token!==speakToken||!speaking)return;
+        // Some mobile voice providers report completion without an onstart
+        // callback. Completion is still evidence that this utterance ended;
+        // otherwise the Book remains stuck on Starting and never continues.
+        // Ignore ended callbacks after Stop, Pause, or a newer utterance.
+        if(token!==speakToken||(!speaking&&!starting))return;
+        if(!started){
+          if(document.hidden&&!playlistMode){stop('Stopped because the app was hidden before speech started');return;}
+          starting=false;
+          if(unit.bookChapterId)window.dispatchEvent(new CustomEvent('mm:book-audio-position',{detail:{chapterId:unit.bookChapterId,unitIndex:unit.bookSentenceIndex}}));
+        }
         if(index<units.length-1){index+=1;speakCurrent();}
         else {
           if(unit.bookChapterId)window.dispatchEvent(new CustomEvent('mm:book-audio-complete'));

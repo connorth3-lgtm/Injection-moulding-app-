@@ -169,8 +169,8 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load()});
   await expect(page.locator('#mmBookView')).toBeVisible();
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.10.18.1');
-  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.10.18.1');
+  await expect(host).toHaveAttribute('data-version','2026.10.19.1');
+  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.10.19.1');
   await expect(host.locator('summary')).toContainText('Listen');
 
   const placement=await page.evaluate(()=>{
@@ -258,7 +258,7 @@ test('Read Aloud supported-path controls execute the exact product runtime in a 
   await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.supported===true)).toBeTruthy();
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.10.18.1');
+  await expect(host).toHaveAttribute('data-version','2026.10.19.1');
   await host.locator('details').evaluate(el=>{el.open=true;});
 
   const visibilityCheck=await page.evaluate(() => {
@@ -1037,3 +1037,31 @@ for(const phone of ['Android','iPhone']){
     expect(await page.evaluate(()=>window.__phoneTestVoiceRate)).toBe(1);
   });
 }
+
+test('Android voice completion advances sentences even if its onstart callback never fires',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>First device sentence. Second device sentence.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
+    class Utterance{constructor(text=''){this.text=text;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const voice={utterances:[],getVoices(){return[];},
+      speak(u){this.utterances.push(u);},
+      cancel(){},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    window.__endOnlyVoice=voice;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:voice});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const player=page.locator('.mm-read-aloud');
+  await player.locator('summary').click();
+  await player.locator('[data-mm-read="play"]').click();
+  await expect(player.locator('[data-mm-read="play"]')).toHaveText('Starting…');
+  const advanced=await page.evaluate(()=>{
+    window.__endOnlyVoice.utterances[0].onend?.();
+    return window.__endOnlyVoice.utterances.map(u=>u.text);
+  });
+  expect(advanced).toEqual(['First device sentence.','Second device sentence.']);
+  await expect(player.locator('[data-mm-read="position"]')).toHaveText('2 / 2');
+  await page.evaluate(()=>window.__endOnlyVoice.utterances[1].onend?.());
+  await expect(player.locator('.mm-read-status')).toHaveText('Finished reading');
+  await expect(player.locator('[data-mm-read="play"]')).toHaveText('Listen');
+});

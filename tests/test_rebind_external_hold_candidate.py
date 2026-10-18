@@ -50,27 +50,39 @@ class CandidateRebindRegression(unittest.TestCase):
 
     def test_pending_release_packet_accepts_only_exact_retain_identity(self):
         current = copy.deepcopy(CANDIDATE)
-        current["release"] = "2026.10.18.2"
-        path = "qa/BOOK_SME_REVIEW_2026.10.18.2.md"
-        pending = (ROOT / path).read_text(encoding="utf-8")
-        self.assertIn("> **PENDING 2026.10.18.2 ARTIFACT.", pending)
+        current["release"] = "2026.10.19.1"
+        path = "qa/BOOK_SME_REVIEW_2026.10.19.1.md"
+        source = (ROOT / path).read_text(encoding="utf-8")
+        # The canonical current packet legitimately transitions from PENDING
+        # to RETAINED after a producer artifact is verified. Build a pending
+        # fixture from either state instead of assuming the repository has
+        # never completed technical retention.
+        lines = source.splitlines(keepends=True)
+        active = [i for i, line in enumerate(lines[:12])
+                  if line.startswith(("> **PENDING ", "> **RETAINED "))]
+        self.assertEqual(len(active), 1)
+        if lines[active[0]].startswith("> **RETAINED "):
+            lines[active[0]] = ("> **PENDING 2026.10.19.1 ARTIFACT.** "
+                                "Tester invitation STOP; all independent reviews HOLD.\n")
+        pending = "".join(lines)
+        self.assertIn("> **PENDING 2026.10.19.1 ARTIFACT.", pending)
         rewritten = update_banner(pending, current, path)
-        self.assertIn("> **RETAINED 2026.10.18.2 TECHNICAL ARTIFACT", rewritten)
+        self.assertIn("> **RETAINED 2026.10.19.1 TECHNICAL ARTIFACT", rewritten)
         self.assertIn(current["sourceSha"], rewritten.splitlines()[4])
         self.assertIn("STATUS: HOLD", rewritten)
         self.assertEqual(rewritten.splitlines()[5:], pending.splitlines()[5:])
         self.assertEqual(update_banner(rewritten, current, path), rewritten)
 
         stale = pending.replace(
-            "> **PENDING 2026.10.18.2 ARTIFACT.",
+            "> **PENDING 2026.10.19.1 ARTIFACT.",
             "> **PENDING 2026.10.17.1 ARTIFACT.", 1,
         )
         with self.assertRaises(SystemExit):
             update_banner(stale, current, path)
 
         duplicate = pending.replace(
-            "> **PENDING 2026.10.18.2 ARTIFACT.",
-            "> **PENDING 2026.10.18.2 ARTIFACT.\n> **PENDING 2026.10.18.2 ARTIFACT.",
+            "> **PENDING 2026.10.19.1 ARTIFACT.",
+            "> **PENDING 2026.10.19.1 ARTIFACT.\n> **PENDING 2026.10.19.1 ARTIFACT.",
             1,
         )
         with self.assertRaises(SystemExit):
