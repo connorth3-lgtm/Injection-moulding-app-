@@ -1149,3 +1149,52 @@ test('Android first-word regression: sound test and next sentence do not cancel 
   expect(await page.evaluate(()=>window.__mmAndroidNoIdleCancel.cancels)).toBe(1);
   await expect(player.locator('.mm-read-status')).toHaveText('Stopped');
 });
+
+test('Android silent TTS is distinguishable from browser media output without claiming audible confirmation',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Audio routing diagnostic must use browser output separately from device voice.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
+    const calls=[];
+    window.__mediaOutputCalls=calls;
+    class AudioContextStub{
+      constructor(){this.currentTime=0;this.destination={};}
+      createOscillator(){
+        const parameter={setValueAtTime(){calls.push('frequency');}};
+        const tone={frequency:parameter,connect(){calls.push('connect-tone');},
+          start(){calls.push('start-tone');},stop(){calls.push('stop-tone');},onended:null};
+        window.__mediaOutputTone=tone;
+        return tone;
+      }
+      createGain(){return{gain:{setValueAtTime(){},linearRampToValueAtTime(){}},
+        connect(){calls.push('connect-output');}};}
+      resume(){calls.push('resume-output');return Promise.resolve();}
+      close(){calls.push('close-output');return Promise.resolve();}
+    }
+    class Utterance{constructor(text=''){this.text=text;}}
+    const speech={getVoices(){return[];},cancel(){},
+      speak(u){calls.push('speak-voice');queueMicrotask(()=>u.onstart?.());},
+      pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    Object.defineProperty(window,'AudioContext',{configurable:true,value:AudioContextStub});
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:speech});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const panel=page.locator('.mm-read-aloud');
+  await panel.locator('summary').click();
+  await panel.locator('[data-mm-read="audio-output"]').click();
+  const before=await page.evaluate(()=>window.__mediaOutputCalls);
+  expect(before).toContain('start-tone');
+  expect(before).toContain('stop-tone');
+  expect(before).toContain('resume-output');
+  expect(before).not.toContain('speak-voice');
+  await expect(panel.locator('.mm-read-status')).toContainText('listen for two beeps');
+  await page.evaluate(()=>window.__mediaOutputTone.onended?.());
+  await expect(panel.locator('.mm-read-status')).toContainText('Did you hear two beeps?');
+  await panel.locator('[data-mm-read="audio-output"]').click();
+  await page.evaluate(()=>window.__previousAudioOutputTone=window.__mediaOutputTone);
+  await panel.locator('[data-mm-read="play"]').click();
+  await expect(panel.locator('.mm-read-status')).toHaveText('Reading');
+  await page.evaluate(()=>window.__previousAudioOutputTone.onended?.());
+  await expect(panel.locator('.mm-read-status')).toHaveText('Reading');
+  expect(await page.evaluate(()=>window.__mediaOutputCalls.includes('close-output'))).toBe(true);
+});
