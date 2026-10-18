@@ -346,11 +346,11 @@
   "currentAssuranceEvidence": {
     "staticContract": {
       "status": "fail",
-      "meaning": "Release 2026.10.17.1 candidate has no successful exact-source producer, artifact or public runtime fingerprint; old 2026.10.16.1 technical run 38864931906 is historical only; seven independent workstreams HOLD."
+      "meaning": "HOLD: merged preview release 2026.10.18.2 has no independently accepted same-release public candidate, proven producer artifact, digest or runtime fingerprint. Prior-release candidate artifacts are historical only; seven external review streams remain HOLD."
     },
     "behavioralBrowser": {
       "status": "fail",
-      "meaning": "Draft core-lesson 2026.10.17.1 substantive Chromium/WebKit, cross-browser, reachability and 500-case reliability passed, but the strict 52-screen visual comparison awaits new owner approval and full exact-head mobile-browser verification. No approval bypass."
+      "meaning": "HOLD: PR #646 functional Learn/Book, WebKit, mobile reachability and 500-case reliability jobs passed, but the real-AT/static contract and overall mobile-browser workflow remained red. Functional test success does not authorize candidate promotion, publication, phone-audio claims or owner visual approval."
     },
     "externalHumanDevice": {
       "status": "hold",
