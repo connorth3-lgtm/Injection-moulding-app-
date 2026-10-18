@@ -353,8 +353,10 @@ test('Book listening return focuses the original Contents listening control',asy
   await page.keyboard.press('Enter');
   await expect(page.locator('#mmBookView [data-mm-book-reader]')).toBeVisible();
   const back=page.locator('#mmBookView [data-mm-book-reader] > button[data-mm-book-back]').first();
+  await expect(back).toBeVisible();
   await back.focus();
-  await page.keyboard.press('Enter');
+  await expect(back).toBeFocused();
+  await back.press('Enter');
   await expect(page.locator('#mmBookView [data-mm-book-contents]')).toBeVisible();
   await expect(listen).toBeFocused();
 });
