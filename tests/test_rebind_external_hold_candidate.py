@@ -52,7 +52,19 @@ class CandidateRebindRegression(unittest.TestCase):
         current = copy.deepcopy(CANDIDATE)
         current["release"] = "2026.10.19.1"
         path = "qa/BOOK_SME_REVIEW_2026.10.19.1.md"
-        pending = (ROOT / path).read_text(encoding="utf-8")
+        source = (ROOT / path).read_text(encoding="utf-8")
+        # The canonical current packet legitimately transitions from PENDING
+        # to RETAINED after a producer artifact is verified. Build a pending
+        # fixture from either state instead of assuming the repository has
+        # never completed technical retention.
+        lines = source.splitlines(keepends=True)
+        active = [i for i, line in enumerate(lines[:12])
+                  if line.startswith(("> **PENDING ", "> **RETAINED "))]
+        self.assertEqual(len(active), 1)
+        if lines[active[0]].startswith("> **RETAINED "):
+            lines[active[0]] = ("> **PENDING 2026.10.19.1 ARTIFACT.** "
+                                "Tester invitation STOP; all independent reviews HOLD.\n")
+        pending = "".join(lines)
         self.assertIn("> **PENDING 2026.10.19.1 ARTIFACT.", pending)
         rewritten = update_banner(pending, current, path)
         self.assertIn("> **RETAINED 2026.10.19.1 TECHNICAL ARTIFACT", rewritten)
