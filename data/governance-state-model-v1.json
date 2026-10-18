@@ -346,7 +346,7 @@
   "currentAssuranceEvidence": {
     "staticContract": {
       "status": "fail",
-      "meaning": "HOLD: merged preview release 2026.10.18.2 has no independently accepted same-release public candidate, proven producer artifact, digest or runtime fingerprint. Prior-release candidate artifacts are historical only; seven external review streams remain HOLD."
+      "meaning": "HOLD: merged preview release 2026.10.19.1 has no independently accepted same-release public candidate, proven producer artifact, digest or runtime fingerprint. Prior-release candidate artifacts are historical only; seven external review streams remain HOLD."
     },
     "behavioralBrowser": {
       "status": "fail",

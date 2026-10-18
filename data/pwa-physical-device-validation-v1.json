@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Automated app/browser QA cannot demonstrate physical iOS/iPadOS and Android devices passing real offline install/update/reboot, speaker/audio, zoom, safe-area and long-reading checks for release 2026.10.18.2. All real-device evidence remains pending. Real NVDA/VoiceOver assistive-technology acceptance is governed separately in data/accessibility-real-at-validation-v1.json; a previous-release artifact cannot be reused as current device evidence. No production authorization.",
+  "boundary": "Automated app/browser QA cannot demonstrate physical iOS/iPadOS and Android devices passing real offline install/update/reboot, speaker/audio, zoom, safe-area and long-reading checks for release 2026.10.19.1. All real-device evidence remains pending. Real NVDA/VoiceOver assistive-technology acceptance is governed separately in data/accessibility-real-at-validation-v1.json; a previous-release artifact cannot be reused as current device evidence. No production authorization.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
@@ -41,7 +41,7 @@
     }
   },
   "privacyBoundary": "Public contract metadata must not include learner names, customer/site identifiers, email addresses, private screenshots, raw process data, backup content, filesystem/user paths or other personal/proprietary evidence. Keep detailed device evidence outside the public repository and reference it only with a non-sensitive review identifier.",
-  "release": "2026.10.18.2",
+  "release": "2026.10.19.1",
   "candidate": null,
   "previousCandidate": {
     "release": "2026.10.16.1",

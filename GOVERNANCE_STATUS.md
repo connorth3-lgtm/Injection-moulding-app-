@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.18.2`**.
+Current governed web candidate: **`2026.10.19.1`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | HOLD: merged preview release 2026.10.18.2 has no independently accepted same-release public candidate, proven producer artifact, digest or runtime fingerprint. Prior-release candidate artifacts are historical only; seven external review streams remain HOLD. |
+| Static / contract | **fail** | HOLD: merged preview release 2026.10.19.1 has no independently accepted same-release public candidate, proven producer artifact, digest or runtime fingerprint. Prior-release candidate artifacts are historical only; seven external review streams remain HOLD. |
 | Behavioral / browser | **fail** | HOLD: PR #646 functional Learn/Book, WebKit, mobile reachability and 500-case reliability jobs passed, but the real-AT/static contract and overall mobile-browser workflow remained red. Functional test success does not authorize candidate promotion, publication, phone-audio claims or owner visual approval. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |

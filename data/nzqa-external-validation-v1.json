@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.18.2",
+  "release": "2026.10.19.1",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.18.2.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.19.1.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 619,
   "candidate": null,
-  "boundary": "No genuine G1–G8 external provider evidence or same-release accepted producer is recorded for 2026.10.18.2; all accreditation, assessment, moderation and learner competence claims remain HOLD. Previous-release technical artifacts are historical only.",
+  "boundary": "No genuine G1–G8 external provider evidence or same-release accepted producer is recorded for 2026.10.19.1; all accreditation, assessment, moderation and learner competence claims remain HOLD. Previous-release technical artifacts are historical only.",
   "requiredGates": [
     {
       "id": "G1-provider",
