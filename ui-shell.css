@@ -706,3 +706,19 @@ button:disabled,[aria-disabled="true"]{
     outline-color:Highlight;
   }
 }
+
+/* Phone Practice hub owns a single, source-readable task column.
+ * This baseline rule applies even before optional learner-polish CSS finishes
+ * loading after a route/viewport change. Keep large-screen two-column layout. */
+@media (max-width:700px){
+  #scenarios .mm-practice-hub .mm-hub-section .mm-hub-grid,
+  #scenarios .mm-practice-hub .mm-hub-grid{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:9px!important;
+  }
+  #scenarios .mm-practice-hub .mm-hub-grid > .mm-hub-tile{
+    min-width:0!important;
+    max-width:100%!important;
+  }
+}
