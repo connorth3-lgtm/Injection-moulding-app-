@@ -55,6 +55,9 @@ jobs:
       - name: Canonical governance states
         run: python qa_governance_state_model.py
 
+      - name: Fail-closed external HOLD candidate transition regression
+        run: python -m unittest discover -s tests -p test_rebind_external_hold_candidate.py -v
+
       - name: Lifecycle orphan and stuck-state detection
         run: python qa_governance_orphan_detection.py
 

@@ -40,14 +40,29 @@ def update_banner(text, candidate, path):
     """Replace only the release-specific artifact banner, retaining review evidence."""
     lines = text.splitlines(keepends=True)
     need(bool(lines) and candidate["release"] in lines[0], f"{path}: release heading stale")
-    positions = [i for i, line in enumerate(lines[:12]) if line.startswith("> **RETAINED ")]
-    need(len(positions) == 1, f"{path}: missing or ambiguous retained-artifact banner")
-    try:
-        validate_packet(text, path, candidate, candidate["release"])
-        return text
-    except ValueError:
-        pass
+    # A new release starts with a truthful PENDING artifact banner. Only a
+    # real successful producer may later supply the retained candidate identity.
+    # Both staged and already-bound packets must have exactly one active banner;
+    # never accept a prior release's banner or ambiguous duplicated provenance.
+    positions = [i for i, line in enumerate(lines[:12])
+                 if line.startswith("> **RETAINED ") or line.startswith("> **PENDING ")]
+    need(len(positions) == 1, f"{path}: missing or ambiguous artifact banner")
     i = positions[0]
+    banner_release = re.match(
+        r"^> \*\*(?:PENDING|RETAINED) (\d{4}\.\d{2}\.\d{2}\.\d+) (?:TECHNICAL )?ARTIFACT",
+        lines[i],
+    )
+    need(bool(banner_release) and banner_release.group(1) == candidate["release"],
+         f"{path}: artifact banner release mismatch")
+    if lines[i].startswith("> **PENDING "):
+        need("ARTIFACT" in lines[i] and "STOP" in lines[i],
+             f"{path}: pending artifact banner must explicitly preserve tester HOLD")
+    else:
+        try:
+            validate_packet(text, path, candidate, candidate["release"])
+            return text
+        except ValueError:
+            pass
     expiry, fingerprint, digest = (candidate[key] for key in ("artifactExpiresAt", "runtimeFingerprint", "artifactDigest"))
     source, run, artifact = candidate["sourceSha"], candidate["candidateRunId"], candidate["artifactId"]
     banner = (
