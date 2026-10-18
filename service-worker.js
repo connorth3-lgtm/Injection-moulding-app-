@@ -1,5 +1,5 @@
 const CACHE_VERSION='2026.10.19.1';
-const CACHE_REVISION='preview-book-speech-end-20261019';
+const CACHE_REVISION='preview-android-speech-stability-20261019';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both

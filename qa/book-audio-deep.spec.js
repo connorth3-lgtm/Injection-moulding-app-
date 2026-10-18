@@ -188,3 +188,40 @@ test('Book preserves its learner-scoped cursor and advances if a phone voice onl
   await page.locator('.mm-read-aloud [data-mm-read="stop"]').click();
   await expect(page.locator('.mm-read-aloud [data-mm-read="play"]')).toHaveText('Listen');
 });
+
+
+test('Book on Android never cuts speech after onstart when optional learner bookmark scope is unavailable',async({page})=>{
+  await openBook(page);
+  await page.evaluate(()=>{
+    // Simulate an installed PWA where learner storage has not initialized.
+    // Narration must work, but no cross-learner bookmark may be persisted.
+    window.MM_LEARNER_SCOPE=undefined;
+    window.__mmMissingScopeSpeech={cancels:0,utterances:[]};
+    window.speechSynthesis.cancel=()=>{
+      window.__mmMissingScopeSpeech.cancels++;
+    };
+    window.speechSynthesis.speak=u=>{
+      window.__mmMissingScopeSpeech.utterances.push(u);
+      queueMicrotask(()=>u.onstart?.());
+    };
+  });
+  await page.locator('#mmBookView [data-mm-book-mode="listen"]').click();
+  const player=page.locator('.mm-read-aloud');
+  await expect(player.locator('.mm-read-status')).toHaveText('Reading');
+  await expect(player.locator('[data-mm-read="play"]')).toHaveText('Pause');
+  expect(await page.evaluate(()=>window.__mmMissingScopeSpeech.cancels)).toBe(0);
+  expect(await page.evaluate(()=>window.__mmMissingScopeSpeech.utterances.length)).toBe(1);
+  expect(await page.evaluate(()=>window.MMBook.getAudioResume())).toBeNull();
+
+  // A completed short chapter heading advances to governed prose without
+  // flushing the OS voice with another cancel() in between.
+  await page.evaluate(()=>window.__mmMissingScopeSpeech.utterances[0].onend?.());
+  await expect.poll(()=>page.evaluate(()=>window.__mmMissingScopeSpeech.utterances.length)).toBe(2);
+  expect(await page.evaluate(()=>window.__mmMissingScopeSpeech.cancels)).toBe(0);
+  await expect(player.locator('.mm-read-status')).toHaveText('Reading');
+
+  // Explicit Stop must still cancel the active physical voice.
+  await player.locator('[data-mm-read="stop"]').click();
+  expect(await page.evaluate(()=>window.__mmMissingScopeSpeech.cancels)).toBe(1);
+  await expect(player.locator('.mm-read-status')).toHaveText('Stopped');
+});
