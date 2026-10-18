@@ -190,7 +190,25 @@ async function searchAllPage(query,{types=null,region=null,country=null,manufact
     }
     ids=intersect(ids,allowed);
   }
-  const ordered=index.documentOrder.filter(id=>ids.has(id));const safePageSize=Math.max(1,Math.min(Number(pageSize)||20,100));const total=ordered.length;const pageCount=Math.max(1,Math.ceil(total/safePageSize));const safePage=Math.max(1,Math.min(Number(page)||1,pageCount));const start=(safePage-1)*safePageSize;
+  const ordered=index.documentOrder.filter(id=>ids.has(id));
+  // A country or supplier mentioned only in a reference document must not
+  // outrank a published grade whose name/country actually matches the query.
+  // Keep the canonical catalogue order for blank searches and within each
+  // relevance tier; source mentions remain searchable as supporting context.
+  if(queryTokens.length){
+    const phrase=norm(query);
+    function priority(id){
+      const doc=index.documentById.get(id),cat=doc?.catalog||{};
+      if(norm(doc?.title).includes(phrase))return 0;
+      if(norm(cat.manufacturer).includes(phrase))return 1;
+      if(norm(cat.country).includes(phrase))return 2;
+      if(norm(doc?.subtitle).includes(phrase))return 3;
+      return 4;
+    }
+    const ranks=new Map(ordered.map(id=>[id,priority(id)]));
+    ordered.sort((a,b)=>ranks.get(a)-ranks.get(b));
+  }
+  const safePageSize=Math.max(1,Math.min(Number(pageSize)||20,100));const total=ordered.length;const pageCount=Math.max(1,Math.ceil(total/safePageSize));const safePage=Math.max(1,Math.min(Number(page)||1,pageCount));const start=(safePage-1)*safePageSize;
   return {items:ordered.slice(start,start+safePageSize).map(id=>index.documentById.get(id)),total,page:safePage,pageSize:safePageSize,pageCount,hasPrevious:safePage>1,hasNext:safePage<pageCount,types:[...index.typeIndex.keys()]};
 }
 async function facets(){
