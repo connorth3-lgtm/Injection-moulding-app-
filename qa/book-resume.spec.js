@@ -355,6 +355,8 @@ test('Book listening return focuses the original Contents listening control',asy
   const back=page.locator('#mmBookView [data-mm-book-reader] > button[data-mm-book-back]').first();
   await expect(back).toBeVisible();
   await back.focus();
+  // A pending animation-frame focus must not steal the explicit Back control.
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
   await expect(back).toBeFocused();
   await back.press('Enter');
   await expect(page.locator('#mmBookView [data-mm-book-contents]')).toBeVisible();
