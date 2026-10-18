@@ -48,7 +48,12 @@ def update_banner(text, candidate, path):
                  if line.startswith("> **RETAINED ") or line.startswith("> **PENDING ")]
     need(len(positions) == 1, f"{path}: missing or ambiguous artifact banner")
     i = positions[0]
-    need(candidate["release"] in lines[i], f"{path}: artifact banner release mismatch")
+    banner_release = re.match(
+        r"^> \\*\\*(?:PENDING|RETAINED) (\\d{4}\\.\\d{2}\\.\\d{2}\\.\\d+) (?:TECHNICAL )?ARTIFACT",
+        lines[i],
+    )
+    need(bool(banner_release) and banner_release.group(1) == candidate["release"],
+         f"{path}: artifact banner release mismatch")
     if lines[i].startswith("> **PENDING "):
         need("ARTIFACT" in lines[i] and "STOP" in lines[i],
              f"{path}: pending artifact banner must explicitly preserve tester HOLD")
