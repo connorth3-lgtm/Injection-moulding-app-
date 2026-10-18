@@ -1115,3 +1115,37 @@ for (const [platform, agent] of [
     await panel.locator('[data-mm-read="stop"]').click();
   });
 }
+
+
+test('Android first-word regression: sound test and next sentence do not cancel an idle voice',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>First Android sentence. Second Android sentence.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
+    class Utterance{constructor(text=''){this.text=text;this.lang='';this.voice=null;this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const device={cancels:0,spoken:[],getVoices(){return[];},
+      speak(u){this.spoken.push(u);},
+      cancel(){this.cancels++;},
+      pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    window.__mmAndroidNoIdleCancel=device;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:device});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const player=page.locator('.mm-read-aloud');
+  await player.locator('summary').click();
+  await player.locator('[data-mm-read="test"]').click();
+  expect(await page.evaluate(()=>window.__mmAndroidNoIdleCancel.cancels)).toBe(0);
+  await page.evaluate(()=>{const u=window.__mmAndroidNoIdleCancel.spoken[0];u.onstart?.();u.onend?.();});
+  await expect(player.locator('.mm-read-status')).toContainText('Sound test finished');
+  expect(await page.evaluate(()=>window.__mmAndroidNoIdleCancel.cancels)).toBe(0);
+  await player.locator('[data-mm-read="play"]').click();
+  expect(await page.evaluate(()=>window.__mmAndroidNoIdleCancel.cancels)).toBe(0);
+  await page.evaluate(()=>window.__mmAndroidNoIdleCancel.spoken[1].onstart?.());
+  await expect(player.locator('.mm-read-status')).toHaveText('Reading');
+  await page.evaluate(()=>window.__mmAndroidNoIdleCancel.spoken[1].onend?.());
+  await expect.poll(()=>page.evaluate(()=>window.__mmAndroidNoIdleCancel.spoken.length)).toBe(3);
+  expect(await page.evaluate(()=>window.__mmAndroidNoIdleCancel.cancels)).toBe(0);
+  await player.locator('[data-mm-read="stop"]').click();
+  expect(await page.evaluate(()=>window.__mmAndroidNoIdleCancel.cancels)).toBe(1);
+  await expect(player.locator('.mm-read-status')).toHaveText('Stopped');
+});
