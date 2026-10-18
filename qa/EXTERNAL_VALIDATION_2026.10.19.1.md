@@ -1,6 +1,6 @@
 # MouldMaster 2026.10.19.1 — preview-release external validation HOLD
 
-**STATUS: TECHNICAL RETENTION PENDING / ALL SEVEN INDEPENDENT EXTERNAL REVIEWS HOLD.** The combined Learn/Practice, Book/Listen, Materials and mobile repairs were merged to the non-publishing `preview` branch via PR #646. Automated functional checks on the PR head do not constitute an accepted, current-release exact-source public candidate, human visual approval, physical phone speaker/audio test, or independent accessibility/SME/provider approval. The prior-release candidate and earlier test reports are historical only.
+**STATUS: TECHNICAL CANDIDATE RETAINED / ALL SEVEN INDEPENDENT EXTERNAL REVIEWS HOLD.** The combined Learn/Practice, Book/Listen, Materials and mobile repairs were merged to the non-publishing `preview` branch via PR #646. Source 4e8169602ca73fc78cfd2f2421a263632cfe84ea has a verified retained technical artifact from [producer 39148051891](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/39148051891), with passing exact-source automated checks. This does not grant owner visual approval, physical phone speaker/audio confirmation or independent accessibility/SME/provider approval. The prior-release candidate and earlier test reports are historical only.
 
 ## Seven independent release-specific HOLD packets
 
@@ -14,7 +14,7 @@
 
 ## Protected release acceptance
 
-1. Retain a successful exact-source `2026.10.19.1` candidate from the governed producer, record its real source SHA, artifact ID/digest, runtime fingerprint and expiry, and independently verify its quality gates. Until then `webCandidate` must stay null.
+1. Technical retention: source `4e8169602ca73fc78cfd2f2421a263632cfe84ea`, run `39148051891`, artifact `12143923886`, digest `sha256:04a8e7f21d5256986d996911e20bb9051eb0ecd5373ab94537255644bbe7a224`, fingerprint `sha256:1f498160634145407bd394bfe8c32ed70a1ce5f862834e8159d2f1e9fdd6cee9`, expiry `2027-01-16T17:06:33Z`. Human-reviewed technical acceptance and publication remain separately blocked.
 2. Review genuine phone speaker sound, iOS/iPadOS and Android install/offline/update flows, human NVDA/VoiceOver outcomes, Book and curriculum SME review, learner pilot, signed Windows distribution and provider G1–G8 evidence against that candidate.
 3. Keep all seven external streams **HOLD**, software publication **BLOCKED** and production machine-control authority **NOT GRANTED**. The `preview` branch and its artifacts are not a live GitHub Pages deployment.
 

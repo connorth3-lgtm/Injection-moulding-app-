@@ -6,8 +6,12 @@
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 619,
-  "candidate": null,
-  "boundary": "No genuine G1–G8 external provider evidence or same-release accepted producer is recorded for 2026.10.19.1; all accreditation, assessment, moderation and learner competence claims remain HOLD. Previous-release technical artifacts are historical only.",
+  "candidate": {
+    "release": "2026.10.19.1",
+    "sourceSha": "4e8169602ca73fc78cfd2f2421a263632cfe84ea",
+    "runtimeFingerprint": "sha256:1f498160634145407bd394bfe8c32ed70a1ce5f862834e8159d2f1e9fdd6cee9"
+  },
+  "boundary": "Release 2026.10.19.1 technical candidate 4e8169602ca73fc78cfd2f2421a263632cfe84ea does not establish any of NZQA/provider G1–G8 external gates or assessment/accreditation authority.",
   "requiredGates": [
     {
       "id": "G1-provider",

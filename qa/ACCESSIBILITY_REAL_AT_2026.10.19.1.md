@@ -1,8 +1,8 @@
 # Real assistive technology — 2026.10.19.1
 
-**STATUS: HOLD — 2026.10.19.1 has no retained and independently verified current-release candidate or real external review. Earlier builds/tests are historical only; no owner visual, human AT, physical phone audio, SME or provider approval is inferred.**
+**STATUS: HOLD — 2026.10.19.1 has a verified retained technical candidate but no completed real external review. Earlier builds/tests are historical only; no owner visual, human AT, physical phone audio, SME or provider approval is inferred.**
 
-> **PENDING 2026.10.19.1 ARTIFACT.** A previous-release artifact is historical evidence only, not acceptance for this release. Do not populate producer SHA/run, runtime fingerprint, artifact IDs or human/device result fields without independently verified real provenance. Tester invitation STOP; no machine-control, signed distribution, accreditation or production use.
+> **RETAINED 2026.10.19.1 TECHNICAL ARTIFACT — INDEPENDENT REVIEWS HOLD.** [Exact-source producer run 39148051891](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/39148051891) created artifact **12143923886**, source 4e8169602ca73fc78cfd2f2421a263632cfe84ea, digest sha256:04a8e7f21d5256986d996911e20bb9051eb0ecd5373ab94537255644bbe7a224, expiry 2027-01-16T17:06:33Z, and public-runtime fingerprint sha256:1f498160634145407bd394bfe8c32ed70a1ce5f862834e8159d2f1e9fdd6cee9. Producer quality passed exact-source automated gates. The retained artifact does not establish any human, real-device, Windows signing, provider, accreditation or production authorization.
 
 ## Required independently reviewed evidence
 

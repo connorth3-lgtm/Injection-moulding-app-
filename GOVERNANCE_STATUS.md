@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | HOLD: merged preview release 2026.10.19.1 has no independently accepted same-release public candidate, proven producer artifact, digest or runtime fingerprint. Prior-release candidate artifacts are historical only; seven external review streams remain HOLD. |
-| Behavioral / browser | **fail** | HOLD: PR #646 functional Learn/Book, WebKit, mobile reachability and 500-case reliability jobs passed, but the real-AT/static contract and overall mobile-browser workflow remained red. Functional test success does not authorize candidate promotion, publication, phone-audio claims or owner visual approval. |
+| Static / contract | **fail** | HOLD: release 2026.10.19.1 now has a source-bound, unexpired technical artifact 12143923886, producer 39148051891 and runtime fingerprint sha256:1f498160634145407bd394bfe8c32ed70a1ce5f862834e8159d2f1e9fdd6cee9. Exact-source automated gates passed, but independent technical acceptance and the seven external review streams remain HOLD. |
+| Behavioral / browser | **fail** | HOLD: exact-source Read Aloud, combined Book/Learn, full mobile browser, reliability and question-quality workflows passed on 4e8169602ca73fc78cfd2f2421a263632cfe84ea. These tests cannot prove actual phone speaker sound, independent assistive-technology review, SME approval or live public release. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
