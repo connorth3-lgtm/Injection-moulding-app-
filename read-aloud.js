@@ -19,6 +19,9 @@
   let selectedVoice=null;
   let preferredVoiceId='';
   let speakToken=0;
+  // Hold the current OS utterance strongly until completion or cancellation.
+  // Some mobile Chromium speech providers stop mid-sentence if it is collected.
+  let activeUtterance=null;
   let activeSource=null;
   let activeRoot=null;
   let ui=null;
@@ -228,7 +231,10 @@
     // Invalidate active callbacks before cancel: some device voices dispatch
     // a synchronous cancellation error from synth.cancel().
     speakToken+=1;
-    cancelDeviceSpeech();
+    const hadActiveUtterance=!!activeUtterance;
+    activeUtterance=null;
+    // Cancelling a fresh, idle Android synthesizer can abort the next speak.
+    if(hadActiveUtterance)cancelDeviceSpeech();
     selectionPending=false;
     starting=false;speaking=false;paused=false;
     clearHighlight();
@@ -273,7 +279,9 @@
       if(document.hidden&&!playlistMode){stop('Stopped because the app was hidden before speech started');return;}
       // Must run directly inside the original tap handler on Android, even
       // with an empty voice list. The platform can pick its default voice.
-      cancelDeviceSpeech();
+      // Only cancel an utterance actually owned by this player. A second
+      // cancel immediately before speak() can cut off Android audio.
+      if(activeUtterance){activeUtterance=null;cancelDeviceSpeech();}
       let utterance;
       try{
         utterance=new SpeechSynthesisUtterance(unit.text);
@@ -296,6 +304,7 @@
         // A platform may deliver a late onstart after timeout. Invalidate it
         // before canceling or retrying, including when cancel emits no error.
         speakToken+=1;
+        activeUtterance=null;
         cancelDeviceSpeech();starting=false;speaking=false;paused=false;
         if(androidSpeech){
           // Timer callbacks cannot recover a blocked mobile user gesture.
@@ -327,6 +336,7 @@
         // otherwise the Book remains stuck on Starting and never continues.
         // Ignore ended callbacks after Stop, Pause, or a newer utterance.
         if(token!==speakToken||(!speaking&&!starting))return;
+        if(activeUtterance===utterance)activeUtterance=null;
         if(!started){
           if(document.hidden&&!playlistMode){stop('Stopped because the app was hidden before speech started');return;}
           starting=false;
@@ -352,6 +362,7 @@
           ? 'Android blocked voice playback. Tap Listen to start audio.'
           : `Speech playback could not continue${event?.error?`: ${event.error}`:''}.`);
       };
+      activeUtterance=utterance;
       try{synth.speak(utterance)}catch(err){
         clearTimeout(startTimer);starting=false;
         stop(androidSpeech?'Android voice could not start. Tap Listen again.':'Device voice could not be started.');
@@ -440,6 +451,7 @@
     };
     utterance.onend=()=>{
       clearTimeout(timer);
+      if(activeUtterance===utterance)activeUtterance=null;
       if(token===speakToken)stop('Sound test finished. If you heard nothing, check media volume and your phone text-to-speech voice.');
     };
     utterance.onerror=event=>{
@@ -448,6 +460,7 @@
     };
     // Never wait for voiceschanged, a promise or animation frame on mobile:
     // speech synthesis should receive the real user activation immediately.
+    activeUtterance=utterance;
     try{synth.speak(utterance)}catch(_){
       clearTimeout(timer);
       stop('Phone voice could not start. Check text-to-speech settings.');
