@@ -1065,3 +1065,53 @@ test('Android voice completion advances sentences even if its onstart callback n
   await expect(player.locator('.mm-read-status')).toHaveText('Finished reading');
   await expect(player.locator('[data-mm-read="play"]')).toHaveText('Listen');
 });
+
+
+for (const [platform, agent] of [
+  ['Android', 'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'],
+  ['iPhone', 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile Safari/604.1'],
+]) {
+  test(`${platform} Automatic device voice never overrides OS default, but an explicitly selected voice is honoured`,async({page})=>{
+    await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Speak from the phone speaker with the automatic device voice.</p></main></body></html>');
+    await page.evaluate(agent=>{
+      Object.defineProperty(navigator,'userAgent',{configurable:true,value:agent});
+      class Utterance{
+        constructor(text=''){this.text=text;this.lang='';this.voice=null;this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}
+      }
+      const installed={name:'Legacy installed voice',lang:'en-US',voiceURI:'legacy-voice-uri',default:true};
+      const speech={
+        getVoices(){return[installed];},
+        speak(u){
+          (window.__mmDeviceVoiceRequests||(window.__mmDeviceVoiceRequests=[]))
+            .push({text:u.text,voiceURI:u.voice?.voiceURI||null});
+          queueMicrotask(()=>u.onstart?.());
+        },
+        cancel(){},pause(){},resume(){},addEventListener(){},removeEventListener(){}
+      };
+      Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+      Object.defineProperty(window,'speechSynthesis',{configurable:true,value:speech});
+    },agent);
+    await page.addScriptTag({path:'read-aloud.js'});
+    const panel=page.locator('.mm-read-aloud');
+    await panel.locator('details').evaluate(el=>{el.open=true;});
+    const voice=panel.locator('[data-mm-read="voice"]');
+    await expect(voice).toHaveValue('');
+    await panel.locator('[data-mm-read="play"]').click();
+    await expect.poll(()=>page.evaluate(()=>window.__mmDeviceVoiceRequests?.length||0)).toBe(1);
+    expect(await page.evaluate(()=>window.__mmDeviceVoiceRequests.at(-1).voiceURI)).toBeNull();
+    await panel.locator('[data-mm-read="stop"]').click();
+    await panel.locator('[data-mm-read="test"]').click();
+    await expect.poll(()=>page.evaluate(()=>window.__mmDeviceVoiceRequests?.length||0)).toBe(2);
+    expect(await page.evaluate(()=>window.__mmDeviceVoiceRequests.at(-1).voiceURI)).toBeNull();
+    await panel.locator('[data-mm-read="stop"]').click();
+    await voice.selectOption('legacy-voice-uri');
+    await panel.locator('[data-mm-read="play"]').click();
+    await expect.poll(()=>page.evaluate(()=>window.__mmDeviceVoiceRequests?.length||0)).toBe(3);
+    expect(await page.evaluate(()=>window.__mmDeviceVoiceRequests.at(-1).voiceURI)).toBe('legacy-voice-uri');
+    await panel.locator('[data-mm-read="stop"]').click();
+    await panel.locator('[data-mm-read="test"]').click();
+    await expect.poll(()=>page.evaluate(()=>window.__mmDeviceVoiceRequests?.length||0)).toBe(4);
+    expect(await page.evaluate(()=>window.__mmDeviceVoiceRequests.at(-1).voiceURI)).toBe('legacy-voice-uri');
+    await panel.locator('[data-mm-read="stop"]').click();
+  });
+}
