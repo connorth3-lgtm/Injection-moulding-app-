@@ -195,15 +195,15 @@ def main() -> None:
     version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))["web_release"]
     titles = []
     total_duration = 0.0
-    # Parallel audiobook generation: ten independent two-chapter shards.
+    # Parallel audiobook generation: five independent four-chapter shards.
     # Each shard validates the full governed source, and outputs only the
     # named chapters. The final package assembles and audits every shard.
     shard = int(os.environ.get("MM_AUDIO_SHARD", "0"))
-    if shard and not 1 <= shard <= 10:
-        raise RuntimeError("MM_AUDIO_SHARD must be 1..10")
+    if shard and not 1 <= shard <= 5:
+        raise RuntimeError("MM_AUDIO_SHARD must be 1..5")
 
     for index, reader in enumerate(readers, 1):
-        if shard and (index - 1) // 2 + 1 != shard:
+        if shard and (index - 1) // 4 + 1 != shard:
             continue
         lines: list[str] = []
         module_ids = reader["moduleIds"]
