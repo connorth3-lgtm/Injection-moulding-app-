@@ -163,9 +163,13 @@ test('Singapore exact-grade material search exposes Mitsui Elastomers Singapore 
   const filters=root.locator('[data-mm-all-material-filters]');
   await filters.locator('summary').click();
   await filters.locator('[data-mm-all-material-type]').selectOption('exact-grade');
+  const status=root.locator('[data-mm-all-material-status]');
+  // A free-text Singapore search also matches supplier source documents
+  // worldwide. Prioritize the actual Singapore manufacturer on page one.
+  await search.fill('Singapore');
+  await expect(root.locator('[data-mm-all-material-results] [data-mm-material-index-result]').first()).toContainText('Mitsui Elastomers Singapore');
   // Country is an explicit manufacturer-country facet, not a guarantee of
   // where a grade was produced. Wait for the async index after each change.
-  const status=root.locator('[data-mm-all-material-status]');
   await filters.locator('[data-mm-all-material-country]').selectOption('Singapore');
   await expect(status).toContainText('31 matching material records');
   await search.fill('Singapore');
