@@ -3,7 +3,7 @@ name: Natural Voice Chapter 1 Audition (offline neural TTS)
 on:
   push:
     branches:
-      - 'audiobook/natural-voice-*'
+      - 'audiobook/natural-voice-audition-*'
   workflow_dispatch:
 
 permissions:
