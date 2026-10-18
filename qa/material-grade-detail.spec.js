@@ -163,14 +163,20 @@ test('Singapore exact-grade material search exposes Mitsui Elastomers Singapore 
   const filters=root.locator('[data-mm-all-material-filters]');
   await filters.locator('summary').click();
   await filters.locator('[data-mm-all-material-type]').selectOption('exact-grade');
-  await search.fill('Singapore');
+  // Country is an explicit manufacturer-country facet, not a guarantee of
+  // where a grade was produced. Wait for the async index after each change.
   const status=root.locator('[data-mm-all-material-status]');
-  await expect(status).toContainText('matching material records');
+  await filters.locator('[data-mm-all-material-country]').selectOption('Singapore');
+  await expect(status).toContainText('31 matching material records');
+  await search.fill('Singapore');
+  await expect(search).toHaveValue('Singapore');
+  await expect(status).toContainText('31 matching material records');
   await expect(root.locator('[data-mm-all-material-results]')).toContainText('Mitsui Elastomers Singapore');
   // Each sourced product remains individually discoverable on the unified
   // index, rather than silently existing in a hidden second catalogue.
   for(const code of ['A-4070S','DF640','MA8510']){
     await search.fill(code);
+    await expect(status).toContainText('1 matching material record');
     await expect(root.locator('[data-mm-all-material-results]')).toContainText(code);
   }
   const geometry=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,page:document.documentElement.scrollWidth}));
