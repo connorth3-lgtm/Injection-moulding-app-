@@ -159,4 +159,4 @@ for marker in (
     need(marker in privacy, f"Read Aloud privacy disclosure missing: {marker}")
 need("entirely on-device" in privacy, "voice-processing limitation disclosure missing")
 
-print("MouldMaster Read Aloud QA passed: speech-synthesis-only, Android first-tap/desktop delayed-voice aware, long-session Listening enabled, offline/desktop-integrity wired, and privacy disclosed.")
+print("MouldMaster Read Aloud QA passed: output-only speech synthesis and tap-only local audio tone diagnostic, Android first-tap/desktop delayed-voice aware, long-session Listening enabled, offline/desktop-integrity wired, and privacy disclosed.")
