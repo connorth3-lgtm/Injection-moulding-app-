@@ -103,6 +103,11 @@
   window.addEventListener('mm:book-audio-position',event=>{
     if(!open||!ui?.view||ui.view.classList.contains('hidden'))return;
     const d=event.detail||{},key=audioStorageKey();
+    // A learner-specific bookmark is optional: failing to obtain a local
+    // storage scope must not cancel speech just after its first onstart event.
+    // If the session began with a valid scope, keep the strict profile-change
+    // stop so another learner never inherits the previous user's narration.
+    if(!activeAudioScopeKey)return;
     if(!key||key!==activeAudioScopeKey){window.MMReadAloud?.stop?.();return;}
     if(!/^r(?:0[1-9]|1[0-9]|20)$/.test(String(d.chapterId||''))||!Number.isInteger(d.unitIndex)||d.unitIndex<0||d.unitIndex>20000)return;
     const mode=ui.audioMode?.value||'complete';
