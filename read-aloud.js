@@ -311,7 +311,16 @@
       };
       utterance.onend=()=>{
         clearTimeout(startTimer);
-        if(token!==speakToken||!speaking)return;
+        // Some mobile voice providers report completion without an onstart
+        // callback. Completion is still evidence that this utterance ended;
+        // otherwise the Book remains stuck on Starting and never continues.
+        // Ignore ended callbacks after Stop, Pause, or a newer utterance.
+        if(token!==speakToken||(!speaking&&!starting))return;
+        if(!started){
+          if(document.hidden&&!playlistMode){stop('Stopped because the app was hidden before speech started');return;}
+          starting=false;
+          if(unit.bookChapterId)window.dispatchEvent(new CustomEvent('mm:book-audio-position',{detail:{chapterId:unit.bookChapterId,unitIndex:unit.bookSentenceIndex}}));
+        }
         if(index<units.length-1){index+=1;speakCurrent();}
         else {
           if(unit.bookChapterId)window.dispatchEvent(new CustomEvent('mm:book-audio-complete'));
