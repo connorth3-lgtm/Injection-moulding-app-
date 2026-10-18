@@ -5031,3 +5031,10 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
     min-height:44px!important;
   }
 }
+
+/* Phone Practice: keep the five source-owned choices readable without horizontal squeeze. */
+@media(max-width:480px){
+  .mm-reference-layout #scenarios .mm-practice-hub>.mm-hub-section .mm-hub-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+}
