@@ -195,8 +195,16 @@ def main() -> None:
     version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))["web_release"]
     titles = []
     total_duration = 0.0
+    # Parallel audiobook generation: ten independent two-chapter shards.
+    # Each shard validates the full governed source, and outputs only the
+    # named chapters. The final package assembles and audits every shard.
+    shard = int(os.environ.get("MM_AUDIO_SHARD", "0"))
+    if shard and not 1 <= shard <= 10:
+        raise RuntimeError("MM_AUDIO_SHARD must be 1..10")
 
     for index, reader in enumerate(readers, 1):
+        if shard and (index - 1) // 2 + 1 != shard:
+            continue
         lines: list[str] = []
         module_ids = reader["moduleIds"]
         append_line(lines, f"Chapter {index}. {reader['title']}.")
@@ -281,7 +289,7 @@ def main() -> None:
         if os.environ.get("MM_AUDIO_SAMPLE_ONLY") == "1":
             break
 
-    if os.environ.get("MM_AUDIO_SAMPLE_ONLY") != "1" and (
+    if not shard and os.environ.get("MM_AUDIO_SAMPLE_ONLY") != "1" and (
         sum(x["syntheticWorkedCases"] for x in titles) != 27 or sum(
             x["diagramDescriptions"] for x in titles
         ) != 25
@@ -297,8 +305,11 @@ def main() -> None:
     result = {
         "edition": "MouldMaster Book – complete authored text listening edition",
         "sourceSha": source_sha, "governedBookVersion": version,
-        "readerChapters": 20, "governedModules": 46, "workedCases": 27,
-        "diagramDescriptions": 25, "minutes": round(total_duration / 60, 1),
+        "readerChapters": len(titles),
+        "governedModules": sum(len(x["modules"]) for x in titles),
+        "workedCases": sum(x["syntheticWorkedCases"] for x in titles),
+        "diagramDescriptions": sum(x["diagramDescriptions"] for x in titles),
+        "minutes": round(total_duration / 60, 1),
         "chapters": titles,
         "independentHumanSmeReview": "HOLD",
         "physicalDeviceAudioVerified": False,
