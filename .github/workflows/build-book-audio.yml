@@ -3,7 +3,7 @@ name: Build 20-Chapter Book Audio (non-publishing)
 on:
   push:
     branches:
-      - 'audiobook/**'
+      - 'audiobook/whole-book-mp3-20261019'
   workflow_dispatch:
 
 permissions:
