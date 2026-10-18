@@ -168,3 +168,23 @@ test('phone Book narration starts directly from the original tap, not a syntheti
   expect(await page.evaluate(()=>window.__syntheticPlayAttempt===true)).toBe(false);
   await expect(page.locator('.mm-read-aloud [data-mm-book-audio-chapter]')).toHaveValue('r04');
 });
+
+test('Book preserves its learner-scoped cursor and advances if a phone voice only reports onend',async({page})=>{
+  await openBook(page);
+  await page.locator('[data-mm-book-audio-start]').selectOption('r09');
+  await page.evaluate(()=>{
+    window.speechSynthesis.speak=u=>{
+      window.__bookEndOnlyLast=u;
+      window.__bookEndOnlyCount=(window.__bookEndOnlyCount||0)+1;
+    };
+  });
+  await page.locator('#mmBookView [data-mm-book-mode="listen"]').click();
+  await expect(page.locator('.mm-read-aloud [data-mm-read="play"]')).toHaveText('Starting…');
+  expect(await page.evaluate(()=>window.MMBook.getAudioResume())).toBeNull();
+  await page.evaluate(()=>window.__bookEndOnlyLast.onend?.());
+  await expect.poll(()=>page.evaluate(()=>window.MMBook.getAudioResume()?.chapterId)).toBe('r09');
+  await expect.poll(()=>page.evaluate(()=>window.MMBook.getAudioResume()?.unitIndex)).toBe(0);
+  expect(await page.evaluate(()=>window.__bookEndOnlyCount)).toBe(2);
+  await page.locator('.mm-read-aloud [data-mm-read="stop"]').click();
+  await expect(page.locator('.mm-read-aloud [data-mm-read="play"]')).toHaveText('Listen');
+});
