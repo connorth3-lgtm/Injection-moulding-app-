@@ -70,7 +70,7 @@ class CandidateRebindRegression(unittest.TestCase):
 
         duplicate = pending.replace(
             "> **PENDING 2026.10.18.2 ARTIFACT.",
-            "> **PENDING 2026.10.18.2 ARTIFACT.\\n> **PENDING 2026.10.18.2 ARTIFACT.",
+            "> **PENDING 2026.10.18.2 ARTIFACT.\n> **PENDING 2026.10.18.2 ARTIFACT.",
             1,
         )
         with self.assertRaises(SystemExit):
