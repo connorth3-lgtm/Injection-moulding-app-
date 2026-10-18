@@ -16,13 +16,15 @@ async function openApp(page,width,learningAwards=[]){
 async function mobileHub(page,name){await page.locator('.mobile-nav > button').filter({hasText:name}).click()}
 async function mobileMore(page){await page.locator('.mobile-nav > button').filter({hasText:'More'}).click();await expect(page.locator('#modal .modal-card')).toBeVisible()}
 async function visibleMoreAction(page,id){
- const action=page.locator('#modal [data-mm-registry-menu="'+id+'"]');
- // The compact More menu groups native actions inside initially closed details.
- // Expand the actual disclosure through its summary so this tests visible UI.
+ // Wait for the deferred shell menu and its final disclosure groups.
+ const grid=page.locator('#modal:not(.hidden) .grid2[data-mm-more-organized="1"][data-mm-reference-more="1"]');
+ await expect(grid).toBeVisible();
+ const action=grid.locator('[data-mm-registry-menu="'+id+'"]');
+ await expect(action).toHaveCount(1);
  const group=action.locator('xpath=ancestor::details[1]');
- if(await group.count() && await group.getAttribute('open')===null){
-   await group.locator('summary').first().click();
- }
+ await expect(group).toHaveCount(1);
+ if(await group.getAttribute('open')===null)await group.locator(':scope > summary').click();
+ await expect(group).toHaveAttribute('open','');
  await expect(action).toBeVisible();
  return action;
 }
