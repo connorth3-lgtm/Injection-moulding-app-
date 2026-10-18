@@ -33,10 +33,17 @@ async function openLearnHub(page){
   await expectOnlyCurrent(page,'Learn');
 }
 async function visibleMoreAction(page,id){
-  const action=page.locator('#modal [data-mm-registry-menu="'+id+'"]');
+  // The shell populates More on the next animation frame. Wait for its
+  // organized, decorated native groups before opening a disclosure.
+  const grid=page.locator('#modal:not(.hidden) .grid2[data-mm-more-organized="1"][data-mm-reference-more="1"]');
+  await expect(grid).toBeVisible();
+  const action=grid.locator('[data-mm-registry-menu="'+id+'"]');
+  await expect(action).toHaveCount(1);
   const disclosure=action.locator('xpath=ancestor::details[1]');
-  if(await disclosure.count()&&await disclosure.getAttribute('open')===null)
-    await disclosure.locator('summary').first().click();
+  await expect(disclosure).toHaveCount(1);
+  if(await disclosure.getAttribute('open')===null)
+    await disclosure.locator(':scope > summary').click();
+  await expect(disclosure).toHaveAttribute('open','');
   await expect(action).toBeVisible();
   return action;
 }
@@ -115,6 +122,11 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
 
       await openPracticeHub(page);
       await openPracticeAction(page,'troubleshooting');
+      // Troubleshooting opens a user-visible tool chooser first; the learner
+      // must select the diagnostic workbench rather than auto-routing.
+      const chooser=page.locator('#modal:not(.hidden) .mm-diagnose-chooser');
+      await expect(chooser).toBeVisible();
+      await chooser.locator('[data-mm-hub-action="diagnostic-workbench"]').click();
       await expect(page.locator('#defects').getByRole('heading',{name:'Defect Finder + Troubleshooting Coach'})).toBeVisible();
       await expect(page.locator('#defects [data-mm-dx-action="choose"]').first()).toBeVisible();
       await expect(page.locator('#modal')).toHaveClass(/hidden/);
