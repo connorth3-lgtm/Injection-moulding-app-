@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.10.17.1",
+  "release": "2026.10.19.1",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": null,
-  "scope": "Draft 2026.10.17.1 PR #640 embeds 32 optional teaching checks across existing core lessons; no successful new release-producer, immutable owner-approved screenshots, public runtime fingerprint or artifact. Prior 2026.10.16.1 exact-source e336f656351afa4eeaaae0940969bea881ae9b68 is historical only.",
-  "approvalBoundary": "Current technical FAIL pending owner's specific visual review, exact-source public candidate, six required checks; external human/device/provider seven HOLD. Advisory only, no tester invitations/merge/publication.",
+  "candidateSourceSha": "4e8169602ca73fc78cfd2f2421a263632cfe84ea",
+  "scope": "Current 2026.10.19.1 producer run 39148051891 succeeded on exact source 4e8169602ca73fc78cfd2f2421a263632cfe84ea and retained artifact 12143923886 (runtime fingerprint sha256:1f498160634145407bd394bfe8c32ed70a1ce5f862834e8159d2f1e9fdd6cee9). The technical automation ledger remains FAIL; independent technical release acceptance is not granted. The preview branch has newer unmerged repair PR #649; its exact candidate publication has not been approved. All seven human/device/provider streams remain HOLD.",
+  "approvalBoundary": "Technical automation FAIL: retained technical artifact and passing feature checks are not current release signoff. Exact-head all-required CI, actual owner release decision and governed publication remain pending. All seven external human/device/provider acceptance lanes HOLD; advisory-only, no production authority or tester invitations.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -43,7 +43,7 @@
   "productionAuthority": "advisory-only",
   "humanEvidenceStatus": "hold",
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
-  "lastReviewedDate": "2026-10-17",
+  "lastReviewedDate": "2026-10-19",
   "previousVerifiedCandidate": {
     "release": "2026.10.16.1",
     "sourceSha": "e336f656351afa4eeaaae0940969bea881ae9b68"

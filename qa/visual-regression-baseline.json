@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.11.3",
-  "commit": "cf68994c400814a0b529b955a94f196b2b1449be",
-  "browser": "chromium via @playwright/test 1.55.0",
+  "release": "2026.10.16.1",
+  "commit": "04628e13a6c9a9517bef22bae6c12a456896f299",
+  "browser": "chromium via @playwright/test 1.64.0",
   "maxDiffPixels": 12,
   "viewports": [
     {
@@ -41,6 +41,17 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "On 2026-10-11 the owner expressly authorized promoting the current 2026.10.11.3 learner UI to the hosted non-production /preview/ path via PR #603, conditional on protected-main CI and production HOLD. The prior approved Chromium baseline 2026.10.10.1 (source 52160745ac51cbc9dae108315adc27fc1a3f5910) detected Material Atlas changes on four viewports; the exact failed run 38096152752 generated complete candidate/old/diff images (artifact 11685789264). Technical screenshot inspection confirmed the Material Atlas adds an explicit current-availability/processing-suitability-not-verified warning for a source-currentness-unknown grade, shifting later text without changing other shown UI elements. This record does not claim the owner independently opened/inspected every screenshot. The new pinned QA comparison source is exact preview SHA cf68994c400814a0b529b955a94f196b2b1449be and newly created visual-baseline/2026.10.11.3; the previous baseline ref remains preserved. Strict maxDiffPixels=12, viewport/surface coverage and fail-closed main visual gating are unchanged. Independent real devices, 200% zoom, NVDA/VoiceOver, Book/curriculum SME, learner studies, NZQA/provider G1-G8, Windows signing, production/root and machine-control authority remain HOLD. Protected-main /preview/ deployment still requires all exact-head CI to pass.",
-  "ref": "visual-baseline/2026.10.11.3"
+  "policy": "Visual approval for exact-source PR #639 screenshots only: after viewing three before/after comparisons and being asked if the compact phone More layout and small Practice change were approved, the owner replied \"Yes that's better\" on 2026-10-16 NZDT. The reviewed source is 04628e13a6c9a9517bef22bae6c12a456896f299; Mobile Browser QA run 38846976380, artifact 12023269036 (digest sha256:bf52e4488c878e4d1a0357eaa67b61aebb65455500f66d2e5d2e5286cfbd3ed6). Its screenshot manifest records 52 full, unmasked images at four viewports across thirteen surfaces, with three approved intentional drifts (phone-360x800-more 83431; phone-412x915-more 134974; phone-412x915-practice 7540) and 49 remaining screens within unchanged maxDiffPixels=12. The owner reviewed the presented three comparisons, not necessarily all 52 raw images. Approved capture image SHA256 values and full provenance are in qa/VISUAL_REVIEW_2026.10.16.1_PR639.md. This newly created visual-baseline/2026.10.16.1 ref is locked to actual reviewed source 04628e13a6c9a9517bef22bae6c12a456896f299; the historical visual-baseline/2026.10.15.3 ref remains unchanged at 82b1677caecb50c95c5395166317132447851e5b. All 52 surfaces and maxDiffPixels=12 retain strict protection with no masking. The pre-approval CI screenshot record correctly retains visualOwnerApproved=false; later owner approval is recorded separately. Visual approval is not release/merge approval, a technical producer pass, physical PWA or human NVDA/VoiceOver/SME, signing, learner/provider/NZQA evidence, accreditation or production authority. All seven external streams HOLD.",
+  "ref": "visual-baseline/2026.10.16.1",
+  "referenceCaptureToolchain": {
+    "framework": "@playwright/test",
+    "version": "1.64.0",
+    "browser": "chromium",
+    "referenceSourceSha": "04628e13a6c9a9517bef22bae6c12a456896f299"
+  },
+  "currentComparisonToolchain": {
+    "framework": "@playwright/test",
+    "version": "1.64.0",
+    "browser": "chromium"
+  }
 }
