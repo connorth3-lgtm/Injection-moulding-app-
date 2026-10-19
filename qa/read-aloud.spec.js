@@ -1038,3 +1038,35 @@ test('Android voice completion advances sentences when onstart is omitted',async
   await expect(player.locator('.mm-read-status')).toHaveText('Finished reading');
   await expect(player.locator('[data-mm-read="play"]')).toHaveText('Listen');
 });
+
+test('Book Listen advances when an Android speech provider omits onstart',async({page})=>{
+  await seedLearner(page);
+  await page.setViewportSize({width:390,height:844});
+  await page.addInitScript(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:
+      'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
+    class QaUtterance{
+      constructor(text=''){this.text=String(text);this.lang='';this.voice=null;this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}
+    }
+    const synth={utterances:[],getVoices(){return[];},speak(u){this.utterances.push(u);},
+      cancel(){},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    window.__mmBookEndOnlySpeech=synth;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:QaUtterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.goto(APP,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>Boolean(window.MMBook?.ready&&window.MMReadAloud?.supported&&window.MM_APP_SHELL_FINALIZED));
+  await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load();});
+  const listen=page.locator('#mmBookView [data-mm-book-mode="listen"]');
+  await expect(listen).toBeEnabled();
+  await listen.click();
+  const player=page.locator('.mm-read-aloud');
+  await expect(player.locator('[data-mm-read="play"]')).toHaveText('Starting…');
+  const first=await page.evaluate(()=>window.__mmBookEndOnlySpeech.utterances[0]?.text||'');
+  expect(first.length).toBeGreaterThan(0);
+  await page.evaluate(()=>window.__mmBookEndOnlySpeech.utterances[0].onend?.());
+  await expect.poll(()=>page.evaluate(()=>window.__mmBookEndOnlySpeech.utterances.length)).toBe(2);
+  await expect(player.locator('[data-mm-read="position"]')).toHaveText(/^2 \/ \d+$/);
+  await page.locator('.mm-read-aloud [data-mm-read="stop"]').click();
+  await expect(player.locator('.mm-read-status')).toHaveText('Stopped');
+});
