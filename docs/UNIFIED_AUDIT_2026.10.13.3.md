@@ -1,5 +1,11 @@
 # Unified MouldMaster audit and acceptance — 17 October 2026
 
+> **Archived snapshot — 17 October 2026; not current.** The release table, issue counts and follow-up text below preserve the state at that review date and must not be used as current release status.
+>
+> **Status checked 20 October 2026 (NZDT):** protected `main` is `53712742aa8c82e400a264f4c0e4a38b864335c4` and declares web release `2026.10.16.1`. The retained, non-publishing preview candidate is `2026.10.19.1`, bound to source `4e8169602ca73fc78cfd2f2421a263632cfe84ea`; see [issue #619](https://github.com/connorth3-lgtm/Injection-moulding-app-/issues/619). PR [#648](https://github.com/connorth3-lgtm/Injection-moulding-app-/pull/648) merged to `preview` and includes a Book Read Aloud fix for speech providers that send `onend` without `onstart`. That fix is absent from the checked `main` source; this change backports the callback fix with a regression test. The preview candidate is not a public Pages deployment, and independent device, assistive-technology, SME, learner-outcome and provider reviews remain HOLD.
+>
+> Use the generated [governance status](../GOVERNANCE_STATUS.md), [Book governance status](../BOOK_GOVERNANCE_STATUS.md) and the latest candidate/evidence tracker [issue #619](https://github.com/connorth3-lgtm/Injection-moulding-app-/issues/619) for current state. The first-read report's 850-word measure remains an editorial target, not an acceptance gate.
+
 **Single current audit tracker: [issue #632](https://github.com/connorth3-lgtm/Injection-moulding-app-/issues/632).** This document consolidates status; it does not merge different people's evidence or imply that an issue is closed. Each original issue retains its own history. The machine-readable issue map is in `qa/audit-issue-consolidation-v1.json` and is checked by the release documentation suite.
 
 ## Reviewed current release
