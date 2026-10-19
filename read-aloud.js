@@ -279,7 +279,15 @@
       };
       utterance.onend=()=>{
         clearTimeout(startTimer);
-        if(token!==speakToken||!speaking)return;
+        // Some mobile speech providers complete an utterance without firing
+        // onstart. Accept that completion while this utterance is still the
+        // active start request, but ignore callbacks after Stop, Pause or a
+        // newer utterance.
+        if(token!==speakToken||(!speaking&&!starting))return;
+        if(!started){
+          if(document.hidden&&!playlistMode){stop('Stopped because the app was hidden before speech started');return;}
+          starting=false;
+        }
         if(index<units.length-1){index+=1;speakCurrent();}
         else stop(playlistMode?'Finished all lessons':'Finished reading');
       };
