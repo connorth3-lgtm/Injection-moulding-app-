@@ -1012,3 +1012,29 @@ test('Book Contents narration does not pick an unrelated screen when the reader 
   const units=await page.evaluate(()=>window.MMReadAloud.refresh().map(u=>u.text));
   expect(units).toEqual(['Book Contents heading.','Choose a reader chapter from the Book.']);
 });
+
+test('Android voice completion advances sentences when onstart is omitted',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>First device sentence. Second device sentence.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
+    class Utterance{constructor(text=''){this.text=text;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const voice={utterances:[],getVoices(){return[];},speak(u){this.utterances.push(u);},cancel(){},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    window.__endOnlyVoice=voice;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:voice});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const player=page.locator('.mm-read-aloud');
+  await player.locator('summary').click();
+  await player.locator('[data-mm-read="play"]').click();
+  await expect(player.locator('[data-mm-read="play"]')).toHaveText('Starting…');
+  const utterances=await page.evaluate(()=>{
+    window.__endOnlyVoice.utterances[0].onend?.();
+    return window.__endOnlyVoice.utterances.map(u=>u.text);
+  });
+  expect(utterances).toEqual(['First device sentence.','Second device sentence.']);
+  await expect(player.locator('[data-mm-read="position"]')).toHaveText('2 / 2');
+  await page.evaluate(()=>window.__endOnlyVoice.utterances[1].onend?.());
+  await expect(player.locator('.mm-read-status')).toHaveText('Finished reading');
+  await expect(player.locator('[data-mm-read="play"]')).toHaveText('Listen');
+});
