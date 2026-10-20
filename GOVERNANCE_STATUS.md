@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.20.3`**.
+Current governed web candidate: **`2026.10.20.4`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Successful exact-source release 2026.10.20.3 producer run 39410559794 retained artifact 12259316379 for source 9ea761d15597f15631565cf514e46dc163c9f2c5 with fingerprint sha256:b9875512b44d9d5bfed5d6f21c9ab280950114f6d1e89e8dc3dd349d2d745eed. Software contract QA passed; no human, device or production approval is implied. |
-| Behavioral / browser | **pass** | Automated browser and Read Aloud regression suites passed for release 2026.10.20.3 source 9ea761d15597f15631565cf514e46dc163c9f2c5; Mobile Browser QA run 39410559791 passed Chromium, WebKit, cross-browser and 500 reliability runs, and Read Aloud QA run 39410560202 passed. |
+| Static / contract | **pass** | Exact-source candidate for release 2026.10.20.4: source 264091fc0eabb309fba3d5b255bfc36c36730679 was retained from Pre-merge Public Candidate run 39470451630 (success), artifact 12287815554, fingerprint sha256:7f977664ddcf352f5bbed506ec26273c19ce50adcaf0e381f58caed052700425. Static/contract QA passed on this candidate. No human, physical-device or production approval is implied. |
+| Behavioral / browser | **pass** | Read Aloud and mobile-browser regressions passed for release 2026.10.20.4 source 264091fc0eabb309fba3d5b255bfc36c36730679; active speech without onstart remains playing and reports Pause. This is browser evidence and does not substitute for human assistive-technology or physical-device testing. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
