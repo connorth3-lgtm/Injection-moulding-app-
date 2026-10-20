@@ -1188,6 +1188,8 @@ test('Android natural completion leaves completed speech uncanceled',async({page
     const utterance=window.__androidNaturalEndSpeech.utterances[0];
     utterance.onstart?.();
     utterance.onend?.();
+    // onend runs before the speech engine has fully returned to idle.
+    window.__androidNaturalEndSpeech.speaking=false;
   });
   await expect(player.locator('.mm-read-status')).toHaveText('Finished reading');
   expect(await page.evaluate(()=>window.__androidNaturalEndSpeech.cancels)).toBe(0);
